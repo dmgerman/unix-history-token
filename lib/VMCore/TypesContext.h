@@ -332,7 +332,7 @@ name|public
 label|:
 name|IntegerValType
 argument_list|(
-argument|uint16_t numbits
+argument|uint32_t numbits
 argument_list|)
 block|:
 name|bits
@@ -956,6 +956,171 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|// UnionValType - Define a class to hold the key that goes into the TypeMap
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_decl_stmt
+name|class
+name|UnionValType
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|>
+name|ElTypes
+expr_stmt|;
+name|public
+label|:
+name|UnionValType
+argument_list|(
+argument|const Type* const* Types
+argument_list|,
+argument|unsigned NumTypes
+argument_list|)
+block|:
+name|ElTypes
+argument_list|(
+argument|&Types[
+literal|0
+argument|]
+argument_list|,
+argument|&Types[NumTypes]
+argument_list|)
+block|{}
+specifier|static
+name|UnionValType
+name|get
+parameter_list|(
+specifier|const
+name|UnionType
+modifier|*
+name|UT
+parameter_list|)
+block|{
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|>
+name|ElTypes
+expr_stmt|;
+name|ElTypes
+operator|.
+name|reserve
+argument_list|(
+name|UT
+operator|->
+name|getNumElements
+argument_list|()
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|UT
+operator|->
+name|getNumElements
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+name|ElTypes
+operator|.
+name|push_back
+argument_list|(
+name|UT
+operator|->
+name|getElementType
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|UnionValType
+argument_list|(
+operator|&
+name|ElTypes
+index|[
+literal|0
+index|]
+argument_list|,
+name|ElTypes
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|hashTypeStructure
+parameter_list|(
+specifier|const
+name|UnionType
+modifier|*
+name|UT
+parameter_list|)
+block|{
+return|return
+name|UT
+operator|->
+name|getNumElements
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|UnionValType
+operator|&
+name|UTV
+operator|)
+specifier|const
+block|{
+return|return
+operator|(
+name|ElTypes
+operator|<
+name|UTV
+operator|.
+name|ElTypes
+operator|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// FunctionValType - Define a class to hold the key that goes into the TypeMap
 end_comment
 
@@ -1155,8 +1320,6 @@ name|PATypeHolder
 operator|>
 name|TypesByHash
 expr_stmt|;
-name|public
-label|:
 operator|~
 name|TypeMapBase
 argument_list|()
@@ -1262,6 +1425,8 @@ function_decl|;
 block|}
 block|}
 block|}
+name|public
+operator|:
 name|void
 name|RemoveFromTypesByHash
 argument_list|(
@@ -1491,15 +1656,6 @@ operator|::
 name|iterator
 name|iterator
 expr_stmt|;
-operator|~
-name|TypeMap
-argument_list|()
-block|{
-name|print
-argument_list|(
-literal|"ON EXIT"
-argument_list|)
-block|; }
 specifier|inline
 name|TypeClass
 operator|*
@@ -1546,22 +1702,14 @@ else|:
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|inline
 name|void
 name|add
-parameter_list|(
-specifier|const
-name|ValType
-modifier|&
-name|V
-parameter_list|,
-name|TypeClass
-modifier|*
-name|Ty
-parameter_list|)
+argument_list|(
+argument|const ValType&V
+argument_list|,
+argument|TypeClass *Ty
+argument_list|)
 block|{
 name|Map
 operator|.
@@ -1576,7 +1724,7 @@ argument_list|,
 name|Ty
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 comment|// If this type has a cycle, remember it.
 name|TypesByHash
 operator|.
@@ -1596,45 +1744,24 @@ argument_list|,
 name|Ty
 argument_list|)
 argument_list|)
-expr_stmt|;
+block|;
 name|print
 argument_list|(
 literal|"add"
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|;   }
 comment|/// RefineAbstractType - This method is called after we have merged a type
-end_comment
-
-begin_comment
 comment|/// with another one.  We must now either merge the type away with
-end_comment
-
-begin_comment
 comment|/// some other type or reinstall it in the map with it's new configuration.
-end_comment
-
-begin_function
 name|void
 name|RefineAbstractType
-parameter_list|(
-name|TypeClass
-modifier|*
-name|Ty
-parameter_list|,
-specifier|const
-name|DerivedType
-modifier|*
-name|OldType
-parameter_list|,
-specifier|const
-name|Type
-modifier|*
-name|NewType
-parameter_list|)
+argument_list|(
+argument|TypeClass *Ty
+argument_list|,
+argument|const DerivedType *OldType
+argument_list|,
+argument|const Type *NewType
+argument_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -1672,7 +1799,7 @@ name|NewType
 operator|<<
 literal|"])\n"
 argument_list|)
-expr_stmt|;
+block|;
 endif|#
 directive|endif
 comment|// Otherwise, we are changing one subelement type into another.  Clearly the
@@ -1686,26 +1813,26 @@ argument_list|()
 operator|&&
 literal|"Refining a non-abstract type!"
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|OldType
 operator|!=
 name|NewType
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Make a temporary type holder for the type so that it doesn't disappear on
 comment|// us when we erase the entry from the map.
 name|PATypeHolder
 name|TyHolder
-init|=
+operator|=
 name|Ty
-decl_stmt|;
+block|;
 comment|// The old record is now out-of-date, because one of the children has been
 comment|// updated.  Remove the obsolete entry from the map.
 name|unsigned
 name|NumErased
-init|=
+operator|=
 name|Map
 operator|.
 name|erase
@@ -1717,30 +1844,30 @@ argument_list|(
 name|Ty
 argument_list|)
 argument_list|)
-decl_stmt|;
+block|;
 name|assert
 argument_list|(
 name|NumErased
 operator|&&
 literal|"Element not found!"
 argument_list|)
-expr_stmt|;
+block|;
 name|NumErased
 operator|=
 name|NumErased
-expr_stmt|;
+block|;
 comment|// Remember the structural hash for the type before we start hacking on it,
 comment|// in case we need it later.
 name|unsigned
 name|OldTypeHash
-init|=
+operator|=
 name|ValType
 operator|::
 name|hashTypeStructure
 argument_list|(
 name|Ty
 argument_list|)
-decl_stmt|;
+block|;
 comment|// Find the type element we are refining... and change it now!
 for|for
 control|(
@@ -1785,17 +1912,29 @@ name|NewType
 expr_stmt|;
 name|unsigned
 name|NewTypeHash
-init|=
+operator|=
 name|ValType
 operator|::
 name|hashTypeStructure
 argument_list|(
 name|Ty
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// If there are no cycles going through this node, we can do a simple,
+end_comment
+
+begin_comment
 comment|// efficient lookup in the map, instead of an inefficient nasty linear
+end_comment
+
+begin_comment
 comment|// lookup.
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -2092,7 +2231,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
 comment|// If the hash codes differ, update TypesByHash
+end_comment
+
+begin_if
 if|if
 condition|(
 name|NewTypeHash
@@ -2122,10 +2267,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
 comment|// If the type is currently thought to be abstract, rescan all of our
+end_comment
+
+begin_comment
 comment|// subtypes to see if the type has just become concrete!  Note that this
+end_comment
+
+begin_comment
 comment|// may send out notifications to AbstractTypeUsers that types become
+end_comment
+
+begin_comment
 comment|// concrete.
+end_comment
+
+begin_if
 if|if
 condition|(
 name|Ty
@@ -2138,19 +2298,18 @@ operator|->
 name|PromoteAbstractToConcrete
 argument_list|()
 expr_stmt|;
-block|}
-end_function
+end_if
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|}    void
 name|print
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Arg
+argument|const char *Arg
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 ifdef|#
 directive|ifdef
@@ -2166,12 +2325,12 @@ name|Arg
 operator|<<
 literal|" table contents:\n"
 argument_list|)
-expr_stmt|;
+block|;
 name|unsigned
 name|i
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 for|for
 control|(
 name|typename
@@ -2247,7 +2406,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_expr_stmt
 name|void

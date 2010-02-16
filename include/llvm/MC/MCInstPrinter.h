@@ -56,6 +56,9 @@ decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 comment|/// MCInstPrinter - This is an instance of a target assembly language printer
 comment|/// that converts an MCInst to valid target assembly syntax.
 name|class
@@ -63,9 +66,17 @@ name|MCInstPrinter
 block|{
 name|protected
 label|:
+comment|/// O - The main stream to emit instruction text to.
 name|raw_ostream
 modifier|&
 name|O
+decl_stmt|;
+comment|/// CommentStream - a stream that comments can be emitted to if desired.
+comment|/// Each comment must end with a newline.  This will be null if verbose
+comment|/// assembly emission is disable.
+name|raw_ostream
+modifier|*
+name|CommentStream
 decl_stmt|;
 specifier|const
 name|MCAsmInfo
@@ -91,6 +102,11 @@ argument_list|(
 name|o
 argument_list|)
 operator|,
+name|CommentStream
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|MAI
 argument_list|(
 argument|mai
@@ -101,6 +117,21 @@ operator|~
 name|MCInstPrinter
 argument_list|()
 expr_stmt|;
+comment|/// setCommentStream - Specify a stream to emit comments to.
+name|void
+name|setCommentStream
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+block|{
+name|CommentStream
+operator|=
+operator|&
+name|OS
+expr_stmt|;
+block|}
 comment|/// printInst - Print the specified MCInst to the current raw_ostream.
 comment|///
 name|virtual
@@ -115,6 +146,17 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// getOpcodeName - Return the name of the specified opcode enum (e.g.
+comment|/// "MOV32ri") or empty if we can't resolve it.
+name|virtual
+name|StringRef
+name|getOpcodeName
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -3886,6 +3886,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecRes_SETCC
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecRes_UNDEF
 parameter_list|(
 name|SDNode
@@ -4012,19 +4020,10 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Vector Widening Utilities Support: LegalizeVectorTypes.cpp
 comment|//===--------------------------------------------------------------------===//
-comment|/// Helper genWidenVectorLoads - Helper function to generate a set of
+comment|/// Helper GenWidenVectorLoads - Helper function to generate a set of
 comment|/// loads to load a vector with a resulting wider type. It takes
-comment|///   ExtType: Extension type
-comment|///   LdChain: list of chains for the load we have generated.
-comment|///   Chain:   incoming chain for the ld vector.
-comment|///   BasePtr: base pointer to load from.
-comment|///   SV:         memory disambiguation source value.
-comment|///   SVOffset:   memory disambiugation offset.
-comment|///   Alignment:  alignment of the memory.
-comment|///   isVolatile: volatile load.
-comment|///   LdWidth:    width of memory that we want to load.
-comment|///   ResType:    the wider result result type for the resulting vector.
-comment|///   dl:         DebugLoc to be applied to new nodes
+comment|///   LdChain: list of chains for the load to be generated.
+comment|///   Ld:      load to widen
 name|SDValue
 name|GenWidenVectorLoads
 argument_list|(
@@ -4037,49 +4036,42 @@ operator|>
 operator|&
 name|LdChain
 argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|BasePtr
-argument_list|,
-specifier|const
-name|Value
+name|LoadSDNode
 operator|*
-name|SV
+name|LD
+argument_list|)
+decl_stmt|;
+comment|/// GenWidenVectorExtLoads - Helper function to generate a set of extension
+comment|/// loads to load a ector with a resulting wider type.  It takes
+comment|///   LdChain: list of chains for the load to be generated.
+comment|///   Ld:      load to widen
+comment|///   ExtType: extension element type
+name|SDValue
+name|GenWidenVectorExtLoads
+argument_list|(
+name|SmallVector
+operator|<
+name|SDValue
 argument_list|,
-name|int
-name|SVOffset
+literal|16
+operator|>
+operator|&
+name|LdChain
 argument_list|,
-name|unsigned
-name|Alignment
+name|LoadSDNode
+operator|*
+name|LD
 argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-name|unsigned
-name|LdWidth
-argument_list|,
-name|EVT
-name|ResType
-argument_list|,
-name|DebugLoc
-name|dl
+name|ISD
+operator|::
+name|LoadExtType
+name|ExtType
 argument_list|)
 decl_stmt|;
 comment|/// Helper genWidenVectorStores - Helper function to generate a set of
 comment|/// stores to store a widen vector into non widen memory
-comment|/// It takes
 comment|///   StChain: list of chains for the stores we have generated
-comment|///   Chain:   incoming chain for the ld vector
-comment|///   BasePtr: base pointer to load from
-comment|///   SV:      memory disambiguation source value
-comment|///   SVOffset:   memory disambiugation offset
-comment|///   Alignment:  alignment of the memory
-comment|///   isVolatile: volatile lod
-comment|///   ValOp:   value to store
-comment|///   StWidth: width of memory that we want to store
-comment|///   dl:         DebugLoc to be applied to new nodes
+comment|///   ST:      store of a widen value
 name|void
 name|GenWidenVectorStores
 argument_list|(
@@ -4092,34 +4084,30 @@ operator|>
 operator|&
 name|StChain
 argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|BasePtr
-argument_list|,
-specifier|const
-name|Value
+name|StoreSDNode
 operator|*
-name|SV
-argument_list|,
-name|int
-name|SVOffset
-argument_list|,
-name|unsigned
-name|Alignment
-argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
+name|ST
+argument_list|)
+decl_stmt|;
+comment|/// Helper genWidenVectorTruncStores - Helper function to generate a set of
+comment|/// stores to store a truncate widen vector into non widen memory
+comment|///   StChain: list of chains for the stores we have generated
+comment|///   ST:      store of a widen value
+name|void
+name|GenWidenVectorTruncStores
+argument_list|(
+name|SmallVector
+operator|<
 name|SDValue
-name|ValOp
 argument_list|,
-name|unsigned
-name|StWidth
+literal|16
+operator|>
+operator|&
+name|StChain
 argument_list|,
-name|DebugLoc
-name|dl
+name|StoreSDNode
+operator|*
+name|ST
 argument_list|)
 decl_stmt|;
 comment|/// Modifies a vector input (widen or narrows) to a vector of NVT.  The

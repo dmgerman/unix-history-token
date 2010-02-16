@@ -103,25 +103,18 @@ directive|include
 file|"llvm/Support/SourceMgr.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ModuleProvider.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// If the given MemoryBuffer holds a bitcode image, return a ModuleProvider
-comment|/// for it which does lazy deserialization of function bodies.  Otherwise,
-comment|/// attempt to parse it as LLVM Assembly and return a fully populated
-comment|/// ModuleProvider. This function *always* takes ownership of the given
-comment|/// MemoryBuffer.
+comment|/// If the given MemoryBuffer holds a bitcode image, return a Module for it
+comment|/// which does lazy deserialization of function bodies.  Otherwise, attempt to
+comment|/// parse it as LLVM Assembly and return a fully populated Module. This
+comment|/// function *always* takes ownership of the given MemoryBuffer.
 specifier|inline
-name|ModuleProvider
+name|Module
 modifier|*
-name|getIRModuleProvider
+name|getLazyIRModule
 parameter_list|(
 name|MemoryBuffer
 modifier|*
@@ -169,11 +162,11 @@ operator|::
 name|string
 name|ErrMsg
 expr_stmt|;
-name|ModuleProvider
+name|Module
 modifier|*
-name|MP
+name|M
 init|=
-name|getBitcodeModuleProvider
+name|getLazyBitcodeModule
 argument_list|(
 name|Buffer
 argument_list|,
@@ -185,7 +178,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|MP
+name|M
 operator|==
 literal|0
 condition|)
@@ -217,13 +210,10 @@ name|Buffer
 decl_stmt|;
 block|}
 return|return
-name|MP
+name|M
 return|;
 block|}
-name|Module
-modifier|*
-name|M
-init|=
+return|return
 name|ParseAssembly
 argument_list|(
 name|Buffer
@@ -234,32 +224,16 @@ name|Err
 argument_list|,
 name|Context
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|M
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|new
-name|ExistingModuleProvider
-argument_list|(
-name|M
-argument_list|)
 return|;
 block|}
-comment|/// If the given file holds a bitcode image, return a ModuleProvider
+comment|/// If the given file holds a bitcode image, return a Module
 comment|/// for it which does lazy deserialization of function bodies.  Otherwise,
 comment|/// attempt to parse it as LLVM Assembly and return a fully populated
-comment|/// ModuleProvider.
+comment|/// Module.
 specifier|inline
-name|ModuleProvider
+name|Module
 modifier|*
-name|getIRFileModuleProvider
+name|getLazyIRFileModule
 argument_list|(
 specifier|const
 name|std
@@ -332,7 +306,7 @@ literal|0
 return|;
 block|}
 return|return
-name|getIRModuleProvider
+name|getLazyIRModule
 argument_list|(
 name|F
 argument_list|,

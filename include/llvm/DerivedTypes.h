@@ -109,6 +109,9 @@ name|class
 name|StructValType
 decl_stmt|;
 name|class
+name|UnionValType
+decl_stmt|;
+name|class
 name|PointerValType
 decl_stmt|;
 name|class
@@ -820,6 +823,13 @@ name|getTypeID
 argument_list|()
 operator|==
 name|VectorTyID
+operator|||
+name|T
+operator|->
+name|getTypeID
+argument_list|()
+operator|==
+name|UnionTyID
 return|;
 block|}
 expr|}
@@ -1123,6 +1133,262 @@ operator|?
 name|true
 operator|:
 name|false
+return|;
+block|}
+expr|}
+block|;
+comment|/// UnionType - Class to represent union types. A union type is similar to
+comment|/// a structure, except that all member fields begin at offset 0.
+comment|///
+name|class
+name|UnionType
+operator|:
+name|public
+name|CompositeType
+block|{
+name|friend
+name|class
+name|TypeMap
+operator|<
+name|UnionValType
+block|,
+name|UnionType
+operator|>
+block|;
+name|UnionType
+argument_list|(
+specifier|const
+name|UnionType
+operator|&
+argument_list|)
+block|;
+comment|// Do not implement
+specifier|const
+name|UnionType
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|UnionType
+operator|&
+operator|)
+block|;
+comment|// Do not implement
+name|UnionType
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|const Type* const* Types
+argument_list|,
+argument|unsigned NumTypes
+argument_list|)
+block|;
+name|public
+operator|:
+comment|/// UnionType::get - This static method is the primary way to create a
+comment|/// UnionType.
+specifier|static
+name|UnionType
+operator|*
+name|get
+argument_list|(
+argument|const Type* const* Types
+argument_list|,
+argument|unsigned NumTypes
+argument_list|)
+block|;
+comment|/// UnionType::get - This static method is a convenience method for
+comment|/// creating union types by specifying the elements as arguments.
+specifier|static
+name|UnionType
+operator|*
+name|get
+argument_list|(
+argument|const Type *type
+argument_list|,
+argument|...
+argument_list|)
+name|END_WITH_NULL
+block|;
+comment|/// isValidElementType - Return true if the specified type is valid as a
+comment|/// element type.
+specifier|static
+name|bool
+name|isValidElementType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
+block|;
+comment|/// Given an element type, return the member index of that type, or -1
+comment|/// if there is no such member type.
+name|int
+name|getElementTypeIndex
+argument_list|(
+argument|const Type *ElemTy
+argument_list|)
+specifier|const
+block|;
+comment|// Iterator access to the elements
+typedef|typedef
+name|Type
+operator|::
+name|subtype_iterator
+name|element_iterator
+expr_stmt|;
+name|element_iterator
+name|element_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContainedTys
+return|;
+block|}
+name|element_iterator
+name|element_end
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|ContainedTys
+index|[
+name|NumContainedTys
+index|]
+return|;
+block|}
+comment|// Random access to the elements
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumContainedTys
+return|;
+block|}
+specifier|const
+name|Type
+operator|*
+name|getElementType
+argument_list|(
+argument|unsigned N
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|N
+operator|<
+name|NumContainedTys
+operator|&&
+literal|"Element number out of range!"
+argument_list|)
+block|;
+return|return
+name|ContainedTys
+index|[
+name|N
+index|]
+return|;
+block|}
+comment|/// getTypeAtIndex - Given an index value into the type, return the type of
+comment|/// the element.  For a union type, this must be a constant value...
+comment|///
+name|virtual
+specifier|const
+name|Type
+operator|*
+name|getTypeAtIndex
+argument_list|(
+argument|const Value *V
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|Type
+operator|*
+name|getTypeAtIndex
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|indexValid
+argument_list|(
+argument|const Value *V
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|indexValid
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+comment|// Implement the AbstractTypeUser interface.
+name|virtual
+name|void
+name|refineAbstractType
+argument_list|(
+specifier|const
+name|DerivedType
+operator|*
+name|OldTy
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|NewTy
+argument_list|)
+block|;
+name|virtual
+name|void
+name|typeBecameConcrete
+argument_list|(
+specifier|const
+name|DerivedType
+operator|*
+name|AbsTy
+argument_list|)
+block|;
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const UnionType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeID
+argument_list|()
+operator|==
+name|UnionTyID
 return|;
 block|}
 expr|}
@@ -1983,6 +2249,10 @@ operator|:
 name|public
 name|DerivedType
 block|{
+name|friend
+name|class
+name|LLVMContextImpl
+block|;
 name|OpaqueType
 argument_list|(
 specifier|const

@@ -238,6 +238,9 @@ name|Uses
 operator|,
 name|bool
 name|Defs
+operator|,
+name|bool
+name|SkipDebug
 operator|>
 name|class
 name|defusechain_iterator
@@ -250,6 +253,8 @@ operator|<
 name|true
 operator|,
 name|true
+operator|,
+name|false
 operator|>
 name|reg_iterator
 expr_stmt|;
@@ -310,6 +315,8 @@ operator|<
 name|false
 operator|,
 name|true
+operator|,
+name|false
 operator|>
 name|def_iterator
 expr_stmt|;
@@ -370,6 +377,8 @@ operator|<
 name|true
 operator|,
 name|false
+operator|,
+name|false
 operator|>
 name|use_iterator
 expr_stmt|;
@@ -420,6 +429,69 @@ name|RegNo
 argument_list|)
 operator|==
 name|use_end
+argument_list|()
+return|;
+block|}
+comment|/// use_nodbg_iterator/use_nodbg_begin/use_nodbg_end - Walk all uses of the
+comment|/// specified register, skipping those marked as Debug.
+typedef|typedef
+name|defusechain_iterator
+operator|<
+name|true
+operator|,
+name|false
+operator|,
+name|true
+operator|>
+name|use_nodbg_iterator
+expr_stmt|;
+name|use_nodbg_iterator
+name|use_nodbg_begin
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|use_nodbg_iterator
+argument_list|(
+name|getRegUseDefListHead
+argument_list|(
+name|RegNo
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|use_nodbg_iterator
+name|use_nodbg_end
+parameter_list|()
+block|{
+return|return
+name|use_nodbg_iterator
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// use_nodbg_empty - Return true if there are no non-Debug instructions
+comment|/// using the specified register.
+name|bool
+name|use_nodbg_empty
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|use_nodbg_begin
+argument_list|(
+name|RegNo
+argument_list|)
+operator|==
+name|use_nodbg_end
 argument_list|()
 return|;
 block|}
@@ -1054,7 +1126,8 @@ comment|/// defusechain_iterator - This class provides iterator support for mach
 comment|/// operands in the function that use or define a specific register.  If
 comment|/// ReturnUses is true it returns uses of registers, if ReturnDefs is true it
 comment|/// returns defs.  If neither are true then you are silly and it always
-comment|/// returns end().
+comment|/// returns end().  If SkipDebug is true it skips uses marked Debug
+comment|/// when incrementing.
 name|template
 operator|<
 name|bool
@@ -1062,6 +1135,9 @@ name|ReturnUses
 operator|,
 name|bool
 name|ReturnDefs
+operator|,
+name|bool
+name|SkipDebug
 operator|>
 name|class
 name|defusechain_iterator
@@ -1123,6 +1199,15 @@ operator|&&
 name|op
 operator|->
 name|isDef
+argument_list|()
+operator|)
+operator|||
+operator|(
+name|SkipDebug
+operator|&&
+name|op
+operator|->
+name|isDebug
 argument_list|()
 operator|)
 condition|)
@@ -1290,6 +1375,15 @@ operator|&&
 name|Op
 operator|->
 name|isDef
+argument_list|()
+operator|)
+operator|||
+operator|(
+name|SkipDebug
+operator|&&
+name|Op
+operator|->
+name|isDebug
 argument_list|()
 operator|)
 operator|)

@@ -1484,7 +1484,7 @@ block|}
 comment|/// EmitRecordWithAbbrevImpl - This is the core implementation of the record
 comment|/// emission code.  If BlobData is non-null, then it specifies an array of
 comment|/// data that should be emitted as part of the Blob or Array operand that is
-comment|/// known to exist at the end of the the record.
+comment|/// known to exist at the end of the record.
 name|template
 operator|<
 name|typename

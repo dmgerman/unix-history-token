@@ -2025,7 +2025,7 @@ comment|// Double the number of buckets.
 while|while
 condition|(
 name|NumBuckets
-operator|<=
+operator|<
 name|AtLeast
 condition|)
 name|NumBuckets

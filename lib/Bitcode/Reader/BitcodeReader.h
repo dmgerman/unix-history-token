@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ModuleProvider.h"
+file|"llvm/GVMaterializer.h"
 end_include
 
 begin_include
@@ -590,15 +590,22 @@ name|class
 name|BitcodeReader
 range|:
 name|public
-name|ModuleProvider
+name|GVMaterializer
 block|{
 name|LLVMContext
 operator|&
 name|Context
 block|;
+name|Module
+operator|*
+name|TheModule
+block|;
 name|MemoryBuffer
 operator|*
 name|Buffer
+block|;
+name|bool
+name|BufferOwned
 block|;
 name|BitstreamReader
 name|StreamFile
@@ -728,22 +735,15 @@ name|bool
 name|HasReversedFunctionsWithBodies
 decl_stmt|;
 comment|/// DeferredFunctionInfo - When function bodies are initially scanned, this
-comment|/// map contains info about where to find deferred function body (in the
-comment|/// stream) and what linkage the original function had.
+comment|/// map contains info about where to find deferred function body in the
+comment|/// stream.
 name|DenseMap
 operator|<
 name|Function
 operator|*
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
 name|uint64_t
-operator|,
-name|unsigned
 operator|>
-expr|>
 name|DeferredFunctionInfo
 expr_stmt|;
 comment|/// BlockAddrFwdRefs - These are blockaddr references to basic blocks.  These
@@ -793,9 +793,19 @@ argument_list|(
 name|C
 argument_list|)
 operator|,
+name|TheModule
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|Buffer
 argument_list|(
 name|buffer
+argument_list|)
+operator|,
+name|BufferOwned
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|ErrorString
@@ -828,25 +838,49 @@ name|void
 name|FreeState
 argument_list|()
 expr_stmt|;
-comment|/// releaseMemoryBuffer - This causes the reader to completely forget about
-comment|/// the memory buffer it contains, which prevents the buffer from being
-comment|/// destroyed when it is deleted.
+comment|/// setBufferOwned - If this is true, the reader will destroy the MemoryBuffer
+comment|/// when the reader is destroyed.
 name|void
-name|releaseMemoryBuffer
-parameter_list|()
+name|setBufferOwned
+parameter_list|(
+name|bool
+name|Owned
+parameter_list|)
 block|{
-name|Buffer
+name|BufferOwned
 operator|=
-literal|0
+name|Owned
 expr_stmt|;
 block|}
 name|virtual
 name|bool
-name|materializeFunction
+name|isMaterializable
 argument_list|(
-name|Function
+specifier|const
+name|GlobalValue
 operator|*
-name|F
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|isDematerializable
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|Materialize
+argument_list|(
+name|GlobalValue
+operator|*
+name|GV
 argument_list|,
 name|std
 operator|::
@@ -858,10 +892,13 @@ literal|0
 argument_list|)
 decl_stmt|;
 name|virtual
-name|Module
-modifier|*
-name|materializeModule
+name|bool
+name|MaterializeModule
 argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
 name|std
 operator|::
 name|string
@@ -873,27 +910,13 @@ argument_list|)
 decl_stmt|;
 name|virtual
 name|void
-name|dematerializeFunction
+name|Dematerialize
 parameter_list|(
-name|Function
+name|GlobalValue
 modifier|*
-name|F
+name|GV
 parameter_list|)
 function_decl|;
-name|virtual
-name|Module
-modifier|*
-name|releaseModule
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
 name|bool
 name|Error
 parameter_list|(
@@ -925,8 +948,12 @@ block|}
 comment|/// @brief Main interface to parsing a bitcode buffer.
 comment|/// @returns true if an error occurred.
 name|bool
-name|ParseBitcode
-parameter_list|()
+name|ParseBitcodeInto
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
 function_decl|;
 name|private
 label|:
@@ -1238,15 +1265,8 @@ return|;
 block|}
 name|bool
 name|ParseModule
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ModuleID
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 name|bool
 name|ParseAttributeBlock
 parameter_list|()

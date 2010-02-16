@@ -178,13 +178,14 @@ name|InlineThreshold
 return|;
 block|}
 comment|/// Calculate the inline threshold for given Caller. This threshold is lower
-comment|/// if Caller is marked with OptimizeForSize and -inline-threshold is not
-comment|/// given on the comand line.
+comment|/// if the caller is marked with OptimizeForSize and -inline-threshold is not
+comment|/// given on the comand line. It is higher if the callee is marked with the
+comment|/// inlinehint attribute.
 comment|///
 name|unsigned
 name|getInlineThreshold
 argument_list|(
-argument|Function* Caller
+argument|CallSite CS
 argument_list|)
 specifier|const
 block|;

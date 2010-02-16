@@ -112,12 +112,6 @@ comment|/// 'isThumb'.
 name|bool
 name|hasThumb2
 block|;
-comment|/// Align - required alignment.  ARM functions and Thumb functions with
-comment|/// constant pools require 4-byte alignment; other Thumb functions
-comment|/// require only 2-byte alignment.
-name|unsigned
-name|Align
-block|;
 comment|/// VarArgsRegSaveSize - Size of the register save area for vararg functions.
 comment|///
 name|unsigned
@@ -203,11 +197,6 @@ block|,
 name|hasThumb2
 argument_list|(
 name|false
-argument_list|)
-block|,
-name|Align
-argument_list|(
-literal|2U
 argument_list|)
 block|,
 name|VarArgsRegSaveSize
@@ -327,15 +316,6 @@ operator|)
 operator|.
 name|hasThumb2
 argument_list|()
-argument_list|)
-block|,
-name|Align
-argument_list|(
-name|isThumb
-operator|?
-literal|1U
-operator|:
-literal|2U
 argument_list|)
 block|,
 name|VarArgsRegSaveSize
@@ -459,25 +439,6 @@ operator|&&
 name|hasThumb2
 return|;
 block|}
-name|unsigned
-name|getAlign
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Align
-return|;
-block|}
-name|void
-name|setAlign
-argument_list|(
-argument|unsigned a
-argument_list|)
-block|{
-name|Align
-operator|=
-name|a
-block|; }
 name|unsigned
 name|getVarArgsRegSaveSize
 argument_list|()

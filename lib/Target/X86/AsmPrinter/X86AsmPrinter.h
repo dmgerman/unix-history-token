@@ -149,13 +149,26 @@ operator|:
 name|explicit
 name|X86AsmPrinter
 argument_list|(
-argument|formatted_raw_ostream&O
+name|formatted_raw_ostream
+operator|&
+name|O
 argument_list|,
-argument|TargetMachine&TM
+name|TargetMachine
+operator|&
+name|TM
 argument_list|,
-argument|const MCAsmInfo *T
+name|MCContext
+operator|&
+name|Ctx
 argument_list|,
-argument|bool V
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|T
 argument_list|)
 operator|:
 name|AsmPrinter
@@ -164,9 +177,11 @@ argument|O
 argument_list|,
 argument|TM
 argument_list|,
-argument|T
+argument|Ctx
 argument_list|,
-argument|V
+argument|Streamer
+argument_list|,
+argument|T
 argument_list|)
 block|{
 name|Subtarget
@@ -251,20 +266,12 @@ operator|&
 name|M
 argument_list|)
 block|;
+name|virtual
 name|void
-name|printInstructionThroughMCStreamer
+name|EmitInstruction
 argument_list|(
 specifier|const
 name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-block|;
-name|void
-name|printMCInst
-argument_list|(
-specifier|const
-name|MCInst
 operator|*
 name|MI
 argument_list|)
@@ -277,6 +284,15 @@ name|MachineOperand
 operator|&
 name|MO
 argument_list|)
+block|;
+name|virtual
+name|MCSymbol
+operator|*
+name|GetGlobalValueSymbol
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
 block|;
 comment|// These methods are used by the tablegen'erated instruction printer.
 name|void
@@ -565,48 +581,6 @@ argument|const char *Modifier=NULL
 argument_list|)
 block|;
 name|void
-name|printPICJumpTableSetLabel
-argument_list|(
-argument|unsigned uid
-argument_list|,
-argument|const MachineBasicBlock *MBB
-argument_list|)
-specifier|const
-block|;
-name|void
-name|printPICJumpTableSetLabel
-argument_list|(
-argument|unsigned uid
-argument_list|,
-argument|unsigned uid2
-argument_list|,
-argument|const MachineBasicBlock *MBB
-argument_list|)
-specifier|const
-block|{
-name|AsmPrinter
-operator|::
-name|printPICJumpTableSetLabel
-argument_list|(
-name|uid
-argument_list|,
-name|uid2
-argument_list|,
-name|MBB
-argument_list|)
-block|;   }
-name|void
-name|printPICJumpTableEntry
-argument_list|(
-argument|const MachineJumpTableInfo *MJTI
-argument_list|,
-argument|const MachineBasicBlock *MBB
-argument_list|,
-argument|unsigned uid
-argument_list|)
-specifier|const
-block|;
-name|void
 name|printPICLabel
 argument_list|(
 argument|const MachineInstr *MI
@@ -626,16 +600,7 @@ name|MachineFunction
 operator|&
 name|F
 argument_list|)
-block|;
-name|void
-name|emitFunctionHeader
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

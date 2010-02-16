@@ -109,13 +109,7 @@ name|class
 name|TargetFrameInfo
 decl_stmt|;
 name|class
-name|MachineCodeEmitter
-decl_stmt|;
-name|class
 name|JITCodeEmitter
-decl_stmt|;
-name|class
-name|ObjectCodeEmitter
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
@@ -128,9 +122,6 @@ name|PassManager
 decl_stmt|;
 name|class
 name|Pass
-decl_stmt|;
-name|class
-name|TargetMachOWriterInfo
 decl_stmt|;
 name|class
 name|TargetELFWriterInfo
@@ -175,24 +166,6 @@ name|Large
 block|}
 enum|;
 block|}
-name|namespace
-name|FileModel
-block|{
-enum|enum
-name|Model
-block|{
-name|Error
-block|,
-name|None
-block|,
-name|AsmFile
-block|,
-name|MachOFile
-block|,
-name|ElfFile
-block|}
-enum|;
-block|}
 comment|// Code generation optimization level.
 name|namespace
 name|CodeGenOpt
@@ -211,21 +184,6 @@ block|,
 comment|// -O2, -Os
 name|Aggressive
 comment|// -O3
-block|}
-enum|;
-block|}
-comment|// Specify if we should encode the LSDA pointer in the FDE as 4- or 8-bytes.
-name|namespace
-name|DwarfLSDAEncoding
-block|{
-enum|enum
-name|Encoding
-block|{
-name|Default
-block|,
-name|FourByte
-block|,
-name|EightByte
 block|}
 enum|;
 block|}
@@ -465,21 +423,6 @@ name|InstrItineraryData
 argument_list|()
 return|;
 block|}
-comment|/// getMachOWriterInfo - If this target supports a Mach-O writer, return
-comment|/// information for it, otherwise return null.
-comment|///
-name|virtual
-specifier|const
-name|TargetMachOWriterInfo
-operator|*
-name|getMachOWriterInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// getELFWriterInfo - If this target supports an ELF writer, return
 comment|/// information for it, otherwise return null.
 comment|///
@@ -553,40 +496,18 @@ parameter_list|(
 name|bool
 parameter_list|)
 function_decl|;
-comment|/// getLSDAEncoding - Returns the LSDA pointer encoding. The choices are
-comment|/// 4-byte, 8-byte, and target default. The CIE is hard-coded to indicate that
-comment|/// the LSDA pointer in the FDE section is an "sdata4", and should be encoded
-comment|/// as a 4-byte pointer by default. However, some systems may require a
-comment|/// different size due to bugs or other conditions. We will default to a
-comment|/// 4-byte encoding unless the system tells us otherwise.
-comment|///
-comment|/// FIXME: This call-back isn't good! We should be using the correct encoding
-comment|/// regardless of the system. However, there are some systems which have bugs
-comment|/// that prevent this from occuring.
-name|virtual
-name|DwarfLSDAEncoding
-operator|::
-name|Encoding
-name|getLSDAEncoding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfLSDAEncoding
-operator|::
-name|Default
-return|;
-block|}
 comment|/// CodeGenFileType - These enums are meant to be passed into
-comment|/// addPassesToEmitFile to indicate what type of file to emit.
+comment|/// addPassesToEmitFile to indicate what type of file to emit, and returned by
+comment|/// it to indicate what type of file could actually be made.
 enum|enum
 name|CodeGenFileType
 block|{
-name|AssemblyFile
+name|CGFT_AssemblyFile
 block|,
-name|ObjectFile
+name|CGFT_ObjectFile
 block|,
-name|DynamicLibrary
+name|CGFT_Null
+comment|// Do not emit any output.
 block|}
 enum|;
 comment|/// getEnableTailMergeDefault - the default setting for -enable-tail-merge
@@ -603,90 +524,20 @@ return|;
 block|}
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.
-comment|/// This method should return FileModel::Error if emission of this file type
-comment|/// is not supported.
-comment|///
+comment|/// generation.  This method should return true if emission of this file type
+comment|/// is not supported, or false on success.
 name|virtual
-name|FileModel
-operator|::
-name|Model
+name|bool
 name|addPassesToEmitFile
 argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|formatted_raw_ostream&
-argument_list|,
-argument|CodeGenFileType
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|)
-block|{
-return|return
-name|FileModel
-operator|::
-name|None
-return|;
-block|}
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
 name|PassManagerBase
 operator|&
 argument_list|,
-name|MachineCodeEmitter
-operator|*
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
-name|PassManagerBase
+name|formatted_raw_ostream
 operator|&
 argument_list|,
-name|JITCodeEmitter
-operator|*
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
-name|PassManagerBase
-operator|&
-argument_list|,
-name|ObjectCodeEmitter
-operator|*
+name|CodeGenFileType
+name|Filetype
 argument_list|,
 name|CodeGenOpt
 operator|::
@@ -698,32 +549,7 @@ name|true
 return|;
 block|}
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a MachineCodeEmitter object to handle
-comment|/// actually outputting the machine code and resolving things like the address
-comment|/// of functions.  This method returns true if machine code emission is
-comment|/// not supported.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitMachineCode
-argument_list|(
-name|PassManagerBase
-operator|&
-argument_list|,
-name|MachineCodeEmitter
-operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a MachineCodeEmitter object to handle
+comment|/// get machine code emitted.  This uses a JITCodeEmitter object to handle
 comment|/// actually outputting the machine code and resolving things like the address
 comment|/// of functions.  This method returns true if machine code emission is
 comment|/// not supported.
@@ -826,9 +652,6 @@ argument_list|)
 block|;
 name|private
 operator|:
-comment|// These routines are used by addPassesToEmitFileFinish and
-comment|// addPassesToEmitMachineCode to set the CodeModel if it's still marked
-comment|// as default.
 name|virtual
 name|void
 name|setCodeModelForJIT
@@ -843,19 +666,10 @@ name|public
 operator|:
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
-comment|/// generation.  If OptLevel is None, the code generator should emit code as fast
-comment|/// as possible, though the generated code may be less efficient.  This method
-comment|/// should return FileModel::Error if emission of this file type is not
-comment|/// supported.
-comment|///
-comment|/// The default implementation of this method adds components from the
-comment|/// LLVM retargetable code generator, invoking the methods below to get
-comment|/// target-specific passes in standard locations.
-comment|///
+comment|/// generation.  If OptLevel is None, the code generator should emit code as
+comment|/// fast as possible, though the generated code may be less efficient.
 name|virtual
-name|FileModel
-operator|::
-name|Model
+name|bool
 name|addPassesToEmitFile
 argument_list|(
 argument|PassManagerBase&PM
@@ -867,94 +681,8 @@ argument_list|,
 argument|CodeGenOpt::Level
 argument_list|)
 block|;
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
-argument_list|,
-name|MachineCodeEmitter
-operator|*
-name|MCE
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|;
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
-argument_list|,
-name|JITCodeEmitter
-operator|*
-name|JCE
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|;
-comment|/// addPassesToEmitFileFinish - If the passes to emit the specified file had
-comment|/// to be split up (e.g., to add an object writer pass), this method can be
-comment|/// used to finish up adding passes to emit the file, if necessary.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitFileFinish
-argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
-argument_list|,
-name|ObjectCodeEmitter
-operator|*
-name|OCE
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|;
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a MachineCodeEmitter object to handle
-comment|/// actually outputting the machine code and resolving things like the address
-comment|/// of functions.  This method returns true if machine code emission is
-comment|/// not supported.
-comment|///
-name|virtual
-name|bool
-name|addPassesToEmitMachineCode
-argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
-argument_list|,
-name|MachineCodeEmitter
-operator|&
-name|MCE
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|)
-block|;
-comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
-comment|/// get machine code emitted.  This uses a MachineCodeEmitter object to handle
+comment|/// get machine code emitted.  This uses a JITCodeEmitter object to handle
 comment|/// actually outputting the machine code and resolving things like the address
 comment|/// of functions.  This method returns true if machine code emission is
 comment|/// not supported.
@@ -1070,79 +798,7 @@ argument|PassManagerBase&
 argument_list|,
 argument|CodeGenOpt::Level
 argument_list|,
-argument|MachineCodeEmitter&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addCodeEmitter - This pass should be overridden by the target to add a
-comment|/// code emitter, if supported.  If this is not supported, 'true' should be
-comment|/// returned.
-name|virtual
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
 argument|JITCodeEmitter&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
-comment|/// a code emitter (without setting flags), if supported.  If this is not
-comment|/// supported, 'true' should be returned.
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|MachineCodeEmitter&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
-comment|/// a code emitter (without setting flags), if supported.  If this is not
-comment|/// supported, 'true' should be returned.
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|JITCodeEmitter&
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addSimpleCodeEmitter - This pass should be overridden by the target to add
-comment|/// a code emitter (without setting flags), if supported.  If this is not
-comment|/// supported, 'true' should be returned.
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|CodeGenOpt::Level
-argument_list|,
-argument|ObjectCodeEmitter&
 argument_list|)
 block|{
 return|return
@@ -1161,48 +817,8 @@ return|return
 name|true
 return|;
 block|}
-comment|/// addAssemblyEmitter - Helper function which creates a target specific
-comment|/// assembly printer, if available.
-comment|///
-comment|/// \return Returns 'false' on success.
-name|bool
-name|addAssemblyEmitter
-argument_list|(
-name|PassManagerBase
-operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
-name|bool
-comment|/* VerboseAsmDefault */
-argument_list|,
-name|formatted_raw_ostream
-operator|&
-argument_list|)
-block|;
-comment|/// addObjectFileEmitter - Helper function which creates a target specific
-comment|/// object files emitter, if available.  This interface is temporary, for
-comment|/// bringing up MCAssembler-based object file emitters.
-comment|///
-comment|/// \return Returns 'false' on success.
-name|bool
-name|addObjectFileEmitter
-argument_list|(
-name|PassManagerBase
-operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
-name|formatted_raw_ostream
-operator|&
-argument_list|)
-block|; }
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

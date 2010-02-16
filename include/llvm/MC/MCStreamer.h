@@ -181,6 +181,18 @@ return|;
 block|}
 comment|/// @name Assembly File Formatting.
 comment|/// @{
+comment|/// isVerboseAsm - Return true if this streamer supports verbose assembly at
+comment|/// all.
+name|virtual
+name|bool
+name|isVerboseAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// AddComment - Add a comment that can be emitted to the generated .s
 comment|/// file if applicable as a QoI issue to make the output of the compiler
 comment|/// more readable.  This only affects the MCAsmStreamer, and only when
@@ -335,6 +347,27 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// EmitELFSize - Emit an ELF .size directive.
+comment|///
+comment|/// This corresponds to an assembler statement such as:
+comment|///  .size symbol, expression
+comment|///
+name|virtual
+name|void
+name|EmitELFSize
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// EmitCommonSymbol - Emit a common symbol.
 comment|///
 comment|/// @param Symbol - The common symbol to emit.
@@ -474,6 +507,23 @@ name|unsigned
 name|AddrSpace
 parameter_list|)
 function_decl|;
+comment|/// EmitGPRel32Value - Emit the expression @param Value into the output as a
+comment|/// gprel32 (32-bit GP relative) value.
+comment|///
+comment|/// This is used to implement assembler directives such as .gprel32 on
+comment|/// targets that support them.
+name|virtual
+name|void
+name|EmitGPRel32Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// EmitFill - Emit NumBytes bytes worth of the value specified by
 comment|/// FillValue.  This implements directives such as '.space'.
 name|virtual
@@ -581,6 +631,34 @@ init|=
 literal|0
 function_decl|;
 comment|/// @}
+comment|/// EmitFileDirective - Switch to a new logical file.  This is used to
+comment|/// implement the '.file "foo.c"' assembler directive.
+name|virtual
+name|void
+name|EmitFileDirective
+parameter_list|(
+name|StringRef
+name|Filename
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitDwarfFileDirective - Associate a filename with a specified logical
+comment|/// file number.  This implements the DWARF2 '.file 4 "foo.c"' assembler
+comment|/// directive.
+name|virtual
+name|void
+name|EmitDwarfFileDirective
+parameter_list|(
+name|unsigned
+name|FileNo
+parameter_list|,
+name|StringRef
+name|Filename
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// EmitInstruction - Emit the given @param Instruction into the current
 comment|/// section.
 name|virtual
@@ -619,6 +697,15 @@ function_decl|;
 comment|/// createAsmStreamer - Create a machine code streamer which will print out
 comment|/// assembly for the native target, suitable for compiling with a native
 comment|/// assembler.
+comment|///
+comment|/// \param InstPrint - If given, the instruction printer to use. If not given
+comment|/// the MCInst representation will be printed.
+comment|///
+comment|/// \param CE - If given, a code emitter to use to show the instruction
+comment|/// encoding inline with the assembly.
+comment|///
+comment|/// \param ShowInst - Whether to show the MCInst representation inline with
+comment|/// the assembly.
 name|MCStreamer
 modifier|*
 name|createAsmStreamer
@@ -653,6 +740,11 @@ modifier|*
 name|CE
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|ShowInst
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|// FIXME: These two may end up getting rolled into a single
@@ -675,8 +767,6 @@ parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// createELFStreamer - Create a machine code streamer which will generative

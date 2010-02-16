@@ -476,7 +476,7 @@ comment|/// The archive is searched to resolve outstanding symbols. Any modules 
 comment|/// the archive that resolve outstanding symbols will be linked in. The
 comment|/// library is searched repeatedly until no more modules that resolve
 comment|/// symbols can be found. If an error occurs, the error string is  set.
-comment|/// To speed up this function, ensure the the archive has been processed
+comment|/// To speed up this function, ensure the archive has been processed
 comment|/// llvm-ranlib or the S option was given to llvm-ar when the archive was
 comment|/// created. These tools add a symbol table to the archive which makes the
 comment|/// search for undefined symbols much faster.

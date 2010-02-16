@@ -853,6 +853,11 @@ parameter_list|,
 name|SelectionDAG
 modifier|&
 name|DAG
+parameter_list|,
+specifier|const
+name|ARMSubtarget
+modifier|*
+name|Subtarget
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -1157,6 +1162,7 @@ name|bool
 name|isVarArg
 argument_list|,
 name|bool
+operator|&
 name|isTailCall
 argument_list|,
 specifier|const

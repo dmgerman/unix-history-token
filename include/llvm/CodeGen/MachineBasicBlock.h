@@ -82,6 +82,15 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|template
@@ -1490,7 +1499,7 @@ name|isCond
 parameter_list|)
 function_decl|;
 comment|/// findDebugLoc - find the next valid DebugLoc starting at MBBI, skipping
-comment|/// any DEBUG_VALUE instructions.  Return UnknownLoc if there is none.
+comment|/// any DBG_VALUE instructions.  Return UnknownLoc if there is none.
 name|DebugLoc
 name|findDebugLoc
 argument_list|(
@@ -1541,6 +1550,18 @@ operator|=
 name|N
 expr_stmt|;
 block|}
+comment|/// getSymbol - Return the MCSymbol for this basic block.
+comment|///
+name|MCSymbol
+modifier|*
+name|getSymbol
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|// Methods used to maintain doubly linked list of blocks...

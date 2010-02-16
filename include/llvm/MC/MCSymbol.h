@@ -250,7 +250,7 @@ name|isDefined
 argument_list|()
 return|;
 block|}
-comment|/// isAbsolute - Check if this this is an absolute symbol.
+comment|/// isAbsolute - Check if this is an absolute symbol.
 name|bool
 name|isAbsolute
 argument_list|()

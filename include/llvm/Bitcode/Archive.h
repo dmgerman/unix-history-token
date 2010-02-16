@@ -110,10 +110,6 @@ name|MemoryBuffer
 decl_stmt|;
 comment|// Forward declare classes
 name|class
-name|ModuleProvider
-decl_stmt|;
-comment|// From VMCore
-name|class
 name|Module
 decl_stmt|;
 comment|// From VMCore
@@ -1088,14 +1084,14 @@ comment|/// This accessor looks up the \p symbol in the archive's symbol table a
 comment|/// returns the associated module that defines that symbol. This method can
 comment|/// be called as many times as necessary. This is handy for linking the
 comment|/// archive into another module based on unresolved symbols. Note that the
-comment|/// ModuleProvider returned by this accessor should not be deleted by the
-comment|/// caller. It is managed internally by the Archive class. It is possible
-comment|/// that multiple calls to this accessor will return the same ModuleProvider
-comment|/// instance because the associated module defines multiple symbols.
-comment|/// @returns The ModuleProvider* found or null if the archive does not
-comment|/// contain a module that defines the \p symbol.
+comment|/// Module returned by this accessor should not be deleted by the caller. It
+comment|/// is managed internally by the Archive class. It is possible that multiple
+comment|/// calls to this accessor will return the same Module instance because the
+comment|/// associated module defines multiple symbols.
+comment|/// @returns The Module* found or null if the archive does not contain a
+comment|/// module that defines the \p symbol.
 comment|/// @brief Look up a module by symbol name.
-name|ModuleProvider
+name|Module
 modifier|*
 name|findModuleDefiningSymbol
 argument_list|(
@@ -1143,7 +1139,7 @@ name|std
 operator|::
 name|set
 operator|<
-name|ModuleProvider
+name|Module
 operator|*
 operator|>
 operator|&
@@ -1449,7 +1445,7 @@ parameter_list|()
 function_decl|;
 comment|/// This type is used to keep track of bitcode modules loaded from the
 comment|/// symbol table. It maps the file offset to a pair that consists of the
-comment|/// associated ArchiveMember and the ModuleProvider.
+comment|/// associated ArchiveMember and the Module.
 comment|/// @brief Module mapping type
 typedef|typedef
 name|std
@@ -1462,7 +1458,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|ModuleProvider
+name|Module
 operator|*
 operator|,
 name|ArchiveMember

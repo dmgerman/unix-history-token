@@ -1358,6 +1358,125 @@ return|return
 name|BO
 return|;
 block|}
+comment|/// CreateNUWMul - Create a Mul operator with the NUW flag set.
+comment|///
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name =
+literal|""
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|BasicBlock *BB
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|BB
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWMul
+argument_list|(
+argument|Value *V1
+argument_list|,
+argument|Value *V2
+argument_list|,
+argument|const Twine&Name
+argument_list|,
+argument|Instruction *I
+argument_list|)
+block|{
+name|BinaryOperator
+operator|*
+name|BO
+operator|=
+name|CreateMul
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+name|Name
+argument_list|,
+name|I
+argument_list|)
+block|;
+name|BO
+operator|->
+name|setHasNoUnsignedWrap
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|BO
+return|;
+block|}
 comment|/// CreateExactSDiv - Create an SDiv operator with the exact flag set.
 comment|///
 specifier|static
@@ -1552,6 +1671,48 @@ specifier|static
 name|BinaryOperator
 operator|*
 name|CreateNSWNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+argument_list|,
+name|BasicBlock
+operator|*
+name|InsertAtEnd
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWNeg
+argument_list|(
+name|Value
+operator|*
+name|Op
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+operator|=
+literal|0
+argument_list|)
+block|;
+specifier|static
+name|BinaryOperator
+operator|*
+name|CreateNUWNeg
 argument_list|(
 name|Value
 operator|*
@@ -2737,87 +2898,87 @@ comment|/// predicate values are not overlapping between the classes.
 expr|enum
 name|Predicate
 block|{
-comment|// Opcode             U L G E    Intuitive operation
+comment|// Opcode              U L G E    Intuitive operation
 name|FCMP_FALSE
 operator|=
 literal|0
 block|,
-comment|/// 0 0 0 0    Always false (always folded)
+comment|///< 0 0 0 0    Always false (always folded)
 name|FCMP_OEQ
 operator|=
 literal|1
 block|,
-comment|/// 0 0 0 1    True if ordered and equal
+comment|///< 0 0 0 1    True if ordered and equal
 name|FCMP_OGT
 operator|=
 literal|2
 block|,
-comment|/// 0 0 1 0    True if ordered and greater than
+comment|///< 0 0 1 0    True if ordered and greater than
 name|FCMP_OGE
 operator|=
 literal|3
 block|,
-comment|/// 0 0 1 1    True if ordered and greater than or equal
+comment|///< 0 0 1 1    True if ordered and greater than or equal
 name|FCMP_OLT
 operator|=
 literal|4
 block|,
-comment|/// 0 1 0 0    True if ordered and less than
+comment|///< 0 1 0 0    True if ordered and less than
 name|FCMP_OLE
 operator|=
 literal|5
 block|,
-comment|/// 0 1 0 1    True if ordered and less than or equal
+comment|///< 0 1 0 1    True if ordered and less than or equal
 name|FCMP_ONE
 operator|=
 literal|6
 block|,
-comment|/// 0 1 1 0    True if ordered and operands are unequal
+comment|///< 0 1 1 0    True if ordered and operands are unequal
 name|FCMP_ORD
 operator|=
 literal|7
 block|,
-comment|/// 0 1 1 1    True if ordered (no nans)
+comment|///< 0 1 1 1    True if ordered (no nans)
 name|FCMP_UNO
 operator|=
 literal|8
 block|,
-comment|/// 1 0 0 0    True if unordered: isnan(X) | isnan(Y)
+comment|///< 1 0 0 0    True if unordered: isnan(X) | isnan(Y)
 name|FCMP_UEQ
 operator|=
 literal|9
 block|,
-comment|/// 1 0 0 1    True if unordered or equal
+comment|///< 1 0 0 1    True if unordered or equal
 name|FCMP_UGT
 operator|=
 literal|10
 block|,
-comment|/// 1 0 1 0    True if unordered or greater than
+comment|///< 1 0 1 0    True if unordered or greater than
 name|FCMP_UGE
 operator|=
 literal|11
 block|,
-comment|/// 1 0 1 1    True if unordered, greater than, or equal
+comment|///< 1 0 1 1    True if unordered, greater than, or equal
 name|FCMP_ULT
 operator|=
 literal|12
 block|,
-comment|/// 1 1 0 0    True if unordered or less than
+comment|///< 1 1 0 0    True if unordered or less than
 name|FCMP_ULE
 operator|=
 literal|13
 block|,
-comment|/// 1 1 0 1    True if unordered, less than, or equal
+comment|///< 1 1 0 1    True if unordered, less than, or equal
 name|FCMP_UNE
 operator|=
 literal|14
 block|,
-comment|/// 1 1 1 0    True if unordered or not equal
+comment|///< 1 1 1 0    True if unordered or not equal
 name|FCMP_TRUE
 operator|=
 literal|15
 block|,
-comment|/// 1 1 1 1    Always true (always folded)
+comment|///< 1 1 1 1    Always true (always folded)
 name|FIRST_FCMP_PREDICATE
 operator|=
 name|FCMP_FALSE
@@ -2836,52 +2997,52 @@ name|ICMP_EQ
 operator|=
 literal|32
 block|,
-comment|/// equal
+comment|///< equal
 name|ICMP_NE
 operator|=
 literal|33
 block|,
-comment|/// not equal
+comment|///< not equal
 name|ICMP_UGT
 operator|=
 literal|34
 block|,
-comment|/// unsigned greater than
+comment|///< unsigned greater than
 name|ICMP_UGE
 operator|=
 literal|35
 block|,
-comment|/// unsigned greater or equal
+comment|///< unsigned greater or equal
 name|ICMP_ULT
 operator|=
 literal|36
 block|,
-comment|/// unsigned less than
+comment|///< unsigned less than
 name|ICMP_ULE
 operator|=
 literal|37
 block|,
-comment|/// unsigned less or equal
+comment|///< unsigned less or equal
 name|ICMP_SGT
 operator|=
 literal|38
 block|,
-comment|/// signed greater than
+comment|///< signed greater than
 name|ICMP_SGE
 operator|=
 literal|39
 block|,
-comment|/// signed greater or equal
+comment|///< signed greater or equal
 name|ICMP_SLT
 operator|=
 literal|40
 block|,
-comment|/// signed less than
+comment|///< signed less than
 name|ICMP_SLE
 operator|=
 literal|41
 block|,
-comment|/// signed less or equal
+comment|///< signed less or equal
 name|FIRST_ICMP_PREDICATE
 operator|=
 name|ICMP_EQ

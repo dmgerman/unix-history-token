@@ -219,7 +219,7 @@ function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  free Call Utility Functions.
 comment|//
-comment|/// isFreeCall - Returns true if the the value is a call to the builtin free()
+comment|/// isFreeCall - Returns true if the value is a call to the builtin free()
 name|bool
 name|isFreeCall
 parameter_list|(

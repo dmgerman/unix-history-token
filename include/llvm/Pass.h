@@ -201,19 +201,19 @@ name|PMT_ModulePassManager
 init|=
 literal|1
 block|,
-comment|/// MPPassManager
+comment|///< MPPassManager
 name|PMT_CallGraphPassManager
 block|,
-comment|/// CGPassManager
+comment|///< CGPassManager
 name|PMT_FunctionPassManager
 block|,
-comment|/// FPPassManager
+comment|///< FPPassManager
 name|PMT_LoopPassManager
 block|,
-comment|/// LPPassManager
+comment|///< LPPassManager
 name|PMT_BasicBlockPassManager
 block|,
-comment|/// BBPassManager
+comment|///< BBPassManager
 name|PMT_Last
 block|}
 enum|;

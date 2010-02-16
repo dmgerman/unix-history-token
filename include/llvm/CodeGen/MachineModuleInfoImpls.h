@@ -88,11 +88,9 @@ comment|/// FnStubs - Darwin '$stub' stubs.  The key is something like "Lfoo$stu
 comment|/// the value is something like "_foo".
 name|DenseMap
 operator|<
-specifier|const
 name|MCSymbol
 operator|*
 block|,
-specifier|const
 name|MCSymbol
 operator|*
 operator|>
@@ -102,11 +100,9 @@ comment|/// GVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something like
 comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo".
 name|DenseMap
 operator|<
-specifier|const
 name|MCSymbol
 operator|*
 block|,
-specifier|const
 name|MCSymbol
 operator|*
 operator|>
@@ -117,11 +113,9 @@ comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo".  Unlike GVS
 comment|/// these are for things with hidden visibility.
 name|DenseMap
 operator|<
-specifier|const
 name|MCSymbol
 operator|*
 block|,
-specifier|const
 name|MCSymbol
 operator|*
 operator|>
@@ -140,13 +134,12 @@ argument_list|(
 argument|const MachineModuleInfo&
 argument_list|)
 block|{}
-specifier|const
 name|MCSymbol
 operator|*
 operator|&
 name|getFnStubEntry
 argument_list|(
-argument|const MCSymbol *Sym
+argument|MCSymbol *Sym
 argument_list|)
 block|{
 name|assert
@@ -163,13 +156,12 @@ name|Sym
 index|]
 return|;
 block|}
-specifier|const
 name|MCSymbol
 operator|*
 operator|&
 name|getGVStubEntry
 argument_list|(
-argument|const MCSymbol *Sym
+argument|MCSymbol *Sym
 argument_list|)
 block|{
 name|assert
@@ -186,13 +178,12 @@ name|Sym
 index|]
 return|;
 block|}
-specifier|const
 name|MCSymbol
 operator|*
 operator|&
 name|getHiddenGVStubEntry
 argument_list|(
-argument|const MCSymbol *Sym
+argument|MCSymbol *Sym
 argument_list|)
 block|{
 name|assert
@@ -210,26 +201,6 @@ index|]
 return|;
 block|}
 comment|/// Accessor methods to return the set of stubs in sorted order.
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|MCSymbol
-operator|*
-operator|,
-specifier|const
-name|MCSymbol
-operator|*
-operator|>
-expr|>
-name|SymbolListTy
-expr_stmt|;
 name|SymbolListTy
 name|GetFnStubList
 argument_list|()
@@ -266,36 +237,81 @@ name|HiddenGVStubs
 argument_list|)
 return|;
 block|}
-name|private
+expr|}
+block|;
+comment|/// MachineModuleInfoELF - This is a MachineModuleInfoImpl implementation
+comment|/// for ELF targets.
+name|class
+name|MachineModuleInfoELF
 operator|:
-specifier|static
-name|SymbolListTy
-name|GetSortedStubs
-argument_list|(
-specifier|const
+name|public
+name|MachineModuleInfoImpl
+block|{
+comment|/// GVStubs - These stubs are used to materialize global addresses in PIC
+comment|/// mode.
 name|DenseMap
 operator|<
-specifier|const
 name|MCSymbol
 operator|*
-argument_list|,
-specifier|const
+block|,
 name|MCSymbol
 operator|*
 operator|>
-operator|&
-name|Map
+name|GVStubs
+block|;
+name|virtual
+name|void
+name|Anchor
+argument_list|()
+block|;
+comment|// Out of line virtual method.
+name|public
+operator|:
+name|MachineModuleInfoELF
+argument_list|(
+argument|const MachineModuleInfo&
 argument_list|)
-decl_stmt|;
+block|{}
+name|MCSymbol
+operator|*
+operator|&
+name|getGVStubEntry
+argument_list|(
+argument|MCSymbol *Sym
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Sym
+operator|&&
+literal|"Key cannot be null"
+argument_list|)
+block|;
+return|return
+name|GVStubs
+index|[
+name|Sym
+index|]
+return|;
 block|}
+comment|/// Accessor methods to return the set of stubs in sorted order.
+name|SymbolListTy
+name|GetGVStubList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetSortedStubs
+argument_list|(
+name|GVStubs
+argument_list|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

@@ -85,12 +85,6 @@ directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -209,14 +203,6 @@ specifier|static
 name|char
 name|ID
 block|;
-comment|/// FunctionNumber - This provides a unique ID for each function emitted in
-comment|/// this translation unit.  It is autoincremented by SetupMachineFunction,
-comment|/// and can be accessed with getFunctionNumber() and
-comment|/// IncrementFunctionNumber().
-comment|///
-name|unsigned
-name|FunctionNumber
-block|;
 comment|// GCMetadataPrinters - The garbage collection metadata printer table.
 typedef|typedef
 name|DenseMap
@@ -261,18 +247,6 @@ name|DW
 decl_stmt|;
 name|public
 label|:
-comment|/// Flags to specify different kinds of comments to output in
-comment|/// assembly code.  These flags carry semantic information not
-comment|/// otherwise easily derivable from the IR text.
-comment|///
-enum|enum
-name|CommentFlag
-block|{
-name|ReloadReuse
-init|=
-literal|0x1
-block|}
-enum|;
 comment|/// Output stream on which we're printing assembly code.
 comment|///
 name|formatted_raw_ostream
@@ -391,13 +365,18 @@ name|TargetMachine
 modifier|&
 name|TM
 parameter_list|,
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|MCStreamer
+modifier|&
+name|Streamer
+parameter_list|,
 specifier|const
 name|MCAsmInfo
 modifier|*
 name|T
-parameter_list|,
-name|bool
-name|V
 parameter_list|)
 function_decl|;
 name|public
@@ -424,11 +403,7 @@ name|unsigned
 name|getFunctionNumber
 argument_list|()
 specifier|const
-block|{
-return|return
-name|FunctionNumber
-return|;
-block|}
+expr_stmt|;
 name|protected
 label|:
 comment|/// getAnalysisUsage - Record analysis usage.
@@ -555,6 +530,32 @@ modifier|*
 name|ExtraCode
 parameter_list|)
 function_decl|;
+comment|/// runOnMachineFunction - Emit the specified function out to the
+comment|/// OutStreamer.
+name|virtual
+name|bool
+name|runOnMachineFunction
+parameter_list|(
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+block|{
+name|SetupMachineFunction
+argument_list|(
+name|MF
+argument_list|)
+expr_stmt|;
+name|EmitFunctionHeader
+argument_list|()
+expr_stmt|;
+name|EmitFunctionBody
+argument_list|()
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 comment|/// SetupMachineFunction - This should be called when a new MachineFunction
 comment|/// is being processed from runOnMachineFunction.
 name|void
@@ -565,44 +566,67 @@ modifier|&
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// IncrementFunctionNumber - Increase Function Number.  AsmPrinters should
-comment|/// not normally call this, as the counter is automatically bumped by
-comment|/// SetupMachineFunction.
+comment|/// EmitFunctionHeader - This method emits the header for the current
+comment|/// function.
 name|void
-name|IncrementFunctionNumber
+name|EmitFunctionHeader
 parameter_list|()
+function_decl|;
+comment|/// EmitFunctionBody - This method emits the body and trailer for a
+comment|/// function.
+name|void
+name|EmitFunctionBody
+parameter_list|()
+function_decl|;
+comment|/// EmitInstruction - Targets should implement this to emit instructions.
+name|virtual
+name|void
+name|EmitInstruction
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
 block|{
-name|FunctionNumber
-operator|++
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"EmitInstruction not implemented"
+argument_list|)
 expr_stmt|;
 block|}
+comment|/// EmitFunctionBodyStart - Targets can override this to emit stuff before
+comment|/// the first basic block in the function.
+name|virtual
+name|void
+name|EmitFunctionBodyStart
+parameter_list|()
+block|{}
+comment|/// EmitFunctionBodyEnd - Targets can override this to emit stuff after
+comment|/// the last basic block in the function.
+name|virtual
+name|void
+name|EmitFunctionBodyEnd
+parameter_list|()
+block|{}
 comment|/// EmitConstantPool - Print to the current output stream assembly
 comment|/// representations of the constants in the constant pool MCP. This is
 comment|/// used to print out constants which have been "spilled to memory" by
 comment|/// the code generator.
 comment|///
+name|virtual
 name|void
 name|EmitConstantPool
-parameter_list|(
-name|MachineConstantPool
-modifier|*
-name|MCP
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// EmitJumpTableInfo - Print assembly representations of the jump tables
 comment|/// used by the current function to the current output stream.
 comment|///
 name|void
 name|EmitJumpTableInfo
-parameter_list|(
-name|MachineJumpTableInfo
-modifier|*
-name|MJTI
-parameter_list|,
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// EmitGlobalVariable - Emit the specified global variable to the .s file.
 name|virtual
@@ -672,18 +696,6 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EmitFile - Emit a .file directive.
-name|void
-name|EmitFile
-argument_list|(
-name|unsigned
-name|Number
-argument_list|,
-name|StringRef
-name|Name
-argument_list|)
-decl|const
-decl_stmt|;
 comment|//===------------------------------------------------------------------===//
 comment|/// EmitAlignment - Emit an alignment directive to the specified power of
 comment|/// two boundary.  For example, if you pass in 3 here, you will get an 8
@@ -731,16 +743,6 @@ comment|/// exception handling tables.
 name|void
 name|printLabel
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|printLabel
-argument_list|(
 name|unsigned
 name|Id
 argument_list|)
@@ -758,19 +760,9 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EmitComments - Pretty-print comments for instructions
-name|void
-name|EmitComments
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// GetGlobalValueSymbol - Return the MCSymbol for the specified global
 comment|/// value.
+name|virtual
 name|MCSymbol
 modifier|*
 name|GetGlobalValueSymbol
@@ -815,17 +807,6 @@ name|Sym
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// GetMBBSymbol - Return the MCSymbol corresponding to the specified basic
-comment|/// block label.
-name|MCSymbol
-modifier|*
-name|GetMBBSymbol
-argument_list|(
-name|unsigned
-name|MBBID
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// GetCPISymbol - Return the symbol for the specified constant pool entry.
 name|MCSymbol
 modifier|*
@@ -851,6 +832,20 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// GetJTSetSymbol - Return the symbol for the specified jump table .set
+comment|/// FIXME: privatize to AsmPrinter.
+name|MCSymbol
+modifier|*
+name|GetJTSetSymbol
+argument_list|(
+name|unsigned
+name|UID
+argument_list|,
+name|unsigned
+name|MBBID
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// GetBlockAddressSymbol - Return the MCSymbol used to satisfy BlockAddress
 comment|/// uses of the specified basic block.
 name|MCSymbol
@@ -861,13 +856,6 @@ specifier|const
 name|BlockAddress
 operator|*
 name|BA
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Suffix
-operator|=
-literal|""
 argument_list|)
 decl|const
 decl_stmt|;
@@ -884,13 +872,6 @@ specifier|const
 name|BasicBlock
 operator|*
 name|BB
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|Suffix
-operator|=
-literal|""
 argument_list|)
 decl|const
 decl_stmt|;
@@ -927,6 +908,11 @@ name|protected
 label|:
 name|virtual
 name|void
+name|EmitFunctionEntryLabel
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
 name|EmitMachineConstantPoolValue
 parameter_list|(
 name|MachineConstantPoolValue
@@ -934,6 +920,17 @@ modifier|*
 name|MCPV
 parameter_list|)
 function_decl|;
+comment|/// printOffset - This is just convenient handler for printing offsets.
+name|void
+name|printOffset
+argument_list|(
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
+name|private
+label|:
 comment|/// processDebugLoc - Processes the debug information of each machine
 comment|/// instruction's DebugLoc.
 name|void
@@ -948,6 +945,16 @@ name|bool
 name|BeforePrintingInsn
 parameter_list|)
 function_decl|;
+name|void
+name|printLabelInst
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// printInlineAsm - This method formats and prints the specified machine
 comment|/// instruction that is an inline asm.
 name|void
@@ -983,42 +990,34 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printPICJumpTableSetLabel - This method prints a set label for the
-comment|/// specified MachineBasicBlock for a jumptable entry.
-name|virtual
+comment|/// EmitVisibility - This emits visibility information about symbol, if
+comment|/// this is suported by the target.
 name|void
-name|printPICJumpTableSetLabel
+name|EmitVisibility
 argument_list|(
-name|unsigned
-name|uid
-argument_list|,
-specifier|const
-name|MachineBasicBlock
+name|MCSymbol
 operator|*
-name|MBB
+name|Sym
+argument_list|,
+name|unsigned
+name|Visibility
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|void
-name|printPICJumpTableSetLabel
+name|EmitLinkage
 argument_list|(
 name|unsigned
-name|uid
+name|Linkage
 argument_list|,
-name|unsigned
-name|uid2
-argument_list|,
-specifier|const
-name|MachineBasicBlock
+name|MCSymbol
 operator|*
-name|MBB
+name|GVSym
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|void
-name|printPICJumpTableEntry
+name|EmitJumpTableEntry
 argument_list|(
 specifier|const
 name|MachineJumpTableInfo
@@ -1035,31 +1034,6 @@ name|uid
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printVisibility - This prints visibility information about symbol, if
-comment|/// this is suported by the target.
-name|void
-name|printVisibility
-argument_list|(
-name|MCSymbol
-operator|*
-name|Sym
-argument_list|,
-name|unsigned
-name|Visibility
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// printOffset - This is just convenient handler for printing offsets.
-name|void
-name|printOffset
-argument_list|(
-name|int64_t
-name|Offset
-argument_list|)
-decl|const
-decl_stmt|;
-name|private
-label|:
 name|void
 name|EmitLLVMUsedList
 parameter_list|(

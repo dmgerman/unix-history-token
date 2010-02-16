@@ -813,6 +813,14 @@ operator|=
 literal|1
 operator|<<
 literal|5
+block|,
+name|FlagArtificial
+operator|=
+literal|1
+operator|<<
+literal|6
+comment|// To identify artificial arguments in
+comment|// a subroutine type. e.g. "this" in c++.
 block|}
 block|;
 name|protected
@@ -1074,6 +1082,22 @@ operator|!=
 literal|0
 return|;
 block|}
+name|bool
+name|isArtificial
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|FlagArtificial
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// dump - print type.
 name|void
 name|dump
@@ -1299,6 +1323,21 @@ name|getUnsignedField
 argument_list|(
 literal|11
 argument_list|)
+return|;
+block|}
+name|DICompositeType
+name|getContainingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DICompositeType
+operator|>
+operator|(
+literal|12
+operator|)
 return|;
 block|}
 comment|/// Verify - Verify that a composite type descriptor is well formed.
@@ -1734,6 +1773,18 @@ operator|>
 operator|(
 literal|13
 operator|)
+return|;
+block|}
+name|unsigned
+name|isArtificial
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|14
+argument_list|)
 return|;
 block|}
 name|StringRef
@@ -2548,6 +2599,16 @@ argument|DIArray Elements
 argument_list|,
 argument|unsigned RunTimeLang =
 literal|0
+argument_list|,
+argument|MDNode *ContainingType =
+literal|0
+argument_list|)
+block|;
+comment|/// CreateArtificialType - Create a new DIType with "artificial" flag set.
+name|DIType
+name|CreateArtificialType
+argument_list|(
+argument|DIType Ty
 argument_list|)
 block|;
 comment|/// CreateCompositeType - Create a composite type like array, struct, etc.
@@ -2610,6 +2671,9 @@ argument|unsigned VIndex =
 literal|0
 argument_list|,
 argument|DIType = DIType()
+argument_list|,
+argument|bool isArtificial =
+literal|0
 argument_list|)
 block|;
 comment|/// CreateSubprogramDefinition - Create new subprogram descriptor for the

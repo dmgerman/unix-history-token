@@ -125,6 +125,10 @@ specifier|extern
 name|Target
 name|TheSparcTarget
 decl_stmt|;
+specifier|extern
+name|Target
+name|TheSparcV9Target
+decl_stmt|;
 block|}
 end_decl_stmt
 

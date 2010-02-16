@@ -924,9 +924,9 @@ specifier|const
 name|int
 name|FIRST_TARGET_MEMORY_OPCODE
 init|=
-literal|1
-operator|<<
-literal|14
+name|BUILTIN_OP_END
+operator|+
+literal|80
 decl_stmt|;
 comment|/// Node predicates
 comment|/// isBuildVectorAllOnes - Return true if the specified node is a
@@ -1422,6 +1422,19 @@ operator|=
 name|N
 expr_stmt|;
 block|}
+specifier|inline
+name|SDNode
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+decl|const
+block|{
+return|return
+name|Node
+return|;
+block|}
 name|bool
 name|operator
 operator|==
@@ -1651,7 +1664,13 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1702,12 +1721,18 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|unsigned
 name|getHashValue
-argument_list|(
-argument|const SDValue&Val
-argument_list|)
+parameter_list|(
+specifier|const
+name|SDValue
+modifier|&
+name|Val
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1748,14 +1773,23 @@ name|getResNo
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|isEqual
-argument_list|(
-argument|const SDValue&LHS
-argument_list|,
-argument|const SDValue&RHS
-argument_list|)
+parameter_list|(
+specifier|const
+name|SDValue
+modifier|&
+name|LHS
+parameter_list|,
+specifier|const
+name|SDValue
+modifier|&
+name|RHS
+parameter_list|)
 block|{
 return|return
 name|LHS
@@ -1763,8 +1797,10 @@ operator|==
 name|RHS
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -1781,9 +1817,18 @@ name|value
 operator|=
 name|true
 block|; }
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// simplify_type specializations - Allow casting operators to work directly on
+end_comment
+
+begin_comment
 comment|/// SDValues as if they were SDNode*'s.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1818,8 +1863,14 @@ argument_list|()
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1855,35 +1906,56 @@ argument_list|()
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// SDUse - Represents a use of a SDNode. This class holds an SDValue,
+end_comment
+
+begin_comment
 comment|/// which records the SDNode being used and the result number, a
+end_comment
+
+begin_comment
 comment|/// pointer to the SDNode using the value, and Next and Prev pointers,
+end_comment
+
+begin_comment
 comment|/// which link together all the uses of an SDNode.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|SDUse
 block|{
 comment|/// Val - The value being used.
 name|SDValue
 name|Val
-block|;
+decl_stmt|;
 comment|/// User - The user of this value.
 name|SDNode
-operator|*
+modifier|*
 name|User
-block|;
+decl_stmt|;
 comment|/// Prev, Next - Pointers to the uses list of the SDNode referred by
 comment|/// this operand.
 name|SDUse
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|Prev
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|Next
-block|;
+decl_stmt|;
 name|SDUse
 argument_list|(
 specifier|const
@@ -1891,37 +1963,37 @@ name|SDUse
 operator|&
 name|U
 argument_list|)
-block|;
+expr_stmt|;
 comment|// Do not implement
 name|void
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|SDUse
 operator|&
 name|U
 operator|)
-block|;
+decl_stmt|;
 comment|// Do not implement
 name|public
-operator|:
+label|:
 name|SDUse
 argument_list|()
 operator|:
 name|Val
 argument_list|()
-block|,
+operator|,
 name|User
 argument_list|(
 name|NULL
 argument_list|)
-block|,
+operator|,
 name|Prev
 argument_list|(
 name|NULL
 argument_list|)
-block|,
+operator|,
 name|Next
 argument_list|(
 argument|NULL
@@ -1955,9 +2027,9 @@ return|;
 block|}
 comment|/// getUser - This returns the SDNode that contains this Use.
 name|SDNode
-operator|*
+modifier|*
 name|getUser
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|User
@@ -2069,71 +2141,77 @@ name|V
 return|;
 block|}
 name|private
-operator|:
+label|:
 name|friend
 name|class
 name|SelectionDAG
-block|;
+decl_stmt|;
 name|friend
 name|class
 name|SDNode
-block|;
+decl_stmt|;
 name|void
 name|setUser
-argument_list|(
-argument|SDNode *p
-argument_list|)
+parameter_list|(
+name|SDNode
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|User
 operator|=
 name|p
-block|; }
+expr_stmt|;
+block|}
 comment|/// set - Remove this use from its existing use list, assign it the
 comment|/// given value, and add it to the new value's node's use list.
 specifier|inline
 name|void
 name|set
-argument_list|(
+parameter_list|(
 specifier|const
 name|SDValue
-operator|&
+modifier|&
 name|V
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setInitial - like set, but only supports initializing a newly-allocated
 comment|/// SDUse with a non-null value.
 specifier|inline
 name|void
 name|setInitial
-argument_list|(
+parameter_list|(
 specifier|const
 name|SDValue
-operator|&
+modifier|&
 name|V
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// setNode - like set, but only sets the Node portion of the value,
 comment|/// leaving the ResNo portion unmodified.
 specifier|inline
 name|void
 name|setNode
-argument_list|(
+parameter_list|(
 name|SDNode
-operator|*
+modifier|*
 name|N
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|addToList
-argument_list|(
-argument|SDUse **List
-argument_list|)
+parameter_list|(
+name|SDUse
+modifier|*
+modifier|*
+name|List
+parameter_list|)
 block|{
 name|Next
 operator|=
 operator|*
 name|List
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|Next
@@ -2148,21 +2226,22 @@ expr_stmt|;
 name|Prev
 operator|=
 name|List
-block|;
+expr_stmt|;
 operator|*
 name|List
 operator|=
 name|this
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|removeFromList
-argument_list|()
+parameter_list|()
 block|{
 operator|*
 name|Prev
 operator|=
 name|Next
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|Next
@@ -2174,10 +2253,22 @@ operator|=
 name|Prev
 expr_stmt|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// simplify_type specializations - Allow casting operators to work directly on
+end_comment
+
+begin_comment
 comment|/// SDValues as if they were SDNode*'s.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2212,8 +2303,14 @@ argument_list|()
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2249,104 +2346,117 @@ argument_list|()
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// SDNode - Represents one node in the SelectionDAG.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|SDNode
-operator|:
+range|:
 name|public
 name|FoldingSetNode
-block|,
+decl_stmt|,
 name|public
 name|ilist_node
-operator|<
+decl|<
 name|SDNode
-operator|>
+decl|>
 block|{
 name|private
-operator|:
+label|:
 comment|/// NodeType - The operation that this node performs.
 comment|///
 name|int16_t
 name|NodeType
-block|;
+decl_stmt|;
 comment|/// OperandsNeedDelete - This is true if OperandList was new[]'d.  If true,
 comment|/// then they will be delete[]'d when the node is destroyed.
 name|uint16_t
 name|OperandsNeedDelete
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|protected
-operator|:
+label|:
 comment|/// SubclassData - This member is defined by this class, but is not used for
 comment|/// anything.  Subclasses can use it to hold whatever state they find useful.
 comment|/// This field is initialized to zero by the ctor.
 name|uint16_t
 name|SubclassData
-operator|:
+range|:
 literal|15
-block|;
+decl_stmt|;
 name|private
-operator|:
+label|:
 comment|/// NodeId - Unique id per SDNode in the DAG.
 name|int
 name|NodeId
-block|;
+decl_stmt|;
 comment|/// OperandList - The values that are used by this operation.
 comment|///
 name|SDUse
-operator|*
+modifier|*
 name|OperandList
-block|;
+decl_stmt|;
 comment|/// ValueList - The types of the values this node defines.  SDNode's may
 comment|/// define multiple values simultaneously.
 specifier|const
 name|EVT
-operator|*
+modifier|*
 name|ValueList
-block|;
+decl_stmt|;
 comment|/// UseList - List of uses for this SDNode.
 name|SDUse
-operator|*
+modifier|*
 name|UseList
-block|;
+decl_stmt|;
 comment|/// NumOperands/NumValues - The number of entries in the Operand/Value list.
 name|unsigned
 name|short
 name|NumOperands
-block|,
+decl_stmt|,
 name|NumValues
-block|;
+decl_stmt|;
 comment|/// debugLoc - source line information.
 name|DebugLoc
 name|debugLoc
-block|;
+decl_stmt|;
 comment|/// getValueTypeList - Return a pointer to the specified value type.
 specifier|static
 specifier|const
 name|EVT
-operator|*
+modifier|*
 name|getValueTypeList
-argument_list|(
-argument|EVT VT
-argument_list|)
-block|;
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|)
+function_decl|;
 name|friend
 name|class
 name|SelectionDAG
-block|;
+decl_stmt|;
 name|friend
-expr|struct
+block|struct
 name|ilist_traits
 operator|<
 name|SDNode
 operator|>
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|//  Accessors
 comment|//
@@ -2504,14 +2614,16 @@ block|}
 comment|/// setNodeId - Set unique node id.
 name|void
 name|setNodeId
-argument_list|(
-argument|int Id
-argument_list|)
+parameter_list|(
+name|int
+name|Id
+parameter_list|)
 block|{
 name|NodeId
 operator|=
 name|Id
-block|; }
+expr_stmt|;
+block|}
 comment|/// getDebugLoc - Return the source location info.
 specifier|const
 name|DebugLoc
@@ -2527,19 +2639,22 @@ comment|/// setDebugLoc - Set source location info.  Try to avoid this, putting
 comment|/// it in the constructor is preferable.
 name|void
 name|setDebugLoc
-argument_list|(
-argument|const DebugLoc dl
-argument_list|)
+parameter_list|(
+specifier|const
+name|DebugLoc
+name|dl
+parameter_list|)
 block|{
 name|debugLoc
 operator|=
 name|dl
-block|; }
+expr_stmt|;
+block|}
 comment|/// use_iterator - This class provides iterator support for SDUse
 comment|/// operands that use a specific SDNode.
 name|class
 name|use_iterator
-operator|:
+range|:
 name|public
 name|std
 operator|::
@@ -2548,16 +2663,16 @@ operator|<
 name|std
 operator|::
 name|forward_iterator_tag
-block|,
+decl_stmt|,
 name|SDUse
-block|,
+decl_stmt|,
 name|ptrdiff_t
-operator|>
+decl|>
 block|{
 name|SDUse
-operator|*
+modifier|*
 name|Op
-block|;
+decl_stmt|;
 name|explicit
 name|use_iterator
 argument_list|(
@@ -2574,9 +2689,9 @@ block|{     }
 name|friend
 name|class
 name|SDNode
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 typedef|typedef
 name|std
 operator|::
@@ -2762,7 +2877,7 @@ name|operator
 operator|->
 expr|(
 block|)
-specifier|const
+decl|const
 block|{
 return|return
 name|operator
@@ -2813,9 +2928,21 @@ argument_list|)
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// use_begin/use_end - Provide iteration support to walk over all uses
+end_comment
+
+begin_comment
 comment|/// of an SDNode.
+end_comment
+
+begin_expr_stmt
 name|use_iterator
 name|use_begin
 argument_list|()
@@ -2828,6 +2955,9 @@ name|UseList
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|use_iterator
 name|use_end
@@ -2840,9 +2970,21 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// hasNUsesOfValue - Return true if there are exactly NUSES uses of the
+end_comment
+
+begin_comment
 comment|/// indicated value.  This method ignores uses of other values defined by this
+end_comment
+
+begin_comment
 comment|/// operation.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|hasNUsesOfValue
 argument_list|(
@@ -2854,8 +2996,17 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// hasAnyUseOfValue - Return true if there are any use of the indicated
+end_comment
+
+begin_comment
 comment|/// value. This method ignores uses of other values defined by this operation.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|hasAnyUseOfValue
 argument_list|(
@@ -2864,8 +3015,17 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// isOnlyUserOf - Return true if this node is the only use of N.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isOnlyUserOf
 argument_list|(
@@ -2875,8 +3035,17 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// isOperandOf - Return true if this node is an operand of N.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isOperandOf
 argument_list|(
@@ -2886,10 +3055,25 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// isPredecessorOf - Return true if this node is a predecessor of N. This
+end_comment
+
+begin_comment
 comment|/// node is either an operand of N or it can be reached by recursively
+end_comment
+
+begin_comment
 comment|/// traversing up the operands.
+end_comment
+
+begin_comment
 comment|/// NOTE: this is an expensive method. Use it carefully.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isPredecessorOf
 argument_list|(
@@ -2899,8 +3083,17 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getNumOperands - Return the number of values used by this operation.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumOperands
 argument_list|()
@@ -2910,8 +3103,17 @@ return|return
 name|NumOperands
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getConstantOperandVal - Helper method returns the integer value of a
+end_comment
+
+begin_comment
 comment|/// ConstantSDNode operand.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|getConstantOperandVal
 argument_list|(
@@ -2920,6 +3122,9 @@ name|Num
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|SDValue
 modifier|&
@@ -2946,11 +3151,17 @@ name|Num
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|SDUse
 modifier|*
 name|op_iterator
 typedef|;
+end_typedef
+
+begin_expr_stmt
 name|op_iterator
 name|op_begin
 argument_list|()
@@ -2960,6 +3171,9 @@ return|return
 name|OperandList
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|op_iterator
 name|op_end
 argument_list|()
@@ -2971,6 +3185,9 @@ operator|+
 name|NumOperands
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SDVTList
 name|getVTList
 argument_list|()
@@ -2989,8 +3206,17 @@ return|return
 name|X
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getFlaggedNode - If this node has a flag operand, return the node
+end_comment
+
+begin_comment
 comment|/// to which the flag operand points. Otherwise return NULL.
+end_comment
+
+begin_expr_stmt
 name|SDNode
 operator|*
 name|getFlaggedNode
@@ -3034,13 +3260,16 @@ operator|.
 name|getNode
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 literal|0
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|// If this is a pseudo op, like copyfromreg, look to see if there is a
 end_comment
 
@@ -3049,7 +3278,7 @@ comment|// real target node flagged to it.  If so, return the target node.
 end_comment
 
 begin_expr_stmt
-specifier|const
+unit|const
 name|SDNode
 operator|*
 name|getFlaggedMachineNode
@@ -5010,6 +5239,18 @@ literal|5
 operator|)
 operator|&
 literal|1
+return|;
+block|}
+name|bool
+name|isNonTemporal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMO
+operator|->
+name|isNonTemporal
+argument_list|()
 return|;
 block|}
 comment|/// Returns the SrcValue and offset that describes the location of the access

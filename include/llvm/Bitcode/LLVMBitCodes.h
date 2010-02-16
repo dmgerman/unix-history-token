@@ -273,7 +273,12 @@ comment|// PPC LONG DOUBLE (2 doubles)
 name|TYPE_CODE_METADATA
 init|=
 literal|16
+block|,
 comment|// METADATA
+name|TYPE_CODE_UNION
+init|=
+literal|17
+comment|// UNION: [eltty x N]
 block|}
 enum|;
 comment|// The type symbol table only has one code (TST_ENTRY_CODE).

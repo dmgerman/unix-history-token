@@ -190,9 +190,9 @@ comment|/// Intrinsic::getDeclaration(M, ID) - Create or insert an LLVM Function
 comment|/// declaration for an intrinsic, and return it.
 comment|///
 comment|/// The Tys and numTys parameters are for intrinsics with overloaded types
-comment|/// (e.g., those using iAny or fAny). For a declaration for an overloaded
-comment|/// intrinsic, Tys should point to an array of numTys pointers to Type,
-comment|/// and must provide exactly one type for each overloaded type in the
+comment|/// (e.g., those using iAny, fAny, vAny, or iPTRAny). For a declaration for an
+comment|/// overloaded intrinsic, Tys should point to an array of numTys pointers to
+comment|/// Type, and must provide exactly one type for each overloaded type in the
 comment|/// intrinsic.
 name|Function
 modifier|*

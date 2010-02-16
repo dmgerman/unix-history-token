@@ -223,6 +223,7 @@ comment|/// emitted immediately after the function entry point.
 name|void
 name|BeginFunction
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|*
 name|MF
@@ -233,6 +234,7 @@ comment|///
 name|void
 name|EndFunction
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|*
 name|MF

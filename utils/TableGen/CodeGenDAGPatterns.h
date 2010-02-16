@@ -1025,6 +1025,54 @@ operator|=
 name|N
 expr_stmt|;
 block|}
+comment|/// hasChild - Return true if N is any of our children.
+name|bool
+name|hasChild
+argument_list|(
+specifier|const
+name|TreePatternNode
+operator|*
+name|N
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Children
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Children
+index|[
+name|i
+index|]
+operator|==
+name|N
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -1175,6 +1223,49 @@ name|CDP
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getComplexPatternInfo - If this node corresponds to a ComplexPattern,
+comment|/// return the ComplexPattern information, otherwise return null.
+specifier|const
+name|ComplexPattern
+modifier|*
+name|getComplexPatternInfo
+argument_list|(
+specifier|const
+name|CodeGenDAGPatterns
+operator|&
+name|CGP
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// NodeHasProperty - Return true if this node has the specified property.
+name|bool
+name|NodeHasProperty
+argument_list|(
+name|SDNP
+name|Property
+argument_list|,
+specifier|const
+name|CodeGenDAGPatterns
+operator|&
+name|CGP
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// TreeHasProperty - Return true if any node in this tree has the specified
+comment|/// property.
+name|bool
+name|TreeHasProperty
+argument_list|(
+name|SDNP
+name|Property
+argument_list|,
+specifier|const
+name|CodeGenDAGPatterns
+operator|&
+name|CGP
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isCommutativeIntrinsic - Return true if the node is an intrinsic which is
 comment|/// marked isCommutative.
 name|bool
@@ -1212,6 +1303,11 @@ name|clone
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// RemoveAllTypes - Recursively strip all the types of this tree.
+name|void
+name|RemoveAllTypes
+parameter_list|()
+function_decl|;
 comment|/// isIsomorphicTo - Return true if this node is recursively isomorphic to
 comment|/// the specified node.  For this comparison, all of the state of the node
 comment|/// is considered, except for the assigned name.  Nodes with differing names
@@ -1415,6 +1511,36 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|TreePatternNode
+operator|&
+name|TPN
+operator|)
+block|{
+name|TPN
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// TreePattern - Represent a pattern, used for instructions, pattern

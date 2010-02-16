@@ -204,7 +204,16 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
+name|MachineJumpTableInfo
+decl_stmt|;
+name|class
 name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
+name|class
+name|MCExpr
 decl_stmt|;
 name|class
 name|DwarfWriter
@@ -420,17 +429,6 @@ specifier|const
 block|{
 return|return
 name|ShiftAmountTy
-return|;
-block|}
-comment|/// usesGlobalOffsetTable - Return true if this target uses a GOT for PIC
-comment|/// codegen.
-name|bool
-name|usesGlobalOffsetTable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UsesGlobalOffsetTable
 return|;
 block|}
 comment|/// isSelectExpensive - Return true if the select operation is expensive for
@@ -1426,6 +1424,21 @@ return|return
 name|true
 return|;
 block|}
+comment|/// canOpTrap - Returns true if the operation can trap for the value type.
+comment|/// VT must be a legal type. By default, we optimistically assume most
+comment|/// operations don't trap except for divide and remainder.
+name|virtual
+name|bool
+name|canOpTrap
+argument_list|(
+name|unsigned
+name|Op
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isVectorClearMaskLegal - Similar to isShuffleMaskLegal. This is
 comment|/// used by Targets can use this to indicate if there is a suitable
 comment|/// VECTOR_SHUFFLE that can be used to replace a VAND with a constant
@@ -3268,6 +3281,51 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getJumpTableEncoding - Return the entry encoding for a jump table in the
+comment|/// current function.  The returned value is a member of the
+comment|/// MachineJumpTableInfo::JTEntryKind enum.
+name|virtual
+name|unsigned
+name|getJumpTableEncoding
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
+specifier|const
+name|MCExpr
+modifier|*
+name|LowerCustomJumpTableEntry
+argument_list|(
+specifier|const
+name|MachineJumpTableInfo
+operator|*
+name|MJTI
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|unsigned
+name|uid
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Need to implement this hook if target has custom JTIs"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
 comment|/// jumptable.
 name|virtual
@@ -3280,6 +3338,29 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getPICJumpTableRelocBaseExpr - This returns the relocation base for the
+comment|/// given PIC jumptable, the same as getPICJumpTableRelocBase, but as an
+comment|/// MCExpr.
+name|virtual
+specifier|const
+name|MCExpr
+modifier|*
+name|getPICJumpTableRelocBaseExpr
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|,
+name|unsigned
+name|JTI
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3751,20 +3832,6 @@ comment|// the derived class constructor to configure this object for the target
 comment|//
 name|protected
 label|:
-comment|/// setUsesGlobalOffsetTable - Specify that this target does or doesn't use a
-comment|/// GOT for PC-relative code.
-name|void
-name|setUsesGlobalOffsetTable
-parameter_list|(
-name|bool
-name|V
-parameter_list|)
-block|{
-name|UsesGlobalOffsetTable
-operator|=
-name|V
-expr_stmt|;
-block|}
 comment|/// setShiftAmountType - Describe the type that should be used for shift
 comment|/// amounts.  This type defaults to the pointer type.
 name|void
@@ -4911,12 +4978,6 @@ comment|/// by the Outs array, and the values to be returned by the call are
 comment|/// described by the Ins array. The implementation should fill in the
 comment|/// InVals array with legal-type return values from the call, and return
 comment|/// the resulting token chain value.
-comment|///
-comment|/// The isTailCall flag here is normative. If it is true, the
-comment|/// implementation must emit a tail call. The
-comment|/// IsEligibleForTailCallOptimization hook should be used to catch
-comment|/// cases that cannot be handled.
-comment|///
 name|virtual
 name|SDValue
 name|LowerCall
@@ -4936,6 +4997,7 @@ name|bool
 name|isVarArg
 argument_list|,
 name|bool
+operator|&
 name|isTailCall
 argument_list|,
 specifier|const
@@ -5329,45 +5391,6 @@ operator|&&
 literal|"ReplaceNodeResults not implemented for this target!"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible for
-comment|/// tail call optimization. Targets which want to do tail call optimization
-comment|/// should override this function.
-name|virtual
-name|bool
-name|IsEligibleForTailCallOptimization
-argument_list|(
-name|SDValue
-name|Callee
-argument_list|,
-name|CallingConv
-operator|::
-name|ID
-name|CalleeCC
-argument_list|,
-name|bool
-name|isVarArg
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|ISD
-operator|::
-name|InputArg
-operator|>
-operator|&
-name|Ins
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-block|{
-comment|// Conservative default: no calls are eligible.
-return|return
-name|false
-return|;
 block|}
 comment|/// getTargetNodeName() - This method returns the name of a target specific
 comment|/// DAG node.
@@ -6147,11 +6170,6 @@ comment|/// IsLittleEndian - True if this is a little endian target.
 comment|///
 name|bool
 name|IsLittleEndian
-decl_stmt|;
-comment|/// UsesGlobalOffsetTable - True if this target uses a GOT for PIC codegen.
-comment|///
-name|bool
-name|UsesGlobalOffsetTable
 decl_stmt|;
 comment|/// SelectIsExpensive - Tells the code generator not to expand operations
 comment|/// into sequences that use the select operations if possible.

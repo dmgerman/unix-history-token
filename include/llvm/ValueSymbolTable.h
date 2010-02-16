@@ -77,12 +77,6 @@ directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ilist_node.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -614,7 +608,8 @@ comment|/// @name Mutators
 comment|/// @{
 name|public
 label|:
-comment|/// insert - The method inserts a new entry into the stringmap.
+comment|/// insert - The method inserts a new entry into the stringmap. This will
+comment|/// replace existing entry, if any.
 name|void
 name|insert
 parameter_list|(
@@ -626,6 +621,41 @@ modifier|*
 name|Node
 parameter_list|)
 block|{
+name|StringMapEntry
+operator|<
+name|NamedMDNode
+operator|*
+operator|>
+operator|&
+name|Entry
+operator|=
+name|mmap
+operator|.
+name|GetOrCreateValue
+argument_list|(
+name|Name
+argument_list|,
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Entry
+operator|.
+name|getValue
+argument_list|()
+operator|!=
+name|Node
+condition|)
+block|{
+name|mmap
+operator|.
+name|remove
+argument_list|(
+operator|&
+name|Entry
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -638,6 +668,7 @@ argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/// This method removes a NamedMDNode from the symbol table.
 name|void

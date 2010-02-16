@@ -381,7 +381,7 @@ literal|8
 operator|>
 name|SourceIds
 block|;
-comment|/// Lines - List of of source line correspondence.
+comment|/// Lines - List of source line correspondence.
 name|std
 operator|::
 name|vector
@@ -1714,6 +1714,7 @@ comment|/// emitted immediately after the function entry point.
 name|void
 name|beginFunction
 parameter_list|(
+specifier|const
 name|MachineFunction
 modifier|*
 name|MF
@@ -1724,6 +1725,7 @@ comment|///
 name|void
 name|endFunction
 parameter_list|(
+specifier|const
 name|MachineFunction
 modifier|*
 name|MF
@@ -1787,11 +1789,7 @@ comment|/// extractScopeInformation - Scan machine instructions in this function
 comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
 name|bool
 name|extractScopeInformation
-parameter_list|(
-name|MachineFunction
-modifier|*
-name|MF
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// collectVariableInfo - Populate DbgScope entries with variables' info.
 name|void

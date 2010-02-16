@@ -145,13 +145,26 @@ operator|:
 name|explicit
 name|PIC16AsmPrinter
 argument_list|(
-argument|formatted_raw_ostream&O
+name|formatted_raw_ostream
+operator|&
+name|O
 argument_list|,
-argument|TargetMachine&TM
+name|TargetMachine
+operator|&
+name|TM
 argument_list|,
-argument|const MCAsmInfo *T
+name|MCContext
+operator|&
+name|Ctx
 argument_list|,
-argument|bool V
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|T
 argument_list|)
 block|;
 name|private
@@ -228,8 +241,8 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|bool
-name|printMachineInstruction
+name|void
+name|EmitInstruction
 argument_list|(
 specifier|const
 name|MachineInstr

@@ -5122,6 +5122,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* llvalue -> llvalue -> llbasicblock -> unit */
+end_comment
+
 begin_function
 name|CAMLprim
 name|value
@@ -6662,7 +6666,7 @@ name|LLVMValueRef
 name|Pointer
 parameter_list|,
 name|value
-name|Indices
+name|Index
 parameter_list|,
 name|value
 name|Name
@@ -6672,7 +6676,7 @@ name|B
 parameter_list|)
 block|{
 return|return
-name|LLVMBuildInBoundsGEP
+name|LLVMBuildStructGEP
 argument_list|(
 name|Builder_val
 argument_list|(
@@ -6681,18 +6685,9 @@ argument_list|)
 argument_list|,
 name|Pointer
 argument_list|,
-operator|(
-name|LLVMValueRef
-operator|*
-operator|)
-name|Op_val
+name|Int_val
 argument_list|(
-name|Indices
-argument_list|)
-argument_list|,
-name|Wosize_val
-argument_list|(
-name|Indices
+name|Index
 argument_list|)
 argument_list|,
 name|String_val

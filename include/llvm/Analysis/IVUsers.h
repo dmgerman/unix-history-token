@@ -72,19 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/ScalarEvolution.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
+file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -100,13 +88,19 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-struct_decl|struct
-name|IVUsersOfOneStride
-struct_decl|;
-comment|/// IVStrideUse - Keep track of one use of a strided induction variable, where
-comment|/// the stride is stored externally.  The Offset member keeps track of the
-comment|/// offset from the IV, User is the actual user of the operand, and
-comment|/// 'OperandValToReplace' is the operand of the User that is the use.
+name|class
+name|IVUsers
+decl_stmt|;
+name|class
+name|ScalarEvolution
+decl_stmt|;
+name|class
+name|SCEV
+decl_stmt|;
+comment|/// IVStrideUse - Keep track of one use of a strided induction variable.
+comment|/// The Expr member keeps track of the expression, User is the actual user
+comment|/// instruction of the operand, and 'OperandValToReplace' is the operand of
+comment|/// the User that is the use.
 name|class
 name|IVStrideUse
 range|:
@@ -123,14 +117,19 @@ name|public
 label|:
 name|IVStrideUse
 argument_list|(
-name|IVUsersOfOneStride
+name|IVUsers
 operator|*
-name|parent
+name|P
 argument_list|,
 specifier|const
 name|SCEV
 operator|*
-name|offset
+name|S
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|Off
 argument_list|,
 name|Instruction
 operator|*
@@ -148,12 +147,17 @@ argument_list|)
 operator|,
 name|Parent
 argument_list|(
-name|parent
+name|P
+argument_list|)
+operator|,
+name|Stride
+argument_list|(
+name|S
 argument_list|)
 operator|,
 name|Offset
 argument_list|(
-name|offset
+name|Off
 argument_list|)
 operator|,
 name|OperandValToReplace
@@ -199,9 +203,9 @@ name|NewUser
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getParent - Return a pointer to the IVUsersOfOneStride that owns
+comment|/// getParent - Return a pointer to the IVUsers that owns
 comment|/// this IVStrideUse.
-name|IVUsersOfOneStride
+name|IVUsers
 operator|*
 name|getParent
 argument_list|()
@@ -210,6 +214,33 @@ block|{
 return|return
 name|Parent
 return|;
+block|}
+comment|/// getStride - Return the expression for the stride for the use.
+specifier|const
+name|SCEV
+operator|*
+name|getStride
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stride
+return|;
+block|}
+comment|/// setStride - Assign a new stride to this use.
+name|void
+name|setStride
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|Val
+parameter_list|)
+block|{
+name|Stride
+operator|=
+name|Val
+expr_stmt|;
 block|}
 comment|/// getOffset - Return the offset to add to a theoeretical induction
 comment|/// variable that starts at zero and counts up by the stride to compute
@@ -296,10 +327,16 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|/// Parent - a pointer to the IVUsersOfOneStride that owns this IVStrideUse.
-name|IVUsersOfOneStride
+comment|/// Parent - a pointer to the IVUsers that owns this IVStrideUse.
+name|IVUsers
 modifier|*
 name|Parent
+decl_stmt|;
+comment|/// Stride - The stride for this use.
+specifier|const
+name|SCEV
+modifier|*
+name|Stride
 decl_stmt|;
 comment|/// Offset - The offset to add to the base induction expression.
 specifier|const
@@ -421,110 +458,6 @@ operator|>
 name|Sentinel
 block|; }
 expr_stmt|;
-comment|/// IVUsersOfOneStride - This structure keeps track of all instructions that
-comment|/// have an operand that is based on the trip count multiplied by some stride.
-name|struct
-name|IVUsersOfOneStride
-range|:
-name|public
-name|ilist_node
-operator|<
-name|IVUsersOfOneStride
-operator|>
-block|{
-name|private
-operator|:
-name|IVUsersOfOneStride
-argument_list|(
-specifier|const
-name|IVUsersOfOneStride
-operator|&
-name|I
-argument_list|)
-block|;
-comment|// do not implement
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|IVUsersOfOneStride
-operator|&
-name|I
-operator|)
-block|;
-comment|// do not implement
-name|public
-operator|:
-name|IVUsersOfOneStride
-argument_list|()
-operator|:
-name|Stride
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|explicit
-name|IVUsersOfOneStride
-argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|stride
-argument_list|)
-operator|:
-name|Stride
-argument_list|(
-argument|stride
-argument_list|)
-block|{}
-comment|/// Stride - The stride for all the contained IVStrideUses. This is
-comment|/// a constant for affine strides.
-specifier|const
-name|SCEV
-operator|*
-name|Stride
-block|;
-comment|/// Users - Keep track of all of the users of this stride as well as the
-comment|/// initial value and the operand that uses the IV.
-name|ilist
-operator|<
-name|IVStrideUse
-operator|>
-name|Users
-block|;
-name|void
-name|addUser
-argument_list|(
-argument|const SCEV *Offset
-argument_list|,
-argument|Instruction *User
-argument_list|,
-argument|Value *Operand
-argument_list|)
-block|{
-name|Users
-operator|.
-name|push_back
-argument_list|(
-argument|new IVStrideUse(this, Offset, User, Operand)
-argument_list|)
-block|;   }
-name|void
-name|removeUser
-argument_list|(
-argument|IVStrideUse *User
-argument_list|)
-block|{
-name|Users
-operator|.
-name|erase
-argument_list|(
-name|User
-argument_list|)
-block|;   }
-block|}
-decl_stmt|;
 name|class
 name|IVUsers
 range|:
@@ -533,7 +466,7 @@ name|LoopPass
 block|{
 name|friend
 name|class
-name|IVStrideUserVH
+name|IVStrideUse
 block|;
 name|Loop
 operator|*
@@ -564,42 +497,10 @@ comment|/// IVUses - A list of all tracked IV uses of induction variable express
 comment|/// we are interested in.
 name|ilist
 operator|<
-name|IVUsersOfOneStride
+name|IVStrideUse
 operator|>
 name|IVUses
 block|;
-name|public
-operator|:
-comment|/// IVUsesByStride - A mapping from the strides in StrideOrder to the
-comment|/// uses in IVUses.
-name|std
-operator|::
-name|map
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-name|IVUsersOfOneStride
-operator|*
-operator|>
-name|IVUsesByStride
-block|;
-comment|/// StrideOrder - An ordering of the keys in IVUsesByStride that is stable:
-comment|/// We use this to iterate over the IVUsesByStride collection without being
-comment|/// dependent on random ordering of pointers in the process.
-name|SmallVector
-operator|<
-specifier|const
-name|SCEV
-operator|*
-block|,
-literal|16
-operator|>
-name|StrideOrder
-block|;
-name|private
-operator|:
 name|virtual
 name|void
 name|getAnalysisUsage
@@ -647,7 +548,8 @@ operator|*
 name|I
 argument_list|)
 block|;
-name|void
+name|IVStrideUse
+operator|&
 name|AddUser
 argument_list|(
 specifier|const
@@ -692,32 +594,120 @@ argument|const IVStrideUse&U
 argument_list|)
 specifier|const
 block|;
+typedef|typedef
+name|ilist
+operator|<
+name|IVStrideUse
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|ilist
+operator|<
+name|IVStrideUse
+operator|>
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|IVUses
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|IVUses
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IVUses
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IVUses
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IVUses
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 name|void
 name|print
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|const Module* =
+specifier|const
+name|Module
+operator|*
+operator|=
 literal|0
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 comment|/// dump - This method is used for debugging.
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|Pass
 modifier|*
 name|createIVUsersPass
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -161,6 +161,7 @@ block|}
 enum|;
 comment|// External symbol names require memory to live till the program end.
 comment|// So we have to allocate it and keep.
+comment|// FIXME: Don't leak the allocated strings.
 specifier|inline
 specifier|static
 specifier|const
@@ -191,7 +192,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|strcpy
+name|memcpy
 argument_list|(
 name|tmpName
 argument_list|,
@@ -199,6 +200,13 @@ name|name
 operator|.
 name|c_str
 argument_list|()
+argument_list|,
+name|name
+operator|.
+name|size
+argument_list|()
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

@@ -115,6 +115,9 @@ name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
+name|GlobalValue
+decl_stmt|;
+name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -125,14 +128,18 @@ name|DwarfPrinter
 block|{
 name|protected
 label|:
+operator|~
+name|DwarfPrinter
+argument_list|()
+block|{}
 comment|//===-------------------------------------------------------------==---===//
 comment|// Core attributes used by the DWARF printer.
 comment|//
 comment|/// O - Stream to .s file.
 name|raw_ostream
-modifier|&
+operator|&
 name|O
-decl_stmt|;
+expr_stmt|;
 comment|/// Asm - Target of Dwarf emission.
 name|AsmPrinter
 modifier|*
@@ -162,6 +169,7 @@ modifier|*
 name|M
 decl_stmt|;
 comment|/// MF - Current machine function.
+specifier|const
 name|MachineFunction
 modifier|*
 name|MF
@@ -256,6 +264,23 @@ return|return
 name|TD
 return|;
 block|}
+comment|/// SizeOfEncodedValue - Return the size of the encoding in bytes.
+name|unsigned
+name|SizeOfEncodedValue
+argument_list|(
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|PrintRelDirective
+argument_list|(
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|PrintRelDirective
 argument_list|(
@@ -538,9 +563,49 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// EmitDifference - Emit the difference between two labels.  Some
-comment|/// assemblers do not behave with absolute expressions with data directives,
-comment|/// so there is an option (needsSet) to use an intermediary set expression.
+name|void
+name|EmitReference
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Tag
+argument_list|,
+name|unsigned
+name|Number
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|EmitReference
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|EmitReference
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitDifference - Emit the difference between two labels.
 name|void
 name|EmitDifference
 parameter_list|(

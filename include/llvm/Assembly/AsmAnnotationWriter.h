@@ -88,6 +88,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|formatted_raw_ostream
+decl_stmt|;
+name|class
 name|AssemblyAnnotationWriter
 block|{
 name|public
@@ -97,8 +100,8 @@ operator|~
 name|AssemblyAnnotationWriter
 argument_list|()
 expr_stmt|;
-comment|// emitFunctionAnnot - This may be implemented to emit a string right before
-comment|// the start of a function.
+comment|/// emitFunctionAnnot - This may be implemented to emit a string right before
+comment|/// the start of a function.
 name|virtual
 name|void
 name|emitFunctionAnnot
@@ -113,8 +116,8 @@ modifier|&
 name|OS
 parameter_list|)
 block|{}
-comment|// emitBasicBlockStartAnnot - This may be implemented to emit a string right
-comment|// after the basic block label, but before the first instruction in the block.
+comment|/// emitBasicBlockStartAnnot - This may be implemented to emit a string right
+comment|/// after the basic block label, but before the first instruction in the block.
 name|virtual
 name|void
 name|emitBasicBlockStartAnnot
@@ -129,8 +132,8 @@ modifier|&
 name|OS
 parameter_list|)
 block|{   }
-comment|// emitBasicBlockEndAnnot - This may be implemented to emit a string right
-comment|// after the basic block.
+comment|/// emitBasicBlockEndAnnot - This may be implemented to emit a string right
+comment|/// after the basic block.
 name|virtual
 name|void
 name|emitBasicBlockEndAnnot
@@ -145,8 +148,8 @@ modifier|&
 name|OS
 parameter_list|)
 block|{   }
-comment|// emitInstructionAnnot - This may be implemented to emit a string right
-comment|// before an instruction is emitted.
+comment|/// emitInstructionAnnot - This may be implemented to emit a string right
+comment|/// before an instruction is emitted.
 name|virtual
 name|void
 name|emitInstructionAnnot
@@ -157,6 +160,22 @@ modifier|*
 name|I
 parameter_list|,
 name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+block|{}
+comment|/// printInfoComment - This may be implemented to emit a comment to the
+comment|/// right of an instruction or global value.
+name|virtual
+name|void
+name|printInfoComment
+parameter_list|(
+specifier|const
+name|Value
+modifier|&
+name|V
+parameter_list|,
+name|formatted_raw_ostream
 modifier|&
 name|OS
 parameter_list|)

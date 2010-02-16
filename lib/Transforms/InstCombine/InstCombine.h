@@ -1325,11 +1325,12 @@ modifier|*
 name|SI
 parameter_list|)
 function_decl|;
-comment|/// ValueRequiresCast - Return true if the cast from "V to Ty" actually
-comment|/// results in any code being generated.  It does not require codegen if V is
-comment|/// simple enough or if the cast can be folded into other casts.
+comment|/// ShouldOptimizeCast - Return true if the cast from "V to Ty" actually
+comment|/// results in any code being generated and is interesting to optimize out. If
+comment|/// the cast can be eliminated by some other simple transformation, we prefer
+comment|/// to do the simplification first.
 name|bool
-name|ValueRequiresCast
+name|ShouldOptimizeCast
 argument_list|(
 name|Instruction
 operator|::

@@ -150,6 +150,10 @@ range|:
 name|public
 name|TargetLowering
 block|{
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|// FrameIndex for start of varargs area.
 name|public
 operator|:
 name|explicit
@@ -311,6 +315,14 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 block|;
+name|SDValue
+name|LowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
 name|virtual
 name|SDValue
 name|LowerFormalArguments
@@ -342,7 +354,7 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|bool isTailCall
+argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

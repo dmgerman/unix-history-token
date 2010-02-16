@@ -70,53 +70,71 @@ name|MCSA_Invalid
 init|=
 literal|0
 block|,
-comment|/// Not a valid directive.
+comment|///< Not a valid directive.
 comment|// Various directives in alphabetical order.
+name|MCSA_ELF_TypeFunction
+block|,
+comment|///< .type _foo, STT_FUNC  # aka @function
+name|MCSA_ELF_TypeIndFunction
+block|,
+comment|///< .type _foo, STT_GNU_IFUNC
+name|MCSA_ELF_TypeObject
+block|,
+comment|///< .type _foo, STT_OBJECT  # aka @object
+name|MCSA_ELF_TypeTLS
+block|,
+comment|///< .type _foo, STT_TLS     # aka @tls_object
+name|MCSA_ELF_TypeCommon
+block|,
+comment|///< .type _foo, STT_COMMON  # aka @common
+name|MCSA_ELF_TypeNoType
+block|,
+comment|///< .type _foo, STT_NOTYPE  # aka @notype
 name|MCSA_Global
 block|,
-comment|/// .globl
+comment|///< .globl
 name|MCSA_Hidden
 block|,
-comment|/// .hidden (ELF)
+comment|///< .hidden (ELF)
 name|MCSA_IndirectSymbol
 block|,
-comment|/// .indirect_symbol (MachO)
+comment|///< .indirect_symbol (MachO)
 name|MCSA_Internal
 block|,
-comment|/// .internal (ELF)
+comment|///< .internal (ELF)
 name|MCSA_LazyReference
 block|,
-comment|/// .lazy_reference (MachO)
+comment|///< .lazy_reference (MachO)
 name|MCSA_Local
 block|,
-comment|/// .local (ELF)
+comment|///< .local (ELF)
 name|MCSA_NoDeadStrip
 block|,
-comment|/// .no_dead_strip (MachO)
+comment|///< .no_dead_strip (MachO)
 name|MCSA_PrivateExtern
 block|,
-comment|/// .private_extern (MachO)
+comment|///< .private_extern (MachO)
 name|MCSA_Protected
 block|,
-comment|/// .protected (ELF)
+comment|///< .protected (ELF)
 name|MCSA_Reference
 block|,
-comment|/// .reference (MachO)
+comment|///< .reference (MachO)
 name|MCSA_Weak
 block|,
-comment|/// .weak
+comment|///< .weak
 name|MCSA_WeakDefinition
 block|,
-comment|/// .weak_definition (MachO)
+comment|///< .weak_definition (MachO)
 name|MCSA_WeakReference
-comment|/// .weak_reference (MachO)
+comment|///< .weak_reference (MachO)
 block|}
 enum|;
 enum|enum
 name|MCAssemblerFlag
 block|{
 name|MCAF_SubsectionsViaSymbols
-comment|/// .subsections_via_symbols (MachO)
+comment|///< .subsections_via_symbols (MachO)
 block|}
 enum|;
 block|}

@@ -152,9 +152,6 @@ comment|///< Function to be accessible from DLL.
 name|ExternalWeakLinkage
 block|,
 comment|///< ExternalWeak linkage description.
-name|GhostLinkage
-block|,
-comment|///< Stand-in functions for streaming fns from BC files.
 name|CommonLinkage
 comment|///< Tentative definitions.
 block|}
@@ -397,7 +394,7 @@ operator|=
 name|S
 block|; }
 comment|/// If the usage is empty (except transitively dead constants), then this
-comment|/// global value can can be safely deleted since the destructor will
+comment|/// global value can be safely deleted since the destructor will
 comment|/// delete the dead constants as well.
 comment|/// @brief Determine if the usage of this global value is empty except
 comment|/// for transitively dead constants.
@@ -605,17 +602,6 @@ name|ExternalWeakLinkage
 return|;
 block|}
 name|bool
-name|hasGhostLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Linkage
-operator|==
-name|GhostLinkage
-return|;
-block|}
-name|bool
 name|hasCommonLinkage
 argument_list|()
 specifier|const
@@ -724,22 +710,50 @@ operator|*
 name|Src
 argument_list|)
 block|;
-comment|/// hasNotBeenReadFromBitcode - If a module provider is being used to lazily
-comment|/// stream in functions from disk, this method can be used to check to see if
-comment|/// the function has been read in yet or not.  Unless you are working on the
-comment|/// JIT or something else that streams stuff in lazily, you don't need to
-comment|/// worry about this.
+comment|/// @name Materialization
+comment|/// Materialization is used to construct functions only as they're needed. This
+comment|/// is useful to reduce memory usage in LLVM or parsing work done by the
+comment|/// BitcodeReader to load the Module.
+comment|/// @{
+comment|/// isMaterializable - If this function's Module is being lazily streamed in
+comment|/// functions from disk or some other source, this method can be used to check
+comment|/// to see if the function has been read in yet or not.
 name|bool
-name|hasNotBeenReadFromBitcode
+name|isMaterializable
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Linkage
-operator|==
-name|GhostLinkage
-return|;
-block|}
+block|;
+comment|/// isDematerializable - Returns true if this function was loaded from a
+comment|/// GVMaterializer that's still attached to its Module and that knows how to
+comment|/// dematerialize the function.
+name|bool
+name|isDematerializable
+argument_list|()
+specifier|const
+block|;
+comment|/// Materialize - make sure this GlobalValue is fully read.  If the module is
+comment|/// corrupt, this returns true and fills in the optional string with
+comment|/// information about the problem.  If successful, this returns false.
+name|bool
+name|Materialize
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrInfo
+operator|=
+literal|0
+argument_list|)
+block|;
+comment|/// Dematerialize - If this GlobalValue is read in, and if the GVMaterializer
+comment|/// supports it, release the memory for the function, and set it up to be
+comment|/// materialized lazily.  If !isDematerializable(), this method is a noop.
+name|void
+name|Dematerialize
+argument_list|()
+block|;
+comment|/// @}
 comment|/// Override from Constant class. No GlobalValue's are null values so this
 comment|/// always returns false.
 name|virtual

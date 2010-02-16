@@ -97,7 +97,10 @@ name|SymbolRef
 block|,
 comment|///< References to labels and assigned expressions.
 name|Unary
+block|,
 comment|///< Unary expressions.
+name|Target
+comment|///< Target specific expression.
 block|}
 enum|;
 name|private
@@ -125,6 +128,7 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|protected
 label|:
+name|explicit
 name|MCExpr
 argument_list|(
 argument|ExprKind _Kind
@@ -248,6 +252,7 @@ block|{
 name|int64_t
 name|Value
 block|;
+name|explicit
 name|MCConstantExpr
 argument_list|(
 argument|int64_t _Value
@@ -341,6 +346,7 @@ name|MCSymbol
 operator|*
 name|Symbol
 block|;
+name|explicit
 name|MCSymbolRefExpr
 argument_list|(
 specifier|const
@@ -680,16 +686,18 @@ block|,
 comment|///< Bitwise and.
 name|Div
 block|,
-comment|///< Division.
+comment|///< Signed division.
 name|EQ
 block|,
 comment|///< Equality comparison.
 name|GT
 block|,
-comment|///< Greater than comparison.
+comment|///< Signed greater than comparison (result is either 0 or some
+comment|///< target-specific non-zero value)
 name|GTE
 block|,
-comment|///< Greater than or equal comparison.
+comment|///< Signed greater than or equal comparison (result is either 0 or
+comment|///< some target-specific non-zero value).
 name|LAnd
 block|,
 comment|///< Logical and.
@@ -698,13 +706,15 @@ block|,
 comment|///< Logical or.
 name|LT
 block|,
-comment|///< Less than comparison.
+comment|///< Signed less than comparison (result is either 0 or
+comment|///< some target-specific non-zero value).
 name|LTE
 block|,
-comment|///< Less than or equal comparison.
+comment|///< Signed less than or equal comparison (result is either 0 or
+comment|///< some target-specific non-zero value).
 name|Mod
 block|,
-comment|///< Modulus.
+comment|///< Signed remainder.
 name|Mul
 block|,
 comment|///< Multiplication.
@@ -716,10 +726,10 @@ block|,
 comment|///< Bitwise or.
 name|Shl
 block|,
-comment|///< Bitwise shift left.
+comment|///< Shift left.
 name|Shr
 block|,
-comment|///< Bitwise shift right.
+comment|///< Shift right (arithmetic or logical, depending on target)
 name|Sub
 block|,
 comment|///< Subtraction.
@@ -1319,6 +1329,90 @@ name|bool
 name|classof
 argument_list|(
 argument|const MCBinaryExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// MCTargetExpr - This is an extension point for target-specific MCExpr
+comment|/// subclasses to implement.
+comment|///
+comment|/// NOTE: All subclasses are required to have trivial destructors because
+comment|/// MCExprs are bump pointer allocated and not destructed.
+name|class
+name|MCTargetExpr
+operator|:
+name|public
+name|MCExpr
+block|{
+name|virtual
+name|void
+name|Anchor
+argument_list|()
+block|;
+name|protected
+operator|:
+name|MCTargetExpr
+argument_list|()
+operator|:
+name|MCExpr
+argument_list|(
+argument|Target
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|MCTargetExpr
+argument_list|()
+block|{}
+name|public
+operator|:
+name|virtual
+name|void
+name|PrintImpl
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|bool
+name|EvaluateAsRelocatableImpl
+argument_list|(
+argument|MCValue&Res
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCExpr
+operator|::
+name|Target
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCTargetExpr *
 argument_list|)
 block|{
 return|return

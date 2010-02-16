@@ -215,6 +215,9 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|MDNode
 decl_stmt|;
 name|class
@@ -249,6 +252,43 @@ operator|~
 name|MachineModuleInfoImpl
 argument_list|()
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+expr|>
+name|SymbolListTy
+expr_stmt|;
+name|protected
+label|:
+specifier|static
+name|SymbolListTy
+name|GetSortedStubs
+argument_list|(
+specifier|const
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+argument_list|,
+name|MCSymbol
+operator|*
+operator|>
+operator|&
+name|Map
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -373,6 +413,20 @@ operator|<
 name|LandingPadInfo
 operator|>
 name|LandingPads
+block|;
+comment|// Map of invoke call site index values to associated begin EH_LABEL for
+comment|// the current function.
+name|DenseMap
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|CallSiteMap
+block|;
+comment|// The current call site index being processed, if any. 0 if none.
+name|unsigned
+name|CurCallSite
 block|;
 comment|// TypeInfos - List of C++ TypeInfo used in the current function.
 comment|//
@@ -499,15 +553,6 @@ name|bool
 name|doFinalization
 parameter_list|()
 function_decl|;
-comment|/// BeginFunction - Begin gathering function meta information.
-comment|///
-name|void
-name|BeginFunction
-parameter_list|(
-name|MachineFunction
-modifier|*
-parameter_list|)
-block|{}
 comment|/// EndFunction - Discard function meta information.
 comment|///
 name|void
@@ -1220,6 +1265,104 @@ name|LandingPads
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// setCallSiteBeginLabel - Map the begin label for a call site
+end_comment
+
+begin_function
+name|void
+name|setCallSiteBeginLabel
+parameter_list|(
+name|unsigned
+name|BeginLabel
+parameter_list|,
+name|unsigned
+name|Site
+parameter_list|)
+block|{
+name|CallSiteMap
+index|[
+name|BeginLabel
+index|]
+operator|=
+name|Site
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// getCallSiteBeginLabel - Get the call site number for a begin label
+end_comment
+
+begin_function
+name|unsigned
+name|getCallSiteBeginLabel
+parameter_list|(
+name|unsigned
+name|BeginLabel
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|CallSiteMap
+operator|.
+name|count
+argument_list|(
+name|BeginLabel
+argument_list|)
+operator|&&
+literal|"Missing call site number for EH_LABEL!"
+argument_list|)
+expr_stmt|;
+return|return
+name|CallSiteMap
+index|[
+name|BeginLabel
+index|]
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// setCurrentCallSite - Set the call site currently being processed.
+end_comment
+
+begin_function
+name|void
+name|setCurrentCallSite
+parameter_list|(
+name|unsigned
+name|Site
+parameter_list|)
+block|{
+name|CurCallSite
+operator|=
+name|Site
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// getCurrentCallSite - Get the call site currently being processed, if any.
+end_comment
+
+begin_comment
+comment|/// return zero if none.
+end_comment
+
+begin_function
+name|unsigned
+name|getCurrentCallSite
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|CurCallSite
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/// getTypeInfos - Return a reference to the C++ typeinfo for the current

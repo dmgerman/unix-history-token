@@ -131,6 +131,10 @@ name|NumInsts
 decl_stmt|,
 name|NumBlocks
 decl_stmt|;
+comment|/// NumCalls - Keep track of the number of calls to 'big' functions.
+name|unsigned
+name|NumCalls
+decl_stmt|;
 comment|/// NumVectorInsts - Keep track of how many instructions produce vector
 comment|/// values.  The inliner is being more aggressive with inlining vector
 comment|/// kernels.
@@ -160,6 +164,11 @@ literal|0
 argument_list|)
 operator|,
 name|NumBlocks
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumCalls
 argument_list|(
 literal|0
 argument_list|)
@@ -203,9 +212,21 @@ block|{
 comment|// Various magic constants used to adjust heuristics.
 specifier|const
 name|int
-name|CallPenalty
+name|InstrCost
 init|=
 literal|5
+decl_stmt|;
+specifier|const
+name|int
+name|IndirectCallBonus
+init|=
+literal|500
+decl_stmt|;
+specifier|const
+name|int
+name|CallPenalty
+init|=
+literal|25
 decl_stmt|;
 specifier|const
 name|int

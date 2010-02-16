@@ -141,22 +141,6 @@ name|Triple
 argument_list|)
 block|;   }
 decl_stmt|;
-name|struct
-name|X86WinMCAsmInfo
-range|:
-name|public
-name|MCAsmInfo
-block|{
-name|explicit
-name|X86WinMCAsmInfo
-argument_list|(
-specifier|const
-name|Triple
-operator|&
-name|Triple
-argument_list|)
-block|;   }
-decl_stmt|;
 block|}
 end_decl_stmt
 

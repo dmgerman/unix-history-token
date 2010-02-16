@@ -370,7 +370,7 @@ operator|*
 name|ErrMsg
 argument_list|)
 decl_stmt|;
-name|ModuleProvider
+name|Module
 modifier|*
 name|GetBitcodeSymbols
 argument_list|(

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLoweringObjectFile.h"
+file|"llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 end_include
 
 begin_include

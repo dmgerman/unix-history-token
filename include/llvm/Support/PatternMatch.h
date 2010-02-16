@@ -2487,7 +2487,7 @@ operator|)
 return|;
 block|}
 comment|/// m_SelectCst - This matches a select of two constants, e.g.:
-comment|///    m_SelectCst(m_Value(V), -1, 0)
+comment|///    m_SelectCst<-1, 0>(m_Value(V))
 name|template
 operator|<
 name|int64_t
@@ -2730,6 +2730,74 @@ operator|,
 name|Instruction
 operator|::
 name|Trunc
+operator|>
+operator|(
+name|Op
+operator|)
+return|;
+block|}
+comment|/// m_SExt
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+specifier|inline
+name|CastClass_match
+operator|<
+name|OpTy
+block|,
+name|Instruction
+operator|::
+name|SExt
+operator|>
+name|m_SExt
+argument_list|(
+argument|const OpTy&Op
+argument_list|)
+block|{
+return|return
+name|CastClass_match
+operator|<
+name|OpTy
+operator|,
+name|Instruction
+operator|::
+name|SExt
+operator|>
+operator|(
+name|Op
+operator|)
+return|;
+block|}
+comment|/// m_ZExt
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+specifier|inline
+name|CastClass_match
+operator|<
+name|OpTy
+block|,
+name|Instruction
+operator|::
+name|ZExt
+operator|>
+name|m_ZExt
+argument_list|(
+argument|const OpTy&Op
+argument_list|)
+block|{
+return|return
+name|CastClass_match
+operator|<
+name|OpTy
+operator|,
+name|Instruction
+operator|::
+name|ZExt
 operator|>
 operator|(
 name|Op

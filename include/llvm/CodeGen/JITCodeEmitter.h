@@ -652,7 +652,7 @@ name|BufferEnd
 expr_stmt|;
 block|}
 block|}
-comment|/// emitAlignment - Move the CurBufferPtr pointer up the the specified
+comment|/// emitAlignment - Move the CurBufferPtr pointer up to the specified
 comment|/// alignment (saturated to BufferEnd of course).
 name|void
 name|emitAlignment

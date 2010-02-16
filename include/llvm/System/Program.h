@@ -275,8 +275,9 @@ operator|&
 name|name
 argument_list|)
 decl_stmt|;
-comment|// These methods change the specified standard stream (stdin or stdout) to
-comment|// binary mode. They return true if an error occurred
+comment|// These methods change the specified standard stream (stdin,
+comment|// stdout, or stderr) to binary mode. They return true if an error
+comment|// occurred
 specifier|static
 name|bool
 name|ChangeStdinToBinary
@@ -285,6 +286,11 @@ function_decl|;
 specifier|static
 name|bool
 name|ChangeStdoutToBinary
+parameter_list|()
+function_decl|;
+specifier|static
+name|bool
+name|ChangeStderrToBinary
 parameter_list|()
 function_decl|;
 comment|/// A convenience function equivalent to Program prg; prg.Execute(..);

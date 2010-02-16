@@ -76,7 +76,7 @@ comment|/// This class provides a portable interface to dynamic libraries which 
 comment|/// might be known as shared libraries, shared objects, dynamic shared
 comment|/// objects, or dynamic link libraries. Regardless of the terminology or the
 comment|/// operating system interface, this class provides a portable interface that
-comment|/// allows dynamic libraries to be loaded and and searched for externally
+comment|/// allows dynamic libraries to be loaded and searched for externally
 comment|/// defined symbols. This is typically used to provide "plug-in" support.
 comment|/// It also allows for symbols to be defined which don't live in any library,
 comment|/// but rather the main program itself, useful on Windows where the main

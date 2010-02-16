@@ -833,9 +833,18 @@ argument_list|(
 argument|const FromTy&Val
 argument_list|)
 block|{
-return|return
-name|reinterpret_cast
+name|typename
+name|cast_retty
 operator|<
+name|To
+block|,
+name|FromTy
+operator|>
+operator|::
+name|ret_type
+name|Res2
+operator|=
+operator|(
 name|typename
 name|cast_retty
 operator|<
@@ -845,8 +854,7 @@ name|FromTy
 operator|>
 operator|::
 name|ret_type
-operator|>
-operator|(
+operator|)
 name|const_cast
 operator|<
 name|FromTy
@@ -855,7 +863,9 @@ operator|>
 operator|(
 name|Val
 operator|)
-operator|)
+block|;
+return|return
+name|Res2
 return|;
 block|}
 expr|}

@@ -183,7 +183,7 @@ name|V
 argument_list|)
 return|;
 block|}
-name|void
+name|bool
 name|erase
 parameter_list|(
 specifier|const
@@ -192,13 +192,14 @@ modifier|&
 name|V
 parameter_list|)
 block|{
+return|return
 name|TheMap
 operator|.
 name|erase
 argument_list|(
 name|V
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 name|DenseSet
 modifier|&

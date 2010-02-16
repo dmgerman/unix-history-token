@@ -536,6 +536,11 @@ name|bool
 name|GOTrelative
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|NeedStub
+init|=
+name|true
 parameter_list|)
 block|{
 name|assert
@@ -583,7 +588,7 @@ name|Result
 operator|.
 name|MayNeedFarStub
 operator|=
-name|true
+name|NeedStub
 expr_stmt|;
 name|Result
 operator|.

@@ -129,6 +129,7 @@ name|Constant
 modifier|*
 name|ConstantFoldConstantExpression
 parameter_list|(
+specifier|const
 name|ConstantExpr
 modifier|*
 name|CE

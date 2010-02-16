@@ -374,7 +374,7 @@ expr_stmt|;
 end_typedef
 
 begin_label
-name|private
+name|protected
 label|:
 end_label
 
@@ -618,13 +618,6 @@ end_comment
 
 begin_decl_stmt
 unit|};
-name|friend
-name|class
-name|Factory
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|contains
 argument_list|(

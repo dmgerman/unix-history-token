@@ -669,6 +669,9 @@ comment|// This is an instance of ConstantArray
 name|ConstantStructVal
 block|,
 comment|// This is an instance of ConstantStruct
+name|ConstantUnionVal
+block|,
+comment|// This is an instance of ConstantUnion
 name|ConstantVectorVal
 block|,
 comment|// This is an instance of ConstantVector
@@ -841,18 +844,29 @@ block|}
 comment|/// getUnderlyingObject - This method strips off any GEP address adjustments
 comment|/// and pointer casts from the specified value, returning the original object
 comment|/// being addressed.  Note that the returned value has pointer type if the
-comment|/// specified value does.
+comment|/// specified value does.  If the MaxLookup value is non-zero, it limits the
+comment|/// number of instructions to be stripped off.
 name|Value
 modifier|*
 name|getUnderlyingObject
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|MaxLookup
+init|=
+literal|6
+parameter_list|)
 function_decl|;
 specifier|const
 name|Value
-operator|*
+modifier|*
 name|getUnderlyingObject
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|MaxLookup
+operator|=
+literal|6
+argument_list|)
+decl|const
 block|{
 return|return
 name|const_cast
@@ -865,7 +879,9 @@ name|this
 operator|)
 operator|->
 name|getUnderlyingObject
-argument_list|()
+argument_list|(
+name|MaxLookup
+argument_list|)
 return|;
 block|}
 comment|/// DoPHITranslation - If this value is a PHI node with CurBB as its parent,

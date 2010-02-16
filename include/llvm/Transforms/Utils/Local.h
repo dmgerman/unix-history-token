@@ -122,6 +122,16 @@ parameter_list|,
 name|Instruction
 modifier|*
 name|ScanFrom
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -290,6 +300,13 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,

@@ -104,10 +104,6 @@ init|=
 name|ISD
 operator|::
 name|BUILTIN_OP_END
-operator|+
-name|XCore
-operator|::
-name|INSTRUCTION_LIST_END
 block|,
 comment|// Branch and link (call)
 name|BL
@@ -484,7 +480,7 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|bool isTailCall
+argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

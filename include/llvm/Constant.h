@@ -300,8 +300,6 @@ comment|/// constant exprs and other cases we can't handle, we return an empty v
 name|void
 name|getVectorElements
 argument_list|(
-argument|LLVMContext&Context
-argument_list|,
 argument|SmallVectorImpl<Constant*>&Elts
 argument_list|)
 specifier|const

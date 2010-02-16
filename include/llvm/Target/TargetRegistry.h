@@ -105,22 +105,28 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|MCAsmParser
-decl_stmt|;
-name|class
-name|MCCodeEmitter
-decl_stmt|;
-name|class
 name|Module
 decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCAsmParser
+decl_stmt|;
+name|class
+name|MCCodeEmitter
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCDisassembler
 decl_stmt|;
 name|class
 name|MCInstPrinter
+decl_stmt|;
+name|class
+name|MCStreamer
 decl_stmt|;
 name|class
 name|TargetAsmLexer
@@ -217,27 +223,32 @@ argument_list|)
 argument_list|;     typedef
 name|AsmPrinter
 operator|*
-operator|(
-operator|*
+call|(
+modifier|*
 name|AsmPrinterCtorTy
-operator|)
-operator|(
+call|)
+argument_list|(
 name|formatted_raw_ostream
 operator|&
 name|OS
-operator|,
+argument_list|,
 name|TargetMachine
 operator|&
 name|TM
-operator|,
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|*
 name|MAI
-operator|,
-name|bool
-name|VerboseAsm
-operator|)
+argument_list|)
 argument_list|;     typedef
 name|TargetAsmLexer
 operator|*
@@ -328,6 +339,10 @@ argument_list|,
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 argument_list|;
 name|private
@@ -607,7 +622,8 @@ name|Features
 argument_list|)
 return|;
 block|}
-comment|/// createAsmPrinter - Create a target specific assembly printer pass.
+comment|/// createAsmPrinter - Create a target specific assembly printer pass.  This
+comment|/// takes ownership of the MCContext and MCStreamer objects but not the MAI.
 name|AsmPrinter
 modifier|*
 name|createAsmPrinter
@@ -620,13 +636,18 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|*
 name|MAI
-argument_list|,
-name|bool
-name|Verbose
 argument_list|)
 decl|const
 block|{
@@ -645,9 +666,11 @@ name|OS
 argument_list|,
 name|TM
 argument_list|,
-name|MAI
+name|Ctx
 argument_list|,
-name|Verbose
+name|Streamer
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}
@@ -785,6 +808,10 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 decl|const
 block|{
@@ -803,6 +830,8 @@ operator|*
 name|this
 argument_list|,
 name|TM
+argument_list|,
+name|Ctx
 argument_list|)
 return|;
 block|}
@@ -2162,9 +2191,11 @@ argument|formatted_raw_ostream&OS
 argument_list|,
 argument|TargetMachine&TM
 argument_list|,
-argument|const MCAsmInfo *MAI
+argument|MCContext&Ctx
 argument_list|,
-argument|bool Verbose
+argument|MCStreamer&Streamer
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 block|{
 return|return
@@ -2175,9 +2206,11 @@ name|OS
 argument_list|,
 name|TM
 argument_list|,
-name|MAI
+name|Ctx
 argument_list|,
-name|Verbose
+name|Streamer
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}
@@ -2412,6 +2445,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|TargetMachine&TM
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
@@ -2421,6 +2456,8 @@ argument_list|(
 name|T
 argument_list|,
 name|TM
+argument_list|,
+name|Ctx
 argument_list|)
 return|;
 block|}

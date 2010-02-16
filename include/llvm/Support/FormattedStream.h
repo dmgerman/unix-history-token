@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/FormattedStream.h - Formatted streams ------*- C++ -*-===//
+comment|//===-- llvm/Support/FormattedStream.h - Formatted streams ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -312,7 +312,8 @@ comment|/// column is already equal to or more than NewCol, PadToColumn inserts 
 comment|/// space.
 comment|///
 comment|/// \param NewCol - The column to move to.
-name|void
+name|formatted_raw_ostream
+operator|&
 name|PadToColumn
 argument_list|(
 argument|unsigned NewCol

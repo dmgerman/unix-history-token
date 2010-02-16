@@ -8,7 +8,7 @@ comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm -fwritable-strings %s | \
 end_comment
 
 begin_comment
-comment|// RUN:    grep {private global}
+comment|// RUN:    grep {internal global}
 end_comment
 
 begin_comment

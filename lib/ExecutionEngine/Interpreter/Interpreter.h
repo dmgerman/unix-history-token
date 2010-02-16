@@ -413,7 +413,7 @@ label|:
 name|explicit
 name|Interpreter
 parameter_list|(
-name|ModuleProvider
+name|Module
 modifier|*
 name|M
 parameter_list|)
@@ -446,7 +446,7 @@ name|ExecutionEngine
 modifier|*
 name|create
 argument_list|(
-name|ModuleProvider
+name|Module
 operator|*
 name|M
 argument_list|,

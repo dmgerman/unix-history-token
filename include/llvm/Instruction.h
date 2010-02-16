@@ -568,7 +568,7 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// setMetadata - Set the metadata of of the specified kind to the specified
+comment|/// setMetadata - Set the metadata of the specified kind to the specified
 comment|/// node.  This updates/replaces metadata if already present, or removes it if
 comment|/// Node is null.
 name|void

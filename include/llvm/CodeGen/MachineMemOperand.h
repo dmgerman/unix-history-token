@@ -132,6 +132,16 @@ comment|/// The memory access is volatile.
 name|MOVolatile
 init|=
 literal|4
+block|,
+comment|/// The memory access is non-temporal.
+name|MONonTemporal
+init|=
+literal|8
+block|,
+comment|// This is the number of bits we need to represent flags.
+name|MOMaxBits
+init|=
+literal|4
 block|}
 enum|;
 comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
@@ -177,7 +187,15 @@ block|{
 return|return
 name|Flags
 operator|&
-literal|7
+operator|(
+operator|(
+literal|1
+operator|<<
+name|MOMaxBits
+operator|)
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 comment|/// getOffset - For normal values, this is a byte offset added to the base
@@ -223,7 +241,7 @@ operator|<<
 operator|(
 name|Flags
 operator|>>
-literal|3
+name|MOMaxBits
 operator|)
 operator|)
 operator|>>
@@ -261,6 +279,17 @@ return|return
 name|Flags
 operator|&
 name|MOVolatile
+return|;
+block|}
+name|bool
+name|isNonTemporal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|MONonTemporal
 return|;
 block|}
 comment|/// refineAlignment - Update this MachineMemOperand to reflect the alignment

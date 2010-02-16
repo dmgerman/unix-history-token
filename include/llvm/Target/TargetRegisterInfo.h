@@ -712,7 +712,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// hasSubClass - return true if the the specified TargetRegisterClass
+comment|/// hasSubClass - return true if the specified TargetRegisterClass
 end_comment
 
 begin_comment
@@ -2657,6 +2657,7 @@ name|virtual
 name|int
 name|getFrameIndexOffset
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -2673,6 +2674,7 @@ name|virtual
 name|int
 name|getFrameIndexReference
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF

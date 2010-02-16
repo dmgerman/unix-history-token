@@ -110,6 +110,14 @@ name|typename
 name|ImutInfo
 operator|>
 name|class
+name|ImutIntervalAVLFactory
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|ImutInfo
+operator|>
+name|class
 name|ImutAVLTreeInOrderIterator
 expr_stmt|;
 name|template
@@ -164,6 +172,13 @@ expr_stmt|;
 name|friend
 name|class
 name|ImutAVLFactory
+operator|<
+name|ImutInfo
+operator|>
+expr_stmt|;
+name|friend
+name|class
+name|ImutIntervalAVLFactory
 operator|<
 name|ImutInfo
 operator|>
@@ -1772,7 +1787,7 @@ comment|//===--------------------------------------------------===//
 end_comment
 
 begin_label
-name|private
+name|protected
 label|:
 end_label
 
@@ -3094,7 +3109,7 @@ name|digest
 condition|)
 continue|continue;
 comment|// We found a collision.  Perform a comparison of Contents('T')
-comment|// with Contents('L')+'V'+Contents('R').
+comment|// with Contents('TNew')
 name|typename
 name|TreeTy
 operator|::
@@ -3113,55 +3128,12 @@ operator|->
 name|end
 argument_list|()
 expr_stmt|;
-comment|// First compare Contents('L') with the (initial) contents of T.
 if|if
 condition|(
 operator|!
 name|CompareTreeWithSection
 argument_list|(
 name|TNew
-operator|->
-name|getLeft
-argument_list|()
-argument_list|,
-name|TI
-argument_list|,
-name|TE
-argument_list|)
-condition|)
-continue|continue;
-comment|// Now compare the new data element.
-if|if
-condition|(
-name|TI
-operator|==
-name|TE
-operator|||
-operator|!
-name|TI
-operator|->
-name|ElementEqual
-argument_list|(
-name|TNew
-operator|->
-name|getValue
-argument_list|()
-argument_list|)
-condition|)
-continue|continue;
-operator|++
-name|TI
-expr_stmt|;
-comment|// Now compare the remainder of 'T' with 'R'.
-if|if
-condition|(
-operator|!
-name|CompareTreeWithSection
-argument_list|(
-name|TNew
-operator|->
-name|getRight
-argument_list|()
 argument_list|,
 name|TI
 argument_list|,
@@ -3176,7 +3148,7 @@ operator|!=
 name|TE
 condition|)
 continue|continue;
-comment|// Contents('R') did not match suffix of 'T'.
+comment|// T has more contents than TNew.
 comment|// Trees did match!  Return 'T'.
 return|return
 name|T

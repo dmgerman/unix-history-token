@@ -73,9 +73,6 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|ModuleProvider
-decl_stmt|;
-name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
@@ -90,14 +87,14 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// getBitcodeModuleProvider - Read the header of the specified bitcode buffer
+comment|/// getLazyBitcodeModule - Read the header of the specified bitcode buffer
 comment|/// and prepare for lazy deserialization of function bodies.  If successful,
 comment|/// this takes ownership of 'buffer' and returns a non-null pointer.  On
 comment|/// error, this returns null, *does not* take ownership of Buffer, and fills
 comment|/// in *ErrMsg with an error description if ErrMsg is non-null.
-name|ModuleProvider
+name|Module
 modifier|*
-name|getBitcodeModuleProvider
+name|getLazyBitcodeModule
 argument_list|(
 name|MemoryBuffer
 operator|*

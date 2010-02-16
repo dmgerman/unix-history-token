@@ -283,62 +283,7 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|,
-argument|MachineCodeEmitter&MCE
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
 argument|JITCodeEmitter&JCE
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|ObjectCodeEmitter&JCE
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|MachineCodeEmitter&MCE
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&JCE
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addSimpleCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|ObjectCodeEmitter&OCE
 argument_list|)
 block|; }
 decl_stmt|;

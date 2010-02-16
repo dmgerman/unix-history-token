@@ -501,6 +501,11 @@ name|ColumnNo
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ShowLine
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|SMDiagnostic
 argument_list|(
@@ -550,15 +555,11 @@ block|{}
 name|void
 name|Print
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|ProgName
+argument|const char *ProgName
 argument_list|,
-name|raw_ostream
-operator|&
-name|S
+argument|raw_ostream&S
 argument_list|)
+specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;

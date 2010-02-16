@@ -108,11 +108,11 @@ name|FunctionPassManager
 name|PM
 decl_stmt|;
 comment|// Passes to compile a function
-name|ModuleProvider
+name|Module
 modifier|*
-name|MP
+name|M
 decl_stmt|;
-comment|// ModuleProvider used to create the PM
+comment|// Module used to create the PM
 comment|/// PendingFunctions - Functions which have not been code generated yet, but
 comment|/// were called from a function being code generated.
 name|std
@@ -131,19 +131,19 @@ label|:
 name|explicit
 name|JITState
 argument_list|(
-name|ModuleProvider
+name|Module
 operator|*
-name|MP
+name|M
 argument_list|)
 operator|:
 name|PM
 argument_list|(
-name|MP
+name|M
 argument_list|)
 operator|,
-name|MP
+name|M
 argument_list|(
-argument|MP
+argument|M
 argument_list|)
 block|{}
 name|FunctionPassManager
@@ -157,14 +157,14 @@ return|return
 name|PM
 return|;
 block|}
-name|ModuleProvider
+name|Module
 operator|*
-name|getMP
+name|getModule
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MP
+name|M
 return|;
 block|}
 name|std
@@ -224,13 +224,18 @@ comment|/// should be set to true.  Doing so breaks freeMachineCodeForFunction.
 name|bool
 name|AllocateGVsWithCode
 block|;
+comment|/// True while the JIT is generating code.  Used to assert against recursive
+comment|/// entry.
+name|bool
+name|isAlreadyCodeGenerating
+block|;
 name|JITState
 operator|*
 name|jitstate
 block|;
 name|JIT
 argument_list|(
-argument|ModuleProvider *MP
+argument|Module *M
 argument_list|,
 argument|TargetMachine&tm
 argument_list|,
@@ -256,7 +261,7 @@ argument_list|()
 block|{
 name|JITCtor
 operator|=
-name|create
+name|createJIT
 block|;   }
 comment|/// getJITInfo - Return the target JIT information structure.
 comment|///
@@ -278,7 +283,7 @@ name|ExecutionEngine
 operator|*
 name|create
 argument_list|(
-argument|ModuleProvider *MP
+argument|Module *M
 argument_list|,
 argument|std::string *Err
 argument_list|,
@@ -296,7 +301,7 @@ name|ExecutionEngine
 operator|::
 name|createJIT
 argument_list|(
-name|MP
+name|M
 argument_list|,
 name|Err
 argument_list|,
@@ -312,72 +317,22 @@ return|;
 block|}
 name|virtual
 name|void
-name|addModuleProvider
+name|addModule
 argument_list|(
-name|ModuleProvider
-operator|*
-name|MP
-argument_list|)
-block|;
-comment|/// removeModuleProvider - Remove a ModuleProvider from the list of modules.
-comment|/// Relases the Module from the ModuleProvider, materializing it in the
-comment|/// process, and returns the materialized Module.
-name|virtual
 name|Module
 operator|*
-name|removeModuleProvider
-argument_list|(
-name|ModuleProvider
-operator|*
-name|MP
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
+name|M
 argument_list|)
 block|;
-comment|/// deleteModuleProvider - Remove a ModuleProvider from the list of modules,
-comment|/// and deletes the ModuleProvider and owned Module.  Avoids materializing
-comment|/// the underlying module.
+comment|/// removeModule - Remove a Module from the list of modules.  Returns true if
+comment|/// M is found.
 name|virtual
-name|void
-name|deleteModuleProvider
-argument_list|(
-name|ModuleProvider
-operator|*
-name|P
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
-block|;
-comment|/// materializeFunction - make sure the given function is fully read.  If the
-comment|/// module is corrupt, this returns true and fills in the optional string with
-comment|/// information about the problem.  If successful, this returns false.
-comment|///
 name|bool
-name|materializeFunction
+name|removeModule
 argument_list|(
-name|Function
+name|Module
 operator|*
-name|F
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
+name|M
 argument_list|)
 block|;
 comment|/// runFunction - Start execution with the specified function and arguments.
@@ -539,15 +494,15 @@ name|TargetMachine
 operator|*
 name|selectTarget
 argument_list|(
-name|ModuleProvider
-operator|*
-name|MP
+argument|Module *M
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Err
+argument|StringRef MArch
+argument_list|,
+argument|StringRef MCPU
+argument_list|,
+argument|const SmallVectorImpl<std::string>& MAttrs
+argument_list|,
+argument|std::string *Err
 argument_list|)
 block|;
 specifier|static
@@ -555,7 +510,7 @@ name|ExecutionEngine
 operator|*
 name|createJIT
 argument_list|(
-argument|ModuleProvider *MP
+argument|Module *M
 argument_list|,
 argument|std::string *ErrorStr
 argument_list|,
@@ -566,6 +521,12 @@ argument_list|,
 argument|bool GVsWithCode
 argument_list|,
 argument|CodeModel::Model CMM
+argument_list|,
+argument|StringRef MArch
+argument_list|,
+argument|StringRef MCPU
+argument_list|,
+argument|const SmallVectorImpl<std::string>& MAttrs
 argument_list|)
 block|;
 comment|// Run the JIT on F and return information about the generated code

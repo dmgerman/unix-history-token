@@ -211,6 +211,13 @@ name|IsEarlyClobber
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsDebug - True if this MO_Register 'use' operand is in a debug pseudo,
+comment|/// not a real instruction.  Such uses should be ignored during codegen.
+name|bool
+name|IsDebug
+range|:
+literal|1
+decl_stmt|;
 comment|/// ParentMI - This is the instruction that this operand is embedded into.
 comment|/// This is valid for all operand types, when the operand is in an instr.
 name|MachineInstr
@@ -708,6 +715,23 @@ return|return
 name|IsEarlyClobber
 return|;
 block|}
+name|bool
+name|isDebug
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|IsDebug
+return|;
+block|}
 comment|/// getNextOperandForReg - Return the next MachineOperand in the function that
 comment|/// uses or defines this register.
 name|MachineOperand
@@ -785,6 +809,19 @@ operator|&&
 literal|"Wrong MachineOperand accessor"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|Val
+operator|||
+operator|!
+name|isDebug
+argument_list|()
+operator|)
+operator|&&
+literal|"Marking a debug operation as def"
+argument_list|)
+expr_stmt|;
 name|IsDef
 operator|=
 operator|!
@@ -806,6 +843,20 @@ name|isReg
 argument_list|()
 operator|&&
 literal|"Wrong MachineOperand accessor"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Val
+operator|||
+operator|!
+name|isDebug
+argument_list|()
+operator|)
+operator|&&
+literal|"Marking a debug operation as def"
 argument_list|)
 expr_stmt|;
 name|IsDef
@@ -853,6 +904,20 @@ operator|!
 name|IsDef
 operator|&&
 literal|"Wrong MachineOperand accessor"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|Val
+operator|||
+operator|!
+name|isDebug
+argument_list|()
+operator|)
+operator|&&
+literal|"Marking a debug operation as kill"
 argument_list|)
 expr_stmt|;
 name|IsKill
@@ -1325,6 +1390,11 @@ name|bool
 name|isUndef
 init|=
 name|false
+parameter_list|,
+name|bool
+name|isDebug
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -1426,6 +1496,11 @@ name|unsigned
 name|SubReg
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|isDebug
+init|=
+name|false
 parameter_list|)
 block|{
 name|MachineOperand
@@ -1471,6 +1546,12 @@ operator|.
 name|IsEarlyClobber
 operator|=
 name|isEarlyClobber
+expr_stmt|;
+name|Op
+operator|.
+name|IsDebug
+operator|=
+name|isDebug
 expr_stmt|;
 name|Op
 operator|.

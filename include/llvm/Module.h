@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -105,6 +111,9 @@ name|llvm
 block|{
 name|class
 name|FunctionType
+decl_stmt|;
+name|class
+name|GVMaterializer
 decl_stmt|;
 name|class
 name|LLVMContext
@@ -568,6 +577,13 @@ modifier|*
 name|TypeSymTab
 decl_stmt|;
 comment|///< Symbol table for types
+name|OwningPtr
+operator|<
+name|GVMaterializer
+operator|>
+name|Materializer
+expr_stmt|;
+comment|///< Used to materialize GlobalValues
 name|std
 operator|::
 name|string
@@ -763,8 +779,8 @@ operator|=
 name|Asm
 expr_stmt|;
 block|}
-comment|/// Append to the module-scope inline assembly blocks, automatically
-comment|/// appending a newline to the end.
+comment|/// Append to the module-scope inline assembly blocks, automatically inserting
+comment|/// a separating newline if necessary.
 name|void
 name|appendModuleInlineAsm
 parameter_list|(
@@ -772,13 +788,33 @@ name|StringRef
 name|Asm
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
 name|GlobalScopeAsm
-operator|+=
-name|Asm
-expr_stmt|;
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|GlobalScopeAsm
+index|[
+name|GlobalScopeAsm
+operator|.
+name|size
+argument_list|()
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
 name|GlobalScopeAsm
 operator|+=
 literal|'\n'
+expr_stmt|;
+name|GlobalScopeAsm
+operator|+=
+name|Asm
 expr_stmt|;
 block|}
 comment|/// @}
@@ -1075,6 +1111,125 @@ name|StringRef
 name|Name
 argument_list|)
 decl|const
+decl_stmt|;
+comment|/// @}
+comment|/// @name Materialization
+comment|/// @{
+comment|/// setMaterializer - Sets the GVMaterializer to GVM.  This module must not
+comment|/// yet have a Materializer.  To reset the materializer for a module that
+comment|/// already has one, call MaterializeAllPermanently first.  Destroying this
+comment|/// module will destroy its materializer without materializing any more
+comment|/// GlobalValues.  Without destroying the Module, there is no way to detach or
+comment|/// destroy a materializer without materializing all the GVs it controls, to
+comment|/// avoid leaving orphan unmaterialized GVs.
+name|void
+name|setMaterializer
+parameter_list|(
+name|GVMaterializer
+modifier|*
+name|GVM
+parameter_list|)
+function_decl|;
+comment|/// getMaterializer - Retrieves the GVMaterializer, if any, for this Module.
+name|GVMaterializer
+operator|*
+name|getMaterializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Materializer
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// isMaterializable - True if the definition of GV has yet to be materialized
+comment|/// from the GVMaterializer.
+name|bool
+name|isMaterializable
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isDematerializable - Returns true if this GV was loaded from this Module's
+comment|/// GVMaterializer and the GVMaterializer knows how to dematerialize the GV.
+name|bool
+name|isDematerializable
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Materialize - Make sure the GlobalValue is fully read.  If the module is
+comment|/// corrupt, this returns true and fills in the optional string with
+comment|/// information about the problem.  If successful, this returns false.
+name|bool
+name|Materialize
+argument_list|(
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrInfo
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// Dematerialize - If the GlobalValue is read in, and if the GVMaterializer
+comment|/// supports it, release the memory for the function, and set it up to be
+comment|/// materialized lazily.  If !isDematerializable(), this method is a noop.
+name|void
+name|Dematerialize
+parameter_list|(
+name|GlobalValue
+modifier|*
+name|GV
+parameter_list|)
+function_decl|;
+comment|/// MaterializeAll - Make sure all GlobalValues in this Module are fully read.
+comment|/// If the module is corrupt, this returns true and fills in the optional
+comment|/// string with information about the problem.  If successful, this returns
+comment|/// false.
+name|bool
+name|MaterializeAll
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrInfo
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// MaterializeAllPermanently - Make sure all GlobalValues in this Module are
+comment|/// fully read and clear the Materializer.  If the module is corrupt, this
+comment|/// returns true, fills in the optional string with information about the
+comment|/// problem, and DOES NOT clear the old Materializer.  If successful, this
+comment|/// returns false.
+name|bool
+name|MaterializeAllPermanently
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrInfo
+operator|=
+literal|0
+argument_list|)
 decl_stmt|;
 comment|/// @}
 comment|/// @name Direct access to the globals list, functions list, and symbol table

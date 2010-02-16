@@ -109,10 +109,6 @@ name|scUMaxExpr
 block|,
 name|scSMaxExpr
 block|,
-name|scFieldOffset
-block|,
-name|scAllocSize
-block|,
 name|scUnknown
 block|,
 name|scCouldNotCompute
@@ -1883,17 +1879,10 @@ argument|const Loop *QL
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
+return|return
 name|L
 operator|==
 name|QL
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
 return|;
 block|}
 name|virtual
@@ -1901,6 +1890,24 @@ name|bool
 name|isLoopInvariant
 argument_list|(
 argument|const Loop *QueryLoop
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|dominates
+argument_list|(
+argument|BasicBlock *BB
+argument_list|,
+argument|DominatorTree *DT
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|properlyDominates
+argument_list|(
+argument|BasicBlock *BB
+argument_list|,
+argument|DominatorTree *DT
 argument_list|)
 specifier|const
 block|;
@@ -2231,376 +2238,6 @@ block|}
 expr|}
 block|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVTargetDataConstant - This node is the base class for representing
-comment|/// target-dependent values in a target-independent way.
-comment|///
-name|class
-name|SCEVTargetDataConstant
-operator|:
-name|public
-name|SCEV
-block|{
-name|protected
-operator|:
-specifier|const
-name|Type
-operator|*
-name|Ty
-block|;
-name|SCEVTargetDataConstant
-argument_list|(
-argument|const FoldingSetNodeID&ID
-argument_list|,
-argument|enum SCEVTypes T
-argument_list|,
-argument|const Type *ty
-argument_list|)
-operator|:
-name|SCEV
-argument_list|(
-name|ID
-argument_list|,
-name|T
-argument_list|)
-block|,
-name|Ty
-argument_list|(
-argument|ty
-argument_list|)
-block|{}
-name|public
-operator|:
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-comment|// not computable
-block|}
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *
-argument_list|,
-argument|DominatorTree *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *
-argument_list|,
-argument|DominatorTree *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-specifier|const
-name|Type
-operator|*
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ty
-return|;
-block|}
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVTargetDataConstant *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEV *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getSCEVType
-argument_list|()
-operator|==
-name|scFieldOffset
-operator|||
-name|S
-operator|->
-name|getSCEVType
-argument_list|()
-operator|==
-name|scAllocSize
-return|;
-block|}
-expr|}
-block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVFieldOffsetExpr - This node represents an offsetof expression.
-comment|///
-name|class
-name|SCEVFieldOffsetExpr
-operator|:
-name|public
-name|SCEVTargetDataConstant
-block|{
-name|friend
-name|class
-name|ScalarEvolution
-block|;
-specifier|const
-name|StructType
-operator|*
-name|STy
-block|;
-name|unsigned
-name|FieldNo
-block|;
-name|SCEVFieldOffsetExpr
-argument_list|(
-argument|const FoldingSetNodeID&ID
-argument_list|,
-argument|const Type *ty
-argument_list|,
-argument|const StructType *sty
-argument_list|,
-argument|unsigned fieldno
-argument_list|)
-operator|:
-name|SCEVTargetDataConstant
-argument_list|(
-name|ID
-argument_list|,
-name|scFieldOffset
-argument_list|,
-name|ty
-argument_list|)
-block|,
-name|STy
-argument_list|(
-name|sty
-argument_list|)
-block|,
-name|FieldNo
-argument_list|(
-argument|fieldno
-argument_list|)
-block|{}
-name|public
-operator|:
-specifier|const
-name|StructType
-operator|*
-name|getStructType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STy
-return|;
-block|}
-name|unsigned
-name|getFieldNo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FieldNo
-return|;
-block|}
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVFieldOffsetExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEV *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getSCEVType
-argument_list|()
-operator|==
-name|scFieldOffset
-return|;
-block|}
-expr|}
-block|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// SCEVAllocSize - This node represents a sizeof expression.
-comment|///
-name|class
-name|SCEVAllocSizeExpr
-operator|:
-name|public
-name|SCEVTargetDataConstant
-block|{
-name|friend
-name|class
-name|ScalarEvolution
-block|;
-specifier|const
-name|Type
-operator|*
-name|AllocTy
-block|;
-name|SCEVAllocSizeExpr
-argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|ty
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|allocty
-argument_list|)
-operator|:
-name|SCEVTargetDataConstant
-argument_list|(
-name|ID
-argument_list|,
-name|scAllocSize
-argument_list|,
-name|ty
-argument_list|)
-block|,
-name|AllocTy
-argument_list|(
-argument|allocty
-argument_list|)
-block|{}
-name|public
-operator|:
-specifier|const
-name|Type
-operator|*
-name|getAllocType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AllocTy
-return|;
-block|}
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEVAllocSizeExpr *S
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const SCEV *S
-argument_list|)
-block|{
-return|return
-name|S
-operator|->
-name|getSCEVType
-argument_list|()
-operator|==
-name|scAllocSize
-return|;
-block|}
-expr|}
-block|;
-comment|//===--------------------------------------------------------------------===//
 comment|/// SCEVUnknown - This means that we are dealing with an entirely unknown SCEV
 comment|/// value, and only represent it as its LLVM Value.  This is the "bottom"
 comment|/// value for the analysis.
@@ -2655,6 +2292,35 @@ return|return
 name|V
 return|;
 block|}
+comment|/// isSizeOf, isAlignOf, isOffsetOf - Test whether this is a special
+comment|/// constant representing a type size, alignment, or field offset in
+comment|/// a target-independent manner, and hasn't happened to have been
+comment|/// folded with other operations into something unrecognizable. This
+comment|/// is mainly only useful for pretty-printing and other situations
+comment|/// where it isn't absolutely required for these to succeed.
+name|bool
+name|isSizeOf
+argument_list|(
+argument|const Type *&AllocTy
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isAlignOf
+argument_list|(
+argument|const Type *&AllocTy
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isOffsetOf
+argument_list|(
+argument|const Type *&STy
+argument_list|,
+argument|Constant *&FieldNo
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|isLoopInvariant
@@ -2998,50 +2664,6 @@ argument_list|(
 operator|(
 specifier|const
 name|SCEVUMaxExpr
-operator|*
-operator|)
-name|S
-argument_list|)
-return|;
-case|case
-name|scFieldOffset
-case|:
-return|return
-operator|(
-operator|(
-name|SC
-operator|*
-operator|)
-name|this
-operator|)
-operator|->
-name|visitFieldOffsetExpr
-argument_list|(
-operator|(
-specifier|const
-name|SCEVFieldOffsetExpr
-operator|*
-operator|)
-name|S
-argument_list|)
-return|;
-case|case
-name|scAllocSize
-case|:
-return|return
-operator|(
-operator|(
-name|SC
-operator|*
-operator|)
-name|this
-operator|)
-operator|->
-name|visitAllocSizeExpr
-argument_list|(
-operator|(
-specifier|const
-name|SCEVAllocSizeExpr
 operator|*
 operator|)
 name|S

@@ -215,12 +215,15 @@ specifier|extern
 name|bool
 name|UnwindTablesMandatory
 decl_stmt|;
-comment|/// PerformTailCallOpt - This flag is enabled when -tailcallopt is specified
-comment|/// on the commandline. When the flag is on, the target will perform tail call
-comment|/// optimization (pop the caller's stack) providing it supports it.
+comment|/// GuaranteedTailCallOpt - This flag is enabled when -tailcallopt is
+comment|/// specified on the commandline. When the flag is on, participating targets
+comment|/// will perform tail call optimization on all calls which use the fastcc
+comment|/// calling convention and which satisfy certain target-independent
+comment|/// criteria (being at the end of a function, having the same return type
+comment|/// as their parent function, etc.), using an alternate ABI if necessary.
 specifier|extern
 name|bool
-name|PerformTailCallOpt
+name|GuaranteedTailCallOpt
 decl_stmt|;
 comment|/// StackAlignment - Override default stack alignment for target.
 specifier|extern

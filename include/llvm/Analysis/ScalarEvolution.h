@@ -1676,27 +1676,6 @@ block|;
 specifier|const
 name|SCEV
 operator|*
-name|getFieldOffsetExpr
-argument_list|(
-argument|const StructType *STy
-argument_list|,
-argument|unsigned FieldNo
-argument_list|)
-block|;
-specifier|const
-name|SCEV
-operator|*
-name|getAllocSizeExpr
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|AllocTy
-argument_list|)
-block|;
-specifier|const
-name|SCEV
-operator|*
 name|getUnknown
 argument_list|(
 name|Value
@@ -1709,6 +1688,61 @@ name|SCEV
 operator|*
 name|getCouldNotCompute
 argument_list|()
+block|;
+comment|/// getSizeOfExpr - Return an expression for sizeof on the given type.
+comment|///
+specifier|const
+name|SCEV
+operator|*
+name|getSizeOfExpr
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|AllocTy
+argument_list|)
+block|;
+comment|/// getAlignOfExpr - Return an expression for alignof on the given type.
+comment|///
+specifier|const
+name|SCEV
+operator|*
+name|getAlignOfExpr
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|AllocTy
+argument_list|)
+block|;
+comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field.
+comment|///
+specifier|const
+name|SCEV
+operator|*
+name|getOffsetOfExpr
+argument_list|(
+argument|const StructType *STy
+argument_list|,
+argument|unsigned FieldNo
+argument_list|)
+block|;
+comment|/// getOffsetOfExpr - Return an expression for offsetof on the given field.
+comment|///
+specifier|const
+name|SCEV
+operator|*
+name|getOffsetOfExpr
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|CTy
+argument_list|,
+name|Constant
+operator|*
+name|FieldNo
+argument_list|)
 block|;
 comment|/// getNegativeSCEV - Return the SCEV object corresponding to -V.
 comment|///
@@ -1876,7 +1910,7 @@ name|SCEV
 operator|*
 name|getIntegerSCEV
 argument_list|(
-argument|int Val
+argument|int64_t Val
 argument_list|,
 argument|const Type *Ty
 argument_list|)

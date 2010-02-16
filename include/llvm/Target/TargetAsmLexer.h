@@ -139,6 +139,10 @@ name|Target
 modifier|&
 name|TheTarget
 decl_stmt|;
+name|MCAsmLexer
+modifier|*
+name|Lexer
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -155,6 +159,30 @@ specifier|const
 block|{
 return|return
 name|TheTarget
+return|;
+block|}
+comment|/// InstallLexer - Set the lexer to get tokens from lower-level lexer \arg L.
+name|void
+name|InstallLexer
+parameter_list|(
+name|MCAsmLexer
+modifier|&
+name|L
+parameter_list|)
+block|{
+name|Lexer
+operator|=
+operator|&
+name|L
+expr_stmt|;
+block|}
+name|MCAsmLexer
+modifier|*
+name|getLexer
+parameter_list|()
+block|{
+return|return
+name|Lexer
 return|;
 block|}
 comment|/// Lex - Consume the next token from the input stream and return it.

@@ -300,6 +300,29 @@ operator|<<
 literal|24
 decl_stmt|;
 comment|///< Naked function
+specifier|const
+name|Attributes
+name|InlineHint
+init|=
+literal|1
+operator|<<
+literal|25
+decl_stmt|;
+comment|///< source said inlining was
+comment|///desirable
+specifier|const
+name|Attributes
+name|StackAlignment
+init|=
+literal|31
+operator|<<
+literal|26
+decl_stmt|;
+comment|///< Alignment of stack for
+comment|///function (5 bits) stored as log2
+comment|///of alignment with +1 bias
+comment|///0 means unaligned (different from
+comment|///alignstack(1))
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes
@@ -342,6 +365,10 @@ operator||
 name|NoImplicitFloat
 operator||
 name|Naked
+operator||
+name|InlineHint
+operator||
+name|StackAlignment
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const
@@ -477,6 +504,100 @@ operator|(
 name|Align
 operator|>>
 literal|16
+operator|)
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/// This turns an int stack alignment (which must be a power of 2) into
+comment|/// the form used internally in Attributes.
+specifier|inline
+name|Attributes
+name|constructStackAlignmentFromInt
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|)
+block|{
+comment|// Default alignment, allow the target to define how to align it.
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|assert
+argument_list|(
+name|isPowerOf2_32
+argument_list|(
+name|i
+argument_list|)
+operator|&&
+literal|"Alignment must be a power of two."
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|i
+operator|<=
+literal|0x40000000
+operator|&&
+literal|"Alignment too large."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Log2_32
+argument_list|(
+name|i
+argument_list|)
+operator|+
+literal|1
+operator|)
+operator|<<
+literal|26
+return|;
+block|}
+comment|/// This returns the stack alignment field of an attribute as a byte alignment
+comment|/// value.
+specifier|inline
+name|unsigned
+name|getStackAlignmentFromAttrs
+parameter_list|(
+name|Attributes
+name|A
+parameter_list|)
+block|{
+name|Attributes
+name|StackAlign
+init|=
+name|A
+operator|&
+name|Attribute
+operator|::
+name|StackAlignment
+decl_stmt|;
+if|if
+condition|(
+name|StackAlign
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1U
+operator|<<
+operator|(
+operator|(
+name|StackAlign
+operator|>>
+literal|26
 operator|)
 operator|-
 literal|1

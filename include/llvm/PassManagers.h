@@ -1452,8 +1452,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// Set of available Analysis. This information is used while scheduling
-comment|// pass. If a pass requires an analysis which is not not available then
-comment|// equired analysis pass is scheduled to run before the pass itself is
+comment|// pass. If a pass requires an analysis which is not available then
+comment|// the required analysis pass is scheduled to run before the pass itself is
 comment|// scheduled to run.
 name|std
 operator|::

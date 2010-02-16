@@ -5745,13 +5745,10 @@ block|{
 name|unsigned
 name|BitPos
 operator|=
-name|reinterpret_cast
-operator|<
-name|unsigned
-operator|>
 operator|(
-name|V
+name|unsigned
 operator|)
+name|V
 block|;
 name|assert
 argument_list|(

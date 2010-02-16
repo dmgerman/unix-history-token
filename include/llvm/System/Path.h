@@ -101,7 +101,7 @@ comment|/// is patterned after the stat(2) Unix operating system call but made
 comment|/// platform independent and eliminates many of the unix-specific fields.
 comment|/// However, to support llvm-ar, the mode, user, and group fields are
 comment|/// retained. These pertain to unix security and may not have a meaningful
-comment|/// value on non-Unix platforms. However, the other fields fields should
+comment|/// value on non-Unix platforms. However, the other fields should
 comment|/// always be applicable on all platforms.  The structure is filled in by
 comment|/// the PathWithStatus class.
 comment|/// @brief File status structure

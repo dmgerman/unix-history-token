@@ -149,7 +149,7 @@ argument_list|()
 block|;
 name|public
 operator|:
-comment|/// InlineAsm::get - Return the the specified uniqued inline asm string.
+comment|/// InlineAsm::get - Return the specified uniqued inline asm string.
 comment|///
 specifier|static
 name|InlineAsm

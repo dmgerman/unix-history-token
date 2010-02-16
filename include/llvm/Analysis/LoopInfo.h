@@ -3171,6 +3171,10 @@ comment|/// getSmallConstantTripCount - Returns the trip count of this loop as a
 comment|/// normal unsigned value, if possible. Returns 0 if the trip count is unknown
 comment|/// of not constant. Will also return 0 if the trip count is very large
 comment|/// (>= 2^32)
+comment|///
+comment|/// The IndVarSimplify pass transforms loops to have a form that this
+comment|/// function easily understands.
+comment|///
 name|unsigned
 name|getSmallConstantTripCount
 argument_list|()

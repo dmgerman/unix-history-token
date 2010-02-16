@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCFixup.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -100,6 +106,9 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
+name|MCFragment
+decl_stmt|;
+name|class
 name|MCSection
 decl_stmt|;
 name|class
@@ -108,6 +117,66 @@ decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
+comment|/// MCAsmFixup - Represent a fixed size region of bytes inside some fragment
+comment|/// which needs to be rewritten. This region will either be rewritten by the
+comment|/// assembler or cause a relocation entry to be generated.
+struct|struct
+name|MCAsmFixup
+block|{
+comment|/// Offset - The offset inside the fragment which needs to be rewritten.
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|/// Value - The expression to eventually write into the fragment.
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+decl_stmt|;
+comment|/// Kind - The fixup kind.
+name|MCFixupKind
+name|Kind
+decl_stmt|;
+comment|/// FixedValue - The value to replace the fix up by.
+comment|//
+comment|// FIXME: This should not be here.
+name|uint64_t
+name|FixedValue
+decl_stmt|;
+name|public
+label|:
+name|MCAsmFixup
+argument_list|(
+argument|uint64_t _Offset
+argument_list|,
+argument|const MCExpr&_Value
+argument_list|,
+argument|MCFixupKind _Kind
+argument_list|)
+block|:
+name|Offset
+argument_list|(
+name|_Offset
+argument_list|)
+operator|,
+name|Value
+argument_list|(
+operator|&
+name|_Value
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+name|_Kind
+argument_list|)
+operator|,
+name|FixedValue
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
 name|class
 name|MCFragment
 range|:
@@ -338,11 +407,15 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
 name|class
 name|MCDataFragment
-operator|:
+range|:
 name|public
 name|MCFragment
 block|{
@@ -352,8 +425,41 @@ literal|32
 operator|>
 name|Contents
 block|;
+comment|/// Fixups - The list of fixups in this fragment.
+name|std
+operator|::
+name|vector
+operator|<
+name|MCAsmFixup
+operator|>
+name|Fixups
+block|;
 name|public
 operator|:
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|MCAsmFixup
+operator|>
+operator|::
+name|const_iterator
+name|const_fixup_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|MCAsmFixup
+operator|>
+operator|::
+name|iterator
+name|fixup_iterator
+expr_stmt|;
+name|public
+label|:
 name|MCDataFragment
 argument_list|(
 name|MCSectionData
@@ -411,12 +517,106 @@ name|Contents
 return|;
 block|}
 comment|/// @}
+comment|/// @name Fixup Access
+comment|/// @{
+name|std
+operator|::
+name|vector
+operator|<
+name|MCAsmFixup
+operator|>
+operator|&
+name|getFixups
+argument_list|()
+block|{
+return|return
+name|Fixups
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|MCAsmFixup
+operator|>
+operator|&
+name|getFixups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fixups
+return|;
+block|}
+name|fixup_iterator
+name|fixup_begin
+parameter_list|()
+block|{
+return|return
+name|Fixups
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_fixup_iterator
+name|fixup_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fixups
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|fixup_iterator
+name|fixup_end
+parameter_list|()
+block|{
+return|return
+name|Fixups
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_fixup_iterator
+name|fixup_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fixups
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|fixup_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fixups
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// @}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const MCFragment *F
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCFragment
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -432,19 +632,32 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const MCDataFragment *
-argument_list|)
+parameter_list|(
+specifier|const
+name|MCDataFragment
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|class
 name|MCAlignFragment
-operator|:
+range|:
 name|public
 name|MCFragment
 block|{
@@ -594,18 +807,23 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|MCFillFragment
-operator|:
+range|:
 name|public
 name|MCFragment
 block|{
 comment|/// Value - Value to use for filling bytes.
-specifier|const
-name|MCExpr
-operator|*
+name|int64_t
 name|Value
 block|;
 comment|/// ValueSize - The size (in bytes) of \arg Value to use when filling.
@@ -620,7 +838,7 @@ name|public
 operator|:
 name|MCFillFragment
 argument_list|(
-argument|const MCExpr&_Value
+argument|int64_t _Value
 argument_list|,
 argument|unsigned _ValueSize
 argument_list|,
@@ -639,7 +857,6 @@ argument_list|)
 block|,
 name|Value
 argument_list|(
-operator|&
 name|_Value
 argument_list|)
 block|,
@@ -666,15 +883,12 @@ operator|*
 name|Count
 return|;
 block|}
-specifier|const
-name|MCExpr
-operator|&
+name|int64_t
 name|getValue
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|Value
 return|;
 block|}
@@ -726,11 +940,18 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|MCOrgFragment
-operator|:
+range|:
 name|public
 name|MCFragment
 block|{
@@ -841,13 +1062,26 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// MCZeroFillFragment - Represent data which has a fixed size and alignment,
+end_comment
+
+begin_comment
 comment|/// but requires no physical space in the object file.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MCZeroFillFragment
-operator|:
+range|:
 name|public
 name|MCFragment
 block|{
@@ -952,14 +1186,30 @@ return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|virtual
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// FIXME: Should this be a separate class, or just merged into MCSection? Since
+end_comment
+
+begin_comment
 comment|// we anticipate the fast path being through an MCAssembler, the only reason to
+end_comment
+
+begin_comment
 comment|// keep it out is for API abstraction.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MCSectionData
-operator|:
+range|:
 name|public
 name|ilist_node
 operator|<
@@ -986,79 +1236,6 @@ block|;
 comment|// DO NOT IMPLEMENT
 name|public
 operator|:
-comment|/// Fixup - Represent a fixed size region of bytes inside some fragment which
-comment|/// needs to be rewritten. This region will either be rewritten by the
-comment|/// assembler or cause a relocation entry to be generated.
-expr|struct
-name|Fixup
-block|{
-comment|/// Fragment - The fragment containing the fixup.
-name|MCFragment
-operator|*
-name|Fragment
-block|;
-comment|/// Offset - The offset inside the fragment which needs to be rewritten.
-name|uint64_t
-name|Offset
-block|;
-comment|/// Value - The expression to eventually write into the fragment.
-specifier|const
-name|MCExpr
-operator|*
-name|Value
-block|;
-comment|/// Size - The fixup size.
-name|unsigned
-name|Size
-block|;
-comment|/// FixedValue - The value to replace the fix up by.
-comment|//
-comment|// FIXME: This should not be here.
-name|uint64_t
-name|FixedValue
-block|;
-name|public
-operator|:
-name|Fixup
-argument_list|(
-argument|MCFragment&_Fragment
-argument_list|,
-argument|uint64_t _Offset
-argument_list|,
-argument|const MCExpr&_Value
-argument_list|,
-argument|unsigned _Size
-argument_list|)
-operator|:
-name|Fragment
-argument_list|(
-operator|&
-name|_Fragment
-argument_list|)
-block|,
-name|Offset
-argument_list|(
-name|_Offset
-argument_list|)
-block|,
-name|Value
-argument_list|(
-operator|&
-name|_Value
-argument_list|)
-block|,
-name|Size
-argument_list|(
-name|_Size
-argument_list|)
-block|,
-name|FixedValue
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-block|}
-block|;
 typedef|typedef
 name|iplist
 operator|<
@@ -1066,96 +1243,166 @@ name|MCFragment
 operator|>
 name|FragmentListType
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|FragmentListType
 operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|FragmentListType
 operator|::
 name|iterator
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
-name|std
+name|FragmentListType
 operator|::
-name|vector
-operator|<
-name|Fixup
-operator|>
-operator|::
-name|const_iterator
-name|const_fixup_iterator
+name|const_reverse_iterator
+name|const_reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
-name|std
+name|FragmentListType
 operator|::
-name|vector
-operator|<
-name|Fixup
-operator|>
-operator|::
-name|iterator
-name|fixup_iterator
+name|reverse_iterator
+name|reverse_iterator
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_expr_stmt
 name|iplist
 operator|<
 name|MCFragment
 operator|>
 name|Fragments
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|MCSection
-operator|*
+modifier|*
 name|Section
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Alignment - The maximum alignment seen in this section.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|Alignment
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @name Assembler Backend Data
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: This could all be kept private to the assembler implementation.
+end_comment
+
+begin_comment
 comment|/// Address - The computed address of this section. This is ~0 until
+end_comment
+
+begin_comment
 comment|/// initialized.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|Address
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Size - The content size of this section. This is ~0 until initialized.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|Size
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// FileSize - The size of this section in the object file. This is ~0 until
+end_comment
+
+begin_comment
 comment|/// initialized.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|FileSize
-block|;
-comment|/// LastFixupLookup - Cache for the last looked up fixup.
-name|mutable
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// HasInstructions - Whether this section has had instructions emitted into
+end_comment
+
+begin_comment
+comment|/// it.
+end_comment
+
+begin_decl_stmt
 name|unsigned
-name|LastFixupLookup
-block|;
-comment|/// Fixups - The list of fixups in this section.
-name|std
-operator|::
-name|vector
-operator|<
-name|Fixup
-operator|>
-name|Fixups
-block|;
+name|HasInstructions
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_comment
 comment|// Only for use as sentinel.
+end_comment
+
+begin_expr_stmt
 name|MCSectionData
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MCSectionData
 argument_list|(
 specifier|const
@@ -1169,7 +1416,10 @@ name|A
 operator|=
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|MCSection
 operator|&
@@ -1182,6 +1432,9 @@ operator|*
 name|Section
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getAlignment
 argument_list|()
@@ -1191,18 +1444,32 @@ return|return
 name|Alignment
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setAlignment
-argument_list|(
-argument|unsigned Value
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Value
+parameter_list|)
 block|{
 name|Alignment
 operator|=
 name|Value
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// @name Fragment Access
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|FragmentListType
 operator|&
@@ -1214,18 +1481,24 @@ return|return
 name|Fragments
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|FragmentListType
-operator|&
+modifier|&
 name|getFragmentList
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Fragments
 return|;
 block|}
+end_function
+
+begin_function
 name|iterator
 name|begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Fragments
@@ -1234,6 +1507,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -1246,9 +1522,12 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|iterator
 name|end
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Fragments
@@ -1257,6 +1536,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -1269,6 +1551,67 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
+name|reverse_iterator
+name|rbegin
+parameter_list|()
+block|{
+return|return
+name|Fragments
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fragments
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|reverse_iterator
+name|rend
+parameter_list|()
+block|{
+return|return
+name|Fragments
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Fragments
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -1281,6 +1624,9 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -1293,81 +1639,29 @@ name|empty
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
-comment|/// @name Fixup Access
-comment|/// @{
-name|std
-operator|::
-name|vector
-operator|<
-name|Fixup
-operator|>
-operator|&
-name|getFixups
-argument_list|()
-block|{
-return|return
-name|Fixups
-return|;
-block|}
-name|fixup_iterator
-name|fixup_begin
-argument_list|()
-block|{
-return|return
-name|Fixups
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|fixup_iterator
-name|fixup_end
-argument_list|()
-block|{
-return|return
-name|Fixups
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|size_t
-name|fixup_size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fixups
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Assembler Backend Support
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: This could all be kept private to the assembler implementation.
-comment|/// LookupFixup - Look up the fixup for the given \arg Fragment and \arg
-comment|/// Offset.
-comment|///
-comment|/// If multiple fixups exist for the same fragment and offset it is undefined
-comment|/// which one is returned.
-comment|//
-comment|// FIXME: This isn't horribly slow in practice, but there are much nicer
-comment|// solutions to applying the fixups.
-specifier|const
-name|Fixup
-operator|*
-name|LookupFixup
-argument_list|(
-argument|const MCFragment *Fragment
-argument_list|,
-argument|uint64_t Offset
-argument_list|)
-specifier|const
-block|;
+end_comment
+
+begin_expr_stmt
 name|uint64_t
 name|getAddress
 argument_list|()
@@ -1390,16 +1684,24 @@ return|return
 name|Address
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setAddress
-argument_list|(
-argument|uint64_t Value
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
 block|{
 name|Address
 operator|=
 name|Value
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|uint64_t
 name|getSize
 argument_list|()
@@ -1422,16 +1724,24 @@ return|return
 name|Size
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSize
-argument_list|(
-argument|uint64_t Value
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
 block|{
 name|Size
 operator|=
 name|Value
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|uint64_t
 name|getFileSize
 argument_list|()
@@ -1454,23 +1764,70 @@ return|return
 name|FileSize
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setFileSize
-argument_list|(
-argument|uint64_t Value
-argument_list|)
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|)
 block|{
 name|FileSize
 operator|=
 name|Value
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|hasInstructions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasInstructions
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHasInstructions
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|HasInstructions
+operator|=
+name|Value
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// @}
-expr|}
-block|;
+end_comment
+
+begin_function_decl
+name|void
+name|dump
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|};
 comment|// FIXME: Same concerns as with SectionData.
+end_comment
+
+begin_decl_stmt
 name|class
 name|MCSymbolData
-operator|:
+range|:
 name|public
 name|ilist_node
 operator|<
@@ -1752,26 +2109,39 @@ operator|=
 name|Value
 block|; }
 comment|/// @}
-expr|}
-block|;
+name|void
+name|dump
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// FIXME: This really doesn't belong here. See comments below.
-block|struct
+end_comment
+
+begin_struct
+struct|struct
 name|IndirectSymbolData
 block|{
 name|MCSymbol
-operator|*
+modifier|*
 name|Symbol
-block|;
+decl_stmt|;
 name|MCSectionData
-operator|*
+modifier|*
 name|SectionData
-block|; }
-block|;
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
 name|class
 name|MCAssembler
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|iplist
 operator|<
@@ -2165,6 +2535,10 @@ argument_list|()
 return|;
 block|}
 comment|/// @}
+name|void
+name|dump
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

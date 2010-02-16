@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/FastISel.h"
 end_include
 
@@ -257,6 +263,11 @@ block|,
 comment|/// WrapperRIP - Special wrapper used under X86-64 PIC mode for RIP
 comment|/// relative displacements.
 name|WrapperRIP
+block|,
+comment|/// MOVQ2DQ - Copies a 64-bit value from a vector to another vector.
+comment|/// Can be used to move a vector value from a MMX register to a XMM
+comment|/// register.
+name|MOVQ2DQ
 block|,
 comment|/// PEXTRB - Extract an 8-bit value from a vector and zero extend it to
 comment|/// i32, corresponds to X86::PEXTRB.
@@ -692,10 +703,6 @@ name|int
 name|BytesToPopOnReturn
 block|;
 comment|// Number of arg bytes ret should pop.
-name|int
-name|BytesCallerReserves
-block|;
-comment|// Number of arg bytes caller makes.
 name|public
 operator|:
 name|explicit
@@ -706,14 +713,62 @@ operator|&
 name|TM
 argument_list|)
 block|;
+comment|/// getPICBaseSymbol - Return the X86-32 PIC base.
+name|MCSymbol
+operator|*
+name|getPICBaseSymbol
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getJumpTableEncoding
+argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|LowerCustomJumpTableEntry
+argument_list|(
+argument|const MachineJumpTableInfo *MJTI
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|unsigned uid
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+specifier|const
+block|;
 comment|/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
 comment|/// jumptable.
+name|virtual
 name|SDValue
 name|getPICJumpTableRelocBase
 argument_list|(
 argument|SDValue Table
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getPICJumpTableRelocBaseExpr
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|,
+argument|unsigned JTI
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -727,17 +782,6 @@ specifier|const
 block|{
 return|return
 name|BytesToPopOnReturn
-return|;
-block|}
-comment|// Return the number of bytes that the caller reserves for arguments passed
-comment|// to this function.
-name|unsigned
-name|getBytesCallerReserves
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BytesCallerReserves
 return|;
 block|}
 comment|/// getStackPtrReg - Return the stack pointer register we are using: either
@@ -1144,25 +1188,6 @@ operator|::
 name|f80
 return|;
 block|}
-comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
-comment|/// for tail call optimization. Targets which want to do tail call
-comment|/// optimization should implement this function.
-name|virtual
-name|bool
-name|IsEligibleForTailCallOptimization
-argument_list|(
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CalleeCC
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|SelectionDAG& DAG
-argument_list|)
-specifier|const
-block|;
 name|virtual
 specifier|const
 name|X86Subtarget
@@ -1410,6 +1435,26 @@ argument|ISD::ArgFlagsTy Flags
 argument_list|)
 block|;
 comment|// Call lowering helpers.
+comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
+comment|/// for tail call optimization. Targets which want to do tail call
+comment|/// optimization should implement this function.
+name|bool
+name|IsEligibleForTailCallOptimization
+argument_list|(
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CalleeCC
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|SelectionDAG& DAG
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|IsCalleePop
 argument_list|(
@@ -1443,12 +1488,6 @@ argument_list|(
 argument|CallingConv::ID CallConv
 argument_list|)
 specifier|const
-block|;
-name|NameDecorationStyle
-name|NameDecorationForCallConv
-argument_list|(
-argument|CallingConv::ID CallConv
-argument_list|)
 block|;
 name|unsigned
 name|GetAlignedArgumentStackSize
@@ -1489,6 +1528,14 @@ argument_list|)
 block|;
 name|SDValue
 name|LowerBUILD_VECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerCONCAT_VECTORS
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1913,7 +1960,7 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|bool isTailCall
+argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

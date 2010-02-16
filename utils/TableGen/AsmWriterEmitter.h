@@ -171,6 +171,14 @@ operator|&
 name|o
 argument_list|)
 block|;
+name|void
+name|EmitGetInstructionName
+argument_list|(
+name|raw_ostream
+operator|&
+name|o
+argument_list|)
+block|;
 name|AsmWriterInst
 operator|*
 name|getAsmWriterInstByID

@@ -156,6 +156,9 @@ comment|// PPC64: powerpc64, ppu
 name|sparc
 block|,
 comment|// Sparc: sparc
+name|sparcv9
+block|,
+comment|// Sparcv9: Sparcv9
 name|systemz
 block|,
 comment|// SystemZ: s390x

@@ -133,19 +133,6 @@ name|bool
 name|HasStaticCtorDtorReferenceInStaticMode
 decl_stmt|;
 comment|// Default is false.
-comment|/// NeedsSet - True if target asm treats expressions in data directives
-comment|/// as linktime-relocatable.  For assembly-time computation, we need to
-comment|/// use a .set.  Thus:
-comment|/// .set w, x-y
-comment|/// .long w
-comment|/// is computed at assembly time, while
-comment|/// .long x-y
-comment|/// is relocated if the relative locations of x and y change at linktime.
-comment|/// We want both these things in different places.
-name|bool
-name|NeedsSet
-decl_stmt|;
-comment|// Defaults to false.
 comment|/// MaxInstLength - This is the maximum possible length of an instruction,
 comment|/// which is needed to compute the size of an inline asm.
 name|unsigned
@@ -172,7 +159,7 @@ comment|/// which asm comments should be printed.
 name|unsigned
 name|CommentColumn
 decl_stmt|;
-comment|// Defaults to 60
+comment|// Defaults to 40
 comment|/// CommentString - This indicates the comment character used by the
 comment|/// assembler.
 specifier|const
@@ -291,6 +278,15 @@ modifier|*
 name|Data64bitsDirective
 decl_stmt|;
 comment|// Defaults to "\t.quad\t"
+comment|/// GPRel32Directive - if non-null, a directive that is used to emit a word
+comment|/// which should be relocated as a 32-bit GP-relative offset, e.g. .gpword
+comment|/// on Mips or .gprel32 on Alpha.
+specifier|const
+name|char
+modifier|*
+name|GPRel32Directive
+decl_stmt|;
+comment|// Defaults to NULL.
 comment|/// getDataASDirective - Return the directive that should be used to emit
 comment|/// data of the specified size to the specified numeric address space.
 name|virtual
@@ -358,21 +354,6 @@ name|unsigned
 name|TextAlignFillValue
 decl_stmt|;
 comment|// Defaults to 0
-comment|//===--- Section Switching Directives ---------------------------------===//
-comment|/// JumpTableDirective - if non-null, the directive to emit before jump
-comment|/// table entries.  FIXME: REMOVE THIS.
-specifier|const
-name|char
-modifier|*
-name|JumpTableDirective
-decl_stmt|;
-comment|// Defaults to NULL.
-specifier|const
-name|char
-modifier|*
-name|PICJumpTableDirective
-decl_stmt|;
-comment|// Defaults to NULL.
 comment|//===--- Global Variable Emission Directives --------------------------===//
 comment|/// GlobalDirective - This is the directive used to declare a global entity.
 comment|///
@@ -391,26 +372,23 @@ modifier|*
 name|ExternDirective
 decl_stmt|;
 comment|// Defaults to NULL.
-comment|/// SetDirective - This is the name of a directive that can be used to tell
-comment|/// the assembler to set the value of a variable to some expression.
-specifier|const
-name|char
-modifier|*
-name|SetDirective
+comment|/// HasSetDirective - True if the assembler supports the .set directive.
+name|bool
+name|HasSetDirective
 decl_stmt|;
-comment|// Defaults to null.
+comment|// Defaults to true.
 comment|/// HasLCOMMDirective - This is true if the target supports the .lcomm
 comment|/// directive.
 name|bool
 name|HasLCOMMDirective
 decl_stmt|;
 comment|// Defaults to false.
-comment|/// COMMDirectiveTakesAlignment - True if COMMDirective take a third
-comment|/// argument that specifies the alignment of the declaration.
+comment|/// COMMDirectiveAlignmentIsInBytes - True is COMMDirective's optional
+comment|/// alignment is to be specified in bytes instead of log2(n).
 name|bool
-name|COMMDirectiveTakesAlignment
+name|COMMDirectiveAlignmentIsInBytes
 decl_stmt|;
-comment|// Defaults to true.
+comment|// Defaults to true;
 comment|/// HasDotTypeDotSizeDirective - True if the target has .type and .size
 comment|/// directives, this is true for most ELF targets.
 name|bool
@@ -695,6 +673,17 @@ name|AS
 argument_list|)
 return|;
 block|}
+specifier|const
+name|char
+operator|*
+name|getGPRel32Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GPRel32Directive
+return|;
+block|}
 comment|/// getNonexecutableStackSection - Targets can implement this method to
 comment|/// specify a section to switch to if the translation unit doesn't have any
 comment|/// trampolines that require an executable stack.
@@ -749,15 +738,6 @@ specifier|const
 block|{
 return|return
 name|HasStaticCtorDtorReferenceInStaticMode
-return|;
-block|}
-name|bool
-name|needsSet
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NeedsSet
 return|;
 block|}
 name|unsigned
@@ -926,24 +906,6 @@ return|;
 block|}
 specifier|const
 name|char
-modifier|*
-name|getJumpTableDirective
-argument_list|(
-name|bool
-name|isPIC
-argument_list|)
-decl|const
-block|{
-return|return
-name|isPIC
-condition|?
-name|PICJumpTableDirective
-else|:
-name|JumpTableDirective
-return|;
-block|}
-specifier|const
-name|char
 operator|*
 name|getAlignDirective
 argument_list|()
@@ -993,15 +955,13 @@ return|return
 name|ExternDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getSetDirective
+name|bool
+name|hasSetDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SetDirective
+name|HasSetDirective
 return|;
 block|}
 name|bool
@@ -1014,21 +974,21 @@ name|HasLCOMMDirective
 return|;
 block|}
 name|bool
-name|getCOMMDirectiveTakesAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|COMMDirectiveTakesAlignment
-return|;
-block|}
-name|bool
 name|hasDotTypeDotSizeDirective
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasDotTypeDotSizeDirective
+return|;
+block|}
+name|bool
+name|getCOMMDirectiveAlignmentIsInBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|COMMDirectiveAlignmentIsInBytes
 return|;
 block|}
 name|bool

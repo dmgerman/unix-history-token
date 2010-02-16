@@ -893,7 +893,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// SmallPtrSet - This class implements a set which is optimizer for holding
+comment|/// SmallPtrSet - This class implements a set which is optimized for holding
 end_comment
 
 begin_comment

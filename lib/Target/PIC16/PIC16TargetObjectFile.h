@@ -416,6 +416,8 @@ operator|*
 name|SectionForCode
 argument_list|(
 argument|const std::string&FnName
+argument_list|,
+argument|bool isISR
 argument_list|)
 specifier|const
 block|;

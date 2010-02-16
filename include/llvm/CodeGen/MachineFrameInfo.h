@@ -778,6 +778,17 @@ name|Alignment
 operator|=
 name|Align
 expr_stmt|;
+name|MaxAlignment
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|MaxAlignment
+argument_list|,
+name|Align
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// getObjectOffset - Return the assigned stack offset of the specified object
 comment|/// from the incoming stack pointer.
@@ -960,62 +971,6 @@ name|MaxAlignment
 operator|=
 name|Align
 expr_stmt|;
-block|}
-comment|/// calculateMaxStackAlignment() - If there is a local object which requires
-comment|/// greater alignment than the current max alignment, adjust accordingly.
-name|void
-name|calculateMaxStackAlignment
-parameter_list|()
-block|{
-for|for
-control|(
-name|int
-name|i
-init|=
-name|getObjectIndexBegin
-argument_list|()
-init|,
-name|e
-init|=
-name|getObjectIndexEnd
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-if|if
-condition|(
-name|isDeadObjectIndex
-argument_list|(
-name|i
-argument_list|)
-condition|)
-continue|continue;
-name|unsigned
-name|Align
-init|=
-name|getObjectAlignment
-argument_list|(
-name|i
-argument_list|)
-decl_stmt|;
-name|MaxAlignment
-operator|=
-name|std
-operator|::
-name|max
-argument_list|(
-name|MaxAlignment
-argument_list|,
-name|Align
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/// hasCalls - Return true if the current function has no function calls.
 comment|/// This is only valid during or after prolog/epilog code emission.
@@ -1299,6 +1254,17 @@ operator|&&
 literal|"Bad frame index!"
 argument_list|)
 expr_stmt|;
+name|MaxAlignment
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|MaxAlignment
+argument_list|,
+name|Alignment
+argument_list|)
+expr_stmt|;
 return|return
 name|Index
 return|;
@@ -1341,6 +1307,17 @@ name|NumFixedObjects
 operator|-
 literal|1
 decl_stmt|;
+name|MaxAlignment
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|MaxAlignment
+argument_list|,
+name|Alignment
+argument_list|)
+expr_stmt|;
 return|return
 name|Index
 return|;

@@ -190,18 +190,21 @@ comment|///<  9: Functions
 name|StructTyID
 block|,
 comment|///< 10: Structures
+name|UnionTyID
+block|,
+comment|///< 11: Unions
 name|ArrayTyID
 block|,
-comment|///< 11: Arrays
+comment|///< 12: Arrays
 name|PointerTyID
 block|,
-comment|///< 12: Pointers
+comment|///< 13: Pointers
 name|OpaqueTyID
 block|,
-comment|///< 13: Opaque: type with unknown structure
+comment|///< 14: Opaque: type with unknown structure
 name|VectorTyID
 block|,
-comment|///< 14: SIMD 'packed' format, or other vector type
+comment|///< 15: SIMD 'packed' format, or other vector type
 name|NumTypeIDs
 block|,
 comment|// Must remain as last defined ID
@@ -573,10 +576,10 @@ name|getDescription
 argument_list|()
 specifier|const
 block|;
-comment|/// isInteger - True if this is an instance of IntegerType.
+comment|/// isIntegerTy - True if this is an instance of IntegerType.
 comment|///
 name|bool
-name|isInteger
+name|isIntegerTy
 argument_list|()
 specifier|const
 block|{
@@ -586,26 +589,26 @@ operator|==
 name|IntegerTyID
 return|;
 block|}
-comment|/// isInteger - Return true if this is an IntegerType of the specified width.
+comment|/// isIntegerTy - Return true if this is an IntegerType of the given width.
 name|bool
-name|isInteger
+name|isIntegerTy
 argument_list|(
 argument|unsigned Bitwidth
 argument_list|)
 specifier|const
 block|;
-comment|/// isIntOrIntVector - Return true if this is an integer type or a vector of
+comment|/// isIntOrIntVectorTy - Return true if this is an integer type or a vector of
 comment|/// integer types.
 comment|///
 name|bool
-name|isIntOrIntVector
+name|isIntOrIntVectorTy
 argument_list|()
 specifier|const
 block|;
-comment|/// isFloatingPoint - Return true if this is one of the five floating point
+comment|/// isFloatingPointTy - Return true if this is one of the five floating point
 comment|/// types
 name|bool
-name|isFloatingPoint
+name|isFloatingPointTy
 argument_list|()
 specifier|const
 block|{
@@ -631,13 +634,78 @@ operator|==
 name|PPC_FP128TyID
 return|;
 block|}
-comment|/// isFPOrFPVector - Return true if this is a FP type or a vector of FP types.
+comment|/// isFPOrFPVectorTy - Return true if this is a FP type or a vector of FP.
 comment|///
 name|bool
-name|isFPOrFPVector
+name|isFPOrFPVectorTy
 argument_list|()
 specifier|const
 block|;
+comment|/// isFunctionTy - True if this is an instance of FunctionType.
+comment|///
+name|bool
+name|isFunctionTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|FunctionTyID
+return|;
+block|}
+comment|/// isStructTy - True if this is an instance of StructType.
+comment|///
+name|bool
+name|isStructTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|StructTyID
+return|;
+block|}
+comment|/// isArrayTy - True if this is an instance of ArrayType.
+comment|///
+name|bool
+name|isArrayTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|ArrayTyID
+return|;
+block|}
+comment|/// isPointerTy - True if this is an instance of PointerType.
+comment|///
+name|bool
+name|isPointerTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|PointerTyID
+return|;
+block|}
+comment|/// isVectorTy - True if this is an instance of VectorType.
+comment|///
+name|bool
+name|isVectorTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|VectorTyID
+return|;
+block|}
 comment|/// isAbstract - True if the type is either an Opaque type, or is a derived
 comment|/// type that includes an opaque type somewhere in it.
 comment|///
@@ -768,6 +836,10 @@ operator|||
 name|ID
 operator|==
 name|ArrayTyID
+operator|||
+name|ID
+operator|==
+name|UnionTyID
 return|;
 block|}
 comment|/// isSized - Return true if it makes sense to take the size of this type.  To
@@ -786,7 +858,7 @@ name|ID
 operator|==
 name|IntegerTyID
 operator|||
-name|isFloatingPoint
+name|isFloatingPointTy
 argument_list|()
 operator|||
 name|ID
@@ -811,6 +883,10 @@ operator|&&
 name|ID
 operator|!=
 name|VectorTyID
+operator|&&
+name|ID
+operator|!=
+name|UnionTyID
 condition|)
 return|return
 name|false

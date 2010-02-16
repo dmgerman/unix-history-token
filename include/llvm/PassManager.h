@@ -91,9 +91,6 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|ModuleProvider
-decl_stmt|;
-name|class
 name|PassManagerImpl
 decl_stmt|;
 name|class
@@ -186,13 +183,13 @@ block|{
 name|public
 operator|:
 comment|/// FunctionPassManager ctor - This initializes the pass manager.  It needs,
-comment|/// but does not take ownership of, the specified module provider.
+comment|/// but does not take ownership of, the specified Module.
 name|explicit
 name|FunctionPassManager
 argument_list|(
-name|ModuleProvider
+name|Module
 operator|*
-name|P
+name|M
 argument_list|)
 block|;
 operator|~
@@ -236,38 +233,15 @@ name|bool
 name|doFinalization
 argument_list|()
 block|;
-comment|/// getModuleProvider - Return the module provider that this passmanager is
-comment|/// currently using.  This is the module provider that it uses when a function
-comment|/// is optimized that is non-resident in the module.
-name|ModuleProvider
-operator|*
-name|getModuleProvider
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MP
-return|;
-block|}
-name|void
-name|setModuleProvider
-argument_list|(
-argument|ModuleProvider *NewMP
-argument_list|)
-block|{
-name|MP
-operator|=
-name|NewMP
-block|; }
 name|private
 operator|:
 name|FunctionPassManagerImpl
 operator|*
 name|FPM
 block|;
-name|ModuleProvider
+name|Module
 operator|*
-name|MP
+name|M
 block|; }
 decl_stmt|;
 block|}

@@ -116,6 +116,10 @@ name|EarlyClobber
 init|=
 literal|0x40
 block|,
+name|Debug
+init|=
+literal|0x80
+block|,
 name|ImplicitDefine
 init|=
 name|Implicit
@@ -266,6 +270,12 @@ operator|::
 name|EarlyClobber
 argument_list|,
 name|SubReg
+argument_list|,
+name|flags
+operator|&
+name|RegState
+operator|::
+name|Debug
 argument_list|)
 argument_list|)
 expr_stmt|;

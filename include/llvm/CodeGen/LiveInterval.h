@@ -1322,7 +1322,7 @@ block|}
 comment|/// advanceTo - Advance the specified iterator to point to the LiveRange
 comment|/// containing the specified position, or end() if the position is past the
 comment|/// end of the interval.  If no LiveRange contains this position, but the
-comment|/// position is in a hole, this method returns an iterator pointing the the
+comment|/// position is in a hole, this method returns an iterator pointing to the
 comment|/// LiveRange immediately after the hole.
 name|iterator
 name|advanceTo

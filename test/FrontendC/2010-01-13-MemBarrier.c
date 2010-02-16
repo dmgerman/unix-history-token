@@ -4,7 +4,7 @@ comment|// RUN: %llvmgcc %s -S -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// XFAIL: sparc,powerpc
+comment|// XFAIL: sparc
 end_comment
 
 begin_comment

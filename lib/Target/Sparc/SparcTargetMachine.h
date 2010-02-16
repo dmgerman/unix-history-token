@@ -105,14 +105,14 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|SparcSubtarget
+name|Subtarget
+block|;
 specifier|const
 name|TargetData
 name|DataLayout
 block|;
 comment|// Calculates type size& alignment
-name|SparcSubtarget
-name|Subtarget
-block|;
 name|SparcTargetLowering
 name|TLInfo
 block|;
@@ -126,24 +126,13 @@ name|public
 operator|:
 name|SparcTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|const std::string&TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|const std::string&FS
+argument_list|,
+argument|bool is64bit
 argument_list|)
 block|;
 name|virtual
@@ -250,6 +239,72 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// SparcV8TargetMachine - Sparc 32-bit target machine
+comment|///
+name|class
+name|SparcV8TargetMachine
+range|:
+name|public
+name|SparcTargetMachine
+block|{
+name|public
+operator|:
+name|SparcV8TargetMachine
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// SparcV9TargetMachine - Sparc 64-bit target machine
+comment|///
+name|class
+name|SparcV9TargetMachine
+range|:
+name|public
+name|SparcTargetMachine
+block|{
+name|public
+operator|:
+name|SparcV9TargetMachine
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
 argument_list|)
 block|; }
 decl_stmt|;

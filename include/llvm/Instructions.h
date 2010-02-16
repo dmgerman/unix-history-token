@@ -2497,7 +2497,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isIntOrIntVector
+name|isIntOrIntVectorTy
 argument_list|()
 operator|||
 name|isa
@@ -2605,7 +2605,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isIntOrIntVector
+name|isIntOrIntVectorTy
 argument_list|()
 operator|||
 name|isa
@@ -2708,7 +2708,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isIntOrIntVector
+name|isIntOrIntVectorTy
 argument_list|()
 operator|||
 name|isa
@@ -3068,7 +3068,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isFPOrFPVector
+name|isFPOrFPVectorTy
 argument_list|()
 operator|&&
 literal|"Invalid operand types for FCmp instruction"
@@ -3154,7 +3154,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isFPOrFPVector
+name|isFPOrFPVectorTy
 argument_list|()
 operator|&&
 literal|"Invalid operand types for FCmp instruction"
@@ -3235,7 +3235,7 @@ operator|->
 name|getType
 argument_list|()
 operator|->
-name|isFPOrFPVector
+name|isFPOrFPVectorTy
 argument_list|()
 operator|&&
 literal|"Invalid operand types for FCmp instruction"

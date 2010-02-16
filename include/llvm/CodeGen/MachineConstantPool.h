@@ -436,7 +436,7 @@ operator|~
 name|MachineConstantPool
 argument_list|()
 expr_stmt|;
-comment|/// getConstantPoolAlignment - Return the the alignment required by
+comment|/// getConstantPoolAlignment - Return the alignment required by
 comment|/// the whole constant pool, of which the first element must be aligned.
 name|unsigned
 name|getConstantPoolAlignment

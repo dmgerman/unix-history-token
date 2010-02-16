@@ -131,6 +131,9 @@ name|class
 name|MachineJumpTableInfo
 decl_stmt|;
 name|class
+name|Pass
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -355,6 +358,12 @@ comment|// Tracks debug locations.
 name|DebugLocTracker
 name|DebugLocInfo
 decl_stmt|;
+comment|/// FunctionNumber - This provides a unique ID for each function emitted in
+comment|/// this translation unit.
+comment|///
+name|unsigned
+name|FunctionNumber
+decl_stmt|;
 comment|// The alignment of the function.
 name|unsigned
 name|Alignment
@@ -381,16 +390,13 @@ name|public
 label|:
 name|MachineFunction
 argument_list|(
-name|Function
-operator|*
-name|Fn
+argument|Function *Fn
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
+argument_list|,
+argument|unsigned FunctionNum
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|MachineFunction
 argument_list|()
@@ -405,6 +411,17 @@ specifier|const
 block|{
 return|return
 name|Fn
+return|;
+block|}
+comment|/// getFunctionNumber - Return a unique ID for the current function.
+comment|///
+name|unsigned
+name|getFunctionNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionNumber
 return|;
 block|}
 comment|/// getTarget - Return the target machine this machine code is compiled with
@@ -469,18 +486,9 @@ name|FrameInfo
 return|;
 block|}
 comment|/// getJumpTableInfo - Return the jump table info object for the current
-comment|/// function.  This object contains information about jump tables for switch
-comment|/// instructions in the current function.
-comment|///
-name|MachineJumpTableInfo
-modifier|*
-name|getJumpTableInfo
-parameter_list|()
-block|{
-return|return
-name|JumpTableInfo
-return|;
-block|}
+comment|/// function.  This object contains information about jump tables in the
+comment|/// current function.  If the current function has no jump tables, this will
+comment|/// return null.
 specifier|const
 name|MachineJumpTableInfo
 operator|*
@@ -492,6 +500,25 @@ return|return
 name|JumpTableInfo
 return|;
 block|}
+name|MachineJumpTableInfo
+modifier|*
+name|getJumpTableInfo
+parameter_list|()
+block|{
+return|return
+name|JumpTableInfo
+return|;
+block|}
+comment|/// getOrCreateJumpTableInfo - Get the JumpTableInfo for this function, if it
+comment|/// does already exist, allocate one.
+name|MachineJumpTableInfo
+modifier|*
+name|getOrCreateJumpTableInfo
+parameter_list|(
+name|unsigned
+name|JTEntryKind
+parameter_list|)
+function_decl|;
 comment|/// getConstantPool - Return the constant pool object for the current
 comment|/// function.
 comment|///
@@ -535,6 +562,25 @@ name|unsigned
 name|A
 parameter_list|)
 block|{
+name|Alignment
+operator|=
+name|A
+expr_stmt|;
+block|}
+comment|/// EnsureAlignment - Make sure the function is at least 'A' bits aligned.
+name|void
+name|EnsureAlignment
+parameter_list|(
+name|unsigned
+name|A
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Alignment
+operator|<
+name|A
+condition|)
 name|Alignment
 operator|=
 name|A
@@ -1212,7 +1258,7 @@ name|false
 parameter_list|)
 function_decl|;
 comment|/// CloneMachineInstr - Create a new MachineInstr which is a copy of the
-comment|/// 'Orig' instruction, identical in all ways except the the instruction
+comment|/// 'Orig' instruction, identical in all ways except the instruction
 comment|/// has no parent, prev, or next.
 comment|///
 comment|/// See also TargetInstrInfo::duplicate() for target-specific fixes to cloned
@@ -1359,6 +1405,30 @@ argument_list|,
 argument|MachineInstr::mmo_iterator End
 argument_list|)
 expr_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Label Manipulation.
+comment|//
+comment|/// getJTISymbol - Return the MCSymbol for the specified non-empty jump table.
+comment|/// If isLinkerPrivate is specified, an 'l' label is returned, otherwise a
+comment|/// normal 'L' label is returned.
+name|MCSymbol
+modifier|*
+name|getJTISymbol
+argument_list|(
+name|unsigned
+name|JTI
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|bool
+name|isLinkerPrivate
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Debug location.
 comment|//

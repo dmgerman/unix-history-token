@@ -137,6 +137,9 @@ name|class
 name|StructType
 decl_stmt|;
 name|class
+name|UnionType
+decl_stmt|;
+name|class
 name|PointerType
 decl_stmt|;
 name|class
@@ -1631,6 +1634,186 @@ argument_list|,
 argument|Constant
 argument_list|)
 comment|//===----------------------------------------------------------------------===//
+comment|// ConstantUnion - Constant Union Declarations
+comment|//
+name|class
+name|ConstantUnion
+operator|:
+name|public
+name|Constant
+block|{
+name|friend
+expr|struct
+name|ConstantCreator
+operator|<
+name|ConstantUnion
+block|,
+name|UnionType
+block|,
+name|Constant
+operator|*
+operator|>
+block|;
+name|ConstantUnion
+argument_list|(
+specifier|const
+name|ConstantUnion
+operator|&
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|protected
+operator|:
+name|ConstantUnion
+argument_list|(
+specifier|const
+name|UnionType
+operator|*
+name|T
+argument_list|,
+name|Constant
+operator|*
+name|Val
+argument_list|)
+block|;
+name|public
+operator|:
+comment|// ConstantUnion accessors
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
+specifier|const
+name|UnionType
+operator|*
+name|T
+argument_list|,
+name|Constant
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// Transparently provide more efficient getOperand methods.
+name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
+argument_list|(
+name|Constant
+argument_list|)
+block|;
+comment|/// getType() specialization - Reduce amount of casting...
+comment|///
+specifier|inline
+specifier|const
+name|UnionType
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|UnionType
+operator|*
+operator|>
+operator|(
+name|Value
+operator|::
+name|getType
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// isNullValue - Return true if this is the value that would be returned by
+comment|/// getNullValue.  This always returns false because zero structs are always
+comment|/// created as ConstantAggregateZero objects.
+name|virtual
+name|bool
+name|isNullValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|destroyConstant
+argument_list|()
+block|;
+name|virtual
+name|void
+name|replaceUsesOfWithOnConstant
+argument_list|(
+name|Value
+operator|*
+name|From
+argument_list|,
+name|Value
+operator|*
+name|To
+argument_list|,
+name|Use
+operator|*
+name|U
+argument_list|)
+block|;
+comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const ConstantUnion *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Value *V
+argument_list|)
+block|{
+return|return
+name|V
+operator|->
+name|getValueID
+argument_list|()
+operator|==
+name|ConstantUnionVal
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|OperandTraits
+operator|<
+name|ConstantUnion
+operator|>
+operator|:
+name|public
+name|FixedNumOperandTraits
+operator|<
+literal|1
+operator|>
+block|{ }
+block|;
+name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+argument_list|(
+argument|ConstantUnion
+argument_list|,
+argument|Constant
+argument_list|)
+comment|//===----------------------------------------------------------------------===//
 comment|/// ConstantVector - Constant Vector Declarations
 comment|///
 name|class
@@ -2523,8 +2706,7 @@ comment|// expression into something simpler if possible.
 comment|/// Cast constant expr
 comment|///
 comment|/// getAlignOf constant expr - computes the alignment of a type in a target
-comment|/// independent way (Note: the return type is an i32; Note: assumes that i8
-comment|/// is byte aligned).
+comment|/// independent way (Note: the return type is an i64).
 specifier|static
 name|Constant
 operator|*
@@ -2550,17 +2732,35 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getOffsetOf constant expr - computes the offset of a field in a target
-comment|/// independent way (Note: the return type is an i64).
+comment|/// getOffsetOf constant expr - computes the offset of a struct field in a
+comment|/// target independent way (Note: the return type is an i64).
 comment|///
 specifier|static
 name|Constant
 operator|*
 name|getOffsetOf
 argument_list|(
-argument|const StructType* Ty
+argument|const StructType* STy
 argument_list|,
 argument|unsigned FieldNo
+argument_list|)
+block|;
+comment|/// getOffsetOf constant expr - This is a generalized form of getOffsetOf,
+comment|/// which supports any aggregate type, and any Constant index.
+comment|///
+specifier|static
+name|Constant
+operator|*
+name|getOffsetOf
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|Constant
+operator|*
+name|FieldNo
 argument_list|)
 block|;
 specifier|static
@@ -3038,7 +3238,31 @@ block|;
 specifier|static
 name|Constant
 operator|*
+name|getNUWNeg
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
 name|getNSWAdd
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNUWAdd
 argument_list|(
 name|Constant
 operator|*
@@ -3066,7 +3290,35 @@ block|;
 specifier|static
 name|Constant
 operator|*
+name|getNUWSub
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
 name|getNSWMul
+argument_list|(
+name|Constant
+operator|*
+name|C1
+argument_list|,
+name|Constant
+operator|*
+name|C2
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getNUWMul
 argument_list|(
 name|Constant
 operator|*

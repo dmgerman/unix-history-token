@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ValueMap.h"
 end_include
 
@@ -144,9 +150,6 @@ name|MachineCodeInfo
 decl_stmt|;
 name|class
 name|Module
-decl_stmt|;
-name|class
-name|ModuleProvider
 decl_stmt|;
 name|class
 name|MutexGuard
@@ -361,11 +364,11 @@ decl_stmt|;
 comment|// To allow access to JITCtor and InterpCtor.
 name|protected
 label|:
-comment|/// Modules - This is a list of ModuleProvider's that we are JIT'ing from.  We
-comment|/// use a smallvector to optimize for the case where there is only one module.
+comment|/// Modules - This is a list of Modules that we are JIT'ing from.  We use a
+comment|/// smallvector to optimize for the case where there is only one module.
 name|SmallVector
 operator|<
-name|ModuleProvider
+name|Module
 operator|*
 operator|,
 literal|1
@@ -409,9 +412,9 @@ operator|*
 name|JITCtor
 operator|)
 operator|(
-name|ModuleProvider
+name|Module
 operator|*
-name|MP
+name|M
 operator|,
 name|std
 operator|::
@@ -435,6 +438,22 @@ name|CodeModel
 operator|::
 name|Model
 name|CMM
+operator|,
+name|StringRef
+name|MArch
+operator|,
+name|StringRef
+name|MCPU
+operator|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|MAttrs
 operator|)
 expr_stmt|;
 specifier|static
@@ -445,9 +464,9 @@ modifier|*
 name|InterpCtor
 call|)
 argument_list|(
-name|ModuleProvider
+name|Module
 operator|*
-name|MP
+name|M
 argument_list|,
 name|std
 operator|::
@@ -510,13 +529,13 @@ argument_list|()
 argument_list|;
 comment|/// create - This is the factory method for creating an execution engine which
 comment|/// is appropriate for the current machine.  This takes ownership of the
-comment|/// module provider.
+comment|/// module.
 specifier|static
 name|ExecutionEngine
 operator|*
 name|create
 argument_list|(
-argument|ModuleProvider *MP
+argument|Module *M
 argument_list|,
 argument|bool ForceInterpreter = false
 argument_list|,
@@ -537,22 +556,9 @@ comment|// default freeMachineCodeForFunction works.
 argument|bool GVsWithCode = true
 argument_list|)
 argument_list|;
-comment|/// create - This is the factory method for creating an execution engine which
-comment|/// is appropriate for the current machine.  This takes ownership of the
-comment|/// module.
-specifier|static
-name|ExecutionEngine
-operator|*
-name|create
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|)
-argument_list|;
 comment|/// createJIT - This is the factory method for creating a JIT for the current
 comment|/// machine, it does not fall back to the interpreter.  This takes ownership
-comment|/// of the ModuleProvider and JITMemoryManager if successful.
+comment|/// of the Module and JITMemoryManager if successful.
 comment|///
 comment|/// Clients should make sure to initialize targets prior to calling this
 comment|/// function.
@@ -561,7 +567,7 @@ name|ExecutionEngine
 operator|*
 name|createJIT
 argument_list|(
-argument|ModuleProvider *MP
+argument|Module *M
 argument_list|,
 argument|std::string *ErrorStr =
 literal|0
@@ -576,21 +582,21 @@ argument_list|,
 argument|CodeModel::Model CMM = 				      CodeModel::Default
 argument_list|)
 argument_list|;
-comment|/// addModuleProvider - Add a ModuleProvider to the list of modules that we
-comment|/// can JIT from.  Note that this takes ownership of the ModuleProvider: when
-comment|/// the ExecutionEngine is destroyed, it destroys the MP as well.
+comment|/// addModule - Add a Module to the list of modules that we can JIT from.
+comment|/// Note that this takes ownership of the Module: when the ExecutionEngine is
+comment|/// destroyed, it destroys the Module as well.
 name|virtual
 name|void
-name|addModuleProvider
+name|addModule
 argument_list|(
-argument|ModuleProvider *P
+argument|Module *M
 argument_list|)
 block|{
 name|Modules
 operator|.
 name|push_back
 argument_list|(
-name|P
+name|M
 argument_list|)
 block|;   }
 comment|//===----------------------------------------------------------------------===//
@@ -605,47 +611,17 @@ return|return
 name|TD
 return|;
 block|}
-comment|/// removeModuleProvider - Remove a ModuleProvider from the list of modules.
-comment|/// Relases the Module from the ModuleProvider, materializing it in the
-comment|/// process, and returns the materialized Module.
+comment|/// removeModule - Remove a Module from the list of modules.  Returns true if
+comment|/// M is found.
 name|virtual
+name|bool
+name|removeModule
+parameter_list|(
 name|Module
 modifier|*
-name|removeModuleProvider
-argument_list|(
-name|ModuleProvider
-operator|*
-name|P
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-comment|/// deleteModuleProvider - Remove a ModuleProvider from the list of modules,
-comment|/// and deletes the ModuleProvider and owned Module.  Avoids materializing
-comment|/// the underlying module.
-name|virtual
-name|void
-name|deleteModuleProvider
-argument_list|(
-name|ModuleProvider
-operator|*
-name|P
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrInfo
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
+name|M
+parameter_list|)
+function_decl|;
 comment|/// FindFunctionNamed - Search all of the active modules to find the one that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
@@ -1185,9 +1161,9 @@ label|:
 name|explicit
 name|ExecutionEngine
 parameter_list|(
-name|ModuleProvider
+name|Module
 modifier|*
-name|P
+name|M
 parameter_list|)
 function_decl|;
 name|void
@@ -1291,9 +1267,9 @@ name|EngineBuilder
 block|{
 name|private
 label|:
-name|ModuleProvider
+name|Module
 modifier|*
-name|MP
+name|M
 decl_stmt|;
 name|EngineKind
 operator|::
@@ -1322,6 +1298,26 @@ name|CodeModel
 operator|::
 name|Model
 name|CMModel
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|MArch
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|MCPU
+expr_stmt|;
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|4
+operator|>
+name|MAttrs
 expr_stmt|;
 comment|/// InitEngine - Does the common initialization of default options.
 comment|///
@@ -1363,48 +1359,35 @@ block|}
 name|public
 label|:
 comment|/// EngineBuilder - Constructor for EngineBuilder.  If create() is called and
-comment|/// is successful, the created engine takes ownership of the module
-comment|/// provider.
-name|EngineBuilder
-argument_list|(
-name|ModuleProvider
-operator|*
-name|mp
-argument_list|)
-operator|:
-name|MP
-argument_list|(
-argument|mp
-argument_list|)
-block|{
-name|InitEngine
-argument_list|()
-block|;   }
-comment|/// EngineBuilder - Overloaded constructor that automatically creates an
-comment|/// ExistingModuleProvider for an existing module.
+comment|/// is successful, the created engine takes ownership of the module.
 name|EngineBuilder
 argument_list|(
 name|Module
 operator|*
 name|m
 argument_list|)
-expr_stmt|;
+operator|:
+name|M
+argument_list|(
+argument|m
+argument_list|)
+block|{
+name|InitEngine
+argument_list|()
+block|;   }
 comment|/// setEngineKind - Controls whether the user wants the interpreter, the JIT,
 comment|/// or whichever engine works.  This option defaults to EngineKind::Either.
 name|EngineBuilder
-modifier|&
+operator|&
 name|setEngineKind
 argument_list|(
-name|EngineKind
-operator|::
-name|Kind
-name|w
+argument|EngineKind::Kind w
 argument_list|)
 block|{
 name|WhichEngine
 operator|=
 name|w
-expr_stmt|;
+block|;
 return|return
 operator|*
 name|this
@@ -1515,6 +1498,102 @@ name|AllocateGVsWithCode
 operator|=
 name|a
 expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setMArch - Override the architecture set by the Module's triple.
+name|EngineBuilder
+modifier|&
+name|setMArch
+parameter_list|(
+name|StringRef
+name|march
+parameter_list|)
+block|{
+name|MArch
+operator|.
+name|assign
+argument_list|(
+name|march
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|march
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setMCPU - Target a specific cpu type.
+name|EngineBuilder
+modifier|&
+name|setMCPU
+parameter_list|(
+name|StringRef
+name|mcpu
+parameter_list|)
+block|{
+name|MCPU
+operator|.
+name|assign
+argument_list|(
+name|mcpu
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|mcpu
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setMAttrs - Set cpu-specific attributes.
+name|template
+operator|<
+name|typename
+name|StringSequence
+operator|>
+name|EngineBuilder
+operator|&
+name|setMAttrs
+argument_list|(
+argument|const StringSequence&mattrs
+argument_list|)
+block|{
+name|MAttrs
+operator|.
+name|clear
+argument_list|()
+block|;
+name|MAttrs
+operator|.
+name|append
+argument_list|(
+name|mattrs
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|mattrs
+operator|.
+name|end
+argument_list|()
+argument_list|)
+block|;
 return|return
 operator|*
 name|this

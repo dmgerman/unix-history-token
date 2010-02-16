@@ -384,6 +384,13 @@ modifier|*
 name|createOptimizeExtsPass
 parameter_list|()
 function_decl|;
+comment|/// createOptimizePHIsPass - This pass optimizes machine instruction PHIs
+comment|/// to take advantage of opportunities created during DAG legalization.
+name|FunctionPass
+modifier|*
+name|createOptimizePHIsPass
+parameter_list|()
+function_decl|;
 comment|/// createStackSlotColoringPass - This pass performs stack slot coloring.
 name|FunctionPass
 modifier|*

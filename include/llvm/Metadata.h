@@ -414,6 +414,11 @@ name|NumVals
 parameter_list|,
 name|FunctionLocalness
 name|FL
+parameter_list|,
+name|bool
+name|Insert
+init|=
+name|true
 parameter_list|)
 function_decl|;
 name|public
@@ -460,6 +465,25 @@ name|NumVals
 parameter_list|,
 name|bool
 name|isFunctionLocal
+parameter_list|)
+function_decl|;
+specifier|static
+name|MDNode
+modifier|*
+name|getIfExists
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
 parameter_list|)
 function_decl|;
 comment|/// getOperand - Return specified operand.

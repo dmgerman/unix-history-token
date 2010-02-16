@@ -123,6 +123,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+name|class
+name|UnionType
+decl_stmt|;
 comment|/// ValID - Represents a reference of a definition of some sort with no type.
 comment|/// There are several cases where we have to parse the value but where the
 comment|/// type can depend on later context.  This may either be a numeric reference
@@ -884,6 +887,14 @@ name|Alignment
 parameter_list|)
 function_decl|;
 name|bool
+name|ParseOptionalStackAlignment
+parameter_list|(
+name|unsigned
+modifier|&
+name|Alignment
+parameter_list|)
+function_decl|;
+name|bool
 name|ParseInstructionMetadata
 argument_list|(
 name|SmallVectorImpl
@@ -1151,6 +1162,14 @@ name|H
 parameter_list|,
 name|bool
 name|Packed
+parameter_list|)
+function_decl|;
+name|bool
+name|ParseUnionType
+parameter_list|(
+name|PATypeHolder
+modifier|&
+name|H
 parameter_list|)
 function_decl|;
 name|bool
@@ -1555,6 +1574,24 @@ name|PFS
 argument_list|)
 return|;
 block|}
+name|bool
+name|ParseUnionValue
+parameter_list|(
+specifier|const
+name|UnionType
+modifier|*
+name|utype
+parameter_list|,
+name|ValID
+modifier|&
+name|ID
+parameter_list|,
+name|Value
+modifier|*
+modifier|&
+name|V
+parameter_list|)
+function_decl|;
 struct|struct
 name|ParamInfo
 block|{

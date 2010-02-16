@@ -148,11 +148,40 @@ struct|;
 name|class
 name|MachineJumpTableInfo
 block|{
-name|unsigned
-name|EntrySize
-decl_stmt|;
-name|unsigned
-name|Alignment
+name|public
+label|:
+comment|/// JTEntryKind - This enum indicates how each entry of the jump table is
+comment|/// represented and emitted.
+enum|enum
+name|JTEntryKind
+block|{
+comment|/// EK_BlockAddress - Each entry is a plain address of block, e.g.:
+comment|///     .word LBB123
+name|EK_BlockAddress
+block|,
+comment|/// EK_GPRel32BlockAddress - Each entry is an address of block, encoded
+comment|/// with a relocation as gp-relative, e.g.:
+comment|///     .gprel32 LBB123
+name|EK_GPRel32BlockAddress
+block|,
+comment|/// EK_LabelDifference32 - Each entry is the address of the block minus
+comment|/// the address of the jump table.  This is used for PIC jump tables where
+comment|/// gprel32 is not supported.  e.g.:
+comment|///      .word LBB123 - LJTI1_2
+comment|/// If the .set directive is supported, this is emitted as:
+comment|///      .set L4_5_set_123, LBB123 - LJTI1_2
+comment|///      .word L4_5_set_123
+name|EK_LabelDifference32
+block|,
+comment|/// EK_Custom32 - Each entry is a 32-bit value that is custom lowered by the
+comment|/// TargetLowering::LowerCustomJumpTableEntry hook.
+name|EK_Custom32
+block|}
+enum|;
+name|private
+label|:
+name|JTEntryKind
+name|EntryKind
 decl_stmt|;
 name|std
 operator|::
@@ -166,21 +195,45 @@ name|public
 label|:
 name|MachineJumpTableInfo
 argument_list|(
-argument|unsigned Size
-argument_list|,
-argument|unsigned Align
+argument|JTEntryKind Kind
 argument_list|)
 block|:
-name|EntrySize
+name|EntryKind
 argument_list|(
-name|Size
-argument_list|)
-operator|,
-name|Alignment
-argument_list|(
-argument|Align
+argument|Kind
 argument_list|)
 block|{}
+name|JTEntryKind
+name|getEntryKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EntryKind
+return|;
+block|}
+comment|/// getEntrySize - Return the size of each entry in the jump table.
+name|unsigned
+name|getEntrySize
+argument_list|(
+specifier|const
+name|TargetData
+operator|&
+name|TD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getEntryAlignment - Return the alignment of each entry in the jump table.
+name|unsigned
+name|getEntryAlignment
+argument_list|(
+specifier|const
+name|TargetData
+operator|&
+name|TD
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getJumpTableIndex - Create a new jump table or return an existing one.
 comment|///
 name|unsigned
@@ -197,7 +250,7 @@ operator|>
 operator|&
 name|DestBBs
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// isEmpty - Return true if there are no jump tables.
 comment|///
 name|bool
@@ -228,8 +281,8 @@ return|return
 name|JumpTables
 return|;
 block|}
-comment|/// RemoveJumpTable - Mark the specific index as being dead.  This will cause
-comment|/// it to not be emitted.
+comment|/// RemoveJumpTable - Mark the specific index as being dead.  This will
+comment|/// prevent it from being emitted.
 name|void
 name|RemoveJumpTable
 parameter_list|(
@@ -279,27 +332,6 @@ modifier|*
 name|New
 parameter_list|)
 function_decl|;
-comment|/// getEntrySize - Returns the size of an individual field in a jump table.
-comment|///
-name|unsigned
-name|getEntrySize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|EntrySize
-return|;
-block|}
-comment|/// getAlignment - returns the target's preferred alignment for jump tables
-name|unsigned
-name|getAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Alignment
-return|;
-block|}
 comment|/// print - Used by the MachineFunction printer to print information about
 comment|/// jump tables.  Implemented in MachineFunction.cpp
 comment|///

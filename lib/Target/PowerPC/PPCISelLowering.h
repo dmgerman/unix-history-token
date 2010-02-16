@@ -757,22 +757,6 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|IsEligibleForTailCallOptimization
-argument_list|(
-argument|SDValue Callee
-argument_list|,
-argument|CallingConv::ID CalleeCC
-argument_list|,
-argument|bool isVarArg
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|SelectionDAG& DAG
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
@@ -816,6 +800,21 @@ block|;
 name|SDValue
 name|getReturnAddrFrameIndex
 argument_list|(
+argument|SelectionDAG& DAG
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|IsEligibleForTailCallOptimization
+argument_list|(
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CalleeCC
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
 argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
@@ -1150,7 +1149,7 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|bool isTailCall
+argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

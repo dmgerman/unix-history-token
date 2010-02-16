@@ -1346,6 +1346,18 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
+comment|/// AssignOrderingToNode - Assign an ordering to the node. The order is gotten
+comment|/// from how the code appeared in the source. The ordering is used by the
+comment|/// scheduler to effectively turn off scheduling.
+name|void
+name|AssignOrderingToNode
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
 name|void
 name|visit
 parameter_list|(

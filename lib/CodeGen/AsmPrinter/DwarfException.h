@@ -250,13 +250,6 @@ name|Timer
 operator|*
 name|ExceptionTimer
 block|;
-comment|/// SizeOfEncodedValue - Return the size of the encoding in bytes.
-name|unsigned
-name|SizeOfEncodedValue
-argument_list|(
-argument|unsigned Encoding
-argument_list|)
-block|;
 comment|/// EmitCIE - Emit a Common Information Entry (CIE). This holds information
 comment|/// that is shared among many Frame Description Entries.  There is at least
 comment|/// one CIE in every non-empty .debug_frame section.
@@ -294,7 +287,7 @@ comment|///     landing pad site, each type Id is checked for a match to the cur
 comment|///     exception.  If it matches then the exception and type id are passed
 comment|///     on to the landing pad.  Otherwise the next action is looked up.  This
 comment|///     chain is terminated with a next action of zero.  If no type id is
-comment|///     found the the frame is unwound and handling continues.
+comment|///     found the frame is unwound and handling continues.
 comment|///  3. Type id table contains references to all the C++ typeinfo for all
 comment|///     catches in the function.  This tables is reversed indexed base 1.
 comment|/// SharedTypeIds - How many leading type ids two landing pads have in common.
@@ -415,9 +408,8 @@ block|;
 comment|// The value to write - may not be equal to the type id.
 name|int
 name|NextAction
-block|;     struct
-name|ActionEntry
-operator|*
+block|;
+name|unsigned
 name|Previous
 block|;   }
 block|;
@@ -603,6 +595,7 @@ comment|/// emitted immediately after the function entry point.
 name|void
 name|BeginFunction
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|*
 name|MF

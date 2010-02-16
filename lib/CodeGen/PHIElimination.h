@@ -70,13 +70,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"llvm/CodeGen/MachineRegisterInfo.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LiveVariables
+decl_stmt|;
 comment|/// Lower PHI instructions to copies.
 name|class
 name|PHIElimination
@@ -422,6 +425,18 @@ expr_stmt|;
 comment|// SkipPHIsAndLabels - Copies need to be inserted after phi nodes and
 comment|// also after any exception handling labels: in landing pads execution
 comment|// starts at the label, so any copies placed before it won't be executed!
+comment|// We also deal with DBG_VALUEs, which are a bit tricky:
+comment|//  PHI
+comment|//  DBG_VALUE
+comment|//  LABEL
+comment|// Here the DBG_VALUE needs to be skipped, and if it refers to a PHI it
+comment|// needs to be annulled or, better, moved to follow the label, as well.
+comment|//  PHI
+comment|//  DBG_VALUE
+comment|//  no label
+comment|// Here it is not a good idea to skip the DBG_VALUE.
+comment|// FIXME: For now we skip and annul all DBG_VALUEs, maximally simple and
+comment|// maximally stupid.
 name|MachineBasicBlock
 operator|::
 name|iterator
@@ -446,29 +461,65 @@ operator|&&
 operator|(
 name|I
 operator|->
-name|getOpcode
+name|isPHI
 argument_list|()
-operator|==
-name|TargetInstrInfo
-operator|::
-name|PHI
 operator|||
 name|I
 operator|->
 name|isLabel
 argument_list|()
+operator|||
+name|I
+operator|->
+name|isDebugValue
+argument_list|()
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|I
+operator|->
+name|isDebugValue
+argument_list|()
+operator|&&
+name|I
+operator|->
+name|getNumOperands
+argument_list|()
+operator|==
+literal|3
+operator|&&
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|isReg
+argument_list|()
+condition|)
+name|I
+operator|->
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|setReg
+argument_list|(
+literal|0U
+argument_list|)
+expr_stmt|;
 operator|++
 name|I
 expr_stmt|;
+block|}
 return|return
 name|I
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -480,9 +531,6 @@ name|unsigned
 operator|>
 name|BBVRegPair
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
@@ -492,31 +540,16 @@ name|unsigned
 operator|>
 name|VRegPHIUse
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|VRegPHIUse
 name|VRegPHIUseCount
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|PHIDefMap
 name|PHIDefs
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|PHIKillMap
 name|PHIKills
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Defs of PHI sources which are implicit_def.
-end_comment
-
-begin_expr_stmt
 name|SmallPtrSet
 operator|<
 name|MachineInstr
@@ -526,17 +559,8 @@ literal|4
 operator|>
 name|ImpDefs
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// Lowered PHI nodes may be reused. We provide special DenseMap traits to
-end_comment
-
-begin_comment
 comment|// match PHI nodes with identical arguments.
-end_comment
-
-begin_decl_stmt
 name|struct
 name|PHINodeTraits
 range|:
@@ -573,13 +597,7 @@ name|RHS
 argument_list|)
 block|;     }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Map reusable lowered PHI node -> incoming join register.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|DenseMap
 operator|<
@@ -592,16 +610,18 @@ name|PHINodeTraits
 operator|>
 name|LoweredPHIMap
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|LoweredPHIMap
 name|LoweredPHIs
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
-unit|};  }
+unit|}
 endif|#
 directive|endif
 end_endif

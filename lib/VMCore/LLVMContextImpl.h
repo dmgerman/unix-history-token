@@ -663,6 +663,21 @@ decl_stmt|;
 typedef|typedef
 name|ConstantUniqueMap
 operator|<
+name|Constant
+operator|*
+operator|,
+name|UnionType
+operator|,
+name|ConstantUnion
+operator|>
+name|UnionConstantsTy
+expr_stmt|;
+name|UnionConstantsTy
+name|UnionConstants
+decl_stmt|;
+typedef|typedef
+name|ConstantUniqueMap
+operator|<
 name|std
 operator|::
 name|vector
@@ -847,6 +862,14 @@ name|StructTypes
 expr_stmt|;
 name|TypeMap
 operator|<
+name|UnionValType
+operator|,
+name|UnionType
+operator|>
+name|UnionTypes
+expr_stmt|;
+name|TypeMap
+operator|<
 name|IntegerValType
 operator|,
 name|IntegerType
@@ -867,6 +890,12 @@ name|OpaqueTypesTy
 expr_stmt|;
 name|OpaqueTypesTy
 name|OpaqueTypes
+decl_stmt|;
+comment|/// Used as an abstract type that will never be resolved.
+name|OpaqueType
+modifier|*
+specifier|const
+name|AlwaysOpaqueTy
 decl_stmt|;
 comment|/// ValueHandles - This map keeps track of all of the value handles that are
 comment|/// watching a Value*.  The Value::HasValueHandle bit is used to know
@@ -1046,11 +1075,29 @@ argument_list|)
 operator|,
 name|Int64Ty
 argument_list|(
-argument|C
+name|C
 argument_list|,
 literal|64
 argument_list|)
-block|{ }
+operator|,
+name|AlwaysOpaqueTy
+argument_list|(
+argument|new OpaqueType(C)
+argument_list|)
+block|{
+comment|// Make sure the AlwaysOpaqueTy stays alive as long as the Context.
+name|AlwaysOpaqueTy
+operator|->
+name|addRef
+argument_list|()
+block|;
+name|OpaqueTypes
+operator|.
+name|insert
+argument_list|(
+name|AlwaysOpaqueTy
+argument_list|)
+block|;   }
 operator|~
 name|LLVMContextImpl
 argument_list|()
@@ -1177,6 +1224,11 @@ block|}
 name|MDNodeSet
 operator|.
 name|clear
+argument_list|()
+expr_stmt|;
+name|AlwaysOpaqueTy
+operator|->
+name|dropRef
 argument_list|()
 expr_stmt|;
 for|for

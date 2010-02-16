@@ -185,7 +185,7 @@ block|;
 name|int
 name|getFrameIndexOffset
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|,
 argument|int FI
 argument_list|)

@@ -92,18 +92,11 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|// Constant fold various types of instruction...
 name|Constant
 modifier|*
 name|ConstantFoldCastInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|unsigned
 name|opcode
 parameter_list|,
@@ -124,10 +117,6 @@ name|Constant
 modifier|*
 name|ConstantFoldSelectInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|Cond
@@ -145,10 +134,6 @@ name|Constant
 modifier|*
 name|ConstantFoldExtractElementInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|Val
@@ -162,10 +147,6 @@ name|Constant
 modifier|*
 name|ConstantFoldInsertElementInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|Val
@@ -183,10 +164,6 @@ name|Constant
 modifier|*
 name|ConstantFoldShuffleVectorInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|V1
@@ -204,10 +181,6 @@ name|Constant
 modifier|*
 name|ConstantFoldExtractValueInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|Agg
@@ -225,10 +198,6 @@ name|Constant
 modifier|*
 name|ConstantFoldInsertValueInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|Agg
@@ -250,10 +219,6 @@ name|Constant
 modifier|*
 name|ConstantFoldBinaryInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|unsigned
 name|Opcode
 parameter_list|,
@@ -270,10 +235,6 @@ name|Constant
 modifier|*
 name|ConstantFoldCompareInstruction
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|unsigned
 name|short
 name|predicate
@@ -291,10 +252,6 @@ name|Constant
 modifier|*
 name|ConstantFoldGetElementPtr
 parameter_list|(
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|,
 name|Constant
 modifier|*
 name|C

@@ -732,6 +732,17 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getABIIntegerTypeAlignment - Return the minimum ABI-required alignment for
+comment|/// an integer type of the specified bitwidth.
+name|unsigned
+name|char
+name|getABIIntegerTypeAlignment
+argument_list|(
+name|unsigned
+name|BitWidth
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getCallFrameTypeAlignment - Return the minimum ABI-required alignment
 comment|/// for the specified type when it is part of a call frame.
 name|unsigned

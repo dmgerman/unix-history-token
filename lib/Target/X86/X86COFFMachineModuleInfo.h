@@ -100,69 +100,52 @@ operator|<
 operator|>
 name|CygMingStubs
 block|;
-comment|// We have to propagate some information about MachineFunction to
-comment|// AsmPrinter. It's ok, when we're printing the function, since we have
-comment|// access to MachineFunction and can get the appropriate MachineFunctionInfo.
-comment|// Unfortunately, this is not possible when we're printing reference to
-comment|// Function (e.g. calling it and so on). Even more, there is no way to get the
-comment|// corresponding MachineFunctions: it can even be not created at all. That's
-comment|// why we should use additional structure, when we're collecting all necessary
-comment|// information.
-comment|//
-comment|// This structure is using e.g. for name decoration for stdcall& fastcall'ed
-comment|// function, since we have to use arguments' size for decoration.
-typedef|typedef
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|Function
 operator|*
-operator|,
-name|X86MachineFunctionInfo
+block|,
+name|unsigned
 operator|>
-name|FMFInfoMap
-expr_stmt|;
-name|FMFInfoMap
-name|FunctionInfoMap
-decl_stmt|;
+name|FnArgWords
+block|;
 name|public
-label|:
+operator|:
 name|X86COFFMachineModuleInfo
 argument_list|(
 specifier|const
 name|MachineModuleInfo
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 operator|~
 name|X86COFFMachineModuleInfo
 argument_list|()
-expr_stmt|;
+block|;
 name|void
 name|DecorateCygMingName
-parameter_list|(
+argument_list|(
 name|MCSymbol
-modifier|*
-modifier|&
+operator|*
+operator|&
 name|Name
-parameter_list|,
+argument_list|,
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|,
+argument_list|,
 specifier|const
 name|GlobalValue
-modifier|*
+operator|*
 name|GV
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|&
+operator|&
 name|TD
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|DecorateCygMingName
 argument_list|(
@@ -183,21 +166,16 @@ name|TargetData
 operator|&
 name|TD
 argument_list|)
-decl_stmt|;
+block|;
 name|void
-name|AddFunctionInfo
-parameter_list|(
+name|addExternalFunction
+argument_list|(
 specifier|const
-name|Function
-modifier|*
-name|F
-parameter_list|,
-specifier|const
-name|X86MachineFunctionInfo
-modifier|&
-name|Val
-parameter_list|)
-function_decl|;
+name|StringRef
+operator|&
+name|Name
+argument_list|)
+block|;
 typedef|typedef
 name|StringSet
 operator|<
@@ -231,14 +209,11 @@ argument_list|()
 return|;
 block|}
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

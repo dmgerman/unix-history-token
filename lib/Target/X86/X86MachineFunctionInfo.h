@@ -69,16 +69,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-enum|enum
-name|NameDecorationStyle
-block|{
-name|None
-block|,
-name|StdCall
-block|,
-name|FastCall
-block|}
-enum|;
 comment|/// X86MachineFunctionInfo - This class is derived from MachineFunction and
 comment|/// contains private X86 target-specific information for each MachineFunction.
 name|class
@@ -104,18 +94,12 @@ comment|/// Used on windows platform for stdcall& fastcall name decoration
 name|unsigned
 name|BytesToPopOnReturn
 block|;
-comment|/// DecorationStyle - If the function requires additional name decoration,
-comment|/// DecorationStyle holds the right way to do so.
-name|NameDecorationStyle
-name|DecorationStyle
-block|;
 comment|/// ReturnAddrIndex - FrameIndex for return slot.
 name|int
 name|ReturnAddrIndex
 block|;
-comment|/// TailCallReturnAddrDelta - Delta the ReturnAddr stack slot is moved
-comment|/// Used for creating an area before the register spill area on the stack
-comment|/// the returnaddr can be savely move to this area
+comment|/// TailCallReturnAddrDelta - The number of bytes by which return address
+comment|/// stack slot is moved as the result of tail call optimization.
 name|int
 name|TailCallReturnAddrDelta
 block|;
@@ -149,11 +133,6 @@ block|,
 name|BytesToPopOnReturn
 argument_list|(
 literal|0
-argument_list|)
-block|,
-name|DecorationStyle
-argument_list|(
-name|None
 argument_list|)
 block|,
 name|ReturnAddrIndex
@@ -197,11 +176,6 @@ block|,
 name|BytesToPopOnReturn
 argument_list|(
 literal|0
-argument_list|)
-block|,
-name|DecorationStyle
-argument_list|(
-name|None
 argument_list|)
 block|,
 name|ReturnAddrIndex
@@ -280,25 +254,6 @@ block|{
 name|BytesToPopOnReturn
 operator|=
 name|bytes
-block|;}
-name|NameDecorationStyle
-name|getDecorationStyle
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DecorationStyle
-return|;
-block|}
-name|void
-name|setDecorationStyle
-argument_list|(
-argument|NameDecorationStyle style
-argument_list|)
-block|{
-name|DecorationStyle
-operator|=
-name|style
 block|;}
 name|int
 name|getRAIndex
