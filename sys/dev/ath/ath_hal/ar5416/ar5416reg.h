@@ -4003,7 +4003,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_MERLIN_20)
+value|(AR_SREV_MERLIN(_ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_MERLIN_20)
 end_define
 
 begin_define
@@ -4069,7 +4069,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_KITE(ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
+value|(AR_SREV_KITE(ah)&& \ 	 AH_PRIVATE((_ah))->ah_macRev == AR_XSREV_REVISION_KITE_12)
 end_define
 
 begin_define
