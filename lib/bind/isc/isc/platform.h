@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: platform.h.in,v 1.34.18.11 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: platform.h.in,v 1.34.18.12 2008/12/01 04:02:15 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -159,16 +159,6 @@ begin_undef
 undef|#
 directive|undef
 name|ISC_PLATFORM_NEEDPTON
-end_undef
-
-begin_comment
-comment|/*! \brief  * If this system needs inet_aton(), ISC_PLATFORM_NEEDATON will be defined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ISC_PLATFORM_NEEDATON
 end_undef
 
 begin_comment

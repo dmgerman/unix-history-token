@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1987, 1993  *      The Regents of the Unive
 end_comment
 
 begin_comment
-comment|/* $Id: file.c,v 1.47.18.2 2005/04/29 00:17:07 marka Exp $ */
+comment|/* $Id: file.c,v 1.47.18.4 2009/02/16 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<isc/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/log.h>
 end_include
 
 begin_include
@@ -845,14 +851,29 @@ break|break;
 block|}
 block|}
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|file
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+return|return
+operator|(
+name|isc__errno2result
+argument_list|(
+name|errno
+argument_list|)
+operator|)
+return|;
 return|return
 operator|(
 name|ISC_R_SUCCESS
@@ -1133,14 +1154,32 @@ argument_list|(
 name|errno
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|remove
 argument_list|(
 name|templet
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|isc_lctx
+argument_list|,
+name|ISC_LOGCATEGORY_GENERAL
+argument_list|,
+name|ISC_LOGMODULE_FILE
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"remove '%s': failed"
+argument_list|,
+name|templet
+argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1577,7 +1616,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put the absolute name of the current directory into 'dirname', which is  * a buffer of at least 'length' characters.  End the string with the   * appropriate path separator, such that the final product could be  * concatenated with a relative pathname to make a valid pathname string.  */
+comment|/*  * Put the absolute name of the current directory into 'dirname', which is  * a buffer of at least 'length' characters.  End the string with the  * appropriate path separator, such that the final product could be  * concatenated with a relative pathname to make a valid pathname string.  */
 end_comment
 
 begin_function

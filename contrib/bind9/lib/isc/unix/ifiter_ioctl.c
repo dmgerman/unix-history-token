@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ifiter_ioctl.c,v 1.44.18.13 2007/08/31 23:46:25 tbox Exp $ */
+comment|/* $Id: ifiter_ioctl.c,v 1.44.18.17 2009/01/19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -504,7 +504,7 @@ name|iter
 operator|->
 name|buf
 expr_stmt|;
-comment|/* 		 * Ignore the HP/UX warning about "interger overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
+comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
 name|ioctl
@@ -828,7 +828,7 @@ name|iter
 operator|->
 name|buf6
 expr_stmt|;
-comment|/* 		 * Ignore the HP/UX warning about "interger overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
+comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion".  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
 name|ioctl
@@ -2147,7 +2147,7 @@ name|byte
 operator|=
 operator|(
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|hex
 argument_list|,
@@ -2166,7 +2166,7 @@ literal|4
 operator|)
 operator||
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|hex
 argument_list|,
@@ -2786,7 +2786,7 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Ignore the HP/UX warning about "interger overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
+comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
 name|ioctl
@@ -3214,7 +3214,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Ignore the HP/UX warning about "interger overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
+comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
 name|ioctl
@@ -3335,7 +3335,7 @@ name|ifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ignore the HP/UX warning about "interger overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
+comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
 name|ioctl
@@ -3811,7 +3811,7 @@ name|iter
 operator|->
 name|socket
 expr_stmt|;
-comment|/* 	 * Ignore the HP/UX warning about "interger overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
+comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
 name|ioctl
@@ -3948,7 +3948,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Ignore the HP/UX warning about "interger overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
+comment|/* 		 * Ignore the HP/UX warning about "integer overflow during 		 * conversion.  It comes from its own macro definition, 		 * and is really hard to shut up. 		 */
 if|if
 condition|(
 name|ioctl
@@ -4169,7 +4169,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Ignore the HP/UX warning about "interger overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
+comment|/* 	 * Ignore the HP/UX warning about "integer overflow during 	 * conversion.  It comes from its own macro definition, 	 * and is really hard to shut up. 	 */
 if|if
 condition|(
 name|ioctl

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.126.18.19 2006/08/01 03:45:21 marka Exp $ */
+comment|/* $Id: zone.h,v 1.126.18.24 2009/07/11 04:30:50 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -756,8 +756,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_zone_loadandthaw
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  *	Cause the database to be loaded from its backing store.  *	Confirm that the minimum requirements for the zone type are  *	met, otherwise DNS_R_BADZONE is returned.  *  *	dns_zone_loadnew() only loads zones that are not yet loaded.  *	dns_zone_load() also loads zones that are already loaded and  *	and whose master file has changed since the last load.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	#ISC_R_UNEXPECTED  *\li	#ISC_R_SUCCESS  *\li	DNS_R_CONTINUE	  Incremental load has been queued.  *\li	DNS_R_UPTODATE	  The zone has already been loaded based on  *			  file system timestamps.  *\li	DNS_R_BADZONE  *\li	Any result value from dns_db_load().  */
+comment|/*%<  *	Cause the database to be loaded from its backing store.  *	Confirm that the minimum requirements for the zone type are  *	met, otherwise DNS_R_BADZONE is returned.  *  *	dns_zone_loadnew() only loads zones that are not yet loaded.  *	dns_zone_load() also loads zones that are already loaded and  *	and whose master file has changed since the last load.  *	dns_zone_loadandthaw() is similar to dns_zone_load() but will  *	also re-enable DNS UPDATEs when the load completes.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	#ISC_R_UNEXPECTED  *\li	#ISC_R_SUCCESS  *\li	DNS_R_CONTINUE	  Incremental load has been queued.  *\li	DNS_R_UPTODATE	  The zone has already been loaded based on  *			  file system timestamps.  *\li	DNS_R_BADZONE  *\li	Any result value from dns_db_load().  */
 end_comment
 
 begin_function_decl
@@ -982,7 +993,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Write the zone to database if there are uncommited changes.  *  * Require:  *\li	'zone' to be a valid zone.  */
+comment|/*%<  *	Write the zone to database if there are uncommitted changes.  *  * Require:  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -1073,7 +1084,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Perform regular maintenace on the zone.  This is called as a  *	result of a zone being managed.  *  * Require  *\li	'zone' to be a valid zone.  */
+comment|/*%<  *	Perform regular maintenance on the zone.  This is called as a  *	result of a zone being managed.  *  * Require  *\li	'zone' to be a valid zone.  */
 end_comment
 
 begin_function_decl
@@ -1143,7 +1154,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifyees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  *	Set the list of additional servers to be notified when  *	a zone changes.	 To clear the list use 'count = 0'.  *  * Require:  *\li	'zone' to be a valid zone.  *\li	'notify' to be non-NULL if count != 0.  *\li	'count' to be the number of notifiees.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1873,7 +1884,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Tell the zone that it has recieved a NOTIFY message from another  *	server.  This may cause some zone maintainence activity to occur.  *  * Requires:  *\li	'zone' to be a valid zone.  *\li	'*from' to contain the address of the server from which 'msg'  *		was recieved.  *\li	'msg' a message with opcode NOTIFY and qr clear.  *  * Returns:  *\li	DNS_R_REFUSED  *\li	DNS_R_NOTIMP  *\li	DNS_R_FORMERR  *\li	DNS_R_SUCCESS  */
+comment|/*%<  *	Tell the zone that it has received a NOTIFY message from another  *	server.  This may cause some zone maintenance activity to occur.  *  * Requires:  *\li	'zone' to be a valid zone.  *\li	'*from' to contain the address of the server from which 'msg'  *		was received.  *\li	'msg' a message with opcode NOTIFY and qr clear.  *  * Returns:  *\li	DNS_R_REFUSED  *\li	DNS_R_NOTIMP  *\li	DNS_R_FORMERR  *\li	DNS_R_SUCCESS  */
 end_comment
 
 begin_function_decl
@@ -2066,7 +2077,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redunant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	DNS_R_SUCCESS  * \li	DNS_R_BADZONE	zone failed basic consistancy checks:  *			* a single SOA must exist  *			* some NS records must exist.  *	Others  */
+comment|/*%<  * Replace the database of "zone" with a new database "db".  *  * If "dump" is ISC_TRUE, then the new zone contents are dumped  * into to the zone's master file for persistence.  When replacing  * a zone database by one just loaded from a master file, set  * "dump" to ISC_FALSE to avoid a redundant redump of the data just  * loaded.  Otherwise, it should be set to ISC_TRUE.  *  * If the "diff-on-reload" option is enabled in the configuration file,  * the differences between the old and the new database are added to the  * journal file, and the master file dump is postponed.  *  * Requires:  * \li	'zone' to be a valid zone.  *  * Returns:  * \li	DNS_R_SUCCESS  * \li	DNS_R_BADZONE	zone failed basic consistency checks:  *			* a single SOA must exist  *			* some NS records must exist.  *	Others  */
 end_comment
 
 begin_function_decl
@@ -2280,7 +2291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Forward 'msg' to each master in turn until we get an answer or we  * have exausted the list of masters. 'callback' will be called with  * ISC_R_SUCCESS if we get an answer and the returned message will be  * passed as 'answer_message', otherwise a non ISC_R_SUCCESS result code  * will be passed and answer_message will be NULL.  The callback function  * is responsible for destroying 'answer_message'.  *		(callback)(callback_arg, result, answer_message);  *  * Require:  *\li	'zone' to be valid  *\li	'msg' to be valid.  *\li	'callback' to be non NULL.  * Returns:  *\li	#ISC_R_SUCCESS if the message has been forwarded,  *\li	#ISC_R_NOMEMORY  *\li	Others  */
+comment|/*%<  * Forward 'msg' to each master in turn until we get an answer or we  * have exhausted the list of masters. 'callback' will be called with  * ISC_R_SUCCESS if we get an answer and the returned message will be  * passed as 'answer_message', otherwise a non ISC_R_SUCCESS result code  * will be passed and answer_message will be NULL.  The callback function  * is responsible for destroying 'answer_message'.  *		(callback)(callback_arg, result, answer_message);  *  * Require:  *\li	'zone' to be valid  *\li	'msg' to be valid.  *\li	'callback' to be non NULL.  * Returns:  *\li	#ISC_R_SUCCESS if the message has been forwarded,  *\li	#ISC_R_NOMEMORY  *\li	Others  */
 end_comment
 
 begin_function_decl
@@ -2423,7 +2434,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Force zone maintenance of all zones managed by 'zmgr' at its  * earliest conveniene.  */
+comment|/*%<  * Force zone maintenance of all zones managed by 'zmgr' at its  * earliest convenience.  */
 end_comment
 
 begin_function_decl
@@ -2541,7 +2552,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Return the the maximum number of simultaneous transfers in allowed.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
+comment|/*%<  *	Return the maximum number of simultaneous transfers in allowed.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
 end_comment
 
 begin_function_decl
@@ -2592,7 +2603,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Set the number of simultaneous file descriptors available for   *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'iolimit' to be positive.  */
+comment|/*%<  *	Set the number of simultaneous file descriptors available for  *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  *\li	'iolimit' to be positive.  */
 end_comment
 
 begin_function_decl
@@ -2607,7 +2618,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Get the number of simultaneous file descriptors available for   *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
+comment|/*%<  *	Get the number of simultaneous file descriptors available for  *	reading and writing masterfiles.  *  * Requires:  *\li	'zmgr' to be a valid zone manager.  */
 end_comment
 
 begin_function_decl
@@ -2852,7 +2863,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return the name of the zone with class and view.  *   * Requires:  *\li	'zone' to be valid.  *\li	'buf' to be non NULL.  */
+comment|/*%<  * Return the name of the zone with class and view.  *  * Requires:  *\li	'zone' to be valid.  *\li	'buf' to be non NULL.  */
 end_comment
 
 begin_function_decl

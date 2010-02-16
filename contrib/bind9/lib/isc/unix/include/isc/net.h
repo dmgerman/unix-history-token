@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2008  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: net.h,v 1.39.18.6 2008/06/24 23:45:55 tbox Exp $ */
+comment|/* $Id: net.h,v 1.39.18.8 2008/12/01 04:13:20 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -1033,12 +1033,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISC_PLATFORM_NEEDATON
-end_ifdef
-
 begin_function_decl
 name|int
 name|isc_net_aton
@@ -1056,17 +1050,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_undef
+undef|#
+directive|undef
+name|inet_aton
+end_undef
+
 begin_define
 define|#
 directive|define
 name|inet_aton
 value|isc_net_aton
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|ISC_LANG_ENDDECLS

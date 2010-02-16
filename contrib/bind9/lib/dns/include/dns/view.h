@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: view.h,v 1.91.18.9 2006/03/09 23:38:21 marka Exp $ */
+comment|/* $Id: view.h,v 1.91.18.13 2009/01/19 00:36:28 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -446,7 +446,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Detach '*viewp' from its view.  If this was the last reference  * uncommited changed in zones will be flushed to disk.  *  * Requires:  *  *\li	'viewp' points to a valid dns_view_t *  *  * Ensures:  *  *\li	*viewp is NULL.  */
+comment|/*%<  * Detach '*viewp' from its view.  If this was the last reference  * uncommitted changed in zones will be flushed to disk.  *  * Requires:  *  *\li	'viewp' points to a valid dns_view_t *  *  * Ensures:  *  *\li	*viewp is NULL.  */
 end_comment
 
 begin_function_decl
@@ -604,7 +604,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set the view's destination port.  This is the port to  * which outgoing queries are sent.  The default is 53,  * the standard DNS port.  *  * Requires:  *  *\li      'view' is a valid view.  *  *\li      'dstport' is a valid TCP/UDP port number.  *  * Ensures:  *\li	External name servers will be assumed to be listning  *	on 'dstport'.  For servers whose address has already  *	obtained obtained at the time of the call, the view may  *	continue to use the previously set port until the address  *	times out from the view's address database.  */
+comment|/*%<  * Set the view's destination port.  This is the port to  * which outgoing queries are sent.  The default is 53,  * the standard DNS port.  *  * Requires:  *  *\li      'view' is a valid view.  *  *\li      'dstport' is a valid TCP/UDP port number.  *  * Ensures:  *\li	External name servers will be assumed to be listening  *	on 'dstport'.  For servers whose address has already  *	obtained obtained at the time of the call, the view may  *	continue to use the previously set port until the address  *	times out from the view's address database.  */
 end_comment
 
 begin_function_decl
@@ -901,7 +901,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never   * been loaded.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE, ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
+comment|/*%<  * Load zones attached to this view.  dns_view_load() loads  * all zones whose master file has changed since the last  * load; dns_view_loadnew() loads only zones that have never  * been loaded.  *  * If 'stop' is ISC_TRUE, stop on the first error and return it.  * If 'stop' is ISC_FALSE, ignore errors.  *  * Requires:  *  *\li	'view' is valid.  */
 end_comment
 
 begin_function_decl
@@ -925,7 +925,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the TSIG key configured in 'view' with name 'keyname',  * if any.  *  * Reqires:  *\li	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
+comment|/*%<  * Find the TSIG key configured in 'view' with name 'keyname',  * if any.  *  * Requires:  *\li	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
 end_comment
 
 begin_function_decl
@@ -949,7 +949,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the TSIG key configured in 'view' for the server whose  * address is 'peeraddr', if any.  *  * Reqires:  *	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
+comment|/*%<  * Find the TSIG key configured in 'view' for the server whose  * address is 'peeraddr', if any.  *  * Requires:  *	keyp points to a NULL dns_tsigkey_t *.  *  * Returns:  *\li	#ISC_R_SUCCESS	A key was found and '*keyp' now points to it.  *\li	#ISC_R_NOTFOUND	No key was found.  *\li	others		An error occurred.  */
 end_comment
 
 begin_function_decl
@@ -1006,7 +1006,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Dump the current state of the view 'view' to the stream 'fp'  * for purposes of analysis or debugging.  *  * Currently the dumped state includes the view's cache; in the future  * it may also include other state such as the address database.  * It will not not include authoritative data since it is voluminous and  * easily obtainable by other means.  *  * Requires:  * 	  *\li	'view' is valid.  *  *\li	'fp' refers to a file open for writing.  *  * Returns:  * \li	ISC_R_SUCCESS	The cache was successfully dumped.  * \li	others		An error occurred (see dns_master_dump)  */
+comment|/*%<  * Dump the current state of the view 'view' to the stream 'fp'  * for purposes of analysis or debugging.  *  * Currently the dumped state includes the view's cache; in the future  * it may also include other state such as the address database.  * It will not not include authoritative data since it is voluminous and  * easily obtainable by other means.  *  * Requires:  *  *\li	'view' is valid.  *  *\li	'fp' refers to a file open for writing.  *  * Returns:  * \li	ISC_R_SUCCESS	The cache was successfully dumped.  * \li	others		An error occurred (see dns_master_dump)  */
 end_comment
 
 begin_function_decl
@@ -1058,7 +1058,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add the given name to the delegation only table.  *   *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given name to the delegation only table.  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1077,7 +1077,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Add the given name to be excluded from the root-delegation-only.  *   *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
+comment|/*%<  * Add the given name to be excluded from the root-delegation-only.  *  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl
@@ -1096,7 +1096,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Check if 'name' is in the delegation only table or if  * rootdelonly is set that name is not being excluded.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_TRUE if the name is is the table.  *\li	#ISC_FALSE othewise.  */
+comment|/*%<  * Check if 'name' is in the delegation only table or if  * rootdelonly is set that name is not being excluded.  *  * Requires:  *\li	'view' is valid.  *\li	'name' is valid.  *  * Returns:  *\li	#ISC_TRUE if the name is the table.  *\li	#ISC_FALSE otherwise.  */
 end_comment
 
 begin_function_decl

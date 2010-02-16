@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.119.18.41.2.2 2009/11/19 00:25:18 marka Exp $ */
+comment|/* $Id: validator.c,v 1.119.18.51 2009/12/30 06:44:05 each Exp $ */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/*%< Cancelled. */
+comment|/*%< Canceled. */
 end_comment
 
 begin_define
@@ -5341,7 +5341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Get the key that genertated this signature.  */
+comment|/*%  * Get the key that generated this signature.  */
 end_comment
 
 begin_function
@@ -5371,7 +5371,7 @@ decl_stmt|;
 name|dns_namereln_t
 name|namereln
 decl_stmt|;
-comment|/* 	 * Is the signer name appropriate for this signature? 	 * 	 * The signer name must be at the same level as the owner name 	 * or closer to the the DNS root. 	 */
+comment|/* 	 * Is the signer name appropriate for this signature? 	 * 	 * The signer name must be at the same level as the owner name 	 * or closer to the DNS root. 	 */
 name|namereln
 operator|=
 name|dns_name_fullcompare
@@ -5453,6 +5453,79 @@ operator|(
 name|DNS_R_CONTINUE
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 		 * SOA and NS RRsets can only be signed by a key with 		 * the same name. 		 */
+if|if
+condition|(
+name|val
+operator|->
+name|event
+operator|->
+name|rdataset
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_soa
+operator|||
+name|val
+operator|->
+name|event
+operator|->
+name|rdataset
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_ns
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|typename
+decl_stmt|;
+if|if
+condition|(
+name|val
+operator|->
+name|event
+operator|->
+name|rdataset
+operator|->
+name|type
+operator|==
+name|dns_rdatatype_soa
+condition|)
+name|typename
+operator|=
+literal|"SOA"
+expr_stmt|;
+else|else
+name|typename
+operator|=
+literal|"NS"
+expr_stmt|;
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"%s signer mismatch"
+argument_list|,
+name|typename
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|DNS_R_CONTINUE
+operator|)
+return|;
+block|}
 block|}
 comment|/* 	 * Do we know about this key? 	 */
 name|result
@@ -7487,6 +7560,12 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdataset_disassociate
+argument_list|(
+operator|&
+name|trdataset
+argument_list|)
+expr_stmt|;
 name|validator_log
 argument_list|(
 name|val
@@ -8016,6 +8095,24 @@ operator|==
 name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dns_name_equal
+argument_list|(
+name|val
+operator|->
+name|event
+operator|->
+name|name
+argument_list|,
+operator|&
+name|sig
+operator|.
+name|signer
+argument_list|)
+condition|)
+continue|continue;
 name|result
 operator|=
 name|dns_keytable_findkeynode
@@ -8975,6 +9072,12 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
+name|dns_rdataset_disassociate
+argument_list|(
+operator|&
+name|trdataset
+argument_list|)
+expr_stmt|;
 name|validator_log
 argument_list|(
 name|val
@@ -9075,6 +9178,38 @@ operator|.
 name|algorithm
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|!
+name|dns_name_equal
+argument_list|(
+name|val
+operator|->
+name|event
+operator|->
+name|name
+argument_list|,
+operator|&
+name|sig
+operator|.
+name|signer
+argument_list|)
+condition|)
+block|{
+name|validator_log
+argument_list|(
+name|val
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"DNSKEY signer mismatch"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|dstkey
 operator|=
 name|NULL
@@ -11024,7 +11159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Start the DLV lookup proccess.  *  * Returns  * \li	ISC_R_SUCCESS  * \li	DNS_R_WAIT  * \li	Others on validation failures.  */
+comment|/*%  * Start the DLV lookup process.  *  * Returns  * \li	ISC_R_SUCCESS  * \li	DNS_R_WAIT  * \li	Others on validation failures.  */
 end_comment
 
 begin_function
@@ -11955,6 +12090,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|unsigned
+name|int
+name|labels
+decl_stmt|;
 name|dns_name_copy
 argument_list|(
 name|val
@@ -11969,6 +12108,13 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If this is a response to a DS query, we need to look in 		 * the parent zone for the trust anchor. 		 */
+name|labels
+operator|=
+name|dns_name_countlabels
+argument_list|(
+name|secroot
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|val
@@ -11979,20 +12125,19 @@ name|type
 operator|==
 name|dns_rdatatype_ds
 operator|&&
-name|dns_name_countlabels
-argument_list|(
-name|secroot
-argument_list|)
+name|labels
 operator|>
 literal|1U
 condition|)
-name|dns_name_split
+name|dns_name_getlabelsequence
 argument_list|(
 name|secroot
 argument_list|,
 literal|1
 argument_list|,
-name|NULL
+name|labels
+operator|-
+literal|1
 argument_list|,
 name|secroot
 argument_list|)
@@ -12017,18 +12162,6 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"not beneath secure root"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|val
@@ -12980,7 +13113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Start the validation process.  *  * Attempt to valididate the answer based on the category it appears to  * fall in.  * \li	1. secure positive answer.  * \li	2. unsecure positive answer.  * \li	3. a negative answer (secure or unsecure).  *  * Note a answer that appears to be a secure positive answer may actually  * be a unsecure positive answer.  */
+comment|/*%  * Start the validation process.  *  * Attempt to validate the answer based on the category it appears to  * fall in.  * \li	1. secure positive answer.  * \li	2. unsecure positive answer.  * \li	3. a negative answer (secure or unsecure).  *  * Note a answer that appears to be a secure positive answer may actually  * be a unsecure positive answer.  */
 end_comment
 
 begin_function
@@ -13043,7 +13176,7 @@ name|vevent
 operator|->
 name|validator
 expr_stmt|;
-comment|/* If the validator has been cancelled, val->event == NULL */
+comment|/* If the validator has been canceled, val->event == NULL */
 if|if
 condition|(
 name|val

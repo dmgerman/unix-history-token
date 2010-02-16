@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: loc_29.c,v 1.41.18.2 2005/04/29 00:16:34 marka Exp $ */
+comment|/* $Id: loc_29.c,v 1.41.18.6 2009/02/17 05:55:19 marka Exp $ */
 end_comment
 
 begin_comment
@@ -2654,6 +2654,25 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|INSIST
+argument_list|(
+operator|(
+name|size
+operator|&
+literal|0x0f
+operator|)
+operator|<
+literal|10
+operator|&&
+operator|(
+name|size
+operator|>>
+literal|4
+operator|)
+operator|<
+literal|10
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2719,6 +2738,25 @@ name|base
 index|[
 literal|2
 index|]
+expr_stmt|;
+name|INSIST
+argument_list|(
+operator|(
+name|hp
+operator|&
+literal|0x0f
+operator|)
+operator|<
+literal|10
+operator|&&
+operator|(
+name|hp
+operator|>>
+literal|4
+operator|)
+operator|<
+literal|10
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2785,6 +2823,25 @@ name|base
 index|[
 literal|3
 index|]
+expr_stmt|;
+name|INSIST
+argument_list|(
+operator|(
+name|vp
+operator|&
+literal|0x0f
+operator|)
+operator|<
+literal|10
+operator|&&
+operator|(
+name|vp
+operator|>>
+literal|4
+operator|)
+operator|<
+literal|10
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2948,6 +3005,13 @@ name|int
 operator|)
 name|latitude
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|latitude
+operator|<=
+literal|90U
+argument_list|)
+expr_stmt|;
 name|longitude
 operator|=
 name|uint32_fromregion
@@ -3044,6 +3108,13 @@ operator|(
 name|int
 operator|)
 name|longitude
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|longitude
+operator|<=
+literal|180U
+argument_list|)
 expr_stmt|;
 name|altitude
 operator|=
@@ -3512,7 +3583,7 @@ operator|(
 name|ISC_R_RANGE
 operator|)
 return|;
-comment|/* 	 * Altitiude. 	 * All values possible. 	 */
+comment|/* 	 * Altitude. 	 * All values possible. 	 */
 name|isc_buffer_activeregion
 argument_list|(
 name|source

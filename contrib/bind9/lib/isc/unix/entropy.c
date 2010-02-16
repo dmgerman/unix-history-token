@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.c,v 1.71.18.7 2006/12/07 04:53:03 marka Exp $ */
+comment|/* $Id: entropy.c,v 1.71.18.9 2008/12/01 23:45:57 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -56,6 +56,23 @@ include|#
 directive|include
 file|<sys/un.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NANOSLEEP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -699,12 +716,43 @@ operator|==
 name|EAGAIN
 condition|)
 block|{
-comment|/* 					 * The problem of EAGAIN (try again 					 * later) is a major issue on HP-UX. 					 * Solaris actually tries the recvfrom 					 * call again, while HP-UX just dies.  					 * This code is an attempt to let the 					 * entropy pool fill back up (at least 					 * that's what I think the problem is.) 					 * We go to eagain_loop because if we  					 * just "break", then the "desired" 					 * amount gets borked. 					 */
+comment|/* 					 * The problem of EAGAIN (try again 					 * later) is a major issue on HP-UX. 					 * Solaris actually tries the recvfrom 					 * call again, while HP-UX just dies. 					 * This code is an attempt to let the 					 * entropy pool fill back up (at least 					 * that's what I think the problem is.) 					 * We go to eagain_loop because if we 					 * just "break", then the "desired" 					 * amount gets borked. 					 */
+ifdef|#
+directive|ifdef
+name|HAVE_NANOSLEEP
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|ts
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|ts
+operator|.
+name|tv_nsec
+operator|=
+literal|1000000
+expr_stmt|;
+name|nanosleep
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|usleep
 argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|eagain_loop
 goto|;
@@ -1909,7 +1957,7 @@ goto|goto
 name|errout
 goto|;
 block|}
-comment|/*  	 * Solaris 2.5.1 does not have support for sockets (S_IFSOCK), 	 * but it does return type S_IFIFO (the OS believes that 	 * the socket is a fifo).  This may be an issue if we tell 	 * the program to look at an actual FIFO as its source of 	 * entropy. 	 */
+comment|/* 	 * Solaris 2.5.1 does not have support for sockets (S_IFSOCK), 	 * but it does return type S_IFIFO (the OS believes that 	 * the socket is a fifo).  This may be an issue if we tell 	 * the program to look at an actual FIFO as its source of 	 * entropy. 	 */
 if|#
 directive|if
 name|defined

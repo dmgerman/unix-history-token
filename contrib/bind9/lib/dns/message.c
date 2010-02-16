@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: message.c,v 1.222.18.16 2008/07/28 23:46:20 tbox Exp $ */
+comment|/* $Id: message.c,v 1.222.18.18 2009/01/19 23:46:15 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -412,7 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*%  * "helper" type, which consists of a block of some type, and is linkable.  * For it to work, sizeof(dns_msgblock_t) must be a multiple of the pointer  * size, or the allocated elements will not be alligned correctly.  */
+comment|/*%  * "helper" type, which consists of a block of some type, and is linkable.  * For it to work, sizeof(dns_msgblock_t) must be a multiple of the pointer  * size, or the allocated elements will not be aligned correctly.  */
 end_comment
 
 begin_struct
@@ -8117,7 +8117,7 @@ name|total
 operator|+=
 name|count
 expr_stmt|;
-comment|/* 				 * If out of space, record stats on what we 				 * rendered so far, and return that status. 				 * 				 * XXXMLG Need to change this when 				 * dns_rdataset_towire() can render partial 				 * sets starting at some arbitary point in the 				 * set.  This will include setting a bit in the 				 * rdataset to indicate that a partial 				 * rendering was done, and some state saved 				 * somewhere (probably in the message struct) 				 * to indicate where to continue from. 				 */
+comment|/* 				 * If out of space, record stats on what we 				 * rendered so far, and return that status. 				 * 				 * XXXMLG Need to change this when 				 * dns_rdataset_towire() can render partial 				 * sets starting at some arbitrary point in the 				 * set.  This will include setting a bit in the 				 * rdataset to indicate that a partial 				 * rendering was done, and some state saved 				 * somewhere (probably in the message struct) 				 * to indicate where to continue from. 				 */
 if|if
 condition|(
 name|partial

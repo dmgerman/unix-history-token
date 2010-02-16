@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: dnssec.c,v 1.81.18.10 2007/09/14 04:35:42 marka Exp $  */
+comment|/*  * $Id: dnssec.c,v 1.81.18.12 2008/11/20 23:46:03 tbox Exp $  */
 end_comment
 
 begin_comment
@@ -1824,6 +1824,21 @@ operator|)
 return|;
 if|if
 condition|(
+name|set
+operator|->
+name|type
+operator|!=
+name|sig
+operator|.
+name|covered
+condition|)
+return|return
+operator|(
+name|DNS_R_SIGINVALID
+operator|)
+return|;
+if|if
+condition|(
 name|isc_serial_lt
 argument_list|(
 name|sig
@@ -1892,6 +1907,84 @@ operator|(
 name|DNS_R_SIGEXPIRED
 operator|)
 return|;
+block|}
+comment|/* 	 * NS, SOA and DNSSKEY records are signed by their owner. 	 * DS records are signed by the parent. 	 */
+switch|switch
+condition|(
+name|set
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|dns_rdatatype_ns
+case|:
+case|case
+name|dns_rdatatype_soa
+case|:
+case|case
+name|dns_rdatatype_dnskey
+case|:
+if|if
+condition|(
+operator|!
+name|dns_name_equal
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|sig
+operator|.
+name|signer
+argument_list|)
+condition|)
+return|return
+operator|(
+name|DNS_R_SIGINVALID
+operator|)
+return|;
+break|break;
+case|case
+name|dns_rdatatype_ds
+case|:
+if|if
+condition|(
+name|dns_name_equal
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|sig
+operator|.
+name|signer
+argument_list|)
+condition|)
+return|return
+operator|(
+name|DNS_R_SIGINVALID
+operator|)
+return|;
+comment|/* FALLTHROUGH */
+default|default:
+if|if
+condition|(
+operator|!
+name|dns_name_issubdomain
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|sig
+operator|.
+name|signer
+argument_list|)
+condition|)
+return|return
+operator|(
+name|DNS_R_SIGINVALID
+operator|)
+return|;
+break|break;
 block|}
 comment|/* 	 * Is the key allowed to sign data? 	 */
 name|flags
@@ -2742,6 +2835,23 @@ name|DNS_KEYTYPE_NOAUTH
 operator|)
 operator|!=
 literal|0
+condition|)
+goto|goto
+name|next
+goto|;
+comment|/* Corrupted .key file? */
+if|if
+condition|(
+operator|!
+name|dns_name_equal
+argument_list|(
+name|name
+argument_list|,
+name|dst_key_name
+argument_list|(
+name|pubkey
+argument_list|)
+argument_list|)
 condition|)
 goto|goto
 name|next
@@ -4089,7 +4199,7 @@ name|ctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Digest the SIG(0) record, except for the signature. 	 */
+comment|/* 	 * Digest the SIG(0) record, except for the signature. 	 */
 name|dns_rdata_toregion
 argument_list|(
 operator|&

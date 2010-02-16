@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: portset.h,v 1.3.4.1 2008/06/24 03:42:10 marka Exp $ */
+comment|/* $Id: portset.h,v 1.3.4.4 2009/06/25 05:33:47 marka Exp $ */
 end_comment
 
 begin_comment
-comment|/*! \file isc/portset.h  * \brief Transport Protocol Port Manipuration Module  *  * This module provides simple utilities to handle a set of transport protocol  * (UDP or TCP) port numbers, e.g., for creating an ACL list.  An isc_portset_t  * object is an opaque instance of a port set, for which the user can add or  * remove a specific port or a range of consecutive ports.  This object is  * expected to be used as a temporary work space only, and does not protect  * simultaneous access from multiple threads.  Therefore it must not be stored  * in a place that can be accessed from multiple threads.  */
+comment|/*! \file isc/portset.h  * \brief Transport Protocol Port Manipulation Module  *  * This module provides simple utilities to handle a set of transport protocol  * (UDP or TCP) port numbers, e.g., for creating an ACL list.  An isc_portset_t  * object is an opaque instance of a port set, for which the user can add or  * remove a specific port or a range of consecutive ports.  This object is  * expected to be used as a temporary work space only, and does not protect  * simultaneous access from multiple threads.  Therefore it must not be stored  * in a place that can be accessed from multiple threads.  */
 end_comment
 
 begin_ifndef
@@ -201,7 +201,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ISC_NETADDR_H */
+comment|/* ISC_PORTSET_H */
 end_comment
 
 end_unit

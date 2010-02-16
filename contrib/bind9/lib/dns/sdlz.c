@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2005-2007  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2005-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: sdlz.c,v 1.2.2.11 2007/08/28 07:20:05 tbox Exp $ */
+comment|/* $Id: sdlz.c,v 1.2.2.14 2009/06/26 06:25:20 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3888,12 +3888,19 @@ condition|(
 name|sigrdataset
 operator|!=
 name|NULL
+operator|&&
+name|dns_rdataset_isassociated
+argument_list|(
+name|sigrdataset
+argument_list|)
 condition|)
+block|{
 name|dns_rdataset_disassociate
 argument_list|(
 name|sigrdataset
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|result
@@ -4935,6 +4942,7 @@ name|current
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|dns_name_equal
@@ -4953,6 +4961,20 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+name|sdlziter
+operator|->
+name|current
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|sdlziter
+operator|->
+name|current
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ISC_R_NOTFOUND

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: client.c,v 1.219.18.31 2008/05/22 23:46:03 tbox Exp $ */
+comment|/* $Id: client.c,v 1.219.18.33 2009/01/19 23:46:14 tbox Exp $ */
 end_comment
 
 begin_include
@@ -5022,7 +5022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Callback to see if a non-recursive query coming from 'srcaddr' to  * 'destaddr', with optional key 'mykey' for class 'rdclass' would be  * delivered to 'myview'.  *  * We run this unlocked as both the view list and the interface list  * are updated when the approprite task has exclusivity.  */
+comment|/*  * Callback to see if a non-recursive query coming from 'srcaddr' to  * 'destaddr', with optional key 'mykey' for class 'rdclass' would be  * delivered to 'myview'.  *  * We run this unlocked as both the view list and the interface list  * are updated when the appropriate task has exclusivity.  */
 end_comment
 
 begin_function
@@ -8904,7 +8904,7 @@ name|tcpmsg_valid
 operator|=
 name|ISC_TRUE
 expr_stmt|;
-comment|/* 		 * Let a new client take our place immediately, before 		 * we wait for a request packet.  If we don't, 		 * telnetting to port 53 (once per CPU) will 		 * deny service to legititmate TCP clients. 		 */
+comment|/* 		 * Let a new client take our place immediately, before 		 * we wait for a request packet.  If we don't, 		 * telnetting to port 53 (once per CPU) will 		 * deny service to legitimate TCP clients. 		 */
 name|result
 operator|=
 name|isc_quota_attach

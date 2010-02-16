@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.59.18.11 2008/02/07 23:45:56 tbox Exp $ */
+comment|/* $Id: mem.h,v 1.59.18.14 2009/02/11 03:11:39 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -288,7 +288,7 @@ value|0x0000001FU
 end_define
 
 begin_comment
-comment|/*!<  * The variable isc_mem_debugging holds a set of flags for  * turning certain memory debugging options on or off at  * runtime.  Its is intialized to the value ISC_MEM_DEGBUGGING,  * which is 0 by default but may be overridden at compile time.  * The following flags can be specified:  *  * \li #ISC_MEM_DEBUGTRACE  *	Log each allocation and free to isc_lctx.  *  * \li #ISC_MEM_DEBUGRECORD  *	Remember each allocation, and match them up on free.  *	Crash if a free doesn't match an allocation.  *  * \li #ISC_MEM_DEBUGUSAGE  *	If a hi_water mark is set, print the maximium inuse memory  *	every time it is raised once it exceeds the hi_water mark.  *  * \li #ISC_MEM_DEBUGSIZE  *	Check the size argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  *  * \li #ISC_MEM_DEBUGCTX  *	Check the mctx argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  */
+comment|/*!<  * The variable isc_mem_debugging holds a set of flags for  * turning certain memory debugging options on or off at  * runtime.  It is initialized to the value ISC_MEM_DEGBUGGING,  * which is 0 by default but may be overridden at compile time.  * The following flags can be specified:  *  * \li #ISC_MEM_DEBUGTRACE  *	Log each allocation and free to isc_lctx.  *  * \li #ISC_MEM_DEBUGRECORD  *	Remember each allocation, and match them up on free.  *	Crash if a free doesn't match an allocation.  *  * \li #ISC_MEM_DEBUGUSAGE  *	If a hi_water mark is set, print the maximum inuse memory  *	every time it is raised once it exceeds the hi_water mark.  *  * \li #ISC_MEM_DEBUGSIZE  *	Check the size argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  *  * \li #ISC_MEM_DEBUGCTX  *	Check the mctx argument being passed to isc_mem_put() matches  *	that passed to isc_mem_get().  */
 end_comment
 
 begin_comment
@@ -442,6 +442,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|isc_mem_reallocate
+parameter_list|(
+name|c
+parameter_list|,
+name|p
+parameter_list|,
+name|s
+parameter_list|)
+value|isc__mem_reallocate((c), (p), (s) _ISC_MEM_FILELINE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|isc_mem_strdup
 parameter_list|(
 name|c
@@ -462,7 +476,7 @@ value|isc__mempool_get((c) _ISC_MEM_FILELINE)
 end_define
 
 begin_comment
-comment|/*%  * isc_mem_putanddetach() is a convienence function for use where you  * have a structure with an attached memory context.  *  * Given:  *  * \code  * struct {  *	...  *	isc_mem_t *mctx;  *	...  * } *ptr;  *  * isc_mem_t *mctx;  *  * isc_mem_putanddetach(&ptr->mctx, ptr, sizeof(*ptr));  * \endcode  *  * is the equivalent of:  *  * \code  * mctx = NULL;  * isc_mem_attach(ptr->mctx,&mctx);  * isc_mem_detach(&ptr->mctx);  * isc_mem_put(mctx, ptr, sizeof(*ptr));  * isc_mem_detach(&mctx);  * \endcode  */
+comment|/*%  * isc_mem_putanddetach() is a convenience function for use where you  * have a structure with an attached memory context.  *  * Given:  *  * \code  * struct {  *	...  *	isc_mem_t *mctx;  *	...  * } *ptr;  *  * isc_mem_t *mctx;  *  * isc_mem_putanddetach(&ptr->mctx, ptr, sizeof(*ptr));  * \endcode  *  * is the equivalent of:  *  * \code  * mctx = NULL;  * isc_mem_attach(ptr->mctx,&mctx);  * isc_mem_detach(&ptr->mctx);  * isc_mem_put(mctx, ptr, sizeof(*ptr));  * isc_mem_detach(&mctx);  * \endcode  */
 end_comment
 
 begin_if
@@ -889,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set high and low water marks for this memory context.  *  * When the memory usage of 'mctx' exceeds 'hiwater',  * '(water)(water_arg, #ISC_MEM_HIWATER)' will be called.  'water' needs to  * call isc_mem_waterack() with #ISC_MEM_HIWATER to acknowlege the state  * change.  'water' may be called multiple times.  *  * When the usage drops below 'lowater', 'water' will again be called, this  * time with #ISC_MEM_LOWATER.  'water' need to calls isc_mem_waterack() with  * #ISC_MEM_LOWATER to acknowlege the change.  *  *	static void  *	water(void *arg, int mark) {  *		struct foo *foo = arg;  *  *		LOCK(&foo->marklock);  *		if (foo->mark != mark) {  * 			foo->mark = mark;  *			....  *			isc_mem_waterack(foo->mctx, mark);  *		}  *		UNLOCK(&foo->marklock);  *	}  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
+comment|/*%<  * Set high and low water marks for this memory context.  *  * When the memory usage of 'mctx' exceeds 'hiwater',  * '(water)(water_arg, #ISC_MEM_HIWATER)' will be called.  'water' needs to  * call isc_mem_waterack() with #ISC_MEM_HIWATER to acknowledge the state  * change.  'water' may be called multiple times.  *  * When the usage drops below 'lowater', 'water' will again be called, this  * time with #ISC_MEM_LOWATER.  'water' need to calls isc_mem_waterack() with  * #ISC_MEM_LOWATER to acknowledge the change.  *  *	static void  *	water(void *arg, int mark) {  *		struct foo *foo = arg;  *  *		LOCK(&foo->marklock);  *		if (foo->mark != mark) {  * 			foo->mark = mark;  *			....  *			isc_mem_waterack(foo->mctx, mark);  *		}  *		UNLOCK(&foo->marklock);  *	}  * If 'water' is NULL then 'water_arg', 'hi_water' and 'lo_water' are  * ignored and the state is reset.  *  * Requires:  *  *	'water' is not NULL.  *	hi_water>= lo_water  */
 end_comment
 
 begin_function_decl
@@ -907,7 +921,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Called to acknowledge changes in signalled by calls to 'water'.  */
+comment|/*%<  * Called to acknowledge changes in signaled by calls to 'water'.  */
 end_comment
 
 begin_function_decl
@@ -1038,7 +1052,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Associate a lock with this memory pool.  *  * This lock is used when getting or putting items using this memory pool,  * and it is also used to set or get internal state via the isc_mempool_get*()  * and isc_mempool_set*() set of functions.  *  * Mutiple pools can each share a single lock.  For instance, if "manager"  * type object contained pools for various sizes of events, and each of  * these pools used a common lock.  Note that this lock must NEVER be used  * by other than mempool routines once it is given to a pool, since that can  * easily cause double locking.  *  * Requires:  *  *\li	mpctpx is a valid pool.  *  *\li	lock != NULL.  *  *\li	No previous lock is assigned to this pool.  *  *\li	The lock is initialized before calling this function via the normal  *	means of doing that.  */
+comment|/*%<  * Associate a lock with this memory pool.  *  * This lock is used when getting or putting items using this memory pool,  * and it is also used to set or get internal state via the isc_mempool_get*()  * and isc_mempool_set*() set of functions.  *  * Multiple pools can each share a single lock.  For instance, if "manager"  * type object contained pools for various sizes of events, and each of  * these pools used a common lock.  Note that this lock must NEVER be used  * by other than mempool routines once it is given to a pool, since that can  * easily cause double locking.  *  * Requires:  *  *\li	mpctpx is a valid pool.  *  *\li	lock != NULL.  *  *\li	No previous lock is assigned to this pool.  *  *\li	The lock is initialized before calling this function via the normal  *	means of doing that.  */
 end_comment
 
 begin_comment
@@ -1239,6 +1253,23 @@ modifier|*
 name|isc__mem_allocate
 parameter_list|(
 name|isc_mem_t
+modifier|*
+parameter_list|,
+name|size_t
+name|_ISC_MEM_FLARG
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|isc__mem_reallocate
+parameter_list|(
+name|isc_mem_t
+modifier|*
+parameter_list|,
+name|void
 modifier|*
 parameter_list|,
 name|size_t

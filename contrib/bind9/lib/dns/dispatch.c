@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.116.18.37 2008/09/04 00:24:41 jinmei Exp $ */
+comment|/* $Id: dispatch.c,v 1.116.18.42 2009/12/02 23:36:35 marka Exp $ */
 end_comment
 
 begin_comment
@@ -8765,6 +8765,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * We only increase the maxbuffers to avoid accidental buffer 		 * shortage.  Ideally we'd separate the manager-wide maximum 		 * from per-dispatch limits and respect the latter within the 		 * global limit.  But at this moment that's deemed to be 		 * overkilling and isn't worth additional implementation 		 * complexity. 		 */
+if|if
+condition|(
+name|maxbuffers
+operator|>
+name|mgr
+operator|->
+name|maxbuffers
+condition|)
+block|{
 name|isc_mempool_setmaxalloc
 argument_list|(
 name|mgr
@@ -8780,6 +8790,7 @@ name|maxbuffers
 operator|=
 name|maxbuffers
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -10555,7 +10566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MUST be unlocked, and not used by anthing.  */
+comment|/*  * MUST be unlocked, and not used by anything.  */
 end_comment
 
 begin_function
@@ -11857,6 +11868,40 @@ return|;
 block|}
 block|}
 comment|/* 		 * If this fails 1024 times, we then ask the kernel for 		 * choosing one. 		 */
+block|}
+else|else
+block|{
+comment|/* Allow to reuse address for non-random ports. */
+name|result
+operator|=
+name|open_socket
+argument_list|(
+name|sockmgr
+argument_list|,
+name|localaddr
+argument_list|,
+name|ISC_SOCKET_REUSEADDRESS
+argument_list|,
+operator|&
+name|sock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+operator|*
+name|sockp
+operator|=
+name|sock
+expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
 block|}
 name|memset
 argument_list|(

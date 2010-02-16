@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: file.h,v 1.27.18.2 2005/04/29 00:16:54 marka Exp $ */
+comment|/* $Id: file.h,v 1.27.18.4 2009/01/19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -76,7 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Get the time of last modication of a file.  *  * Notes:  *\li	The time that is set is relative to the (OS-specific) epoch, as are  *	all isc_time_t structures.  *  * Requires:  *\li	file != NULL.  *\li	time != NULL.  *  * Ensures:  *\li	If the file could not be accessed, 'time' is unchanged.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_NOTFOUND  *		No such file exists.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file's metainformation could not be retrieved because  *		permission was denied to some part of the file's path.  *\li	#ISC_R_EIO  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  *  */
+comment|/*!<  * \brief Get the time of last modification of a file.  *  * Notes:  *\li	The time that is set is relative to the (OS-specific) epoch, as are  *	all isc_time_t structures.  *  * Requires:  *\li	file != NULL.  *\li	time != NULL.  *  * Ensures:  *\li	If the file could not be accessed, 'time' is unchanged.  *  * Returns:  *\li	#ISC_R_SUCCESS  *		Success.  *\li	#ISC_R_NOTFOUND  *		No such file exists.  *\li	#ISC_R_INVALIDFILE  *		The path specified was not usable by the operating system.  *\li	#ISC_R_NOPERM  *		The file's metainformation could not be retrieved because  *		permission was denied to some part of the file's path.  *\li	#ISC_R_EIO  *		Hardware error interacting with the filesystem.  *\li	#ISC_R_UNEXPECTED  *		Something totally unexpected happened.  *  */
 end_comment
 
 begin_function_decl
@@ -261,7 +261,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Given an operating system specific file name "filename"  * referring to a program, return the canonical program name.   *  *  * Any directory prefix or executable file name extension (if  * used on the OS in case) is stripped.  On systems where program  * names are case insensitive, the name is canonicalized to all  * lower case.  The name is written to 'buf', an array of 'buflen'  * chars, and null terminated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE 	The name did not fit in 'buf'.  */
+comment|/*!<  * \brief Given an operating system specific file name "filename"  * referring to a program, return the canonical program name.  *  *  * Any directory prefix or executable file name extension (if  * used on the OS in case) is stripped.  On systems where program  * names are case insensitive, the name is canonicalized to all  * lower case.  The name is written to 'buf', an array of 'buflen'  * chars, and null terminated.  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE 	The name did not fit in 'buf'.  */
 end_comment
 
 begin_function_decl

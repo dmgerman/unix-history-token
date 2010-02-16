@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.410.18.55 2008/10/24 01:43:17 tbox Exp $ */
+comment|/* $Id: zone.c,v 1.410.18.61 2009/09/24 21:38:52 jinmei Exp $ */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<isc/serial.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/strerror.h>
 end_include
 
 begin_include
@@ -1247,7 +1259,7 @@ value|0x00001000U
 end_define
 
 begin_comment
-comment|/*%< an attempt to refresh a 						 * zone with no masters 						 * occured */
+comment|/*%< an attempt to refresh a 						 * zone with no masters 						 * occurred */
 end_comment
 
 begin_define
@@ -1360,6 +1372,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|DNS_ZONEFLG_REFRESHING
+value|0x04000000U
+end_define
+
+begin_comment
+comment|/*%< Refreshing keydata */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONEFLG_THAW
+value|0x08000000U
+end_define
+
+begin_define
+define|#
+directive|define
 name|DNS_ZONE_OPTION
 parameter_list|(
 name|z
@@ -1382,6 +1412,17 @@ end_define
 
 begin_comment
 comment|/* Do not stat() master files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_ZONELOADFLAG_THAW
+value|0x00000002U
+end_define
+
+begin_comment
+comment|/* Thaw the zone on successful 						   load. */
 end_comment
 
 begin_struct
@@ -5565,9 +5606,26 @@ name|DNS_ZONEFLG_LOADING
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|DNS_ZONELOADFLAG_THAW
+operator|)
+operator|!=
+literal|0
+condition|)
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_THAW
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
-name|ISC_R_SUCCESS
+name|DNS_R_CONTINUE
 expr_stmt|;
 goto|goto
 name|cleanup
@@ -6104,6 +6162,23 @@ argument_list|,
 name|DNS_ZONEFLG_LOADING
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|DNS_ZONELOADFLAG_THAW
+operator|)
+operator|!=
+literal|0
+condition|)
+name|DNS_ZONE_SETFLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_THAW
+argument_list|)
+expr_stmt|;
 goto|goto
 name|cleanup
 goto|;
@@ -6187,6 +6262,75 @@ name|zone
 argument_list|,
 name|DNS_ZONELOADFLAG_NOSTAT
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_zone_loadandthaw
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+block|{
+name|isc_result_t
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|zone_load
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONELOADFLAG_THAW
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|result
+condition|)
+block|{
+case|case
+name|DNS_R_CONTINUE
+case|:
+comment|/* Deferred thaw. */
+break|break;
+case|case
+name|ISC_R_SUCCESS
+case|:
+case|case
+name|DNS_R_UPTODATE
+case|:
+case|case
+name|DNS_R_SEENINCLUDE
+case|:
+name|zone
+operator|->
+name|update_disabled
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+break|break;
+case|case
+name|DNS_R_NOMASTERFILE
+case|:
+name|zone
+operator|->
+name|update_disabled
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Error, remain in disabled state. */
+break|break;
+block|}
+return|return
+operator|(
+name|result
 operator|)
 return|;
 block|}
@@ -13995,7 +14139,7 @@ condition|)
 goto|goto
 name|unlock
 goto|;
-comment|/* 	 * masters must countain count elements! 	 */
+comment|/* 	 * masters must contain count elements! 	 */
 name|new
 operator|=
 name|isc_mem_get
@@ -21964,7 +22108,7 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Perhaps AXFR/IXFR is allowed even if SOA queries arn't. 		 */
+comment|/* 		 * Perhaps AXFR/IXFR is allowed even if SOA queries aren't. 		 */
 if|if
 condition|(
 name|msg
@@ -30952,7 +31096,7 @@ operator|&
 name|ver
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The initial version of a slave zone is always dumped; 	 * subsequent versions may be journalled instead if this 	 * is enabled in the configuration. 	 */
+comment|/* 	 * The initial version of a slave zone is always dumped; 	 * subsequent versions may be journaled instead if this 	 * is enabled in the configuration. 	 */
 if|if
 condition|(
 name|zone
@@ -31304,7 +31448,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * The in-memory database just changed, and 			 * because 'dump' is set, it didn't change by 			 * being loaded from disk.  Also, we have not 			 * journalled diffs for this change. 			 * Therefore, the on-disk journal is missing 			 * the deltas for this change.  Since it can 			 * no longer be used to bring the zone 			 * up-to-date, it is useless and should be 			 * removed. 			 */
+comment|/* 			 * The in-memory database just changed, and 			 * because 'dump' is set, it didn't change by 			 * being loaded from disk.  Also, we have not 			 * journaled diffs for this change. 			 * Therefore, the on-disk journal is missing 			 * the deltas for this change.  Since it can 			 * no longer be used to bring the zone 			 * up-to-date, it is useless and should be 			 * removed. 			 */
 name|isc_log_write
 argument_list|(
 name|dns_lctx
@@ -31321,16 +31465,61 @@ argument_list|,
 literal|"removing journal file"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|remove
 argument_list|(
 name|zone
 operator|->
 name|journal
 argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
+name|char
+name|strbuf
+index|[
+name|ISC_STRERRORSIZE
+index|]
+decl_stmt|;
+name|isc__strerror
+argument_list|(
+name|errno
+argument_list|,
+name|strbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|strbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|isc_log_write
+argument_list|(
+name|dns_lctx
+argument_list|,
+name|DNS_LOGCATEGORY_GENERAL
+argument_list|,
+name|DNS_LOGMODULE_ZONE
+argument_list|,
+name|ISC_LOG_WARNING
+argument_list|,
+literal|"unable to remove journal "
+literal|"'%s': '%s'"
+argument_list|,
+name|zone
+operator|->
+name|journal
+argument_list|,
+name|strbuf
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|dns_db_closeversion
@@ -31902,12 +32091,6 @@ goto|;
 block|}
 name|zone
 operator|->
-name|serial
-operator|=
-name|serial
-expr_stmt|;
-name|zone
-operator|->
 name|refresh
 operator|=
 name|RANGE
@@ -32131,15 +32314,13 @@ name|ISC_LOG_INFO
 argument_list|,
 literal|"transferred serial %u%s"
 argument_list|,
-name|zone
-operator|->
 name|serial
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * This is not neccessary if we just performed a AXFR 		 * however it is necessary for an IXFR / UPTODATE and 		 * won't hurt with an AXFR. 		 */
+comment|/* 		 * This is not necessary if we just performed a AXFR 		 * however it is necessary for an IXFR / UPTODATE and 		 * won't hurt with an AXFR. 		 */
 if|if
 condition|(
 name|zone
@@ -32771,6 +32952,43 @@ operator|->
 name|zone
 argument_list|,
 name|DNS_ZONEFLG_LOADING
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Leave the zone frozen if the reload fails. 	 */
+if|if
+condition|(
+operator|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|||
+name|result
+operator|==
+name|DNS_R_SEENINCLUDE
+operator|)
+operator|&&
+name|DNS_ZONE_FLAG
+argument_list|(
+name|load
+operator|->
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_THAW
+argument_list|)
+condition|)
+name|zone
+operator|->
+name|update_disabled
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+name|DNS_ZONE_CLRFLAG
+argument_list|(
+name|load
+operator|->
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_THAW
 argument_list|)
 expr_stmt|;
 name|UNLOCK_ZONE
@@ -37484,7 +37702,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Hook for ondestroy notifcation from a database. */
+comment|/* Hook for ondestroy notification from a database. */
 end_comment
 
 begin_endif

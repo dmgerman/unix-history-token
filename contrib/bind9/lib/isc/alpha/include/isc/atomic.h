@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.2.2.2 2005/06/16 22:01:01 jinmei Exp $ */
+comment|/* $Id: atomic.h,v 1.2.2.4 2009/04/08 06:46:30 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * This routine atomically increments the value stored in 'p' by 'val', and  * returns the previous value.  */
+comment|/*  * This routine atomically increments the value stored in 'p' by 'val', and  * returns the previous value.  Memory access ordering around this function  * can be critical, so we add explicit memory block instructions at the  * beginning and the end of it (same for other functions).  */
 end_comment
 
 begin_function
@@ -81,7 +81,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-asm|asm("1:" 		    "ldl_l %t0, 0(%a0);"
+asm|asm("mb;" 		    "1:" 		    "ldl_l %t0, 0(%a0);"
 comment|/* load old value */
 asm|"mov %t0, %v0;"
 comment|/* copy the old value */
@@ -89,9 +89,9 @@ asm|"addl %t0, %a1, %t0;"
 comment|/* calculate new value */
 asm|"stl_c %t0, 0(%a0);"
 comment|/* attempt to store */
-asm|"beq %t0, 1b;",
+asm|"beq %t0, 1b;"
 comment|/* spin if failed */
-asm|p, val));
+asm|"mb;", 		    p, val));
 block|}
 end_function
 
@@ -116,15 +116,15 @@ block|{
 operator|(
 name|void
 operator|)
-asm|asm("1:" 		  "ldl_l %t0, 0(%a0);"
+asm|asm("mb;" 		  "1:" 		  "ldl_l %t0, 0(%a0);"
 comment|/* load old value */
 asm|"mov %a1, %t0;"
 comment|/* value to store */
 asm|"stl_c %t0, 0(%a0);"
 comment|/* attempt to store */
-asm|"beq %t0, 1b;",
+asm|"beq %t0, 1b;"
 comment|/* spin if failed */
-asm|p, val);
+asm|"mb;", 		  p, val);
 block|}
 end_function
 
@@ -151,7 +151,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-asm|asm("1:" 		   "ldl_l %t0, 0(%a0);"
+asm|asm("mb;" 		   "1:" 		   "ldl_l %t0, 0(%a0);"
 comment|/* load old value */
 asm|"mov %t0, %v0;"
 comment|/* copy the old value */
@@ -165,7 +165,7 @@ asm|"stl_c %t0, 0(%a0);"
 comment|/* attempt to store */
 asm|"beq %t0, 1b;"
 comment|/* if it failed, spin */
-asm|"2:", 		   p, cmpval, val));
+asm|"2:" 		   "mb;", 		   p, cmpval, val));
 block|}
 end_function
 
@@ -199,7 +199,7 @@ name|prev
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		"1:" 		"ldl_l %0, %1;"
+asm|( 		"mb;" 		"1:" 		"ldl_l %0, %1;"
 comment|/* load old value */
 asm|"mov %0, %2;"
 comment|/* copy the old value */
@@ -209,7 +209,7 @@ asm|"stl_c %0, %1;"
 comment|/* attempt to store */
 asm|"beq %0, 1b;"
 comment|/* spin if failed */
-asm|: "=&r"(temp), "+m"(*p), "=r"(prev) 		: "r"(val) 		: "memory");
+asm|"mb;" 		: "=&r"(temp), "+m"(*p), "=&r"(prev) 		: "r"(val) 		: "memory");
 return|return
 operator|(
 name|prev
@@ -237,7 +237,7 @@ name|temp
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		"1:" 		"ldl_l %0, %1;"
+asm|( 		"mb;" 		"1:" 		"ldl_l %0, %1;"
 comment|/* load old value */
 asm|"mov %2, %0;"
 comment|/* value to store */
@@ -245,7 +245,7 @@ asm|"stl_c %0, %1;"
 comment|/* attempt to store */
 asm|"beq %0, 1b;"
 comment|/* if it failed, spin */
-asm|: "=&r"(temp), "+m"(*p) 		: "r"(val) 		: "memory");
+asm|"mb;" 		: "=&r"(temp), "+m"(*p) 		: "r"(val) 		: "memory");
 block|}
 end_function
 
@@ -273,7 +273,7 @@ name|prev
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		"1:" 		"ldl_l %0, %1;"
+asm|( 		"mb;" 		"1:" 		"ldl_l %0, %1;"
 comment|/* load old value */
 asm|"mov %0, %2;"
 comment|/* copy the old value */
@@ -287,7 +287,7 @@ asm|"stl_c %0, %1;"
 comment|/* attempt to store */
 asm|"beq %0, 1b;"
 comment|/* if it failed, spin */
-asm|"2:" 		: "=&r"(temp), "+m"(*p), "=r"(prev) 		: "r"(cmpval), "r"(val) 		: "memory");
+asm|"2:" 		"mb;" 		: "=&r"(temp), "+m"(*p), "=&r"(prev) 		: "r"(cmpval), "r"(val) 		: "memory");
 return|return
 operator|(
 name|prev

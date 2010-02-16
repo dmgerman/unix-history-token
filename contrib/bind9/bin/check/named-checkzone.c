@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.29.18.21 2008/10/24 01:43:17 tbox Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.29.18.24 2009/05/29 02:19:20 marka Exp $ */
 end_comment
 
 begin_comment
@@ -483,16 +483,20 @@ name|prog_name
 operator|+=
 literal|3
 expr_stmt|;
+define|#
+directive|define
+name|PROGCMP
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|(strcasecmp(prog_name, X) == 0 || strcasecmp(prog_name, X ".exe") == 0)
 if|if
 condition|(
-name|strcmp
+name|PROGCMP
 argument_list|(
-name|prog_name
-argument_list|,
 literal|"named-checkzone"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|progmode
 operator|=
@@ -501,14 +505,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|PROGCMP
 argument_list|(
-name|prog_name
-argument_list|,
 literal|"named-compilezone"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|progmode
 operator|=
@@ -1037,38 +1037,6 @@ argument_list|,
 literal|"isc_dir_chroot: %s: %s\n"
 argument_list|,
 name|isc_commandline_argument
-argument_list|,
-name|isc_result_totext
-argument_list|(
-name|result
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|result
-operator|=
-name|isc_dir_chdir
-argument_list|(
-literal|"/"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|result
-operator|!=
-name|ISC_R_SUCCESS
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"isc_dir_chdir: %s\n"
 argument_list|,
 name|isc_result_totext
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: soa_6.c,v 1.59 2004/03/05 05:10:18 marka Exp $ */
+comment|/* $Id: soa_6.c,v 1.59.18.2 2009/02/16 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -426,6 +426,10 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|multiline
+condition|)
 name|comment
 operator|=
 name|ISC_TF
@@ -440,6 +444,11 @@ operator|)
 operator|!=
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|comment
+operator|=
+name|ISC_FALSE
 expr_stmt|;
 name|dns_name_init
 argument_list|(
@@ -626,17 +635,13 @@ name|buf
 index|[
 sizeof|sizeof
 argument_list|(
-literal|"2147483647"
+literal|"0123456789 ; "
 argument_list|)
 index|]
 decl_stmt|;
 name|unsigned
 name|long
 name|num
-decl_stmt|;
-name|unsigned
-name|int
-name|numlen
 decl_stmt|;
 name|num
 operator|=
@@ -654,29 +659,17 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|numlen
-operator|=
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
+name|comment
+condition|?
+literal|"%-10lu ; "
+else|:
 literal|"%lu"
 argument_list|,
 name|num
-argument_list|)
-expr_stmt|;
-name|INSIST
-argument_list|(
-name|numlen
-operator|>
-literal|0
-operator|&&
-name|numlen
-operator|<
-sizeof|sizeof
-argument_list|(
-literal|"2147483647"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|RETERR
@@ -691,23 +684,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|multiline
-operator|&&
 name|comment
 condition|)
 block|{
-name|RETERR
-argument_list|(
-name|str_totext
-argument_list|(
-literal|"           ; "
-operator|+
-name|numlen
-argument_list|,
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|RETERR
 argument_list|(
 name|str_totext
