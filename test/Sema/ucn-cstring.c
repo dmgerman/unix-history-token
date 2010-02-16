@@ -41,7 +41,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%d)\n"
+literal|"%s (%zd)\n"
 argument_list|,
 literal|"hello \u2192 \u2603 \u2190 world"
 argument_list|,
@@ -53,7 +53,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%d)\n"
+literal|"%s (%zd)\n"
 argument_list|,
 literal|"\U00010400\U0001D12B"
 argument_list|,

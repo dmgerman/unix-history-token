@@ -113,6 +113,9 @@ comment|///< Emit a .ll file.
 name|EmitLLVMOnly
 block|,
 comment|///< Generate LLVM IR, but do not
+name|EmitObj
+block|,
+comment|///< Emit a .o file.
 name|FixIt
 block|,
 comment|///< Parse and apply any fixits to the source.
@@ -321,6 +324,17 @@ operator|::
 name|string
 operator|>
 name|Plugins
+expr_stmt|;
+comment|/// \brief The list of AST files to merge.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ASTMergeFiles
 expr_stmt|;
 name|public
 label|:

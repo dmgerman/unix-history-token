@@ -56,7 +56,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CXCursor_H
+name|LLVM_CLANG_CXCURSOR_H
 end_define
 
 begin_include

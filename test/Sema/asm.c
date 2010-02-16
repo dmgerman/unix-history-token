@@ -180,5 +180,19 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/7574870>
+end_comment
+
+begin_asm
+asm|asm
+specifier|volatile
+asm|("");
+end_asm
+
+begin_comment
+comment|// expected-warning {{meaningless 'volatile' on asm outside function}}
+end_comment
+
 end_unit
 

@@ -1974,6 +1974,17 @@ return|;
 block|}
 end_function
 
+begin_function
+name|virtual
+name|void
+name|ActOnObjCCatchParam
+parameter_list|(
+name|DeclPtrTy
+name|D
+parameter_list|)
+block|{   }
+end_function
+
 begin_comment
 comment|/// AddInitializerToDecl - This action is called immediately after
 end_comment
@@ -3506,6 +3517,31 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// ActOnSwitchBodyError - This is called if there is an error parsing the
+end_comment
+
+begin_comment
+comment|/// body of the switch stmt instead of ActOnFinishSwitchStmt.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnSwitchBodyError
+parameter_list|(
+name|SourceLocation
+name|SwitchLoc
+parameter_list|,
+name|StmtArg
+name|Switch
+parameter_list|,
+name|StmtArg
+name|Body
+parameter_list|)
+block|{}
+end_function
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -3872,59 +3908,58 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|virtual
 name|OwningStmtResult
 name|ActOnAsmStmt
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|AsmLoc
-argument_list|,
+parameter_list|,
 name|bool
 name|IsSimple
-argument_list|,
+parameter_list|,
 name|bool
 name|IsVolatile
-argument_list|,
+parameter_list|,
 name|unsigned
 name|NumOutputs
-argument_list|,
+parameter_list|,
 name|unsigned
 name|NumInputs
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+modifier|*
 name|Names
-argument_list|,
+parameter_list|,
 name|MultiExprArg
 name|Constraints
-argument_list|,
+parameter_list|,
 name|MultiExprArg
 name|Exprs
-argument_list|,
+parameter_list|,
 name|ExprArg
 name|AsmString
-argument_list|,
+parameter_list|,
 name|MultiExprArg
 name|Clobbers
-argument_list|,
+parameter_list|,
 name|SourceLocation
 name|RParenLoc
-argument_list|,
+parameter_list|,
 name|bool
 name|MSAsm
-operator|=
+init|=
 name|false
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|StmtEmpty
 argument_list|()
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|// Objective-c statements
@@ -5397,6 +5432,10 @@ name|Ident
 parameter_list|,
 name|SourceLocation
 name|LBrace
+parameter_list|,
+name|AttributeList
+modifier|*
+name|AttrList
 parameter_list|)
 block|{
 return|return
@@ -6913,6 +6952,14 @@ begin_comment
 comment|/// contains the individual member (and base) initializers.
 end_comment
 
+begin_comment
+comment|/// AnyErrors will be true if there were any invalid member initializers
+end_comment
+
+begin_comment
+comment|/// that are not represented in the list.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -6931,6 +6978,9 @@ name|MemInits
 parameter_list|,
 name|unsigned
 name|NumMemInits
+parameter_list|,
+name|bool
+name|AnyErrors
 parameter_list|)
 block|{   }
 end_function

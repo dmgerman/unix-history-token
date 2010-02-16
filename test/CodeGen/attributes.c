@@ -484,5 +484,46 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|void
+argument_list|(
+name|__attribute__
+argument_list|(
+operator|(
+name|fastcall
+operator|)
+argument_list|)
+operator|*
+name|fptr
+argument_list|)
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|t21
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fptr
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: [[FPTRVAR:%[a-z0-9]+]] = load void (i32)** @fptr
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: call x86_fastcallcc void [[FPTRVAR]](i32 10)
+end_comment
+
 end_unit
 

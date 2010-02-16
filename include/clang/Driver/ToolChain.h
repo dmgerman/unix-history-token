@@ -182,9 +182,9 @@ return|return
 name|Triple
 return|;
 block|}
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|getArchName
 argument_list|()
 specifier|const
@@ -196,9 +196,9 @@ name|getArchName
 argument_list|()
 return|;
 block|}
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|getPlatform
 argument_list|()
 specifier|const
@@ -210,9 +210,9 @@ name|getVendorName
 argument_list|()
 return|;
 block|}
-name|std
+name|llvm
 operator|::
-name|string
+name|StringRef
 name|getOS
 argument_list|()
 specifier|const
@@ -358,11 +358,36 @@ return|return
 name|false
 return|;
 block|}
+comment|/// IsIntegratedAssemblerDefault - Does this tool chain enable -integrated-as
+comment|/// by default.
+name|virtual
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// IsObjCNonFragileABIDefault - Does this tool chain set
 comment|/// -fobjc-nonfragile-abi by default.
 name|virtual
 name|bool
 name|IsObjCNonFragileABIDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// IsObjCLegacyDispatchDefault - Does this tool chain set
+comment|/// -fobjc-legacy-dispatch by default (this is only used with the non-fragile
+comment|/// ABI).
+name|virtual
+name|bool
+name|IsObjCLegacyDispatchDefault
 argument_list|()
 specifier|const
 block|{
@@ -422,6 +447,17 @@ comment|/// compile unit information.
 name|virtual
 name|bool
 name|UseDwarfDebugFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// UseSjLjExceptions - Does this tool chain use SjLj exceptions.
+name|virtual
+name|bool
+name|UseSjLjExceptions
 argument_list|()
 specifier|const
 block|{

@@ -168,6 +168,11 @@ name|CurLoc
 decl_stmt|,
 name|PrevLoc
 decl_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|VTablePtrType
+expr_stmt|;
 comment|/// CompileUnitCache - Cache of previously constructed CompileUnits.
 name|llvm
 operator|::
@@ -219,12 +224,26 @@ operator|>
 expr|>
 name|RegionStack
 expr_stmt|;
-comment|/// FunctionNames - This is a storage for function names that are
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|RegionMap
+expr_stmt|;
+comment|/// DebugInfoNames - This is a storage for names that are
 comment|/// constructed on demand. For example, C++ destructors, C++ operators etc..
 name|llvm
 operator|::
 name|BumpPtrAllocator
-name|FunctionNames
+name|DebugInfoNames
 expr_stmt|;
 name|llvm
 operator|::
@@ -239,6 +258,20 @@ operator|::
 name|WeakVH
 operator|>
 name|SPCache
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|NamespaceDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|NameSpaceCache
 expr_stmt|;
 comment|/// Helper functions for getOrCreateType.
 name|llvm
@@ -394,6 +427,34 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|getOrCreateMethodType
+argument_list|(
+argument|const CXXMethodDecl *Method
+argument_list|,
+argument|llvm::DICompileUnit Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateVTablePtrType
+argument_list|(
+argument|llvm::DICompileUnit Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DINameSpace
+name|getOrCreateNameSpace
+argument_list|(
+argument|const NamespaceDecl *N
+argument_list|,
+argument|llvm::DIDescriptor Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|CreatePointerLikeType
 argument_list|(
 argument|unsigned Tag
@@ -403,6 +464,18 @@ argument_list|,
 argument|QualType PointeeTy
 argument_list|,
 argument|llvm::DICompileUnit U
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DISubprogram
+name|CreateCXXMemberFunction
+argument_list|(
+argument|const CXXMethodDecl *Method
+argument_list|,
+argument|llvm::DICompileUnit Unit
+argument_list|,
+argument|llvm::DICompositeType&RecordTy
 argument_list|)
 expr_stmt|;
 name|void
@@ -437,6 +510,37 @@ name|T
 argument_list|)
 decl_stmt|;
 name|void
+name|CollectCXXBases
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Decl
+argument_list|,
+name|llvm
+operator|::
+name|DICompileUnit
+name|Unit
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|DIDescriptor
+operator|>
+operator|&
+name|EltTys
+argument_list|,
+name|llvm
+operator|::
+name|DICompositeType
+operator|&
+name|RecordTy
+argument_list|)
+decl_stmt|;
+name|void
 name|CollectRecordFields
 argument_list|(
 specifier|const
@@ -459,6 +563,31 @@ name|DIDescriptor
 operator|>
 operator|&
 name|E
+argument_list|)
+decl_stmt|;
+name|void
+name|CollectVtableInfo
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Decl
+argument_list|,
+name|llvm
+operator|::
+name|DICompileUnit
+name|Unit
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|DIDescriptor
+operator|>
+operator|&
+name|EltTys
 argument_list|)
 decl_stmt|;
 name|public
@@ -703,14 +832,31 @@ operator|*
 name|CGF
 argument_list|)
 decl_stmt|;
-comment|/// getContext - Get context info for the decl.
+comment|// EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.
+comment|// See BuildByRefType.
+name|llvm
+operator|::
+name|DIType
+name|EmitTypeForVarWithBlocksAttr
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|,
+name|uint64_t
+operator|*
+name|OffSet
+argument_list|)
+expr_stmt|;
+comment|/// getContextDescriptor - Get context info for the decl.
 name|llvm
 operator|::
 name|DIDescriptor
-name|getContext
+name|getContextDescriptor
 argument_list|(
 specifier|const
-name|VarDecl
+name|Decl
 operator|*
 name|Decl
 argument_list|,
@@ -766,6 +912,18 @@ specifier|const
 name|FunctionDecl
 operator|*
 name|FD
+argument_list|)
+expr_stmt|;
+comment|/// getVtableName - Get vtable name for the given Class.
+name|llvm
+operator|::
+name|StringRef
+name|getVtableName
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Decl
 argument_list|)
 expr_stmt|;
 block|}

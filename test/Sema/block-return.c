@@ -826,7 +826,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// OK
+comment|// expected-error{{incompatible block pointer types initializing 'int (^)(void)', expected 'int const (^)(void)'}}
 end_comment
 
 begin_function_decl
@@ -1017,12 +1017,8 @@ name|k
 return|;
 end_return
 
-begin_comment
-unit|};
-comment|// expected-error {{incompatible block pointer types initializing 'int const (^)(void)', expected 'int (^)(void)'}}
-end_comment
-
 begin_function_decl
+unit|};
 name|int
 function_decl|(
 modifier|^
@@ -1042,11 +1038,6 @@ name|cint
 return|;
 end_return
 
-begin_comment
-unit|};
-comment|// expected-error {{incompatible block pointer types initializing 'int const (^)(void)', expected 'int (^)(void)'}}
-end_comment
-
-unit|}
+unit|}; }
 end_unit
 

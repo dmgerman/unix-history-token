@@ -220,5 +220,32 @@ comment|// expected-warning {{returning address of label, which is local}}
 block|}
 end_function
 
+begin_comment
+comment|// PR6034
+end_comment
+
+begin_function
+name|void
+name|test11
+parameter_list|(
+name|int
+name|bit
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|bit
+condition|)
+switch|switch
+condition|(
+name|env
+operator|->
+name|fpscr
+condition|)
+comment|// expected-error {{use of undeclared identifier 'env'}}
+block|{   }
+block|}
+end_function
+
 end_unit
 

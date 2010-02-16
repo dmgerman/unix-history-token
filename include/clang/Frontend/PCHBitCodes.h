@@ -362,6 +362,11 @@ comment|/// information of the compiler used to build this PCH file.
 name|VERSION_CONTROL_BRANCH_REVISION
 init|=
 literal|21
+block|,
+comment|/// \brief Record code for the array of unused static functions.
+name|UNUSED_STATIC_FUNCS
+init|=
+literal|22
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -1169,6 +1174,12 @@ name|EXPR_CXX_CONST_CAST
 block|,
 comment|// \brief A CXXFunctionalCastExpr record.
 name|EXPR_CXX_FUNCTIONAL_CAST
+block|,
+comment|// \brief A CXXBoolLiteralExpr record.
+name|EXPR_CXX_BOOL_LITERAL
+block|,
+comment|// \brief A CXXNullPtrLiteralExpr record.
+name|EXPR_CXX_NULL_PTR_LITERAL
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

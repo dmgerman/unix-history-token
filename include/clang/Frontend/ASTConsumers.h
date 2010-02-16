@@ -212,15 +212,18 @@ name|BackendAction
 block|{
 name|Backend_EmitAssembly
 block|,
-comment|// Emit native assembly
+comment|// Emit native assembly files
 name|Backend_EmitBC
 block|,
-comment|// Emit LLVM bitcode file
+comment|// Emit LLVM bitcode files
 name|Backend_EmitLL
 block|,
 comment|// Emit human-readable LLVM assembly
 name|Backend_EmitNothing
+block|,
 comment|// Don't emit anything (benchmarking mode)
+name|Backend_EmitObj
+comment|// Emit native object files
 block|}
 enum|;
 name|ASTConsumer

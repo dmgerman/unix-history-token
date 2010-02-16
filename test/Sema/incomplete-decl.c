@@ -120,7 +120,7 @@ name|int
 name|ary
 index|[]
 decl_stmt|;
-comment|// expected-error{{variable has incomplete type 'int []'}}
+comment|// expected-error{{definition of variable with array type needs an explicit size or an initializer}}
 name|void
 name|b
 decl_stmt|;

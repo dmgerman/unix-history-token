@@ -1780,10 +1780,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:#define _CONFIG(conf) asm("CONFIG "#conf)
-end_comment
-
-begin_comment
 comment|// PIC16:#define __CHAR_BIT__ 8
 end_comment
 
@@ -2008,6 +2004,10 @@ comment|// PIC16:#define __NO_INLINE__ 1
 end_comment
 
 begin_comment
+comment|// PIC16:#define __PIC16 1
+end_comment
+
+begin_comment
 comment|// PIC16:#define __POINTER_WIDTH__ 16
 end_comment
 
@@ -2068,7 +2068,19 @@ comment|// PIC16:#define __WINT_WIDTH__ 16
 end_comment
 
 begin_comment
+comment|// PIC16:#define __address(Addr) __attribute__((section("Address="#Addr)))
+end_comment
+
+begin_comment
 comment|// PIC16:#define __clang__ 1
+end_comment
+
+begin_comment
+comment|// PIC16:#define __config(conf) asm("CONFIG "#conf)
+end_comment
+
+begin_comment
+comment|// PIC16:#define __idlocs(value) asm("__IDLOCS "#value)
 end_comment
 
 begin_comment
@@ -2080,15 +2092,15 @@ comment|// PIC16:#define __pic16 1
 end_comment
 
 begin_comment
-comment|// PIC16:#define _address(Addr) __attribute__((section("Address="#Addr)))
+comment|// PIC16:#define __section(SectName) __attribute__((section(SectName)))
 end_comment
 
 begin_comment
-comment|// PIC16:#define _interrupt __attribute__((section("interrupt=0x4"))) __attribute__((used))
+comment|// PIC16:#define interrupt __attribute__((section("interrupt=0x4"))) __attribute__((used))
 end_comment
 
 begin_comment
-comment|// PIC16:#define _section(SectName) __attribute__((section(SectName)))
+comment|// PIC16:#define near __attribute__((section("Address=NEAR")))
 end_comment
 
 begin_comment

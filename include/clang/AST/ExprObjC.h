@@ -1818,6 +1818,8 @@ comment|/// This constructor is used to represent class messages where the
 comment|/// ObjCInterfaceDecl* of the receiver is not known.
 name|ObjCMessageExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|IdentifierInfo *clsName
 argument_list|,
 argument|Selector selInfo
@@ -1840,6 +1842,8 @@ comment|/// ObjCInterfaceDecl* of the receiver is known.
 comment|// FIXME: clsName should be typed to ObjCInterfaceType
 name|ObjCMessageExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|ObjCInterfaceDecl *cls
 argument_list|,
 argument|Selector selInfo
@@ -1860,6 +1864,8 @@ block|;
 comment|// constructor for instance messages.
 name|ObjCMessageExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|Expr *receiver
 argument_list|,
 argument|Selector selInfo
@@ -1900,14 +1906,15 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-operator|~
-name|ObjCMessageExpr
-argument_list|()
-block|{
-name|delete
-index|[]
-name|SubExprs
-block|;   }
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 comment|/// getReceiver - Returns the receiver of the message expression.
 comment|///  This can be NULL if the message is for class methods.  For
 comment|///  class methods, use getClassName.

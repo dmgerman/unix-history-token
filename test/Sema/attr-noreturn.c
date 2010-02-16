@@ -85,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'noreturn' attribute only applies to function types}}
+comment|// expected-warning {{'noreturn' only applies to function types; type here is 'int'}}
 end_comment
 
 begin_function_decl

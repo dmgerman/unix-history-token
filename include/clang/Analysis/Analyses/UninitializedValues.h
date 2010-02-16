@@ -232,6 +232,30 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_function_decl
+name|void
+name|CheckUninitializedValues
+parameter_list|(
+name|CFG
+modifier|&
+name|cfg
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|Diagnostic
+modifier|&
+name|Diags
+parameter_list|,
+name|bool
+name|FullUninitTaint
+init|=
+name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 unit|}
 comment|// end namespace clang

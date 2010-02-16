@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -checker-cfref -analyzer-experimental-checks -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef
@@ -292,6 +292,19 @@ decl_stmt|;
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pr6293
+parameter_list|()
+block|{
+name|free
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

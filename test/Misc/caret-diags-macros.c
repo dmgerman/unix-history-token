@@ -82,5 +82,45 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// rdar://7597492
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sprintf
+parameter_list|(
+name|str
+parameter_list|,
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+define|\
+value|__builtin___sprintf_chk (str, 0, 42, A, B)
+end_define
+
+begin_function
+name|void
+name|baz
+parameter_list|(
+name|char
+modifier|*
+name|Msg
+parameter_list|)
+block|{
+name|sprintf
+argument_list|(
+name|Msg
+argument_list|,
+literal|"  sizeof FoooLib            : =%3u\n"
+argument_list|,
+literal|12LL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

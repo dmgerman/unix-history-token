@@ -166,6 +166,16 @@ return|;
 block|}
 name|virtual
 name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
@@ -254,6 +264,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
@@ -319,6 +331,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
@@ -382,6 +396,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
@@ -445,6 +461,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
@@ -508,6 +526,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const
@@ -571,6 +591,8 @@ name|virtual
 name|void
 name|RenderExtraToolArgs
 argument_list|(
+argument|const JobAction&JA
+argument_list|,
 argument|ArgStringList&CmdArgs
 argument_list|)
 specifier|const

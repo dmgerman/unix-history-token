@@ -153,6 +153,13 @@ literal|1
 decl_stmt|;
 comment|/// -fno-zero-initialized-in-bss
 name|unsigned
+name|ObjCLegacyDispatch
+range|:
+literal|1
+decl_stmt|;
+comment|/// Use legacy Objective-C dispatch, even with
+comment|/// 2.0 runtime.
+name|unsigned
 name|OptimizationLevel
 range|:
 literal|3
@@ -292,15 +299,15 @@ name|NoZeroInitializedInBSS
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCLegacyDispatch
+operator|=
+literal|0
+expr_stmt|;
 name|OptimizationLevel
 operator|=
 literal|0
 expr_stmt|;
 name|OptimizeSize
-operator|=
-literal|0
-expr_stmt|;
-name|UnrollLoops
 operator|=
 literal|0
 expr_stmt|;
@@ -315,6 +322,10 @@ expr_stmt|;
 name|UnitAtATime
 operator|=
 literal|1
+expr_stmt|;
+name|UnrollLoops
+operator|=
+literal|0
 expr_stmt|;
 name|UnwindTables
 operator|=

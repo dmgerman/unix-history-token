@@ -12,11 +12,11 @@ comment|// CHECK:define void @test_addrspace(%struct.S addrspace(1)* %p1, %struc
 end_comment
 
 begin_comment
-comment|// CHECK:  [[p1addr:%.*]] = alloca %struct.S addrspace(1)*       ;<%struct.S addrspace(1)**> [#uses=3]
+comment|// CHECK:  [[p1addr:%.*]] = alloca %struct.S addrspace(1)*
 end_comment
 
 begin_comment
-comment|// CHECK:  [[p2addr:%.*]] = alloca %struct.S addrspace(2)*       ;<%struct.S addrspace(2)**> [#uses=3]
+comment|// CHECK:  [[p2addr:%.*]] = alloca %struct.S addrspace(2)*
 end_comment
 
 begin_comment

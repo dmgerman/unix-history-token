@@ -456,5 +456,36 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_comment
+comment|// PR5254
+end_comment
+
+begin_comment
+comment|// CHECK: define void @f16
+end_comment
+
+begin_comment
+comment|// CHECK: alignstack(16)
+end_comment
+
+begin_comment
+comment|// CHECK: {
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|force_align_arg_pointer
+operator|)
+argument_list|)
+name|f16
+argument_list|(
+name|void
+argument_list|)
+block|{ }
+end_decl_stmt
+
 end_unit
 

@@ -179,6 +179,12 @@ literal|1
 decl_stmt|;
 comment|// Objective-C modern abi enabled
 name|unsigned
+name|ObjCNonFragileABI2
+range|:
+literal|1
+decl_stmt|;
+comment|// Objective-C enhanced modern abi enabled
+name|unsigned
 name|PascalStrings
 range|:
 literal|1
@@ -207,6 +213,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Support exception handling.
+name|unsigned
+name|SjLjExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|// Use setjmp-longjump exception handling.
 name|unsigned
 name|RTTI
 range|:
@@ -377,6 +389,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Generate code to check for undefined ops.
+name|unsigned
+name|DumpVtableLayouts
+range|:
+literal|1
+decl_stmt|;
+comment|// Dump the layouts of all the emitted
+comment|// vtables.
 name|private
 label|:
 name|unsigned
@@ -479,6 +498,8 @@ name|ObjC2
 operator|=
 name|ObjCNonFragileABI
 operator|=
+name|ObjCNonFragileABI2
+operator|=
 literal|0
 expr_stmt|;
 name|C99
@@ -500,6 +521,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|Exceptions
+operator|=
+name|SjLjExceptions
 operator|=
 name|Freestanding
 operator|=
@@ -538,10 +561,9 @@ name|unsigned
 operator|)
 name|Default
 expr_stmt|;
-comment|// FIXME: The default should be 1.
 name|ThreadsafeStatics
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|POSIXThreads
 operator|=
@@ -621,6 +643,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|CatchUndefined
+operator|=
+literal|0
+expr_stmt|;
+name|DumpVtableLayouts
 operator|=
 literal|0
 expr_stmt|;

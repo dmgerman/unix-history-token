@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGCXX.h"
+file|"GlobalDecl.h"
 end_include
 
 begin_decl_stmt
@@ -195,10 +195,11 @@ name|Type
 operator|*
 name|LLVMType
 expr_stmt|;
-comment|/// ContainsMemberPointer - Whether one of the fields in this record layout
-comment|/// is a member pointer, or a struct that contains a member pointer.
+comment|/// ContainsPointerToDataMember - Whether one of the fields in this record
+comment|/// layout is a pointer to data member, or a struct that contains pointer to
+comment|/// data member.
 name|bool
-name|ContainsMemberPointer
+name|ContainsPointerToDataMember
 decl_stmt|;
 name|public
 label|:
@@ -206,7 +207,7 @@ name|CGRecordLayout
 argument_list|(
 argument|const llvm::Type *T
 argument_list|,
-argument|bool ContainsMemberPointer
+argument|bool ContainsPointerToDataMember
 argument_list|)
 block|:
 name|LLVMType
@@ -214,9 +215,9 @@ argument_list|(
 name|T
 argument_list|)
 operator|,
-name|ContainsMemberPointer
+name|ContainsPointerToDataMember
 argument_list|(
-argument|ContainsMemberPointer
+argument|ContainsPointerToDataMember
 argument_list|)
 block|{ }
 comment|/// getLLVMType - Return llvm type associated with this record.
@@ -233,13 +234,15 @@ return|return
 name|LLVMType
 return|;
 block|}
+comment|/// containsPointerToDataMember - Whether this struct contains pointers to
+comment|/// data members.
 name|bool
-name|containsMemberPointer
+name|containsPointerToDataMember
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ContainsMemberPointer
+name|ContainsPointerToDataMember
 return|;
 block|}
 block|}
@@ -698,6 +701,15 @@ name|CGFunctionInfo
 modifier|&
 name|getFunctionInfo
 parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+parameter_list|(
 specifier|const
 name|FunctionDecl
 modifier|*
@@ -754,6 +766,44 @@ name|CXXDtorType
 name|Type
 parameter_list|)
 function_decl|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+parameter_list|(
+specifier|const
+name|CallArgList
+modifier|&
+name|Args
+parameter_list|,
+specifier|const
+name|FunctionType
+modifier|*
+name|Ty
+parameter_list|)
+block|{
+return|return
+name|getFunctionInfo
+argument_list|(
+name|Ty
+operator|->
+name|getResultType
+argument_list|()
+argument_list|,
+name|Args
+argument_list|,
+name|Ty
+operator|->
+name|getCallConv
+argument_list|()
+argument_list|,
+name|Ty
+operator|->
+name|getNoReturnAttr
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|// getFunctionInfo - Get the function info for a member function.
 specifier|const
 name|CGFunctionInfo
@@ -787,10 +837,11 @@ name|CallArgList
 modifier|&
 name|Args
 parameter_list|,
-name|unsigned
-name|CallingConvention
-init|=
-literal|0
+name|CallingConv
+name|CC
+parameter_list|,
+name|bool
+name|NoReturn
 parameter_list|)
 function_decl|;
 specifier|const
@@ -806,10 +857,11 @@ name|FunctionArgList
 modifier|&
 name|Args
 parameter_list|,
-name|unsigned
-name|CallingConvention
-init|=
-literal|0
+name|CallingConv
+name|CC
+parameter_list|,
+name|bool
+name|NoReturn
 parameter_list|)
 function_decl|;
 specifier|const
@@ -832,10 +884,11 @@ operator|>
 operator|&
 name|ArgTys
 argument_list|,
-name|unsigned
-name|CallingConvention
-operator|=
-literal|0
+name|CallingConv
+name|CC
+argument_list|,
+name|bool
+name|NoReturn
 argument_list|)
 decl_stmt|;
 name|public

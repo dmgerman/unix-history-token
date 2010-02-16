@@ -808,6 +808,18 @@ literal|16
 operator|>
 name|TentativeDefinitions
 expr_stmt|;
+comment|/// \brief The set of tentative definitions stored in the the PCH
+comment|/// file.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|16
+operator|>
+name|UnusedStaticFuncs
+expr_stmt|;
 comment|/// \brief The set of locally-scoped external declarations stored in
 comment|/// the the PCH file.
 name|llvm

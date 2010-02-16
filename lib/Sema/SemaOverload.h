@@ -332,11 +332,15 @@ name|void
 modifier|*
 name|FromTypePtr
 decl_stmt|;
-comment|/// ToType - The type that this conversion is converting to. This
-comment|/// is an opaque pointer that can be translated into a QualType.
+comment|/// ToType - The types that this conversion is converting to in
+comment|/// each step. This is an opaque pointer that can be translated
+comment|/// into a QualType.
 name|void
 modifier|*
-name|ToTypePtr
+name|ToTypePtrs
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/// CopyConstructor - The copy constructor that is used to perform
 comment|/// this conversion, when the conversion is actually just the
@@ -365,16 +369,69 @@ block|}
 name|void
 name|setToType
 parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
 name|QualType
 name|T
 parameter_list|)
 block|{
-name|ToTypePtr
+name|assert
+argument_list|(
+name|Idx
+operator|<
+literal|3
+operator|&&
+literal|"To type index is out of range"
+argument_list|)
+expr_stmt|;
+name|ToTypePtrs
+index|[
+name|Idx
+index|]
 operator|=
 name|T
 operator|.
 name|getAsOpaquePtr
 argument_list|()
+expr_stmt|;
+block|}
+name|void
+name|setAllToTypes
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|ToTypePtrs
+index|[
+literal|0
+index|]
+operator|=
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+expr_stmt|;
+name|ToTypePtrs
+index|[
+literal|1
+index|]
+operator|=
+name|ToTypePtrs
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|ToTypePtrs
+index|[
+literal|2
+index|]
+operator|=
+name|ToTypePtrs
+index|[
+literal|0
+index|]
 expr_stmt|;
 block|}
 name|QualType
@@ -393,15 +450,30 @@ return|;
 block|}
 name|QualType
 name|getToType
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
 block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+literal|3
+operator|&&
+literal|"To type index is out of range"
+argument_list|)
+expr_stmt|;
 return|return
 name|QualType
 operator|::
 name|getFromOpaquePtr
 argument_list|(
-name|ToTypePtr
+name|ToTypePtrs
+index|[
+name|Idx
+index|]
 argument_list|)
 return|;
 block|}
@@ -1352,6 +1424,44 @@ name|unsigned
 name|char
 name|FailureKind
 decl_stmt|;
+comment|/// PathAccess - The 'path access' to the given function/conversion.
+comment|/// Actually an AccessSpecifier.
+name|unsigned
+name|Access
+decl_stmt|;
+name|AccessSpecifier
+name|getAccess
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AccessSpecifier
+argument_list|(
+name|Access
+argument_list|)
+return|;
+block|}
+comment|/// A structure used to record information about a failed
+comment|/// template argument deduction.
+struct|struct
+name|DeductionFailureInfo
+block|{
+comment|// A Sema::TemplateDeductionResult.
+name|unsigned
+name|Result
+decl_stmt|;
+comment|// A TemplateParameter.
+name|void
+modifier|*
+name|TemplateParameter
+decl_stmt|;
+block|}
+struct|;
+union|union
+block|{
+name|DeductionFailureInfo
+name|DeductionFailure
+decl_stmt|;
 comment|/// FinalConversion - For a conversion function (where Function is
 comment|/// a CXXConversionDecl), the standard conversion that occurs
 comment|/// after the call to the overload candidate to convert the result
@@ -1359,6 +1469,8 @@ comment|/// of calling the conversion function to the required type.
 name|StandardConversionSequence
 name|FinalConversion
 decl_stmt|;
+block|}
+union|;
 comment|/// hasAmbiguousConversion - Returns whether this overload
 comment|/// candidate requires an ambiguous conversion or not.
 name|bool
@@ -1458,8 +1570,30 @@ literal|16
 operator|>
 name|Functions
 expr_stmt|;
+name|SourceLocation
+name|Loc
+decl_stmt|;
 name|public
 label|:
+name|OverloadCandidateSet
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|:
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{}
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
 comment|/// \brief Determine when this overload candidate will be new to the
 comment|/// overload set.
 name|bool

@@ -80,31 +80,49 @@ begin_struct
 struct|struct
 name|_zend_module_entry
 block|{ }
-decl|typedef struct
-name|_zend_function_entry
-block|{ }
-comment|// expected-error {{cannot combine with previous 'struct' declaration specifier}}
-decl|static
-name|void
-name|buggy
-argument_list|(
+comment|// expected-error {{expected ';' after struct}}
 name|int
-operator|*
-name|x
-argument_list|)
-block|{ }
-comment|// expected-error {{function definition declared 'typedef'}} \
-comment|// expected-error {{cannot combine with previous 'typedef' declaration specifier}} \
-comment|// expected-error {{cannot combine with previous 'struct' declaration specifier}}
-comment|// Type qualifiers.
-decl|typedef
-name|int
-name|f
-argument_list|(
-name|void
-argument_list|)
+name|gv1
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_zend_function_entry
+block|{ }
+comment|// expected-error {{expected ';' after struct}} \
+comment|// expected-error {{declaration does not declare anything}}
+name|int
+name|gv2
+typedef|;
+end_typedef
+
+begin_function
+specifier|static
+name|void
+name|buggy
+parameter_list|(
+name|int
+modifier|*
+name|x
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// Type qualifiers.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|f
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -171,6 +189,21 @@ end_struct_decl
 begin_comment
 comment|// expected-error {{restrict requires a pointer or reference}}
 end_comment
+
+begin_comment
+comment|// PR6180
+end_comment
+
+begin_struct
+struct|struct
+name|test1
+block|{ }
+comment|// expected-error {{expected ';' after struct}}
+name|void
+name|test2
+argument_list|()
+block|{}
+end_struct
 
 end_unit
 

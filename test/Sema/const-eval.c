@@ -749,5 +749,19 @@ literal|2.0
 argument_list|)
 end_macro
 
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|38
+argument_list|,
+argument|__builtin_expect(
+literal|1
+argument|,
+literal|1
+argument|) ==
+literal|1
+argument_list|)
+end_macro
+
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- DiagnosticAST.h - Diagnostics for the AST library ------*- C++ -*-===//
+comment|//===--- ASTDiagnostic.h - Diagnostics for the AST library ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -89,6 +89,66 @@ block|}
 enum|;
 block|}
 comment|// end namespace diag
+comment|/// \brief Diagnostic argument formatting function for diagnostics that
+comment|/// involve AST nodes.
+comment|///
+comment|/// This function formats diagnostic arguments for various AST nodes,
+comment|/// including types, declaration names, nested name specifiers, and
+comment|/// declaration contexts, into strings that can be printed as part of
+comment|/// diagnostics. It is meant to be used as the argument to
+comment|/// \c Diagnostic::SetArgToStringFn(), where the cookie is an \c ASTContext
+comment|/// pointer.
+name|void
+name|FormatASTNodeDiagnosticArgument
+argument_list|(
+name|Diagnostic
+operator|::
+name|ArgumentKind
+name|Kind
+argument_list|,
+name|intptr_t
+name|Val
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Modifier
+argument_list|,
+name|unsigned
+name|ModLen
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Argument
+argument_list|,
+name|unsigned
+name|ArgLen
+argument_list|,
+specifier|const
+name|Diagnostic
+operator|::
+name|ArgumentValue
+operator|*
+name|PrevArgs
+argument_list|,
+name|unsigned
+name|NumPrevArgs
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Output
+argument_list|,
+name|void
+operator|*
+name|Cookie
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

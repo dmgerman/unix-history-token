@@ -27,6 +27,19 @@ name|long
 name|y
 parameter_list|)
 block|{
+name|void
+specifier|const
+modifier|*
+name|l1_ptr
+init|=
+operator|&&
+name|l1
+decl_stmt|;
+goto|goto *
+name|l1_ptr
+goto|;
+name|l1
+label|:
 goto|goto *
 name|x
 goto|;

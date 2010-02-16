@@ -998,7 +998,7 @@ operator|*
 name|Dest
 argument_list|)
 decl_stmt|;
-comment|/// StartConditionalBranch - Should be called before a conditional part of an
+comment|/// BeginConditionalBranch - Should be called before a conditional part of an
 comment|/// expression is emitted. For example, before the RHS of the expression below
 comment|/// is emitted:
 comment|///
@@ -1007,19 +1007,28 @@ comment|///
 comment|/// This is used to make sure that any temporaries created in the conditional
 comment|/// branch are only destroyed if the branch is taken.
 name|void
-name|StartConditionalBranch
+name|BeginConditionalBranch
 parameter_list|()
 block|{
 operator|++
 name|ConditionalBranchLevel
 expr_stmt|;
 block|}
-comment|/// FinishConditionalBranch - Should be called after a conditional part of an
+comment|/// EndConditionalBranch - Should be called after a conditional part of an
 comment|/// expression has been emitted.
 name|void
-name|FinishConditionalBranch
+name|EndConditionalBranch
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|ConditionalBranchLevel
+operator|!=
+literal|0
+operator|&&
+literal|"Conditional branch mismatch!"
+argument_list|)
+expr_stmt|;
 operator|--
 name|ConditionalBranchLevel
 expr_stmt|;
@@ -1654,7 +1663,7 @@ name|CharUnits
 operator|&
 name|Size
 argument_list|,
-name|uint64_t
+name|CharUnits
 operator|&
 name|Align
 argument_list|,
@@ -2071,6 +2080,29 @@ argument_list|(
 argument|QualType T
 argument_list|)
 expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|ConvertType
+argument_list|(
+argument|const TypeDecl *T
+argument_list|)
+block|{
+return|return
+name|ConvertType
+argument_list|(
+name|getContext
+argument_list|()
+operator|.
+name|getTypeDeclType
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// LoadObjCSelf - Load the value of self. This function is only valid while
 comment|/// generating code for an Objective-C method.
 name|llvm
@@ -2446,7 +2478,11 @@ comment|/// CreateTempAlloca - This creates a alloca and inserts it into the ent
 end_comment
 
 begin_comment
-comment|/// block.
+comment|/// block. The caller is responsible for setting an appropriate alignment on
+end_comment
+
+begin_comment
+comment|/// the alloca.
 end_comment
 
 begin_expr_stmt
@@ -2470,6 +2506,29 @@ name|Twine
 operator|&
 name|Name
 operator|=
+literal|"tmp"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// CreateMemTemp - Create a temporary memory object of the given type, with
+end_comment
+
+begin_comment
+comment|/// appropriate alignment.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CreateMemTemp
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|const llvm::Twine&Name =
 literal|"tmp"
 argument_list|)
 expr_stmt|;
@@ -2919,19 +2978,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// GetAddressOfBaseOfCompleteClass - Convert the given pointer to a
+end_comment
+
+begin_comment
+comment|/// complete class down to one of its virtual bases.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetAddressOfBaseOfCompleteClass
+argument_list|(
+argument|llvm::Value *Value
+argument_list|,
+argument|bool IsVirtual
+argument_list|,
+argument|const CXXRecordDecl *Derived
+argument_list|,
+argument|const CXXRecordDecl *Base
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// GetAddressOfBaseClass - This function will add the necessary delta to the
 end_comment
 
 begin_comment
 comment|/// load of 'this' and returns address of the base class.
-end_comment
-
-begin_comment
-comment|// FIXME. This currently only does a derived to non-virtual base conversion.
-end_comment
-
-begin_comment
-comment|// Other kinds of conversions will come later.
 end_comment
 
 begin_expr_stmt
@@ -2975,7 +3052,7 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|GetVirtualCXXBaseClassOffset
+name|GetVirtualBaseClassOffset
 argument_list|(
 name|llvm
 operator|::
@@ -3563,17 +3640,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|EmitStaticBlockVarDecl
-parameter_list|(
+argument_list|(
 specifier|const
 name|VarDecl
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|Linkage
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitParmDecl - Emit a ParmVarDecl or an ImplicitParamDecl.
@@ -4668,18 +4752,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|LValue
-name|EmitPointerToDataMemberLValue
-parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|Field
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|llvm
 operator|::
@@ -4715,8 +4787,38 @@ name|FieldDecl
 operator|*
 name|Field
 argument_list|,
-name|bool
-name|isUnion
+name|unsigned
+name|CVRQualifiers
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// EmitLValueForFieldInitialization - Like EmitLValueForField, except that
+end_comment
+
+begin_comment
+comment|/// if the Field is a reference, this will return the address of the reference
+end_comment
+
+begin_comment
+comment|/// and not the address of the value stored in the reference.
+end_comment
+
+begin_decl_stmt
+name|LValue
+name|EmitLValueForFieldInitialization
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Base
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|Field
 argument_list|,
 name|unsigned
 name|CVRQualifiers
@@ -5398,9 +5500,6 @@ name|Expr
 modifier|*
 name|E
 parameter_list|,
-name|QualType
-name|DestType
-parameter_list|,
 name|bool
 name|IsInitializer
 init|=
@@ -5546,6 +5645,26 @@ name|false
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// EmitAggExprToLValue - Emit the computation of the specified expression of
+end_comment
+
+begin_comment
+comment|/// aggregate type into a temporary LValue.
+end_comment
+
+begin_function_decl
+name|LValue
+name|EmitAggExprToLValue
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitGCMemmoveCollectable - Emit special API for structs with object

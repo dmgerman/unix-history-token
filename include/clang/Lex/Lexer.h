@@ -550,6 +550,18 @@ name|BufferPtr
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return the current location in the buffer.
+specifier|const
+name|char
+operator|*
+name|getBufferLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BufferPtr
+return|;
+block|}
 comment|/// Stringify - Convert the specified string into a C string by escaping '\'
 comment|/// and " characters.  This does not add surrounding ""'s to the string.
 comment|/// If Charify is true, this escapes the ' character instead of ".

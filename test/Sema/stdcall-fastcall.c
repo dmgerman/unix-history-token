@@ -20,7 +20,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning{{'stdcall' attribute only applies to function types}}
+comment|// expected-warning{{'stdcall' only applies to function types; type here is 'int'}}
 end_comment
 
 begin_decl_stmt
@@ -36,7 +36,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning{{'fastcall' attribute only applies to function types}}
+comment|// expected-warning{{'fastcall' only applies to function types; type here is 'int'}}
 end_comment
 
 begin_comment
@@ -77,6 +77,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
 begin_decl_stmt
 name|void
 name|__attribute__
@@ -93,7 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{fastcall and stdcall attributes are not compatible}}
+comment|// expected-error{{function declared 'fastcall' here was previously declared 'stdcall'}}
 end_comment
 
 end_unit

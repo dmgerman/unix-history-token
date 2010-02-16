@@ -929,27 +929,24 @@ comment|/// inline asm statements.
 name|bool
 name|isValidGCCRegisterName
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|Name
 argument_list|)
 decl|const
 decl_stmt|;
 comment|// getNormalizedGCCRegisterName - Returns the "normalized" GCC register name.
 comment|// For example, on x86 it will return "ax" when "eax" is passed in.
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|getNormalizedGCCRegisterName
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 struct|struct
 name|ConstraintInfo
 block|{
@@ -1000,11 +997,9 @@ name|public
 label|:
 name|ConstraintInfo
 argument_list|(
-argument|const char *str
+argument|llvm::StringRef ConstraintStr
 argument_list|,
-argument|unsigned strlen
-argument_list|,
-argument|const std::string&name
+argument|llvm::StringRef Name
 argument_list|)
 block|:
 name|Flags
@@ -1020,55 +1015,15 @@ argument_list|)
 operator|,
 name|ConstraintStr
 argument_list|(
-name|str
-argument_list|,
-name|str
-operator|+
-name|strlen
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-argument|name
-argument_list|)
-block|{}
-name|explicit
-name|ConstraintInfo
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Str
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|name
-argument_list|)
-operator|:
-name|Flags
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|TiedOperand
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|,
 name|ConstraintStr
-argument_list|(
-name|Str
+operator|.
+name|str
+argument_list|()
 argument_list|)
 operator|,
 name|Name
 argument_list|(
-argument|name
+argument|Name.str()
 argument_list|)
 block|{}
 specifier|const
@@ -1400,20 +1355,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getUnicodeStringSection - Return the section to use for unicode
-comment|/// string literals, or 0 if no special section is used.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getUnicodeStringSection
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// getCFStringSection - Return the section to use for CFString
 comment|/// literals, or 0 if no special section is used.
 name|virtual
@@ -1444,7 +1385,7 @@ operator|::
 name|string
 name|isValidSectionSpecifier
 argument_list|(
-argument|const llvm::StringRef&SR
+argument|llvm::StringRef SR
 argument_list|)
 specifier|const
 block|{

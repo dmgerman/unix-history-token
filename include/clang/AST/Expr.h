@@ -412,6 +412,8 @@ block|,
 name|LV_MemberFunction
 block|,
 name|LV_SubObjCPropertySetting
+block|,
+name|LV_SubObjCPropertyGetterSetting
 block|}
 block|;
 name|isLvalueResult
@@ -469,6 +471,8 @@ block|,
 name|MLV_MemberFunction
 block|,
 name|MLV_SubObjCPropertySetting
+block|,
+name|MLV_SubObjCPropertyGetterSetting
 block|}
 block|;
 name|isModifiableLvalueResult
@@ -509,6 +513,12 @@ name|getBitField
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns whether this expression refers to a vector element.
+name|bool
+name|refersToVectorElement
+argument_list|()
+specifier|const
+block|;
 comment|/// isIntegerConstantExpr - Return true if this expression is a valid integer
 comment|/// constant expression, and, if so, return its value in Result.  If not a
 comment|/// valid i-c-e, return false and fill in Loc (if specified) with the location
@@ -1841,6 +1851,10 @@ block|,
 name|Function
 block|,
 name|PrettyFunction
+block|,
+comment|/// PrettyFunctionNoVirtual - The same as PrettyFunction, except that the
+comment|/// 'virtual' keyword is omitted for virtual member functions.
+name|PrettyFunctionNoVirtual
 block|}
 block|;
 name|private
@@ -1947,8 +1961,6 @@ operator|::
 name|string
 name|ComputeName
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|IdentType IT
 argument_list|,
 argument|const Decl *CurrentDecl
@@ -7383,7 +7395,7 @@ if|if
 condition|(
 name|SC
 operator|>=
-name|ExplicitCastExprClass
+name|CStyleCastExprClass
 operator|&&
 name|SC
 operator|<=

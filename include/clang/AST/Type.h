@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Linkage.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/NestedNameSpecifier.h"
 end_include
 
@@ -3233,6 +3239,13 @@ parameter_list|)
 value|Class,
 define|#
 directive|define
+name|LAST_TYPE
+parameter_list|(
+name|Class
+parameter_list|)
+value|TypeLast = Class,
+define|#
+directive|define
 name|ABSTRACT_TYPE
 parameter_list|(
 name|Class
@@ -3251,33 +3264,24 @@ init|=
 name|Enum
 block|}
 enum|;
-name|protected
-label|:
-enum|enum
-block|{
-name|TypeClassBitSize
-init|=
-literal|6
-block|}
-enum|;
 name|private
 label|:
 name|QualType
 name|CanonicalType
 decl_stmt|;
+comment|/// TypeClass bitfield - Enum that specifies what subclass this belongs to.
+name|unsigned
+name|TC
+range|:
+literal|8
+decl_stmt|;
 comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
+comment|/// Note that this should stay at the end of the ivars for Type so that
+comment|/// subclasses can pack their bitfields into the same word.
 name|bool
 name|Dependent
 range|:
 literal|1
-decl_stmt|;
-comment|/// TypeClass bitfield - Enum that specifies what subclass this belongs to.
-comment|/// Note that this should stay at the end of the ivars for Type so that
-comment|/// subclasses can pack their bitfields into the same word.
-name|unsigned
-name|TC
-range|:
-name|TypeClassBitSize
 decl_stmt|;
 name|Type
 argument_list|(
@@ -3336,14 +3340,14 @@ else|:
 name|Canonical
 argument_list|)
 operator|,
-name|Dependent
-argument_list|(
-name|dependent
-argument_list|)
-operator|,
 name|TC
 argument_list|(
-argument|tc
+name|tc
+argument_list|)
+operator|,
+name|Dependent
+argument_list|(
+argument|dependent
 argument_list|)
 block|{}
 name|virtual
@@ -3967,6 +3971,13 @@ name|getTypeClassName
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine the linkage of this type.
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+expr_stmt|;
 name|QualType
 name|getCanonicalTypeInternal
 argument_list|()
@@ -4263,6 +4274,12 @@ operator|<=
 name|LongDouble
 return|;
 block|}
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -4405,6 +4422,12 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -4546,6 +4569,12 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -4691,6 +4720,12 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -4806,6 +4841,15 @@ return|return
 name|SpelledAsLValue
 return|;
 block|}
+name|bool
+name|isInnerRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InnerRef
+return|;
+block|}
 name|QualType
 name|getPointeeTypeAsWritten
 argument_list|()
@@ -4896,6 +4940,12 @@ argument_list|(
 name|SpelledAsLValue
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -5258,6 +5308,12 @@ argument_list|(
 name|Class
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -5438,6 +5494,12 @@ return|return
 name|IndexTypeQuals
 return|;
 block|}
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -6525,7 +6587,8 @@ block|; }
 block|;
 comment|/// VectorType - GCC generic vector type. This type is created using
 comment|/// __attribute__((vector_size(n)), where "n" specifies the vector size in
-comment|/// bytes. Since the constructor takes the number of vector elements, the
+comment|/// bytes; or from an Altivec __vector or vector declaration.
+comment|/// Since the constructor takes the number of vector elements, the
 comment|/// client is responsible for converting the size into the number of elements.
 name|class
 name|VectorType
@@ -6548,6 +6611,14 @@ comment|/// NumElements - The number of elements in the vector.
 name|unsigned
 name|NumElements
 block|;
+comment|/// AltiVec - True if this is for an Altivec vector.
+name|bool
+name|AltiVec
+block|;
+comment|/// Pixel - True if this is for an Altivec vector pixel.
+name|bool
+name|Pixel
+block|;
 name|VectorType
 argument_list|(
 argument|QualType vecType
@@ -6555,6 +6626,10 @@ argument_list|,
 argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
+argument_list|,
+argument|bool isAltiVec
+argument_list|,
+argument|bool isPixel
 argument_list|)
 operator|:
 name|Type
@@ -6576,7 +6651,17 @@ argument_list|)
 block|,
 name|NumElements
 argument_list|(
-argument|nElements
+name|nElements
+argument_list|)
+block|,
+name|AltiVec
+argument_list|(
+name|isAltiVec
+argument_list|)
+block|,
+name|Pixel
+argument_list|(
+argument|isPixel
 argument_list|)
 block|{}
 name|VectorType
@@ -6588,6 +6673,10 @@ argument_list|,
 argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
+argument_list|,
+argument|bool isAltiVec
+argument_list|,
+argument|bool isPixel
 argument_list|)
 operator|:
 name|Type
@@ -6609,7 +6698,17 @@ argument_list|)
 block|,
 name|NumElements
 argument_list|(
-argument|nElements
+name|nElements
+argument_list|)
+block|,
+name|AltiVec
+argument_list|(
+name|isAltiVec
+argument_list|)
+block|,
+name|Pixel
+argument_list|(
+argument|isPixel
 argument_list|)
 block|{}
 name|friend
@@ -6660,6 +6759,24 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|bool
+name|isAltiVec
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AltiVec
+return|;
+block|}
+name|bool
+name|isPixel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pixel
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -6678,6 +6795,10 @@ argument_list|()
 argument_list|,
 name|getTypeClass
 argument_list|()
+argument_list|,
+name|AltiVec
+argument_list|,
+name|Pixel
 argument_list|)
 block|;   }
 specifier|static
@@ -6691,6 +6812,10 @@ argument_list|,
 argument|unsigned NumElements
 argument_list|,
 argument|TypeClass TypeClass
+argument_list|,
+argument|bool isAltiVec
+argument_list|,
+argument|bool isPixel
 argument_list|)
 block|{
 name|ID
@@ -6716,7 +6841,27 @@ name|AddInteger
 argument_list|(
 name|TypeClass
 argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|isAltiVec
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|isPixel
+argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -6782,6 +6927,10 @@ argument_list|,
 argument|nElements
 argument_list|,
 argument|canonType
+argument_list|,
+argument|false
+argument_list|,
+argument|false
 argument_list|)
 block|{}
 name|friend
@@ -7233,6 +7382,15 @@ name|CallConv
 return|;
 block|}
 specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getNameForCallConv
+argument_list|(
+argument|CallingConv CC
+argument_list|)
+block|;
+specifier|static
 name|bool
 name|classof
 argument_list|(
@@ -7358,6 +7516,9 @@ argument_list|()
 argument_list|,
 name|getNoReturnAttr
 argument_list|()
+argument_list|,
+name|getCallConv
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -7369,8 +7530,17 @@ argument_list|,
 argument|QualType ResultType
 argument_list|,
 argument|bool NoReturn
+argument_list|,
+argument|CallingConv CallConv
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|CallConv
+argument_list|)
+block|;
 name|ID
 operator|.
 name|AddInteger
@@ -7388,6 +7558,12 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -7876,6 +8052,12 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -7938,6 +8120,8 @@ argument_list|,
 argument|exception_iterator Exs
 argument_list|,
 argument|bool NoReturn
+argument_list|,
+argument|CallingConv CallConv
 argument_list|)
 block|; }
 block|;
@@ -7957,6 +8141,7 @@ name|Decl
 block|;
 name|UnresolvedUsingType
 argument_list|(
+specifier|const
 name|UnresolvedUsingTypenameDecl
 operator|*
 name|D
@@ -7974,7 +8159,7 @@ argument_list|)
 block|,
 name|Decl
 argument_list|(
-argument|D
+argument|const_cast<UnresolvedUsingTypenameDecl*>(D)
 argument_list|)
 block|{}
 name|friend
@@ -8093,7 +8278,7 @@ name|TypedefType
 argument_list|(
 argument|TypeClass tc
 argument_list|,
-argument|TypedefDecl *D
+argument|const TypedefDecl *D
 argument_list|,
 argument|QualType can
 argument_list|)
@@ -8112,7 +8297,7 @@ argument_list|)
 block|,
 name|Decl
 argument_list|(
-argument|D
+argument|const_cast<TypedefDecl*>(D)
 argument_list|)
 block|{
 name|assert
@@ -8282,8 +8467,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Subclass of TypeOfExprType that is used for canonical, dependent
+comment|/// \brief Internal representation of canonical, dependent
 comment|/// typeof(expr) types.
+comment|///
+comment|/// This class is used internally by the ASTContext to manage
+comment|/// canonical, dependent types, only. Clients will only see instances
+comment|/// of this class via TypeOfExprType nodes.
 name|class
 name|DependentTypeOfExprType
 operator|:
@@ -8601,8 +8790,12 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// Subclass of DecltypeType that is used for canonical, dependent
-comment|/// C++0x decltype types.
+comment|/// \brief Internal representation of canonical, dependent
+comment|/// decltype(expr) types.
+comment|///
+comment|/// This class is used internally by the ASTContext to manage
+comment|/// canonical, dependent types, only. Clients will only see instances
+comment|/// of this class via DecltypeType nodes.
 name|class
 name|DependentDecltypeType
 operator|:
@@ -8727,7 +8920,7 @@ name|TagType
 argument_list|(
 argument|TypeClass TC
 argument_list|,
-argument|TagDecl *D
+argument|const TagDecl *D
 argument_list|,
 argument|QualType can
 argument_list|)
@@ -8779,6 +8972,12 @@ operator|:
 literal|0
 argument_list|)
 block|; }
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 specifier|static
 name|bool
 name|classof
@@ -8850,6 +9049,7 @@ operator|:
 name|explicit
 name|RecordType
 argument_list|(
+specifier|const
 name|RecordDecl
 operator|*
 name|D
@@ -8859,7 +9059,7 @@ name|TagType
 argument_list|(
 argument|Record
 argument_list|,
-argument|reinterpret_cast<TagDecl*>(D)
+argument|reinterpret_cast<const TagDecl*>(D)
 argument_list|,
 argument|QualType()
 argument_list|)
@@ -8876,7 +9076,7 @@ name|TagType
 argument_list|(
 argument|TC
 argument_list|,
-argument|reinterpret_cast<TagDecl*>(D)
+argument|reinterpret_cast<const TagDecl*>(D)
 argument_list|,
 argument|QualType()
 argument_list|)
@@ -9016,6 +9216,7 @@ block|{
 name|explicit
 name|EnumType
 argument_list|(
+specifier|const
 name|EnumDecl
 operator|*
 name|D
@@ -9025,7 +9226,7 @@ name|TagType
 argument_list|(
 argument|Enum
 argument_list|,
-argument|reinterpret_cast<TagDecl*>(D)
+argument|reinterpret_cast<const TagDecl*>(D)
 argument_list|,
 argument|QualType()
 argument_list|)
@@ -10615,20 +10816,14 @@ name|ObjCInterfaceDecl
 operator|*
 name|Decl
 block|;
-comment|// List of protocols for this protocol conforming object type
-comment|// List is sorted on protocol name. No protocol is enterred more than once.
-name|ObjCProtocolDecl
-operator|*
-operator|*
-name|Protocols
-block|;
+comment|/// \brief The number of protocols stored after the ObjCInterfaceType node.
+comment|/// The list of protocols is sorted on protocol name. No protocol is enterred
+comment|/// more than once.
 name|unsigned
 name|NumProtocols
 block|;
 name|ObjCInterfaceType
 argument_list|(
-argument|ASTContext&Ctx
-argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|ObjCInterfaceDecl *D
@@ -10674,6 +10869,33 @@ return|return
 name|NumProtocols
 return|;
 block|}
+comment|/// \brief Retrieve the Ith protocol.
+name|ObjCProtocolDecl
+operator|*
+name|getProtocol
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumProtocols
+argument_list|()
+operator|&&
+literal|"Out-of-range protocol access"
+argument_list|)
+block|;
+return|return
+name|qual_begin
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+block|}
 comment|/// qual_iterator and friends: this provides access to the (potentially empty)
 comment|/// list of protocols qualifying this interface.
 typedef|typedef
@@ -10689,7 +10911,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
+name|reinterpret_cast
+operator|<
+name|qual_iterator
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
 return|;
 block|}
 name|qual_iterator
@@ -10698,13 +10928,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|?
-name|Protocols
+name|qual_begin
+argument_list|()
 operator|+
 name|NumProtocols
-operator|:
-literal|0
 return|;
 block|}
 name|bool
@@ -10759,10 +10986,16 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|const ObjCInterfaceDecl *Decl
 argument_list|,
-argument|ObjCProtocolDecl **protocols
+argument|ObjCProtocolDecl * const *protocols
 argument_list|,
 argument|unsigned NumProtocols
 argument_list|)
+block|;
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
 block|;
 specifier|static
 name|bool
@@ -10813,20 +11046,16 @@ name|QualType
 name|PointeeType
 block|;
 comment|// A builtin or interface type.
-comment|// List of protocols for this protocol conforming object type
-comment|// List is sorted on protocol name. No protocol is entered more than once.
-name|ObjCProtocolDecl
-operator|*
-operator|*
-name|Protocols
-block|;
+comment|/// \brief The number of protocols stored after the ObjCObjectPointerType
+comment|/// node.
+comment|///
+comment|/// The list of protocols is sorted on protocol name. No protocol is enterred
+comment|/// more than once.
 name|unsigned
 name|NumProtocols
 block|;
 name|ObjCObjectPointerType
 argument_list|(
-argument|ASTContext&Ctx
-argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|QualType T
@@ -10893,13 +11122,13 @@ block|{
 return|return
 name|getInterfaceType
 argument_list|()
-condition|?
+operator|?
 name|getInterfaceType
 argument_list|()
 operator|->
 name|getDecl
 argument_list|()
-else|:
+operator|:
 literal|0
 return|;
 block|}
@@ -11000,7 +11229,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
+name|reinterpret_cast
+operator|<
+name|qual_iterator
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
 return|;
 block|}
 name|qual_iterator
@@ -11009,13 +11246,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Protocols
-operator|?
-name|Protocols
+name|qual_begin
+argument_list|()
 operator|+
 name|NumProtocols
-operator|:
-name|NULL
 return|;
 block|}
 name|bool
@@ -11038,6 +11272,33 @@ specifier|const
 block|{
 return|return
 name|NumProtocols
+return|;
+block|}
+comment|/// \brief Retrieve the Ith protocol.
+name|ObjCProtocolDecl
+operator|*
+name|getProtocol
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumProtocols
+argument_list|()
+operator|&&
+literal|"Out-of-range protocol access"
+argument_list|)
+block|;
+return|return
+name|qual_begin
+argument_list|()
+index|[
+name|I
+index|]
 return|;
 block|}
 name|bool
@@ -11063,6 +11324,12 @@ literal|0
 argument_list|)
 return|;
 block|}
+name|virtual
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|;
 name|void
 name|Profile
 argument_list|(
@@ -11081,7 +11348,7 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType T
 argument_list|,
-argument|ObjCProtocolDecl **protocols
+argument|ObjCProtocolDecl *const *protocols
 argument_list|,
 argument|unsigned NumProtocols
 argument_list|)

@@ -233,6 +233,10 @@ comment|/// depend on the ABI.
 name|unsigned
 name|EffectiveCallingConvention
 block|;
+comment|/// Whether this function is noreturn.
+name|bool
+name|NoReturn
+block|;
 name|unsigned
 name|NumArgs
 block|;
@@ -256,6 +260,8 @@ typedef|;
 name|CGFunctionInfo
 argument_list|(
 argument|unsigned CallingConvention
+argument_list|,
+argument|bool NoReturn
 argument_list|,
 argument|QualType ResTy
 argument_list|,
@@ -326,6 +332,15 @@ specifier|const
 block|{
 return|return
 name|NumArgs
+return|;
+block|}
+name|bool
+name|isNoReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoReturn
 return|;
 block|}
 comment|/// getCallingConvention - Return the user specified calling
@@ -424,6 +439,13 @@ name|getCallingConvention
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|NoReturn
+argument_list|)
+expr_stmt|;
 name|getReturnType
 argument_list|()
 operator|.
@@ -475,6 +497,8 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|unsigned CallingConvention
 argument_list|,
+argument|bool NoReturn
+argument_list|,
 argument|QualType ResTy
 argument_list|,
 argument|Iterator begin
@@ -487,6 +511,13 @@ operator|.
 name|AddInteger
 argument_list|(
 name|CallingConvention
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|NoReturn
 argument_list|)
 block|;
 name|ResTy

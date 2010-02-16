@@ -60,6 +60,16 @@ block|,
 literal|2
 block|}
 decl_stmt|;
+name|void
+modifier|*
+name|xx
+init|=
+name|ptr
+condition|?
+else|:
+operator|&
+name|x
+decl_stmt|;
 block|}
 end_function
 
@@ -68,15 +78,31 @@ comment|// RUN: c-index-test -test-load-source all %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:4:15: TypeRef=T:1:13 [Extent=4:15:4:15]
+comment|// CHECK: load-exprs.c:4:15: TypeRef=T:1:13 Extent=[4:15 - 4:16]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:5:16: TypeRef=T:1:13 [Extent=5:16:5:16]
+comment|// CHECK: load-exprs.c:5:16: TypeRef=T:1:13 Extent=[5:16 - 5:17]
 end_comment
 
 begin_comment
-comment|// FIXME: the source location for "struct X" points at "struct", not "X"
+comment|// CHECK: load-exprs.c:6:10: TypeRef=struct X:2:8 Extent=[6:10 - 6:11]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:6:24: TypeRef=struct X:2:8 Extent=[6:24 - 6:25]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:7:9: VarDecl=xx:7:9 (Definition) Extent=[7:3 - 7:24]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:7:14: DeclRefExpr=ptr:3:14 Extent=[7:14 - 7:17]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:7:23: DeclRefExpr=x:6:12 Extent=[7:23 - 7:24]
 end_comment
 
 end_unit

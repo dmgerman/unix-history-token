@@ -214,29 +214,29 @@ argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves the repository revision number (or identifer) from which
 comment|///  this Clang was built.
-name|llvm
+name|std
 operator|::
-name|StringRef
+name|string
 name|getClangRevision
 argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves the full repository version that is an amalgamation of
 comment|///  the information in getClangRepositoryPath() and getClangRevision().
-name|llvm
+name|std
 operator|::
-name|StringRef
+name|string
 name|getClangFullRepositoryVersion
 argument_list|()
 expr_stmt|;
 comment|/// \brief Retrieves a string representing the complete clang version,
 comment|///   which includes the clang version number, the repository version,
 comment|///   and the vendor tag.
-specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
 name|getClangFullVersion
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 

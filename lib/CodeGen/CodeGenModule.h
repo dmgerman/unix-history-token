@@ -224,6 +224,9 @@ name|class
 name|BlockExpr
 decl_stmt|;
 name|class
+name|CharUnits
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -884,13 +887,13 @@ argument_list|,
 argument|const CovariantThunkAdjustment&Adjustment
 argument_list|)
 expr_stmt|;
-comment|/// GetCXXBaseClassOffset - Returns the offset from a derived class to its
-comment|/// base class. Returns null if the offset is 0.
+comment|/// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to
+comment|/// its base class. Returns null if the offset is 0.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GetCXXBaseClassOffset
+name|GetNonVirtualBaseClassOffset
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -1249,6 +1252,18 @@ argument_list|,
 argument|unsigned LineNo
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitPointerToDataMember
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|)
+expr_stmt|;
 comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
 comment|/// specified stmt yet.
 comment|/// \param OmitOnError - If true, then this error should only be emitted if no
@@ -1489,6 +1504,20 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
+comment|/// GetTargetTypeStoreSize - Return the store size, in character units, of
+comment|/// the given LLVM type.
+name|CharUnits
+name|GetTargetTypeStoreSize
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|/// UniqueMangledName - Unique a name by (if necessary) inserting it into the
@@ -1587,10 +1616,8 @@ comment|/// declaration.
 name|void
 name|SetFunctionAttributes
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|FD
+name|GlobalDecl
+name|GD
 argument_list|,
 name|llvm
 operator|::

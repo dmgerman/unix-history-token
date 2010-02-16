@@ -428,6 +428,22 @@ name|getRawEncoding
 argument_list|()
 expr_stmt|;
 block|}
+name|SourceLocation
+name|getLastLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAnnotation
+argument_list|()
+operator|?
+name|getAnnotationEndLoc
+argument_list|()
+operator|:
+name|getLocation
+argument_list|()
+return|;
+block|}
 comment|/// getAnnotationRange - SourceRange of the group of tokens that this
 comment|/// annotation token represents.
 name|SourceRange

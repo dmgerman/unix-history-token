@@ -103,6 +103,9 @@ decl_stmt|;
 name|class
 name|RecordDecl
 decl_stmt|;
+name|class
+name|QualType
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -123,10 +126,11 @@ comment|/// Packed - Whether the resulting LLVM struct will be packed or not.
 name|bool
 name|Packed
 decl_stmt|;
-comment|/// ContainsMemberPointer - Whether one of the fields is a member pointer
-comment|/// or is a struct that contains a member pointer.
+comment|/// ContainsPointerToDataMember - Whether one of the fields in this record
+comment|/// layout is a pointer to data member, or a struct that contains pointer to
+comment|/// data member.
 name|bool
-name|ContainsMemberPointer
+name|ContainsPointerToDataMember
 decl_stmt|;
 comment|/// Alignment - Contains the alignment of the RecordDecl.
 name|unsigned
@@ -261,7 +265,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|ContainsMemberPointer
+name|ContainsPointerToDataMember
 argument_list|(
 name|false
 argument_list|)
@@ -443,14 +447,13 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// CheckForMemberPointer - Check if the field contains a member pointer.
+comment|/// CheckForPointerToDataMember - Check if the given type contains a pointer
+comment|/// to data member.
 name|void
-name|CheckForMemberPointer
+name|CheckForPointerToDataMember
 parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|FD
+name|QualType
+name|T
 parameter_list|)
 function_decl|;
 name|public

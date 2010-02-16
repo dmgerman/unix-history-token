@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -194,6 +200,9 @@ name|class
 name|TargetInfo
 decl_stmt|;
 comment|// Decls
+name|class
+name|DeclContext
+decl_stmt|;
 name|class
 name|CXXMethodDecl
 decl_stmt|;
@@ -1713,6 +1722,12 @@ name|VectorType
 parameter_list|,
 name|unsigned
 name|NumElts
+parameter_list|,
+name|bool
+name|AltiVec
+parameter_list|,
+name|bool
+name|IsPixel
 parameter_list|)
 function_decl|;
 comment|/// getExtVectorType - Return the unique reference to an extended vector type
@@ -1825,10 +1840,12 @@ comment|/// the specified type declaration.
 name|QualType
 name|getTypeDeclType
 parameter_list|(
+specifier|const
 name|TypeDecl
 modifier|*
 name|Decl
 parameter_list|,
+specifier|const
 name|TypeDecl
 modifier|*
 name|PrevDecl
@@ -1841,6 +1858,7 @@ comment|/// specified typename decl.
 name|QualType
 name|getTypedefType
 parameter_list|(
+specifier|const
 name|TypedefDecl
 modifier|*
 name|Decl
@@ -2902,6 +2920,24 @@ operator|.
 name|second
 return|;
 block|}
+comment|/// getTypeAlignInChars - Return the ABI-specified alignment of a type, in
+comment|/// characters. This method does not work on incomplete types.
+name|CharUnits
+name|getTypeAlignInChars
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+name|CharUnits
+name|getTypeAlignInChars
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|T
+parameter_list|)
+function_decl|;
 comment|/// getPreferredTypeAlign - Return the "preferred" alignment of the specified
 comment|/// type for the current target in bits.  This can be different than the ABI
 comment|/// alignment in cases where it is beneficial for performance to overalign
@@ -2915,8 +2951,13 @@ modifier|*
 name|T
 parameter_list|)
 function_decl|;
-name|unsigned
-name|getDeclAlignInBytes
+comment|/// getDeclAlign - Return a conservative estimate of the alignment of
+comment|/// the specified decl.  Note that bitfields do not have a valid alignment, so
+comment|/// this method will assert on them.
+comment|/// If @p RefAsPointee, references are treated like their underlying type
+comment|/// (for alignof), else they're treated like pointers (for CodeGen).
+name|CharUnits
+name|getDeclAlign
 parameter_list|(
 specifier|const
 name|Decl
@@ -3095,10 +3136,12 @@ name|CDecl
 argument_list|,
 name|llvm
 operator|::
-name|SmallVectorImpl
+name|SmallPtrSet
 operator|<
 name|ObjCProtocolDecl
 operator|*
+argument_list|,
+literal|8
 operator|>
 operator|&
 name|Protocols
@@ -3288,6 +3331,54 @@ modifier|*
 name|NNS
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieves the canonical representation of the given
+comment|/// calling convention.
+name|CallingConv
+name|getCanonicalCallConv
+parameter_list|(
+name|CallingConv
+name|CC
+parameter_list|)
+block|{
+if|if
+condition|(
+name|CC
+operator|==
+name|CC_C
+condition|)
+return|return
+name|CC_Default
+return|;
+return|return
+name|CC
+return|;
+block|}
+comment|/// \brief Determines whether two calling conventions name the same
+comment|/// calling convention.
+name|bool
+name|isSameCallConv
+parameter_list|(
+name|CallingConv
+name|lcc
+parameter_list|,
+name|CallingConv
+name|rcc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|getCanonicalCallConv
+argument_list|(
+name|lcc
+argument_list|)
+operator|==
+name|getCanonicalCallConv
+argument_list|(
+name|rcc
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// \brief Retrieves the "canonical" template name that refers to a
 comment|/// given template.
 comment|///
@@ -4032,6 +4123,33 @@ name|ObjCImplementationDecl
 modifier|*
 name|Impl
 parameter_list|)
+function_decl|;
+name|private
+label|:
+comment|// FIXME: This currently contains the set of StoredDeclMaps used
+comment|// by DeclContext objects.  This probably should not be in ASTContext,
+comment|// but we include it here so that ASTContext can quickly deallocate them.
+name|std
+operator|::
+name|vector
+operator|<
+name|void
+operator|*
+operator|>
+name|SDMs
+expr_stmt|;
+name|friend
+name|class
+name|DeclContext
+decl_stmt|;
+name|void
+modifier|*
+name|CreateStoredDeclsMap
+parameter_list|()
+function_decl|;
+name|void
+name|ReleaseDeclContextMaps
+parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;

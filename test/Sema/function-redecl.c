@@ -653,5 +653,30 @@ comment|// expected-warning{{incompatible integer to pointer conversion passing 
 block|}
 end_function
 
+begin_enum
+enum|enum
+name|e0
+block|{}
+enum|;
+end_enum
+
+begin_function_decl
+name|void
+name|f3
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f3
+parameter_list|(
+name|enum
+name|e0
+name|x
+parameter_list|)
+block|{}
+end_function
+
 end_unit
 

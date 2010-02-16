@@ -229,5 +229,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// PR6164
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+name|T0
+block|{
+name|unsigned
+name|int
+range|:
+literal|0
+decl_stmt|;
+block|}
+name|T0
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|T0
+name|t0
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

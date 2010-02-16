@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wconversion -triple x86_64-apple-darwin %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wconversion -nostdinc -isystem %S/Inputs -triple x86_64-apple-darwin %s -Wno-unreachable-code
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<conversion.h>
+end_include
 
 begin_define
 define|#
@@ -1529,6 +1535,27 @@ name|x2
 operator|+
 name|x3
 return|;
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/7631400>
+end_comment
+
+begin_function
+name|void
+name|test_7631400
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// This should show up despite the caret being inside a macro substitution
+name|char
+name|s
+init|=
+name|LONG_MAX
+decl_stmt|;
+comment|// expected-warning {{implicit cast loses integer precision: 'long' to 'char'}}
 block|}
 end_function
 

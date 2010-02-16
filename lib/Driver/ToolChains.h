@@ -193,54 +193,60 @@ operator|*
 operator|>
 name|Tools
 block|;
-comment|/// Darwin version of tool chain.
+comment|/// Whether the information on the target has been initialized.
+comment|//
+comment|// FIXME: This should be eliminated. What we want to do is make this part of
+comment|// the "default target for arguments" selection process, once we get out of
+comment|// the argument translation business.
+name|mutable
+name|bool
+name|TargetInitialized
+block|;
+comment|/// Whether we are targetting iPhoneOS target.
+name|mutable
+name|bool
+name|TargetIsIPhoneOS
+block|;
+comment|/// The OS version we are targetting.
+name|mutable
 name|unsigned
-name|DarwinVersion
+name|TargetVersion
 index|[
 literal|3
 index|]
 block|;
-comment|/// Whether this is this an iPhoneOS toolchain.
-comment|//
-comment|// FIXME: This should go away, such differences should be completely
-comment|// determined by the target triple.
-name|bool
-name|IsIPhoneOS
-block|;
 comment|/// The default macosx-version-min of this tool chain; empty until
 comment|/// initialized.
-name|mutable
 name|std
 operator|::
 name|string
 name|MacosxVersionMin
 block|;
-comment|/// The default iphoneos-version-min of this tool chain.
-name|std
-operator|::
-name|string
-name|IPhoneOSVersionMin
-block|;
-specifier|const
-name|char
-operator|*
-name|getMacosxVersionMin
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|Darwin
 argument_list|(
-argument|const HostInfo&Host
+specifier|const
+name|HostInfo
+operator|&
+name|Host
 argument_list|,
-argument|const llvm::Triple& Triple
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
 argument_list|,
-argument|const unsigned (&DarwinVersion)[
+specifier|const
+name|unsigned
+argument_list|(
+operator|&
+name|DarwinVersion
+argument_list|)
+index|[
 literal|3
-argument|]
-argument_list|,
-argument|bool IsIPhoneOS
+index|]
 argument_list|)
 block|;
 operator|~
@@ -249,83 +255,158 @@ argument_list|()
 block|;
 comment|/// @name Darwin Specific Toolchain API
 comment|/// {
+comment|// FIXME: Eliminate these ...Target functions and derive separate tool chains
+comment|// for these targets and put version in constructor.
 name|void
-name|getDarwinVersion
+name|setTarget
 argument_list|(
-argument|unsigned (&Res)[
-literal|3
-argument|]
+argument|bool isIPhoneOS
+argument_list|,
+argument|unsigned Major
+argument_list|,
+argument|unsigned Minor
+argument_list|,
+argument|unsigned Micro
 argument_list|)
 specifier|const
 block|{
-name|Res
+comment|// FIXME: For now, allow reinitialization as long as values don't
+comment|// change. This will go away when we move away from argument translation.
+if|if
+condition|(
+name|TargetInitialized
+operator|&&
+name|TargetIsIPhoneOS
+operator|==
+name|isIPhoneOS
+operator|&&
+name|TargetVersion
 index|[
 literal|0
 index|]
-operator|=
-name|DarwinVersion
-index|[
-literal|0
-index|]
-block|;
-name|Res
+operator|==
+name|Major
+operator|&&
+name|TargetVersion
 index|[
 literal|1
 index|]
-operator|=
-name|DarwinVersion
-index|[
-literal|1
-index|]
-block|;
-name|Res
+operator|==
+name|Minor
+operator|&&
+name|TargetVersion
 index|[
 literal|2
 index|]
-operator|=
-name|DarwinVersion
-index|[
-literal|2
-index|]
-block|;   }
-name|void
-name|getMacosxVersion
+operator|==
+name|Micro
+condition|)
+return|return;
+name|assert
 argument_list|(
-argument|unsigned (&Res)[
-literal|3
-argument|]
+operator|!
+name|TargetInitialized
+operator|&&
+literal|"Target already initialized!"
 argument_list|)
+block|;
+name|TargetInitialized
+operator|=
+name|true
+block|;
+name|TargetIsIPhoneOS
+operator|=
+name|isIPhoneOS
+block|;
+name|TargetVersion
+index|[
+literal|0
+index|]
+operator|=
+name|Major
+block|;
+name|TargetVersion
+index|[
+literal|1
+index|]
+operator|=
+name|Minor
+block|;
+name|TargetVersion
+index|[
+literal|2
+index|]
+operator|=
+name|Micro
+block|;   }
+name|bool
+name|isTargetIPhoneOS
+argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|TargetInitialized
+operator|&&
+literal|"Target not initialized!"
+argument_list|)
+block|;
+return|return
+name|TargetIsIPhoneOS
+return|;
+block|}
+name|void
+name|getTargetVersion
+argument_list|(
+name|unsigned
+argument_list|(
+operator|&
+name|Res
+argument_list|)
+index|[
+literal|3
+index|]
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|TargetInitialized
+operator|&&
+literal|"Target not initialized!"
+argument_list|)
+expr_stmt|;
 name|Res
 index|[
 literal|0
 index|]
 operator|=
-literal|10
-block|;
+name|TargetVersion
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|Res
 index|[
 literal|1
 index|]
 operator|=
-name|DarwinVersion
+name|TargetVersion
 index|[
-literal|0
+literal|1
 index|]
-operator|-
-literal|4
-block|;
+expr_stmt|;
 name|Res
 index|[
 literal|2
 index|]
 operator|=
-name|DarwinVersion
+name|TargetVersion
 index|[
-literal|1
+literal|2
 index|]
-block|;   }
+expr_stmt|;
+block|}
 comment|/// getDarwinArchName - Get the "Darwin" arch name for a particular compiler
 comment|/// invocation. For example, Darwin treats different ARM variations as
 comment|/// distinct architectures.
@@ -337,31 +418,28 @@ argument_list|(
 argument|const ArgList&Args
 argument_list|)
 specifier|const
-block|;
-comment|/// getMacosxVersionMin - Get the effective -mmacosx-version-min, which is
-comment|/// either the -mmacosx-version-min, or the current version if unspecified.
-name|void
-name|getMacosxVersionMin
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned (&Res)[
-literal|3
-argument|]
-argument_list|)
-specifier|const
-block|;
+expr_stmt|;
 specifier|static
 name|bool
-name|isMacosxVersionLT
+name|isVersionLT
 argument_list|(
-argument|unsigned (&A)[
+name|unsigned
+argument_list|(
+operator|&
+name|A
+argument_list|)
+index|[
 literal|3
-argument|]
+index|]
 argument_list|,
-argument|unsigned (&B)[
+name|unsigned
+argument_list|(
+operator|&
+name|B
+argument_list|)
+index|[
 literal|3
-argument|]
+index|]
 argument_list|)
 block|{
 for|for
@@ -414,29 +492,38 @@ return|return
 name|false
 return|;
 block|}
-specifier|static
 name|bool
-name|isMacosxVersionLT
+name|isIPhoneOSVersionLT
 argument_list|(
-argument|unsigned (&A)[
-literal|3
-argument|]
+name|unsigned
+name|V0
 argument_list|,
-argument|unsigned V0
-argument_list|,
-argument|unsigned V1=
+name|unsigned
+name|V1
+operator|=
 literal|0
 argument_list|,
-argument|unsigned V2=
+name|unsigned
+name|V2
+operator|=
 literal|0
 argument_list|)
+decl|const
 block|{
+name|assert
+argument_list|(
+name|isTargetIPhoneOS
+argument_list|()
+operator|&&
+literal|"Unexpected call for OS X target!"
+argument_list|)
+expr_stmt|;
 name|unsigned
 name|B
 index|[
 literal|3
 index|]
-operator|=
+init|=
 block|{
 name|V0
 block|,
@@ -444,42 +531,64 @@ name|V1
 block|,
 name|V2
 block|}
-block|;
+decl_stmt|;
 return|return
-name|isMacosxVersionLT
+name|isVersionLT
 argument_list|(
-name|A
+name|TargetVersion
 argument_list|,
 name|B
 argument_list|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getMacosxVersionStr
-argument_list|()
-specifier|const
+name|bool
+name|isMacosxVersionLT
+argument_list|(
+name|unsigned
+name|V0
+argument_list|,
+name|unsigned
+name|V1
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|V2
+operator|=
+literal|0
+argument_list|)
+decl|const
 block|{
-return|return
-name|MacosxVersionMin
-operator|.
-name|c_str
+name|assert
+argument_list|(
+operator|!
+name|isTargetIPhoneOS
 argument_list|()
-return|;
+operator|&&
+literal|"Unexpected call for iPhoneOS target!"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|B
+index|[
+literal|3
+index|]
+init|=
+block|{
+name|V0
+block|,
+name|V1
+block|,
+name|V2
 block|}
-specifier|const
-name|char
-operator|*
-name|getIPhoneOSVersionStr
-argument_list|()
-specifier|const
-block|{
+decl_stmt|;
 return|return
-name|IPhoneOSVersionMin
-operator|.
-name|c_str
-argument_list|()
+name|isVersionLT
+argument_list|(
+name|TargetVersion
+argument_list|,
+name|B
+argument_list|)
 return|;
 block|}
 comment|/// AddLinkSearchPathArgs - Add the linker search paths to \arg CmdArgs.
@@ -491,78 +600,102 @@ name|virtual
 name|void
 name|AddLinkSearchPathArgs
 argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&CmdArgs
-argument_list|)
 specifier|const
-operator|=
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|/// AddLinkRuntimeLibArgs - Add the linker arguments to link the compiler
 comment|/// runtime library.
 name|virtual
 name|void
 name|AddLinkRuntimeLibArgs
 argument_list|(
-argument|const ArgList&Args
+specifier|const
+name|ArgList
+operator|&
+name|Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+name|ArgStringList
+operator|&
+name|CmdArgs
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;
-name|bool
-name|isIPhoneOS
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsIPhoneOS
-return|;
-block|}
+decl_stmt|;
 comment|/// }
 comment|/// @name ToolChain Implementation
 comment|/// {
 name|virtual
 name|DerivedArgList
-operator|*
+modifier|*
 name|TranslateArgs
 argument_list|(
-argument|InputArgList&Args
+name|InputArgList
+operator|&
+name|Args
 argument_list|,
-argument|const char *BoundArch
-argument_list|)
 specifier|const
-block|;
+name|char
+operator|*
+name|BoundArch
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|Tool
-operator|&
+modifier|&
 name|SelectTool
 argument_list|(
-argument|const Compilation&C
-argument_list|,
-argument|const JobAction&JA
-argument_list|)
 specifier|const
-block|;
+name|Compilation
+operator|&
+name|C
+argument_list|,
+specifier|const
+name|JobAction
+operator|&
+name|JA
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|bool
 name|IsBlocksDefault
 argument_list|()
 specifier|const
 block|{
-comment|// Blocks default to on for 10.6 (darwin10) and beyond.
+comment|// Blocks default to on for OS X 10.6 and iPhoneOS 3.0 and beyond.
+if|if
+condition|(
+name|isTargetIPhoneOS
+argument_list|()
+condition|)
 return|return
-operator|(
-name|DarwinVersion
-index|[
-literal|0
-index|]
-operator|>
-literal|9
-operator|)
+operator|!
+name|isIPhoneOSVersionLT
+argument_list|(
+literal|3
+argument_list|)
+return|;
+else|else
+return|return
+operator|!
+name|isMacosxVersionLT
+argument_list|(
+literal|10
+argument_list|,
+literal|6
+argument_list|)
 return|;
 block|}
 name|virtual
@@ -571,16 +704,11 @@ name|IsObjCNonFragileABIDefault
 argument_list|()
 specifier|const
 block|{
-comment|// Non-fragile ABI default to on for 10.5 (darwin9) and beyond on x86-64.
+comment|// Non-fragile ABI default to on for iPhoneOS and x86-64.
 return|return
-operator|(
-name|DarwinVersion
-index|[
-literal|0
-index|]
-operator|>=
-literal|9
-operator|&&
+name|isTargetIPhoneOS
+argument_list|()
+operator|||
 name|getTriple
 argument_list|()
 operator|.
@@ -592,6 +720,40 @@ operator|::
 name|Triple
 operator|::
 name|x86_64
+return|;
+block|}
+name|virtual
+name|bool
+name|IsObjCLegacyDispatchDefault
+argument_list|()
+specifier|const
+block|{
+comment|// This is only used with the non-fragile ABI.
+return|return
+operator|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|arm
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|thumb
 operator|)
 return|;
 block|}
@@ -600,27 +762,26 @@ name|bool
 name|IsUnwindTablesDefault
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
 argument_list|()
 specifier|const
 block|{
-comment|// Stack protectors default to on for 10.6 (darwin10) and beyond.
+comment|// Stack protectors default to on for 10.6 and beyond.
 return|return
-operator|(
-name|DarwinVersion
-index|[
-literal|0
-index|]
-operator|>
-literal|9
-operator|)
-operator|?
-literal|1
-operator|:
-literal|0
+operator|!
+name|isTargetIPhoneOS
+argument_list|()
+operator|&&
+operator|!
+name|isMacosxVersionLT
+argument_list|(
+literal|10
+argument_list|,
+literal|6
+argument_list|)
 return|;
 block|}
 name|virtual
@@ -630,7 +791,7 @@ operator|*
 name|GetDefaultRelocationModel
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 specifier|const
 name|char
@@ -638,16 +799,22 @@ operator|*
 name|GetForcedPicModel
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|virtual
 name|bool
 name|UseDwarfDebugFlags
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+name|virtual
+name|bool
+name|UseSjLjExceptions
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// }
 block|}
-decl_stmt|;
+empty_stmt|;
 comment|/// DarwinClang - The Darwin toolchain used by Clang.
 name|class
 name|VISIBILITY_HIDDEN
@@ -660,15 +827,27 @@ name|public
 operator|:
 name|DarwinClang
 argument_list|(
-argument|const HostInfo&Host
+specifier|const
+name|HostInfo
+operator|&
+name|Host
 argument_list|,
-argument|const llvm::Triple& Triple
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
 argument_list|,
-argument|const unsigned (&DarwinVersion)[
+specifier|const
+name|unsigned
+argument_list|(
+operator|&
+name|DarwinVersion
+argument_list|)
+index|[
 literal|3
-argument|]
-argument_list|,
-argument|bool IsIPhoneOS
+index|]
 argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation
@@ -721,19 +900,37 @@ name|public
 operator|:
 name|DarwinGCC
 argument_list|(
-argument|const HostInfo&Host
+specifier|const
+name|HostInfo
+operator|&
+name|Host
 argument_list|,
-argument|const llvm::Triple& Triple
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
 argument_list|,
-argument|const unsigned (&DarwinVersion)[
+specifier|const
+name|unsigned
+argument_list|(
+operator|&
+name|DarwinVersion
+argument_list|)
+index|[
 literal|3
-argument|]
+index|]
 argument_list|,
-argument|const unsigned (&GCCVersion)[
+specifier|const
+name|unsigned
+argument_list|(
+operator|&
+name|GCCVersion
+argument_list|)
+index|[
 literal|3
-argument|]
-argument_list|,
-argument|bool IsIPhoneOS
+index|]
 argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation

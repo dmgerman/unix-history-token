@@ -761,6 +761,14 @@ argument_list|)
 expr_stmt|;
 define|#
 directive|define
+name|ABSTRACT_EXPR
+parameter_list|(
+name|CLASS
+parameter_list|,
+name|PARENT
+parameter_list|)
+define|#
+directive|define
 name|STMT
 parameter_list|(
 name|CLASS

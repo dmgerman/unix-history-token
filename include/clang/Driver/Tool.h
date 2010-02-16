@@ -175,6 +175,16 @@ literal|0
 expr_stmt|;
 name|virtual
 name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const

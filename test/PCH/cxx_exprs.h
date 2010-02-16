@@ -9,7 +9,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|typeof
+name|__typeof__
 argument_list|(
 argument|static_cast<void *>(
 literal|0
@@ -54,7 +54,7 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|typeof
+name|__typeof__
 argument_list|(
 argument|dynamic_cast<Derived *>(base_ptr)
 argument_list|)
@@ -68,7 +68,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|typeof
+name|__typeof__
 argument_list|(
 argument|reinterpret_cast<void *>(
 literal|0
@@ -92,7 +92,7 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|typeof
+name|__typeof__
 argument_list|(
 argument|const_cast<char *>(const_char_ptr_value)
 argument_list|)
@@ -112,11 +112,57 @@ end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|typeof
+name|__typeof__
 argument_list|(
 argument|double(int_value)
 argument_list|)
 name|functional_cast_result
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|// CXXBoolLiteralExpr
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|true
+argument_list|)
+name|bool_literal_result
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|bool
+name|true_value
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|bool
+name|false_value
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CXXNullPtrLiteralExpr
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+argument|nullptr
+argument_list|)
+name|cxx_null_ptr_result
 expr_stmt|;
 end_typedef
 

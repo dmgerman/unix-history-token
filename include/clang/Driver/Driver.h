@@ -238,47 +238,54 @@ name|HostSystem
 operator|,
 name|HostRelease
 expr_stmt|;
-comment|/// Whether the driver should follow g++ like behavior.
-name|bool
-name|CCCIsCXX
-range|:
-literal|1
-decl_stmt|;
-comment|/// Echo commands while executing (in -v style).
-name|bool
-name|CCCEcho
-range|:
-literal|1
-decl_stmt|;
-comment|/// Only print tool bindings, don't build any jobs.
-name|bool
-name|CCCPrintBindings
-range|:
-literal|1
-decl_stmt|;
 comment|/// Name to use when calling the generic gcc.
 name|std
 operator|::
 name|string
 name|CCCGenericGCCName
 expr_stmt|;
+comment|/// Whether the driver should follow g++ like behavior.
+name|unsigned
+name|CCCIsCXX
+range|:
+literal|1
+decl_stmt|;
+comment|/// Echo commands while executing (in -v style).
+name|unsigned
+name|CCCEcho
+range|:
+literal|1
+decl_stmt|;
+comment|/// Only print tool bindings, don't build any jobs.
+name|unsigned
+name|CCCPrintBindings
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
+comment|/// Whether to check that input files exist when constructing compilation
+comment|/// jobs.
+name|unsigned
+name|CheckInputsExist
+range|:
+literal|1
+decl_stmt|;
 comment|/// Use the clang compiler where possible.
-name|bool
+name|unsigned
 name|CCCUseClang
 range|:
 literal|1
 decl_stmt|;
 comment|/// Use clang for handling C++ and Objective-C++ inputs.
-name|bool
+name|unsigned
 name|CCCUseClangCXX
 range|:
 literal|1
 decl_stmt|;
 comment|/// Use clang as a preprocessor (clang's preprocessor will still be
 comment|/// used where an integrated CPP would).
-name|bool
+name|unsigned
 name|CCCUseClangCPP
 range|:
 literal|1
@@ -286,8 +293,10 @@ decl_stmt|;
 name|public
 label|:
 comment|/// Use lazy precompiled headers for PCH support.
-name|bool
+name|unsigned
 name|CCCUsePCH
+range|:
+literal|1
 decl_stmt|;
 name|private
 label|:
@@ -376,6 +385,27 @@ block|{
 return|return
 name|Diags
 return|;
+block|}
+name|bool
+name|getCheckInputsExist
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CheckInputsExist
+return|;
+block|}
+name|void
+name|setCheckInputsExist
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|CheckInputsExist
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// @}
 comment|/// @name Primary Functionality

@@ -12,7 +12,7 @@ comment|// CHECK-LSB: @.str1 = private constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment
-comment|// CHECK-LSB: @.str2 = internal constant [36 x i8] c"h\00e\00l\00l\00o\00 \00\92! \00\03& \00\90! \00w\00o\00r\00l\00d\00\00\00", section "__TEXT,__ustring", align 2
+comment|// CHECK-LSB: @.str2 = internal constant [36 x i8] c"h\00e\00l\00l\00o\00 \00\92! \00\03& \00\90! \00w\00o\00r\00l\00d\00\00\00", align 2
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// CHECK-MSB: @.str1 = private constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment
-comment|// CHECK-MSB: @.str2 = internal constant [36 x i8] c"\00h\00e\00l\00l\00o\00 !\92\00&\03\00 !\90\00 \00w\00o\00r\00l\00d\00\00", section "__TEXT,__ustring", align 2
+comment|// CHECK-MSB: @.str2 = internal constant [36 x i8] c"\00h\00e\00l\00l\00o\00 !\92\00&\03\00 !\90\00 \00w\00o\00r\00l\00d\00\00", align 2
 end_comment
 
 begin_decl_stmt

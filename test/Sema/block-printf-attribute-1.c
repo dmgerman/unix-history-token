@@ -133,10 +133,6 @@ block|{}
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// FIXME: argument type poking not yet supportted.
-end_comment
-
 begin_expr_stmt
 name|z
 argument_list|(
@@ -150,7 +146,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* { dg-warning "format \\'\%s\\' expects type \\'char \\*\\'\, but argument 3 has type \\'int\\'" } */
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'int'}}
 end_comment
 
 begin_expr_stmt
@@ -166,7 +162,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// OK
+comment|// no-warning
 end_comment
 
 unit|}

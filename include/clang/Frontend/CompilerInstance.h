@@ -162,17 +162,23 @@ block|{
 comment|/// The LLVM context used for this instance.
 name|llvm
 operator|::
+name|OwningPtr
+operator|<
+name|llvm
+operator|::
 name|LLVMContext
-operator|*
+operator|>
 name|LLVMContext
 expr_stmt|;
-name|bool
-name|OwnsLLVMContext
-decl_stmt|;
 comment|/// The options used in this compiler instance.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
 name|CompilerInvocation
+operator|>
 name|Invocation
-decl_stmt|;
+expr_stmt|;
 comment|/// The diagnostics engine instance.
 name|llvm
 operator|::
@@ -286,18 +292,29 @@ operator|>
 expr|>
 name|OutputFiles
 expr_stmt|;
-name|public
-label|:
-comment|/// Create a new compiler instance with the given LLVM context, optionally
-comment|/// taking ownership of it.
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CompilerInstance
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
 name|CompilerInstance
 argument_list|(
-argument|llvm::LLVMContext *_LLVMContext =
-literal|0
-argument_list|,
-argument|bool _OwnsLLVMContext = true
+specifier|const
+name|CompilerInstance
+operator|&
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|public
+label|:
+name|CompilerInstance
+argument_list|()
+expr_stmt|;
 operator|~
 name|CompilerInstance
 argument_list|()
@@ -376,6 +393,20 @@ operator|*
 name|LLVMContext
 return|;
 block|}
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|takeLLVMContext
+argument_list|()
+block|{
+return|return
+name|LLVMContext
+operator|.
+name|take
+argument_list|()
+return|;
+block|}
 comment|/// setLLVMContext - Replace the current LLVM context and take ownership of
 comment|/// \arg Value.
 name|void
@@ -386,59 +417,61 @@ operator|::
 name|LLVMContext
 operator|*
 name|Value
-argument_list|,
-name|bool
-name|TakeOwnership
-operator|=
-name|true
 argument_list|)
-block|{
-name|LLVMContext
-operator|=
-name|Value
-expr_stmt|;
-name|OwnsLLVMContext
-operator|=
-name|TakeOwnership
-expr_stmt|;
-block|}
+decl_stmt|;
 comment|/// }
 comment|/// @name Compiler Invocation and Options
 comment|/// {
-name|CompilerInvocation
-modifier|&
-name|getInvocation
-parameter_list|()
-block|{
-return|return
-name|Invocation
-return|;
-block|}
-specifier|const
-name|CompilerInvocation
-operator|&
-name|getInvocation
+name|bool
+name|hasInvocation
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Invocation
+operator|!=
+literal|0
 return|;
 block|}
+name|CompilerInvocation
+modifier|&
+name|getInvocation
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Invocation
+operator|&&
+literal|"Compiler instance has no invocation!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Invocation
+return|;
+block|}
+name|CompilerInvocation
+modifier|*
+name|takeInvocation
+parameter_list|()
+block|{
+return|return
+name|Invocation
+operator|.
+name|take
+argument_list|()
+return|;
+block|}
+comment|/// setInvocation - Replace the current invocation; the compiler instance
+comment|/// takes ownership of \arg Value.
 name|void
 name|setInvocation
 parameter_list|(
-specifier|const
 name|CompilerInvocation
-modifier|&
+modifier|*
 name|Value
 parameter_list|)
-block|{
-name|Invocation
-operator|=
-name|Value
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// }
 comment|/// @name Forwarding Methods
 comment|/// {
@@ -449,7 +482,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getAnalyzerOpts
 argument_list|()
 return|;
@@ -463,7 +496,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getAnalyzerOpts
 argument_list|()
 return|;
@@ -475,7 +508,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getCodeGenOpts
 argument_list|()
 return|;
@@ -489,7 +522,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getCodeGenOpts
 argument_list|()
 return|;
@@ -501,7 +534,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getDependencyOutputOpts
 argument_list|()
 return|;
@@ -515,7 +548,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getDependencyOutputOpts
 argument_list|()
 return|;
@@ -527,7 +560,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getDiagnosticOpts
 argument_list|()
 return|;
@@ -541,7 +574,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getDiagnosticOpts
 argument_list|()
 return|;
@@ -553,7 +586,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getFrontendOpts
 argument_list|()
 return|;
@@ -567,7 +600,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getFrontendOpts
 argument_list|()
 return|;
@@ -579,7 +612,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getHeaderSearchOpts
 argument_list|()
 return|;
@@ -593,7 +626,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getHeaderSearchOpts
 argument_list|()
 return|;
@@ -605,7 +638,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getLangOpts
 argument_list|()
 return|;
@@ -619,7 +652,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getLangOpts
 argument_list|()
 return|;
@@ -631,7 +664,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getPreprocessorOpts
 argument_list|()
 return|;
@@ -645,7 +678,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getPreprocessorOpts
 argument_list|()
 return|;
@@ -657,7 +690,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getPreprocessorOutputOpts
 argument_list|()
 return|;
@@ -671,7 +704,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getPreprocessorOutputOpts
 argument_list|()
 return|;
@@ -683,7 +716,7 @@ parameter_list|()
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getTargetOpts
 argument_list|()
 return|;
@@ -697,7 +730,7 @@ specifier|const
 block|{
 return|return
 name|Invocation
-operator|.
+operator|->
 name|getTargetOpts
 argument_list|()
 return|;

@@ -247,5 +247,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// radar 7528255
+end_comment
+
+begin_function
+name|void
+name|f0
+parameter_list|()
+block|{
+lambda|^
+parameter_list|(
+name|int
+parameter_list|,
+name|double
+name|d
+parameter_list|,
+name|char
+parameter_list|)
+block|{}
+argument_list|(
+literal|1
+argument_list|,
+literal|1.34
+argument_list|,
+literal|'a'
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{parameter name omitted}} \
+comment|// expected-error {{parameter name omitted}}
+block|}
+end_function
+
 end_unit
 

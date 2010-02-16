@@ -107,6 +107,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -124,6 +127,9 @@ name|class
 name|DiagnosticClient
 decl_stmt|;
 name|class
+name|FileManager
+decl_stmt|;
+name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
@@ -134,6 +140,9 @@ name|PartialDiagnostic
 decl_stmt|;
 name|class
 name|Preprocessor
+decl_stmt|;
+name|class
+name|SourceManager
 decl_stmt|;
 name|class
 name|SourceRange
@@ -1250,6 +1259,33 @@ operator|~
 literal|0U
 expr_stmt|;
 block|}
+comment|/// Deserialize - Deserialize the first diagnostic within the memory
+comment|/// [Memory, MemoryEnd), producing a new diagnostic builder describing the
+comment|/// deserialized diagnostic. If the memory does not contain a
+comment|/// diagnostic, returns a diagnostic builder with no diagnostic ID.
+name|DiagnosticBuilder
+name|Deserialize
+parameter_list|(
+name|FileManager
+modifier|&
+name|FM
+parameter_list|,
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|Memory
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|MemoryEnd
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// getDiagnosticMappingInfo - Return the mapping info currently set for the
@@ -1464,9 +1500,7 @@ index|]
 decl_stmt|;
 comment|/// DiagRanges - The list of ranges added to this diagnostic.  It currently
 comment|/// only support 10 ranges, could easily be extended if needed.
-specifier|const
 name|SourceRange
-modifier|*
 name|DiagRanges
 index|[
 literal|10
@@ -1721,6 +1755,18 @@ block|{
 name|Emit
 argument_list|()
 block|; }
+comment|/// isActive - Determine whether this diagnostic is still active.
+name|bool
+name|isActive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DiagObj
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// Operator bool: conversion of DiagnosticBuilder to bool always returns
 comment|/// true.  This allows is to be used in boolean error contexts like:
 comment|/// return Diag(...);
@@ -1878,7 +1924,6 @@ name|NumRanges
 operator|++
 index|]
 operator|=
-operator|&
 name|R
 expr_stmt|;
 block|}
@@ -2730,9 +2775,7 @@ operator|->
 name|NumDiagRanges
 return|;
 block|}
-specifier|const
 name|SourceRange
-modifier|&
 name|getRange
 argument_list|(
 name|unsigned
@@ -2752,7 +2795,6 @@ literal|"Invalid diagnostic range index!"
 argument_list|)
 expr_stmt|;
 return|return
-operator|*
 name|DiagObj
 operator|->
 name|DiagRanges
@@ -2854,6 +2896,26 @@ name|char
 operator|>
 operator|&
 name|OutStr
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Serialize - Serialize the given diagnostic (with its diagnostic
+comment|/// level) to the given stream. Serialization is a lossy operation,
+comment|/// since the specific diagnostic ID and any macro-instantiation
+comment|/// information is lost.
+name|void
+name|Serialize
+argument_list|(
+name|Diagnostic
+operator|::
+name|Level
+name|DiagLevel
+argument_list|,
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl|const
 decl_stmt|;

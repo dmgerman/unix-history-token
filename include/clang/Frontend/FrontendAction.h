@@ -74,6 +74,9 @@ decl_stmt|;
 name|class
 name|CompilerInstance
 decl_stmt|;
+name|class
+name|ASTMergeAction
+decl_stmt|;
 comment|/// FrontendAction - Abstract base class for actions which can be performed by
 comment|/// the frontend.
 name|class
@@ -95,6 +98,10 @@ expr_stmt|;
 name|CompilerInstance
 modifier|*
 name|Instance
+decl_stmt|;
+name|friend
+name|class
+name|ASTMergeAction
 decl_stmt|;
 name|protected
 label|:
@@ -286,6 +293,18 @@ operator|*
 name|CurrentASTUnit
 return|;
 block|}
+name|ASTUnit
+modifier|*
+name|takeCurrentASTUnit
+parameter_list|()
+block|{
+return|return
+name|CurrentASTUnit
+operator|.
+name|take
+argument_list|()
+return|;
+block|}
 name|void
 name|setCurrentFile
 argument_list|(
@@ -420,7 +439,7 @@ comment|/// @}
 block|}
 empty_stmt|;
 comment|/// ASTFrontendAction - Abstract base class to use for AST consumer based
-comment|/// frontend actios.
+comment|/// frontend actions.
 name|class
 name|ASTFrontendAction
 range|:

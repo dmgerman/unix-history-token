@@ -201,6 +201,16 @@ expr_stmt|;
 name|bool
 name|tempFile
 decl_stmt|;
+comment|/// Optional owned invocation, just used to make the invocation used in
+comment|/// LoadFromCommandLine available.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|CompilerInvocation
+operator|>
+name|Invocation
+expr_stmt|;
 comment|// OnlyLocalDecls - when true, walking this AST should only visit declarations
 comment|// that come from the AST itself, not from included precompiled headers.
 comment|// FIXME: This is temporary; eventually, CIndex will always do this.
@@ -525,11 +535,6 @@ name|OnlyLocalDecls
 operator|=
 name|false
 argument_list|,
-name|bool
-name|UseBumpAllocator
-operator|=
-name|false
-argument_list|,
 name|RemappedFile
 operator|*
 name|RemappedFiles
@@ -546,7 +551,7 @@ comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, v
 comment|/// CompilerInvocation object.
 comment|///
 comment|/// \param CI - The compiler invocation to use; it must have exactly one input
-comment|/// source file.
+comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
 comment|///
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
@@ -558,9 +563,8 @@ name|ASTUnit
 modifier|*
 name|LoadFromCompilerInvocation
 parameter_list|(
-specifier|const
 name|CompilerInvocation
-modifier|&
+modifier|*
 name|CI
 parameter_list|,
 name|Diagnostic
@@ -615,11 +619,6 @@ name|ResourceFilesPath
 argument_list|,
 name|bool
 name|OnlyLocalDecls
-operator|=
-name|false
-argument_list|,
-name|bool
-name|UseBumpAllocator
 operator|=
 name|false
 argument_list|,

@@ -135,10 +135,20 @@ decl_stmt|;
 comment|/// Show diagnostics with ANSI color sequences.
 name|unsigned
 name|VerifyDiagnostics
+range|:
+literal|1
 decl_stmt|;
 comment|/// Check that diagnostics match the expected
 comment|/// diagnostics, indicated by markers in the
 comment|/// input source file.
+name|unsigned
+name|BinaryOutput
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit diagnostics via the diagnostic
+comment|/// binary serialization mechanism, to be
+comment|/// deserialized by, e.g., the CIndex library.
 comment|/// The distance between tab stops.
 name|unsigned
 name|TabStop
@@ -235,6 +245,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|VerifyDiagnostics
+operator|=
+literal|0
+expr_stmt|;
+name|BinaryOutput
 operator|=
 literal|0
 expr_stmt|;

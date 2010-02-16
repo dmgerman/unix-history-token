@@ -49,6 +49,18 @@ directive|include
 file|"clang/Frontend/FrontendAction.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -382,6 +394,106 @@ return|;
 block|}
 expr|}
 block|;
+comment|/**  * \brief Frontend action adaptor that merges ASTs together.  *  * This action takes an existing AST file and "merges" it into the AST  * context, producing a merged context. This action is an action  * adaptor, which forwards most of its calls to another action that  * will consume the merged context.  */
+name|class
+name|ASTMergeAction
+operator|:
+name|public
+name|FrontendAction
+block|{
+comment|/// \brief The action that the merge action adapts.
+name|FrontendAction
+operator|*
+name|AdaptedAction
+block|;
+comment|/// \brief The set of AST files to merge.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ASTFiles
+block|;
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|BeginSourceFileAction
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef Filename
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ExecuteAction
+argument_list|()
+block|;
+name|virtual
+name|void
+name|EndSourceFileAction
+argument_list|()
+block|;
+name|public
+operator|:
+name|ASTMergeAction
+argument_list|(
+argument|FrontendAction *AdaptedAction
+argument_list|,
+argument|std::string *ASTFiles
+argument_list|,
+argument|unsigned NumASTFiles
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|ASTMergeAction
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|usesPreprocessorOnly
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|usesCompleteTranslationUnit
+argument_list|()
+block|;
+name|virtual
+name|bool
+name|hasPCHSupport
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasASTSupport
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasCodeCompletionSupport
+argument_list|()
+specifier|const
+block|; }
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Code Gen AST Actions
 comment|//===----------------------------------------------------------------------===//
@@ -459,6 +571,18 @@ block|{
 name|public
 operator|:
 name|EmitLLVMOnlyAction
+argument_list|()
+block|; }
+block|;
+name|class
+name|EmitObjAction
+operator|:
+name|public
+name|CodeGenAction
+block|{
+name|public
+operator|:
+name|EmitObjAction
 argument_list|()
 block|; }
 block|;

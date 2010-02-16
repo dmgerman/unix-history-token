@@ -448,5 +448,46 @@ begin_comment
 comment|// expected-warning {{incompatible integer to pointer conversion initializing 'an_enum', expected 'char *'}}
 end_comment
 
+begin_comment
+comment|// PR4515
+end_comment
+
+begin_enum
+enum|enum
+name|PR4515
+block|{
+name|PR4515a
+init|=
+literal|1u
+block|,
+name|PR4515b
+init|=
+operator|(
+name|PR4515a
+operator|-
+literal|2
+operator|)
+operator|/
+literal|2
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+name|int
+name|CheckPR4515
+index|[
+name|PR4515b
+operator|==
+literal|0
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

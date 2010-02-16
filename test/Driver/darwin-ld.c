@@ -135,5 +135,133 @@ begin_comment
 comment|// RUN: grep dsymutil %t.log | count 0
 end_comment
 
+begin_comment
+comment|// Check linker changes that came with new linkedit format.
+end_comment
+
+begin_comment
+comment|// RUN: touch %t.o
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv6 -miphoneos-version-min=3.0 %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv6 -miphoneos-version-min=3.0 -dynamiclib %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv6 -miphoneos-version-min=3.0 -bundle %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IPHONE_3_0 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0-NOT: -lcrt1.3.1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -lcrt1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -dylib
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -ldylib1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -lbundle1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_0: -lSystem
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv7 -miphoneos-version-min=3.1 %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv7 -miphoneos-version-min=3.1 -dynamiclib %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -arch armv7 -miphoneos-version-min=3.1 -bundle %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IPHONE_3_1 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1-NOT: -lcrt1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: -lcrt1.3.1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: -dylib
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1-NOT: -ldylib1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: ld"
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1-NOT: -lbundle1.o
+end_comment
+
+begin_comment
+comment|// LINK_IPHONE_3_1: -lSystem
+end_comment
+
 end_unit
 

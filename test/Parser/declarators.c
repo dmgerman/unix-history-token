@@ -307,7 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{use of tagged type 'xyz' without 'struct' tag}}
+comment|// expected-error {{must use 'struct' tag to refer to type 'xyz'}}
 end_comment
 
 begin_decl_stmt
@@ -317,7 +317,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{use of tagged type 'myenum' without 'enum' tag}}
+comment|// expected-error {{must use 'enum' tag to refer to type 'myenum'}}
 end_comment
 
 begin_function
@@ -390,6 +390,93 @@ literal|"foo"
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|test9
+block|{
+name|int
+name|x
+comment|// expected-error {{expected ';' at end of declaration list}}
+name|int
+name|y
+decl_stmt|;
+name|int
+name|z
+comment|// expected-warning {{expected ';' at end of declaration list}}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// PR6208
+end_comment
+
+begin_struct
+struct|struct
+name|test10
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+decl|static
+name|test10x
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|test11
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+decl|const
+name|test11x
+struct|;
+end_struct
+
+begin_comment
+comment|// PR6216
+end_comment
+
+begin_function
+name|void
+name|test12
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|__builtin_offsetof
+argument_list|(
+argument|struct { char c; int i; }
+argument_list|,
+argument|i
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://7608537
+end_comment
+
+begin_struct
+struct|struct
+name|test13
+block|{
+name|int
+name|a
+decl_stmt|;
+block|}
+argument_list|(
+name|test13x
+argument_list|)
+struct|;
+end_struct
 
 end_unit
 

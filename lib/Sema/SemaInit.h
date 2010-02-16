@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/UnresolvedSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Parse/Action.h"
 end_include
 
@@ -100,6 +106,16 @@ include|#
 directive|include
 file|<cassert>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -215,8 +231,8 @@ name|CXXBaseSpecifier
 modifier|*
 name|Base
 decl_stmt|;
-comment|/// \brief When Kind = EK_ArrayOrVectorElement, the index of the
-comment|/// array or vector element being initialized.
+comment|/// \brief When Kind = EK_ArrayElement or EK_VectorElement, the
+comment|/// index of the array or vector element being initialized.
 name|unsigned
 name|Index
 decl_stmt|;
@@ -633,6 +649,27 @@ name|getDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Retrieve the base specifier.
+name|CXXBaseSpecifier
+operator|*
+name|getBaseSpecifier
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_Base
+operator|&&
+literal|"Not a base specifier"
+argument_list|)
+block|;
+return|return
+name|Base
+return|;
+block|}
 comment|/// \brief Determine the location of the 'return' keyword when initializing
 comment|/// the result of a function call.
 name|SourceLocation
@@ -1282,8 +1319,11 @@ block|{
 comment|/// \brief When Kind == SK_ResolvedOverloadedFunction or Kind ==
 comment|/// SK_UserConversion, the function that the expression should be
 comment|/// resolved to or the conversion function to call, respectively.
-name|FunctionDecl
-modifier|*
+comment|///
+comment|/// Always a FunctionDecl.
+comment|/// For conversion decls, the naming class is the source type.
+comment|/// For construct decls, the naming class is the target type.
+name|DeclAccessPair
 name|Function
 decl_stmt|;
 comment|/// \brief When Kind = SK_ConversionSequence, the implicit conversion
@@ -1623,6 +1663,9 @@ name|FunctionDecl
 modifier|*
 name|Function
 parameter_list|,
+name|AccessSpecifier
+name|Access
+parameter_list|,
 name|QualType
 name|T
 parameter_list|)
@@ -1667,6 +1710,9 @@ parameter_list|(
 name|CXXConstructorDecl
 modifier|*
 name|Constructor
+parameter_list|,
+name|AccessSpecifier
+name|Access
 parameter_list|,
 name|QualType
 name|T
@@ -1762,6 +1808,26 @@ return|return
 name|Failure
 return|;
 block|}
+comment|/// \brief Dump a representation of this initialization sequence to
+comment|/// the given stream, for debugging purposes.
+name|void
+name|dump
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Dump a representation of this initialization sequence to
+comment|/// standard error, for debugging purposes.
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 

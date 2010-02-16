@@ -410,18 +410,28 @@ argument_list|(
 literal|"abc"
 literal|"%*d"
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 literal|1
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{field width should have type 'int'}}
+comment|// no-warning
 name|printf
 argument_list|(
 literal|"abc\ def"
+literal|"%*d"
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|//<rdar://problem/6079850>, allow 'unsigned' (instead of 'int') to be used for both
+comment|// the field width and precision.  This deviates from C99, but is reasonably safe
+comment|// and is also accepted by GCC.
+name|printf
+argument_list|(
 literal|"%*d"
 argument_list|,
 operator|(
@@ -432,7 +442,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{field width should have type 'int'}}
+comment|// no-warning
 block|}
 end_function
 
@@ -511,7 +521,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{more data arguments than '%' conversions}}
+comment|// expected-warning{{more data arguments than format specifiers}}
 block|}
 end_function
 
@@ -576,7 +586,7 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{lid conversion '%lb'}}
+comment|// expected-warning {{invalid conversion specifier 'b'}}
 name|fprintf
 argument_list|(
 name|fp
@@ -584,7 +594,7 @@ argument_list|,
 literal|"%%%l"
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{lid conversion '%l'}}
+comment|// expected-warning {{incomplete format specifier}}
 name|sprintf
 argument_list|(
 name|buf
@@ -598,7 +608,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning{{conversion specifies type 'long' but the argument has type 'int'}}
 name|snprintf
 argument_list|(
 name|buf
@@ -614,7 +624,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{sion '%;'}}
+comment|// expected-warning{{conversion specifies type 'long' but the argument has type 'int'}} expected-warning {{invalid conversion specifier ';'}}
 block|}
 end_function
 
@@ -992,6 +1002,496 @@ name|v8
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|test10
+parameter_list|(
+name|int
+name|x
+parameter_list|,
+name|float
+name|f
+parameter_list|,
+name|int
+name|i
+parameter_list|,
+name|long
+name|long
+name|lli
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%@"
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{invalid conversion specifier '@'}}
+name|printf
+argument_list|(
+literal|"\0"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string contains '\0' within the string body}}
+name|printf
+argument_list|(
+literal|"xs\0"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string contains '\0' within the string body}}
+name|printf
+argument_list|(
+literal|"%*d\n"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{'*' specified field width is missing a matching 'int' argument}}
+name|printf
+argument_list|(
+literal|"%*.*d\n"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{'.*' specified field precision is missing a matching 'int' argument}}
+name|printf
+argument_list|(
+literal|"%*d\n"
+argument_list|,
+name|f
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{field width should have type 'int', but argument has type 'double'}}
+name|printf
+argument_list|(
+literal|"%*.*d\n"
+argument_list|,
+name|x
+argument_list|,
+name|f
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{field precision should have type 'int', but argument has type 'double'}}
+name|printf
+argument_list|(
+literal|"%**\n"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{invalid conversion specifier '*'}}
+name|printf
+argument_list|(
+literal|"%n"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+name|printf
+argument_list|(
+literal|"%d%d\n"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|x
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more data arguments than format specifiers}}
+name|printf
+argument_list|(
+literal|"%W%d%Z\n"
+argument_list|,
+name|x
+argument_list|,
+name|x
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{invalid conversion specifier 'W'}} expected-warning{{invalid conversion specifier 'Z'}}
+name|printf
+argument_list|(
+literal|"%"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{incomplete format specifier}}
+name|printf
+argument_list|(
+literal|"%.d"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%."
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{incomplete format specifier}}
+name|printf
+argument_list|(
+literal|"%f"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'double' but the argument has type 'int'}}
+name|printf
+argument_list|(
+literal|"%qd"
+argument_list|,
+name|lli
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"hhX %hhX"
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"llX %llX"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// This is fine, because there is an implicit conversion to an int.
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'int' but the argument has type 'long long'}}
+name|printf
+argument_list|(
+literal|"%Lf\n"
+argument_list|,
+operator|(
+name|long
+name|double
+operator|)
+literal|1.0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%f\n"
+argument_list|,
+operator|(
+name|long
+name|double
+operator|)
+literal|1.0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'double' but the argument has type 'long double'}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test11
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%p"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%.4p"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{precision used in 'p' conversion specifier (where it has no meaning)}}
+name|printf
+argument_list|(
+literal|"%+p"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '+' results in undefined behavior in 'p' conversion specifier}}
+name|printf
+argument_list|(
+literal|"% p"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag ' ' results in undefined behavior in 'p' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%0p"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '0' results in undefined behavior in 'p' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%+s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '+' results in undefined behavior in 's' conversion specifier}}
+name|printf
+argument_list|(
+literal|"% s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag ' ' results in undefined behavior in 's' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%0s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '0' results in undefined behavior in 's' conversion specifier}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test12
+parameter_list|(
+name|char
+modifier|*
+name|b
+parameter_list|)
+block|{
+name|unsigned
+name|char
+name|buf
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%.4s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%.4s\n"
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'unsigned char (*)[4]'}}
+comment|// Verify that we are checking asprintf
+name|asprintf
+argument_list|(
+operator|&
+name|b
+argument_list|,
+literal|"%d"
+argument_list|,
+literal|"asprintf"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'int' but the argument has type 'char *'}}
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__aslclient
+modifier|*
+name|aslclient
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__aslmsg
+modifier|*
+name|aslmsg
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|asl_log
+parameter_list|(
+name|aslclient
+name|asl
+parameter_list|,
+name|aslmsg
+name|msg
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|4
+operator|,
+function_decl|5
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|test_asl
+parameter_list|(
+name|aslclient
+name|asl
+parameter_list|)
+block|{
+comment|// Test case from<rdar://problem/7341605>.
+name|asl_log
+argument_list|(
+name|asl
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|"Error: %m"
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|asl_log
+argument_list|(
+name|asl
+argument_list|,
+literal|0
+argument_list|,
+literal|3
+argument_list|,
+literal|"Error: %W"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{invalid conversion specifier 'W'}}
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/7595366>
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|A
+block|}
+name|int_t
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|f0
+parameter_list|(
+name|int_t
+name|x
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

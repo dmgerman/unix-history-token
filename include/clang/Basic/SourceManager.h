@@ -2488,6 +2488,33 @@ return|;
 block|}
 end_expr_stmt
 
+begin_decl_stmt
+name|bool
+name|hasFileInfo
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+decl|const
+block|{
+return|return
+name|FileInfos
+operator|.
+name|find
+argument_list|(
+name|File
+argument_list|)
+operator|!=
+name|FileInfos
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|/// PrintStats - Print statistics to stderr.
 end_comment
@@ -2512,6 +2539,33 @@ specifier|const
 block|{
 return|return
 name|SLocEntryTable
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// FIXME: Exposing this is a little gross; what we want is a good way
+end_comment
+
+begin_comment
+comment|//  to iterate the entries that were not defined in a PCH file (or
+end_comment
+
+begin_comment
+comment|//  any other external source).
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|sloc_loaded_entry_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SLocEntryLoaded
 operator|.
 name|size
 argument_list|()

@@ -805,8 +805,9 @@ comment|/// imported block variable.
 name|CharUnits
 name|BlockOffset
 block|;
-comment|/// BlockAlign - Maximal alignment needed for the Block expressed in bytes.
-name|uint64_t
+comment|/// BlockAlign - Maximal alignment needed for the Block expressed in
+comment|/// characters.
+name|CharUnits
 name|BlockAlign
 block|;
 comment|/// getBlockOffset - Allocate an offset for the ValueDecl from a

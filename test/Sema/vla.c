@@ -399,5 +399,36 @@ begin_comment
 comment|// expected-error {{variable-sized object may not be initialized}}
 end_comment
 
+begin_comment
+comment|// PR5185
+end_comment
+
+begin_function_decl
+name|void
+name|pr5185
+parameter_list|(
+name|int
+name|a
+index|[
+operator|*
+index|]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|pr5185
+parameter_list|(
+name|int
+name|a
+index|[
+operator|*
+index|]
+parameter_list|)
+comment|// expected-error {{variable length array must be bound in function definition}}
+block|{ }
+end_function
+
 end_unit
 
