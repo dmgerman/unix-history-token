@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acl.h,v 1.22.18.4 2006/03/02 00:37:21 marka Exp $ */
+comment|/* $Id: acl.h,v 1.22.18.6 2009/01/19 23:46:15 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -389,7 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Return #ISC_TRUE iff the acl 'a' is considered insecure, that is,  * if it contains IP addresses other than those of the local host.  * This is intended for applications such as printing warning   * messages for suspect ACLs; it is not intended for making access  * control decisions.  We make no guarantee that an ACL for which  * this function returns #ISC_FALSE is safe.  */
+comment|/*%<  * Return #ISC_TRUE iff the acl 'a' is considered insecure, that is,  * if it contains IP addresses other than those of the local host.  * This is intended for applications such as printing warning  * messages for suspect ACLs; it is not intended for making access  * control decisions.  We make no guarantee that an ACL for which  * this function returns #ISC_FALSE is safe.  */
 end_comment
 
 begin_function_decl
@@ -508,7 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Like dns_acl_match, but matches against the single ACL element 'e'  * rather than a complete list and returns ISC_TRUE iff it matched.  * To determine whether the match was prositive or negative, the   * caller should examine e->negative.  Since the element 'e' may be  * a reference to a named ACL or a nested ACL, the matching element  * returned through 'matchelt' is not necessarily 'e' itself.  */
+comment|/*%<  * Like dns_acl_match, but matches against the single ACL element 'e'  * rather than a complete list and returns ISC_TRUE iff it matched.  *  * To determine whether the match was positive or negative, the  * caller should examine e->negative.  Since the element 'e' may be  * a reference to a named ACL or a nested ACL, the matching element  * returned through 'matchelt' is not necessarily 'e' itself.  */
 end_comment
 
 begin_function_decl

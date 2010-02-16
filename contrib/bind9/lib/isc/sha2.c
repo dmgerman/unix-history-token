@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005, 2006  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005, 2006, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sha2.c,v 1.2.2.12 2006/08/16 03:18:14 marka Exp $ */
+comment|/* $Id: sha2.c,v 1.2.2.14 2009/01/19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*	$KAME: sha2.c,v 1.8 2001/11/08 01:07:52 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * sha2.c  *  * Version 1.0.0beta1  *  * Written by Aaron D. Gifford<me@aarongifford.com>  *  * Copyright 2000 Aaron D. Gifford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the copyright holder nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTOR(S) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) OR CONTRIBUTOR(S) BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sha2.c  *  * Version 1.0.0beta1  *  * Written by Aaron D. Gifford<me@aarongifford.com>  *  * Copyright 2000 Aaron D. Gifford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the copyright holder nor the names of contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTOR(S) ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) OR CONTRIBUTOR(S) BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ comment|/*** SHA-256/384/512 Machine Architecture Definitions *****************/
 end_comment
 
 begin_comment
-comment|/*  * BYTE_ORDER NOTE:  *  * Please make sure that your system defines BYTE_ORDER.  If your  * architecture is little-endian, make sure it also defines  * LITTLE_ENDIAN and that the two (BYTE_ORDER and LITTLE_ENDIAN) are  * equivilent.  *  * If your system does not define the above, then you can do so by  * hand like this:  *  *   #define LITTLE_ENDIAN 1234  *   #define BIG_ENDIAN    4321  *  * And for little-endian machines, add:  *  *   #define BYTE_ORDER LITTLE_ENDIAN   *  * Or for big-endian machines:  *  *   #define BYTE_ORDER BIG_ENDIAN  *  * The FreeBSD machine this was written on defines BYTE_ORDER  * appropriately by including<sys/types.h> (which in turn includes  *<machine/endian.h> where the appropriate definitions are actually  * made).  */
+comment|/*  * BYTE_ORDER NOTE:  *  * Please make sure that your system defines BYTE_ORDER.  If your  * architecture is little-endian, make sure it also defines  * LITTLE_ENDIAN and that the two (BYTE_ORDER and LITTLE_ENDIAN) are  * equivalent.  *  * If your system does not define the above, then you can do so by  * hand like this:  *  *   #define LITTLE_ENDIAN 1234  *   #define BIG_ENDIAN    4321  *  * And for little-endian machines, add:  *  *   #define BYTE_ORDER LITTLE_ENDIAN  *  * Or for big-endian machines:  *  *   #define BYTE_ORDER BIG_ENDIAN  *  * The FreeBSD machine this was written on defines BYTE_ORDER  * appropriately by including<sys/types.h> (which in turn includes  *<machine/endian.h> where the appropriate definitions are actually  * made).  */
 end_comment
 
 begin_if
@@ -1681,7 +1681,7 @@ parameter_list|,
 name|h
 parameter_list|)
 define|\
-value|REVERSE32(*data++, W256[j]); \ 	T1 = (h) + Sigma1_256(e) + Ch((e), (f), (g)) + \              K256[j] + W256[j]; \ 	(d) += T1; \ 	(h) = T1 + Sigma0_256(a) + Maj((a), (b), (c)); \ 	j++
+value|REVERSE32(*data++, W256[j]); \ 	T1 = (h) + Sigma1_256(e) + Ch((e), (f), (g)) + \ 	     K256[j] + W256[j]; \ 	(d) += T1; \ 	(h) = T1 + Sigma0_256(a) + Maj((a), (b), (c)); \ 	j++
 end_define
 
 begin_else
@@ -3760,7 +3760,7 @@ parameter_list|,
 name|h
 parameter_list|)
 define|\
-value|REVERSE64(*data++, W512[j]); \ 	T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + \              K512[j] + W512[j]; \ 	(d) += T1, \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)), \ 	j++
+value|REVERSE64(*data++, W512[j]); \ 	T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + \ 	     K512[j] + W512[j]; \ 	(d) += T1, \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)), \ 	j++
 end_define
 
 begin_else
@@ -3794,7 +3794,7 @@ parameter_list|,
 name|h
 parameter_list|)
 define|\
-value|T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + \              K512[j] + (W512[j] = *data++); \ 	(d) += T1; \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)); \ 	j++
+value|T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + \ 	     K512[j] + (W512[j] = *data++); \ 	(d) += T1; \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)); \ 	j++
 end_define
 
 begin_endif
@@ -3828,7 +3828,7 @@ parameter_list|,
 name|h
 parameter_list|)
 define|\
-value|s0 = W512[(j+1)&0x0f]; \ 	s0 = sigma0_512(s0); \ 	s1 = W512[(j+14)&0x0f]; \ 	s1 = sigma1_512(s1); \ 	T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + K512[j] + \              (W512[j&0x0f] += s1 + W512[(j+9)&0x0f] + s0); \ 	(d) += T1; \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)); \ 	j++
+value|s0 = W512[(j+1)&0x0f]; \ 	s0 = sigma0_512(s0); \ 	s1 = W512[(j+14)&0x0f]; \ 	s1 = sigma1_512(s1); \ 	T1 = (h) + Sigma1_512(e) + Ch((e), (f), (g)) + K512[j] + \ 	     (W512[j&0x0f] += s1 + W512[(j+9)&0x0f] + s0); \ 	(d) += T1; \ 	(h) = T1 + Sigma0_512(a) + Maj((a), (b), (c)); \ 	j++
 end_define
 
 begin_function

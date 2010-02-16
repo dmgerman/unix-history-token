@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.6.7 2006/01/27 23:57:44 marka Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: dst_api.c,v 1.1.6.15 2009/09/25 01:48:28 marka Exp $  */
 end_comment
 
 begin_comment
@@ -416,19 +416,22 @@ parameter_list|(
 name|alg
 parameter_list|)
 define|\
-value|do {					\ 		isc_result_t _r;		\ 		_r = algorithm_status(alg);	\ 		if (_r != ISC_R_SUCCESS)	\ 			return (_r);		\ 	} while (0);				\  static void *
+value|do {					\ 		isc_result_t _r;		\ 		_r = algorithm_status(alg);	\ 		if (_r != ISC_R_SUCCESS)	\ 			return (_r);		\ 	} while (0);				\  #ifdef OPENSSL
 end_define
 
-begin_macro
+begin_function
+specifier|static
+name|void
+modifier|*
 name|default_memalloc
-argument_list|(
-argument|void *arg
-argument_list|,
-argument|size_t size
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
 block|{
 name|UNUSED
 argument_list|(
@@ -454,7 +457,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -482,6 +485,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|isc_result_t
@@ -4726,6 +4734,23 @@ condition|)
 name|BADTOKEN
 argument_list|()
 expr_stmt|;
+comment|/* 	 * We don't support "@" in .key files. 	 */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|DST_AS_STR
+argument_list|(
+name|token
+argument_list|)
+argument_list|,
+literal|"@"
+argument_list|)
+condition|)
+name|BADTOKEN
+argument_list|()
+expr_stmt|;
 name|dns_fixedname_init
 argument_list|(
 operator|&
@@ -4804,6 +4829,17 @@ argument_list|,
 operator|&
 name|token
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|token
+operator|.
+name|type
+operator|!=
+name|isc_tokentype_string
+condition|)
+name|BADTOKEN
+argument_list|()
 expr_stmt|;
 comment|/* If it's a TTL, read the next one */
 name|result
@@ -5570,6 +5606,22 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|ret
+operator|=
+name|DST_R_WRITEERROR
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
@@ -5577,7 +5629,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ISC_R_SUCCESS
+name|ret
 operator|)
 return|;
 block|}
@@ -6326,6 +6378,21 @@ condition|(
 name|n
 operator|<
 literal|0
+condition|)
+return|return
+operator|(
+name|ISC_R_FAILURE
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|n
+operator|>=
+name|len
 condition|)
 return|return
 operator|(

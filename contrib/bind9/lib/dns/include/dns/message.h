@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: message.h,v 1.114.18.6 2006/03/02 23:19:20 marka Exp $ */
+comment|/* $Id: message.h,v 1.114.18.8 2009/01/19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -61,7 +61,7 @@ file|<dst/dst.h>
 end_include
 
 begin_comment
-comment|/*! \file   * \brief Message Handling Module  *  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *\li	(1) insert it into a section, using dns_message_addname().  *  *\li	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  * \code  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, ISC_FALSE,  *				   buffer);  *	dns_message_takebuffer(message,&buffer);  * \endcode  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
+comment|/*! \file  * \brief Message Handling Module  *  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *\li	(1) insert it into a section, using dns_message_addname().  *  *\li	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  * \code  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, ISC_FALSE,  *				   buffer);  *	dns_message_takebuffer(message,&buffer);  * \endcode  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
 end_comment
 
 begin_define
@@ -385,7 +385,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/*%< trucation errors are 						  * not fatal. */
+comment|/*%< truncation errors are 						  * not fatal. */
 end_comment
 
 begin_comment
@@ -1494,7 +1494,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Set the OPT record for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message with rendering intent  *	and no sections have been rendered.  *  *\li	'opt' is a valid OPT record.  *  * Ensures:  *  *\li	The OPT record has either been freed or ownership of it has  *	been transferred to the message.  *  *\li	If ISC_R_SUCCESS was returned, the OPT record will be rendered   *	when dns_message_renderend() is called.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_NOSPACE		-- there is no space for the OPT record.  */
+comment|/*%<  * Set the OPT record for 'msg'.  *  * Requires:  *  *\li	'msg' is a valid message with rendering intent  *	and no sections have been rendered.  *  *\li	'opt' is a valid OPT record.  *  * Ensures:  *  *\li	The OPT record has either been freed or ownership of it has  *	been transferred to the message.  *  *\li	If ISC_R_SUCCESS was returned, the OPT record will be rendered  *	when dns_message_renderend() is called.  *  * Returns:  *  *\li	#ISC_R_SUCCESS		-- all is well.  *  *\li	#ISC_R_NOSPACE		-- there is no space for the OPT record.  */
 end_comment
 
 begin_function_decl
@@ -1669,7 +1669,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Give the *buffer to the message code to clean up when it is no  * longer needed.  This is usually when the message is reset or  * destroyed.  *  * Requires:  *  *\li	msg be a valid message.  *  *\li	buffer != NULL&& *buffer is a valid isc_buffer_t, which was  *	dynamincally allocated via isc_buffer_allocate().  */
+comment|/*%<  * Give the *buffer to the message code to clean up when it is no  * longer needed.  This is usually when the message is reset or  * destroyed.  *  * Requires:  *  *\li	msg be a valid message.  *  *\li	buffer != NULL&& *buffer is a valid isc_buffer_t, which was  *	dynamically allocated via isc_buffer_allocate().  */
 end_comment
 
 begin_function_decl

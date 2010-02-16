@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: os.c,v 1.66.18.17 2008/10/24 01:43:17 tbox Exp $ */
+comment|/* $Id: os.c,v 1.66.18.21 2009/03/02 03:06:25 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1337,7 +1337,7 @@ name|buf
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Signal to the parent that we stated successfully. 	 */
+comment|/* 	 * Signal to the parent that we started successfully. 	 */
 if|if
 condition|(
 name|dfd
@@ -1357,6 +1357,8 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
 name|write
 argument_list|(
 name|dfd
@@ -1368,6 +1370,14 @@ operator|&
 name|buf
 argument_list|,
 literal|1
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"unable to signal parent that we "
+literal|"otherwise started successfully."
 argument_list|)
 expr_stmt|;
 name|close
@@ -1545,6 +1555,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_CHROOT
 if|if
 condition|(
 name|chroot
@@ -1575,6 +1588,15 @@ name|strbuf
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|ns_main_earlyfatal
+argument_list|(
+literal|"chroot(): disabled"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|chdir
@@ -2114,14 +2136,25 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|filename
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|fd
 operator|=
 name|open
@@ -2160,6 +2193,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|n
+decl_stmt|;
 if|if
 condition|(
 name|pidfile
@@ -2167,11 +2203,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|n
+operator|=
 name|unlink
 argument_list|(
+name|pidfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+name|ns_main_earlywarning
+argument_list|(
+literal|"unlink '%s': failed"
+argument_list|,
 name|pidfile
 argument_list|)
 expr_stmt|;

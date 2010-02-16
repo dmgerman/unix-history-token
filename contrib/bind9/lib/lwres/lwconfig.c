@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: lwconfig.c,v 1.38.18.5 2006/10/03 23:50:51 marka Exp $ */
+comment|/* $Id: lwconfig.c,v 1.38.18.7 2008/12/17 23:46:01 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*! \file */
 end_comment
 
 begin_comment
-comment|/**  * Module for parsing resolv.conf files.  *  *    lwres_conf_init() creates an empty lwres_conf_t structure for  *    lightweight resolver context ctx.  *   *    lwres_conf_clear() frees up all the internal memory used by that  *    lwres_conf_t structure in resolver context ctx.  *   *    lwres_conf_parse() opens the file filename and parses it to initialise  *    the resolver context ctx's lwres_conf_t structure.  *   *    lwres_conf_print() prints the lwres_conf_t structure for resolver  *    context ctx to the FILE fp.  *   * \section lwconfig_return Return Values  *   *    lwres_conf_parse() returns #LWRES_R_SUCCESS if it successfully read and  *    parsed filename. It returns #LWRES_R_FAILURE if filename could not be  *    opened or contained incorrect resolver statements.  *   *    lwres_conf_print() returns #LWRES_R_SUCCESS unless an error occurred  *    when converting the network addresses to a numeric host address  *    string. If this happens, the function returns #LWRES_R_FAILURE.  *   * \section lwconfig_see See Also  *   *    stdio(3), \link resolver resolver \endlink  *   * \section files Files  *   *    /etc/resolv.conf  */
+comment|/**  * Module for parsing resolv.conf files.  *  *    lwres_conf_init() creates an empty lwres_conf_t structure for  *    lightweight resolver context ctx.  *  *    lwres_conf_clear() frees up all the internal memory used by that  *    lwres_conf_t structure in resolver context ctx.  *  *    lwres_conf_parse() opens the file filename and parses it to initialise  *    the resolver context ctx's lwres_conf_t structure.  *  *    lwres_conf_print() prints the lwres_conf_t structure for resolver  *    context ctx to the FILE fp.  *  * \section lwconfig_return Return Values  *  *    lwres_conf_parse() returns #LWRES_R_SUCCESS if it successfully read and  *    parsed filename. It returns #LWRES_R_FAILURE if filename could not be  *    opened or contained incorrect resolver statements.  *  *    lwres_conf_print() returns #LWRES_R_SUCCESS unless an error occurred  *    when converting the network addresses to a numeric host address  *    string. If this happens, the function returns #LWRES_R_FAILURE.  *  * \section lwconfig_see See Also  *  *    stdio(3), \link resolver resolver \endlink  *  * \section files Files  *  *    /etc/resolv.conf  */
 end_comment
 
 begin_include
@@ -1252,7 +1252,38 @@ condition|(
 name|res
 operator|==
 name|LWRES_R_SUCCESS
+operator|&&
+operator|(
+operator|(
+name|address
+operator|.
+name|family
+operator|==
+name|LWRES_ADDRTYPE_V4
+operator|&&
+name|ctx
+operator|->
+name|use_ipv4
+operator|==
+literal|1
+operator|)
+operator|||
+operator|(
+name|address
+operator|.
+name|family
+operator|==
+name|LWRES_ADDRTYPE_V6
+operator|&&
+name|ctx
+operator|->
+name|use_ipv6
+operator|==
+literal|1
+operator|)
+operator|)
 condition|)
+block|{
 name|confdata
 operator|->
 name|nameservers
@@ -1265,6 +1296,7 @@ index|]
 operator|=
 name|address
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|LWRES_R_SUCCESS

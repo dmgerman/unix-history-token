@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: dlz.c,v 1.2.2.2 2005/09/06 03:47:17 marka Exp $ */
+comment|/* $Id: dlz.c,v 1.2.2.4 2009/01/19 23:46:15 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -958,7 +958,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * loop through starting with the longest domain name and 	 * trying shorter names portions of the name until we find a 	 * match, have an error, or are below the 'minlabels' 	 * threshold.  minlabels is 0, if the standard database didn't 	 * have a zone name match.  Otherwise minlables is the number 	 * of labels in that name.  We need to beat that for a 	 * "better" match for the DLZ database to be authoritative 	 * instead of the standard database. 	 */
+comment|/* 	 * loop through starting with the longest domain name and 	 * trying shorter names portions of the name until we find a 	 * match, have an error, or are below the 'minlabels' 	 * threshold.  minlabels is 0, if the standard database didn't 	 * have a zone name match.  Otherwise minlabels is the number 	 * of labels in that name.  We need to beat that for a 	 * "better" match for the DLZ database to be authoritative 	 * instead of the standard database. 	 */
 for|for
 control|(
 name|i

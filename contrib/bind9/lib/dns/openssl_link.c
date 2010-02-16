@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: openssl_link.c,v 1.1.6.12 2007/08/28 07:20:04 tbox Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: openssl_link.c,v 1.1.6.14 2009/02/11 23:46:05 tbox Exp $  */
 end_comment
 
 begin_ifdef
@@ -508,10 +508,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|p
-decl_stmt|;
 name|INSIST
 argument_list|(
 name|dst__memory_pool
@@ -519,58 +515,16 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|>
-literal|0U
-condition|)
-block|{
-name|p
-operator|=
-name|mem_alloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-operator|&&
-name|ptr
-operator|!=
-name|NULL
-condition|)
-name|memcpy
-argument_list|(
-name|p
-argument_list|,
-name|ptr
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ptr
-operator|!=
-name|NULL
-condition|)
-name|mem_free
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|p
+name|isc_mem_reallocate
+argument_list|(
+name|dst__memory_pool
+argument_list|,
+name|ptr
+argument_list|,
+name|size
+argument_list|)
 operator|)
 return|;
 block|}

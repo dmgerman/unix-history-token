@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: log.h,v 1.47.18.3 2005/04/29 00:16:58 marka Exp $ */
+comment|/* $Id: log.h,v 1.47.18.8 2009/02/16 02:12:58 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -277,7 +277,7 @@ comment|/*@}*/
 end_comment
 
 begin_comment
-comment|/*!  * \brief Used to name the categories used by a library.    *  * An array of isc_logcategory  * structures names each category, and the id value is initialized by calling  * isc_log_registercategories.  */
+comment|/*!  * \brief Used to name the categories used by a library.  *  * An array of isc_logcategory  * structures names each category, and the id value is initialized by calling  * isc_log_registercategories.  */
 end_comment
 
 begin_struct
@@ -319,7 +319,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*%  * The isc_logfile structure is initialized as part of an isc_logdestination  * before calling isc_log_createchannel().    *  * When defining an #ISC_LOG_TOFILE  * channel the name, versions and maximum_size should be set before calling  * isc_log_createchannel().  To define an #ISC_LOG_TOFILEDESC channel set only  * the stream before the call.  *   * Setting maximum_size to zero implies no maximum.  */
+comment|/*%  * The isc_logfile structure is initialized as part of an isc_logdestination  * before calling isc_log_createchannel().  *  * When defining an #ISC_LOG_TOFILE  * channel the name, versions and maximum_size should be set before calling  * isc_log_createchannel().  To define an #ISC_LOG_TOFILEDESC channel set only  * the stream before the call.  *  * Setting maximum_size to zero implies no maximum.  */
 end_comment
 
 begin_typedef
@@ -467,6 +467,13 @@ define|#
 directive|define
 name|ISC_LOGMODULE_TIMER
 value|(&isc_modules[3])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISC_LOGMODULE_FILE
+value|(&isc_modules[4])
 end_define
 
 begin_function_decl
@@ -683,7 +690,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Associate a named logging channel with a category and module that  * will use it.  *  * Notes:  *\li	The name is searched for linearly in the set of known channel names  *	until a match is found.  (Note the performance impact of a very large  *	number of named channels.)  When multiple channels of the same  *	name are defined, the most recent definition is found.  *  *\li	Specifing a very large number of channels for a category will have  *	a moderate impact on performance in isc_log_write(), as each  *	call looks up the category for the start of a linked list, which  *	it follows all the way to the end to find matching modules.  The  *	test for matching modules is  integral, though.  *  *\li	If category is NULL, then the channel is associated with the indicated  *	module for all known categories (including the "default" category).  *  *\li	If module is NULL, then the channel is associated with every module  *	that uses that category.  *  *\li	Passing both category and module as NULL would make every log message  *	use the indicated channel.  *  * \li	Specifying a channel that is #ISC_LOG_TONULL for a category/module pair  *	has no effect on any other channels associated with that pair,  *	regardless of ordering.  Thus you cannot use it to "mask out" one  *	category/module pair when you have specified some other channel that  * 	is also used by that category/module pair.  *  * Requires:  *\li	lcfg is a valid logging configuration.  *  *\li	category is NULL or has an id that is in the range of known ids.  *  *	module is NULL or has an id that is in the range of known ids.  *  * Ensures:  *\li	#ISC_R_SUCCESS  *		The channel will be used by the indicated category/module  *		arguments.  *  *\li	#ISC_R_NOMEMORY  *		If assignment for a specific category has been requested,  *		the channel has not been associated with the indicated  *		category/module arguments and no additional memory is  *		used by the logging context.  *		If assignment for all categories has been requested  *		then _some_ may have succeeded (starting with category  *		"default" and progressing through the order of categories  *		passed to isc_log_registercategories()) and additional memory  *		is being used by whatever assignments succeeded.  *  * Returns:  *\li	#ISC_R_SUCCESS	Success  *\li	#ISC_R_NOMEMORY	Resource limit: Out of memory  */
+comment|/*%<  * Associate a named logging channel with a category and module that  * will use it.  *  * Notes:  *\li	The name is searched for linearly in the set of known channel names  *	until a match is found.  (Note the performance impact of a very large  *	number of named channels.)  When multiple channels of the same  *	name are defined, the most recent definition is found.  *  *\li	Specifying a very large number of channels for a category will have  *	a moderate impact on performance in isc_log_write(), as each  *	call looks up the category for the start of a linked list, which  *	it follows all the way to the end to find matching modules.  The  *	test for matching modules is  integral, though.  *  *\li	If category is NULL, then the channel is associated with the indicated  *	module for all known categories (including the "default" category).  *  *\li	If module is NULL, then the channel is associated with every module  *	that uses that category.  *  *\li	Passing both category and module as NULL would make every log message  *	use the indicated channel.  *  * \li	Specifying a channel that is #ISC_LOG_TONULL for a category/module pair  *	has no effect on any other channels associated with that pair,  *	regardless of ordering.  Thus you cannot use it to "mask out" one  *	category/module pair when you have specified some other channel that  * 	is also used by that category/module pair.  *  * Requires:  *\li	lcfg is a valid logging configuration.  *  *\li	category is NULL or has an id that is in the range of known ids.  *  *	module is NULL or has an id that is in the range of known ids.  *  * Ensures:  *\li	#ISC_R_SUCCESS  *		The channel will be used by the indicated category/module  *		arguments.  *  *\li	#ISC_R_NOMEMORY  *		If assignment for a specific category has been requested,  *		the channel has not been associated with the indicated  *		category/module arguments and no additional memory is  *		used by the logging context.  *		If assignment for all categories has been requested  *		then _some_ may have succeeded (starting with category  *		"default" and progressing through the order of categories  *		passed to isc_log_registercategories()) and additional memory  *		is being used by whatever assignments succeeded.  *  * Returns:  *\li	#ISC_R_SUCCESS	Success  *\li	#ISC_R_NOMEMORY	Resource limit: Out of memory  */
 end_comment
 
 begin_comment
@@ -691,7 +698,7 @@ comment|/* Attention: next four comments PRECEED code */
 end_comment
 
 begin_comment
-comment|/*!   *   \brief  * Write a message to the log channels.  *  * Notes:  *\li	Log messages containing natural language text should be logged with  *	isc_log_iwrite() to allow for localization.  *  *\li	lctx can be NULL; this is allowed so that programs which use  *	libraries that use the ISC logging system are not required to  *	also use it.  *  *\li	The format argument is a printf(3) string, with additional arguments  *	as necessary.  *  * Requires:  *\li	lctx is a valid logging context.  *  *\li	The category and module arguments must have ids that are in the  *	range of known ids, as estabished by isc_log_registercategories()  *	and isc_log_registermodules().  *  *\li	level != #ISC_LOG_DYNAMIC.  ISC_LOG_DYNAMIC is used only to define  *	channels, and explicit debugging level must be identified for  *	isc_log_write() via ISC_LOG_DEBUG(level).  *  *\li	format != NULL.  *  * Ensures:  *\li	The log message is written to every channel associated with the  *	indicated category/module pair.  *  * Returns:  *\li	Nothing.  Failure to log a message is not construed as a  *	meaningful error.  */
+comment|/*!  *   \brief  * Write a message to the log channels.  *  * Notes:  *\li	Log messages containing natural language text should be logged with  *	isc_log_iwrite() to allow for localization.  *  *\li	lctx can be NULL; this is allowed so that programs which use  *	libraries that use the ISC logging system are not required to  *	also use it.  *  *\li	The format argument is a printf(3) string, with additional arguments  *	as necessary.  *  * Requires:  *\li	lctx is a valid logging context.  *  *\li	The category and module arguments must have ids that are in the  *	range of known ids, as established by isc_log_registercategories()  *	and isc_log_registermodules().  *  *\li	level != #ISC_LOG_DYNAMIC.  ISC_LOG_DYNAMIC is used only to define  *	channels, and explicit debugging level must be identified for  *	isc_log_write() via ISC_LOG_DEBUG(level).  *  *\li	format != NULL.  *  * Ensures:  *\li	The log message is written to every channel associated with the  *	indicated category/module pair.  *  * Returns:  *\li	Nothing.  Failure to log a message is not construed as a  *	meaningful error.  */
 end_comment
 
 begin_function_decl
@@ -733,7 +740,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*%  * Write a message to the log channels.  *  * Notes:  *\li	lctx can be NULL; this is allowed so that programs which use  *	libraries that use the ISC logging system are not required to  *	also use it.  *  *\li	The format argument is a printf(3) string, with additional arguments  *	as necessary.  *  * Requires:  *\li	lctx is a valid logging context.  *  *\li	The category and module arguments must have ids that are in the  *	range of known ids, as estabished by isc_log_registercategories()  *	and isc_log_registermodules().  *  *\li	level != #ISC_LOG_DYNAMIC.  ISC_LOG_DYNAMIC is used only to define  *	channels, and explicit debugging level must be identified for  *	isc_log_write() via ISC_LOG_DEBUG(level).  *  *\li	format != NULL.  *  * Ensures:  *\li	The log message is written to every channel associated with the  *	indicated category/module pair.  *  * Returns:  *\li	Nothing.  Failure to log a message is not construed as a  *	meaningful error.  */
+comment|/*%  * Write a message to the log channels.  *  * Notes:  *\li	lctx can be NULL; this is allowed so that programs which use  *	libraries that use the ISC logging system are not required to  *	also use it.  *  *\li	The format argument is a printf(3) string, with additional arguments  *	as necessary.  *  * Requires:  *\li	lctx is a valid logging context.  *  *\li	The category and module arguments must have ids that are in the  *	range of known ids, as established by isc_log_registercategories()  *	and isc_log_registermodules().  *  *\li	level != #ISC_LOG_DYNAMIC.  ISC_LOG_DYNAMIC is used only to define  *	channels, and explicit debugging level must be identified for  *	isc_log_write() via ISC_LOG_DEBUG(level).  *  *\li	format != NULL.  *  * Ensures:  *\li	The log message is written to every channel associated with the  *	indicated category/module pair.  *  * Returns:  *\li	Nothing.  Failure to log a message is not construed as a  *	meaningful error.  */
 end_comment
 
 begin_function_decl
@@ -861,7 +868,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*%  * These are four internationalized versions of the the isc_log_[v]write[1]  * functions.    *  * The only difference is that they take arguments for a message  * catalog, message set, and message number, all immediately preceding the  * format argument.  The format argument becomes the default text, a la  * isc_msgcat_get.  If the message catalog is NULL, no lookup is attempted  * for a message -- which makes the message set and message number irrelevant,  * and the non-internationalized call should have probably been used instead.  *  * Yes, that means there are now *eight* interfaces to logging a message.  * Sheesh.   Make the madness stop!  */
+comment|/*%  * These are four internationalized versions of the isc_log_[v]write[1]  * functions.  *  * The only difference is that they take arguments for a message  * catalog, message set, and message number, all immediately preceding the  * format argument.  The format argument becomes the default text, a la  * isc_msgcat_get.  If the message catalog is NULL, no lookup is attempted  * for a message -- which makes the message set and message number irrelevant,  * and the non-internationalized call should have probably been used instead.  *  * Yes, that means there are now *eight* interfaces to logging a message.  * Sheesh.   Make the madness stop!  */
 end_comment
 
 begin_comment
@@ -1209,7 +1216,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Initialize syslog logging.  *  * Notes:  *\li	XXXDCL NT  *	This is currently equivalent to openlog(), but is not going to remain  *	that way.  In the meantime, the arguments are all identical to  *	those used by openlog(3), as follows:  *  * \code  *		tag: The string to use in the position of the program  *			name in syslog messages.  Most (all?) syslogs  *			will use basename(argv[0]) if tag is NULL.  *  *		options: LOG_CONS, LOG_PID, LOG_NDELAY ... whatever your  *			syslog supports.  *  *		facility: The default syslog facility.  This is irrelevant  *			since isc_log_write will ALWAYS use the channel's  *			declared facility.  * \endcode  *  *\li	Zero effort has been made (yet) to accomodate systems with openlog()  *	that only takes two arguments, or to identify valid syslog  *	facilities or options for any given architecture.  *  *\li	It is necessary to call isc_log_opensyslog() to initialize  *	syslogging on machines which do not support network connections to  *	syslogd because they require a Unix domain socket to be used.  Since  *	this is a chore to determine at run-time, it is suggested that it  *	always be called by programs using the ISC logging system.  *  * Requires:  *\li	Nothing.  *  * Ensures:  *\li	openlog() is called to initialize the syslog system.  */
+comment|/*%<  * Initialize syslog logging.  *  * Notes:  *\li	XXXDCL NT  *	This is currently equivalent to openlog(), but is not going to remain  *	that way.  In the meantime, the arguments are all identical to  *	those used by openlog(3), as follows:  *  * \code  *		tag: The string to use in the position of the program  *			name in syslog messages.  Most (all?) syslogs  *			will use basename(argv[0]) if tag is NULL.  *  *		options: LOG_CONS, LOG_PID, LOG_NDELAY ... whatever your  *			syslog supports.  *  *		facility: The default syslog facility.  This is irrelevant  *			since isc_log_write will ALWAYS use the channel's  *			declared facility.  * \endcode  *  *\li	Zero effort has been made (yet) to accommodate systems with openlog()  *	that only takes two arguments, or to identify valid syslog  *	facilities or options for any given architecture.  *  *\li	It is necessary to call isc_log_opensyslog() to initialize  *	syslogging on machines which do not support network connections to  *	syslogd because they require a Unix domain socket to be used.  Since  *	this is a chore to determine at run-time, it is suggested that it  *	always be called by programs using the ISC logging system.  *  * Requires:  *\li	Nothing.  *  * Ensures:  *\li	openlog() is called to initialize the syslog system.  */
 end_comment
 
 begin_function_decl

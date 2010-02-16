@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2006  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2006, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: log.c,v 1.84.18.8 2006/03/02 00:37:22 marka Exp $ */
+comment|/* $Id: log.c,v 1.84.18.13 2009/02/16 02:12:58 marka Exp $ */
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!  * This is the structure that holds each named channel.  A simple linked  * list chains all of the channels together, so an individual channel is  * found by doing strcmp()s with the names down the list.  Their should  * be no peformance penalty from this as it is expected that the number  * of named channels will be no more than a dozen or so, and name lookups  * from the head of the list are only done when isc_log_usechannel() is  * called, which should also be very infrequent.  */
+comment|/*!  * This is the structure that holds each named channel.  A simple linked  * list chains all of the channels together, so an individual channel is  * found by doing strcmp()s with the names down the list.  Their should  * be no performance penalty from this as it is expected that the number  * of named channels will be no more than a dozen or so, and name lookups  * from the head of the list are only done when isc_log_usechannel() is  * called, which should also be very infrequent.  */
 end_comment
 
 begin_typedef
@@ -354,7 +354,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*!  * This isc_log structure provides the context for the isc_log functions.  * The log context locks itself in isc_log_doit, the internal backend to  * isc_log_write.  The locking is necessary both to provide exclusive access  * to the the buffer into which the message is formatted and to guard against  * competing threads trying to write to the same syslog resource.  (On  * some systems, such as BSD/OS, stdio is thread safe but syslog is not.)  * Unfortunately, the lock cannot guard against a _different_ logging  * context in the same program competing for syslog's attention.  Thus  * There Can Be Only One, but this is not enforced.  * XXXDCL enforce it?  *  * Note that the category and module information is not locked.  * This is because in the usual case, only one isc_log_t is ever created  * in a program, and the category/module registration happens only once.  * XXXDCL it might be wise to add more locking overall.  */
+comment|/*!  * This isc_log structure provides the context for the isc_log functions.  * The log context locks itself in isc_log_doit, the internal backend to  * isc_log_write.  The locking is necessary both to provide exclusive access  * to the buffer into which the message is formatted and to guard against  * competing threads trying to write to the same syslog resource.  (On  * some systems, such as BSD/OS, stdio is thread safe but syslog is not.)  * Unfortunately, the lock cannot guard against a _different_ logging  * context in the same program competing for syslog's attention.  Thus  * There Can Be Only One, but this is not enforced.  * XXXDCL enforce it?  *  * Note that the category and module information is not locked.  * This is because in the usual case, only one isc_log_t is ever created  * in a program, and the category/module registration happens only once.  * XXXDCL it might be wise to add more locking overall.  */
 end_comment
 
 begin_struct
@@ -532,6 +532,12 @@ block|}
 block|,
 block|{
 literal|"timer"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"file"
 block|,
 literal|0
 block|}

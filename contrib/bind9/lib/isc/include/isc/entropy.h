@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: entropy.h,v 1.25.18.2 2005/04/29 00:16:54 marka Exp $ */
+comment|/* $Id: entropy.h,v 1.25.18.4 2009/01/19 23:46:16 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -130,7 +130,7 @@ comment|/***  *** Flags.  ***/
 end_comment
 
 begin_comment
-comment|/*!  * \brief   *	Extract only "good" data; return failure if there is not enough  *	data available and there are no sources which we can poll to get  *	data, or those sources are empty.  *  *  */
+comment|/*!  * \brief  *	Extract only "good" data; return failure if there is not enough  *	data available and there are no sources which we can poll to get  *	data, or those sources are empty.  *  *  */
 end_comment
 
 begin_define
@@ -163,7 +163,7 @@ value|0x00000004U
 end_define
 
 begin_comment
-comment|/*!  * \brief  *	Estimate the amount of entropy contained in the sample pool.  *	If this is not set, the source will be gathered and perodically  *	mixed into the entropy pool, but no increment in contained entropy  *	will be assumed.  This flag only makes sense on sample sources.  */
+comment|/*!  * \brief  *	Estimate the amount of entropy contained in the sample pool.  *	If this is not set, the source will be gathered and periodically  *	mixed into the entropy pool, but no increment in contained entropy  *	will be assumed.  This flag only makes sense on sample sources.  */
 end_comment
 
 begin_define
@@ -178,7 +178,7 @@ comment|/*  * For use with isc_entropy_usebestsource().  */
 end_comment
 
 begin_comment
-comment|/*!  * \brief   *	Use the keyboard as the only entropy source.  */
+comment|/*!  * \brief  *	Use the keyboard as the only entropy source.  */
 end_comment
 
 begin_define
@@ -189,7 +189,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*!  * \brief   *	Never use the keyboard as an entropy source.  */
+comment|/*!  * \brief  *	Never use the keyboard as an entropy source.  */
 end_comment
 
 begin_define
@@ -354,7 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Create an entropy source that is polled via a callback.    *  * This would  * be used when keyboard input is used, or a GUI input method.  It can  * also be used to hook in any external entropy source.  *  * Samples are added via isc_entropy_addcallbacksample(), below.  * _addcallbacksample() is the only function which may be called from  * within an entropy API callback function.  */
+comment|/*!<  * \brief Create an entropy source that is polled via a callback.  *  * This would  * be used when keyboard input is used, or a GUI input method.  It can  * also be used to hook in any external entropy source.  *  * Samples are added via isc_entropy_addcallbacksample(), below.  * _addcallbacksample() is the only function which may be called from  * within an entropy API callback function.  */
 end_comment
 
 begin_function_decl
@@ -411,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Add a sample to the sample source.    *  * The sample MUST be a timestamp  * that increases over time, with the exception of wrap-around for  * extremely high resolution timers which will quickly wrap-around  * a 32-bit integer.  *  * The "extra" parameter is used only to add a bit more unpredictable  * data.  It is not used other than included in the hash of samples.  *  * When in an entropy API callback function, _addcallbacksource() must be  * used.  At all other times, _addsample() must be used.  */
+comment|/*!<  * \brief Add a sample to the sample source.  *  * The sample MUST be a timestamp  * that increases over time, with the exception of wrap-around for  * extremely high resolution timers which will quickly wrap-around  * a 32-bit integer.  *  * The "extra" parameter is used only to add a bit more unpredictable  * data.  It is not used other than included in the hash of samples.  *  * When in an entropy API callback function, _addcallbacksource() must be  * used.  At all other times, _addsample() must be used.  */
 end_comment
 
 begin_comment
@@ -520,7 +520,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*!<  * \brief Use whatever source of entropy is best.  *  * Notes:  *\li	If "randomfile" is not NULL, open it with  *	isc_entropy_createfilesource().   *  *\li	If "randomfile" is NULL and the system's random device was detected  *	when the program was configured and built, open that device with  *	isc_entropy_createfilesource().   *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDYES, then always open  *	the keyboard as an entropy source (possibly in addition to  *	"randomfile" or the random device).  *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDMAYBE, open the keyboard only  *	if opening the random file/device fails.  A message will be  *	printed describing the need for keyboard input.  *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDNO, the keyboard will  *	never be opened.  *  * Returns:  *\li	#ISC_R_SUCCESS if at least one source of entropy could be started.  *  *\li	#ISC_R_NOENTROPY if use_keyboard is #ISC_ENTROPY_KEYBOARDNO and  *	there is no random device pathname compiled into the program.  *  *\li	A return code from isc_entropy_createfilesource() or  *	isc_entropy_createcallbacksource().  */
+comment|/*!<  * \brief Use whatever source of entropy is best.  *  * Notes:  *\li	If "randomfile" is not NULL, open it with  *	isc_entropy_createfilesource().  *  *\li	If "randomfile" is NULL and the system's random device was detected  *	when the program was configured and built, open that device with  *	isc_entropy_createfilesource().  *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDYES, then always open  *	the keyboard as an entropy source (possibly in addition to  *	"randomfile" or the random device).  *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDMAYBE, open the keyboard only  *	if opening the random file/device fails.  A message will be  *	printed describing the need for keyboard input.  *  *\li	If "use_keyboard" is #ISC_ENTROPY_KEYBOARDNO, the keyboard will  *	never be opened.  *  * Returns:  *\li	#ISC_R_SUCCESS if at least one source of entropy could be started.  *  *\li	#ISC_R_NOENTROPY if use_keyboard is #ISC_ENTROPY_KEYBOARDNO and  *	there is no random device pathname compiled into the program.  *  *\li	A return code from isc_entropy_createfilesource() or  *	isc_entropy_createcallbacksource().  */
 end_comment
 
 begin_macro

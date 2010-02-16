@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2005  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2005, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: dlz.h,v 1.2.2.2 2005/09/06 03:47:18 marka Exp $ */
+comment|/* $Id: dlz.h,v 1.2.2.4 2009/01/19 23:46:15 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*%<  * Method prototype.  Drivers implementing the DLZ interface MUST  * supply a destroy method.  This method is called when the DNS server  * is shuting down and no longer needs the driver.  */
+comment|/*%<  * Method prototype.  Drivers implementing the DLZ interface MUST  * supply a destroy method.  This method is called when the DNS server  * is shutting down and no longer needs the driver.  */
 end_comment
 
 begin_typedef
@@ -234,7 +234,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*%<   * Method prototype.  Drivers implementing the DLZ interface MUST  * supply a find zone method.  This method is called when the DNS  * server is performing a query.  The find zone method will be called  * with the longest possible name first, and continue to be called  * with successively shorter domain names, until any of the following  * occur:  *  * \li	1) a match is found, and the function returns (ISC_R_SUCCESS)  *  * \li	2) a problem occurs, and the functions returns anything other  *	   than (ISC_R_NOTFOUND)  * \li	3) we run out of domain name labels. I.E. we have tried the  *	   shortest domain name  * \li	4) the number of labels in the domain name is less than  *	   min_lables for dns_dlzfindzone  *  * The driver's find zone method should return ISC_R_SUCCESS and a  * database pointer to the name server if the zone is supported by the  * database.  Otherwise it will return ISC_R_NOTFOUND, and a null  * pointer if the zone is not supported.  If an error occurs it should  * return a result code indicating the type of error.  */
+comment|/*%<   * Method prototype.  Drivers implementing the DLZ interface MUST  * supply a find zone method.  This method is called when the DNS  * server is performing a query.  The find zone method will be called  * with the longest possible name first, and continue to be called  * with successively shorter domain names, until any of the following  * occur:  *  * \li	1) a match is found, and the function returns (ISC_R_SUCCESS)  *  * \li	2) a problem occurs, and the functions returns anything other  *	   than (ISC_R_NOTFOUND)  * \li	3) we run out of domain name labels. I.E. we have tried the  *	   shortest domain name  * \li	4) the number of labels in the domain name is less than  *	   min_labels for dns_dlzfindzone  *  * The driver's find zone method should return ISC_R_SUCCESS and a  * database pointer to the name server if the zone is supported by the  * database.  Otherwise it will return ISC_R_NOTFOUND, and a null  * pointer if the zone is not supported.  If an error occurs it should  * return a result code indicating the type of error.  */
 end_comment
 
 begin_comment
@@ -356,7 +356,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * This method is called when the DNS server is performing a zone  * transfer query.  It will call the DLZ driver's allow zone tranfer  * method.  */
+comment|/*%<  * This method is called when the DNS server is performing a zone  * transfer query.  It will call the DLZ driver's allow zone transfer  * method.  */
 end_comment
 
 begin_function_decl
@@ -411,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * This method is called when the DNS server is shuting down and no  * longer needs the driver.  If the DLZ driver supplies a destroy  * methods, this function will call it.  */
+comment|/*%<  * This method is called when the DNS server is shutting down and no  * longer needs the driver.  If the DLZ driver supplies a destroy  * methods, this function will call it.  */
 end_comment
 
 begin_function_decl

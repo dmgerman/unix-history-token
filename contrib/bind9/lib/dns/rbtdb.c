@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.196.18.53.4.1 2009/11/19 00:25:17 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.196.18.59 2009/11/26 23:46:11 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1956,7 +1956,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%  * 'init_count' is used to initialize 'newheader->count' which inturn  * is used to determine where in the cycle rrset-order cyclic starts.  * We don't lock this as we don't care about simultanious updates.  *  * Note:  *	Both init_count and header->count can be ISC_UINT32_MAX.  *      The count on the returned rdataset however can't be as  *	that indicates that the database does not implement cyclic  *	processing.  */
+comment|/*%  * 'init_count' is used to initialize 'newheader->count' which inturn  * is used to determine where in the cycle rrset-order cyclic starts.  * We don't lock this as we don't care about simultaneous updates.  *  * Note:  *	Both init_count and header->count can be ISC_UINT32_MAX.  *      The count on the returned rdataset however can't be as  *	that indicates that the database does not implement cyclic  *	processing.  */
 end_comment
 
 begin_decl_stmt
@@ -10935,13 +10935,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * The node may be a zone cut itself.  If it might be one, 		 * make sure we check for it later. 		 */
+comment|/* 		 * The node may be a zone cut itself.  If it might be one, 		 * make sure we check for it later. 		 * 		 * DS records live above the zone cut in ordinary zone so 		 * we want to ignore any referral. 		 * 		 * Stub zones don't have anything "above" the delgation so 		 * we always return a referral. 		 */
 if|if
 condition|(
 name|node
 operator|->
 name|find_callback
 operator|&&
+operator|(
 operator|(
 name|node
 operator|!=
@@ -10950,6 +10951,13 @@ operator|.
 name|rbtdb
 operator|->
 name|origin_node
+operator|&&
+operator|!
+name|dns_rdatatype_atparent
+argument_list|(
+name|type
+argument_list|)
+operator|)
 operator|||
 name|IS_STUB
 argument_list|(
@@ -10958,12 +10966,6 @@ operator|.
 name|rbtdb
 argument_list|)
 operator|)
-operator|&&
-operator|!
-name|dns_rdatatype_atparent
-argument_list|(
-name|type
-argument_list|)
 condition|)
 name|maybe_zonecut
 operator|=
@@ -16105,7 +16107,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that 'log' can be true IFF rbtdb->overmem is also true. 		 * rbtdb->ovemem can currently only be true for cache databases 		 * -- hence all of the "overmem cache" log strings. 		 */
+comment|/* 		 * Note that 'log' can be true IFF rbtdb->overmem is also true. 		 * rbtdb->overmem can currently only be true for cache 		 * databases -- hence all of the "overmem cache" log strings. 		 */
 name|log
 operator|=
 name|ISC_TF
@@ -18093,7 +18095,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Look for active extant "other data". 			 * 			 * "Other data" is any rdataset whose type is not 			 * KEY, RRSIG KEY, NSEC, RRSIG NSEC or RRSIG CNAME. 			 */
+comment|/* 			 * Look for active extant "other data". 			 * 			 * "Other data" is any rdataset whose type is not 			 * KEY, NSEC, SIG or RRSIG. 			 */
 name|rdtype
 operator|=
 name|RBTDB_RDATATYPE_BASE
@@ -18106,38 +18108,23 @@ expr_stmt|;
 if|if
 condition|(
 name|rdtype
-operator|==
-name|dns_rdatatype_rrsig
-operator|||
+operator|!=
+name|dns_rdatatype_key
+operator|&&
 name|rdtype
-operator|==
+operator|!=
 name|dns_rdatatype_sig
-condition|)
-name|rdtype
-operator|=
-name|RBTDB_RDATATYPE_EXT
-argument_list|(
-name|header
-operator|->
-name|type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|rdtype
 operator|!=
 name|dns_rdatatype_nsec
 operator|&&
 name|rdtype
 operator|!=
-name|dns_rdatatype_key
-operator|&&
-name|rdtype
-operator|!=
-name|dns_rdatatype_cname
+name|dns_rdatatype_rrsig
 condition|)
 block|{
-comment|/* 				 * We've found a type that isn't 				 * NSEC, KEY, CNAME, or one of their 				 * signatures.  Is it active and extant? 				 */
+comment|/* 				 * Is it active and extant? 				 */
 do|do
 block|{
 if|if
@@ -20432,7 +20419,7 @@ argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is defered until closeversion() is called. 	 */
+comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is deferred until closeversion() is called. 	 */
 if|if
 condition|(
 name|result
@@ -21236,7 +21223,7 @@ argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is defered until closeversion() is called. 	 */
+comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is deferred until closeversion() is called. 	 */
 if|if
 condition|(
 name|result
@@ -21522,7 +21509,7 @@ argument_list|,
 name|isc_rwlocktype_write
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is defered until closeversion() is called. 	 */
+comment|/* 	 * Update the zone's secure status.  If version is non-NULL 	 * this is deferred until closeversion() is called. 	 */
 if|if
 condition|(
 name|result
@@ -23449,7 +23436,7 @@ operator|.
 name|mctx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Must be initalized before free_rbtdb() is called. 	 */
+comment|/* 	 * Must be initialized before free_rbtdb() is called. 	 */
 name|isc_ondestroy_init
 argument_list|(
 operator|&

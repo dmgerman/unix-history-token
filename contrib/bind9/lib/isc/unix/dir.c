@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dir.c,v 1.20.18.3 2005/09/05 00:18:30 marka Exp $ */
+comment|/* $Id: dir.c,v 1.20.18.7 2009/02/16 23:46:03 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -300,7 +300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*!  * \brief Return previously retrieved file or get next one.     * Unix's dirent has  * separate open and read functions, but the Win32 and DOS interfaces open  * the dir stream and reads the first file in one operation.  */
+comment|/*!  * \brief Return previously retrieved file or get next one.   * Unix's dirent has  * separate open and read functions, but the Win32 and DOS interfaces open  * the dir stream and reads the first file in one operation.  */
 end_comment
 
 begin_function
@@ -559,11 +559,21 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CHROOT
 if|if
 condition|(
 name|chroot
 argument_list|(
 name|dirname
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|chdir
+argument_list|(
+literal|"/"
 argument_list|)
 operator|<
 literal|0
@@ -581,6 +591,15 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|ISC_R_NOTIMPLEMENTED
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
