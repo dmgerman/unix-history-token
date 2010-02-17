@@ -11211,9 +11211,17 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"COMMAND %p TIMEOUT AFTER %d SECONDS\n"
+literal|"COMMAND %p (TYPE %d) TIMEOUT AFTER %d SECONDS\n"
 argument_list|,
 name|cm
+argument_list|,
+name|cm
+operator|->
+name|cm_fib
+operator|->
+name|Header
+operator|.
+name|Command
 argument_list|,
 call|(
 name|int
