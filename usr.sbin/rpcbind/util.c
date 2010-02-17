@@ -745,15 +745,6 @@ continue|continue;
 if|if
 condition|(
 operator|!
-name|addr_is_bound
-argument_list|(
-name|ifsa
-argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
 operator|(
 name|ifap
 operator|->
