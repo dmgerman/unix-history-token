@@ -982,6 +982,7 @@ name|nlist
 operator|*
 sizeof|sizeof
 argument_list|(
+operator|*
 name|jp
 argument_list|)
 argument_list|)

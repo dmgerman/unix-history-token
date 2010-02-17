@@ -2743,16 +2743,8 @@ modifier|*
 name|dw
 decl_stmt|;
 name|int
-name|num
-decl_stmt|,
 name|i
 decl_stmt|;
-name|num
-operator|=
-name|MGE_TX_DESC_NUM
-operator|+
-name|MGE_RX_DESC_NUM
-expr_stmt|;
 comment|/* Allocate a busdma tag and DMA safe memory for TX/RX descriptors. */
 name|error
 operator|=
@@ -3178,7 +3170,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|MGE_RECEIVE_LOCK
+name|MGE_RECEIVE_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -3310,11 +3302,6 @@ name|MGE_ENABLE_RXQ
 argument_list|(
 name|MGE_RX_DEFAULT_QUEUE
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MGE_RECEIVE_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6820,19 +6807,6 @@ name|dw
 operator|->
 name|buffer_dmap
 expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|sc
-operator|->
-name|mge_desc_dtag
-argument_list|,
-name|mapp
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-operator||
-name|BUS_DMASYNC_POSTWRITE
-argument_list|)
-expr_stmt|;
 comment|/* Create mapping in DMA memory */
 name|error
 operator|=
@@ -6985,7 +6959,9 @@ name|sc
 operator|->
 name|mge_desc_dtag
 argument_list|,
-name|mapp
+name|dw
+operator|->
+name|desc_dmap
 argument_list|,
 name|BUS_DMASYNC_PREREAD
 operator||
