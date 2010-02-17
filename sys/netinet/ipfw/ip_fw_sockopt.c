@@ -1589,11 +1589,6 @@ case|case
 literal|2
 case|:
 comment|/* move rules with given number to new set */
-name|IPFW_UH_WLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1634,21 +1629,11 @@ operator|=
 name|new_set
 expr_stmt|;
 block|}
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|3
 case|:
 comment|/* move rules with given set number to new set */
-name|IPFW_UH_WLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1689,21 +1674,11 @@ operator|=
 name|new_set
 expr_stmt|;
 block|}
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|4
 case|:
 comment|/* swap two sets */
-name|IPFW_UH_WLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1759,11 +1734,6 @@ operator|=
 name|rulenum
 expr_stmt|;
 block|}
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 name|rule
