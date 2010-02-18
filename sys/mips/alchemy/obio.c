@@ -471,6 +471,50 @@ end_function_decl
 
 begin_function
 specifier|static
+name|void
+name|obio_mask_irq
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* XXX need to write */
+if|#
+directive|if
+literal|0
+block|unsigned int irq = (unsigned int)arg; 	int ip_bit, mask, mask_register;
+comment|/* mask IRQ */
+block|mask_register = ICU_IRQ_MASK_REG(irq); 	ip_bit = ICU_IP_BIT(irq);  	mask = ICU_REG_READ(mask_register); 	ICU_REG_WRITE(mask_register, mask | ip_bit);
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|obio_unmask_irq
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+comment|/* XXX need to write */
+if|#
+directive|if
+literal|0
+block|unsigned int irq = (unsigned int)arg; 	int ip_bit, mask, mask_register;
+comment|/* unmask IRQ */
+block|mask_register = ICU_IRQ_MASK_REG(irq); 	ip_bit = ICU_IP_BIT(irq);  	mask = ICU_REG_READ(mask_register); 	ICU_REG_WRITE(mask_register, mask& ~ip_bit);
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|obio_probe
 parameter_list|(
@@ -1485,15 +1529,9 @@ literal|0
 argument_list|,
 name|irq
 argument_list|,
-operator|(
-name|mask_fn
-operator|)
-name|mips_mask_irq
+name|obio_mask_irq
 argument_list|,
-operator|(
-name|mask_fn
-operator|)
-name|mips_unmask_irq
+name|obio_unmask_irq
 argument_list|,
 name|NULL
 argument_list|,
