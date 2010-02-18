@@ -689,7 +689,7 @@ directive|ifdef
 name|FPA_DEBUG_TERSE
 name|printf
 argument_list|(
-literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: %p = 0x%X\n"
+literal|"FPA fill: %u  Count: %u  SizeBytes: %u  SizeBytesAligned: %u  1st: %p = %p\n"
 argument_list|,
 name|pool
 argument_list|,
@@ -704,6 +704,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|OCTEON_PTR2PHYS
 argument_list|(
@@ -743,12 +746,19 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" %% Block %d:  %p  Phys 0x%X   Bytes %u\n"
+literal|" %% Block %d:  %p  Phys %p   Bytes %u\n"
 argument_list|,
 name|block
 argument_list|,
 name|memory
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|OCTEON_PTR2PHYS
 argument_list|(
 name|memory
