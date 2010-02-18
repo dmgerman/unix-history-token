@@ -113,6 +113,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cache.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -698,10 +704,15 @@ name|Elf_Rel
 modifier|*
 name|rel
 decl_stmt|;
-specifier|const
-name|Elf_Rela
+comment|/* 	 * Stash R_MIPS_HI16 info so we can use it when processing R_MIPS_LO16 	 */
+specifier|static
+name|Elf_Addr
+name|ahl
+decl_stmt|;
+specifier|static
+name|Elf_Addr
 modifier|*
-name|rela
+name|where_hi16
 decl_stmt|;
 switch|switch
 condition|(
@@ -758,57 +769,6 @@ name|r_info
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|ELF_RELOC_RELA
-case|:
-name|rela
-operator|=
-operator|(
-specifier|const
-name|Elf_Rela
-operator|*
-operator|)
-name|data
-expr_stmt|;
-name|where
-operator|=
-operator|(
-name|Elf_Addr
-operator|*
-operator|)
-operator|(
-name|relocbase
-operator|+
-name|rela
-operator|->
-name|r_offset
-operator|)
-expr_stmt|;
-name|addend
-operator|=
-name|rela
-operator|->
-name|r_addend
-expr_stmt|;
-name|rtype
-operator|=
-name|ELF_R_TYPE
-argument_list|(
-name|rela
-operator|->
-name|r_info
-argument_list|)
-expr_stmt|;
-name|symidx
-operator|=
-name|ELF_R_SYM
-argument_list|(
-name|rela
-operator|->
-name|r_info
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|panic
 argument_list|(
@@ -817,21 +777,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|local
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* TBD  */
-block|if (rtype == R_386_RELATIVE) {
-comment|/* A + B */
-block|addr = elf_relocaddr(lf, relocbase + addend); 			if (*where != addr) 				*where = addr; 		} 		return (0);
-endif|#
-directive|endif
 block|}
 switch|switch
 condition|(
@@ -844,24 +789,9 @@ case|:
 comment|/* none */
 break|break;
 case|case
-name|R_MIPS_16
-case|:
-comment|/* S + sign-extend(A) */
-comment|/* 			 * There shouldn't be R_MIPS_16 relocs in kernel objects. 			 */
-name|printf
-argument_list|(
-literal|"kldload: unexpected R_MIPS_16 relocation\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-break|break;
-case|case
 name|R_MIPS_32
 case|:
-comment|/* S + A - P */
+comment|/* S + A */
 name|addr
 operator|=
 name|lookup
@@ -880,8 +810,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|addr
 operator|+=
@@ -901,88 +833,175 @@ name|addr
 expr_stmt|;
 break|break;
 case|case
-name|R_MIPS_REL32
-case|:
-comment|/* A - EA + S */
-comment|/* 			 * There shouldn't be R_MIPS_REL32 relocs in kernel objects? 			 */
-name|printf
-argument_list|(
-literal|"kldload: unexpected R_MIPS_REL32 relocation\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-break|break;
-case|case
 name|R_MIPS_26
 case|:
 comment|/* ((A<< 2) | (P& 0xf0000000) + S)>> 2 */
+name|addr
+operator|=
+name|lookup
+argument_list|(
+name|lf
+argument_list|,
+name|symidx
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|addend
+operator|&=
+literal|0x03ffffff
+expr_stmt|;
+name|addend
+operator|<<=
+literal|2
+expr_stmt|;
+name|addr
+operator|+=
+operator|(
+operator|(
+name|Elf_Addr
+operator|)
+name|where
+operator|&
+literal|0xf0000000
+operator|)
+operator||
+name|addend
+expr_stmt|;
+name|addr
+operator|>>=
+literal|2
+expr_stmt|;
+operator|*
+name|where
+operator|&=
+operator|~
+literal|0x03ffffff
+expr_stmt|;
+operator|*
+name|where
+operator||=
+name|addr
+operator|&
+literal|0x03ffffff
+expr_stmt|;
 break|break;
 case|case
 name|R_MIPS_HI16
 case|:
-comment|/* extern/local: ((AHL + S) - ((short)(AHL + S))>> 16 */
-comment|/* _gp_disp: ((AHL + GP - P) - (short)(AHL + GP - P))>> 16 */
+comment|/* ((AHL + S) - ((short)(AHL + S))>> 16 */
+name|ahl
+operator|=
+name|addend
+operator|<<
+literal|16
+expr_stmt|;
+name|where_hi16
+operator|=
+name|where
+expr_stmt|;
 break|break;
 case|case
 name|R_MIPS_LO16
 case|:
-comment|/* extern/local: AHL + S */
-comment|/* _gp_disp: AHL + GP - P + 4 */
-break|break;
-case|case
-name|R_MIPS_GPREL16
-case|:
-comment|/* extern/local: ((AHL + S) - ((short)(AHL + S))>> 16 */
-comment|/* _gp_disp: ((AHL + GP - P) - (short)(AHL + GP - P))>> 16 */
-break|break;
-case|case
-name|R_MIPS_LITERAL
-case|:
-comment|/* sign-extend(A) + L */
-break|break;
-case|case
-name|R_MIPS_GOT16
-case|:
-comment|/* external: G */
-comment|/* local: tbd */
-break|break;
-case|case
-name|R_MIPS_PC16
-case|:
-comment|/* sign-extend(A) + S - P */
-break|break;
-case|case
-name|R_MIPS_CALL16
-case|:
-comment|/* G */
-break|break;
-case|case
-name|R_MIPS_GPREL32
-case|:
-comment|/* A + S + GP0 - GP */
-break|break;
-case|case
-name|R_MIPS_GOTHI16
-case|:
-comment|/* (G - (short)G)>> 16 + A */
-break|break;
-case|case
-name|R_MIPS_GOTLO16
-case|:
-comment|/* G& 0xffff */
-break|break;
-case|case
-name|R_MIPS_CALLHI16
-case|:
-comment|/* (G - (short)G)>> 16 + A */
-break|break;
-case|case
-name|R_MIPS_CALLLO16
-case|:
-comment|/* G& 0xffff */
+comment|/* AHL + S */
+name|ahl
+operator|+=
+operator|(
+name|int16_t
+operator|)
+name|addend
+expr_stmt|;
+name|addr
+operator|=
+name|lookup
+argument_list|(
+name|lf
+argument_list|,
+name|symidx
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|addend
+operator|&=
+literal|0xffff0000
+expr_stmt|;
+name|addend
+operator||=
+call|(
+name|uint16_t
+call|)
+argument_list|(
+name|ahl
+operator|+
+name|addr
+argument_list|)
+expr_stmt|;
+operator|*
+name|where
+operator|=
+name|addend
+expr_stmt|;
+name|addend
+operator|=
+operator|*
+name|where_hi16
+expr_stmt|;
+name|addend
+operator|&=
+literal|0xffff0000
+expr_stmt|;
+name|addend
+operator||=
+operator|(
+operator|(
+name|ahl
+operator|+
+name|addr
+operator|)
+operator|-
+call|(
+name|int16_t
+call|)
+argument_list|(
+name|ahl
+operator|+
+name|addr
+argument_list|)
+operator|)
+operator|>>
+literal|16
+expr_stmt|;
+operator|*
+name|where_hi16
+operator|=
+name|addend
+expr_stmt|;
 break|break;
 default|default:
 name|printf
@@ -1102,6 +1121,10 @@ name|lf
 name|__unused
 parameter_list|)
 block|{
+comment|/* 	 * Sync the I and D caches to make sure our relocations are visible. 	 */
+name|mips_icache_sync_all
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
