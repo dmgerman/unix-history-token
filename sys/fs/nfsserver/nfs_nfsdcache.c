@@ -1190,7 +1190,7 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rp
+name|newrp
 operator|->
 name|rc_flag
 operator||=
