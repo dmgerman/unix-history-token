@@ -863,6 +863,8 @@ literal|0
 expr_stmt|;
 name|execf
 operator|=
+name|NULL
+expr_stmt|;
 name|coref
 operator|=
 name|_PATH_DEVNULL
