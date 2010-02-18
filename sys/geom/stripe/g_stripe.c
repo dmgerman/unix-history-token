@@ -3073,7 +3073,7 @@ name|g_stripe_fast_failed
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Do use "economic" when: 	 * 1. "Economic" mode is ON. 	 * or 	 * 2. "Fast" mode failed. It can only failed if there is no memory. 	 */
+comment|/* 	 * Do use "economic" when: 	 * 1. "Economic" mode is ON. 	 * or 	 * 2. "Fast" mode failed. It can only fail if there is no memory. 	 */
 if|if
 condition|(
 operator|!
