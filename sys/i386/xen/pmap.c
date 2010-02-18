@@ -396,12 +396,35 @@ name|PMAP_DIAGNOSTIC
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC_GNU_INLINE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PMAP_INLINE
+value|inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|PMAP_INLINE
 value|extern inline
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
