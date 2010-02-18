@@ -1820,7 +1820,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-comment|/* 	 * Open all the disks we can find and see if we can reconstruct 	 * ZFS pools from them. Bogusly assumes that the disks are named 	 * diskN or diskNsM. 	 */
+comment|/* 	 * Open all the disks we can find and see if we can reconstruct 	 * ZFS pools from them. Bogusly assumes that the disks are named 	 * diskN, diskNpM or diskNsM. 	 */
 name|zfs_init
 argument_list|()
 expr_stmt|;
