@@ -61701,7 +61701,13 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"RX: Packet size underrun (1)\n"
+literal|"frame too short (length=%d)\n"
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -61751,7 +61757,13 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"RX: Packet size underrun (2)\n"
+literal|"frame too short (length=%d)\n"
+argument_list|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -61781,7 +61793,20 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"TODO: BWN_RX_MAC_DEC\n"
+literal|"RX decryption attempted (old %d keyidx %#x)\n"
+argument_list|,
+name|BWN_ISOLDFMT
+argument_list|(
+name|mac
+argument_list|)
+argument_list|,
+operator|(
+name|macstat
+operator|&
+name|BWN_RX_MAC_KEYIDX
+operator|)
+operator|>>
+name|BWN_RX_MAC_KEYIDX_SHIFT
 argument_list|)
 expr_stmt|;
 comment|/* XXX calculating RSSI& noise& antenna */
