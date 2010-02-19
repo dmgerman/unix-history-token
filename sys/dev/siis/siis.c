@@ -1461,6 +1461,23 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* Set PCIe max read request size to at least 1024 bytes */
+if|if
+condition|(
+name|pci_get_max_read_req
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|1024
+condition|)
+name|pci_set_max_read_req
+argument_list|(
+name|dev
+argument_list|,
+literal|1024
+argument_list|)
+expr_stmt|;
 comment|/* Put controller into reset state. */
 name|ctlr
 operator|->
