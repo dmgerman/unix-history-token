@@ -1278,7 +1278,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
+comment|/* 	 * td_pflags should not be read by any thread other than 	 * curthread, but as long as this flag is invariant during the 	 * thread's lifetime, it is OK to check its state. 	 */
 if|if
 condition|(
 operator|(
@@ -1370,7 +1370,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
+comment|/* 	 * td_pflags should not be read by any thread other than 	 * curthread, but as long as this flag is invariant during the 	 * thread's lifetime, it is OK to check its state. 	 */
 if|if
 condition|(
 operator|(
