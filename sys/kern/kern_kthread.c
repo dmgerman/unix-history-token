@@ -1218,9 +1218,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|curthread
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_numthreads
 operator|==
