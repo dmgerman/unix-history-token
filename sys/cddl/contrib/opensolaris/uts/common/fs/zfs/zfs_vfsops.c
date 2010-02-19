@@ -1161,7 +1161,9 @@ name|zfsvfs
 operator|->
 name|z_vfs
 operator|->
-name|vfs_bsize
+name|mnt_stat
+operator|.
+name|f_iosize
 operator|=
 name|newval
 expr_stmt|;
@@ -2892,6 +2894,16 @@ name|z_vfs
 operator|->
 name|vfs_bsize
 operator|=
+name|SPA_MINBLOCKSIZE
+expr_stmt|;
+name|zfsvfs
+operator|->
+name|z_vfs
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+operator|=
 name|recordsize
 expr_stmt|;
 name|vfsp
@@ -3902,11 +3914,7 @@ name|statp
 operator|->
 name|f_bsize
 operator|=
-name|zfsvfs
-operator|->
-name|z_vfs
-operator|->
-name|vfs_bsize
+name|SPA_MINBLOCKSIZE
 expr_stmt|;
 name|statp
 operator|->
@@ -3916,7 +3924,9 @@ name|zfsvfs
 operator|->
 name|z_vfs
 operator|->
-name|vfs_bsize
+name|mnt_stat
+operator|.
+name|f_iosize
 expr_stmt|;
 comment|/* 	 * The following report "total" blocks of various kinds in the 	 * file system, but reported in terms of f_frsize - the 	 * "fragment" size. 	 */
 name|statp
@@ -3928,10 +3938,8 @@ name|refdbytes
 operator|+
 name|availbytes
 operator|)
-operator|/
-name|statp
-operator|->
-name|f_bsize
+operator|>>
+name|SPA_MINBLOCKSHIFT
 expr_stmt|;
 name|statp
 operator|->
