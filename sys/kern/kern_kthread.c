@@ -1199,13 +1199,23 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|p
+operator|=
+name|curthread
+operator|->
+name|td_proc
+expr_stmt|;
 comment|/* A module may be waiting for us to exit. */
 name|wakeup
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We could rely on thread_exit to call exit1() but 	 * there is extra work that needs to be done 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -1216,23 +1226,19 @@ name|p_numthreads
 operator|==
 literal|1
 condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* never returns */
-name|p
-operator|=
-name|curthread
-operator|->
-name|td_proc
-expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED. */
+block|}
 name|PROC_SLOCK
 argument_list|(
 name|p
