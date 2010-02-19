@@ -2892,7 +2892,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles reseting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
+comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles resetting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
 name|sc
 operator|->
 name|sc_bhalq
@@ -4153,7 +4153,7 @@ operator|->
 name|if_flags
 argument_list|)
 expr_stmt|;
-comment|/*  	 * NB: the order of these is important: 	 * o stop the chip so no more interrupts will fire 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o free the taskqueue which drains any pending tasks 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
+comment|/* 	 * NB: the order of these is important: 	 * o stop the chip so no more interrupts will fire 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o free the taskqueue which drains any pending tasks 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
 name|ath_stop
 argument_list|(
 name|ifp
@@ -7179,7 +7179,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"bb hang detected (0x%x), reseting\n"
+literal|"bb hang detected (0x%x), resetting\n"
 argument_list|,
 name|hangs
 argument_list|)
@@ -24824,7 +24824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Update internal state after a channel change.  */
+comment|/*  * Update internal state after a channel change.  */
 end_comment
 
 begin_function
@@ -24880,7 +24880,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set/change channels.  If the channel is really being changed,  * it's done by reseting the chip.  To accomplish this we must  * first cleanup any pending DMA, then restart stuff after a la  * ath_init.  */
+comment|/*  * Set/change channels.  If the channel is really being changed,  * it's done by resetting the chip.  To accomplish this we must  * first cleanup any pending DMA, then restart stuff after a la  * ath_init.  */
 end_comment
 
 begin_function
@@ -25731,7 +25731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Walk the vap list and check if there any vap's in RUN state.  */
+comment|/*  * Walk the vap list and check if there any vap's in RUN state.  */
 end_comment
 
 begin_function
@@ -28258,7 +28258,7 @@ operator|*
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NB: caller is responsible for reseting rate control state */
+comment|/* NB: caller is responsible for resetting rate control state */
 undef|#
 directive|undef
 name|N
