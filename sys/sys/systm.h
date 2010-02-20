@@ -127,17 +127,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|nswap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of swap space */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|pagesizes
 index|[]
