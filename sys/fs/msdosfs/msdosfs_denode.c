@@ -375,7 +375,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
+comment|/* 	 * Do the malloc before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if malloc should block. 	 */
 name|ldep
 operator|=
 name|malloc
@@ -389,6 +389,8 @@ argument_list|,
 name|M_MSDOSFSNODE
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Directory entry was not in cache, have to create a vnode and 	 * copy it from the passed disk buffer. 	 */
@@ -429,18 +431,6 @@ return|return
 name|error
 return|;
 block|}
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ldep
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ldep
-argument_list|)
-expr_stmt|;
 name|nvp
 operator|->
 name|v_data
