@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2010 Marcel Moolenaar  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -21,43 +21,46 @@ end_comment
 
 begin_struct
 struct|struct
-name|ia64_interrupt_block
+name|ia64_pib
 block|{
-name|u_int64_t
+name|uint64_t
 name|ib_ipi
 index|[
-literal|0x20000
+literal|65536
+index|]
+index|[
+literal|2
 index|]
 decl_stmt|;
-comment|/* 1Mb of IPI interrupts */
-name|u_int8_t
-name|ib_reserved1
+comment|/* 64K-way IPIs (1MB area). */
+name|uint8_t
+name|_rsvd1
 index|[
 literal|0xe0000
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ib_inta
 decl_stmt|;
-comment|/* Generate INTA cycle */
-name|u_int8_t
-name|ib_reserved2
+comment|/* Generate INTA cycle. */
+name|uint8_t
+name|_rsvd2
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ib_xtp
 decl_stmt|;
-comment|/* XTP cycle */
-name|u_int8_t
-name|ib_reserved3
+comment|/* External Task Priority. */
+name|uint8_t
+name|_rsvd3
 index|[
 literal|7
 index|]
 decl_stmt|;
-name|u_int8_t
-name|ib_reserved4
+name|uint8_t
+name|_rsvd4
 index|[
 literal|0x1fff0
 index|]
@@ -68,18 +71,12 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|u_int64_t
-name|ia64_lapic_address
+name|struct
+name|ia64_pib
+modifier|*
+name|ia64_pib
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IA64_INTERRUPT_BLOCK
-define|\
-value|(struct ia64_interrupt_block *)IA64_PHYS_TO_RR6(ia64_lapic_address)
-end_define
 
 begin_function_decl
 name|int

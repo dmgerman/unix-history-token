@@ -332,6 +332,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/mca.h>
 end_include
 
@@ -612,6 +618,22 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int64_t
 name|ia64_port_base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int64_t
+name|ia64_lapic_addr
+init|=
+name|PAL_PIB_DEFAULT_ADDR
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ia64_pib
+modifier|*
+name|ia64_pib
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,6 +1379,19 @@ expr_stmt|;
 comment|/* 	 * Traverse the MADT to discover IOSAPIC and Local SAPIC 	 * information. 	 */
 name|ia64_probe_sapics
 argument_list|()
+expr_stmt|;
+name|ia64_pib
+operator|=
+name|pmap_mapdev
+argument_list|(
+name|ia64_lapic_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ia64_pib
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|ia64_mca_init
 argument_list|()
@@ -3095,11 +3130,20 @@ name|EFI_MD_TYPE_IOPORT
 case|:
 name|ia64_port_base
 operator|=
-name|IA64_PHYS_TO_RR6
+operator|(
+name|uintptr_t
+operator|)
+name|pmap_mapdev
 argument_list|(
 name|md
 operator|->
 name|md_phys
+argument_list|,
+name|md
+operator|->
+name|md_pages
+operator|*
+name|EFI_PAGE_SIZE
 argument_list|)
 expr_stmt|;
 break|break;
