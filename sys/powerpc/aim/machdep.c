@@ -738,6 +738,27 @@ name|realmem
 operator|=
 name|physmem
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"available KVA = %zd (%zd MB)\n"
+argument_list|,
+name|virtual_end
+operator|-
+name|virtual_avail
+argument_list|,
+operator|(
+name|virtual_end
+operator|-
+name|virtual_avail
+operator|)
+operator|/
+literal|1048576
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
 condition|(
