@@ -2047,11 +2047,17 @@ if|if
 condition|(
 name|bp
 condition|)
+block|{
 name|brelse
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|UFS_LOCK
 argument_list|(
 name|ump
