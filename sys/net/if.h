@@ -841,6 +841,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_VLAN_HWTSO
+value|0x40000
+end_define
+
+begin_comment
+comment|/* can do IFCAP_TSO on VLANs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
