@@ -761,14 +761,14 @@ begin_define
 define|#
 directive|define
 name|CPU_ID_FA526
-value|0x66015261
+value|0x66015260
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPU_ID_FA626TE
-value|0x66056261
+value|0x66056260
 end_define
 
 begin_define
