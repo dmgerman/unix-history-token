@@ -887,6 +887,16 @@ operator|)
 operator|*
 name|s
 argument_list|)
+operator|||
+name|isdigit
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|s
+argument_list|)
 condition|)
 block|{
 name|s
