@@ -48,7 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* restore heirarchies */
+comment|/* restore hierarchies */
 end_comment
 
 begin_decl_stmt
