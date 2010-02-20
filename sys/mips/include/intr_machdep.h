@@ -21,42 +21,6 @@ directive|ifdef
 name|TARGET_XLR_XLS
 end_ifdef
 
-begin_comment
-comment|/*  * XLR/XLS uses its own intr_machdep.c and has  * a different number of interupts. This probably  * should be placed somewhere else.  */
-end_comment
-
-begin_struct
-struct|struct
-name|mips_intrhand
-block|{
-name|struct
-name|intr_event
-modifier|*
-name|mih_event
-decl_stmt|;
-name|driver_intr_t
-modifier|*
-name|mih_disable
-decl_stmt|;
-specifier|volatile
-name|long
-modifier|*
-name|cntp
-decl_stmt|;
-comment|/* interrupt counter */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mips_intrhand
-name|mips_intr_handlers
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
