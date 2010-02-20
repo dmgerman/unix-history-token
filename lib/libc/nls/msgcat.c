@@ -153,7 +153,7 @@ name|RLOCK
 parameter_list|(
 name|fail
 parameter_list|)
-value|{ int ret; \ 			  if (__isthreaded&& \ 			      ((ret = _pthread_rwlock_rdlock(&rwlock)) != 0)) { \ 				  errno = ret; \ 				  return (fail); \ 			  }}
+value|{ int ret;						\ 			  if (__isthreaded&&					\ 			      ((ret = _pthread_rwlock_rdlock(&rwlock)) != 0)) {	\ 				  errno = ret;					\ 				  return (fail);				\ 			  }}
 end_define
 
 begin_define
@@ -163,14 +163,14 @@ name|WLOCK
 parameter_list|(
 name|fail
 parameter_list|)
-value|{ int ret; \ 			  if (__isthreaded&& \ 			      ((ret = _pthread_rwlock_wrlock(&rwlock)) != 0)) { \ 				  errno = ret; \ 				  return (fail); \ 			  }}
+value|{ int ret;						\ 			  if (__isthreaded&&					\ 			      ((ret = _pthread_rwlock_wrlock(&rwlock)) != 0)) {	\ 				  errno = ret;					\ 				  return (fail);				\ 			  }}
 end_define
 
 begin_define
 define|#
 directive|define
 name|UNLOCK
-value|{ if (__isthreaded) \ 			      _pthread_rwlock_unlock(&rwlock); }
+value|{ if (__isthreaded)					\ 			      _pthread_rwlock_unlock(&rwlock); }
 end_define
 
 begin_define
@@ -201,7 +201,7 @@ name|l
 parameter_list|,
 name|e
 parameter_list|)
-value|{ WLOCK(NLERR); \ 				  np = malloc(sizeof(struct catentry)); \ 				  if (np != NULL) { \ 				  	np->name = strdup(n); \ 					np->path = NULL; \ 					np->lang = (l == NULL) ? NULL : strdup(l); \ 					np->caterrno = e; \ 				  	SLIST_INSERT_HEAD(&cache, np, list); \ 				  } \ 				  UNLOCK; \ 				  errno = e; \ 				}
+value|{ WLOCK(NLERR);					\ 				  np = malloc(sizeof(struct catentry));		\ 				  if (np != NULL) {				\ 				  	np->name = strdup(n);			\ 					np->path = NULL;			\ 					np->lang = (l == NULL) ? NULL :		\ 					    strdup(l);				\ 					np->caterrno = e;			\ 				  	SLIST_INSERT_HEAD(&cache, np, list);	\ 				  }						\ 				  UNLOCK;					\ 				  errno = e;					\ 				}
 end_define
 
 begin_function_decl
@@ -869,7 +869,7 @@ case|:
 operator|++
 name|nlspath
 expr_stmt|;
-comment|/* fallthrough */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
@@ -1670,7 +1670,7 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* path/name will never be NULL here */
-comment|/* One more try in cache; if it was not found by name, 	 * it might still be found by absolute path. 	 */
+comment|/* 	 * One more try in cache; if it was not found by name, 	 * it might still be found by absolute path. 	 */
 name|RLOCK
 argument_list|(
 name|NLERR
@@ -1792,7 +1792,7 @@ name|EFTYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the file size cannot be held in size_t we cannot mmap() 	 * it to the memory. Probably, this will not be a problem given 	 * that catalog files are usually small. 	 */
+comment|/* 	 * If the file size cannot be held in size_t we cannot mmap() 	 * it to the memory.  Probably, this will not be a problem given 	 * that catalog files are usually small. 	 */
 if|if
 condition|(
 name|st
