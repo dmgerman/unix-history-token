@@ -235,7 +235,8 @@ begin_function_decl
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
