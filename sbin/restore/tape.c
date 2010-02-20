@@ -1163,6 +1163,9 @@ operator|!
 name|pipein
 operator|&&
 operator|!
+name|pipecmdin
+operator|&&
+operator|!
 name|bflag
 condition|)
 name|findtapeblksize
@@ -1743,18 +1746,6 @@ operator|==
 literal|1
 condition|)
 return|return;
-if|if
-condition|(
-name|pipecmdin
-condition|)
-block|{
-name|closemt
-argument_list|()
-expr_stmt|;
-goto|goto
-name|getpipecmdhdr
-goto|;
-block|}
 goto|goto
 name|gethdr
 goto|;
@@ -2106,8 +2097,6 @@ literal|"2147483647"
 argument_list|)
 index|]
 decl_stmt|;
-name|getpipecmdhdr
-label|:
 operator|(
 name|void
 operator|)
@@ -6098,6 +6087,9 @@ condition|(
 operator|!
 name|pipein
 operator|&&
+operator|!
+name|pipecmdin
+operator|&&
 name|numtrec
 operator|<
 name|ntrec
@@ -6122,7 +6114,11 @@ block|}
 comment|/* 	 * Handle partial block read. 	 */
 if|if
 condition|(
+operator|(
 name|pipein
+operator|||
+name|pipecmdin
+operator|)
 operator|&&
 name|i
 operator|==
@@ -6153,6 +6149,8 @@ block|{
 if|if
 condition|(
 name|pipein
+operator|||
+name|pipecmdin
 condition|)
 block|{
 name|rd
