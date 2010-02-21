@@ -853,15 +853,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pt_entry_t
-modifier|*
-name|CMAP1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|pt_entry_t
 modifier|*
@@ -871,10 +862,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|CADDR1
-init|=
-literal|0
-decl_stmt|,
 name|ptvmmap
 init|=
 literal|0
@@ -1937,17 +1924,25 @@ argument|sysmaps->CADDR2
 argument_list|,
 literal|1
 argument_list|)
-block|}
-name|SYSMAP
+name|PT_SET_MA
 argument_list|(
-argument|caddr_t
+name|sysmaps
+operator|->
+name|CADDR1
 argument_list|,
-argument|CMAP1
-argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
+literal|0
 argument_list|)
+expr_stmt|;
+name|PT_SET_MA
+argument_list|(
+name|sysmaps
+operator|->
+name|CADDR2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|SYSMAP
 argument_list|(
 argument|caddr_t
@@ -2038,13 +2033,6 @@ expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
-expr_stmt|;
-name|PT_SET_MA
-argument_list|(
-name|CADDR1
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Leave in place an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code.  This 	 * mapping must not have PG_G set.  	 */
 ifndef|#
@@ -4194,6 +4182,9 @@ operator|!=
 name|newpf
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PT_SET_MA
 argument_list|(
 name|PADDR2
@@ -4206,6 +4197,9 @@ name|PG_A
 operator||
 name|PG_M
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|CTR3
 argument_list|(
