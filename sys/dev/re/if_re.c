@@ -5207,6 +5207,23 @@ name|rl_flags
 operator||=
 name|RL_FLAG_PCIE
 expr_stmt|;
+comment|/* Set PCIe maximum read request size to 2048. */
+if|if
+condition|(
+name|pci_get_max_read_req
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|2048
+condition|)
+name|pci_set_max_read_req
+argument_list|(
+name|dev
+argument_list|,
+literal|2048
+argument_list|)
+expr_stmt|;
 name|msic
 operator|=
 name|pci_msi_count
