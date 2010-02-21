@@ -2804,11 +2804,6 @@ name|virtual_avail
 operator|=
 name|va
 expr_stmt|;
-operator|*
-name|CMAP1
-operator|=
-literal|0
-expr_stmt|;
 name|invltlb
 argument_list|()
 expr_stmt|;
