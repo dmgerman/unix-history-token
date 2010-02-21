@@ -320,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|XN_CSUM_FEATURES
-value|(CSUM_TCP | CSUM_UDP | CSUM_TSO)
+value|(CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_define
@@ -1123,7 +1123,7 @@ name|mtx
 name|rx_lock
 decl_stmt|;
 name|struct
-name|sx
+name|mtx
 name|sc_lock
 decl_stmt|;
 name|u_int
@@ -1267,7 +1267,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \         sx_init(&(_sc)->sc_lock, #_name"_rx")
+value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \     mtx_init(&(_sc)->sc_lock, #_name"_sc", "netfront softc lock", MTX_DEF)
 end_define
 
 begin_define
@@ -1317,7 +1317,7 @@ name|XN_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_xlock(&(_sc)->sc_lock);
+value|mtx_lock(&(_sc)->sc_lock);
 end_define
 
 begin_define
@@ -1327,7 +1327,7 @@ name|XN_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_xunlock(&(_sc)->sc_lock);
+value|mtx_unlock(&(_sc)->sc_lock);
 end_define
 
 begin_define
@@ -1337,7 +1337,7 @@ name|XN_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_assert(&(_sc)->sc_lock, SX_LOCKED);
+value|mtx_assert(&(_sc)->sc_lock, MA_OWNED);
 end_define
 
 begin_define
@@ -1367,7 +1367,7 @@ name|XN_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                sx_destroy(&(_sc)->sc_lock);
+value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                mtx_destroy(&(_sc)->sc_lock);
 end_define
 
 begin_struct
@@ -1681,6 +1681,12 @@ define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1695,11 +1701,33 @@ define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WPRINTK
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_define
 define|#
@@ -4804,7 +4832,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"network_tx_buf_gc: warning "
 literal|"-- grant still in use by backend "
@@ -5604,7 +5632,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("rx->status=%hd rx->offset=%hu frags=%u\n", 			rx->status, rx->offset, frags);
+block|DPRINTK("rx->status=%hd rx->offset=%hu frags=%u\n", 			rx->status, rx->offset, frags);
 endif|#
 directive|endif
 if|if
@@ -6376,7 +6404,7 @@ operator|>=
 name|NET_TX_RING_SIZE
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"xn_start_locked: xn_tx_chain_cnt (%d) + nfrags %d>= NET_TX_RING_SIZE (%d); must be full!\n"
 argument_list|,
@@ -6436,7 +6464,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"xn_start_locked: free ring slots (%d)< (nfrags + 1) (%d); must be full!\n"
 argument_list|,
@@ -7888,11 +7916,6 @@ name|feature_rx_flip
 operator|)
 operator|)
 expr_stmt|;
-name|XN_LOCK
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
 comment|/* Recovery procedure: */
 name|error
 operator|=
@@ -8115,11 +8138,6 @@ name|np
 argument_list|)
 expr_stmt|;
 name|network_alloc_rx_buffers
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
-name|XN_UNLOCK
 argument_list|(
 name|np
 argument_list|)
@@ -8407,7 +8425,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|IPRINTK
 argument_list|(
 literal|"#### netfront can't alloc tx grant refs\n"
 argument_list|)
@@ -8436,7 +8454,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"#### netfront can't alloc rx grant refs\n"
 argument_list|)
@@ -8548,6 +8566,17 @@ name|if_start
 operator|=
 name|xn_start
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+name|ifp
+operator|->
+name|if_watchdog
+operator|=
+name|xn_watchdog
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_init
@@ -8587,12 +8616,6 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|700000
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
-name|IFCAP_TSO4
-expr_stmt|;
 if|if
 condition|(
 name|xn_enable_lro
