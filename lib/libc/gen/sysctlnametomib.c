@@ -100,10 +100,6 @@ name|mibp
 argument_list|,
 name|sizep
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|name
 argument_list|,
 name|strlen
