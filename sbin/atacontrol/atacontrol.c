@@ -243,6 +243,12 @@ case|:
 return|return
 literal|"SATA 6Gb/s"
 return|;
+case|case
+literal|0xff
+case|:
+return|return
+literal|"SATA"
+return|;
 default|default:
 return|return
 literal|"???"

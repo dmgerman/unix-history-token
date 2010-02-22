@@ -5728,6 +5728,12 @@ operator|->
 name|revision
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"SATA, "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sata
