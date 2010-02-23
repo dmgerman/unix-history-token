@@ -23291,7 +23291,7 @@ argument_list|)
 argument_list|,
 name|tgt
 argument_list|,
-name|CAM_LUN_WILDCARD
+literal|0
 argument_list|)
 operator|!=
 name|CAM_REQ_CMP
