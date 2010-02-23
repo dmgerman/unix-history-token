@@ -2215,12 +2215,6 @@ name|cm_timestamp
 operator|=
 name|time_uptime
 expr_stmt|;
-name|cm
-operator|->
-name|cm_queue
-operator|=
-name|AAC_ADAP_NORM_CMD_QUEUE
-expr_stmt|;
 name|fib
 operator|->
 name|Header
