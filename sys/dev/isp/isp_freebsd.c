@@ -23269,6 +23269,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * xpt_rescan only honors wildcard in the target field.  	 * Scan the whole bus instead of target, which will then 	 * force a scan of all luns. 	 */
 if|if
 condition|(
 name|xpt_create_path
@@ -23289,9 +23290,9 @@ operator|->
 name|sim
 argument_list|)
 argument_list|,
-name|tgt
+name|CAM_TARGET_WILDCARD
 argument_list|,
-literal|0
+name|CAM_LUN_WILDCARD
 argument_list|)
 operator|!=
 name|CAM_REQ_CMP
