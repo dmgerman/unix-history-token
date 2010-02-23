@@ -1308,6 +1308,10 @@ define|#
 directive|define
 name|V_ADP_ATTACHED
 value|(1<< 19)
+define|#
+directive|define
+name|V_ADP_DAC8
+value|(1<< 20)
 name|vm_offset_t
 name|va_io_base
 decl_stmt|;
