@@ -56,7 +56,7 @@ value|_IO(ISP_IOC, 3)
 end_define
 
 begin_comment
-comment|/*  * This ioctl performs a reset and then will set the adapter to the  * role that was passed in (the old role will be returned). It almost  * goes w/o saying: use with caution.  */
+comment|/*  * This ioctl performs a reset and then will set the adapter to the  * role that was passed in (the old role will be returned). It almost  * goes w/o saying: use with caution.  *  * Channel selector stored in bits 8..32 as input to driver.  */
 end_comment
 
 begin_define
@@ -95,7 +95,7 @@ value|(ISP_ROLE_TARGET|ISP_ROLE_INITIATOR)
 end_define
 
 begin_comment
-comment|/*  * Get the current adapter role  */
+comment|/*  * Get the current adapter role  * Channel selector passed in first argument.  */
 end_comment
 
 begin_define
@@ -221,19 +221,20 @@ block|{
 name|uint32_t
 name|loopid
 decl_stmt|;
-comment|/* 0..255 */
+comment|/* 0..255,2047 */
 name|uint32_t
-label|:
+name|chan
+range|:
 literal|6
-operator|,
+decl_stmt|,
 name|role
-operator|:
+range|:
 literal|2
-operator|,
+decl_stmt|,
 name|portid
-operator|:
+range|:
 literal|24
-expr_stmt|;
+decl_stmt|;
 comment|/* 24 bit Port ID */
 name|uint64_t
 name|node_wwn
@@ -282,26 +283,11 @@ name|uint32_t
 label|:
 literal|8
 operator|,
-operator|:
-literal|4
-operator|,
 name|fc_speed
 operator|:
 literal|4
 operator|,
 comment|/* Gbps */
-operator|:
-literal|2
-operator|,
-name|fc_class2
-operator|:
-literal|1
-operator|,
-name|fc_ip_supported
-operator|:
-literal|1
-operator|,
-name|fc_scsi_supported
 operator|:
 literal|1
 operator|,
@@ -309,9 +295,13 @@ name|fc_topology
 operator|:
 literal|3
 operator|,
-name|fc_loopid
+name|fc_channel
 operator|:
 literal|8
+operator|,
+name|fc_loopid
+operator|:
+literal|16
 expr_stmt|;
 name|uint8_t
 name|fc_fw_major
@@ -323,8 +313,13 @@ name|uint8_t
 name|fc_fw_micro
 decl_stmt|;
 name|uint8_t
-name|reserved
+name|fc_nchannels
 decl_stmt|;
+comment|/* number of supported channels */
+name|uint16_t
+name|fc_nports
+decl_stmt|;
+comment|/* number of supported ports */
 name|uint64_t
 name|nvram_node_wwn
 decl_stmt|;
@@ -396,11 +391,15 @@ begin_comment
 comment|/* F-port */
 end_comment
 
+begin_comment
+comment|/* don't use 12 any more */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISP_FC_GETHINFO
-value|_IOR(ISP_IOC, 12, struct isp_hba_device)
+value|_IOWR(ISP_IOC, 13, struct isp_hba_device)
 end_define
 
 begin_comment
@@ -414,9 +413,12 @@ block|{
 name|uint32_t
 name|loopid
 decl_stmt|;
-comment|/* 0..255 */
-name|uint32_t
+comment|/* 0..255/2048 */
+name|uint16_t
 name|lun
+decl_stmt|;
+name|uint16_t
+name|chan
 decl_stmt|;
 enum|enum
 block|{
@@ -436,11 +438,56 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* don't use 97 any more */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISP_TSK_MGMT
-value|_IOWR(ISP_IOC, 97, struct isp_fc_tsk_mgmt)
+value|_IOWR(ISP_IOC, 98, struct isp_fc_tsk_mgmt)
+end_define
+
+begin_comment
+comment|/*  * Just gimme a list of WWPNs that are logged into us.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|count
+decl_stmt|;
+name|uint16_t
+name|channel
+decl_stmt|;
+struct|struct
+name|wwnpair
+block|{
+name|uint64_t
+name|wwnn
+decl_stmt|;
+name|uint64_t
+name|wwpn
+decl_stmt|;
+block|}
+name|wwns
+index|[
+literal|1
+index|]
+struct|;
+block|}
+name|isp_dlist_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ISP_FC_GETDLIST
+value|_IO(ISP_IOC, 14)
 end_define
 
 end_unit

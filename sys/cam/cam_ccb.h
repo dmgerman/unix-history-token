@@ -519,6 +519,16 @@ init|=
 literal|0x17
 block|,
 comment|/* 				 * Calculate the geometry parameters for 				 * a device give the sector size and 				 * volume size. 				 */
+name|XPT_GET_SIM_KNOB
+init|=
+literal|0x18
+block|,
+comment|/* 				 * Get SIM specific knob values. 				 */
+name|XPT_SET_SIM_KNOB
+init|=
+literal|0x19
+block|,
+comment|/* 				 * Set SIM specific knob values. 				 */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=
@@ -571,10 +581,28 @@ name|XPT_FC_QUEUED
 operator||
 name|XPT_FC_USER_CCB
 block|,
-comment|/* Notify Host Target driver of event */
+comment|/* Notify Host Target driver of event (obsolete) */
 name|XPT_NOTIFY_ACK
 init|=
 literal|0x35
+block|,
+comment|/* Acknowledgement of event (obsolete) */
+name|XPT_IMMEDIATE_NOTIFY
+init|=
+literal|0x36
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+block|,
+comment|/* Notify Host Target driver of event */
+name|XPT_NOTIFY_ACKNOWLEDGE
+init|=
+literal|0x37
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
 block|,
 comment|/* Acknowledgement of event */
 comment|/* Vendor Unique codes: 0x80->0x8F */
@@ -2156,6 +2184,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|AC_CONTRACT
+init|=
+literal|0x1000
+block|,
+comment|/* A contractual callback */
 name|AC_GETDEV_CHANGED
 init|=
 literal|0x800
@@ -2238,6 +2271,61 @@ name|args
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/*  * Generic Asynchronous callbacks.  *  * Generic arguments passed bac which are then interpreted between a per-system  * contract number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AC_CONTRACT_DATA_MAX
+value|(128 - sizeof (u_int64_t))
+end_define
+
+begin_struct
+struct|struct
+name|ac_contract
+block|{
+name|u_int64_t
+name|contract_number
+decl_stmt|;
+name|u_int8_t
+name|contract_data
+index|[
+name|AC_CONTRACT_DATA_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AC_CONTRACT_DEV_CHG
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|ac_device_changed
+block|{
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+name|u_int32_t
+name|port
+decl_stmt|;
+name|target_id_t
+name|target
+decl_stmt|;
+name|u_int8_t
+name|arrived
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Set Asynchronous Callback CCB */
@@ -2615,6 +2703,155 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Set or get SIM (and transport) specific knobs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KNOB_VALID_ADDRESS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_VALID_ROLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_INITIATOR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_TARGET
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOB_ROLE_BOTH
+value|0x3
+end_define
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_spi
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int
+name|initiator_id
+decl_stmt|;
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_fc
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int64_t
+name|wwpn
+decl_stmt|;
+comment|/* world wide port name */
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_sim_knob_settings_sas
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+name|u_int64_t
+name|wwnn
+decl_stmt|;
+comment|/* world wide node name */
+name|u_int
+name|role
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|KNOB_SETTINGS_SIZE
+value|128
+end_define
+
+begin_struct
+struct|struct
+name|ccb_sim_knob
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+union|union
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+name|struct
+name|ccb_sim_knob_settings_spi
+name|spi
+decl_stmt|;
+name|struct
+name|ccb_sim_knob_settings_fc
+name|fc
+decl_stmt|;
+name|struct
+name|ccb_sim_knob_settings_sas
+name|sas
+decl_stmt|;
+name|char
+name|pad
+index|[
+name|KNOB_SETTINGS_SIZE
+index|]
+decl_stmt|;
+block|}
+name|xport_specific
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Rescan the given bus, or bus/target/lun  */
 end_comment
 
@@ -2679,6 +2916,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* old, barely used immediate notify, binary compatibility */
+end_comment
+
 begin_struct
 struct|struct
 name|ccb_immed_notify
@@ -2726,6 +2967,62 @@ name|u_int8_t
 name|event
 decl_stmt|;
 comment|/* Event flags */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_immediate_notify
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|u_int
+name|tag_id
+decl_stmt|;
+comment|/* Tag for immediate notify */
+name|u_int
+name|seq_id
+decl_stmt|;
+comment|/* Tag for target of notify */
+name|u_int
+name|initiator_id
+decl_stmt|;
+comment|/* Initiator Identifier */
+name|u_int
+name|arg
+decl_stmt|;
+comment|/* Function specific */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccb_notify_acknowledge
+block|{
+name|struct
+name|ccb_hdr
+name|ccb_h
+decl_stmt|;
+name|u_int
+name|tag_id
+decl_stmt|;
+comment|/* Tag for immediate notify */
+name|u_int
+name|seq_id
+decl_stmt|;
+comment|/* Tar for target of notify */
+name|u_int
+name|initiator_id
+decl_stmt|;
+comment|/* Initiator Identifier */
+name|u_int
+name|arg
+decl_stmt|;
+comment|/* Function specific */
 block|}
 struct|;
 end_struct
@@ -3002,6 +3299,10 @@ name|ccb_calc_geometry
 name|ccg
 decl_stmt|;
 name|struct
+name|ccb_sim_knob
+name|knob
+decl_stmt|;
+name|struct
 name|ccb_abort
 name|cab
 decl_stmt|;
@@ -3036,6 +3337,14 @@ decl_stmt|;
 name|struct
 name|ccb_notify_ack
 name|cna
+decl_stmt|;
+name|struct
+name|ccb_immediate_notify
+name|cin1
+decl_stmt|;
+name|struct
+name|ccb_notify_acknowledge
+name|cna2
 decl_stmt|;
 name|struct
 name|ccb_eng_inq

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  *  Copyright (c) 1997-2007 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  */
+comment|/*-  *  Copyright (c) 1997-2009 by Matthew Jacob  *  All rights reserved.  *   *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *   *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in the  *     documentation and/or other materials provided with the distribution.  *   *  THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *  ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *  SUCH DAMAGE.  *   */
 end_comment
 
 begin_ifndef
@@ -19,10 +19,53 @@ directive|define
 name|_ISP_LIBRARY_H
 end_define
 
+begin_comment
+comment|/*  * Common command shipping routine.  *  * This used to be platform specific, but basically once you get the segment  * stuff figured out, you can make all the code in one spot.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ISP_TO_DEVICE
+block|,
+name|ISP_FROM_DEVICE
+block|,
+name|ISP_NOXFR
+block|}
+name|isp_ddir_t
+typedef|;
+end_typedef
+
 begin_function_decl
-specifier|extern
 name|int
-name|isp_save_xs
+name|isp_send_cmd
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|isp_ddir_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Handle management functions.  *  * These handles are associate with a command.  */
+end_comment
+
+begin_function_decl
+name|int
+name|isp_allocate_xs
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -37,7 +80,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|XS_T
 modifier|*
 name|isp_find_xs
@@ -51,7 +93,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|uint32_t
 name|isp_find_handle
 parameter_list|(
@@ -65,17 +106,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|uint32_t
 name|isp_handle_index
 parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_destroy_handle
 parameter_list|(
@@ -87,35 +129,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Request Queue allocation  */
+end_comment
+
 begin_function_decl
-specifier|extern
-name|int
+name|void
+modifier|*
 name|isp_getrqentry
 parameter_list|(
 name|ispsoftc_t
-modifier|*
-parameter_list|,
-name|uint32_t
-modifier|*
-parameter_list|,
-name|uint32_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Queue Entry debug functions  */
+end_comment
+
 begin_function_decl
-specifier|extern
 name|void
 name|isp_print_qentry
 parameter_list|(
 name|ispsoftc_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -128,7 +168,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_print_bytes
 parameter_list|(
@@ -147,10 +186,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_comment
+comment|/*  * Fibre Channel specific routines and data.  */
+end_comment
+
+begin_decl_stmt
 specifier|extern
+specifier|const
+name|char
+modifier|*
+name|isp_class3_roles
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|int
 name|isp_fc_runstate
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_dump_portdb
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -161,9 +229,60 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|const
+name|char
+modifier|*
+name|isp_fc_fw_statename
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|isp_fc_loop_statename
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|isp_fc_toponame
+parameter_list|(
+name|fcparam
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isp_fc_change_role
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Cleanup  */
+end_comment
+
+begin_function_decl
 name|void
-name|isp_dump_portdb
+name|isp_clear_commands
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -171,8 +290,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Common chip shutdown function  */
+end_comment
+
 begin_function_decl
-specifier|extern
 name|void
 name|isp_shutdown
 parameter_list|(
@@ -182,8 +304,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Put/Get routines to push from CPU view to device view  * or to pull from device view to CPU view for various  * data structures (IOCB)  */
+end_comment
+
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_hdr
 parameter_list|(
@@ -200,7 +325,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_hdr
 parameter_list|(
@@ -217,7 +341,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|isp_get_response_type
 parameter_list|(
@@ -231,7 +354,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request
 parameter_list|(
@@ -248,7 +370,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_marker
 parameter_list|(
@@ -265,7 +386,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_marker_24xx
 parameter_list|(
@@ -282,7 +402,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request_t2
 parameter_list|(
@@ -299,7 +418,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request_t2e
 parameter_list|(
@@ -316,7 +434,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request_t3
 parameter_list|(
@@ -333,7 +450,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request_t3e
 parameter_list|(
@@ -350,7 +466,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_extended_request
 parameter_list|(
@@ -367,7 +482,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_request_t7
 parameter_list|(
@@ -384,7 +498,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|isp_put_24xx_tmf
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|isp24xx_tmf_t
+modifier|*
+parameter_list|,
+name|isp24xx_tmf_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|isp_put_24xx_abrt
 parameter_list|(
@@ -401,7 +530,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_cont_req
 parameter_list|(
@@ -418,7 +546,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_cont64_req
 parameter_list|(
@@ -435,7 +562,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_response
 parameter_list|(
@@ -452,7 +578,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_24xx_response
 parameter_list|(
@@ -485,7 +610,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_rio2
 parameter_list|(
@@ -502,7 +626,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_icb
 parameter_list|(
@@ -519,7 +642,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_icb_2400
 parameter_list|(
@@ -536,7 +658,118 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|isp_put_icb_2400_vpinfo
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|isp_icb_2400_vpinfo_t
+modifier|*
+parameter_list|,
+name|isp_icb_2400_vpinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_put_vp_port_info
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_port_info_t
+modifier|*
+parameter_list|,
+name|vp_port_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_get_vp_port_info
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_port_info_t
+modifier|*
+parameter_list|,
+name|vp_port_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_put_vp_ctrl_info
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_ctrl_info_t
+modifier|*
+parameter_list|,
+name|vp_ctrl_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_get_vp_ctrl_info
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_ctrl_info_t
+modifier|*
+parameter_list|,
+name|vp_ctrl_info_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_put_vp_modify
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_modify_t
+modifier|*
+parameter_list|,
+name|vp_modify_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_get_vp_modify
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|vp_modify_t
+modifier|*
+parameter_list|,
+name|vp_modify_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|isp_get_pdb_21xx
 parameter_list|(
@@ -553,7 +786,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_pdb_24xx
 parameter_list|(
@@ -570,7 +802,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|void
+name|isp_get_ridacq
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|isp_ridacq_t
+modifier|*
+parameter_list|,
+name|isp_ridacq_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|isp_get_plogx
 parameter_list|(
@@ -587,7 +834,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_plogx
 parameter_list|(
@@ -604,7 +850,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ct_pt
 parameter_list|(
@@ -622,7 +867,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ms
 parameter_list|(
@@ -640,7 +884,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ct_pt
 parameter_list|(
@@ -658,7 +901,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ms
 parameter_list|(
@@ -676,7 +918,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_sns_request
 parameter_list|(
@@ -693,7 +934,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_gid_ft_request
 parameter_list|(
@@ -710,7 +950,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_gxn_id_request
 parameter_list|(
@@ -727,7 +966,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_sns_response
 parameter_list|(
@@ -746,7 +984,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_gid_ft_response
 parameter_list|(
@@ -765,7 +1002,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_gxn_id_response
 parameter_list|(
@@ -782,7 +1018,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_gff_id_response
 parameter_list|(
@@ -799,7 +1034,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ga_nxt_response
 parameter_list|(
@@ -816,7 +1050,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_els
 parameter_list|(
@@ -833,7 +1066,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_els
 parameter_list|(
@@ -850,7 +1082,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_fc_hdr
 parameter_list|(
@@ -867,7 +1098,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_fcp_cmnd_iu
 parameter_list|(
@@ -884,7 +1114,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_rft_id
 parameter_list|(
@@ -901,7 +1130,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ct_hdr
 parameter_list|(
@@ -919,7 +1147,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ct_hdr
 parameter_list|(
@@ -1000,20 +1227,36 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IS_TARGET_HANDLE
+begin_function_decl
+name|int
+name|isp_send_tgt_cmd
 parameter_list|(
-name|x
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|isp_ddir_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
 parameter_list|)
-value|((x)& 0x8000)
-end_define
+function_decl|;
+end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
-name|isp_save_xs_tgt
+name|isp_allocate_xs_tgt
 parameter_list|(
 name|ispsoftc_t
 modifier|*
@@ -1028,7 +1271,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|isp_find_xs_tgt
@@ -1042,7 +1284,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|uint32_t
 name|isp_find_tgt_handle
 parameter_list|(
@@ -1056,7 +1297,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_destroy_tgt_handle
 parameter_list|(
@@ -1069,7 +1309,136 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|int
+name|isp_find_pdb_by_wwn
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|fcportdb_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isp_find_pdb_by_loopid
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|fcportdb_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isp_find_pdb_by_sid
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|fcportdb_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_find_chan_by_did
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint16_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_add_wwn_entry
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint16_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_del_wwn_entry
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint64_t
+parameter_list|,
+name|uint16_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_del_all_wwn_entries
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_del_wwn_entries
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|isp_notify_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|isp_put_atio
 parameter_list|(
@@ -1086,7 +1455,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_atio
 parameter_list|(
@@ -1103,7 +1471,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_atio2
 parameter_list|(
@@ -1120,7 +1487,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_atio2e
 parameter_list|(
@@ -1137,7 +1503,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_atio2
 parameter_list|(
@@ -1154,7 +1519,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_atio2e
 parameter_list|(
@@ -1171,7 +1535,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_atio7
 parameter_list|(
@@ -1189,7 +1552,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ctio
 parameter_list|(
@@ -1206,7 +1568,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ctio
 parameter_list|(
@@ -1223,7 +1584,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ctio2
 parameter_list|(
@@ -1240,7 +1600,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ctio2e
 parameter_list|(
@@ -1257,7 +1616,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_ctio7
 parameter_list|(
@@ -1274,7 +1632,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ctio2
 parameter_list|(
@@ -1291,7 +1648,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ctio2e
 parameter_list|(
@@ -1308,7 +1664,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_ctio7
 parameter_list|(
@@ -1325,7 +1680,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_enable_lun
 parameter_list|(
@@ -1342,7 +1696,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_enable_lun
 parameter_list|(
@@ -1359,7 +1712,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify
 parameter_list|(
@@ -1376,7 +1728,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify
 parameter_list|(
@@ -1393,7 +1744,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_fc
 parameter_list|(
@@ -1410,7 +1760,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_fc_e
 parameter_list|(
@@ -1427,7 +1776,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_24xx
 parameter_list|(
@@ -1444,7 +1792,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_fc
 parameter_list|(
@@ -1461,7 +1808,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_fc_e
 parameter_list|(
@@ -1478,7 +1824,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_24xx
 parameter_list|(
@@ -1495,7 +1840,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_ack
 parameter_list|(
@@ -1512,7 +1856,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_ack
 parameter_list|(
@@ -1529,7 +1872,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_24xx_ack
 parameter_list|(
@@ -1546,7 +1888,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_ack_fc
 parameter_list|(
@@ -1563,7 +1904,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_ack_fc_e
 parameter_list|(
@@ -1580,7 +1920,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_notify_ack_24xx
 parameter_list|(
@@ -1597,7 +1936,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_ack_fc
 parameter_list|(
@@ -1614,7 +1952,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_ack_fc_e
 parameter_list|(
@@ -1631,7 +1968,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_notify_ack_24xx
 parameter_list|(
@@ -1648,7 +1984,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_abts
 parameter_list|(
@@ -1665,7 +2000,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_put_abts_rsp
 parameter_list|(
@@ -1682,7 +2016,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isp_get_abts_rsp
 parameter_list|(
