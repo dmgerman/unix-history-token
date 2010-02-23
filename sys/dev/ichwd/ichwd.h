@@ -355,6 +355,13 @@ name|DEVICEID_ICH10R
 value|0x3a16
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_H55
+value|0x3b06
+end_define
+
 begin_comment
 comment|/* ICH LPC Interface Bridge Registers (ICH5 and older) */
 end_comment
