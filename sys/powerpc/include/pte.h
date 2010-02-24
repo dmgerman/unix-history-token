@@ -306,6 +306,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LPTE_LOCKED
+value|0x0000000000000008ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|LPTE_BIG
 value|0x0000000000000004ULL
 end_define
