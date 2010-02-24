@@ -14653,11 +14653,11 @@ block|}
 end_block
 
 begin_macro
-name|DB_SHOW_COMMAND
+name|DB_SHOW_ALL_COMMAND
 argument_list|(
 argument|ifnets
 argument_list|,
-argument|db_show_ifnets
+argument|db_show_all_ifnets
 argument_list|)
 end_macro
 
