@@ -255,6 +255,9 @@ name|CONFIG_PAGE_IOC_6
 modifier|*
 name|ioc6
 decl_stmt|;
+name|U16
+name|IOCStatus
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -416,7 +419,8 @@ name|fd
 argument_list|,
 literal|2
 argument_list|,
-name|NULL
+operator|&
+name|IOCStatus
 argument_list|)
 expr_stmt|;
 if|if
@@ -625,6 +629,27 @@ name|ioc2
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|IOCStatus
+operator|&
+name|MPI_IOCSTATUS_MASK
+operator|)
+operator|!=
+name|MPI_IOCSTATUS_CONFIG_INVALID_PAGE
+condition|)
+name|warnx
+argument_list|(
+literal|"mpt_read_ioc_page(2): %s"
+argument_list|,
+name|mpt_ioc_status
+argument_list|(
+name|IOCStatus
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ioc6
 operator|=
 name|mpt_read_ioc_page
@@ -633,7 +658,8 @@ name|fd
 argument_list|,
 literal|6
 argument_list|,
-name|NULL
+operator|&
+name|IOCStatus
 argument_list|)
 expr_stmt|;
 if|if
@@ -766,6 +792,27 @@ name|ioc6
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|IOCStatus
+operator|&
+name|MPI_IOCSTATUS_MASK
+operator|)
+operator|!=
+name|MPI_IOCSTATUS_CONFIG_INVALID_PAGE
+condition|)
+name|warnx
+argument_list|(
+literal|"mpt_read_ioc_page(6): %s"
+argument_list|,
+name|mpt_ioc_status
+argument_list|(
+name|IOCStatus
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* TODO: Add an ioctl to fetch IOC_FACTS and print firmware version. */
 name|close
 argument_list|(
@@ -2902,7 +2949,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|IOCStatus
+operator|&
+name|MPI_IOCSTATUS_MASK
+operator|)
 operator|!=
 name|MPI_IOCSTATUS_CONFIG_INVALID_PAGE
 condition|)
