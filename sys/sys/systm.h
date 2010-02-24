@@ -218,6 +218,17 @@ begin_comment
 comment|/* system tune hint */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ngroups_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max # of supplemental groups */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
