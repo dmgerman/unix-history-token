@@ -1152,20 +1152,6 @@ name|ngroups_max
 operator|=
 name|NGROUPS_MAX
 expr_stmt|;
-if|if
-condition|(
-name|ngroups_max
-operator|>
-name|INT_MAX
-operator|-
-literal|1
-condition|)
-name|ngroups_max
-operator|=
-name|INT_MAX
-operator|-
-literal|1
-expr_stmt|;
 block|}
 end_function
 
