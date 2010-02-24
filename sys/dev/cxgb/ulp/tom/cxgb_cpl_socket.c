@@ -182,12 +182,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cxgb_config.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cxgb_osdep.h>
 end_include
 

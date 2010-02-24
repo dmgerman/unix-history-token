@@ -1884,24 +1884,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FIRMWARE_LATEST
 specifier|const
 name|struct
 name|firmware
 modifier|*
 name|fw
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|firmware
-modifier|*
-name|fw
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|status
 decl_stmt|;
@@ -1974,11 +1962,9 @@ name|dev
 argument_list|,
 literal|"firmware update returned %s %d\n"
 argument_list|,
-operator|(
 name|status
 operator|==
 literal|0
-operator|)
 condition|?
 literal|"success"
 else|:
@@ -2044,16 +2030,11 @@ name|port_qsets
 init|=
 literal|1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MSI_SUPPORTED
 name|int
 name|msi_needed
 decl_stmt|,
 name|reg
 decl_stmt|;
-endif|#
-directive|endif
 name|char
 name|buf
 index|[
@@ -2086,10 +2067,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX not really related but a recent addition 	 */
-ifdef|#
-directive|ifdef
-name|MSI_SUPPORTED
 comment|/* find the PCIe link width and set max read request to 4KB*/
 if|if
 condition|(
@@ -2219,8 +2196,6 @@ name|link_width
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|touch_bars
 argument_list|(
 name|dev
@@ -2549,9 +2524,6 @@ name|out
 goto|;
 block|}
 comment|/* Allocate the BAR for doing MSI-X.  If it succeeds, try to allocate 	 * enough messages for the queue sets.  If that fails, try falling 	 * back to MSI.  If that fails, then try falling back to the legacy 	 * interrupt pin model. 	 */
-ifdef|#
-directive|ifdef
-name|MSI_SUPPORTED
 name|sc
 operator|->
 name|msix_regs_rid
@@ -2828,8 +2800,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -2854,9 +2824,6 @@ name|t3b_intr
 expr_stmt|;
 block|}
 comment|/* Create a private taskqueue thread for handling driver events */
-ifdef|#
-directive|ifdef
-name|TASKQUEUE_CURRENT
 name|sc
 operator|->
 name|tq
@@ -2875,28 +2842,6 @@ operator|->
 name|tq
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sc
-operator|->
-name|tq
-operator|=
-name|taskqueue_create_fast
-argument_list|(
-literal|"cxgb_taskq"
-argument_list|,
-name|M_NOWAIT
-argument_list|,
-name|taskqueue_thread_enqueue
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|tq
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -3755,9 +3700,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MSI_SUPPORTED
 if|if
 condition|(
 name|sc
@@ -3827,8 +3769,6 @@ name|msix_regs_res
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Free the adapter's taskqueue. 	 */
 if|if
 condition|(
@@ -4559,13 +4499,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_NET
 argument_list|,
-ifdef|#
-directive|ifdef
-name|INTR_FILTERS
 name|NULL
 argument_list|,
-endif|#
-directive|endif
 name|sc
 operator|->
 name|cxgb_intr
@@ -4733,13 +4668,8 @@ name|INTR_MPSAFE
 operator||
 name|INTR_TYPE_NET
 argument_list|,
-ifdef|#
-directive|ifdef
-name|INTR_FILTERS
 name|NULL
 argument_list|,
-endif|#
-directive|endif
 name|t3_intr_msix
 argument_list|,
 operator|&
@@ -4981,113 +4911,19 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LRO_SUPPORTED
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IFCAP_LRO
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|IFCAP_LRO
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|IFCAP_LRO
-value|0x0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TSO_SUPPORTED
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|CXGB_CAP
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO)
+value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | \     IFCAP_VLAN_HWCSUM | IFCAP_TSO | IFCAP_JUMBO_MTU | IFCAP_LRO)
 end_define
-
-begin_comment
-comment|/* Don't enable TSO6 yet */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CXGB_CAP_ENABLE
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | IFCAP_TSO4 | IFCAP_JUMBO_MTU | IFCAP_LRO)
+value|(CXGB_CAP& ~IFCAP_TSO6)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CXGB_CAP
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM | IFCAP_JUMBO_MTU)
-end_define
-
-begin_comment
-comment|/* Don't enable TSO6 yet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CXGB_CAP_ENABLE
-value|(IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_MTU | IFCAP_HWCSUM |  IFCAP_JUMBO_MTU)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO6
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0x0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -5193,7 +5029,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* 	 * Note that there is currently no watchdog timer. 	 */
 name|if_initname
 argument_list|(
 name|ifp
@@ -5275,35 +5110,20 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_hwassist
-operator|=
-name|ifp
-operator|->
 name|if_capabilities
 operator|=
-name|ifp
-operator|->
-name|if_capenable
-operator|=
-literal|0
-expr_stmt|;
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
 name|CXGB_CAP
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
-operator||=
+operator|=
 name|CXGB_CAP_ENABLE
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hwassist
-operator||=
-operator|(
+operator|=
 name|CSUM_TCP
 operator||
 name|CSUM_UDP
@@ -5311,14 +5131,11 @@ operator||
 name|CSUM_IP
 operator||
 name|CSUM_TSO
-operator|)
 expr_stmt|;
-comment|/* 	 * disable TSO on 4-port - it isn't supported by the firmware yet 	 */
+comment|/* 	 * Disable TSO on 4-port - it isn't supported by the firmware. 	 */
 if|if
 condition|(
-name|p
-operator|->
-name|adapter
+name|sc
 operator|->
 name|params
 operator|.
@@ -5332,22 +5149,14 @@ operator|->
 name|if_capabilities
 operator|&=
 operator|~
-operator|(
-name|IFCAP_TSO4
-operator||
-name|IFCAP_TSO6
-operator|)
+name|IFCAP_TSO
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable
 operator|&=
 operator|~
-operator|(
-name|IFCAP_TSO4
-operator||
-name|IFCAP_TSO6
-operator|)
+name|IFCAP_TSO
 expr_stmt|;
 name|ifp
 operator|->
@@ -5378,12 +5187,12 @@ name|if_qflush
 operator|=
 name|cxgb_qflush
 expr_stmt|;
-comment|/* 	 * Only default to jumbo frames on 10GigE 	 */
+ifdef|#
+directive|ifdef
+name|DEFAULT_JUMBO
 if|if
 condition|(
-name|p
-operator|->
-name|adapter
+name|sc
 operator|->
 name|params
 operator|.
@@ -5397,6 +5206,8 @@ name|if_mtu
 operator|=
 name|ETHERMTU_JUMBO
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -8001,24 +7812,12 @@ modifier|*
 name|adap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FIRMWARE_LATEST
 specifier|const
 name|struct
 name|firmware
 modifier|*
 name|tpeeprom
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|firmware
-modifier|*
-name|tpeeprom
-decl_stmt|;
-endif|#
-directive|endif
 name|uint32_t
 name|version
 decl_stmt|;
@@ -8257,24 +8056,12 @@ modifier|*
 name|adap
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FIRMWARE_LATEST
 specifier|const
 name|struct
 name|firmware
 modifier|*
 name|tpsram
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|firmware
-modifier|*
-name|tpsram
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|ret
 decl_stmt|;
@@ -9929,12 +9716,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
-end_ifdef
-
 begin_comment
 comment|/*  * Mark lro enabled or disabled in all qsets for this port  */
 end_comment
@@ -10027,11 +9808,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -10611,9 +10387,6 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 if|if
 condition|(
 name|mask
@@ -10640,8 +10413,6 @@ name|IFCAP_LRO
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|mask

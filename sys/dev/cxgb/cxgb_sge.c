@@ -5800,9 +5800,6 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSO_SUPPORTED
 if|if
 condition|(
 name|m
@@ -5816,8 +5813,6 @@ condition|)
 name|flits
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|flits_to_desc
 argument_list|(
@@ -6843,12 +6838,6 @@ name|TCPPKTHDRSIZE
 value|(ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN + 20 + 20)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -6861,27 +6850,6 @@ parameter_list|)
 define|\
 value|do { \ 	if ((m)->m_flags& M_VLANTAG)					            \ 		cntrl |= F_TXPKT_VLAN_VLD | V_TXPKT_VLAN((m)->m_pkthdr.ether_vtag); \ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GET_VTAG
-parameter_list|(
-name|cntrl
-parameter_list|,
-name|m
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -7107,9 +7075,6 @@ literal|"not packet header\n"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
 if|if
 condition|(
 name|m0
@@ -7145,8 +7110,6 @@ operator|.
 name|tso_segsz
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|m0
@@ -10963,9 +10926,6 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -10976,8 +10936,6 @@ operator|.
 name|ctrl
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 name|q
@@ -14080,9 +14038,6 @@ name|EXT_JUMBOP
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* Allocate and setup the lro_ctrl structure */
 name|q
 operator|->
@@ -14142,8 +14097,6 @@ name|pi
 operator|->
 name|ifp
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -14879,18 +14832,11 @@ operator|=
 literal|0xffff
 expr_stmt|;
 block|}
-comment|/*  	 * XXX need to add VLAN support for 6.x 	 */
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
 if|if
 condition|(
-name|__predict_false
-argument_list|(
 name|cpl
 operator|->
 name|vlan_valid
-argument_list|)
 condition|)
 block|{
 name|m
@@ -14913,8 +14859,6 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -15794,9 +15738,6 @@ name|sleeping
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|int
 name|lro_enabled
 init|=
@@ -15821,8 +15762,6 @@ name|lro
 operator|.
 name|ctrl
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -16473,9 +16412,6 @@ argument_list|,
 name|ethpad
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* 			 * The T304 sends incoming packets on any qset.  If LRO 			 * is also enabled, we could end up sending packet up 			 * lro_ctrl->ifp's input.  That is incorrect. 			 * 			 * The mbuf's rcvif was derived from the cpl header and 			 * is accurate.  Skip LRO and just use that. 			 */
 name|skip_lro
 operator|=
@@ -16522,8 +16458,6 @@ block|{
 comment|/* successfully queue'd for LRO */
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 comment|/* 				 * LRO not enabled, packet unsuitable for LRO, 				 * or unable to queue.  Pass it up right now in 				 * either case. 				 */
 name|struct
@@ -16607,9 +16541,6 @@ argument_list|,
 name|ngathered
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* Flush LRO */
 while|while
 condition|(
@@ -16654,8 +16585,6 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|sleeping
@@ -20312,9 +20241,6 @@ argument_list|,
 literal|"dump of the transmit queue"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -20419,8 +20345,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Now add a node for mac stats. */
 name|poid
