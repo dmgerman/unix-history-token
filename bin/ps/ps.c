@@ -1295,9 +1295,11 @@ argument_list|)
 expr_stmt|;
 name|memf
 operator|=
+name|_PATH_DEVNULL
+expr_stmt|;
 name|nlistf
 operator|=
-name|_PATH_DEVNULL
+name|NULL
 expr_stmt|;
 while|while
 condition|(
