@@ -111,6 +111,13 @@ directive|include
 file|<isa/isa_dmareg.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ISARAM_END
+value|RAM_END
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -888,7 +895,7 @@ literal|17
 operator|)
 operator|||
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|addr
 operator|&
@@ -1670,10 +1677,6 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|ISARAM_END
-value|RAM_END
 if|if
 condition|(
 name|phys

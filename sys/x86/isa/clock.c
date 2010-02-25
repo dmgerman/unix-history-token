@@ -21,11 +21,22 @@ begin_comment
 comment|/*  * Routines to handle clock hardware.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__amd64__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"opt_apic.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -49,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|"opt_mca.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_xbox.h"
 end_include
 
 begin_include
@@ -145,12 +150,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
 end_include
 
 begin_include
@@ -1705,8 +1704,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__amd64__
+end_ifndef
+
 begin_comment
-comment|/*  * Restore all the timers non-atomically (XXX: should be atomically).  *  * This function is called from pmtimer_resume() to restore all the timers.  * This should not be necessary, but there are broken laptops that do not  * restore all the timers on resume.  */
+comment|/*  * Restore all the timers non-atomically (XXX: should be atomically).  *  * This function is called from pmtimer_resume() to restore all the timers.  * This should not be necessary, but there are broken laptops that do not  * restore all the timers on resume.  * As long as pmtimer is not part of amd64 suport, skip this for the amd64  * case.  */
 end_comment
 
 begin_function
@@ -1726,6 +1731,11 @@ expr_stmt|;
 comment|/* reenable RTC interrupts */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This is separate from startrtclock() so that it can be called early. */
@@ -1798,9 +1808,17 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|DEV_APIC
+argument_list|)
 name|using_lapic_timer
 operator|=
 name|lapic_setup_clock
@@ -2148,6 +2166,9 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
+name|register_t
+name|flags
+decl_stmt|;
 name|u_int
 name|count
 decl_stmt|;
@@ -2156,14 +2177,23 @@ name|high
 decl_stmt|,
 name|low
 decl_stmt|;
-name|u_int
-name|eflags
-decl_stmt|;
-name|eflags
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|flags
+operator|=
+name|read_rflags
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|flags
 operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2230,7 +2260,7 @@ operator|||
 operator|(
 operator|!
 operator|(
-name|eflags
+name|flags
 operator|&
 name|PSL_I
 operator|)
@@ -2381,6 +2411,26 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|attimer_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|i8254_restore
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -2428,7 +2478,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|attimer_resume
 argument_list|)
 block|,
 block|{
