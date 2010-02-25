@@ -436,7 +436,7 @@ operator|||
 operator|(
 name|va
 operator|>
-name|VM_MAX_KERNEL_ADDRESS
+name|virtual_end
 operator|)
 condition|)
 goto|goto
