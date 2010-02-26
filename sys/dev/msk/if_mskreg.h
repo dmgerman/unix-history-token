@@ -17209,6 +17209,12 @@ name|uint8_t
 name|msk_num_port
 decl_stmt|;
 name|int
+name|msk_expcap
+decl_stmt|;
+name|int
+name|msk_pcixcap
+decl_stmt|;
+name|int
 name|msk_ramsize
 decl_stmt|;
 comment|/* amount of SRAM on NIC */
