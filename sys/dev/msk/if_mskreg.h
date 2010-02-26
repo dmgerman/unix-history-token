@@ -17176,7 +17176,7 @@ name|resource
 modifier|*
 name|msk_irq
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* IRQ resources */
@@ -17188,9 +17188,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* irq handler handle */
 name|device_t
