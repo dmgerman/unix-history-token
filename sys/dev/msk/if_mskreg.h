@@ -16790,6 +16790,9 @@ decl_stmt|;
 name|uint16_t
 name|msk_tso_mtu
 decl_stmt|;
+name|uint32_t
+name|msk_last_csum
+decl_stmt|;
 name|int
 name|msk_tx_prod
 decl_stmt|;
