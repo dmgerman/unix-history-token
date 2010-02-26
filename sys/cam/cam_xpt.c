@@ -4963,7 +4963,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n%s%d: Command Queueing enabled"
+literal|"%s%d: Command Queueing enabled\n"
 argument_list|,
 name|periph
 operator|->
