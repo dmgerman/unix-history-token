@@ -3585,7 +3585,7 @@ argument_list|,
 name|HAL_CIPHER_CLR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for multicast key sarch support. 	 */
+comment|/* 	 * Check for multicast key search support. 	 */
 if|if
 condition|(
 name|ath_hal_hasmcastkeysearch
@@ -10599,8 +10599,6 @@ return|return
 literal|0
 return|;
 block|}
-operator|*
-operator|/
 if|if
 condition|(
 name|vap
