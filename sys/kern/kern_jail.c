@@ -17863,6 +17863,9 @@ case|case
 name|PRIV_NET_SETIFCAP
 case|:
 case|case
+name|PRIV_NET_SETIFDESCR
+case|:
+case|case
 name|PRIV_NET_SETIFNAME
 case|:
 case|case
