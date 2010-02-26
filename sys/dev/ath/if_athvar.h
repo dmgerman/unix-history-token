@@ -2930,11 +2930,18 @@ define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_BURST, 0, NULL) == HAL_OK)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
+begin_define
+define|#
+directive|define
+name|ath_hal_setmcastkeysearch
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_MCAST_KEYSRCH, 0, _v, NULL)
+end_define
 
 begin_define
 define|#
@@ -2957,26 +2964,6 @@ parameter_list|)
 define|\
 value|(ath_hal_getcapability(_ah, HAL_CAP_MCAST_KEYSRCH, 1, NULL) == HAL_OK)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ath_hal_getmcastkeysearch
-parameter_list|(
-name|_ah
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

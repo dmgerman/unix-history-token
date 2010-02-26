@@ -3585,6 +3585,35 @@ argument_list|,
 name|HAL_CIPHER_CLR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check for multicast key sarch support. 	 */
+if|if
+condition|(
+name|ath_hal_hasmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+operator|&&
+operator|!
+name|ath_hal_getmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+block|{
+name|ath_hal_setmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_mcastkey
@@ -9735,7 +9764,7 @@ operator|->
 name|sc_mcastkey
 condition|)
 block|{
-comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a mac that is the sender's address with 		 * the high bit set instead of the app-specified address. 		 */
+comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a MAC that is the sender's address with 		 * the high bit set instead of the app-specified address. 		 */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|gmac
@@ -10525,24 +10554,9 @@ operator|->
 name|wk_keyix
 operator|!=
 name|IEEE80211_KEYIX_NONE
-operator|||
-comment|/* global key */
-operator|(
-operator|(
-name|k
-operator|->
-name|wk_flags
-operator|&
-name|IEEE80211_KEY_GROUP
-operator|)
-operator|&&
-operator|!
-name|sc
-operator|->
-name|sc_mcastkey
-operator|)
 condition|)
 block|{
+comment|/* 		 * Only global keys should have key index assigned. 		 */
 if|if
 condition|(
 operator|!
@@ -10585,7 +10599,32 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 		 * XXX we pre-allocate the global keys so 		 * have no way to check if they've already been allocated. 		 */
+operator|*
+operator|/
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
+operator|||
+operator|!
+operator|(
+name|k
+operator|->
+name|wk_flags
+operator|&
+name|IEEE80211_KEY_GROUP
+operator|)
+operator|||
+operator|!
+name|sc
+operator|->
+name|sc_mcastkey
+condition|)
+block|{
+comment|/* 			 * XXX we pre-allocate the global keys so 			 * have no way to check if they've already 			 * been allocated. 			 */
 operator|*
 name|keyix
 operator|=
@@ -10601,6 +10640,14 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+comment|/* 		 * Group key and device supports multicast key search. 		 */
+name|k
+operator|->
+name|wk_keyix
+operator|=
+name|IEEE80211_KEYIX_NONE
+expr_stmt|;
 block|}
 comment|/* 	 * We allocate two pair for TKIP when using the h/w to do 	 * the MIC.  For everything else, including software crypto, 	 * we allocate a single entry.  Note that s/w crypto requires 	 * a pass-through slot on the 5211 and 5212.  The 5210 does 	 * not support pass-through cache entries and we map all 	 * those requests to slot 0. 	 */
 if|if
@@ -33503,6 +33550,21 @@ argument_list|,
 literal|"using %u tx buffers\n"
 argument_list|,
 name|ath_txbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mcastkey
+operator|&&
+name|bootverbose
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"using multicast key search\n"
 argument_list|)
 expr_stmt|;
 block|}
