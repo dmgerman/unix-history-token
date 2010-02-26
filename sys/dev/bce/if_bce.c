@@ -28856,12 +28856,14 @@ expr_stmt|;
 comment|/* Try to defrag the mbuf. */
 name|m0
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
+argument_list|,
+name|BCE_MAX_SEGMENTS
 argument_list|)
 expr_stmt|;
 if|if
