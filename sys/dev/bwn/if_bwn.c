@@ -11789,6 +11789,9 @@ operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode */
 operator||
+name|IEEE80211_C_AHDEMO
+comment|/* adhoc demo mode */
+operator||
 name|IEEE80211_C_SHPREAMBLE
 comment|/* short preamble supported */
 operator||
@@ -56200,6 +56203,12 @@ operator|->
 name|iv_opmode
 operator|==
 name|IEEE80211_M_MONITOR
+operator|||
+name|vap
+operator|->
+name|iv_opmode
+operator|==
+name|IEEE80211_M_AHDEMO
 condition|)
 block|{
 comment|/* XXX nothing to do? */
