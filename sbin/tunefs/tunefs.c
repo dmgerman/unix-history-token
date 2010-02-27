@@ -1233,6 +1233,9 @@ name|sblock
 operator|.
 name|fs_avgfilesize
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|fvalue
 condition|)
 block|{
@@ -1838,6 +1841,9 @@ name|sblock
 operator|.
 name|fs_avgfpdir
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|svalue
 condition|)
 block|{

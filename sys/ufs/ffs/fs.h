@@ -499,7 +499,7 @@ name|int32_t
 name|fs_old_dsize
 decl_stmt|;
 comment|/* number of data blocks in fs */
-name|int32_t
+name|u_int32_t
 name|fs_ncg
 decl_stmt|;
 comment|/* number of cylinder groups */
@@ -644,7 +644,7 @@ name|int32_t
 name|fs_old_cpg
 decl_stmt|;
 comment|/* cylinders per group */
-name|int32_t
+name|u_int32_t
 name|fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
@@ -779,22 +779,22 @@ name|int64_t
 name|fs_pendingblocks
 decl_stmt|;
 comment|/* (u) blocks being freed */
-name|int32_t
+name|u_int32_t
 name|fs_pendinginodes
 decl_stmt|;
 comment|/* (u) inodes being freed */
-name|int32_t
+name|ino_t
 name|fs_snapinum
 index|[
 name|FSMAXSNAP
 index|]
 decl_stmt|;
 comment|/* list of snapshot inode numbers */
-name|int32_t
+name|u_int32_t
 name|fs_avgfilesize
 decl_stmt|;
 comment|/* expected average file size */
-name|int32_t
+name|u_int32_t
 name|fs_avgfpdir
 decl_stmt|;
 comment|/* expected # of files per directory */
@@ -1216,7 +1216,7 @@ name|int32_t
 name|cg_old_time
 decl_stmt|;
 comment|/* time last written */
-name|int32_t
+name|u_int32_t
 name|cg_cgx
 decl_stmt|;
 comment|/* we are the cgx'th cylinder group */
@@ -1228,7 +1228,7 @@ name|int16_t
 name|cg_old_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|int32_t
+name|u_int32_t
 name|cg_ndblk
 decl_stmt|;
 comment|/* number of data blocks this cg */
@@ -1237,19 +1237,19 @@ name|csum
 name|cg_cs
 decl_stmt|;
 comment|/* cylinder summary information */
-name|int32_t
+name|u_int32_t
 name|cg_rotor
 decl_stmt|;
 comment|/* position of last used block */
-name|int32_t
+name|u_int32_t
 name|cg_frotor
 decl_stmt|;
 comment|/* position of last used frag */
-name|int32_t
+name|u_int32_t
 name|cg_irotor
 decl_stmt|;
 comment|/* position of last used inode */
-name|int32_t
+name|u_int32_t
 name|cg_frsum
 index|[
 name|MAXFRAG
@@ -1264,39 +1264,39 @@ name|int32_t
 name|cg_old_boff
 decl_stmt|;
 comment|/* (u_int16) free block positions */
-name|int32_t
+name|u_int32_t
 name|cg_iusedoff
 decl_stmt|;
 comment|/* (u_int8) used inode map */
-name|int32_t
+name|u_int32_t
 name|cg_freeoff
 decl_stmt|;
 comment|/* (u_int8) free block map */
-name|int32_t
+name|u_int32_t
 name|cg_nextfreeoff
 decl_stmt|;
 comment|/* (u_int8) next available space */
-name|int32_t
+name|u_int32_t
 name|cg_clustersumoff
 decl_stmt|;
 comment|/* (u_int32) counts of avail clusters */
-name|int32_t
+name|u_int32_t
 name|cg_clusteroff
 decl_stmt|;
 comment|/* (u_int8) free cluster map */
-name|int32_t
+name|u_int32_t
 name|cg_nclusterblks
 decl_stmt|;
 comment|/* number of clusters this cg */
-name|int32_t
+name|u_int32_t
 name|cg_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|int32_t
+name|u_int32_t
 name|cg_initediblk
 decl_stmt|;
 comment|/* last initialized inode */
-name|int32_t
+name|u_int32_t
 name|cg_unrefs
 decl_stmt|;
 comment|/* number of unreferenced inodes */
@@ -1522,7 +1522,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|((x) / (fs)->fs_ipg)
+value|(((ino_t)(x)) / (fs)->fs_ipg)
 end_define
 
 begin_define
@@ -1535,7 +1535,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((ufs2_daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+value|((ufs2_daddr_t)(cgimin(fs, ino_to_cg(fs, (ino_t)(x))) +		\ 	    (blkstofrags((fs), ((((ino_t)(x)) % (fs)->fs_ipg) / INOPB(fs))))))
 end_define
 
 begin_define
@@ -1547,7 +1547,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|((x) % INOPB(fs))
+value|(((ino_t)(x)) % INOPB(fs))
 end_define
 
 begin_comment

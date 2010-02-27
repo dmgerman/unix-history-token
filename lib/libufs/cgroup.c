@@ -151,6 +151,9 @@ name|d_fs
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|c
 operator|>=
 name|fs
