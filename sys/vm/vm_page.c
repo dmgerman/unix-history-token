@@ -3478,7 +3478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	This routine may not block.  */
+comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_NOOBJ		page is not associated with a vm object  *	VM_ALLOC_NOBUSY		do not set the page busy  *	VM_ALLOC_IFNOTCACHED	return NULL, do not reactivate if the page  *				is cached  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
