@@ -15,6 +15,18 @@ begin_comment
 comment|/*-  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FS_MSDOSFS_DIRENTRY_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FS_MSDOSFS_DIRENTRY_H_
+end_define
+
 begin_comment
 comment|/*  * Structure of a dos directory entry.  */
 end_comment
@@ -26,7 +38,7 @@ block|{
 name|u_int8_t
 name|deName
 index|[
-literal|8
+literal|11
 index|]
 decl_stmt|;
 comment|/* filename, blank filled */
@@ -45,13 +57,6 @@ directive|define
 name|SLOT_DELETED
 value|0xe5
 comment|/* file in this slot deleted */
-name|u_int8_t
-name|deExtension
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* extension, blank filled */
 name|u_int8_t
 name|deAttributes
 decl_stmt|;
@@ -606,10 +611,9 @@ begin_function_decl
 name|u_int8_t
 name|winChksum
 parameter_list|(
-name|struct
-name|direntry
+name|u_int8_t
 modifier|*
-name|dep
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -656,6 +660,15 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_FS_MSDOSFS_DIRENTRY_H_ */
 end_comment
 
 end_unit
