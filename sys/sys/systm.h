@@ -218,6 +218,32 @@ begin_comment
 comment|/* max # of supplemental groups */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_guest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Running as virtual machine guest? */
+end_comment
+
+begin_enum
+enum|enum
+name|VM_GUEST
+block|{
+name|VM_GUEST_NO
+init|=
+literal|0
+block|,
+name|VM_GUEST_VM
+block|,
+name|VM_GUEST_XEN
+block|}
+enum|;
+end_enum
+
 begin_ifdef
 ifdef|#
 directive|ifdef

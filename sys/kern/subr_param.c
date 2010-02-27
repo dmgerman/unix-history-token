@@ -212,25 +212,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Values of enum VM_GUEST members are used as indices in   * vm_guest_sysctl_names */
-end_comment
-
-begin_enum
-enum|enum
-name|VM_GUEST
-block|{
-name|VM_GUEST_NO
-init|=
-literal|0
-block|,
-name|VM_GUEST_VM
-block|,
-name|VM_GUEST_XEN
-block|}
-enum|;
-end_enum
-
 begin_function_decl
 specifier|static
 name|int
@@ -724,6 +705,10 @@ modifier|*
 name|swbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The elements of this array are ordered based upon the values of the  * corresponding enum VM_GUEST members.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
