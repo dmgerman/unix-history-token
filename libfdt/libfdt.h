@@ -233,6 +233,7 @@ parameter_list|,
 name|int
 name|offset
 parameter_list|,
+name|unsigned
 name|int
 name|checklen
 parameter_list|)
@@ -460,7 +461,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static inline void fdt_set_##name(void *fdt, uint32_t val) \ 	{ \ 		struct fdt_header *fdth = fdt; \ 		fdth->name = cpu_to_fdt32(val); \ 	}
+value|static inline void fdt_set_##name(void *fdt, uint32_t val) \ 	{ \ 		struct fdt_header *fdth = (struct fdt_header*)fdt; \ 		fdth->name = cpu_to_fdt32(val); \ 	}
 end_define
 
 begin_expr_stmt
@@ -762,6 +763,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * fdt_get_property_namelen - find a property based on substring  * @fdt: pointer to the device tree blob  * @nodeoffset: offset of the node whose property to find  * @name: name of the property to find  * @namelen: number of characters of name to consider  * @lenp: pointer to an integer variable (will be overwritten) or NULL  *  * Identical to fdt_get_property_namelen(), but only examine the first  * namelen characters of name for matching the property name.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|struct
+name|fdt_property
+modifier|*
+name|fdt_get_property_namelen
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|fdt
+parameter_list|,
+name|int
+name|nodeoffset
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|,
+name|int
+modifier|*
+name|lenp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * fdt_get_property - find a given property in a given node  * @fdt: pointer to the device tree blob  * @nodeoffset: offset of the node whose property to find  * @name: name of the property to find  * @lenp: pointer to an integer variable (will be overwritten) or NULL  *  * fdt_get_property() retrieves a pointer to the fdt_property  * structure within the device tree blob corresponding to the property  * named 'name' of the node at offset nodeoffset.  If lenp is  * non-NULL, the length of the property value is also returned, in the  * integer pointed to by lenp.  *  * returns:  *	pointer to the structure representing the property  *		if lenp is non-NULL, *lenp contains the length of the property  *		value (>=0)  *	NULL, on error  *		if lenp is non-NULL, *lenp contains an error code (<0):  *		-FDT_ERR_NOTFOUND, node does not have named property  *		-FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag  *		-FDT_ERR_BADMAGIC,  *		-FDT_ERR_BADVERSION,  *		-FDT_ERR_BADSTATE,  *		-FDT_ERR_BADSTRUCTURE,  *		-FDT_ERR_TRUNCATED, standard meanings  */
 end_comment
 
@@ -839,6 +874,39 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * fdt_getprop_namelen - get property value based on substring  * @fdt: pointer to the device tree blob  * @nodeoffset: offset of the node whose property to find  * @name: name of the property to find  * @namelen: number of characters of name to consider  * @lenp: pointer to an integer variable (will be overwritten) or NULL  *  * Identical to fdt_getprop(), but only examine the first namelen  * characters of name for matching the property name.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|void
+modifier|*
+name|fdt_getprop_namelen
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|fdt
+parameter_list|,
+name|int
+name|nodeoffset
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|,
+name|int
+modifier|*
+name|lenp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**  * fdt_getprop - retrieve the value of a given property  * @fdt: pointer to the device tree blob  * @nodeoffset: offset of the node whose property to find  * @name: name of the property to find  * @lenp: pointer to an integer variable (will be overwritten) or NULL  *  * fdt_getprop() retrieves a pointer to the value of the property  * named 'name' of the node at offset nodeoffset (this will be a  * pointer to within the device blob itself, not a copy of the value).  * If lenp is non-NULL, the length of the property value is also  * returned, in the integer pointed to by lenp.  *  * returns:  *	pointer to the property's value  *		if lenp is non-NULL, *lenp contains the length of the property  *		value (>=0)  *	NULL, on error  *		if lenp is non-NULL, *lenp contains an error code (<0):  *		-FDT_ERR_NOTFOUND, node does not have named property  *		-FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag  *		-FDT_ERR_BADMAGIC,  *		-FDT_ERR_BADVERSION,  *		-FDT_ERR_BADSTATE,  *		-FDT_ERR_BADSTRUCTURE,  *		-FDT_ERR_TRUNCATED, standard meanings  */
@@ -931,6 +999,55 @@ name|fdt
 parameter_list|,
 name|int
 name|nodeoffset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * fdt_get_alias_namelen - get alias based on substring  * @fdt: pointer to the device tree blob  * @name: name of the alias th look up  * @namelen: number of characters of name to consider  *  * Identical to fdt_get_alias(), but only examine the first namelen  * characters of name for matching the alias name.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|fdt_get_alias_namelen
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|fdt
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * fdt_get_alias - retreive the path referenced by a given alias  * @fdt: pointer to the device tree blob  * @name: name of the alias th look up  *  * fdt_get_alias() retrieves the value of a given alias.  That is, the  * value of the property named 'name' in the node /aliases.  *  * returns:  *	a pointer to the expansion of the alias named 'name', of it exists  *	NULL, if the given alias or the /aliases node does not exist  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|fdt_get_alias
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|fdt
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

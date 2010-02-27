@@ -55,25 +55,6 @@ value|{ \ 		int err; \ 		if ((err = fdt_check_header(fdt)) != 0) \ 			return err
 end_define
 
 begin_function_decl
-name|uint32_t
-name|_fdt_next_tag
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|fdt
-parameter_list|,
-name|int
-name|startoffset
-parameter_list|,
-name|int
-modifier|*
-name|nextoffset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_fdt_check_node_offset
 parameter_list|(

@@ -52,6 +52,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|int
 name|path_depth
 parameter_list|(
@@ -141,6 +142,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|path_prefix
 parameter_list|(
@@ -223,6 +225,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_supernode_atdepth
 parameter_list|(
@@ -430,6 +433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_supernode_overdepth
 parameter_list|(
@@ -524,6 +528,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_path
 parameter_list|(

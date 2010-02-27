@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -38,6 +44,13 @@ include|#
 directive|include
 file|<libfdt_env.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|FTDUMP_BUF_SIZE
+value|65536
+end_define
 
 begin_define
 define|#
@@ -70,7 +83,7 @@ name|GET_CELL
 parameter_list|(
 name|p
 parameter_list|)
-value|(p += 4, *((uint32_t *)(p-4)))
+value|(p += 4, *((const uint32_t *)(p-4)))
 end_define
 
 begin_function
@@ -175,7 +188,7 @@ name|void
 name|print_data
 parameter_list|(
 specifier|const
-name|void
+name|char
 modifier|*
 name|data
 parameter_list|,
@@ -187,9 +200,11 @@ name|int
 name|i
 decl_stmt|;
 specifier|const
-name|uint8_t
+name|char
 modifier|*
-name|s
+name|p
+init|=
+name|data
 decl_stmt|;
 comment|/* no data, don't print */
 if|if
@@ -255,19 +270,15 @@ literal|4
 control|)
 name|printf
 argument_list|(
-literal|"%08x%s"
+literal|"0x%08x%s"
 argument_list|,
-operator|*
-operator|(
-operator|(
-specifier|const
-name|uint32_t
-operator|*
-operator|)
-name|data
-operator|+
-name|i
-operator|)
+name|fdt32_to_cpu
+argument_list|(
+name|GET_CELL
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
 argument_list|,
 name|i
 operator|<
@@ -300,10 +311,6 @@ control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|s
-operator|=
-name|data
 init|;
 name|i
 operator|<
@@ -316,10 +323,9 @@ name|printf
 argument_list|(
 literal|"%02x%s"
 argument_list|,
-name|s
-index|[
-name|i
-index|]
+operator|*
+name|p
+operator|++
 argument_list|,
 name|i
 operator|<
@@ -408,11 +414,13 @@ operator|+
 name|off_mem_rsvmap
 operator|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p_struct
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -420,11 +428,13 @@ name|blob
 operator|+
 name|off_dt
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p_strings
 init|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -455,11 +465,11 @@ decl_stmt|;
 name|uint32_t
 name|tag
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|s
 decl_stmt|,
@@ -488,6 +498,11 @@ expr_stmt|;
 name|shift
 operator|=
 literal|4
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/dts-v1/;\n"
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -923,12 +938,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|char
+modifier|*
 name|buf
-index|[
-literal|16384
-index|]
 decl_stmt|;
-comment|/* 16k max */
 name|int
 name|size
 decl_stmt|;
@@ -950,6 +962,28 @@ return|return
 literal|5
 return|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fp
+operator|=
+name|stdin
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fp
 operator|=
 name|fopen
@@ -985,6 +1019,33 @@ return|return
 literal|10
 return|;
 block|}
+block|}
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|FTDUMP_BUF_SIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Couldn't allocate %d byte buffer\n"
+argument_list|,
+name|FTDUMP_BUF_SIZE
+argument_list|)
+expr_stmt|;
+return|return
+literal|10
+return|;
+block|}
 name|size
 operator|=
 name|fread
@@ -993,10 +1054,7 @@ name|buf
 argument_list|,
 literal|1
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|FTDUMP_BUF_SIZE
 argument_list|,
 name|fp
 argument_list|)
@@ -1005,18 +1063,16 @@ if|if
 condition|(
 name|size
 operator|==
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|FTDUMP_BUF_SIZE
 condition|)
 block|{
-comment|/* too large */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"file too large\n"
+literal|"file too large (maximum is %d bytes)\n"
+argument_list|,
+name|FTDUMP_BUF_SIZE
 argument_list|)
 expr_stmt|;
 return|return

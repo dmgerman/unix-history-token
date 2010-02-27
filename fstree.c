@@ -214,7 +214,7 @@ name|prop
 operator|=
 name|build_property
 argument_list|(
-name|strdup
+name|xstrdup
 argument_list|(
 name|de
 operator|->
@@ -276,7 +276,7 @@ name|name_node
 argument_list|(
 name|newchild
 argument_list|,
-name|strdup
+name|xstrdup
 argument_list|(
 name|de
 operator|->

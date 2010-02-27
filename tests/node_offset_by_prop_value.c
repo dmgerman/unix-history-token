@@ -58,6 +58,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|vcheck_search
 parameter_list|(
@@ -160,6 +161,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_search
 parameter_list|(
@@ -215,6 +217,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_search_str
 parameter_list|(

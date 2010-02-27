@@ -59,6 +59,7 @@ value|('\xff')
 end_define
 
 begin_function
+specifier|static
 name|void
 name|check_path_buf
 parameter_list|(
@@ -145,6 +146,17 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
+name|verbose_printf
+argument_list|(
+literal|"get_path() %s -> %d -> %s\n"
+argument_list|,
+name|path
+argument_list|,
+name|offset
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|buflen
@@ -194,18 +206,16 @@ if|if
 condition|(
 name|len
 operator|!=
-name|pathlen
+literal|0
 condition|)
 name|FAIL
 argument_list|(
-literal|"fdt_get_path([%d bytes]) reports length %d "
-literal|"instead of %d"
+literal|"fdt_get_path([%d bytes]) returns %d "
+literal|"instead of 0"
 argument_list|,
 name|buflen
 argument_list|,
 name|len
-argument_list|,
-name|pathlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -252,6 +262,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_path
 parameter_list|(
@@ -306,6 +317,28 @@ argument_list|,
 name|pathlen
 argument_list|,
 name|pathlen
+argument_list|)
+expr_stmt|;
+name|check_path_buf
+argument_list|(
+name|fdt
+argument_list|,
+name|path
+argument_list|,
+name|pathlen
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|check_path_buf
+argument_list|(
+name|fdt
+argument_list|,
+name|path
+argument_list|,
+name|pathlen
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 block|}

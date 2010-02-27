@@ -52,6 +52,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|int
 name|path_parent_len
 parameter_list|(
@@ -100,6 +101,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|check_path
 parameter_list|(

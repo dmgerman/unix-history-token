@@ -65,6 +65,18 @@ begin_comment
 comment|/* Additional padding to blob */
 end_comment
 
+begin_decl_stmt
+name|int
+name|phandle_format
+init|=
+name|PHANDLE_BOTH
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use linux,phandle or phandle properties */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -530,6 +542,41 @@ argument_list|,
 literal|"\t\tPrint DTC version and exit\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-H<phandle format>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\tphandle formats are:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t\tlegacy - \"linux,phandle\" properties only\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t\tepapr - \"phandle\" properties only\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t\t\tboth - Both \"linux,phandle\" and \"phandle\" properties\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|3
@@ -639,7 +686,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"hI:O:o:V:R:S:p:fcqb:v"
+literal|"hI:O:o:V:R:S:p:fcqb:vH:"
 argument_list|)
 operator|)
 operator|!=
@@ -789,6 +836,59 @@ literal|0
 argument_list|)
 expr_stmt|;
 case|case
+literal|'H'
+case|:
+if|if
+condition|(
+name|streq
+argument_list|(
+name|optarg
+argument_list|,
+literal|"legacy"
+argument_list|)
+condition|)
+name|phandle_format
+operator|=
+name|PHANDLE_LEGACY
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|streq
+argument_list|(
+name|optarg
+argument_list|,
+literal|"epapr"
+argument_list|)
+condition|)
+name|phandle_format
+operator|=
+name|PHANDLE_EPAPR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|streq
+argument_list|(
+name|optarg
+argument_list|,
+literal|"both"
+argument_list|)
+condition|)
+name|phandle_format
+operator|=
+name|PHANDLE_BOTH
+expr_stmt|;
+else|else
+name|die
+argument_list|(
+literal|"Invalid argument \"%s\" to -H option\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 default|default:
@@ -843,6 +943,17 @@ condition|)
 name|die
 argument_list|(
 literal|"Can't set both -p and -S\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|minsize
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"DTC: Use of \"-S\" is deprecated; it will be removed soon, use \"-p\" instead\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

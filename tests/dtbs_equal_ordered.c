@@ -52,6 +52,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|compare_mem_rsv
 parameter_list|(
@@ -232,6 +233,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|compare_structure
 parameter_list|(

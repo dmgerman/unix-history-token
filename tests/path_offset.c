@@ -52,6 +52,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|int
 name|check_subnode
 parameter_list|(

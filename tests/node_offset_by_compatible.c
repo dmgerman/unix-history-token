@@ -58,6 +58,7 @@ file|"testdata.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|check_search
 parameter_list|(

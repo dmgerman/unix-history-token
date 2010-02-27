@@ -955,6 +955,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|data
 name|data_append_markers

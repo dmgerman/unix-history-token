@@ -2036,6 +2036,15 @@ operator|!=
 name|FDT_END
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|struct_size
+operator|<
+literal|0
+condition|)
+return|return
+name|struct_size
+return|;
 block|}
 if|if
 condition|(

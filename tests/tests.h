@@ -110,6 +110,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARRAY_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|(sizeof(x) / sizeof((x)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
 name|streq
 parameter_list|(
 name|s1

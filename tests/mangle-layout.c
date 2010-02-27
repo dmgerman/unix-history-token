@@ -73,6 +73,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|expand_buf
 parameter_list|(
@@ -120,6 +121,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|new_header
 parameter_list|(
@@ -230,6 +232,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|add_block
 parameter_list|(
