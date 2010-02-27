@@ -7858,7 +7858,6 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|isp_hdl_t
-operator|*
 argument_list|)
 operator|*
 name|isp
