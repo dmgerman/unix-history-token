@@ -218,6 +218,7 @@ begin_struct
 struct|struct
 name|keytab
 block|{
+specifier|const
 name|char
 modifier|*
 name|kt_cp
@@ -389,6 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|atalk_aton
 parameter_list|(
@@ -404,6 +406,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|atalk_ntoa
@@ -415,6 +418,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bprintf
 parameter_list|(
@@ -430,6 +434,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flushroutes
 parameter_list|(
@@ -445,6 +450,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getaddr
 parameter_list|(
@@ -462,9 +468,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|keyword
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -472,6 +480,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|inet_makenetandmask
 parameter_list|(
@@ -501,6 +510,7 @@ name|struct
 name|sockaddr_in6
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -513,6 +523,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|interfaces
 parameter_list|(
@@ -522,6 +533,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mask_addr
 parameter_list|(
@@ -531,6 +543,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|monitor
 parameter_list|(
@@ -540,6 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -553,6 +567,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|newroute
 parameter_list|(
@@ -566,6 +581,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pmsg_addrs
 parameter_list|(
@@ -578,6 +594,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pmsg_common
 parameter_list|(
@@ -589,9 +606,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|prefixlen
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -599,6 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_getmsg
 parameter_list|(
@@ -612,6 +632,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_rtmsg
 parameter_list|(
@@ -625,6 +646,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -638,6 +660,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
@@ -649,6 +672,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|set_metric
 parameter_list|(
@@ -661,6 +685,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sockaddr
 parameter_list|(
@@ -675,11 +700,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sodump
 parameter_list|(
 name|sup
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -691,11 +718,14 @@ specifier|extern
 name|char
 modifier|*
 name|iso_ntoa
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 argument_list|(
@@ -720,6 +750,8 @@ block|{
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 name|warnx
 argument_list|(
@@ -771,10 +803,6 @@ literal|2
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -847,10 +875,6 @@ case|:
 default|default:
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -917,6 +941,8 @@ if|if
 condition|(
 operator|*
 name|argv
+operator|!=
+name|NULL
 condition|)
 switch|switch
 condition|(
@@ -997,6 +1023,7 @@ comment|/*  * Purge all entries in the routing tables not  * associated with net
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|flushroutes
 parameter_list|(
@@ -1044,6 +1071,8 @@ decl_stmt|;
 if|if
 condition|(
 name|uid
+operator|!=
+literal|0
 operator|&&
 operator|!
 name|debugonly
@@ -1382,6 +1411,8 @@ continue|continue;
 if|if
 condition|(
 name|af
+operator|!=
+literal|0
 condition|)
 block|{
 name|struct
@@ -1613,6 +1644,7 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -1755,7 +1787,7 @@ name|sin_addr
 expr_stmt|;
 name|cp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1779,7 +1811,7 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|!
 name|nflag
@@ -1808,12 +1840,15 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|!=
+name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|cp
+name|char
+modifier|*
+name|cptr
+decl_stmt|;
+name|cptr
 operator|=
 name|strchr
 argument_list|(
@@ -1823,22 +1858,28 @@ name|h_name
 argument_list|,
 literal|'.'
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cptr
+operator|!=
+name|NULL
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
-name|cp
+name|cptr
 operator|+
 literal|1
 argument_list|,
 name|domain
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
-name|cp
+name|cptr
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 name|cp
 operator|=
@@ -1851,6 +1892,8 @@ block|}
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|strncpy
@@ -2156,7 +2199,7 @@ default|default:
 block|{
 name|u_short
 modifier|*
-name|s
+name|sp
 init|=
 operator|(
 name|u_short
@@ -2166,9 +2209,9 @@ name|sa
 decl_stmt|;
 name|u_short
 modifier|*
-name|slim
+name|splim
 init|=
-name|s
+name|sp
 operator|+
 operator|(
 operator|(
@@ -2184,7 +2227,7 @@ operator|)
 decl_stmt|;
 name|char
 modifier|*
-name|cp
+name|cps
 init|=
 name|line
 operator|+
@@ -2213,11 +2256,11 @@ decl_stmt|;
 while|while
 condition|(
 operator|++
-name|s
+name|sp
 operator|<
-name|slim
+name|splim
 operator|&&
-name|cp
+name|cps
 operator|<
 name|cpe
 condition|)
@@ -2229,28 +2272,28 @@ name|n
 operator|=
 name|snprintf
 argument_list|(
-name|cp
+name|cps
 argument_list|,
 name|cpe
 operator|-
-name|cp
+name|cps
 argument_list|,
 literal|" %x"
 argument_list|,
 operator|*
-name|s
+name|sp
 argument_list|)
 operator|)
 operator|>
 literal|0
 condition|)
-name|cp
+name|cps
 operator|+=
 name|n
 expr_stmt|;
 else|else
 operator|*
-name|cp
+name|cps
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -2281,11 +2324,12 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|static
 name|char
@@ -2301,7 +2345,7 @@ name|netent
 modifier|*
 name|np
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|u_long
 name|net
@@ -2479,6 +2523,8 @@ expr_stmt|;
 if|if
 condition|(
 name|np
+operator|!=
+name|NULL
 condition|)
 name|cp
 operator|=
@@ -2497,6 +2543,8 @@ value|(unsigned)((x)& 0xff)
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 name|strncpy
 argument_list|(
@@ -2941,7 +2989,7 @@ default|default:
 block|{
 name|u_short
 modifier|*
-name|s
+name|sp
 init|=
 operator|(
 name|u_short
@@ -2953,9 +3001,9 @@ name|sa_data
 decl_stmt|;
 name|u_short
 modifier|*
-name|slim
+name|splim
 init|=
-name|s
+name|sp
 operator|+
 operator|(
 operator|(
@@ -2971,7 +3019,7 @@ operator|)
 decl_stmt|;
 name|char
 modifier|*
-name|cp
+name|cps
 init|=
 name|line
 operator|+
@@ -2999,11 +3047,11 @@ argument_list|)
 decl_stmt|;
 while|while
 condition|(
-name|s
+name|sp
 operator|<
-name|slim
+name|splim
 operator|&&
-name|cp
+name|cps
 operator|<
 name|cpe
 condition|)
@@ -3014,29 +3062,29 @@ name|n
 operator|=
 name|snprintf
 argument_list|(
-name|cp
+name|cps
 argument_list|,
 name|cpe
 operator|-
-name|cp
+name|cps
 argument_list|,
 literal|" %x"
 argument_list|,
 operator|*
-name|s
+name|sp
 operator|++
 argument_list|)
 operator|)
 operator|>
 literal|0
 condition|)
-name|cp
+name|cps
 operator|+=
 name|n
 expr_stmt|;
 else|else
 operator|*
-name|cp
+name|cps
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3052,6 +3100,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_metric
 parameter_list|(
@@ -3211,6 +3260,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|newroute
 parameter_list|(
@@ -3226,7 +3276,9 @@ block|{
 name|char
 modifier|*
 name|cmd
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|dest
 init|=
@@ -3272,6 +3324,8 @@ decl_stmt|;
 if|if
 condition|(
 name|uid
+operator|!=
+literal|0
 condition|)
 block|{
 name|errx
@@ -3553,10 +3607,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3586,10 +3636,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3619,10 +3665,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3652,10 +3694,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3685,10 +3723,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3723,10 +3757,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3763,10 +3793,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3839,10 +3865,6 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -4097,8 +4119,12 @@ name|AF_INET
 operator|&&
 operator|*
 name|gateway
+operator|!=
+literal|'\0'
 operator|&&
 name|hp
+operator|!=
+name|NULL
 operator|&&
 name|hp
 operator|->
@@ -4106,6 +4132,8 @@ name|h_addr_list
 index|[
 literal|1
 index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 name|hp
@@ -4131,6 +4159,9 @@ index|]
 argument_list|,
 name|MIN
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|hp
 operator|->
 name|h_length
@@ -4350,6 +4381,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|inet_makenetandmask
 parameter_list|(
@@ -4380,7 +4412,7 @@ name|rtm_addrs
 operator||=
 name|RTA_NETMASK
 expr_stmt|;
-comment|/*  	 * XXX: This approach unable to handle 0.0.0.1/32 correctly 	 * as inet_network() converts 0.0.0.1 and 1 equally. 	 */
+comment|/* 	 * XXX: This approach unable to handle 0.0.0.1/32 correctly 	 * as inet_network() converts 0.0.0.1 and 1 equally. 	 */
 if|if
 condition|(
 name|net
@@ -4424,7 +4456,7 @@ name|addr
 operator|=
 name|net
 expr_stmt|;
-comment|/* 	 * If no /xx was specified we must cacluate the  	 * CIDR address. 	 */
+comment|/* 	 * If no /xx was specified we must calculate the 	 * CIDR address. 	 */
 if|if
 condition|(
 operator|(
@@ -4615,6 +4647,7 @@ name|sockaddr_in6
 modifier|*
 name|sin6
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|plen
@@ -4626,8 +4659,9 @@ name|in6
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|plen
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -4719,8 +4753,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 name|plen
+operator|==
+name|NULL
 operator|||
 name|strcmp
 argument_list|(
@@ -4732,22 +4767,23 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|rtm_addrs
 operator||=
 name|RTA_NETMASK
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|prefixlen
 argument_list|(
 name|plen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4762,6 +4798,7 @@ comment|/*  * Interpret an argument as a network address of some kind,  * return
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|getaddr
 parameter_list|(
@@ -4770,7 +4807,7 @@ name|which
 parameter_list|,
 name|char
 modifier|*
-name|s
+name|str
 parameter_list|,
 name|struct
 name|hostent
@@ -4895,6 +4932,8 @@ operator|=
 name|ifap
 init|;
 name|ifa
+operator|!=
+name|NULL
 condition|;
 name|ifa
 operator|=
@@ -4918,12 +4957,14 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|s
+name|str
 argument_list|,
 name|ifa
 operator|->
 name|ifa_name
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 name|sdl
@@ -4942,6 +4983,8 @@ comment|/* If we found it, then use it */
 if|if
 condition|(
 name|sdl
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 				 * Copy is safe since we have a 				 * sockaddr_storage member in sockunion{}. 				 * Note that we need to copy before calling 				 * freeifaddrs(). 				 */
@@ -4968,6 +5011,8 @@ expr_stmt|;
 if|if
 condition|(
 name|sdl
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -5045,7 +5090,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|s
+name|str
 argument_list|,
 literal|"default"
 argument_list|)
@@ -5053,7 +5098,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Default is net 0.0.0.0/0  		 */
+comment|/* 		 * Default is net 0.0.0.0/0 		 */
 switch|switch
 condition|(
 name|which
@@ -5072,14 +5117,11 @@ block|bzero(su, sizeof(*su));
 comment|/* for readability */
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
 name|getaddr
 argument_list|(
 name|RTA_NETMASK
 argument_list|,
-name|s
+name|str
 argument_list|,
 literal|0
 argument_list|)
@@ -5136,7 +5178,7 @@ name|q
 operator|=
 name|strchr
 argument_list|(
-name|s
+name|str
 argument_list|,
 literal|'/'
 argument_list|)
@@ -5180,7 +5222,7 @@ name|ecode
 operator|=
 name|getaddrinfo
 argument_list|(
-name|s
+name|str
 argument_list|,
 name|NULL
 argument_list|,
@@ -5224,7 +5266,7 @@ name|stderr
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
-name|s
+name|str
 argument_list|,
 name|gai_strerror
 argument_list|(
@@ -5381,7 +5423,7 @@ condition|(
 operator|!
 name|atalk_aton
 argument_list|(
-name|s
+name|str
 argument_list|,
 operator|&
 name|su
@@ -5397,7 +5439,7 @@ name|EX_NOHOST
 argument_list|,
 literal|"bad address: %s"
 argument_list|,
-name|s
+name|str
 argument_list|)
 expr_stmt|;
 name|rtm_addrs
@@ -5424,7 +5466,7 @@ name|AF_LINK
 case|:
 name|link_addr
 argument_list|(
-name|s
+name|str
 argument_list|,
 operator|&
 name|su
@@ -5454,7 +5496,7 @@ argument_list|)
 expr_stmt|;
 name|sockaddr
 argument_list|(
-name|s
+name|str
 argument_list|,
 operator|&
 name|su
@@ -5493,7 +5535,7 @@ name|q
 operator|=
 name|strchr
 argument_list|(
-name|s
+name|str
 argument_list|,
 literal|'/'
 argument_list|)
@@ -5501,6 +5543,8 @@ expr_stmt|;
 if|if
 condition|(
 name|q
+operator|!=
+name|NULL
 operator|&&
 name|which
 operator|==
@@ -5519,7 +5563,7 @@ name|val
 operator|=
 name|inet_network
 argument_list|(
-name|s
+name|str
 argument_list|)
 operator|)
 operator|!=
@@ -5573,7 +5617,7 @@ operator|)
 operator|&&
 name|inet_aton
 argument_list|(
-name|s
+name|str
 argument_list|,
 operator|&
 name|su
@@ -5648,7 +5692,7 @@ name|val
 operator|=
 name|inet_network
 argument_list|(
-name|s
+name|str
 argument_list|)
 operator|)
 operator|!=
@@ -5660,7 +5704,7 @@ name|np
 operator|=
 name|getnetbyname
 argument_list|(
-name|s
+name|str
 argument_list|)
 operator|)
 operator|!=
@@ -5703,12 +5747,14 @@ name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|s
+name|str
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -5745,6 +5791,9 @@ name|h_addr
 argument_list|,
 name|MIN
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|hp
 operator|->
 name|h_length
@@ -5772,19 +5821,21 @@ name|EX_NOHOST
 argument_list|,
 literal|"bad address: %s"
 argument_list|,
-name|s
+name|str
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|prefixlen
 parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|s
+name|str
 parameter_list|)
 block|{
 name|int
@@ -5792,7 +5843,7 @@ name|len
 init|=
 name|atoi
 argument_list|(
-name|s
+name|str
 argument_list|)
 decl_stmt|,
 name|q
@@ -5863,9 +5914,6 @@ name|sin_addr
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5878,7 +5926,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
 block|}
 if|if
 condition|(
@@ -5891,16 +5938,13 @@ operator|<
 name|len
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: bad value\n"
 argument_list|,
-name|s
+name|str
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6003,17 +6047,22 @@ operator|==
 name|max
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|len
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|interfaces
 parameter_list|(
@@ -6248,6 +6297,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|monitor
 parameter_list|(
@@ -6359,6 +6409,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|rtmsg
 parameter_list|(
@@ -6758,6 +6809,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mask_addr
 parameter_list|(
@@ -6961,6 +7013,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|msgtypes
@@ -7051,6 +7104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|print_rtmsg
 parameter_list|(
@@ -7061,6 +7115,7 @@ name|rtm
 parameter_list|,
 name|int
 name|msglen
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -7088,6 +7143,7 @@ name|if_announcemsghdr
 modifier|*
 name|ifan
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|state
@@ -7481,6 +7537,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_getmsg
 parameter_list|(
@@ -8078,6 +8135,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pmsg_common
 parameter_list|(
@@ -8150,6 +8208,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pmsg_addrs
 parameter_list|(
@@ -8218,6 +8277,8 @@ operator|=
 literal|1
 init|;
 name|i
+operator|!=
+literal|0
 condition|;
 name|i
 operator|<<=
@@ -8280,6 +8341,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bprintf
 parameter_list|(
@@ -8292,7 +8354,7 @@ name|b
 parameter_list|,
 name|u_char
 modifier|*
-name|s
+name|str
 parameter_list|)
 block|{
 name|int
@@ -8316,7 +8378,7 @@ operator|(
 name|i
 operator|=
 operator|*
-name|s
+name|str
 operator|++
 operator|)
 operator|!=
@@ -8374,12 +8436,12 @@ operator|(
 name|i
 operator|=
 operator|*
-name|s
+name|str
 operator|)
 operator|>
 literal|32
 condition|;
-name|s
+name|str
 operator|++
 control|)
 operator|(
@@ -8397,11 +8459,11 @@ else|else
 while|while
 condition|(
 operator|*
-name|s
+name|str
 operator|>
 literal|32
 condition|)
-name|s
+name|str
 operator|++
 expr_stmt|;
 block|}
@@ -8426,6 +8488,7 @@ begin_function
 name|int
 name|keyword
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -8443,6 +8506,8 @@ condition|(
 name|kt
 operator|->
 name|kt_cp
+operator|!=
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
@@ -8452,25 +8517,31 @@ name|kt_cp
 argument_list|,
 name|cp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|kt
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|kt
 operator|->
 name|kt_i
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sodump
 parameter_list|(
 name|sup
 name|su
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|which
@@ -8616,6 +8687,7 @@ value|(4*2)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|sockaddr
 parameter_list|(
@@ -8769,7 +8841,7 @@ condition|(
 operator|*
 name|addr
 operator|==
-literal|0
+literal|'\0'
 condition|)
 name|state
 operator||=
@@ -8901,6 +8973,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|atalk_aton
 parameter_list|(
@@ -8974,6 +9047,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|atalk_ntoa
