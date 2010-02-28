@@ -47,6 +47,12 @@ directive|include
 file|<openssl/bn.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -541,6 +547,16 @@ return|;
 block|}
 endif|#
 directive|endif
+name|RAND_seed
+argument_list|(
+name|dgst
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|s
 operator|=
 name|DSA_do_sign

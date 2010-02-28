@@ -5914,6 +5914,14 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+name|X509_STORE_CTX_set_flags
+argument_list|(
+operator|&
+name|xsc
+argument_list|,
+name|X509_V_FLAG_CHECK_SS_SIGNATURE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

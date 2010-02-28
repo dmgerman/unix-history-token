@@ -1117,6 +1117,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fgets
 argument_list|(
 name|buf
@@ -1126,7 +1129,21 @@ name|buf
 argument_list|,
 name|infile
 argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"unable to read key from '%s'\n"
+argument_list|,
+name|file
+argument_list|)
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 name|fclose
 argument_list|(
 name|infile

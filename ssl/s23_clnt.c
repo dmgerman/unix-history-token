@@ -698,8 +698,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|ch_len
 decl_stmt|;
 name|unsigned
@@ -720,10 +718,18 @@ name|version_major
 decl_stmt|,
 name|version_minor
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+name|int
+name|j
+decl_stmt|;
 name|SSL_COMP
 modifier|*
 name|comp
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 decl_stmt|;

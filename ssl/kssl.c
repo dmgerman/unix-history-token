@@ -21,48 +21,6 @@ directive|include
 file|<openssl/opensslconf.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_XOPEN_SOURCE
-value|500
-end_define
-
-begin_comment
-comment|/* glibc2 needs this to declare strptime() */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* experimental */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_XOPEN_SOURCE
-end_undef
-
-begin_comment
-comment|/* To avoid clashes with anything else... */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

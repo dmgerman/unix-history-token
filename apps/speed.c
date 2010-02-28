@@ -1085,31 +1085,26 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYS_VMS
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_WINDOWS
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_MACINTOSH_CLASSIC
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_OS2
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|OPENSSL_SYS_NETWARE
@@ -1119,7 +1114,31 @@ end_if
 begin_define
 define|#
 directive|define
+name|NO_FORK
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|HAVE_FORK
+end_elif
+
+begin_undef
+undef|#
+directive|undef
+name|NO_FORK
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO_FORK
 value|1
 end_define
 
@@ -1265,11 +1284,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FORK
+end_ifndef
 
 begin_function_decl
 specifier|static
@@ -1436,6 +1455,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_RSA
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|double
@@ -1449,6 +1474,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DSA
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|double
@@ -1461,6 +1497,11 @@ literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -3732,9 +3773,9 @@ name|decrypt
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
+ifndef|#
+directive|ifndef
+name|NO_FORK
 name|int
 name|multi
 init|=
@@ -4388,9 +4429,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
+ifndef|#
+directive|ifndef
+name|NO_FORK
 elseif|else
 if|if
 condition|(
@@ -7137,9 +7178,9 @@ argument_list|,
 literal|"-mr             produce machine readable output.\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
+ifndef|#
+directive|ifndef
+name|NO_FORK
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -7163,9 +7204,9 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
+ifndef|#
+directive|ifndef
+name|NO_FORK
 if|if
 condition|(
 name|multi
@@ -15590,9 +15631,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
+ifndef|#
+directive|ifndef
+name|NO_FORK
 name|show_res
 label|:
 endif|#
@@ -17083,11 +17124,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_FORK
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FORK
+end_ifndef
 
 begin_function
 specifier|static

@@ -83,6 +83,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+end_ifdef
+
+begin_comment
+comment|/* Rename these functions to avoid name clashes on NetWare OS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uni2asc
+value|OPENSSL_uni2asc
+end_define
+
+begin_define
+define|#
+directive|define
+name|asc2uni
+value|OPENSSL_asc2uni
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* PKCS12 compatible key/IV generation */
 end_comment

@@ -454,6 +454,18 @@ case|:
 return|return
 name|NID_des_cfb64
 return|;
+case|case
+name|NID_des_ede3_cfb64
+case|:
+case|case
+name|NID_des_ede3_cfb8
+case|:
+case|case
+name|NID_des_ede3_cfb1
+case|:
+return|return
+name|NID_des_cfb64
+return|;
 default|default:
 comment|/* Check it has an OID and it is valid */
 name|otmp

@@ -5097,6 +5097,26 @@ begin_comment
 comment|/* SHA512_ASM */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* OPENSSL_NO_SHA512 */
+end_comment
+
+begin_comment
+comment|/* Sensitive compilers ("Compaq C V6.4-005 on OpenVMS VAX V7.3", for  * example) dislike a statement-free file, complaining:  * "%CC-W-EMPTYFILE, Source file does not contain any declarations."  */
+end_comment
+
+begin_function_decl
+name|int
+name|sha512_dummy
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

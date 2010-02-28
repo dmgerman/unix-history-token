@@ -1,4 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_include
+include|#
+directive|include
+file|"../bn_lcl.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -30,6 +36,18 @@ directive|define
 name|BN_ULONG
 value|unsigned long
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|mul
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|mul_add
+end_undef
 
 begin_comment
 comment|/*  * "m"(a), "+m"(r)	is the way to favor DirectPath µ-code;  * "g"(0)		let the compiler to decide where does it  *			want to keep the value of zero;  */
@@ -90,6 +108,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -302,6 +321,7 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
@@ -511,6 +531,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -732,10 +753,12 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|bp
@@ -785,10 +808,12 @@ name|BN_ULONG
 modifier|*
 name|rp
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|ap
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|bp
@@ -3131,6 +3156,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a
@@ -3863,6 +3889,7 @@ name|BN_ULONG
 modifier|*
 name|r
 parameter_list|,
+specifier|const
 name|BN_ULONG
 modifier|*
 name|a

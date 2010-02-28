@@ -1350,7 +1350,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -1359,6 +1358,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -1386,7 +1387,6 @@ name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -1395,6 +1395,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err

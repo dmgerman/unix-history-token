@@ -228,7 +228,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|RAND_bytes
 argument_list|(
 name|rec
@@ -242,6 +241,8 @@ operator|->
 name|cipher
 argument_list|)
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|-

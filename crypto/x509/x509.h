@@ -262,6 +262,9 @@ name|X509_NAME
 undef|#
 directive|undef
 name|X509_CERT_PAIR
+undef|#
+directive|undef
+name|X509_EXTENSIONS
 endif|#
 directive|endif
 define|#

@@ -190,6 +190,9 @@ name|OPENSSL_assert
 argument_list|(
 name|j
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|ctx
 operator|->
@@ -253,6 +256,9 @@ name|OPENSSL_assert
 argument_list|(
 name|len
 operator|<=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|ctx
 operator|->
