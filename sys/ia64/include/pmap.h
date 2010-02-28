@@ -150,10 +150,6 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* base RID for pmap */
-name|int
-name|pm_active
-decl_stmt|;
-comment|/* active flag */
 name|struct
 name|pmap_statistics
 name|pm_stats
