@@ -269,6 +269,12 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|RB_COMPACT
+end_define
+
 begin_include
 include|#
 directive|include
@@ -6305,7 +6311,7 @@ comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|rb_wrap
+name|rb_gen
 argument_list|(
 argument|__unused static
 argument_list|,
@@ -6384,7 +6390,7 @@ comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|rb_wrap
+name|rb_gen
 argument_list|(
 argument|__unused static
 argument_list|,
@@ -8527,7 +8533,7 @@ comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|rb_wrap
+name|rb_gen
 argument_list|(
 argument|__unused static
 argument_list|,
@@ -8611,7 +8617,7 @@ comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|rb_wrap
+name|rb_gen
 argument_list|(
 argument|__unused static
 argument_list|,
@@ -8753,7 +8759,7 @@ comment|/* Wrap red-black tree macros in functions. */
 end_comment
 
 begin_macro
-name|rb_wrap
+name|rb_gen
 argument_list|(
 argument|__unused static
 argument_list|,
@@ -11041,6 +11047,68 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DEBUG
+end_ifdef
+
+begin_function
+specifier|static
+name|arena_chunk_t
+modifier|*
+name|chunks_dirty_iter_cb
+parameter_list|(
+name|arena_chunk_tree_t
+modifier|*
+name|tree
+parameter_list|,
+name|arena_chunk_t
+modifier|*
+name|chunk
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|size_t
+modifier|*
+name|ndirty
+init|=
+operator|(
+name|size_t
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|assert
+argument_list|(
+name|chunk
+operator|->
+name|dirtied
+argument_list|)
+expr_stmt|;
+operator|*
+name|ndirty
+operator|+=
+name|chunk
+operator|->
+name|ndirty
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -11068,41 +11136,25 @@ name|ndirty
 init|=
 literal|0
 decl_stmt|;
-name|rb_foreach_begin
+name|arena_chunk_tree_dirty_iter
 argument_list|(
-argument|arena_chunk_t
-argument_list|,
-argument|link_dirty
-argument_list|,
-argument|&arena->chunks_dirty
-argument_list|,
-argument|chunk
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|chunk
+operator|&
+name|arena
 operator|->
-name|dirtied
+name|chunks_dirty
+argument_list|,
+name|NULL
+argument_list|,
+name|chunks_dirty_iter_cb
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|ndirty
 argument_list|)
 expr_stmt|;
-name|ndirty
-operator|+=
-name|chunk
-operator|->
-name|ndirty
-expr_stmt|;
-block|}
-name|rb_foreach_end
-argument_list|(
-argument|arena_chunk_t
-argument_list|,
-argument|link_dirty
-argument_list|,
-argument|&arena->chunks_dirty
-argument_list|,
-argument|chunk
-argument_list|)
 name|assert
 argument_list|(
 name|ndirty
