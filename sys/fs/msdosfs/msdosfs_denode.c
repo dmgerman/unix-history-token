@@ -564,17 +564,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX: Not sure this is right */
-name|nvp
+operator|*
+name|depp
 operator|=
 name|xvp
-expr_stmt|;
-name|ldep
 operator|->
-name|de_vnode
-operator|=
-name|nvp
+name|v_data
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|ldep
 operator|->
