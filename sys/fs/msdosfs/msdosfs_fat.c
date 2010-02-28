@@ -75,75 +75,6 @@ directive|include
 file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
-begin_comment
-comment|/*  * Fat cache stats.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fc_fileextends
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of file extends			 */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fc_lfcempty
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of time last file cluster cache entry 				 * was empty */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fc_bmapcalls
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of times pcbmap was called		 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LMMAX
-value|20
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fc_lmdistance
-index|[
-name|LMMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* counters for how far off the last 				 * cluster mapped entry was. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fc_largedistance
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* off by more than LMMAX		 */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -532,9 +463,6 @@ decl_stmt|;
 name|u_long
 name|bsize
 decl_stmt|;
-name|fc_bmapcalls
-operator|++
-expr_stmt|;
 comment|/* 	 * If they don't give us someplace to return a value then don't 	 * bother doing anything. 	 */
 if|if
 condition|(
@@ -720,28 +648,6 @@ argument_list|,
 operator|&
 name|cn
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|bn
-operator|=
-name|findcn
-operator|-
-name|i
-operator|)
-operator|>=
-name|LMMAX
-condition|)
-name|fc_largedistance
-operator|++
-expr_stmt|;
-else|else
-name|fc_lmdistance
-index|[
-name|bn
-index|]
-operator|++
 expr_stmt|;
 comment|/* 	 * Handle all other files or directories the normal way. 	 */
 for|for
@@ -4090,9 +3996,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If the "file's last cluster" cache entry is empty, and the file 	 * is not empty, then fill the cache entry by calling pcbmap(). 	 */
-name|fc_fileextends
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|dep
@@ -4113,9 +4016,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fc_lfcempty
-operator|++
-expr_stmt|;
 name|error
 operator|=
 name|pcbmap
