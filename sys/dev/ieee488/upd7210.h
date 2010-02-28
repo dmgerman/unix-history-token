@@ -80,6 +80,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|use_fifo
+decl_stmt|;
 comment|/* private stuff */
 name|struct
 name|mtx
