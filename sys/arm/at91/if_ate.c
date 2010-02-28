@@ -2057,10 +2057,6 @@ condition|)
 continue|continue;
 name|index
 operator|=
-literal|0
-expr_stmt|;
-name|index
-operator|=
 name|ate_mac_hash
 argument_list|(
 name|LLADDR
