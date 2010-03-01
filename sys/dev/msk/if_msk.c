@@ -17261,7 +17261,6 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* XXX Sync Rx LEs here. */
 name|rxput
 index|[
 name|MSK_PORT_A
@@ -17322,7 +17321,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 		 * Marvell's FreeBSD driver updates status LE after clearing 		 * HW_OWNER. However we don't have a way to sync single LE 		 * with bus_dma(9) API. bus_dma(9) provides a way to sync 		 * an entire DMA map. So don't sync LE until we have a better 		 * way to sync LEs. 		 */
 name|control
 operator|&=
 operator|~
@@ -17613,7 +17611,21 @@ name|msk_stat_cons
 operator|=
 name|cons
 expr_stmt|;
-comment|/* XXX We should sync status LEs here. See above notes. */
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|msk_stat_tag
+argument_list|,
+name|sc
+operator|->
+name|msk_stat_map
+argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rxput
