@@ -1035,6 +1035,14 @@ name|uint32_t
 name|ah_11nCompat
 decl_stmt|;
 comment|/* 11n compat controls */
+name|uint8_t
+name|ah_txtrig_level
+decl_stmt|;
+comment|/* current Tx trigger level */
+name|uint8_t
+name|ah_max_txtrig_level
+decl_stmt|;
+comment|/* max tx trigger level */
 comment|/* 	 * State for regulatory domain handling. 	 */
 name|HAL_REG_DOMAIN
 name|ah_currentRD

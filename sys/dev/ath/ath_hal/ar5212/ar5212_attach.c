@@ -595,6 +595,16 @@ name|ar5212SetInterrupts
 block|}
 block|,
 operator|.
+name|ah_txtrig_level
+operator|=
+name|INIT_TX_FIFO_THRESHOLD
+block|,
+operator|.
+name|ah_max_txtrig_level
+operator|=
+name|MAX_TX_FIFO_THRESHOLD
+block|,
+operator|.
 name|ah_getChannelEdges
 operator|=
 name|ar5212GetChannelEdges

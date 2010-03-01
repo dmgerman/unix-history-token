@@ -603,6 +603,17 @@ name|ah_tx_chainmask
 operator|=
 name|AR9285_DEFAULT_TXCHAINMASK
 expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_max_txtrig_level
+operator|=
+name|MAX_TX_FIFO_THRESHOLD
+operator|>>
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
