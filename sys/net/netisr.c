@@ -146,6 +146,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|_WANT_NETISR_INTERNAL
+end_define
+
+begin_comment
+comment|/* Enable definitions from netisr_internal.h */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -167,11 +177,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/netisr_internal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
 begin_comment
-comment|/*-  * Synchronize use and modification of the registered netisr data structures;  * acquire a read lock while modifying the set of registered protocols to  * prevent partially registered or unregistered protocols from being run.  *  * The following data structures and fields are protected by this lock:  *  * - The np array, including all fields of struct netisr_proto.  * - The nws array, including all fields of struct netisr_worker.  * - The nws_array array.  *  * Note: the NETISR_LOCKING define controls whether read locks are acquired  * in packet processing paths requiring netisr registration stability.  This  * is disabled by default as it can lead to measurable performance  * degradation even with rmlocks (3%-6% for loopback ping-pong traffic), and  * because netisr registration and unregistration is extremely rare at  * runtime.  If it becomes more common, this decision should be revisited.  *  * XXXRW: rmlocks don't support assertions.  */
+comment|/*-  * Synchronize use and modification of the registered netisr data structures;  * acquire a read lock while modifying the set of registered protocols to  * prevent partially registered or unregistered protocols from being run.  *  * The following data structures and fields are protected by this lock:  *  * - The netisr_proto array, including all fields of struct netisr_proto.  * - The nws array, including all fields of struct netisr_worker.  * - The nws_array array.  *  * Note: the NETISR_LOCKING define controls whether read locks are acquired  * in packet processing paths requiring netisr registration stability.  This  * is disabled by default as it can lead to measurable performance  * degradation even with rmlocks (3%-6% for loopback ping-pong traffic), and  * because netisr registration and unregistration is extremely rare at  * runtime.  If it becomes more common, this decision should be revisited.  *  * XXXRW: rmlocks don't support assertions.  */
 end_comment
 
 begin_decl_stmt
@@ -549,71 +565,48 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Each protocol is described by a struct netisr_proto, which holds all  * global per-protocol information.  This data structure is set up by  * netisr_register(), and derived from the public struct netisr_handler.  */
+comment|/*  * Store and export the compile-time constant NETISR_MAXPROT limit on the  * number of protocols that can register with netisr at a time.  This is  * required for crashdump analysis, as it sizes netisr_proto[].  */
 end_comment
 
-begin_struct
-struct|struct
-name|netisr_proto
-block|{
-specifier|const
-name|char
-modifier|*
-name|np_name
-decl_stmt|;
-comment|/* Character string protocol name. */
-name|netisr_handler_t
-modifier|*
-name|np_handler
-decl_stmt|;
-comment|/* Protocol handler. */
-name|netisr_m2flow_t
-modifier|*
-name|np_m2flow
-decl_stmt|;
-comment|/* Query flow for untagged packet. */
-name|netisr_m2cpuid_t
-modifier|*
-name|np_m2cpuid
-decl_stmt|;
-comment|/* Query CPU to process packet on. */
-name|netisr_drainedcpu_t
-modifier|*
-name|np_drainedcpu
-decl_stmt|;
-comment|/* Callback when drained a queue. */
+begin_decl_stmt
+specifier|static
 name|u_int
-name|np_qlimit
-decl_stmt|;
-comment|/* Maximum per-CPU queue depth. */
-name|u_int
-name|np_policy
-decl_stmt|;
-comment|/* Work placement policy. */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
+name|netisr_maxprot
+init|=
 name|NETISR_MAXPROT
-value|16
-end_define
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_isr
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxprot
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|netisr_maxprot
+argument_list|,
+literal|0
+argument_list|,
+literal|"Compile-time limit on the number of protocols supported by netisr."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* Compile-time limit. */
-end_comment
-
-begin_comment
-comment|/*  * The np array describes all registered protocols, indexed by protocol  * number.  */
+comment|/*  * The netisr_proto array describes all registered protocols, indexed by  * protocol number.  See netisr_internal.h for more details.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|netisr_proto
-name|np
+name|netisr_proto
 index|[
 name|NETISR_MAXPROT
 index|]
@@ -621,112 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Protocol-specific work for each workstream is described by struct  * netisr_work.  Each work descriptor consists of an mbuf queue and  * statistics.  */
-end_comment
-
-begin_struct
-struct|struct
-name|netisr_work
-block|{
-comment|/* 	 * Packet queue, linked by m_nextpkt. 	 */
-name|struct
-name|mbuf
-modifier|*
-name|nw_head
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|nw_tail
-decl_stmt|;
-name|u_int
-name|nw_len
-decl_stmt|;
-name|u_int
-name|nw_qlimit
-decl_stmt|;
-name|u_int
-name|nw_watermark
-decl_stmt|;
-comment|/* 	 * Statistics -- written unlocked, but mostly from curcpu. 	 */
-name|u_int64_t
-name|nw_dispatched
-decl_stmt|;
-comment|/* Number of direct dispatches. */
-name|u_int64_t
-name|nw_hybrid_dispatched
-decl_stmt|;
-comment|/* "" hybrid dispatches. */
-name|u_int64_t
-name|nw_qdrops
-decl_stmt|;
-comment|/* "" drops. */
-name|u_int64_t
-name|nw_queued
-decl_stmt|;
-comment|/* "" enqueues. */
-name|u_int64_t
-name|nw_handled
-decl_stmt|;
-comment|/* "" handled in worker. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Workstreams hold a queue of ordered work across each protocol, and are  * described by netisr_workstream.  Each workstream is associated with a  * worker thread, which in turn is pinned to a CPU.  Work associated with a  * workstream can be processd in other threads during direct dispatch;  * concurrent processing is prevented by the NWS_RUNNING flag, which  * indicates that a thread is already processing the work queue.  It is  * important to prevent a directly dispatched packet from "skipping ahead" of  * work already in the workstream queue.  */
-end_comment
-
-begin_struct
-struct|struct
-name|netisr_workstream
-block|{
-name|struct
-name|intr_event
-modifier|*
-name|nws_intr_event
-decl_stmt|;
-comment|/* Handler for stream. */
-name|void
-modifier|*
-name|nws_swi_cookie
-decl_stmt|;
-comment|/* swi(9) cookie for stream. */
-name|struct
-name|mtx
-name|nws_mtx
-decl_stmt|;
-comment|/* Synchronize work. */
-name|u_int
-name|nws_cpu
-decl_stmt|;
-comment|/* CPU pinning. */
-name|u_int
-name|nws_flags
-decl_stmt|;
-comment|/* Wakeup flags. */
-name|u_int
-name|nws_pendingbits
-decl_stmt|;
-comment|/* Scheduled protocols. */
-comment|/* 	 * Each protocol has per-workstream data. 	 */
-name|struct
-name|netisr_work
-name|nws_work
-index|[
-name|NETISR_MAXPROT
-index|]
-decl_stmt|;
-block|}
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Per-CPU workstream data.  */
+comment|/*  * Per-CPU workstream data.  See netisr_internal.h for more details.  */
 end_comment
 
 begin_expr_stmt
@@ -785,43 +673,6 @@ literal|"Number of extant netisr threads."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Per-workstream flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NWS_RUNNING
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Currently running in a thread. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NWS_DISPATCHING
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Currently being direct-dispatched. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NWS_SCHEDULED
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* Signal issued. */
-end_comment
 
 begin_comment
 comment|/*  * Synchronization for each workstream: a mutex protects all mutable fields  * in each stream, including per-protocol state (mbuf queues).  The SWI is  * woken up if asynchronous dispatch is required.  */
@@ -1149,7 +1000,7 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1171,7 +1022,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1191,7 +1042,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1200,7 +1051,7 @@ name|np_name
 operator|=
 name|name
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1211,7 +1062,7 @@ name|nhp
 operator|->
 name|nh_handler
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1222,7 +1073,7 @@ name|nhp
 operator|->
 name|nh_m2flow
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1233,7 +1084,7 @@ name|nhp
 operator|->
 name|nh_m2cpuid
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1252,7 +1103,7 @@ name|nh_qlimit
 operator|==
 literal|0
 condition|)
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1287,7 +1138,7 @@ argument_list|,
 name|netisr_maxqlimit
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1298,7 +1149,7 @@ name|netisr_maxqlimit
 expr_stmt|;
 block|}
 else|else
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1309,7 +1160,7 @@ name|nhp
 operator|->
 name|nh_qlimit
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1374,7 +1225,7 @@ name|npwp
 operator|->
 name|nw_qlimit
 operator|=
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1462,7 +1313,7 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1624,7 +1475,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1778,7 +1629,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1801,7 +1652,7 @@ expr_stmt|;
 operator|*
 name|qlimitp
 operator|=
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1905,7 +1756,7 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -1925,7 +1776,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2171,7 +2022,7 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2191,7 +2042,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2200,7 +2051,7 @@ name|np_name
 operator|=
 name|NULL
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2209,7 +2060,7 @@ name|np_handler
 operator|=
 name|NULL
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2218,7 +2069,7 @@ name|np_m2flow
 operator|=
 name|NULL
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2227,7 +2078,7 @@ name|np_m2cpuid
 operator|=
 name|NULL
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2236,7 +2087,7 @@ name|np_qlimit
 operator|=
 literal|0
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2746,7 +2597,7 @@ operator|->
 name|if_vnet
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -2783,14 +2634,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
 operator|.
 name|np_drainedcpu
 condition|)
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3416,7 +3267,7 @@ endif|#
 directive|endif
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3439,7 +3290,7 @@ operator|=
 name|netisr_select_cpuid
 argument_list|(
 operator|&
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3633,7 +3484,7 @@ endif|#
 directive|endif
 name|KASSERT
 argument_list|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3684,7 +3535,7 @@ operator|->
 name|nw_handled
 operator|++
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3708,7 +3559,7 @@ operator|=
 name|netisr_select_cpuid
 argument_list|(
 operator|&
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -3849,7 +3700,7 @@ argument_list|(
 name|nwsp
 argument_list|)
 expr_stmt|;
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -4555,7 +4406,7 @@ block|{
 name|npp
 operator|=
 operator|&
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -5159,7 +5010,7 @@ block|{
 name|npp
 operator|=
 operator|&
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -5479,7 +5330,7 @@ control|)
 block|{
 if|if
 condition|(
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
@@ -5528,7 +5379,7 @@ name|db_printf
 argument_list|(
 literal|"%6s %5d %5d %5d %8ju %8ju %8ju %8ju\n"
 argument_list|,
-name|np
+name|netisr_proto
 index|[
 name|proto
 index|]
