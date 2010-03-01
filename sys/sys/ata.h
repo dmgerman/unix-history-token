@@ -106,9 +106,11 @@ name|u_int16_t
 name|cylinders
 decl_stmt|;
 comment|/* # of cylinders */
+comment|/*002*/
 name|u_int16_t
-name|reserved2
+name|specconf
 decl_stmt|;
+comment|/* specific configuration */
 comment|/*003*/
 name|u_int16_t
 name|heads
