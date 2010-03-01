@@ -16978,6 +16978,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSK_INT_HOLDOFF_DEFAULT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSK_TX_TIMEOUT
 value|5
 end_define
@@ -17288,6 +17295,9 @@ name|msk_stat_ring
 decl_stmt|;
 name|bus_addr_t
 name|msk_stat_ring_paddr
+decl_stmt|;
+name|int
+name|msk_int_holdoff
 decl_stmt|;
 name|int
 name|msk_process_limit
