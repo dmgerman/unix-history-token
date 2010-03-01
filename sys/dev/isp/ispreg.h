@@ -4254,6 +4254,13 @@ name|SXP_PINS_SE_MODE
 value|0x0400
 end_define
 
+begin_define
+define|#
+directive|define
+name|SXP_PINS_MODE_MASK
+value|(SXP_PINS_LVD_MODE|SXP_PINS_HVD_MODE|SXP_PINS_SE_MODE)
+end_define
+
 begin_comment
 comment|/* The above have to be put together with the DIFFM pin to make sense */
 end_comment
@@ -4283,8 +4290,7 @@ begin_define
 define|#
 directive|define
 name|ISP1080_MODE_MASK
-define|\
-value|(SXP_PINS_LVD_MODE|SXP_PINS_HVD_MODE|SXP_PINS_SE_MODE|SXP_PINS_DIFF_MODE)
+value|(SXP_PINS_MODE_MASK|SXP_PINS_DIFF_MODE)
 end_define
 
 begin_comment

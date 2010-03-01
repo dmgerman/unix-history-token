@@ -1216,6 +1216,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASYNC_RIO32_1
+value|0x8021
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_RIO32_2
+value|0x8022
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASYNC_IP_XMIT_DONE
 value|0x8022
 end_define
@@ -1265,35 +1279,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO1
+name|ASYNC_RIO16_1
 value|0x8031
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO2
+name|ASYNC_RIO16_2
 value|0x8032
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO3
+name|ASYNC_RIO16_3
 value|0x8033
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO4
+name|ASYNC_RIO16_4
 value|0x8034
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO5
+name|ASYNC_RIO16_5
 value|0x8035
 end_define
 
@@ -1342,16 +1356,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO_RESP
+name|ASYNC_RIOZIO_STALL
 value|0x8040
 end_define
+
+begin_comment
+comment|/* there's a RIO/ZIO entry that hasn't been serviced */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ASYNC_RIO_COMP
+name|ASYNC_RIO32_2_2200
 value|0x8042
 end_define
+
+begin_comment
+comment|/* same as ASYNC_RIO32_2, but for 2100/2200 */
+end_comment
 
 begin_define
 define|#
@@ -4047,7 +4069,7 @@ value|(ISP_CAP_MULTI_ID(isp) ? tag : 0)
 end_define
 
 begin_comment
-comment|/*  * Reduced Interrupt Operation Response Queue Entreis  */
+comment|/*  * Reduced Interrupt Operation Response Queue Entries  */
 end_comment
 
 begin_typedef

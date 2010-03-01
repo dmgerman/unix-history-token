@@ -5420,7 +5420,7 @@ expr_stmt|;
 operator|*
 name|mbox0p
 operator|=
-name|ASYNC_RIO1
+name|ASYNC_RIO16_1
 expr_stmt|;
 operator|*
 name|semap
