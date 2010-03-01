@@ -2897,11 +2897,6 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|struct
-name|cam_path
-modifier|*
-name|path
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2931,6 +2926,10 @@ operator|=
 name|xpt_create_path
 argument_list|(
 operator|&
+name|ccb
+operator|->
+name|ccb_h
+operator|.
 name|path
 argument_list|,
 name|xpt_periph
