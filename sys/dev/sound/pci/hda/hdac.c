@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|HDA_DRV_TEST_REV
-value|"20100122_0141"
+value|"20100226_0142"
 end_define
 
 begin_expr_stmt
@@ -18090,15 +18090,17 @@ if|if
 condition|(
 name|as
 operator|->
-name|hpredir
-operator|>=
-literal|0
+name|fakeredir
 operator|&&
 name|i
 operator|==
+operator|(
 name|as
 operator|->
 name|pincnt
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|c
