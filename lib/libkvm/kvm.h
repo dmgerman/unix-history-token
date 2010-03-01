@@ -173,7 +173,8 @@ parameter_list|(
 name|kvm_t
 modifier|*
 parameter_list|,
-name|u_int
+name|unsigned
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
