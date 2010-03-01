@@ -2753,9 +2753,9 @@ literal|"%-25s %12s %12s\n"
 argument_list|,
 literal|"Setting"
 argument_list|,
-literal|"Value"
+literal|"Current"
 argument_list|,
-literal|"Maximum"
+literal|"Limit"
 argument_list|)
 expr_stmt|;
 name|printf
