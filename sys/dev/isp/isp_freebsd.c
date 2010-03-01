@@ -13666,7 +13666,7 @@ name|tval
 decl_stmt|,
 name|handle
 decl_stmt|;
-comment|/* 	 * CTIO, CTIO2 and CTIO7 are close enough.... 	 */
+comment|/* 	 * CTIO handles are 16 bits. 	 * CTIO2 and CTIO7 are 32 bits. 	 */
 if|if
 condition|(
 name|IS_SCSI
