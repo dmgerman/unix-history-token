@@ -3630,6 +3630,11 @@ name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pmp
+condition|)
+block|{
 name|lockdestroy
 argument_list|(
 operator|&
@@ -3638,11 +3643,6 @@ operator|->
 name|pm_fatlock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmp
-condition|)
-block|{
 if|if
 condition|(
 name|pmp
