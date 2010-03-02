@@ -440,6 +440,18 @@ name|ah_setTxPowerLimit
 operator|=
 name|ar5416SetTxPowerLimit
 expr_stmt|;
+name|ah
+operator|->
+name|ah_setTxPower
+operator|=
+name|ar5416SetTransmitPower
+expr_stmt|;
+name|ah
+operator|->
+name|ah_setBoardValues
+operator|=
+name|ar5416SetBoardValues
+expr_stmt|;
 comment|/* Transmit functions */
 name|ah
 operator|->

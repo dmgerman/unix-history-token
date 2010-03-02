@@ -123,10 +123,25 @@ decl_stmt|;
 name|HAL_INT
 name|omask
 decl_stmt|;
+if|if
+condition|(
+name|ahp
+operator|->
+name|ah_txTrigLev
+operator|>=
+name|ahp
+operator|->
+name|ah_maxTxTrigLev
+condition|)
+return|return
+name|AH_FALSE
+return|;
 comment|/* 	 * Disable interrupts while futzing with the fifo level. 	 */
 name|omask
 operator|=
-name|ar5212SetInterrupts
+name|ah
+operator|->
+name|ah_setInterrupts
 argument_list|(
 name|ah
 argument_list|,
@@ -170,7 +185,9 @@ if|if
 condition|(
 name|curLevel
 operator|<
-name|MAX_TX_FIFO_THRESHOLD
+name|ahp
+operator|->
+name|ah_maxTxTrigLev
 condition|)
 name|newLevel
 operator|++
@@ -214,8 +231,16 @@ name|AR_FTRIG
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ahp
+operator|->
+name|ah_txTrigLev
+operator|=
+name|newLevel
+expr_stmt|;
 comment|/* re-enable chip interrupts */
-name|ar5212SetInterrupts
+name|ah
+operator|->
+name|ah_setInterrupts
 argument_list|(
 name|ah
 argument_list|,

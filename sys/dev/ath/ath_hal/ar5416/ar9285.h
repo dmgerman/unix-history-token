@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ATH_AR9280_H_
+name|_ATH_AR9285_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ATH_AR9280_H_
+name|_ATH_AR9285_H_
 end_define
 
 begin_include
@@ -23,20 +23,17 @@ end_include
 
 begin_struct
 struct|struct
-name|ath_hal_9280
+name|ath_hal_9285
 block|{
 name|struct
 name|ath_hal_5416
 name|ah_5416
 decl_stmt|;
 name|HAL_INI_ARRAY
-name|ah_ini_xmodes
+name|ah_ini_txgain
 decl_stmt|;
 name|HAL_INI_ARRAY
 name|ah_ini_rxgain
-decl_stmt|;
-name|HAL_INI_ARRAY
-name|ah_ini_txgain
 decl_stmt|;
 block|}
 struct|;
@@ -45,18 +42,11 @@ end_struct
 begin_define
 define|#
 directive|define
-name|AH9280
+name|AH9285
 parameter_list|(
 name|_ah
 parameter_list|)
-value|((struct ath_hal_9280 *)(_ah))
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR9280_DEFAULT_RXCHAINMASK
-value|3
+value|((struct ath_hal_9285 *)(_ah))
 end_define
 
 begin_define
@@ -69,40 +59,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR9280_DEFAULT_TXCHAINMASK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|AR9285_DEFAULT_TXCHAINMASK
 value|1
 end_define
 
 begin_function_decl
 name|HAL_BOOL
-name|ar9280RfAttach
-parameter_list|(
-name|struct
-name|ath_hal
-modifier|*
-parameter_list|,
-name|HAL_STATUS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|ath_hal
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|HAL_BOOL
-name|ar9280SetAntennaSwitch
+name|ar9285SetAntennaSwitch
 parameter_list|(
 name|struct
 name|ath_hal
@@ -114,8 +77,43 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ar9280SpurMitigate
+name|HAL_BOOL
+name|ar9285RfAttach
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|HAL_STATUS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar9285SetTransmitPower
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|,
+name|uint16_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar9285SetBoardValues
 parameter_list|(
 name|struct
 name|ath_hal
@@ -135,7 +133,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ATH_AR9280_H_ */
+comment|/* _ATH_AR9285_H_ */
 end_comment
 
 end_unit
