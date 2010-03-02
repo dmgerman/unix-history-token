@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: spnego.c,v 1.8.118.2 2009/01/18 23:47:40 tbox Exp $ */
+comment|/* $Id: spnego.c,v 1.8.118.4 2009/07/21 07:27:13 marka Exp $ */
 end_comment
 
 begin_comment
@@ -635,7 +635,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
-name|unsigned
+name|void
 modifier|*
 name|num
 parameter_list|,
@@ -827,7 +827,7 @@ name|size_t
 name|len
 parameter_list|,
 specifier|const
-name|unsigned
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -2291,6 +2291,7 @@ operator|++
 name|i
 control|)
 block|{
+name|unsigned
 name|char
 name|mechbuf
 index|[
@@ -3954,7 +3955,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
-name|unsigned
+name|void
 modifier|*
 name|num
 parameter_list|,
@@ -5470,7 +5471,7 @@ name|size_t
 name|len
 parameter_list|,
 specifier|const
-name|unsigned
+name|void
 modifier|*
 name|data
 parameter_list|,
@@ -5483,6 +5484,11 @@ name|unsigned
 name|num
 init|=
 operator|*
+operator|(
+specifier|const
+name|unsigned
+operator|*
+operator|)
 name|data
 decl_stmt|;
 name|size_t

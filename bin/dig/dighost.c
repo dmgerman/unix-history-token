@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dighost.c,v 1.311.70.8 2009/02/25 02:39:21 marka Exp $ */
+comment|/* $Id: dighost.c,v 1.311.70.11 2009/11/10 17:27:13 each Exp $ */
 end_comment
 
 begin_comment
@@ -5321,6 +5321,14 @@ name|ndots
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If user doesn't specify server use nameservers from resolv.conf. */
+if|if
+condition|(
+name|ISC_LIST_EMPTY
+argument_list|(
+name|server_list
+argument_list|)
+condition|)
 name|copy_server_list
 argument_list|(
 name|lwconf
@@ -11904,6 +11912,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|query
+operator|->
+name|sock
+operator|!=
+name|NULL
+condition|)
 name|isc_socket_cancel
 argument_list|(
 name|query
@@ -11913,24 +11929,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|ISC_SOCKCANCEL_ALL
-argument_list|)
-expr_stmt|;
-name|isc_socket_detach
-argument_list|(
-operator|&
-name|query
-operator|->
-name|sock
-argument_list|)
-expr_stmt|;
-name|sockcount
-operator|--
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"sockcount=%d"
-argument_list|,
-name|sockcount
 argument_list|)
 expr_stmt|;
 name|send_tcp_connect
@@ -12908,15 +12906,15 @@ operator|->
 name|sock
 argument_list|)
 expr_stmt|;
-name|sockcount
-operator|--
-expr_stmt|;
 name|INSIST
 argument_list|(
 name|sockcount
-operator|>=
+operator|>
 literal|0
 argument_list|)
+expr_stmt|;
+name|sockcount
+operator|--
 expr_stmt|;
 name|debug
 argument_list|(

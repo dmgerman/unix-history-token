@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.c,v 1.142.50.2 2009/01/18 23:47:40 tbox Exp $ */
+comment|/* $Id: rbt.c,v 1.142.50.3 2009/10/20 05:06:04 marka Exp $ */
 end_comment
 
 begin_comment
@@ -326,6 +326,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|OLDNAMELEN
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->oldnamelen)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OFFSETLEN
 parameter_list|(
 name|node
@@ -341,16 +351,6 @@ parameter_list|(
 name|node
 parameter_list|)
 value|((node)->attributes)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PADBYTES
-parameter_list|(
-name|node
-parameter_list|)
-value|((node)->padbytes)
 end_define
 
 begin_define
@@ -408,7 +408,7 @@ value|((node)->locknum)
 end_define
 
 begin_comment
-comment|/*%  * The variable length stuff stored after the node.  */
+comment|/*%  * The variable length stuff stored after the node has the following  * structure.  *  *<name_data>{1..255}<oldoffsetlen>{1}<offsets>{1..128}  *  *<name_data> contains the name of the node when it was created.  *<oldoffsetlen> contains the length of<offsets> when the node was created.  *<offsets> contains the offets into name for each label when the node was  * created.  */
 end_comment
 
 begin_define
@@ -428,7 +428,17 @@ name|OFFSETS
 parameter_list|(
 name|node
 parameter_list|)
-value|(NAME(node) + NAMELEN(node))
+value|(NAME(node) + OLDNAMELEN(node) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLDOFFSETLEN
+parameter_list|(
+name|node
+parameter_list|)
+value|(OFFSETS(node)[-1])
 end_define
 
 begin_define
@@ -438,7 +448,7 @@ name|NODE_SIZE
 parameter_list|(
 name|node
 parameter_list|)
-value|(sizeof(*node) + \ 			 NAMELEN(node) + OFFSETLEN(node) + PADBYTES(node))
+value|(sizeof(*node) + \ 			 OLDNAMELEN(node) + OLDOFFSETLEN(node) + 1)
 end_define
 
 begin_comment
@@ -2244,47 +2254,6 @@ operator|=
 name|prefix
 operator|->
 name|labels
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|OFFSETS
-argument_list|(
-name|current
-argument_list|)
-argument_list|,
-name|prefix
-operator|->
-name|offsets
-argument_list|,
-name|prefix
-operator|->
-name|labels
-argument_list|)
-expr_stmt|;
-name|PADBYTES
-argument_list|(
-name|current
-argument_list|)
-operator|+=
-operator|(
-name|current_name
-operator|.
-name|length
-operator|-
-name|prefix
-operator|->
-name|length
-operator|)
-operator|+
-operator|(
-name|current_name
-operator|.
-name|labels
-operator|-
-name|prefix
-operator|->
-name|labels
-operator|)
 expr_stmt|;
 comment|/* 				 * Set up the new root of the next level. 				 * By definition it will not be the top 				 * level tree, so clear DNS_NAMEATTR_ABSOLUTE. 				 */
 name|current
@@ -4697,6 +4666,8 @@ operator|.
 name|length
 operator|+
 name|labels
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4822,7 +4793,12 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The following is stored to make reconstructing a name from the 	 * stored value in the node easy:  the length of the name, the number 	 * of labels, whether the name is absolute or not, the name itself, 	 * and the name's offsets table. 	 * 	 * XXX RTH 	 *      The offsets table could be made smaller by eliminating the 	 *      first offset, which is always 0.  This requires changes to 	 *      lib/dns/name.c. 	 */
+comment|/* 	 * The following is stored to make reconstructing a name from the 	 * stored value in the node easy:  the length of the name, the number 	 * of labels, whether the name is absolute or not, the name itself, 	 * and the name's offsets table. 	 * 	 * XXX RTH 	 *      The offsets table could be made smaller by eliminating the 	 *      first offset, which is always 0.  This requires changes to 	 *      lib/dns/name.c. 	 * 	 * Note: OLDOFFSETLEN *must* be assigned *after* OLDNAMELEN is assigned 	 * 	 as it uses OLDNAMELEN. 	 */
+name|OLDNAMELEN
+argument_list|(
+name|node
+argument_list|)
+operator|=
 name|NAMELEN
 argument_list|(
 name|node
@@ -4832,13 +4808,11 @@ name|region
 operator|.
 name|length
 expr_stmt|;
-name|PADBYTES
+name|OLDOFFSETLEN
 argument_list|(
 name|node
 argument_list|)
 operator|=
-literal|0
-expr_stmt|;
 name|OFFSETLEN
 argument_list|(
 name|node
