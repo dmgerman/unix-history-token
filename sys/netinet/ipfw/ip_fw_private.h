@@ -26,6 +26,47 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * For platforms that do not have SYSCTL support, we wrap the  * SYSCTL_* into a function (one per file) to collect the values  * into an array at module initialization. The wrapping macros,  * SYSBEGIN() and SYSEND, are empty in the default case.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSBEGIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSBEGIN
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSEND
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSEND
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Return values from ipfw_chk() */
 end_comment
 
@@ -231,6 +272,41 @@ begin_comment
 comment|/* wrapper for freeing a packet, in case we need to do more work */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FREE_PKT
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FREE_PKT
+parameter_list|(
+name|m
+parameter_list|)
+value|netisr_dispatch(-1, m)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -240,6 +316,20 @@ name|m
 parameter_list|)
 value|m_freem(m)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !FREE_PKT */
+end_comment
 
 begin_comment
 comment|/*  * Function definitions.  */
@@ -714,6 +804,25 @@ index|[
 name|IPFW_TABLES_MAX
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+name|spinlock_t
+name|rwmtx
+decl_stmt|;
+name|spinlock_t
+name|uh_lock
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|rwlock
 name|rwmtx
@@ -723,6 +832,8 @@ name|rwlock
 name|uh_lock
 decl_stmt|;
 comment|/* lock for upper half */
+endif|#
+directive|endif
 name|uint32_t
 name|id
 decl_stmt|;
@@ -926,6 +1037,40 @@ name|struct
 name|ip_fw
 modifier|*
 name|head
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In ip_fw_pfil */
+end_comment
+
+begin_function_decl
+name|int
+name|ipfw_check_hook
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|m0
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+name|dir
+parameter_list|,
+name|struct
+name|inpcb
+modifier|*
+name|inp
 parameter_list|)
 function_decl|;
 end_function_decl

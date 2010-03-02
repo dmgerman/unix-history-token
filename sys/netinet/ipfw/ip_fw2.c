@@ -600,6 +600,29 @@ directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
 
+begin_decl_stmt
+name|uint32_t
+name|dummy_def
+init|=
+name|IPFW_DEFAULT_RULE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|dummy_tables_max
+init|=
+name|IPFW_TABLES_MAX
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|SYSBEGIN
+argument_list|(
+argument|f3
+argument_list|)
+end_macro
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -729,9 +752,10 @@ name|default_rule
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
+operator|&
+name|dummy_def
 argument_list|,
-name|IPFW_DEFAULT_RULE
+literal|0
 argument_list|,
 literal|"The default/max possible rule number."
 argument_list|)
@@ -749,9 +773,10 @@ name|tables_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
+operator|&
+name|dummy_tables_max
 argument_list|,
-name|IPFW_TABLES_MAX
+literal|0
 argument_list|,
 literal|"The maximum number of tables."
 argument_list|)
@@ -883,20 +908,12 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_endif
+begin_function
+name|SYSEND
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYSCTL_NODE */
-end_comment
-
-begin_comment
 comment|/*  * Some macros used in the various matching options.  * L3HDR maps an ipv4 pointer into a layer3 header pointer of type T  * Other macros just cast void * into the appropriate type  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|L3HDR
@@ -906,9 +923,6 @@ parameter_list|,
 name|ip
 parameter_list|)
 value|((T *)((u_int32_t *)(ip) + (ip)->ip_hl))
-end_define
-
-begin_define
 define|#
 directive|define
 name|TCP
@@ -916,9 +930,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct tcphdr *)(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|SCTP
@@ -926,9 +937,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct sctphdr *)(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|UDP
@@ -936,9 +944,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct udphdr *)(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|ICMP
@@ -946,9 +951,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct icmphdr *)(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|ICMP6
@@ -956,9 +958,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct icmp6_hdr *)(p))
-end_define
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -1574,6 +1573,10 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* and OSX too ? */
 name|struct
 name|ifaddr
 modifier|*
@@ -1650,6 +1653,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 return|return
 operator|(
@@ -1682,6 +1688,14 @@ name|u_int
 name|fib
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+return|return
+literal|0
+return|;
+else|#
+directive|else
 name|struct
 name|route
 name|ro
@@ -1865,6 +1879,9 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 end_function
 
@@ -2801,15 +2818,15 @@ parameter_list|,
 name|u_int16_t
 name|src_port
 parameter_list|,
+name|int
+modifier|*
+name|ugid_lookupp
+parameter_list|,
 name|struct
 name|ucred
 modifier|*
 modifier|*
 name|uc
-parameter_list|,
-name|int
-modifier|*
-name|ugid_lookupp
 parameter_list|,
 name|struct
 name|inpcb
@@ -2817,6 +2834,50 @@ modifier|*
 name|inp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+return|return
+name|cred_check
+argument_list|(
+name|insn
+argument_list|,
+name|proto
+argument_list|,
+name|oif
+argument_list|,
+name|dst_ip
+argument_list|,
+name|dst_port
+argument_list|,
+name|src_ip
+argument_list|,
+name|src_port
+argument_list|,
+operator|(
+expr|struct
+name|bsd_ucred
+operator|*
+operator|)
+name|uc
+argument_list|,
+name|ugid_lookupp
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+name|inp
+operator|)
+operator|->
+name|m_skb
+argument_list|)
+return|;
+else|#
+directive|else
+comment|/* FreeBSD */
 name|struct
 name|inpcbinfo
 modifier|*
@@ -3151,6 +3212,9 @@ expr_stmt|;
 return|return
 name|match
 return|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 end_function
 
@@ -3273,6 +3337,15 @@ operator|*
 argument_list|)
 decl_stmt|;
 comment|/* 	 * For rules which contain uid/gid or jail constraints, cache 	 * a copy of the users credentials after the pcb lookup has been 	 * executed. This will speed up the processing of rules with 	 * these types of constraints, as well as decrease contention 	 * on pcb related locks. 	 */
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+name|struct
+name|bsd_ucred
+name|ucred_cache
+decl_stmt|;
+else|#
+directive|else
 name|struct
 name|ucred
 modifier|*
@@ -3280,6 +3353,8 @@ name|ucred_cache
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ucred_lookup
 init|=
@@ -4963,16 +5038,40 @@ argument_list|,
 name|src_port
 argument_list|,
 operator|&
-name|ucred_cache
-argument_list|,
-operator|&
 name|ucred_lookup
+argument_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|&
+name|ucred_cache
 argument_list|,
 name|args
 operator|->
 name|inp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|ucred_cache
+operator|,
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+name|args
+operator|->
+name|m
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|O_RECV
@@ -5515,10 +5614,13 @@ argument_list|,
 name|src_port
 argument_list|,
 operator|&
-name|ucred_cache
-argument_list|,
-operator|&
 name|ucred_lookup
+argument_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+operator|&
+name|ucred_cache
 argument_list|,
 name|args
 operator|->
@@ -5554,6 +5656,56 @@ name|cr_prison
 operator|->
 name|pr_id
 expr_stmt|;
+else|#
+directive|else
+comment|/* !__FreeBSD__ */
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|ucred_cache
+operator|,
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+name|args
+operator|->
+name|m
+block|)
+empty_stmt|;
+if|if
+condition|(
+name|v
+operator|==
+literal|4
+comment|/* O_UID */
+condition|)
+name|key
+operator|=
+name|ucred_cache
+operator|.
+name|uid
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|v
+operator|==
+literal|5
+comment|/* O_JAIL */
+condition|)
+name|key
+operator|=
+name|ucred_cache
+operator|.
+name|xid
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__FreeBSD__ */
 name|key
 operator|=
 name|htonl
@@ -5739,10 +5891,10 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
 ifdef|#
 directive|ifdef
 name|INET6
+comment|/* FALLTHROUGH */
 case|case
 name|O_IP6_SRC_ME
 case|:
@@ -5918,10 +6070,10 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
 ifdef|#
 directive|ifdef
 name|INET6
+comment|/* FALLTHROUGH */
 case|case
 name|O_IP6_DST_ME
 case|:
@@ -8914,52 +9066,71 @@ break|break;
 comment|/* try next rule    */
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* end of inner loop, scan opcodes */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|done
 condition|)
 break|break;
+end_if
+
+begin_comment
 comment|/* next_rule:; */
+end_comment
+
+begin_comment
 comment|/* try next rule		*/
-block|}
+end_comment
+
+begin_comment
+unit|}
 comment|/* end of outer for, scan rules */
-if|if
-condition|(
+end_comment
+
+begin_expr_stmt
+unit|if
+operator|(
 name|done
-condition|)
-block|{
-name|struct
+operator|)
+block|{ 		struct
 name|ip_fw
-modifier|*
+operator|*
 name|rule
-init|=
+operator|=
 name|chain
 operator|->
 name|map
 index|[
 name|f_pos
 index|]
-decl_stmt|;
+block|;
 comment|/* Update statistics */
 name|rule
 operator|->
 name|pcnt
 operator|++
-expr_stmt|;
+block|;
 name|rule
 operator|->
 name|bcnt
 operator|+=
 name|pktlen
-expr_stmt|;
+block|;
 name|rule
 operator|->
 name|timestamp
 operator|=
 name|time_uptime
-expr_stmt|;
-block|}
+block|; 	}
+end_expr_stmt
+
+begin_else
 else|else
 block|{
 name|retval
@@ -8972,11 +9143,23 @@ literal|"ipfw: ouch!, skip past end of rules, denying packet\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_else
+
+begin_expr_stmt
 name|IPFW_RUNLOCK
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_if
 if|if
 condition|(
 name|ucred_cache
@@ -8988,13 +9171,27 @@ argument_list|(
 name|ucred_cache
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
 return|return
 operator|(
 name|retval
 operator|)
 return|;
+end_return
+
+begin_label
 name|pullup_failed
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|V_fw_verbose
@@ -9004,15 +9201,18 @@ argument_list|(
 literal|"ipfw: pullup failed\n"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 name|IP_FW_DENY
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Module and VNET glue  */
 end_comment
 
@@ -9021,7 +9221,7 @@ comment|/*  * Stuff that must be initialised only on boot or module load  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|int
 name|ipfw_init
 parameter_list|(

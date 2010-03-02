@@ -384,6 +384,25 @@ name|ipfw_dyn_rule_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_expr_stmt
+name|DEFINE_SPINLOCK
+argument_list|(
+name|ipfw_dyn_mtx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -395,6 +414,11 @@ end_decl_stmt
 begin_comment
 comment|/* mutex guarding dynamic rules */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -670,6 +694,13 @@ directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
 
+begin_macro
+name|SYSBEGIN
+argument_list|(
+argument|f2
+argument_list|)
+end_macro
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -942,16 +973,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
+begin_function
+name|SYSEND
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYSCTL_NODE */
-end_comment
-
-begin_function
 specifier|static
 name|__inline
 name|int
@@ -3737,6 +3763,14 @@ name|int
 name|flags
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+return|return
+name|NULL
+return|;
+else|#
+directive|else
 name|struct
 name|mbuf
 modifier|*
@@ -4440,6 +4474,9 @@ operator|(
 name|m
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 block|}
 end_function
 

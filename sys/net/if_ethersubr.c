@@ -251,12 +251,6 @@ directive|include
 file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -2497,10 +2491,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* dummynet packet, already partially processed */
 name|struct
-name|dn_pkt_tag
+name|ipfw_rule_ref
 modifier|*
-name|dn_tag
+name|r
 decl_stmt|;
 comment|/* XXX can we free it after use ? */
 name|mtag
@@ -2509,11 +2504,11 @@ name|m_tag_id
 operator|=
 name|PACKET_TAG_NONE
 expr_stmt|;
-name|dn_tag
+name|r
 operator|=
 operator|(
 expr|struct
-name|dn_pkt_tag
+name|ipfw_rule_ref
 operator|*
 operator|)
 operator|(
@@ -2524,17 +2519,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|dn_tag
+name|r
 operator|->
-name|rule
-operator|.
-name|slot
-operator|!=
-literal|0
-operator|&&
-name|V_fw_one_pass
+name|info
+operator|&
+name|IPFW_ONEPASS
 condition|)
-comment|/* dummynet packet, already partially processed */
 return|return
 operator|(
 literal|1
@@ -2544,9 +2534,8 @@ name|args
 operator|.
 name|rule
 operator|=
-name|dn_tag
-operator|->
-name|rule
+operator|*
+name|r
 expr_stmt|;
 block|}
 comment|/* 	 * I need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */

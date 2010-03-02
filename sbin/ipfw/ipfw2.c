@@ -221,7 +221,7 @@ name|tok
 parameter_list|,
 name|s_x
 parameter_list|)
-value|do {			\ 	if (!ac)							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TABLEARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long val;							\ 	char *end;							\ 									\ 	val = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (val == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || val< min || val> max)			\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (val == IP_FW_TABLEARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = val;							\ 	}								\ } while (0)
+value|do {			\ 	if (!av[0])							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TABLEARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long _xval;							\ 	char *end;							\ 									\ 	_xval = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (_xval == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || _xval< min || _xval> max)		\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (_xval == IP_FW_TABLEARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = _xval;							\ 	}								\ } while (0)
 end_define
 
 begin_function
@@ -1550,7 +1550,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * conditionally runs the command.  */
+comment|/*  * conditionally runs the command.  * Selected options or negative -> getsockopt  */
 end_comment
 
 begin_function
@@ -1646,9 +1646,25 @@ operator|==
 name|IP_FW_NAT_GET_CONFIG
 operator|||
 name|optname
+operator|<
+literal|0
+operator|||
+name|optname
 operator|==
 name|IP_FW_NAT_GET_LOG
 condition|)
+block|{
+if|if
+condition|(
+name|optname
+operator|<
+literal|0
+condition|)
+name|optname
+operator|=
+operator|-
+name|optname
+expr_stmt|;
 name|i
 operator|=
 name|getsockopt
@@ -1668,7 +1684,9 @@ operator|)
 name|optlen
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|i
 operator|=
 name|setsockopt
@@ -1684,6 +1702,7 @@ argument_list|,
 name|optlen
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|i
 return|;
@@ -3410,7 +3429,7 @@ name|he
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|uint32_t
 name|len
 init|=
 name|F_LEN
@@ -5440,6 +5459,9 @@ literal|" log"
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_ALTQ
 if|if
 condition|(
 name|altqptr
@@ -5451,6 +5473,8 @@ name|altqptr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|tagptr
@@ -7741,9 +7765,6 @@ begin_function
 name|void
 name|ipfw_sets_handler
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -7771,16 +7792,17 @@ name|cmd
 decl_stmt|,
 name|new_set
 decl_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ac
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -7990,17 +8012,24 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ac
-operator|!=
-literal|2
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|||
+name|av
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
 condition|)
 name|errx
 argument_list|(
@@ -8139,15 +8168,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ac
+operator|!
+name|av
+index|[
+literal|0
+index|]
 operator|&&
 name|_substrcmp
 argument_list|(
@@ -8164,9 +8194,6 @@ name|cmd
 operator|=
 literal|2
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -8178,9 +8205,33 @@ literal|3
 expr_stmt|;
 if|if
 condition|(
-name|ac
-operator|!=
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|||
+name|av
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+operator|||
+name|av
+index|[
+literal|2
+index|]
+operator|==
+name|NULL
+operator|||
+name|av
+index|[
 literal|3
+index|]
+operator|!=
+name|NULL
 operator|||
 name|_substrcmp
 argument_list|(
@@ -8374,9 +8425,6 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -8394,7 +8442,11 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|ac
+operator|!
+name|av
+index|[
+literal|0
+index|]
 condition|)
 block|{
 if|if
@@ -8494,9 +8546,6 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8563,9 +8612,6 @@ begin_function
 name|void
 name|ipfw_sysctl_handler
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -8575,17 +8621,17 @@ name|int
 name|which
 parameter_list|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ac
-operator|==
+name|av
+index|[
 literal|0
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|warnx
@@ -8753,6 +8799,9 @@ name|which
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_ALTQ
 block|}
 elseif|else
 if|if
@@ -8773,6 +8822,8 @@ argument_list|(
 name|which
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -8916,6 +8967,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|co
+operator|.
+name|do_pipe
+condition|)
+block|{
+name|dummynet_list
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|,
+name|show_counters
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|ac
 operator|--
 expr_stmt|;
@@ -8987,28 +9056,6 @@ else|:
 literal|"FW"
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|co
-operator|.
-name|do_pipe
-condition|)
-block|{
-name|ipfw_list_pipes
-argument_list|(
-name|data
-argument_list|,
-name|nbytes
-argument_list|,
-name|ac
-argument_list|,
-name|av
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 block|}
 comment|/* 	 * Count static rules. They have variable size so we 	 * need to scan the list to count them. 	 */
 for|for
@@ -10966,6 +11013,9 @@ index|[
 literal|1
 index|]
 operator|==
+operator|(
+name|uint32_t
+operator|)
 operator|~
 literal|0
 operator|&&
@@ -11326,9 +11376,6 @@ begin_function
 name|void
 name|ipfw_delete
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -11354,9 +11401,6 @@ decl_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|NEED1
 argument_list|(
 literal|"missing rule specification"
@@ -11364,9 +11408,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ac
-operator|>
-literal|0
+operator|*
+name|av
 operator|&&
 name|_substrcmp
 argument_list|(
@@ -11398,9 +11441,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* delete set */
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -11408,7 +11448,8 @@ block|}
 comment|/* Rule number */
 while|while
 condition|(
-name|ac
+operator|*
+name|av
 operator|&&
 name|isdigit
 argument_list|(
@@ -11428,9 +11469,6 @@ argument_list|)
 expr_stmt|;
 name|av
 operator|++
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -11740,7 +11778,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|l
 decl_stmt|;
 name|char
@@ -11912,8 +11951,9 @@ literal|'/'
 condition|)
 block|{
 comment|/* mask len */
-name|l
-operator|=
+name|long
+name|ml
+init|=
 name|strtol
 argument_list|(
 name|ptr
@@ -11923,7 +11963,7 @@ name|ap
 argument_list|,
 literal|10
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -11931,13 +11971,13 @@ name|ap
 operator|!=
 literal|0
 operator|||
-name|l
+name|ml
 operator|>
 name|ETHER_ADDR_LEN
 operator|*
 literal|8
 operator|||
-name|l
+name|ml
 operator|<
 literal|0
 condition|)
@@ -11954,7 +11994,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|l
+name|ml
 operator|>
 literal|0
 operator|&&
@@ -11962,7 +12002,7 @@ name|i
 operator|<
 name|ETHER_ADDR_LEN
 condition|;
-name|l
+name|ml
 operator|-=
 literal|8
 operator|,
@@ -11975,7 +12015,7 @@ name|i
 index|]
 operator|=
 operator|(
-name|l
+name|ml
 operator|>=
 literal|8
 operator|)
@@ -11990,7 +12030,7 @@ operator|<<
 operator|(
 literal|8
 operator|-
-name|l
+name|ml
 operator|)
 expr_stmt|;
 block|}
@@ -12151,9 +12191,6 @@ name|ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -12212,9 +12249,12 @@ name|l
 operator|=
 literal|0
 init|;
+name|av
+index|[
 name|i
-operator|<
-name|ac
+index|]
+operator|!=
+name|NULL
 condition|;
 name|i
 operator|++
@@ -12287,9 +12327,12 @@ name|i
 operator|=
 literal|0
 init|;
+name|av
+index|[
 name|i
-operator|<
-name|ac
+index|]
+operator|!=
+name|NULL
 condition|;
 name|i
 operator|++
@@ -12408,9 +12451,6 @@ name|ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -12423,9 +12463,23 @@ name|mac
 decl_stmt|;
 if|if
 condition|(
-name|ac
-operator|<
-literal|2
+operator|(
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|av
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+operator|)
 condition|)
 name|errx
 argument_list|(
@@ -12531,9 +12585,6 @@ name|ipfw_insn
 modifier|*
 name|cmd
 parameter_list|,
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -12541,9 +12592,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ac
-operator|<
-literal|1
+operator|!
+name|av
 condition|)
 name|errx
 argument_list|(
@@ -13190,6 +13240,7 @@ name|int
 name|opcode
 parameter_list|)
 block|{
+comment|/* XXX "any" is trapped before. Perhaps "to" */
 if|if
 condition|(
 name|_substrcmp
@@ -13335,6 +13386,8 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|ret
 operator|=
@@ -13366,7 +13419,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-operator|!
 name|inet_pton
 argument_list|(
 name|AF_INET6
@@ -13376,6 +13428,8 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|!=
+literal|1
 operator|)
 condition|)
 name|ret
@@ -13512,6 +13566,8 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|ret
 operator|=
@@ -13543,7 +13599,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-operator|!
 name|inet_pton
 argument_list|(
 name|AF_INET6
@@ -13553,6 +13608,8 @@ argument_list|,
 operator|&
 name|a
 argument_list|)
+operator|!=
+literal|1
 operator|)
 condition|)
 name|ret
@@ -13602,9 +13659,6 @@ begin_function
 name|void
 name|ipfw_add
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -13765,13 +13819,13 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 comment|/* [rule N]	-- Rule number optional */
 if|if
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
 operator|&&
 name|isdigit
 argument_list|(
@@ -13794,16 +13848,20 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 block|}
 comment|/* [set N]	-- set number (0..RESVD_SET), optional */
 if|if
 condition|(
-name|ac
-operator|>
+name|av
+index|[
+literal|0
+index|]
+operator|&&
+operator|!
+name|av
+index|[
 literal|1
+index|]
 operator|&&
 name|_substrcmp
 argument_list|(
@@ -13863,17 +13921,19 @@ name|av
 operator|+=
 literal|2
 expr_stmt|;
-name|ac
-operator|-=
-literal|2
-expr_stmt|;
 block|}
 comment|/* [prob D]	-- match probability, optional */
 if|if
 condition|(
-name|ac
-operator|>
+name|av
+index|[
+literal|0
+index|]
+operator|&&
+name|av
+index|[
 literal|1
+index|]
 operator|&&
 name|_substrcmp
 argument_list|(
@@ -13924,10 +13984,6 @@ name|av
 operator|+=
 literal|2
 expr_stmt|;
-name|ac
-operator|-=
-literal|2
-expr_stmt|;
 block|}
 comment|/* action	-- mandatory */
 name|NEED1
@@ -13944,9 +14000,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -14076,9 +14129,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14107,9 +14157,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -14232,7 +14279,10 @@ label|:
 if|if
 condition|(
 operator|!
-name|ac
+name|av
+index|[
+literal|0
+index|]
 condition|)
 name|errx
 argument_list|(
@@ -14396,9 +14446,6 @@ operator|-
 literal|1
 operator|)
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -14597,9 +14644,6 @@ name|sin_addr
 operator|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14614,9 +14658,6 @@ operator|->
 name|opcode
 operator|=
 name|O_COUNT
-expr_stmt|;
-name|ac
-operator|++
 expr_stmt|;
 name|av
 operator|--
@@ -14706,9 +14747,6 @@ argument_list|,
 literal|"fib too large.\n"
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14749,9 +14787,12 @@ expr_stmt|;
 comment|/* 	 * [altq queuename] -- altq tag, optional 	 * [log [logamount N]]	-- log, optional 	 * 	 * If they exist, it go first in the cmdbuf, but then it is 	 * skipped in the copy section to the end of the buffer. 	 */
 while|while
 condition|(
-name|ac
-operator|!=
+name|av
+index|[
 literal|0
+index|]
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|i
@@ -14769,9 +14810,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14833,7 +14871,10 @@ name|O_LOG
 expr_stmt|;
 if|if
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
 operator|&&
 name|_substrcmp
 argument_list|(
@@ -14846,9 +14887,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14883,9 +14921,6 @@ operator|->
 name|max_log
 operator|=
 name|l
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -14936,6 +14971,9 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+ifndef|#
+directive|ifndef
+name|NO_ALTQ
 case|case
 name|TOK_ALTQ
 case|:
@@ -14999,14 +15037,13 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|TOK_TAG
 case|:
@@ -15065,9 +15102,6 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15101,12 +15135,12 @@ parameter_list|(
 name|target
 parameter_list|)
 define|\
-value|if (ac&& (*av[0] == '(' || *av[0] == '{')) {		\ 		if (open_par)					\ 			errx(EX_USAGE, "nested \"(\" not allowed\n"); \ 		prev = NULL;					\ 		open_par = 1;					\ 		if ( (av[0])[1] == '\0') {			\ 			ac--; av++;				\ 		} else						\ 			(*av)++;				\ 	}							\ 	target:							\   #define	CLOSE_PAR						\ 	if (open_par) {						\ 		if (ac&& (					\ 		    strcmp(*av, ")") == 0 ||			\ 		    strcmp(*av, "}") == 0)) {			\ 			prev = NULL;				\ 			open_par = 0;				\ 			ac--; av++;				\ 		} else						\ 			errx(EX_USAGE, "missing \")\"\n");	\ 	}
+value|if (av[0]&& (*av[0] == '(' || *av[0] == '{')) { 	\ 		if (open_par)					\ 			errx(EX_USAGE, "nested \"(\" not allowed\n"); \ 		prev = NULL;					\ 		open_par = 1;					\ 		if ( (av[0])[1] == '\0') {			\ 			av++;					\ 		} else						\ 			(*av)++;				\ 	}							\ 	target:							\   #define	CLOSE_PAR						\ 	if (open_par) {						\ 		if (av[0]&& (					\ 		    strcmp(*av, ")") == 0 ||			\ 		    strcmp(*av, "}") == 0)) {			\ 			prev = NULL;				\ 			open_par = 0;				\ 			av++;					\ 		} else						\ 			errx(EX_USAGE, "missing \")\"\n");	\ 	}
 define|#
 directive|define
 name|NOT_BLOCK
 define|\
-value|if (ac&& _substrcmp(*av, "not") == 0) {		\ 		if (cmd->len& F_NOT)				\ 			errx(EX_USAGE, "double \"not\" not allowed\n"); \ 		cmd->len |= F_NOT;				\ 		ac--; av++;					\ 	}
+value|if (av[0]&& _substrcmp(*av, "not") == 0) {		\ 		if (cmd->len& F_NOT)				\ 			errx(EX_USAGE, "double \"not\" not allowed\n"); \ 		cmd->len |= F_NOT;				\ 		av++;						\ 	}
 define|#
 directive|define
 name|OR_BLOCK
@@ -15114,7 +15148,7 @@ parameter_list|(
 name|target
 parameter_list|)
 define|\
-value|if (ac&& _substrcmp(*av, "or") == 0) {		\ 		if (prev == NULL || open_par == 0)		\ 			errx(EX_DATAERR, "invalid OR block");	\ 		prev->len |= F_OR;				\ 		ac--; av++;					\ 		goto target;					\ 	}							\ 	CLOSE_PAR;
+value|if (av[0]&& _substrcmp(*av, "or") == 0) {		\ 		if (prev == NULL || open_par == 0)		\ 			errx(EX_DATAERR, "invalid OR block");	\ 		prev->len |= F_OR;				\ 		av++;					\ 		goto target;					\ 	}							\ 	CLOSE_PAR;
 name|first_cmd
 operator|=
 name|cmd
@@ -15123,13 +15157,13 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * MAC addresses, optional. 	 * If we have this, we skip the part "proto from src to dst" 	 * and jump straight to the option parsing. 	 */
-block|NOT_BLOCK; 	NEED1("missing protocol"); 	if (_substrcmp(*av, "MAC") == 0 || 	    _substrcmp(*av, "mac") == 0) { 		ac--; av++;
+block|NOT_BLOCK; 	NEED1("missing protocol"); 	if (_substrcmp(*av, "MAC") == 0 || 	    _substrcmp(*av, "mac") == 0) { 		av++;
 comment|/* the "MAC" keyword */
-block|add_mac(cmd, ac, av);
+block|add_mac(cmd, av);
 comment|/* exits in case of errors */
-block|cmd = next_cmd(cmd); 		ac -= 2; av += 2;
+block|cmd = next_cmd(cmd); 		av += 2;
 comment|/* dst-mac and src-mac */
-block|NOT_BLOCK; 		NEED1("missing mac type"); 		if (add_mactype(cmd, ac, av[0])) 			cmd = next_cmd(cmd); 		ac--; av++;
+block|NOT_BLOCK; 		NEED1("missing mac type"); 		if (add_mactype(cmd, av[0])) 			cmd = next_cmd(cmd); 		av++;
 comment|/* any or mac-type */
 block|goto read_options; 	}
 endif|#
@@ -15163,9 +15197,6 @@ condition|)
 block|{
 name|av
 operator|++
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -15221,8 +15252,14 @@ expr_stmt|;
 comment|/* 	 * "from", mandatory 	 */
 if|if
 condition|(
-operator|!
-name|ac
+operator|(
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|)
 operator|||
 name|_substrcmp
 argument_list|(
@@ -15240,9 +15277,6 @@ name|EX_USAGE
 argument_list|,
 literal|"missing ``from''"
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -15274,9 +15308,6 @@ name|proto
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15326,7 +15357,12 @@ expr_stmt|;
 comment|/* optional "not" */
 if|if
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -15354,9 +15390,6 @@ name|O_IP_SRCPORT
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15381,8 +15414,14 @@ block|}
 comment|/* 	 * "to", mandatory 	 */
 if|if
 condition|(
-operator|!
-name|ac
+operator|(
+name|av
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|)
 operator|||
 name|_substrcmp
 argument_list|(
@@ -15403,9 +15442,6 @@ argument_list|)
 expr_stmt|;
 name|av
 operator|++
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 comment|/* 	 * destination, mandatory 	 */
 name|OR_START
@@ -15434,9 +15470,6 @@ name|proto
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15486,7 +15519,10 @@ expr_stmt|;
 comment|/* optional "not" */
 if|if
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
 condition|)
 block|{
 if|if
@@ -15514,9 +15550,6 @@ name|O_IP_DSTPORT
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15542,7 +15575,10 @@ name|read_options
 label|:
 if|if
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
 operator|&&
 name|first_cmd
 operator|==
@@ -15563,7 +15599,12 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
-name|ac
+name|av
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
@@ -15630,9 +15671,6 @@ name|rule_options
 argument_list|,
 name|s
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -15878,9 +15916,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -15957,9 +15992,6 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 break|break;
 case|case
 name|TOK_ICMP6TYPES
@@ -15983,9 +16015,6 @@ argument_list|)
 expr_stmt|;
 name|av
 operator|++
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 break|break;
 case|case
@@ -16052,9 +16081,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16125,9 +16151,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16197,9 +16220,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16230,9 +16250,6 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16271,9 +16288,6 @@ operator|<<
 literal|5
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16298,9 +16312,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16324,9 +16335,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16427,9 +16435,6 @@ name|F_INSN_SIZE
 argument_list|(
 name|ipfw_insn_u32
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16532,9 +16537,6 @@ argument_list|(
 name|ipfw_insn_u32
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16616,9 +16618,6 @@ name|F_INSN_SIZE
 argument_list|(
 name|ipfw_insn_u32
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16732,9 +16731,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16758,9 +16754,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -16820,9 +16813,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16857,9 +16847,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -16889,9 +16876,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -17011,9 +16995,12 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|ac
-operator|>
+name|av
+index|[
 literal|0
+index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -17038,9 +17025,6 @@ operator|->
 name|limit_mask
 operator||=
 name|val
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -17076,9 +17060,6 @@ argument_list|,
 name|rule_options
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17106,9 +17087,6 @@ name|proto
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17144,9 +17122,6 @@ name|av
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17171,9 +17146,6 @@ name|av
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17198,9 +17170,6 @@ name|av
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17225,9 +17194,6 @@ name|av
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17266,9 +17232,6 @@ name|O_IP_SRCPORT
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17318,9 +17281,6 @@ name|O_IP_DSTPORT
 argument_list|)
 condition|)
 block|{
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17346,21 +17306,13 @@ name|add_mac
 argument_list|(
 name|cmd
 argument_list|,
-name|ac
-argument_list|,
 name|av
 argument_list|)
 condition|)
-block|{
-name|ac
-operator|-=
-literal|2
-expr_stmt|;
 name|av
 operator|+=
 literal|2
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|TOK_MACTYPE
@@ -17377,8 +17329,6 @@ name|add_mactype
 argument_list|(
 name|cmd
 argument_list|,
-name|ac
-argument_list|,
 operator|*
 name|av
 argument_list|)
@@ -17392,9 +17342,6 @@ argument_list|,
 operator|*
 name|av
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -17501,9 +17448,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17537,9 +17481,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17551,18 +17492,15 @@ name|fill_comment
 argument_list|(
 name|cmd
 argument_list|,
-name|ac
-argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
 name|av
-operator|+=
-name|ac
-expr_stmt|;
-name|ac
-operator|=
+index|[
 literal|0
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 case|case
@@ -17570,9 +17508,10 @@ name|TOK_TAGGED
 case|:
 if|if
 condition|(
-name|ac
-operator|>
+name|av
+index|[
 literal|0
+index|]
 operator|&&
 name|strpbrk
 argument_list|(
@@ -17640,9 +17579,6 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17674,9 +17610,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17704,9 +17637,15 @@ name|j
 decl_stmt|;
 if|if
 condition|(
-name|ac
-operator|<
-literal|2
+name|av
+index|[
+literal|0
+index|]
+operator|&&
+name|av
+index|[
+literal|1
+index|]
 condition|)
 name|errx
 argument_list|(
@@ -17799,9 +17738,6 @@ operator|=
 name|j
 expr_stmt|;
 comment|// i converted to option
-name|ac
-operator|--
-expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -17833,9 +17769,6 @@ name|EX_USAGE
 argument_list|,
 literal|"format: lookup argument tablenum"
 argument_list|)
-expr_stmt|;
-name|ac
-operator|--
 expr_stmt|;
 name|av
 operator|++
@@ -18692,6 +18625,18 @@ condition|)
 comment|/* user said no */
 return|return;
 block|}
+if|if
+condition|(
+name|co
+operator|.
+name|do_pipe
+condition|)
+block|{
+name|dummynet_flush
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 comment|/* `ipfw set N flush` - is the same that `ipfw delete set N` */
 if|if
 condition|(
@@ -19407,13 +19352,16 @@ name|is_all
 condition|?
 name|tables_max
 else|:
-operator|(
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|ent
 operator|.
 name|tbl
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 do|do
 block|{
@@ -19477,13 +19425,16 @@ name|is_all
 condition|?
 name|tables_max
 else|:
-operator|(
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|ent
 operator|.
 name|tbl
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 do|do
 block|{
