@@ -4651,16 +4651,8 @@ name|LOG_ERR
 argument_list|,
 literal|"rn_delete: Orphaned Mask %p at %p\n"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|m
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|x
 argument_list|)
 expr_stmt|;
