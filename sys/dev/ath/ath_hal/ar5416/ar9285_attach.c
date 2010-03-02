@@ -603,12 +603,9 @@ name|ah_tx_chainmask
 operator|=
 name|AR9285_DEFAULT_TXCHAINMASK
 expr_stmt|;
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
-name|ah_max_txtrig_level
+name|ah_maxTxTrigLev
 operator|=
 name|MAX_TX_FIFO_THRESHOLD
 operator|>>

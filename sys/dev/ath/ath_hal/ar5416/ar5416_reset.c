@@ -1784,6 +1784,16 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
+name|struct
+name|ath_hal_5212
+modifier|*
+name|ahp
+init|=
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+decl_stmt|;
 comment|/* 	 * set AHB_MODE not to do cacheline prefetches 	 */
 name|OS_REG_SET_BIT
 argument_list|(
@@ -1859,12 +1869,9 @@ operator|)
 operator||
 name|SM
 argument_list|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
+name|ahp
 operator|->
-name|ah_txtrig_level
+name|ah_txTrigLev
 argument_list|,
 name|AR_FTRIG
 argument_list|)

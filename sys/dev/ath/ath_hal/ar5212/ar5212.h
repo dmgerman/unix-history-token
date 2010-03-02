@@ -1202,6 +1202,14 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|uint8_t
+name|ah_txTrigLev
+decl_stmt|;
+comment|/* current Tx trigger level */
+name|uint8_t
+name|ah_maxTxTrigLev
+decl_stmt|;
+comment|/* max tx trigger level */
 block|}
 struct|;
 end_struct
