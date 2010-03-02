@@ -17306,15 +17306,6 @@ name|int
 name|msk_stat_cons
 decl_stmt|;
 name|struct
-name|taskqueue
-modifier|*
-name|msk_tq
-decl_stmt|;
-name|struct
-name|task
-name|msk_int_task
-decl_stmt|;
-name|struct
 name|mtx
 name|msk_mtx
 decl_stmt|;
@@ -17518,10 +17509,6 @@ comment|/* parent controller */
 name|struct
 name|msk_hw_stats
 name|msk_stats
-decl_stmt|;
-name|struct
-name|task
-name|msk_tx_task
 decl_stmt|;
 name|int
 name|msk_if_flags
