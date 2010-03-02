@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PC_VESA_H
+name|_DEV_FB_VESA_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PC_VESA_H
+name|_DEV_FB_VESA_H_
 end_define
 
 begin_struct
@@ -76,6 +76,18 @@ name|u_int32_t
 name|v_revstr
 decl_stmt|;
 comment|/* product rev */
+name|u_int8_t
+name|v_strach
+index|[
+literal|222
+index|]
+decl_stmt|;
+name|u_int8_t
+name|v_oemdata
+index|[
+literal|256
+index|]
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -267,7 +279,51 @@ decl_stmt|;
 name|u_int16_t
 name|v_offscreensize
 decl_stmt|;
+comment|/* 3.0 implementations */
+name|u_int16_t
+name|v_linbpscanline
+decl_stmt|;
+name|u_int8_t
+name|v_bankipages
+decl_stmt|;
+name|u_int8_t
+name|v_linipages
+decl_stmt|;
+name|u_int8_t
+name|v_linredmasksize
+decl_stmt|;
+name|u_int8_t
+name|v_linredfieldpos
+decl_stmt|;
+name|u_int8_t
+name|v_lingreenmasksize
+decl_stmt|;
+name|u_int8_t
+name|v_lingreenfieldpos
+decl_stmt|;
+name|u_int8_t
+name|v_linbluemasksize
+decl_stmt|;
+name|u_int8_t
+name|v_linbluefieldpos
+decl_stmt|;
+name|u_int8_t
+name|v_linresmasksize
+decl_stmt|;
+name|u_int8_t
+name|v_linresfieldpos
+decl_stmt|;
+name|u_int32_t
+name|v_maxpixelclock
+decl_stmt|;
+name|u_int8_t
+name|v_reserved1
+index|[
+literal|190
+index|]
+decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -316,7 +372,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PC_VESA_H */
+comment|/* !_DEV_FB_VESA_H_ */
 end_comment
 
 end_unit

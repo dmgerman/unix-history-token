@@ -740,7 +740,7 @@ decl_stmt|;
 comment|/* configuration flags */
 define|#
 directive|define
-name|SC_VESA800X600
+name|SC_VESAMODE
 value|(1<< 7)
 define|#
 directive|define
@@ -914,6 +914,19 @@ operator|*
 literal|3
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SC_PIXEL_MODE
+name|u_char
+name|palette2
+index|[
+literal|256
+operator|*
+literal|3
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifndef|#
@@ -2866,6 +2879,17 @@ name|fontsize
 parameter_list|,
 name|int
 name|font_width
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sc_support_pixel_mode
+parameter_list|(
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
