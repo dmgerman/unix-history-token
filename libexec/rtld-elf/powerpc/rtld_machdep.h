@@ -124,6 +124,15 @@ end_comment
 
 begin_function_decl
 name|void
+name|_rtld_powerpc_pltlongresolve
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_rtld_powerpc_pltresolve
 parameter_list|(
 name|void

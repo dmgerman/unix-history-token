@@ -10543,7 +10543,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Create and modify a temporary credential instead of one that 	 * is potentially shared.  This could also mess up socket 	 * buffer accounting which can run in an interrupt context. 	 */
+comment|/* 	 * Create and modify a temporary credential instead of one that 	 * is potentially shared. 	 */
 if|if
 condition|(
 operator|!

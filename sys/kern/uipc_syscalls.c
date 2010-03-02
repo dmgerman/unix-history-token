@@ -4651,7 +4651,7 @@ condition|)
 operator|*
 name|controlp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|AUDIT_ARG_FD
 argument_list|(

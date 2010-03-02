@@ -374,12 +374,6 @@ directive|include
 file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/ip_dummynet.h>
-end_include
-
 begin_comment
 comment|/*  * Size of the route hash table.  Must be a power of two.  */
 end_comment
@@ -13556,9 +13550,9 @@ block|}
 else|else
 block|{
 name|struct
-name|dn_pkt_tag
+name|ipfw_rule_ref
 modifier|*
-name|dn_tag
+name|r
 decl_stmt|;
 comment|/* XXX can we free the tag after use ? */
 name|mtag
@@ -13567,11 +13561,11 @@ name|m_tag_id
 operator|=
 name|PACKET_TAG_NONE
 expr_stmt|;
-name|dn_tag
+name|r
 operator|=
 operator|(
 expr|struct
-name|dn_pkt_tag
+name|ipfw_rule_ref
 operator|*
 operator|)
 operator|(
@@ -13583,15 +13577,11 @@ expr_stmt|;
 comment|/* packet already partially processed ? */
 if|if
 condition|(
-name|dn_tag
+name|r
 operator|->
-name|rule
-operator|.
-name|slot
-operator|!=
-literal|0
-operator|&&
-name|V_fw_one_pass
+name|info
+operator|&
+name|IPFW_ONEPASS
 condition|)
 goto|goto
 name|ipfwpass
@@ -13600,9 +13590,8 @@ name|args
 operator|.
 name|rule
 operator|=
-name|dn_tag
-operator|->
-name|rule
+operator|*
+name|r
 expr_stmt|;
 block|}
 name|args

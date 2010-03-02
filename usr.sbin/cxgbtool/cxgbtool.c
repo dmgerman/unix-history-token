@@ -271,21 +271,15 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|noreturn
-operator|)
-argument_list|)
 name|usage
-argument_list|(
+parameter_list|(
 name|FILE
-operator|*
+modifier|*
 name|fp
-argument_list|)
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -341,7 +335,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -631,7 +625,7 @@ name|val
 init|=
 literal|0
 decl_stmt|,
-name|write
+name|w
 init|=
 literal|0
 decl_stmt|;
@@ -702,7 +696,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|write
+name|w
 operator|=
 literal|1
 expr_stmt|;
@@ -730,7 +724,7 @@ return|;
 block|}
 if|if
 condition|(
-name|write
+name|w
 condition|)
 name|write_reg
 argument_list|(
@@ -790,10 +784,6 @@ modifier|*
 name|iff_name
 parameter_list|)
 block|{
-name|struct
-name|ifreq
-name|ifr
-decl_stmt|;
 name|struct
 name|ch_mii_data
 name|p
@@ -3187,8 +3177,6 @@ name|iff_name
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|vers
 decl_stmt|,
 name|revision
@@ -3940,6 +3928,21 @@ name|struct
 name|ch_ifconf_regs
 name|regs
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|start_arg
+expr_stmt|;
 name|regs
 operator|.
 name|len
@@ -4056,6 +4059,7 @@ name|struct
 name|ch_mtus
 name|m
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -4339,7 +4343,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"base address: 0x%llx\n"
+literal|"base address: 0x%"
+name|PRIx64
+literal|"\n"
 argument_list|,
 operator|(
 operator|(
@@ -4510,7 +4516,9 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"base address: 0x%llx\n"
+literal|"base address: 0x%"
+name|PRIx64
+literal|"\n"
 argument_list|,
 operator|(
 operator|(
@@ -4694,7 +4702,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"base address: 0x%llx\n"
+literal|"base address: 0x%"
+name|PRIx64
+literal|"\n"
 argument_list|,
 operator|(
 operator|(
@@ -4852,7 +4862,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"base address:     0x%llx\n"
+literal|"base address:     0x%"
+name|PRIx64
+literal|"\n"
 argument_list|,
 operator|(
 operator|(
@@ -6707,7 +6719,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Max FW size is 32K including version, +4 bytes for the checksum. */
+comment|/* Max FW size is 64K including version, +4 bytes for the checksum. */
 end_comment
 
 begin_define
@@ -6828,8 +6840,6 @@ argument_list|,
 literal|"load firmware"
 argument_list|)
 expr_stmt|;
-name|op
-operator|.
 name|len
 operator|=
 name|read
@@ -6847,8 +6857,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|op
-operator|.
 name|len
 operator|<
 literal|0
@@ -6862,8 +6870,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|op
-operator|.
 name|len
 operator|>
 name|MAX_FW_IMAGE_SIZE
@@ -6874,6 +6880,12 @@ literal|1
 argument_list|,
 literal|"FW image too large"
 argument_list|)
+expr_stmt|;
+name|op
+operator|.
+name|len
+operator|=
+name|len
 expr_stmt|;
 if|if
 condition|(
@@ -7275,6 +7287,16 @@ modifier|*
 name|iff_name
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|start_arg
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -7459,10 +7481,11 @@ modifier|*
 name|iff_name
 parameter_list|)
 block|{
-name|struct
-name|ch_qset_params
-name|qp
-decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -7508,6 +7531,11 @@ name|struct
 name|ch_reg
 name|reg
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -9147,6 +9175,21 @@ modifier|*
 name|iff_name
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|start_arg
+expr_stmt|;
 if|if
 condition|(
 name|doit
@@ -9208,6 +9251,21 @@ name|max_idx
 decl_stmt|,
 name|entries
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|start_arg
+expr_stmt|;
 name|la
 operator|.
 name|stopped
@@ -9407,6 +9465,21 @@ name|i
 decl_stmt|,
 name|entries
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|argv
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|start_arg
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -10265,7 +10338,9 @@ parameter_list|)
 block|{
 name|int
 name|n
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 name|char
@@ -10284,6 +10359,11 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|argc
+expr_stmt|;
 name|args
 index|[
 literal|0
@@ -10335,34 +10415,10 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
 operator|-
 literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"too much input.\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|n

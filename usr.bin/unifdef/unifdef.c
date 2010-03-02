@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 - 2010 Tony Finch<dot@dotat.at>  *  * Redistrib
 end_comment
 
 begin_comment
-comment|/*  * unifdef - remove ifdef'ed lines  *  * This code was derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
+comment|/*  * unifdef - remove ifdef'ed lines  *  * This code was derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *  *   These require better buffer handling, which would also make  *   it possible to handle all "dodgy" directives correctly.  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: unifdef/unifdef.c,v 1.193 2010/01/19 18:03:02 fanf2 Exp $"
+literal|"$dotat: unifdef/unifdef.c,v 1.198 2010/02/19 16:37:05 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -755,6 +755,41 @@ end_decl_stmt
 begin_comment
 comment|/* used for editing #elif's */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|newline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input file format */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|newline_unix
+index|[]
+init|=
+literal|"\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|newline_crlf
+index|[]
+init|=
+literal|"\r\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1476,6 +1511,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|ofilename
+operator|=
+literal|"[stdout]"
+expr_stmt|;
 name|output
 operator|=
 name|stdout
@@ -1635,16 +1674,16 @@ name|ofilename
 argument_list|)
 expr_stmt|;
 else|else
-name|strlcpy
+name|snprintf
 argument_list|(
 name|tempname
-argument_list|,
-name|TEMPLATE
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|tempname
 argument_list|)
+argument_list|,
+name|TEMPLATE
 argument_list|)
 expr_stmt|;
 name|ofd
@@ -2341,7 +2380,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"else\n"
+literal|"else"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2362,7 +2401,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"endif\n"
+literal|"endif"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2383,7 +2422,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"endif\n"
+literal|"endif"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2968,11 +3007,9 @@ modifier|*
 name|replacement
 parameter_list|)
 block|{
-name|strlcpy
+name|snprintf
 argument_list|(
 name|keyword
-argument_list|,
-name|replacement
 argument_list|,
 name|tline
 operator|+
@@ -2982,6 +3019,12 @@ name|tline
 argument_list|)
 operator|-
 name|keyword
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|replacement
+argument_list|,
+name|newline
 argument_list|)
 expr_stmt|;
 name|print
@@ -3115,7 +3158,7 @@ name|strspn
 argument_list|(
 name|tline
 argument_list|,
-literal|" \t\n"
+literal|" \t\r\n"
 argument_list|)
 index|]
 operator|==
@@ -3153,9 +3196,11 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"#line %d\n"
+literal|"#line %d%s"
 argument_list|,
 name|linenum
+argument_list|,
+name|newline
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -3189,9 +3234,9 @@ if|if
 condition|(
 name|lnblank
 condition|)
-name|putc
+name|fputs
 argument_list|(
-literal|'\n'
+name|newline
 argument_list|,
 name|output
 argument_list|)
@@ -3309,7 +3354,9 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"couldn't write to output"
+literal|"couldn't write to %s"
+argument_list|,
+name|ofilename
 argument_list|)
 expr_stmt|;
 if|if
@@ -3458,6 +3505,41 @@ operator|(
 name|LT_EOF
 operator|)
 return|;
+if|if
+condition|(
+name|newline
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strrchr
+argument_list|(
+name|tline
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|==
+name|strrchr
+argument_list|(
+name|tline
+argument_list|,
+literal|'\r'
+argument_list|)
+operator|+
+literal|1
+condition|)
+name|newline
+operator|=
+name|newline_crlf
+expr_stmt|;
+else|else
+name|newline
+operator|=
+name|newline_unix
+expr_stmt|;
+block|}
 name|retval
 operator|=
 name|LT_PLAIN
@@ -3551,6 +3633,17 @@ expr_stmt|;
 comment|/* no way can we deal with a continuation inside a keyword */
 if|if
 condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"\\\r\n"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|strncmp
 argument_list|(
 name|cp
@@ -3891,26 +3984,21 @@ name|NULL
 condition|)
 block|{
 comment|/* append the missing newline */
+name|strcpy
+argument_list|(
 name|tline
-index|[
-name|len
 operator|+
-literal|0
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-name|tline
-index|[
 name|len
-operator|+
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|,
+name|newline
+argument_list|)
 expr_stmt|;
 name|cp
-operator|++
+operator|+=
+name|strlen
+argument_list|(
+name|newline
+argument_list|)
 expr_stmt|;
 name|linestate
 operator|=
@@ -5532,6 +5620,24 @@ name|strncmp
 argument_list|(
 name|cp
 argument_list|,
+literal|"\\\r\n"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|+=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
 literal|"\\\n"
 argument_list|,
 literal|2
@@ -5552,6 +5658,30 @@ block|{
 case|case
 name|NO_COMMENT
 case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"/\\\r\n"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|STARTING_COMMENT
+expr_stmt|;
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strncmp
@@ -5708,7 +5838,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-literal|" \t"
+literal|" \r\t"
 argument_list|,
 operator|*
 name|cp
@@ -5876,6 +6006,30 @@ continue|continue;
 case|case
 name|C_COMMENT
 case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"*\\\r\n"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|FINISHING_COMMENT
+expr_stmt|;
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strncmp
@@ -6438,7 +6592,7 @@ index|[
 name|symind
 index|]
 operator|=
-literal|""
+literal|"1"
 expr_stmt|;
 else|else
 name|usage

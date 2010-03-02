@@ -147,13 +147,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/isa/icu.h>
+file|<x86/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/isa/isa.h>
+file|<x86/isa/isa.h>
 end_include
 
 begin_endif

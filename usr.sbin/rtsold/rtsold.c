@@ -325,6 +325,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|dumpfilename
@@ -350,6 +351,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|pidfilename
@@ -465,7 +467,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|argv0
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|opts
 decl_stmt|;
@@ -2984,6 +2988,7 @@ name|rtsold_set_dump_file
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|do_dump
@@ -3242,6 +3247,8 @@ name|a
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|i
 decl_stmt|,

@@ -540,7 +540,10 @@ name|intr_setup
 argument_list|(
 name|PIL_TICK
 argument_list|,
-name|cpu_impl
+name|PCPU_GET
+argument_list|(
+name|impl
+argument_list|)
 operator|<
 name|CPU_IMPL_ULTRASPARCIII
 condition|?
@@ -1330,7 +1333,8 @@ begin_function
 name|void
 name|tick_clear
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 if|if
@@ -1362,7 +1366,8 @@ begin_function
 name|void
 name|tick_stop
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 if|if

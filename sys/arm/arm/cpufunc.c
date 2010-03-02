@@ -7662,6 +7662,8 @@ operator||
 name|CPU_CONTROL_WBUF_ENABLE
 operator||
 name|CPU_CONTROL_LABT_ENABLE
+operator||
+name|CPU_CONTROL_BPRD_ENABLE
 expr_stmt|;
 name|cpuctrlmask
 operator|=

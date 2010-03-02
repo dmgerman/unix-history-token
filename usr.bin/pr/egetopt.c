@@ -62,6 +62,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * egetopt:	get option letter from argument vector (an extended  *		version of getopt).  *  * Non standard additions to the ostr specs are:  * 1) '?': immediate value following arg is optional (no white space  *    between the arg and the value)  * 2) '#': +/- followed by a number (with an optional sign but  *    no white space between the arg and the number). The - may be  *    combined with other options, but the + cannot.  */
 end_comment

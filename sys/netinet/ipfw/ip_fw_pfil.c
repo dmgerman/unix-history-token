@@ -304,6 +304,13 @@ directive|ifdef
 name|SYSCTL_NODE
 end_ifdef
 
+begin_macro
+name|SYSBEGIN
+argument_list|(
+argument|f1
+argument_list|)
+end_macro
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -399,21 +406,12 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_endif
+begin_function
+name|SYSEND
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SYSCTL_NODE */
-end_comment
-
-begin_comment
 comment|/*  * The pfilter hook to pass packets to ipfw_chk and then to  * dummynet, divert, netgraph or other modules.  * The packet may be consumed.  */
-end_comment
-
-begin_function
-specifier|static
 name|int
 name|ipfw_check_hook
 parameter_list|(

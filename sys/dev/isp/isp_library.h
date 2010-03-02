@@ -611,6 +611,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|isp_get_rio1
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|isp_rio1_t
+modifier|*
+parameter_list|,
+name|isp_rio1_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|isp_get_rio2
 parameter_list|(
 name|ispsoftc_t

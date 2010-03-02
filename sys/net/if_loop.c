@@ -831,7 +831,7 @@ name|moduledata_t
 name|loop_mod
 init|=
 block|{
-literal|"loop"
+literal|"if_lo"
 block|,
 name|loop_modevent
 block|,
@@ -843,7 +843,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-name|loop
+name|if_lo
 argument_list|,
 name|loop_mod
 argument_list|,

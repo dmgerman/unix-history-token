@@ -3746,7 +3746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * install_dir --  *	build directory heirarchy  */
+comment|/*  * install_dir --  *	build directory hierarchy  */
 end_comment
 
 begin_function

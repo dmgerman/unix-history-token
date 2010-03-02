@@ -526,7 +526,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
+file|<x86/isa/icu.h>
 end_include
 
 begin_endif

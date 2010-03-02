@@ -13666,7 +13666,7 @@ name|tval
 decl_stmt|,
 name|handle
 decl_stmt|;
-comment|/* 	 * CTIO, CTIO2 and CTIO7 are close enough.... 	 */
+comment|/* 	 * CTIO handles are 16 bits. 	 * CTIO2 and CTIO7 are 32 bits. 	 */
 if|if
 condition|(
 name|IS_SCSI
@@ -23269,6 +23269,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * xpt_rescan only honors wildcard in the target field.  	 * Scan the whole bus instead of target, which will then 	 * force a scan of all luns. 	 */
 if|if
 condition|(
 name|xpt_create_path
@@ -23289,7 +23290,7 @@ operator|->
 name|sim
 argument_list|)
 argument_list|,
-name|tgt
+name|CAM_TARGET_WILDCARD
 argument_list|,
 name|CAM_LUN_WILDCARD
 argument_list|)

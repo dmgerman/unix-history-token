@@ -342,7 +342,7 @@ literal|64
 index|]
 comment|/* XXX */
 decl_stmt|;
-name|Elf64_Phdr
+name|Elf64_Shdr
 name|shdr
 index|[
 literal|64

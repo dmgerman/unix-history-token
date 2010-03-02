@@ -1201,7 +1201,7 @@ modifier|*
 name|msg
 init|=
 literal|"Unable to continue traversing"
-literal|" directory heirarchy after a fatal error."
+literal|" directory hierarchy after a fatal error."
 decl_stmt|;
 name|write
 argument_list|(

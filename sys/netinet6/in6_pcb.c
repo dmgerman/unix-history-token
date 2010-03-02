@@ -213,12 +213,6 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<security/mac/mac_framework.h>
-end_include
-
 begin_decl_stmt
 name|struct
 name|in6_addr

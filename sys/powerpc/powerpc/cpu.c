@@ -1884,7 +1884,34 @@ begin_comment
 comment|/* Configure power-saving mode */
 end_comment
 
-begin_expr_stmt
+begin_switch
+switch|switch
+condition|(
+name|vers
+condition|)
+block|{
+case|case
+name|IBM970MP
+case|:
+name|hid0_hi
+operator||=
+operator|(
+name|HID0_DEEPNAP
+operator||
+name|HID0_DPM
+operator|)
+expr_stmt|;
+name|hid0_hi
+operator|&=
+operator|~
+operator|(
+name|HID0_DOZE
+operator||
+name|HID0_NAP
+operator|)
+expr_stmt|;
+break|break;
+default|default:
 name|hid0_hi
 operator||=
 operator|(
@@ -1893,9 +1920,6 @@ operator||
 name|HID0_DPM
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|hid0_hi
 operator|&=
 operator|~
@@ -1905,7 +1929,9 @@ operator||
 name|HID0_DEEPNAP
 operator|)
 expr_stmt|;
-end_expr_stmt
+break|break;
+block|}
+end_switch
 
 begin_expr_stmt
 name|powerpc_pow_enabled

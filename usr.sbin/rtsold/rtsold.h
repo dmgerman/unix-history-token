@@ -429,6 +429,7 @@ specifier|extern
 name|void
 name|rtsold_dump_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

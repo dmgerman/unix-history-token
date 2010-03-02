@@ -141,10 +141,6 @@ name|struct
 name|cam_periph
 modifier|*
 name|periph
-parameter_list|,
-name|char
-modifier|*
-name|announce_string
 parameter_list|)
 function_decl|;
 end_typedef

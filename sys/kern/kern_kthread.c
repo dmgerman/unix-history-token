@@ -1199,40 +1199,44 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-comment|/* A module may be waiting for us to exit. */
-name|wakeup
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We could rely on thread_exit to call exit1() but 	 * there is extra work that needs to be done 	 */
-if|if
-condition|(
-name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_numthreads
-operator|==
-literal|1
-condition|)
-name|kproc_exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* never returns */
 name|p
 operator|=
 name|curthread
 operator|->
 name|td_proc
 expr_stmt|;
+comment|/* A module may be waiting for us to exit. */
+name|wakeup
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_numthreads
+operator|==
+literal|1
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|kproc_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED. */
+block|}
 name|PROC_SLOCK
 argument_list|(
 name|p
@@ -1272,7 +1276,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
+comment|/* 	 * td_pflags should not be read by any thread other than 	 * curthread, but as long as this flag is invariant during the 	 * thread's lifetime, it is OK to check its state. 	 */
 if|if
 condition|(
 operator|(
@@ -1364,7 +1368,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* 	 * td_pflags should not be ready by any other thread different by 	 * curthread, but as long as this flag is invariant during the 	 * thread lifetime, it is ok to check for it now. 	 */
+comment|/* 	 * td_pflags should not be read by any thread other than 	 * curthread, but as long as this flag is invariant during the 	 * thread's lifetime, it is OK to check its state. 	 */
 if|if
 condition|(
 operator|(

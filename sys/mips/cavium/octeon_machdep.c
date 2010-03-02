@@ -2476,8 +2476,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"octeon_dram == %llx\n"
+literal|"octeon_dram == %jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|octeon_dram
 argument_list|)
 expr_stmt|;
@@ -2598,13 +2601,19 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"phys_avail[0] = %x phys_avail[1] = %x\n"
+literal|"phys_avail[0] = %#lx phys_avail[1] = %#lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|1
@@ -2702,13 +2711,19 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Next block of memory goes from %x to %x\n"
+literal|"Next block of memory goes from %#lx to %#lx\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|2
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|3
@@ -2757,13 +2772,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Bank 0 = %#08X   ->  %#08X\n"
+literal|"Bank 0 = %#08lX   ->  %#08lX\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|1
@@ -2772,13 +2793,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Bank 1 = %#08X   ->  %#08X\n"
+literal|"Bank 1 = %#08lX   ->  %#08lX\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|2
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|phys_avail
 index|[
 literal|3

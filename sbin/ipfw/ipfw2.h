@@ -31,7 +31,7 @@ comment|/* Be quiet in add and flush */
 name|int
 name|do_pipe
 decl_stmt|;
-comment|/* this cmd refers to a pipe */
+comment|/* this cmd refers to a pipe/queue/sched */
 name|int
 name|do_nat
 decl_stmt|;
@@ -133,7 +133,13 @@ name|TOK_COUNT
 block|,
 name|TOK_PIPE
 block|,
+name|TOK_LINK
+block|,
 name|TOK_QUEUE
+block|,
+name|TOK_FLOWSET
+block|,
+name|TOK_SCHED
 block|,
 name|TOK_DIVERT
 block|,
@@ -265,11 +271,15 @@ name|TOK_ALL
 block|,
 name|TOK_MASK
 block|,
+name|TOK_FLOW_MASK
+block|,
+name|TOK_SCHED_MASK
+block|,
 name|TOK_BW
 block|,
 name|TOK_DELAY
 block|,
-name|TOK_PIPE_PROFILE
+name|TOK_PROFILE
 block|,
 name|TOK_BURST
 block|,
@@ -281,7 +291,16 @@ name|TOK_DROPTAIL
 block|,
 name|TOK_PROTO
 block|,
+comment|/* dummynet tokens */
 name|TOK_WEIGHT
+block|,
+name|TOK_LMAX
+block|,
+name|TOK_PRI
+block|,
+name|TOK_TYPE
+block|,
+name|TOK_SLOTSIZE
 block|,
 name|TOK_IP
 block|,
@@ -341,11 +360,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NEED
+parameter_list|(
+name|_p
+parameter_list|,
+name|msg
+parameter_list|)
+value|{if (!_p) errx(EX_USAGE, msg);}
+end_define
+
+begin_define
+define|#
+directive|define
 name|NEED1
 parameter_list|(
 name|msg
 parameter_list|)
-value|{if (!ac) errx(EX_USAGE, msg);}
+value|{if (!(*av)) errx(EX_USAGE, msg);}
 end_define
 
 begin_function_decl
@@ -580,9 +611,6 @@ begin_function_decl
 name|void
 name|ipfw_add
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -640,9 +668,6 @@ begin_function_decl
 name|void
 name|ipfw_sets_handler
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -670,9 +695,6 @@ begin_function_decl
 name|void
 name|ipfw_sysctl_handler
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -688,9 +710,6 @@ begin_function_decl
 name|void
 name|ipfw_delete
 parameter_list|(
-name|int
-name|ac
-parameter_list|,
 name|char
 modifier|*
 name|av
@@ -789,15 +808,8 @@ end_comment
 
 begin_function_decl
 name|void
-name|ipfw_list_pipes
+name|dummynet_list
 parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|uint
-name|nbytes
-parameter_list|,
 name|int
 name|ac
 parameter_list|,
@@ -805,6 +817,18 @@ name|char
 modifier|*
 name|av
 index|[]
+parameter_list|,
+name|int
+name|show_counters
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dummynet_flush
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

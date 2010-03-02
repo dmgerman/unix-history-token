@@ -77,6 +77,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|QMD_SAVELINK
+parameter_list|(
+name|name
+parameter_list|,
+name|link
+parameter_list|)
+value|void **name = (void *)&(link)
+end_define
+
+begin_define
+define|#
+directive|define
 name|QMD_TRACE_HEAD
 parameter_list|(
 name|head
@@ -114,6 +126,17 @@ directive|define
 name|QMD_TRACE_HEAD
 parameter_list|(
 name|head
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QMD_SAVELINK
+parameter_list|(
+name|name
+parameter_list|,
+name|link
 parameter_list|)
 end_define
 
@@ -320,7 +343,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = SLIST_FIRST((head));		\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_REMOVE_AFTER(curelm, field);			\ 	}								\ 	TRASHIT((elm)->field.sle_next);					\ } while (0)
+value|do {			\ 	QMD_SAVELINK(oldnext, (elm)->field.sle_next);			\ 	if (SLIST_FIRST((head)) == (elm)) {				\ 		SLIST_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = SLIST_FIRST((head));		\ 		while (SLIST_NEXT(curelm, field) != (elm))		\ 			curelm = SLIST_NEXT(curelm, field);		\ 		SLIST_REMOVE_AFTER(curelm, field);			\ 	}								\ 	TRASHIT(*oldnext);						\ } while (0)
 end_define
 
 begin_define
@@ -554,7 +577,7 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		STAILQ_REMOVE_AFTER(head, curelm, field);		\ 	}								\ 	TRASHIT((elm)->field.stqe_next);				\ } while (0)
+value|do {			\ 	QMD_SAVELINK(oldnext, (elm)->field.stqe_next);			\ 	if (STAILQ_FIRST((head)) == (elm)) {				\ 		STAILQ_REMOVE_HEAD((head), field);			\ 	}								\ 	else {								\ 		struct type *curelm = STAILQ_FIRST((head));		\ 		while (STAILQ_NEXT(curelm, field) != (elm))		\ 			curelm = STAILQ_NEXT(curelm, field);		\ 		STAILQ_REMOVE_AFTER(head, curelm, field);		\ 	}								\ 	TRASHIT(*oldnext);						\ } while (0)
 end_define
 
 begin_define
@@ -870,7 +893,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {					\ 	QMD_LIST_CHECK_NEXT(elm, field);				\ 	QMD_LIST_CHECK_PREV(elm, field);				\ 	if (LIST_NEXT((elm), field) != NULL)				\ 		LIST_NEXT((elm), field)->field.le_prev = 		\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = LIST_NEXT((elm), field);		\ 	TRASHIT((elm)->field.le_next);					\ 	TRASHIT((elm)->field.le_prev);					\ } while (0)
+value|do {					\ 	QMD_SAVELINK(oldnext, (elm)->field.le_next);			\ 	QMD_SAVELINK(oldprev, (elm)->field.le_prev);			\ 	QMD_LIST_CHECK_NEXT(elm, field);				\ 	QMD_LIST_CHECK_PREV(elm, field);				\ 	if (LIST_NEXT((elm), field) != NULL)				\ 		LIST_NEXT((elm), field)->field.le_prev = 		\ 		    (elm)->field.le_prev;				\ 	*(elm)->field.le_prev = LIST_NEXT((elm), field);		\ 	TRASHIT(*oldnext);						\ 	TRASHIT(*oldprev);						\ } while (0)
 end_define
 
 begin_define
@@ -1283,7 +1306,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {				\ 	QMD_TAILQ_CHECK_NEXT(elm, field);				\ 	QMD_TAILQ_CHECK_PREV(elm, field);				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT((elm)->field.tqe_next);					\ 	TRASHIT((elm)->field.tqe_prev);					\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
+value|do {				\ 	QMD_SAVELINK(oldnext, (elm)->field.tqe_next);			\ 	QMD_SAVELINK(oldprev, (elm)->field.tqe_prev);			\ 	QMD_TAILQ_CHECK_NEXT(elm, field);				\ 	QMD_TAILQ_CHECK_PREV(elm, field);				\ 	if ((TAILQ_NEXT((elm), field)) != NULL)				\ 		TAILQ_NEXT((elm), field)->field.tqe_prev = 		\ 		    (elm)->field.tqe_prev;				\ 	else {								\ 		(head)->tqh_last = (elm)->field.tqe_prev;		\ 		QMD_TRACE_HEAD(head);					\ 	}								\ 	*(elm)->field.tqe_prev = TAILQ_NEXT((elm), field);		\ 	TRASHIT(*oldnext);						\ 	TRASHIT(*oldprev);						\ 	QMD_TRACE_ELEM(&(elm)->field);					\ } while (0)
 end_define
 
 begin_define

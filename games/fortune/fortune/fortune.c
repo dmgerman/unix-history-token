@@ -1204,11 +1204,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|exit
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

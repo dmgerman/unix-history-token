@@ -36,6 +36,24 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lockmgr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tree.h>
 end_include
 
@@ -251,6 +269,11 @@ argument_list|)
 name|pm_filenos
 expr_stmt|;
 comment|/* 64<->32-bit fileno mapping */
+name|struct
+name|lock
+name|pm_fatlock
+decl_stmt|;
+comment|/* lockmgr protecting allocations and rb tree */
 block|}
 struct|;
 end_struct
@@ -615,6 +638,39 @@ name|uint64_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MSDOSFS_LOCK_MP
+parameter_list|(
+name|pmp
+parameter_list|)
+define|\
+value|lockmgr(&(pmp)->pm_fatlock, LK_EXCLUSIVE, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSDOSFS_UNLOCK_MP
+parameter_list|(
+name|pmp
+parameter_list|)
+define|\
+value|lockmgr(&(pmp)->pm_fatlock, LK_RELEASE, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSDOSFS_ASSERT_MP_LOCKED
+parameter_list|(
+name|pmp
+parameter_list|)
+define|\
+value|lockmgr_assert(&(pmp)->pm_fatlock, KA_XLOCKED)
+end_define
 
 begin_endif
 endif|#

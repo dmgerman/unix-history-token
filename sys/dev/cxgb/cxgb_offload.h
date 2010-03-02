@@ -18,18 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<common/cxgb_version.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cxgb_config.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<common/cxgb_tcb.h>
 end_include
 

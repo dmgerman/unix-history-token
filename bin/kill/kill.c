@@ -505,10 +505,6 @@ condition|(
 name|numsig
 operator|<
 literal|0
-operator|||
-name|numsig
-operator|>=
-name|sys_nsig
 condition|)
 name|nosig
 argument_list|(

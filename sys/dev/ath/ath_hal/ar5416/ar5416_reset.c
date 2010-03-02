@@ -1784,6 +1784,16 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
+name|struct
+name|ath_hal_5212
+modifier|*
+name|ahp
+init|=
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+decl_stmt|;
 comment|/* 	 * set AHB_MODE not to do cacheline prefetches 	 */
 name|OS_REG_SET_BIT
 argument_list|(
@@ -1838,7 +1848,35 @@ operator||
 name|AR_RXCFG_DMASZ_128B
 argument_list|)
 expr_stmt|;
-comment|/* XXX restore TX trigger level */
+comment|/* restore TX trigger level */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TXCFG
+argument_list|,
+operator|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TXCFG
+argument_list|)
+operator|&
+operator|~
+name|AR_FTRIG
+operator|)
+operator||
+name|SM
+argument_list|(
+name|ahp
+operator|->
+name|ah_txTrigLev
+argument_list|,
+name|AR_FTRIG
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Setup receive FIFO threshold to hold off TX activities 	 */
 name|OS_REG_WRITE
 argument_list|(

@@ -250,9 +250,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&

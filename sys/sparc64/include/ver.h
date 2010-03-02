@@ -95,35 +95,40 @@ begin_define
 define|#
 directive|define
 name|VER_MANUF_MASK
-value|(((1L<<VER_MANUF_SIZE)-1)<<VER_MANUF_SHIFT)
+define|\
+value|(((1UL<< VER_MANUF_SIZE) - 1)<< VER_MANUF_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VER_IMPL_MASK
-value|(((1L<<VER_IMPL_SIZE)-1)<<VER_IMPL_SHIFT)
+define|\
+value|(((1UL<< VER_IMPL_SIZE) - 1)<< VER_IMPL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VER_MASK_MASK
-value|(((1L<<VER_MASK_SIZE)-1)<<VER_MASK_SHIFT)
+define|\
+value|(((1UL<< VER_MASK_SIZE) - 1)<< VER_MASK_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VER_MAXTL_MASK
-value|(((1L<<VER_MAXTL_SIZE)-1)<<VER_MAXTL_SHIFT)
+define|\
+value|(((1UL<< VER_MAXTL_SIZE) - 1)<< VER_MAXTL_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VER_MAXWIN_MASK
-value|(((1L<<VER_MAXWIN_SIZE)-1)<<VER_MAXWIN_SHIFT)
+define|\
+value|(((1UL<< VER_MAXWIN_SIZE) - 1)<< VER_MAXWIN_SHIFT)
 end_define
 
 begin_define
@@ -180,13 +185,6 @@ parameter_list|)
 define|\
 value|(((ver)& VER_MAXWIN_MASK)>> VER_MAXWIN_SHIFT)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cpu_impl
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

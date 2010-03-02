@@ -4534,7 +4534,7 @@ end_expr_stmt
 begin_expr_stmt
 name|virtual_end
 operator|=
-name|VM_MAX_KERNEL_ADDRESS
+name|VM_MAX_SAFE_KERNEL_ADDRESS
 expr_stmt|;
 end_expr_stmt
 
@@ -10887,7 +10887,7 @@ operator|&&
 operator|(
 name|va
 operator|<=
-name|VM_MAX_KERNEL_ADDRESS
+name|virtual_end
 operator|)
 condition|)
 block|{

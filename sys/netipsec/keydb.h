@@ -96,7 +96,7 @@ name|union
 name|sockaddr_union
 name|src
 decl_stmt|;
-comment|/* srouce address for SA */
+comment|/* source address for SA */
 name|union
 name|sockaddr_union
 name|dst

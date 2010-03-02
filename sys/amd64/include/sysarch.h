@@ -19,6 +19,12 @@ directive|define
 name|_MACHINE_SYSARCH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -168,12 +174,6 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_function_decl
 name|__BEGIN_DECLS

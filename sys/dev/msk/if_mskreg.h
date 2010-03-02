@@ -16790,6 +16790,9 @@ decl_stmt|;
 name|uint16_t
 name|msk_tso_mtu
 decl_stmt|;
+name|uint32_t
+name|msk_last_csum
+decl_stmt|;
 name|int
 name|msk_tx_prod
 decl_stmt|;
@@ -16970,6 +16973,13 @@ define|#
 directive|define
 name|MSK_PROC_MAX
 value|(MSK_RX_RING_CNT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_INT_HOLDOFF_DEFAULT
+value|100
 end_define
 
 begin_define
@@ -17173,7 +17183,7 @@ name|resource
 modifier|*
 name|msk_irq
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* IRQ resources */
@@ -17185,9 +17195,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* irq handler handle */
 name|device_t
@@ -17204,6 +17211,12 @@ name|msk_bustype
 decl_stmt|;
 name|uint8_t
 name|msk_num_port
+decl_stmt|;
+name|int
+name|msk_expcap
+decl_stmt|;
+name|int
+name|msk_pcixcap
 decl_stmt|;
 name|int
 name|msk_ramsize
@@ -17284,19 +17297,13 @@ name|bus_addr_t
 name|msk_stat_ring_paddr
 decl_stmt|;
 name|int
+name|msk_int_holdoff
+decl_stmt|;
+name|int
 name|msk_process_limit
 decl_stmt|;
 name|int
 name|msk_stat_cons
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|msk_tq
-decl_stmt|;
-name|struct
-name|task
-name|msk_int_task
 decl_stmt|;
 name|struct
 name|mtx
@@ -17502,10 +17509,6 @@ comment|/* parent controller */
 name|struct
 name|msk_hw_stats
 name|msk_stats
-decl_stmt|;
-name|struct
-name|task
-name|msk_tx_task
 decl_stmt|;
 name|int
 name|msk_if_flags

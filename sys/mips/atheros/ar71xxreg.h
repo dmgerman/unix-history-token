@@ -2095,7 +2095,7 @@ begin_define
 define|#
 directive|define
 name|DMA_RX_STATUS_OVERFLOW
-value|(1<< 1)
+value|(1<< 2)
 end_define
 
 begin_define

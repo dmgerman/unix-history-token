@@ -1030,7 +1030,7 @@ operator|)
 return|;
 return|return
 operator|(
-literal|0
+literal|0xff
 operator|)
 return|;
 block|}

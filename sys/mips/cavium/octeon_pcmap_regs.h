@@ -1923,7 +1923,7 @@ parameter_list|(
 name|ptr
 parameter_list|)
 define|\
-value|((((mipsx_addr_size) ptr)>> MIPSX_ADDR_SIZE_KSEGX_BIT_SHIFT) == 2) ? \     	((mipsx_addr_size) ptr& MIPSX_ADDR_SIZE_KSEGX_MASK_REMOVED)  :   \     	(vtophys(ptr))
+value|(((((mipsx_addr_size) ptr)>> MIPSX_ADDR_SIZE_KSEGX_BIT_SHIFT) == 2) ? \     	((mipsx_addr_size) ptr& MIPSX_ADDR_SIZE_KSEGX_MASK_REMOVED)  :   \         (vtophys(ptr)))
 end_define
 
 begin_ifdef

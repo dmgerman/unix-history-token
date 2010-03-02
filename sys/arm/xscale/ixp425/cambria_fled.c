@@ -234,7 +234,7 @@ argument_list|,
 literal|"front"
 argument_list|)
 expr_stmt|;
-name|led_func
+name|fled_cb
 argument_list|(
 name|sc
 argument_list|,

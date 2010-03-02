@@ -5420,7 +5420,7 @@ expr_stmt|;
 operator|*
 name|mbox0p
 operator|=
-name|ASYNC_RIO1
+name|ASYNC_RIO16_1
 expr_stmt|;
 operator|*
 name|semap
@@ -7858,7 +7858,6 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|isp_hdl_t
-operator|*
 argument_list|)
 operator|*
 name|isp

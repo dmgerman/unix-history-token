@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998-2002 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1998-2010 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,418 +16,255 @@ name|_IP_DUMMYNET_H
 end_define
 
 begin_comment
-comment|/*  * Definition of dummynet data structures. In the structures, I decided  * not to use the macros in<sys/queue.h> in the hope of making the code  * easier to port to other architectures. The type of lists and queue we  * use here is pretty simple anyways.  */
-end_comment
-
-begin_comment
-comment|/*  * We start with a heap, which is used in the scheduler to decide when  * to transmit packets etc.  *  * The key for the heap is used for two different values:  *  * 1. timer ticks- max 10K/second, so 32 bits are enough;  *  * 2. virtual times. These increase in steps of len/x, where len is the  *    packet length, and x is either the weight of the flow, or the  *    sum of all weights.  *    If we limit to max 1000 flows and a max weight of 100, then  *    x needs 17 bits. The packet size is 16 bits, so we can easily  *    overflow if we do not allow errors.  * So we use a key "dn_key" which is 64 bits. Some macros are used to  * compare key values and handle wraparounds.  * MAX64 returns the largest of two key values.  * MY_M is used as a shift count when doing fixed point arithmetic  * (a better name would be useful...).  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int64_t
-name|dn_key
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* sorting key */
+comment|/*  * Definition of the kernel-userland API for dummynet.  *  * Setsockopt() and getsockopt() pass a batch of objects, each  * of them starting with a "struct dn_id" which should fully identify  * the object and its relation with others in the sequence.  * The first object in each request should have  *	 type= DN_CMD_*, id = DN_API_VERSION.  * For other objects, type and subtype specify the object, len indicates  * the total length including the header, and 'id' identifies the specific  * object.  *  * Most objects are numbered with an identifier in the range 1..65535.  * DN_MAX_ID indicates the first value outside the range.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DN_KEY_LT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((int64_t)((a)-(b))< 0)
+name|DN_API_VERSION
+value|12500000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DN_KEY_LEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((int64_t)((a)-(b))<= 0)
+name|DN_MAX_ID
+value|0x10000
 end_define
-
-begin_define
-define|#
-directive|define
-name|DN_KEY_GT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((int64_t)((a)-(b))> 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DN_KEY_GEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((int64_t)((a)-(b))>= 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX64
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(( (int64_t) ( (y)-(x) ))> 0 ) ? (y) : (x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MY_M
-value|16
-end_define
-
-begin_comment
-comment|/* number of left shift to obtain a larger precision */
-end_comment
-
-begin_comment
-comment|/*  * XXX With this scaling, max 1000 flows, max weight 100, 1Gbit/s, the  * virtual time wraps every 15 days.  */
-end_comment
-
-begin_comment
-comment|/*  * The maximum hash table size for queues.  This value must be a power  * of 2.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DN_MAX_HASH_SIZE
-value|65536
-end_define
-
-begin_comment
-comment|/*  * A heap entry is made of a key and a pointer to the actual  * object stored in the heap.  * The heap is an array of dn_heap_entry entries, dynamically allocated.  * Current size is "size", with "elements" actually in use.  * The heap normally supports only ordered insert and extract from the top.  * If we want to extract an object from the middle of the heap, we  * have to know where the object itself is located in the heap (or we  * need to scan the whole array). To this purpose, an object has a  * field (int) which contains the index of the object itself into the  * heap. When the object is moved, the field must also be updated.  * The offset of the index in the object is stored in the 'offset'  * field in the heap descriptor. The assumption is that this offset  * is non-zero if we want to support extract from the middle.  */
-end_comment
 
 begin_struct
 struct|struct
-name|dn_heap_entry
+name|dn_id
 block|{
-name|dn_key
-name|key
-decl_stmt|;
-comment|/* sorting key. Topmost element is smallest one */
-name|void
-modifier|*
-name|object
-decl_stmt|;
-comment|/* object pointer */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|dn_heap
-block|{
-name|int
-name|size
-decl_stmt|;
-name|int
-name|elements
-decl_stmt|;
-name|int
-name|offset
-decl_stmt|;
-comment|/* XXX if> 0 this is the offset of direct ptr to obj */
-name|struct
-name|dn_heap_entry
-modifier|*
-name|p
-decl_stmt|;
-comment|/* really an array of "size" entries */
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  This is used within  * the dummynet code as well as outside when checking for special  * processing requirements.  * Note that the first part is the reinject info and is common to  * other forms of packet reinjection.  */
-end_comment
-
-begin_struct
-struct|struct
-name|dn_pkt_tag
-block|{
-name|struct
-name|ipfw_rule_ref
-name|rule
-decl_stmt|;
-comment|/* matching rule */
-comment|/* second part, dummynet specific */
-name|int
-name|dn_dir
-decl_stmt|;
-comment|/* action when packet comes out. */
-comment|/* see ip_fw_private.h */
-name|dn_key
-name|output_time
-decl_stmt|;
-comment|/* when the pkt is due for delivery	*/
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-comment|/* interface, for ip_output		*/
-name|struct
-name|_ip6dn_args
-name|ip6opt
-decl_stmt|;
-comment|/* XXX ipv6 options			*/
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * Overall structure of dummynet (with WF2Q+):  In dummynet, packets are selected with the firewall rules, and passed to two different objects: PIPE or QUEUE.  A QUEUE is just a queue with configurable size and queue management policy. It is also associated with a mask (to discriminate among different flows), a weight (used to give different shares of the bandwidth to different flows) and a "pipe", which essentially supplies the transmit clock for all queues associated with that pipe.  A PIPE emulates a fixed-bandwidth link, whose bandwidth is configurable.  The "clock" for a pipe can come from either an internal timer, or from the transmit interrupt of an interface. A pipe is also associated with one (or more, if masks are used) queue, where all packets for that pipe are stored.  The bandwidth available on the pipe is shared by the queues associated with that pipe (only one in case the packet is sent to a PIPE) according to the WF2Q+ scheduling algorithm and the configured weights.  In general, incoming packets are stored in the appropriate queue, which is then placed into one of a few heaps managed by a scheduler to decide when the packet should be extracted. The scheduler (a function called dummynet()) is run at every timer tick, and grabs queues from the head of the heaps when they are ready for processing.  There are three data structures definining a pipe and associated queues:   + dn_pipe, which contains the main configuration parameters related    to delay and bandwidth;  + dn_flow_set, which contains WF2Q+ configuration, flow    masks, plr and RED configuration;  + dn_flow_queue, which is the per-flow queue (containing the packets)  Multiple dn_flow_set can be linked to the same pipe, and multiple dn_flow_queue can be linked to the same dn_flow_set. All data structures are linked in a linear list which is used for housekeeping purposes.  During configuration, we create and initialize the dn_flow_set and dn_pipe structures (a dn_pipe also contains a dn_flow_set).  At runtime: packets are sent to the appropriate dn_flow_set (either WFQ ones, or the one embedded in the dn_pipe for fixed-rate flows), which in turn dispatches them to the appropriate dn_flow_queue (created dynamically according to the masks).  The transmit clock for fixed rate flows (ready_event()) selects the dn_flow_queue to be used to transmit the next packet. For WF2Q, wfq_ready_event() extract a pipe which in turn selects the right flow using a number of heaps defined into the pipe itself.   *  */
-end_comment
-
-begin_comment
-comment|/*  * per flow queue. This contains the flow identifier, the queue  * of packets, counters, and parameters used to support both RED and  * WF2Q+.  *  * A dn_flow_queue is created and initialized whenever a packet for  * a new flow arrives.  */
-end_comment
-
-begin_struct
-struct|struct
-name|dn_flow_queue
-block|{
-name|struct
-name|dn_flow_queue
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|ipfw_flow_id
-name|id
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|,
-modifier|*
-name|tail
-decl_stmt|;
-comment|/* queue of packets */
-name|u_int
+name|uint16_t
 name|len
 decl_stmt|;
-name|u_int
-name|len_bytes
+comment|/* total obj len including this header */
+name|uint8_t
+name|type
 decl_stmt|;
-comment|/*      * When we emulate MAC overheads, or channel unavailability due      * to other traffic on a shared medium, we augment the packet at      * the head of the queue with an 'extra_bits' field representsing      * the additional delay the packet will be subject to:      *		extra_bits = bw*unavailable_time.      * With large bandwidth and large delays, extra_bits (and also numbytes)      * can become very large, so better play safe and use 64 bit      */
-name|uint64_t
-name|numbytes
+name|uint8_t
+name|subtype
 decl_stmt|;
-comment|/* credit for transmission (dynamic queues) */
-name|int64_t
-name|extra_bits
+name|uint32_t
+name|id
 decl_stmt|;
-comment|/* extra bits simulating unavailable channel */
-name|u_int64_t
-name|tot_pkts
-decl_stmt|;
-comment|/* statistics counters	*/
-name|u_int64_t
-name|tot_bytes
-decl_stmt|;
-name|u_int32_t
-name|drops
-decl_stmt|;
-name|int
-name|hash_slot
-decl_stmt|;
-comment|/* debugging/diagnostic */
-comment|/* RED parameters */
-name|int
-name|avg
-decl_stmt|;
-comment|/* average queue length est. (scaled) */
-name|int
-name|count
-decl_stmt|;
-comment|/* arrivals since last RED drop */
-name|int
-name|random
-decl_stmt|;
-comment|/* random value (scaled) */
-name|dn_key
-name|idle_time
-decl_stmt|;
-comment|/* start of queue idle time */
-comment|/* WF2Q+ support */
-name|struct
-name|dn_flow_set
-modifier|*
-name|fs
-decl_stmt|;
-comment|/* parent flow set */
-name|int
-name|heap_pos
-decl_stmt|;
-comment|/* position (index) of struct in heap */
-name|dn_key
-name|sched_time
-decl_stmt|;
-comment|/* current time when queue enters ready_heap */
-name|dn_key
-name|S
-decl_stmt|,
-name|F
-decl_stmt|;
-comment|/* start time, finish time */
-comment|/*      * Setting F< S means the timestamp is invalid. We only need      * to test this when the queue is empty.      */
+comment|/* generic id */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * flow_set descriptor. Contains the "template" parameters for the  * queue configuration, and pointers to the hash table of dn_flow_queue's.  *  * The hash table is an array of lists -- we identify the slot by  * hashing the flow-id, then scan the list looking for a match.  * The size of the hash table (buckets) is configurable on a per-queue  * basis.  *  * A dn_flow_set is created whenever a new queue or pipe is created (in the  * latter case, the structure is located inside the struct dn_pipe).  */
+comment|/*  * These values are in the type field of struct dn_id.  * To preserve the ABI, never rearrange the list or delete  * entries with the exception of DN_LAST  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DN_NONE
+init|=
+literal|0
+block|,
+name|DN_LINK
+init|=
+literal|1
+block|,
+name|DN_FS
+block|,
+name|DN_SCH
+block|,
+name|DN_SCH_I
+block|,
+name|DN_QUEUE
+block|,
+name|DN_DELAY_LINE
+block|,
+name|DN_PROFILE
+block|,
+name|DN_FLOW
+block|,
+comment|/* struct dn_flow */
+name|DN_TEXT
+block|,
+comment|/* opaque text is the object */
+name|DN_CMD_CONFIG
+init|=
+literal|0x80
+block|,
+comment|/* objects follow */
+name|DN_CMD_DELETE
+block|,
+comment|/* subtype + list of entries */
+name|DN_CMD_GET
+block|,
+comment|/* subtype + list of entries */
+name|DN_CMD_FLUSH
+block|,
+comment|/* for compatibility with FreeBSD 7.2/8 */
+name|DN_COMPAT_PIPE
+block|,
+name|DN_COMPAT_QUEUE
+block|,
+name|DN_GET_COMPAT
+block|,
+comment|/* special commands for emulation of sysctl variables */
+name|DN_SYSCTL_GET
+block|,
+name|DN_SYSCTL_SET
+block|,
+name|DN_LAST
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+comment|/* subtype for schedulers, flowset and the like */
+name|DN_SCHED_UNKNOWN
+init|=
+literal|0
+block|,
+name|DN_SCHED_FIFO
+init|=
+literal|1
+block|,
+name|DN_SCHED_WF2QP
+init|=
+literal|2
+block|,
+comment|/* others are in individual modules */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+comment|/* user flags */
+name|DN_HAVE_MASK
+init|=
+literal|0x0001
+block|,
+comment|/* fs or sched has a mask */
+name|DN_NOERROR
+init|=
+literal|0x0002
+block|,
+comment|/* do not report errors */
+name|DN_QHT_HASH
+init|=
+literal|0x0004
+block|,
+comment|/* qht is a hash table */
+name|DN_QSIZE_BYTES
+init|=
+literal|0x0008
+block|,
+comment|/* queue size is in bytes */
+name|DN_HAS_PROFILE
+init|=
+literal|0x0010
+block|,
+comment|/* a link has a profile */
+name|DN_IS_RED
+init|=
+literal|0x0020
+block|,
+name|DN_IS_GENTLE_RED
+init|=
+literal|0x0040
+block|,
+name|DN_PIPE_CMD
+init|=
+literal|0x1000
+block|,
+comment|/* pipe config... */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * link template.  */
 end_comment
 
 begin_struct
 struct|struct
-name|dn_flow_set
+name|dn_link
 block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|dn_flow_set
-argument_list|)
-name|next
-expr_stmt|;
-comment|/* linked list in a hash slot */
-name|u_short
+name|struct
+name|dn_id
+name|oid
+decl_stmt|;
+comment|/* 	 * Userland sets bw and delay in bits/s and milliseconds. 	 * The kernel converts this back and forth to bits/tick and ticks. 	 * XXX what about burst ?      */
+name|int32_t
+name|link_nr
+decl_stmt|;
+name|int
+name|bandwidth
+decl_stmt|;
+comment|/* bit/s or bits/tick.   */
+name|int
+name|delay
+decl_stmt|;
+comment|/* ms and ticks */
+name|uint64_t
+name|burst
+decl_stmt|;
+comment|/* scaled. bits*Hz  XXX */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A flowset, which is a template for flows. Contains parameters  * from the command line: id, target scheduler, queue sizes, plr,  * flow masks, buckets for the flow hash, and possibly scheduler-  * specific parameters (weight, quantum and so on).  */
+end_comment
+
+begin_struct
+struct|struct
+name|dn_fs
+block|{
+name|struct
+name|dn_id
+name|oid
+decl_stmt|;
+name|uint32_t
 name|fs_nr
 decl_stmt|;
-comment|/* flow_set number       */
-name|u_short
-name|flags_fs
+comment|/* the flowset number */
+name|uint32_t
+name|flags
 decl_stmt|;
-define|#
-directive|define
-name|DN_HAVE_FLOW_MASK
-value|0x0001
-define|#
-directive|define
-name|DN_IS_RED
-value|0x0002
-define|#
-directive|define
-name|DN_IS_GENTLE_RED
-value|0x0004
-define|#
-directive|define
-name|DN_QSIZE_IS_BYTES
-value|0x0008
-comment|/* queue size is measured in bytes */
-define|#
-directive|define
-name|DN_NOERROR
-value|0x0010
-comment|/* do not report ENOBUFS on drops  */
-define|#
-directive|define
-name|DN_HAS_PROFILE
-value|0x0020
-comment|/* the pipe has a delay profile. */
-define|#
-directive|define
-name|DN_IS_PIPE
-value|0x4000
-define|#
-directive|define
-name|DN_IS_QUEUE
-value|0x8000
-name|struct
-name|dn_pipe
-modifier|*
-name|pipe
-decl_stmt|;
-comment|/* pointer to parent pipe */
-name|u_short
-name|parent_nr
-decl_stmt|;
-comment|/* parent pipe#, 0 if local to a pipe */
-name|int
-name|weight
-decl_stmt|;
-comment|/* WFQ queue weight */
+comment|/* userland flags */
 name|int
 name|qsize
 decl_stmt|;
 comment|/* queue size in slots or bytes */
-name|int
+name|int32_t
 name|plr
 decl_stmt|;
-comment|/* pkt loss rate (2^31-1 means 100%) */
+comment|/* PLR, pkt loss rate (2^31-1 means 100%) */
+name|uint32_t
+name|buckets
+decl_stmt|;
+comment|/* buckets used for the queue hash table */
 name|struct
 name|ipfw_flow_id
 name|flow_mask
 decl_stmt|;
-comment|/* hash table of queues onto this flow_set */
+name|uint32_t
+name|sched_nr
+decl_stmt|;
+comment|/* the scheduler we attach to */
+comment|/* generic scheduler parameters. Leave them at -1 if unset. 	 * Now we use 0: weight, 1: lmax, 2: priority 	 */
 name|int
-name|rq_size
+name|par
+index|[
+literal|4
+index|]
 decl_stmt|;
-comment|/* number of slots */
-name|int
-name|rq_elements
-decl_stmt|;
-comment|/* active elements */
-name|struct
-name|dn_flow_queue
-modifier|*
-modifier|*
-name|rq
-decl_stmt|;
-comment|/* array of rq_size entries */
-name|u_int32_t
-name|last_expired
-decl_stmt|;
-comment|/* do not expire too frequently */
-name|int
-name|backlogged
-decl_stmt|;
-comment|/* #active queues for this flowset */
-comment|/* RED parameters */
+comment|/* RED/GRED parameters. 	 * weight and probabilities are in the range 0..1 represented 	 * in fixed point arithmetic with SCALE_RED decimal bits. 	 */
 define|#
 directive|define
 name|SCALE_RED
@@ -471,160 +308,108 @@ name|int
 name|max_p
 decl_stmt|;
 comment|/* maximum value for p_b (scaled) */
-name|u_int
-name|c_1
-decl_stmt|;
-comment|/* max_p/(max_th-min_th) (scaled) */
-name|u_int
-name|c_2
-decl_stmt|;
-comment|/* max_p*min_th/(max_th-min_th) (scaled) */
-name|u_int
-name|c_3
-decl_stmt|;
-comment|/* for GRED, (1-max_p)/max_th (scaled) */
-name|u_int
-name|c_4
-decl_stmt|;
-comment|/* for GRED, 1 - 2*max_p (scaled) */
-name|u_int
-modifier|*
-name|w_q_lookup
-decl_stmt|;
-comment|/* lookup table for computing (1-w_q)^t */
-name|u_int
-name|lookup_depth
-decl_stmt|;
-comment|/* depth of lookup table */
-name|int
-name|lookup_step
-decl_stmt|;
-comment|/* granularity inside the lookup table */
-name|int
-name|lookup_weight
-decl_stmt|;
-comment|/* equal to (1-w_q)^t / (1-w_q)^(t+1) */
-name|int
-name|avg_pkt_size
-decl_stmt|;
-comment|/* medium packet size */
-name|int
-name|max_pkt_size
-decl_stmt|;
-comment|/* max packet size */
 block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SLIST_HEAD
-argument_list|(
-name|dn_flow_set_head
-argument_list|,
-name|dn_flow_set
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
-comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *  * For WF2Q+ support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *  */
+comment|/*  * dn_flow collects flow_id and stats for queues and scheduler  * instances, and is used to pass these info to userland.  * oid.type/oid.subtype describe the object, oid.id is number  * of the parent object.  */
 end_comment
 
 begin_struct
 struct|struct
-name|dn_pipe
+name|dn_flow
 block|{
-comment|/* a pipe */
-name|SLIST_ENTRY
-argument_list|(
-argument|dn_pipe
-argument_list|)
-name|next
-expr_stmt|;
-comment|/* linked list in a hash slot */
-name|int
-name|pipe_nr
-decl_stmt|;
-comment|/* number	*/
-name|int
-name|bandwidth
-decl_stmt|;
-comment|/* really, bytes/tick.	*/
-name|int
-name|delay
-decl_stmt|;
-comment|/* really, ticks	*/
 name|struct
-name|mbuf
-modifier|*
-name|head
-decl_stmt|,
-modifier|*
-name|tail
+name|dn_id
+name|oid
 decl_stmt|;
-comment|/* packets in delay line */
-comment|/* WF2Q+ */
 name|struct
-name|dn_heap
-name|scheduler_heap
+name|ipfw_flow_id
+name|fid
 decl_stmt|;
-comment|/* top extract - key Finish time*/
-name|struct
-name|dn_heap
-name|not_eligible_heap
-decl_stmt|;
-comment|/* top extract- key Start time */
-name|struct
-name|dn_heap
-name|idle_heap
-decl_stmt|;
-comment|/* random extract - key Start=Finish time */
-name|dn_key
-name|V
-decl_stmt|;
-comment|/* virtual time */
-name|int
-name|sum
-decl_stmt|;
-comment|/* sum of weights of all active sessions */
-comment|/* Same as in dn_flow_queue, numbytes can become large */
-name|int64_t
-name|numbytes
-decl_stmt|;
-comment|/* bits I can transmit (more or less). */
 name|uint64_t
-name|burst
+name|tot_pkts
 decl_stmt|;
-comment|/* burst size, scaled: bits * hz */
-name|dn_key
-name|sched_time
+comment|/* statistics counters  */
+name|uint64_t
+name|tot_bytes
 decl_stmt|;
-comment|/* time pipe was scheduled in ready_heap */
-name|dn_key
-name|idle_time
+name|uint32_t
+name|length
 decl_stmt|;
-comment|/* start of pipe idle time */
-comment|/*      * When the tx clock come from an interface (if_name[0] != '\0'), its name      * is stored below, whereas the ifp is filled when the rule is configured.      */
+comment|/* Queue lenght, in packets */
+name|uint32_t
+name|len_bytes
+decl_stmt|;
+comment|/* Queue lenght, in bytes */
+name|uint32_t
+name|drops
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Scheduler template, mostly indicating the name, number,  * sched_mask and buckets.      */
+end_comment
+
+begin_struct
+struct|struct
+name|dn_sch
+block|{
+name|struct
+name|dn_id
+name|oid
+decl_stmt|;
+name|uint32_t
+name|sched_nr
+decl_stmt|;
+comment|/* N, scheduler number */
+name|uint32_t
+name|buckets
+decl_stmt|;
+comment|/* number of buckets for the instances */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* have_mask, ... */
 name|char
-name|if_name
+name|name
 index|[
-name|IFNAMSIZ
+literal|16
 index|]
 decl_stmt|;
+comment|/* null terminated */
+comment|/* mask to select the appropriate scheduler instance */
 name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|ipfw_flow_id
+name|sched_mask
 decl_stmt|;
-name|int
-name|ready
-decl_stmt|;
-comment|/* set if ifp != NULL and we got a signal from it */
+comment|/* M */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* A delay profile is attached to a link.  * Note that a profile, as any other object, cannot be longer than 2^16  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_MAX_SAMPLES_NO
+value|1024
+end_define
+
+begin_struct
+struct|struct
+name|dn_profile
+block|{
 name|struct
-name|dn_flow_set
-name|fs
+name|dn_id
+name|oid
 decl_stmt|;
-comment|/* used with fixed-rate flows */
 comment|/* fields to simulate a delay profile */
 define|#
 directive|define
@@ -637,57 +422,33 @@ name|ED_MAX_NAME_LEN
 index|]
 decl_stmt|;
 name|int
+name|link_nr
+decl_stmt|;
+name|int
 name|loss_level
 decl_stmt|;
 name|int
+name|bandwidth
+decl_stmt|;
+comment|// XXX use link bandwidth?
+name|int
 name|samples_no
 decl_stmt|;
-name|int
-modifier|*
-name|samples
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* dn_pipe_max is used to pass pipe configuration from userland onto  * kernel space and back  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_MAX_SAMPLES_NO
-value|1024
-end_define
-
-begin_struct
-struct|struct
-name|dn_pipe_max
-block|{
-name|struct
-name|dn_pipe
-name|pipe
-decl_stmt|;
+comment|/* actual length of samples[] */
 name|int
 name|samples
 index|[
 name|ED_MAX_SAMPLES_NO
 index|]
 decl_stmt|;
+comment|/* may be shorter */
 block|}
 struct|;
 end_struct
 
-begin_expr_stmt
-name|SLIST_HEAD
-argument_list|(
-name|dn_pipe_head
-argument_list|,
-name|dn_pipe
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*  * Overall structure of dummynet  In dummynet, packets are selected with the firewall rules, and passed to two different objects: PIPE or QUEUE (bad name).  A QUEUE defines a classifier, which groups packets into flows according to a 'mask', puts them into independent queues (one per flow) with configurable size and queue management policy, and passes flows to a scheduler:                   (flow_mask|sched_mask)  sched_mask 	 +---------+   weight Wx  +-------------+          |         |->-[flow]-->--|             |-+     -->--| QUEUE x |   ...        |             | |          |         |->-[flow]-->--| SCHEDuler N | | 	 +---------+              |             | | 	     ...                  |             +--[LINK N]-->-- 	 +---------+   weight Wy  |             | +--[LINK N]-->--          |         |->-[flow]-->--|             | |     -->--| QUEUE y |   ...        |             | |          |         |->-[flow]-->--|             | | 	 +---------+              +-------------+ | 	                            +-------------+  Many QUEUE objects can connect to the same scheduler, each QUEUE object can have its own set of parameters.  In turn, the SCHEDuler 'forks' multiple instances according to a 'sched_mask', each instance manages its own set of queues and transmits on a private instance of a configurable LINK.  A PIPE is a simplified version of the above, where there is no flow_mask, and each scheduler instance handles a single queue.  The following data structures (visible from userland) describe the objects used by dummynet:   + dn_link, contains the main configuration parameters related    to delay and bandwidth;  + dn_profile describes a delay profile;  + dn_flow describes the flow status (flow id, statistics)      + dn_sch describes a scheduler  + dn_fs describes a flowset (msk, weight, queue parameters)   *  */
+end_comment
 
 begin_endif
 endif|#

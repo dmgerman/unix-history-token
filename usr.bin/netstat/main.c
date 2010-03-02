@@ -2021,6 +2021,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Qflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show netisr information */
+end_comment
+
+begin_decl_stmt
+name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
@@ -2159,7 +2169,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBbdf:ghI:iLlM:mN:np:q:rSsuWw:xz"
+literal|"AaBbdf:ghI:iLlM:mN:np:Qq:rSsuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -2516,6 +2526,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|Qflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 name|noutputs
@@ -2788,6 +2806,48 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Qflag
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
+condition|)
+block|{
+if|if
+condition|(
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|netisr_stats
+argument_list|(
+name|kvmd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|netisr_stats
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4107,7 +4167,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLnSWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
@@ -4134,6 +4194,8 @@ argument_list|,
 literal|"       netstat -g [-W] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -gs [-s] [-f address_family] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -Q"
 argument_list|)
 expr_stmt|;
 name|exit

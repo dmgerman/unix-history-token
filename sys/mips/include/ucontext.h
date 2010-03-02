@@ -89,17 +89,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SZREG
+end_ifndef
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__mips_n64
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips_n32
+name|__mips_o32
 argument_list|)
 end_if
 
@@ -107,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|SZREG
-value|8
+value|4
 end_define
 
 begin_else
@@ -119,8 +120,13 @@ begin_define
 define|#
 directive|define
 name|SZREG
-value|4
+value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

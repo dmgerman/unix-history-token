@@ -535,7 +535,7 @@ literal|129
 block|,
 literal|8
 block|,
-literal|"Bus Heirarchy"
+literal|"Bus Hierarchy"
 block|}
 block|,
 block|{

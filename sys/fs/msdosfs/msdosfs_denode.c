@@ -467,14 +467,6 @@ name|de_inode
 operator|=
 name|inode
 expr_stmt|;
-name|fc_purge
-argument_list|(
-name|ldep
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* init the fat cache for this denode */
 name|lockmgr
 argument_list|(
 name|nvp
@@ -486,6 +478,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|fc_purge
+argument_list|(
+name|ldep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* init the fat cache for this denode */
 name|error
 operator|=
 name|insmntque
@@ -564,17 +564,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX: Not sure this is right */
-name|nvp
+operator|*
+name|depp
 operator|=
 name|xvp
-expr_stmt|;
-name|ldep
 operator|->
-name|de_vnode
-operator|=
-name|nvp
+name|v_data
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|ldep
 operator|->
@@ -2174,6 +2175,15 @@ literal|0
 index|]
 operator|==
 name|SLOT_DELETED
+operator|||
+name|dep
+operator|->
+name|de_Name
+index|[
+literal|0
+index|]
+operator|==
+name|SLOT_EMPTY
 condition|)
 goto|goto
 name|out
@@ -2300,6 +2310,15 @@ literal|0
 index|]
 operator|==
 name|SLOT_DELETED
+operator|||
+name|dep
+operator|->
+name|de_Name
+index|[
+literal|0
+index|]
+operator|==
+name|SLOT_EMPTY
 condition|)
 name|vrecycle
 argument_list|(

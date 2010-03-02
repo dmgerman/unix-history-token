@@ -262,8 +262,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_MAX_SAFE_KERNEL_ADDRESS
+value|(VM_MIN_KERNEL_ADDRESS + 2*SEGMENT_LENGTH -1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(VM_MIN_KERNEL_ADDRESS + 2*SEGMENT_LENGTH - 1)
+value|(VM_MIN_KERNEL_ADDRESS + 3*SEGMENT_LENGTH - 1)
 end_define
 
 begin_comment
@@ -274,16 +281,6 @@ begin_define
 define|#
 directive|define
 name|UMA_MD_SMALL_ALLOC
-end_define
-
-begin_comment
-comment|/*  * On 64-bit systems in bridge mode, we have no direct map, so we fake  * the small_alloc() calls. But we need the VM to be in a reasonable  * state first.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMA_MD_SMALL_ALLOC_NEEDS_VM
 end_define
 
 begin_else

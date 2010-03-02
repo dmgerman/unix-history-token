@@ -2142,6 +2142,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 if|if
 condition|(
 name|oif
@@ -2197,6 +2200,8 @@ name|fragment
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|log
 argument_list|(
 name|LOG_SECURITY

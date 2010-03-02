@@ -230,13 +230,19 @@ name|sockaddr_in6
 name|sin6_allrouters
 init|=
 block|{
+operator|.
+name|sin6_len
+operator|=
 sizeof|sizeof
 argument_list|(
 name|sin6_allrouters
 argument_list|)
 block|,
+operator|.
+name|sin6_family
+operator|=
 name|AF_INET6
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -875,7 +881,7 @@ name|hoplimit
 init|=
 literal|255
 decl_stmt|;
-name|int
+name|ssize_t
 name|i
 decl_stmt|;
 name|struct
@@ -1093,6 +1099,9 @@ name|i
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|i
 operator|!=
 name|ifinfo
@@ -1163,12 +1172,13 @@ name|ifindex
 init|=
 literal|0
 decl_stmt|,
-name|i
-decl_stmt|,
 modifier|*
 name|hlimp
 init|=
 name|NULL
+decl_stmt|;
+name|ssize_t
+name|i
 decl_stmt|;
 name|struct
 name|in6_pktinfo
@@ -1409,6 +1419,9 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|<
 sizeof|sizeof
@@ -1424,7 +1437,7 @@ name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
-literal|"packet size(%d) is too short"
+literal|"packet size(%zd) is too short"
 argument_list|,
 name|i
 argument_list|)

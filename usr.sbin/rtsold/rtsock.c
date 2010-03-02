@@ -304,7 +304,7 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|len
 decl_stmt|;
 name|int
@@ -313,7 +313,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|const
-name|size_t
+name|ssize_t
 name|lenlim
 init|=
 name|offsetof
@@ -528,6 +528,7 @@ name|rtsock_input_ifannounce
 parameter_list|(
 name|int
 name|s
+name|__unused
 parameter_list|,
 name|struct
 name|rt_msghdr

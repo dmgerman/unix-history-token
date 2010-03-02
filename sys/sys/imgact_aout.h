@@ -539,6 +539,9 @@ name|vp
 parameter_list|,
 name|off_t
 name|limit
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
