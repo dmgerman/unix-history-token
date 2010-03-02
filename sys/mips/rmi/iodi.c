@@ -243,16 +243,6 @@ directive|include
 file|<mips/rmi/dev/xlr/xgmac_mdio.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|iodi_activateirqs
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|bus_space_tag_t
@@ -348,10 +338,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* There can be only one. */
-end_comment
-
-begin_comment
-comment|/* static void pic_usb_ack(void *arg) { 	xlr_reg_t *mmio = xlr_io_mmio(XLR_IO_PIC_OFFSET); 	int irq = PIC_USB_IRQ ;  	mtx_lock_spin(&xlr_pic_lock); 	xlr_write_reg(mmio, PIC_INT_ACK, (1<< (irq - PIC_IRQ_BASE))); 	mtx_unlock_spin(&xlr_pic_lock); } */
 end_comment
 
 begin_function
@@ -750,28 +736,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Strange hook found in mips/include/bus.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIPS_BUS_SPACE_PCI
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIPS_BUS_SPACE_PCI
-value|10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|struct
@@ -998,10 +962,7 @@ name|res
 operator|->
 name|r_bustag
 operator|=
-operator|(
-name|bus_space_tag_t
-operator|)
-name|MIPS_BUS_SPACE_PCI
+name|rmi_pci_bus_space
 expr_stmt|;
 block|}
 elseif|else

@@ -460,13 +460,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
-name|bus_space_tag_t
-name|rmi_pci_bus_space
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|devclass_t
 name|pcib_devclass
