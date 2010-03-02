@@ -204,6 +204,13 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|IMGACT_CORE_COMPRESS
+value|0x01
+end_define
+
 begin_function_decl
 name|int
 name|exec_check_permissions
