@@ -3057,6 +3057,28 @@ operator|/
 literal|10
 operator|)
 expr_stmt|;
+comment|/* 	 * Disable large page mappings by default if the kernel is running in 	 * a virtual machine on an AMD Family 10h processor.  This is a work- 	 * around for Erratum 383. 	 */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_VM
+operator|&&
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_AMD
+operator|&&
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x10
+condition|)
+name|pg_ps_enabled
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Are large page mappings enabled? 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
