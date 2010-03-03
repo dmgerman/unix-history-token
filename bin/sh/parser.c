@@ -7397,6 +7397,15 @@ operator|*
 name|fmt
 operator|==
 literal|'W'
+operator|&&
+name|ps
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 comment|/* Final path component only. */
