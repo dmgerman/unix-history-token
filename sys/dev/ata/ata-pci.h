@@ -314,6 +314,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_ALI_5228
+value|0x522810b9
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ALI_5229
 value|0x522910b9
 end_define
