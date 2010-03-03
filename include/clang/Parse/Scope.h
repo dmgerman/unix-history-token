@@ -264,6 +264,10 @@ expr_stmt|;
 name|UsingDirectivesTy
 name|UsingDirectives
 decl_stmt|;
+comment|/// \brief The number of errors at the start of the given scope.
+name|unsigned
+name|NumErrorsAtStart
+decl_stmt|;
 name|public
 label|:
 name|Scope
@@ -620,6 +624,29 @@ block|{
 name|Entity
 operator|=
 name|E
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the number of errors that had been emitted when we
+comment|/// entered this scope.
+name|unsigned
+name|getNumErrorsAtStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumErrorsAtStart
+return|;
+block|}
+name|void
+name|setNumErrorsAtStart
+parameter_list|(
+name|unsigned
+name|NumErrors
+parameter_list|)
+block|{
+name|NumErrorsAtStart
+operator|=
+name|NumErrors
 expr_stmt|;
 block|}
 comment|/// isClassScope - Return true if this scope is a class/struct/union scope.
@@ -998,6 +1025,10 @@ name|clear
 argument_list|()
 expr_stmt|;
 name|Entity
+operator|=
+literal|0
+expr_stmt|;
+name|NumErrorsAtStart
 operator|=
 literal|0
 expr_stmt|;

@@ -71,7 +71,7 @@ name|ptr1
 operator|!=
 name|ptr2
 return|;
-comment|// CHECK: code-complete-errors.c:10:15:[10:10 - 10:14][10:18 - 10:22]: warning: comparison of distinct pointer types ('int *' and 'float *')
+comment|// CHECK: code-complete-errors.c:10:15:{10:10-10:14}{10:18-10:22}: warning: comparison of distinct pointer types ('int *' and 'float *')
 block|}
 end_function
 

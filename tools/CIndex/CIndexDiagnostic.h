@@ -33,6 +33,12 @@ directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -60,88 +66,49 @@ decl_stmt|;
 name|class
 name|Preprocessor
 decl_stmt|;
-comment|/**  * \brief Diagnostic client that translates Clang diagnostics into diagnostics  * for the C interface to Clang.  */
-name|class
-name|CIndexDiagnosticClient
-range|:
-name|public
-name|DiagnosticClient
+comment|/// \brief The storage behind a CXDiagnostic
+struct|struct
+name|CXStoredDiagnostic
 block|{
-name|CXDiagnosticCallback
-name|Callback
-block|;
-name|CXClientData
-name|ClientData
-block|;
+specifier|const
+name|StoredDiagnostic
+modifier|&
+name|Diag
+decl_stmt|;
 specifier|const
 name|LangOptions
-operator|*
-name|LangOptsPtr
-block|;
-name|public
-operator|:
-name|CIndexDiagnosticClient
+modifier|&
+name|LangOpts
+decl_stmt|;
+name|CXStoredDiagnostic
 argument_list|(
-argument|CXDiagnosticCallback Callback
+specifier|const
+name|StoredDiagnostic
+operator|&
+name|Diag
 argument_list|,
-argument|CXClientData ClientData
-argument_list|)
-operator|:
-name|Callback
-argument_list|(
-name|Callback
-argument_list|)
-block|,
-name|ClientData
-argument_list|(
-name|ClientData
-argument_list|)
-block|,
-name|LangOptsPtr
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-name|virtual
-operator|~
-name|CIndexDiagnosticClient
-argument_list|()
-block|;
-name|virtual
-name|void
-name|BeginSourceFile
-argument_list|(
 specifier|const
 name|LangOptions
 operator|&
 name|LangOpts
-argument_list|,
-specifier|const
-name|Preprocessor
-operator|*
-name|PP
 argument_list|)
-block|;
-name|virtual
-name|void
-name|EndSourceFile
-argument_list|()
-block|;
-name|virtual
-name|void
-name|HandleDiagnostic
+operator|:
+name|Diag
 argument_list|(
-argument|Diagnostic::Level DiagLevel
-argument_list|,
-argument|const DiagnosticInfo&Info
+name|Diag
 argument_list|)
-block|; }
-decl_stmt|;
+operator|,
+name|LangOpts
+argument_list|(
+argument|LangOpts
+argument_list|)
+block|{ }
+block|}
+struct|;
 comment|/// \brief Given the path to a file that contains binary, serialized
-comment|/// diagnostics produced by Clang, emit those diagnostics via the
-comment|/// given diagnostic engine.
+comment|/// diagnostics produced by Clang, load those diagnostics.
 name|void
-name|ReportSerializedDiagnostics
+name|LoadSerializedDiagnostics
 argument_list|(
 specifier|const
 name|llvm
@@ -152,10 +119,6 @@ name|Path
 operator|&
 name|DiagnosticsPath
 argument_list|,
-name|Diagnostic
-operator|&
-name|Diags
-argument_list|,
 name|unsigned
 name|num_unsaved_files
 argument_list|,
@@ -164,10 +127,22 @@ name|CXUnsavedFile
 operator|*
 name|unsaved_files
 argument_list|,
-specifier|const
-name|LangOptions
+name|FileManager
 operator|&
-name|LangOpts
+name|FileMgr
+argument_list|,
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|StoredDiagnostic
+operator|>
+operator|&
+name|Diags
 argument_list|)
 decl_stmt|;
 block|}

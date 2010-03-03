@@ -289,5 +289,13 @@ begin_comment
 comment|// CHECK: Punctuation: "}" [10:1 - 10:2]
 end_comment
 
+begin_comment
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:165:32 %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:165:38 %s | FileCheck %s
+end_comment
+
 end_unit
 

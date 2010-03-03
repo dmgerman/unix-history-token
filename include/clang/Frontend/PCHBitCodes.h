@@ -936,6 +936,9 @@ comment|/// associates a declaration name with one or more declaration
 comment|/// IDs. This data is used when performing qualified name lookup
 comment|/// into a DeclContext via DeclContext::lookup.
 name|DECL_CONTEXT_VISIBLE
+block|,
+comment|/// \brief A NamespaceDecl record.
+name|DECL_NAMESPACE
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.

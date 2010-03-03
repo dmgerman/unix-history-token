@@ -219,6 +219,12 @@ operator|::
 name|string
 name|DefaultImageName
 expr_stmt|;
+comment|/// Driver title to use with help.
+name|std
+operator|::
+name|string
+name|DriverTitle
+expr_stmt|;
 comment|/// Host information for the platform the driver is running as. This
 comment|/// will generally be the actual host platform, but not always.
 specifier|const
@@ -403,6 +409,32 @@ name|Value
 parameter_list|)
 block|{
 name|CheckInputsExist
+operator|=
+name|Value
+expr_stmt|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getTitle
+argument_list|()
+block|{
+return|return
+name|DriverTitle
+return|;
+block|}
+name|void
+name|setTitle
+argument_list|(
+name|std
+operator|::
+name|string
+name|Value
+argument_list|)
+block|{
+name|DriverTitle
 operator|=
 name|Value
 expr_stmt|;

@@ -428,6 +428,17 @@ modifier|*
 name|FromId
 parameter_list|)
 function_decl|;
+comment|/// \brief Import the given Objective-C selector from the "from"
+comment|/// context into the "to" context.
+comment|///
+comment|/// \returns the equivalent selector in the "to" context.
+name|Selector
+name|Import
+parameter_list|(
+name|Selector
+name|FromSel
+parameter_list|)
+function_decl|;
 comment|/// \brief Import the given file ID from the "from" context into the
 comment|/// "to" context.
 comment|///

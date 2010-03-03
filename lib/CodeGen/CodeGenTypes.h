@@ -133,6 +133,13 @@ decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|CanQual
+expr_stmt|;
 name|class
 name|CXXConstructorDecl
 decl_stmt|;
@@ -172,6 +179,13 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+typedef|typedef
+name|CanQual
+operator|<
+name|Type
+operator|>
+name|CanQualType
+expr_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -620,6 +634,16 @@ argument_list|,
 argument|bool IsVariadic
 argument_list|)
 expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|FunctionType
+operator|*
+name|GetFunctionType
+argument_list|(
+argument|GlobalDecl GD
+argument_list|)
+expr_stmt|;
 comment|/// GetFunctionTypeForVtable - Get the LLVM function type for use in a vtable,
 comment|/// given a CXXMethodDecl. If the method to has an incomplete return type,
 comment|/// and/or incomplete argument types, this will return the opaque type.
@@ -669,32 +693,6 @@ modifier|*
 name|TD
 parameter_list|)
 function_decl|;
-name|private
-label|:
-specifier|const
-name|CGFunctionInfo
-modifier|&
-name|getFunctionInfo
-parameter_list|(
-specifier|const
-name|FunctionNoProtoType
-modifier|*
-name|FTNP
-parameter_list|)
-function_decl|;
-specifier|const
-name|CGFunctionInfo
-modifier|&
-name|getFunctionInfo
-parameter_list|(
-specifier|const
-name|FunctionProtoType
-modifier|*
-name|FTP
-parameter_list|)
-function_decl|;
-name|public
-label|:
 comment|/// getFunctionInfo - Get the function info for the specified function decl.
 specifier|const
 name|CGFunctionInfo
@@ -804,6 +802,30 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+argument_list|(
+name|CanQual
+operator|<
+name|FunctionProtoType
+operator|>
+name|Ty
+argument_list|)
+decl_stmt|;
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getFunctionInfo
+argument_list|(
+name|CanQual
+operator|<
+name|FunctionNoProtoType
+operator|>
+name|Ty
+argument_list|)
+decl_stmt|;
 comment|// getFunctionInfo - Get the function info for a member function.
 specifier|const
 name|CGFunctionInfo
@@ -864,22 +886,23 @@ name|bool
 name|NoReturn
 parameter_list|)
 function_decl|;
+comment|/// Retrieves the ABI information for the given function signature.
+comment|///
+comment|/// \param ArgTys - must all actually be canonical as params
 specifier|const
 name|CGFunctionInfo
 modifier|&
 name|getFunctionInfo
 argument_list|(
-name|QualType
+name|CanQualType
 name|RetTy
 argument_list|,
 specifier|const
 name|llvm
 operator|::
-name|SmallVector
+name|SmallVectorImpl
 operator|<
-name|QualType
-argument_list|,
-literal|16
+name|CanQualType
 operator|>
 operator|&
 name|ArgTys

@@ -128,8 +128,8 @@ literal|3
 case|:
 name|live
 argument_list|()
-operator|+
 comment|// expected-warning {{will never be executed}}
+operator|+
 name|halt
 argument_list|()
 expr_stmt|;

@@ -115,9 +115,42 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+name|__attribute__
+argument_list|(
+operator|(
+name|__force_align_arg_pointer__
+operator|)
+argument_list|)
+operator|*
+name|p2
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_typedef
+
 begin_comment
-comment|//expected-warning{{force_align_arg_pointer used on function pointer; attribute ignored}}
+comment|// Attribute is also ignored on function typedefs.
 end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|force_align_arg_pointer
+operator|)
+argument_list|)
+name|e
+argument_list|(
+name|void
+argument_list|)
+typedef|;
+end_typedef
 
 end_unit
 

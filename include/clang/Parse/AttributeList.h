@@ -191,6 +191,9 @@ enum|enum
 name|Kind
 block|{
 comment|// Please keep this list alphabetized.
+name|AT_IBAction
+block|,
+comment|// Clang-specific.
 name|AT_IBOutlet
 block|,
 comment|// Clang-specific.
@@ -264,7 +267,13 @@ name|AT_objc_exception
 block|,
 name|AT_override
 block|,
+name|AT_cf_returns_not_retained
+block|,
+comment|// Clang-specific.
 name|AT_cf_returns_retained
+block|,
+comment|// Clang-specific.
+name|AT_ns_returns_not_retained
 block|,
 comment|// Clang-specific.
 name|AT_ns_returns_retained
@@ -302,6 +311,8 @@ block|,
 name|AT_warn_unused_result
 block|,
 name|AT_weak
+block|,
+name|AT_weakref
 block|,
 name|AT_weak_import
 block|,

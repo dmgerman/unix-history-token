@@ -79,7 +79,12 @@ comment|// too pos
 name|f
 init|=
 literal|2147483648
+block|,
 comment|// expected-warning {{ISO C restricts enumerator values to range of 'int'}}
+name|i
+init|=
+literal|0xFFFF0000
+comment|// expected-warning {{too large}}
 block|}
 enum|;
 end_enum

@@ -1,13 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_typedef
+typedef|typedef
+name|__typeof
+argument_list|(
+argument|(int*)
+literal|0
+argument|- (int*)
+literal|0
+argument_list|)
+name|intptr_t
+expr_stmt|;
+end_typedef
 
 begin_decl_stmt
 specifier|static

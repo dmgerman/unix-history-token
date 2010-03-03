@@ -344,6 +344,7 @@ name|SymbolData
 modifier|*
 name|SymbolRef
 typedef|;
+comment|// A symbol representing the value of a MemRegion.
 name|class
 name|SymbolRegionValue
 operator|:
@@ -351,14 +352,9 @@ name|public
 name|SymbolData
 block|{
 specifier|const
-name|MemRegion
+name|TypedRegion
 operator|*
 name|R
-block|;
-comment|// We may cast the region to another type, so the expected type of the symbol
-comment|// may be different from the region's original type.
-name|QualType
-name|T
 block|;
 name|public
 operator|:
@@ -366,9 +362,7 @@ name|SymbolRegionValue
 argument_list|(
 argument|SymbolID sym
 argument_list|,
-argument|const MemRegion *r
-argument_list|,
-argument|QualType t = QualType()
+argument|const TypedRegion *r
 argument_list|)
 operator|:
 name|SymbolData
@@ -380,16 +374,11 @@ argument_list|)
 block|,
 name|R
 argument_list|(
-name|r
-argument_list|)
-block|,
-name|T
-argument_list|(
-argument|t
+argument|r
 argument_list|)
 block|{}
 specifier|const
-name|MemRegion
+name|TypedRegion
 operator|*
 name|getRegion
 argument_list|()
@@ -405,9 +394,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|,
-argument|const MemRegion* R
-argument_list|,
-argument|QualType T
+argument|const TypedRegion* R
 argument_list|)
 block|{
 name|profile
@@ -426,13 +413,6 @@ name|AddPointer
 argument_list|(
 name|R
 argument_list|)
-block|;
-name|T
-operator|.
-name|Profile
-argument_list|(
-name|profile
-argument_list|)
 block|;   }
 name|virtual
 name|void
@@ -446,8 +426,6 @@ argument_list|(
 name|profile
 argument_list|,
 name|R
-argument_list|,
-name|T
 argument_list|)
 block|;   }
 name|void
@@ -484,6 +462,7 @@ return|;
 block|}
 expr|}
 block|;
+comment|// A symbol representing the result of an expression.
 name|class
 name|SymbolConjured
 operator|:
@@ -686,6 +665,8 @@ return|;
 block|}
 expr|}
 block|;
+comment|// A symbol representing the value of a MemRegion whose parent region has
+comment|// symbolic value.
 name|class
 name|SymbolDerived
 operator|:
@@ -1331,9 +1312,10 @@ name|SymbolRegionValue
 operator|*
 name|getRegionValueSymbol
 argument_list|(
-argument|const MemRegion* R
-argument_list|,
-argument|QualType T = QualType()
+specifier|const
+name|TypedRegion
+operator|*
+name|R
 argument_list|)
 block|;
 specifier|const

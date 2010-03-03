@@ -1344,10 +1344,6 @@ return|return
 name|Label
 return|;
 block|}
-name|void
-name|reverseStmts
-parameter_list|()
-function_decl|;
 name|unsigned
 name|getBlockID
 argument_list|()

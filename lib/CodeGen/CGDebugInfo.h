@@ -399,6 +399,16 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
+argument|const VectorType *Ty
+argument_list|,
+argument|llvm::DICompileUnit Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
 argument|const ArrayType *Ty
 argument_list|,
 argument|llvm::DICompileUnit U

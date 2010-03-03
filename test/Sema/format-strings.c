@@ -521,7 +521,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{more data arguments than format specifiers}}
+comment|// expected-warning{{data argument not used by format string}}
 block|}
 end_function
 
@@ -1025,6 +1025,12 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{more '%' conversions than data arguments}}
+name|printf
+argument_list|(
 literal|"%@"
 argument_list|,
 literal|12
@@ -1111,7 +1117,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{more data arguments than format specifiers}}
+comment|// expected-warning{{data argument not used by format string}}
 name|printf
 argument_list|(
 literal|"%W%d%Z\n"
@@ -1234,6 +1240,19 @@ literal|1.0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{conversion specifies type 'double' but the argument has type 'long double'}}
+comment|// The man page says that a zero precision is okay.
+name|printf
+argument_list|(
+literal|"%.0Lf"
+argument_list|,
+operator|(
+name|long
+name|double
+operator|)
+literal|1.0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 
@@ -1492,6 +1511,202 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Unicode test cases.  These are possibly specific to Mac OS X.  If so, they should
+end_comment
+
+begin_comment
+comment|// eventually be moved into a separate test.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__WCHAR_TYPE__
+name|wchar_t
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|test_unicode_conversions
+parameter_list|(
+name|wchar_t
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%S"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'wchar_t *'}}
+name|printf
+argument_list|(
+literal|"%C"
+argument_list|,
+name|s
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%c"
+argument_list|,
+name|s
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+comment|// FIXME: This test reports inconsistent results. On Windows, '%C' expects
+comment|// 'unsigned short'.
+comment|// printf("%C", 10);
+comment|// FIXME: we report the expected type as 'int*' instead of 'wchar_t*'
+name|printf
+argument_list|(
+literal|"%S"
+argument_list|,
+literal|"hello"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{but the argument has type 'char *'}}
+block|}
+end_function
+
+begin_comment
+comment|// Mac OS X supports positional arguments in format strings.
+end_comment
+
+begin_comment
+comment|// This is an IEEE extension (IEEE Std 1003.1).
+end_comment
+
+begin_comment
+comment|// FIXME: This is probably not portable everywhere.
+end_comment
+
+begin_function
+name|void
+name|test_positional_arguments
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"%0$"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{position arguments in format strings start counting at 1 (not 0)}}
+name|printf
+argument_list|(
+literal|"%1$*0$d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{position arguments in format strings start counting at 1 (not 0)}}
+name|printf
+argument_list|(
+literal|"%1$d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%1$d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument not used by format string}}
+name|printf
+argument_list|(
+literal|"%1$d%1$f"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'double' but the argument has type 'int'}}
+name|printf
+argument_list|(
+literal|"%1$2.2d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%2$*1$.2d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%2$*8$d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{specified field width is missing a matching 'int' argument}}
 block|}
 end_function
 

@@ -426,15 +426,9 @@ name|DefinedOrUnknownSVal
 name|getRegionValueSymbolVal
 parameter_list|(
 specifier|const
-name|MemRegion
+name|TypedRegion
 modifier|*
 name|R
-parameter_list|,
-name|QualType
-name|T
-init|=
-name|QualType
-argument_list|()
 parameter_list|)
 function_decl|;
 name|DefinedOrUnknownSVal

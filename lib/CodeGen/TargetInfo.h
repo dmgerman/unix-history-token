@@ -70,6 +70,9 @@ block|{
 name|class
 name|GlobalValue
 decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -88,6 +91,9 @@ name|CodeGen
 block|{
 name|class
 name|CodeGenModule
+decl_stmt|;
+name|class
+name|CodeGenFunction
 decl_stmt|;
 block|}
 comment|/// TargetCodeGenInfo - This class organizes various target-specific
@@ -160,6 +166,67 @@ name|M
 argument_list|)
 decl|const
 block|{ }
+comment|/// Controls whether __builtin_extend_pointer should sign-extend
+comment|/// pointers to uint64_t or zero-extend them (the default).  Has
+comment|/// no effect for targets:
+comment|///   - that have 64-bit pointers, or
+comment|///   - that cannot address through registers larger than pointers, or
+comment|///   - that implicitly ignore/truncate the top bits when addressing
+comment|///     through such registers.
+name|virtual
+name|bool
+name|extendPointerWithSExt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// Performs the code-generation required to convert a return
+comment|/// address as stored by the system into the actual address of the
+comment|/// next instruction that will be executed.
+comment|///
+comment|/// Used by __builtin_extract_return_addr().
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|decodeReturnAddress
+argument_list|(
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *Address
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
+comment|/// Performs the code-generation required to convert the address
+comment|/// of an instruction into a return address suitable for storage
+comment|/// by the system in a return slot.
+comment|///
+comment|/// Used by __builtin_frob_return_addr().
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|encodeReturnAddress
+argument_list|(
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *Address
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

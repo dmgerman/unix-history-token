@@ -203,6 +203,15 @@ name|void
 name|test2
 argument_list|()
 block|{}
+comment|// PR6423
+decl|struct
+name|test3s
+block|{ }
+comment|// expected-error {{expected ';' after struct}}
+decl|typedef
+name|int
+name|test3g
+struct|;
 end_struct
 
 end_unit

@@ -232,6 +232,15 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 expr_stmt|;
+comment|/// lookupCXXTypeForCType - Lookup CXX input type that corresponds to given
+comment|/// C type (used for clang++ emulation of g++ behaviour)
+name|ID
+name|lookupCXXTypeForCType
+parameter_list|(
+name|ID
+name|Id
+parameter_list|)
+function_decl|;
 block|}
 comment|// end namespace types
 block|}

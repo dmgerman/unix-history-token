@@ -1611,7 +1611,6 @@ comment|///  represent the "code", while BlockDataRegions represent instances of
 comment|///  which correspond to "code+data".  The distinction is important, because
 comment|///  like a closure a block captures the values of externally referenced
 comment|///  variables.
-comment|/// BlockDataRegion - A region that represents code texts of blocks (closures).
 name|class
 name|BlockDataRegion
 operator|:
@@ -3181,23 +3180,31 @@ name|GlobalsSpaceRegion
 operator|*
 name|globals
 block|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
 specifier|const
 name|StackFrameContext
 operator|*
-name|cachedStackLocalsFrame
-block|;
+block|,
 name|StackLocalsSpaceRegion
 operator|*
-name|cachedStackLocalsRegion
+operator|>
+name|StackLocalsSpaceRegions
 block|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
 specifier|const
 name|StackFrameContext
 operator|*
-name|cachedStackArgumentsFrame
-block|;
+block|,
 name|StackArgumentsSpaceRegion
 operator|*
-name|cachedStackArgumentsRegion
+operator|>
+name|StackArgumentsSpaceRegions
 block|;
 name|HeapSpaceRegion
 operator|*
@@ -3237,26 +3244,6 @@ name|a
 argument_list|)
 block|,
 name|globals
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|cachedStackLocalsFrame
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|cachedStackLocalsRegion
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|cachedStackArgumentsFrame
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|cachedStackArgumentsRegion
 argument_list|(
 literal|0
 argument_list|)

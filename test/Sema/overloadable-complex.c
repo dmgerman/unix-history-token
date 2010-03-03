@@ -20,10 +20,6 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|// expected-note 3 {{candidate function}}
-end_comment
-
 begin_function
 name|void
 name|test_foo_1
@@ -101,10 +97,6 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|// expected-note 3 {{candidate function}}
-end_comment
-
 begin_function
 name|void
 name|test_foo_2
@@ -142,7 +134,6 @@ argument_list|(
 name|dv
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous; candidates are:}}
 name|int
 modifier|*
 name|ip
@@ -161,7 +152,6 @@ argument_list|(
 name|dc
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous; candidates are:}}
 block|}
 end_function
 
@@ -182,10 +172,6 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|// expected-note {{candidate function}}
-end_comment
 
 begin_function
 name|void
@@ -224,7 +210,6 @@ argument_list|(
 name|dv
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{call to 'foo' is ambiguous; candidates are:}}
 name|int
 modifier|*
 name|ip

@@ -136,6 +136,12 @@ name|OwnsOutputStream
 operator|:
 literal|1
 block|;
+comment|/// A string to prefix to error messages.
+name|std
+operator|::
+name|string
+name|Prefix
+block|;
 name|public
 operator|:
 name|TextDiagnosticPrinter
@@ -152,6 +158,19 @@ operator|~
 name|TextDiagnosticPrinter
 argument_list|()
 block|;
+comment|/// setPrefix - Set the diagnostic printer prefix string, which will be
+comment|/// printed at the start of any diagnostics. If empty, no prefix string is
+comment|/// used.
+name|void
+name|setPrefix
+argument_list|(
+argument|std::string Value
+argument_list|)
+block|{
+name|Prefix
+operator|=
+name|Value
+block|; }
 name|void
 name|BeginSourceFile
 argument_list|(

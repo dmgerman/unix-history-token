@@ -224,6 +224,9 @@ name|class
 name|TargetInfo
 decl_stmt|;
 name|class
+name|TargetCodeGenInfo
+decl_stmt|;
+name|class
 name|VarDecl
 decl_stmt|;
 name|class
@@ -241,9 +244,6 @@ decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
-name|class
-name|CodeGenModule
-decl_stmt|;
 name|class
 name|CodeGenTypes
 decl_stmt|;
@@ -344,13 +344,6 @@ expr_stmt|;
 comment|/// CurGD - The GlobalDecl for the current function being compiled.
 name|GlobalDecl
 name|CurGD
-decl_stmt|;
-comment|/// OuterTryBlock - This is the address of the outter most try block, 0
-comment|/// otherwise.
-specifier|const
-name|Stmt
-modifier|*
-name|OuterTryBlock
 decl_stmt|;
 comment|/// ReturnBlock - Unified return block.
 name|llvm
@@ -1322,6 +1315,12 @@ name|ImplicitParamDecl
 modifier|*
 name|CXXThisDecl
 decl_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CXXThisValue
+expr_stmt|;
 comment|/// CXXVTTDecl - When generating code for a base object constructor or
 comment|/// base object destructor with virtual bases, this will hold the implicit
 comment|/// VTT parameter.
@@ -1329,6 +1328,12 @@ name|ImplicitParamDecl
 modifier|*
 name|CXXVTTDecl
 decl_stmt|;
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CXXVTTValue
+expr_stmt|;
 comment|/// CXXLiveTemporaryInfo - Holds information about a live C++ temporary.
 struct|struct
 name|CXXLiveTemporaryInfo
@@ -1614,6 +1619,8 @@ name|Constant
 operator|*
 name|BuildDescriptorBlockDecl
 argument_list|(
+argument|const BlockExpr *
+argument_list|,
 argument|bool BlockHasCopyDispose
 argument_list|,
 argument|CharUnits Size
@@ -1767,6 +1774,30 @@ name|SourceLocation
 name|StartLoc
 argument_list|)
 decl_stmt|;
+name|void
+name|EmitConstructorBody
+parameter_list|(
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
+name|void
+name|EmitDestructorBody
+parameter_list|(
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
+name|void
+name|EmitFunctionBody
+parameter_list|(
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
 comment|/// EmitReturnBlock - Emit the unified return block, trying to avoid its
 comment|/// emission when possible.
 name|void
@@ -1890,93 +1921,22 @@ argument_list|)
 decl_stmt|;
 name|void
 name|SynthesizeCXXCopyConstructor
-argument_list|(
-specifier|const
-name|CXXConstructorDecl
-operator|*
-name|Ctor
-argument_list|,
-name|CXXCtorType
-name|Type
-argument_list|,
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
+parameter_list|(
 specifier|const
 name|FunctionArgList
-operator|&
+modifier|&
 name|Args
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|SynthesizeCXXCopyAssignment
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|CD
-argument_list|,
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
+parameter_list|(
 specifier|const
 name|FunctionArgList
-operator|&
+modifier|&
 name|Args
-argument_list|)
-decl_stmt|;
-name|void
-name|SynthesizeDefaultConstructor
-argument_list|(
-specifier|const
-name|CXXConstructorDecl
-operator|*
-name|Ctor
-argument_list|,
-name|CXXCtorType
-name|Type
-argument_list|,
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
-specifier|const
-name|FunctionArgList
-operator|&
-name|Args
-argument_list|)
-decl_stmt|;
-name|void
-name|SynthesizeDefaultDestructor
-argument_list|(
-specifier|const
-name|CXXDestructorDecl
-operator|*
-name|Dtor
-argument_list|,
-name|CXXDtorType
-name|Type
-argument_list|,
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
-specifier|const
-name|FunctionArgList
-operator|&
-name|Args
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// EmitDtorEpilogue - Emit all code that comes at the end of class's
 comment|/// destructor. This is to call destructors on members and base classes in
 comment|/// reverse order of their construction.
@@ -2512,6 +2472,41 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// CreateIRTemp - Create a temporary IR object of the given type, with
+end_comment
+
+begin_comment
+comment|/// appropriate alignment. This routine should only be used when an temporary
+end_comment
+
+begin_comment
+comment|/// value needs to be stored into an alloca (for example, to avoid explicit
+end_comment
+
+begin_comment
+comment|/// PHI construction), but the type is the IR type, not the type appropriate
+end_comment
+
+begin_comment
+comment|/// for storing in memory.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|CreateIRTemp
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|const llvm::Twine&Name =
+literal|"tmp"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// CreateMemTemp - Create a temporary memory object of the given type, with
 end_comment
 
@@ -2956,7 +2951,18 @@ name|Value
 operator|*
 name|LoadCXXThis
 argument_list|()
-expr_stmt|;
+block|{
+name|assert
+argument_list|(
+name|CXXThisValue
+operator|&&
+literal|"no 'this' value for this function"
+argument_list|)
+block|;
+return|return
+name|CXXThisValue
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -2974,7 +2980,18 @@ name|Value
 operator|*
 name|LoadCXXVTT
 argument_list|()
-expr_stmt|;
+block|{
+name|assert
+argument_list|(
+name|CXXVTTValue
+operator|&&
+literal|"no VTT value for this function"
+argument_list|)
+block|;
+return|return
+name|CXXVTTValue
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -3200,6 +3217,26 @@ name|Ty
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|EmitDelegateCXXConstructorCall
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|Ctor
+parameter_list|,
+name|CXXCtorType
+name|CtorType
+parameter_list|,
+specifier|const
+name|FunctionArgList
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -4071,6 +4108,59 @@ specifier|const
 name|ObjCAtSynchronizedStmt
 modifier|&
 name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|CXXTryStmtInfo
+block|{
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|SavedLandingPad
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|HandlerBlock
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|FinallyBlock
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|CXXTryStmtInfo
+name|EnterCXXTryStmt
+parameter_list|(
+specifier|const
+name|CXXTryStmt
+modifier|&
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ExitCXXTryStmt
+parameter_list|(
+specifier|const
+name|CXXTryStmt
+modifier|&
+name|S
+parameter_list|,
+name|CXXTryStmtInfo
+name|Info
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6573,13 +6663,25 @@ argument_list|)
 block|;     }
 end_expr_stmt
 
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+unit|}    const
+name|TargetCodeGenInfo
+operator|&
+name|getTargetHooks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CGM
+operator|.
+name|getTargetCodeGenInfo
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|};   }
 comment|// end namespace CodeGen
 end_comment
 

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CanonicalType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CGValue.h"
 end_include
 
@@ -216,7 +222,7 @@ name|FoldingSetNode
 block|{     struct
 name|ArgInfo
 block|{
-name|QualType
+name|CanQualType
 name|type
 block|;
 name|ABIArgInfo
@@ -263,12 +269,9 @@ argument|unsigned CallingConvention
 argument_list|,
 argument|bool NoReturn
 argument_list|,
-argument|QualType ResTy
+argument|CanQualType ResTy
 argument_list|,
-argument|const llvm::SmallVector<QualType
-argument_list|,
-literal|16
-argument|>&ArgTys
+argument|const llvm::SmallVectorImpl<CanQualType>&ArgTys
 argument_list|)
 empty_stmt|;
 operator|~
@@ -377,7 +380,7 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-name|QualType
+name|CanQualType
 name|getReturnType
 argument_list|()
 specifier|const
@@ -499,7 +502,7 @@ argument|unsigned CallingConvention
 argument_list|,
 argument|bool NoReturn
 argument_list|,
-argument|QualType ResTy
+argument|CanQualType ResTy
 argument_list|,
 argument|Iterator begin
 argument_list|,
@@ -537,13 +540,22 @@ condition|;
 operator|++
 name|begin
 control|)
+block|{
+name|CanQualType
+name|T
+init|=
+operator|*
 name|begin
-operator|->
+decl_stmt|;
+comment|// force iterator to be over canonical types
+name|T
+operator|.
 name|Profile
 argument_list|(
 name|ID
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 empty_stmt|;

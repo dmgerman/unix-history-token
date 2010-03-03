@@ -344,6 +344,21 @@ name|isLocalRestrictQualified
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determines if this canonical type is furthermore
+comment|/// canonical as a parameter.  The parameter-canonicalization
+comment|/// process decays arrays to pointers and drops top-level qualifiers.
+name|bool
+name|isCanonicalAsParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stored
+operator|.
+name|isCanonicalAsParam
+argument_list|()
+return|;
+block|}
 comment|/// \brief Retrieve the unqualified form of this type.
 name|CanQual
 operator|<
@@ -467,6 +482,26 @@ argument_list|(
 argument|QualType Other
 argument_list|)
 expr_stmt|;
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl|const
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 
@@ -569,6 +604,27 @@ operator|>
 name|CanQualType
 expr_stmt|;
 end_typedef
+
+begin_expr_stmt
+specifier|inline
+name|CanQualType
+name|Type
+operator|::
+name|getCanonicalTypeUnqualified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CanQualType
+operator|::
+name|CreateUnsafe
+argument_list|(
+name|getCanonicalTypeInternal
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
@@ -2403,6 +2459,18 @@ name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
 argument|getResultType
 argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
+argument|getNoReturnAttr
+argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|CallingConv
+argument_list|,
+argument|getCallConv
+argument_list|)
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -2427,6 +2495,18 @@ name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
 argument|getResultType
 argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
+argument|getNoReturnAttr
+argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|CallingConv
+argument_list|,
+argument|getCallConv
+argument_list|)
 block|}
 expr_stmt|;
 end_expr_stmt
@@ -2450,6 +2530,18 @@ block|{
 name|LLVM_CLANG_CANPROXY_TYPE_ACCESSOR
 argument_list|(
 argument|getResultType
+argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
+argument|getNoReturnAttr
+argument_list|)
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|CallingConv
+argument_list|,
+argument|getCallConv
 argument_list|)
 name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(

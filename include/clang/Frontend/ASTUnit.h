@@ -86,6 +86,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/System/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -198,9 +210,6 @@ name|ASTContext
 operator|>
 name|Ctx
 expr_stmt|;
-name|bool
-name|tempFile
-decl_stmt|;
 comment|/// Optional owned invocation, just used to make the invocation used in
 comment|/// LoadFromCommandLine available.
 name|llvm
@@ -247,6 +256,34 @@ comment|// Critical optimization when using clang_getCursor().
 name|ASTLocation
 name|LastLoc
 decl_stmt|;
+comment|/// \brief The set of diagnostics produced when creating this
+comment|/// translation unit.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|StoredDiagnostic
+operator|,
+literal|4
+operator|>
+name|Diagnostics
+expr_stmt|;
+comment|/// \brief Temporary files that should be removed when the ASTUnit is
+comment|/// destroyed.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|llvm
+operator|::
+name|sys
+operator|::
+name|Path
+operator|,
+literal|4
+operator|>
+name|TemporaryFiles
+expr_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -398,13 +435,28 @@ operator|&
 name|getPCHFileName
 argument_list|()
 expr_stmt|;
+comment|/// \brief Add a temporary file that the ASTUnit depends on.
+comment|///
+comment|/// This file will be erased when the ASTUnit is destroyed.
 name|void
-name|unlinkTemporaryFile
-parameter_list|()
+name|addTemporaryFile
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|sys
+operator|::
+name|Path
+operator|&
+name|TempFile
+argument_list|)
 block|{
-name|tempFile
-operator|=
-name|true
+name|TemporaryFiles
+operator|.
+name|push_back
+argument_list|(
+name|TempFile
+argument_list|)
 expr_stmt|;
 block|}
 name|bool
@@ -487,6 +539,65 @@ return|return
 name|TopLevelDecls
 return|;
 block|}
+comment|// Retrieve the diagnostics associated with this AST
+typedef|typedef
+specifier|const
+name|StoredDiagnostic
+modifier|*
+name|diag_iterator
+typedef|;
+name|diag_iterator
+name|diag_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diagnostics
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|diag_iterator
+name|diag_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diagnostics
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|diag_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diagnostics
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|StoredDiagnostic
+operator|,
+literal|4
+operator|>
+operator|&
+name|getDiagnostics
+argument_list|()
+block|{
+return|return
+name|Diagnostics
+return|;
+block|}
 comment|/// \brief A mapping from a file name to the memory buffer that stores the
 comment|/// remapped contents of that file.
 typedef|typedef
@@ -545,6 +656,11 @@ name|unsigned
 name|NumRemappedFiles
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|CaptureDiagnostics
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
@@ -573,6 +689,11 @@ name|Diags
 parameter_list|,
 name|bool
 name|OnlyLocalDecls
+init|=
+name|false
+parameter_list|,
+name|bool
+name|CaptureDiagnostics
 init|=
 name|false
 parameter_list|)
@@ -632,6 +753,11 @@ name|unsigned
 name|NumRemappedFiles
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|CaptureDiagnostics
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 block|}

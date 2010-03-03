@@ -363,6 +363,9 @@ name|class
 name|ObjCContainerDecl
 decl_stmt|;
 name|class
+name|PseudoDestructorTypeStorage
+decl_stmt|;
+name|class
 name|FunctionProtoType
 decl_stmt|;
 name|class
@@ -395,45 +398,26 @@ decl_stmt|;
 name|class
 name|ADLResult
 decl_stmt|;
-comment|/// BlockSemaInfo - When a block is being parsed, this contains information
-comment|/// about the block.  It is pointed to from Sema::CurBlock.
+comment|/// \brief Retains information about a function, method, or block that is
+comment|/// currently being parsed.
 struct|struct
-name|BlockSemaInfo
+name|FunctionScopeInfo
 block|{
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|ParmVarDecl
-operator|*
-operator|,
-literal|8
-operator|>
-name|Params
-expr_stmt|;
+comment|/// \brief Whether this scope information structure defined information for
+comment|/// a block.
 name|bool
-name|hasPrototype
+name|IsBlockInfo
 decl_stmt|;
+comment|/// \brief Set true when a function, method contains a VLA or ObjC try block,
+comment|/// which introduce scopes that need to be checked for goto conditions.  If a
+comment|/// function does not contain this, then it need not have the jump checker run on it.
 name|bool
-name|isVariadic
+name|NeedsScopeChecking
 decl_stmt|;
-name|bool
-name|hasBlockDeclRefExprs
-decl_stmt|;
-name|BlockDecl
-modifier|*
-name|TheDecl
-decl_stmt|;
-comment|/// TheScope - This is the scope for the block itself, which contains
-comment|/// arguments etc.
-name|Scope
-modifier|*
-name|TheScope
-decl_stmt|;
-comment|/// ReturnType - This will get set to block result type, by looking at
-comment|/// return types, if any, in the block body.
-name|QualType
-name|ReturnType
+comment|/// \brief The number of errors that had occurred before starting this
+comment|/// function or block.
+name|unsigned
+name|NumErrorsAtStartOfFunction
 decl_stmt|;
 comment|/// LabelMap - This is a mapping from label identifiers to the LabelStmt for
 comment|/// it (which acts like the label decl in some ways).  Forward referenced
@@ -463,19 +447,171 @@ literal|8
 operator|>
 name|SwitchStack
 expr_stmt|;
-comment|/// SavedFunctionNeedsScopeChecking - This is the value of
-comment|/// CurFunctionNeedsScopeChecking at the point when the block started.
+name|FunctionScopeInfo
+argument_list|(
+argument|unsigned NumErrors
+argument_list|)
+block|:
+name|IsBlockInfo
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NeedsScopeChecking
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NumErrorsAtStartOfFunction
+argument_list|(
+argument|NumErrors
+argument_list|)
+block|{ }
+name|virtual
+operator|~
+name|FunctionScopeInfo
+argument_list|()
+expr_stmt|;
+comment|/// \brief Clear out the information in this function scope, making it
+comment|/// suitable for reuse.
+name|void
+name|Clear
+parameter_list|(
+name|unsigned
+name|NumErrors
+parameter_list|)
+function_decl|;
+specifier|static
 name|bool
-name|SavedFunctionNeedsScopeChecking
-decl_stmt|;
-comment|/// PrevBlockInfo - If this is nested inside another block, this points
-comment|/// to the outer block.
-name|BlockSemaInfo
+name|classof
+parameter_list|(
+specifier|const
+name|FunctionScopeInfo
 modifier|*
-name|PrevBlockInfo
-decl_stmt|;
+name|FSI
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 struct|;
+comment|/// \brief Retains information about a block that is currently being parsed.
+name|struct
+name|BlockScopeInfo
+range|:
+name|FunctionScopeInfo
+block|{
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ParmVarDecl
+operator|*
+block|,
+literal|8
+operator|>
+name|Params
+block|;
+name|bool
+name|hasPrototype
+block|;
+name|bool
+name|isVariadic
+block|;
+name|bool
+name|hasBlockDeclRefExprs
+block|;
+name|BlockDecl
+operator|*
+name|TheDecl
+block|;
+comment|/// TheScope - This is the scope for the block itself, which contains
+comment|/// arguments etc.
+name|Scope
+operator|*
+name|TheScope
+block|;
+comment|/// ReturnType - This will get set to block result type, by looking at
+comment|/// return types, if any, in the block body.
+name|QualType
+name|ReturnType
+block|;
+name|BlockScopeInfo
+argument_list|(
+argument|unsigned NumErrors
+argument_list|,
+argument|Scope *BlockScope
+argument_list|,
+argument|BlockDecl *Block
+argument_list|)
+operator|:
+name|FunctionScopeInfo
+argument_list|(
+name|NumErrors
+argument_list|)
+block|,
+name|hasPrototype
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|isVariadic
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|hasBlockDeclRefExprs
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|TheDecl
+argument_list|(
+name|Block
+argument_list|)
+block|,
+name|TheScope
+argument_list|(
+argument|BlockScope
+argument_list|)
+block|{
+name|IsBlockInfo
+operator|=
+name|true
+block|;    }
+name|virtual
+operator|~
+name|BlockScopeInfo
+argument_list|()
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const FunctionScopeInfo *FSI
+argument_list|)
+block|{
+return|return
+name|FSI
+operator|->
+name|IsBlockInfo
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const BlockScopeInfo *BSI
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Holds a QualType and a TypeSourceInfo* that came out of a declarator
 comment|/// parsing.
 comment|///
@@ -484,7 +620,7 @@ comment|/// and Sema, when we want to preserve type source info for a parsed typ
 comment|/// It will not participate in the type system semantics in any way.
 name|class
 name|LocInfoType
-range|:
+operator|:
 name|public
 name|Type
 block|{   enum
@@ -685,12 +821,6 @@ name|DeclContext
 operator|*
 name|CurContext
 block|;
-comment|/// CurBlock - If inside of a block definition, this contains a pointer to
-comment|/// the active block object that represents it.
-name|BlockSemaInfo
-operator|*
-name|CurBlock
-block|;
 comment|/// PackContext - Manages the stack for #pragma pack. An alignment
 comment|/// of 0 indicates default alignment.
 name|void
@@ -698,38 +828,26 @@ operator|*
 name|PackContext
 block|;
 comment|// Really a "PragmaPackStack*"
-comment|/// FunctionLabelMap - This is a mapping from label identifiers to the
-comment|/// LabelStmt for it (which acts like the label decl in some ways).  Forward
-comment|/// referenced labels have a LabelStmt created for them with a null location&
-comment|/// SubStmt.
-comment|///
-comment|/// Note that this should always be accessed through getLabelMap() in order
-comment|/// to handle blocks properly.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|IdentifierInfo
-operator|*
-block|,
-name|LabelStmt
-operator|*
-operator|>
-name|FunctionLabelMap
-block|;
-comment|/// FunctionSwitchStack - This is the current set of active switch statements
-comment|/// in the top level function.  Clients should always use getSwitchStack() to
-comment|/// handle the case when they are in a block.
+comment|/// \brief Stack containing information about each of the nested function,
+comment|/// block, and method scopes that are currently active.
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|SwitchStmt
+name|FunctionScopeInfo
 operator|*
 block|,
-literal|8
+literal|4
 operator|>
-name|FunctionSwitchStack
+name|FunctionScopes
+block|;
+comment|/// \brief Cached function scope object used for the top function scope
+comment|/// and when there is no function scope (in error cases).
+comment|///
+comment|/// This should never be accessed directly; rather, it's address will be
+comment|/// pushed into \c FunctionScopes when we want to re-use it.
+name|FunctionScopeInfo
+name|TopFunctionScope
 block|;
 comment|/// ExprTemporaries - This is the stack of temporaries that are created by
 comment|/// the current full expression.
@@ -743,13 +861,6 @@ block|,
 literal|8
 operator|>
 name|ExprTemporaries
-block|;
-comment|/// CurFunctionNeedsScopeChecking - This is set to true when a function or
-comment|/// ObjC method body contains a VLA or an ObjC try block, which introduce
-comment|/// scopes that need to be checked for goto conditions.  If a function does
-comment|/// not contain this, then it need not have the jump checker run on it.
-name|bool
-name|CurFunctionNeedsScopeChecking
 block|;
 comment|/// ExtVectorDecls - This is a list all the extended vector types. This allows
 comment|/// us to associate a raw vector type with one of the ext_vector type names.
@@ -1599,17 +1710,8 @@ operator|=
 literal|0
 block|;     }
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+decl_stmt|;
 comment|/// A stack of expression evaluation contexts.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|SmallVector
@@ -1620,69 +1722,27 @@ literal|8
 operator|>
 name|ExprEvalContexts
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether the code handled by Sema should be considered a
-end_comment
-
-begin_comment
 comment|/// complete translation unit or not.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When true (which is generally the case), Sema will perform
-end_comment
-
-begin_comment
 comment|/// end-of-translation-unit semantic tasks (such as creating
-end_comment
-
-begin_comment
 comment|/// initializers for tentative definitions in C) once parsing has
-end_comment
-
-begin_comment
 comment|/// completed. This flag will be false when building PCH files,
-end_comment
-
-begin_comment
 comment|/// since a PCH file is by definition not a complete translation
-end_comment
-
-begin_comment
 comment|/// unit.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|CompleteTranslationUnit
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|BumpAlloc
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The number of SFINAE diagnostics that have been trapped.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|NumSFINAEErrors
 decl_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -1694,37 +1754,16 @@ name|ObjCMethodList
 operator|>
 name|MethodPool
 expr_stmt|;
-end_typedef
-
-begin_comment
 comment|/// Instance/Factory Method Pools - allows efficient lookup when typechecking
-end_comment
-
-begin_comment
 comment|/// messages to "id". We need to maintain a list, since selectors can have
-end_comment
-
-begin_comment
 comment|/// differing signatures across classes. In Cocoa, this happens to be
-end_comment
-
-begin_comment
 comment|/// extremely uncommon (only 1% of selectors are "overloaded").
-end_comment
-
-begin_decl_stmt
 name|MethodPool
 name|InstanceMethodPool
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MethodPool
 name|FactoryMethodPool
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|MethodPool
 operator|::
 name|iterator
@@ -1735,13 +1774,7 @@ argument_list|,
 argument|bool isInstance
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// Private Helper predicate to check for 'self'.
-end_comment
-
-begin_function_decl
 name|bool
 name|isSelfExpr
 parameter_list|(
@@ -1750,14 +1783,8 @@ modifier|*
 name|RExpr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_macro
 name|Sema
 argument_list|(
 argument|Preprocessor&pp
@@ -1771,20 +1798,11 @@ argument_list|,
 argument|CodeCompleteConsumer *CompletionConsumer =
 literal|0
 argument_list|)
-end_macro
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 operator|~
 name|Sema
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|LangOptions
 operator|&
@@ -1796,9 +1814,6 @@ return|return
 name|LangOpts
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|Diagnostic
 operator|&
 name|getDiagnostics
@@ -1809,9 +1824,6 @@ return|return
 name|Diags
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceManager
 operator|&
 name|getSourceManager
@@ -1822,9 +1834,6 @@ return|return
 name|SourceMgr
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|TargetAttributesSema
 operator|&
@@ -1832,45 +1841,15 @@ name|getTargetAttributesSema
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Helper class that creates diagnostics with optional
-end_comment
-
-begin_comment
 comment|/// template instantiation stacks.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This class provides a wrapper around the basic DiagnosticBuilder
-end_comment
-
-begin_comment
 comment|/// class that emits diagnostics. SemaDiagnosticBuilder is
-end_comment
-
-begin_comment
 comment|/// responsible for emitting the diagnostic (as DiagnosticBuilder
-end_comment
-
-begin_comment
 comment|/// does) and, if the diagnostic comes from inside a template
-end_comment
-
-begin_comment
 comment|/// instantiation, printing the template instantiation stack as
-end_comment
-
-begin_comment
 comment|/// well.
-end_comment
-
-begin_decl_stmt
 name|class
 name|SemaDiagnosticBuilder
 range|:
@@ -1935,13 +1914,7 @@ name|SemaDiagnosticBuilder
 argument_list|()
 block|;   }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Emit a diagnostic.
-end_comment
-
-begin_function
 name|SemaDiagnosticBuilder
 name|Diag
 parameter_list|(
@@ -2013,13 +1986,7 @@ name|DiagID
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Emit a partial diagnostic.
-end_comment
-
-begin_function_decl
 name|SemaDiagnosticBuilder
 name|Diag
 parameter_list|(
@@ -2032,9 +1999,6 @@ modifier|&
 name|PD
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|DeleteExpr
@@ -2044,9 +2008,6 @@ modifier|*
 name|E
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|void
 name|DeleteStmt
@@ -2056,9 +2017,6 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|OwningExprResult
 name|Owned
 parameter_list|(
@@ -2088,9 +2046,6 @@ name|E
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|OwningExprResult
 name|Owned
 parameter_list|(
@@ -2145,9 +2100,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|OwningStmtResult
 name|Owned
 parameter_list|(
@@ -2177,25 +2129,33 @@ name|S
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|virtual
 name|void
 name|ActOnEndOfTranslationUnit
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
+name|void
+name|PushFunctionScope
+parameter_list|()
+function_decl|;
+name|void
+name|PushBlockScope
+parameter_list|(
+name|Scope
+modifier|*
+name|BlockScope
+parameter_list|,
+name|BlockDecl
+modifier|*
+name|Block
+parameter_list|)
+function_decl|;
+name|void
+name|PopFunctionOrBlockScope
+parameter_list|()
+function_decl|;
 comment|/// getLabelMap() - Return the current label map.  If we're in a block, we
-end_comment
-
-begin_comment
 comment|/// return it.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|DenseMap
@@ -2210,17 +2170,28 @@ operator|&
 name|getLabelMap
 argument_list|()
 block|{
+if|if
+condition|(
+name|FunctionScopes
+operator|.
+name|empty
+argument_list|()
+condition|)
 return|return
-name|CurBlock
-operator|?
-name|CurBlock
+name|TopFunctionScope
+operator|.
+name|LabelMap
+return|;
+return|return
+name|FunctionScopes
+operator|.
+name|back
+argument_list|()
 operator|->
 name|LabelMap
-operator|:
-name|FunctionLabelMap
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// getSwitchStack - This is returns the switch stack for the current block or
@@ -2244,17 +2215,93 @@ operator|&
 name|getSwitchStack
 argument_list|()
 block|{
+if|if
+condition|(
+name|FunctionScopes
+operator|.
+name|empty
+argument_list|()
+condition|)
 return|return
-name|CurBlock
-operator|?
-name|CurBlock
+name|TopFunctionScope
+operator|.
+name|SwitchStack
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|FunctionScopes
+operator|.
+name|back
+argument_list|()
 operator|->
 name|SwitchStack
-operator|:
-name|FunctionSwitchStack
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Determine whether the current function or block needs scope
+end_comment
+
+begin_comment
+comment|/// checking.
+end_comment
+
+begin_expr_stmt
+unit|bool
+operator|&
+name|FunctionNeedsScopeChecking
+argument_list|()
+block|{
+if|if
+condition|(
+name|FunctionScopes
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|TopFunctionScope
+operator|.
+name|NeedsScopeChecking
+return|;
 end_expr_stmt
+
+begin_return
+return|return
+name|FunctionScopes
+operator|.
+name|back
+argument_list|()
+operator|->
+name|NeedsScopeChecking
+return|;
+end_return
+
+begin_macro
+unit|}      bool
+name|hasAnyErrorsInThisFunction
+argument_list|()
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Retrieve the current block, if any.
+end_comment
+
+begin_function_decl
+name|BlockScopeInfo
+modifier|*
+name|getCurBlock
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// WeakTopLevelDeclDecls - access to #pragma weak-generated Decls
@@ -7261,6 +7308,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|DiagnoseDuplicateIvars
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|ID
+parameter_list|,
+name|ObjCInterfaceDecl
+modifier|*
+name|SID
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// MatchTwoMethodDeclarations - Checks if two methods' type match and returns
 end_comment
@@ -10569,6 +10631,41 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|virtual
+name|TypeTy
+modifier|*
+name|getDestructorName
+parameter_list|(
+name|SourceLocation
+name|TildeLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/// ActOnCXXNamedCast - Parse {dynamic,static,reinterpret,const}_cast's.
 end_comment
@@ -11129,6 +11226,107 @@ name|TypeTy
 operator|*
 operator|&
 name|ObjectType
+argument_list|,
+name|bool
+operator|&
+name|MayBePseudoDestructor
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|OwningExprResult
+name|DiagnoseDtorReference
+parameter_list|(
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|ExprArg
+name|MemExpr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|OwningExprResult
+name|BuildPseudoDestructorExpr
+argument_list|(
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+name|TypeSourceInfo
+operator|*
+name|ScopeType
+argument_list|,
+name|SourceLocation
+name|CCLoc
+argument_list|,
+name|SourceLocation
+name|TildeLoc
+argument_list|,
+name|PseudoDestructorTypeStorage
+name|DestroyedType
+argument_list|,
+name|bool
+name|HasTrailingLParen
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnPseudoDestructorExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+name|UnqualifiedId
+operator|&
+name|FirstTypeName
+argument_list|,
+name|SourceLocation
+name|CCLoc
+argument_list|,
+name|SourceLocation
+name|TildeLoc
+argument_list|,
+name|UnqualifiedId
+operator|&
+name|SecondTypeName
+argument_list|,
+name|bool
+name|HasTrailingLParen
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -11313,6 +11511,34 @@ parameter_list|,
 name|NestedNameSpecifier
 modifier|*
 name|NNS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|bool
+name|isNonTypeNestedNameSpecifier
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15926,7 +16152,14 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|(
 name|Result
+operator|||
+name|D
+operator|->
+name|isInvalidDecl
+argument_list|()
+operator|)
 operator|&&
 literal|"declaration was not instantiated in this scope!"
 argument_list|)
@@ -16047,8 +16280,14 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|(
 operator|!
 name|Stored
+operator|||
+name|Stored
+operator|==
+name|Inst
+operator|)
 operator|&&
 literal|"Already instantiated this local"
 argument_list|)
@@ -16549,6 +16788,9 @@ name|NamedDecl
 modifier|*
 name|FindInstantiatedDecl
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|NamedDecl
 modifier|*
 name|D
@@ -16566,6 +16808,9 @@ name|DeclContext
 modifier|*
 name|FindInstantiatedContext
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 name|DeclContext
 modifier|*
 name|DC
@@ -18576,13 +18821,15 @@ name|Expr
 modifier|*
 modifier|&
 name|E2
+parameter_list|,
+name|bool
+modifier|*
+name|NonStandardCompositeType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|// C++ 5.9
-end_comment
 
 begin_function_decl
 name|QualType
@@ -19943,9 +20190,7 @@ modifier|*
 name|TheCall
 parameter_list|,
 name|unsigned
-name|LastArg
-init|=
-literal|1
+name|NumArgs
 parameter_list|)
 function_decl|;
 end_function_decl

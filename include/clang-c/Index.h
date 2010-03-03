@@ -27,6 +27,12 @@ directive|include
 file|<time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -95,13 +101,13 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
-comment|/**    * \brief A null-terminated buffer containing the unsaved contents    * of this file.    */
+comment|/**    * \brief A buffer containing the unsaved contents of this file.    */
 specifier|const
 name|char
 modifier|*
 name|Contents
 decl_stmt|;
-comment|/**    * \brief The length of the unsaved contents of this buffer, not    * counting the NULL at the end of the buffer.    */
+comment|/**    * \brief The length of the unsaved contents of this buffer.    */
 name|unsigned
 name|long
 name|Length
@@ -146,13 +152,16 @@ name|string
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
-comment|/**  * \brief clang_createIndex() provides a shared context for creating  * translation units. It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled  * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * Here is an example:  *  *   // excludeDeclsFromPCH = 1  *   Idx = clang_createIndex(1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,  *                                                  0, 0);  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
+comment|/**  * \brief clang_createIndex() provides a shared context for creating  * translation units. It provides two options:  *  * - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"  * declarations (when loading any new translation units). A "local" declaration  * is one that belongs in the translation unit itself and not in a precompiled  * header that was used by the translation unit. If zero, all declarations  * will be enumerated.  *  * Here is an example:  *  *   // excludeDeclsFromPCH = 1, displayDiagnostics=1  *   Idx = clang_createIndex(1, 1);  *  *   // IndexTest.pch was produced with the following command:  *   // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"  *   TU = clang_createTranslationUnit(Idx, "IndexTest.pch");  *  *   // This will load all the symbols from 'IndexTest.pch'  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  *   // This will load all the symbols from 'IndexTest.c', excluding symbols  *   // from 'IndexTest.pch'.  *   char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };  *   TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,  *                                                  0, 0);  *   clang_visitChildren(clang_getTranslationUnitCursor(TU),  *                       TranslationUnitVisitor, 0);  *   clang_disposeTranslationUnit(TU);  *  * This process of creating the 'pch', loading it separately, and using it (via  * -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks  * (which gives the indexer the same performance benefit as the compiler).  */
 name|CINDEX_LINKAGE
 name|CXIndex
 name|clang_createIndex
 parameter_list|(
 name|int
 name|excludeDeclarationsFromPCH
+parameter_list|,
+name|int
+name|displayDiagnostics
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the given index.  *  * The index must not be destroyed until all of the translation units created  * within that index have been destroyed.  */
@@ -185,9 +194,7 @@ name|CXFile
 typedef|;
 comment|/**  * \brief Retrieve the complete file and path name of the given file.  */
 name|CINDEX_LINKAGE
-specifier|const
-name|char
-modifier|*
+name|CXString
 name|clang_getFileName
 parameter_list|(
 name|CXFile
@@ -385,47 +392,83 @@ init|=
 literal|4
 block|}
 enum|;
-comment|/**  * \brief Describes the kind of fix-it hint expressed within a  * diagnostic.  */
-enum|enum
-name|CXFixItKind
-block|{
-comment|/**    * \brief A fix-it hint that inserts code at a particular position.    */
-name|CXFixIt_Insertion
-init|=
-literal|0
-block|,
-comment|/**    * \brief A fix-it hint that removes code within a range.    */
-name|CXFixIt_Removal
-init|=
-literal|1
-block|,
-comment|/**    * \brief A fix-it hint that replaces the code within a range with another    * string.    */
-name|CXFixIt_Replacement
-init|=
-literal|2
-block|}
-enum|;
 comment|/**  * \brief A single diagnostic, containing the diagnostic's severity,  * location, text, source ranges, and fix-it hints.  */
 typedef|typedef
 name|void
 modifier|*
 name|CXDiagnostic
 typedef|;
-comment|/**  * \brief Callback function invoked for each diagnostic emitted during  * translation.  *  * \param Diagnostic the diagnostic emitted during translation. This  * diagnostic pointer is only valid during the execution of the  * callback.  *  * \param ClientData the callback client data.  */
-typedef|typedef
+comment|/**  * \brief Determine the number of diagnostics produced for the given  * translation unit.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getNumDiagnostics
+parameter_list|(
+name|CXTranslationUnit
+name|Unit
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve a diagnostic associated with the given translation unit.  *  * \param Unit the translation unit to query.  * \param Index the zero-based diagnostic number to retrieve.  *  * \returns the requested diagnostic. This diagnostic must be freed  * via a call to \c clang_disposeDiagnostic().  */
+name|CINDEX_LINKAGE
+name|CXDiagnostic
+name|clang_getDiagnostic
+parameter_list|(
+name|CXTranslationUnit
+name|Unit
+parameter_list|,
+name|unsigned
+name|Index
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Destroy a diagnostic.  */
+name|CINDEX_LINKAGE
 name|void
-function_decl|(
-modifier|*
-name|CXDiagnosticCallback
-function_decl|)
+name|clang_disposeDiagnostic
+parameter_list|(
+name|CXDiagnostic
+name|Diagnostic
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Options to control the display of diagnostics.  *  * The values in this enum are meant to be combined to customize the  * behavior of \c clang_displayDiagnostic().  */
+enum|enum
+name|CXDiagnosticDisplayOptions
+block|{
+comment|/**    * \brief Display the source-location information where the    * diagnostic was located.    *    * When set, diagnostics will be prefixed by the file, line, and    * (optionally) column to which the diagnostic refers. For example,    *    * \code    * test.c:28: warning: extra tokens at end of #endif directive    * \endcode    *    * This option corresponds to the clang flag \c -fshow-source-location.    */
+name|CXDiagnostic_DisplaySourceLocation
+init|=
+literal|0x01
+block|,
+comment|/**    * \brief If displaying the source-location information of the    * diagnostic, also include the column number.    *    * This option corresponds to the clang flag \c -fshow-column.    */
+name|CXDiagnostic_DisplayColumn
+init|=
+literal|0x02
+block|,
+comment|/**    * \brief If displaying the source-location information of the    * diagnostic, also include information about source ranges in a    * machine-parsable format.    *    * This option corresponds to the clang flag     * \c -fdiagnostics-print-source-range-info.    */
+name|CXDiagnostic_DisplaySourceRanges
+init|=
+literal|0x04
+block|}
+enum|;
+comment|/**  * \brief Format the given diagnostic in a manner that is suitable for display.  *  * This routine will format the given diagnostic to a string, rendering  * the diagnostic according to the various options given. The   * \c clang_defaultDiagnosticDisplayOptions() function returns the set of   * options that most closely mimics the behavior of the clang compiler.  *  * \param Diagnostic The diagnostic to print.  *  * \param Options A set of options that control the diagnostic display,   * created by combining \c CXDiagnosticDisplayOptions values.  *  * \returns A new string containing for formatted diagnostic.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_formatDiagnostic
 parameter_list|(
 name|CXDiagnostic
 name|Diagnostic
 parameter_list|,
-name|CXClientData
-name|ClientData
+name|unsigned
+name|Options
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieve the set of display options most similar to the  * default behavior of the clang compiler.  *  * \returns A set of display options suitable for use with \c  * clang_displayDiagnostic().  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_defaultDiagnosticDisplayOptions
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Print a diagnostic to the given file.  */
 comment|/**  * \brief Determine the severity of the given diagnostic.  */
 name|CINDEX_LINKAGE
 name|enum
@@ -480,51 +523,10 @@ name|CXDiagnostic
 name|Diagnostic
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the kind of the given fix-it.  *  * \param Diagnostic the diagnostic whose fix-its are being queried.  *  * \param FixIt the zero-based index of the fix-it to query.  */
-name|CINDEX_LINKAGE
-name|enum
-name|CXFixItKind
-name|clang_getDiagnosticFixItKind
-parameter_list|(
-name|CXDiagnostic
-name|Diagnostic
-parameter_list|,
-name|unsigned
-name|FixIt
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Retrieve the insertion information for an insertion fix-it.  *  * For a fix-it that describes an insertion into a text buffer,  * retrieve the source location where the text should be inserted and  * the text to be inserted.  *  * \param Diagnostic the diagnostic whose fix-its are being queried.  *  * \param FixIt the zero-based index of the insertion fix-it.  *  * \param Location will be set to the location where text should be  * inserted.  *  * \returns the text string to insert at the given location.  */
+comment|/**  * \brief Retrieve the replacement information for a given fix-it.  *  * Fix-its are described in terms of a source range whose contents  * should be replaced by a string. This approach generalizes over  * three kinds of operations: removal of source code (the range covers  * the code to be removed and the replacement string is empty),  * replacement of source code (the range covers the code to be  * replaced and the replacement string provides the new code), and  * insertion (both the start and end of the range point at the  * insertion location, and the replacement string provides the text to  * insert).  *  * \param Diagnostic The diagnostic whose fix-its are being queried.  *  * \param FixIt The zero-based index of the fix-it.  *  * \param ReplacementRange The source range whose contents will be  * replaced with the returned replacement string. Note that source  * ranges are half-open ranges [a, b), so the source code should be  * replaced from a and up to (but not including) b.  *  * \returns A string containing text that should be replace the source  * code indicated by the \c ReplacementRange.  */
 name|CINDEX_LINKAGE
 name|CXString
-name|clang_getDiagnosticFixItInsertion
-parameter_list|(
-name|CXDiagnostic
-name|Diagnostic
-parameter_list|,
-name|unsigned
-name|FixIt
-parameter_list|,
-name|CXSourceLocation
-modifier|*
-name|Location
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Retrieve the removal information for a removal fix-it.  *  * For a fix-it that describes a removal from a text buffer, retrieve  * the source range that should be removed.  *  * \param Diagnostic the diagnostic whose fix-its are being queried.  *  * \param FixIt the zero-based index of the removal fix-it.  *  * \returns a source range describing the text that should be removed  * from the buffer.  */
-name|CINDEX_LINKAGE
-name|CXSourceRange
-name|clang_getDiagnosticFixItRemoval
-parameter_list|(
-name|CXDiagnostic
-name|Diagnostic
-parameter_list|,
-name|unsigned
-name|FixIt
-parameter_list|)
-function_decl|;
-comment|/**  * \brief Retrieve the replacement information for an replacement fix-it.  *  * For a fix-it that describes replacement of text in the text buffer  * with alternative text.  *  * \param Diagnostic the diagnostic whose fix-its are being queried.  *  * \param FixIt the zero-based index of the replacement fix-it.  *  * \param Range will be set to the source range whose text should be  * replaced with the returned text.  *  * \returns the text string to use as replacement text.  */
-name|CINDEX_LINKAGE
-name|CXString
-name|clang_getDiagnosticFixItReplacement
+name|clang_getDiagnosticFixIt
 parameter_list|(
 name|CXDiagnostic
 name|Diagnostic
@@ -534,7 +536,7 @@ name|FixIt
 parameter_list|,
 name|CXSourceRange
 modifier|*
-name|Range
+name|ReplacementRange
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -577,12 +579,6 @@ name|struct
 name|CXUnsavedFile
 modifier|*
 name|unsaved_files
-parameter_list|,
-name|CXDiagnosticCallback
-name|diag_callback
-parameter_list|,
-name|CXClientData
-name|diag_client_data
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Create a translation unit from an AST file (-emit-ast).  */
@@ -596,12 +592,6 @@ specifier|const
 name|char
 modifier|*
 name|ast_filename
-parameter_list|,
-name|CXDiagnosticCallback
-name|diag_callback
-parameter_list|,
-name|CXClientData
-name|diag_client_data
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */
@@ -826,6 +816,28 @@ comment|/**    * \brief Cursor that represents the translation unit itself.    *
 name|CXCursor_TranslationUnit
 init|=
 literal|300
+block|,
+comment|/* Attributes */
+name|CXCursor_FirstAttr
+init|=
+literal|400
+block|,
+comment|/**    * \brief An attribute whose specific kind is not exposed via this    * interface.    */
+name|CXCursor_UnexposedAttr
+init|=
+literal|400
+block|,
+name|CXCursor_IBActionAttr
+init|=
+literal|401
+block|,
+name|CXCursor_IBOutletAttr
+init|=
+literal|402
+block|,
+name|CXCursor_LastAttr
+init|=
+name|CXCursor_IBOutletAttr
 block|}
 enum|;
 comment|/**  * \brief A cursor representing some element in the abstract syntax tree for  * a translation unit.  *  * The cursor abstraction unifies the different kinds of entities in a  * program--declaration, statements, expressions, references to declarations,  * etc.--under a single "cursor" abstraction with a common set of operations.  * Common operation for a cursor include: getting the physical location in  * a source file where the cursor points, getting the name associated with a  * cursor, and retrieving cursors for any child nodes of a particular cursor.  *  * Cursors can be produced in two specific ways.  * clang_getTranslationUnitCursor() produces a cursor for a translation unit,  * from which one can use clang_visitChildren() to explore the rest of the  * translation unit. clang_getCursor() maps from a physical source location  * to the entity that resides at that location, allowing one to map from the  * source code into the AST.  */
@@ -934,6 +946,36 @@ name|clang_isTranslationUnit
 parameter_list|(
 name|enum
 name|CXCursorKind
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Describe the linkage of the entity referred to by a cursor.  */
+enum|enum
+name|CXLinkageKind
+block|{
+comment|/** \brief This value indicates that no linkage information is available    * for a provided CXCursor. */
+name|CXLinkage_Invalid
+block|,
+comment|/**    * \brief This is the linkage for variables, parameters, and so on that    *  have automatic storage.  This covers normal (non-extern) local variables.    */
+name|CXLinkage_NoLinkage
+block|,
+comment|/** \brief This is the linkage for static variables and static functions. */
+name|CXLinkage_Internal
+block|,
+comment|/** \brief This is the linkage for entities with external linkage that live    * in C++ anonymous namespaces.*/
+name|CXLinkage_UniqueExternal
+block|,
+comment|/** \brief This is the linkage for entities with true, external linkage. */
+name|CXLinkage_External
+block|}
+enum|;
+comment|/**  * \brief Determine the linkage of the entity referred to be a given cursor.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXLinkageKind
+name|clang_getCursorLinkage
+parameter_list|(
+name|CXCursor
+name|cursor
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -1196,9 +1238,7 @@ comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_DEBUG Debugging facilities  *  * These routines are used for testing and debugging, only, and should not  * be relied upon.  *  * @{  */
 comment|/* for debug/testing */
 name|CINDEX_LINKAGE
-specifier|const
-name|char
-modifier|*
+name|CXString
 name|clang_getCursorKindSpelling
 parameter_list|(
 name|enum
@@ -1241,6 +1281,13 @@ modifier|*
 name|endColumn
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
+name|void
+name|clang_enableStackTraces
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CODE_COMPLET Code completion  *  * Code completion involves taking an (incomplete) source file, along with  * knowledge of where the user is actively editing that file, and suggesting  * syntactically- and semantically-valid constructs that the user might want to  * use at that particular point in the source code. These data structures and  * routines provide support for code completion.  *  * @{  */
 comment|/**  * \brief A semantic string that describes a code-completion result.  *  * A semantic string that describes the formatting of a code-completion  * result as a single "template" of text that should be inserted into the  * source buffer when a particular code-completion result is selected.  * Each semantic string is made up of some number of "chunks", each of which  * contains some text along with a description of what that text means, e.g.,  * the name of the entity being referenced, whether the text chunk is part of  * the template, or whether it is a "placeholder" that the user should replace  * with actual code,of a specific kind. See \c CXCompletionChunkKind for a  * description of the different kinds of chunks.  */
@@ -1269,7 +1316,7 @@ comment|/**  * \brief Describes a single piece of text within a code-completion 
 enum|enum
 name|CXCompletionChunkKind
 block|{
-comment|/**    * \brief A code-completion string that describes "optional" text that    * could be a part of the template (but is not required).    *    * The Optional chunk is the only kind of chunk that has a code-completion    * string for its representation, which is accessible via    * \c clang_getCompletionChunkCompletionString(). The code-completion string    * describes an additional part of the template that is completely optional.    * For example, optional chunks can be used to describe the placeholders for    * arguments that match up with defaulted function parameters, e.g. given:    *    * \code    * void f(int x, float y = 3.14, double z = 2.71828);    * \endcode    *    * The code-completion string for this function would contain:    *   - a TypedText chunk for "f".    *   - a LeftParen chunk for "(".    *   - a Placeholder chunk for "int x"    *   - an Optional chunk containing the remaining defaulted arguments, e.g.,    *       - a Comma chunk for ","    *       - a Placeholder chunk for "float x"    *       - an Optional chunk containing the last defaulted argument:    *           - a Comma chunk for ","    *           - a Placeholder chunk for "double z"    *   - a RightParen chunk for ")"    *    * There are many ways two handle Optional chunks. Two simple approaches are:    *   - Completely ignore optional chunks, in which case the template for the    *     function "f" would only include the first parameter ("int x").    *   - Fully expand all optional chunks, in which case the template for the    *     function "f" would have all of the parameters.    */
+comment|/**    * \brief A code-completion string that describes "optional" text that    * could be a part of the template (but is not required).    *    * The Optional chunk is the only kind of chunk that has a code-completion    * string for its representation, which is accessible via    * \c clang_getCompletionChunkCompletionString(). The code-completion string    * describes an additional part of the template that is completely optional.    * For example, optional chunks can be used to describe the placeholders for    * arguments that match up with defaulted function parameters, e.g. given:    *    * \code    * void f(int x, float y = 3.14, double z = 2.71828);    * \endcode    *    * The code-completion string for this function would contain:    *   - a TypedText chunk for "f".    *   - a LeftParen chunk for "(".    *   - a Placeholder chunk for "int x"    *   - an Optional chunk containing the remaining defaulted arguments, e.g.,    *       - a Comma chunk for ","    *       - a Placeholder chunk for "float y"    *       - an Optional chunk containing the last defaulted argument:    *           - a Comma chunk for ","    *           - a Placeholder chunk for "double z"    *   - a RightParen chunk for ")"    *    * There are many ways to handle Optional chunks. Two simple approaches are:    *   - Completely ignore optional chunks, in which case the template for the    *     function "f" would only include the first parameter ("int x").    *   - Fully expand all optional chunks, in which case the template for the    *     function "f" would have all of the parameters.    */
 name|CXCompletionChunk_Optional
 block|,
 comment|/**    * \brief Text that a user would be expected to type to get this    * code-completion result.    *    * There will be exactly one "typed text" chunk in a semantic string, which    * will typically provide the spelling of a keyword or the name of a    * declaration that could be used at the current code point. Clients are    * expected to filter the code-completion results based on the text in this    * chunk.    */
@@ -1348,9 +1395,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * \brief Retrieve the text associated with a particular chunk within a  * completion string.  *  * \param completion_string the completion string to query.  *  * \param chunk_number the 0-based index of the chunk in the completion string.  *  * \returns the text associated with the chunk at index \c chunk_number.  */
 name|CINDEX_LINKAGE
-specifier|const
-name|char
-modifier|*
+name|CXString
 name|clang_getCompletionChunkText
 parameter_list|(
 name|CXCompletionString
@@ -1438,12 +1483,6 @@ name|complete_line
 parameter_list|,
 name|unsigned
 name|complete_column
-parameter_list|,
-name|CXDiagnosticCallback
-name|diag_callback
-parameter_list|,
-name|CXClientData
-name|diag_client_data
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Free the given set of code-completion results.  */
@@ -1454,6 +1493,29 @@ parameter_list|(
 name|CXCodeCompleteResults
 modifier|*
 name|Results
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the number of diagnostics produced prior to the  * location where code completion was performed.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_codeCompleteGetNumDiagnostics
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve a diagnostic associated with the given code completion.  *  * \param Result the code completion results to query.  * \param Index the zero-based diagnostic number to retrieve.  *  * \returns the requested diagnostic. This diagnostic must be freed  * via a call to \c clang_disposeDiagnostic().  */
+name|CINDEX_LINKAGE
+name|CXDiagnostic
+name|clang_codeCompleteGetDiagnostic
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|,
+name|unsigned
+name|Index
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

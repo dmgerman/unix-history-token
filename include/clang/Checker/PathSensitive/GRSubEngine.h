@@ -103,6 +103,12 @@ name|class
 name|GREndPathNodeBuilder
 decl_stmt|;
 name|class
+name|GRCallEnterNodeBuilder
+decl_stmt|;
+name|class
+name|GRCallExitNodeBuilder
+decl_stmt|;
+name|class
 name|LocationContext
 decl_stmt|;
 name|class
@@ -229,6 +235,30 @@ name|void
 name|ProcessEndPath
 parameter_list|(
 name|GREndPathNodeBuilder
+modifier|&
+name|builder
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|// Generate the entry node of the callee.
+name|virtual
+name|void
+name|ProcessCallEnter
+parameter_list|(
+name|GRCallEnterNodeBuilder
+modifier|&
+name|builder
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|// Generate the first post callsite node.
+name|virtual
+name|void
+name|ProcessCallExit
+parameter_list|(
+name|GRCallExitNodeBuilder
 modifier|&
 name|builder
 parameter_list|)

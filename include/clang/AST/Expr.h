@@ -414,6 +414,8 @@ block|,
 name|LV_SubObjCPropertySetting
 block|,
 name|LV_SubObjCPropertyGetterSetting
+block|,
+name|LV_ClassTemporary
 block|}
 block|;
 name|isLvalueResult
@@ -473,6 +475,8 @@ block|,
 name|MLV_SubObjCPropertySetting
 block|,
 name|MLV_SubObjCPropertyGetterSetting
+block|,
+name|MLV_ClassTemporary
 block|}
 block|;
 name|isModifiableLvalueResult

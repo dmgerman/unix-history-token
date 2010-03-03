@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: not grep __builtin %t
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple x86_64-darwin-apple | FileCheck %s
+end_comment
+
 begin_function_decl
 name|int
 name|printf
@@ -69,6 +73,40 @@ block|}
 end_function
 
 begin_function
+name|void
+name|r
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: %p\n"
+argument_list|,
+name|str
+argument_list|,
+name|ptr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|int
+name|random
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
 name|int
 name|main
 parameter_list|()
@@ -97,6 +135,15 @@ parameter_list|,
 name|args
 parameter_list|)
 value|q(#n #args, __builtin_##n args)
+define|#
+directive|define
+name|R
+parameter_list|(
+name|n
+parameter_list|,
+name|args
+parameter_list|)
+value|r(#n #args, __builtin_##n args)
 define|#
 directive|define
 name|V
@@ -866,7 +913,7 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
-name|P
+name|R
 argument_list|(
 name|extract_return_addr
 argument_list|,
@@ -884,13 +931,6 @@ end_function
 
 begin_function
 name|void
-name|strcat
-parameter_list|()
-block|{}
-end_function
-
-begin_function
-name|void
 name|foo
 parameter_list|()
 block|{
@@ -903,6 +943,155 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @bar(
+end_comment
+
+begin_function
+name|void
+name|bar
+parameter_list|()
+block|{
+name|float
+name|f
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
+name|long
+name|double
+name|ld
+decl_stmt|;
+comment|// LLVM's hex representation of float constants is really unfortunate;
+comment|// basically it does a float-to-double "conversion" and then prints the
+comment|// hex form of that.  That gives us wierd artifacts like exponents
+comment|// that aren't numerically similar to the original exponent and
+comment|// significand bit-patterns that are offset by three bits (because
+comment|// the exponent was expanded from 8 bits to 11).
+comment|//
+comment|// 0xAE98 == 1010111010011000
+comment|// 0x15D3 == 1010111010011
+name|f
+operator|=
+name|__builtin_huge_valf
+argument_list|()
+expr_stmt|;
+comment|// CHECK: float    0x7FF0000000000000
+name|d
+operator|=
+name|__builtin_huge_val
+argument_list|()
+expr_stmt|;
+comment|// CHECK: double   0x7FF0000000000000
+name|ld
+operator|=
+name|__builtin_huge_vall
+argument_list|()
+expr_stmt|;
+comment|// CHECK: x86_fp80 0xK7FFF8000000000000000
+name|f
+operator|=
+name|__builtin_nanf
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: float    0x7FF8000000000000
+name|d
+operator|=
+name|__builtin_nan
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: double   0x7FF8000000000000
+name|ld
+operator|=
+name|__builtin_nanl
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: x86_fp80 0xK7FFFC000000000000000
+name|f
+operator|=
+name|__builtin_nanf
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: float    0x7FF815D300000000
+name|d
+operator|=
+name|__builtin_nan
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: double   0x7FF800000000AE98
+name|ld
+operator|=
+name|__builtin_nanl
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: x86_fp80 0xK7FFFC00000000000AE98
+name|f
+operator|=
+name|__builtin_nansf
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: float    0x7FF4000000000000
+name|d
+operator|=
+name|__builtin_nans
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: double   0x7FF4000000000000
+name|ld
+operator|=
+name|__builtin_nansl
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// CHECK: x86_fp80 0xK7FFFA000000000000000
+name|f
+operator|=
+name|__builtin_nansf
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: float    0x7FF015D300000000
+name|d
+operator|=
+name|__builtin_nans
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: double   0x7FF000000000AE98
+name|ld
+operator|=
+name|__builtin_nansl
+argument_list|(
+literal|"0xAE98"
+argument_list|)
+expr_stmt|;
+comment|// CHECK: x86_fp80 0xK7FFF800000000000AE98
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: }
+end_comment
 
 end_unit
 

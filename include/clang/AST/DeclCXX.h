@@ -2727,17 +2727,18 @@ begin_comment
 comment|/// getDestructor - Returns the destructor decl for this class.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|CXXDestructorDecl
 modifier|*
 name|getDestructor
-parameter_list|(
+argument_list|(
 name|ASTContext
-modifier|&
+operator|&
 name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// isLocalClass - If the class is a local class [class.local], returns
@@ -2921,6 +2922,70 @@ argument_list|,
 name|CXXBasePaths
 operator|&
 name|Paths
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Determine whether this class is virtually derived from
+end_comment
+
+begin_comment
+comment|/// the class \p Base.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine only determines whether this class is virtually
+end_comment
+
+begin_comment
+comment|/// derived from \p Base, but does not account for factors that may
+end_comment
+
+begin_comment
+comment|/// make a Derived -> Base class ill-formed, such as
+end_comment
+
+begin_comment
+comment|/// private/protected inheritance or multiple, ambiguous base class
+end_comment
+
+begin_comment
+comment|/// subobjects.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base the base class we are searching for.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if this class is virtually derived from Base,
+end_comment
+
+begin_comment
+comment|/// false otherwise.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isVirtuallyDerivedFrom
+argument_list|(
+name|CXXRecordDecl
+operator|*
+name|Base
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3246,6 +3311,63 @@ begin_function_decl
 specifier|static
 name|bool
 name|FindBaseClass
+parameter_list|(
+specifier|const
+name|CXXBaseSpecifier
+modifier|*
+name|Specifier
+parameter_list|,
+name|CXXBasePath
+modifier|&
+name|Path
+parameter_list|,
+name|void
+modifier|*
+name|BaseRecord
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Base-class lookup callback that determines whether the
+end_comment
+
+begin_comment
+comment|/// given base class specifier refers to a specific class
+end_comment
+
+begin_comment
+comment|/// declaration and describes virtual derivation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback can be used with \c lookupInBases() to determine
+end_comment
+
+begin_comment
+comment|/// whether a given derived class has is a virtual base class
+end_comment
+
+begin_comment
+comment|/// subobject of a particular type.  The user data pointer should
+end_comment
+
+begin_comment
+comment|/// refer to the canonical CXXRecordDecl of the base class that we
+end_comment
+
+begin_comment
+comment|/// are searching for.
+end_comment
+
+begin_function_decl
+specifier|static
+name|bool
+name|FindVirtualBaseClass
 parameter_list|(
 specifier|const
 name|CXXBaseSpecifier

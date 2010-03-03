@@ -1559,5 +1559,45 @@ comment|// expected-warning {{implicit cast loses integer precision: 'long' to '
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/7676608>: assertion for compound operators with non-integral RHS
+end_comment
+
+begin_function_decl
+name|void
+name|f7676608
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test_7676608
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|float
+name|q
+init|=
+literal|0.7f
+decl_stmt|;
+name|char
+name|c
+init|=
+literal|5
+decl_stmt|;
+name|f7676608
+argument_list|(
+name|c
+operator|*=
+name|q
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

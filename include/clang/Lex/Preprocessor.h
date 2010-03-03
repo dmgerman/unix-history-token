@@ -1827,6 +1827,20 @@ name|Buffer
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getSpelling - This method is used to get the spelling of a token into a
+comment|/// SmallVector. Note that the returned StringRef may not point to the
+comment|/// supplied buffer if a copy can be avoided.
+name|llvm
+operator|::
+name|StringRef
+name|getSpelling
+argument_list|(
+argument|const Token&Tok
+argument_list|,
+argument|llvm::SmallVectorImpl<char>&Buffer
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// getSpellingOfSingleCharacterNumericConstant - Tok is a numeric constant
 comment|/// with length 1, return the character.
 name|char

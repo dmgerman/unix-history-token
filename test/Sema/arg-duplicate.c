@@ -19,6 +19,7 @@ name|y
 decl_stmt|,
 name|x
 decl_stmt|,
+comment|// expected-note {{previous declaration is here}}
 name|x
 decl_stmt|;
 comment|// expected-error {{redefinition of parameter}}

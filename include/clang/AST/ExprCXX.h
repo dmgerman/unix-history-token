@@ -4130,21 +4130,129 @@ name|child_end
 argument_list|()
 block|; }
 block|;
+comment|/// \brief Structure used to store the type being destroyed by a
+comment|/// pseudo-destructor expression.
+name|class
+name|PseudoDestructorTypeStorage
+block|{
+comment|/// \brief Either the type source information or the name of the type, if
+comment|/// it couldn't be resolved due to type-dependence.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|TypeSourceInfo
+operator|*
+block|,
+name|IdentifierInfo
+operator|*
+operator|>
+name|Type
+block|;
+comment|/// \brief The starting source location of the pseudo-destructor type.
+name|SourceLocation
+name|Location
+block|;
+name|public
+operator|:
+name|PseudoDestructorTypeStorage
+argument_list|()
+block|{ }
+name|PseudoDestructorTypeStorage
+argument_list|(
+argument|IdentifierInfo *II
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|II
+argument_list|)
+block|,
+name|Location
+argument_list|(
+argument|Loc
+argument_list|)
+block|{ }
+name|PseudoDestructorTypeStorage
+argument_list|(
+name|TypeSourceInfo
+operator|*
+name|Info
+argument_list|)
+block|;
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Type
+operator|.
+name|dyn_cast
+operator|<
+name|TypeSourceInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|IdentifierInfo
+operator|*
+name|getIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Type
+operator|.
+name|dyn_cast
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Location
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents a C++ pseudo-destructor (C++ [expr.pseudo]).
 comment|///
-comment|/// Example:
+comment|/// A pseudo-destructor is an expression that looks like a member access to a
+comment|/// destructor of a scalar type, except that scalar types don't have
+comment|/// destructors. For example:
+comment|///
+comment|/// \code
+comment|/// typedef int T;
+comment|/// void f(int *p) {
+comment|///   p->T::~T();
+comment|/// }
+comment|/// \endcode
+comment|///
+comment|/// Pseudo-destructors typically occur when instantiating templates such as:
 comment|///
 comment|/// \code
 comment|/// template<typename T>
 comment|/// void destroy(T* ptr) {
-comment|///   ptr->~T();
+comment|///   ptr->T::~T();
 comment|/// }
 comment|/// \endcode
 comment|///
-comment|/// When the template is parsed, the expression \c ptr->~T will be stored as
-comment|/// a member reference expression. If it then instantiated with a scalar type
-comment|/// as a template argument for T, the resulting expression will be a
-comment|/// pseudo-destructor expression.
+comment|/// for scalar types. A pseudo-destructor expression has no run-time semantics
+comment|/// beyond evaluating the base expression.
 name|class
 name|CXXPseudoDestructorExpr
 operator|:
@@ -4177,13 +4285,25 @@ comment|/// present.
 name|SourceRange
 name|QualifierRange
 block|;
-comment|/// \brief The type being destroyed.
-name|QualType
-name|DestroyedType
+comment|/// \brief The type that precedes the '::' in a qualified pseudo-destructor
+comment|/// expression.
+name|TypeSourceInfo
+operator|*
+name|ScopeType
 block|;
-comment|/// \brief The location of the type after the '~'.
+comment|/// \brief The location of the '::' in a qualified pseudo-destructor
+comment|/// expression.
 name|SourceLocation
-name|DestroyedTypeLoc
+name|ColonColonLoc
+block|;
+comment|/// \brief The location of the '~'.
+name|SourceLocation
+name|TildeLoc
+block|;
+comment|/// \brief The type being destroyed, or its name if we were unable to
+comment|/// resolve the name.
+name|PseudoDestructorTypeStorage
+name|DestroyedType
 block|;
 name|public
 operator|:
@@ -4201,9 +4321,13 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|QualType DestroyedType
+argument|TypeSourceInfo *ScopeType
 argument_list|,
-argument|SourceLocation DestroyedTypeLoc
+argument|SourceLocation ColonColonLoc
+argument_list|,
+argument|SourceLocation TildeLoc
+argument_list|,
+argument|PseudoDestructorTypeStorage DestroyedType
 argument_list|)
 operator|:
 name|Expr
@@ -4229,11 +4353,46 @@ argument_list|,
 name|false
 argument_list|,
 literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|false
+argument_list|,
+name|CC_Default
 argument_list|)
 argument_list|)
 argument_list|,
 comment|/*isTypeDependent=*/
-name|false
+operator|(
+name|Base
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|||
+operator|(
+name|DestroyedType
+operator|.
+name|getTypeSourceInfo
+argument_list|()
+operator|&&
+name|DestroyedType
+operator|.
+name|getTypeSourceInfo
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|isDependentType
+argument_list|()
+operator|)
+operator|)
 argument_list|,
 comment|/*isValueDependent=*/
 name|Base
@@ -4274,14 +4433,24 @@ argument_list|(
 name|QualifierRange
 argument_list|)
 block|,
-name|DestroyedType
+name|ScopeType
 argument_list|(
-name|DestroyedType
+name|ScopeType
 argument_list|)
 block|,
-name|DestroyedTypeLoc
+name|ColonColonLoc
 argument_list|(
-argument|DestroyedTypeLoc
+name|ColonColonLoc
+argument_list|)
+block|,
+name|TildeLoc
+argument_list|(
+name|TildeLoc
+argument_list|)
+block|,
+name|DestroyedType
+argument_list|(
+argument|DestroyedType
 argument_list|)
 block|{ }
 name|void
@@ -4380,24 +4549,99 @@ return|return
 name|OperatorLoc
 return|;
 block|}
-comment|/// \brief Retrieve the type that is being destroyed.
-name|QualType
-name|getDestroyedType
+comment|/// \brief Retrieve the scope type in a qualified pseudo-destructor
+comment|/// expression.
+comment|///
+comment|/// Pseudo-destructor expressions can have extra qualification within them
+comment|/// that is not part of the nested-name-specifier, e.g., \c p->T::~T().
+comment|/// Here, if the object type of the expression is (or may be) a scalar type,
+comment|/// \p T may also be a scalar type and, therefore, cannot be part of a
+comment|/// nested-name-specifier. It is stored as the "scope type" of the pseudo-
+comment|/// destructor expression.
+name|TypeSourceInfo
+operator|*
+name|getScopeTypeInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ScopeType
+return|;
+block|}
+comment|/// \brief Retrieve the location of the '::' in a qualified pseudo-destructor
+comment|/// expression.
+name|SourceLocation
+name|getColonColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonColonLoc
+return|;
+block|}
+comment|/// \brief Retrieve the location of the '~'.
+name|SourceLocation
+name|getTildeLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TildeLoc
+return|;
+block|}
+comment|/// \brief Retrieve the source location information for the type
+comment|/// being destroyed.
+comment|///
+comment|/// This type-source information is available for non-dependent
+comment|/// pseudo-destructor expressions and some dependent pseudo-destructor
+comment|/// expressions. Returns NULL if we only have the identifier for a
+comment|/// dependent pseudo-destructor expression.
+name|TypeSourceInfo
+operator|*
+name|getDestroyedTypeInfo
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DestroyedType
+operator|.
+name|getTypeSourceInfo
+argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the location of the type being destroyed.
+comment|/// \brief In a dependent pseudo-destructor expression for which we do not
+comment|/// have full type information on the destroyed type, provides the name
+comment|/// of the destroyed type.
+name|IdentifierInfo
+operator|*
+name|getDestroyedTypeIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DestroyedType
+operator|.
+name|getIdentifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the type being destroyed.
+name|QualType
+name|getDestroyedType
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Retrieve the starting location of the type being destroyed.
 name|SourceLocation
 name|getDestroyedTypeLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DestroyedTypeLoc
+name|DestroyedType
+operator|.
+name|getLocation
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -4405,19 +4649,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|Base
-operator|->
-name|getLocStart
-argument_list|()
-argument_list|,
-name|DestroyedTypeLoc
-argument_list|)
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -5435,22 +5667,19 @@ block|}
 name|virtual
 name|StmtIterator
 name|child_begin
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|virtual
 name|StmtIterator
 name|child_end
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -5464,83 +5693,33 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|UnresolvedLookupExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const UnresolvedLookupExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief A qualified reference to a name whose declaration cannot
-end_comment
-
-begin_comment
 comment|/// yet be resolved.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// DependentScopeDeclRefExpr is similar to DeclRefExpr in that
-end_comment
-
-begin_comment
 comment|/// it expresses a reference to a declaration such as
-end_comment
-
-begin_comment
 comment|/// X<T>::value. The difference, however, is that an
-end_comment
-
-begin_comment
 comment|/// DependentScopeDeclRefExpr node is used only within C++ templates when
-end_comment
-
-begin_comment
 comment|/// the qualification (e.g., X<T>::) refers to a dependent type. In
-end_comment
-
-begin_comment
 comment|/// this case, X<T>::value cannot resolve to a declaration because the
-end_comment
-
-begin_comment
 comment|/// declaration will differ from on instantiation of X<T> to the
-end_comment
-
-begin_comment
 comment|/// next. Therefore, DependentScopeDeclRefExpr keeps track of the
-end_comment
-
-begin_comment
 comment|/// qualifier (X<T>::) and the name of the entity being referenced
-end_comment
-
-begin_comment
 comment|/// ("value"). Such expressions will instantiate to a DeclRefExpr once the
-end_comment
-
-begin_comment
 comment|/// declaration can be found.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DependentScopeDeclRefExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -5826,18 +6005,12 @@ return|return
 name|Range
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -5848,42 +6021,28 @@ operator|==
 name|DependentScopeDeclRefExprClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|DependentScopeDeclRefExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const DependentScopeDeclRefExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|virtual
 name|StmtIterator
 name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|()
+block|;
 name|virtual
 name|StmtIterator
 name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-unit|};
+argument_list|()
+block|; }
+decl_stmt|;
 name|class
 name|CXXExprWithTemporaries
 range|:
@@ -6094,93 +6253,27 @@ name|child_end
 argument_list|()
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Describes an explicit type conversion that uses functional
-end_comment
-
-begin_comment
 comment|/// notion but could not be resolved because one or more arguments are
-end_comment
-
-begin_comment
 comment|/// type-dependent.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The explicit type conversions expressed by
-end_comment
-
-begin_comment
 comment|/// CXXUnresolvedConstructExpr have the form \c T(a1, a2, ..., aN),
-end_comment
-
-begin_comment
 comment|/// where \c T is some type and \c a1, a2, ..., aN are values, and
-end_comment
-
-begin_comment
 comment|/// either \C T is a dependent type or one or more of the \c a's is
-end_comment
-
-begin_comment
 comment|/// type-dependent. For example, this would occur in a template such
-end_comment
-
-begin_comment
 comment|/// as:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \code
-end_comment
-
-begin_comment
 comment|///   template<typename T, typename A1>
-end_comment
-
-begin_comment
 comment|///   inline T make_a(const A1& a1) {
-end_comment
-
-begin_comment
 comment|///     return T(a1);
-end_comment
-
-begin_comment
 comment|///   }
-end_comment
-
-begin_comment
 comment|/// \endcode
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// When the returned expression is instantiated, it may resolve to a
-end_comment
-
-begin_comment
 comment|/// constructor call, conversion function call, or some kind of type
-end_comment
-
-begin_comment
 comment|/// conversion.
-end_comment
-
-begin_decl_stmt
 name|class
 name|CXXUnresolvedConstructExpr
 range|:
@@ -6372,9 +6465,6 @@ operator|+
 name|NumArgs
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 specifier|const
 name|Expr
@@ -6383,9 +6473,6 @@ specifier|const
 modifier|*
 name|const_arg_iterator
 typedef|;
-end_typedef
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_begin
 argument_list|()
@@ -6407,9 +6494,6 @@ literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_end
 argument_list|()
@@ -6422,9 +6506,6 @@ operator|+
 name|NumArgs
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|Expr
 modifier|*
 name|getArg
@@ -6452,9 +6533,6 @@ name|I
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|const
 name|Expr
 modifier|*
@@ -6484,9 +6562,6 @@ name|I
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -6502,9 +6577,6 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -6524,9 +6596,6 @@ operator|==
 name|CXXUnresolvedConstructExprClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -6540,30 +6609,25 @@ return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|virtual
 name|child_iterator
 name|child_end
 parameter_list|()
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Represents a C++ member access expression where the actual
 end_comment
 

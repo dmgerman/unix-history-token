@@ -227,7 +227,10 @@ name|Hiding
 block|,
 name|IBOutletKind
 block|,
-comment|// Clang-specific.  Use "Kind" suffix to not conflict with
+comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
+name|IBActionKind
+block|,
+comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
 name|Malloc
 block|,
 name|NoDebug
@@ -249,7 +252,13 @@ block|,
 name|CFReturnsRetained
 block|,
 comment|// Clang/Checker-specific.
+name|CFReturnsNotRetained
+block|,
+comment|// Clang/Checker-specific.
 name|NSReturnsRetained
+block|,
+comment|// Clang/Checker-specific.
+name|NSReturnsNotRetained
 block|,
 comment|// Clang/Checker-specific.
 name|Overloadable
@@ -287,6 +296,8 @@ block|,
 name|Weak
 block|,
 name|WeakImport
+block|,
+name|WeakRef
 block|,
 name|FIRST_TARGET_ATTRIBUTE
 block|,
@@ -1254,61 +1265,6 @@ block|}
 expr|}
 block|;
 name|class
-name|GNUInlineAttr
-operator|:
-name|public
-name|Attr
-block|{
-name|public
-operator|:
-name|GNUInlineAttr
-argument_list|()
-operator|:
-name|Attr
-argument_list|(
-argument|GNUInline
-argument_list|)
-block|{}
-name|virtual
-name|Attr
-operator|*
-name|clone
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-specifier|const
-block|;
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Attr *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|GNUInline
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const GNUInlineAttr *A
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-name|class
 name|IBOutletAttr
 operator|:
 name|public
@@ -1363,15 +1319,60 @@ return|;
 block|}
 expr|}
 block|;
-name|DEF_SIMPLE_ATTR
+name|class
+name|IBActionAttr
+operator|:
+name|public
+name|Attr
+block|{
+name|public
+operator|:
+name|IBActionAttr
+argument_list|()
+operator|:
+name|Attr
 argument_list|(
-name|Malloc
+argument|IBActionKind
 argument_list|)
+block|{}
+name|virtual
+name|Attr
+operator|*
+name|clone
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
 block|;
-name|DEF_SIMPLE_ATTR
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
 argument_list|(
-name|NoReturn
+argument|const Attr *A
 argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IBActionKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const IBActionAttr *A
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
 block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
@@ -1386,6 +1387,21 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|Final
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|GNUInline
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|Malloc
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|NoReturn
 argument_list|)
 block|;
 name|class
@@ -1486,6 +1502,11 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|WeakImport
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|WeakRef
 argument_list|)
 block|;
 name|DEF_SIMPLE_ATTR
@@ -2478,7 +2499,17 @@ block|;
 comment|// Checker-specific attributes.
 name|DEF_SIMPLE_ATTR
 argument_list|(
+name|CFReturnsNotRetained
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
 name|CFReturnsRetained
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|NSReturnsNotRetained
 argument_list|)
 block|;
 name|DEF_SIMPLE_ATTR

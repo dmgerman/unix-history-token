@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-variable -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-variable -fblocks -verify %s
 end_comment
 
 begin_struct
@@ -70,6 +70,90 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+end_function
+
+begin_comment
+comment|// PR5933
+end_comment
+
+begin_function
+name|int
+name|f2
+parameter_list|()
+block|{
+name|int
+name|X
+init|=
+literal|4
+decl_stmt|;
+comment|// Shouldn't have a bogus 'unused variable X' warning.
+return|return
+name|Y
+operator|+
+name|X
+return|;
+comment|// expected-error {{use of undeclared identifier 'Y'}}
+block|}
+end_function
+
+begin_function
+name|int
+name|f3
+parameter_list|()
+block|{
+name|int
+name|X1
+init|=
+literal|4
+decl_stmt|;
+call|(
+name|void
+call|)
+argument_list|(
+name|Y1
+operator|+
+name|X1
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'Y1'}}
+call|(
+name|void
+call|)
+argument_list|(
+lambda|^
+parameter_list|()
+block|{
+name|int
+name|X
+init|=
+literal|4
+decl_stmt|;
+block|}
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{unused}}
+call|(
+name|void
+call|)
+argument_list|(
+lambda|^
+parameter_list|()
+block|{
+name|int
+name|X
+init|=
+literal|4
+decl_stmt|;
+return|return
+name|Y
+operator|+
+name|X
+return|;
+block|}
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'Y'}}
 block|}
 end_function
 

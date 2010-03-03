@@ -744,6 +744,8 @@ argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
+comment|// If the 'state' is not new, we need to check if the cached state 'ST'
+comment|// is new.
 if|if
 condition|(
 name|state
@@ -777,6 +779,45 @@ operator|.
 name|Add
 argument_list|(
 name|Pred
+argument_list|)
+expr_stmt|;
+block|}
+comment|// Generate a node with a new program point different from the one that will
+comment|// be created by the GRStmtNodeBuilder.
+name|void
+name|addTransition
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|,
+name|ProgramPoint
+name|Loc
+parameter_list|)
+block|{
+name|ExplodedNode
+modifier|*
+name|N
+init|=
+name|B
+operator|.
+name|generateNode
+argument_list|(
+name|Loc
+argument_list|,
+name|state
+argument_list|,
+name|Pred
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|N
+condition|)
+name|addTransition
+argument_list|(
+name|N
 argument_list|)
 expr_stmt|;
 block|}

@@ -157,10 +157,10 @@ literal|1.9e-20f
 block|,
 literal|1.9e50f
 block|,
-comment|// expected-error {{too large}}
+comment|// expected-warning {{too large}}
 literal|1.9e-50f
 block|,
-comment|// expected-error {{too small}}
+comment|// expected-warning {{too small}}
 operator|-
 literal|1.9e20f
 block|,
@@ -170,10 +170,10 @@ block|,
 operator|-
 literal|1.9e50f
 block|,
-comment|// expected-error {{too large}}
+comment|// expected-warning {{too large}}
 operator|-
 literal|1.9e-50f
-comment|// expected-error {{too small}}
+comment|// expected-warning {{too small}}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -190,10 +190,10 @@ literal|1.9e-50
 block|,
 literal|1.9e500
 block|,
-comment|// expected-error {{too large}}
+comment|// expected-warning {{too large}}
 literal|1.9e-500
 block|,
-comment|// expected-error {{too small}}
+comment|// expected-warning {{too small}}
 operator|-
 literal|1.9e50
 block|,
@@ -203,10 +203,10 @@ block|,
 operator|-
 literal|1.9e500
 block|,
-comment|// expected-error {{too large}}
+comment|// expected-warning {{too large}}
 operator|-
 literal|1.9e-500
-comment|// expected-error {{too small}}
+comment|// expected-warning {{too small}}
 block|}
 decl_stmt|;
 end_decl_stmt

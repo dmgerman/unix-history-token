@@ -258,6 +258,72 @@ name|class
 name|Context
 decl_stmt|;
 block|}
+comment|/// \brief A vector of C++ member functions that is optimized for
+comment|/// storing a single method.
+name|class
+name|CXXMethodVector
+block|{
+comment|/// \brief Storage for the vector.
+comment|///
+comment|/// When the low bit is zero, this is a const CXXMethodDecl *. When the
+comment|/// low bit is one, this is a std::vector<const CXXMethodDecl *> *.
+name|mutable
+name|uintptr_t
+name|Storage
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|*
+operator|>
+name|vector_type
+expr_stmt|;
+name|public
+label|:
+name|CXXMethodVector
+argument_list|()
+operator|:
+name|Storage
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+typedef|typedef
+specifier|const
+name|CXXMethodDecl
+modifier|*
+modifier|*
+name|iterator
+typedef|;
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+expr_stmt|;
+name|iterator
+name|end
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|push_back
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|)
+function_decl|;
+name|void
+name|Destroy
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// ASTContext - This class holds long-lived AST nodes (such as types and
 comment|/// decls) that can be referred to throughout the semantic analysis of a file.
 name|class
@@ -742,6 +808,24 @@ operator|*
 operator|>
 name|InstantiatedFromUnnamedFieldDecl
 expr_stmt|;
+comment|/// \brief Mapping that stores the methods overridden by a given C++
+comment|/// member function.
+comment|///
+comment|/// Since most C++ member functions aren't virtual and therefore
+comment|/// don't override anything, we store the overridden functions in
+comment|/// this map on the side rather than within the CXXMethodDecl structure.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|*
+operator|,
+name|CXXMethodVector
+operator|>
+name|OverriddenMethods
+expr_stmt|;
 name|TranslationUnitDecl
 modifier|*
 name|TUDecl
@@ -1085,6 +1169,49 @@ parameter_list|,
 name|FieldDecl
 modifier|*
 name|Tmpl
+parameter_list|)
+function_decl|;
+comment|// Access to the set of methods overridden by the given C++ method.
+typedef|typedef
+name|CXXMethodVector
+operator|::
+name|iterator
+name|overridden_cxx_method_iterator
+expr_stmt|;
+name|overridden_cxx_method_iterator
+name|overridden_methods_begin
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+name|overridden_cxx_method_iterator
+name|overridden_methods_end
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Note that the given C++ \p Method overrides the given \p
+comment|/// Overridden method.
+name|void
+name|addOverriddenMethod
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|,
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|Overridden
 parameter_list|)
 function_decl|;
 name|TranslationUnitDecl
@@ -1804,35 +1931,23 @@ name|TypeQuals
 parameter_list|,
 name|bool
 name|hasExceptionSpec
-init|=
-name|false
 parameter_list|,
 name|bool
 name|hasAnyExceptionSpec
-init|=
-name|false
 parameter_list|,
 name|unsigned
 name|NumExs
-init|=
-literal|0
 parameter_list|,
 specifier|const
 name|QualType
 modifier|*
 name|ExArray
-init|=
-literal|0
 parameter_list|,
 name|bool
 name|NoReturn
-init|=
-name|false
 parameter_list|,
 name|CallingConv
 name|CallConv
-init|=
-name|CC_Default
 parameter_list|)
 function_decl|;
 comment|/// getTypeDeclType - Return the unique reference to the type for
@@ -3063,15 +3178,10 @@ operator|*
 operator|>
 operator|&
 name|Ivars
-argument_list|,
-name|bool
-name|CollectSynthesized
-operator|=
-name|true
 argument_list|)
 decl_stmt|;
 name|void
-name|CollectSynthesizedIvars
+name|CollectNonClassIvars
 argument_list|(
 specifier|const
 name|ObjCInterfaceDecl

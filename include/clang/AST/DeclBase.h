@@ -1100,11 +1100,7 @@ name|bool
 name|isUsed
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Used
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_function
@@ -1344,6 +1340,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|virtual
 name|bool
 name|isOutOfLine
 argument_list|()

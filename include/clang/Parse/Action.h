@@ -1413,6 +1413,62 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Determine whether the given name refers to a non-type nested name
+end_comment
+
+begin_comment
+comment|/// specifier, e.g., the name of a namespace or namespace alias.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This actual is used in the parsing of pseudo-destructor names to
+end_comment
+
+begin_comment
+comment|/// distinguish a nested-name-specifier and a "type-name ::" when we
+end_comment
+
+begin_comment
+comment|/// see the token sequence "X :: ~".
+end_comment
+
+begin_function
+name|virtual
+name|bool
+name|isNonTypeNestedNameSpecifier
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|SourceLocation
+name|IdLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXGlobalScopeSpecifier - Return the object that represents the
 end_comment
 
@@ -2087,6 +2143,27 @@ name|Dcl
 parameter_list|,
 name|bool
 name|TypeContainsUndeducedAuto
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Note that the given declaration had an initializer that could not
+end_comment
+
+begin_comment
+comment|/// be parsed.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnInitializerError
+parameter_list|(
+name|DeclPtrTy
+name|Dcl
 parameter_list|)
 block|{
 return|return;
@@ -6206,6 +6283,71 @@ comment|//===------------------------- C++ Expressions -------------------------
 end_comment
 
 begin_comment
+comment|/// \brief Parsed a destructor name or pseudo-destructor name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the type being destructed.
+end_comment
+
+begin_function
+name|virtual
+name|TypeTy
+modifier|*
+name|getDestructorName
+parameter_list|(
+name|SourceLocation
+name|TildeLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|&
+name|II
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|)
+block|{
+return|return
+name|getTypeName
+argument_list|(
+name|II
+argument_list|,
+name|NameLoc
+argument_list|,
+name|S
+argument_list|,
+operator|&
+name|SS
+argument_list|,
+name|false
+argument_list|,
+name|ObjectType
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXNamedCast - Parse {dynamic,static,reinterpret,const}_cast's.
 end_comment
 
@@ -6691,6 +6833,34 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param MayBePseudoDestructor Originally false. The action should
+end_comment
+
+begin_comment
+comment|/// set this true if the expression may end up being a
+end_comment
+
+begin_comment
+comment|/// pseudo-destructor expression, indicating to the parser that it
+end_comment
+
+begin_comment
+comment|/// shoudl be parsed as a pseudo-destructor rather than as a member
+end_comment
+
+begin_comment
+comment|/// access expression. Note that this should apply both when the
+end_comment
+
+begin_comment
+comment|/// object type is a scalar and when the object type is dependent.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns the (possibly modified) \p Base expression
 end_comment
 
@@ -6718,6 +6888,196 @@ name|TypeTy
 operator|*
 operator|&
 name|ObjectType
+argument_list|,
+name|bool
+operator|&
+name|MayBePseudoDestructor
+argument_list|)
+block|{
+return|return
+name|ExprEmpty
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Parsed a C++ pseudo-destructor expression or a dependent
+end_comment
+
+begin_comment
+comment|/// member access expression that has the same syntactic form as a
+end_comment
+
+begin_comment
+comment|/// pseudo-destructor expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the member access expression occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Base The expression in which a member is being accessed, e.g., the
+end_comment
+
+begin_comment
+comment|/// "x" in "x.f".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpLoc The location of the member access operator ("." or "->")
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param OpKind The kind of member access operator ("." or "->")
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS The nested-name-specifier that precedes the type names
+end_comment
+
+begin_comment
+comment|/// in the grammar. Note that this nested-name-specifier will not
+end_comment
+
+begin_comment
+comment|/// cover the last "type-name ::" in the grammar, because it isn't
+end_comment
+
+begin_comment
+comment|/// necessarily a nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param FirstTypeName The type name that follows the optional
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier but precedes the '::', e.g., the first
+end_comment
+
+begin_comment
+comment|/// type-name in "type-name :: type-name". This type name may be
+end_comment
+
+begin_comment
+comment|/// empty. This will be either an identifier or a template-id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CCLoc The location of the '::' in "type-name ::
+end_comment
+
+begin_comment
+comment|/// typename". May be invalid, if there is no \p FirstTypeName.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TildeLoc The location of the '~'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SecondTypeName The type-name following the '~', which is
+end_comment
+
+begin_comment
+comment|/// the name of the type being destroyed. This will be either an
+end_comment
+
+begin_comment
+comment|/// identifier or a template-id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param HasTrailingLParen Whether the next token in the stream is
+end_comment
+
+begin_comment
+comment|/// a left parentheses.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|OwningExprResult
+name|ActOnPseudoDestructorExpr
+argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
+name|ExprArg
+name|Base
+argument_list|,
+name|SourceLocation
+name|OpLoc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|OpKind
+argument_list|,
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|SS
+argument_list|,
+name|UnqualifiedId
+operator|&
+name|FirstTypeName
+argument_list|,
+name|SourceLocation
+name|CCLoc
+argument_list|,
+name|SourceLocation
+name|TildeLoc
+argument_list|,
+name|UnqualifiedId
+operator|&
+name|SecondTypeName
+argument_list|,
+name|bool
+name|HasTrailingLParen
 argument_list|)
 block|{
 return|return

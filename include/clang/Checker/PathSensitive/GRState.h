@@ -66,37 +66,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"clang/Checker/PathSensitive/Environment.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Checker/PathSensitive/Store.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Checker/PathSensitive/ConstraintManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Checker/PathSensitive/ValueManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Checker/PathSensitive/GRCoreEngine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Expr.h"
+file|"clang/AST/ASTContext.h"
 end_include
 
 begin_include
@@ -108,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTContext.h"
+file|"clang/AST/Expr.h"
 end_include
 
 begin_include
@@ -120,19 +90,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"clang/Checker/PathSensitive/ConstraintManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"clang/Checker/PathSensitive/Environment.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Checker/PathSensitive/GRCoreEngine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Checker/PathSensitive/Store.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Checker/PathSensitive/ValueManager.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/APSInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseSet.h"
 end_include
 
 begin_include
@@ -156,19 +150,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/System/DataTypes.h"
 end_include
 
 begin_include
@@ -354,6 +354,7 @@ name|R
 operator|)
 specifier|const
 decl_stmt|;
+comment|// Do not implement.
 name|friend
 name|class
 name|GRStateManager
@@ -368,9 +369,6 @@ decl_stmt|;
 name|Store
 name|St
 decl_stmt|;
-comment|// FIXME: Make these private.
-name|public
-label|:
 name|GenericDataMap
 name|GDM
 decl_stmt|;

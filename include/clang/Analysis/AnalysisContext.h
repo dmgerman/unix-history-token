@@ -448,6 +448,13 @@ return|return
 name|Parent
 return|;
 block|}
+name|bool
+name|isParentOf
+argument_list|(
+argument|const LocationContext *LC
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|Decl
 operator|*

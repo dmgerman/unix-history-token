@@ -175,9 +175,6 @@ comment|///< Complex conversions (C99 6.3.1.6)
 name|ICK_Floating_Integral
 block|,
 comment|///< Floating-integral conversions (C++ 4.9)
-name|ICK_Complex_Real
-block|,
-comment|///< Complex-real conversions (C99 6.3.1.7)
 name|ICK_Pointer_Conversion
 block|,
 comment|///< Pointer conversions (C++ 4.10)
@@ -193,6 +190,9 @@ comment|///< Conversions between compatible types in C99
 name|ICK_Derived_To_Base
 block|,
 comment|///< Derived-to-base (C++ [over.best.ics])
+name|ICK_Complex_Real
+block|,
+comment|///< Complex-real conversions (C99 6.3.1.7)
 name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
@@ -245,7 +245,10 @@ name|ICR_Promotion
 block|,
 comment|///< Promotion
 name|ICR_Conversion
+block|,
 comment|///< Conversion
+name|ICR_Complex_Real_Conversion
+comment|///< Complex<-> Real conversion
 block|}
 enum|;
 name|ImplicitConversionRank
@@ -293,7 +296,7 @@ comment|/// Deprecated - Whether this the deprecated conversion of a
 comment|/// string literal to a pointer to non-const character data
 comment|/// (C++ 4.2p2).
 name|bool
-name|Deprecated
+name|DeprecatedStringLiteralToCharPtr
 range|:
 literal|1
 decl_stmt|;
@@ -991,8 +994,17 @@ block|}
 enum|;
 name|private
 label|:
+enum|enum
+block|{
+name|Uninitialized
+init|=
+name|BadConversion
+operator|+
+literal|1
+block|}
+enum|;
 comment|/// ConversionKind - The kind of implicit conversion sequence.
-name|Kind
+name|unsigned
 name|ConversionKind
 decl_stmt|;
 name|void
@@ -1002,19 +1014,28 @@ name|Kind
 name|K
 parameter_list|)
 block|{
-if|if
-condition|(
-name|isAmbiguous
-argument_list|()
-condition|)
-name|Ambiguous
-operator|.
 name|destruct
 argument_list|()
 expr_stmt|;
 name|ConversionKind
 operator|=
 name|K
+expr_stmt|;
+block|}
+name|void
+name|destruct
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ConversionKind
+operator|==
+name|AmbiguousConversion
+condition|)
+name|Ambiguous
+operator|.
+name|destruct
+argument_list|()
 expr_stmt|;
 block|}
 name|public
@@ -1048,24 +1069,16 @@ argument_list|()
 operator|:
 name|ConversionKind
 argument_list|(
-argument|BadConversion
+argument|Uninitialized
 argument_list|)
 block|{}
 operator|~
 name|ImplicitConversionSequence
 argument_list|()
 block|{
-if|if
-condition|(
-name|isAmbiguous
-argument_list|()
-condition|)
-name|Ambiguous
-operator|.
 name|destruct
 argument_list|()
-expr_stmt|;
-block|}
+block|;     }
 name|ImplicitConversionSequence
 argument_list|(
 specifier|const
@@ -1084,6 +1097,10 @@ condition|(
 name|ConversionKind
 condition|)
 block|{
+case|case
+name|Uninitialized
+case|:
+break|break;
 case|case
 name|StandardConversion
 case|:
@@ -1144,16 +1161,9 @@ operator|&
 name|Other
 operator|)
 block|{
-if|if
-condition|(
-name|isAmbiguous
-argument_list|()
-condition|)
-name|Ambiguous
-operator|.
 name|destruct
 argument_list|()
-expr_stmt|;
+block|;
 name|new
 argument_list|(
 argument|this
@@ -1162,7 +1172,7 @@ name|ImplicitConversionSequence
 argument_list|(
 name|Other
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|*
 name|this
@@ -1171,19 +1181,31 @@ block|}
 name|Kind
 name|getKind
 argument_list|()
-decl|const
+specifier|const
 block|{
+name|assert
+argument_list|(
+name|isInitialized
+argument_list|()
+operator|&&
+literal|"querying uninitialized conversion"
+argument_list|)
+block|;
 return|return
+name|Kind
+argument_list|(
 name|ConversionKind
+argument_list|)
 return|;
 block|}
 name|bool
 name|isBad
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
-name|ConversionKind
+name|getKind
+argument_list|()
 operator|==
 name|BadConversion
 return|;
@@ -1191,10 +1213,11 @@ block|}
 name|bool
 name|isStandard
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
-name|ConversionKind
+name|getKind
+argument_list|()
 operator|==
 name|StandardConversion
 return|;
@@ -1202,10 +1225,11 @@ block|}
 name|bool
 name|isEllipsis
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
-name|ConversionKind
+name|getKind
+argument_list|()
 operator|==
 name|EllipsisConversion
 return|;
@@ -1213,10 +1237,11 @@ block|}
 name|bool
 name|isAmbiguous
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
-name|ConversionKind
+name|getKind
+argument_list|()
 operator|==
 name|AmbiguousConversion
 return|;
@@ -1224,27 +1249,99 @@ block|}
 name|bool
 name|isUserDefined
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
-name|ConversionKind
+name|getKind
+argument_list|()
 operator|==
 name|UserDefinedConversion
 return|;
 block|}
+comment|/// Determines whether this conversion sequence has been
+comment|/// initialized.  Most operations should never need to query
+comment|/// uninitialized conversions and should assert as above.
+name|bool
+name|isInitialized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ConversionKind
+operator|!=
+name|Uninitialized
+return|;
+block|}
+comment|/// Sets this sequence as a bad conversion for an explicit argument.
 name|void
 name|setBad
-argument_list|()
+argument_list|(
+name|BadConversionSequence
+operator|::
+name|FailureKind
+name|Failure
+argument_list|,
+name|Expr
+operator|*
+name|FromExpr
+argument_list|,
+name|QualType
+name|ToType
+argument_list|)
 block|{
 name|setKind
 argument_list|(
 name|BadConversion
 argument_list|)
 expr_stmt|;
+name|Bad
+operator|.
+name|init
+argument_list|(
+name|Failure
+argument_list|,
+name|FromExpr
+argument_list|,
+name|ToType
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Sets this sequence as a bad conversion for an implicit argument.
+name|void
+name|setBad
+argument_list|(
+name|BadConversionSequence
+operator|::
+name|FailureKind
+name|Failure
+argument_list|,
+name|QualType
+name|FromType
+argument_list|,
+name|QualType
+name|ToType
+argument_list|)
+block|{
+name|setKind
+argument_list|(
+name|BadConversion
+argument_list|)
+expr_stmt|;
+name|Bad
+operator|.
+name|init
+argument_list|(
+name|Failure
+argument_list|,
+name|FromType
+argument_list|,
+name|ToType
+argument_list|)
+expr_stmt|;
 block|}
 name|void
 name|setStandard
-argument_list|()
+parameter_list|()
 block|{
 name|setKind
 argument_list|(
@@ -1254,7 +1351,7 @@ expr_stmt|;
 block|}
 name|void
 name|setEllipsis
-argument_list|()
+parameter_list|()
 block|{
 name|setKind
 argument_list|(
@@ -1264,7 +1361,7 @@ expr_stmt|;
 block|}
 name|void
 name|setUserDefined
-argument_list|()
+parameter_list|()
 block|{
 name|setKind
 argument_list|(
@@ -1274,12 +1371,13 @@ expr_stmt|;
 block|}
 name|void
 name|setAmbiguous
-argument_list|()
+parameter_list|()
 block|{
 if|if
 condition|(
-name|isAmbiguous
-argument_list|()
+name|ConversionKind
+operator|==
+name|AmbiguousConversion
 condition|)
 return|return;
 name|ConversionKind
@@ -1295,36 +1393,30 @@ block|}
 comment|// The result of a comparison between implicit conversion
 comment|// sequences. Use Sema::CompareImplicitConversionSequences to
 comment|// actually perform the comparison.
-decl|enum
+enum|enum
 name|CompareKind
 block|{
 name|Better
-operator|=
+init|=
 operator|-
 literal|1
-operator|,
+block|,
 name|Indistinguishable
-operator|=
+init|=
 literal|0
-operator|,
+block|,
 name|Worse
-operator|=
+init|=
 literal|1
 block|}
-struct|;
+enum|;
 name|void
 name|DebugPrint
 argument_list|()
 specifier|const
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_enum
+struct|;
 enum|enum
 name|OverloadFailureKind
 block|{
@@ -1346,13 +1438,7 @@ comment|/// type is not implicitly convertible to the desired type.
 name|ovl_fail_bad_final_conversion
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
-end_comment
-
-begin_struct
 struct|struct
 name|OverloadCandidate
 block|{
@@ -1512,6 +1598,17 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|I
+operator|->
+name|isInitialized
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
 name|I
 operator|->
 name|isAmbiguous
@@ -1525,18 +1622,10 @@ return|return
 name|false
 return|;
 block|}
-end_struct
-
-begin_comment
-unit|};
+block|}
+struct|;
 comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
-end_comment
-
-begin_comment
 comment|/// overload resolution (C++ 13.3).
-end_comment
-
-begin_decl_stmt
 name|class
 name|OverloadCandidateSet
 range|:
@@ -1633,14 +1722,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

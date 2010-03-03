@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o %t
+comment|// RUN: %clang_cc1 %s -emit-llvm -o - -verify | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -92,16 +92,16 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|// RUN: grep 'define void @f0()' %t
-end_comment
-
 begin_function
 name|void
 name|f0
 parameter_list|()
 block|{}
 end_function
+
+begin_comment
+comment|// CHECK: define void @f0()
+end_comment
 
 begin_function_decl
 name|void
@@ -110,10 +110,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// RUN: grep 'call void @f1()' %t
-end_comment
-
 begin_function
 name|void
 name|f2
@@ -121,6 +117,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// CHECK: call void @f1()
 name|f1
 argument_list|(
 literal|1
@@ -134,7 +131,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define void @f1()' %t
+comment|// CHECK: define void @f1()
 end_comment
 
 begin_function
@@ -145,7 +142,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// RUN: grep 'define .* @f3' %t | not grep -F '...'
+comment|// CHECK: define {{.*}} @f3{{\(\)|\(.*sret.*\)}}
 end_comment
 
 begin_struct
@@ -183,6 +180,41 @@ argument_list|(
 literal|42
 argument_list|)
 expr_stmt|;
+block|}
+comment|//expected-warning {{too many arguments}}
+comment|// Qualifiers on parameter types shouldn't make a difference.
+decl|static
+name|void
+name|f6
+argument_list|(
+specifier|const
+name|float
+name|f
+argument_list|,
+specifier|const
+name|float
+name|g
+argument_list|)
+block|{ }
+name|void
+name|f7
+argument_list|(
+name|float
+name|f
+argument_list|,
+name|float
+name|g
+argument_list|)
+block|{
+name|f6
+argument_list|(
+name|f
+argument_list|,
+name|g
+argument_list|)
+expr_stmt|;
+comment|// CHECK: define void @f7(float{{.*}}, float{{.*}})
+comment|// CHECK: call void @f6(float{{.*}}, float{{.*}})
 block|}
 end_struct
 

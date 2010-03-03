@@ -739,6 +739,8 @@ argument|const CXXRecordDecl *RD
 argument_list|,
 argument|uint64_t Offset
 argument_list|,
+argument|bool IsVirtual
+argument_list|,
 argument|AddressPointsMapTy& AddressPoints
 argument_list|)
 expr_stmt|;
@@ -893,6 +895,9 @@ specifier|const
 name|BaseSubobject
 modifier|&
 name|Base
+parameter_list|,
+name|bool
+name|BaseIsVirtual
 parameter_list|)
 function_decl|;
 name|llvm

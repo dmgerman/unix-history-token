@@ -61,6 +61,7 @@ parameter_list|(
 name|int
 name|x
 parameter_list|,
+comment|// expected-note {{previous declaration is here}}
 name|int
 name|x
 parameter_list|)

@@ -635,6 +635,24 @@ modifier|&
 name|builder
 parameter_list|)
 function_decl|;
+comment|// Generate the entry node of the callee.
+name|void
+name|ProcessCallEnter
+parameter_list|(
+name|GRCallEnterNodeBuilder
+modifier|&
+name|builder
+parameter_list|)
+function_decl|;
+comment|// Generate the first post callsite node.
+name|void
+name|ProcessCallExit
+parameter_list|(
+name|GRCallExitNodeBuilder
+modifier|&
+name|builder
+parameter_list|)
+function_decl|;
 comment|/// EvalAssume - Callback function invoked by the ConstraintManager when
 comment|///  making assumptions about state values.
 specifier|const

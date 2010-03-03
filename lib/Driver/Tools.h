@@ -119,6 +119,15 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|AddMIPSTargetArgs
+argument_list|(
+argument|const ArgList&Args
+argument_list|,
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddX86TargetArgs
 argument_list|(
 argument|const ArgList&Args

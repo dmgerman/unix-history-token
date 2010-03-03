@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt
@@ -161,6 +161,154 @@ end_function
 
 begin_comment
 comment|// expected-warning {{'foo6' redeclared without dllimport attribute: previous dllimport ignored}}
+end_comment
+
+begin_comment
+comment|// PR6269
+end_comment
+
+begin_function
+specifier|inline
+name|void
+name|__declspec
+parameter_list|(
+name|dllexport
+parameter_list|)
+function|foo7
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-warning{{dllexport attribute ignored}}
+end_comment
+
+begin_function
+specifier|inline
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function|foo8
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-warning{{dllimport attribute ignored}}
+end_comment
+
+begin_function
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function|foo9
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-error{{dllimport attribute can be applied only to symbol declaration}}
+end_comment
+
+begin_function_decl
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function_decl|__declspec
+parameter_list|(
+name|dllexport
+parameter_list|)
+function_decl|foo10
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{dllimport attribute ignored}}
+end_comment
+
+begin_function_decl
+name|void
+name|__declspec
+parameter_list|(
+name|dllexport
+parameter_list|)
+function_decl|foo11
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function_decl|foo11
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{dllimport attribute ignored}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__declspec
+argument_list|(
+name|dllexport
+argument_list|)
+name|type1
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-warning{{'dllexport' attribute only applies to variable and function types}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__declspec
+argument_list|(
+name|dllimport
+argument_list|)
+name|type2
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-warning{{'dllimport' attribute only applies to variable and function}}
+end_comment
+
+begin_function_decl
+name|void
+name|__declspec
+parameter_list|(
+name|dllimport
+parameter_list|)
+function_decl|foo12
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|foo12
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-warning {{'foo12' redeclared without dllimport attribute: previous dllimport ignored}}
 end_comment
 
 end_unit

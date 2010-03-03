@@ -427,11 +427,28 @@ name|class
 name|TemplateArgumentListInfo
 decl_stmt|;
 name|class
+name|Type
+decl_stmt|;
+name|class
 name|QualifiedNameType
 decl_stmt|;
 struct_decl|struct
 name|PrintingPolicy
 struct_decl|;
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|CanQual
+expr_stmt|;
+typedef|typedef
+name|CanQual
+operator|<
+name|Type
+operator|>
+name|CanQualType
+expr_stmt|;
 comment|// Provide forward declarations for all of the *Type classes
 define|#
 directive|define
@@ -3987,6 +4004,12 @@ return|return
 name|CanonicalType
 return|;
 block|}
+name|CanQualType
+name|getCanonicalTypeUnqualified
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|// in CanonicalType.h
 name|void
 name|dump
 argument_list|()

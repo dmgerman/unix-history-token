@@ -209,6 +209,13 @@ literal|1
 decl_stmt|;
 comment|/// Control whether the module should be run
 comment|/// through the LLVM Verifier.
+name|unsigned
+name|CXXCtorDtorAliases
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit complete ctors/dtors as linker
+comment|/// aliases to base ctors when possible.
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
@@ -334,6 +341,10 @@ expr_stmt|;
 name|VerifyModule
 operator|=
 literal|1
+expr_stmt|;
+name|CXXCtorDtorAliases
+operator|=
+literal|0
 expr_stmt|;
 name|Inlining
 operator|=

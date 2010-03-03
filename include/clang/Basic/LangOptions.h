@@ -264,12 +264,6 @@ literal|1
 decl_stmt|;
 comment|// block extension to C
 name|unsigned
-name|BlockIntrospection
-range|:
-literal|1
-decl_stmt|;
-comment|// block have ObjC type encodings.
-name|unsigned
 name|EmitAllDecls
 range|:
 literal|1
@@ -573,10 +567,6 @@ name|Blocks
 operator|=
 literal|0
 expr_stmt|;
-name|BlockIntrospection
-operator|=
-literal|0
-expr_stmt|;
 name|EmitAllDecls
 operator|=
 literal|0
@@ -608,7 +598,7 @@ literal|0
 expr_stmt|;
 name|InstantiationDepth
 operator|=
-literal|99
+literal|500
 expr_stmt|;
 name|Optimize
 operator|=

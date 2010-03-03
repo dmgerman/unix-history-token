@@ -974,6 +974,9 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
+name|D
+operator|||
 name|D
 operator|->
 name|isAnonymousNamespace
@@ -982,6 +985,9 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
+operator|!
+name|D
+operator|||
 name|D
 operator|->
 name|getParent
@@ -2279,6 +2285,7 @@ comment|/// definition of a static data member.
 end_comment
 
 begin_expr_stmt
+name|virtual
 name|bool
 name|isOutOfLine
 argument_list|()
@@ -5738,6 +5745,7 @@ comment|/// definition of a member function.
 end_comment
 
 begin_expr_stmt
+name|virtual
 name|bool
 name|isOutOfLine
 argument_list|()
