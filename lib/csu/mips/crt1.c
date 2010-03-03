@@ -194,24 +194,6 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|__gccmain
-parameter_list|(
-name|void
-parameter_list|)
-block|{}
-end_function
-
-begin_function
-name|void
-name|__main
-parameter_list|(
-name|void
-parameter_list|)
-block|{}
-end_function
-
 begin_comment
 comment|/* The entry function. */
 end_comment
