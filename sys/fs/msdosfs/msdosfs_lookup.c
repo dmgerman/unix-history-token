@@ -343,17 +343,6 @@ name|dp
 operator|->
 name|de_pmp
 expr_stmt|;
-if|if
-condition|(
-name|vpp
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|vpp
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -374,6 +363,17 @@ endif|#
 directive|endif
 name|restart
 label|:
+if|if
+condition|(
+name|vpp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * If they are going after the . or .. entry in the root directory, 	 * they won't find it.  DOS filesystems don't have them in the root 	 * directory.  So, we fake it. deget() is in on this scam too. 	 */
 if|if
 condition|(
@@ -1606,11 +1606,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* 		 * Recheck that ".." still points to the inode we 		 * looked up before pdp lock was dropped. 		 */
 name|error
 operator|=
@@ -1636,6 +1643,11 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|)
+expr_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
