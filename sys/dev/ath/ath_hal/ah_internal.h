@@ -1299,6 +1299,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_setInterrupts
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_mask
+parameter_list|)
+define|\
+value|(_ah)->ah_setInterrupts(_ah, _mask)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_eepromDetach
 parameter_list|(
 name|_ah
