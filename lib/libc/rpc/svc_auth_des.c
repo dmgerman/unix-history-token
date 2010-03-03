@@ -2063,22 +2063,22 @@ begin_struct
 struct|struct
 name|bsdcred
 block|{
-name|short
+name|uid_t
 name|uid
 decl_stmt|;
 comment|/* cached uid */
-name|short
+name|gid_t
 name|gid
 decl_stmt|;
 comment|/* cached gid */
-name|short
+name|int
 name|grouplen
 decl_stmt|;
 comment|/* length of cached groups */
-name|short
+name|gid_t
 name|groups
 index|[
-name|NGROUPS
+name|NGRPS
 index|]
 decl_stmt|;
 comment|/* cached groups */
