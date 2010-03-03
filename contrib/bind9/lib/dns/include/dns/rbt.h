@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbt.h,v 1.71.48.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: rbt.h,v 1.71.48.3 2009/10/20 05:06:04 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -273,7 +273,7 @@ name|unsigned
 name|int
 name|attributes
 range|:
-literal|3
+literal|4
 decl_stmt|;
 comment|/*%< range is 0..2 */
 name|unsigned
@@ -299,11 +299,11 @@ decl_stmt|;
 comment|/*%< range is 1..128 */
 name|unsigned
 name|int
-name|padbytes
+name|oldnamelen
 range|:
-literal|9
+literal|8
 decl_stmt|;
-comment|/*%< range is 0..380 */
+comment|/*%< range is 1..255 */
 comment|/*@}*/
 ifdef|#
 directive|ifdef

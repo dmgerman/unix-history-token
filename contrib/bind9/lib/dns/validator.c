@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.164.12.9.8.2 2009/12/31 20:29:21 each Exp $ */
+comment|/* $Id: validator.c,v 1.164.12.11 2009/12/30 06:44:44 each Exp $ */
 end_comment
 
 begin_include

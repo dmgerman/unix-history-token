@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dispatch.c,v 1.155.12.7 2009/04/28 21:39:45 jinmei Exp $ */
+comment|/* $Id: dispatch.c,v 1.155.12.11 2009/12/02 23:26:28 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3254,6 +3254,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*%  * The caller must not hold the qid->lock.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3276,6 +3280,10 @@ init|=
 operator|*
 name|portentryp
 decl_stmt|;
+name|dns_qid_t
+modifier|*
+name|qid
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|disp
@@ -3296,6 +3304,21 @@ operator|->
 name|refs
 operator|>
 literal|0
+argument_list|)
+expr_stmt|;
+name|qid
+operator|=
+name|DNS_QID
+argument_list|(
+name|disp
+argument_list|)
+expr_stmt|;
+name|LOCK
+argument_list|(
+operator|&
+name|qid
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|portentry
@@ -3344,6 +3367,14 @@ operator|*
 name|portentryp
 operator|=
 name|NULL
+expr_stmt|;
+name|UNLOCK
+argument_list|(
+operator|&
+name|qid
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3408,6 +3439,20 @@ condition|)
 block|{
 if|if
 condition|(
+name|dispsock
+operator|->
+name|portentry
+operator|!=
+name|NULL
+operator|&&
+name|dispsock
+operator|->
+name|portentry
+operator|->
+name|port
+operator|==
+name|port
+operator|&&
 name|isc_sockaddr_equal
 argument_list|(
 name|dest
@@ -3417,14 +3462,6 @@ name|dispsock
 operator|->
 name|host
 argument_list|)
-operator|&&
-name|dispsock
-operator|->
-name|portentry
-operator|->
-name|port
-operator|==
-name|port
 condition|)
 return|return
 operator|(
@@ -9322,6 +9359,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * We only increase the maxbuffers to avoid accidental buffer 		 * shortage.  Ideally we'd separate the manager-wide maximum 		 * from per-dispatch limits and respect the latter within the 		 * global limit.  But at this moment that's deemed to be 		 * overkilling and isn't worth additional implementation 		 * complexity. 		 */
+if|if
+condition|(
+name|maxbuffers
+operator|>
+name|mgr
+operator|->
+name|maxbuffers
+condition|)
+block|{
 name|isc_mempool_setmaxalloc
 argument_list|(
 name|mgr
@@ -9337,6 +9384,7 @@ name|maxbuffers
 operator|=
 name|maxbuffers
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

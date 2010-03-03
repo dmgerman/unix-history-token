@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2005-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2005-2007, 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: sha2.c,v 1.13.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: sha2.c,v 1.13.332.4 2010/01/15 23:47:34 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1299,6 +1299,30 @@ operator|->
 name|bitcount
 operator|=
 literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|isc_sha224_invalidate
+parameter_list|(
+name|isc_sha224_t
+modifier|*
+name|context
+parameter_list|)
+block|{
+name|memset
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isc_sha224_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2862,6 +2886,30 @@ end_endif
 begin_comment
 comment|/* ISC_SHA2_UNROLL_TRANSFORM */
 end_comment
+
+begin_function
+name|void
+name|isc_sha256_invalidate
+parameter_list|(
+name|isc_sha256_t
+modifier|*
+name|context
+parameter_list|)
+block|{
+name|memset
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isc_sha256_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -4939,6 +4987,30 @@ end_comment
 
 begin_function
 name|void
+name|isc_sha512_invalidate
+parameter_list|(
+name|isc_sha512_t
+modifier|*
+name|context
+parameter_list|)
+block|{
+name|memset
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isc_sha512_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|isc_sha512_update
 parameter_list|(
 name|isc_sha512_t
@@ -5872,6 +5944,30 @@ literal|1
 index|]
 operator|=
 literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|isc_sha384_invalidate
+parameter_list|(
+name|isc_sha384_t
+modifier|*
+name|context
+parameter_list|)
+block|{
+name|memset
+argument_list|(
+name|context
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isc_sha384_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -506,6 +506,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_sha256' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_SHA256
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_sha512' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_SHA512
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 
@@ -856,17 +878,6 @@ define|#
 directive|define
 name|HAVE_UNISTD_H
 value|1
-end_define
-
-begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LT_OBJDIR
-value|".libs/"
 end_define
 
 begin_comment

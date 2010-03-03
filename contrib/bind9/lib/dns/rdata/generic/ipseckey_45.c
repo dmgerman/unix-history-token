@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005, 2007, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: ipseckey_45.c,v 1.4.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: ipseckey_45.c,v 1.4.332.3 2009/09/18 21:55:48 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -1147,6 +1147,15 @@ name|source
 argument_list|,
 operator|&
 name|region
+argument_list|)
+expr_stmt|;
+name|isc_buffer_forward
+argument_list|(
+name|source
+argument_list|,
+name|region
+operator|.
+name|length
 argument_list|)
 expr_stmt|;
 return|return
