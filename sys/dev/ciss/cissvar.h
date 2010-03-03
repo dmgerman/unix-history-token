@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|CISS_MAX_REQUESTS
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -663,6 +663,11 @@ directive|define
 name|CISS_FLAG_RUNNING
 value|(1<<3)
 comment|/* driver is running (interrupts usable) */
+define|#
+directive|define
+name|CISS_FLAG_BUSY
+value|(1<<4)
+comment|/* no free commands */
 define|#
 directive|define
 name|CISS_FLAG_FAKE_SYNCH
