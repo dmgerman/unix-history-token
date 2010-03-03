@@ -1270,7 +1270,9 @@ name|enum
 name|lapic_clock
 name|lapic_setup_clock
 parameter_list|(
-name|void
+name|enum
+name|lapic_clock
+name|srcsdes
 parameter_list|)
 function_decl|;
 end_function_decl
