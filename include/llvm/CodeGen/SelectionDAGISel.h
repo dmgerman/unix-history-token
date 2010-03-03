@@ -256,24 +256,33 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 block|{}
+comment|/// PreprocessISelDAG - This hook allows targets to hack on the graph before
+comment|/// instruction selection starts.
 name|virtual
 name|void
-name|InstructionSelect
+name|PreprocessISelDAG
 argument_list|()
+block|{}
+comment|/// PostprocessISelDAG() - This hook allows the target to hack on the graph
+comment|/// right after selection.
+name|virtual
+name|void
+name|PostprocessISelDAG
+argument_list|()
+block|{}
+comment|/// Select - Main hook targets implement to select a node.
+name|virtual
+name|SDNode
+operator|*
+name|Select
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
 operator|=
 literal|0
 block|;
-name|void
-name|SelectRootInit
-argument_list|()
-block|{
-name|DAGSize
-operator|=
-name|CurDAG
-operator|->
-name|AssignTopologicalOrder
-argument_list|()
-block|;   }
 comment|/// SelectInlineAsmMemoryOperand - Select the specified address as a target
 comment|/// addressing mode, according to the specified constraint code.  If this does
 comment|/// not match or is not implemented, return true.  The resultant operands
@@ -310,7 +319,6 @@ specifier|const
 block|;
 comment|/// IsLegalToFold - Returns true if the specific operand node N of
 comment|/// U can be folded during instruction selection that starts at Root.
-name|virtual
 name|bool
 name|IsLegalToFold
 argument_list|(
@@ -319,6 +327,8 @@ argument_list|,
 argument|SDNode *U
 argument_list|,
 argument|SDNode *Root
+argument_list|,
+argument|bool IgnoreChains = false
 argument_list|)
 specifier|const
 block|;
@@ -330,6 +340,208 @@ operator|*
 name|CreateTargetHazardRecognizer
 argument_list|()
 block|;
+comment|// Opcodes used by the DAG state machine:
+block|enum
+name|BuiltinOpcodes
+block|{
+name|OPC_Scope
+block|,
+name|OPC_RecordNode
+block|,
+name|OPC_RecordChild0
+block|,
+name|OPC_RecordChild1
+block|,
+name|OPC_RecordChild2
+block|,
+name|OPC_RecordChild3
+block|,
+name|OPC_RecordChild4
+block|,
+name|OPC_RecordChild5
+block|,
+name|OPC_RecordChild6
+block|,
+name|OPC_RecordChild7
+block|,
+name|OPC_RecordMemRef
+block|,
+name|OPC_CaptureFlagInput
+block|,
+name|OPC_MoveChild
+block|,
+name|OPC_MoveParent
+block|,
+name|OPC_CheckSame
+block|,
+name|OPC_CheckPatternPredicate
+block|,
+name|OPC_CheckPredicate
+block|,
+name|OPC_CheckOpcode
+block|,
+name|OPC_SwitchOpcode
+block|,
+name|OPC_CheckType
+block|,
+name|OPC_SwitchType
+block|,
+name|OPC_CheckChild0Type
+block|,
+name|OPC_CheckChild1Type
+block|,
+name|OPC_CheckChild2Type
+block|,
+name|OPC_CheckChild3Type
+block|,
+name|OPC_CheckChild4Type
+block|,
+name|OPC_CheckChild5Type
+block|,
+name|OPC_CheckChild6Type
+block|,
+name|OPC_CheckChild7Type
+block|,
+name|OPC_CheckInteger
+block|,
+name|OPC_CheckCondCode
+block|,
+name|OPC_CheckValueType
+block|,
+name|OPC_CheckComplexPat
+block|,
+name|OPC_CheckAndImm
+block|,
+name|OPC_CheckOrImm
+block|,
+name|OPC_CheckFoldableChainNode
+block|,
+name|OPC_EmitInteger
+block|,
+name|OPC_EmitRegister
+block|,
+name|OPC_EmitConvertToTarget
+block|,
+name|OPC_EmitMergeInputChains
+block|,
+name|OPC_EmitCopyToReg
+block|,
+name|OPC_EmitNodeXForm
+block|,
+name|OPC_EmitNode
+block|,
+name|OPC_MorphNodeTo
+block|,
+name|OPC_MarkFlagResults
+block|,
+name|OPC_CompleteMatch
+block|}
+block|;      enum
+block|{
+name|OPFL_None
+operator|=
+literal|0
+block|,
+comment|// Node has no chain or flag input and isn't variadic.
+name|OPFL_Chain
+operator|=
+literal|1
+block|,
+comment|// Node has a chain input.
+name|OPFL_FlagInput
+operator|=
+literal|2
+block|,
+comment|// Node has a flag input.
+name|OPFL_FlagOutput
+operator|=
+literal|4
+block|,
+comment|// Node has a flag output.
+name|OPFL_MemRefs
+operator|=
+literal|8
+block|,
+comment|// Node gets accumulated MemRefs.
+name|OPFL_Variadic0
+operator|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 0 fixed inputs.
+name|OPFL_Variadic1
+operator|=
+literal|2
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 1 fixed inputs.
+name|OPFL_Variadic2
+operator|=
+literal|3
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 2 fixed inputs.
+name|OPFL_Variadic3
+operator|=
+literal|4
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 3 fixed inputs.
+name|OPFL_Variadic4
+operator|=
+literal|5
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 4 fixed inputs.
+name|OPFL_Variadic5
+operator|=
+literal|6
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 5 fixed inputs.
+name|OPFL_Variadic6
+operator|=
+literal|7
+operator|<<
+literal|4
+block|,
+comment|// Node is variadic, root has 6 fixed inputs.
+name|OPFL_VariadicInfo
+operator|=
+name|OPFL_Variadic6
+block|}
+block|;
+comment|/// getNumFixedFromVariadicInfo - Transform an EmitNode flags word into the
+comment|/// number of fixed arity values that should be skipped when copying from the
+comment|/// root.
+specifier|static
+specifier|inline
+name|int
+name|getNumFixedFromVariadicInfo
+argument_list|(
+argument|unsigned Flags
+argument_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|Flags
+operator|&
+name|OPFL_VariadicInfo
+operator|)
+operator|>>
+literal|4
+operator|)
+operator|-
+literal|1
+return|;
+block|}
 name|protected
 operator|:
 comment|/// DAGSize - Size of DAG being instruction selected.
@@ -337,6 +549,173 @@ comment|///
 name|unsigned
 name|DAGSize
 block|;
+comment|/// ISelPosition - Node iterator marking the current position of
+comment|/// instruction selection as it procedes through the topologically-sorted
+comment|/// node list.
+name|SelectionDAG
+operator|::
+name|allnodes_iterator
+name|ISelPosition
+block|;
+comment|/// ISelUpdater - helper class to handle updates of the
+comment|/// instruction selection graph.
+name|class
+name|ISelUpdater
+operator|:
+name|public
+name|SelectionDAG
+operator|::
+name|DAGUpdateListener
+block|{
+name|SelectionDAG
+operator|::
+name|allnodes_iterator
+operator|&
+name|ISelPosition
+block|;
+name|public
+operator|:
+name|explicit
+name|ISelUpdater
+argument_list|(
+name|SelectionDAG
+operator|::
+name|allnodes_iterator
+operator|&
+name|isp
+argument_list|)
+operator|:
+name|ISelPosition
+argument_list|(
+argument|isp
+argument_list|)
+block|{}
+comment|/// NodeDeleted - Handle nodes deleted from the graph. If the
+comment|/// node being deleted is the current ISelPosition node, update
+comment|/// ISelPosition.
+comment|///
+name|virtual
+name|void
+name|NodeDeleted
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SDNode *E
+argument_list|)
+block|{
+if|if
+condition|(
+name|ISelPosition
+operator|==
+name|SelectionDAG
+operator|::
+name|allnodes_iterator
+argument_list|(
+name|N
+argument_list|)
+condition|)
+operator|++
+name|ISelPosition
+expr_stmt|;
+block|}
+comment|/// NodeUpdated - Ignore updates for now.
+name|virtual
+name|void
+name|NodeUpdated
+argument_list|(
+argument|SDNode *N
+argument_list|)
+block|{}
+expr|}
+block|;
+comment|/// ReplaceUses - replace all uses of the old node F with the use
+comment|/// of the new node T.
+name|void
+name|ReplaceUses
+argument_list|(
+argument|SDValue F
+argument_list|,
+argument|SDValue T
+argument_list|)
+block|{
+name|ISelUpdater
+name|ISU
+argument_list|(
+name|ISelPosition
+argument_list|)
+block|;
+name|CurDAG
+operator|->
+name|ReplaceAllUsesOfValueWith
+argument_list|(
+name|F
+argument_list|,
+name|T
+argument_list|,
+operator|&
+name|ISU
+argument_list|)
+block|;   }
+comment|/// ReplaceUses - replace all uses of the old nodes F with the use
+comment|/// of the new nodes T.
+name|void
+name|ReplaceUses
+argument_list|(
+argument|const SDValue *F
+argument_list|,
+argument|const SDValue *T
+argument_list|,
+argument|unsigned Num
+argument_list|)
+block|{
+name|ISelUpdater
+name|ISU
+argument_list|(
+name|ISelPosition
+argument_list|)
+block|;
+name|CurDAG
+operator|->
+name|ReplaceAllUsesOfValuesWith
+argument_list|(
+name|F
+argument_list|,
+name|T
+argument_list|,
+name|Num
+argument_list|,
+operator|&
+name|ISU
+argument_list|)
+block|;   }
+comment|/// ReplaceUses - replace all uses of the old node F with the use
+comment|/// of the new node T.
+name|void
+name|ReplaceUses
+argument_list|(
+argument|SDNode *F
+argument_list|,
+argument|SDNode *T
+argument_list|)
+block|{
+name|ISelUpdater
+name|ISU
+argument_list|(
+name|ISelPosition
+argument_list|)
+block|;
+name|CurDAG
+operator|->
+name|ReplaceAllUsesWith
+argument_list|(
+name|F
+argument_list|,
+name|T
+argument_list|,
+operator|&
+name|ISU
+argument_list|)
+block|;   }
 comment|/// SelectInlineAsmMemoryOperands - Calls to this are automatically generated
 comment|/// by tblgen.  Others should not call it.
 name|void
@@ -352,6 +731,8 @@ operator|&
 name|Ops
 argument_list|)
 block|;
+name|public
+operator|:
 comment|// Calls to these predicates are generated by tblgen.
 name|bool
 name|CheckAndMask
@@ -398,8 +779,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// CheckNodePredicate - This function is generated by tblgen in the
-comment|/// target.  It runs node predicate #PredNo and returns true if it succeeds or
+comment|/// CheckNodePredicate - This function is generated by tblgen in the target.
+comment|/// It runs node predicate number PredNo and returns true if it succeeds or
 comment|/// false if it fails.  The number is a private implementation
 comment|/// detail to the code tblgen produces.
 name|virtual
@@ -423,6 +804,64 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+name|bool
+name|CheckComplexPattern
+argument_list|(
+argument|SDNode *Root
+argument_list|,
+argument|SDValue N
+argument_list|,
+argument|unsigned PatternNo
+argument_list|,
+argument|SmallVectorImpl<SDValue>&Result
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Tblgen should generate the implementation of this!"
+argument_list|)
+block|;
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|SDValue
+name|RunSDNodeXForm
+argument_list|(
+argument|SDValue V
+argument_list|,
+argument|unsigned XFormNo
+argument_list|)
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Tblgen shoudl generate this!"
+argument_list|)
+block|;
+return|return
+name|SDValue
+argument_list|()
+return|;
+block|}
+name|SDNode
+operator|*
+name|SelectCodeCommon
+argument_list|(
+argument|SDNode *NodeToMatch
+argument_list|,
+argument|const unsigned char *MatcherTable
+argument_list|,
+argument|unsigned TableSize
+argument_list|)
+block|;
+name|private
+operator|:
 comment|// Calls to these functions are generated by tblgen.
 name|SDNode
 operator|*
@@ -469,6 +908,27 @@ argument_list|)
 block|;
 name|private
 operator|:
+name|void
+name|DoInstructionSelection
+argument_list|()
+block|;
+name|SDNode
+operator|*
+name|MorphNode
+argument_list|(
+argument|SDNode *Node
+argument_list|,
+argument|unsigned TargetOpc
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|const SDValue *Ops
+argument_list|,
+argument|unsigned NumOps
+argument_list|,
+argument|unsigned EmitNodeInfo
+argument_list|)
+block|;
 name|void
 name|SelectAllBasicBlocks
 argument_list|(
@@ -558,9 +1018,34 @@ name|ScheduleDAGSDNodes
 operator|*
 name|CreateScheduler
 argument_list|()
-block|; }
-decl_stmt|;
-block|}
+block|;
+comment|/// OpcodeOffset - This is a cache used to dispatch efficiently into isel
+comment|/// state machines that start with a OPC_SwitchOpcode node.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|OpcodeOffset
+block|;
+name|void
+name|UpdateChainsAndFlags
+argument_list|(
+argument|SDNode *NodeToMatch
+argument_list|,
+argument|SDValue InputChain
+argument_list|,
+argument|const SmallVectorImpl<SDNode*>&ChainNodesMatched
+argument_list|,
+argument|SDValue InputFlag
+argument_list|,
+argument|const SmallVectorImpl<SDNode*>&F
+argument_list|,
+argument|bool isMorphNodeTo
+argument_list|)
+block|;      }
+block|;  }
 end_decl_stmt
 
 begin_endif

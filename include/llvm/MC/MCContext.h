@@ -139,7 +139,7 @@ argument_list|()
 expr_stmt|;
 comment|/// @name Symbol Managment
 comment|/// @{
-comment|/// CreateSymbol - Create a new symbol with the specified @param Name.
+comment|/// CreateSymbol - Create a new symbol with the specified @p Name.
 comment|///
 comment|/// @param Name - The symbol name, which must be unique across all symbols.
 name|MCSymbol
@@ -151,12 +151,10 @@ name|Name
 parameter_list|)
 function_decl|;
 comment|/// GetOrCreateSymbol - Lookup the symbol inside with the specified
-comment|/// @param Name.  If it exists, return it.  If not, create a forward
+comment|/// @p Name.  If it exists, return it.  If not, create a forward
 comment|/// reference and return it.
 comment|///
 comment|/// @param Name - The symbol name, which must be unique across all symbols.
-comment|/// @param IsTemporary - Whether this symbol is an assembler temporary,
-comment|/// which should not survive into the symbol table for the translation unit.
 name|MCSymbol
 modifier|*
 name|GetOrCreateSymbol
@@ -176,7 +174,7 @@ name|Name
 parameter_list|)
 function_decl|;
 comment|/// CreateTemporarySymbol - Create a new temporary symbol with the specified
-comment|/// @param Name.
+comment|/// @p Name.
 comment|///
 comment|/// @param Name - The symbol name, for debugging purposes only, temporary
 comment|/// symbols do not surive assembly. If non-empty the name must be unique
@@ -191,7 +189,7 @@ init|=
 literal|""
 parameter_list|)
 function_decl|;
-comment|/// LookupSymbol - Get the symbol for @param Name, or null.
+comment|/// LookupSymbol - Get the symbol for \p Name, or null.
 name|MCSymbol
 modifier|*
 name|LookupSymbol

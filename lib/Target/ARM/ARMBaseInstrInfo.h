@@ -971,13 +971,11 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|isIdentical
+name|produceSameValue
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr *MI0
 argument_list|,
-argument|const MachineInstr *Other
-argument_list|,
-argument|const MachineRegisterInfo *MRI
+argument|const MachineInstr *MI1
 argument_list|)
 specifier|const
 block|; }

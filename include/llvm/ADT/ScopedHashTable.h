@@ -150,7 +150,15 @@ name|K
 operator|,
 name|typename
 name|V
+operator|,
+name|typename
+name|KInfo
+operator|=
+name|DenseMapInfo
+operator|<
+name|K
 operator|>
+expr|>
 name|class
 name|ScopedHashTable
 expr_stmt|;
@@ -161,7 +169,15 @@ name|K
 operator|,
 name|typename
 name|V
+operator|,
+name|typename
+name|KInfo
+operator|=
+name|DenseMapInfo
+operator|<
+name|K
 operator|>
+expr|>
 name|class
 name|ScopedHashTableVal
 block|{
@@ -293,7 +309,15 @@ name|K
 block|,
 name|typename
 name|V
+block|,
+name|typename
+name|KInfo
+operator|=
+name|DenseMapInfo
+operator|<
+name|K
 operator|>
+expr|>
 name|class
 name|ScopedHashTableScope
 block|{
@@ -303,6 +327,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|&
 name|HT
@@ -319,6 +345,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
 name|LastValInScope
@@ -348,6 +376,8 @@ operator|<
 name|K
 argument_list|,
 name|V
+argument_list|,
+name|KInfo
 operator|>
 operator|&
 name|HT
@@ -366,6 +396,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 block|;
 name|ScopedHashTableVal
@@ -373,6 +405,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
 name|getLastValInScope
@@ -387,13 +421,15 @@ name|setLastValInScope
 argument_list|(
 argument|ScopedHashTableVal<K
 argument_list|,
-argument|V> *Val
+argument|V
+argument_list|,
+argument|KInfo> *Val
 argument_list|)
 block|{
 name|LastValInScope
 operator|=
 name|Val
-block|; }
+block|;   }
 expr|}
 block|;
 name|template
@@ -403,7 +439,15 @@ name|K
 block|,
 name|typename
 name|V
+block|,
+name|typename
+name|KInfo
+operator|=
+name|DenseMapInfo
+operator|<
+name|K
 operator|>
+expr|>
 name|class
 name|ScopedHashTableIterator
 block|{
@@ -412,6 +456,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
 name|Node
@@ -425,6 +471,8 @@ operator|<
 name|K
 argument_list|,
 name|V
+argument_list|,
+name|KInfo
 operator|>
 operator|*
 name|node
@@ -570,6 +618,9 @@ name|K
 block|,
 name|typename
 name|V
+block|,
+name|typename
+name|KInfo
 operator|>
 name|class
 name|ScopedHashTable
@@ -583,8 +634,12 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
+block|,
+name|KInfo
 operator|>
 name|TopLevelMap
 block|;
@@ -593,6 +648,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
 name|CurScope
@@ -622,6 +679,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 block|;
 name|public
@@ -652,6 +711,38 @@ operator|&&
 literal|"Scope imbalance!"
 argument_list|)
 block|;   }
+name|bool
+name|count
+argument_list|(
+argument|const K&Key
+argument_list|)
+specifier|const
+block|{
+return|return
+name|TopLevelMap
+operator|.
+name|count
+argument_list|(
+name|Key
+argument_list|)
+return|;
+block|}
+name|V
+name|lookup
+argument_list|(
+argument|const K&Key
+argument_list|)
+block|{
+return|return
+name|TopLevelMap
+index|[
+name|Key
+index|]
+operator|.
+name|getValue
+argument_list|()
+return|;
+block|}
 name|void
 name|insert
 argument_list|(
@@ -672,6 +763,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
 operator|&
@@ -690,6 +783,8 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|(
 name|CurScope
@@ -717,6 +812,8 @@ operator|<
 name|K
 operator|,
 name|V
+operator|,
+name|KInfo
 operator|>
 name|iterator
 expr_stmt|;
@@ -747,8 +844,12 @@ operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|*
+block|,
+name|KInfo
 operator|>
 operator|::
 name|iterator
@@ -794,12 +895,17 @@ name|K
 block|,
 name|typename
 name|V
+block|,
+name|typename
+name|KInfo
 operator|>
 name|ScopedHashTableScope
 operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|::
 name|ScopedHashTableScope
@@ -809,6 +915,8 @@ operator|<
 name|K
 argument_list|,
 name|V
+argument_list|,
+name|KInfo
 operator|>
 operator|&
 name|ht
@@ -842,12 +950,17 @@ name|K
 block|,
 name|typename
 name|V
+block|,
+name|typename
+name|KInfo
 operator|>
 name|ScopedHashTableScope
 operator|<
 name|K
 block|,
 name|V
+block|,
+name|KInfo
 operator|>
 operator|::
 operator|~
@@ -879,6 +992,8 @@ operator|<
 name|K
 operator|,
 name|V
+operator|,
+name|KInfo
 operator|>
 operator|*
 name|ThisEntry
@@ -934,6 +1049,8 @@ operator|<
 name|K
 operator|,
 name|V
+operator|,
+name|KInfo
 operator|>
 operator|*
 operator|&

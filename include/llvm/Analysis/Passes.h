@@ -173,16 +173,6 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createAndersensPass - This pass implements Andersen's interprocedural alias
-comment|// analysis.
-comment|//
-name|ModulePass
-modifier|*
-name|createAndersensPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
 comment|// createProfileLoaderPass - This pass loads information from a profile dump
 comment|// file.
 comment|//

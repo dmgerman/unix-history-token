@@ -846,7 +846,7 @@ expr_stmt|;
 name|ReverseDepMapType
 name|ReverseLocalDeps
 decl_stmt|;
-comment|// A reverse mapping form dependencies to the non-local dependees.
+comment|// A reverse mapping from dependencies to the non-local dependees.
 name|ReverseDepMapType
 name|ReverseNonLocalDeps
 decl_stmt|;
@@ -986,6 +986,13 @@ name|Value
 modifier|*
 name|Ptr
 parameter_list|)
+function_decl|;
+comment|/// invalidateCachedPredecessors - Clear the PredIteratorCache info.
+comment|/// This needs to be done when the CFG changes, e.g., due to splitting
+comment|/// critical edges.
+name|void
+name|invalidateCachedPredecessors
+parameter_list|()
 function_decl|;
 name|private
 label|:

@@ -480,11 +480,6 @@ modifier|*
 name|createGVNPass
 parameter_list|(
 name|bool
-name|NoPRE
-init|=
-name|false
-parameter_list|,
-name|bool
 name|NoLoads
 init|=
 name|false

@@ -132,6 +132,8 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|bool DisableVerify
 argument_list|)
 block|;
 name|virtual

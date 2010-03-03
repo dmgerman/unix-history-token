@@ -190,8 +190,9 @@ comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
 block|;
-comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory operands.
-comment|///                  This may require setting a feature bit in the processor.
+comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
+comment|///                  operands. This may require setting a feature bit in the
+comment|///                  processor.
 name|bool
 name|HasVectorUAMem
 block|;

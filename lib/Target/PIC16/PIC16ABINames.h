@@ -618,6 +618,7 @@ operator|+
 name|tag
 return|;
 block|}
+comment|// Get the retval label for the given function.
 specifier|static
 name|std
 operator|::
@@ -653,6 +654,7 @@ operator|+
 name|tag
 return|;
 block|}
+comment|// Get the argument label for the given function.
 specifier|static
 name|std
 operator|::
@@ -688,6 +690,7 @@ operator|+
 name|tag
 return|;
 block|}
+comment|// Get the tempdata label for the given function.
 specifier|static
 name|std
 operator|::
@@ -1111,6 +1114,140 @@ return|return
 name|false
 return|;
 block|}
+comment|// Currently names of libcalls are assigned during TargetLowering
+comment|// object construction. There is no provision to change the when the
+comment|// code for a function IL function being generated.
+comment|// So we have to change these names while printing assembly.
+comment|// We need to do that mainly for names related to intrinsics. This
+comment|// function returns true if a name needs to be cloned.
+specifier|inline
+specifier|static
+name|bool
+name|isIntrinsicStuff
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+comment|// Return true if the name contains LIBCALL marker, or a MemIntrinisc.
+comment|// these are mainly ARGS_LABEL, RET_LABEL, and the LIBCALL name itself.
+if|if
+condition|(
+operator|(
+name|Name
+operator|.
+name|find
+argument_list|(
+name|getTagName
+argument_list|(
+name|LIBCALL
+argument_list|)
+argument_list|)
+operator|!=
+name|std
+operator|::
+name|string
+operator|::
+name|npos
+operator|)
+operator|||
+name|isMemIntrinsic
+argument_list|(
+name|Name
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+comment|// Rename the name for IL.
+specifier|inline
+specifier|static
+name|std
+operator|::
+name|string
+name|Rename
+argument_list|(
+argument|const std::string&Name
+argument_list|)
+block|{
+name|std
+operator|::
+name|string
+name|Newname
+block|;
+comment|// If its a label (LIBCALL+Func+LABEL), change it to
+comment|// (LIBCALL+Func+IL+LABEL).
+name|TAGS
+name|id
+operator|=
+name|getSymbolTag
+argument_list|(
+name|Name
+argument_list|)
+block|;
+if|if
+condition|(
+name|id
+operator|==
+name|ARGS_LABEL
+operator|||
+name|id
+operator|==
+name|RET_LABEL
+condition|)
+block|{
+name|std
+operator|::
+name|size_t
+name|pos
+operator|=
+name|Name
+operator|.
+name|find
+argument_list|(
+name|getTagName
+argument_list|(
+name|id
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Newname
+operator|=
+name|Name
+operator|.
+name|substr
+argument_list|(
+literal|0
+argument_list|,
+name|pos
+argument_list|)
+operator|+
+literal|".IL"
+operator|+
+name|getTagName
+argument_list|(
+name|id
+argument_list|)
+expr_stmt|;
+return|return
+name|Newname
+return|;
+block|}
+comment|// Else, just append IL to name.
+return|return
+name|Name
+operator|+
+literal|".IL"
+return|;
+block|}
 specifier|inline
 specifier|static
 name|bool
@@ -1402,6 +1539,90 @@ argument_list|)
 block|{
 return|return
 literal|"0x4"
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns the name of clone of a function.
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|string
+name|getCloneFnName
+argument_list|(
+argument|const std::string&Func
+argument_list|)
+block|{
+return|return
+operator|(
+name|Func
+operator|+
+literal|".IL"
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Returns the name of clone of a variable.
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|string
+name|getCloneVarName
+argument_list|(
+argument|const std::string&Fn
+argument_list|,
+argument|const std::string&Var
+argument_list|)
+block|{
+name|std
+operator|::
+name|string
+name|cloneVarName
+operator|=
+name|Var
+block|;
+comment|// These vars are named like fun.auto.var.
+comment|// Just replace the function name, with clone function name.
+name|std
+operator|::
+name|string
+name|cloneFnName
+operator|=
+name|getCloneFnName
+argument_list|(
+name|Fn
+argument_list|)
+block|;
+name|cloneVarName
+operator|.
+name|replace
+argument_list|(
+name|cloneVarName
+operator|.
+name|find
+argument_list|(
+name|Fn
+argument_list|)
+argument_list|,
+name|Fn
+operator|.
+name|length
+argument_list|()
+argument_list|,
+name|cloneFnName
+argument_list|)
+block|;
+return|return
+name|cloneVarName
 return|;
 block|}
 end_expr_stmt

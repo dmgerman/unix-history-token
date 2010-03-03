@@ -234,8 +234,9 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// PHITranslateValue - PHI translate the current address up the CFG from
-comment|/// CurBB to Pred, updating our state the reflect any needed changes.  This
-comment|/// returns true on failure and sets Addr to null.
+comment|/// CurBB to Pred, updating our state to reflect any needed changes.  If the
+comment|/// dominator tree DT is non-null, the translated value must dominate
+comment|/// PredBB.  This returns true on failure and sets Addr to null.
 name|bool
 name|PHITranslateValue
 parameter_list|(
@@ -246,6 +247,11 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|PredBB
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 parameter_list|)
 function_decl|;
 comment|/// PHITranslateWithInsertion - PHI translate this value into the specified
@@ -311,33 +317,13 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|PredBB
-parameter_list|)
-function_decl|;
-comment|/// GetAvailablePHITranslatedSubExpr - Return the value computed by
-comment|/// PHITranslateSubExpr if it dominates PredBB, otherwise return null.
-name|Value
-modifier|*
-name|GetAvailablePHITranslatedSubExpr
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|,
-name|BasicBlock
-operator|*
-name|CurBB
-argument_list|,
-name|BasicBlock
-operator|*
-name|PredBB
-argument_list|,
+parameter_list|,
 specifier|const
 name|DominatorTree
-operator|&
+modifier|*
 name|DT
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// InsertPHITranslatedSubExpr - Insert a computation of the PHI translated
 comment|/// version of 'V' for the edge PredBB->CurBB into the end of the PredBB
 comment|/// block.  All newly created instructions are added to the NewInsts list.

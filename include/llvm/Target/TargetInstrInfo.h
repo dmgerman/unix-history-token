@@ -76,19 +76,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmInfo
-decl_stmt|;
-name|class
-name|TargetRegisterClass
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
+name|CalleeSavedInfo
 decl_stmt|;
 name|class
 name|LiveVariables
 decl_stmt|;
 name|class
-name|CalleeSavedInfo
+name|MCAsmInfo
+decl_stmt|;
+name|class
+name|MachineMemOperand
 decl_stmt|;
 name|class
 name|SDNode
@@ -97,7 +94,10 @@ name|class
 name|SelectionDAG
 decl_stmt|;
 name|class
-name|MachineMemOperand
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
 decl_stmt|;
 name|template
 operator|<
@@ -796,28 +796,22 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// isIdentical - Return true if two instructions are identical. This differs
-comment|/// from MachineInstr::isIdenticalTo() in that it does not require the
-comment|/// virtual destination registers to be the same. This is used by MachineLICM
-comment|/// and other MI passes to perform CSE.
+comment|/// produceSameValue - Return true if two machine instructions would produce
+comment|/// identical values. By default, this is only true when the two instructions
+comment|/// are deemed identical except for defs.
 name|virtual
 name|bool
-name|isIdentical
+name|produceSameValue
 argument_list|(
 specifier|const
 name|MachineInstr
 operator|*
-name|MI
+name|MI0
 argument_list|,
 specifier|const
 name|MachineInstr
 operator|*
-name|Other
-argument_list|,
-specifier|const
-name|MachineRegisterInfo
-operator|*
-name|MRI
+name|MI1
 argument_list|)
 decl|const
 init|=
@@ -1798,13 +1792,11 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|isIdentical
+name|produceSameValue
 argument_list|(
-argument|const MachineInstr *MI
+argument|const MachineInstr *MI0
 argument_list|,
-argument|const MachineInstr *Other
-argument_list|,
-argument|const MachineRegisterInfo *MRI
+argument|const MachineInstr *MI1
 argument_list|)
 specifier|const
 block|;

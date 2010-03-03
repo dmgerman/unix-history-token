@@ -1228,14 +1228,6 @@ name|iterator
 name|getFirstTerminator
 parameter_list|()
 function_decl|;
-comment|/// isOnlyReachableViaFallthough - Return true if this basic block has
-comment|/// exactly one predecessor and the control transfer mechanism between
-comment|/// the predecessor and this block is a fall-through.
-name|bool
-name|isOnlyReachableByFallthrough
-argument_list|()
-specifier|const
-expr_stmt|;
 name|void
 name|pop_front
 parameter_list|()

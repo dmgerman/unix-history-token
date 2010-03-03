@@ -4968,8 +4968,6 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
-argument_list|,
-argument|unsigned Order
 argument_list|)
 expr_stmt|;
 comment|/// LowerCall - This hook must be implemented to lower calls into the

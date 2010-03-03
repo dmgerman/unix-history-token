@@ -372,6 +372,14 @@ argument|unsigned OpNum
 argument_list|)
 block|;
 name|void
+name|printMandatoryPredicateOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|;
+name|void
 name|printSBitModifierOperand
 argument_list|(
 argument|const MCInst *MI

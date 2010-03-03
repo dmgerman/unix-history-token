@@ -812,7 +812,7 @@ comment|/*--... Operations on execution engines ................................
 end_comment
 
 begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t */
+comment|/* llmodule -> ExecutionEngine.t */
 end_comment
 
 begin_function
@@ -820,8 +820,8 @@ name|CAMLprim
 name|LLVMExecutionEngineRef
 name|llvm_ee_create
 parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
+name|LLVMModuleRef
+name|M
 parameter_list|)
 block|{
 name|LLVMExecutionEngineRef
@@ -833,12 +833,12 @@ name|Error
 decl_stmt|;
 if|if
 condition|(
-name|LLVMCreateExecutionEngine
+name|LLVMCreateExecutionEngineForModule
 argument_list|(
 operator|&
 name|Interp
 argument_list|,
-name|MP
+name|M
 argument_list|,
 operator|&
 name|Error
@@ -858,7 +858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t */
+comment|/* llmodule -> ExecutionEngine.t */
 end_comment
 
 begin_function
@@ -866,8 +866,8 @@ name|CAMLprim
 name|LLVMExecutionEngineRef
 name|llvm_ee_create_interpreter
 parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
+name|LLVMModuleRef
+name|M
 parameter_list|)
 block|{
 name|LLVMExecutionEngineRef
@@ -879,12 +879,12 @@ name|Error
 decl_stmt|;
 if|if
 condition|(
-name|LLVMCreateInterpreter
+name|LLVMCreateInterpreterForModule
 argument_list|(
 operator|&
 name|Interp
 argument_list|,
-name|MP
+name|M
 argument_list|,
 operator|&
 name|Error
@@ -904,7 +904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t */
+comment|/* llmodule -> int -> ExecutionEngine.t */
 end_comment
 
 begin_function
@@ -912,8 +912,11 @@ name|CAMLprim
 name|LLVMExecutionEngineRef
 name|llvm_ee_create_jit
 parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|value
+name|OptLevel
 parameter_list|)
 block|{
 name|LLVMExecutionEngineRef
@@ -925,62 +928,17 @@ name|Error
 decl_stmt|;
 if|if
 condition|(
-name|LLVMCreateJITCompiler
+name|LLVMCreateJITCompilerForModule
 argument_list|(
 operator|&
 name|JIT
 argument_list|,
-name|MP
+name|M
 argument_list|,
-literal|3
-argument_list|,
-operator|&
-name|Error
+name|Int_val
+argument_list|(
+name|OptLevel
 argument_list|)
-condition|)
-name|llvm_raise
-argument_list|(
-name|llvm_ee_error_exn
-argument_list|,
-name|Error
-argument_list|)
-expr_stmt|;
-return|return
-name|JIT
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t */
-end_comment
-
-begin_function
-name|CAMLprim
-name|LLVMExecutionEngineRef
-name|llvm_ee_create_fast_jit
-parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
-parameter_list|)
-block|{
-name|LLVMExecutionEngineRef
-name|JIT
-decl_stmt|;
-name|char
-modifier|*
-name|Error
-decl_stmt|;
-if|if
-condition|(
-name|LLVMCreateJITCompiler
-argument_list|(
-operator|&
-name|JIT
-argument_list|,
-name|MP
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|Error
@@ -1024,7 +982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t -> unit */
+comment|/* llmodule -> ExecutionEngine.t -> unit */
 end_comment
 
 begin_function
@@ -1032,18 +990,18 @@ name|CAMLprim
 name|value
 name|llvm_ee_add_mp
 parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
+name|LLVMModuleRef
+name|M
 parameter_list|,
 name|LLVMExecutionEngineRef
 name|EE
 parameter_list|)
 block|{
-name|LLVMAddModuleProvider
+name|LLVMAddModule
 argument_list|(
 name|EE
 argument_list|,
-name|MP
+name|M
 argument_list|)
 expr_stmt|;
 return|return
@@ -1053,7 +1011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* llmoduleprovider -> ExecutionEngine.t -> llmodule */
+comment|/* llmodule -> ExecutionEngine.t -> llmodule */
 end_comment
 
 begin_function
@@ -1061,8 +1019,8 @@ name|CAMLprim
 name|LLVMModuleRef
 name|llvm_ee_remove_mp
 parameter_list|(
-name|LLVMModuleProviderRef
-name|MP
+name|LLVMModuleRef
+name|M
 parameter_list|,
 name|LLVMExecutionEngineRef
 name|EE
@@ -1077,11 +1035,11 @@ name|Error
 decl_stmt|;
 if|if
 condition|(
-name|LLVMRemoveModuleProvider
+name|LLVMRemoveModule
 argument_list|(
 name|EE
 argument_list|,
-name|MP
+name|M
 argument_list|,
 operator|&
 name|RemovedModule
@@ -1158,7 +1116,7 @@ name|alloc
 argument_list|(
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|Field

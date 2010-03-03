@@ -128,6 +128,12 @@ name|LADD
 block|,
 comment|// Corresponds to LSUB instruction
 name|LSUB
+block|,
+comment|// Jumptable branch.
+name|BR_JT
+block|,
+comment|// Jumptable branch using long branches for each entry.
+name|BR_JT32
 block|}
 enum|;
 block|}
@@ -372,7 +378,7 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
-name|LowerJumpTable
+name|LowerBR_JT
 argument_list|(
 argument|SDValue Op
 argument_list|,

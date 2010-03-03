@@ -586,7 +586,6 @@ parameter_list|(
 specifier|const
 name|MachineInstr
 modifier|*
-name|MI
 parameter_list|)
 block|{
 name|assert
@@ -926,6 +925,20 @@ name|printOffset
 argument_list|(
 name|int64_t
 name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isBlockOnlyReachableByFallthough - Return true if the basic block has
+comment|/// exactly one predecessor and the control transfer mechanism between
+comment|/// the predecessor and this block is a fall-through.
+name|virtual
+name|bool
+name|isBlockOnlyReachableByFallthrough
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|)
 decl|const
 decl_stmt|;

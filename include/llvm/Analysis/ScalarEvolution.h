@@ -40,7 +40,7 @@ comment|// The ScalarEvolution class is an LLVM pass which can be used to analyz
 end_comment
 
 begin_comment
-comment|// catagorize scalar expressions in loops.  It specializes in recognizing
+comment|// categorize scalar expressions in loops.  It specializes in recognizing
 end_comment
 
 begin_comment
@@ -203,7 +203,7 @@ block|;
 name|protected
 operator|:
 comment|/// SubclassData - This field is initialized to zero and may be used in
-comment|/// subclasses to store miscelaneous information.
+comment|/// subclasses to store miscellaneous information.
 name|unsigned
 name|short
 name|SubclassData
@@ -596,7 +596,7 @@ name|LoopInfo
 operator|*
 name|LI
 block|;
-comment|/// TD - The target data information for the target we are targetting.
+comment|/// TD - The target data information for the target we are targeting.
 comment|///
 name|TargetData
 operator|*
@@ -628,7 +628,7 @@ operator|>
 name|Scalars
 block|;
 comment|/// BackedgeTakenInfo - Information about the backedge-taken count
-comment|/// of a loop. This currently inclues an exact count and a maximum count.
+comment|/// of a loop. This currently includes an exact count and a maximum count.
 comment|///
 block|struct
 name|BackedgeTakenInfo
@@ -958,9 +958,7 @@ block|;
 comment|/// ComputeLoadConstantCompareBackedgeTakenCount - Given an exit condition
 comment|/// of 'icmp op load X, cst', try to see if we can compute the
 comment|/// backedge-taken count.
-specifier|const
-name|SCEV
-operator|*
+name|BackedgeTakenInfo
 name|ComputeLoadConstantCompareBackedgeTakenCount
 argument_list|(
 argument|LoadInst *LI
@@ -992,9 +990,7 @@ block|;
 comment|/// HowFarToZero - Return the number of times a backedge comparing the
 comment|/// specified value to zero will execute.  If not computable, return
 comment|/// CouldNotCompute.
-specifier|const
-name|SCEV
-operator|*
+name|BackedgeTakenInfo
 name|HowFarToZero
 argument_list|(
 specifier|const
@@ -1011,9 +1007,7 @@ block|;
 comment|/// HowFarToNonZero - Return the number of times a backedge checking the
 comment|/// specified value for nonzero will execute.  If not computable, return
 comment|/// CouldNotCompute.
-specifier|const
-name|SCEV
-operator|*
+name|BackedgeTakenInfo
 name|HowFarToNonZero
 argument_list|(
 specifier|const
@@ -1084,7 +1078,7 @@ argument|bool Inverse
 argument_list|)
 block|;
 comment|/// isImpliedCondOperands - Test whether the condition described by Pred,
-comment|/// LHS, and RHS is true whenever the condition desribed by Pred, FoundLHS,
+comment|/// LHS, and RHS is true whenever the condition described by Pred, FoundLHS,
 comment|/// and FoundRHS is true.
 name|bool
 name|isImpliedCondOperands
@@ -1101,7 +1095,7 @@ argument|const SCEV *FoundRHS
 argument_list|)
 block|;
 comment|/// isImpliedCondOperandsHelper - Test whether the condition described by
-comment|/// Pred, LHS, and RHS is true whenever the condition desribed by Pred,
+comment|/// Pred, LHS, and RHS is true whenever the condition described by Pred,
 comment|/// FoundLHS, and FoundRHS is true.
 name|bool
 name|isImpliedCondOperandsHelper
@@ -2083,6 +2077,17 @@ specifier|const
 name|Loop
 operator|*
 name|L
+argument_list|)
+block|;
+comment|/// forgetValue - This method should be called by the client when it has
+comment|/// changed a value in a way that may effect its value, or which may
+comment|/// disconnect it from a def-use chain linking it to a loop.
+name|void
+name|forgetValue
+argument_list|(
+name|Value
+operator|*
+name|V
 argument_list|)
 block|;
 comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S

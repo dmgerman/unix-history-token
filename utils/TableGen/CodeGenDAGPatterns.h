@@ -450,6 +450,14 @@ return|return
 name|TypeConstraints
 return|;
 block|}
+comment|/// getKnownType - If the type constraints on this node imply a fixed type
+comment|/// (e.g. all stores return void, etc), then return it as an
+comment|/// MVT::SimpleValueType.  Otherwise, return EEVT::isUnknown.
+name|unsigned
+name|getKnownType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// hasProperty - Return true if this node has the specified property.
 comment|///
 name|bool
@@ -2261,10 +2269,12 @@ begin_comment
 comment|/// processed to produce isel.
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|class
 name|PatternToMatch
 block|{
+name|public
+label|:
 name|PatternToMatch
 argument_list|(
 argument|ListInit *preds
@@ -2276,6 +2286,8 @@ argument_list|,
 argument|const std::vector<Record*>&dstregs
 argument_list|,
 argument|unsigned complexity
+argument_list|,
+argument|unsigned uid
 argument_list|)
 block|:
 name|Predicates
@@ -2300,7 +2312,12 @@ argument_list|)
 operator|,
 name|AddedComplexity
 argument_list|(
-argument|complexity
+name|complexity
+argument_list|)
+operator|,
+name|ID
+argument_list|(
+argument|uid
 argument_list|)
 block|{}
 name|ListInit
@@ -2332,6 +2349,10 @@ name|unsigned
 name|AddedComplexity
 decl_stmt|;
 comment|// Add to matching pattern complexity.
+name|unsigned
+name|ID
+decl_stmt|;
+comment|// Unique ID for the record.
 name|ListInit
 operator|*
 name|getPredicates
@@ -2396,8 +2417,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|// Deterministic comparison of Record*.
@@ -3035,11 +3059,12 @@ specifier|const
 name|DAGDefaultOperand
 modifier|&
 name|getDefaultOperand
-parameter_list|(
+argument_list|(
 name|Record
-modifier|*
+operator|*
 name|R
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -3288,6 +3313,20 @@ function_decl|;
 name|void
 name|GenerateVariants
 parameter_list|()
+function_decl|;
+name|void
+name|AddPatternToMatch
+parameter_list|(
+specifier|const
+name|TreePattern
+modifier|*
+name|Pattern
+parameter_list|,
+specifier|const
+name|PatternToMatch
+modifier|&
+name|PTM
+parameter_list|)
 function_decl|;
 name|void
 name|FindPatternInputsAndOutputs

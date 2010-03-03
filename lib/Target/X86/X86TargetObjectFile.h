@@ -68,57 +68,6 @@ block|{
 name|class
 name|X86TargetMachine
 decl_stmt|;
-comment|/// X8632_MachoTargetObjectFile - This TLOF implementation is used for
-comment|/// Darwin/x86-32.
-name|class
-name|X8632_MachoTargetObjectFile
-range|:
-name|public
-name|TargetLoweringObjectFileMachO
-block|{
-name|public
-operator|:
-name|virtual
-specifier|const
-name|MCExpr
-operator|*
-name|getSymbolForDwarfGlobalReference
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|Mangler *Mang
-argument_list|,
-argument|MachineModuleInfo *MMI
-argument_list|,
-argument|unsigned Encoding
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getPersonalityEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getLSDAEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getFDEEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getTTypeEncoding
-argument_list|()
-specifier|const
-block|;   }
-decl_stmt|;
 comment|/// X8664_MachoTargetObjectFile - This TLOF implementation is used for
 comment|/// Darwin/x86-64.
 name|class
@@ -144,30 +93,6 @@ argument_list|,
 argument|unsigned Encoding
 argument_list|)
 specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getPersonalityEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getLSDAEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getFDEEncoding
-argument_list|()
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getTTypeEncoding
-argument_list|()
-specifier|const
 block|;   }
 decl_stmt|;
 name|class
@@ -196,7 +121,6 @@ argument_list|(
 argument|tm
 argument_list|)
 block|{ }
-block|;
 name|virtual
 name|unsigned
 name|getPersonalityEncoding
@@ -248,7 +172,6 @@ argument_list|(
 argument|tm
 argument_list|)
 block|{ }
-block|;
 name|virtual
 name|unsigned
 name|getPersonalityEncoding

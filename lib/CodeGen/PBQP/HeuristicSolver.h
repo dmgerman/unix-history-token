@@ -805,7 +805,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Apply rule R1.
-comment|/// @param nItr Node iterator for node to apply R1 to.
+comment|/// @param xnItr Node iterator for node to apply R1 to.
 comment|///
 comment|/// Node will be automatically pushed to the solver stack.
 name|void
@@ -1152,7 +1152,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Apply rule R2.
-comment|/// @param nItr Node iterator for node to apply R2 to.
+comment|/// @param xnItr Node iterator for node to apply R2 to.
 comment|///
 comment|/// Node will be automatically pushed to the solver stack.
 name|void

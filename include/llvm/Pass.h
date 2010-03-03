@@ -505,7 +505,6 @@ parameter_list|(
 specifier|const
 name|PassInfo
 modifier|*
-name|PI
 parameter_list|)
 block|{
 return|return

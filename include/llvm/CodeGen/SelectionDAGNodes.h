@@ -5226,6 +5226,8 @@ return|return
 name|SubclassData
 return|;
 block|}
+comment|// We access subclass data here so that we can check consistency
+comment|// with MachineMemOperand information.
 name|bool
 name|isVolatile
 argument_list|()
@@ -5247,10 +5249,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MMO
-operator|->
-name|isNonTemporal
-argument_list|()
+operator|(
+name|SubclassData
+operator|>>
+literal|6
+operator|)
+operator|&
+literal|1
 return|;
 block|}
 comment|/// Returns the SrcValue and offset that describes the location of the access
@@ -6117,11 +6122,56 @@ operator|&&
 literal|"Cannot get splat index for non-splat!"
 argument_list|)
 block|;
+name|EVT
+name|VT
+operator|=
+name|getValueType
+argument_list|(
+literal|0
+argument_list|)
+block|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|Mask
+index|[
+name|i
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
 return|return
 name|Mask
 index|[
-literal|0
+name|i
 index|]
+return|;
+block|}
+return|return
+operator|-
+literal|1
 return|;
 block|}
 specifier|static
@@ -6408,6 +6458,32 @@ specifier|const
 block|{
 return|return
 name|Value
+return|;
+block|}
+comment|/// isZero - Return true if the value is positive or negative zero.
+name|bool
+name|isZero
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|->
+name|isZero
+argument_list|()
+return|;
+block|}
+comment|/// isNaN - Return true if the value is a NaN.
+name|bool
+name|isNaN
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|->
+name|isNaN
+argument_list|()
 return|;
 block|}
 comment|/// isExactlyValue - We don't rely on operator== working on double values, as

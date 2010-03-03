@@ -229,14 +229,6 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createAndersensPass
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|llvm
-operator|::
 name|createArgumentPromotionPass
 argument_list|()
 expr_stmt|;

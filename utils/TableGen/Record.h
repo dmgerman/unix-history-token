@@ -7191,6 +7191,16 @@ operator|~
 name|Record
 argument_list|()
 block|{}
+specifier|static
+name|unsigned
+name|getNewUID
+argument_list|()
+block|{
+return|return
+name|LastID
+operator|++
+return|;
+block|}
 name|unsigned
 name|getID
 argument_list|()

@@ -108,6 +108,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|MCAssembler
+decl_stmt|;
+name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
@@ -127,6 +130,9 @@ name|MCInstPrinter
 decl_stmt|;
 name|class
 name|MCStreamer
+decl_stmt|;
+name|class
+name|TargetAsmBackend
 decl_stmt|;
 name|class
 name|TargetAsmLexer
@@ -248,6 +254,23 @@ specifier|const
 name|MCAsmInfo
 operator|*
 name|MAI
+argument_list|)
+argument_list|;     typedef
+name|TargetAsmBackend
+operator|*
+call|(
+modifier|*
+name|AsmBackendCtorTy
+call|)
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+name|MCAssembler
+operator|&
+name|A
 argument_list|)
 argument_list|;     typedef
 name|TargetAsmLexer
@@ -382,10 +405,10 @@ comment|/// TargetMachine, if registered.
 name|TargetMachineCtorTy
 name|TargetMachineCtorFn
 argument_list|;
-comment|/// AsmPrinterCtorFn - Construction function for this target's AsmPrinter,
-comment|/// if registered.
-name|AsmPrinterCtorTy
-name|AsmPrinterCtorFn
+comment|/// AsmBackendCtorFn - Construction function for this target's
+comment|/// TargetAsmBackend, if registered.
+name|AsmBackendCtorTy
+name|AsmBackendCtorFn
 argument_list|;
 comment|/// AsmLexerCtorFn - Construction function for this target's TargetAsmLexer,
 comment|/// if registered.
@@ -396,6 +419,11 @@ comment|/// AsmParserCtorFn - Construction function for this target's
 comment|/// TargetAsmParser, if registered.
 name|AsmParserCtorTy
 name|AsmParserCtorFn
+argument_list|;
+comment|/// AsmPrinterCtorFn - Construction function for this target's AsmPrinter,
+comment|/// if registered.
+name|AsmPrinterCtorTy
+name|AsmPrinterCtorFn
 argument_list|;
 comment|/// MCDisassemblerCtorFn - Construction function for this target's
 comment|/// MCDisassembler, if registered.
@@ -477,14 +505,26 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// hasAsmPrinter - Check if this target supports .s printing.
+comment|/// hasAsmBackend - Check if this target supports .o generation.
 name|bool
-name|hasAsmPrinter
+name|hasAsmBackend
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AsmPrinterCtorFn
+name|AsmBackendCtorFn
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// hasAsmLexer - Check if this target supports .s lexing.
+name|bool
+name|hasAsmLexer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AsmLexerCtorFn
 operator|!=
 literal|0
 return|;
@@ -497,6 +537,18 @@ specifier|const
 block|{
 return|return
 name|AsmParserCtorFn
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// hasAsmPrinter - Check if this target supports .s printing.
+name|bool
+name|hasAsmPrinter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AsmPrinterCtorFn
 operator|!=
 literal|0
 return|;
@@ -622,55 +674,34 @@ name|Features
 argument_list|)
 return|;
 block|}
-comment|/// createAsmPrinter - Create a target specific assembly printer pass.  This
-comment|/// takes ownership of the MCContext and MCStreamer objects but not the MAI.
-name|AsmPrinter
+comment|/// createAsmBackend - Create a target specific assembly parser.
+comment|///
+comment|/// \arg Backend - The target independent assembler object.
+name|TargetAsmBackend
 modifier|*
-name|createAsmPrinter
+name|createAsmBackend
 argument_list|(
-name|formatted_raw_ostream
+name|MCAssembler
 operator|&
-name|OS
-argument_list|,
-name|TargetMachine
-operator|&
-name|TM
-argument_list|,
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
-name|MCStreamer
-operator|&
-name|Streamer
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
+name|Backend
 argument_list|)
 decl|const
 block|{
 if|if
 condition|(
 operator|!
-name|AsmPrinterCtorFn
+name|AsmBackendCtorFn
 condition|)
 return|return
 literal|0
 return|;
 return|return
-name|AsmPrinterCtorFn
+name|AsmBackendCtorFn
 argument_list|(
-name|OS
+operator|*
+name|this
 argument_list|,
-name|TM
-argument_list|,
-name|Ctx
-argument_list|,
-name|Streamer
-argument_list|,
-name|MAI
+name|Backend
 argument_list|)
 return|;
 block|}
@@ -734,6 +765,58 @@ operator|*
 name|this
 argument_list|,
 name|Parser
+argument_list|)
+return|;
+block|}
+comment|/// createAsmPrinter - Create a target specific assembly printer pass.  This
+comment|/// takes ownership of the MCContext and MCStreamer objects but not the MAI.
+name|AsmPrinter
+modifier|*
+name|createAsmPrinter
+argument_list|(
+name|formatted_raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|AsmPrinterCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|AsmPrinterCtorFn
+argument_list|(
+name|OS
+argument_list|,
+name|TM
+argument_list|,
+name|Ctx
+argument_list|,
+name|Streamer
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}
@@ -1379,11 +1462,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// RegisterAsmPrinter - Register an AsmPrinter implementation for the given
+comment|/// RegisterAsmBackend - Register a TargetAsmBackend implementation for the
 end_comment
 
 begin_comment
-comment|/// target.
+comment|/// given target.
 end_comment
 
 begin_comment
@@ -1411,13 +1494,13 @@ comment|/// @param T - The target being registered.
 end_comment
 
 begin_comment
-comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+comment|/// @param Fn - A function to construct an AsmBackend for the target.
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|void
-name|RegisterAsmPrinter
+name|RegisterAsmBackend
 argument_list|(
 name|Target
 operator|&
@@ -1425,21 +1508,20 @@ name|T
 argument_list|,
 name|Target
 operator|::
-name|AsmPrinterCtorTy
+name|AsmBackendCtorTy
 name|Fn
 argument_list|)
 block|{
-comment|// Ignore duplicate registration.
 if|if
 condition|(
 operator|!
 name|T
 operator|.
-name|AsmPrinterCtorFn
+name|AsmBackendCtorFn
 condition|)
 name|T
 operator|.
-name|AsmPrinterCtorFn
+name|AsmBackendCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -1479,7 +1561,7 @@ comment|/// @param T - The target being registered.
 end_comment
 
 begin_comment
-comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+comment|/// @param Fn - A function to construct an AsmLexer for the target.
 end_comment
 
 begin_decl_stmt
@@ -1546,7 +1628,7 @@ comment|/// @param T - The target being registered.
 end_comment
 
 begin_comment
-comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+comment|/// @param Fn - A function to construct an AsmParser for the target.
 end_comment
 
 begin_decl_stmt
@@ -1574,6 +1656,74 @@ condition|)
 name|T
 operator|.
 name|AsmParserCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterAsmPrinter - Register an AsmPrinter implementation for the given
+end_comment
+
+begin_comment
+comment|/// target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterAsmPrinter
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|AsmPrinterCtorTy
+name|Fn
+argument_list|)
+block|{
+comment|// Ignore duplicate registration.
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|AsmPrinterCtorFn
+condition|)
+name|T
+operator|.
+name|AsmPrinterCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -1747,7 +1897,7 @@ comment|/// @param T - The target being registered.
 end_comment
 
 begin_comment
-comment|/// @param Fn - A function to construct an AsmPrinter for the target.
+comment|/// @param Fn - A function to construct an MCCodeEmitter for the target.
 end_comment
 
 begin_decl_stmt
@@ -2125,15 +2275,11 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// RegisterAsmPrinter - Helper template for registering a target specific
+comment|/// RegisterAsmBackend - Helper template for registering a target specific
 end_comment
 
 begin_comment
-comment|/// assembly printer, for use in the target machine initialization
-end_comment
-
-begin_comment
-comment|/// function. Usage:
+comment|/// assembler backend. Usage:
 end_comment
 
 begin_comment
@@ -2141,7 +2287,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// extern "C" void LLVMInitializeFooAsmPrinter() {
+comment|/// extern "C" void LLVMInitializeFooAsmBackend() {
 end_comment
 
 begin_comment
@@ -2149,7 +2295,7 @@ comment|///   extern Target TheFooTarget;
 end_comment
 
 begin_comment
-comment|///   RegisterAsmPrinter<FooAsmPrinter> X(TheFooTarget);
+comment|///   RegisterAsmBackend<FooAsmLexer> X(TheFooTarget);
 end_comment
 
 begin_comment
@@ -2160,19 +2306,19 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|AsmPrinterImpl
+name|AsmBackendImpl
 operator|>
 expr|struct
-name|RegisterAsmPrinter
+name|RegisterAsmBackend
 block|{
-name|RegisterAsmPrinter
+name|RegisterAsmBackend
 argument_list|(
 argument|Target&T
 argument_list|)
 block|{
 name|TargetRegistry
 operator|::
-name|RegisterAsmPrinter
+name|RegisterAsmBackend
 argument_list|(
 name|T
 argument_list|,
@@ -2183,34 +2329,22 @@ block|;     }
 name|private
 operator|:
 specifier|static
-name|AsmPrinter
+name|TargetAsmBackend
 operator|*
 name|Allocator
 argument_list|(
-argument|formatted_raw_ostream&OS
+argument|const Target&T
 argument_list|,
-argument|TargetMachine&TM
-argument_list|,
-argument|MCContext&Ctx
-argument_list|,
-argument|MCStreamer&Streamer
-argument_list|,
-argument|const MCAsmInfo *MAI
+argument|MCAssembler&Backend
 argument_list|)
 block|{
 return|return
 name|new
-name|AsmPrinterImpl
+name|AsmBackendImpl
 argument_list|(
-name|OS
+name|T
 argument_list|,
-name|TM
-argument_list|,
-name|Ctx
-argument_list|,
-name|Streamer
-argument_list|,
-name|MAI
+name|Backend
 argument_list|)
 return|;
 block|}
@@ -2373,6 +2507,99 @@ argument_list|(
 name|T
 argument_list|,
 name|P
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|/// RegisterAsmPrinter - Helper template for registering a target specific
+end_comment
+
+begin_comment
+comment|/// assembly printer, for use in the target machine initialization
+end_comment
+
+begin_comment
+comment|/// function. Usage:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// extern "C" void LLVMInitializeFooAsmPrinter() {
+end_comment
+
+begin_comment
+comment|///   extern Target TheFooTarget;
+end_comment
+
+begin_comment
+comment|///   RegisterAsmPrinter<FooAsmPrinter> X(TheFooTarget);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|AsmPrinterImpl
+operator|>
+expr|struct
+name|RegisterAsmPrinter
+block|{
+name|RegisterAsmPrinter
+argument_list|(
+argument|Target&T
+argument_list|)
+block|{
+name|TargetRegistry
+operator|::
+name|RegisterAsmPrinter
+argument_list|(
+name|T
+argument_list|,
+operator|&
+name|Allocator
+argument_list|)
+block|;     }
+name|private
+operator|:
+specifier|static
+name|AsmPrinter
+operator|*
+name|Allocator
+argument_list|(
+argument|formatted_raw_ostream&OS
+argument_list|,
+argument|TargetMachine&TM
+argument_list|,
+argument|MCContext&Ctx
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|,
+argument|const MCAsmInfo *MAI
+argument_list|)
+block|{
+return|return
+name|new
+name|AsmPrinterImpl
+argument_list|(
+name|OS
+argument_list|,
+name|TM
+argument_list|,
+name|Ctx
+argument_list|,
+name|Streamer
+argument_list|,
+name|MAI
 argument_list|)
 return|;
 block|}

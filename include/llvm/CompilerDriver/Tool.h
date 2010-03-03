@@ -86,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -101,6 +113,24 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+name|ArgsVector
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
 name|llvm
 operator|::
 name|sys
@@ -110,6 +140,17 @@ operator|>
 name|PathVector
 expr_stmt|;
 typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|StrVector
+expr_stmt|;
+typedef|typedef
 name|llvm
 operator|::
 name|StringSet
@@ -117,7 +158,7 @@ operator|<
 operator|>
 name|InputLanguagesSet
 expr_stmt|;
-comment|/// Tool - A class
+comment|/// Tool - Represents a single tool.
 name|class
 name|Tool
 range|:
@@ -211,6 +252,14 @@ specifier|const
 operator|=
 literal|0
 block|;
+name|virtual
+name|bool
+name|WorksOnEmpty
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
 name|protected
 operator|:
 comment|/// OutFileName - Generate the output file name.
@@ -228,6 +277,13 @@ argument_list|,
 argument|bool StopCompilation
 argument_list|,
 argument|const char* OutputSuffix
+argument_list|)
+specifier|const
+block|;
+name|StrVector
+name|SortArgs
+argument_list|(
+argument|ArgsVector& Args
 argument_list|)
 specifier|const
 block|;   }

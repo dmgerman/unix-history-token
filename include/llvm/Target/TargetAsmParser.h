@@ -137,8 +137,8 @@ comment|/// construct the appropriate MCInst, or emit an error. On success, the 
 comment|/// line should be parsed up to and including the end-of-statement token. On
 comment|/// failure, the parser is not required to read to the end of the line.
 comment|//
-comment|/// \param AP - The current parser object.
 comment|/// \param Name - The instruction name.
+comment|/// \param NameLoc - The source location of the name.
 comment|/// \param Operands [out] - The list of parsed operands, this returns
 comment|///        ownership of them to the caller.
 comment|/// \return True on failure.
@@ -174,7 +174,7 @@ comment|/// directive is not target specific. If the directive is specific for
 comment|/// the target, the entire line is parsed up to and including the
 comment|/// end-of-statement token and false is returned.
 comment|///
-comment|/// \param ID - the identifier token of the directive.
+comment|/// \param DirectiveID - the identifier token of the directive.
 name|virtual
 name|bool
 name|ParseDirective

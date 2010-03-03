@@ -363,6 +363,14 @@ name|VarInfo
 operator|>
 name|VirtRegInfo
 expr_stmt|;
+comment|/// PHIJoins - list of virtual registers that are PHI joins. These registers
+comment|/// may have multiple definitions, and they require special handling when
+comment|/// building live intervals.
+name|SparseBitVector
+operator|<
+operator|>
+name|PHIJoins
+expr_stmt|;
 comment|/// ReservedRegisters - This vector keeps track of which registers
 comment|/// are reserved register which are not allocatable by the target machine.
 comment|/// We can not track liveness for values that are in this set.
@@ -1062,6 +1070,39 @@ modifier|*
 name|SuccBB
 parameter_list|)
 function_decl|;
+comment|/// isPHIJoin - Return true if Reg is a phi join register.
+name|bool
+name|isPHIJoin
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+return|return
+name|PHIJoins
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+comment|/// setPHIJoin - Mark Reg as a phi join register.
+name|void
+name|setPHIJoin
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|PHIJoins
+operator|.
+name|set
+argument_list|(
+name|Reg
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

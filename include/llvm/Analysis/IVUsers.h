@@ -242,7 +242,7 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
-comment|/// getOffset - Return the offset to add to a theoeretical induction
+comment|/// getOffset - Return the offset to add to a theoretical induction
 comment|/// variable that starts at zero and counts up by the stride to compute
 comment|/// the value for the use. This always has the same type as the stride.
 specifier|const
@@ -355,7 +355,7 @@ name|bool
 name|IsUseOfPostIncrementedValue
 decl_stmt|;
 comment|/// Deleted - Implementation of CallbackVH virtual function to
-comment|/// recieve notification when the User is deleted.
+comment|/// receive notification when the User is deleted.
 name|virtual
 name|void
 name|deleted

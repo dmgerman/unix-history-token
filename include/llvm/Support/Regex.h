@@ -159,6 +159,29 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// sub - Return the result of replacing the first match of the regex in
+comment|/// \arg String with the \arg Repl string. Backreferences like "\0" in the
+comment|/// replacement string are replaced with the appropriate match substring.
+comment|///
+comment|/// Note that the replacement string has backslash escaping performed on
+comment|/// it. Invalid backreferences are ignored (replaced by empty strings).
+comment|///
+comment|/// \param Error If non-null, any errors in the substitution (invalid
+comment|/// backreferences, trailing backslashes) will be recorded as a non-empty
+comment|/// string.
+name|std
+operator|::
+name|string
+name|sub
+argument_list|(
+argument|StringRef Repl
+argument_list|,
+argument|StringRef String
+argument_list|,
+argument|std::string *Error =
+literal|0
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|struct

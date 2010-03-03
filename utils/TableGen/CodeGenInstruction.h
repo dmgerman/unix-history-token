@@ -431,9 +431,6 @@ name|bool
 name|hasSideEffects
 decl_stmt|;
 name|bool
-name|mayHaveSideEffects
-decl_stmt|;
-name|bool
 name|neverHasSideEffects
 decl_stmt|;
 name|bool

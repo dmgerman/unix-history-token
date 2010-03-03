@@ -63,7 +63,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Invariant opcodes: All instruction sets have these as their low opcodes.
+comment|/// Invariant opcodes: All instruction sets have these as their low opcodes.
 name|namespace
 name|TargetOpcode
 block|{
@@ -139,7 +139,7 @@ name|COPY_TO_REGCLASS
 init|=
 literal|10
 block|,
-comment|// DBG_VALUE - a mapping of the llvm.dbg.value intrinsic
+comment|/// DBG_VALUE - a mapping of the llvm.dbg.value intrinsic
 name|DBG_VALUE
 init|=
 literal|11

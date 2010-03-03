@@ -128,7 +128,7 @@ modifier|&
 name|Changes
 parameter_list|)
 function_decl|;
-comment|/// Split - Partition a set of changes \arg Sinto one or two subsets.
+comment|/// Split - Partition a set of changes \arg S into one or two subsets.
 name|void
 name|Split
 parameter_list|(

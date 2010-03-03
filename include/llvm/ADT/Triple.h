@@ -177,6 +177,9 @@ comment|// X86-64: amd64, x86_64
 name|xcore
 block|,
 comment|// XCore: xcore
+name|mblaze
+block|,
+comment|// MBlaze: mblaze
 name|InvalidArch
 block|}
 enum|;

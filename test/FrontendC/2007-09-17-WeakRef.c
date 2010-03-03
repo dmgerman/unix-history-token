@@ -7,10 +7,6 @@ begin_comment
 comment|// PR1678
 end_comment
 
-begin_comment
-comment|// XFAIL: llvmgcc4.0.1
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void

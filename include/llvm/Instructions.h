@@ -2500,11 +2500,6 @@ operator|->
 name|isIntOrIntVectorTy
 argument_list|()
 operator|||
-name|isa
-operator|<
-name|PointerType
-operator|>
-operator|(
 name|getOperand
 argument_list|(
 literal|0
@@ -2512,7 +2507,9 @@ argument_list|)
 operator|->
 name|getType
 argument_list|()
-operator|)
+operator|->
+name|isPointerTy
+argument_list|()
 operator|)
 operator|&&
 literal|"Invalid operand types for ICmp instruction"
@@ -2608,11 +2605,6 @@ operator|->
 name|isIntOrIntVectorTy
 argument_list|()
 operator|||
-name|isa
-operator|<
-name|PointerType
-operator|>
-operator|(
 name|getOperand
 argument_list|(
 literal|0
@@ -2620,7 +2612,9 @@ argument_list|)
 operator|->
 name|getType
 argument_list|()
-operator|)
+operator|->
+name|isPointerTy
+argument_list|()
 operator|)
 operator|&&
 literal|"Invalid operand types for ICmp instruction"
@@ -2711,11 +2705,6 @@ operator|->
 name|isIntOrIntVectorTy
 argument_list|()
 operator|||
-name|isa
-operator|<
-name|PointerType
-operator|>
-operator|(
 name|getOperand
 argument_list|(
 literal|0
@@ -2723,7 +2712,9 @@ argument_list|)
 operator|->
 name|getType
 argument_list|()
-operator|)
+operator|->
+name|isPointerTy
+argument_list|()
 operator|)
 operator|&&
 literal|"Invalid operand types for ICmp instruction"
@@ -7955,7 +7946,7 @@ operator|/
 literal|2
 return|;
 block|}
-comment|/// getIncomingBlock - Return incoming basic block #i.
+comment|/// getIncomingBlock - Return incoming basic block number @p i.
 comment|///
 name|BasicBlock
 operator|*

@@ -678,6 +678,10 @@ comment|/// cannot be satisfied in this width then this fragment is ignored.
 name|unsigned
 name|MaxBytesToEmit
 block|;
+comment|/// EmitNops - true when aligning code and optimal nops to be used for filling
+name|bool
+name|EmitNops
+block|;
 name|public
 operator|:
 name|MCAlignFragment
@@ -689,6 +693,8 @@ argument_list|,
 argument|unsigned _ValueSize
 argument_list|,
 argument|unsigned _MaxBytesToEmit
+argument_list|,
+argument|bool _EmitNops
 argument_list|,
 argument|MCSectionData *SD =
 literal|0
@@ -718,7 +724,12 @@ argument_list|)
 block|,
 name|MaxBytesToEmit
 argument_list|(
-argument|_MaxBytesToEmit
+name|_MaxBytesToEmit
+argument_list|)
+block|,
+name|EmitNops
+argument_list|(
+argument|_EmitNops
 argument_list|)
 block|{}
 comment|/// @name Accessors
@@ -775,6 +786,15 @@ specifier|const
 block|{
 return|return
 name|MaxBytesToEmit
+return|;
+block|}
+name|unsigned
+name|getEmitNops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EmitNops
 return|;
 block|}
 comment|/// @}

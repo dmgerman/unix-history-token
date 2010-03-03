@@ -520,7 +520,7 @@ name|this
 return|;
 block|}
 comment|/// Makes a copy of \p that to \p this.
-comment|/// @param \p that A StringRef denoting the path
+comment|/// @param that A StringRef denoting the path
 comment|/// @returns \p this
 comment|/// @brief Assignment Operator
 name|Path

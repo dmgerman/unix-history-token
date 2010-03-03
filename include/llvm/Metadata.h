@@ -303,6 +303,10 @@ name|friend
 name|class
 name|MDNodeOperand
 decl_stmt|;
+name|friend
+name|class
+name|LLVMContextImpl
+decl_stmt|;
 comment|/// NumOperands - This many 'MDNodeOperand' items are co-allocated onto the
 comment|/// end of this MDNode.
 name|unsigned
@@ -355,7 +359,8 @@ init|=
 literal|1
 block|}
 enum|;
-comment|// Replace each instance of F from the operand list of this node with T.
+comment|/// replaceOperand - Replace each instance of F from the operand list of this
+comment|/// node with T.
 name|void
 name|replaceOperand
 parameter_list|(
@@ -372,6 +377,12 @@ operator|~
 name|MDNode
 argument_list|()
 expr_stmt|;
+comment|/// replaceAllOperandsWithNull - This is used while destroying llvm context to
+comment|/// gracefully delete all nodes. This method replaces all operands with null.
+name|void
+name|replaceAllOperandsWithNull
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|explicit

@@ -424,7 +424,17 @@ argument_list|)
 index|]
 return|;
 block|}
+comment|/// Converts a string into a number.  The string must be non-empty
+comment|/// and well-formed as a number of the given base. The bit-width
+comment|/// must be sufficient to hold the result.
+comment|///
 comment|/// This is used by the constructors that take string arguments.
+comment|///
+comment|/// StringRef::getAsInteger is superficially similar but (1) does
+comment|/// not assume that the string is well-formed and (2) grows the
+comment|/// result to hold the input.
+comment|///
+comment|/// @param radix 2, 8, 10, or 16
 comment|/// @brief Convert a char array into an APInt
 name|void
 name|fromString
@@ -1954,6 +1964,73 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// Performs a bitwise OR operation on this APInt and RHS. RHS is
+end_comment
+
+begin_comment
+comment|/// logically zero-extended or truncated to match the bit-width of
+end_comment
+
+begin_comment
+comment|/// the LHS.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @brief Bitwise OR assignment operator.
+end_comment
+
+begin_expr_stmt
+name|APInt
+operator|&
+name|operator
+operator||=
+operator|(
+name|uint64_t
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+block|{
+name|VAL
+operator||=
+name|RHS
+expr_stmt|;
+name|clearUnusedBits
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_else
+else|else
+block|{
+name|pVal
+index|[
+literal|0
+index|]
+operator||=
+name|RHS
+expr_stmt|;
+block|}
+end_else
+
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// Performs a bitwise XOR operation on this APInt and RHS. The result is
 end_comment
 
@@ -1970,7 +2047,7 @@ comment|/// @brief Bitwise XOR assignment operator.
 end_comment
 
 begin_expr_stmt
-name|APInt
+unit|APInt
 operator|&
 name|operator
 operator|^=
@@ -5664,6 +5741,25 @@ begin_function_decl
 specifier|static
 name|void
 name|tcSetBit
+parameter_list|(
+name|integerPart
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+name|bit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Clear the given bit of a bignum.  Zero-based.
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|tcClearBit
 parameter_list|(
 name|integerPart
 modifier|*

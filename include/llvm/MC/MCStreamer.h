@@ -242,7 +242,7 @@ name|CurSection
 return|;
 block|}
 comment|/// SwitchSection - Set the current section where code is being emitted to
-comment|/// @param Section.  This is required to update CurSection.
+comment|/// @p Section.  This is required to update CurSection.
 comment|///
 comment|/// This corresponds to assembler directives like .section, .text, etc.
 name|virtual
@@ -257,7 +257,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitLabel - Emit a label for @param Symbol into the current section.
+comment|/// EmitLabel - Emit a label for @p Symbol into the current section.
 comment|///
 comment|/// This corresponds to an assembler statement such as:
 comment|///   foo:
@@ -276,7 +276,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitAssemblerFlag - Note in the output the specified @param Flag
+comment|/// EmitAssemblerFlag - Note in the output the specified @p Flag
 name|virtual
 name|void
 name|EmitAssemblerFlag
@@ -287,7 +287,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitAssignment - Emit an assignment of @param Value to @param Symbol.
+comment|/// EmitAssignment - Emit an assignment of @p Value to @p Symbol.
 comment|///
 comment|/// This corresponds to an assembler statement such as:
 comment|///  symbol = value
@@ -314,7 +314,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitSymbolAttribute - Add the given @param Attribute to @param Symbol.
+comment|/// EmitSymbolAttribute - Add the given @p Attribute to @p Symbol.
 name|virtual
 name|void
 name|EmitSymbolAttribute
@@ -329,7 +329,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitSymbolDesc - Set the @param DescValue for the @param Symbol.
+comment|/// EmitSymbolDesc - Set the @p DescValue for the @p Symbol.
 comment|///
 comment|/// @param Symbol - The symbol to have its n_desc field set.
 comment|/// @param DescValue - The value to set into the n_desc field.
@@ -464,8 +464,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitValue - Emit the expression @param Value into the output as a native
-comment|/// integer of the given @param Size bytes.
+comment|/// EmitValue - Emit the expression @p Value into the output as a native
+comment|/// integer of the given @p Size bytes.
 comment|///
 comment|/// This is used to implement assembler directives such as .word, .quad,
 comment|/// etc.
@@ -507,7 +507,7 @@ name|unsigned
 name|AddrSpace
 parameter_list|)
 function_decl|;
-comment|/// EmitGPRel32Value - Emit the expression @param Value into the output as a
+comment|/// EmitGPRel32Value - Emit the expression @p Value into the output as a
 comment|/// gprel32 (32-bit GP relative) value.
 comment|///
 comment|/// This is used to implement assembler directives such as .gprel32 on
@@ -562,11 +562,11 @@ name|AddrSpace
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// EmitValueToAlignment - Emit some number of copies of @param Value until
-comment|/// the byte alignment @param ByteAlignment is reached.
+comment|/// EmitValueToAlignment - Emit some number of copies of @p Value until
+comment|/// the byte alignment @p ByteAlignment is reached.
 comment|///
 comment|/// If the number of bytes need to emit for the alignment is not a multiple
-comment|/// of @param ValueSize, then the contents of the emitted fill bytes is
+comment|/// of @p ValueSize, then the contents of the emitted fill bytes is
 comment|/// undefined.
 comment|///
 comment|/// This used to implement the .align assembler directive.
@@ -574,8 +574,8 @@ comment|///
 comment|/// @param ByteAlignment - The alignment to reach. This must be a power of
 comment|/// two on some targets.
 comment|/// @param Value - The value to use when filling bytes.
-comment|/// @param Size - The size of the integer (in bytes) to emit for @param
-comment|/// Value. This must match a native machine width.
+comment|/// @param ValueSize - The size of the integer (in bytes) to emit for
+comment|/// @p Value. This must match a native machine width.
 comment|/// @param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
 comment|/// the alignment cannot be reached in this many bytes, no bytes are
 comment|/// emitted.
@@ -604,8 +604,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitValueToOffset - Emit some number of copies of @param Value until the
-comment|/// byte offset @param Offset is reached.
+comment|/// EmitCodeAlignment - Emit nops until the byte alignment @p ByteAlignment
+comment|/// is reached.
+comment|///
+comment|/// This used to align code where the alignment bytes may be executed.  This
+comment|/// can emit different bytes for different sizes to optimize execution.
+comment|///
+comment|/// @param ByteAlignment - The alignment to reach. This must be a power of
+comment|/// two on some targets.
+comment|/// @param MaxBytesToEmit - The maximum numbers of bytes to emit, or 0. If
+comment|/// the alignment cannot be reached in this many bytes, no bytes are
+comment|/// emitted.
+name|virtual
+name|void
+name|EmitCodeAlignment
+parameter_list|(
+name|unsigned
+name|ByteAlignment
+parameter_list|,
+name|unsigned
+name|MaxBytesToEmit
+init|=
+literal|0
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitValueToOffset - Emit some number of copies of @p Value until the
+comment|/// byte offset @p Offset is reached.
 comment|///
 comment|/// This is used to implement assembler directives such as .org.
 comment|///
@@ -659,7 +685,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitInstruction - Emit the given @param Instruction into the current
+comment|/// EmitInstruction - Emit the given @p Instruction into the current
 comment|/// section.
 name|virtual
 name|void

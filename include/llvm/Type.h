@@ -210,7 +210,7 @@ block|,
 comment|// Must remain as last defined ID
 name|LastPrimitiveTyID
 operator|=
-name|LabelTyID
+name|MetadataTyID
 block|,
 name|FirstDerivedTyID
 operator|=
@@ -459,6 +459,14 @@ comment|//===-------------------------------------------------------------------
 comment|// Property accessors for dealing with types... Some of these virtual methods
 comment|// are defined in private classes defined in Type.cpp for primitive types.
 comment|//
+comment|/// getDescription - Return the string representation of the type.
+name|std
+operator|::
+name|string
+name|getDescription
+argument_list|()
+specifier|const
+block|;
 comment|/// getTypeID - Return the type id for the type.  This will return one
 comment|/// of the TypeID enum elements defined above.
 comment|///
@@ -544,67 +552,6 @@ operator|==
 name|PPC_FP128TyID
 return|;
 block|}
-comment|/// isLabelTy - Return true if this is 'label'.
-name|bool
-name|isLabelTy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ID
-operator|==
-name|LabelTyID
-return|;
-block|}
-comment|/// isMetadataTy - Return true if this is 'metadata'.
-name|bool
-name|isMetadataTy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ID
-operator|==
-name|MetadataTyID
-return|;
-block|}
-comment|/// getDescription - Return the string representation of the type.
-name|std
-operator|::
-name|string
-name|getDescription
-argument_list|()
-specifier|const
-block|;
-comment|/// isIntegerTy - True if this is an instance of IntegerType.
-comment|///
-name|bool
-name|isIntegerTy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ID
-operator|==
-name|IntegerTyID
-return|;
-block|}
-comment|/// isIntegerTy - Return true if this is an IntegerType of the given width.
-name|bool
-name|isIntegerTy
-argument_list|(
-argument|unsigned Bitwidth
-argument_list|)
-specifier|const
-block|;
-comment|/// isIntOrIntVectorTy - Return true if this is an integer type or a vector of
-comment|/// integer types.
-comment|///
-name|bool
-name|isIntOrIntVectorTy
-argument_list|()
-specifier|const
-block|;
 comment|/// isFloatingPointTy - Return true if this is one of the five floating point
 comment|/// types
 name|bool
@@ -641,6 +588,59 @@ name|isFPOrFPVectorTy
 argument_list|()
 specifier|const
 block|;
+comment|/// isLabelTy - Return true if this is 'label'.
+name|bool
+name|isLabelTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|LabelTyID
+return|;
+block|}
+comment|/// isMetadataTy - Return true if this is 'metadata'.
+name|bool
+name|isMetadataTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|MetadataTyID
+return|;
+block|}
+comment|/// isIntegerTy - True if this is an instance of IntegerType.
+comment|///
+name|bool
+name|isIntegerTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|IntegerTyID
+return|;
+block|}
+comment|/// isIntegerTy - Return true if this is an IntegerType of the given width.
+name|bool
+name|isIntegerTy
+argument_list|(
+argument|unsigned Bitwidth
+argument_list|)
+specifier|const
+block|;
+comment|/// isIntOrIntVectorTy - Return true if this is an integer type or a vector of
+comment|/// integer types.
+comment|///
+name|bool
+name|isIntOrIntVectorTy
+argument_list|()
+specifier|const
+block|;
 comment|/// isFunctionTy - True if this is an instance of FunctionType.
 comment|///
 name|bool
@@ -667,6 +667,19 @@ operator|==
 name|StructTyID
 return|;
 block|}
+comment|/// isUnionTy - True if this is an instance of UnionType.
+comment|///
+name|bool
+name|isUnionTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|UnionTyID
+return|;
+block|}
 comment|/// isArrayTy - True if this is an instance of ArrayType.
 comment|///
 name|bool
@@ -691,6 +704,19 @@ return|return
 name|ID
 operator|==
 name|PointerTyID
+return|;
+block|}
+comment|/// isOpaqueTy - True if this is an instance of OpaqueType.
+comment|///
+name|bool
+name|isOpaqueTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|OpaqueTyID
 return|;
 block|}
 comment|/// isVectorTy - True if this is an instance of VectorType.

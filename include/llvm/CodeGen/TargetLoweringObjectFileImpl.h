@@ -584,6 +584,30 @@ argument_list|,
 argument|unsigned Encoding
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getPersonalityEncoding
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getLSDAEncoding
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getFDEEncoding
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getTTypeEncoding
+argument_list|()
+specifier|const
 block|; }
 decl_stmt|;
 name|class

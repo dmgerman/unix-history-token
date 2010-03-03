@@ -363,6 +363,13 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|/// createMachineCSEPass - This pass performs global CSE on machine
+comment|/// instructions.
+name|FunctionPass
+modifier|*
+name|createMachineCSEPass
+parameter_list|()
+function_decl|;
 comment|/// createMachineLICMPass - This pass performs LICM on machine instructions.
 comment|///
 name|FunctionPass
@@ -413,7 +420,7 @@ function_decl|;
 comment|/// createMachineVerifierPass - This pass verifies cenerated machine code
 comment|/// instructions for correctness.
 comment|///
-comment|/// @param allowPhysDoubleDefs ignore double definitions of
+comment|/// @param allowDoubleDefs ignore double definitions of
 comment|///        registers. Useful before LiveVariables has run.
 name|FunctionPass
 modifier|*

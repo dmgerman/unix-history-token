@@ -335,7 +335,12 @@ name|VUZP
 block|,
 comment|// unzip (deinterleave)
 name|VTRN
+block|,
 comment|// transpose
+comment|// Floating-point max and min:
+name|FMAX
+block|,
+name|FMIN
 block|}
 enum|;
 block|}

@@ -298,6 +298,22 @@ name|unsigned
 name|SuccNum
 parameter_list|)
 function_decl|;
+comment|/// GetSuccessorNumber - Search for the specified successor of basic block BB
+comment|/// and return its position in the terminator instruction's list of
+comment|/// successors.  It is an error to call this with a block that is not a
+comment|/// successor.
+name|unsigned
+name|GetSuccessorNumber
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|Succ
+parameter_list|)
+function_decl|;
 comment|/// isCriticalEdge - Return true if the specified edge is a critical edge.
 comment|/// Critical edges are edges from a block with multiple successors to a block
 comment|/// with multiple predecessors.

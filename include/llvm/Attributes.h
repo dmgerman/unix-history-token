@@ -314,12 +314,12 @@ specifier|const
 name|Attributes
 name|StackAlignment
 init|=
-literal|31
+literal|7
 operator|<<
 literal|26
 decl_stmt|;
 comment|///< Alignment of stack for
-comment|///function (5 bits) stored as log2
+comment|///function (3 bits) stored as log2
 comment|///of alignment with +1 bias
 comment|///0 means unaligned (different from
 comment|///alignstack(1))
@@ -544,7 +544,7 @@ name|assert
 argument_list|(
 name|i
 operator|<=
-literal|0x40000000
+literal|0x100
 operator|&&
 literal|"Alignment too large."
 argument_list|)

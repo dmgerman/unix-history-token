@@ -481,6 +481,14 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|bool
+name|canSimplifyCallFramePseudos
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(

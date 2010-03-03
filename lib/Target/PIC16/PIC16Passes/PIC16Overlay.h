@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- PIC16FrameOverlay.h - Interface for PIC16 Frame Overlay -*- C++ -*-===//
+comment|//===-- PIC16Overlay.h - Interface for PIC16 Frame Overlay -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -59,24 +59,6 @@ directive|define
 name|PIC16FRAMEOVERLAY_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/CallGraph.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CallGraphSCCPass.h"
-end_include
-
 begin_expr_stmt
 name|using
 name|std
@@ -96,8 +78,27 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|// Forward declarations.
+name|class
+name|Function
+decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|ModulePass
+decl_stmt|;
+name|class
+name|AnalysisUsage
+decl_stmt|;
+name|class
+name|CallGraphNode
+decl_stmt|;
+name|class
+name|CallGraph
+decl_stmt|;
 name|namespace
-name|PIC16Overlay
+name|PIC16OVERLAY
 block|{
 enum|enum
 name|OverlayConsts
@@ -113,7 +114,7 @@ block|}
 enum|;
 block|}
 name|class
-name|PIC16FrameOverlay
+name|PIC16Overlay
 range|:
 name|public
 name|ModulePass
@@ -136,7 +137,7 @@ name|char
 name|ID
 block|;
 comment|// Class identification
-name|PIC16FrameOverlay
+name|PIC16Overlay
 argument_list|()
 operator|:
 name|ModulePass
@@ -150,13 +151,13 @@ literal|"Overlay="
 block|;
 name|InterruptDepth
 operator|=
-name|PIC16Overlay
+name|PIC16OVERLAY
 operator|::
 name|StartInterruptColor
 block|;
 name|IndirectCallColor
 operator|=
-name|PIC16Overlay
+name|PIC16OVERLAY
 operator|::
 name|StartIndirectCallColor
 block|;     }

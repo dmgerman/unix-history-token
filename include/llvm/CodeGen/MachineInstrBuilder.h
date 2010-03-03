@@ -623,6 +623,7 @@ name|MachineInstrBuilder
 modifier|&
 name|addMetadata
 argument_list|(
+specifier|const
 name|MDNode
 operator|*
 name|MD

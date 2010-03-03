@@ -2133,6 +2133,30 @@ name|getFilename
 argument_list|()
 return|;
 block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getColumnNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getUnsignedField
+argument_list|(
+literal|3
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
 comment|/// DINameSpace - A wrapper for a C++ style name space.
@@ -2757,6 +2781,12 @@ name|DILexicalBlock
 name|CreateLexicalBlock
 argument_list|(
 argument|DIDescriptor Context
+argument_list|,
+argument|unsigned Line =
+literal|0
+argument_list|,
+argument|unsigned Col =
+literal|0
 argument_list|)
 block|;
 comment|/// CreateNameSpace - This creates new descriptor for a namespace

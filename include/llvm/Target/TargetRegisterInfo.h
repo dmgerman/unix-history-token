@@ -2354,6 +2354,35 @@ name|MF
 argument_list|)
 return|;
 block|}
+comment|/// canSimplifyCallFramePseudos - When possible, it's best to simplify the
+comment|/// call frame pseudo ops before doing frame index elimination. This is
+comment|/// possible only when frame index references between the pseudos won't
+comment|/// need adjusted for the call frame adjustments. Normally, that's true
+comment|/// if the function has a reserved call frame or a frame pointer. Some
+comment|/// targets (Thumb2, for example) may have more complicated criteria,
+comment|/// however, and can override this behavior.
+name|virtual
+name|bool
+name|canSimplifyCallFramePseudos
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasReservedCallFrame
+argument_list|(
+name|MF
+argument_list|)
+operator|||
+name|hasFP
+argument_list|(
+name|MF
+argument_list|)
+return|;
+block|}
 comment|/// hasReservedSpillSlot - Return true if target has reserved a spill slot in
 comment|/// the stack frame of the given function for the specified register. e.g. On
 comment|/// x86, if the frame register is required, the first fixed stack object is

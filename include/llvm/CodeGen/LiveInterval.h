@@ -2343,6 +2343,28 @@ name|getSize
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// isSpillable - Can this interval be spilled?
+name|bool
+name|isSpillable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|weight
+operator|!=
+name|HUGE_VALF
+return|;
+block|}
+comment|/// markNotSpillable - Mark interval as not spillable
+name|void
+name|markNotSpillable
+parameter_list|()
+block|{
+name|weight
+operator|=
+name|HUGE_VALF
+expr_stmt|;
+block|}
 comment|/// ComputeJoinedWeight - Set the weight of a live interval after
 comment|/// Other has been merged into it.
 name|void

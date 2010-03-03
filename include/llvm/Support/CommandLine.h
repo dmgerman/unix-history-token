@@ -300,17 +300,17 @@ name|NotHidden
 init|=
 literal|0x20
 block|,
-comment|// Option included in --help& --help-hidden
+comment|// Option included in -help& -help-hidden
 name|Hidden
 init|=
 literal|0x40
 block|,
-comment|// -help doesn't, but --help-hidden does
+comment|// -help doesn't, but -help-hidden does
 name|ReallyHidden
 init|=
 literal|0x60
 block|,
-comment|// Neither --help nor --help-hidden show this arg
+comment|// Neither -help nor -help-hidden show this arg
 name|HiddenMask
 init|=
 literal|0x60
@@ -468,7 +468,7 @@ name|char
 modifier|*
 name|HelpStr
 decl_stmt|;
-comment|// The descriptive text message for --help
+comment|// The descriptive text message for -help
 specifier|const
 name|char
 modifier|*
@@ -958,7 +958,7 @@ comment|//===-------------------------------------------------------------------
 comment|// Command line option modifiers that can be used to modify the behavior of
 comment|// command line option parsers...
 comment|//
-comment|// desc - Modifier to set the description shown in the --help output...
+comment|// desc - Modifier to set the description shown in the -help output...
 struct|struct
 name|desc
 block|{
@@ -996,7 +996,7 @@ argument_list|)
 block|; }
 block|}
 struct|;
-comment|// value_desc - Modifier to set the value description shown in the --help
+comment|// value_desc - Modifier to set the value description shown in the -help
 comment|// output...
 struct|struct
 name|value_desc
@@ -1686,7 +1686,7 @@ block|;
 comment|// Default parser implementation - This implementation depends on having a
 comment|// mapping of recognized options to values of some sort.  In addition to this,
 comment|// each entry in the mapping also tracks a help message that is printed with the
-comment|// command line option for --help.  Because this is a simple mapping parser, the
+comment|// command line option for -help.  Because this is a simple mapping parser, the
 comment|// data type can be any unsupported type.
 comment|//
 name|template
@@ -7216,7 +7216,7 @@ comment|// This function just prints the help message, exactly the same way as i
 end_comment
 
 begin_comment
-comment|// --help option had been given on the command line.
+comment|// -help option had been given on the command line.
 end_comment
 
 begin_comment

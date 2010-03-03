@@ -79,6 +79,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|APInt
+decl_stmt|;
 comment|/// StringRef - Represent a constant reference to a string, i.e. a character
 comment|/// array and a length, which need not be null terminated.
 comment|///
@@ -995,6 +998,29 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|// TODO: Provide overloads for int/unsigned that check for overflow.
+comment|/// getAsInteger - Parse the current string as an integer of the
+comment|/// specified radix, or of an autosensed radix if the radix given
+comment|/// is 0.  The current value in Result is discarded, and the
+comment|/// storage is changed to be wide enough to store the parsed
+comment|/// integer.
+comment|///
+comment|/// Returns true if the string does not solely consist of a valid
+comment|/// non-empty number in the appropriate base.
+comment|///
+comment|/// APInt::fromString is superficially similar but assumes the
+comment|/// string is well-formed in the given radix.
+name|bool
+name|getAsInteger
+argument_list|(
+name|unsigned
+name|Radix
+argument_list|,
+name|APInt
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Substring Operations
 comment|/// @{
@@ -1312,7 +1338,7 @@ comment|/// \param MaxSplit - The maximum number of times the string is split.
 end_comment
 
 begin_comment
-comment|/// \parm KeepEmpty - True if empty substring should be added.
+comment|/// \param KeepEmpty - True if empty substring should be added.
 end_comment
 
 begin_decl_stmt

@@ -265,6 +265,7 @@ argument_list|(
 argument|&ID
 argument_list|)
 block|{}
+comment|// Calculate the spill weight to assign to a single instruction.
 specifier|static
 name|float
 name|getSpillWeight
@@ -275,24 +276,30 @@ argument|bool isUse
 argument_list|,
 argument|unsigned loopDepth
 argument_list|)
+expr_stmt|;
+comment|// After summing the spill weights of all defs and uses, the final weight
+comment|// should be normalized, dividing the weight of the interval by its size.
+comment|// This encourages spilling of intervals that are large and have few uses,
+comment|// and discourages spilling of small intervals with many uses.
+name|void
+name|normalizeSpillWeight
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|li
+parameter_list|)
 block|{
-return|return
-operator|(
-name|isDef
-operator|+
-name|isUse
-operator|)
-operator|*
-name|powf
+name|li
+operator|.
+name|weight
+operator|/=
+name|getApproximateInstructionCount
 argument_list|(
-literal|10.0F
-argument_list|,
-operator|(
-name|float
-operator|)
-name|loopDepth
+name|li
 argument_list|)
-return|;
+operator|+
+literal|25
+expr_stmt|;
 block|}
 typedef|typedef
 name|Reg2IntervalMap
@@ -1841,6 +1848,21 @@ operator|>
 operator|&
 name|MBBVRegsMap
 argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|&
+name|NewLIs
+argument_list|)
+decl_stmt|;
+comment|// Normalize the spill weight of all the intervals in NewLIs.
+name|void
+name|normalizeSpillWeights
+argument_list|(
 name|std
 operator|::
 name|vector

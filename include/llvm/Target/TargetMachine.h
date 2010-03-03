@@ -537,11 +537,15 @@ name|formatted_raw_ostream
 operator|&
 argument_list|,
 name|CodeGenFileType
-name|Filetype
 argument_list|,
 name|CodeGenOpt
 operator|::
 name|Level
+argument_list|,
+name|bool
+name|DisableVerify
+operator|=
+name|true
 argument_list|)
 block|{
 return|return
@@ -567,6 +571,11 @@ argument_list|,
 name|CodeGenOpt
 operator|::
 name|Level
+argument_list|,
+name|bool
+name|DisableVerify
+operator|=
+name|true
 argument_list|)
 block|{
 return|return
@@ -601,6 +610,11 @@ argument_list|,
 name|CodeGenOpt
 operator|::
 name|Level
+argument_list|,
+name|bool
+name|DisableVerify
+operator|=
+name|true
 argument_list|)
 block|{
 return|return
@@ -642,12 +656,11 @@ comment|///
 name|bool
 name|addCommonCodeGenPasses
 argument_list|(
-name|PassManagerBase
-operator|&
+argument|PassManagerBase&
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
+argument|CodeGenOpt::Level
+argument_list|,
+argument|bool DisableVerify
 argument_list|)
 block|;
 name|private
@@ -679,6 +692,8 @@ argument_list|,
 argument|CodeGenFileType FileType
 argument_list|,
 argument|CodeGenOpt::Level
+argument_list|,
+argument|bool DisableVerify = true
 argument_list|)
 block|;
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
@@ -691,17 +706,13 @@ name|virtual
 name|bool
 name|addPassesToEmitMachineCode
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|,
-name|JITCodeEmitter
-operator|&
-name|MCE
+argument|JITCodeEmitter&MCE
 argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
+argument|CodeGenOpt::Level
+argument_list|,
+argument|bool DisableVerify = true
 argument_list|)
 block|;
 comment|/// Target-Independent Code Generator Pass Configuration Options.

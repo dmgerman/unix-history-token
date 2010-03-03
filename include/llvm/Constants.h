@@ -907,6 +907,32 @@ name|isNegative
 argument_list|()
 return|;
 block|}
+comment|/// isZero - Return true if the value is positive or negative zero.
+name|bool
+name|isZero
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|isZero
+argument_list|()
+return|;
+block|}
+comment|/// isNaN - Return true if the value is a NaN.
+name|bool
+name|isNaN
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|isNaN
+argument_list|()
+return|;
+block|}
 comment|/// isExactlyValue - We don't rely on operator== working on double values, as
 comment|/// it returns true for things that are clearly not equal, like -0.0 and 0.0.
 comment|/// As such, this method can be used to do an exact bit-for-bit comparison of
@@ -2718,8 +2744,9 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// getSizeOf constant expr - computes the size of a type in a target
-comment|/// independent way (Note: the return type is an i64).
+comment|/// getSizeOf constant expr - computes the (alloc) size of a type (in
+comment|/// address-units, not bits) in a target independent way (Note: the return
+comment|/// type is an i64).
 comment|///
 specifier|static
 name|Constant

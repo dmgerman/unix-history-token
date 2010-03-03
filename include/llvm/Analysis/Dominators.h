@@ -225,7 +225,7 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
+comment|/// getRoots - Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
 comment|/// dominators, this will always be a single block (the entry node).
 comment|///
@@ -2898,7 +2898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// eraseNode - Removes a node from  the dominator tree. Block must not
+comment|/// eraseNode - Removes a node from the dominator tree. Block must not
 end_comment
 
 begin_comment
@@ -4056,7 +4056,7 @@ operator|*
 name|DT
 return|;
 block|}
-comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
+comment|/// getRoots - Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
 comment|/// dominators, this will always be a single block (the entry node).
 comment|///
@@ -4559,7 +4559,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// eraseNode - Removes a node from  the dominator tree. Block must not
+comment|/// eraseNode - Removes a node from the dominator tree. Block must not
 end_comment
 
 begin_comment
@@ -5019,7 +5019,7 @@ argument_list|(
 argument|isPostDom
 argument_list|)
 block|{}
-comment|/// getRoots -  Return the root blocks of the current CFG.  This may include
+comment|/// getRoots - Return the root blocks of the current CFG.  This may include
 comment|/// multiple blocks if we are computing post dominators.  For forward
 comment|/// dominators, this will always be a single block (the entry node).
 comment|///
@@ -5888,7 +5888,7 @@ argument_list|,
 argument|DominatorTree *DT
 argument_list|)
 block|{
-comment|// NewBB is now  dominating BB. Which means BB's dominance
+comment|// NewBB is now dominating BB. Which means BB's dominance
 comment|// frontier is now part of NewBB's dominance frontier. However, BB
 comment|// itself is not member of NewBB's dominance frontier.
 name|DominanceFrontier
