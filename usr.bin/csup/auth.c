@@ -797,7 +797,7 @@ name|lprintf
 argument_list|(
 literal|2
 argument_list|,
-literal|"MD5 authentication successfull\n"
+literal|"MD5 authentication successful\n"
 argument_list|)
 expr_stmt|;
 return|return
