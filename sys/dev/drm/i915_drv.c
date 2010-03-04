@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm_mm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/i915_drm.h"
 end_include
 

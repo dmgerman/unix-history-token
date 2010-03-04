@@ -101,11 +101,26 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not used yet */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_fw.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2669,7 +2684,7 @@ comment|/* Run packet through ipfw processing, if enabled */
 if|#
 directive|if
 literal|0
-block|if (priv->conf.ipfw[linkNum]&& V_fw_enable&& ip_fw_chk_ptr != NULL) {
+block|if (priv->conf.ipfw[linkNum]&& V_fw_enable&& V_ip_fw_chk_ptr != NULL) {
 comment|/* XXX not implemented yet */
 block|}
 endif|#

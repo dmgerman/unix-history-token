@@ -297,7 +297,7 @@ name|void
 operator|)
 name|setlocale
 argument_list|(
-name|LC_TIME
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
@@ -565,6 +565,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|die
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT

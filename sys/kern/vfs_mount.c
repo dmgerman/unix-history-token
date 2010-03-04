@@ -389,7 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The root filesystem is detailed in the kernel environment variable  * vfs.root.mountfrom, which is expected to be in the general format  *  *<vfsname>:[<path>]  * vfsname   := the name of a VFS known to the kernel and capable  *              of being mounted as root  * path      := disk device name or other data used by the filesystem  *              to locate its physical store  *  * The environment variable vfs.root.mountfrom options is a comma delimited  * set of string mount options.  These mount options must be parseable  * by nmount() in the kernel.  */
+comment|/*  * The root filesystem is detailed in the kernel environment variable  * vfs.root.mountfrom, which is expected to be in the general format  *  *<vfsname>:[<path>][<vfsname>:[<path>] ...]  * vfsname   := the name of a VFS known to the kernel and capable  *              of being mounted as root  * path      := disk device name or other data used by the filesystem  *              to locate its physical store  *  * If the environment variable vfs.root.mountfrom is a space separated list,  * each list element is tried in turn and the root filesystem will be mounted  * from the first one that suceeds.  *  * The environment variable vfs.root.mountfrom.options is a comma delimited  * set of string mount options.  These mount options must be parseable  * by nmount() in the kernel.  */
 end_comment
 
 begin_comment
@@ -4757,6 +4757,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Allocate and initialize the filesystem. 		 */
 name|mp
 operator|=
@@ -4771,13 +4778,6 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXXMAC: pass to vfs_mount_alloc? */
@@ -5285,17 +5285,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
-name|struct
-name|vnode
-modifier|*
-name|newdp
-decl_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -5313,6 +5302,17 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|newdp
+decl_stmt|;
 name|vp
 operator|->
 name|v_mountedhere
@@ -5429,23 +5429,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|v_iflag
-operator|&=
-operator|~
-name|VI_MOUNT
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
@@ -6739,7 +6722,6 @@ name|root_holds
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|root_holds
 argument_list|)
 expr_stmt|;
@@ -7980,7 +7962,13 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
+name|cpt
+decl_stmt|,
+modifier|*
 name|options
+decl_stmt|,
+modifier|*
+name|tmpdev
 decl_stmt|;
 name|int
 name|error
@@ -8145,28 +8133,58 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|cpt
+operator|=
+name|cp
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|tmpdev
+operator|=
+name|strsep
+argument_list|(
+operator|&
+name|cpt
+argument_list|,
+literal|" \t"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|error
 operator|=
 name|vfs_mountroot_try
 argument_list|(
-name|cp
+name|tmpdev
 argument_list|,
 name|options
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|freeenv
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
 goto|goto
 name|mounted
 goto|;
+block|}
+block|}
+name|freeenv
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Try values that may have been computed by code during boot 	 */
 if|if
@@ -9017,6 +9035,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"<fstype>:<device>  Mount<device> using filesystem<fstype>\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"                       eg. zfs:tank\n"
 argument_list|)
 expr_stmt|;
 name|printf

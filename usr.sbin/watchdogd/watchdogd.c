@@ -407,9 +407,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit
+name|err
 argument_list|(
-name|EX_SOFTWARE
+name|EX_OSERR
+argument_list|,
+literal|"patting the dog"
 argument_list|)
 expr_stmt|;
 name|pfh
@@ -611,7 +613,9 @@ begin_function
 specifier|static
 name|int
 name|watchdog_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fd
 operator|=
@@ -830,7 +834,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

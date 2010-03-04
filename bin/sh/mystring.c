@@ -223,10 +223,6 @@ name|error
 argument_list|(
 literal|"Illegal number: %s"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|s
 argument_list|)
 expr_stmt|;

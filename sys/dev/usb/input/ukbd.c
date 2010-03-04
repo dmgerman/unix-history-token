@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -356,6 +362,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.ukbd.debug"
+argument_list|,
+operator|&
+name|ukbd_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.ukbd.no_leds"
+argument_list|,
+operator|&
+name|ukbd_no_leds
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -547,6 +575,11 @@ name|ukbd_data
 name|sc_odata
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|sc_poll_thread
+decl_stmt|;
+name|struct
 name|usb_device
 modifier|*
 name|sc_udev
@@ -641,18 +674,21 @@ define|#
 directive|define
 name|UKBD_FLAG_TIMER_RUNNING
 value|0x0200
-name|int32_t
+name|int
 name|sc_mode
 decl_stmt|;
 comment|/* input mode (K_XLATE,K_RAW,K_CODE) */
-name|int32_t
+name|int
 name|sc_state
 decl_stmt|;
 comment|/* shift/lock key state */
-name|int32_t
+name|int
 name|sc_accents
 decl_stmt|;
 comment|/* accent key index (> 0) */
+name|int
+name|sc_poll_tick_last
+decl_stmt|;
 name|uint16_t
 name|sc_inputs
 decl_stmt|;
@@ -677,6 +713,9 @@ name|sc_kbd_id
 decl_stmt|;
 name|uint8_t
 name|sc_led_id
+decl_stmt|;
+name|uint8_t
+name|sc_poll_detected
 decl_stmt|;
 block|}
 struct|;
@@ -1162,18 +1201,18 @@ name|NN
 block|,
 name|NN
 block|,
-literal|115
+literal|123
 block|,
 comment|/* 80 - 87 */
-literal|112
+literal|124
 block|,
 literal|125
 block|,
-literal|121
+literal|126
 block|,
-literal|123
+literal|127
 block|,
-name|NN
+literal|128
 block|,
 name|NN
 block|,
@@ -1568,6 +1607,42 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|ukbd_is_polling
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ukbd_polls_other_thread
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ukbd_event_keyinput
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_probe_t
@@ -1812,6 +1887,54 @@ argument_list|,
 literal|"polling\n"
 argument_list|)
 expr_stmt|;
+comment|/* update stats about last polling event */
+name|sc
+operator|->
+name|sc_poll_tick_last
+operator|=
+name|ticks
+expr_stmt|;
+name|sc
+operator|->
+name|sc_poll_detected
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|kdb_active
+operator|==
+literal|0
+condition|)
+block|{
+while|while
+condition|(
+name|sc
+operator|->
+name|sc_inputs
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* make sure the USB code gets a chance to run */
+name|pause
+argument_list|(
+literal|"UKBD"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* check if we should wait */
+if|if
+condition|(
+operator|!
+name|wait
+condition|)
+break|break;
+block|}
+return|return;
+comment|/* Only poll if KDB is active */
+block|}
 while|while
 condition|(
 name|sc
@@ -1916,13 +2039,25 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ukbd_polls_other_thread
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 name|sc
 operator|->
 name|sc_flags
 operator|&
 name|UKBD_FLAG_POLLING
 condition|)
-block|{
 name|ukbd_do_poll
 argument_list|(
 name|sc
@@ -1930,7 +2065,6 @@ argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -2025,9 +2159,6 @@ decl_stmt|;
 name|uint32_t
 name|dtime
 decl_stmt|;
-name|uint32_t
-name|c
-decl_stmt|;
 name|uint8_t
 name|key
 decl_stmt|;
@@ -2050,11 +2181,7 @@ index|]
 operator|==
 name|KEY_ERROR
 condition|)
-block|{
-goto|goto
-name|done
-goto|;
-block|}
+return|return;
 name|n_mod
 operator|=
 name|sc
@@ -2459,15 +2586,15 @@ name|sc
 operator|->
 name|sc_ndata
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 name|sc
 operator|->
-name|sc_ntime
+name|sc_otime
 argument_list|,
 name|sc
 operator|->
-name|sc_otime
+name|sc_ntime
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2477,6 +2604,36 @@ name|sc_otime
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ukbd_event_keyinput
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ukbd_event_keyinput
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|c
+decl_stmt|;
+if|if
+condition|(
+name|ukbd_is_polling
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|sc
@@ -2485,24 +2642,7 @@ name|sc_inputs
 operator|==
 literal|0
 condition|)
-block|{
-goto|goto
-name|done
-goto|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|UKBD_FLAG_POLLING
-condition|)
-block|{
-goto|goto
-name|done
-goto|;
-block|}
+return|return;
 if|if
 condition|(
 name|KBD_IS_ACTIVE
@@ -2576,9 +2716,6 @@ name|NOKEY
 condition|)
 do|;
 block|}
-name|done
-label|:
-return|return;
 block|}
 end_function
 
@@ -2607,18 +2744,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|UKBD_FLAG_POLLING
-operator|)
-condition|)
-block|{
 name|sc
 operator|->
 name|sc_time_ms
@@ -2626,8 +2751,13 @@ operator|+=
 literal|25
 expr_stmt|;
 comment|/* milliseconds */
-block|}
 name|ukbd_interrupt
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Make sure any leftover key events gets read out */
+name|ukbd_event_keyinput
 argument_list|(
 name|sc
 argument_list|)
@@ -2638,6 +2768,14 @@ name|ukbd_any_key_pressed
 argument_list|(
 name|sc
 argument_list|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_inputs
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|ukbd_start_timer
@@ -3865,7 +4003,7 @@ return|;
 else|else
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_GENERIC
 operator|)
 return|;
 block|}
@@ -3961,7 +4099,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-literal|0
+name|BUS_PROBE_GENERIC
 expr_stmt|;
 block|}
 else|else
@@ -4260,6 +4398,56 @@ argument_list|(
 name|kbd
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set boot protocol if we need the quirk. 	 */
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_KBD_BOOTPROTO
+argument_list|)
+condition|)
+block|{
+name|err
+operator|=
+name|usbd_req_set_protocol
+argument_list|(
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+name|NULL
+argument_list|,
+name|sc
+operator|->
+name|sc_iface_index
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+name|USB_ERR_NORMAL_COMPLETION
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"set protocol error=%s\n"
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|detach
+goto|;
+block|}
+block|}
 comment|/* figure out if there is an ID byte in the data */
 name|err
 operator|=
@@ -4469,6 +4657,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ukbd_ioctl
 argument_list|(
 name|kbd
@@ -4487,6 +4681,12 @@ expr_stmt|;
 name|KBD_INIT_DONE
 argument_list|(
 name|kbd
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -4622,21 +4822,12 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_flags
-operator|&
-name|UKBD_FLAG_POLLING
-condition|)
-block|{
-name|panic
+name|mtx_lock
 argument_list|(
-literal|"cannot detach polled keyboard!\n"
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
-block|}
 name|sc
 operator|->
 name|sc_flags
@@ -4744,6 +4935,12 @@ name|kb_flags
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|usbd_transfer_unsetup
 argument_list|(
 name|sc
@@ -4798,12 +4995,24 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ukbd_clear_state
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_kbd
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -5207,13 +5416,6 @@ name|retval
 operator|)
 return|;
 block|}
-name|ukbd_do_poll
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5233,6 +5435,34 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check if key belongs to this thread */
+if|if
+condition|(
+name|ukbd_polls_other_thread
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_POLLING
+condition|)
+name|ukbd_do_poll
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE
@@ -5380,6 +5610,19 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check if key belongs to this thread */
+if|if
+condition|(
+name|ukbd_polls_other_thread
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -5543,6 +5786,20 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* check if key belongs to this thread */
+if|if
+condition|(
+name|ukbd_polls_other_thread
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE
@@ -5860,6 +6117,19 @@ name|NOKEY
 operator|)
 return|;
 block|}
+comment|/* check if key belongs to this thread */
+if|if
+condition|(
+name|ukbd_polls_other_thread
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NOKEY
+operator|)
+return|;
 name|next_code
 label|:
 comment|/* do we have a composed char to return ? */
@@ -6672,11 +6942,53 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * XXX big problem: If scroll lock is pressed and "printf()" 		 * is called, the CPU will get here, to un-scroll lock the 		 * keyboard. But if "printf()" acquires the "Giant" lock, 		 * there will be a locking order reversal problem, so the 		 * keyboard system must get out of "Giant" first, before the 		 * CPU can proceed here ... 		 */
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+name|KDGKBMODE
+case|:
+case|case
+name|KDSKBMODE
+case|:
+comment|/* workaround for Geli */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|ukbd_ioctl
+argument_list|(
+name|kbd
+argument_list|,
+name|cmd
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|i
+operator|)
+return|;
+default|default:
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 block|}
 switch|switch
 condition|(
@@ -6812,6 +7124,15 @@ operator|)
 name|arg
 condition|)
 block|{
+if|if
+condition|(
+name|ukbd_is_polling
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|ukbd_clear_state
 argument_list|(
 name|kbd
@@ -7387,8 +7708,25 @@ name|Giant
 argument_list|)
 condition|)
 block|{
+comment|/* XXX cludge */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|ukbd_clear_state
+argument_list|(
+name|kbd
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
-comment|/* XXX */
 block|}
 name|sc
 operator|->
@@ -7443,13 +7781,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_ndata
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|sc
@@ -7458,12 +7798,14 @@ name|sc_ndata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_odata
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7473,12 +7815,14 @@ name|sc_odata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_ntime
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7488,12 +7832,14 @@ name|sc_ntime
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_otime
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7574,6 +7920,110 @@ end_function
 begin_function
 specifier|static
 name|int
+name|ukbd_is_polling
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|delta
+decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_POLLING
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* polling */
+name|delta
+operator|=
+name|ticks
+operator|-
+name|sc
+operator|->
+name|sc_poll_tick_last
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|delta
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|delta
+operator|>=
+name|hz
+operator|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_poll_detected
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* not polling */
+block|}
+return|return
+operator|(
+name|sc
+operator|->
+name|sc_poll_detected
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ukbd_polls_other_thread
+parameter_list|(
+name|struct
+name|ukbd_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ukbd_is_polling
+argument_list|(
+name|sc
+argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_poll_thread
+operator|!=
+name|curthread
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|ukbd_poll
 parameter_list|(
 name|keyboard_t
@@ -7645,6 +8095,12 @@ name|sc_flags
 operator||=
 name|UKBD_FLAG_POLLING
 expr_stmt|;
+name|sc
+operator|->
+name|sc_poll_thread
+operator|=
+name|curthread
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -7655,6 +8111,12 @@ operator|&=
 operator|~
 name|UKBD_FLAG_POLLING
 expr_stmt|;
+name|ukbd_start_timer
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* start timer */
 block|}
 return|return
 operator|(
@@ -7897,79 +8359,136 @@ name|scan
 index|[]
 init|=
 block|{
-literal|0x1c
+comment|/* 89 */
+literal|0x11c
 block|,
-literal|0x1d
+comment|/* Enter */
+comment|/* 90-99 */
+literal|0x11d
 block|,
-literal|0x35
+comment|/* Ctrl-R */
+literal|0x135
 block|,
-literal|0x37
+comment|/* Divide */
+literal|0x137
 operator||
 name|SCAN_PREFIX_SHIFT
 block|,
 comment|/* PrintScreen */
-literal|0x38
+literal|0x138
 block|,
-literal|0x47
+comment|/* Alt-R */
+literal|0x147
 block|,
-literal|0x48
+comment|/* Home */
+literal|0x148
 block|,
-literal|0x49
+comment|/* Up */
+literal|0x149
 block|,
-literal|0x4b
+comment|/* PageUp */
+literal|0x14b
 block|,
-literal|0x4d
+comment|/* Left */
+literal|0x14d
 block|,
-literal|0x4f
+comment|/* Right */
+literal|0x14f
 block|,
-literal|0x50
+comment|/* End */
+comment|/* 100-109 */
+literal|0x150
 block|,
-literal|0x51
+comment|/* Down */
+literal|0x151
 block|,
-literal|0x52
+comment|/* PageDown */
+literal|0x152
 block|,
-literal|0x53
+comment|/* Insert */
+literal|0x153
 block|,
-literal|0x46
+comment|/* Delete */
+literal|0x146
 block|,
 comment|/* XXX Pause/Break */
-literal|0x5b
+literal|0x15b
 block|,
+comment|/* Win_L(Super_L) */
+literal|0x15c
+block|,
+comment|/* Win_R(Super_R) */
+literal|0x15d
+block|,
+comment|/* Application(Menu) */
+comment|/* SUN TYPE 6 USB KEYBOARD */
+literal|0x168
+block|,
+comment|/* Sun Type 6 Help */
+literal|0x15e
+block|,
+comment|/* Sun Type 6 Stop */
+comment|/* 110 - 119 */
+literal|0x15f
+block|,
+comment|/* Sun Type 6 Again */
+literal|0x160
+block|,
+comment|/* Sun Type 6 Props */
+literal|0x161
+block|,
+comment|/* Sun Type 6 Undo */
+literal|0x162
+block|,
+comment|/* Sun Type 6 Front */
+literal|0x163
+block|,
+comment|/* Sun Type 6 Copy */
+literal|0x164
+block|,
+comment|/* Sun Type 6 Open */
+literal|0x165
+block|,
+comment|/* Sun Type 6 Paste */
+literal|0x166
+block|,
+comment|/* Sun Type 6 Find */
+literal|0x167
+block|,
+comment|/* Sun Type 6 Cut */
+literal|0x125
+block|,
+comment|/* Sun Type 6 Mute */
+comment|/* 120 - 128 */
+literal|0x11f
+block|,
+comment|/* Sun Type 6 VolumeDown */
+literal|0x11e
+block|,
+comment|/* Sun Type 6 VolumeUp */
+literal|0x120
+block|,
+comment|/* Sun Type 6 PowerDown */
+comment|/* Japanese 106/109 keyboard */
+literal|0x73
+block|,
+comment|/* Keyboard Intl' 1 (backslash / underscore) */
+literal|0x70
+block|,
+comment|/* Keyboard Intl' 2 (Katakana / Hiragana) */
+literal|0x7d
+block|,
+comment|/* Keyboard Intl' 3 (Yen sign) (Not using in jp106/109) */
+literal|0x79
+block|,
+comment|/* Keyboard Intl' 4 (Henkan) */
+literal|0x7b
+block|,
+comment|/* Keyboard Intl' 5 (Muhenkan) */
 literal|0x5c
 block|,
-literal|0x5d
-block|,
-comment|/* SUN TYPE 6 USB KEYBOARD */
-literal|0x68
-block|,
-literal|0x5e
-block|,
-literal|0x5f
-block|,
-literal|0x60
-block|,
-literal|0x61
-block|,
-literal|0x62
-block|,
-literal|0x63
-block|,
-literal|0x64
-block|,
-literal|0x65
-block|,
-literal|0x66
-block|,
-literal|0x67
-block|,
-literal|0x25
-block|,
-literal|0x1f
-block|,
-literal|0x1e
-block|,
-literal|0x20
-block|, 	}
+comment|/* Keyboard Intl' 6 (Keypad ,) (For PC-9821 layout) */
+block|}
 decl_stmt|;
 if|if
 condition|(
@@ -8011,8 +8530,6 @@ name|code
 operator|-
 literal|89
 index|]
-operator||
-name|SCAN_PREFIX_E0
 expr_stmt|;
 block|}
 comment|/* Pause/Break */

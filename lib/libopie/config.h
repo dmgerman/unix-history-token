@@ -623,9 +623,12 @@ begin_comment
 comment|/* Define if you have the getutxline function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETUTXLINE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXLINE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the getwd function.  */
@@ -666,9 +669,12 @@ begin_comment
 comment|/* Define if you have the pututxline function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PUTUTXLINE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PUTUTXLINE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the rindex function.  */
@@ -1119,9 +1125,12 @@ begin_comment
 comment|/* Define if you have the<utmpx.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UTMPX_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UTMPX_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the crypt library (-lcrypt).  */

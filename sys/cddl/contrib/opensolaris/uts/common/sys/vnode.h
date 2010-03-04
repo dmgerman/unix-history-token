@@ -483,11 +483,6 @@ directive|define
 name|V_ACE_MASK
 value|0x1
 comment|/* mask represents  NFSv4 ACE permissions */
-define|#
-directive|define
-name|V_APPEND
-value|0x2
-comment|/* want to do append only check */
 comment|/*  * Flags for vnode operations.  */
 enum|enum
 name|rm

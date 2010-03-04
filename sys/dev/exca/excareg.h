@@ -1679,7 +1679,7 @@ comment|/* #define	EXCA_RESERVED			0x3F */
 end_comment
 
 begin_comment
-comment|/* cardbus extensions - memory window page registers */
+comment|/* CardBus extensions - memory window page registers */
 end_comment
 
 begin_define

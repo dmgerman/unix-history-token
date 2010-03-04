@@ -217,18 +217,13 @@ argument_list|(
 literal|"Empty cpio archive is incorrectly formatted."
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|memcmp
+name|assertEqualMem
 argument_list|(
 name|buff
 argument_list|,
 name|ref
 argument_list|,
 literal|87
-argument_list|)
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -35,13 +35,6 @@ name|ia64_clock_reload
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|uint64_t
-name|itc_frequency
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

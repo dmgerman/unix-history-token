@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: resolver.c,v 1.384.14.14 2009/06/02 23:47:13 tbox Exp $ */
+comment|/* $Id: resolver.c,v 1.384.14.14.8.2 2010/01/07 17:17:19 each Exp $ */
 end_comment
 
 begin_comment
@@ -18845,7 +18845,7 @@ name|view
 operator|->
 name|maxcachettl
 expr_stmt|;
-comment|/* 		 * If this rrset is in a secure domain, do DNSSEC validation 		 * for it, unless it is glue. 		 */
+comment|/* 		 * If this RRset is in a secure domain, is in bailiwick, 		 * and is not glue, attempt DNSSEC validation.	(We do not 		 * attempt to validate glue or out-of-bailiwick data--even 		 * though there might be some performance benefit to doing 		 * so--because it makes it simpler and safer to ensure that 		 * records from a secure domain are only cached if validated 		 * within the context of a query to the domain that owns 		 * them.) 		 */
 if|if
 condition|(
 name|secure_domain
@@ -18855,8 +18855,17 @@ operator|->
 name|trust
 operator|!=
 name|dns_trust_glue
+operator|&&
+operator|!
+name|EXTERNAL
+argument_list|(
+name|rdataset
+argument_list|)
 condition|)
 block|{
+name|dns_trust_t
+name|trust
+decl_stmt|;
 comment|/* 			 * RRSIGs are validated as part of validating the 			 * type they cover. 			 */
 if|if
 condition|(
@@ -18965,12 +18974,29 @@ operator|->
 name|ttl
 expr_stmt|;
 block|}
-comment|/* 			 * Cache this rdataset/sigrdataset pair as 			 * pending data. 			 */
+comment|/* 			 * Cache this rdataset/sigrdataset pair as 			 * pending data.  Track whether it was additional 			 * or not. 			 */
+if|if
+condition|(
+name|rdataset
+operator|->
+name|trust
+operator|==
+name|dns_trust_additional
+condition|)
+name|trust
+operator|=
+name|dns_trust_pending_additional
+expr_stmt|;
+else|else
+name|trust
+operator|=
+name|dns_trust_pending_answer
+expr_stmt|;
 name|rdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|trust
 expr_stmt|;
 if|if
 condition|(
@@ -18982,7 +19008,7 @@ name|sigrdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|trust
 expr_stmt|;
 if|if
 condition|(
@@ -20250,7 +20276,7 @@ name|trdataset
 operator|->
 name|trust
 operator|=
-name|dns_trust_pending
+name|dns_trust_pending_answer
 expr_stmt|;
 name|result
 operator|=
@@ -23090,7 +23116,7 @@ condition|(
 name|external
 condition|)
 block|{
-comment|/* 						 * This data is outside of 						 * our query domain, and 						 * may only be cached if it 						 * comes from a secure zone 						 * and validates. 						 */
+comment|/* 						 * This data is outside of 						 * our query domain, and 						 * may not be cached. 						 */
 name|rdataset
 operator|->
 name|attributes

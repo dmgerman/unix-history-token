@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2002, 2004, 2009 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb1.c,v 8.59 2004/08/03 20:58:39 ca Exp $"
+literal|"@(#)$Id: smdb1.c,v 8.62 2009/11/12 23:04:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1813,12 +1813,6 @@ condition|)
 return|return
 name|SMDBE_ONLY_SUPPORTS_ONE_CURSOR
 return|;
-name|db1
-operator|->
-name|smdb1_cursor_in_use
-operator|=
-name|true
-expr_stmt|;
 name|db1_cursor
 operator|=
 operator|(
@@ -1833,12 +1827,15 @@ name|SMDB_DB1_CURSOR
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|db1_cursor
-operator|->
-name|db
-operator|=
-name|db1
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+name|SMDBE_MALLOC
+return|;
 name|cur
 operator|=
 operator|(
@@ -1859,9 +1856,28 @@ name|cur
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|db1_cursor
+argument_list|)
+expr_stmt|;
 return|return
 name|SMDBE_MALLOC
 return|;
+block|}
+name|db1
+operator|->
+name|smdb1_cursor_in_use
+operator|=
+name|true
+expr_stmt|;
+name|db1_cursor
+operator|->
+name|db
+operator|=
+name|db1
+expr_stmt|;
 name|cur
 operator|->
 name|smdbc_impl
@@ -2182,9 +2198,29 @@ name|db1
 operator|==
 name|NULL
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|smdb_unlock_file
+argument_list|(
+name|lock_fd
+argument_list|)
+expr_stmt|;
+name|smdb_free_database
+argument_list|(
+name|smdb_db
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|db1
+argument_list|)
+expr_stmt|;
 return|return
 name|SMDBE_MALLOC
 return|;
+block|}
 name|db1
 operator|->
 name|smdb1_lock_fd

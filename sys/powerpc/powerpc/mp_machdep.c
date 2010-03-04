@@ -209,6 +209,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Set up important bits on the CPU (HID registers, etc.) */
+name|cpudep_ap_setup
+argument_list|()
+expr_stmt|;
+comment|/* Set PIR */
 name|PCPU_SET
 argument_list|(
 name|pir
@@ -252,11 +257,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|printf
 argument_list|(
-name|KTR_SMP
-argument_list|,
-literal|"SMP: AP CPU%d launched"
+literal|"SMP: AP CPU #%d launched\n"
 argument_list|,
 name|PCPU_GET
 argument_list|(
@@ -293,6 +296,7 @@ operator||
 name|PSL_EE
 argument_list|)
 expr_stmt|;
+comment|/* Announce ourselves awake, and enter the scheduler */
 name|sched_throw
 argument_list|(
 name|NULL
@@ -952,6 +956,12 @@ name|smp_cpus
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Let the APs get into the scheduler */
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
 name|smp_active
 operator|=
 literal|1

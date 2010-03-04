@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: safefile.c,v 8.128 2004/09/30 18:15:49 ca Exp $"
+literal|"@(#)$Id: safefile.c,v 8.129 2008/08/04 18:07:04 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2956,10 +2956,6 @@ name|omode
 operator|&=
 operator|~
 name|O_CREAT
-expr_stmt|;
-name|smode
-operator|=
-literal|0
 expr_stmt|;
 switch|switch
 condition|(

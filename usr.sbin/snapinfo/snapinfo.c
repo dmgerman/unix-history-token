@@ -570,6 +570,7 @@ name|struct
 name|FTW
 modifier|*
 name|ftwv
+name|__unused
 parameter_list|)
 block|{
 if|if

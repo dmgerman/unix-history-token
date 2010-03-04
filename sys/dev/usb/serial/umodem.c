@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/quirk/usb_quirk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
@@ -697,6 +703,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|umodem_poll
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -946,6 +965,12 @@ name|ucom_stop_write
 operator|=
 operator|&
 name|umodem_stop_write
+block|,
+operator|.
+name|ucom_poll
+operator|=
+operator|&
+name|umodem_poll
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1345,13 +1370,35 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no CM or union descriptor!\n"
+literal|"Missing descriptor. "
+literal|"Assuming data interface is next.\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ctrl_iface_no
+operator|==
+literal|0xFF
+condition|)
 goto|goto
 name|detach
 goto|;
+else|else
+name|sc
+operator|->
+name|sc_data_iface_no
+operator|=
+name|sc
+operator|->
+name|sc_ctrl_iface_no
+operator|+
+literal|1
+expr_stmt|;
 block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_data_iface_no
@@ -1363,6 +1410,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1500,7 +1548,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no data interface!\n"
+literal|"no data interface\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1508,6 +1556,25 @@ name|detach
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_ASSUME_CM_OVER_DATA
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_cm_over_data
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|sc
@@ -1551,6 +1618,7 @@ name|sc_cm_over_data
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|error
 operator|=
@@ -3636,6 +3704,38 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|umodem_poll
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+block|{
+name|struct
+name|umodem_softc
+modifier|*
+name|sc
+init|=
+name|ucom
+operator|->
+name|sc_parent
+decl_stmt|;
+name|usbd_transfer_poll
+argument_list|(
+name|sc
+operator|->
+name|sc_xfer
+argument_list|,
+name|UMODEM_N_TRANSFER
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

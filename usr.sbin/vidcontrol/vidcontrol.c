@@ -778,9 +778,9 @@ literal|"                  [-g geometry] [-h size] [-i adapter | mode] [-l scree
 argument_list|,
 literal|"                  [-M char] [-m on | off] [-r foreground background]"
 argument_list|,
-literal|"                  [-S on | off] [-s number] [-t N | off] [mode]"
+literal|"                  [-S on | off] [-s number] [-T xterm | cons25] [-t N | off]"
 argument_list|,
-literal|"                  [foreground [background]] [show]"
+literal|"                  [mode] [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5319,6 +5319,60 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|set_terminal_mode
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"xterm"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\033[=T"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"cons25"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\033[=1T"
+argument_list|)
+expr_stmt|;
+else|else
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -5401,7 +5455,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Cc:df:g:h:Hi:l:LM:m:pPr:S:s:t:x"
+literal|"b:Cc:df:g:h:Hi:l:LM:m:pPr:S:s:T:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -5631,6 +5685,15 @@ case|case
 literal|'s'
 case|:
 name|set_console
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|set_terminal_mode
 argument_list|(
 name|optarg
 argument_list|)

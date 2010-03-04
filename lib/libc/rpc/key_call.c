@@ -1265,8 +1265,6 @@ name|struct
 name|key_call_private
 modifier|*
 name|kcp
-init|=
-name|key_call_private_main
 decl_stmt|;
 name|struct
 name|timeval

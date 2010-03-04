@@ -336,6 +336,10 @@ name|ts_ltick
 decl_stmt|;
 comment|/* Last tick that we were running on */
 name|int
+name|ts_incrtick
+decl_stmt|;
+comment|/* Last tick that we incremented on */
+name|int
 name|ts_ftick
 decl_stmt|;
 comment|/* First tick that we were running on */
@@ -1435,21 +1439,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 specifier|inline
-name|struct
-name|mtx
-modifier|*
-name|thread_block_switch
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|inline
 name|void
 name|thread_unblock_switch
 parameter_list|(
@@ -2414,11 +2403,9 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_NOLOAD
+name|TDF_NOLOAD
 operator|)
 operator|==
 literal|0
@@ -2508,11 +2495,9 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_NOLOAD
+name|TDF_NOLOAD
 operator|)
 operator|==
 literal|0
@@ -3719,7 +3704,9 @@ begin_function
 specifier|static
 name|void
 name|sched_balance
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|tdq
@@ -5131,6 +5118,9 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * The hard case, migration, we need to block the thread first to 	 * prevent order reversals with other cpus locks. 	 */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 name|thread_lock_block
 argument_list|(
 name|td
@@ -5150,6 +5140,9 @@ argument_list|(
 name|tdq
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -6345,7 +6338,7 @@ name|sched_interact_score
 argument_list|(
 name|td
 argument_list|)
-operator|-
+operator|+
 name|td
 operator|->
 name|td_proc
@@ -7485,62 +7478,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Block a thread for switching.  Similar to thread_block() but does not  * bump the spin count.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|struct
-name|mtx
-modifier|*
-name|thread_block_switch
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
-name|struct
-name|mtx
-modifier|*
-name|lock
-decl_stmt|;
-name|THREAD_LOCK_ASSERT
-argument_list|(
-name|td
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|lock
-operator|=
-name|td
-operator|->
-name|td_lock
-expr_stmt|;
-name|td
-operator|->
-name|td_lock
-operator|=
-operator|&
-name|blocked_lock
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-name|lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|lock
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Handle migration from sched_switch().  This happens only for  * cpu binding.  */
 end_comment
 
@@ -7595,7 +7532,7 @@ comment|/* 	 * Do the lock dance required to avoid LOR.  We grab an extra 	 * sp
 name|spinlock_enter
 argument_list|()
 expr_stmt|;
-name|thread_block_switch
+name|thread_lock_block
 argument_list|(
 name|td
 argument_list|)
@@ -7647,7 +7584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release a thread that was blocked with thread_block_switch().  */
+comment|/*  * Variadic version of thread_lock_unblock() that does not assume td_lock  * is blocked.  */
 end_comment
 
 begin_function
@@ -7919,7 +7856,7 @@ argument_list|)
 expr_stmt|;
 name|mtx
 operator|=
-name|thread_block_switch
+name|thread_lock_block
 argument_list|(
 name|td
 argument_list|)
@@ -8229,7 +8166,7 @@ name|td
 argument_list|)
 operator|||
 name|prio
-operator|<=
+operator|>=
 name|PSOCK
 condition|)
 name|td
@@ -8550,6 +8487,14 @@ operator|=
 name|ts
 operator|->
 name|ts_ltick
+expr_stmt|;
+name|ts2
+operator|->
+name|ts_incrtick
+operator|=
+name|ts
+operator|->
+name|ts_incrtick
 expr_stmt|;
 name|ts2
 operator|->
@@ -9224,7 +9169,7 @@ if|if
 condition|(
 name|ts
 operator|->
-name|ts_ltick
+name|ts_incrtick
 operator|==
 name|ticks
 condition|)
@@ -9241,6 +9186,12 @@ expr_stmt|;
 name|ts
 operator|->
 name|ts_ltick
+operator|=
+name|ticks
+expr_stmt|;
+name|ts
+operator|->
+name|ts_incrtick
 operator|=
 name|ticks
 expr_stmt|;

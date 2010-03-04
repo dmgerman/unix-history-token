@@ -1014,6 +1014,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_FA526
+block|,
+name|CPU_CLASS_ARM9
+block|,
+literal|"FA526"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_TI925T
 block|,
 name|CPU_CLASS_ARM9TDMI
@@ -1429,6 +1439,13 @@ literal|"CPU_ARM8"
 block|}
 block|,
 comment|/* CPU_CLASS_ARM8 */
+block|{
+literal|"ARM9"
+block|,
+literal|"CPU_ARM9"
+block|}
+block|,
+comment|/* CPU_CLASS_ARM9 */
 block|{
 literal|"ARM9TDMI"
 block|,

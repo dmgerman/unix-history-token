@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Routines to build and maintain radix trees for routing lookups.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_RADIX_H_
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -58,28 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -88,11 +60,6 @@ include|#
 directive|include
 file|<net/radix.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -116,6 +83,83 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|log
+parameter_list|(
+name|x
+parameter_list|,
+name|arg
+modifier|...
+parameter_list|)
+value|fprintf(stderr, ## arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|panic
+parameter_list|(
+name|x
+parameter_list|)
+value|fprintf(stderr, "PANIC: %s", x), exit(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b) )
+end_define
+
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -256,7 +300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Work area -- the following point to 3 buffers of size max_keylen,  * allocated in this order in a block of memory malloc'ed by rn_init.  */
+comment|/*  * Work area -- the following point to 3 buffers of size max_keylen,  * allocated in this order in a block of memory malloc'ed by rn_init.  * rn_zeros, rn_ones are set in rn_init and used in readonly afterwards.  * addmask_key is used in rn_addmask in rw mode and not thread-safe.  */
 end_comment
 
 begin_decl_stmt
@@ -361,7 +405,7 @@ comment|/*  * The data structure for the keys is a radix tree with one way  * br
 end_comment
 
 begin_comment
-comment|/*  * Most of the functions in this code assume that the key/mask arguments  * are sockaddr-like structures, where the first byte is an u_char  * indicating the size of the entire structure.  *  * To make the assumption more explicit, we use the LEN() macro to access  * this field. It is safe to pass an expression with side effects  * to LEN() as the argument is evaluated only once.  */
+comment|/*  * Most of the functions in this code assume that the key/mask arguments  * are sockaddr-like structures, where the first byte is an u_char  * indicating the size of the entire structure.  *  * To make the assumption more explicit, we use the LEN() macro to access  * this field. It is safe to pass an expression with side effects  * to LEN() as the argument is evaluated only once.  * We cast the result to int as this is the dominant usage.  */
 end_comment
 
 begin_define
@@ -371,7 +415,7 @@ name|LEN
 parameter_list|(
 name|x
 parameter_list|)
-value|(*(const u_char *)(x))
+value|( (int) (*(const u_char *)(x)) )
 end_define
 
 begin_comment
@@ -630,9 +674,6 @@ name|n
 operator|++
 argument_list|)
 operator|-
-operator|(
-name|int
-operator|)
 name|LEN
 argument_list|(
 name|m
@@ -935,7 +976,7 @@ if|if
 condition|(
 name|cp3
 operator|==
-literal|0
+name|NULL
 condition|)
 name|cp3
 operator|=
@@ -948,12 +989,10 @@ name|min
 argument_list|(
 name|length
 argument_list|,
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
+name|LEN
+argument_list|(
 name|cp3
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cplim
@@ -1735,9 +1774,6 @@ name|rn_offset
 decl_stmt|,
 name|vlen
 init|=
-operator|(
-name|int
-operator|)
 name|LEN
 argument_list|(
 name|v
@@ -5534,7 +5570,10 @@ end_function
 begin_function
 name|void
 name|rn_init
-parameter_list|()
+parameter_list|(
+name|int
+name|maxk
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -5543,44 +5582,10 @@ decl_stmt|,
 modifier|*
 name|cplim
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|struct
-name|domain
-modifier|*
-name|dom
-decl_stmt|;
-for|for
-control|(
-name|dom
-operator|=
-name|domains
-init|;
-name|dom
-condition|;
-name|dom
-operator|=
-name|dom
-operator|->
-name|dom_next
-control|)
-if|if
-condition|(
-name|dom
-operator|->
-name|dom_maxrtkey
-operator|>
-name|max_keylen
-condition|)
 name|max_keylen
 operator|=
-name|dom
-operator|->
-name|dom_maxrtkey
+name|maxk
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|max_keylen

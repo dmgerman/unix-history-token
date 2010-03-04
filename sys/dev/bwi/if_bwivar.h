@@ -2148,6 +2148,10 @@ name|callout
 name|sc_calib_ch
 decl_stmt|;
 name|struct
+name|callout
+name|sc_watchdog_timer
+decl_stmt|;
+name|struct
 name|bwi_regwin
 modifier|*
 name|sc_cur_regwin

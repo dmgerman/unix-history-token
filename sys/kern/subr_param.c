@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -206,25 +212,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Values of enum VM_GUEST members are used as indices in   * vm_guest_sysctl_names */
-end_comment
-
-begin_enum
-enum|enum
-name|VM_GUEST
-block|{
-name|VM_GUEST_NO
-init|=
-literal|0
-block|,
-name|VM_GUEST_VM
-block|,
-name|VM_GUEST_XEN
-block|}
-enum|;
-end_enum
-
 begin_function_decl
 specifier|static
 name|int
@@ -312,6 +299,16 @@ name|int
 name|nbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ngroups_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max # groups per process */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -708,6 +705,10 @@ modifier|*
 name|swbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The elements of this array are ordered based upon the values of the  * corresponding enum VM_GUEST members.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1112,6 +1113,29 @@ argument_list|,
 operator|&
 name|sgrowsiz
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Let the administrator set {NGROUPS_MAX}, but disallow values 	 * less than NGROUPS_MAX which would violate POSIX.1-2008 or 	 * greater than INT_MAX-1 which would result in overflow. 	 */
+name|ngroups_max
+operator|=
+name|NGROUPS_MAX
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ngroups"
+argument_list|,
+operator|&
+name|ngroups_max
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ngroups_max
+operator|<
+name|NGROUPS_MAX
+condition|)
+name|ngroups_max
+operator|=
+name|NGROUPS_MAX
 expr_stmt|;
 block|}
 end_function

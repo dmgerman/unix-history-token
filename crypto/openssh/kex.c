@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.80 2008/09/06 12:24:13 djm Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.81 2009/05/27 06:34:36 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -132,13 +132,6 @@ include|#
 directive|include
 file|"monitor.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|KEX_COOKIE_LEN
-value|16
-end_define
 
 begin_if
 if|#

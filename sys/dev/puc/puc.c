@@ -531,6 +531,8 @@ init|=
 name|arg
 decl_stmt|;
 name|u_long
+name|ds
+decl_stmt|,
 name|dev
 decl_stmt|,
 name|devs
@@ -543,10 +545,22 @@ decl_stmt|,
 name|ipend
 decl_stmt|,
 name|isrc
+decl_stmt|,
+name|nints
 decl_stmt|;
 name|uint8_t
 name|ilr
 decl_stmt|;
+name|nints
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+comment|/* 		 * Obtain the set of devices with pending interrupts. 		 */
 name|devs
 operator|=
 name|sc
@@ -624,7 +638,7 @@ operator|==
 name|PUC_ILR_QUATECH
 condition|)
 block|{
-comment|/* 		 * Don't trust the value if it's the same as the option 		 * register. It may mean that the ILR is not active and 		 * we're reading the option register instead. This may 		 * lead to false positives on 8-port boards. 		 */
+comment|/* 			 * Don't trust the value if it's the same as the option 			 * register. It may mean that the ILR is not active and 			 * we're reading the option register instead. This may 			 * lead to false positives on 8-port boards. 			 */
 name|ilr
 operator|=
 name|bus_read_1
@@ -661,6 +675,14 @@ operator|)
 name|ilr
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|devs
+operator|==
+literal|0UL
+condition|)
+break|break;
+comment|/* 		 * Obtain the set of interrupt sources from those devices 		 * that have pending interrupts. 		 */
 name|ipend
 operator|=
 literal|0
@@ -673,9 +695,13 @@ name|dev
 operator|=
 literal|1UL
 expr_stmt|;
+name|ds
+operator|=
+name|devs
+expr_stmt|;
 while|while
 condition|(
-name|devs
+name|ds
 operator|!=
 literal|0UL
 condition|)
@@ -683,7 +709,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|devs
+name|ds
 operator|&
 name|dev
 operator|)
@@ -697,7 +723,7 @@ name|dev
 operator|<<=
 literal|1
 expr_stmt|;
-name|devs
+name|ds
 operator|&=
 operator|~
 name|dev
@@ -730,6 +756,13 @@ operator|->
 name|p_ipend
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ipend
+operator|==
+literal|0
+condition|)
+break|break;
 name|i
 operator|=
 literal|0
@@ -789,15 +822,13 @@ name|dev
 operator|=
 literal|1UL
 expr_stmt|;
-name|devs
+name|ds
 operator|=
-name|sc
-operator|->
-name|sc_serdevs
+name|devs
 expr_stmt|;
 while|while
 condition|(
-name|devs
+name|ds
 operator|!=
 literal|0UL
 condition|)
@@ -805,7 +836,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|devs
+name|ds
 operator|&
 name|dev
 operator|)
@@ -819,7 +850,7 @@ name|dev
 operator|<<=
 literal|1
 expr_stmt|;
-name|devs
+name|ds
 operator|&=
 operator|~
 name|dev
@@ -872,15 +903,22 @@ operator|->
 name|p_iharg
 argument_list|)
 expr_stmt|;
+name|nints
+operator|++
+expr_stmt|;
+block|}
+block|}
 block|}
 return|return
 operator|(
-name|FILTER_HANDLED
+operator|(
+name|nints
+operator|>
+literal|0
 operator|)
-return|;
-block|}
-return|return
-operator|(
+condition|?
+name|FILTER_HANDLED
+else|:
 name|FILTER_STRAY
 operator|)
 return|;

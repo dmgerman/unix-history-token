@@ -4154,9 +4154,6 @@ name|struct
 name|statfs
 name|buf
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|statfs

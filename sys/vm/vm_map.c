@@ -169,10 +169,6 @@ begin_comment
 comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a self-adjusting binary search tree of these  *	entries is used to speed up lookups.  *  *	Since portions of maps are specified by start/end addresses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one map to  *	another, and then marking both regions as copy-on-write.  */
 end_comment
 
-begin_comment
-comment|/*  *	vm_map_startup:  *  *	Initialize the vm_map module.  Must be called before  *	any other vm_map routines.  *  *	Map and entry structures are allocated from the general  *	purpose memory pool with some exceptions:  *  *	- The kernel map and kmem submap are allocated statically.  *	- Kernel map entries are allocated out of a static pool.  *  *	These restrictions are necessary since malloc() uses the  *	maps and requires map entries.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -415,6 +411,10 @@ parameter_list|)
 define|\
 value|{					\ 		if (start< vm_map_min(map))		\ 			start = vm_map_min(map);	\ 		if (end> vm_map_max(map))		\ 			end = vm_map_max(map);		\ 		if (start> end)			\ 			start = end;			\ 		}
 end_define
+
+begin_comment
+comment|/*  *	vm_map_startup:  *  *	Initialize the vm_map module.  Must be called before  *	any other vm_map routines.  *  *	Map and entry structures are allocated from the general  *	purpose memory pool with some exceptions:  *  *	- The kernel map and kmem submap are allocated statically.  *	- Kernel map entries are allocated out of a static pool.  *  *	These restrictions are necessary since malloc() uses the  *	maps and requires map entries.  */
+end_comment
 
 begin_function
 name|void
@@ -4367,7 +4367,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
-name|cow
+name|protoeflags
 operator|&
 name|MAP_ENTRY_NEEDS_COPY
 operator|)
@@ -7183,8 +7183,7 @@ parameter_list|)
 block|{
 name|vm_map_entry_t
 name|current
-decl_stmt|;
-name|vm_map_entry_t
+decl_stmt|,
 name|entry
 decl_stmt|;
 name|vm_object_t
@@ -7194,6 +7193,9 @@ name|struct
 name|uidinfo
 modifier|*
 name|uip
+decl_stmt|;
+name|vm_prot_t
+name|old_prot
 decl_stmt|;
 name|vm_map_lock
 argument_list|(
@@ -7582,9 +7584,6 @@ name|end
 operator|)
 condition|)
 block|{
-name|vm_prot_t
-name|old_prot
-decl_stmt|;
 name|old_prot
 operator|=
 name|current
@@ -7616,14 +7615,72 @@ name|protection
 operator|=
 name|new_prot
 expr_stmt|;
-comment|/* 		 * Update physical map if necessary. Worry about copy-on-write 		 * here. 		 */
 if|if
 condition|(
+operator|(
+name|current
+operator|->
+name|eflags
+operator|&
+operator|(
+name|MAP_ENTRY_COW
+operator||
+name|MAP_ENTRY_USER_WIRED
+operator|)
+operator|)
+operator|==
+operator|(
+name|MAP_ENTRY_COW
+operator||
+name|MAP_ENTRY_USER_WIRED
+operator|)
+operator|&&
+operator|(
 name|current
 operator|->
 name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
 operator|!=
+literal|0
+operator|&&
+operator|(
 name|old_prot
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|vm_fault_copy_entry
+argument_list|(
+name|map
+argument_list|,
+name|map
+argument_list|,
+name|current
+argument_list|,
+name|current
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * When restricting access, update the physical map.  Worry 		 * about copy-on-write here. 		 */
+if|if
+condition|(
+operator|(
+name|old_prot
+operator|&
+operator|~
+name|current
+operator|->
+name|protection
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 define|#
@@ -9429,8 +9486,6 @@ argument_list|,
 name|saved_start
 argument_list|,
 name|saved_end
-argument_list|,
-name|user_wire
 argument_list|,
 name|fictitious
 argument_list|)
@@ -14364,20 +14419,7 @@ goto|goto
 name|RetryLookup
 goto|;
 block|}
-comment|/* 	 * Check whether this task is allowed to have this page. 	 * Note the special case for MAP_ENTRY_COW 	 * pages with an override.  This is to implement a forced 	 * COW for debuggers. 	 */
-if|if
-condition|(
-name|fault_type
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-condition|)
-name|prot
-operator|=
-name|entry
-operator|->
-name|max_protection
-expr_stmt|;
-else|else
+comment|/* 	 * Check whether this task is allowed to have this page. 	 */
 name|prot
 operator|=
 name|entry
@@ -14403,6 +14445,10 @@ name|prot
 operator|)
 operator|!=
 name|fault_type
+operator|||
+name|prot
+operator|==
+name|VM_PROT_NONE
 condition|)
 block|{
 name|vm_map_unlock_read
@@ -14439,14 +14485,6 @@ name|fault_type
 operator|&
 name|VM_PROT_WRITE
 operator|)
-operator|&&
-operator|(
-name|fault_typea
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|vm_map_unlock_read
@@ -14477,8 +14515,6 @@ condition|(
 operator|*
 name|wired
 condition|)
-name|prot
-operator|=
 name|fault_type
 operator|=
 name|entry
@@ -14508,9 +14544,21 @@ block|{
 comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the map locked. 		 * 		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
 if|if
 condition|(
+operator|(
 name|fault_type
 operator|&
 name|VM_PROT_WRITE
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|fault_typea
+operator|&
+name|VM_PROT_COPY
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 			 * Make a new object, and place it in the object 			 * chain.  Note that no new references have appeared 			 * -- one just moved from the map to the new 			 * object. 			 */
@@ -14957,20 +15005,7 @@ operator|(
 name|KERN_FAILURE
 operator|)
 return|;
-comment|/* 	 * Check whether this task is allowed to have this page. 	 * Note the special case for MAP_ENTRY_COW 	 * pages with an override.  This is to implement a forced 	 * COW for debuggers. 	 */
-if|if
-condition|(
-name|fault_type
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-condition|)
-name|prot
-operator|=
-name|entry
-operator|->
-name|max_protection
-expr_stmt|;
-else|else
+comment|/* 	 * Check whether this task is allowed to have this page. 	 */
 name|prot
 operator|=
 name|entry
@@ -15023,14 +15058,6 @@ name|fault_type
 operator|&
 name|VM_PROT_WRITE
 operator|)
-operator|&&
-operator|(
-name|fault_typea
-operator|&
-name|VM_PROT_OVERRIDE_WRITE
-operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -15054,8 +15081,6 @@ condition|(
 operator|*
 name|wired
 condition|)
-name|prot
-operator|=
 name|fault_type
 operator|=
 name|entry

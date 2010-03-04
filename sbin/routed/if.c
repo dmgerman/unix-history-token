@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
@@ -91,7 +97,7 @@ name|remote_if
 init|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|ifnet
+name|remote_if
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4381,14 +4387,14 @@ block|{
 name|trace_act
 argument_list|(
 literal|"interface %s has been off"
-literal|" %ld seconds; forget it"
+literal|" %jd seconds; forget it"
 argument_list|,
 name|ifp
 operator|->
 name|int_name
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|now
 operator|.

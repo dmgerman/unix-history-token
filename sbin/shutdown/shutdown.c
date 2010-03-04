@@ -380,6 +380,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|badtime
 parameter_list|(
@@ -389,8 +390,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
-name|die_you_gravy_sucking_pig_dog
+name|perform_shutdown
 parameter_list|(
 name|void
 parameter_list|)
@@ -398,6 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|finish
 parameter_list|(
@@ -407,6 +410,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getoffset
 parameter_list|(
@@ -417,6 +421,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|loop
 parameter_list|(
@@ -426,6 +431,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nolog
 parameter_list|(
@@ -435,6 +441,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|timeout
 parameter_list|(
@@ -444,6 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|timewarn
 parameter_list|(
@@ -453,6 +461,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1019,9 +1028,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|loop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|interval
@@ -1201,7 +1213,7 @@ name|timeleft
 condition|)
 break|break;
 block|}
-name|die_you_gravy_sucking_pig_dog
+name|perform_shutdown
 argument_list|()
 expr_stmt|;
 block|}
@@ -1232,6 +1244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|timewarn
 parameter_list|(
@@ -1521,6 +1534,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|timeout
 parameter_list|(
@@ -1540,9 +1554,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|die_you_gravy_sucking_pig_dog
-parameter_list|()
+name|perform_shutdown
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1867,6 +1884,7 @@ value|(p[0] - '0') * 10 + (p[1] - '0'); p += 2;
 end_define
 
 begin_function
+specifier|static
 name|void
 name|getoffset
 parameter_list|(
@@ -2300,9 +2318,12 @@ value|"\n\nNO LOGINS: System going down at "
 end_define
 
 begin_function
+specifier|static
 name|void
 name|nolog
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|logfd
@@ -2461,6 +2482,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|finish
 parameter_list|(
@@ -2491,9 +2513,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|badtime
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|errx
 argument_list|(
@@ -2506,6 +2531,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

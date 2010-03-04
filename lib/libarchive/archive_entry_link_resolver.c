@@ -656,7 +656,7 @@ operator|==
 literal|1
 condition|)
 return|return;
-comment|/* Directories never have hardlinks. */
+comment|/* Directories, devices never have hardlinks. */
 if|if
 condition|(
 name|archive_entry_filetype
@@ -666,6 +666,22 @@ name|e
 argument_list|)
 operator|==
 name|AE_IFDIR
+operator|||
+name|archive_entry_filetype
+argument_list|(
+operator|*
+name|e
+argument_list|)
+operator|==
+name|AE_IFBLK
+operator|||
+name|archive_entry_filetype
+argument_list|(
+operator|*
+name|e
+argument_list|)
+operator|==
+name|AE_IFCHR
 condition|)
 return|return;
 switch|switch
@@ -923,7 +939,7 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|ino
 decl_stmt|;
 comment|/* Free a held entry. */
@@ -991,16 +1007,21 @@ argument_list|)
 expr_stmt|;
 name|ino
 operator|=
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
 name|hash
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|dev
 operator|^
 name|ino
+argument_list|)
 expr_stmt|;
 comment|/* Try to locate this entry in the links cache. */
 name|bucket
@@ -1052,7 +1073,7 @@ argument_list|)
 operator|&&
 name|ino
 operator|==
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|le
 operator|->
@@ -1421,7 +1442,7 @@ argument_list|(
 name|entry
 argument_list|)
 operator|^
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)

@@ -1908,7 +1908,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Cannot push "
-literal|"item @ %d!\n"
+literal|"item @ %d\n"
 argument_list|,
 name|s
 operator|->
@@ -2010,7 +2010,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Cannot pop "
-literal|"item @ %d!\n"
+literal|"item @ %d\n"
 argument_list|,
 name|s
 operator|->
@@ -2112,7 +2112,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"max usage reached!\n"
+literal|"max usage reached\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2265,7 +2265,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Usage set dropped!\n"
+literal|"Usage set dropped\n"
 argument_list|)
 expr_stmt|;
 block|}

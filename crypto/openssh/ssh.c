@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.c,v 1.324 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: ssh.c,v 1.326 2009/07/02 02:11:47 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -686,6 +692,8 @@ block|{
 name|int
 name|i
 decl_stmt|,
+name|r
+decl_stmt|,
 name|opt
 decl_stmt|,
 name|exit_status
@@ -702,9 +710,12 @@ decl_stmt|,
 modifier|*
 name|line
 decl_stmt|,
+modifier|*
+name|argv0
+decl_stmt|,
 name|buf
 index|[
-literal|256
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct
@@ -875,6 +886,13 @@ expr_stmt|;
 name|use_syslog
 operator|=
 literal|0
+expr_stmt|;
+name|argv0
+operator|=
+name|av
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|again
 label|:
@@ -2263,10 +2281,7 @@ block|}
 comment|/* 	 * Initialize "log" output.  Since we are the client all output 	 * actually goes to stderr. 	 */
 name|log_init
 argument_list|(
-name|av
-index|[
-literal|0
-index|]
+name|argv0
 argument_list|,
 name|options
 operator|.
@@ -2326,6 +2341,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|r
+operator|=
 name|snprintf
 argument_list|(
 name|buf
@@ -2333,7 +2350,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%.100s/%.100s"
+literal|"%s/%s"
 argument_list|,
 name|pw
 operator|->
@@ -2342,6 +2359,22 @@ argument_list|,
 name|_PATH_SSH_USER_CONFFILE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|>
+literal|0
+operator|&&
+operator|(
+name|size_t
+operator|)
+name|r
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -2391,10 +2424,7 @@ expr_stmt|;
 comment|/* reinit */
 name|log_init
 argument_list|(
-name|av
-index|[
-literal|0
-index|]
+name|argv0
 argument_list|,
 name|options
 operator|.
@@ -3270,6 +3300,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Now that we are back to our own permissions, create ~/.ssh 	 * directory if it doesn't already exist. 	 */
+name|r
+operator|=
 name|snprintf
 argument_list|(
 name|buf
@@ -3277,7 +3309,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%.100s%s%.100s"
+literal|"%s%s%s"
 argument_list|,
 name|pw
 operator|->
@@ -3301,6 +3333,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|>
+literal|0
+operator|&&
+operator|(
+name|size_t
+operator|)
+name|r
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|&&
 name|stat
 argument_list|(
 name|buf

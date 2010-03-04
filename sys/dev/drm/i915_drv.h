@@ -36,6 +36,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm_mm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/i915_reg.h"
 end_include
 
@@ -702,15 +708,10 @@ index|]
 decl_stmt|;
 struct|struct
 block|{
-ifdef|#
-directive|ifdef
-name|__linux__
 name|struct
 name|drm_mm
 name|gtt_space
 decl_stmt|;
-endif|#
-directive|endif
 comment|/** 		 * List of objects currently involved in rendering from the 		 * ringbuffer. 		 * 		 * A reference is held on the buffer while on this list. 		 */
 name|struct
 name|list_head
@@ -2564,7 +2565,7 @@ name|IS_I965G
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x2972 || \ 		       (dev)->pci_device == 0x2982 || \ 		       (dev)->pci_device == 0x2992 || \ 		       (dev)->pci_device == 0x29A2 || \ 		       (dev)->pci_device == 0x2A02 || \ 		       (dev)->pci_device == 0x2A12 || \ 		       (dev)->pci_device == 0x2A42 || \ 		       (dev)->pci_device == 0x2E02 || \ 		       (dev)->pci_device == 0x2E12 || \ 		       (dev)->pci_device == 0x2E22)
+value|((dev)->pci_device == 0x2972 || \ 		       (dev)->pci_device == 0x2982 || \ 		       (dev)->pci_device == 0x2992 || \ 		       (dev)->pci_device == 0x29A2 || \ 		       (dev)->pci_device == 0x2A02 || \ 		       (dev)->pci_device == 0x2A12 || \ 		       (dev)->pci_device == 0x2A42 || \ 		       (dev)->pci_device == 0x2E02 || \ 		       (dev)->pci_device == 0x2E12 || \ 		       (dev)->pci_device == 0x2E22 || \ 		       (dev)->pci_device == 0x2E32)
 end_define
 
 begin_define
@@ -2594,7 +2595,7 @@ name|IS_G4X
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22 || \ 		     IS_GM45(dev))
+value|((dev)->pci_device == 0x2E02 || \ 		     (dev)->pci_device == 0x2E12 || \ 		     (dev)->pci_device == 0x2E22 || \ 		     (dev)->pci_device == 0x2E32 || \ 		     IS_GM45(dev))
 end_define
 
 begin_define

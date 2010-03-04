@@ -459,6 +459,11 @@ begin_function_decl
 name|int
 name|secpolicy_xvattr
 parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
 name|xvattr_t
 modifier|*
 name|xvap

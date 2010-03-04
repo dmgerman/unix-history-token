@@ -81,7 +81,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fifolog_writer [-w write-rate] [-s sync-rate] "
+literal|"Usage: fifolog_writer [-w write-rate] [-s sync-rate] "
 literal|"[-z compression] file\n"
 argument_list|)
 expr_stmt|;

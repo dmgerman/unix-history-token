@@ -3073,7 +3073,7 @@ name|g_stripe_fast_failed
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Do use "economic" when: 	 * 1. "Economic" mode is ON. 	 * or 	 * 2. "Fast" mode failed. It can only failed if there is no memory. 	 */
+comment|/* 	 * Do use "economic" when: 	 * 1. "Economic" mode is ON. 	 * or 	 * 2. "Fast" mode failed. It can only fail if there is no memory. 	 */
 if|if
 condition|(
 operator|!
@@ -3344,6 +3344,24 @@ operator|*
 name|sc
 operator|->
 name|sc_ndisks
+expr_stmt|;
+name|sc
+operator|->
+name|sc_provider
+operator|->
+name|stripesize
+operator|=
+name|sc
+operator|->
+name|sc_stripesize
+expr_stmt|;
+name|sc
+operator|->
+name|sc_provider
+operator|->
+name|stripeoffset
+operator|=
+literal|0
 expr_stmt|;
 name|g_error_provider
 argument_list|(
@@ -4633,6 +4651,20 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+comment|/* Skip providers that are already open for writing. */
+if|if
+condition|(
+name|pp
+operator|->
+name|acw
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|G_STRIPE_DEBUG
 argument_list|(
 literal|3

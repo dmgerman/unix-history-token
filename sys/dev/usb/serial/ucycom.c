@@ -477,6 +477,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ucycom_poll
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -635,6 +648,12 @@ name|ucom_stop_write
 operator|=
 operator|&
 name|ucycom_stop_write
+block|,
+operator|.
+name|ucom_poll
+operator|=
+operator|&
+name|ucycom_poll
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1256,7 +1275,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"allocating USB "
-literal|"transfers failed!\n"
+literal|"transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2533,7 +2552,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"unsupported model number!\n"
+literal|"unsupported model number\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2612,6 +2631,38 @@ goto|;
 block|}
 return|return;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ucycom_poll
+parameter_list|(
+name|struct
+name|ucom_softc
+modifier|*
+name|ucom
+parameter_list|)
+block|{
+name|struct
+name|ucycom_softc
+modifier|*
+name|sc
+init|=
+name|ucom
+operator|->
+name|sc_parent
+decl_stmt|;
+name|usbd_transfer_poll
+argument_list|(
+name|sc
+operator|->
+name|sc_xfer
+argument_list|,
+name|UCYCOM_N_TRANSFER
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -78,14 +78,24 @@ name|zh_claim_seq
 decl_stmt|;
 comment|/* highest claimed sequence number */
 name|uint64_t
+name|zh_flags
+decl_stmt|;
+comment|/* header flags */
+name|uint64_t
 name|zh_pad
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 block|}
 name|zil_header_t
 typedef|;
+comment|/*  * zh_flags bit settings  */
+define|#
+directive|define
+name|ZIL_REPLAY_NEEDED
+value|0x1
+comment|/* replay needed - internal only */
 comment|/*  * Log block trailer - structure at the end of the header and each log block  *  * The zit_bt contains a zbt_cksum which for the intent log is  * the sequence number of this log block. A seq of 0 is invalid.  * The zbt_cksum is checked by the SPA against the sequence  * number passed in the blk_cksum field of the blkptr_t  */
 typedef|typedef
 struct|struct

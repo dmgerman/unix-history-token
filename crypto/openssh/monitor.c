@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.101 2009/02/12 03:26:22 djm Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.104 2009/06/12 20:43:22 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -355,6 +355,12 @@ directive|include
 file|"jpake.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"roaming.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -422,15 +428,6 @@ specifier|extern
 name|u_char
 name|session_id
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Buffer
-name|input
-decl_stmt|,
-name|output
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +519,12 @@ name|output
 decl_stmt|;
 name|u_int
 name|olen
+decl_stmt|;
+name|u_int64_t
+name|sent_bytes
+decl_stmt|;
+name|u_int64_t
+name|recv_bytes
 decl_stmt|;
 block|}
 name|child_state
@@ -8406,14 +8409,14 @@ comment|/* Network I/O buffers */
 comment|/* XXX inefficient for large buffers, need: buffer_init_from_string */
 name|buffer_clear
 argument_list|(
-operator|&
-name|input
+name|packet_get_input
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|buffer_append
 argument_list|(
-operator|&
-name|input
+name|packet_get_input
+argument_list|()
 argument_list|,
 name|child_state
 operator|.
@@ -8446,14 +8449,14 @@ argument_list|)
 expr_stmt|;
 name|buffer_clear
 argument_list|(
-operator|&
-name|output
+name|packet_get_output
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|buffer_append
 argument_list|(
-operator|&
-name|output
+name|packet_get_output
+argument_list|()
 argument_list|,
 name|child_state
 operator|.
@@ -8482,6 +8485,22 @@ argument_list|(
 name|child_state
 operator|.
 name|output
+argument_list|)
+expr_stmt|;
+comment|/* Roaming */
+if|if
+condition|(
+name|compat20
+condition|)
+name|roam_set_bytes
+argument_list|(
+name|child_state
+operator|.
+name|sent_bytes
+argument_list|,
+name|child_state
+operator|.
+name|recv_bytes
 argument_list|)
 expr_stmt|;
 block|}
@@ -9259,6 +9278,33 @@ operator|.
 name|olen
 argument_list|)
 expr_stmt|;
+comment|/* Roaming */
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|child_state
+operator|.
+name|sent_bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+name|child_state
+operator|.
+name|recv_bytes
+operator|=
+name|buffer_get_int64
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 name|buffer_free
 argument_list|(
 operator|&

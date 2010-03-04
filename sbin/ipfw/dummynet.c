@@ -310,6 +310,10 @@ specifier|static
 name|int
 name|sort_q
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -525,7 +529,7 @@ name|do_sort
 operator|!=
 literal|0
 condition|)
-name|heapsort
+name|qsort_r
 argument_list|(
 name|q
 argument_list|,
@@ -536,6 +540,8 @@ argument_list|,
 sizeof|sizeof
 expr|*
 name|q
+argument_list|,
+name|NULL
 argument_list|,
 name|sort_q
 argument_list|)
@@ -2305,6 +2311,7 @@ comment|/*  * Take as input a string describing a bandwidth value  * and return 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|read_bandwidth
 parameter_list|(
@@ -2532,6 +2539,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|compare_points
 parameter_list|(
@@ -3292,6 +3300,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|samples
@@ -5051,6 +5064,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|int64_t
+operator|*
+operator|)
 operator|&
 name|p
 operator|.

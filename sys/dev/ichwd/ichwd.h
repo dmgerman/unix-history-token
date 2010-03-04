@@ -246,6 +246,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_NM10
+value|0x27bc
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_ICH7MDH
 value|0x27bd
 end_define
@@ -353,6 +360,13 @@ define|#
 directive|define
 name|DEVICEID_ICH10R
 value|0x3a16
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_H55
+value|0x3b06
 end_define
 
 begin_comment

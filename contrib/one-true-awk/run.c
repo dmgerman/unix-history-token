@@ -3,6 +3,20 @@ begin_comment
 comment|/**************************************************************** Copyright (C) Lucent Technologies 1997 All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the name Lucent Technologies or any of its entities not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  LUCENT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. ****************************************************************/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2433,7 +2447,7 @@ end_function
 begin_function
 name|Cell
 modifier|*
-name|getline
+name|awkgetline
 parameter_list|(
 name|Node
 modifier|*
@@ -4271,7 +4285,7 @@ else|else
 block|{
 name|i
 operator|=
-name|strcmp
+name|strcoll
 argument_list|(
 name|getsval
 argument_list|(
@@ -7525,6 +7539,11 @@ argument_list|)
 expr_stmt|;
 name|tempfree
 argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+name|tempfree
+argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
@@ -7544,11 +7563,6 @@ operator|->
 name|tval
 operator|=
 name|STR
-expr_stmt|;
-name|tempfree
-argument_list|(
-name|x
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

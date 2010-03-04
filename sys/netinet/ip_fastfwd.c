@@ -1174,7 +1174,7 @@ operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 condition|)
 goto|goto
@@ -1185,7 +1185,7 @@ condition|(
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 operator|&
 name|m
@@ -1442,7 +1442,7 @@ operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|)
 condition|)
 goto|goto
@@ -1453,7 +1453,7 @@ condition|(
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet_pfil_hook
+name|V_inet_pfil_hook
 argument_list|,
 operator|&
 name|m

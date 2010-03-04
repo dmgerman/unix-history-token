@@ -326,6 +326,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.dev.debug"
+argument_list|,
+operator|&
+name|usb_fifo_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2631,7 +2642,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"USB FIFO %p has not been linked!\n"
+literal|"USB FIFO %p has not been linked\n"
 argument_list|,
 name|f
 argument_list|)
@@ -4182,7 +4193,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Could not create usb bus device!\n"
+literal|"Could not create usb bus device\n"
 argument_list|)
 expr_stmt|;
 block|}

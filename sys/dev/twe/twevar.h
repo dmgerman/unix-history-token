@@ -112,6 +112,9 @@ decl_stmt|;
 name|u_int8_t
 name|td_type
 decl_stmt|;
+name|u_int8_t
+name|td_stripe
+decl_stmt|;
 comment|/* handle for attached driver */
 name|device_t
 name|td_disk

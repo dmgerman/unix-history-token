@@ -1778,6 +1778,9 @@ modifier|*
 name|ipcompstat
 parameter_list|)
 block|{
+name|uint32_t
+name|version
+decl_stmt|;
 define|#
 directive|define
 name|p32
@@ -1808,6 +1811,23 @@ name|t
 parameter_list|)
 define|\
 value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
+ifndef|#
+directive|ifndef
+name|IPCOMPSTAT_VERSION
+name|version
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|version
+operator|=
+name|ipcompstat
+operator|->
+name|version
+expr_stmt|;
+endif|#
+directive|endif
 name|p32
 argument_list|(
 name|ipcomps_hdrops
@@ -1924,6 +1944,28 @@ argument_list|,
 literal|"COMP output"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|version
+operator|>=
+literal|1
+condition|)
+block|{
+name|p32
+argument_list|(
+name|ipcomps_threshold
+argument_list|,
+literal|" packet%s sent uncompressed; size< compr. algo. threshold\n"
+argument_list|)
+expr_stmt|;
+name|p32
+argument_list|(
+name|ipcomps_uncompr
+argument_list|,
+literal|" packet%s sent uncompressed; compression was useless\n"
+argument_list|)
+expr_stmt|;
+block|}
 undef|#
 directive|undef
 name|p32

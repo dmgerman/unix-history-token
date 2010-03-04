@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -531,6 +537,9 @@ name|int
 parameter_list|,
 specifier|const
 name|int
+parameter_list|,
+specifier|const
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -921,6 +930,47 @@ literal|"net.inet6.mld.v1enable"
 argument_list|,
 operator|&
 name|mld_v1enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mld_use_allow
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_mld
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|use_allow
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mld_use_allow
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use ALLOW/BLOCK for RFC 4604 SSM joins/leaves"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet6.mld.use_allow"
+argument_list|,
+operator|&
+name|mld_use_allow
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1723,6 +1773,16 @@ operator|->
 name|mli_flags
 operator||=
 name|MLIF_SILENT
+expr_stmt|;
+if|if
+condition|(
+name|mld_use_allow
+condition|)
+name|mli
+operator|->
+name|mli_flags
+operator||=
+name|MLIF_USEALLOW
 expr_stmt|;
 name|MLD_UNLOCK
 argument_list|()
@@ -5526,6 +5586,8 @@ name|in6m_state
 operator|==
 name|MLD_SG_QUERY_PENDING_MEMBER
 operator|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -7108,6 +7170,14 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|mli
+operator|->
+name|mli_flags
+operator|&
+name|MLIF_USEALLOW
+operator|)
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -7488,6 +7558,14 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|mli
+operator|->
+name|mli_flags
+operator|&
+name|MLIF_USEALLOW
+operator|)
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -7812,6 +7890,14 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|mli
+operator|->
+name|mli_flags
+operator|&
+name|MLIF_USEALLOW
+operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7936,7 +8022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Enqueue an MLDv2 group record to the given output queue.  *  * If is_state_change is zero, a current-state record is appended.  * If is_state_change is non-zero, a state-change report is appended.  *  * If is_group_query is non-zero, an mbuf packet chain is allocated.  * If is_group_query is zero, and if there is a packet with free space  * at the tail of the queue, it will be appended to providing there  * is enough free space.  * Otherwise a new mbuf packet chain is allocated.  *  * If is_source_query is non-zero, each source is checked to see if  * it was recorded for a Group-Source query, and will be omitted if  * it is not both in-mode and recorded.  *  * The function will attempt to allocate leading space in the packet  * for the IPv6+ICMP headers to be prepended without fragmenting the chain.  *  * If successful the size of all data appended to the queue is returned,  * otherwise an error code less than zero is returned, or zero if  * no record(s) were appended.  */
+comment|/*  * Enqueue an MLDv2 group record to the given output queue.  *  * If is_state_change is zero, a current-state record is appended.  * If is_state_change is non-zero, a state-change report is appended.  *  * If is_group_query is non-zero, an mbuf packet chain is allocated.  * If is_group_query is zero, and if there is a packet with free space  * at the tail of the queue, it will be appended to providing there  * is enough free space.  * Otherwise a new mbuf packet chain is allocated.  *  * If is_source_query is non-zero, each source is checked to see if  * it was recorded for a Group-Source query, and will be omitted if  * it is not both in-mode and recorded.  *  * If use_block_allow is non-zero, state change reports for initial join  * and final leave, on an inclusive mode group with a source list, will be  * rewritten to use the ALLOW_NEW and BLOCK_OLD record types, respectively.  *  * The function will attempt to allocate leading space in the packet  * for the IPv6+ICMP headers to be prepended without fragmenting the chain.  *  * If successful the size of all data appended to the queue is returned,  * otherwise an error code less than zero is returned, or zero if  * no record(s) were appended.  */
 end_comment
 
 begin_function
@@ -7965,6 +8051,10 @@ parameter_list|,
 specifier|const
 name|int
 name|is_source_query
+parameter_list|,
+specifier|const
+name|int
+name|use_block_allow
 parameter_list|)
 block|{
 name|struct
@@ -8143,7 +8233,7 @@ condition|(
 name|is_state_change
 condition|)
 block|{
-comment|/* 		 * Queue a state change record. 		 * If the mode did not change, and there are non-ASM 		 * listeners or source filters present, 		 * we potentially need to issue two records for the group. 		 * If we are transitioning to MCAST_UNDEFINED, we need 		 * not send any sources. 		 * If there are ASM listeners, and there was no filter 		 * mode transition of any kind, do nothing. 		 */
+comment|/* 		 * Queue a state change record. 		 * If the mode did not change, and there are non-ASM 		 * listeners or source filters present, 		 * we potentially need to issue two records for the group. 		 * If there are ASM listeners, and there was no filter 		 * mode transition of any kind, do nothing. 		 * 		 * If we are transitioning to MCAST_UNDEFINED, we need 		 * not send any sources. A transition to/from this state is 		 * considered inclusive with some special treatment. 		 * 		 * If we are rewriting initial joins/leaves to use 		 * ALLOW/BLOCK, and the group's membership is inclusive, 		 * we need to send sources in all cases. 		 */
 if|if
 condition|(
 name|mode
@@ -8190,6 +8280,34 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|use_block_allow
+condition|)
+block|{
+comment|/* 					 * XXX 					 * Here we're interested in state 					 * edges either direction between 					 * MCAST_UNDEFINED and MCAST_INCLUDE. 					 * Perhaps we should just check 					 * the group state, rather than 					 * the filter mode. 					 */
+if|if
+condition|(
+name|mode
+operator|==
+name|MCAST_UNDEFINED
+condition|)
+block|{
+name|type
+operator|=
+name|MLD_BLOCK_OLD_SOURCES
+expr_stmt|;
+block|}
+else|else
+block|{
+name|type
+operator|=
+name|MLD_ALLOW_NEW_SOURCES
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|type
 operator|=
 name|MLD_CHANGE_TO_INCLUDE_MODE
@@ -8204,6 +8322,7 @@ name|record_has_sources
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -8687,7 +8806,7 @@ expr|struct
 name|mldv2_record
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Append as many sources as will fit in the first packet. 	 * If we are appending to a new packet, the chain allocation 	 * may potentially use clusters; use m_getptr() in this case. 	 * If we are appending to an existing packet, we need to obtain 	 * a pointer to the group record after m_append(), in case a new 	 * mbuf was allocated. 	 * Only append sources which are in-mode at t1. If we are 	 * transitioning to MCAST_UNDEFINED state on the group, do not 	 * include source entries. 	 * Only report recorded sources in our filter set when responding 	 * to a group-source query. 	 */
+comment|/* 	 * Append as many sources as will fit in the first packet. 	 * If we are appending to a new packet, the chain allocation 	 * may potentially use clusters; use m_getptr() in this case. 	 * If we are appending to an existing packet, we need to obtain 	 * a pointer to the group record after m_append(), in case a new 	 * mbuf was allocated. 	 * 	 * Only append sources which are in-mode at t1. If we are 	 * transitioning to MCAST_UNDEFINED state on the group, and 	 * use_block_allow is zero, do not include source entries. 	 * Otherwise, we need to include this source in the report. 	 * 	 * Only report recorded sources in our filter set when responding 	 * to a group-source query. 	 */
 if|if
 condition|(
 name|record_has_sources
@@ -8834,9 +8953,14 @@ name|now
 operator|==
 name|mode
 operator|&&
+operator|(
+operator|!
+name|use_block_allow
+operator|&&
 name|mode
 operator|==
 name|MCAST_UNDEFINED
+operator|)
 operator|)
 condition|)
 block|{
@@ -9338,9 +9462,14 @@ name|now
 operator|==
 name|mode
 operator|&&
+operator|(
+operator|!
+name|use_block_allow
+operator|&&
 name|mode
 operator|==
 name|MCAST_UNDEFINED
+operator|)
 operator|)
 condition|)
 block|{
@@ -11154,6 +11283,8 @@ operator|->
 name|mli_gq
 argument_list|,
 name|inm
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

@@ -882,7 +882,7 @@ operator|(
 name|clen
 operator|^
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|addr
 operator|)

@@ -171,9 +171,12 @@ begin_comment
 comment|/* Define to 1 if you have the `getutent' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETUTENT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the iconv() function. */
@@ -434,17 +437,23 @@ begin_comment
 comment|/* Define to 1 if `ut_tv' is member of `struct utmp'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRUCT_UTMP_UT_TV */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_UTMP_UT_TV
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if `ut_user' is member of `struct utmp'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_STRUCT_UTMP_UT_USER */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_UTMP_UT_USER
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if `ut_xtime' is member of `struct utmp'. */
@@ -518,20 +527,20 @@ begin_comment
 comment|/* Define to 1 if you have the<utmpx.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UTMPX_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UTMPX_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<utmp.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_UTMP_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_UTMP_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */

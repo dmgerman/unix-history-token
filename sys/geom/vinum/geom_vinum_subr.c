@@ -2490,7 +2490,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"can't give sd '%s' to '%s' "
+literal|"error giving subdisk '%s' to '%s' "
 literal|"(already on '%s')"
 argument_list|,
 name|s
@@ -2626,7 +2626,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"couldn't autosize '%s' on '%s'"
+literal|"unable to autosize '%s' on '%s'"
 argument_list|,
 name|s
 operator|->

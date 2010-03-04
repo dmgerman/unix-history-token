@@ -8656,7 +8656,7 @@ for|for
 control|(
 name|i
 operator|=
-name|start
+literal|0
 init|;
 name|i
 operator|<
@@ -8674,7 +8674,7 @@ name|dma
 operator|->
 name|buflist
 index|[
-name|i
+name|start
 index|]
 expr_stmt|;
 name|buf_priv
@@ -8721,6 +8721,15 @@ return|return
 name|buf
 return|;
 block|}
+if|if
+condition|(
+operator|++
+name|start
+operator|>=
+name|dma
+operator|->
+name|buf_count
+condition|)
 name|start
 operator|=
 literal|0
@@ -8745,28 +8754,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|DRM_DEBUG
-argument_list|(
-literal|"returning NULL!\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct drm_buf *radeon_freelist_get(struct drm_device * dev) { 	struct drm_device_dma *dma = dev->dma; 	drm_radeon_private_t *dev_priv = dev->dev_private; 	drm_radeon_buf_priv_t *buf_priv; 	struct drm_buf *buf; 	int i, t; 	int start; 	u32 done_age;  	done_age = radeon_read_ring_rptr(dev_priv, RADEON_SCRATCHOFF(1)); 	if (++dev_priv->last_buf>= dma->buf_count) 		dev_priv->last_buf = 0;  	start = dev_priv->last_buf; 	dev_priv->stats.freelist_loops++;  	for (t = 0; t< 2; t++) { 		for (i = start; i< dma->buf_count; i++) { 			buf = dma->buflist[i]; 			buf_priv = buf->dev_private; 			if (buf->file_priv == 0 || (buf->pending&& 						    buf_priv->age<= 						    done_age)) { 				dev_priv->stats.requested_bufs++; 				buf->pending = 0; 				return buf; 			} 		} 		start = 0; 	}  	return NULL; }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

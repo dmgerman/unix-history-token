@@ -415,6 +415,17 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+name|setvbuf
+argument_list|(
+name|stdin
+argument_list|,
+literal|0
+argument_list|,
+name|_IONBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'h'

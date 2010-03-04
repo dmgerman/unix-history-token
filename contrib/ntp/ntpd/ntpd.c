@@ -124,12 +124,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS_WINNT
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -238,50 +232,6 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SYS_RESOURCE_H */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<process.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<io.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<clockstuff.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_iocompletionport.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS_WINNT */
 end_comment
 
 begin_if
@@ -3338,17 +3288,6 @@ expr_stmt|;
 name|init_timer
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_IO_COMPLETION_PORT
-argument_list|)
-name|init_io_completion_port
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|init_lib
 argument_list|()
 expr_stmt|;
@@ -3992,12 +3931,9 @@ init|;
 condition|;
 control|)
 block|{
-name|int
-name|tot_full_recvbufs
-init|=
 name|GetReceivedBuffers
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 else|#
 directive|else
 comment|/* normal I/O */

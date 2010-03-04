@@ -170,6 +170,17 @@ begin_comment
 comment|//must match ata_marvell.c's definition
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MV_7042
+value|72
+end_define
+
+begin_comment
+comment|//must match ata_marvell.c's definition
+end_comment
+
 begin_comment
 comment|/*  * Adaptec chipset support functions  */
 end_comment
@@ -212,6 +223,20 @@ block|,
 name|ATA_SA300
 block|,
 literal|"1420SA"
+block|}
+block|,
+block|{
+name|ATA_ADAPTEC_1430
+block|,
+literal|0
+block|,
+literal|4
+block|,
+name|MV_7042
+block|,
+name|ATA_SA300
+block|,
+literal|"1430SA"
 block|}
 block|,
 block|{

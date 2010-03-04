@@ -52,6 +52,12 @@ begin_comment
 comment|/* 0 == not setup, 1 == OK, -1 == failed */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|parsefile
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|char
 modifier|*
@@ -129,6 +135,7 @@ begin_function_decl
 name|void
 name|setinputfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -165,6 +172,28 @@ name|void
 name|popfile
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|parsefile
+modifier|*
+name|getcurrentfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|popfilesupto
+parameter_list|(
+name|struct
+name|parsefile
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

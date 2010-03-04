@@ -35,7 +35,7 @@ parameter_list|,
 name|_arg_
 parameter_list|)
 define|\
-value|if (debug>= (_lvl_))                   \                 printf _arg_;
+value|do { 						\ 		if (debug>= (_lvl_))			\ 			printf _arg_;			\ 	} while (0)
 end_define
 
 begin_else
@@ -52,6 +52,7 @@ name|_lvl_
 parameter_list|,
 name|_arg_
 parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif

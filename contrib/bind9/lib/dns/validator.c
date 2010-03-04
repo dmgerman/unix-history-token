@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.164.12.9 2009/05/07 23:47:12 tbox Exp $ */
+comment|/* $Id: validator.c,v 1.164.12.9.8.2 2009/12/31 20:29:21 each Exp $ */
 end_comment
 
 begin_include
@@ -7401,13 +7401,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -7467,13 +7468,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Having a pending key with no signature means that 			 * something is broken. 			 */
@@ -10228,13 +10230,14 @@ name|frdataset
 expr_stmt|;
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
@@ -10294,13 +10297,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * There should never be an unsigned DS. 				 */
@@ -15153,6 +15157,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|unsigned
+name|int
+name|labels
+decl_stmt|;
 name|dns_name_copy
 argument_list|(
 name|val
@@ -15167,6 +15175,13 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If this is a response to a DS query, we need to look in 		 * the parent zone for the trust anchor. 		 */
+name|labels
+operator|=
+name|dns_name_countlabels
+argument_list|(
+name|secroot
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|val
@@ -15177,20 +15192,19 @@ name|type
 operator|==
 name|dns_rdatatype_ds
 operator|&&
-name|dns_name_countlabels
-argument_list|(
-name|secroot
-argument_list|)
+name|labels
 operator|>
 literal|1U
 condition|)
-name|dns_name_split
+name|dns_name_getlabelsequence
 argument_list|(
 name|secroot
 argument_list|,
 literal|1
 argument_list|,
-name|NULL
+name|labels
+operator|-
+literal|1
 argument_list|,
 name|secroot
 argument_list|)
@@ -15215,18 +15229,6 @@ operator|==
 name|ISC_R_NOTFOUND
 condition|)
 block|{
-name|validator_log
-argument_list|(
-name|val
-argument_list|,
-name|ISC_LOG_DEBUG
-argument_list|(
-literal|3
-argument_list|)
-argument_list|,
-literal|"not beneath secure root"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|val
@@ -15632,13 +15634,14 @@ block|{
 comment|/* 			 * There is no DS.  If this is a delegation, 			 * we maybe done. 			 */
 if|if
 condition|(
+name|DNS_TRUST_PENDING
+argument_list|(
 name|val
 operator|->
 name|frdataset
 operator|.
 name|trust
-operator|==
-name|dns_trust_pending
+argument_list|)
 condition|)
 block|{
 name|result

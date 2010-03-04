@@ -269,6 +269,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|openat
+value|_openat
+end_define
+
+begin_define
+define|#
+directive|define
 name|poll
 value|_poll
 end_define

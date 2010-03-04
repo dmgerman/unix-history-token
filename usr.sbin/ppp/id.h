@@ -11,7 +11,7 @@ end_ifndef
 
 begin_struct_decl
 struct_decl|struct
-name|utmp
+name|utmpx
 struct_decl|;
 end_struct_decl
 
@@ -175,8 +175,9 @@ specifier|extern
 name|void
 name|ID0login
 parameter_list|(
+specifier|const
 name|struct
-name|utmp
+name|utmpx
 modifier|*
 parameter_list|)
 function_decl|;
@@ -188,10 +189,9 @@ name|void
 name|ID0logout
 parameter_list|(
 specifier|const
-name|char
+name|struct
+name|utmpx
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -390,24 +390,14 @@ begin_define
 define|#
 directive|define
 name|ID0login
-parameter_list|(
-name|u
-parameter_list|)
-define|\
-value|do {					\     if (logout((u)->ut_line))		\       logwtmp((u)->ut_line, "", "");	\     login(u);				\   } while (0)
+value|pututxline
 end_define
 
 begin_define
 define|#
 directive|define
 name|ID0logout
-parameter_list|(
-name|dev
-parameter_list|,
-name|no
-parameter_list|)
-define|\
-value|do {							\     struct utmp ut;					\     strncpy(ut.ut_line, dev, sizeof ut.ut_line - 1);	\     ut.ut_line[sizeof ut.ut_line - 1] = '\0';		\     if (no || logout(ut.ut_line))			\       logwtmp(ut.ut_line, "", ""); 			\   } while (0)
+value|pututxline
 end_define
 
 begin_define

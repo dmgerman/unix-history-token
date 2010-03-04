@@ -2187,13 +2187,18 @@ parameter_list|(
 name|teken_t
 modifier|*
 name|t
-name|__unused
 parameter_list|)
 block|{
 name|teken_printf
 argument_list|(
-literal|"device control string???\n"
+literal|"Unsupported device control string\n"
 argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|t_stateflags
+operator||=
+name|TS_INSTRING
 expr_stmt|;
 block|}
 end_function
@@ -3699,6 +3704,30 @@ end_function
 begin_function
 specifier|static
 name|void
+name|teken_subr_operating_system_command
+parameter_list|(
+name|teken_t
+modifier|*
+name|t
+parameter_list|)
+block|{
+name|teken_printf
+argument_list|(
+literal|"Unsupported operating system command\n"
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|t_stateflags
+operator||=
+name|TS_INSTRING
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|teken_subr_pan_down
 parameter_list|(
 name|teken_t
@@ -4457,14 +4486,12 @@ case|case
 literal|1
 case|:
 comment|/* Cursor keys mode. */
-name|teken_funcs_param
-argument_list|(
 name|t
-argument_list|,
-name|TP_CURSORKEYS
-argument_list|,
-literal|0
-argument_list|)
+operator|->
+name|t_stateflags
+operator|&=
+operator|~
+name|TS_CURSORKEYS
 expr_stmt|;
 break|break;
 case|case
@@ -4631,6 +4658,20 @@ comment|/* Switch to alternate buffer. */
 name|teken_printf
 argument_list|(
 literal|"Switch to alternate buffer\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1000
+case|:
+comment|/* Mouse input. */
+name|teken_funcs_param
+argument_list|(
+name|t
+argument_list|,
+name|TP_MOUSE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5124,14 +5165,11 @@ case|case
 literal|1
 case|:
 comment|/* Cursor keys mode. */
-name|teken_funcs_param
-argument_list|(
 name|t
-argument_list|,
-name|TP_CURSORKEYS
-argument_list|,
-literal|1
-argument_list|)
+operator|->
+name|t_stateflags
+operator||=
+name|TS_CURSORKEYS
 expr_stmt|;
 break|break;
 case|case
@@ -5290,6 +5328,20 @@ comment|/* Switch to alternate buffer. */
 name|teken_printf
 argument_list|(
 literal|"Switch away from alternate buffer\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1000
+case|:
+comment|/* Mouse input. */
+name|teken_funcs_param
+argument_list|(
+name|t
+argument_list|,
+name|TP_MOUSE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5918,6 +5970,7 @@ operator|.
 name|tp_row
 expr_stmt|;
 block|}
+comment|/* Apply scrolling region. */
 name|t
 operator|->
 name|t_scrollreg
@@ -5942,8 +5995,6 @@ name|t_stateflags
 operator|&
 name|TS_ORIGIN
 condition|)
-block|{
-comment|/* XXX: home cursor? */
 name|t
 operator|->
 name|t_originreg
@@ -5952,6 +6003,7 @@ name|t
 operator|->
 name|t_scrollreg
 expr_stmt|;
+comment|/* Home cursor to the top left of the scrolling region. */
 name|t
 operator|->
 name|t_cursor
@@ -5984,7 +6036,6 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -6037,11 +6088,7 @@ name|t
 name|__unused
 parameter_list|)
 block|{
-name|teken_printf
-argument_list|(
-literal|"string terminator???\n"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Strings are already terminated in teken_input_char() when ^[ 	 * is inserted. 	 */
 block|}
 end_function
 

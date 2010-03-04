@@ -347,6 +347,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|an_init_locked
+parameter_list|(
+name|struct
+name|an_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|an_init_tx_ring
 parameter_list|(
@@ -372,10 +384,22 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|an_watchdog
+name|an_start_locked
 parameter_list|(
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|an_watchdog
+parameter_list|(
+name|struct
+name|an_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1492,8 +1516,6 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1589,37 +1611,6 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * We need to fake up a softc structure long enough 	 * to be able to issue commands and call some of the 	 * other routines. 	 */
-name|sc
-operator|->
-name|an_bhandle
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|port_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|an_btag
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|port_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|an_unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ssid
 operator|.
 name|an_len
@@ -1685,8 +1676,6 @@ argument_list|,
 name|MTX_NETWORK_LOCK
 argument_list|,
 name|MTX_DEF
-operator||
-name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|AN_LOCK
@@ -2913,13 +2902,13 @@ name|reply
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to allocate RX descriptor\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to allocate RX descriptor\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3091,13 +3080,13 @@ name|reply
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to allocate TX descriptor\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to allocate TX descriptor\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3275,13 +3264,13 @@ name|reply
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to allocate host descriptor\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to allocate host descriptor\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3392,9 +3381,6 @@ modifier|*
 name|sc
 parameter_list|,
 name|int
-name|unit
-parameter_list|,
-name|int
 name|flags
 parameter_list|)
 block|{
@@ -3436,13 +3422,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: can not if_alloc()\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"can not if_alloc()\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3525,13 +3511,13 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: failed to load config data\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"failed to load config data\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3577,13 +3563,13 @@ name|an_config
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: read record failed\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"read record failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3629,13 +3615,13 @@ name|an_caps
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: read record failed\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"read record failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3681,13 +3667,13 @@ name|an_ssidlist
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: read record failed\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"read record failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3733,13 +3719,13 @@ name|an_aplist
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: read record failed\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"read record failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3805,25 +3791,25 @@ name|an_rssimap
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: unable to get RSSI<-> dBM map\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"unable to get RSSI<-> dBM map\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: got RSSI<-> dBM map\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"got RSSI<-> dBM map\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3836,13 +3822,13 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"an%d: no RSSI<-> dBM map\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_dev
+argument_list|,
+literal|"no RSSI<-> dBM map\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3858,12 +3844,6 @@ operator|->
 name|if_softc
 operator|=
 name|sc
-expr_stmt|;
-name|sc
-operator|->
-name|an_unit
-operator|=
-name|unit
 expr_stmt|;
 name|if_initname
 argument_list|(
@@ -3911,12 +3891,6 @@ operator|->
 name|if_start
 operator|=
 name|an_start
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|an_watchdog
 expr_stmt|;
 name|ifp
 operator|->
@@ -4672,14 +4646,12 @@ name|buf_802_11
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: oversized packet "
-literal|"received (%d, %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"oversized packet "
+literal|"received (%d, %d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -4798,14 +4770,12 @@ name|buf_802_11
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: oversized packet "
-literal|"received (%d, %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"oversized packet "
+literal|"received (%d, %d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -5076,14 +5046,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: oversized packet "
-literal|"received (%d, %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"oversized packet "
+literal|"received (%d, %d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -5458,14 +5426,12 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: oversized packet "
-literal|"received (%d, %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"oversized packet "
+literal|"received (%d, %d)\n"
 argument_list|,
 name|len
 argument_list|,
@@ -5652,14 +5618,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: Didn't get valid RX packet "
-literal|"%x %x %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"Didn't get valid RX packet "
+literal|"%x %x %d\n"
 argument_list|,
 name|an_rx_desc
 operator|.
@@ -5715,9 +5679,9 @@ name|sc
 operator|->
 name|an_ifp
 expr_stmt|;
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|an_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -5946,6 +5910,26 @@ operator|=
 name|sc
 operator|->
 name|an_ifp
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|an_timer
+operator|>
+literal|0
+operator|&&
+operator|--
+name|sc
+operator|->
+name|an_timer
+operator|==
+literal|0
+condition|)
+name|an_watchdog
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -6447,7 +6431,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|an_start
+name|an_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -7138,13 +7122,13 @@ argument_list|)
 operator|==
 name|ETIMEDOUT
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: reset failed\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"reset failed\n"
 argument_list|)
 expr_stmt|;
 name|an_cmd
@@ -7197,6 +7181,11 @@ name|struct
 name|an_reply
 name|reply
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
 name|u_int16_t
 modifier|*
 name|ptr
@@ -7234,6 +7223,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|an_ifp
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7259,13 +7254,11 @@ name|an_type
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: RID access failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"RID access failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7291,13 +7284,11 @@ name|AN_BAP1
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: seek to record failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"seek to record failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7329,14 +7320,12 @@ literal|2
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: record length mismatch -- expected %d, "
-literal|"got %d for Rid %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"record length mismatch -- expected %d, "
+literal|"got %d for Rid %x\n"
 argument_list|,
 name|ltv
 operator|->
@@ -7593,13 +7582,11 @@ operator|&
 name|AN_CMD_QUAL_MASK
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to read RID %x %x %x %x %x, %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"failed to read RID %x %x %x %x %x, %d\n"
 argument_list|,
 name|ltv
 operator|->
@@ -7684,14 +7671,12 @@ literal|2
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: record length mismatch -- expected %d, "
-literal|"got %d for Rid %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"record length mismatch -- expected %d, "
+literal|"got %d for Rid %x\n"
 argument_list|,
 name|ltv
 operator|->
@@ -8188,13 +8173,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to write RID 1 %x %x %x %x %x, %d\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to write RID 1 %x %x %x %x %x, %d\n"
 argument_list|,
 name|ltv
 operator|->
@@ -8234,13 +8219,13 @@ operator|&
 name|AN_CMD_QUAL_MASK
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to write RID 2 %x %x %x %x %x, %d\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to write RID 2 %x %x %x %x %x, %d\n"
 argument_list|,
 name|ltv
 operator|->
@@ -8336,13 +8321,13 @@ name|an_len
 operator|-
 literal|4
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: RID %4x, Length %4d, Mode %s\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"RID %4x, Length %4d, Mode %s\n"
 argument_list|,
 name|ltv
 operator|->
@@ -8372,13 +8357,13 @@ name|an_type
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d:\t"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"\t"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -8471,13 +8456,13 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d:\t"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"\t"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -8578,13 +8563,13 @@ name|AN_OFF1
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: invalid data path: %x\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"invalid data path: %x\n"
 argument_list|,
 name|chan
 argument_list|)
@@ -8955,13 +8940,13 @@ name|len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to allocate %d bytes on NIC\n"
-argument_list|,
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+argument_list|,
+literal|"failed to allocate %d bytes on NIC\n"
 argument_list|,
 name|len
 argument_list|)
@@ -9445,23 +9430,7 @@ case|:
 end_case
 
 begin_expr_stmt
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|an_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|AN_LOCK
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -9668,13 +9637,11 @@ default|default:
 end_default
 
 begin_expr_stmt
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: unknown RID: %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"unknown RID: %x\n"
 argument_list|,
 name|areq
 operator|->
@@ -9699,22 +9666,11 @@ name|ifp
 operator|->
 name|if_flags
 operator|)
-block|{
-name|AN_UNLOCK
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
-block|;
-name|an_init
-argument_list|(
-name|sc
-argument_list|)
-block|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-block|; 	}
+expr_stmt|;
 end_expr_stmt
 
 begin_return
@@ -9779,23 +9735,11 @@ name|sc
 operator|->
 name|an_was_monitor
 condition|)
-block|{
-name|AN_UNLOCK
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|an_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|an_was_monitor
@@ -10091,23 +10035,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|AN_UNLOCK
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|an_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -10119,29 +10051,12 @@ name|if_drv_flags
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
-block|{
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|an_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|an_if_flags
@@ -10149,6 +10064,11 @@ operator|=
 name|ifp
 operator|->
 name|if_flags
+expr_stmt|;
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -12877,11 +12797,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ireq
@@ -12925,7 +12840,7 @@ operator|->
 name|an_home_product
 expr_stmt|;
 comment|/* update configuration */
-name|an_init
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -12942,11 +12857,6 @@ argument_list|(
 expr|struct
 name|an_ltv_key
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -13318,6 +13228,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* 		if (!error) { 			AN_LOCK(sc); 			an_setdef(sc,&sc->areq); 			AN_UNLOCK(sc); 		} 		*/
 break|break;
@@ -13489,19 +13406,50 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|an_ifp
-decl_stmt|;
 name|AN_LOCK
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|an_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|an_init_locked
+parameter_list|(
+name|struct
+name|an_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|AN_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|an_ifp
 expr_stmt|;
 if|if
 condition|(
@@ -13509,14 +13457,7 @@ name|sc
 operator|->
 name|an_gone
 condition|)
-block|{
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 if|if
 condition|(
 name|ifp
@@ -13569,19 +13510,11 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: tx buffer allocation "
-literal|"failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|)
-expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
+literal|"tx buffer allocation failed\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13767,18 +13700,11 @@ name|an_ssidlist
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to set ssid list\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|)
-expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
+literal|"failed to set ssid list\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13822,18 +13748,11 @@ name|an_aplist
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to set AP list\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|)
-expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
+literal|"failed to set AP list\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13877,18 +13796,11 @@ name|an_config
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to set configuration\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|)
-expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
+literal|"failed to set configuration\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13906,18 +13818,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: failed to enable MAC\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
-argument_list|)
-expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
+literal|"failed to enable MAC\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -13986,11 +13891,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -13999,6 +13899,46 @@ begin_function
 specifier|static
 name|void
 name|an_start
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+name|struct
+name|an_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
+name|AN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|an_start_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|an_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -14051,6 +13991,11 @@ operator|=
 name|ifp
 operator|->
 name|if_softc
+expr_stmt|;
+name|AN_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -14130,11 +14075,6 @@ operator|->
 name|an_rdata
 operator|.
 name|an_tx_prod
-expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -14299,6 +14239,13 @@ expr_stmt|;
 name|txcontrol
 operator|=
 name|AN_TXCTL_8023
+operator||
+name|AN_TXCTL_HW
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
 expr_stmt|;
 comment|/* write the txcontrol only */
 name|an_write_data
@@ -14404,13 +14351,11 @@ argument_list|,
 name|id
 argument_list|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: xmit failed\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"xmit failed\n"
 argument_list|)
 expr_stmt|;
 name|AN_INC
@@ -14421,9 +14366,9 @@ name|AN_TX_RING_CNT
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Set a timeout in case the chip goes out to lunch. 			 */
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|an_timer
 operator|=
 literal|5
 expr_stmt|;
@@ -14593,6 +14538,13 @@ expr_stmt|;
 name|txcontrol
 operator|=
 name|AN_TXCTL_8023
+operator||
+name|AN_TXCTL_HW
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
 expr_stmt|;
 comment|/* write the txcontrol only */
 name|bcopy
@@ -14715,19 +14667,21 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
-init|;
-name|i
-operator|<
 sizeof|sizeof
 argument_list|(
 name|an_tx_desc
 argument_list|)
 operator|/
 literal|4
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 name|CSR_MEM_AUX_WRITE_4
@@ -14817,9 +14771,9 @@ name|AN_EV_ALLOC
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Set a timeout in case the chip goes out to lunch. 			 */
-name|ifp
+name|sc
 operator|->
-name|if_timer
+name|an_timer
 operator|=
 literal|5
 expr_stmt|;
@@ -14845,11 +14799,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m0
@@ -14892,7 +14841,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|AN_LOCK
+name|AN_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -14903,14 +14852,7 @@ name|sc
 operator|->
 name|an_gone
 condition|)
-block|{
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|ifp
 operator|=
 name|sc
@@ -15020,12 +14962,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15035,23 +14971,17 @@ name|void
 name|an_watchdog
 parameter_list|(
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|struct
 name|an_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
 name|ifp
-operator|->
-name|if_softc
-expr_stmt|;
-name|AN_LOCK
+decl_stmt|;
+name|AN_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
@@ -15062,21 +14992,18 @@ name|sc
 operator|->
 name|an_gone
 condition|)
-block|{
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
-name|printf
-argument_list|(
-literal|"an%d: device timeout\n"
-argument_list|,
+name|ifp
+operator|=
 name|sc
 operator|->
-name|an_unit
+name|an_ifp
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
 name|an_reset
@@ -15095,12 +15022,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|an_init
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -15110,7 +15032,6 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15134,6 +15055,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|AN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|an_stop
 argument_list|(
 name|sc
@@ -15145,8 +15071,15 @@ name|an_gone
 operator|=
 literal|1
 expr_stmt|;
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -15212,7 +15145,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|an_init
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -15293,7 +15226,7 @@ name|if_flags
 operator|&
 name|IFF_UP
 condition|)
-name|an_start
+name|an_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -15551,9 +15484,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|SIGDEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"an: q value %x (MSB=0x%x, LSB=0x%x) \n"
+name|sc
+operator|->
+name|an_ifp
+argument_list|,
+literal|"q value %x (MSB=0x%x, LSB=0x%x) \n"
 argument_list|,
 name|rx_rssi
 operator|&
@@ -16040,6 +15977,11 @@ name|sc
 operator|->
 name|an_tx_rate
 decl_stmt|;
+name|AN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|an_tx_rate
@@ -16071,11 +16013,6 @@ operator|->
 name|an_tx_rate
 operator|=
 literal|0
-expr_stmt|;
-name|AN_LOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -16211,11 +16148,6 @@ name|an_opmode
 operator||=
 name|AN_OPMODE_INFRASTRUCTURE_STATION
 expr_stmt|;
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|otype
@@ -16232,7 +16164,12 @@ name|sc
 operator|->
 name|an_tx_rate
 condition|)
-name|an_init
+name|an_init_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|AN_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -16338,11 +16275,6 @@ operator||
 name|IFM_ACTIVE
 expr_stmt|;
 block|}
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -16411,6 +16343,11 @@ operator|->
 name|ifm_status
 operator||=
 name|IFM_ACTIVE
+expr_stmt|;
+name|AN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -17380,12 +17317,12 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|an_stop
+name|AN_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|AN_LOCK
+name|an_stop
 argument_list|(
 name|sc
 argument_list|)
@@ -17414,13 +17351,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: Waitbusy hang b4 RESET =%d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"Waitbusy hang b4 RESET =%d\n"
 argument_list|,
 name|status
 argument_list|)
@@ -17472,13 +17407,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: Waitbusy hang AFTER RESET =%d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"Waitbusy hang AFTER RESET =%d\n"
 argument_list|,
 name|status
 argument_list|)
@@ -17915,13 +17848,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: flash putchar busywait timeout! \n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"flash putchar busywait timeout!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -18199,17 +18130,7 @@ literal|1024
 argument_list|)
 expr_stmt|;
 comment|/* Added 12/7/00 */
-name|AN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|an_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|AN_LOCK
+name|an_init_locked
 argument_list|(
 name|sc
 argument_list|)
@@ -18273,13 +18194,11 @@ operator|->
 name|mpi350
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: flashing not supported on MPI 350 yet\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"flashing not supported on MPI 350 yet\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -18535,13 +18454,11 @@ operator|>
 name|FLASH_SIZE
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: Buffer to big, %x %x\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"Buffer to big, %x %x\n"
 argument_list|,
 name|l_ioctl
 operator|->
@@ -18628,13 +18545,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"an%d: FLASHRESTART returned %d\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|an_unit
+literal|"FLASHRESTART returned %d\n"
 argument_list|,
 name|status
 argument_list|)

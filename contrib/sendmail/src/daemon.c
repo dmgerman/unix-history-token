@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.680 2008/02/14 00:20:26 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.683 2009/12/18 01:12:40 ca Exp $"
 argument_list|)
 end_macro
 
@@ -822,7 +822,7 @@ operator|++
 control|)
 name|sm_dprintf
 argument_list|(
-literal|"getrequests: daemon %s: %d\n"
+literal|"getrequests: daemon %s: socket %d\n"
 argument_list|,
 name|Daemons
 index|[
@@ -8463,7 +8463,10 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|!=
+name|htonl
+argument_list|(
 name|INADDR_LOOPBACK
+argument_list|)
 condition|)
 block|{
 name|clt_bind
@@ -9252,6 +9255,12 @@ label|:
 if|if
 condition|(
 name|hp
+operator|==
+name|NULL
+operator|||
+name|hp
+operator|->
+name|h_addr
 operator|==
 name|NULL
 condition|)

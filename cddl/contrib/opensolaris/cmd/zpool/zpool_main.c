@@ -15362,6 +15362,18 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
+literal|" 14  passthrough-x aclinherit "
+literal|"support\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
 literal|"For more information on a particular "
 literal|"version, including supported releases, see:\n\n"
 argument_list|)

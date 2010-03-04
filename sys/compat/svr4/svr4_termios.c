@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<sys/tty.h>
 end_include
 
 begin_include

@@ -270,7 +270,6 @@ name|root
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|root
 argument_list|)
 expr_stmt|;
@@ -2089,7 +2088,9 @@ begin_function
 specifier|static
 name|void
 name|DaemonMode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -5826,7 +5827,9 @@ begin_function
 specifier|static
 name|void
 name|Usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i

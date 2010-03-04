@@ -596,7 +596,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|text
+name|act
 operator|!=
 name|MM_NULLACT
 condition|)

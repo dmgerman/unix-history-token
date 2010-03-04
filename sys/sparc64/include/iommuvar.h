@@ -113,7 +113,7 @@ name|uint64_t
 name|is_dvmabase
 decl_stmt|;
 comment|/* (r) */
-name|int64_t
+name|uint64_t
 name|is_cr
 decl_stmt|;
 comment|/* (r) Control reg value */
@@ -125,7 +125,7 @@ index|]
 decl_stmt|;
 comment|/* (r) */
 specifier|volatile
-name|int64_t
+name|uint64_t
 modifier|*
 name|is_flushva
 index|[
@@ -199,6 +199,18 @@ define|#
 directive|define
 name|IOMMU_RERUN_DISABLE
 value|(1<< 0)
+define|#
+directive|define
+name|IOMMU_FIRE
+value|(1<< 1)
+define|#
+directive|define
+name|IOMMU_FLUSH_CACHE
+value|(1<< 2)
+define|#
+directive|define
+name|IOMMU_PRESERVE_PROM
+value|(1<< 3)
 block|}
 struct|;
 end_struct
@@ -221,13 +233,13 @@ name|iommu_state
 modifier|*
 name|is
 parameter_list|,
-name|int
+name|u_int
 name|tsbsize
 parameter_list|,
 name|uint32_t
 name|iovabase
 parameter_list|,
-name|int
+name|u_int
 name|resvpg
 parameter_list|)
 function_decl|;

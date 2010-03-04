@@ -99,6 +99,9 @@ name|buff
 decl_stmt|,
 modifier|*
 name|e
+decl_stmt|,
+modifier|*
+name|file
 decl_stmt|;
 name|size_t
 name|buffsize
@@ -523,9 +526,14 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFLNK
-operator||
 literal|0664
+argument_list|)
+expr_stmt|;
+name|archive_entry_set_filetype
+argument_list|(
+name|entry
+argument_list|,
+name|AE_IFLNK
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_symlink
@@ -637,12 +645,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Verify the archive format. 	 */
+comment|/* 	 * Verify the archive format. 	 * 	 * Notes on the ino validation: cpio does not actually require 	 * that the ino values written to the archive match those read 	 * from disk.  It really requires that: 	 *   * matching non-zero ino values be written as matching 	 *     non-zero values 	 *   * non-matching non-zero ino values be written as non-matching 	 *     non-zero values 	 * Libarchive further ensures that zero ino values get written 	 * as zeroes.  This allows the cpio writer to generate 	 * synthetic ino values for the archive that may be different 	 * than those on disk in order to avoid problems due to truncation. 	 * This is especially needed for odc (POSIX format) that 	 * only supports 18-bit ino values. 	 */
 name|e
 operator|=
 name|buff
 expr_stmt|;
 comment|/* "file" */
+name|file
+operator|=
+name|e
+expr_stmt|;
+comment|/* Remember where this starts... */
 name|assert
 argument_list|(
 name|is_octal
@@ -678,18 +691,23 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* dev */
-name|assertEqualMem
+name|assert
+argument_list|(
+name|memcmp
 argument_list|(
 name|e
 operator|+
 literal|12
 argument_list|,
-literal|"000131"
+literal|"000000"
 argument_list|,
 literal|6
 argument_list|)
+operator|!=
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* ino */
+comment|/* ino must be != 0 */
 name|assertEqualMem
 argument_list|(
 name|e
@@ -856,12 +874,14 @@ name|e
 operator|+
 literal|12
 argument_list|,
-literal|"000131"
+name|file
+operator|+
+literal|12
 argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/* ino */
+comment|/* ino must match above */
 name|assertEqualMem
 argument_list|(
 name|e
@@ -1181,18 +1201,42 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* dev */
-name|assertEqualMem
+name|assert
+argument_list|(
+name|memcmp
 argument_list|(
 name|e
 operator|+
 literal|12
 argument_list|,
-literal|"000132"
+name|file
+operator|+
+literal|12
 argument_list|,
 literal|6
 argument_list|)
+operator|!=
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* ino */
+comment|/* ino must != file ino */
+name|assert
+argument_list|(
+name|memcmp
+argument_list|(
+name|e
+operator|+
+literal|12
+argument_list|,
+literal|"000000"
+argument_list|,
+literal|6
+argument_list|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* ino must != 0 */
 name|assertEqualMem
 argument_list|(
 name|e

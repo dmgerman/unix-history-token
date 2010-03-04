@@ -335,7 +335,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aimnprsv"
+literal|"aimnoprsv"
 argument_list|)
 operator|)
 operator|!=
@@ -407,6 +407,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|'s'
+case|:
+case|case
+literal|'o'
 case|:
 name|flags
 operator||=
@@ -873,7 +876,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uname [-aimnprsv]\n"
+literal|"usage: uname [-aimnoprsv]\n"
 argument_list|)
 expr_stmt|;
 name|exit

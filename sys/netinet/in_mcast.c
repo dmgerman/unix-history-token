@@ -8933,7 +8933,7 @@ operator|!=
 name|AF_UNSPEC
 condition|)
 block|{
-comment|/* 			 * MCAST_JOIN_SOURCE on an exclusive membership 			 * is an error. On an existing inclusive membership, 			 * it just adds the source to the filter list. 			 */
+comment|/* 			 * MCAST_JOIN_SOURCE_GROUP on an exclusive membership 			 * is an error. On an existing inclusive membership, 			 * it just adds the source to the filter list. 			 */
 if|if
 condition|(
 name|imf

@@ -474,7 +474,7 @@ decl_stmt|;
 block|}
 name|name
 struct|;
-name|time_t
+name|int
 name|Utmp
 decl_stmt|;
 comment|/* Are we in utmp ? */

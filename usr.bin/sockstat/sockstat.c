@@ -2660,11 +2660,16 @@ decl_stmt|;
 name|void
 modifier|*
 name|addr
+init|=
+name|NULL
 decl_stmt|;
+comment|/* Keep compiler happy. */
 name|int
 name|off
 decl_stmt|,
 name|port
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(

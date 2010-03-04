@@ -3668,10 +3668,10 @@ name|uint16_t
 name|count
 decl_stmt|;
 name|uint16_t
-name|seg
+name|off
 decl_stmt|;
 name|uint16_t
-name|off
+name|seg
 decl_stmt|;
 name|uint64_t
 name|lba
@@ -3740,7 +3740,7 @@ name|nblk
 expr_stmt|;
 name|packet
 operator|.
-name|seg
+name|off
 operator|=
 name|VTOPOFF
 argument_list|(
@@ -3749,7 +3749,7 @@ argument_list|)
 expr_stmt|;
 name|packet
 operator|.
-name|off
+name|seg
 operator|=
 name|VTOPSEG
 argument_list|(

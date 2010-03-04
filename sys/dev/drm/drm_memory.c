@@ -243,6 +243,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|DRM_MEM_MM
+argument_list|,
+literal|"drm_sman"
+argument_list|,
+literal|"DRM MEMORY MANAGER Data Structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|DRM_MEM_HASHTAB
+argument_list|,
+literal|"drm_hashtab"
+argument_list|,
+literal|"DRM HASHTABLE Data Structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|drm_mem_init

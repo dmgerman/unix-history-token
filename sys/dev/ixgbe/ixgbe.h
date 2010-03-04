@@ -410,19 +410,15 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * This parameter controls the duration of transmit watchdog timer.  */
+comment|/*  * This is the max watchdog interval, ie. the time that can  * pass between any two TX clean operations, such only happening  * when the TX hardware is functioning.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_TIMEOUT
-value|5
+name|IXGBE_WATCHDOG
+value|(10 * hz)
 end_define
-
-begin_comment
-comment|/* set to 5 seconds */
-end_comment
 
 begin_comment
 comment|/*  * This parameters control when the driver calls the routine to reclaim  * transmit descriptors.  */
@@ -457,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_FC_PAUSE
-value|0x680
+value|0xFFFF
 end_define
 
 begin_define
@@ -660,7 +656,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_RX_HDR
-value|128
+value|256
 end_define
 
 begin_define
@@ -928,8 +924,11 @@ decl_stmt|;
 name|u32
 name|msix
 decl_stmt|;
-name|u32
-name|watchdog_timer
+name|bool
+name|watchdog_check
+decl_stmt|;
+name|int
+name|watchdog_time
 decl_stmt|;
 name|union
 name|ixgbe_adv_tx_desc
@@ -954,10 +953,10 @@ modifier|*
 name|tq
 decl_stmt|;
 name|u32
-name|next_avail_tx_desc
+name|next_avail_desc
 decl_stmt|;
 name|u32
-name|next_tx_to_clean
+name|next_to_clean
 decl_stmt|;
 name|struct
 name|ixgbe_tx_buf
@@ -1002,6 +1001,17 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IXGBE_FDIR
+name|u16
+name|atr_sample
+decl_stmt|;
+name|u16
+name|atr_count
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Soft Stats */
 name|u32
 name|no_tx_desc_avail
@@ -1073,9 +1083,12 @@ decl_stmt|;
 name|bool
 name|hdr_split
 decl_stmt|;
+name|bool
+name|hw_rsc
+decl_stmt|;
 name|unsigned
 name|int
-name|last_cleaned
+name|last_refreshed
 decl_stmt|;
 name|unsigned
 name|int
@@ -1091,16 +1104,6 @@ name|rxtag
 decl_stmt|;
 name|bus_dmamap_t
 name|spare_map
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|fmp
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|lmp
 decl_stmt|;
 name|char
 name|mtx_name
@@ -1138,6 +1141,17 @@ decl_stmt|;
 name|u64
 name|rx_bytes
 decl_stmt|;
+name|u64
+name|rsc_num
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IXGBE_FDIR
+name|u64
+name|flm
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1212,16 +1226,13 @@ decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
-name|u32
+name|u16
 name|num_vlans
 decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
 comment|/* Info about the board itself */
-name|u32
-name|part_num
-decl_stmt|;
 name|u32
 name|optics
 decl_stmt|;
@@ -1239,18 +1250,6 @@ name|link_up
 decl_stmt|;
 name|u32
 name|linkvec
-decl_stmt|;
-name|u32
-name|tx_int_delay
-decl_stmt|;
-name|u32
-name|tx_abs_int_delay
-decl_stmt|;
-name|u32
-name|rx_int_delay
-decl_stmt|;
-name|u32
-name|rx_abs_int_delay
 decl_stmt|;
 comment|/* Mbuf cluster size */
 name|u32
@@ -1275,6 +1274,18 @@ name|task
 name|msf_task
 decl_stmt|;
 comment|/* Multispeed Fiber tasklet */
+ifdef|#
+directive|ifdef
+name|IXGBE_FDIR
+name|int
+name|fdir_reinit
+decl_stmt|;
+name|struct
+name|task
+name|fdir_task
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|taskqueue
 modifier|*

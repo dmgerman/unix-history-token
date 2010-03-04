@@ -548,6 +548,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_template"
+argument_list|,
+operator|&
+name|usb_template
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -564,6 +575,92 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Selected USB device side template"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* English is default language */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_lang_id
+init|=
+literal|0x0009
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_lang_mask
+init|=
+literal|0x00FF
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_lang_id"
+argument_list|,
+operator|&
+name|usb_lang_id
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usb_lang_id
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usb_lang_id
+argument_list|,
+literal|0
+argument_list|,
+literal|"Preferred USB language ID"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_lang_mask"
+argument_list|,
+operator|&
+name|usb_lang_mask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usb_lang_mask
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usb_lang_mask
+argument_list|,
+literal|0
+argument_list|,
+literal|"Preferred USB language mask"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1490,14 +1587,6 @@ name|struct
 name|usb_endpoint
 modifier|*
 name|ep_end
-init|=
-name|udev
-operator|->
-name|endpoints
-operator|+
-name|udev
-operator|->
-name|endpoints_max
 decl_stmt|;
 comment|/* be NULL safe */
 if|if
@@ -1511,6 +1600,16 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|ep_end
+operator|=
+name|udev
+operator|->
+name|endpoints
+operator|+
+name|udev
+operator|->
+name|endpoints_max
+expr_stmt|;
 comment|/* get next endpoint */
 if|if
 condition|(
@@ -1816,7 +1915,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2272,7 +2371,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2463,7 +2562,7 @@ if|if
 condition|(
 name|ep
 operator|->
-name|refcount
+name|refcount_alloc
 operator|!=
 literal|0
 condition|)
@@ -3609,35 +3708,17 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flag
-operator|&
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-operator|)
-condition|)
-block|{
-operator|*
-name|ppdev
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|ppdev
-condition|)
-block|{
-comment|/* 		 * NOTE: It is important to clear "*ppdev" before deleting 		 * the child due to some device methods being called late 		 * during the delete process ! 		 */
 name|dev
 operator|=
 operator|*
 name|ppdev
 expr_stmt|;
+if|if
+condition|(
+name|dev
+condition|)
+block|{
+comment|/* 		 * NOTE: It is important to clear "*ppdev" before deleting 		 * the child due to some device methods being called late 		 * during the delete process ! 		 */
 operator|*
 name|ppdev
 operator|=
@@ -3699,7 +3780,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Resume failed!\n"
+literal|"Resume failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3740,7 +3821,7 @@ label|:
 comment|/* Detach is not allowed to fail in the USB world */
 name|panic
 argument_list|(
-literal|"An USB driver would not detach!\n"
+literal|"A USB driver would not detach\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3983,7 +4064,7 @@ block|{
 comment|/* 			 * Panic here, else one can get a double call 			 * to device_detach().  USB devices should 			 * never fail on detach! 			 */
 name|panic
 argument_list|(
-literal|"device_delete_child() failed!\n"
+literal|"device_delete_child() failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4029,7 +4110,7 @@ name|udev
 operator|->
 name|parent_dev
 argument_list|,
-literal|"Device creation failed!\n"
+literal|"Device creation failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4250,6 +4331,12 @@ operator|=
 name|udev
 operator|->
 name|port_no
+expr_stmt|;
+name|uaa
+operator|->
+name|dev_state
+operator|=
+name|UAA_DEV_READY
 expr_stmt|;
 name|uaa
 operator|->
@@ -4720,7 +4807,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"device delete child failed!\n"
+literal|"device delete child failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4820,7 +4907,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%s failed!\n"
+literal|"%s failed\n"
 argument_list|,
 name|do_suspend
 condition|?
@@ -5139,7 +5226,7 @@ name|uint8_t
 modifier|*
 name|scratch_ptr
 decl_stmt|;
-name|uint32_t
+name|size_t
 name|scratch_size
 decl_stmt|;
 name|usb_error_t
@@ -5147,6 +5234,15 @@ name|err
 decl_stmt|;
 name|uint8_t
 name|device_index
+decl_stmt|;
+name|uint8_t
+name|config_index
+decl_stmt|;
+name|uint8_t
+name|config_quirk
+decl_stmt|;
+name|uint8_t
+name|set_config_failed
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -5216,7 +5312,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"No free USB device index for new device!\n"
+literal|"No free USB device index for new device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5238,7 +5334,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"Invalid device depth!\n"
+literal|"Invalid device depth\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5878,7 +5974,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"getting device descriptor "
-literal|"at addr %d failed, %s!\n"
+literal|"at addr %d failed, %s\n"
 argument_list|,
 name|udev
 operator|->
@@ -6113,7 +6209,7 @@ name|scratch_ptr
 argument_list|,
 literal|4
 argument_list|,
-name|scratch_size
+literal|0
 argument_list|,
 name|USB_LANGUAGE_TABLE
 argument_list|)
@@ -6151,9 +6247,101 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|uint16_t
+name|langid
+decl_stmt|;
+name|uint16_t
+name|pref
+decl_stmt|;
+name|uint16_t
+name|mask
+decl_stmt|;
+name|uint8_t
+name|x
+decl_stmt|;
+comment|/* load preferred value and mask */
+name|pref
+operator|=
+name|usb_lang_id
+expr_stmt|;
+name|mask
+operator|=
+name|usb_lang_mask
+expr_stmt|;
+comment|/* align length correctly */
+name|scratch_ptr
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
+comment|/* fix compiler warning */
+name|langid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* search for preferred language */
+for|for
+control|(
+name|x
+operator|=
+literal|2
+init|;
+operator|(
+name|x
+operator|<
+name|scratch_ptr
+index|[
+literal|0
+index|]
+operator|)
+condition|;
+name|x
+operator|+=
+literal|2
+control|)
+block|{
+name|langid
+operator|=
+name|UGETW
+argument_list|(
+name|scratch_ptr
+operator|+
+name|x
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|langid
+operator|&
+name|mask
+operator|)
+operator|==
+name|pref
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|x
+operator|>=
+name|scratch_ptr
+index|[
+literal|0
+index|]
+condition|)
+block|{
 comment|/* pick the first language as the default */
-name|udev
-operator|->
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Using first language\n"
+argument_list|)
+expr_stmt|;
 name|langid
 operator|=
 name|UGETW
@@ -6162,6 +6350,22 @@ name|scratch_ptr
 operator|+
 literal|2
 argument_list|)
+expr_stmt|;
+block|}
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Language selected: 0x%04x\n"
+argument_list|,
+name|langid
+argument_list|)
+expr_stmt|;
+name|udev
+operator|->
+name|langid
+operator|=
+name|langid
 expr_stmt|;
 block|}
 comment|/* assume 100mA bus powered for now. Changed when configured. */
@@ -6185,21 +6389,19 @@ name|flags
 operator|.
 name|usb_mode
 operator|==
-name|USB_MODE_HOST
+name|USB_MODE_DEVICE
 condition|)
 block|{
-name|uint8_t
-name|config_index
-decl_stmt|;
-name|uint8_t
-name|config_quirk
-decl_stmt|;
-name|uint8_t
-name|set_config_failed
-init|=
+comment|/* USB device mode setup is complete */
+name|err
+operator|=
 literal|0
-decl_stmt|;
-comment|/* 		 * Most USB devices should attach to config index 0 by 		 * default 		 */
+expr_stmt|;
+goto|goto
+name|config_done
+goto|;
+block|}
+comment|/* 	 * Most USB devices should attach to config index 0 by 	 * default 	 */
 if|if
 condition|(
 name|usb_test_quirk
@@ -6315,6 +6517,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|set_config_failed
+operator|=
+literal|0
+expr_stmt|;
 name|repeat_set_config
 label|:
 name|DPRINTF
@@ -6384,9 +6590,8 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Failure selecting "
-literal|"configuration index %u: %s, port %u, "
-literal|"addr %u (ignored)\n"
+literal|"Failure selecting configuration index %u:"
+literal|"%s, port %u, addr %u (ignored)\n"
 argument_list|,
 name|config_index
 argument_list|,
@@ -6405,28 +6610,23 @@ name|address
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Some USB devices do not have any 			 * configurations. Ignore any set config 			 * failures! 			 */
+comment|/* 		 * Some USB devices do not have any configurations. Ignore any 		 * set config failures! 		 */
 name|err
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|config_done
+goto|;
 block|}
-elseif|else
 if|if
 condition|(
+operator|!
 name|config_quirk
-condition|)
-block|{
-comment|/* user quirk selects configuration index */
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
+operator|&&
 name|config_index
 operator|+
 literal|1
-operator|)
 operator|<
 name|udev
 operator|->
@@ -6447,7 +6647,6 @@ operator|<
 literal|2
 operator|)
 operator|&&
-operator|(
 name|usbd_get_no_descriptors
 argument_list|(
 name|udev
@@ -6458,15 +6657,13 @@ name|UDESC_ENDPOINT
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
 block|{
 name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Found no endpoints "
-literal|"(trying next config)!\n"
+literal|"Found no endpoints, trying next config\n"
 argument_list|)
 expr_stmt|;
 name|config_index
@@ -6483,19 +6680,15 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Try to figure out if we have an 				 * auto-install disk there: 				 */
+comment|/* 			 * Try to figure out if we have an 			 * auto-install disk there: 			 */
 if|if
 condition|(
-name|usb_test_autoinstall
+name|usb_iface_is_cdrom
 argument_list|(
 name|udev
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|DPRINTFN
@@ -6515,45 +6708,36 @@ goto|;
 block|}
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|usb_test_huawei_autoinst_p
+name|EVENTHANDLER_INVOKE
 argument_list|(
+name|usb_dev_configured
+argument_list|,
 name|udev
 argument_list|,
 operator|&
 name|uaa
 argument_list|)
-operator|==
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|.
+name|dev_state
+operator|!=
+name|UAA_DEV_READY
 condition|)
 block|{
-name|DPRINTFN
-argument_list|(
-literal|0
-argument_list|,
-literal|"Found Huawei auto-install disk!\n"
-argument_list|)
-expr_stmt|;
 comment|/* leave device unconfigured */
 name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|err
-operator|=
-literal|0
-expr_stmt|;
-comment|/* set success */
-block|}
+name|config_done
+label|:
 name|DPRINTF
 argument_list|(
 literal|"new dev (addr %d), udev=%p, parent_hub=%p\n"
@@ -6645,14 +6829,12 @@ condition|(
 name|err
 condition|)
 block|{
-comment|/* free device  */
+comment|/* 		 * Free USB device and all subdevices, if any. 		 */
 name|usb_free_device
 argument_list|(
 name|udev
 argument_list|,
-name|USB_UNCFG_FLAG_FREE_SUBDEV
-operator||
-name|USB_UNCFG_FLAG_FREE_EP0
+literal|0
 argument_list|)
 expr_stmt|;
 name|udev
@@ -7238,7 +7420,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usb_free_device  *  * This function is NULL safe and will free an USB device.  *  * Flag values, see "USB_UNCFG_FLAG_XXX".  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usb_free_device  *  * This function is NULL safe and will free an USB device and its  * children devices, if any.  *  * Flag values: Reserved, set to zero.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -7462,7 +7644,7 @@ name|usb_unconfigure
 argument_list|(
 name|udev
 argument_list|,
-name|flag
+name|USB_UNCFG_FLAG_FREE_EP0
 argument_list|)
 expr_stmt|;
 comment|/* unsetup any leftover default USB transfers */
@@ -8132,11 +8314,12 @@ name|kdp
 decl_stmt|;
 endif|#
 directive|endif
-name|char
-name|temp
-index|[
-literal|64
-index|]
+name|uint8_t
+modifier|*
+name|temp_ptr
+decl_stmt|;
+name|size_t
+name|temp_size
 decl_stmt|;
 name|uint16_t
 name|vendor_id
@@ -8144,6 +8327,35 @@ decl_stmt|;
 name|uint16_t
 name|product_id
 decl_stmt|;
+name|temp_ptr
+operator|=
+name|udev
+operator|->
+name|bus
+operator|->
+name|scratch
+index|[
+literal|0
+index|]
+operator|.
+name|data
+expr_stmt|;
+name|temp_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|udev
+operator|->
+name|bus
+operator|->
+name|scratch
+index|[
+literal|0
+index|]
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
 name|vendor_id
 operator|=
 name|UGETW
@@ -8163,28 +8375,15 @@ name|idProduct
 argument_list|)
 expr_stmt|;
 comment|/* get serial number string */
-name|bzero
-argument_list|(
-name|temp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
 name|NULL
 argument_list|,
-name|temp
+name|temp_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|temp_size
 argument_list|,
 name|udev
 operator|->
@@ -8199,34 +8398,21 @@ name|serial
 operator|=
 name|strdup
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
 comment|/* get manufacturer string */
-name|bzero
-argument_list|(
-name|temp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
 name|NULL
 argument_list|,
-name|temp
+name|temp_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|temp_size
 argument_list|,
 name|udev
 operator|->
@@ -8237,12 +8423,12 @@ argument_list|)
 expr_stmt|;
 name|usb_trim_spaces
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|temp
+name|temp_ptr
 index|[
 literal|0
 index|]
@@ -8255,34 +8441,21 @@ name|manufacturer
 operator|=
 name|strdup
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
 name|M_USB
 argument_list|)
 expr_stmt|;
 comment|/* get product string */
-name|bzero
-argument_list|(
-name|temp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|usbd_req_get_string_any
 argument_list|(
 name|udev
 argument_list|,
 name|NULL
 argument_list|,
-name|temp
+name|temp_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|temp_size
 argument_list|,
 name|udev
 operator|->
@@ -8293,12 +8466,12 @@ argument_list|)
 expr_stmt|;
 name|usb_trim_spaces
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|temp
+name|temp_ptr
 index|[
 literal|0
 index|]
@@ -8311,7 +8484,7 @@ name|product
 operator|=
 name|strdup
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
 name|M_USB
 argument_list|)
@@ -8460,12 +8633,9 @@ condition|)
 block|{
 name|snprintf
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|temp_size
 argument_list|,
 literal|"vendor 0x%04x"
 argument_list|,
@@ -8478,7 +8648,7 @@ name|manufacturer
 operator|=
 name|strdup
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
 name|M_USB
 argument_list|)
@@ -8495,12 +8665,9 @@ condition|)
 block|{
 name|snprintf
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|temp_size
 argument_list|,
 literal|"product 0x%04x"
 argument_list|,
@@ -8513,7 +8680,7 @@ name|product
 operator|=
 name|strdup
 argument_list|(
-name|temp
+name|temp_ptr
 argument_list|,
 name|M_USB
 argument_list|)
@@ -8865,6 +9032,12 @@ name|malloc_type
 modifier|*
 name|mt
 decl_stmt|;
+specifier|const
+name|size_t
+name|buf_size
+init|=
+literal|512
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8896,7 +9069,7 @@ name|data
 operator|=
 name|malloc
 argument_list|(
-literal|512
+name|buf_size
 argument_list|,
 name|mt
 argument_list|,
@@ -8915,7 +9088,7 @@ name|snprintf
 argument_list|(
 name|data
 argument_list|,
-literal|1024
+name|buf_size
 argument_list|,
 literal|"%s"
 literal|"%s "

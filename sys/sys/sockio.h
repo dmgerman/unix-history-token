@@ -493,6 +493,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFDESCR
+value|_IOW('i', 41, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set ifnet descr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFDESCR
+value|_IOWR('i', 42, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get ifnet descr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define

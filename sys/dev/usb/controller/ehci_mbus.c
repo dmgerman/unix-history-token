@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/controller/ehcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/mv/mvreg.h>
 end_include
 
@@ -578,14 +584,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|usbrev
-operator|=
-name|USB_REV_2_0
-expr_stmt|;
 name|rid
 operator|=
 literal|0

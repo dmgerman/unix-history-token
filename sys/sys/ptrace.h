@@ -317,6 +317,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_VM_TIMESTAMP
+value|40
+end_define
+
+begin_comment
+comment|/* Get VM version (timestamp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_VM_ENTRY
+value|41
+end_define
+
+begin_comment
+comment|/* Get VM map (entry) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_FIRSTMACH
 value|64
 end_define
@@ -455,6 +477,59 @@ name|sigset_t
 name|pl_siglist
 decl_stmt|;
 comment|/* LWP pending signal */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Argument structure for PT_VM_ENTRY. */
+end_comment
+
+begin_struct
+struct|struct
+name|ptrace_vm_entry
+block|{
+name|int
+name|pve_entry
+decl_stmt|;
+comment|/* Entry number used for iteration. */
+name|int
+name|pve_timestamp
+decl_stmt|;
+comment|/* Generation number of VM map. */
+name|u_long
+name|pve_start
+decl_stmt|;
+comment|/* Start VA of range. */
+name|u_long
+name|pve_end
+decl_stmt|;
+comment|/* End VA of range (incl). */
+name|u_long
+name|pve_offset
+decl_stmt|;
+comment|/* Offset in backing object. */
+name|u_int
+name|pve_prot
+decl_stmt|;
+comment|/* Protection of memory range. */
+name|u_int
+name|pve_pathlen
+decl_stmt|;
+comment|/* Size of path. */
+name|long
+name|pve_fileid
+decl_stmt|;
+comment|/* File ID. */
+name|uint32_t
+name|pve_fsid
+decl_stmt|;
+comment|/* File system ID. */
+name|char
+modifier|*
+name|pve_path
+decl_stmt|;
+comment|/* Path name of object. */
 block|}
 struct|;
 end_struct

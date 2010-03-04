@@ -2201,6 +2201,9 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|ifp
 operator|->
@@ -5360,7 +5363,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Ethetnet address registers are invalid.\n"
+literal|"Ethernet address registers are invalid.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10256,7 +10259,7 @@ condition|)
 continue|continue;
 name|crc
 operator|=
-name|ether_crc32_le
+name|ether_crc32_be
 argument_list|(
 name|LLADDR
 argument_list|(

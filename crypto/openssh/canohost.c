@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.64 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.65 2009/05/27 06:31:25 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -121,6 +121,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|canonical_host_ip
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cached_port
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Return the canonical name of the host at the other end of the socket. The  * caller should free the returned string with xfree.  */
@@ -1356,6 +1376,38 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|clear_cached_addr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|canonical_host_ip
+operator|!=
+name|NULL
+condition|)
+block|{
+name|xfree
+argument_list|(
+name|canonical_host_ip
+argument_list|)
+expr_stmt|;
+name|canonical_host_ip
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|cached_port
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Returns the IP-address of the remote host as a string.  The returned  * string must not be freed.  */
 end_comment
@@ -1369,13 +1421,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
-name|char
-modifier|*
-name|canonical_host_ip
-init|=
-name|NULL
-decl_stmt|;
 comment|/* Check whether we have cached the ipaddr. */
 if|if
 condition|(
@@ -1751,22 +1796,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|port
-init|=
-operator|-
-literal|1
-decl_stmt|;
 comment|/* Cache to avoid getpeername() on a dead connection */
 if|if
 condition|(
-name|port
+name|cached_port
 operator|==
 operator|-
 literal|1
 condition|)
-name|port
+name|cached_port
 operator|=
 name|get_port
 argument_list|(
@@ -1774,7 +1812,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|port
+name|cached_port
 return|;
 block|}
 end_function

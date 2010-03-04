@@ -349,7 +349,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"create drive '%s': couldn't attach"
+literal|"create drive '%s': unable to attach"
 argument_list|,
 name|d
 operator|->
@@ -544,7 +544,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"create drive '%s': couldn't update "
+literal|"create drive '%s': unable to update "
 literal|"access counts"
 argument_list|,
 name|d
@@ -1528,9 +1528,6 @@ name|int
 modifier|*
 name|drives
 decl_stmt|,
-modifier|*
-name|flags
-decl_stmt|,
 name|dcount
 decl_stmt|;
 name|sc
@@ -1565,26 +1562,11 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume names not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|flags
-operator|=
-name|gctl_get_paraml
-argument_list|(
-name|req
-argument_list|,
-literal|"flags"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|flags
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|drives
 operator|=
 name|gctl_get_paraml
@@ -2072,7 +2054,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2118,7 +2100,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2627,10 +2609,6 @@ name|off_t
 modifier|*
 name|stripesize
 decl_stmt|;
-name|dcount
-operator|=
-literal|0
-expr_stmt|;
 name|sc
 operator|=
 name|gp
@@ -2659,7 +2637,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2736,7 +2714,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3211,7 +3189,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"volume's not given"
+literal|"volume name not given"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3257,7 +3235,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"drives not given"
+literal|"drive names not given"
 argument_list|)
 expr_stmt|;
 return|return;

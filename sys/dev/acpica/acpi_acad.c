@@ -455,6 +455,11 @@ name|status
 operator|=
 name|newstatus
 expr_stmt|;
+name|ACPI_SERIAL_END
+argument_list|(
+name|acad
+argument_list|)
+expr_stmt|;
 name|power_profile_set_state
 argument_list|(
 name|newstatus
@@ -492,6 +497,7 @@ name|newstatus
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|ACPI_SERIAL_END
 argument_list|(
 name|acad

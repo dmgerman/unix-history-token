@@ -831,41 +831,6 @@ name|ATA_SACTIVE
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIIS_SII3124
-value|0x31241095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132
-value|0x31321095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132_1
-value|0x02421095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3132_2
-value|0x02441095
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIIS_SII3531
-value|0x35311095
-end_define
-
 begin_comment
 comment|/*  * Global registers  */
 end_comment
@@ -1904,6 +1869,30 @@ value|0x0080
 name|u_int16_t
 name|protocol_override
 decl_stmt|;
+define|#
+directive|define
+name|SIIS_PRB_PROTO_PACKET
+value|0x0001
+define|#
+directive|define
+name|SIIS_PRB_PROTO_TCQ
+value|0x0002
+define|#
+directive|define
+name|SIIS_PRB_PROTO_NCQ
+value|0x0004
+define|#
+directive|define
+name|SIIS_PRB_PROTO_READ
+value|0x0008
+define|#
+directive|define
+name|SIIS_PRB_PROTO_WRITE
+value|0x0010
+define|#
+directive|define
+name|SIIS_PRB_PROTO_TRANSPARENT
+value|0x0020
 name|u_int32_t
 name|transfer_count
 decl_stmt|;
@@ -2050,6 +2039,29 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|siis_device
+block|{
+name|int
+name|revision
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|u_int
+name|bytecount
+decl_stmt|;
+name|u_int
+name|atapi
+decl_stmt|;
+name|u_int
+name|tags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* structure describing an ATA channel */
 end_comment
@@ -2099,13 +2111,12 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
+name|quirks
+decl_stmt|;
+name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
-name|int
-name|sata_rev
-decl_stmt|;
-comment|/* Maximum allowed SATA generation */
 name|struct
 name|siis_slot
 name|slot
@@ -2135,6 +2146,10 @@ name|pm_present
 decl_stmt|;
 comment|/* PM presence reported */
 name|uint32_t
+name|oslots
+decl_stmt|;
+comment|/* Occupied slots */
+name|uint32_t
 name|rslots
 decl_stmt|;
 comment|/* Running slots */
@@ -2146,6 +2161,10 @@ name|uint32_t
 name|eslots
 decl_stmt|;
 comment|/* Slots in error */
+name|uint32_t
+name|toslots
+decl_stmt|;
+comment|/* Slots in timeout */
 name|int
 name|numrslots
 decl_stmt|;
@@ -2166,23 +2185,35 @@ name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
+name|int
 name|recovery
 decl_stmt|;
 comment|/* Some slots are in error */
-name|int
-name|lastslot
-decl_stmt|;
-comment|/* Last used slot */
-name|int
-name|taggedtarget
-decl_stmt|;
-comment|/* Last tagged target */
 name|union
 name|ccb
 modifier|*
 name|frozen
 decl_stmt|;
 comment|/* Frozen command */
+name|struct
+name|siis_device
+name|user
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* User-specified settings */
+name|struct
+name|siis_device
+name|curr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Current settings */
 block|}
 struct|;
 end_struct
@@ -2237,7 +2268,13 @@ block|}
 name|irq
 struct|;
 name|int
+name|quirks
+decl_stmt|;
+name|int
 name|channels
+decl_stmt|;
+name|uint32_t
+name|gctl
 decl_stmt|;
 struct|struct
 block|{

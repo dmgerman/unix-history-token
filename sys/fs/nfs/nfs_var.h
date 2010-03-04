@@ -3000,12 +3000,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
 begin_function_decl
 name|int
 name|nfsrv_buildacl
@@ -3019,26 +3013,6 @@ modifier|*
 parameter_list|,
 name|enum
 name|vtype
-parameter_list|,
-name|NFSPROC_T
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfsrv_aclaccess
-parameter_list|(
-name|vnode_t
-parameter_list|,
-name|accmode_t
-parameter_list|,
-name|u_int32_t
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
 parameter_list|,
 name|NFSPROC_T
 modifier|*
@@ -3077,11 +3051,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* nfs_clrpcops.c */
@@ -5404,7 +5373,7 @@ name|nfsvno_accchk
 parameter_list|(
 name|vnode_t
 parameter_list|,
-name|u_int32_t
+name|accmode_t
 parameter_list|,
 name|struct
 name|ucred
@@ -5420,6 +5389,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|u_int32_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5585,7 +5557,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
-name|u_char
+name|int32_t
 modifier|*
 parameter_list|,
 name|NFSDEV_T
@@ -5882,7 +5854,7 @@ name|struct
 name|nfsvattr
 modifier|*
 parameter_list|,
-name|u_char
+name|int32_t
 modifier|*
 parameter_list|,
 name|int

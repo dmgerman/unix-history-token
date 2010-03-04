@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: envelope.c,v 8.305 2008/03/31 16:32:13 ca Exp $"
+literal|"@(#)$Id: envelope.c,v 8.310 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -702,11 +702,11 @@ comment|/* return a warning */
 end_comment
 
 begin_comment
-comment|/* **  DROPENVELOPE -- deallocate an envelope. ** **	Parameters: **		e -- the envelope to deallocate. **		fulldrop -- if set, do return receipts. **		split -- if true, split by recipient if message is queued up ** **	Returns: **		none. ** **	Side Effects: **		housekeeping necessary to dispose of an envelope. **		Unlocks this queue file. */
+comment|/* **  DROPENVELOPE -- deallocate an envelope. ** **	Parameters: **		e -- the envelope to deallocate. **		fulldrop -- if set, do return receipts. **		split -- if true, split by recipient if message is queued up ** **	Returns: **		EX_* status (currently: 0: success, EX_IOERR on panic) ** **	Side Effects: **		housekeeping necessary to dispose of an envelope. **		Unlocks this queue file. */
 end_comment
 
 begin_function
-name|void
+name|int
 name|dropenvelope
 parameter_list|(
 name|e
@@ -895,7 +895,9 @@ name|id
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+name|EX_OK
+return|;
 comment|/* if verify-only mode, we can skip most of this */
 if|if
 condition|(
@@ -906,6 +908,35 @@ condition|)
 goto|goto
 name|simpledrop
 goto|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|92
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"dropenvelope: e_id=%s, EF_LOGSENDER=%d, LogLevel=%d\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+argument_list|,
+name|LogLevel
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|LogLevel
@@ -2848,6 +2879,16 @@ operator|&=
 operator|~
 name|EF_HAS_DF
 expr_stmt|;
+if|if
+condition|(
+name|panic
+condition|)
+return|return
+name|EX_IOERR
+return|;
+return|return
+name|EX_OK
+return|;
 block|}
 end_function
 
@@ -3150,6 +3191,21 @@ operator|->
 name|h_link
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_ENHSC
+name|e
+operator|->
+name|e_enhsc
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_ENHSC */
 block|}
 end_function
 

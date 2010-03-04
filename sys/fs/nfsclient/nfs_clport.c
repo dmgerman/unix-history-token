@@ -6522,32 +6522,18 @@ name|EBUSY
 expr_stmt|;
 break|break;
 block|}
-name|ncl_call_invalcaches
-operator|=
-name|NULL
-expr_stmt|;
-name|nfsd_call_nfscl
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and get rid of the mutexes */
-name|mtx_destroy
-argument_list|(
-operator|&
-name|nfs_clstate_mutex
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|ncl_iod_mutex
-argument_list|)
-expr_stmt|;
-name|loaded
-operator|=
+comment|/* 		 * XXX: Unloading of nfscl module is unsupported. 		 */
+if|#
+directive|if
 literal|0
-expr_stmt|;
-break|break;
+block|ncl_call_invalcaches = NULL; 		nfsd_call_nfscl = NULL;
+comment|/* and get rid of the mutexes */
+block|mtx_destroy(&nfs_clstate_mutex); 		mtx_destroy(&ncl_iod_mutex); 		loaded = 0; 		break;
+else|#
+directive|else
+comment|/* FALLTHROUGH */
+endif|#
+directive|endif
 default|default:
 name|error
 operator|=
@@ -6585,7 +6571,7 @@ name|nfscl_mod
 argument_list|,
 name|SI_SUB_VFS
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/isa/icu.h>
+file|<x86/isa/icu.h>
 end_include
 
 begin_comment
@@ -870,7 +870,7 @@ literal|"\024SSE4.1"
 literal|"\025SSE4.2"
 literal|"\026x2APIC"
 comment|/* xAPIC Extensions */
-literal|"\027<b22>"
+literal|"\027MOVBE"
 literal|"\030POPCNT"
 literal|"\031<b24>"
 literal|"\032<b25>"
@@ -2325,6 +2325,36 @@ literal|0x0f
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Opteron Rev E shows a bug as in very rare occasions a read memory  	 * barrier is not performed as expected if it is followed by a  	 * non-atomic read-modify-write instruction.   	 * As long as that bug pops up very rarely (intensive machine usage 	 * on other operating systems generally generates one unexplainable  	 * crash any 2 months) and as long as a model specific fix would be 	 * impratical at this stage, print out a warning string if the broken 	 * model and family are identified. 	 */
+if|if
+condition|(
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0xf
+operator|&&
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|>=
+literal|0x20
+operator|&&
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|<=
+literal|0x3f
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: This architecture revision has known SMP "
+literal|"hardware bugs which may cause random instability\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

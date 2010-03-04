@@ -204,6 +204,27 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|kld_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|kld_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Set various levels of KLD debug"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2629,7 +2650,10 @@ operator|(
 literal|"linker_file_unload: module %s"
 literal|" failed unload\n"
 operator|,
+name|module_getname
+argument_list|(
 name|mod
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3023,6 +3047,24 @@ name|file
 operator|->
 name|ndeps
 operator|++
+expr_stmt|;
+name|KLD_DPF
+argument_list|(
+name|FILE
+argument_list|,
+operator|(
+literal|"linker_file_add_dependency:"
+literal|" adding %s as dependency for %s\n"
+operator|,
+name|dep
+operator|->
+name|filename
+operator|,
+name|file
+operator|->
+name|filename
+operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -1332,7 +1332,7 @@ operator|==
 name|ifp
 condition|)
 break|break;
-comment|/* If the ipf is there already, return success. */
+comment|/* If the ifp is there already, return success. */
 if|if
 condition|(
 name|elm

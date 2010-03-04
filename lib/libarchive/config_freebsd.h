@@ -25,6 +25,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_ACL_GET_LINK_NP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ACL_GET_PERM_NP
 value|1
 end_define
@@ -160,6 +167,13 @@ end_endif
 begin_define
 define|#
 directive|define
+name|HAVE_BSDXML_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_BZLIB_H
 value|1
 end_define
@@ -224,6 +238,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_DECL_UINT64_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
 value|1
 end_define
 
@@ -377,6 +398,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_LINK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LSTAT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_LUTIMES
 value|1
 end_define
@@ -406,13 +441,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMMOVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMSET
 value|1
 end_define
 
@@ -470,12 +498,6 @@ define|#
 directive|define
 name|HAVE_READLINK
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_RIPEMD_H
 end_define
 
 begin_define
@@ -635,6 +657,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SYMLINK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_CDEFS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_IOCTL_H
 value|1
 end_define
@@ -782,13 +818,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_ZLIB_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|STDC_HEADERS
 value|1
 end_define
 

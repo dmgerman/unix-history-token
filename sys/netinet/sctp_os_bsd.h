@@ -273,12 +273,6 @@ directive|include
 file|<netinet/icmp_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/vnet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -699,16 +693,6 @@ end_define
 begin_comment
 comment|/* FIX ME: temp */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_LIST_EMPTY
-parameter_list|(
-name|list
-parameter_list|)
-value|LIST_EMPTY(list)
-end_define
 
 begin_if
 if|#
@@ -1159,13 +1143,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|UMA_ZFLAG_FULL
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_ZONE_INIT
 parameter_list|(
 name|zone
@@ -1176,7 +1153,7 @@ name|size
 parameter_list|,
 name|number
 parameter_list|)
-value|{ \ 	zone = uma_zcreate(name, size, NULL, NULL, NULL, NULL, UMA_ALIGN_PTR,\ 		UMA_ZFLAG_FULL); \ 	uma_zone_set_max(zone, number); \ }
+value|{ \ 	zone = uma_zcreate(name, size, NULL, NULL, NULL, NULL, UMA_ALIGN_PTR,\ 		0); \ 	uma_zone_set_max(zone, number); \ }
 end_define
 
 begin_define
@@ -2146,37 +2123,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/md5.h>
-end_include
-
-begin_comment
-comment|/* map standard crypto API names */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD5_Init
-value|MD5Init
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD5_Update
-value|MD5Update
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD5_Final
-value|MD5Final
-end_define
 
 begin_endif
 endif|#

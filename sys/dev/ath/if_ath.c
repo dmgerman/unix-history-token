@@ -2892,7 +2892,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles reseting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
+comment|/* 	 * Allocate hardware transmit queues: one queue for 	 * beacon frames and one data queue for each QoS 	 * priority.  Note that the hal handles resetting 	 * these queues at the needed time. 	 * 	 * XXX PS-Poll 	 */
 name|sc
 operator|->
 name|sc_bhalq
@@ -3343,12 +3343,6 @@ name|ath_start
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_ioctl
 operator|=
 name|ath_ioctl
@@ -3585,6 +3579,35 @@ argument_list|,
 name|HAL_CIPHER_CLR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check for multicast key search support. 	 */
+if|if
+condition|(
+name|ath_hal_hasmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+operator|&&
+operator|!
+name|ath_hal_getmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|)
+condition|)
+block|{
+name|ath_hal_setmcastkeysearch
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_mcastkey
@@ -4130,7 +4153,7 @@ operator|->
 name|if_flags
 argument_list|)
 expr_stmt|;
-comment|/*  	 * NB: the order of these is important: 	 * o stop the chip so no more interrupts will fire 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o free the taskqueue which drains any pending tasks 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
+comment|/* 	 * NB: the order of these is important: 	 * o stop the chip so no more interrupts will fire 	 * o call the 802.11 layer before detaching the hal to 	 *   insure callbacks into the driver to delete global 	 *   key cache entries can be handled 	 * o free the taskqueue which drains any pending tasks 	 * o reclaim the tx queue data structures after calling 	 *   the 802.11 layer as we'll get called back to reclaim 	 *   node state and potentially want to use them 	 * o to cleanup the tx queues the hal is called, so detach 	 *   it last 	 * Other than that, it's straightforward... 	 */
 name|ath_stop
 argument_list|(
 name|ifp
@@ -5965,7 +5988,7 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * cardbus detaches the device. 	 */
+comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * CardBus detaches the device. 	 */
 block|}
 end_function
 
@@ -7156,7 +7179,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"bb hang detected (0x%x), reseting\n"
+literal|"bb hang detected (0x%x), resetting\n"
 argument_list|,
 name|hangs
 argument_list|)
@@ -9734,7 +9757,7 @@ operator|->
 name|sc_mcastkey
 condition|)
 block|{
-comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a mac that is the sender's address with 		 * the high bit set instead of the app-specified address. 		 */
+comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a MAC that is the sender's address with 		 * the high bit set instead of the app-specified address. 		 */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|gmac
@@ -10524,24 +10547,9 @@ operator|->
 name|wk_keyix
 operator|!=
 name|IEEE80211_KEYIX_NONE
-operator|||
-comment|/* global key */
-operator|(
-operator|(
-name|k
-operator|->
-name|wk_flags
-operator|&
-name|IEEE80211_KEY_GROUP
-operator|)
-operator|&&
-operator|!
-name|sc
-operator|->
-name|sc_mcastkey
-operator|)
 condition|)
 block|{
+comment|/* 		 * Only global keys should have key index assigned. 		 */
 if|if
 condition|(
 operator|!
@@ -10584,7 +10592,30 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 		 * XXX we pre-allocate the global keys so 		 * have no way to check if they've already been allocated. 		 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_HOSTAP
+operator|||
+operator|!
+operator|(
+name|k
+operator|->
+name|wk_flags
+operator|&
+name|IEEE80211_KEY_GROUP
+operator|)
+operator|||
+operator|!
+name|sc
+operator|->
+name|sc_mcastkey
+condition|)
+block|{
+comment|/* 			 * XXX we pre-allocate the global keys so 			 * have no way to check if they've already 			 * been allocated. 			 */
 operator|*
 name|keyix
 operator|=
@@ -10600,6 +10631,14 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+comment|/* 		 * Group key and device supports multicast key search. 		 */
+name|k
+operator|->
+name|wk_keyix
+operator|=
+name|IEEE80211_KEYIX_NONE
+expr_stmt|;
 block|}
 comment|/* 	 * We allocate two pair for TKIP when using the h/w to do 	 * the MIC.  For everything else, including software crypto, 	 * we allocate a single entry.  Note that s/w crypto requires 	 * a pass-through slot on the 5211 and 5212.  The 5210 does 	 * not support pass-through cache entries and we map all 	 * those requests to slot 0. 	 */
 if|if
@@ -24785,7 +24824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Update internal state after a channel change.  */
+comment|/*  * Update internal state after a channel change.  */
 end_comment
 
 begin_function
@@ -24841,7 +24880,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set/change channels.  If the channel is really being changed,  * it's done by reseting the chip.  To accomplish this we must  * first cleanup any pending DMA, then restart stuff after a la  * ath_init.  */
+comment|/*  * Set/change channels.  If the channel is really being changed,  * it's done by resetting the chip.  To accomplish this we must  * first cleanup any pending DMA, then restart stuff after a la  * ath_init.  */
 end_comment
 
 begin_function
@@ -24971,7 +25010,7 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|"%s: unable to reset "
-literal|"channel %u (%u Mhz, flags 0x%x), hal status %u\n"
+literal|"channel %u (%u MHz, flags 0x%x), hal status %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -25692,7 +25731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Walk the vap list and check if there any vap's in RUN state.  */
+comment|/*  * Walk the vap list and check if there any vap's in RUN state.  */
 end_comment
 
 begin_function
@@ -28219,7 +28258,7 @@ operator|*
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NB: caller is responsible for reseting rate control state */
+comment|/* NB: caller is responsible for resetting rate control state */
 undef|#
 directive|undef
 name|N
@@ -33502,6 +33541,21 @@ argument_list|,
 literal|"using %u tx buffers\n"
 argument_list|,
 name|ath_txbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mcastkey
+operator|&&
+name|bootverbose
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"using multicast key search\n"
 argument_list|)
 expr_stmt|;
 block|}

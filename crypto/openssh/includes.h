@@ -117,6 +117,13 @@ operator|&&
 name|HAVE_DECL_GLOB_NOMATCH
 operator|!=
 literal|0
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|BROKEN_GLOB
+argument_list|)
 end_if
 
 begin_include

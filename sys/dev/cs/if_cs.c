@@ -2300,7 +2300,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|ifnet
 modifier|*

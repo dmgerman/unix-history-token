@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|LINE_LENGTH
-value|76
+value|72
 end_define
 
 begin_comment

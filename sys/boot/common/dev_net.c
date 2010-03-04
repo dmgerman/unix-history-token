@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $NetBSD: dev_net.c,v 1.12 1997/12/10 20:38:37 gwr Exp $  */
+comment|/*	$NetBSD: dev_net.c,v 1.23 2008/04/28 20:24:06 martin Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Gordon W. Ross.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Gordon W. Ross.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -109,11 +109,30 @@ directive|include
 file|"bootstrap.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|debug
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|netdev_name
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +185,16 @@ parameter_list|(
 name|struct
 name|open_file
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|net_cleanup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,11 +249,14 @@ block|,
 name|noioctl
 block|,
 name|net_print
+block|,
+name|net_cleanup
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|net_init
 parameter_list|(
@@ -244,6 +276,7 @@ comment|/*  * Called by devopen after it sets f->f_dev to our devsw entry.  * Th
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|net_open
 parameter_list|(
@@ -290,6 +323,30 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETIF_OPEN_CLOSE_ONCE
+comment|/* Before opening another interface, close the previous one first. */
+if|if
+condition|(
+name|netdev_sock
+operator|>=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|devname
+argument_list|,
+name|netdev_name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|net_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* On first open, do netif open, mount, etc. */
 if|if
 condition|(
@@ -331,6 +388,16 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|netdev_name
+operator|=
+name|strdup
+argument_list|(
+name|devname
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -340,6 +407,8 @@ argument_list|(
 literal|"net_open: netif_open() succeeded\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -364,6 +433,11 @@ name|error
 condition|)
 block|{
 comment|/* getparams makes its own noise */
+name|free
+argument_list|(
+name|netdev_name
+argument_list|)
+expr_stmt|;
 name|netif_close
 argument_list|(
 name|netdev_sock
@@ -381,17 +455,6 @@ operator|)
 return|;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-name|netdev_opens
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|netdev_opens
 operator|++
@@ -412,6 +475,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|net_close
 parameter_list|(
@@ -437,13 +501,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* On last close, do netif close, etc. */
 name|f
 operator|->
 name|f_devdata
 operator|=
 name|NULL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NETIF_OPEN_CLOSE_ONCE
 comment|/* Extra close call? */
 if|if
 condition|(
@@ -471,12 +537,42 @@ operator|(
 literal|0
 operator|)
 return|;
-name|rootip
-operator|.
-name|s_addr
-operator|=
-literal|0
+comment|/* On last close, do netif close, etc. */
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"net_close: calling net_cleanup()\n"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|net_cleanup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|net_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 if|if
 condition|(
 name|netdev_sock
@@ -484,13 +580,29 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"net_close: calling netif_close()\n"
+literal|"net_cleanup: calling netif_close()\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|rootip
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|netdev_name
 argument_list|)
 expr_stmt|;
 name|netif_close
@@ -504,15 +616,11 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|net_strategy
 parameter_list|()
@@ -624,6 +732,9 @@ condition|)
 goto|goto
 name|exit
 goto|;
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -633,6 +744,8 @@ argument_list|(
 literal|"net_open: BOOTP failed, trying RARP/RPC...\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Use RARP to get our IP address.  This also sets our 	 * netmask to the "natural" default for our address. 	 */
@@ -685,6 +798,9 @@ name|EIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -696,6 +812,8 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Ignore the gateway from whoami (unreliable). 	 * Use the "gateway" parameter instead. 	 */
 name|smask
 operator|=
@@ -742,6 +860,9 @@ name|netmask
 operator|=
 name|smask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -756,7 +877,12 @@ name|netmask
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|gateip
@@ -775,6 +901,8 @@ name|gateip
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get the root server and pathname. */
 if|if
 condition|(
@@ -938,6 +1066,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETIF_DEBUG
 if|if
 condition|(
 name|debug
@@ -961,6 +1092,8 @@ name|rootpath
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|d
 operator|=
 name|socktodesc

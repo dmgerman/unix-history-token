@@ -304,6 +304,18 @@ operator|.
 name|mask
 expr_stmt|;
 block|}
+comment|/* 	 * VAPPEND is just a modifier for VWRITE; if the caller asked 	 * for 'VAPPEND | VWRITE', we want to check for ACL_APPEND_DATA only. 	 */
+if|if
+condition|(
+name|access_mask
+operator|&
+name|ACL_APPEND_DATA
+condition|)
+name|access_mask
+operator|&=
+operator|~
+name|ACL_WRITE_DATA
+expr_stmt|;
 return|return
 operator|(
 name|access_mask
@@ -641,6 +653,75 @@ name|must_be_owner
 init|=
 literal|0
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|accmode
+operator|&
+operator|~
+operator|(
+name|VEXEC
+operator||
+name|VWRITE
+operator||
+name|VREAD
+operator||
+name|VADMIN
+operator||
+name|VAPPEND
+operator||
+name|VEXPLICIT_DENY
+operator||
+name|VREAD_NAMED_ATTRS
+operator||
+name|VWRITE_NAMED_ATTRS
+operator||
+name|VDELETE_CHILD
+operator||
+name|VREAD_ATTRIBUTES
+operator||
+name|VWRITE_ATTRIBUTES
+operator||
+name|VDELETE
+operator||
+name|VREAD_ACL
+operator||
+name|VWRITE_ACL
+operator||
+name|VWRITE_OWNER
+operator||
+name|VSYNCHRONIZE
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"invalid bit in accmode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|accmode
+operator|&
+name|VAPPEND
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|accmode
+operator|&
+name|VWRITE
+operator|)
+argument_list|,
+operator|(
+literal|"VAPPEND without VWRITE"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|privused
@@ -3841,7 +3922,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is used to determine whether to remove entry_type attribute  * that stores ACL contents.  */
+comment|/*  * This routine is used to determine whether to remove extended attribute  * that stores ACL contents.  */
 end_comment
 
 begin_function
@@ -3884,7 +3965,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Compute the mode from the ACL, then compute new ACL from that mode. 	 * If the ACLs are identical, then the ACL is trivial. 	 * 	 * XXX: I guess there is a faster way to do this.  However, even 	 *      this slow implementation significantly speeds things up 	 *      for files that don't have any entry_type ACL entries - it's 	 *      critical for performance to not use EA when they are not 	 *      needed. 	 */
+comment|/* 	 * Compute the mode from the ACL, then compute new ACL from that mode. 	 * If the ACLs are identical, then the ACL is trivial. 	 * 	 * XXX: I guess there is a faster way to do this.  However, even 	 *      this slow implementation significantly speeds things up 	 *      for files that don't have non-trivial ACLs - it's critical 	 *      for performance to not use EA when they are not needed. 	 */
 name|tmpaclp
 operator|=
 name|acl_alloc

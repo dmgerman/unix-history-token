@@ -2140,8 +2140,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -3098,8 +3097,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_fill_csio

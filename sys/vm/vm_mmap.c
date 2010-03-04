@@ -793,7 +793,7 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* make sure mapping fits into numeric range etc */
+comment|/* Make sure mapping fits into numeric range, etc. */
 if|if
 condition|(
 operator|(

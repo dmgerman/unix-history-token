@@ -607,15 +607,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1532,10 +1533,12 @@ literal|3
 index|]
 decl_stmt|,
 modifier|*
-name|tmp
-decl_stmt|,
-modifier|*
 name|s
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|tmp
 decl_stmt|;
 name|size_t
 name|len
@@ -1567,10 +1570,7 @@ condition|)
 block|{
 name|tmpdir
 operator|=
-name|xstrdup
-argument_list|(
 name|_PATH_TMP
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2726,7 +2726,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|s
+name|tmp
 operator|=
 name|getenv
 argument_list|(
@@ -2738,12 +2738,12 @@ name|NULL
 operator|||
 name|strlen
 argument_list|(
-name|s
+name|tmp
 argument_list|)
 operator|==
 literal|0
 condition|)
-name|s
+name|tmp
 operator|=
 name|PATH_LINTLIB
 expr_stmt|;
@@ -2752,7 +2752,7 @@ argument_list|(
 operator|&
 name|libsrchpath
 argument_list|,
-name|s
+name|tmp
 argument_list|)
 expr_stmt|;
 name|findlibs
@@ -3045,6 +3045,10 @@ argument_list|(
 name|bn
 argument_list|)
 else|:
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|(
 name|suff
 operator|-
@@ -3052,6 +3056,7 @@ literal|1
 operator|)
 operator|-
 name|bn
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

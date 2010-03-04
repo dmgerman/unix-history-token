@@ -839,7 +839,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Unable to remove %s: volume still in use"
+literal|"unable to remove %s: volume still in use"
 argument_list|,
 name|v
 operator|->
@@ -984,7 +984,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Unable to remove %s: volume still in use"
+literal|"unable to remove %s: volume still in use"
 argument_list|,
 name|p
 operator|->
@@ -1343,7 +1343,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: couldn't access '%s', "
+literal|"%s: unable to access '%s', "
 literal|"errno: %d"
 argument_list|,
 name|__func__
@@ -1387,7 +1387,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"gv_rm_drive: couldn't write header to"
+literal|"gv_rm_drive: error writing header to"
 literal|" '%s', errno: %d"
 argument_list|,
 name|cp

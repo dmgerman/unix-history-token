@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.967 2008/03/31 16:32:13 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.971 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -539,7 +539,7 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|{									\ 	if (extraprivs&&						\ 	    OpMode != MD_DELIVER&& OpMode != MD_SMTP&&		\ 	    OpMode != MD_ARPAFTP&&					\ 	    OpMode != MD_VERIFY&& OpMode != MD_TEST)			\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option (not in submission mode)\n", \ 		       (cmd));						\ 		break;							\ 	}								\ 	if (extraprivs&& queuerun)					\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option with -q\n", \ 		       (cmd));						\ 		break;							\ 	}								\ }
+value|{									\ 	if (extraprivs&&						\ 	    OpMode != MD_DELIVER&& OpMode != MD_SMTP&&		\ 	    OpMode != MD_ARPAFTP&& OpMode != MD_CHECKCONFIG&&		\ 	    OpMode != MD_VERIFY&& OpMode != MD_TEST)			\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option (not in submission mode)\n", \ 		       (cmd));						\ 		break;							\ 	}								\ 	if (extraprivs&& queuerun)					\ 	{								\ 		(void) sm_io_fprintf(smioout, SM_TIME_DEFAULT,		\ 				     "WARNING: Ignoring submission mode -%c option with -q\n", \ 		       (cmd));						\ 		break;							\ 	}								\ }
 end_define
 
 begin_function
@@ -1511,6 +1511,15 @@ case|:
 case|case
 name|MD_ARPAFTP
 case|:
+if|#
+directive|if
+name|_FFR_CHECKCONFIG
+case|case
+name|MD_CHECKCONFIG
+case|:
+endif|#
+directive|endif
+comment|/* _FFR_CHECKCONFIG */
 name|OpMode
 operator|=
 name|j
@@ -4921,6 +4930,10 @@ operator|&&
 name|OpMode
 operator|!=
 name|MD_TEST
+operator|&&
+name|OpMode
+operator|!=
+name|MD_CHECKCONFIG
 operator|)
 operator|||
 name|ExitStat
@@ -6518,6 +6531,9 @@ case|case
 name|MD_TEST
 case|:
 case|case
+name|MD_CHECKCONFIG
+case|:
+case|case
 name|MD_PRINT
 case|:
 case|case
@@ -6701,6 +6717,10 @@ name|HostStatDir
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|MD_CHECKCONFIG
+case|:
 if|if
 condition|(
 name|Verbose
@@ -8006,9 +8026,14 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-comment|/* if we've had errors so far, exit now */
+comment|/* if checking config or have had errors so far, exit now */
 if|if
 condition|(
+name|OpMode
+operator|==
+name|MD_CHECKCONFIG
+operator|||
+operator|(
 name|ExitStat
 operator|!=
 name|EX_OK
@@ -8016,6 +8041,7 @@ operator|&&
 name|OpMode
 operator|!=
 name|MD_TEST
+operator|)
 condition|)
 block|{
 name|finis
@@ -8064,6 +8090,9 @@ name|HoldErrs
 operator|=
 name|false
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 operator|&
@@ -8161,6 +8190,9 @@ case|case
 name|MD_PRINTNQE
 case|:
 comment|/* print number of entries in queue */
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 operator|&
@@ -8794,10 +8826,15 @@ operator|==
 name|MD_SMTP
 condition|)
 block|{
-comment|/* check whether STARTTLS is turned off for the server */
+comment|/* check whether STARTTLS is turned off */
 if|if
 condition|(
 name|chkdaemonmodifiers
+argument_list|(
+name|D_NOTLS
+argument_list|)
+operator|&&
+name|chkclientmodifiers
 argument_list|(
 name|D_NOTLS
 argument_list|)
@@ -10006,6 +10043,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 operator|&
@@ -11609,6 +11649,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|r
+decl_stmt|;
+name|r
+operator|=
 name|dropenvelope
 argument_list|(
 name|CurEnv
@@ -11617,6 +11662,16 @@ name|true
 argument_list|,
 name|false
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exitstat
+operator|==
+name|EX_OK
+condition|)
+name|exitstat
+operator|=
+name|r
 expr_stmt|;
 name|sm_rpool_free
 argument_list|(

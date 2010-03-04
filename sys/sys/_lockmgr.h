@@ -44,6 +44,9 @@ specifier|volatile
 name|uintptr_t
 name|lk_lock
 decl_stmt|;
+name|u_int
+name|lk_exslpfail
+decl_stmt|;
 name|int
 name|lk_timo
 decl_stmt|;

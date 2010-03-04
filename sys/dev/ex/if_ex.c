@@ -3253,6 +3253,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|CSR_READ_2
 argument_list|(
 name|sc
@@ -3261,6 +3262,7 @@ name|IO_PORT_REG
 argument_list|)
 operator|&
 name|Done_bit
+operator|)
 condition|)
 break|break;
 name|tx_status

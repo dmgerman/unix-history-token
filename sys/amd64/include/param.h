@@ -352,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|NBPML4
-value|(1ul<<PML4SHIFT)
+value|(1UL<<PML4SHIFT)
 end_define
 
 begin_comment

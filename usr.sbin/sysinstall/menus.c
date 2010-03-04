@@ -5917,34 +5917,6 @@ block|,
 name|DIST_KERNEL_GENERIC
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|WITH_SMP
-block|{
-literal|" SMP"
-block|,
-literal|"GENERIC symmetric multiprocessor kernel configuration"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|KernelDists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_KERNEL_SMP
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|}

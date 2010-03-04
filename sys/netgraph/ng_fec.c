@@ -1651,6 +1651,13 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|iflladdr_event
+argument_list|,
+name|bifp
+argument_list|)
+expr_stmt|;
 comment|/* Save original input vector */
 name|new
 operator|->
@@ -4799,12 +4806,6 @@ operator|->
 name|if_init
 operator|=
 name|ng_fec_init
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|NULL
 expr_stmt|;
 name|ifp
 operator|->

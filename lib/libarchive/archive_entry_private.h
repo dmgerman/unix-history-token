@@ -6,6 +6,23 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__LIBARCHIVE_BUILD
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|This header is only to be used internally to libarchive.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARCHIVE_ENTRY_PRIVATE_H_INCLUDED
 end_ifndef
 
@@ -168,7 +185,7 @@ decl_stmt|;
 name|gid_t
 name|aest_gid
 decl_stmt|;
-name|ino_t
+name|int64_t
 name|aest_ino
 decl_stmt|;
 name|mode_t

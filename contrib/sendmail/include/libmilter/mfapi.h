@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2004, 2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.78 2008/02/27 22:30:34 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004, 2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.80 2009/11/06 00:57:08 ca Exp $  */
 end_comment
 
 begin_comment
@@ -26,6 +26,43 @@ directive|ifndef
 name|SMFI_VERSION
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|_FFR_MDS_NEGOTIATE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFI_VERSION
+value|0x01000002
+end_define
+
+begin_comment
+comment|/* libmilter version number */
+end_comment
+
+begin_comment
+comment|/* first libmilter version that has MDS support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFI_VERSION_MDS
+value|0x01000002
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_MDS_NEGOTIATE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -35,6 +72,15 @@ end_define
 
 begin_comment
 comment|/* libmilter version number */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MDS_NEGOTIATE */
 end_comment
 
 begin_endif
@@ -622,9 +668,6 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_MAXDATASIZE
 name|LIBMILTER_API
 name|size_t
 name|smfi_setmaxdatasize
@@ -635,9 +678,6 @@ name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_MAXDATASIZE */
 name|LIBMILTER_API
 name|int
 name|smfi_version

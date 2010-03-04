@@ -3072,63 +3072,69 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gnu/fs/ext2fs/ext2_fs.h>
+file|<fs/ext2fs/ext2fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_dinode.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|REISERFS_IMMUTABLE_FL
-value|EXT2_IMMUTABLE_FL
+value|EXT2_IMMUTABLE
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_APPEND_FL
-value|EXT2_APPEND_FL
+value|EXT2_APPEND
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_SYNC_FL
-value|EXT2_SYNC_FL
+value|EXT2_SYNC
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_NOATIME_FL
-value|EXT2_NOATIME_FL
+value|EXT2_NOATIME
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_NODUMP_FL
-value|EXT2_NODUMP_FL
+value|EXT2_NODUMP
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_SECRM_FL
-value|EXT2_SECRM_FL
+value|EXT2_SECRM
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_UNRM_FL
-value|EXT2_UNRM_FL
+value|EXT2_UNRM
 end_define
 
 begin_define
 define|#
 directive|define
 name|REISERFS_COMPR_FL
-value|EXT2_COMPR_FL
+value|EXT2_COMPR
 end_define
 
 begin_define

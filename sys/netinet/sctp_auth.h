@@ -43,13 +43,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_AUTH_DIGEST_LEN_MD5
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_AUTH_DIGEST_LEN_SHA224
 value|28
 end_define
@@ -119,9 +112,6 @@ block|{
 name|SHA1_CTX
 name|sha1
 decl_stmt|;
-name|MD5_CTX
-name|md5
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SHA2
@@ -151,9 +141,7 @@ name|keylen
 decl_stmt|;
 name|uint8_t
 name|key
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|sctp_key_t
@@ -245,9 +233,7 @@ decl_stmt|;
 comment|/* num algorithms used */
 name|uint16_t
 name|hmac
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|sctp_hmaclist_t
@@ -1357,36 +1343,6 @@ end_function_decl
 begin_comment
 comment|/* test functions */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|sctp_test_hmac_sha1
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sctp_test_hmac_md5
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sctp_test_authkey
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

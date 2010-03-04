@@ -2115,20 +2115,13 @@ name|wlioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
-comment|/* paranoia */
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-comment|/* no entries        ifp->if_watchdog        ifp->if_done        ifp->if_reset        */
+comment|/* no entries        ifp->if_done        ifp->if_reset        */
 name|ether_ifattach
 argument_list|(
 name|ifp

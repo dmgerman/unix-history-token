@@ -1248,7 +1248,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"allocating USB transfers failed!\n"
+literal|"allocating USB transfers failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

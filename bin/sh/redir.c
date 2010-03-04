@@ -164,6 +164,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CLOSED
+value|-1
+end_define
+
+begin_comment
+comment|/* fd was not open before redir */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIPESIZE
 value|4096
 end_define
@@ -281,9 +292,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|int
-name|try
-decl_stmt|;
 name|char
 name|memory
 index|[
@@ -395,10 +403,6 @@ name|nfile
 operator|.
 name|fd
 expr_stmt|;
-name|try
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -449,8 +453,6 @@ condition|)
 block|{
 name|INTOFF
 expr_stmt|;
-name|again
-label|:
 if|if
 condition|(
 operator|(
@@ -478,27 +480,11 @@ block|{
 case|case
 name|EBADF
 case|:
-if|if
-condition|(
-operator|!
-name|try
-condition|)
-block|{
-name|openredirect
-argument_list|(
-name|n
-argument_list|,
-name|memory
-argument_list|)
+name|i
+operator|=
+name|CLOSED
 expr_stmt|;
-name|try
-operator|++
-expr_stmt|;
-goto|goto
-name|again
-goto|;
-block|}
-comment|/* FALLTHROUGH*/
+break|break;
 default|default:
 name|INTON
 expr_stmt|;
@@ -517,12 +503,19 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|try
-condition|)
-block|{
+else|else
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|FD_CLOEXEC
+argument_list|)
+expr_stmt|;
 name|sv
 operator|->
 name|renamed
@@ -532,7 +525,6 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-block|}
 name|INTON
 expr_stmt|;
 block|}
@@ -545,11 +537,6 @@ condition|)
 name|fd0_redirected
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|try
-condition|)
 name|openredirect
 argument_list|(
 name|n
@@ -622,7 +609,7 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
-comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  This may not be such a good idea because 	 * an open of a device or a fifo can block indefinitely. 	 */
+comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  Because the signal handler remains 	 * installed and we do not use system call restart, interrupts 	 * will still abort blocking opens such as fifos (they will fail 	 * with EINTR). There is, however, a race condition if an interrupt 	 * arrives after INTOFF and before open blocks. 	 */
 name|INTOFF
 expr_stmt|;
 name|memory

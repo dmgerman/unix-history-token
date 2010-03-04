@@ -1190,7 +1190,7 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rp
+name|newrp
 operator|->
 name|rc_flag
 operator||=
@@ -1836,6 +1836,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_proto
@@ -1845,6 +1846,17 @@ operator|->
 name|dom_family
 operator|!=
 name|AF_INET
+operator|&&
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_domain
+operator|->
+name|dom_family
+operator|!=
+name|AF_INET6
+operator|)
 operator|||
 name|so
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2002, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1999-2002, 2009 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.144 2007/05/11 18:50:36 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.146 2009/08/07 21:28:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -712,6 +712,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -1234,9 +1236,12 @@ expr_stmt|;
 block|}
 name|name
 operator|=
+name|strdup
+argument_list|(
 name|pw
 operator|->
 name|pw_name
+argument_list|)
 expr_stmt|;
 name|user_info
 operator|.
@@ -1308,8 +1313,11 @@ condition|)
 block|{
 name|name
 operator|=
+name|strdup
+argument_list|(
 operator|*
 name|argv
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1516,9 +1524,12 @@ expr_stmt|;
 block|}
 name|name
 operator|=
+name|strdup
+argument_list|(
 name|user
 operator|.
 name|mbdb_name
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1579,6 +1590,26 @@ operator|.
 name|mbdb_name
 argument_list|,
 name|SMDB_MAX_USER_NAME_LEN
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|msglog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vacation: can't allocate memory for username.\n"
+argument_list|)
+expr_stmt|;
+name|EXITM
+argument_list|(
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
@@ -4103,6 +4134,29 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_VAC_WAIT4SM
+ifdef|#
+directive|ifdef
+name|WAITUNION
+name|union
+name|wait
+name|st
+decl_stmt|;
+else|#
+directive|else
+comment|/* WAITUNION */
+specifier|auto
+name|int
+name|st
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WAITUNION */
+endif|#
+directive|endif
+comment|/* _FFR_VAC_WAIT4SM */
 operator|(
 name|void
 operator|)
@@ -4175,6 +4229,21 @@ argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_VAC_WAIT4SM
+operator|(
+name|void
+operator|)
+name|wait
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_VAC_WAIT4SM */
 block|}
 else|else
 block|{

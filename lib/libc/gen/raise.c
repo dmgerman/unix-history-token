@@ -87,11 +87,9 @@ begin_function
 name|int
 name|__raise
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(

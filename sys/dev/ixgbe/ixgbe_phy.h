@@ -500,6 +500,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|ixgbe_setup_phy_link_tnx
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|ixgbe_get_phy_firmware_version_tnx
 parameter_list|(
 name|struct
@@ -516,7 +528,7 @@ end_function_decl
 
 begin_function_decl
 name|s32
-name|ixgbe_get_phy_firmware_version_aq
+name|ixgbe_get_phy_firmware_version_generic
 parameter_list|(
 name|struct
 name|ixgbe_hw

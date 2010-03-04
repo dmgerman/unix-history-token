@@ -47,7 +47,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFREG
+name|AE_IFREG
 operator||
 literal|0642
 argument_list|)
@@ -67,7 +67,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFREG
+name|AE_IFREG
 operator||
 literal|0644
 argument_list|)
@@ -124,7 +124,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFDIR
+name|AE_IFDIR
 operator||
 literal|0777
 argument_list|)
@@ -143,7 +143,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFBLK
+name|AE_IFBLK
 operator||
 literal|03642
 argument_list|)
@@ -162,7 +162,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFCHR
+name|AE_IFCHR
 operator||
 literal|05777
 argument_list|)
@@ -181,7 +181,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFSOCK
+name|AE_IFSOCK
 operator||
 literal|0222
 argument_list|)
@@ -200,7 +200,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFIFO
+name|AE_IFIFO
 operator||
 literal|0444
 argument_list|)
@@ -219,7 +219,7 @@ name|archive_entry_set_mode
 argument_list|(
 name|entry
 argument_list|,
-name|S_IFLNK
+name|AE_IFLNK
 operator||
 literal|04000
 argument_list|)

@@ -178,7 +178,6 @@ name|svc_rpc_gss_callbacks
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|svc_rpc_gss_callbacks
 argument_list|)
 expr_stmt|;
@@ -229,7 +228,6 @@ name|svc_rpc_gss_svc_names
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|svc_rpc_gss_svc_names
 argument_list|)
 expr_stmt|;

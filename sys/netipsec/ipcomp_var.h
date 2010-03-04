@@ -34,6 +34,13 @@ name|IPCOMP_ALG_MAX
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPCOMPSTAT_VERSION
+value|1
+end_define
+
 begin_struct
 struct|struct
 name|ipcompstat
@@ -100,6 +107,18 @@ name|IPCOMP_ALG_MAX
 index|]
 decl_stmt|;
 comment|/* Per-algorithm op count */
+name|u_int32_t
+name|version
+decl_stmt|;
+comment|/* Version of this structure. */
+name|u_int32_t
+name|ipcomps_threshold
+decl_stmt|;
+comment|/* Packet< comp. algo. threshold. */
+name|u_int32_t
+name|ipcomps_uncompr
+decl_stmt|;
+comment|/* Compression was useles. */
 block|}
 struct|;
 end_struct

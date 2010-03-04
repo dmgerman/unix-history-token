@@ -129,7 +129,7 @@ argument_list|)
 expr_stmt|;
 name|failure
 argument_list|(
-literal|"Basic ACLs should set mode to 0640, not %04o"
+literal|"Basic ACLs should set mode to 0644, not %04o"
 argument_list|,
 name|archive_entry_mode
 argument_list|(
@@ -150,7 +150,7 @@ operator|&
 literal|0777
 operator|)
 argument_list|,
-literal|0640
+literal|0644
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -327,7 +327,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|000
+literal|004
 argument_list|,
 name|permset
 argument_list|)

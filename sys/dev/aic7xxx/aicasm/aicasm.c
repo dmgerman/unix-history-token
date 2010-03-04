@@ -1215,7 +1215,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1244,7 +1246,9 @@ begin_function
 specifier|static
 name|void
 name|back_patch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|instruction
@@ -1378,7 +1382,9 @@ begin_function
 specifier|static
 name|void
 name|output_code
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|instruction
@@ -2636,6 +2642,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|free
+argument_list|(
+name|func_values
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Dump the remainder of the file */
 end_comment
@@ -3011,7 +3025,9 @@ name|struct
 name|instruction
 modifier|*
 name|seq_alloc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|instruction
@@ -3086,7 +3102,9 @@ begin_function
 name|critical_section_t
 modifier|*
 name|cs_alloc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|critical_section_t
 modifier|*
@@ -3152,7 +3170,9 @@ begin_function
 name|scope_t
 modifier|*
 name|scope_alloc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|scope_t
 modifier|*

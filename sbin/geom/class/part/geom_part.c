@@ -1023,6 +1023,10 @@ name|bestpp
 operator|=
 name|NULL
 expr_stmt|;
+name|bestsector
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pp

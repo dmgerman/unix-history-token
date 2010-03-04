@@ -99,7 +99,7 @@ name|stack
 modifier|*
 name|st
 parameter_list|,
-name|register_t
+name|vm_offset_t
 name|frame
 parameter_list|)
 block|{
@@ -225,7 +225,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|register_t
+name|vm_offset_t
 name|frame
 decl_stmt|;
 if|if

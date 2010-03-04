@@ -151,12 +151,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 
@@ -659,7 +653,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-7s %-*s %-*s"
+literal|"%-*.*s %-7s %-*s %-8s"
 argument_list|,
 name|AC_COMM_LEN
 argument_list|,
@@ -676,7 +670,9 @@ operator|.
 name|ac_flagx
 argument_list|)
 argument_list|,
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 name|user_from_uid
 argument_list|(
@@ -686,8 +682,6 @@ name|ac_uid
 argument_list|,
 literal|0
 argument_list|)
-argument_list|,
-name|UT_LINESIZE
 argument_list|,
 name|getdev
 argument_list|(

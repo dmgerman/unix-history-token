@@ -630,7 +630,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insb"
@@ -642,7 +642,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -669,7 +669,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insw"
@@ -681,7 +681,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -708,7 +708,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insl"
@@ -720,7 +720,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -817,7 +817,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsb"
@@ -829,7 +829,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -855,7 +855,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsw"
@@ -867,7 +867,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -893,7 +893,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsl"
@@ -905,7 +905,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -942,16 +942,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|__asm__
-name|__volatile
-argument_list|(
-literal|"mfence"
-operator|:
-operator|:
-operator|:
-literal|"memory"
-argument_list|)
-decl_stmt|;
+asm|__asm __volatile("mfence" : : : "memory");
 block|}
 end_function
 
@@ -1405,7 +1396,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|cpu_monitor
 parameter_list|(
@@ -1443,7 +1434,7 @@ end_function
 
 begin_function
 unit|}  static
-specifier|inline
+name|__inline
 name|void
 name|cpu_mwait
 parameter_list|(
@@ -2098,7 +2089,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2115,7 +2106,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2132,7 +2123,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2395,7 +2386,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2413,7 +2404,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2431,7 +2422,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl

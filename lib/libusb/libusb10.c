@@ -10,19 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -40,31 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/filio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -303,6 +303,9 @@ modifier|*
 name|debug
 decl_stmt|;
 name|int
+name|flag
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|ctx
@@ -463,11 +466,13 @@ operator|)
 return|;
 block|}
 comment|/* set non-blocking mode on the control pipe to avoid deadlock */
-name|ret
+name|flag
 operator|=
 literal|1
 expr_stmt|;
-name|ioctl
+name|ret
+operator|=
+name|fcntl
 argument_list|(
 name|ctx
 operator|->
@@ -476,17 +481,29 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|FIONBIO
+name|O_NONBLOCK
 argument_list|,
 operator|&
-name|ret
+name|flag
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
 name|ret
+operator|!=
+operator|-
+literal|1
+operator|&&
+literal|"Couldn't set O_NONBLOCK for ctx->ctrl_pipe[0]"
+argument_list|)
+expr_stmt|;
+name|flag
 operator|=
 literal|1
 expr_stmt|;
-name|ioctl
+name|ret
+operator|=
+name|fcntl
 argument_list|(
 name|ctx
 operator|->
@@ -495,10 +512,20 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|FIONBIO
+name|O_NONBLOCK
 argument_list|,
 operator|&
+name|flag
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
 name|ret
+operator|!=
+operator|-
+literal|1
+operator|&&
+literal|"Couldn't set O_NONBLOCK for ctx->ctrl_pipe[1]"
 argument_list|)
 expr_stmt|;
 name|libusb10_add_pollfd
@@ -838,14 +865,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* get device into libUSB v1.0 list */
-name|libusb20_be_dequeue_device
-argument_list|(
-name|usb_backend
-argument_list|,
-name|pdev
-argument_list|)
-expr_stmt|;
 name|dev
 operator|=
 name|malloc
@@ -910,6 +929,14 @@ name|LIBUSB_ERROR_NO_MEM
 operator|)
 return|;
 block|}
+comment|/* get device into libUSB v1.0 list */
+name|libusb20_be_dequeue_device
+argument_list|(
+name|usb_backend
+argument_list|,
+name|pdev
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|dev
@@ -1698,10 +1725,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|pdev
-operator|=
-name|NULL
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -1770,6 +1793,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|j
+operator|==
+name|i
+condition|)
+name|pdev
+operator|=
+name|NULL
+expr_stmt|;
 name|libusb_free_device_list
 argument_list|(
 name|devs
@@ -1855,6 +1888,7 @@ argument_list|(
 name|pdev
 argument_list|)
 expr_stmt|;
+comment|/* unref will free the "pdev" when the refcount reaches zero */
 name|libusb_unref_device
 argument_list|(
 name|dev
@@ -3516,11 +3550,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* set transfer status */
 name|uxfer
 operator|->
 name|status
 operator|=
 name|status
+expr_stmt|;
+comment|/* update super transfer state */
+name|sxfer
+operator|->
+name|state
+operator|=
+name|LIBUSB_SUPER_XFER_ST_NONE
 expr_stmt|;
 name|dev
 operator|=
@@ -4633,6 +4675,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sxfer
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* cancelling */
+if|if
+condition|(
+name|sxfer
 operator|->
 name|rem_len
 condition|)
@@ -4654,6 +4704,14 @@ argument_list|(
 name|pxfer0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* cancelling */
 if|if
 condition|(
 name|sxfer
@@ -4977,8 +5035,7 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|endpoint
 decl_stmt|;
 name|int
@@ -5154,6 +5211,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* set pending state */
+name|sxfer
+operator|->
+name|state
+operator|=
+name|LIBUSB_SUPER_XFER_ST_PEND
+expr_stmt|;
+comment|/* insert transfer into transfer head list */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5166,6 +5231,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+comment|/* start work transfers */
 name|libusb10_submit_transfer_sub
 argument_list|(
 name|uxfer
@@ -5243,9 +5309,11 @@ name|libusb_device
 modifier|*
 name|dev
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|endpoint
+decl_stmt|;
+name|int
+name|retval
 decl_stmt|;
 if|if
 condition|(
@@ -5258,6 +5326,7 @@ operator|(
 name|LIBUSB_ERROR_INVALID_PARAM
 operator|)
 return|;
+comment|/* check if not initialised */
 if|if
 condition|(
 name|uxfer
@@ -5268,7 +5337,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|LIBUSB_ERROR_INVALID_PARAM
+name|LIBUSB_ERROR_NOT_FOUND
 operator|)
 return|;
 name|endpoint
@@ -5329,6 +5398,10 @@ name|sxfer
 argument_list|)
 operator|)
 expr_stmt|;
+name|retval
+operator|=
+literal|0
+expr_stmt|;
 name|CTX_LOCK
 argument_list|(
 name|dev
@@ -5362,6 +5435,28 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sxfer
+operator|->
+name|state
+operator|!=
+name|LIBUSB_SUPER_XFER_ST_PEND
+condition|)
+block|{
+comment|/* only update the transfer status */
+name|uxfer
+operator|->
+name|status
+operator|=
+name|LIBUSB_TRANSFER_CANCELLED
+expr_stmt|;
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|sxfer
@@ -5417,6 +5512,10 @@ name|NULL
 condition|)
 block|{
 comment|/* not started */
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -5493,6 +5592,10 @@ block|}
 else|else
 block|{
 comment|/* not started */
+name|retval
+operator|=
+name|LIBUSB_ERROR_NOT_FOUND
+expr_stmt|;
 block|}
 name|CTX_UNLOCK
 argument_list|(
@@ -5514,7 +5617,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retval
 operator|)
 return|;
 block|}
@@ -5531,6 +5634,44 @@ name|dev
 parameter_list|)
 block|{
 comment|/* TODO */
+block|}
+end_function
+
+begin_function
+name|uint16_t
+name|libusb_cpu_to_le16
+parameter_list|(
+name|uint16_t
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|htole16
+argument_list|(
+name|x
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint16_t
+name|libusb_le16_to_cpu
+parameter_list|(
+name|uint16_t
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|le16toh
+argument_list|(
+name|x
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

@@ -82,7 +82,6 @@ name|_gss_mechs
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|_gss_mechs
 argument_list|)
 decl_stmt|;

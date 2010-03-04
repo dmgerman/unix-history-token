@@ -157,7 +157,7 @@ name|handler_chain
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-name|foo
+name|handler_chain
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -194,7 +194,7 @@ name|dll_chain
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|foo
+name|dll_chain
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -605,7 +605,6 @@ decl_stmt|,
 modifier|*
 name|b_tmp
 decl_stmt|;
-empty_stmt|;
 name|LIBALIAS_WLOCK_ASSERT
 argument_list|()
 expr_stmt|;

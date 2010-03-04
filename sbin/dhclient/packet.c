@@ -572,6 +572,24 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * While the BPF -- used for broadcasts -- expects a "true" IP header 	 * with all the bytes in network byte order, the raw socket interface 	 * which is used for unicasts expects the ip_len field to be in host 	 * byte order.  In both cases, the checksum has to be correct, so this 	 * is as good a place as any to turn the bytes around again. 	 */
+if|if
+condition|(
+name|to
+operator|!=
+name|INADDR_BROADCAST
+condition|)
+name|ip
+operator|.
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|.
+name|ip_len
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&

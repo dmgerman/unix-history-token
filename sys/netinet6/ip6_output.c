@@ -2891,7 +2891,7 @@ operator|!
 name|PFIL_HOOKED
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|)
 condition|)
 goto|goto
@@ -2909,7 +2909,7 @@ operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
-name|inet6_pfil_hook
+name|V_inet6_pfil_hook
 argument_list|,
 operator|&
 name|m

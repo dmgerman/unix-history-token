@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ratectrl.c,v 8.12 2008/02/11 22:56:05 ca Exp $"
+literal|"@(#)$Id: ratectrl.c,v 8.13 2009/05/05 23:19:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -137,22 +137,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int sockaddrcmp __P((SOCKADDR *, SOCKADDR *));
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_comment
 comment|/* **  CONNECTION_RATE_CHECK - updates connection history data **      and computes connection rate for the given host ** **    Parameters: **      hostaddr -- ip address of smtp client **      e -- envelope ** **    Returns: **      true (always) ** **    Side Effects: **      updates connection history ** **    Warnings: **      For each connection, this call shall be **      done only once with the value true for the **      update parameter. **      Typically, this call is done with the value **      true by the father, and once again with **      the value false by the children. ** */
@@ -1632,31 +1616,6 @@ name|cnt
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* ** SOCKADDRCMP - compare two SOCKADDR structures **   this function may be used to compare SOCKADDR **   structures when using bsearch and qsort functions **   in the same way we do with strcmp ** ** Parameters: **   a, b - addresses ** ** Returns: **   1 if a> b **  -1 if a< b **   0 if a = b ** ** OBS: This call isn't used at the moment, it will ** be used when code will be extended to work with IPV6 */
-end_comment
-
-begin_comment
-unit|static int sockaddrcmp(a, b) 	 SOCKADDR *a; 	 SOCKADDR *b; { 	if (a->sa.sa_family> b->sa.sa_family) 		return 1; 	if (a->sa.sa_family< b->sa.sa_family) 		return -1;  	switch (a->sa.sa_family) 	{ 	  case AF_INET: 		if (a->sin.sin_addr.s_addr> b->sin.sin_addr.s_addr) 			return 1; 		if (a->sin.sin_addr.s_addr< b->sin.sin_addr.s_addr) 			return -1; 		return 0; 		break;  	  case AF_INET6:
-comment|/* TO BE DONE */
-end_comment
-
-begin_endif
-unit|break; 	} 	return 0; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 end_unit
 

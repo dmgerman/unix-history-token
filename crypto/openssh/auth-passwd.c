@@ -306,10 +306,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_CYGWIN
-if|if
-condition|(
-name|is_winnt
-condition|)
 block|{
 name|HANDLE
 name|hToken

@@ -188,6 +188,12 @@ name|archive_write_set_format_ustar
 block|}
 block|,
 block|{
+literal|"zip"
+block|,
+name|archive_write_set_format_zip
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL

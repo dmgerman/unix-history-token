@@ -258,12 +258,6 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 comment|/* media info */
-name|bus_space_handle_t
-name|tl_bhandle
-decl_stmt|;
-name|bus_space_tag_t
-name|tl_btag
-decl_stmt|;
 name|void
 modifier|*
 name|tl_intrhand
@@ -316,6 +310,9 @@ decl_stmt|;
 name|struct
 name|mtx
 name|tl_mtx
+decl_stmt|;
+name|int
+name|tl_timer
 decl_stmt|;
 block|}
 struct|;
@@ -2131,8 +2128,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_4(sc->tl_btag, sc->tl_bhandle, reg, val)
+value|bus_write_4(sc->tl_res, reg, val)
 end_define
 
 begin_define
@@ -2146,8 +2142,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_2(sc->tl_btag, sc->tl_bhandle, reg, val)
+value|bus_write_2(sc->tl_res, reg, val)
 end_define
 
 begin_define
@@ -2161,8 +2156,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|bus_space_write_1(sc->tl_btag, sc->tl_bhandle, reg, val)
+value|bus_write_1(sc->tl_res, reg, val)
 end_define
 
 begin_define
@@ -2174,8 +2168,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_4(sc->tl_btag, sc->tl_bhandle, reg)
+value|bus_read_4(sc->tl_res, reg)
 end_define
 
 begin_define
@@ -2187,8 +2180,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_2(sc->tl_btag, sc->tl_bhandle, reg)
+value|bus_read_2(sc->tl_res, reg)
 end_define
 
 begin_define
@@ -2200,8 +2192,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-define|\
-value|bus_space_read_1(sc->tl_btag, sc->tl_bhandle, reg)
+value|bus_read_1(sc->tl_res, reg)
 end_define
 
 begin_define

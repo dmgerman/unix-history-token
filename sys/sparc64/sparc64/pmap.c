@@ -1116,7 +1116,8 @@ begin_function
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 name|struct
@@ -4897,7 +4898,6 @@ argument|&cpuhead
 argument_list|,
 argument|pc_allcpu
 argument_list|)
-block|{
 if|if
 condition|(
 name|pc
@@ -4912,7 +4912,6 @@ name|pc_pmap
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -5376,7 +5375,6 @@ name|va
 operator|+=
 name|PAGE_SIZE
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -5391,10 +5389,7 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|!
 name|pmap_remove_tte
 argument_list|(
@@ -5408,8 +5403,6 @@ name|va
 argument_list|)
 condition|)
 break|break;
-block|}
-block|}
 name|tlb_range_demap
 argument_list|(
 name|pm
@@ -5886,7 +5879,6 @@ name|va
 operator|+=
 name|PAGE_SIZE
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -5913,7 +5905,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-block|}
 name|tlb_range_demap
 argument_list|(
 name|pm
@@ -6293,14 +6284,12 @@ if|if
 condition|(
 name|wired
 condition|)
-block|{
 name|tp
 operator|->
 name|tte_data
 operator||=
 name|TD_W
 expr_stmt|;
-block|}
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -6320,13 +6309,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * If we're turning on execute permissions, flush the icache. 		 */
 if|if
 condition|(
@@ -6349,13 +6336,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|icache_page_inval
 argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
-block|}
 name|tp
 operator|->
 name|tte_data
@@ -7099,7 +7084,6 @@ name|va
 operator|+=
 name|PAGE_SIZE
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -7126,7 +7110,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-block|}
 name|tlb_range_demap
 argument_list|(
 name|dst_pmap
@@ -8683,7 +8666,6 @@ argument|&m->md.tte_list
 argument_list|,
 argument|tte_link
 argument_list|)
-block|{
 if|if
 condition|(
 operator|(
@@ -8701,7 +8683,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|FALSE
@@ -9533,6 +9514,22 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pmap_sync_icache
+parameter_list|(
+name|pmap_t
+name|pm
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_size_t
+name|sz
+parameter_list|)
+block|{  }
 end_function
 
 begin_comment

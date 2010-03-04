@@ -750,7 +750,7 @@ operator|>
 literal|1
 argument_list|,
 operator|(
-literal|"Invalid alignment, 0x%08x!\n"
+literal|"Invalid alignment, 0x%08x\n"
 operator|,
 name|align
 operator|)
@@ -763,7 +763,7 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"Invalid size = 0!\n"
+literal|"Invalid size = 0\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1734,11 +1734,52 @@ name|frame_limit
 operator|=
 name|USB_MAX_FS_ISOC_FRAMES_PER_XFER
 expr_stmt|;
+name|xfer
+operator|->
+name|fps_shift
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 name|frame_limit
 operator|=
 name|USB_MAX_HS_ISOC_FRAMES_PER_XFER
+expr_stmt|;
+name|xfer
+operator|->
+name|fps_shift
+operator|=
+name|edesc
+operator|->
+name|bInterval
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|fps_shift
+operator|>
+literal|0
+condition|)
+name|xfer
+operator|->
+name|fps_shift
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|fps_shift
+operator|>
+literal|3
+condition|)
+name|xfer
+operator|->
+name|fps_shift
+operator|=
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -3658,13 +3699,58 @@ condition|(
 name|buf
 condition|)
 block|{
-comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount" if you 				 * want more information. 				 */
+comment|/* 				 * Increment the endpoint refcount. This 				 * basically prevents setting a new 				 * configuration and alternate setting 				 * when USB transfers are in use on 				 * the given interface. Search the USB 				 * code for "endpoint->refcount_alloc" if you 				 * want more information. 				 */
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|xfer
 operator|->
 name|endpoint
 operator|->
-name|refcount
+name|refcount_alloc
+operator|>=
+name|USB_EP_REF_MAX
+condition|)
+name|parm
+operator|.
+name|err
+operator|=
+name|USB_ERR_INVAL
+expr_stmt|;
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|refcount_alloc
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|endpoint
+operator|->
+name|refcount_alloc
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"usbd_transfer_setup(): Refcount wrapped to zero\n"
+argument_list|)
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 comment|/* 				 * Whenever we set ppxfer[] then we 				 * also need to increment the 				 * "setup_refcount": 				 */
 name|info
@@ -3681,6 +3767,16 @@ operator|=
 name|xfer
 expr_stmt|;
 block|}
+comment|/* check for error */
+if|if
+condition|(
+name|parm
+operator|.
+name|err
+condition|)
+goto|goto
+name|done
+goto|;
 block|}
 if|if
 condition|(
@@ -4578,12 +4674,26 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * NOTE: default endpoint does not have an 		 * interface, even if endpoint->iface_index == 0 		 */
+name|USB_BUS_LOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|endpoint
 operator|->
-name|refcount
+name|refcount_alloc
 operator|--
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|info
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 name|usb_callout_drain
 argument_list|(
@@ -4610,7 +4720,7 @@ literal|0
 argument_list|,
 operator|(
 literal|"Invalid setup "
-literal|"reference count!\n"
+literal|"reference count\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5016,7 +5126,16 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"Length greater than remaining length!\n"
+literal|"Length (%d) greater than "
+literal|"remaining length (%d)\n"
+argument_list|,
+name|len
+argument_list|,
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_rem
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5078,7 +5197,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Short control transfer without "
-literal|"force_short_xfer set!\n"
+literal|"force_short_xfer set\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5959,6 +6078,16 @@ operator|.
 name|started
 condition|)
 block|{
+comment|/* lock the BUS lock to avoid races updating flags_int */
+name|USB_BUS_LOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flags_int
@@ -5966,6 +6095,15 @@ operator|.
 name|started
 operator|=
 literal|1
+expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* check if the USB transfer callback is already transferring */
@@ -6054,7 +6192,26 @@ operator|.
 name|open
 condition|)
 block|{
+if|if
+condition|(
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|started
+condition|)
+block|{
 comment|/* nothing to do except clearing the "started" flag */
+comment|/* lock the BUS lock to avoid races updating flags_int */
+name|USB_BUS_LOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
 name|xfer
 operator|->
 name|flags_int
@@ -6063,6 +6220,16 @@ name|started
 operator|=
 literal|0
 expr_stmt|;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* try to stop the current USB transfer */
@@ -6075,13 +6242,13 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* override any previous error */
 name|xfer
 operator|->
 name|error
 operator|=
 name|USB_ERR_CANCELLED
 expr_stmt|;
-comment|/* override any previous error */
 comment|/* 	 * Clear "open" and "started" when both private and USB lock 	 * is locked so that we don't get a race updating "flags_int" 	 */
 name|xfer
 operator|->
@@ -6446,8 +6613,15 @@ name|usbd_transfer_pending
 argument_list|(
 name|xfer
 argument_list|)
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
 condition|)
 block|{
+comment|/*  		 * It is allowed that the callback can drop its 		 * transfer mutex. In that case checking only 		 * "usbd_transfer_pending()" is not enough to tell if 		 * the USB transfer is fully drained. We also need to 		 * check the internal "doing_callback" flag. 		 */
 name|xfer
 operator|->
 name|flags_int
@@ -6519,6 +6693,30 @@ name|frbuffers
 index|[
 name|frindex
 index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_xfer_get_fps_shift  *  * The following function is only useful for isochronous transfers. It  * returns how many times the frame execution rate has been shifted  * down.  *  * Return value:  * Success: 0..3  * Failure: 0  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|uint8_t
+name|usbd_xfer_get_fps_shift
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xfer
+operator|->
+name|fps_shift
 operator|)
 return|;
 block|}
@@ -6808,7 +7006,7 @@ name|ext_buffer
 argument_list|,
 operator|(
 literal|"Cannot offset data frame "
-literal|"when the USB buffer is external!\n"
+literal|"when the USB buffer is external\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7320,6 +7518,15 @@ name|curr
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* set flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|1
+expr_stmt|;
 name|USB_BUS_UNLOCK
 argument_list|(
 name|info
@@ -7526,6 +7733,15 @@ name|USB_ST_ERROR
 operator|)
 condition|)
 block|{
+comment|/* clear flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|0
+expr_stmt|;
 comment|/* try to loop, but not recursivly */
 name|usb_command_wrapper
 argument_list|(
@@ -7541,6 +7757,15 @@ return|return;
 block|}
 name|done
 label|:
+comment|/* clear flag in case of drain */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|doing_callback
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Check if we are draining. 	 */
 if|if
 condition|(
@@ -7804,6 +8029,15 @@ name|DPRINTF
 argument_list|(
 literal|"not transferring\n"
 argument_list|)
+expr_stmt|;
+comment|/* end of control transfer, if any */
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|control_act
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -8408,7 +8642,7 @@ name|DPRINTFN
 argument_list|(
 literal|0
 argument_list|,
-literal|"No stall handler!\n"
+literal|"No stall handler\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8851,7 +9085,7 @@ block|{
 name|panic
 argument_list|(
 literal|"%s: actual number of frames, %d, is "
-literal|"greater than initial number of frames, %d!\n"
+literal|"greater than initial number of frames, %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -8961,7 +9195,7 @@ block|{
 name|panic
 argument_list|(
 literal|"%s: actual length, %d, is greater than "
-literal|"initial length, %d!\n"
+literal|"initial length, %d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -9674,7 +9908,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"could not setup default "
-literal|"USB transfer!\n"
+literal|"USB transfer\n"
 argument_list|)
 expr_stmt|;
 block|}

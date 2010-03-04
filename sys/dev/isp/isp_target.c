@@ -4389,9 +4389,16 @@ name|CT_OK
 expr_stmt|;
 name|ct
 operator|->
-name|ct_fwhandle
+name|ct_syshandle
 operator|=
 name|bus
+expr_stmt|;
+comment|/* we skip fwhandle here */
+name|ct
+operator|->
+name|ct_fwhandle
+operator|=
+literal|0
 expr_stmt|;
 name|ct
 operator|->

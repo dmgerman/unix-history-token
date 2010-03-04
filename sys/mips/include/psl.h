@@ -49,23 +49,6 @@ parameter_list|)
 value|(((ps)& (INT_MASK | SR_INT_ENA_PREV)) \ 			    == (INT_MASK | SR_INT_ENA_PREV))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

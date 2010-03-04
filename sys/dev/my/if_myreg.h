@@ -2210,6 +2210,17 @@ name|struct
 name|mtx
 name|my_mtx
 decl_stmt|;
+name|struct
+name|callout
+name|my_autoneg_timer
+decl_stmt|;
+name|struct
+name|callout
+name|my_watchdog
+decl_stmt|;
+name|int
+name|my_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct

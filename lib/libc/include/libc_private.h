@@ -15,6 +15,12 @@ directive|define
 name|_LIBC_PRIVATE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_pthreadtypes.h>
+end_include
+
 begin_comment
 comment|/*  * This global flag is non-zero when a process has created one  * or more threads. It is used to avoid calling locking functions  * when they are not required.  */
 end_comment
@@ -216,6 +222,10 @@ name|PJT_SIGMASK
 block|,
 name|PJT_TESTCANCEL
 block|,
+name|PJT_CLEANUP_POP_IMP
+block|,
+name|PJT_CLEANUP_PUSH_IMP
+block|,
 name|PJT_MAX
 block|}
 name|pjt_index_t
@@ -288,6 +298,28 @@ name|void
 name|_init_tls
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Provides pthread_once()-like functionality for both single-threaded  * and multi-threaded applications.  */
+end_comment
+
+begin_function_decl
+name|int
+name|_once
+parameter_list|(
+name|pthread_once_t
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1329,6 +1329,22 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|ndis_media_status
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ifmediareq
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|ndis_set_cipher
 parameter_list|(
@@ -2137,7 +2153,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3717,7 +3732,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -3736,7 +3750,6 @@ name|ndis_80211
 operator|++
 expr_stmt|;
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -5255,7 +5268,7 @@ name|vap
 argument_list|,
 name|ieee80211_media_change
 argument_list|,
-name|ieee80211_media_status
+name|ndis_media_status
 argument_list|)
 expr_stmt|;
 name|ic
@@ -6260,7 +6273,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6316,7 +6328,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6666,7 +6677,6 @@ operator|->
 name|nmb_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6835,7 +6845,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7325,7 +7334,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -7460,9 +7468,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|ndis_80211
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|!=
+name|NULL
+operator|)
 condition|)
 name|vap
 operator|->
@@ -7512,7 +7530,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7701,7 +7718,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7899,7 +7915,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8036,7 +8051,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8347,9 +8361,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|ndis_80211
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 name|ndis_getstate_80211
@@ -8411,9 +8435,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|ndis_80211
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vap
+operator|!=
+name|NULL
+operator|)
 condition|)
 name|ieee80211_new_state
 argument_list|(
@@ -8444,7 +8478,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8557,7 +8590,6 @@ operator|.
 name|ds_len
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8595,7 +8627,9 @@ name|ni
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8686,7 +8720,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9407,17 +9440,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ndis_80211
-condition|)
-name|ndis_setstate_80211
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|NDIS_LOCK
 argument_list|(
 name|sc
@@ -9619,8 +9641,6 @@ name|ndis_media_state
 name|linkstate
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|len
 decl_stmt|;
 name|ifmr
@@ -9657,8 +9677,6 @@ argument_list|(
 name|linkstate
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|ndis_get_info
 argument_list|(
 name|sc
@@ -9683,8 +9701,6 @@ argument_list|(
 name|media_info
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|ndis_get_info
 argument_list|(
 name|sc
@@ -9763,7 +9779,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10312,6 +10327,103 @@ end_function
 begin_function
 specifier|static
 name|void
+name|ndis_media_status
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|ifmediareq
+modifier|*
+name|imr
+parameter_list|)
+block|{
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|struct
+name|ndis_softc
+modifier|*
+name|sc
+init|=
+name|vap
+operator|->
+name|iv_ic
+operator|->
+name|ic_ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|uint32_t
+name|txrate
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|NDIS_INITIALIZED
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+return|return;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|txrate
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ndis_get_info
+argument_list|(
+name|sc
+argument_list|,
+name|OID_GEN_LINK_SPEED
+argument_list|,
+operator|&
+name|txrate
+argument_list|,
+operator|&
+name|len
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_txrate
+operator|=
+name|txrate
+operator|/
+literal|5000
+expr_stmt|;
+name|ieee80211_media_status
+argument_list|(
+name|ifp
+argument_list|,
+name|imr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ndis_setstate_80211
 parameter_list|(
 name|sc
@@ -10375,13 +10487,6 @@ operator|->
 name|ic_vaps
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|==
-name|NULL
-condition|)
-return|return;
 if|if
 condition|(
 operator|!
@@ -10630,7 +10735,7 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that OID_80211_PRIVACY_FILTER is optional: 	 * not all drivers implement it. 	 */
+comment|/* 	 * Note that OID_802_11_PRIVACY_FILTER is optional: 	 * not all drivers implement it. 	 */
 name|len
 operator|=
 sizeof|sizeof
@@ -11323,7 +11428,7 @@ index|]
 operator|.
 name|wk_keylen
 expr_stmt|;
-comment|/* 				 * 5, 13 and 16 are the only valid 				 * only valid key lengths. Anything 				 * in between will be zero padded out to 				 * the next highest boundary. 				 */
+comment|/* 				 * 5, 13 and 16 are the only valid 				 * key lengths. Anything in between 				 * will be zero padded out to the 				 * next highest boundary. 				 */
 if|if
 condition|(
 name|vap
@@ -12559,13 +12664,6 @@ operator|->
 name|ic_vaps
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|==
-name|NULL
-condition|)
-return|return;
 name|ni
 operator|=
 name|vap
@@ -12659,51 +12757,6 @@ operator|->
 name|nwbx_ssid
 operator|.
 name|ns_ssidlen
-expr_stmt|;
-name|len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|rval
-operator|=
-name|ndis_get_info
-argument_list|(
-name|sc
-argument_list|,
-name|OID_GEN_LINK_SPEED
-argument_list|,
-operator|&
-name|arg
-argument_list|,
-operator|&
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rval
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|ndis_dev
-argument_list|,
-literal|"get link speed failed: %d\n"
-argument_list|,
-name|rval
-argument_list|)
-expr_stmt|;
-name|ni
-operator|->
-name|ni_txrate
-operator|=
-name|arg
-operator|/
-literal|5000
 expr_stmt|;
 if|if
 condition|(
@@ -12908,7 +12961,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine current authentication mode. Note: authmode 	 * reporting isn't supported prior to FreeBSD 6.x. 	 */
+comment|/* 	 * Determine current authentication mode. 	 */
 name|len
 operator|=
 sizeof|sizeof
@@ -13104,7 +13157,6 @@ operator||
 name|IEEE80211_F_DROPUNENC
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14813,7 +14865,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15031,7 +15082,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15066,7 +15116,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15276,45 +15325,12 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ndis_softc
-modifier|*
-name|sc
-init|=
-name|arg
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
-name|ic
-decl_stmt|;
-name|struct
 name|ieee80211vap
 modifier|*
 name|vap
+init|=
+name|arg
 decl_stmt|;
-name|ic
-operator|=
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_l2com
-expr_stmt|;
-name|vap
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|ic
-operator|->
-name|ic_vaps
-argument_list|)
-expr_stmt|;
-name|ndis_scan_results
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ieee80211_scan_done
 argument_list|(
 name|vap
@@ -15881,57 +15897,20 @@ name|frm
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* Grab variable length ies */
-while|while
-condition|(
-name|efrm
-operator|-
-name|frm
-operator|>
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|efrm
-operator|-
-name|frm
-operator|<
-name|frm
-index|[
-literal|1
-index|]
-operator|+
-literal|2
-condition|)
-break|break;
-switch|switch
-condition|(
-operator|*
-name|frm
-condition|)
-block|{
-case|case
-name|IEEE80211_ELEMID_RSN
-case|:
 name|sp
 operator|.
-name|rsn
+name|ies
 operator|=
 name|frm
 expr_stmt|;
-break|break;
-block|}
+name|sp
+operator|.
+name|ies_len
+operator|=
+name|efrm
+operator|-
 name|frm
-operator|+=
-name|frm
-index|[
-literal|1
-index|]
-operator|+
-literal|2
 expr_stmt|;
-block|}
 block|}
 name|done
 label|:
@@ -16251,7 +16230,7 @@ literal|3
 argument_list|,
 name|ndis_scan
 argument_list|,
-name|sc
+name|vap
 argument_list|)
 expr_stmt|;
 block|}
@@ -16317,7 +16296,22 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-comment|/* ignore */
+name|struct
+name|ndis_softc
+modifier|*
+name|sc
+init|=
+name|ic
+operator|->
+name|ic_ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|ndis_scan_results
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

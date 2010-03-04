@@ -927,9 +927,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_td
-operator|->
-name|td_ucred
+name|a_cred
 argument_list|,
 name|ap
 operator|->

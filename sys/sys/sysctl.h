@@ -3806,6 +3806,7 @@ name|__BEGIN_DECLS
 name|int
 name|sysctl
 parameter_list|(
+specifier|const
 name|int
 modifier|*
 parameter_list|,
@@ -3817,6 +3818,7 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -3839,6 +3841,7 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,

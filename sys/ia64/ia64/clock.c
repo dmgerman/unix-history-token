@@ -83,6 +83,12 @@ directive|include
 file|<machine/efi.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
 begin_decl_stmt
 name|uint64_t
 name|ia64_clock_reload
@@ -160,6 +166,8 @@ parameter_list|)
 block|{
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clockadj
 argument_list|,
 literal|0
@@ -167,6 +175,8 @@ argument_list|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|,
 name|ia64_get_itc
@@ -177,6 +187,8 @@ name|ia64_set_itm
 argument_list|(
 name|PCPU_GET
 argument_list|(
+name|md
+operator|.
 name|clock
 argument_list|)
 operator|+
@@ -204,16 +216,18 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
-if|if
-condition|(
-name|itc_frequency
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"Unknown clock frequency"
-argument_list|)
+name|u_long
+name|itc_freq
+decl_stmt|;
+name|itc_freq
+operator|=
+operator|(
+name|u_long
+operator|)
+name|ia64_itc_freq
+argument_list|()
+operator|*
+literal|1000000ul
 expr_stmt|;
 name|stathz
 operator|=
@@ -222,7 +236,7 @@ expr_stmt|;
 name|ia64_clock_reload
 operator|=
 operator|(
-name|itc_frequency
+name|itc_freq
 operator|+
 name|hz
 operator|/
@@ -238,7 +252,7 @@ name|ia64_timecounter
 operator|.
 name|tc_frequency
 operator|=
-name|itc_frequency
+name|itc_freq
 expr_stmt|;
 name|tc_init
 argument_list|(

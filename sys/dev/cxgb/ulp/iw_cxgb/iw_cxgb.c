@@ -689,9 +689,7 @@ operator|++
 condition|)
 name|printf
 argument_list|(
-literal|"Chelsio T3 RDMA Driver - version %s\n"
-argument_list|,
-name|DRV_VERSION
+literal|"Chelsio T3 RDMA Driver - version x.xx\n"
 argument_list|)
 expr_stmt|;
 name|rnicp

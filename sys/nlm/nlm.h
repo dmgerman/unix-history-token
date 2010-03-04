@@ -79,6 +79,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Make a struct netobj.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|nlm_make_netobj
+parameter_list|(
+name|struct
+name|netobj
+modifier|*
+name|dst
+parameter_list|,
+name|caddr_t
+name|srt
+parameter_list|,
+name|size_t
+name|srcsize
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Copy a struct netobj.  */
 end_comment
 
@@ -488,6 +516,27 @@ name|CLIENT
 modifier|*
 modifier|*
 name|rpcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Implementation for the granted result RPC. The client may reject the granted  * message, in which case we need to handle it appropriately.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|nlm_do_granted_res
+parameter_list|(
+name|nlm4_res
+modifier|*
+name|argp
+parameter_list|,
+name|struct
+name|svc_req
+modifier|*
+name|rqstp
 parameter_list|)
 function_decl|;
 end_function_decl

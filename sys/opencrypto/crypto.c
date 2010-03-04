@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -104,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -152,6 +164,14 @@ include|#
 directive|include
 file|"cryptodev_if.h"
 end_include
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|opencrypto
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Crypto drivers register themselves by allocating a slot in the  * crypto_drivers table with crypto_get_driverid() and then registering  * each algorithm they support with crypto_register() and crypto_kregister().  */

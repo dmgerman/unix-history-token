@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1264,6 +1258,20 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Skip providers that are already open for writing. */
+if|if
+condition|(
+name|pp
+operator|->
+name|acw
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|strcmp
@@ -1477,6 +1485,18 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|g_labels
+index|[
+name|i
+index|]
+operator|->
+name|ld_enabled
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;

@@ -121,12 +121,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -322,7 +316,6 @@ comment|/*  * Schedule a soft interrupt. We do this on the 0 to !0 transition  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|uart_sched_softih
 parameter_list|(

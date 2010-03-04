@@ -208,6 +208,10 @@ name|acl
 modifier|*
 name|acl_int
 decl_stmt|;
+name|struct
+name|acl_entry
+name|entry_int
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -304,6 +308,12 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* Use a local copy to prevent deletion of more than this entry */
+name|entry_int
+operator|=
+operator|*
+name|entry_d
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -336,7 +346,8 @@ name|i
 index|]
 operator|)
 argument_list|,
-name|entry_d
+operator|&
+name|entry_int
 argument_list|)
 condition|)
 block|{

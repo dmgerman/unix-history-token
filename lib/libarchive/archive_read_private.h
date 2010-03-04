@@ -6,6 +6,23 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__LIBARCHIVE_BUILD
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|This header is only to be used internally to libarchive.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARCHIVE_READ_PRIVATE_H_INCLUDED
 end_ifndef
 
@@ -452,7 +469,7 @@ function_decl|;
 block|}
 name|formats
 index|[
-literal|8
+literal|9
 index|]
 struct|;
 name|struct

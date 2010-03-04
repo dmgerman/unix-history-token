@@ -257,6 +257,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIPS_PRID_CID_CAVIUM
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Cavium */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIPS_PRID_COPTS
 parameter_list|(
 name|x

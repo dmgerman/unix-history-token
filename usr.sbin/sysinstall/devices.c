@@ -496,6 +496,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"bwn"
+argument_list|,
+literal|"Broadcom BCM43xx IEEE 802.11 wireless adapter"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"cas"
 argument_list|,
 literal|"Sun Cassini/Cassini+ or NS DP83065 Saturn Ethernet"

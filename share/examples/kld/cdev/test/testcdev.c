@@ -10,7 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -34,13 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
+file|<unistd.h>
 end_include
 
 begin_define
@@ -85,11 +97,13 @@ name|main
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 parameter_list|)
 block|{
 name|int

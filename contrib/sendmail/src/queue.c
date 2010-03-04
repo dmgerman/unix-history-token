@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.977 2008/02/15 23:19:58 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.987 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -489,6 +489,9 @@ name|bool
 operator|*
 operator|,
 name|bool
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -8117,8 +8120,9 @@ name|i
 operator|++
 control|)
 block|{
-name|h
-operator|=
+operator|(
+name|void
+operator|)
 name|gatherq
 argument_list|(
 name|qgrp
@@ -8132,6 +8136,9 @@ name|full
 argument_list|,
 operator|&
 name|more
+argument_list|,
+operator|&
+name|h
 argument_list|)
 expr_stmt|;
 if|#
@@ -9018,7 +9025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  GATHERQ -- gather messages from the message queue(s) the work queue. ** **	Parameters: **		qgrp -- the index of the queue group. **		qdir -- the index of the queue directory. **		doall -- if set, include everything in the queue (even **			the jobs that cannot be run because the load **			average is too high, or MaxQueueRun is reached). **			Otherwise, exclude those jobs. **		full -- (optional) to be set 'true' if WorkList is full **		more -- (optional) to be set 'true' if there are still more **			messages in this queue not added to WorkList ** **	Returns: **		The number of request in the queue (not necessarily **		the number of requests in WorkList however). ** **	Side Effects: **		prepares available work into WorkList */
+comment|/* **  GATHERQ -- gather messages from the message queue(s) the work queue. ** **	Parameters: **		qgrp -- the index of the queue group. **		qdir -- the index of the queue directory. **		doall -- if set, include everything in the queue (even **			the jobs that cannot be run because the load **			average is too high, or MaxQueueRun is reached). **			Otherwise, exclude those jobs. **		full -- (optional) to be set 'true' if WorkList is full **		more -- (optional) to be set 'true' if there are still more **			messages in this queue not added to WorkList **		pnentries -- (optional) total nuber of entries in queue ** **	Returns: **		The number of request in the queue (not necessarily **		the number of requests in WorkList however). ** **	Side Effects: **		prepares available work into WorkList */
 end_comment
 
 begin_define
@@ -9152,6 +9159,8 @@ parameter_list|,
 name|full
 parameter_list|,
 name|more
+parameter_list|,
+name|pnentries
 parameter_list|)
 name|int
 name|qgrp
@@ -9169,6 +9178,10 @@ decl_stmt|;
 name|bool
 modifier|*
 name|more
+decl_stmt|;
+name|int
+modifier|*
+name|pnentries
 decl_stmt|;
 block|{
 specifier|register
@@ -9195,9 +9208,10 @@ name|int
 name|i
 decl_stmt|,
 name|num_ent
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wn
+decl_stmt|,
+name|nentries
 decl_stmt|;
 name|QUEUE_CHAR
 modifier|*
@@ -9222,6 +9236,10 @@ operator|-
 literal|1
 expr_stmt|;
 name|num_ent
+operator|=
+literal|0
+expr_stmt|;
+name|nentries
 operator|=
 literal|0
 expr_stmt|;
@@ -9724,6 +9742,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|++
+name|nentries
+expr_stmt|;
 name|check
 operator|=
 name|QueueLimitId
@@ -10854,6 +10875,72 @@ break|break;
 case|case
 literal|'K'
 case|:
+if|#
+directive|if
+name|_FFR_EXPDELAY
+if|if
+condition|(
+name|MaxQueueAge
+operator|>
+literal|0
+condition|)
+block|{
+name|time_t
+name|lasttry
+decl_stmt|,
+name|delay
+decl_stmt|;
+name|lasttry
+operator|=
+operator|(
+name|time_t
+operator|)
+name|atol
+argument_list|(
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|delay
+operator|=
+name|MIN
+argument_list|(
+name|lasttry
+operator|-
+name|w
+operator|->
+name|w_ctime
+argument_list|,
+name|MaxQueueAge
+argument_list|)
+expr_stmt|;
+name|age
+operator|=
+name|curtime
+argument_list|()
+operator|-
+name|lasttry
+expr_stmt|;
+if|if
+condition|(
+name|age
+operator|<
+name|delay
+condition|)
+name|w
+operator|->
+name|w_tooyoung
+operator|=
+name|true
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_EXPDELAY */
 name|age
 operator|=
 name|curtime
@@ -11102,6 +11189,17 @@ name|wn
 operator|>
 literal|0
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pnentries
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|pnentries
+operator|=
+name|nentries
 expr_stmt|;
 return|return
 name|i
@@ -12517,7 +12615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  WORKCMPF5 -- compare based on assigned random number ** **	Parameters: **		a -- the first argument (ignored). **		b -- the second argument (ignored). ** **	Returns: **		randomly 1/-1 */
+comment|/* **  WORKCMPF5 -- compare based on assigned random number ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		randomly 1/-1 */
 end_comment
 
 begin_comment
@@ -13666,6 +13764,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|e
@@ -14164,6 +14265,9 @@ argument_list|,
 name|SM_DELIVER
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 operator|&
@@ -18027,6 +18131,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -19971,6 +20077,13 @@ parameter_list|()
 value|CurrentPid
 end_define
 
+begin_define
+define|#
+directive|define
+name|QIC_LEN_SQR
+value|(QIC_LEN * QIC_LEN)
+end_define
+
 begin_function
 name|void
 name|assign_queueid
@@ -19990,13 +20103,15 @@ name|queuenextid
 argument_list|()
 decl_stmt|;
 specifier|static
+name|unsigned
 name|int
 name|cX
 init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|long
+name|unsigned
+name|int
 name|random_offset
 decl_stmt|;
 name|struct
@@ -20012,6 +20127,7 @@ operator|-
 literal|2
 index|]
 decl_stmt|;
+name|unsigned
 name|int
 name|seq
 decl_stmt|;
@@ -20029,9 +20145,7 @@ if|if
 condition|(
 name|cX
 operator|>=
-name|QIC_LEN
-operator|*
-name|QIC_LEN
+name|QIC_LEN_SQR
 operator|||
 name|LastQueueTime
 operator|==
@@ -20056,8 +20170,16 @@ literal|0
 condition|)
 name|random_offset
 operator|=
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|get_random
 argument_list|()
+operator|)
+operator|%
+name|QIC_LEN_SQR
 expr_stmt|;
 while|while
 condition|(
@@ -20094,25 +20216,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	**  Generate a new sequence number between 0 and QIC_LEN*QIC_LEN-1. 	**  This lets us generate up to QIC_LEN*QIC_LEN unique queue ids 	**  per second, per process.  With envelope splitting, 	**  a single message can consume many queue ids. 	*/
+comment|/* 	**  Generate a new sequence number between 0 and QIC_LEN_SQR-1. 	**  This lets us generate up to QIC_LEN_SQR unique queue ids 	**  per second, per process.  With envelope splitting, 	**  a single message can consume many queue ids. 	*/
 name|seq
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
 name|cX
 operator|+
 name|random_offset
 operator|)
 operator|%
-operator|(
-name|QIC_LEN
-operator|*
-name|QIC_LEN
-operator|)
-argument_list|)
+name|QIC_LEN_SQR
 expr_stmt|;
 operator|++
 name|cX
@@ -20128,7 +20241,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"assign_queueid: random_offset = %ld (%d)\n"
+literal|"assign_queueid: random_offset=%u (%u)\n"
 argument_list|,
 name|random_offset
 argument_list|,
@@ -20374,6 +20487,10 @@ condition|(
 name|OpMode
 operator|!=
 name|MD_TEST
+operator|&&
+name|OpMode
+operator|!=
+name|MD_CHECKCONFIG
 operator|&&
 name|OpMode
 operator|!=
@@ -21513,6 +21630,24 @@ operator|->
 name|qg_numqueues
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_TESTS
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|4
+argument_list|,
+literal|101
+argument_list|)
+condition|)
+return|return
+name|NOQDIR
+return|;
+endif|#
+directive|endif
+comment|/* _FFR_TESTS */
 if|if
 condition|(
 name|MinBlocksFree
@@ -24836,6 +24971,58 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|owner
+operator|&&
+name|RunAsUid
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|r
+decl_stmt|;
+name|r
+operator|=
+name|sm_semsetowner
+argument_list|(
+name|SemId
+argument_list|,
+name|RunAsUid
+argument_list|,
+name|RunAsGid
+argument_list|,
+literal|0660
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"key=%ld, sm_semsetowner=%d, RunAsUid=%d, RunAsGid=%d"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|SemKey
+argument_list|,
+name|r
+argument_list|,
+name|RunAsUid
+argument_list|,
+name|RunAsGid
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -33402,6 +33589,8 @@ argument_list|,
 name|qdir
 argument_list|,
 name|true
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

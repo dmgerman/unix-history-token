@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.366 2009/01/22 10:02:34 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.367 2009/05/28 16:50:16 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
 end_include
 
 begin_include
@@ -172,12 +178,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
 end_include
 
 begin_include
@@ -496,6 +496,12 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roaming.h"
 end_include
 
 begin_include
@@ -919,7 +925,7 @@ begin_decl_stmt
 name|u_int
 name|utmp_len
 init|=
-name|UT_HOSTSIZE
+name|MAXHOSTNAMELEN
 decl_stmt|;
 end_decl_stmt
 
@@ -1657,7 +1663,7 @@ expr_stmt|;
 comment|/* Send our protocol version identification. */
 if|if
 condition|(
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|vwrite
 argument_list|,
@@ -1725,7 +1731,7 @@ control|)
 block|{
 if|if
 condition|(
-name|atomicio
+name|roaming_atomicio
 argument_list|(
 name|read
 argument_list|,
@@ -5515,6 +5521,30 @@ name|initialize_server_options
 argument_list|(
 operator|&
 name|options
+argument_list|)
+expr_stmt|;
+comment|/* Avoid killing the process in high-pressure swapping environments. */
+if|if
+condition|(
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|debug
+argument_list|(
+literal|"madvise(): %.200s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Parse command-line arguments. */

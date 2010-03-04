@@ -94,7 +94,9 @@ end_comment
 begin_function
 name|int
 name|PF_funcs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bool
 name|pfcnt

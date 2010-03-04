@@ -309,6 +309,10 @@ name|callwheelmask
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * There is one struct callout_cpu per cpu, holding all relevant  * state for the callout processing thread on the individual CPU.  * In particular:  *	cc_ticks is incremented once per tick in callout_cpu().  *	It tracks the global 'ticks' but in a way that the individual  *	threads should not worry about races in the order in which  *	hardclock() and hardclock_cpu() run on the various CPUs.  *	cc_softclock is advanced in callout_cpu() to point to the  *	first entry in cc_callwheel that may need handling. In turn,  *	a softclock() is scheduled so it can serve the various entries i  *	such that cc_softclock<= i<= cc_ticks .  *	XXX maybe cc_softclock and cc_ticks should be volatile ?  *  *	cc_ticks is also used in callout_reset_cpu() to determine  *	when the callout should be served.  */
+end_comment
+
 begin_struct
 struct|struct
 name|callout_cpu
@@ -344,6 +348,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|cc_cookie
+decl_stmt|;
+name|int
+name|cc_ticks
 decl_stmt|;
 name|int
 name|cc_softticks
@@ -971,6 +978,11 @@ argument_list|,
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
+name|cc
+operator|->
+name|cc_ticks
+operator|++
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -979,7 +991,9 @@ name|cc
 operator|->
 name|cc_softticks
 operator|-
-name|ticks
+name|cc
+operator|->
+name|cc_ticks
 operator|)
 operator|<=
 literal|0
@@ -1246,7 +1260,9 @@ name|cc_softticks
 operator|-
 literal|1
 operator|!=
-name|ticks
+name|cc
+operator|->
+name|cc_ticks
 condition|)
 block|{
 comment|/* 		 * cc_softticks may be modified by hard clock, so cache 		 * it while we work on a given bucket. 		 */
@@ -2442,7 +2458,9 @@ name|c
 operator|->
 name|c_time
 operator|=
-name|ticks
+name|cc
+operator|->
+name|cc_ticks
 operator|+
 name|to_ticks
 expr_stmt|;

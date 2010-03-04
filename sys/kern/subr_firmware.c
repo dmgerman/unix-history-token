@@ -1699,7 +1699,6 @@ name|flags
 operator||=
 name|FW_UNLOAD
 expr_stmt|;
-empty_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(

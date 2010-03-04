@@ -102,6 +102,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KERNEL3_SR
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
 name|KERNEL_VSIDBITS
 value|0xfffff
 end_define

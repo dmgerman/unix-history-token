@@ -1170,15 +1170,14 @@ operator|=
 literal|0xFF
 expr_stmt|;
 block|}
-comment|/* clear SETUP packet interrupt */
+comment|/* Clear SETUP packet interrupt and all other previous interrupts */
 name|ATMEGA_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
 name|ATMEGA_UEINTX
 argument_list|,
-operator|~
-name|ATMEGA_UEINTX_RXSTPI
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2998,6 +2997,12 @@ expr_stmt|;
 comment|/* setup temp */
 name|temp
 operator|.
+name|pc
+operator|=
+name|NULL
+expr_stmt|;
+name|temp
+operator|.
 name|td
 operator|=
 name|NULL
@@ -4483,9 +4488,13 @@ name|ATMEGA_UESTA0X_CFGOK
 operator|)
 condition|)
 block|{
-name|DPRINTFN
+name|device_printf
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
 argument_list|,
 literal|"Chip rejected configuration\n"
 argument_list|)
@@ -7003,9 +7012,13 @@ name|ATMEGA_UESTA0X_CFGOK
 operator|)
 condition|)
 block|{
-name|DPRINTFN
+name|device_printf
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
 argument_list|,
 literal|"Chip rejected EP0 configuration\n"
 argument_list|)

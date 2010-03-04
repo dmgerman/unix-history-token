@@ -255,24 +255,32 @@ value|VNET(ripcbinfo)
 end_define
 
 begin_comment
-comment|/*  * Control and data hooks for ipfw and dummynet.  * The data hooks are not used here but it is convenient  * to keep them all in one place.  */
+comment|/*  * Control and data hooks for ipfw, dummynet, divert and so on.  * The data hooks are not used here but it is convenient  * to keep them all in one place.  */
 end_comment
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|ip_fw_ctl_ptr
-function_decl|)
-parameter_list|(
-name|struct
-name|sockopt
-modifier|*
-parameter_list|)
-init|=
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|ip_fw_chk_ptr_t
+argument_list|,
+name|ip_fw_chk_ptr
+argument_list|)
+operator|=
 name|NULL
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|ip_fw_ctl_ptr_t
+argument_list|,
+name|ip_fw_ctl_ptr
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|int
@@ -285,25 +293,6 @@ name|struct
 name|sockopt
 modifier|*
 parameter_list|)
-init|=
-name|NULL
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|ip_fw_chk_ptr
-function_decl|)
-parameter_list|(
-name|struct
-name|ip_fw_args
-modifier|*
-name|args
-parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -318,18 +307,52 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|m
 parameter_list|,
 name|int
-name|dir
 parameter_list|,
 name|struct
 name|ip_fw_args
 modifier|*
-name|fwa
 parameter_list|)
-init|=
-name|NULL
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|ip_divert_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|ng_ipfw_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1373,7 +1396,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|jailed
+name|jailed_without_vnet
 argument_list|(
 name|inp
 operator|->
@@ -1555,7 +1578,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|jailed
+name|jailed_without_vnet
 argument_list|(
 name|inp
 operator|->
@@ -1617,12 +1640,24 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * If the incoming datagram is for IGMP, allow it 			 * through unconditionally to the raw socket. 			 * 			 * In the case of IGMPv2, we may not have explicitly 			 * joined the group, and may have set IFF_ALLMULTI 			 * on the interface. imo_multi_filter() may discard 			 * control traffic we actually need to see. 			 * 			 * Userland multicast routing daemons should continue 			 * filter the control traffic appropriately. 			 */
+name|int
+name|blocked
+decl_stmt|;
+name|blocked
+operator|=
+name|MCAST_PASS
+expr_stmt|;
+if|if
+condition|(
+name|proto
+operator|!=
+name|IPPROTO_IGMP
+condition|)
+block|{
 name|struct
 name|sockaddr_in
 name|group
-decl_stmt|;
-name|int
-name|blocked
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -1687,6 +1722,7 @@ operator|&
 name|ripsrc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|blocked
@@ -2437,6 +2473,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW3
+case|:
+comment|/* generic ipfw v.3 functions */
+case|case
 name|IP_FW_ADD
 case|:
 comment|/* ADD actually returns the body... */
@@ -2457,13 +2497,13 @@ name|IP_FW_NAT_GET_LOG
 case|:
 if|if
 condition|(
-name|ip_fw_ctl_ptr
+name|V_ip_fw_ctl_ptr
 operator|!=
 name|NULL
 condition|)
 name|error
 operator|=
-name|ip_fw_ctl_ptr
+name|V_ip_fw_ctl_ptr
 argument_list|(
 name|sopt
 argument_list|)
@@ -2474,6 +2514,10 @@ operator|=
 name|ENOPROTOOPT
 expr_stmt|;
 break|break;
+case|case
+name|IP_DUMMYNET3
+case|:
+comment|/* generic dummynet v.3 functions */
 case|case
 name|IP_DUMMYNET_GET
 case|:
@@ -2633,6 +2677,10 @@ name|INP_HDRINCL
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW3
+case|:
+comment|/* generic ipfw v.3 functions */
+case|case
 name|IP_FW_ADD
 case|:
 case|case
@@ -2664,13 +2712,13 @@ name|IP_FW_NAT_DEL
 case|:
 if|if
 condition|(
-name|ip_fw_ctl_ptr
+name|V_ip_fw_ctl_ptr
 operator|!=
 name|NULL
 condition|)
 name|error
 operator|=
-name|ip_fw_ctl_ptr
+name|V_ip_fw_ctl_ptr
 argument_list|(
 name|sopt
 argument_list|)
@@ -2681,6 +2729,10 @@ operator|=
 name|ENOPROTOOPT
 expr_stmt|;
 break|break;
+case|case
+name|IP_DUMMYNET3
+case|:
+comment|/* generic dummynet v.3 functions */
 case|case
 name|IP_DUMMYNET_CONFIGURE
 case|:

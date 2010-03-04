@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-aix.h,v 1.29 2008/03/09 05:36:55 dtucker Exp $ */
+comment|/* $Id: port-aix.h,v 1.31 2009/08/20 06:20:50 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -360,6 +360,27 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* for setpcred and friends */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_USERSEC_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<usersec.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * According to the setauthdb man page, AIX password registries must be 15  * chars or less plus terminating NUL.  */
 end_comment
 
@@ -451,6 +472,26 @@ modifier|*
 parameter_list|,
 name|Buffer
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_SYS_AUTH_GET_LASTLOGIN_MSG
+end_define
+
+begin_function_decl
+name|char
+modifier|*
+name|sys_auth_get_lastlogin_msg
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|uid_t
 parameter_list|)
 function_decl|;
 end_function_decl

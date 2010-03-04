@@ -641,15 +641,19 @@ define|#
 directive|define
 name|SPA_VERSION_13
 value|13ULL
+define|#
+directive|define
+name|SPA_VERSION_14
+value|14ULL
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_13
+value|SPA_VERSION_14
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"13"
+value|"14"
 comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 define|#
 directive|define
@@ -739,6 +743,10 @@ define|#
 directive|define
 name|SPA_VERSION_USED_BREAKDOWN
 value|SPA_VERSION_13
+define|#
+directive|define
+name|SPA_VERSION_PASSTHROUGH_X
+value|SPA_VERSION_14
 comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.95/stage2/{zfs-include/,fsys_zfs*}  */
 define|#
 directive|define

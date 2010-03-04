@@ -1859,6 +1859,20 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
+comment|/* Skip providers that are already open for writing. */
+if|if
+condition|(
+name|pp
+operator|->
+name|acw
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|buf
 operator|=
 name|NULL
@@ -2537,15 +2551,6 @@ name|flags
 operator|&
 name|G_PF_CANDELETE
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|stripesize
-operator|>
-literal|0
-condition|)
-block|{
 name|pp2
 operator|->
 name|stripesize
@@ -2562,7 +2567,6 @@ name|pp
 operator|->
 name|stripeoffset
 expr_stmt|;
-block|}
 name|g_error_provider
 argument_list|(
 name|pp2

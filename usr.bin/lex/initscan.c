@@ -22655,7 +22655,9 @@ begin_function
 specifier|static
 name|int
 name|yy_get_next_buffer
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -23075,7 +23077,9 @@ begin_function
 specifier|static
 name|yy_state_type
 name|yy_get_previous_state
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|yy_state_type
 name|yy_current_state
@@ -23565,7 +23569,9 @@ directive|else
 specifier|static
 name|int
 name|input
-argument_list|()
+argument_list|(
+argument|void
+argument_list|)
 endif|#
 directive|endif
 block|{

@@ -433,6 +433,9 @@ name|threads_must_exit
 argument_list|)
 condition|)
 block|{
+name|SCTP_IPI_ITERATOR_WQ_DESTROY
+argument_list|()
+expr_stmt|;
 name|kthread_exit
 argument_list|()
 expr_stmt|;

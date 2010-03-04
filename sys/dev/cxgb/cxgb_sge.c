@@ -134,7 +134,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
 end_include
 
 begin_include
@@ -647,10 +671,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_struct
 struct|struct
 name|rsp_desc
@@ -1133,6 +1153,17 @@ parameter_list|(
 name|qs
 parameter_list|)
 value|drbr_empty((qs)->port->ifp, (qs)->txq[TXQ_ETH].txq_mr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXQ_RING_NEEDS_ENQUEUE
+parameter_list|(
+name|qs
+parameter_list|)
+define|\
+value|drbr_needs_enqueue((qs)->port->ifp, (qs)->txq[TXQ_ETH].txq_mr)
 end_define
 
 begin_define
@@ -2619,6 +2650,33 @@ argument_list|)
 condition|)
 name|jumbo_q_size
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|fl_q_size
+operator|<
+operator|(
+name|FL_Q_SIZE
+operator|/
+literal|4
+operator|)
+operator|||
+name|jumbo_q_size
+operator|<
+operator|(
+name|JUMBO_Q_SIZE
+operator|/
+literal|2
+operator|)
+condition|)
+name|device_printf
+argument_list|(
+name|adap
+operator|->
+name|dev
+argument_list|,
+literal|"Insufficient clusters and/or jumbo buffers.\n"
+argument_list|)
 expr_stmt|;
 comment|/* XXX Does ETHER_ALIGN need to be accounted for here? */
 name|p
@@ -5766,9 +5824,6 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TSO_SUPPORTED
 if|if
 condition|(
 name|m
@@ -5782,8 +5837,6 @@ condition|)
 name|flits
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|flits_to_desc
 argument_list|(
@@ -6799,21 +6852,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* sizeof(*eh) + sizeof(*vhdr) + sizeof(*ip) + sizeof(*tcp) */
+comment|/* sizeof(*eh) + sizeof(*ip) + sizeof(*tcp) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCPPKTHDRSIZE
-value|(ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN + 20 + 20)
+value|(ETHER_HDR_LEN + 20 + 20)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
-end_ifdef
 
 begin_define
 define|#
@@ -6827,27 +6874,6 @@ parameter_list|)
 define|\
 value|do { \ 	if ((m)->m_flags& M_VLANTAG)					            \ 		cntrl |= F_TXPKT_VLAN_VLD | V_TXPKT_VLAN((m)->m_pkthdr.ether_vtag); \ } while (0)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GET_VTAG
-parameter_list|(
-name|cntrl
-parameter_list|,
-name|m
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -7006,41 +7032,6 @@ operator|=
 operator|*
 name|m
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"t3_encap port_id=%d qsidx=%d "
-argument_list|,
-name|pi
-operator|->
-name|port_id
-argument_list|,
-name|pi
-operator|->
-name|first_qset
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"mlen=%d txpkt_intf=%d tx_chan=%d\n"
-argument_list|,
-name|m
-index|[
-literal|0
-index|]
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-argument_list|,
-name|pi
-operator|->
-name|txpkt_intf
-argument_list|,
-name|pi
-operator|->
-name|tx_chan
-argument_list|)
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7073,9 +7064,6 @@ literal|"not packet header\n"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
 if|if
 condition|(
 name|m0
@@ -7111,8 +7099,6 @@ operator|.
 name|tso_segsz
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|m0
@@ -7563,6 +7549,15 @@ expr_stmt|;
 name|wmb
 argument_list|()
 expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
 name|wr_gen2
 argument_list|(
 name|txd
@@ -7592,13 +7587,7 @@ name|tso_info
 condition|)
 block|{
 name|int
-name|min_size
-init|=
-name|TCPPKTHDRSIZE
-decl_stmt|,
 name|eth_type
-decl_stmt|,
-name|tagged
 decl_stmt|;
 name|struct
 name|cpl_tx_pkt_lso
@@ -7613,6 +7602,11 @@ operator|)
 name|txd
 decl_stmt|;
 name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+name|struct
 name|ip
 modifier|*
 name|ip
@@ -7621,10 +7615,6 @@ name|struct
 name|tcphdr
 modifier|*
 name|tcp
-decl_stmt|;
-name|char
-modifier|*
-name|pkthdr
 decl_stmt|;
 name|txd
 operator|->
@@ -7669,37 +7659,13 @@ operator||
 literal|0x80000000
 argument_list|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|"tso buf len=%d\n"
-argument_list|,
-name|mlen
-argument_list|)
-expr_stmt|;
-name|tagged
-operator|=
-name|m0
-operator|->
-name|m_flags
-operator|&
-name|M_VLANTAG
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tagged
-condition|)
-name|min_size
-operator|-=
-name|ETHER_VLAN_ENCAP_LEN
-expr_stmt|;
 if|if
 condition|(
 name|__predict_false
 argument_list|(
 name|mlen
 operator|<
-name|min_size
+name|TCPPKTHDRSIZE
 argument_list|)
 condition|)
 block|{
@@ -7743,7 +7709,7 @@ name|m0
 operator|->
 name|m_len
 operator|<
-name|min_size
+name|TCPPKTHDRSIZE
 argument_list|)
 condition|)
 block|{
@@ -7753,7 +7719,7 @@ name|m_pullup
 argument_list|(
 name|m0
 argument_list|,
-name|min_size
+name|TCPPKTHDRSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7774,15 +7740,27 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|pkthdr
+name|eh
 operator|=
+name|mtod
+argument_list|(
 name|m0
-operator|->
-name|m_data
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tagged
+name|eh
+operator|->
+name|ether_type
+operator|==
+name|htons
+argument_list|(
+name|ETHERTYPE_VLAN
+argument_list|)
 condition|)
 block|{
 name|eth_type
@@ -7797,11 +7775,14 @@ name|ip
 operator|*
 operator|)
 operator|(
-name|pkthdr
+operator|(
+expr|struct
+name|ether_vlan_header
+operator|*
+operator|)
+name|eh
 operator|+
-name|ETHER_HDR_LEN
-operator|+
-name|ETHER_VLAN_ENCAP_LEN
+literal|1
 operator|)
 expr_stmt|;
 block|}
@@ -7819,9 +7800,9 @@ name|ip
 operator|*
 operator|)
 operator|(
-name|pkthdr
+name|eh
 operator|+
-name|ETHER_HDR_LEN
+literal|1
 operator|)
 expr_stmt|;
 block|}
@@ -7833,17 +7814,9 @@ name|tcphdr
 operator|*
 operator|)
 operator|(
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|ip
 operator|+
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ip
-argument_list|)
+literal|1
 operator|)
 expr_stmt|;
 name|tso_info
@@ -7886,32 +7859,7 @@ name|PIO_LEN
 argument_list|)
 condition|)
 block|{
-comment|/* pkt not undersized but fits in PIO_LEN 			 * Indicates a TSO bug at the higher levels. 			 * 			 */
-name|DPRINTF
-argument_list|(
-literal|"**5592 Fix** mbuf=%p,len=%d,tso_segsz=%d,csum_flags=%#x,flags=%#x"
-argument_list|,
-name|m0
-argument_list|,
-name|mlen
-argument_list|,
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
-argument_list|,
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-argument_list|,
-name|m0
-operator|->
-name|m_flags
-argument_list|)
-expr_stmt|;
+comment|/* 			 * pkt not undersized but fits in PIO_LEN 			 * Indicates a TSO bug at the higher levels. 			 */
 name|txsd
 operator|->
 name|m
@@ -8014,6 +7962,15 @@ expr_stmt|;
 name|wmb
 argument_list|()
 expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
 name|wr_gen2
 argument_list|(
 name|txd
@@ -8028,6 +7985,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|txq
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
 argument_list|)
 expr_stmt|;
 return|return
@@ -8242,6 +8204,15 @@ expr_stmt|;
 name|wmb
 argument_list|()
 expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
 name|wr_gen2
 argument_list|(
 name|txd
@@ -8256,6 +8227,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|txq
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
 argument_list|)
 expr_stmt|;
 return|return
@@ -8315,6 +8291,15 @@ operator|=
 name|sgl_len
 argument_list|(
 name|nsegs
+argument_list|)
+expr_stmt|;
+name|ETHER_BPF_MTAP
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+name|m0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -8380,9 +8365,7 @@ argument_list|)
 expr_stmt|;
 name|check_ring_tx_db
 argument_list|(
-name|pi
-operator|->
-name|adapter
+name|sc
 argument_list|,
 name|txq
 argument_list|)
@@ -8833,36 +8816,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* Send a copy of the frame to the BPF listener */
-name|ETHER_BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m_head
-argument_list|)
-expr_stmt|;
-comment|/* 		 * We sent via PIO, no longer need a copy 		 */
-if|if
-condition|(
-name|m_head
-operator|->
-name|m_nextpkt
-operator|==
-name|NULL
-operator|&&
-name|m_head
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<=
-name|PIO_LEN
-condition|)
-name|m_freem
-argument_list|(
-name|m_head
-argument_list|)
-expr_stmt|;
 name|m_head
 operator|=
 name|NULL
@@ -9008,7 +8961,8 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|TXQ_RING_EMPTY
+operator|!
+name|TXQ_RING_NEEDS_ENQUEUE
 argument_list|(
 name|qs
 argument_list|)
@@ -9073,30 +9027,6 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-expr_stmt|;
-comment|/* 			** Send a copy of the frame to the BPF 			** listener and set the watchdog on. 			*/
-name|ETHER_BPF_MTAP
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* 			 * We sent via PIO, no longer need a copy 			 */
-if|if
-condition|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|<=
-name|PIO_LEN
-condition|)
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -10938,9 +10868,6 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -10951,8 +10878,6 @@ operator|.
 name|ctrl
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 name|q
@@ -14055,9 +13980,6 @@ name|EXT_JUMBOP
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* Allocate and setup the lro_ctrl structure */
 name|q
 operator|->
@@ -14117,8 +14039,6 @@ name|pi
 operator|->
 name|ifp
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -14854,18 +14774,11 @@ operator|=
 literal|0xffff
 expr_stmt|;
 block|}
-comment|/*  	 * XXX need to add VLAN support for 6.x 	 */
-ifdef|#
-directive|ifdef
-name|VLAN_SUPPORTED
 if|if
 condition|(
-name|__predict_false
-argument_list|(
 name|cpl
 operator|->
 name|vlan_valid
-argument_list|)
 condition|)
 block|{
 name|m
@@ -14888,8 +14801,6 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -15769,9 +15680,6 @@ name|sleeping
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|int
 name|lro_enabled
 init|=
@@ -15796,8 +15704,6 @@ name|lro
 operator|.
 name|ctrl
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|mbuf
 modifier|*
@@ -16448,9 +16354,6 @@ argument_list|,
 name|ethpad
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* 			 * The T304 sends incoming packets on any qset.  If LRO 			 * is also enabled, we could end up sending packet up 			 * lro_ctrl->ifp's input.  That is incorrect. 			 * 			 * The mbuf's rcvif was derived from the cpl header and 			 * is accurate.  Skip LRO and just use that. 			 */
 name|skip_lro
 operator|=
@@ -16497,8 +16400,6 @@ block|{
 comment|/* successfully queue'd for LRO */
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 comment|/* 				 * LRO not enabled, packet unsuitable for LRO, 				 * or unable to queue.  Pass it up right now in 				 * either case. 				 */
 name|struct
@@ -16582,9 +16483,6 @@ argument_list|,
 name|ngathered
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 comment|/* Flush LRO */
 while|while
 condition|(
@@ -16629,8 +16527,6 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|sleeping
@@ -20287,9 +20183,6 @@ argument_list|,
 literal|"dump of the transmit queue"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
@@ -20394,8 +20287,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Now add a node for mac stats. */
 name|poid

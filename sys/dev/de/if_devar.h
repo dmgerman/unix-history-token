@@ -1444,7 +1444,7 @@ name|u_quad_t
 name|perf_ifioctl_cycles
 decl_stmt|;
 name|u_quad_t
-name|perf_ifwatchdog_cycles
+name|perf_stat_cycles
 decl_stmt|;
 name|u_quad_t
 name|perf_timeout_cycles
@@ -1479,7 +1479,7 @@ name|perf_ifioctl
 decl_stmt|;
 name|unsigned
 name|int
-name|perf_ifwatchdog
+name|perf_stat
 decl_stmt|;
 name|unsigned
 name|int
@@ -1751,6 +1751,10 @@ decl_stmt|;
 name|struct
 name|mtx
 name|tulip_mutex
+decl_stmt|;
+name|struct
+name|callout
+name|tulip_stat_timer
 decl_stmt|;
 block|}
 struct|;

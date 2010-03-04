@@ -400,7 +400,7 @@ name|do_accept
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err

@@ -92,6 +92,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|Dir_FindHereOrAbove
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|Dir_MTime
 parameter_list|(
 name|struct

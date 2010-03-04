@@ -6601,11 +6601,9 @@ name|write
 condition|)
 name|DEBUG
 argument_list|(
-literal|"%d sectors from %lld to %p (0x%x) %s"
+literal|"Write %d sector(s) from %p (0x%x) to %lld %s"
 argument_list|,
 name|x
-argument_list|,
-name|dblk
 argument_list|,
 name|p
 argument_list|,
@@ -6613,6 +6611,8 @@ name|VTOP
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+name|dblk
 argument_list|,
 name|result
 condition|?
@@ -6624,9 +6624,11 @@ expr_stmt|;
 else|else
 name|DEBUG
 argument_list|(
-literal|"%d sectors from %p (0x%x) to %lld %s"
+literal|"Read %d sector(s) from %lld to %p (0x%x) %s"
 argument_list|,
 name|x
+argument_list|,
+name|dblk
 argument_list|,
 name|p
 argument_list|,
@@ -6634,8 +6636,6 @@ name|VTOP
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-name|dblk
 argument_list|,
 name|result
 condition|?

@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/hwfunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -112,30 +124,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_tick
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_usec
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uint64_t
-name|cycles_per_sec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|uint64_t
 name|cycles_per_hz
+decl_stmt|,
+name|cycles_per_stathz
+decl_stmt|,
+name|cycles_per_profhz
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|counter_upper
 init|=
@@ -144,16 +158,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|counter_lower_last
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tick_started
 init|=
 literal|0
 decl_stmt|;
@@ -306,16 +313,10 @@ end_function
 
 begin_function
 name|void
-name|cpu_initclocks
+name|platform_initclocks
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|tick_started
-condition|)
 block|{
 name|tc_init
 argument_list|(
@@ -323,10 +324,6 @@ operator|&
 name|counter_timecounter
 argument_list|)
 expr_stmt|;
-name|tick_started
-operator|++
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -401,10 +398,29 @@ name|int
 name|double_count
 parameter_list|)
 block|{
+name|stathz
+operator|=
+name|hz
+expr_stmt|;
+name|profhz
+operator|=
+name|hz
+expr_stmt|;
 comment|/* 	 * XXX: Do not use printf here: uart code 8250 may use DELAY so this 	 * function should  be called before cninit. 	 */
 name|counter_freq
 operator|=
 name|platform_counter_freq
+expr_stmt|;
+comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 * We know this because of status registers in CP0, make it automatic. 	 */
+if|if
+condition|(
+name|double_count
+operator|!=
+literal|0
+condition|)
+name|counter_freq
+operator|/=
+literal|2
 expr_stmt|;
 name|cycles_per_tick
 operator|=
@@ -412,19 +428,23 @@ name|counter_freq
 operator|/
 literal|1000
 expr_stmt|;
-if|if
-condition|(
-name|double_count
-condition|)
-name|cycles_per_tick
-operator|*=
-literal|2
-expr_stmt|;
 name|cycles_per_hz
 operator|=
 name|counter_freq
 operator|/
 name|hz
+expr_stmt|;
+name|cycles_per_stathz
+operator|=
+name|counter_freq
+operator|/
+name|stathz
+expr_stmt|;
+name|cycles_per_profhz
+operator|=
+name|counter_freq
+operator|/
+name|profhz
 expr_stmt|;
 name|cycles_per_usec
 operator|=
@@ -438,40 +458,16 @@ operator|*
 literal|1000
 operator|)
 expr_stmt|;
-name|cycles_per_sec
-operator|=
-name|counter_freq
-expr_stmt|;
 name|counter_timecounter
 operator|.
 name|tc_frequency
 operator|=
 name|counter_freq
 expr_stmt|;
-comment|/* 	 * XXX: Some MIPS32 cores update the Count register only every two 	 * pipeline cycles. 	 * XXX2: We can read this from the hardware register on some 	 * systems.  Need to investigate. 	 */
-if|if
-condition|(
-name|double_count
-operator|!=
-literal|0
-condition|)
-block|{
-name|cycles_per_hz
-operator|/=
-literal|2
-expr_stmt|;
-name|cycles_per_usec
-operator|/=
-literal|2
-expr_stmt|;
-name|cycles_per_sec
-operator|/=
-literal|2
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
-literal|"hz=%d cyl_per_hz:%jd cyl_per_usec:%jd freq:%jd cyl_per_hz:%jd cyl_per_sec:%jd\n"
+literal|"hz=%d cyl_per_tick:%jd cyl_per_usec:%jd freq:%jd "
+literal|"cyl_per_hz:%jd cyl_per_stathz:%jd cyl_per_profhz:%jd\n"
 argument_list|,
 name|hz
 argument_list|,
@@ -483,7 +479,9 @@ name|counter_freq
 argument_list|,
 name|cycles_per_hz
 argument_list|,
-name|cycles_per_sec
+name|cycles_per_stathz
+argument_list|,
+name|cycles_per_profhz
 argument_list|)
 expr_stmt|;
 name|set_cputicker
@@ -703,24 +701,22 @@ name|last
 condition|)
 name|delta
 operator|+=
-operator|(
 name|cur
 operator|+
 operator|(
-name|cycles_per_hz
+literal|0xffffffff
 operator|-
 name|last
 operator|)
-operator|)
+operator|+
+literal|1
 expr_stmt|;
 else|else
 name|delta
 operator|+=
-operator|(
 name|cur
 operator|-
 name|last
-operator|)
 expr_stmt|;
 name|last
 operator|=
@@ -748,30 +744,18 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-end_ifdef
-
-begin_decl_stmt
-name|int64_t
-name|wheel_run
-init|=
+begin_if
+if|#
+directive|if
 literal|0
-decl_stmt|;
-end_decl_stmt
+end_if
 
-begin_function_decl
-name|void
-name|octeon_led_run_wheel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* TARGET_OCTEON */
+end_comment
 
 begin_endif
+unit|int64_t wheel_run = 0;  void octeon_led_run_wheel();
 endif|#
 directive|endif
 end_endif
@@ -917,7 +901,7 @@ name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|+=
-name|stathz
+name|cycles_per_tick
 expr_stmt|;
 if|if
 condition|(
@@ -925,14 +909,14 @@ name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|>=
-name|cycles_per_hz
+name|cycles_per_stathz
 condition|)
 block|{
 name|cpu_ticks
 operator|->
 name|stat_ticks
 operator|-=
-name|cycles_per_hz
+name|cycles_per_stathz
 expr_stmt|;
 name|statclock
 argument_list|(
@@ -950,7 +934,7 @@ name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|+=
-name|profhz
+name|cycles_per_tick
 expr_stmt|;
 if|if
 condition|(
@@ -958,14 +942,14 @@ name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|>=
-name|cycles_per_hz
+name|cycles_per_profhz
 condition|)
 block|{
 name|cpu_ticks
 operator|->
 name|prof_ticks
 operator|-=
-name|cycles_per_hz
+name|cycles_per_profhz
 expr_stmt|;
 if|if
 condition|(
@@ -991,29 +975,12 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TARGET_OCTEON
-comment|/* Run the FreeBSD display once every hz ticks  */
-name|wheel_run
-operator|+=
-name|cycles_per_tick
-expr_stmt|;
-if|if
-condition|(
-name|wheel_run
-operator|>=
-name|cycles_per_sec
-condition|)
-block|{
-name|wheel_run
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-name|octeon_led_run_wheel
-argument_list|()
-expr_stmt|;
-block|}
+comment|/* TARGET_OCTEON */
+comment|/* Run the FreeBSD display once every hz ticks  */
+block|wheel_run += cycles_per_tick; 	if (wheel_run>= cycles_per_usec * 1000000ULL) { 		wheel_run = 0; 		octeon_led_run_wheel(); 	}
 endif|#
 directive|endif
 return|return

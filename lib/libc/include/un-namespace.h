@@ -210,6 +210,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|openat
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|poll
 end_undef
 

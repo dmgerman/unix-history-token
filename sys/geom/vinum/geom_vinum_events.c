@@ -853,7 +853,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"dead drive '%s' has still active "
-literal|"requests, can't detach consumer"
+literal|"requests, unable to detach consumer"
 argument_list|,
 name|d
 operator|->

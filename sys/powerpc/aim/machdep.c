@@ -419,14 +419,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ppc64
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|hw_direct_map
 init|=
 literal|1
@@ -746,6 +738,27 @@ name|realmem
 operator|=
 name|physmem
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"available KVA = %zd (%zd MB)\n"
+argument_list|,
+name|virtual_end
+operator|-
+name|virtual_avail
+argument_list|,
+operator|(
+name|virtual_end
+operator|-
+name|virtual_avail
+operator|)
+operator|/
+literal|1048576
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
 condition|(
@@ -1058,6 +1071,9 @@ name|uint8_t
 modifier|*
 name|cache_check
 decl_stmt|;
+name|int
+name|ppc64
+decl_stmt|;
 name|end
 operator|=
 literal|0
@@ -1352,7 +1368,7 @@ index|]
 operator|=
 literal|0xff
 expr_stmt|;
-asm|__asm __volatile("dcbz %0,0":: "r" (cache_check) : "memory");
+asm|__asm __volatile("dcbz 0,%0":: "r" (cache_check) : "memory");
 comment|/* Find the first byte dcbz did not zero to get the cache line size */
 for|for
 control|(
@@ -1446,6 +1462,17 @@ block|)
 function|;
 end_function
 
+begin_if
+if|if
+condition|(
+name|ppc64
+condition|)
+name|cpu_features
+operator||=
+name|PPC_FEATURE_64
+expr_stmt|;
+end_if
+
 begin_comment
 comment|/* 	 * Now copy restorebridge into all the handlers, if necessary, 	 * and set up the trap tables. 	 */
 end_comment
@@ -1453,7 +1480,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|ppc64
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
 condition|)
 block|{
 comment|/* Patch the two instances of rfi -> rfid */
@@ -2143,7 +2172,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|ppc64
+name|cpu_features
+operator|&
+name|PPC_FEATURE_64
 condition|)
 name|pmap_mmu_install
 argument_list|(
@@ -3262,11 +3293,6 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 name|ucontext_t
 name|uc
 decl_stmt|;
@@ -3344,40 +3370,20 @@ operator|(
 name|error
 operator|)
 return|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
-expr_stmt|;
-name|PROC_LOCK
+name|kern_sigprocmask
 argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|td
-operator|->
-name|td_sigmask
-operator|=
+argument_list|,
+name|SIG_SETMASK
+argument_list|,
+operator|&
 name|uc
 operator|.
 name|uc_sigmask
-expr_stmt|;
-name|SIG_CANTMASK
-argument_list|(
-name|td
-operator|->
-name|td_sigmask
-argument_list|)
-expr_stmt|;
-name|signotify
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|CTR3
@@ -4149,6 +4155,14 @@ block|{
 name|decr_tc_init
 argument_list|()
 expr_stmt|;
+name|stathz
+operator|=
+name|hz
+expr_stmt|;
+name|profhz
+operator|=
+name|hz
+expr_stmt|;
 block|}
 end_function
 
@@ -4180,10 +4194,20 @@ block|{
 name|uint32_t
 name|msr
 decl_stmt|;
+name|uint16_t
+name|vers
+decl_stmt|;
 name|msr
 operator|=
 name|mfmsr
 argument_list|()
+expr_stmt|;
+name|vers
+operator|=
+name|mfpvr
+argument_list|()
+operator|>>
+literal|16
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4230,6 +4254,47 @@ condition|(
 name|powerpc_pow_enabled
 condition|)
 block|{
+switch|switch
+condition|(
+name|vers
+condition|)
+block|{
+case|case
+name|IBM970
+case|:
+case|case
+name|IBM970FX
+case|:
+case|case
+name|IBM970MP
+case|:
+case|case
+name|MPC7447A
+case|:
+case|case
+name|MPC7448
+case|:
+case|case
+name|MPC7450
+case|:
+case|case
+name|MPC7455
+case|:
+case|case
+name|MPC7457
+case|:
+asm|__asm __volatile("\ 			    dssall; sync; mtmsr %0; isync"
+operator|::
+literal|"r"
+operator|(
+name|msr
+operator||
+name|PSL_POW
+operator|)
+block|)
+empty_stmt|;
+break|break;
+default|default:
 name|powerpc_sync
 argument_list|()
 expr_stmt|;
@@ -4243,17 +4308,20 @@ expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|cpu_idle_wakeup
-parameter_list|(
-name|int
-name|cpu
-parameter_list|)
+argument_list|(
+argument|int cpu
+argument_list|)
+end_macro
+
+begin_block
 block|{
 return|return
 operator|(
@@ -4261,7 +4329,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Set set up registers on exec.  */

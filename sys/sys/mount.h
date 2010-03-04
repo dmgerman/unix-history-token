@@ -976,6 +976,13 @@ begin_comment
 comment|/* disable cluster write */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNT_NFS4ACLS
+value|0x00000010
+end_define
+
 begin_comment
 comment|/*  * NFS export related mount flags.  */
 end_comment
@@ -1113,7 +1120,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS | MNT_NFS4ACLS)
 end_define
 
 begin_comment
@@ -1124,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|MNT_UPDATEMASK
-value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER)
+value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER | MNT_NFS4ACLS)
 end_define
 
 begin_comment
@@ -1202,17 +1209,6 @@ define|#
 directive|define
 name|MNT_CMDFLAGS
 value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT	| MNT_BYFSID)
-end_define
-
-begin_comment
-comment|/*  * Still available.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_SPARE_0x00000010
-value|0x00000010
 end_define
 
 begin_comment

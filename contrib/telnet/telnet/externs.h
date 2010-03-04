@@ -125,7 +125,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<termios.h>
 end_include
 
 begin_endif

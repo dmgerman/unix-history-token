@@ -20,7 +20,7 @@ comment|/*  * UltraSPARC IOMMU registers, common to both the PCI and SBus  * con
 end_comment
 
 begin_comment
-comment|/* iommmu registers */
+comment|/* IOMMU registers */
 end_comment
 
 begin_define
@@ -54,6 +54,32 @@ end_define
 
 begin_comment
 comment|/* IOMMU flush register */
+end_comment
+
+begin_comment
+comment|/* The TTE Cache is Fire and Oberon only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMR_CACHE_FLUSH
+value|0x0100
+end_define
+
+begin_comment
+comment|/* IOMMU TTE cache flush address register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMR_CACHE_INVAL
+value|0x0108
+end_define
+
+begin_comment
+comment|/* IOMMU TTE cache invalidate register */
 end_comment
 
 begin_comment
@@ -181,8 +207,15 @@ comment|/*  * control register bits  */
 end_comment
 
 begin_comment
-comment|/* Nummber of entries in IOTSB */
+comment|/* Nummber of entries in the IOTSB - pre-Fire only */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUCR_TSBSZ_MASK
+value|0x0000000000070000UL
+end_define
 
 begin_define
 define|#
@@ -191,75 +224,51 @@ name|IOMMUCR_TSBSZ_SHIFT
 value|16
 end_define
 
+begin_comment
+comment|/* TSB cache snoop enable */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IOMMUCR_TSB1K
+name|IOMMUCR_SE
+value|0x0000000000000400UL
+end_define
+
+begin_comment
+comment|/* Cache modes - Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUCR_CM_NC_TLB_TBW
 value|0x0000000000000000UL
 end_define
 
 begin_define
 define|#
 directive|define
-name|IOMMUCR_TSB2K
-value|0x0000000000010000UL
+name|IOMMUCR_CM_LC_NTLB_NTBW
+value|0x0000000000000100UL
 end_define
 
 begin_define
 define|#
 directive|define
-name|IOMMUCR_TSB4K
-value|0x0000000000020000UL
+name|IOMMUCR_CM_LC_TLB_TBW
+value|0x0000000000000200UL
 end_define
 
 begin_define
 define|#
 directive|define
-name|IOMMUCR_TSB8K
-value|0x0000000000030000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMUCR_TSB16K
-value|0x0000000000040000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMUCR_TSB32K
-value|0x0000000000050000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMUCR_TSB64K
-value|0x0000000000060000UL
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMUCR_TSB128K
-value|0x0000000000070000UL
+name|IOMMUCR_CM_C_TLB_TBW
+value|0x0000000000000300UL
 end_define
 
 begin_comment
-comment|/* Mask for above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IOMMUCR_TSBMASK
-value|0xfffffffffff8ffffUL
-end_define
-
-begin_comment
-comment|/* 8K iommu page size */
+comment|/* IOMMU page size - pre-Fire only */
 end_comment
 
 begin_define
@@ -269,10 +278,6 @@ name|IOMMUCR_8KPG
 value|0x0000000000000000UL
 end_define
 
-begin_comment
-comment|/* 64K iommu page size */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -281,7 +286,18 @@ value|0x0000000000000004UL
 end_define
 
 begin_comment
-comment|/* Diag enable */
+comment|/* Bypass enable - Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUCR_BE
+value|0x0000000000000002UL
+end_define
+
+begin_comment
+comment|/* Diagnostic mode enable - pre-Fire only */
 end_comment
 
 begin_define
@@ -292,7 +308,7 @@ value|0x0000000000000002UL
 end_define
 
 begin_comment
-comment|/* Enable IOMMU */
+comment|/* IOMMU/translation enable */
 end_comment
 
 begin_define
@@ -300,6 +316,157 @@ define|#
 directive|define
 name|IOMMUCR_EN
 value|0x0000000000000001UL
+end_define
+
+begin_comment
+comment|/*  * TSB base register bits  */
+end_comment
+
+begin_comment
+comment|/* TSB base address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_TB_MASK
+value|0x000007ffffffe000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_TB_SHIFT
+value|13
+end_define
+
+begin_comment
+comment|/* IOMMU page size - Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_8KPG
+value|0x0000000000000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_64KPG
+value|0x0000000000000100UL
+end_define
+
+begin_comment
+comment|/* Nummber of entries in the IOTSB - Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_TSBSZ_MASK
+value|0x0000000000000004UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMUTB_TSBSZ_SHIFT
+value|0
+end_define
+
+begin_comment
+comment|/*  * TSB size definitions for both control and TSB base register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB1K
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB2K
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB4K
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB8K
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB16K
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB32K
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB64K
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB128K
+value|7
+end_define
+
+begin_comment
+comment|/* Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB256K
+value|8
+end_define
+
+begin_comment
+comment|/* Fire and Oberon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSB512K
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOMMU_TSBENTRIES
+parameter_list|(
+name|tsbsz
+parameter_list|)
+define|\
+value|((1<< (tsbsz))<< (IO_PAGE_SHIFT - IOTTE_SHIFT))
 end_define
 
 begin_comment
@@ -400,7 +567,7 @@ value|0x8000000000000000UL
 end_define
 
 begin_comment
-comment|/* 8K or 64K page? */
+comment|/* Page size - pre-Fire only */
 end_comment
 
 begin_define
@@ -418,7 +585,7 @@ value|0x0000000000000000UL
 end_define
 
 begin_comment
-comment|/* Is page streamable? */
+comment|/* Streamable page - streaming buffer equipped variants only */
 end_comment
 
 begin_define
@@ -429,7 +596,7 @@ value|0x1000000000000000UL
 end_define
 
 begin_comment
-comment|/* Accesses to same bus segment? */
+comment|/* Accesses to the same bus segment - SBus only */
 end_comment
 
 begin_define
@@ -440,18 +607,18 @@ value|0x0800000000000000UL
 end_define
 
 begin_comment
-comment|/* Let's assume this is correct */
+comment|/* Physical address mask (based on Oberon) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IOTTE_PAMASK
-value|0x000007ffffffe000UL
+value|0x00007fffffffe000UL
 end_define
 
 begin_comment
-comment|/* Accesses to cacheable space */
+comment|/* Accesses to cacheable space - pre-Fire only */
 end_comment
 
 begin_define

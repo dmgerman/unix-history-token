@@ -190,7 +190,6 @@ name|refs
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|refs
 argument_list|)
 expr_stmt|;

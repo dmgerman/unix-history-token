@@ -92,12 +92,10 @@ name|unsigned
 name|int
 name|__sleep
 parameter_list|(
-name|seconds
-parameter_list|)
 name|unsigned
 name|int
 name|seconds
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timespec

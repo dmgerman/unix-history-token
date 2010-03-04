@@ -368,7 +368,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"cons25"
+literal|"xterm"
 argument_list|,
 literal|1
 argument_list|)
@@ -395,7 +395,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"cons25-m"
+literal|"vt100"
 argument_list|,
 literal|1
 argument_list|)

@@ -1106,7 +1106,7 @@ begin_define
 define|#
 directive|define
 name|MUSB2_REG_CONFDATA
-value|0x000F
+value|(0x000F + MUSB2_REG_INDEXED_CSR)
 end_define
 
 begin_comment

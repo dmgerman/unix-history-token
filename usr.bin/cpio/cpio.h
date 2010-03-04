@@ -77,6 +77,10 @@ name|verbose
 decl_stmt|;
 comment|/* -v */
 name|int
+name|dot
+decl_stmt|;
+comment|/* -V */
+name|int
 name|quiet
 decl_stmt|;
 comment|/* --quiet */

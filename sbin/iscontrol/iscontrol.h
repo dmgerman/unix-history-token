@@ -530,21 +530,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pukeText
-parameter_list|(
-name|char
-modifier|*
-name|it
-parameter_list|,
-name|pdu_t
-modifier|*
-name|pp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|lookup
 parameter_list|(

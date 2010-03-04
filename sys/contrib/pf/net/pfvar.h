@@ -2834,6 +2834,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PFRULE_STATESLOPPY
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* sloppy state tracking */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PFSTATE_HIWAT
 value|10000
 end_define
@@ -3206,8 +3217,16 @@ name|u_int8_t
 name|log
 decl_stmt|;
 name|u_int8_t
-name|allow_opts
+name|state_flags
 decl_stmt|;
+define|#
+directive|define
+name|PFSTATE_ALLOWOPTS
+value|0x01
+define|#
+directive|define
+name|PFSTATE_SLOPPY
+value|0x02
 name|u_int8_t
 name|timeout
 decl_stmt|;

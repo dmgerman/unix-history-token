@@ -15013,9 +15013,7 @@ argument_list|(
 name|b
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|b
-argument_list|)
 argument_list|,
 literal|"%03lo"
 argument_list|,

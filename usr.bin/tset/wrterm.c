@@ -83,12 +83,10 @@ begin_function
 name|void
 name|wrtermcap
 parameter_list|(
-name|bp
-parameter_list|)
 name|char
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int

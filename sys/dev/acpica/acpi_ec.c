@@ -345,20 +345,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Indicate that this device has already been probed via ECDT. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEV_ECDT
-parameter_list|(
-name|x
-parameter_list|)
-value|(acpi_get_magic(x) == (uintptr_t)&acpi_ec_devclass)
-end_define
-
-begin_comment
 comment|/*  * Driver softc.  */
 end_comment
 
@@ -777,7 +763,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -933,7 +919,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|val
 parameter_list|,
@@ -954,7 +940,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|,
 name|int
@@ -1350,17 +1336,6 @@ argument_list|,
 name|params
 argument_list|)
 expr_stmt|;
-name|acpi_set_magic
-argument_list|(
-name|child
-argument_list|,
-operator|(
-name|uintptr_t
-operator|)
-operator|&
-name|acpi_ec_devclass
-argument_list|)
-expr_stmt|;
 comment|/* Finish the attach process. */
 if|if
 condition|(
@@ -1413,6 +1388,9 @@ literal|64
 index|]
 decl_stmt|;
 name|int
+name|ecdt
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|struct
@@ -1457,9 +1435,9 @@ name|ret
 operator|=
 name|ENXIO
 expr_stmt|;
-name|params
+name|ecdt
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|buf
 operator|.
@@ -1473,20 +1451,23 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
-if|if
-condition|(
-name|DEV_ECDT
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
 name|params
 operator|=
 name|acpi_get_private
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|params
+operator|!=
+name|NULL
+condition|)
+block|{
+name|ecdt
+operator|=
+literal|1
 expr_stmt|;
 name|ret
 operator|=
@@ -1496,12 +1477,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|acpi_disabled
-argument_list|(
-literal|"ec"
-argument_list|)
-operator|&&
 name|ACPI_ID_PROBE
 argument_list|(
 name|device_get_parent
@@ -1833,10 +1808,7 @@ literal|", GLK"
 else|:
 literal|""
 argument_list|,
-name|DEV_ECDT
-argument_list|(
-name|dev
-argument_list|)
+name|ecdt
 condition|?
 literal|", ECDT"
 else|:
@@ -1989,6 +1961,13 @@ operator|->
 name|ec_suspending
 operator|=
 name|FALSE
+expr_stmt|;
+name|acpi_set_private
+argument_list|(
+name|dev
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -2557,7 +2536,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|val
 parameter_list|,
@@ -2630,7 +2609,7 @@ parameter_list|,
 name|u_int
 name|addr
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 name|val
 parameter_list|,
 name|int
@@ -3134,7 +3113,7 @@ parameter_list|,
 name|UINT32
 name|width
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -3355,7 +3334,7 @@ name|Value
 operator||=
 operator|(
 operator|(
-name|ACPI_INTEGER
+name|UINT64
 operator|)
 name|EcData
 operator|)

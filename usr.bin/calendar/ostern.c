@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"calendar.h"
 end_include
 
@@ -321,8 +315,8 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(

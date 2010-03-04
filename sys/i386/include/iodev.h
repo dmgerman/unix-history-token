@@ -15,5 +15,11 @@ name|ioclose
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_ioctl_t
+name|ioioctl
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

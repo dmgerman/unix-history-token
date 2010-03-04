@@ -28,12 +28,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_pmap.h"
 end_include
 
@@ -83,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -285,12 +273,35 @@ name|DIAGNOSTIC
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC_GNU_INLINE__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PMAP_INLINE
-value|__gnu89_inline
+value|inline
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PMAP_INLINE
+value|extern inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -474,7 +485,7 @@ name|OID_AUTO
 argument_list|,
 name|pg_ps_enabled
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pg_ps_enabled
@@ -605,16 +616,6 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|CADDR1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|msgbuf
-modifier|*
-name|msgbufp
 init|=
 literal|0
 decl_stmt|;
@@ -2118,6 +2119,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TRUE
+operator|||
 operator|(
 name|amd_feature
 operator|&
@@ -2365,6 +2368,8 @@ comment|/* Now set up the direct map space using either 2MB or 1GB pages */
 comment|/* Preset PG_M and PG_A because demotion expects it */
 if|if
 condition|(
+name|TRUE
+operator|||
 operator|(
 name|amd_feature
 operator|&
@@ -2795,25 +2800,9 @@ argument|crashdumpmap
 argument_list|,
 argument|MAXDUMPPGS
 argument_list|)
-comment|/* 	 * msgbufp is used to map the system message buffer. 	 */
-name|SYSMAP
-argument_list|(
-argument|struct msgbuf *
-argument_list|,
-argument|unused
-argument_list|,
-argument|msgbufp
-argument_list|,
-argument|atop(round_page(MSGBUF_SIZE))
-argument_list|)
 name|virtual_avail
 operator|=
 name|va
-expr_stmt|;
-operator|*
-name|CMAP1
-operator|=
-literal|0
 expr_stmt|;
 name|invltlb
 argument_list|()
@@ -3111,10 +3100,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|pd_entry_t
-modifier|*
-name|pd
-decl_stmt|;
 name|vm_page_t
 name|mpte
 decl_stmt|;
@@ -3127,15 +3112,6 @@ decl_stmt|,
 name|pv_npg
 decl_stmt|;
 comment|/* 	 * Initialize the vm page array entries for the kernel pmap's 	 * page table pages. 	 */
-name|pd
-operator|=
-name|pmap_pde
-argument_list|(
-name|kernel_pmap
-argument_list|,
-name|KERNBASE
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3150,56 +3126,17 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
-name|pd
-index|[
-name|i
-index|]
-operator|&
-operator|(
-name|PG_PS
-operator||
-name|PG_V
-operator|)
-operator|)
-operator|==
-operator|(
-name|PG_PS
-operator||
-name|PG_V
-operator|)
-condition|)
-continue|continue;
-name|KASSERT
-argument_list|(
-operator|(
-name|pd
-index|[
-name|i
-index|]
-operator|&
-name|PG_V
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_init: page table page is missing"
-operator|)
-argument_list|)
-expr_stmt|;
 name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|pd
-index|[
+name|KPTphys
+operator|+
+operator|(
 name|i
-index|]
-operator|&
-name|PG_FRAME
+operator|<<
+name|PAGE_SHIFT
+operator|)
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -3236,12 +3173,13 @@ name|mpte
 operator|->
 name|phys_addr
 operator|=
-name|pd
-index|[
+name|KPTphys
+operator|+
+operator|(
 name|i
-index|]
-operator|&
-name|PG_FRAME
+operator|<<
+name|PAGE_SHIFT
+operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * Initialize the address space (zone) for the pv entries.  Set a 	 * high water mark so that the system can recover from excessive 	 * numbers of pv entries. 	 */
@@ -3280,6 +3218,28 @@ name|pv_entry_max
 operator|/
 literal|10
 operator|)
+expr_stmt|;
+comment|/* 	 * Disable large page mappings by default if the kernel is running in 	 * a virtual machine on an AMD Family 10h processor.  This is a work- 	 * around for Erratum 383. 	 */
+if|if
+condition|(
+name|vm_guest
+operator|==
+name|VM_GUEST_VM
+operator|&&
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_AMD
+operator|&&
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+operator|==
+literal|0x10
+condition|)
+name|pg_ps_enabled
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Are large page mappings enabled? 	 */
 name|TUNABLE_INT_FETCH
@@ -21482,6 +21442,22 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pmap_sync_icache
+parameter_list|(
+name|pmap_t
+name|pm
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_size_t
+name|sz
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

@@ -1218,6 +1218,56 @@ name|VDEV_LABELS
 value|4
 end_define
 
+begin_comment
+comment|/*  * Gang block headers are self-checksumming and contain an array  * of block pointers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPA_GANGBLOCKSIZE
+value|SPA_MINBLOCKSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_GBH_NBLKPTRS
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t)) / sizeof (blkptr_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_GBH_FILLER
+value|((SPA_GANGBLOCKSIZE - \ 	sizeof (zio_block_tail_t) - \ 	(SPA_GBH_NBLKPTRS * sizeof (blkptr_t))) /\ 	sizeof (uint64_t))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|zio_gbh
+block|{
+name|blkptr_t
+name|zg_blkptr
+index|[
+name|SPA_GBH_NBLKPTRS
+index|]
+decl_stmt|;
+name|uint64_t
+name|zg_filler
+index|[
+name|SPA_GBH_FILLER
+index|]
+decl_stmt|;
+name|zio_block_tail_t
+name|zg_tail
+decl_stmt|;
+block|}
+name|zio_gbh_phys_t
+typedef|;
+end_typedef
+
 begin_enum
 enum|enum
 name|zio_checksum
@@ -1491,6 +1541,13 @@ name|SPA_VERSION_13
 value|13ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_14
+value|14ULL
+end_define
+
 begin_comment
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understand the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
 end_comment
@@ -1499,14 +1556,14 @@ begin_define
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_13
+value|SPA_VERSION_14
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"13"
+value|"14"
 end_define
 
 begin_comment
@@ -1667,6 +1724,13 @@ name|SPA_VERSION_USED_BREAKDOWN
 value|SPA_VERSION_13
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_PASSTHROUGH_X
+value|SPA_VERSION_14
+end_define
+
 begin_comment
 comment|/*  * The following are configuration names used in the nvlist describing a pool's  * configuration.  */
 end_comment
@@ -1821,13 +1885,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZPOOL_CONFIG_OFFLINE
-value|"offline"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZPOOL_CONFIG_ERRCOUNT
 value|"error_count"
 end_define
@@ -1884,6 +1941,38 @@ end_define
 begin_comment
 comment|/* not stored on disk */
 end_comment
+
+begin_comment
+comment|/*  * The persistent vdev state is stored as separate values rather than a single  * 'vdev_state' entry.  This is because a device can be in multiple states, such  * as offline and degraded.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_OFFLINE
+value|"offline"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_FAULTED
+value|"faulted"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_DEGRADED
+value|"degraded"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZPOOL_CONFIG_REMOVED
+value|"removed"
+end_define
 
 begin_define
 define|#
@@ -2004,9 +2093,15 @@ comment|/* Not currently open			*/
 name|VDEV_STATE_OFFLINE
 block|,
 comment|/* Not allowed to open			*/
+name|VDEV_STATE_REMOVED
+block|,
+comment|/* Explicitly removed from system	*/
 name|VDEV_STATE_CANT_OPEN
 block|,
 comment|/* Tried to open, but failed		*/
+name|VDEV_STATE_FAULTED
+block|,
+comment|/* External request to fault device	*/
 name|VDEV_STATE_DEGRADED
 block|,
 comment|/* Replicated vdev with unhealthy kids	*/

@@ -203,8 +203,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|0
 index|]
@@ -222,8 +220,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|1
 index|]
@@ -241,8 +237,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|2
 index|]
@@ -260,8 +254,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|3
 index|]
@@ -279,8 +271,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|4
 index|]
@@ -298,8 +288,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|5
 index|]
@@ -317,8 +305,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|6
 index|]
@@ -336,8 +322,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|7
 index|]
@@ -355,27 +339,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
-index|[
-literal|8
-index|]
-argument_list|)
-expr_stmt|;
-name|supply_register
-argument_list|(
-name|MIPS_SP_REGNUM
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pcb
-operator|.
-name|pcb_context
-operator|.
-name|val
 index|[
 literal|8
 index|]
@@ -393,8 +356,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|9
 index|]
@@ -412,8 +373,6 @@ operator|&
 name|pcb
 operator|.
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|10
 index|]

@@ -268,7 +268,6 @@ name|datadirs
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|datadirs
 argument_list|)
 expr_stmt|;
@@ -403,7 +402,9 @@ specifier|static
 name|void
 name|__dead2
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char

@@ -3067,7 +3067,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Endpoint profile %u "
-literal|"has too small buffer!\n"
+literal|"has too small buffer\n"
 argument_list|,
 name|ep_no
 argument_list|)
@@ -3122,7 +3122,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Endpoint profile %u "
-literal|"has too small buffer!\n"
+literal|"has too small buffer\n"
 argument_list|,
 name|ep_no
 argument_list|)
@@ -3169,7 +3169,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"Endpoint profile %u "
-literal|"has too small buffer!\n"
+literal|"has too small buffer\n"
 argument_list|,
 name|ep_no
 argument_list|)

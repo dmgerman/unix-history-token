@@ -2410,6 +2410,9 @@ name|struct
 name|mtx
 name|pcn_mtx
 decl_stmt|;
+name|int
+name|pcn_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct

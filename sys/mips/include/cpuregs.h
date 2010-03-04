@@ -199,20 +199,37 @@ name|COP0_SYNC
 value|nop; nop; nop; nop; nop;
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
 name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* nothing */
+comment|/*  * Pick a reasonable default based on the "typical" spacing described in the  * "CP0 Hazards" chapter of MIPS Architecture Book Vol III.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop
+end_define
 
 begin_endif
 endif|#
@@ -3881,6 +3898,50 @@ end_define
 
 begin_comment
 comment|/* MIPS 4KSd			ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_24K
+value|0x93
+end_define
+
+begin_comment
+comment|/* MIPS 24Kc/24Kf		ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_34K
+value|0x95
+end_define
+
+begin_comment
+comment|/* MIPS 34K			ISA 32  R2 MT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_24KE
+value|0x96
+end_define
+
+begin_comment
+comment|/* MIPS 24KEc			ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_74K
+value|0x97
+end_define
+
+begin_comment
+comment|/* MIPS 74Kc/74Kf		ISA 32  Rel 2 */
 end_comment
 
 begin_comment

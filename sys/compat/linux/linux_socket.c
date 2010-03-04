@@ -500,7 +500,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|EINVAL
+name|EAFNOSUPPORT
 expr_stmt|;
 goto|goto
 name|out
@@ -620,6 +620,7 @@ name|bdom
 operator|==
 name|AF_INET
 condition|)
+block|{
 name|alloclen
 operator|=
 sizeof|sizeof
@@ -628,6 +629,23 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|osalen
+operator|<
+name|alloclen
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
 name|sa
 operator|=
 operator|(
@@ -2620,7 +2638,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|INET6
-comment|/* 	 * Linux AF_INET6 socket has IPV6_V6ONLY setsockopt set to 0 by 	 * default and some apps depend on this. So, set V6ONLY to 0 	 * for Linux apps if the sysctl value is set to 1. 	 */
+comment|/* 	 * Linux AF_INET6 socket has IPV6_V6ONLY setsockopt set to 0 by default 	 * and some apps depend on this. So, set V6ONLY to 0 for Linux apps. 	 * For simplicity we do this unconditionally of the net.inet6.ip6.v6only 	 * sysctl value. 	 */
 if|if
 condition|(
 name|bsd_args
@@ -2628,14 +2646,6 @@ operator|.
 name|domain
 operator|==
 name|PF_INET6
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-comment|/* 	     * XXX: Avoid undefined symbol error with an IPv4 only 	     * kernel. 	     */
-operator|&&
-name|V_ip6_v6only
-endif|#
-directive|endif
 condition|)
 block|{
 name|int

@@ -2179,7 +2179,7 @@ name|offset_dw
 operator|+
 literal|1
 index|]
-operator|=
+operator|+=
 operator|(
 name|offset
 operator|&
@@ -2194,7 +2194,7 @@ name|offset_dw
 operator|+
 literal|2
 index|]
-operator|=
+operator|+=
 operator|(
 name|upper_32_bits
 argument_list|(
@@ -2334,7 +2334,7 @@ name|offset_dw
 operator|+
 literal|2
 index|]
-operator|=
+operator|+=
 operator|(
 name|offset
 operator|&
@@ -2349,7 +2349,7 @@ name|offset_dw
 operator|+
 literal|3
 index|]
-operator|=
+operator|+=
 operator|(
 name|upper_32_bits
 argument_list|(
@@ -2571,7 +2571,7 @@ name|offset_dw
 operator|+
 literal|3
 index|]
-operator||=
+operator|+=
 operator|(
 name|upper_32_bits
 argument_list|(
@@ -2676,7 +2676,7 @@ name|offset_dw
 operator|+
 literal|3
 index|]
-operator||=
+operator|+=
 operator|(
 name|upper_32_bits
 argument_list|(
@@ -3459,7 +3459,7 @@ literal|2
 operator|+
 literal|2
 index|]
-operator||=
+operator|+=
 operator|(
 name|upper_32_bits
 argument_list|(

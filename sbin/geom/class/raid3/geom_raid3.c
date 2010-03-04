@@ -111,6 +111,15 @@ name|G_RAID3_VERSION
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|intmax_t
+name|default_blocksize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -402,6 +411,17 @@ name|G_TYPE_BOOL
 block|}
 block|,
 block|{
+literal|'s'
+block|,
+literal|"blocksize"
+block|,
+operator|&
+name|default_blocksize
+block|,
+name|G_TYPE_NUMBER
+block|}
+block|,
+block|{
 literal|'w'
 block|,
 literal|"verify"
@@ -416,7 +436,7 @@ block|}
 block|,
 name|NULL
 block|,
-literal|"[-hFnrvw] name prov prov prov ..."
+literal|"[-hFnrvw] [-s blocksize] name prov prov prov ..."
 block|}
 block|,
 block|{
@@ -914,7 +934,12 @@ literal|0
 expr_stmt|;
 name|sectorsize
 operator|=
-literal|0
+name|gctl_get_intmax
+argument_list|(
+name|req
+argument_list|,
+literal|"blocksize"
+argument_list|)
 expr_stmt|;
 for|for
 control|(

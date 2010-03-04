@@ -259,12 +259,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DC_TYPE_AN985
+name|DC_TYPE_AN983
 value|0x7
 end_define
 
 begin_comment
-comment|/* ADMtek AN985 Centaur */
+comment|/* ADMtek AN983 Centaur */
 end_comment
 
 begin_define
@@ -341,7 +341,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(x->dc_type == DC_TYPE_AL981 ||		\ 	 x->dc_type == DC_TYPE_AN985)
+value|(x->dc_type == DC_TYPE_AL981 ||		\ 	 x->dc_type == DC_TYPE_AN983)
 end_define
 
 begin_define
@@ -381,7 +381,7 @@ name|DC_IS_CENTAUR
 parameter_list|(
 name|x
 parameter_list|)
-value|(x->dc_type == DC_TYPE_AN985)
+value|(x->dc_type == DC_TYPE_AN983)
 end_define
 
 begin_define
@@ -2913,7 +2913,7 @@ comment|/*  * Registers specific to clone devices.  * This mainly relates to RX 
 end_comment
 
 begin_comment
-comment|/*  * ADMtek specific registers and constants for the AL981 and AN985.  * The AN985 doesn't use the magic PHY registers.  */
+comment|/*  * ADMtek specific registers and constants for the AL981 and AN983.  * The AN983 doesn't use the magic PHY registers.  */
 end_comment
 
 begin_define
@@ -4434,14 +4434,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|DC_DEVICEID_AN985
+name|DC_DEVICEID_AN983
 value|0x0985
 end_define
 
 begin_define
 define|#
 directive|define
-name|DC_DEVICEID_FA511
+name|DC_DEVICEID_AN985
 value|0x1985
 end_define
 
@@ -4701,7 +4701,7 @@ value|0x1414
 end_define
 
 begin_comment
-comment|/*  * Supported Microsoft PCI and cardbus NICs. These are really  * ADMtek parts in disguise.  */
+comment|/*  * Supported Microsoft PCI and CardBus NICs. These are really  * ADMtek parts in disguise.  */
 end_comment
 
 begin_define

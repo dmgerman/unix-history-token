@@ -623,7 +623,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"cons25"
+literal|"xterm"
 argument_list|,
 literal|1
 argument_list|)
@@ -640,7 +640,7 @@ name|setenv
 argument_list|(
 literal|"TERMCAP"
 argument_list|,
-name|termcap_cons25
+name|termcap_xterm
 argument_list|,
 literal|1
 argument_list|)
@@ -667,7 +667,7 @@ name|setenv
 argument_list|(
 literal|"TERM"
 argument_list|,
-literal|"cons25-m"
+literal|"vt100"
 argument_list|,
 literal|1
 argument_list|)
@@ -684,7 +684,7 @@ name|setenv
 argument_list|(
 literal|"TERMCAP"
 argument_list|,
-name|termcap_cons25_m
+name|termcap_vt100
 argument_list|,
 literal|1
 argument_list|)

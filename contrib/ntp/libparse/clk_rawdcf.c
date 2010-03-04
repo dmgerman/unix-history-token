@@ -786,9 +786,7 @@ argument_list|(
 name|DD_RAWDCF
 argument_list|,
 operator|(
-literal|"parse: convert_rawdcf: \"%.*s\"\n"
-operator|,
-name|size
+literal|"parse: convert_rawdcf: \"%s\"\n"
 operator|,
 name|buffer
 operator|)
@@ -1351,9 +1349,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: parity check FAILED for \"%.*s\"\n"
-argument_list|,
-name|size
+literal|"parse: convert_rawdcf: parity check FAILED for \"%s\"\n"
 argument_list|,
 name|buffer
 argument_list|)

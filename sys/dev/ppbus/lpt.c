@@ -1808,10 +1808,6 @@ name|sc
 operator|->
 name|sc_backoff
 operator|=
-name|sc
-operator|->
-name|sc_backoff
-operator|>
 name|hz
 operator|/
 name|LPTOUTMAX
@@ -1930,18 +1926,9 @@ name|si_drv1
 decl_stmt|;
 name|device_t
 name|lptdev
-init|=
-name|sc
-operator|->
-name|sc_dev
 decl_stmt|;
 name|device_t
 name|ppbus
-init|=
-name|device_get_parent
-argument_list|(
-name|lptdev
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1953,6 +1940,19 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|lptdev
+operator|=
+name|sc
+operator|->
+name|sc_dev
+expr_stmt|;
+name|ppbus
+operator|=
+name|device_get_parent
+argument_list|(
+name|lptdev
+argument_list|)
+expr_stmt|;
 name|ppb_lock
 argument_list|(
 name|ppbus
@@ -2593,7 +2593,7 @@ name|sc
 operator|->
 name|sc_xfercnt
 condition|)
-comment|/* wait 1/4 second, give up if we get a signal */
+comment|/* wait 1 second, give up if we get a signal */
 if|if
 condition|(
 name|ppb_sleep

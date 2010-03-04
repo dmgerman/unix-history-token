@@ -1122,7 +1122,7 @@ name|video_adapter_t
 modifier|*
 name|adp
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_paddr_t
@@ -1131,6 +1131,10 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1819,9 +1823,11 @@ parameter_list|,
 name|paddr
 parameter_list|,
 name|prot
+parameter_list|,
+name|memattr
 parameter_list|)
 define|\
-value|(*vidsw[(adp)->va_index]->mmap)((adp), (offset), (paddr), (prot))
+value|(*vidsw[(adp)->va_index]->mmap)((adp), (offset), (paddr),	\ 	    (prot), (memattr))
 end_define
 
 begin_define
@@ -2438,7 +2444,7 @@ name|video_adapter_t
 modifier|*
 name|adp
 parameter_list|,
-name|vm_offset_t
+name|vm_ooffset_t
 name|offset
 parameter_list|,
 name|vm_offset_t
@@ -2447,6 +2453,10 @@ name|paddr
 parameter_list|,
 name|int
 name|prot
+parameter_list|,
+name|vm_memattr_t
+modifier|*
+name|memattr
 parameter_list|)
 function_decl|;
 end_function_decl

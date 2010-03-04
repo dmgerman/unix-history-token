@@ -2748,6 +2748,14 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 name|error
 operator|=
@@ -4369,6 +4377,9 @@ argument_list|)
 expr_stmt|;
 name|out0
 label|:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -4424,6 +4435,14 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|socreate
@@ -4804,6 +4823,9 @@ operator|->
 name|sdl
 operator|=
 name|sdl
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return
 name|error
@@ -6359,7 +6381,6 @@ name|vendp
 operator|+=
 name|vendor_client_len
 expr_stmt|;
-empty_stmt|;
 name|ifctx
 operator|->
 name|dhcpquerytype

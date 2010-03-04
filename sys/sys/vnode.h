@@ -637,17 +637,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_OBJDIRTY
-value|0x0400
-end_define
-
-begin_comment
-comment|/* object might be dirty */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_DOINGINACT
 value|0x0800
 end_define
@@ -3089,6 +3078,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vunref
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vn_printf
 parameter_list|(
 name|struct
@@ -3796,6 +3796,18 @@ parameter_list|(
 name|struct
 name|vop_poll_args
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdaccess
+parameter_list|(
+name|struct
+name|vop_access_args
+modifier|*
+name|ap
 parameter_list|)
 function_decl|;
 end_function_decl

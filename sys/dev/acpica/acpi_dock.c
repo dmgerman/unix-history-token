@@ -833,7 +833,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If the system boot up w/o Docking, the devices under the dock 	 * still un-initialized, also control methods such as _INI, _STA 	 * are not executed. 	 * Normal devices are initialized at booting by calling 	 * AcpiInitializeObjects(), however the devices under the dock 	 * need to be initialized here on the scheme of ACPICA. 	 */
-block|ACPI_INIT_WALK_INFO	Info;  	AcpiNsWalkNamespace(ACPI_TYPE_ANY, handle, 	    100, TRUE, AcpiNsInitOneDevice,&Info, NULL);
+block|ACPI_INIT_WALK_INFO	Info;  	AcpiNsWalkNamespace(ACPI_TYPE_ANY, handle, 	    100, TRUE, AcpiNsInitOneDevice, NULL,&Info, NULL);
 endif|#
 directive|endif
 name|dev
@@ -929,6 +929,8 @@ argument_list|,
 literal|100
 argument_list|,
 name|acpi_dock_insert_child
+argument_list|,
+name|NULL
 argument_list|,
 name|dev
 argument_list|,
@@ -1217,6 +1219,8 @@ argument_list|,
 literal|100
 argument_list|,
 name|acpi_dock_eject_child
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|dev

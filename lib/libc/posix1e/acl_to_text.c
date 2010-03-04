@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acl_support.h"
 end_include
 
@@ -136,9 +130,7 @@ decl_stmt|;
 name|char
 name|name_buf
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 name|char
@@ -387,9 +379,7 @@ name|ae_tag
 argument_list|,
 name|ae_id
 argument_list|,
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 argument_list|,
 name|name_buf
 argument_list|,
@@ -637,9 +627,7 @@ name|ae_tag
 argument_list|,
 name|ae_id
 argument_list|,
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 argument_list|,
 name|name_buf
 argument_list|,

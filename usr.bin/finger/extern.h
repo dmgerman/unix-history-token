@@ -143,7 +143,7 @@ name|void
 name|enter_where
 parameter_list|(
 name|struct
-name|utmp
+name|utmpx
 modifier|*
 parameter_list|,
 name|PERSON
@@ -157,7 +157,6 @@ name|PERSON
 modifier|*
 name|find_person
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|)

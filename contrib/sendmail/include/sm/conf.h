@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.134 2007/09/24 23:05:37 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.139 2009/06/16 23:41:32 ca Exp $  */
 end_comment
 
 begin_comment
@@ -3113,6 +3113,17 @@ end_define
 
 begin_comment
 comment|/* changed in S11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* moved from librt to libc in S11 */
 end_comment
 
 begin_endif
@@ -7209,6 +7220,49 @@ end_endif
 
 begin_comment
 comment|/* __FreeBSD_version>= 330000 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|430000
+end_if
+
+begin_comment
+comment|/* 4.3.0-release and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* e.g., arg#3 to accept, getsockname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* arg#5 to getsockopt */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD_version>= 430000 */
 end_comment
 
 begin_define
@@ -18076,6 +18130,47 @@ end_endif
 
 begin_comment
 comment|/* !defined(MAXHOSTNAMELEN)&& !defined(_SCO_unix_)&& !defined(NonStop_UX_BXX)&& !defined(ALTOS_SYSTEM_V) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_LINUX_MHNL
+operator|&&
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|&&
+name|MAXHOSTNAMELEN
+operator|<
+literal|255
+end_if
+
+begin_comment
+comment|/*    **  override Linux wierdness: a FQHN can be 255 chars long    **  SUSv3 requires HOST_NAME_MAX ("Maximum length of a host    **  name (not including the terminating null) as returned from the    **  gethostname() function.") to be at least 255.  c.f.:    **  http://www.opengroup.org/onlinepubs/009695399    **  but Linux defines that to 64 too.    */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MAXHOSTNAMELEN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_LINUX_MHNL&& defined(__linux__)&& MAXHOSTNAMELEN< 255 */
 end_comment
 
 begin_if

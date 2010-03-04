@@ -4726,7 +4726,6 @@ name|sc
 operator|->
 name|bytes_per_row
 expr_stmt|;
-empty_stmt|;
 name|row_addr
 operator|=
 name|start
@@ -4955,7 +4954,6 @@ name|sc
 operator|->
 name|bytes_per_row
 expr_stmt|;
-empty_stmt|;
 name|row_addr
 operator|=
 name|start
@@ -7765,6 +7763,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|freeenv
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -11365,12 +11368,6 @@ operator|->
 name|if_start
 operator|=
 name|hatm_start
-expr_stmt|;
-name|ifp
-operator|->
-name|if_watchdog
-operator|=
-name|NULL
 expr_stmt|;
 name|ifp
 operator|->

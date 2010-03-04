@@ -164,33 +164,31 @@ name|commandname
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|exverror
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|va_list
-parameter_list|)
-function_decl|__printf0like
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+argument_list|)
+name|__printf0like
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  * Called to raise an exception.  Since C doesn't include exceptions, we  * just do a longjmp to the exception handler.  The type of exception is  * stored in the global variable "exception".  */
+comment|/*  * Called to raise an exception.  Since C doesn't include exceptions, we  * just do a longjmp to the exception handler.  The type of exception is  * stored in the global variable "exception".  *  * Interrupts are disabled; they should be reenabled when the exception is  * caught.  */
 end_comment
 
 begin_function
@@ -201,6 +199,8 @@ name|int
 name|e
 parameter_list|)
 block|{
+name|INTOFF
+expr_stmt|;
 if|if
 condition|(
 name|handler
@@ -334,9 +334,8 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
-name|CLEAR_PENDING_INT
-expr_stmt|;
-name|INTOFF
+comment|/* 	 * An interrupt trumps an error.  Certain places catch error 	 * exceptions or transform them to a plain nonzero exit code 	 * in child processes, and if an error exception can be handled, 	 * an interrupt can be handled as well. 	 * 	 * exraise() will disable interrupts for the exception handler. 	 */
+name|FORCEINTON
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -385,8 +384,7 @@ name|commandname
 condition|)
 name|outfmt
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -395,8 +393,7 @@ argument_list|)
 expr_stmt|;
 name|doformat
 argument_list|(
-operator|&
-name|errout
+name|out2
 argument_list|,
 name|msg
 argument_list|,

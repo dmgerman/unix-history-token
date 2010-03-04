@@ -118,7 +118,7 @@ value|(((x)>> 32)& 0x3f)
 end_define
 
 begin_comment
-comment|/* Concenience function (inline) to adjust backingstore pointers. */
+comment|/* Convenience function (inline) to adjust backingstore pointers. */
 end_comment
 
 begin_function
@@ -183,51 +183,9 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|sigcode
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|esigcode
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|szsigcode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|Maxmem
-decl_stmt|;
-end_decl_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|_special
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|fpreg
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|reg
 struct_decl|;
 end_struct_decl
 
@@ -243,6 +201,10 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Return value from ia64_init. Describes stack to switch to.  */
+end_comment
+
 begin_struct
 struct|struct
 name|ia64_init_return
@@ -256,6 +218,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|ia64_lapic_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|Maxmem
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -381,6 +357,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ia64_highfp_enable
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ia64_highfp_save
 parameter_list|(
 name|struct
@@ -391,9 +382,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ia64_highfp_save_ipi
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|ia64_init_return
 name|ia64_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|ia64_itc_freq
 parameter_list|(
 name|void
 parameter_list|)

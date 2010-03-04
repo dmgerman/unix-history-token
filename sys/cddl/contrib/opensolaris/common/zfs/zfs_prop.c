@@ -352,6 +352,12 @@ block|}
 block|,
 comment|/* bkwrd compatability */
 block|{
+literal|"passthrough-x"
+block|,
+name|ZFS_ACL_PASSTHROUGH_X
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -665,7 +671,7 @@ name|PROP_INHERIT
 argument_list|,
 name|ZFS_TYPE_FILESYSTEM
 argument_list|,
-literal|"discard | noallow | restricted | passthrough"
+literal|"discard | noallow | restricted | passthrough | passthrough-x"
 argument_list|,
 literal|"ACLINHERIT"
 argument_list|,

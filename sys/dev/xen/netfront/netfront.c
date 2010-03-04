@@ -320,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|XN_CSUM_FEATURES
-value|(CSUM_TCP | CSUM_UDP | CSUM_TSO)
+value|(CSUM_TCP | CSUM_UDP)
 end_define
 
 begin_define
@@ -834,6 +834,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|xn_ifmedia_upd
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|xn_ifmedia_sts
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|ifmediareq
+modifier|*
+name|ifmr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Xenolinux helper functions */
 end_comment
@@ -1092,7 +1123,7 @@ name|mtx
 name|rx_lock
 decl_stmt|;
 name|struct
-name|sx
+name|mtx
 name|sc_lock
 decl_stmt|;
 name|u_int
@@ -1118,9 +1149,11 @@ name|RX_MAX_TARGET
 value|NET_RX_RING_SIZE
 name|int
 name|rx_min_target
-decl_stmt|,
+decl_stmt|;
+name|int
 name|rx_max_target
-decl_stmt|,
+decl_stmt|;
+name|int
 name|rx_target
 decl_stmt|;
 comment|/* 	 * {tx,rx}_skbs store outstanding skbuffs. The first entry in each 	 * array is an index into a chain of free entries. 	 */
@@ -1202,6 +1235,10 @@ index|[
 name|NET_RX_RING_SIZE
 index|]
 decl_stmt|;
+name|struct
+name|ifmedia
+name|sc_media
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1230,7 +1267,7 @@ parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \         sx_init(&(_sc)->sc_lock, #_name"_rx")
+value|mtx_init(&(_sc)->tx_lock, #_name"_tx", "network transmit lock", MTX_DEF); \         mtx_init(&(_sc)->rx_lock, #_name"_rx", "network receive lock", MTX_DEF);  \     mtx_init(&(_sc)->sc_lock, #_name"_sc", "netfront softc lock", MTX_DEF)
 end_define
 
 begin_define
@@ -1280,7 +1317,7 @@ name|XN_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_xlock(&(_sc)->sc_lock);
+value|mtx_lock(&(_sc)->sc_lock);
 end_define
 
 begin_define
@@ -1290,7 +1327,7 @@ name|XN_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_xunlock(&(_sc)->sc_lock);
+value|mtx_unlock(&(_sc)->sc_lock);
 end_define
 
 begin_define
@@ -1300,7 +1337,7 @@ name|XN_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|sx_assert(&(_sc)->sc_lock, SX_LOCKED);
+value|mtx_assert(&(_sc)->sc_lock, MA_OWNED);
 end_define
 
 begin_define
@@ -1330,7 +1367,7 @@ name|XN_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                sx_destroy(&(_sc)->sc_lock);
+value|mtx_destroy(&(_sc)->rx_lock); \                                mtx_destroy(&(_sc)->tx_lock); \                                mtx_destroy(&(_sc)->sc_lock);
 end_define
 
 begin_struct
@@ -1644,6 +1681,12 @@ define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1658,11 +1701,33 @@ define|\
 value|printf("[XEN] " fmt, ##args)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WPRINTK
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
 
 begin_define
 define|#
@@ -4648,12 +4713,6 @@ name|np
 operator|->
 name|xn_ifp
 expr_stmt|;
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|0
-expr_stmt|;
 do|do
 block|{
 name|prod
@@ -4773,7 +4832,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"network_tx_buf_gc: warning "
 literal|"-- grant still in use by backend "
@@ -5573,7 +5632,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("rx->status=%hd rx->offset=%hu frags=%u\n", 			rx->status, rx->offset, frags);
+block|DPRINTK("rx->status=%hd rx->offset=%hu frags=%u\n", 			rx->status, rx->offset, frags);
 endif|#
 directive|endif
 if|if
@@ -6345,7 +6404,7 @@ operator|>=
 name|NET_TX_RING_SIZE
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"xn_start_locked: xn_tx_chain_cnt (%d) + nfrags %d>= NET_TX_RING_SIZE (%d); must be full!\n"
 argument_list|,
@@ -6405,7 +6464,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"xn_start_locked: free ring slots (%d)< (nfrags + 1) (%d); must be full!\n"
 argument_list|,
@@ -7026,6 +7085,13 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_UP
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -7633,7 +7699,19 @@ name|SIOCGIFMEDIA
 case|:
 name|error
 operator|=
-name|EINVAL
+name|ifmedia_ioctl
+argument_list|(
+name|ifp
+argument_list|,
+name|ifr
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_media
+argument_list|,
+name|cmd
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -7712,6 +7790,13 @@ name|IFF_DRV_RUNNING
 operator||
 name|IFF_DRV_OACTIVE
 operator|)
+expr_stmt|;
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_DOWN
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7830,11 +7915,6 @@ operator|!
 name|feature_rx_flip
 operator|)
 operator|)
-expr_stmt|;
-name|XN_LOCK
-argument_list|(
-name|np
-argument_list|)
 expr_stmt|;
 comment|/* Recovery procedure: */
 name|error
@@ -8062,11 +8142,6 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-name|XN_UNLOCK
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8196,6 +8271,48 @@ argument_list|,
 name|xennetif
 argument_list|)
 expr_stmt|;
+name|ifmedia_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_media
+argument_list|,
+literal|0
+argument_list|,
+name|xn_ifmedia_upd
+argument_list|,
+name|xn_ifmedia_sts
+argument_list|)
+expr_stmt|;
+name|ifmedia_add
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_media
+argument_list|,
+name|IFM_ETHER
+operator||
+name|IFM_MANUAL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|ifmedia_set
+argument_list|(
+operator|&
+name|np
+operator|->
+name|sc_media
+argument_list|,
+name|IFM_ETHER
+operator||
+name|IFM_MANUAL
+argument_list|)
+expr_stmt|;
 name|np
 operator|->
 name|rx_target
@@ -8308,7 +8425,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|IPRINTK
 argument_list|(
 literal|"#### netfront can't alloc tx grant refs\n"
 argument_list|)
@@ -8337,7 +8454,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|WPRINTK
 argument_list|(
 literal|"#### netfront can't alloc rx grant refs\n"
 argument_list|)
@@ -8499,12 +8616,6 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|700000
-name|ifp
-operator|->
-name|if_capabilities
-operator||=
-name|IFCAP_TSO4
-expr_stmt|;
 if|if
 condition|(
 name|xn_enable_lro
@@ -8841,6 +8952,60 @@ name|ref
 argument_list|,
 name|page
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|xn_ifmedia_upd
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|xn_ifmedia_sts
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|ifmediareq
+modifier|*
+name|ifmr
+parameter_list|)
+block|{
+name|ifmr
+operator|->
+name|ifm_status
+operator|=
+name|IFM_AVALID
+operator||
+name|IFM_ACTIVE
+expr_stmt|;
+name|ifmr
+operator|->
+name|ifm_active
+operator|=
+name|IFM_ETHER
+operator||
+name|IFM_MANUAL
 expr_stmt|;
 block|}
 end_function

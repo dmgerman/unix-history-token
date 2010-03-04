@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 The DragonFly Project.  All rights reserved.  *   * This code is derived from software contributed to The DragonFly Project  * by Sepherosa Ziehau<sepherosa@gmail.com>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $DragonFly: src/sys/dev/netif/et/if_etreg.h,v 1.3 2007/10/23 14:28:42 sephe Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007 The DragonFly Project.  All rights reserved.  *  * This code is derived from software contributed to The DragonFly Project  * by Sepherosa Ziehau<sepherosa@gmail.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of The DragonFly Project nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific, prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $DragonFly: src/sys/dev/netif/et/if_etreg.h,v 1.3 2007/10/23 14:28:42 sephe Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,89 +17,6 @@ begin_define
 define|#
 directive|define
 name|_IF_ETREG_H
-end_define
-
-begin_comment
-comment|/*  * __BIT(n): Return a bitmask with bit n set, where the least  *           significant bit is bit 0.  *  * __BITS(m, n): Return a bitmask with bits m through n, inclusive,  *               set.  It does not matter whether m>n or m<=n.  The  *               least significant bit is bit 0.  *  * A "bitfield" is a span of consecutive bits defined by a bitmask,  * where 1s select the bits in the bitfield.  __SHIFTIN, __SHIFTOUT,  * and __SHIFTOUT_MASK help read and write bitfields from device  * registers.  *  * __SHIFTIN(v, mask): Left-shift bits `v' into the bitfield  *                     defined by `mask', and return them.  No  *                     side-effects.  *  * __SHIFTOUT(v, mask): Extract and return the bitfield selected  *                      by `mask' from `v', right-shifting the  *                      bits so that the rightmost selected bit  *                      is at bit 0.  No side-effects.  *  * __SHIFTOUT_MASK(mask): Right-shift the bits in `mask' so that  *                        the rightmost non-zero bit is at bit  *                        0.  This is useful for finding the  *                        greatest unsigned value that a bitfield  *                        can hold.  No side-effects.  Note that  *                        __SHIFTOUT_MASK(m) = __SHIFTOUT(m, m).  */
-end_comment
-
-begin_comment
-comment|/* __BIT(n): nth bit, where __BIT(0) == 0x1. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__BIT
-parameter_list|(
-name|__n
-parameter_list|)
-value|(((__n) == 32) ? 0 : ((uint32_t)1<< (__n)))
-end_define
-
-begin_comment
-comment|/* __BITS(m, n): bits m through n, m< n. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__BITS
-parameter_list|(
-name|__m
-parameter_list|,
-name|__n
-parameter_list|)
-define|\
-value|((__BIT(MAX((__m), (__n)) + 1) - 1) ^ (__BIT(MIN((__m), (__n))) - 1))
-end_define
-
-begin_comment
-comment|/* Find least significant bit that is set */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__LOWEST_SET_BIT
-parameter_list|(
-name|__mask
-parameter_list|)
-value|((((__mask) - 1)& (__mask)) ^ (__mask))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SHIFTOUT
-parameter_list|(
-name|__x
-parameter_list|,
-name|__mask
-parameter_list|)
-value|(((__x)& (__mask)) / __LOWEST_SET_BIT(__mask))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SHIFTIN
-parameter_list|(
-name|__x
-parameter_list|,
-name|__mask
-parameter_list|)
-value|((__x) * __LOWEST_SET_BIT(__mask))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SHIFTOUT_MASK
-parameter_list|(
-name|__mask
-parameter_list|)
-value|__SHIFTOUT((__mask), (__mask))
 end_define
 
 begin_define
@@ -297,40 +214,6 @@ name|ET_PCIR_L0S_L1_LATENCY
 value|0xcf
 end_define
 
-begin_define
-define|#
-directive|define
-name|ET_PCIM_L0S_LATENCY
-value|__BITS(2, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ET_PCIM_L1_LATENCY
-value|__BITS(5, 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ET_PCIV_L0S_LATENCY
-parameter_list|(
-name|l
-parameter_list|)
-value|__SHIFTIN((l) - 1, ET_PCIM_L0S_LATENCY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ET_PCIV_L1_LATENCY
-parameter_list|(
-name|l
-parameter_list|)
-value|__SHIFTIN((l) - 1, ET_PCIM_L1_LATENCY)
-end_define
-
 begin_comment
 comment|/*  * CSR  */
 end_comment
@@ -398,21 +281,21 @@ begin_define
 define|#
 directive|define
 name|ET_PM_SYSCLK_GATE
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PM_TXCLK_GATE
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PM_RXCLK_GATE
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
@@ -440,56 +323,56 @@ begin_define
 define|#
 directive|define
 name|ET_SWRST_TXDMA
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_RXDMA
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_TXMAC
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_RXMAC
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_MAC
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_MAC_STAT
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_MMC
-value|__BIT(6)
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_SWRST_SELFCLR_DISABLE
-value|__BIT(31)
+value|0x80000000
 end_define
 
 begin_define
@@ -524,21 +407,21 @@ begin_define
 define|#
 directive|define
 name|ET_TXDMA_CTRL_HALT
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_TXDMA_CTRL_CACHE_THR
-value|__BITS(7, 4)
+name|ET_TXDMA_CTRL_CACHE_THR_MASK
+value|0x000000F0
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TXDMA_CTRL_SINGLE_EPKT
-value|__BIT(8)
+value|0x00000100
 end_define
 
 begin_comment
@@ -590,15 +473,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_TX_READY_POS_INDEX
-value|__BITS(9, 0)
+name|ET_TX_READY_POS_INDEX_MASK
+value|0x000003FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TX_READY_POS_WRAP
-value|__BIT(10)
+value|0x00000400
 end_define
 
 begin_define
@@ -611,15 +494,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_TX_DONE_POS_INDEX
-value|__BITS(9, 0)
+name|ET_TX_DONE_POS_INDEX_MASK
+value|0x0000003FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TX_DONE_POS_WRAP
-value|__BIT(10)
+value|0x000000400
 end_define
 
 begin_define
@@ -633,21 +516,21 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_HALT
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXDMA_CTRL_RING0_SIZE
-value|__BITS(9, 8)
+name|ET_RXDMA_CTRL_RING0_SIZE_MASK
+value|0x00000300
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING0_128
-value|0
+value|0x00000000
 end_define
 
 begin_comment
@@ -658,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING0_256
-value|1
+value|0x00000100
 end_define
 
 begin_comment
@@ -669,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING0_512
-value|2
+value|0x00000200
 end_define
 
 begin_comment
@@ -680,7 +563,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING0_1024
-value|3
+value|0x00000300
 end_define
 
 begin_comment
@@ -691,21 +574,21 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING0_ENABLE
-value|__BIT(10)
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXDMA_CTRL_RING1_SIZE
-value|__BITS(12, 11)
+name|ET_RXDMA_CTRL_RING1_SIZE_MASK
+value|0x00001800
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING1_2048
-value|0
+value|0x00000000
 end_define
 
 begin_comment
@@ -716,7 +599,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING1_4096
-value|1
+value|0x00000800
 end_define
 
 begin_comment
@@ -727,7 +610,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING1_8192
-value|2
+value|0x00001000
 end_define
 
 begin_comment
@@ -738,7 +621,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING1_16384
-value|3
+value|0x00001800
 end_define
 
 begin_comment
@@ -749,14 +632,14 @@ begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_RING1_ENABLE
-value|__BIT(13)
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXDMA_CTRL_HALTED
-value|__BIT(17)
+value|0x00020000
 end_define
 
 begin_define
@@ -818,15 +701,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_RXSTAT_POS_INDEX
-value|__BITS(11, 0)
+name|ET_RXSTAT_POS_INDEX_MASK
+value|0x00000FFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXSTAT_POS_WRAP
-value|__BIT(12)
+value|0x00001000
 end_define
 
 begin_define
@@ -867,15 +750,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_RX_RING0_POS_INDEX
-value|__BITS(9, 0)
+name|ET_RX_RING0_POS_INDEX_MASK
+value|0x000003FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RX_RING0_POS_WRAP
-value|__BIT(10)
+value|0x00000400
 end_define
 
 begin_define
@@ -917,14 +800,14 @@ begin_define
 define|#
 directive|define
 name|ET_RX_RING1_POS_INDEX
-value|__BITS(9, 0)
+value|0x000003FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RX_RING1_POS_WRAP
-value|__BIT(10)
+value|0x00000400
 end_define
 
 begin_define
@@ -945,14 +828,14 @@ begin_define
 define|#
 directive|define
 name|ET_TXMAC_CTRL_ENABLE
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TXMAC_CTRL_FC_DISABLE
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
@@ -973,21 +856,21 @@ begin_define
 define|#
 directive|define
 name|ET_RXMAC_CTRL_ENABLE
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_CTRL_NO_PKTFILT
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_CTRL_WOL_DISABLE
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
@@ -1057,35 +940,42 @@ begin_define
 define|#
 directive|define
 name|ET_PKTFILT_BCAST
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PKTFILT_MCAST
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PKTFILT_UCAST
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PKTFILT_FRAG
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_PKTFILT_MINLEN
-value|__BITS(22, 16)
+name|ET_PKTFILT_MINLEN_MASK
+value|0x007F0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_PKTFILT_MINLEN_SHIFT
+value|16
 end_define
 
 begin_define
@@ -1099,21 +989,21 @@ begin_define
 define|#
 directive|define
 name|ET_RXMAC_MC_SEGSZ_ENABLE
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_MC_SEGSZ_FC
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_RXMAC_MC_SEGSZ_MAX
-value|__BITS(9, 2)
+name|ET_RXMAC_MC_SEGSZ_MAX_MASK
+value|0x000003FC
 end_define
 
 begin_define
@@ -1158,28 +1048,28 @@ begin_define
 define|#
 directive|define
 name|ET_RXMAC_MGT_PASS_ECRC
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_MGT_PASS_ELEN
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_MGT_PASS_ETRUNC
-value|__BIT(16)
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RXMAC_MGT_CHECK_PKT
-value|__BIT(17)
+value|0x00020000
 end_define
 
 begin_define
@@ -1193,91 +1083,91 @@ begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_TXEN
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_SYNC_TXEN
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RXEN
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_SYNC_RXEN
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_TXFLOW
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RXFLOW
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_LOOPBACK
-value|__BIT(8)
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RST_TXFUNC
-value|__BIT(16)
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RST_RXFUNC
-value|__BIT(17)
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RST_TXMC
-value|__BIT(18)
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_RST_RXMC
-value|__BIT(19)
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_SIM_RST
-value|__BIT(30)
+value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG1_SOFT_RST
-value|__BIT(31)
+value|0x80000000
 end_define
 
 begin_define
@@ -1291,56 +1181,63 @@ begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_FDX
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_CRC
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_PADCRC
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_LENCHK
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_BIGFRM
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_MODE_MII
-value|__BIT(8)
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CFG2_MODE_GMII
-value|__BIT(9)
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_MAC_CFG2_PREAMBLE_LEN
-value|__BITS(15, 12)
+name|ET_MAC_CFG2_PREAMBLE_LEN_MASK
+value|0x0000F000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MAC_CFG2_PREAMBLE_LEN_SHIFT
+value|12
 end_define
 
 begin_define
@@ -1353,29 +1250,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_IPG_B2B
-value|__BITS(6, 0)
+name|ET_IPG_B2B_MASK
+value|0x0000007F
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_IPG_MINIFG
-value|__BITS(15, 8)
+name|ET_IPG_MINIFG_MASK
+value|0x0000FF00
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_IPG_NONB2B_2
-value|__BITS(22, 16)
+name|ET_IPG_NONB2B_2_MASK
+value|0x007F0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_IPG_NONB2B_1
-value|__BITS(30, 24)
+name|ET_IPG_NONB2B_1_MASK
+value|0x7F000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_IPG_B2B_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_IPG_MINIFG_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_IPG_NONB2B_2_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_IPG_NONB2B_1_SHIFT
+value|24
 end_define
 
 begin_define
@@ -1388,50 +1313,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_MAC_HDX_COLLWIN
-value|__BITS(9, 0)
+name|ET_MAC_HDX_COLLWIN_MASK
+value|0x000003FF
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_MAC_HDX_REXMIT_MAX
-value|__BITS(15, 12)
+name|ET_MAC_HDX_REXMIT_MAX_MASK
+value|0x0000F000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_HDX_EXC_DEFER
-value|__BIT(16)
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_HDX_NOBACKOFF
-value|__BIT(17)
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_HDX_BP_NOBACKOFF
-value|__BIT(18)
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_HDX_ALT_BEB
-value|__BIT(19)
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_MAC_HDX_ALT_BEB_TRUNC
-value|__BITS(23, 20)
+name|ET_MAC_HDX_ALT_BEB_TRUNC_MASK
+value|0x00F00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MAC_HDX_COLLWIN_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MAC_HDX_REXMIT_MAX_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MAC_HDX_ALT_BEB_TRUNC_SHIFT
+value|20
 end_define
 
 begin_define
@@ -1452,28 +1398,28 @@ begin_define
 define|#
 directive|define
 name|ET_MII_CFG_CLKRST
-value|__BITS(2, 0)
+value|0x00000007
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MII_CFG_PREAMBLE_SUP
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MII_CFG_SCAN_AUTOINC
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MII_CFG_RST
-value|__BIT(31)
+value|0x80000000
 end_define
 
 begin_define
@@ -1487,7 +1433,7 @@ begin_define
 define|#
 directive|define
 name|ET_MII_CMD_READ
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
@@ -1500,15 +1446,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_MII_ADDR_REG
-value|__BITS(4, 0)
+name|ET_MII_ADDR_REG_MASK
+value|0x0000001F
 end_define
 
 begin_define
 define|#
 directive|define
-name|ET_MII_ADDR_PHY
-value|__BITS(12, 8)
+name|ET_MII_ADDR_PHY_MASK
+value|0x00001F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MII_ADDR_REG_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MII_ADDR_PHY_SHIFT
+value|8
 end_define
 
 begin_define
@@ -1521,8 +1481,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_MII_CTRL_VALUE
-value|__BITS(15, 0)
+name|ET_MII_CTRL_VALUE_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_MII_CTRL_VALUE_SHIFT
+value|0
 end_define
 
 begin_define
@@ -1535,8 +1502,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_MII_STAT_VALUE
-value|__BITS(15, 0)
+name|ET_MII_STAT_VALUE_MASK
+value|0x0000FFFF
 end_define
 
 begin_define
@@ -1550,14 +1517,14 @@ begin_define
 define|#
 directive|define
 name|ET_MII_IND_BUSY
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MII_IND_INVALID
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
@@ -1571,21 +1538,21 @@ begin_define
 define|#
 directive|define
 name|ET_MAC_CTRL_MODE_MII
-value|__BIT(24)
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CTRL_LHDX
-value|__BIT(25)
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MAC_CTRL_GHDX
-value|__BIT(26)
+value|0x04000000
 end_define
 
 begin_define
@@ -1613,49 +1580,49 @@ begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_ENABLE
-value|__BIT(0)
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_ARB_DISABLE
-value|__BIT(1)
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_RXMAC_DISABLE
-value|__BIT(2)
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_TXMAC_DISABLE
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_TXDMA_DISABLE
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_RXDMA_DISABLE
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_MMC_CTRL_FORCE_CE
-value|__BIT(6)
+value|0x00000040
 end_define
 
 begin_comment
@@ -1666,98 +1633,98 @@ begin_define
 define|#
 directive|define
 name|ET_INTR_TXEOF
-value|__BIT(3)
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_TXDMA_ERROR
-value|__BIT(4)
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXEOF
-value|__BIT(5)
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXRING0_LOW
-value|__BIT(6)
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXRING1_LOW
-value|__BIT(7)
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXSTAT_LOW
-value|__BIT(8)
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXDMA_ERROR
-value|__BIT(9)
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_TIMER
-value|__BIT(14)
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_WOL
-value|__BIT(15)
+value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_PHY
-value|__BIT(16)
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_TXMAC
-value|__BIT(17)
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_RXMAC
-value|__BIT(18)
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_MAC_STATS
-value|__BIT(19)
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_INTR_SLAVE_TO
-value|__BIT(20)
+value|0x00100000
 end_define
 
 begin_define
@@ -1774,15 +1741,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ET_RX_RING_POS_INDEX
-value|__BITS(9, 0)
+name|ET_RX_RING_POS_INDEX_MASK
+value|0x000003FF
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_RX_RING_POS_WRAP
-value|__BIT(10)
+value|0x00000400
 end_define
 
 begin_comment

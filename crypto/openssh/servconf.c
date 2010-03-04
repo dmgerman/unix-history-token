@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.c,v 1.194 2009/01/22 10:02:34 djm Exp $ */
+comment|/* $OpenBSD: servconf.c,v 1.195 2009/04/14 21:10:54 jj Exp $ */
 end_comment
 
 begin_comment
@@ -7443,7 +7443,7 @@ value|do {\ 	if (src->n != NULL) { \ 		if (dst->n != NULL) \ 			xfree(dst->n); \
 end_define
 
 begin_comment
-comment|/*  * Copy any supported values that are set.  *  * If the preauth flag is set, we do not bother copying the the string or  * array values that are not used pre-authentication, because any that we  * do use must be explictly sent in mm_getpwnamallow().  */
+comment|/*  * Copy any supported values that are set.  *  * If the preauth flag is set, we do not bother copying the string or  * array values that are not used pre-authentication, because any that we  * do use must be explictly sent in mm_getpwnamallow().  */
 end_comment
 
 begin_function

@@ -8118,6 +8118,10 @@ name|imf
 operator|=
 name|NULL
 expr_stmt|;
+name|lims
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 literal|0
@@ -8636,7 +8640,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * MCAST_JOIN_SOURCE on an exclusive membership is an error. 	 * On an existing inclusive membership, it just adds the 	 * source to the filter list. 	 */
 name|imo
 operator|=
 name|in6p_findmoptions
@@ -8701,7 +8704,11 @@ operator|.
 name|ss_family
 operator|!=
 name|AF_UNSPEC
-operator|&&
+condition|)
+block|{
+comment|/* 			 * MCAST_JOIN_SOURCE_GROUP on an exclusive membership 			 * is an error. On an existing inclusive membership, 			 * it just adds the source to the filter list. 			 */
+if|if
+condition|(
 name|imf
 operator|->
 name|im6f_st
@@ -8720,6 +8727,7 @@ goto|goto
 name|out_in6p_locked
 goto|;
 block|}
+comment|/* 			 * Throw out duplicates. 			 * 			 * XXX FIXME: This makes a naive assumption that 			 * even if entries exist for *ssa in this imf, 			 * they will be rejected as dupes, even if they 			 * are not valid in the current mode (in-mode). 			 * 			 * in6_msource is transactioned just as for anything 			 * else in SSM -- but note naive use of in6m_graft() 			 * below for allocating new filter entries. 			 * 			 * This is only an issue if someone mixes the 			 * full-state SSM API with the delta-based API, 			 * which is discouraged in the relevant RFCs. 			 */
 name|lims
 operator|=
 name|im6o_match_source
@@ -8739,11 +8747,24 @@ condition|(
 name|lims
 operator|!=
 name|NULL
+comment|/*&& 			    lims->im6sl_st[1] == MCAST_INCLUDE*/
 condition|)
 block|{
 name|error
 operator|=
 name|EADDRNOTAVAIL
+expr_stmt|;
+goto|goto
+name|out_in6p_locked
+goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * MCAST_JOIN_GROUP alone, on any existing membership, 			 * is rejected, to stop the same inpcb tying up 			 * multiple refs to the in_multi. 			 * On an existing inclusive membership, this is also 			 * an error; if you want to change filter mode, 			 * you must use the userland API setsourcefilter(). 			 * XXX We don't reject this for imf in UNDEFINED 			 * state at t1, because allocation of a filter 			 * is atomic with allocation of a membership. 			 */
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|out_in6p_locked
@@ -8851,7 +8872,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in6_multi may not have 	 * been allocated yet if this is a new membership. 	 */
+comment|/* 	 * Graft new source into filter list for this inpcb's 	 * membership of the group. The in6_multi may not have 	 * been allocated yet if this is a new membership, however, 	 * the in_mfilter slot will be allocated and must be initialized. 	 * 	 * Note: Grafting of exclusive mode filters doesn't happen 	 * in this path. 	 * XXX: Should check for non-NULL lims (node exists but may 	 * not be in-mode) for interop with full-state API. 	 */
 if|if
 condition|(
 name|ssa
@@ -8939,6 +8960,34 @@ expr_stmt|;
 goto|goto
 name|out_im6o_free
 goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* No address specified; Membership starts in EX mode */
+if|if
+condition|(
+name|is_new
+condition|)
+block|{
+name|CTR1
+argument_list|(
+name|KTR_MLD
+argument_list|,
+literal|"%s: new join w/o source"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|im6f_init
+argument_list|(
+name|imf
+argument_list|,
+name|MCAST_UNDEFINED
+argument_list|,
+name|MCAST_EXCLUDE
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Begin state merge transaction at MLD layer. 	 */
@@ -10155,6 +10204,7 @@ condition|;
 operator|++
 name|idx
 control|)
+block|{
 name|imo
 operator|->
 name|im6o_membership
@@ -10171,6 +10221,23 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+name|imo
+operator|->
+name|im6o_mfilters
+index|[
+name|idx
+operator|-
+literal|1
+index|]
+operator|=
+name|imo
+operator|->
+name|im6o_mfilters
+index|[
+name|idx
+index|]
+expr_stmt|;
+block|}
 name|imo
 operator|->
 name|im6o_num_memberships
@@ -10434,8 +10501,14 @@ operator|.
 name|msfr_nsrcs
 operator|>
 name|in6_mcast_maxsocksrc
-operator|||
+condition|)
+return|return
 operator|(
+name|ENOBUFS
+operator|)
+return|;
+if|if
+condition|(
 name|msfr
 operator|.
 name|msfr_fmode
@@ -10447,7 +10520,6 @@ operator|.
 name|msfr_fmode
 operator|!=
 name|MCAST_INCLUDE
-operator|)
 condition|)
 return|return
 operator|(

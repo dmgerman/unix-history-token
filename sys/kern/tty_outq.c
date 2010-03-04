@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -74,72 +68,6 @@ end_include
 begin_comment
 comment|/*  * TTY output queue buffering.  *  * The previous design of the TTY layer offered the so-called clists.  * These clists were used for both the input queues and the output  * queue. We don't use certain features on the output side, like quoting  * bits for parity marking and such. This mechanism is similar to the  * old clists, but only contains the features we need to buffer the  * output.  */
 end_comment
-
-begin_comment
-comment|/* Statistics. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|ttyoutq_nfast
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|tty_outq_nfast
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|ttyoutq_nfast
-argument_list|,
-literal|0
-argument_list|,
-literal|"Unbuffered reads to userspace on output"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|ttyoutq_nslow
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|tty_outq_nslow
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|ttyoutq_nslow
-argument_list|,
-literal|0
-argument_list|,
-literal|"Buffered reads to userspace on output"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -700,14 +628,6 @@ operator|->
 name|to_end
 condition|)
 block|{
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ttyoutq_nfast
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Fast path: zero copy. Remove the first block, 			 * so we can unlock the TTY temporarily. 			 */
 name|TTYOUTQ_REMOVE_HEAD
 argument_list|(
@@ -786,14 +706,6 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-name|atomic_add_long
-argument_list|(
-operator|&
-name|ttyoutq_nslow
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Slow path: store data in a temporary buffer. 			 */
 name|memcpy
 argument_list|(

@@ -948,6 +948,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|pwent
+expr_stmt|;
+comment|/* Old getpwuid_r ignores last arg. */
 name|r
 operator|=
 name|getpwuid_r
@@ -1187,6 +1193,12 @@ init|;
 condition|;
 control|)
 block|{
+name|result
+operator|=
+operator|&
+name|grent
+expr_stmt|;
+comment|/* Old getgrgid_r ignores last arg. */
 name|r
 operator|=
 name|getgrgid_r

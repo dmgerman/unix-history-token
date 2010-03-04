@@ -4277,6 +4277,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+if|if
+condition|(
 name|TUNABLE_ULONG_FETCH
 argument_list|(
 literal|"kern.ipc.shmmaxpgs"
@@ -4286,7 +4291,27 @@ name|shminfo
 operator|.
 name|shmall
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"kern.ipc.shmmaxpgs is now called kern.ipc.shmall!\n"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"kern.ipc.shmall"
+argument_list|,
+operator|&
+name|shminfo
+operator|.
+name|shmall
+argument_list|)
+expr_stmt|;
+comment|/* Initialize shmmax dealing with possible overflow. */
 for|for
 control|(
 name|i

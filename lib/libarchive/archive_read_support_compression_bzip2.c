@@ -797,8 +797,6 @@ modifier|*
 name|state
 decl_stmt|;
 name|size_t
-name|read_avail
-decl_stmt|,
 name|decompressed
 decl_stmt|;
 specifier|const
@@ -819,10 +817,6 @@ operator|)
 name|self
 operator|->
 name|data
-expr_stmt|;
-name|read_avail
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1392,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_OK
+name|ret
 operator|)
 return|;
 block|}

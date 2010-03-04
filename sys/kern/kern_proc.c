@@ -1106,12 +1106,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uma_zone_t
-name|ithread_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|kstack_pages
 init|=
@@ -2196,6 +2190,12 @@ expr_stmt|;
 name|sess
 operator|->
 name|s_ttyvp
+operator|=
+name|NULL
+expr_stmt|;
+name|sess
+operator|->
+name|s_ttydp
 operator|=
 name|NULL
 expr_stmt|;
@@ -3493,12 +3493,6 @@ name|ki_pctcpu
 operator|=
 literal|0
 expr_stmt|;
-name|kp
-operator|->
-name|ki_runtime
-operator|=
-literal|0
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -3518,17 +3512,6 @@ operator|+=
 name|sched_pctcpu
 argument_list|(
 name|td
-argument_list|)
-expr_stmt|;
-name|kp
-operator|->
-name|ki_runtime
-operator|+=
-name|cputick2usec
-argument_list|(
-name|td
-operator|->
-name|td_runtime
 argument_list|)
 expr_stmt|;
 name|kp
@@ -4521,7 +4504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in information that is thread specific.  Must be called with p_slock  * locked.  If 'preferthread' is set, overwrite certain process-related  * fields that are maintained for both threads and processes.  */
+comment|/*  * Fill in information that is thread specific.  Must be called with  * target process locked.  If 'preferthread' is set, overwrite certain  * process-related fields that are maintained for both threads and  * processes.  */
 end_comment
 
 begin_function
@@ -4607,17 +4590,6 @@ name|ki_wmesg
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_name
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
 name|strlcpy
 argument_list|(
 name|kp
@@ -4976,16 +4948,17 @@ name|ki_rqindex
 operator|=
 literal|0
 expr_stmt|;
-name|SIGSETOR
-argument_list|(
+if|if
+condition|(
+name|preferthread
+condition|)
 name|kp
 operator|->
 name|ki_siglist
-argument_list|,
+operator|=
 name|td
 operator|->
 name|td_siglist
-argument_list|)
 expr_stmt|;
 name|kp
 operator|->

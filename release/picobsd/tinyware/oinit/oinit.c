@@ -556,7 +556,7 @@ literal|"Set environment variable"
 block|,
 literal|"set [VAR=value]"
 block|,
-literal|"set TERM=cons25"
+literal|"set TERM=xterm"
 block|,
 name|set
 block|}
@@ -2734,7 +2734,7 @@ argument_list|)
 expr_stmt|;
 name|putenv
 argument_list|(
-literal|"TERM=cons25"
+literal|"TERM=xterm"
 argument_list|)
 expr_stmt|;
 name|putenv

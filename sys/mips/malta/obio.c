@@ -104,7 +104,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A bit tricky and hackish. Since we need OBIO to rely  * on PCI we make it pseudo-pci device. But there should   * be only one such device, so we use this static flag   * to prevent false positives on every realPCI device probe.   */
+comment|/*  * A bit tricky and hackish. Since we need OBIO to rely  * on PCI we make it pseudo-pci device. But there should   * be only one such device, so we use this static flag   * to prevent false positives on every real PCI device probe.  */
 end_comment
 
 begin_decl_stmt
@@ -138,7 +138,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ENXIO
@@ -169,7 +168,7 @@ name|sc
 operator|->
 name|oba_st
 operator|=
-name|MIPS_BUS_SPACE_IO
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->

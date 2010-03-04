@@ -2456,6 +2456,10 @@ begin_comment
 comment|/* bool: allow bind to any address */
 end_comment
 
+begin_comment
+comment|/*  * Options for controlling the firewall and dummynet.  * Historical options (from 40 to 64) will eventually be  * replaced by only two options, IP_FW3 and IP_DUMMYNET3.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2509,6 +2513,28 @@ end_define
 
 begin_comment
 comment|/* list table contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW3
+value|48
+end_define
+
+begin_comment
+comment|/* generic ipfw v.3 sockopts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET3
+value|49
+end_define
+
+begin_comment
+comment|/* generic dummynet v.3 sockopts */
 end_comment
 
 begin_define
@@ -3580,6 +3606,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|inet_aton
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* in libkern */
+end_comment
+
+begin_function_decl
 name|char
 modifier|*
 name|inet_ntoa
@@ -3686,6 +3731,79 @@ name|ifa
 parameter_list|)
 value|((struct in_ifaddr *)(ifa))
 end_define
+
+begin_comment
+comment|/*  * Historically, BSD keeps ip_len and ip_off in host format  * when doing layer 3 processing, and this often requires  * to translate the format back and forth.  * To make the process explicit, we define a couple of macros  * that also take into account the fact that at some point  * we may want to keep those fields always in net format.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_NET_IPLEN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SET_NET_IPLEN
+parameter_list|(
+name|p
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_HOST_IPLEN
+parameter_list|(
+name|p
+parameter_list|)
+value|do {} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SET_NET_IPLEN
+parameter_list|(
+name|p
+parameter_list|)
+value|do {		\ 	struct ip *h_ip = (p);			\ 	h_ip->ip_len = htons(h_ip->ip_len);	\ 	h_ip->ip_off = htons(h_ip->ip_off);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_HOST_IPLEN
+parameter_list|(
+name|p
+parameter_list|)
+value|do {		\ 	struct ip *h_ip = (p);			\ 	h_ip->ip_len = ntohs(h_ip->ip_len);	\ 	h_ip->ip_off = ntohs(h_ip->ip_off);	\ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_NET_IPLEN */
+end_comment
 
 begin_endif
 endif|#

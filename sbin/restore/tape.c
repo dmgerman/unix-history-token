@@ -1163,6 +1163,9 @@ operator|!
 name|pipein
 operator|&&
 operator|!
+name|pipecmdin
+operator|&&
+operator|!
 name|bflag
 condition|)
 name|findtapeblksize
@@ -1743,18 +1746,6 @@ operator|==
 literal|1
 condition|)
 return|return;
-if|if
-condition|(
-name|pipecmdin
-condition|)
-block|{
-name|closemt
-argument_list|()
-expr_stmt|;
-goto|goto
-name|getpipecmdhdr
-goto|;
-block|}
 goto|goto
 name|gethdr
 goto|;
@@ -2106,8 +2097,6 @@ literal|"2147483647"
 argument_list|)
 index|]
 decl_stmt|;
-name|getpipecmdhdr
-label|:
 operator|(
 name|void
 operator|)
@@ -2115,7 +2104,7 @@ name|sprintf
 argument_list|(
 name|volno
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|newvol
 argument_list|)
@@ -2292,8 +2281,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong volume (%ld)\n"
+literal|"Wrong volume (%jd)\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmpbuf
 operator|.
 name|c_volume
@@ -2391,10 +2383,16 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"last rec %qd, tape starts with %qd\n"
+literal|"last rec %jd, tape starts with %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|prevtapea
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tmpbuf
 operator|.
 name|c_tapea
@@ -2828,8 +2826,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Level %ld dump of %s on %s:%s\n"
+literal|"Level %jd dump of %s on %s:%s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|spcl
 operator|.
 name|c_level
@@ -6098,6 +6099,9 @@ condition|(
 operator|!
 name|pipein
 operator|&&
+operator|!
+name|pipecmdin
+operator|&&
 name|numtrec
 operator|<
 name|ntrec
@@ -6122,7 +6126,11 @@ block|}
 comment|/* 	 * Handle partial block read. 	 */
 if|if
 condition|(
+operator|(
 name|pipein
+operator|||
+name|pipecmdin
+operator|)
 operator|&&
 name|i
 operator|==
@@ -6153,6 +6161,8 @@ block|{
 if|if
 condition|(
 name|pipein
+operator|||
+name|pipecmdin
 condition|)
 block|{
 name|rd
@@ -6436,7 +6446,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"partial block read: %d should be %d\n"
+literal|"partial block read: %ld should be %ld\n"
 argument_list|,
 name|rd
 argument_list|,
@@ -7285,8 +7295,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"begins with record %qd"
+literal|"begins with record %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|header
 operator|->
 name|c_firstrec

@@ -818,12 +818,12 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|CROSS_DEBUGGER
-name|_initialize_mipsfbsd_nat
-argument_list|()
-expr_stmt|;
-name|_initialize_mips_nat
-argument_list|()
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|_initialize_mipsfbsd_nat ();   _initialize_mips_nat ();
+endif|#
+directive|endif
 name|_initialize_kernel_u_addr
 argument_list|()
 expr_stmt|;
@@ -839,9 +839,12 @@ expr_stmt|;
 name|_initialize_svr4_solib
 argument_list|()
 expr_stmt|;
-name|_initialize_svr4_lm
-argument_list|()
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|_initialize_svr4_lm ();
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|_initialize_remote

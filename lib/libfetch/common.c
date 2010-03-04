@@ -3631,7 +3631,7 @@ operator|>
 literal|0
 operator|&&
 name|h_len
-operator|>
+operator|>=
 name|d_len
 operator|&&
 name|strncasecmp

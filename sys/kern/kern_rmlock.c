@@ -421,7 +421,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Add or remove tracker from per cpu list.  *  * The per cpu list can be traversed at any time in forward direction from an  * interrupt on the *local* cpu.  */
+comment|/*  * Add or remove tracker from per-cpu list.  *  * The per-cpu list can be traversed at any time in forward direction from an  * interrupt on the *local* cpu.  */
 end_comment
 
 begin_function
@@ -975,7 +975,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* Remove our tracker from the per cpu list. */
+comment|/* Remove our tracker from the per-cpu list. */
 name|rm_tracker_remove
 argument_list|(
 name|pc
@@ -1020,7 +1020,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Just grand the lock if this thread already have a tracker 		 * for this lock on the per cpu queue. 		 */
+comment|/* 		 * Just grant the lock if this thread already has a tracker 		 * for this lock on the per-cpu queue. 		 */
 for|for
 control|(
 name|queue

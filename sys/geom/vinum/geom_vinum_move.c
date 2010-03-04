@@ -296,7 +296,7 @@ argument_list|(
 name|req
 argument_list|,
 literal|"you can only move subdisks; "
-literal|"'%s' isn't one"
+literal|"'%s' is not a subdisk"
 argument_list|,
 name|object
 argument_list|)
@@ -585,7 +585,7 @@ name|G_VINUM_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"could not set the subdisk '%s' to state "
+literal|"unable to set the subdisk '%s' to state "
 literal|"'stale'"
 argument_list|,
 name|cursd

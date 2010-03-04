@@ -154,11 +154,11 @@ name|CHIP_RV610
 block|,
 name|CHIP_RV630
 block|,
+name|CHIP_RV670
+block|,
 name|CHIP_RV620
 block|,
 name|CHIP_RV635
-block|,
-name|CHIP_RV670
 block|,
 name|CHIP_RS780
 block|,
@@ -166,11 +166,11 @@ name|CHIP_RS880
 block|,
 name|CHIP_RV770
 block|,
-name|CHIP_RV740
-block|,
 name|CHIP_RV730
 block|,
 name|CHIP_RV710
+block|,
+name|CHIP_RV740
 block|,
 name|CHIP_LAST
 block|, }

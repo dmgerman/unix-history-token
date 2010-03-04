@@ -3590,6 +3590,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF_1_NOOPEN
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Do not allow loading on dlopen() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DF_1_ORIGIN
 value|0x00000080
 end_define

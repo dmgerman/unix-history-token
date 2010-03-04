@@ -220,6 +220,12 @@ directive|include
 file|<dev/usb/controller/ohci.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/controller/ohcireg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -281,6 +287,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ohci debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.ohci.debug"
+argument_list|,
+operator|&
+name|ohcidebug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

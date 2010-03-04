@@ -273,7 +273,7 @@ name|pcpu
 block|,
 name|NULL
 block|,
-literal|4
+literal|5
 block|,
 literal|0
 block|,
@@ -1726,7 +1726,7 @@ name|kvar
 block|,
 name|NULL
 block|,
-literal|5
+literal|6
 block|,
 name|KOFF
 argument_list|(
@@ -2512,7 +2512,7 @@ name|vsize
 block|,
 name|NULL
 block|,
-literal|5
+literal|6
 block|,
 literal|0
 block|,
@@ -3178,6 +3178,11 @@ argument_list|(
 name|realfmt
 argument_list|,
 name|user
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|realfmt
 argument_list|)
 expr_stmt|;
 block|}

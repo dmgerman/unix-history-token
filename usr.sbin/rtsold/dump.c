@@ -108,6 +108,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sec2str
@@ -118,8 +119,11 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|ifstatstr
 index|[]
 init|=
@@ -421,6 +425,7 @@ begin_function
 name|void
 name|rtsold_dump_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dumpfile
@@ -473,6 +478,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sec2str

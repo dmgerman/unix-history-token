@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.h,v 1.49 2008/07/10 18:08:11 markus Exp $ */
+comment|/* $OpenBSD: packet.h,v 1.52 2009/06/27 09:29:06 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -208,6 +208,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|packet_put_int64
+parameter_list|(
+name|u_int64_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|packet_put_bignum
 parameter_list|(
 name|BIGNUM
@@ -356,6 +366,15 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|packet_get_int
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int64_t
+name|packet_get_int64
 parameter_list|(
 name|void
 parameter_list|)
@@ -592,6 +611,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|packet_get_newkeys
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|packet_write_poll
 parameter_list|(
 name|void
@@ -696,19 +725,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|max_packet_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|void
+name|packet_set_alive_timeouts
+parameter_list|(
 name|int
-name|keep_alive_timeouts
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|packet_inc_alive_timeouts
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -719,13 +752,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|u_int
 name|packet_get_maxsize
-parameter_list|()
-value|max_packet_size
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* don't allow remaining bytes after the end of the message */
@@ -754,6 +788,44 @@ name|void
 name|packet_set_rekey_limit
 parameter_list|(
 name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_backup_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_restore_state
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|packet_get_input
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|packet_get_output
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

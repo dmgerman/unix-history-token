@@ -434,7 +434,9 @@ end_function
 begin_function
 name|void
 name|symtable_open
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|symtable
 operator|=
@@ -483,7 +485,9 @@ end_function
 begin_function
 name|void
 name|symtable_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

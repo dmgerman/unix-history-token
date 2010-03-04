@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -822,10 +822,6 @@ name|bonustype
 parameter_list|,
 name|int
 name|bonuslen
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 comment|/*  * Free an object from this objset.  *  * The object's data will be freed as well (ie. you don't need to call  * dmu_free(object, 0, -1, tx)).  *  * The object need not be held in the transaction.  *  * If there are any holds on this object's buffers (via dmu_buf_hold()),  * or tx holds on the object (via dmu_tx_hold_object()), you can not  * free it; it fails and returns EBUSY.  *  * If the object is not allocated, it fails and returns ENOENT.  *  * Return 0 on success, or EBUSY or ENOENT as specified above.  */

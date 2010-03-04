@@ -170,17 +170,19 @@ name|eflag
 decl_stmt|,
 name|hflag
 decl_stmt|,
-name|Nflag
-decl_stmt|,
-name|nflag
-decl_stmt|,
-name|oflag
+name|iflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
+name|Nflag
+decl_stmt|,
+name|nflag
+decl_stmt|,
+name|oflag
+decl_stmt|,
 name|qflag
 decl_stmt|,
 name|xflag
@@ -284,6 +286,7 @@ specifier|static
 name|int
 name|set_IK
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -310,7 +313,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehNnoqx] name[=value] ..."
+literal|"usage: sysctl [-bdehiNnoqx] name[=value] ..."
 argument_list|,
 literal|"       sysctl [-bdehNnoqx] -a"
 argument_list|)
@@ -371,7 +374,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabdehNnoqwxX"
+literal|"AabdehiNnoqwxX"
 argument_list|)
 operator|)
 operator|!=
@@ -431,6 +434,14 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
 operator|=
 literal|1
 expr_stmt|;
@@ -745,6 +756,11 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|iflag
+condition|)
+return|return;
 if|if
 condition|(
 name|qflag
@@ -1263,14 +1279,41 @@ break|break;
 case|case
 name|CTLTYPE_QUAD
 case|:
-name|sscanf
+name|quadval
+operator|=
+name|strtoq
 argument_list|(
 name|newval
 argument_list|,
-literal|"%qd"
-argument_list|,
 operator|&
-name|quadval
+name|endptr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|endptr
+operator|==
+name|newval
+operator|||
+operator|*
+name|endptr
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid quad integer"
+literal|" '%s'"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|newval
 argument_list|)
 expr_stmt|;
 name|newval
@@ -1519,7 +1562,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_clockinfo %d != %d"
+literal|"S_clockinfo %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1607,7 +1650,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_loadavg %d != %d"
+literal|"S_loadavg %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1740,7 +1783,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_timeval %d != %d"
+literal|"S_timeval %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -1879,7 +1922,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_vmtotal %d != %d"
+literal|"S_vmtotal %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2052,7 +2095,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"T_dev_T %d != %d"
+literal|"T_dev_T %d != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2069,74 +2112,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-call|(
-name|int
-call|)
-argument_list|(
-operator|*
-name|d
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|minor
-argument_list|(
-operator|*
-name|d
-argument_list|)
-operator|>
-literal|255
-operator|||
-name|minor
-argument_list|(
-operator|*
-name|d
-argument_list|)
-operator|<
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|"{ major = %d, minor = 0x%x }"
+literal|"%s"
 argument_list|,
-name|major
+name|devname
 argument_list|(
 operator|*
 name|d
-argument_list|)
 argument_list|,
-name|minor
-argument_list|(
-operator|*
-name|d
+name|S_IFCHR
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"{ major = %d, minor = %d }"
-argument_list|,
-name|major
-argument_list|(
-operator|*
-name|d
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-operator|*
-name|d
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2271,6 +2259,7 @@ specifier|static
 name|int
 name|set_IK
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2288,10 +2277,12 @@ name|len
 decl_stmt|,
 name|kelv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|endptr
 decl_stmt|;
@@ -2336,11 +2327,6 @@ operator|==
 literal|'F'
 condition|)
 block|{
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
 name|temp
 operator|=
 name|strtof
@@ -2357,10 +2343,9 @@ name|endptr
 operator|==
 name|str
 operator|||
-operator|*
 name|endptr
 operator|!=
-literal|'\0'
+name|p
 condition|)
 return|return
 operator|(
@@ -2648,7 +2633,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl fmt %d %d %d"
+literal|"sysctl fmt %d %zu %d"
 argument_list|,
 name|i
 argument_list|,
@@ -2792,6 +2777,15 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Silence GCC. */
+name|umv
+operator|=
+name|mv
+operator|=
+name|intlen
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|buf
@@ -2874,7 +2868,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl name %d %d %d"
+literal|"sysctl name %d %zu %d"
 argument_list|,
 name|i
 argument_list|,
@@ -3160,6 +3154,9 @@ name|printf
 argument_list|(
 literal|"%.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|p
@@ -3670,7 +3667,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Format:%s Length:%d Dump:0x"
+literal|"Format:%s Length:%zu Dump:0x"
 argument_list|,
 name|fmt
 argument_list|,
@@ -3884,7 +3881,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"sysctl(getnext) %d %d"
+literal|"sysctl(getnext) %d %zu"
 argument_list|,
 name|j
 argument_list|,

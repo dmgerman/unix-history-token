@@ -552,6 +552,9 @@ name|struct
 name|callout
 name|stat_callout
 decl_stmt|;
+name|int
+name|tx_timer
+decl_stmt|;
 name|void
 modifier|*
 name|sc_ih

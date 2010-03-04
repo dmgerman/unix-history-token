@@ -40,6 +40,7 @@ name|alias
 modifier|*
 name|lookupalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

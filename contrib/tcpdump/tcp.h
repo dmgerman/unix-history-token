@@ -327,6 +327,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCPOPT_UTO
+value|28
+end_define
+
+begin_comment
+comment|/* tcp user timeout (rfc5482) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_UTO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCPOPT_TSTAMP_HDR
 define|\
 value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|TCPOPT_TIMESTAMP<<8|TCPOLEN_TIMESTAMP)

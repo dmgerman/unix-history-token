@@ -422,7 +422,7 @@ case|:
 if|if
 condition|(
 name|act
-operator|>
+operator|>=
 name|N
 argument_list|(
 name|hwmp_send_action

@@ -457,6 +457,10 @@ name|uint32_t
 name|id
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__ia64__
+comment|/* XXX this logic has a race-condition on ia64. */
 if|if
 condition|(
 operator|(
@@ -503,6 +507,9 @@ literal|0
 argument_list|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* __ia64__ */
 return|return
 name|_umtx_op_err
 argument_list|(

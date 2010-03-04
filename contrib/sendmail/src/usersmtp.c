@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.472 2008/01/31 18:48:29 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.473 2009/06/17 17:26:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6280,10 +6280,13 @@ decl_stmt|;
 name|sasl_security_properties_t
 name|ssp
 decl_stmt|;
+comment|/* MUST NOT be a multiple of 4: bug in some sasl_encode64() versions */
 name|char
 name|in64
 index|[
 name|MAXOUTLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|#
@@ -7235,7 +7238,10 @@ name|outlen
 argument_list|,
 name|in64
 argument_list|,
-name|MAXOUTLEN
+sizeof|sizeof
+argument_list|(
+name|in64
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
@@ -7508,7 +7514,10 @@ name|outlen
 argument_list|,
 name|in64
 argument_list|,
-name|MAXOUTLEN
+sizeof|sizeof
+argument_list|(
+name|in64
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|)

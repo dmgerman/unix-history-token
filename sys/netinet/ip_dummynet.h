@@ -172,7 +172,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  This is used within  * the dummynet code as well as outside when checking for special  * processing requirements.  */
+comment|/*  * Packets processed by dummynet have an mbuf tag associated with  * them that carries their dummynet state.  This is used within  * the dummynet code as well as outside when checking for special  * processing requirements.  * Note that the first part is the reinject info and is common to  * other forms of packet reinjection.  */
 end_comment
 
 begin_struct
@@ -180,52 +180,16 @@ struct|struct
 name|dn_pkt_tag
 block|{
 name|struct
-name|ip_fw
-modifier|*
+name|ipfw_rule_ref
 name|rule
 decl_stmt|;
 comment|/* matching rule */
-name|uint32_t
-name|rule_id
-decl_stmt|;
-comment|/* matching rule id */
-name|uint32_t
-name|chain_id
-decl_stmt|;
-comment|/* ruleset id */
+comment|/* second part, dummynet specific */
 name|int
 name|dn_dir
 decl_stmt|;
 comment|/* action when packet comes out. */
-define|#
-directive|define
-name|DN_TO_IP_OUT
-value|1
-define|#
-directive|define
-name|DN_TO_IP_IN
-value|2
-comment|/* Obsolete: #define DN_TO_BDG_FWD	3 */
-define|#
-directive|define
-name|DN_TO_ETH_DEMUX
-value|4
-define|#
-directive|define
-name|DN_TO_ETH_OUT
-value|5
-define|#
-directive|define
-name|DN_TO_IP6_IN
-value|6
-define|#
-directive|define
-name|DN_TO_IP6_OUT
-value|7
-define|#
-directive|define
-name|DN_TO_IFB_FWD
-value|8
+comment|/* see ip_fw_private.h */
 name|dn_key
 name|output_time
 decl_stmt|;
@@ -724,85 +688,6 @@ name|dn_pipe
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Return the dummynet tag; if any.  * Make sure that the dummynet tag is not reused by lower layers.  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|dn_pkt_tag
-operator|*
-name|ip_dn_claim_tag
-argument_list|(
-argument|struct mbuf *m
-argument_list|)
-block|{ 	struct
-name|m_tag
-operator|*
-name|mtag
-operator|=
-name|m_tag_find
-argument_list|(
-name|m
-argument_list|,
-name|PACKET_TAG_DUMMYNET
-argument_list|,
-name|NULL
-argument_list|)
-block|;
-if|if
-condition|(
-name|mtag
-operator|!=
-name|NULL
-condition|)
-block|{
-name|mtag
-operator|->
-name|m_tag_id
-operator|=
-name|PACKET_TAG_NONE
-expr_stmt|;
-return|return
-operator|(
-operator|(
-expr|struct
-name|dn_pkt_tag
-operator|*
-operator|)
-operator|(
-name|mtag
-operator|+
-literal|1
-operator|)
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_else
-else|else
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-end_else
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

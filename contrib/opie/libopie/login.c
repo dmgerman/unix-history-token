@@ -21,12 +21,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -62,6 +56,17 @@ directive|define
 name|utmp
 value|utmpx
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
 
 begin_endif
 endif|#

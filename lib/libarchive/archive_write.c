@@ -1400,10 +1400,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|ret
-operator|=
-name|ARCHIVE_OK
-expr_stmt|;
 name|__archive_check_magic
 argument_list|(
 operator|&
@@ -1956,7 +1952,7 @@ name|skip_file_ino
 operator|!=
 literal|0
 operator|&&
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)

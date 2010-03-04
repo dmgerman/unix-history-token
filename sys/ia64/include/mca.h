@@ -55,6 +55,11 @@ directive|define
 name|MCA_RH_FLAGS_PLATFORM_ID
 value|0x01
 comment|/* Platform_id present. */
+define|#
+directive|define
+name|MCA_RH_FLAGS_TIME_STAMP
+value|0x02
+comment|/* Timestamp invalid. */
 name|uint32_t
 name|rh_length
 decl_stmt|;

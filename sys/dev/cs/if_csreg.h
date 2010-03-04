@@ -3003,6 +3003,21 @@ name|int
 name|off
 parameter_list|)
 block|{
+if|if
+condition|(
+name|off
+operator|&
+literal|1
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"BUG: inw to an odd address.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(

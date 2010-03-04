@@ -4536,21 +4536,6 @@ name|ad_handle
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_IVAR_MAGIC
-case|:
-operator|*
-operator|(
-name|uintptr_t
-operator|*
-operator|)
-name|result
-operator|=
-name|ad
-operator|->
-name|ad_magic
-expr_stmt|;
-break|break;
-case|case
 name|ACPI_IVAR_PRIVATE
 case|:
 operator|*
@@ -4696,19 +4681,6 @@ name|ad_handle
 operator|=
 operator|(
 name|ACPI_HANDLE
-operator|)
-name|value
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_IVAR_MAGIC
-case|:
-name|ad
-operator|->
-name|ad_magic
-operator|=
-operator|(
-name|uintptr_t
 operator|)
 name|value
 expr_stmt|;
@@ -7265,6 +7237,8 @@ name|max_depth
 argument_list|,
 name|acpi_device_scan_cb
 argument_list|,
+name|NULL
+argument_list|,
 operator|&
 name|ctx
 argument_list|,
@@ -7738,6 +7712,8 @@ literal|100
 argument_list|,
 name|acpi_probe_child
 argument_list|,
+name|NULL
+argument_list|,
 name|bus
 argument_list|,
 name|NULL
@@ -7770,22 +7746,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"first bus_generic_attach\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|bus_generic_attach
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/*      * Some of these children may have attached others as part of their attach      * process (eg. the root PCI bus driver), so rescan.      */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OBJECTS
-operator|,
-literal|"second bus_generic_attach\n"
+literal|"acpi bus_generic_attach\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7845,6 +7806,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|ACPI_TYPE_PROCESSOR
+condition|)
+operator|*
+name|order
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|acpi_MatchHid
 argument_list|(
 name|handle
@@ -7862,7 +7835,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 elseif|else
 if|if
@@ -7877,7 +7850,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 elseif|else
 if|if
@@ -7892,19 +7865,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|3
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|type
-operator|==
-name|ACPI_TYPE_PROCESSOR
-condition|)
-operator|*
-name|order
-operator|=
-literal|100000
+literal|4
 expr_stmt|;
 block|}
 end_function
@@ -10392,6 +10353,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 name|struct
@@ -10399,8 +10365,6 @@ name|apm_clone_data
 modifier|*
 name|clone
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|state
@@ -10461,17 +10425,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 comment|/* If a suspend request is already in progress, just return. */
 name|ACPI_LOCK
 argument_list|(
@@ -10505,12 +10458,6 @@ name|acpi_next_sstate
 operator|=
 name|state
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 name|STAILQ_FOREACH
 argument_list|(
 argument|clone
@@ -10563,8 +10510,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* If devd(8) is not running, immediately enter the sleep state. */
 if|if
 condition|(
@@ -10780,12 +10725,6 @@ name|sleeping
 operator|=
 name|TRUE
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 name|clone
 operator|->
 name|notify_status
@@ -10827,8 +10766,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* If all devices have voted "yes", we will suspend now. */
 if|if
 condition|(
@@ -12176,6 +12113,8 @@ argument_list|,
 literal|100
 argument_list|,
 name|acpi_wake_prep
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|sstate

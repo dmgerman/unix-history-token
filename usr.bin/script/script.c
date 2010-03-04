@@ -477,12 +477,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ttyflg
 operator|=
 name|isatty
 argument_list|(
 name|STDIN_FILENO
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if

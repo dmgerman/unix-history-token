@@ -50,14 +50,18 @@ name|vm_offset_t
 name|memtop
 decl_stmt|,
 name|memtop_copyin
+decl_stmt|,
+name|high_heap_base
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|bios_basemem
 decl_stmt|,
 name|bios_extmem
+decl_stmt|,
+name|high_heap_size
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +73,17 @@ name|smap
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The minimum amount of memory to reserve in bios_extmem for the heap.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEAP_MIN
+value|(3 * 1024 * 1024)
+end_define
+
 begin_function
 name|void
 name|bios_getmem
@@ -76,6 +91,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint64_t
+name|size
+decl_stmt|;
 comment|/* Parse system memory map */
 name|v86
 operator|.
@@ -225,6 +243,78 @@ name|smap
 operator|.
 name|length
 expr_stmt|;
+block|}
+comment|/* 	 * Look for the largest segment in 'extended' memory beyond 	 * 1MB but below 4GB. 	 */
+if|if
+condition|(
+operator|(
+name|smap
+operator|.
+name|type
+operator|==
+name|SMAP_TYPE_MEMORY
+operator|)
+operator|&&
+operator|(
+name|smap
+operator|.
+name|base
+operator|>
+literal|0x100000
+operator|)
+operator|&&
+operator|(
+name|smap
+operator|.
+name|base
+operator|<
+literal|0x100000000ull
+operator|)
+condition|)
+block|{
+name|size
+operator|=
+name|smap
+operator|.
+name|length
+expr_stmt|;
+comment|/* 	     * If this segment crosses the 4GB boundary, truncate it. 	     */
+if|if
+condition|(
+name|smap
+operator|.
+name|base
+operator|+
+name|size
+operator|>
+literal|0x100000000ull
+condition|)
+name|size
+operator|=
+literal|0x100000000ull
+operator|-
+name|smap
+operator|.
+name|base
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|high_heap_size
+condition|)
+block|{
+name|high_heap_size
+operator|=
+name|size
+expr_stmt|;
+name|high_heap_base
+operator|=
+name|smap
+operator|.
+name|base
+expr_stmt|;
+block|}
 block|}
 block|}
 do|while
@@ -394,6 +484,29 @@ literal|0x100000
 operator|+
 name|bios_extmem
 expr_stmt|;
+comment|/*      * If we have extended memory and did not find a suitable heap      * region in the SMAP, use the last 3MB of 'extended' memory as a      * high heap candidate.      */
+if|if
+condition|(
+name|bios_extmem
+operator|>=
+name|HEAP_MIN
+operator|&&
+name|high_heap_size
+operator|<
+name|HEAP_MIN
+condition|)
+block|{
+name|high_heap_size
+operator|=
+name|HEAP_MIN
+expr_stmt|;
+name|high_heap_base
+operator|=
+name|memtop
+operator|-
+name|HEAP_MIN
+expr_stmt|;
+block|}
 block|}
 end_function
 

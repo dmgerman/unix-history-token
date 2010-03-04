@@ -1942,6 +1942,22 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Get the ERR from queue -- it is from WINCH, 		 * so we should take it out, the "error" is handled. 		 */
+if|if
+condition|(
+name|fifo_peek
+argument_list|(
+name|sp
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fifo_pull
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 name|returnCode
 argument_list|(
 operator|*

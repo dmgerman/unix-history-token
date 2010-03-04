@@ -65,7 +65,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\   if ((USB_DEBUG_VAR)>= (n)) {				\     printf("%s:%u: " fmt,				\ 	   __FUNCTION__, __LINE__,## __VA_ARGS__);	\   }							\ } while (0)
+value|do {		\   if ((USB_DEBUG_VAR)>= (n)) {			\     printf("%s: " fmt,				\ 	   __FUNCTION__,## __VA_ARGS__);	\   }						\ } while (0)
 end_define
 
 begin_define

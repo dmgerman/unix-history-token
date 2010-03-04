@@ -132,7 +132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|uint32_t
+name|uintptr_t
 name|cpudep_ap_bootstrap
 parameter_list|()
 block|{
@@ -238,6 +238,13 @@ name|sp
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|cpudep_ap_setup
+parameter_list|()
+block|{ }
 end_function
 
 end_unit

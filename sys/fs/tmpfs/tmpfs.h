@@ -504,6 +504,62 @@ parameter_list|)
 value|(&(node)->tn_interlock)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TMPFS_ASSERT_LOCKED
+parameter_list|(
+name|node
+parameter_list|)
+value|do {					\ 		MPASS(node != NULL);					\ 		MPASS(node->tn_vnode != NULL);				\ 		if (!VOP_ISLOCKED(node->tn_vnode)&&			\ 		    !mtx_owned(TMPFS_NODE_MTX(node)))			\ 			panic("tmpfs: node is not locked: %p", node);	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPFS_ASSERT_ELOCKED
+parameter_list|(
+name|node
+parameter_list|)
+value|do {					\ 		MPASS((node) != NULL);					\ 		MPASS((node)->tn_vnode != NULL);			\ 		mtx_assert(TMPFS_NODE_MTX(node), MA_OWNED);		\ 		ASSERT_VOP_LOCKED((node)->tn_vnode, "tmpfs");		\ 	} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TMPFS_ASSERT_LOCKED
+parameter_list|(
+name|node
+parameter_list|)
+value|(void)0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPFS_ASSERT_ELOCKED
+parameter_list|(
+name|node
+parameter_list|)
+value|(void)0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -516,6 +572,13 @@ define|#
 directive|define
 name|TMPFS_VNODE_WANT
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMPFS_VNODE_DOOMED
+value|4
 end_define
 
 begin_comment
@@ -1189,7 +1252,7 @@ value|(4 * 1024 * 1024 / PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/*  * Returns information about the number of available memory pages,  * including physical and virtual ones.  *  * If 'total' is TRUE, the value returned is the total amount of memory  * pages configured for the system (either in use or free).  * If it is FALSE, the value returned is the amount of free memory pages.  *  * Remember to remove TMPFS_PAGES_RESERVED from the returned value to avoid  * excessive memory usage.  *  */
+comment|/*  * Returns information about the number of available memory pages,  * including physical and virtual ones.  *  * Remember to remove TMPFS_PAGES_RESERVED from the returned value to avoid  * excessive memory usage.  *  */
 end_comment
 
 begin_function

@@ -213,6 +213,12 @@ name|s_ttyvp
 decl_stmt|;
 comment|/* (m) Vnode of controlling tty. */
 name|struct
+name|cdev_priv
+modifier|*
+name|s_ttydp
+decl_stmt|;
+comment|/* (m) Device of controlling tty.  */
+name|struct
 name|tty
 modifier|*
 name|s_ttyp
@@ -612,10 +618,14 @@ name|u_int
 name|td_estcpu
 decl_stmt|;
 comment|/* (t) estimated cpu utilization */
-name|u_int
+name|int
 name|td_slptick
 decl_stmt|;
 comment|/* (t) Time at sleep. */
+name|int
+name|td_blktick
+decl_stmt|;
+comment|/* (t) Time spent blocked. */
 name|struct
 name|rusage
 name|td_ru
@@ -1160,12 +1170,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED18
+name|TDF_NOLOAD
 value|0x00040000
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* Ignore during load avg calculations. */
 end_comment
 
 begin_define
@@ -1324,6 +1334,17 @@ end_define
 
 begin_comment
 comment|/* Thread is exchanging signal under trace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_USERWR
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Debugger modified memory or registers */
 end_comment
 
 begin_comment
@@ -2531,12 +2552,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NOLOAD
+name|P_UNUSED0
 value|0x00008
 end_define
 
 begin_comment
-comment|/* Ignore during load avg calculations. */
+comment|/* available. */
 end_comment
 
 begin_define
@@ -4609,6 +4630,19 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_set_syscall_retval
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

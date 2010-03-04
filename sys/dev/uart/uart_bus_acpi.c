@@ -180,6 +180,13 @@ block|}
 block|,
 comment|/* PNP0501 */
 block|{
+literal|0x04f0235c
+block|,
+literal|"Wacom Tablet PC Screen"
+block|}
+block|,
+comment|/* WACF004 */
+block|{
 literal|0
 block|}
 block|}

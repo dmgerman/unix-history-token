@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Test 0080:	Check uninitialized scratch memory (only for JIT compiler).  *  * $FreeBSD$  */
+comment|/*-  * Test 0080:	Check uninitialized scratch memory (obsolete).  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|BPF_JIT_COMPILER
+name|BPF_JIT_COMPILER_OBSOLETE
 name|BPF_STMT
 argument_list|(
 name|BPF_LDX

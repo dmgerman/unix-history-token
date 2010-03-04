@@ -2798,11 +2798,13 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|psignal
+name|pksignal
 argument_list|(
 name|p
 argument_list|,
 name|sig
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK

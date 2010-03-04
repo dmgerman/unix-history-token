@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.159 2008/06/28 14:05:15 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.161 2009/03/23 19:38:04 tobias Exp $ */
 end_comment
 
 begin_comment
@@ -5640,6 +5640,9 @@ name|tvp
 init|=
 name|NULL
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 comment|/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
 name|sanitise_stdfd
 argument_list|()
@@ -5873,14 +5876,22 @@ name|shell
 operator|!=
 name|NULL
 operator|&&
-name|strncmp
-argument_list|(
-name|shell
-operator|+
+operator|(
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|shell
 argument_list|)
+operator|)
+operator|>
+literal|2
+operator|&&
+name|strncmp
+argument_list|(
+name|shell
+operator|+
+name|len
 operator|-
 literal|3
 argument_list|,

@@ -148,12 +148,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
 begin_decl_stmt
 name|DIR
 modifier|*
@@ -842,7 +836,14 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*s %s"
 argument_list|,
-name|UT_NAMESIZE
+sizeof|sizeof
+argument_list|(
+name|mp
+operator|->
+name|myutmp
+operator|.
+name|out_name
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1858,6 +1858,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|--
 expr_stmt|;
 name|softc
@@ -2693,6 +2696,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2714,17 +2719,6 @@ name|CAM_REQ_CMP_ERR
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|softc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -2870,6 +2864,17 @@ operator|=
 name|CD_Q_NONE
 expr_stmt|;
 comment|/* Check if the SIM does not want 6 byte commands */
+name|bzero
+argument_list|(
+operator|&
+name|cpi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpi
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
@@ -2881,8 +2886,7 @@ name|periph
 operator|->
 name|path
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cpi
@@ -3116,6 +3120,52 @@ operator|->
 name|d_drv1
 operator|=
 name|periph
+expr_stmt|;
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|==
+literal|0
+condition|)
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_maxsize
+operator|=
+name|DFLTPHYS
+expr_stmt|;
+comment|/* traditional default */
+elseif|else
+if|if
+condition|(
+name|cpi
+operator|.
+name|maxio
+operator|>
+name|MAXPHYS
+condition|)
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_maxsize
+operator|=
+name|MAXPHYS
+expr_stmt|;
+comment|/* for safety */
+else|else
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_maxsize
+operator|=
+name|cpi
+operator|.
+name|maxio
 expr_stmt|;
 name|softc
 operator|->
@@ -3568,6 +3618,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3596,18 +3648,6 @@ goto|goto
 name|cdregisterexit
 goto|;
 block|}
-comment|/* zero the structure */
-name|bzero
-argument_list|(
-name|nchanger
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|cdchanger
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|camq_init
@@ -3997,8 +4037,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 else|else
@@ -4006,8 +4045,7 @@ name|cdschedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 return|return
@@ -4499,7 +4537,7 @@ name|pinfo
 operator|.
 name|priority
 operator|=
-literal|1
+name|CAM_PRIORITY_NORMAL
 expr_stmt|;
 name|softc
 operator|->
@@ -4721,6 +4759,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|>
 literal|0
 condition|)
@@ -4731,6 +4772,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|--
 expr_stmt|;
 name|changer
@@ -4889,6 +4933,9 @@ operator|->
 name|devq
 operator|.
 name|qfrozen_cnt
+index|[
+literal|0
+index|]
 operator|++
 expr_stmt|;
 name|softc
@@ -4912,8 +4959,7 @@ name|softc
 operator|->
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get rid of any pending timeouts, and set a flag to schedule new 	 * ones so this device gets its full time quantum. 	 */
@@ -5424,7 +5470,7 @@ name|pinfo
 operator|.
 name|priority
 operator|=
-literal|1
+name|CAM_PRIORITY_NORMAL
 expr_stmt|;
 name|softc
 operator|->
@@ -5744,8 +5790,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 else|else
@@ -5753,8 +5798,7 @@ name|cdschedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cam_periph_unlock
@@ -5926,17 +5970,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|devstat_start_transaction_bio
-argument_list|(
-name|softc
-operator|->
-name|disk
-operator|->
-name|d_devstat
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 name|scsi_read_write
 argument_list|(
 operator|&
@@ -6099,8 +6132,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/* XXX priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6128,6 +6160,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6161,7 +6195,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -6412,6 +6446,20 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_DEV_QFRZN
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cam_release_devq
 argument_list|(
 name|done_ccb
@@ -6674,6 +6722,20 @@ name|ccb_getdev
 name|cgd
 decl_stmt|;
 comment|/* Don't wedge this device's queue */
+if|if
+condition|(
+operator|(
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_DEV_QFRZN
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cam_release_devq
 argument_list|(
 name|done_ccb
@@ -6716,8 +6778,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|cgd
@@ -8370,6 +8431,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -8643,6 +8706,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -8839,6 +8904,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|lead
@@ -8854,6 +8921,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -9520,6 +9589,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|cam_periph_lock
@@ -11657,11 +11728,6 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -11687,11 +11753,6 @@ argument_list|,
 name|authinfo
 argument_list|)
 expr_stmt|;
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 case|case
@@ -11712,11 +11773,6 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
-name|cam_periph_lock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|cdreaddvdstructure
@@ -11724,11 +11780,6 @@ argument_list|(
 name|periph
 argument_list|,
 name|dvdstruct
-argument_list|)
-expr_stmt|;
-name|cam_periph_unlock
-argument_list|(
-name|periph
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11910,8 +11961,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_prevent
@@ -11922,7 +11972,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -12047,14 +12097,6 @@ name|periph
 argument_list|,
 name|PR_PREVENT
 argument_list|)
-expr_stmt|;
-name|softc
-operator|->
-name|disk
-operator|->
-name|d_maxsize
-operator|=
-name|DFLTPHYS
 expr_stmt|;
 name|softc
 operator|->
@@ -12505,14 +12547,6 @@ name|softc
 operator|->
 name|disk
 operator|->
-name|d_maxsize
-operator|=
-name|DFLTPHYS
-expr_stmt|;
-name|softc
-operator|->
-name|disk
-operator|->
 name|d_sectorsize
 operator|=
 name|softc
@@ -12657,8 +12691,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* XXX Should be M_WAITOK */
@@ -12675,6 +12708,8 @@ argument_list|,
 name|M_SCSICD
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -12696,7 +12731,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|1
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -12759,6 +12794,25 @@ name|rcap_buf
 operator|->
 name|length
 argument_list|)
+expr_stmt|;
+comment|/* Make sure we got at least some block size. */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|softc
+operator|->
+name|params
+operator|.
+name|blksize
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 comment|/* 	 * SCSI-3 mandates that the reported blocksize shall be 2048. 	 * Older drives sometimes report funny values, trim it down to 	 * 2048, or other parts of the kernel will get confused. 	 * 	 * XXX we leave drives alone that might report 512 bytes, as 	 * well as drives reporting more weird sizes like perhaps 4K. 	 */
 if|if
@@ -13749,8 +13803,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -13765,7 +13818,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -13957,8 +14010,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -13973,7 +14025,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14176,8 +14228,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14237,7 +14288,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14512,8 +14563,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14670,7 +14720,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -14800,8 +14850,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -14973,7 +15022,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/*retries*/
-literal|2
+name|cd_retry_count
 argument_list|,
 name|cddone
 argument_list|,
@@ -15084,8 +15133,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15100,7 +15148,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15276,8 +15324,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15292,7 +15339,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15447,8 +15494,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15463,7 +15509,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15590,8 +15636,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_start_stop
@@ -15602,7 +15647,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15686,8 +15731,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_start_stop
@@ -15698,7 +15742,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15795,8 +15839,7 @@ name|cdgetccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/* priority */
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|csio
@@ -15832,7 +15875,7 @@ argument_list|(
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -15985,16 +16028,6 @@ name|lba
 operator|=
 literal|0
 expr_stmt|;
-name|ccb
-operator|=
-name|cdgetccb
-argument_list|(
-name|periph
-argument_list|,
-comment|/* priority */
-literal|1
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|authinfo
@@ -16090,15 +16123,11 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -16126,6 +16155,20 @@ name|databuf
 operator|=
 name|NULL
 expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+name|ccb
+operator|=
+name|cdgetccb
+argument_list|(
+name|periph
+argument_list|,
+name|CAM_PRIORITY_NORMAL
+argument_list|)
+expr_stmt|;
 name|scsi_report_key
 argument_list|(
 operator|&
@@ -16134,7 +16177,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -16569,6 +16612,16 @@ comment|/* NOTREACHED */
 block|}
 name|bailout
 label|:
+name|xpt_release_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|databuf
@@ -16580,11 +16633,6 @@ argument_list|(
 name|databuf
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|xpt_release_ccb
-argument_list|(
-name|ccb
 argument_list|)
 expr_stmt|;
 return|return
@@ -16633,16 +16681,6 @@ expr_stmt|;
 name|databuf
 operator|=
 name|NULL
-expr_stmt|;
-name|ccb
-operator|=
-name|cdgetccb
-argument_list|(
-name|periph
-argument_list|,
-comment|/* priority */
-literal|1
-argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -16884,16 +16922,26 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 block|}
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+name|ccb
+operator|=
+name|cdgetccb
+argument_list|(
+name|periph
+argument_list|,
+name|CAM_PRIORITY_NORMAL
+argument_list|)
+expr_stmt|;
 name|scsi_send_key
 argument_list|(
 operator|&
@@ -16902,7 +16950,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -16948,8 +16996,16 @@ comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|)
 expr_stmt|;
-name|bailout
-label|:
+name|xpt_release_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|databuf
@@ -16961,11 +17017,6 @@ argument_list|(
 name|databuf
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|xpt_release_ccb
-argument_list|(
-name|ccb
 argument_list|)
 expr_stmt|;
 return|return
@@ -17022,16 +17073,6 @@ comment|/* The address is reserved for many of the formats */
 name|address
 operator|=
 literal|0
-expr_stmt|;
-name|ccb
-operator|=
-name|cdgetccb
-argument_list|(
-name|periph
-argument_list|,
-comment|/* priority */
-literal|1
-argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -17103,34 +17144,11 @@ break|break;
 case|case
 name|DVD_STRUCT_CMI
 case|:
-name|error
-operator|=
+return|return
+operator|(
 name|ENODEV
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_read_dvd_struct_data_copy_manage
-argument_list|)
-expr_stmt|;
-name|address
-operator|=
-name|dvdstruct
-operator|->
-name|address
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 case|case
 name|DVD_STRUCT_PROTDISCID
 case|:
@@ -17194,65 +17212,19 @@ break|break;
 case|case
 name|DVD_STRUCT_RMD_LAST
 case|:
-name|error
-operator|=
+return|return
+operator|(
 name|ENODEV
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_read_dvd_struct_data_rmd_borderout
-argument_list|)
-expr_stmt|;
-name|address
-operator|=
-name|dvdstruct
-operator|->
-name|address
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 case|case
 name|DVD_STRUCT_RMD_RMA
 case|:
-name|error
-operator|=
+return|return
+operator|(
 name|ENODEV
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_read_dvd_struct_data_rmd
-argument_list|)
-expr_stmt|;
-name|address
-operator|=
-name|dvdstruct
-operator|->
-name|address
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 case|case
 name|DVD_STRUCT_PRERECORDED
 case|:
@@ -17280,34 +17252,11 @@ break|break;
 case|case
 name|DVD_STRUCT_DCB
 case|:
-name|error
-operator|=
+return|return
+operator|(
 name|ENODEV
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-ifdef|#
-directive|ifdef
-name|notyet
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_read_dvd_struct_data_dcb
-argument_list|)
-expr_stmt|;
-name|address
-operator|=
-name|dvdstruct
-operator|->
-name|address
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 case|case
 name|DVD_STRUCT_LIST
 case|:
@@ -17318,15 +17267,11 @@ literal|65535
 expr_stmt|;
 break|break;
 default|default:
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|bailout
-goto|;
-break|break;
-comment|/* NOTREACHED */
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -17354,6 +17299,20 @@ name|databuf
 operator|=
 name|NULL
 expr_stmt|;
+name|cam_periph_lock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
+name|ccb
+operator|=
+name|cdgetccb
+argument_list|(
+name|periph
+argument_list|,
+name|CAM_PRIORITY_NORMAL
+argument_list|)
+expr_stmt|;
 name|scsi_read_dvd_structure
 argument_list|(
 operator|&
@@ -17362,7 +17321,7 @@ operator|->
 name|csio
 argument_list|,
 comment|/* retries */
-literal|1
+name|cd_retry_count
 argument_list|,
 comment|/* cbfcnp */
 name|cddone
@@ -17752,6 +17711,16 @@ break|break;
 block|}
 name|bailout
 label|:
+name|xpt_release_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|databuf
@@ -17763,11 +17732,6 @@ argument_list|(
 name|databuf
 argument_list|,
 name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-name|xpt_release_ccb
-argument_list|(
-name|ccb
 argument_list|)
 expr_stmt|;
 return|return

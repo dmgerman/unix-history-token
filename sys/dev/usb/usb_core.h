@@ -343,6 +343,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if USB transfer can be 					 * cancelled immediately */
+name|uint8_t
+name|doing_callback
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if executing the callback */
 block|}
 struct|;
 end_struct
@@ -512,17 +518,12 @@ name|uint8_t
 name|max_packet_count
 decl_stmt|;
 name|uint8_t
-name|usb_smask
-decl_stmt|;
-name|uint8_t
-name|usb_cmask
-decl_stmt|;
-name|uint8_t
-name|usb_uframe
-decl_stmt|;
-name|uint8_t
 name|usb_state
 decl_stmt|;
+name|uint8_t
+name|fps_shift
+decl_stmt|;
+comment|/* down shift of FPS, 0..3 */
 name|usb_error_t
 name|error
 decl_stmt|;

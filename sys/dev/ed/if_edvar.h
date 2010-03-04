@@ -197,7 +197,8 @@ modifier|*
 name|sc_tick
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ed_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -240,6 +241,9 @@ parameter_list|,
 name|bus_size_t
 parameter_list|)
 function_decl|;
+name|int
+name|tx_timer
+decl_stmt|;
 name|int
 name|nic_offset
 decl_stmt|;

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -140,21 +146,15 @@ name|char
 modifier|*
 name|get_termcap_entry
 parameter_list|(
-name|userarg
-parameter_list|,
-name|tcapbufp
-parameter_list|)
 name|char
 modifier|*
 name|userarg
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|tcapbufp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|ttyent
@@ -405,7 +405,7 @@ name|ttype
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Prompt the user for a terminal type. */
@@ -417,13 +417,11 @@ name|char
 modifier|*
 name|askuser
 parameter_list|(
-name|dflt
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|dflt
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char

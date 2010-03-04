@@ -621,7 +621,9 @@ end_function
 begin_function
 name|void
 name|_mcleanup
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|fd

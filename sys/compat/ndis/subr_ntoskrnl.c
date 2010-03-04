@@ -3344,7 +3344,6 @@ operator|->
 name|us_len
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3411,7 +3410,6 @@ name|ustr
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3480,7 +3478,6 @@ name|astr
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3874,7 +3871,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4544,7 +4540,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5679,7 +5674,6 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5759,7 +5753,6 @@ operator|)
 operator|+
 name|ssize
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5816,7 +5809,6 @@ name|irp_allocflags
 operator|=
 name|allocflags
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5837,7 +5829,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5857,7 +5848,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6440,7 +6430,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6540,7 +6529,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6595,7 +6583,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6892,7 +6879,6 @@ argument_list|(
 name|iobj
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7055,7 +7041,6 @@ operator|&
 name|ntoskrnl_dispatchlock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7262,7 +7247,6 @@ break|break;
 default|default:
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7328,7 +7312,6 @@ operator|!=
 name|wb
 condition|)
 do|;
-return|return;
 block|}
 end_function
 
@@ -7554,7 +7537,6 @@ operator|->
 name|nle_flink
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7609,7 +7591,6 @@ operator|*
 literal|10000000
 expr_stmt|;
 comment|/* 100ns ticks from 1601 to 1970 */
-return|return;
 block|}
 end_function
 
@@ -8102,7 +8083,7 @@ operator|(
 name|STATUS_SUCCESS
 operator|)
 return|;
-comment|/* 	return(KeWaitForMultipleObjects(1,&obj, WAITTYPE_ALL, reason, 	    mode, alertable, duetime,&w)); */
+comment|/* 	return (KeWaitForMultipleObjects(1,&obj, WAITTYPE_ALL, reason, 	    mode, alertable, duetime,&w)); */
 block|}
 end_function
 
@@ -8956,7 +8937,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9021,7 +9001,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9110,7 +9089,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9735,7 +9713,6 @@ name|gl_maxdepth
 operator|=
 name|LOOKASIDE_DEPTH
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9798,7 +9775,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9978,7 +9954,6 @@ name|gl_maxdepth
 operator|=
 name|LOOKASIDE_DEPTH
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10041,7 +10016,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10265,7 +10239,6 @@ name|lock
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10337,7 +10310,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-return|return;
 block|}
 end_function
 
@@ -10364,7 +10336,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10447,7 +10418,6 @@ literal|0
 condition|)
 comment|/* sit and spin */
 empty_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10472,7 +10442,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10637,7 +10606,6 @@ operator|&
 name|ntoskrnl_interlock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10867,7 +10835,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11201,7 +11168,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11301,7 +11267,6 @@ operator|&=
 operator|~
 name|MDL_MAPPED_TO_SYSTEM_VA
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11529,9 +11494,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-block|{
-return|return;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -12134,7 +12097,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 name|io_workitem
 modifier|*
@@ -12231,7 +12193,6 @@ argument_list|,
 name|iw
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|IoQueueWorkItem
@@ -12401,7 +12362,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12470,7 +12430,6 @@ operator|->
 name|wqi_ctx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * The ExQueueWorkItem() API is deprecated in Windows XP. Microsoft  * warns that it's unsafe and to use IoQueueWorkItem() instead. The  * problem with ExQueueWorkItem() is that it can't guard against  * the condition where a driver submits a job to the work queue and  * is then unloaded before the job is able to run. IoQueueWorkItem()  * acquires a reference to the device's device_object via the  * object manager and retains it until after the job has completed,  * which prevents the driver from being unloaded before the job  * runs. (We don't currently support this behavior, though hopefully  * that will change once the object manager API is fleshed out a bit.)  *  * Having said all that, the ExQueueWorkItem() API remains, because  * there are still other parts of Windows that use it, including  * NDIS itself: NdisScheduleWorkItem() calls ExQueueWorkItem().  * We fake up the ExQueueWorkItem() API on top of our implementation  * of IoQueueWorkItem(). Workitem thread #3 is reserved exclusively  * for ExQueueWorkItem() jobs, and we pass a pointer to the work  * queue item (provided by the caller) in to IoAllocateWorkItem()  * instead of the device_object. We need to save this pointer so  * we can apply a sanity check: as with the DPC queue and other  * workitem queues, we can't allow the same work queue item to  * be queued twice. If it's already pending, we silently return  */
 name|void
@@ -12648,7 +12607,6 @@ argument_list|,
 name|iw
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12673,7 +12631,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -12707,7 +12664,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|size_t
@@ -12880,7 +12836,6 @@ name|src
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 name|void
 name|RtlInitUnicodeString
@@ -12977,7 +12932,6 @@ operator|*
 literal|2
 expr_stmt|;
 block|}
-return|return;
 block|}
 name|ndis_status
 name|RtlUnicodeStringToInteger
@@ -13283,7 +13237,6 @@ name|us_buf
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|RtlFreeAnsiString
@@ -13317,7 +13270,6 @@ name|as_buf
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|int
@@ -13428,7 +13380,6 @@ argument_list|(
 name|seed
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint8_t
@@ -13667,7 +13618,6 @@ name|km_ownerthread
 operator|=
 name|NULL
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -13866,7 +13816,6 @@ argument_list|(
 name|uint32_t
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|uint32_t
 name|KeResetEvent
@@ -14130,7 +14079,6 @@ name|dh_sigstate
 operator|=
 name|FALSE
 expr_stmt|;
-return|return;
 block|}
 name|uint32_t
 name|KeReadStateEvent
@@ -14325,7 +14273,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|uint32_t
@@ -15046,7 +14993,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 ifdef|#
 directive|ifdef
@@ -15181,7 +15127,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 endif|#
 directive|endif
@@ -15307,7 +15252,6 @@ argument_list|,
 name|timer
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 specifier|static
 name|void
@@ -15368,7 +15312,6 @@ operator|&
 name|ntoskrnl_calllock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|KeInitializeTimer
@@ -15394,7 +15337,6 @@ argument_list|,
 name|EVENT_TYPE_NOTIFY
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|KeInitializeTimerEx
@@ -15499,7 +15441,6 @@ argument_list|(
 name|uint32_t
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * DPC subsystem. A Windows Defered Procedure Call has the following  * properties:  * - It runs at DISPATCH_LEVEL.  * - It can have one of 3 importance values that control when it  *   runs relative to other DPCs in the queue.  * - On SMP systems, it can be set to run on a specific processor.  * In order to satisfy the last property, we create a DPC thread for  * each CPU in the system and bind it to that CPU. Each thread  * maintains three queues with different importance levels, which  * will be processed in order from lowest to highest.  *  * In Windows, interrupt handlers run as DPCs. (Not to be confused  * with ISRs, which run in interrupt context and can preempt DPCs.)  * ISRs are given the highest importance so that they'll take  * precedence over timers and other things.  */
 specifier|static
@@ -15956,7 +15897,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|uint8_t
@@ -16131,7 +16071,6 @@ name|k_dpclistentry
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|uint8_t
 name|KeInsertQueueDpc
@@ -16489,7 +16428,6 @@ name|uint8_t
 operator|)
 name|imp
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|KeSetTargetProcessorDpc
@@ -16515,7 +16453,6 @@ name|k_num
 operator|=
 name|cpu
 expr_stmt|;
-return|return;
 block|}
 name|void
 name|KeFlushQueuedDpcs
@@ -16601,7 +16538,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 name|uint32_t
 name|KeGetCurrentProcessorNumber
@@ -17277,7 +17213,6 @@ argument_list|(
 literal|"ntoskrnl dummy called...\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|image_patch_table
 name|ntoskrnl_functbl

@@ -3389,7 +3389,7 @@ case|:
 operator|*
 name|retval
 operator|=
-name|NGROUPS_MAX
+name|ngroups_max
 expr_stmt|;
 break|break;
 case|case

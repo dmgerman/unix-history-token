@@ -162,8 +162,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|0
 index|]
@@ -178,8 +176,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|1
 index|]
@@ -194,8 +190,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|2
 index|]
@@ -210,8 +204,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|3
 index|]
@@ -226,8 +218,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|4
 index|]
@@ -242,8 +232,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|5
 index|]
@@ -258,8 +246,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|6
 index|]
@@ -274,8 +260,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|7
 index|]
@@ -290,8 +274,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|8
 index|]
@@ -306,8 +288,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|9
 index|]
@@ -322,8 +302,6 @@ operator|&
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|10
 index|]
@@ -361,8 +339,6 @@ case|:
 name|kdb_thrctx
 operator|->
 name|pcb_context
-operator|.
-name|val
 index|[
 literal|10
 index|]

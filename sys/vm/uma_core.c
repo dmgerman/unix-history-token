@@ -338,7 +338,6 @@ name|uma_kegs
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|uma_kegs
 argument_list|)
 expr_stmt|;
@@ -371,7 +370,6 @@ name|uma_boot_pages
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|uma_boot_pages
 argument_list|)
 expr_stmt|;

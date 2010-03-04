@@ -4651,7 +4651,7 @@ condition|)
 operator|*
 name|controlp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|AUDIT_ARG_FD
 argument_list|(
@@ -9197,9 +9197,9 @@ name|mtx
 argument_list|,
 literal|"sendfile"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -9706,6 +9706,17 @@ argument_list|,
 name|xfsize
 argument_list|)
 expr_stmt|;
+name|xfsize
+operator|=
+name|omin
+argument_list|(
+name|space
+operator|-
+name|loopbytes
+argument_list|,
+name|xfsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xfsize
@@ -9723,23 +9734,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* all data sent */
-break|break;
-block|}
-comment|/* 			 * Don't overflow the send buffer. 			 * Stop here and send out what we've 			 * already got. 			 */
-if|if
-condition|(
-name|space
-operator|<
-name|loopbytes
-operator|+
-name|xfsize
-condition|)
-block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Attempt to look up the page.  Allocate 			 * if not found or wait and loop if busy. 			 */
@@ -9832,16 +9826,6 @@ name|obj
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Get the page from backing store. 				 */
-name|bsize
-operator|=
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|.
-name|f_iosize
-expr_stmt|;
 name|vfslocked
 operator|=
 name|VFS_LOCK_GIANT
@@ -9851,14 +9835,33 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
 name|LK_SHARED
-operator||
-name|LK_RETRY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|after_read
+goto|;
+name|bsize
+operator|=
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
 expr_stmt|;
 comment|/* 				 * XXXMAC: Because we don't have fp->f_cred 				 * here, we pass in NOCRED.  This is probably 				 * wrong, but is consistent with our original 				 * implementation. 				 */
 name|error
@@ -9913,6 +9916,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|after_read
+label|:
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked

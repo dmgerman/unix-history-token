@@ -284,7 +284,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ext2fs
@@ -299,9 +298,26 @@ operator|.
 name|ld_dir
 operator|=
 literal|"ext2fs"
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|ext2fs
+argument_list|,
+name|g_label_ext2fs
+argument_list|,
+literal|"Create device nodes for EXT2FS volumes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

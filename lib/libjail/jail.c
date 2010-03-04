@@ -982,6 +982,7 @@ name|nlist
 operator|*
 sizeof|sizeof
 argument_list|(
+operator|*
 name|jp
 argument_list|)
 argument_list|)
@@ -3073,6 +3074,10 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+operator|&&
+name|jp_jid
+operator|->
+name|jp_value
 operator|&&
 operator|*
 operator|(

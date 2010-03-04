@@ -328,6 +328,8 @@ block|,
 name|TOK_FIB
 block|,
 name|TOK_SETFIB
+block|,
+name|TOK_LOOKUP
 block|, }
 enum|;
 end_enum

@@ -1426,6 +1426,11 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|pt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;

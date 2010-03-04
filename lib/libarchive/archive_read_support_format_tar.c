@@ -669,16 +669,16 @@ decl_stmt|;
 name|int
 name|header_recursion_depth
 decl_stmt|;
-name|off_t
+name|int64_t
 name|entry_bytes_remaining
 decl_stmt|;
-name|off_t
+name|int64_t
 name|entry_offset
 decl_stmt|;
-name|off_t
+name|int64_t
 name|entry_padding
 decl_stmt|;
-name|off_t
+name|int64_t
 name|realsize
 decl_stmt|;
 name|struct
@@ -2726,7 +2726,7 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-name|off_t
+name|int64_t
 name|bytes_skipped
 decl_stmt|;
 name|struct
@@ -2877,8 +2877,9 @@ condition|)
 block|{
 comment|/* Short read or EOF. */
 comment|/* Try requesting just one byte and see what happens. */
-name|h
-operator|=
+operator|(
+name|void
+operator|)
 name|__archive_read_ahead
 argument_list|(
 name|a
@@ -4022,6 +4023,9 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|type
 operator|&
 operator|~
@@ -5897,9 +5901,6 @@ name|line_length
 decl_stmt|;
 name|char
 modifier|*
-name|line
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|;
 name|char
@@ -5997,8 +5998,6 @@ name|l
 operator|=
 name|attr_length
 expr_stmt|;
-name|line
-operator|=
 name|p
 operator|=
 name|attr
@@ -8044,7 +8043,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 break|break;
 block|}
@@ -9315,7 +9314,7 @@ operator|)
 condition|)
 name|l
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 else|else
@@ -9705,7 +9704,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
@@ -9875,7 +9874,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|UINT64_MAX
+name|INT64_MAX
 expr_stmt|;
 comment|/* Truncate on overflow. */
 break|break;
@@ -10452,10 +10451,6 @@ block|{
 name|wchar_t
 modifier|*
 name|old_entry
-init|=
-name|tar
-operator|->
-name|pax_entry
 decl_stmt|;
 if|if
 condition|(
@@ -10595,7 +10590,6 @@ expr_stmt|;
 block|}
 operator|*
 name|dest
-operator|++
 operator|=
 literal|L'
 expr|\0'
@@ -11094,7 +11088,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|size_t
+name|unsigned
 name|i
 decl_stmt|;
 name|memset

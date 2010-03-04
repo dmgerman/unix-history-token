@@ -1211,8 +1211,34 @@ end_ifndef
 begin_define
 define|#
 directive|define
+name|ENOTCAPABLE
+value|93
+end_define
+
+begin_comment
+comment|/* Capabilities insufficient */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|ELAST
-value|92
+value|93
 end_define
 
 begin_comment

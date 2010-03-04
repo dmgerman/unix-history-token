@@ -622,6 +622,7 @@ operator||=
 name|KI_CRF_GRP_OVERFLOW
 expr_stmt|;
 block|}
+else|else
 name|kp
 operator|->
 name|ki_ngroups

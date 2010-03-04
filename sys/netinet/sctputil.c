@@ -121,42 +121,6 @@ name|NUMBER_OF_MTU_SIZES
 value|18
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__Windows__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SCTP_LOCAL_TRACE_BUF
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"eventrace_netinet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sctputil.tmh"
-end_include
-
-begin_comment
-comment|/* this is the file that will be auto 				 * generated */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -169,11 +133,6 @@ directive|define
 name|KTR_SCTP
 value|KTR_SUBSYS
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -4899,7 +4858,7 @@ name|int
 name|save_in_twait
 parameter_list|)
 block|{
-name|u_long
+name|uint32_t
 name|x
 decl_stmt|,
 name|not_done
@@ -13970,14 +13929,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|sctp_asoc_change_wake
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -14282,9 +14233,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|sctp_asoc_change_wake
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -22567,7 +22515,6 @@ name|tail_mbuf
 operator|=
 name|prev
 expr_stmt|;
-empty_stmt|;
 block|}
 continue|continue;
 block|}
@@ -24504,14 +24451,6 @@ operator|=
 name|sp
 operator|->
 name|act_flags
-expr_stmt|;
-name|chk
-operator|->
-name|addr_over
-operator|=
-name|sp
-operator|->
-name|addr_over
 expr_stmt|;
 name|chk
 operator|->
@@ -30946,6 +30885,9 @@ argument_list|,
 name|sctp_nxt_addr
 argument_list|)
 expr_stmt|;
+name|SCTP_IPI_ITERATOR_WQ_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ADDR_WQ
@@ -30971,9 +30913,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-name|SCTP_IPI_ITERATOR_WQ_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

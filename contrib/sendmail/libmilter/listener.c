@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.124 2007/04/23 22:22:50 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.126 2009/12/16 16:40:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2770,11 +2770,13 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: select() failed (%s), %s"
+literal|"%s: %s() failed (%s), %s"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
+argument_list|,
+name|MI_POLLSELECT
 argument_list|,
 name|sm_errstring
 argument_list|(

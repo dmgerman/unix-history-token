@@ -148,7 +148,9 @@ begin_function
 name|void
 name|spitfire_cache_enable
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
+name|__unused
 parameter_list|)
 block|{
 name|u_long

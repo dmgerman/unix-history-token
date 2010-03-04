@@ -830,6 +830,17 @@ operator|=
 literal|"_arpstat"
 block|}
 block|,
+define|#
+directive|define
+name|N_UNP_SPHEAD
+value|56
+block|{
+operator|.
+name|n_name
+operator|=
+literal|"unp_sphead"
+block|}
+block|,
 block|{
 operator|.
 name|n_name
@@ -1967,6 +1978,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|noutputs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how much outputs before we exit */
+end_comment
+
+begin_decl_stmt
+name|int
 name|numeric_addr
 decl_stmt|;
 end_decl_stmt
@@ -1998,6 +2021,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Qflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show netisr information */
+end_comment
+
+begin_decl_stmt
+name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
@@ -2014,16 +2047,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* show protocol statistics */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show i/f watchdog timers */
 end_comment
 
 begin_decl_stmt
@@ -2146,7 +2169,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBbdf:ghI:iLlM:mN:np:rSstuWw:xz"
+literal|"AaBbdf:ghI:iLlM:mN:np:Qq:rSsuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -2503,6 +2526,34 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|Qflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|noutputs
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|noutputs
+operator|!=
+literal|0
+condition|)
+name|noutputs
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|rflag
@@ -2521,14 +2572,6 @@ case|case
 literal|'S'
 case|:
 name|numeric_addr
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-name|tflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2763,6 +2806,48 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Qflag
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
+condition|)
+block|{
+if|if
+condition|(
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|netisr_stats
+argument_list|(
+name|kvmd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|netisr_stats
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3271,6 +3356,13 @@ argument_list|,
 name|nl
 index|[
 name|N_UNP_SHEAD
+index|]
+operator|.
+name|n_value
+argument_list|,
+name|nl
+index|[
+name|N_UNP_SPHEAD
 index|]
 operator|.
 name|n_value
@@ -4075,15 +4167,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLnSWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-abdhntW] [-f address_family]\n"
+literal|"       netstat -i | -I interface [-abdhnW] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system]"
+literal|"       netstat -w wait [-I interface] [-d] [-M core] [-N system] [-q howmany]"
 argument_list|,
 literal|"       netstat -s [-s] [-z] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
@@ -4102,6 +4194,8 @@ argument_list|,
 literal|"       netstat -g [-W] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -gs [-s] [-f address_family] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -Q"
 argument_list|)
 expr_stmt|;
 name|exit

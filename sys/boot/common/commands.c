@@ -616,6 +616,11 @@ name|command_errmsg
 operator|=
 literal|"usage is 'help<topic> [<subtopic>]"
 expr_stmt|;
+name|close
+argument_list|(
+name|hfd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CMD_ERROR

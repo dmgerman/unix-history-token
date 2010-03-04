@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: unbzip2.c,v 1.11 2008/04/28 20:24:13 martin Exp $	*/
+comment|/*	$NetBSD: unbzip2.c,v 1.12 2009/10/11 05:17:20 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -38,6 +38,10 @@ name|int
 name|ret
 decl_stmt|,
 name|end_of_file
+decl_stmt|,
+name|cold
+init|=
+literal|0
 decl_stmt|;
 name|off_t
 name|bytes_out
@@ -166,12 +170,8 @@ expr_stmt|;
 while|while
 condition|(
 name|ret
-operator|>=
+operator|==
 name|BZ_OK
-operator|&&
-name|ret
-operator|!=
-name|BZ_STREAM_END
 condition|)
 block|{
 if|if
@@ -282,15 +282,39 @@ name|BZ_OK
 operator|&&
 name|end_of_file
 condition|)
-name|maybe_err
+block|{
+comment|/* 				 * If we hit this after a stream end, consider 				 * it as the end of the whole file and don't 				 * bail out. 				 */
+if|if
+condition|(
+name|cold
+operator|==
+literal|1
+condition|)
+name|ret
+operator|=
+name|BZ_STREAM_END
+expr_stmt|;
+else|else
+name|maybe_errx
 argument_list|(
-literal|"read"
+literal|"truncated file"
 argument_list|)
+expr_stmt|;
+block|}
+name|cold
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|tflag
+operator|&&
+name|bzs
+operator|.
+name|avail_out
+operator|!=
+name|BUFLEN
 condition|)
 block|{
 name|ssize_t
@@ -327,6 +351,52 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+name|BZ_STREAM_END
+operator|&&
+operator|!
+name|end_of_file
+condition|)
+block|{
+if|if
+condition|(
+name|BZ2_bzDecompressEnd
+argument_list|(
+operator|&
+name|bzs
+argument_list|)
+operator|!=
+name|BZ_OK
+operator|||
+name|BZ2_bzDecompressInit
+argument_list|(
+operator|&
+name|bzs
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+name|BZ_OK
+condition|)
+name|maybe_errx
+argument_list|(
+literal|"bzip2 re-init"
+argument_list|)
+expr_stmt|;
+name|cold
+operator|=
+literal|1
+expr_stmt|;
+name|ret
+operator|=
+name|BZ_OK
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|BZ_DATA_ERROR
@@ -352,6 +422,15 @@ case|:
 name|maybe_warnx
 argument_list|(
 literal|"bzip2 out of memory"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|maybe_warnx
+argument_list|(
+literal|"unknown bzip2 error: %d"
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1726,7 +1726,6 @@ name|sc
 operator|->
 name|tsq_next
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|idt_tsqe
 modifier|*

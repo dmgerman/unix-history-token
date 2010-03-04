@@ -697,6 +697,11 @@ name|devidx
 init|=
 literal|0
 decl_stmt|;
+name|device_set_usb_desc
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
 name|db
 operator|=
 name|uaa
@@ -847,10 +852,14 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -882,7 +891,6 @@ name|ndisusb_ep
 modifier|*
 name|ne
 decl_stmt|;
-empty_stmt|;
 name|sc
 operator|->
 name|ndisusb_status

@@ -127,17 +127,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|nswap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of swap space */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|pagesizes
 index|[]
@@ -217,6 +206,43 @@ end_decl_stmt
 begin_comment
 comment|/* system tune hint */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ngroups_max
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max # of supplemental groups */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_guest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Running as virtual machine guest? */
+end_comment
+
+begin_enum
+enum|enum
+name|VM_GUEST
+block|{
+name|VM_GUEST_NO
+init|=
+literal|0
+block|,
+name|VM_GUEST_VM
+block|,
+name|VM_GUEST_XEN
+block|}
+enum|;
+end_enum
 
 begin_ifdef
 ifdef|#
@@ -809,6 +835,18 @@ name|init_param3
 parameter_list|(
 name|long
 name|kmempages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_static_kenv
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

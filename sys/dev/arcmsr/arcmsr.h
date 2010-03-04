@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.15 2007-10-07"
+value|"Driver Version 1.20.00.16 2009-10-10"
 end_define
 
 begin_define

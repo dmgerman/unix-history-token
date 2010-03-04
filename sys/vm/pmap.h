@@ -480,6 +480,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_sync_icache
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_zero_page
 parameter_list|(
 name|vm_page_t

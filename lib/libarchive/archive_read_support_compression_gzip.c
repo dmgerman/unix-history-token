@@ -1620,6 +1620,17 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+name|ARCHIVE_OK
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 break|break;
 default|default:
 comment|/* Return an error. */

@@ -106,21 +106,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|xen_save_and_cli
-parameter_list|(
 name|void
+name|write_eflags
+parameter_list|(
+name|u_int
+name|eflags
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|xen_restore_flags
-parameter_list|(
 name|u_int
-name|eflags
+name|read_eflags
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -455,7 +455,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|cpu_monitor
 parameter_list|(
@@ -493,7 +493,7 @@ end_function
 
 begin_function
 unit|}  static
-specifier|inline
+name|__inline
 name|void
 name|cpu_mwait
 parameter_list|(
@@ -690,7 +690,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insb"
@@ -702,7 +702,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -729,7 +729,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insw"
@@ -741,7 +741,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -768,7 +768,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; insl"
@@ -780,7 +780,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -877,7 +877,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsb"
@@ -889,7 +889,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -915,7 +915,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsw"
@@ -927,7 +927,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -953,7 +953,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 block|{
 asm|__asm __volatile("cld; rep; outsl"
@@ -965,7 +965,7 @@ operator|)
 operator|,
 literal|"+c"
 operator|(
-name|cnt
+name|count
 operator|)
 operator|:
 literal|"d"
@@ -1010,10 +1010,21 @@ begin_function
 specifier|static
 name|__inline
 name|u_int
-name|read_eflags
+ifdef|#
+directive|ifdef
+name|XEN
+name|_read_eflags
 parameter_list|(
 name|void
 parameter_list|)
+else|#
+directive|else
+function|read_eflags
+parameter_list|(
+name|void
+parameter_list|)
+endif|#
+directive|endif
 block|{
 name|u_int
 name|ef
@@ -1109,11 +1120,23 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|write_eflags
+ifdef|#
+directive|ifdef
+name|XEN
+name|_write_eflags
 parameter_list|(
 name|u_int
 name|ef
 parameter_list|)
+else|#
+directive|else
+function|write_eflags
+parameter_list|(
+name|u_int
+name|ef
+parameter_list|)
+endif|#
+directive|endif
 block|{
 asm|__asm __volatile("pushl %0; popfl" : : "r" (ef));
 block|}
@@ -1914,16 +1937,6 @@ block|{
 name|register_t
 name|eflags
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|eflags
-operator|=
-name|xen_save_and_cli
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
 name|eflags
 operator|=
 name|read_eflags
@@ -1932,8 +1945,6 @@ expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|eflags
@@ -1952,23 +1963,11 @@ name|register_t
 name|eflags
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|XEN
-name|xen_restore_flags
-argument_list|(
-name|eflags
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|write_eflags
 argument_list|(
 name|eflags
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2092,7 +2091,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2109,7 +2108,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2126,7 +2125,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2389,7 +2388,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2407,7 +2406,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2425,7 +2424,7 @@ modifier|*
 name|addr
 parameter_list|,
 name|size_t
-name|cnt
+name|count
 parameter_list|)
 function_decl|;
 end_function_decl

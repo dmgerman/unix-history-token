@@ -4,7 +4,7 @@ comment|/*	$NetBSD: pkill.c,v 1.16 2005/10/10 22:13:20 kleink Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * Copyright (c) 2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Andrew Doran.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * Copyright (c) 2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Andrew Doran.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -387,6 +393,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|quiet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -408,7 +421,7 @@ name|euidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|euidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -421,7 +434,7 @@ name|ruidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|ruidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -434,7 +447,7 @@ name|rgidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|rgidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -447,7 +460,7 @@ name|pgrplist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|pgrplist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -460,7 +473,7 @@ name|ppidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|ppidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -473,7 +486,7 @@ name|tdevlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|tdevlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -486,7 +499,7 @@ name|sidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|sidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -499,7 +512,7 @@ name|jidlist
 init|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|list
+name|jidlist
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -861,8 +874,14 @@ name|pidfilelock
 operator|=
 literal|0
 expr_stmt|;
+name|quiet
+operator|=
+literal|0
+expr_stmt|;
 name|execf
 operator|=
+name|NULL
+expr_stmt|;
 name|coref
 operator|=
 name|_PATH_DEVNULL
@@ -878,7 +897,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:ILM:N:P:SU:ad:fg:ij:lnos:t:u:vx"
+literal|"DF:G:ILM:N:P:SU:ad:fg:ij:lnoqs:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -1129,6 +1148,22 @@ operator|=
 literal|1
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+if|if
+condition|(
+operator|!
+name|pgrep
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|quiet
 operator|=
 literal|1
 expr_stmt|;
@@ -2560,7 +2595,7 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-LSfilnovx] [-d delim]"
+literal|"[-LSfilnoqvx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
@@ -2606,6 +2641,18 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+if|if
+condition|(
+name|quiet
+condition|)
+block|{
+name|assert
+argument_list|(
+name|pgrep
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -2868,6 +2915,11 @@ argument_list|(
 name|kp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -3128,10 +3180,83 @@ break|break;
 case|case
 name|LT_TTY
 case|:
-name|usage
-argument_list|()
+if|if
+condition|(
+name|li
+operator|->
+name|li_number
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|STATUS_BADUSAGE
+argument_list|,
+literal|"Negative /dev/pts tty `%s'"
+argument_list|,
+name|sp
+argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|_PATH_DEV
+literal|"pts/%s"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+goto|goto
+name|foundtty
+goto|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|errx
+argument_list|(
+name|STATUS_BADUSAGE
+argument_list|,
+literal|"No such tty: `"
+name|_PATH_DEV
+literal|"pts/%s'"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+name|STATUS_ERROR
+argument_list|,
+literal|"Cannot access `"
+name|_PATH_DEV
+literal|"pts/%s'"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}

@@ -111,19 +111,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * We are going to use a combined allocation to hold the metadata  * from the struct immediately followed by the real application data.  */
+end_comment
+
 begin_struct
 struct|struct
 name|deflate_buf
 block|{
-name|u_int8_t
+name|struct
+name|deflate_buf
 modifier|*
-name|out
+name|next
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|size
 decl_stmt|;
-name|int
-name|flag
+name|uint8_t
+name|data
+index|[]
 decl_stmt|;
 block|}
 struct|;

@@ -314,16 +314,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IA64_PHYS_TO_RR6
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) | IA64_RR_BASE(6))
-end_define
-
-begin_define
-define|#
-directive|define
 name|IA64_PHYS_TO_RR7
 parameter_list|(
 name|x

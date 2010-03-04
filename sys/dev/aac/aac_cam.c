@@ -976,7 +976,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|aac_srb32
+name|aac_srb
 modifier|*
 name|srb
 decl_stmt|;
@@ -1210,12 +1210,14 @@ name|target_sprt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Resetting via the passthrough causes problems. */
+comment|/* 		 * Resetting via the passthrough or parallel bus scan 		 * causes problems. 		 */
 name|cpi
 operator|->
 name|hba_misc
 operator|=
 name|PIM_NOBUSRESET
+operator||
+name|PIM_SEQSCAN
 expr_stmt|;
 name|cpi
 operator|->
@@ -1719,7 +1721,7 @@ name|srb
 operator|=
 operator|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 operator|*
 operator|)
 operator|&
@@ -1985,7 +1987,7 @@ name|ScsiPortCommand
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -1993,7 +1995,7 @@ literal|1
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2014,7 +2016,7 @@ name|data_ptr
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2058,7 +2060,7 @@ operator|=
 operator|&
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 expr_stmt|;
 block|}
 block|}
@@ -2076,7 +2078,7 @@ else|else
 block|{
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -2084,7 +2086,7 @@ literal|0
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2213,12 +2215,6 @@ name|cm_timestamp
 operator|=
 name|time_uptime
 expr_stmt|;
-name|cm
-operator|->
-name|cm_queue
-operator|=
-name|AAC_ADAP_NORM_CMD_QUEUE
-expr_stmt|;
 name|fib
 operator|->
 name|Header
@@ -2250,7 +2246,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 argument_list|)
 expr_stmt|;
 name|aac_enqueue_ready

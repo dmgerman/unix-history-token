@@ -4,6 +4,10 @@ comment|/*-  * Copyright (c) 2003-2007 Tim Kientzle  * All rights reserved.  *  
 end_comment
 
 begin_comment
+comment|/* !!ONLY FOR USE INTERNALLY TO LIBARCHIVE!! */
+end_comment
+
+begin_comment
 comment|/*  * This header is the first thing included in any of the libarchive  * source files.  As far as possible, platform-specific issues should  * be dealt with here and not within individual source files.  I'm  * actively trying to minimize #if blocks within the main source,  * since they obfuscate the code.  */
 end_comment
 
@@ -89,18 +93,60 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* It should be possible to get rid of this by extending the feature-test  * macros to cover Windows API functions, probably along with non-trivial  * refactoring of code to find structures that sit more cleanly on top of  * either Windows or Posix APIs. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__WIN32__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__WIN32
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"archive_windows.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * The config files define a lot of feature macros.  The following  * uses those macros to select/define replacements and include key  * headers as required.  */
 end_comment
 
 begin_comment
-comment|/* No non-FreeBSD platform will have __FBSDID, so just define it here. */
+comment|/* Get a real definition for __FBSDID if we can */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_CDEFS_H
+end_if
 
 begin_include
 include|#
@@ -108,18 +154,20 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/* For __FBSDID */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Just leaving this macro replacement empty leads to a dangling semicolon. */
+comment|/* If not, define it so as to avoid dangling semicolons. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FBSDID
+end_ifndef
 
 begin_define
 define|#
@@ -168,6 +216,116 @@ include|#
 directive|include
 file|<stdint.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Borland warns about its own constants!  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_UINT64_MAX
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|UINT64_MAX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DECL_UINT64_MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_UINT64_MIN
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|UINT64_MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DECL_UINT64_MIN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_INT64_MAX
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|INT64_MAX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DECL_INT64_MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_DECL_INT64_MIN
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|INT64_MIN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_DECL_INT64_MIN
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

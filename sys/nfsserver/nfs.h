@@ -238,7 +238,7 @@ comment|/* Want above */
 end_comment
 
 begin_comment
-comment|/*  * Structures for the nfssvc(2) syscall. Not that anyone but nfsd and mount_nfs  * should ever try and use it.  */
+comment|/*  * Structures for the nfssvc(2) syscall.  Not that anyone but nfsd and  * mount_nfs should ever try and use it.  */
 end_comment
 
 begin_comment

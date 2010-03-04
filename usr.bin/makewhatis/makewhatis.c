@@ -4087,12 +4087,14 @@ specifier|static
 name|int
 name|select_sections
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
 name|entry
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p

@@ -393,6 +393,16 @@ name|pr_init
 operator|=
 name|ip_init
 block|,
+ifdef|#
+directive|ifdef
+name|VIMAGE
+operator|.
+name|pr_destroy
+operator|=
+name|ip_destroy
+block|,
+endif|#
+directive|endif
 operator|.
 name|pr_slowtimo
 operator|=

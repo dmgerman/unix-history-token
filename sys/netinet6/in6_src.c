@@ -1128,6 +1128,26 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Bypass source address selection and use the primary jail IP 	 * if requested. 	 */
+if|if
+condition|(
+name|cred
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|prison_saddrsel_ip6
+argument_list|(
+name|cred
+argument_list|,
+name|srcp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * If the address is not specified, choose the best one based on 	 * the outgoing interface and the destination address. 	 */
 comment|/* get the outgoing interface */
 if|if

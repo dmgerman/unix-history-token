@@ -48,7 +48,7 @@ begin_decl_stmt
 name|int
 name|nfsrv_dolocallocks
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -8165,9 +8165,7 @@ operator|->
 name|lo_stp
 operator|&&
 operator|(
-name|lckstp
-operator|->
-name|ls_clp
+name|clp
 operator|!=
 name|lop
 operator|->

@@ -60,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -85,12 +73,10 @@ begin_function
 name|void
 name|cat
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -207,11 +193,9 @@ begin_function
 name|int
 name|outc
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|putc

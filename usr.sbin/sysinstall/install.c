@@ -3705,29 +3705,12 @@ condition|(
 name|RunningAsInit
 condition|)
 block|{
-comment|/* 	 * Install something as /boot/kernel.  Prefer SMP 	 * over GENERIC--this should handle the case where 	 * both SMP and GENERIC are installed (otherwise we 	 * select the one kernel that was installed). 	 * 	 * NB: we assume any existing kernel has been saved 	 *     already and the /boot/kernel we remove is empty. 	 */
+comment|/* 	 * Install something as /boot/kernel. 	 * 	 * NB: we assume any existing kernel has been saved 	 *     already and the /boot/kernel we remove is empty. 	 */
 name|vsystem
 argument_list|(
 literal|"rm -rf /boot/kernel"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|WITH_SMP
-if|if
-condition|(
-name|dists
-operator|&
-name|DIST_KERNEL_SMP
-condition|)
-name|vsystem
-argument_list|(
-literal|"mv /boot/SMP /boot/kernel"
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
 name|vsystem
 argument_list|(
 literal|"mv /boot/GENERIC /boot/kernel"
@@ -5346,44 +5329,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-name|NCpus
-operator|=
-name|acpi_detect
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|NCpus
-operator|==
-operator|-
-literal|1
-condition|)
-name|NCpus
-operator|=
-name|biosmptable_detect
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|NCpus

@@ -192,6 +192,23 @@ directive|ifdef
 name|VNET_DEBUG
 end_ifdef
 
+begin_function_decl
+name|void
+name|vnet_log_recursion
+parameter_list|(
+name|struct
+name|vnet
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -222,7 +239,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|CURVNET_SET_QUIET(arg)						\ 	if (saved_vnet)							\ 		printf("CURVNET_SET(%p) in %s() on cpu %d, prev %p in %s()\n", \ 		       curvnet,	curthread->td_vnet_lpush, curcpu,	\ 		       saved_vnet, saved_vnet_lpush);
+value|CURVNET_SET_QUIET(arg)						\ 	if (saved_vnet)							\ 		vnet_log_recursion(saved_vnet, saved_vnet_lpush, __LINE__);
 end_define
 
 begin_define

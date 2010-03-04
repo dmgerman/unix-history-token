@@ -695,7 +695,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
-literal|"%s: level out of range (%u> %u)\n"
+literal|"%s: immunity level out of range (%u> %u)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1176,7 +1176,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
-literal|"%s: level out of range (%u> %u)\n"
+literal|"%s: firstep level out of range (%u> %u)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1270,7 +1270,7 @@ name|ah
 argument_list|,
 name|HAL_DEBUG_ANY
 argument_list|,
-literal|"%s: level out of range (%u> %u)\n"
+literal|"%s: spur immunity level out of range (%u> %u)\n"
 argument_list|,
 name|__func__
 argument_list|,

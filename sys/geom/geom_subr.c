@@ -3337,6 +3337,17 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+name|g_trace
+argument_list|(
+name|G_T_TOPOLOGY
+argument_list|,
+literal|"g_attach(%p, %p)"
+argument_list|,
+name|cp
+argument_list|,
+name|pp
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|cp

@@ -272,6 +272,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AHA_39320LPE
+value|0x8017900500459005ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AIC7902_PCI_REV_A4
 value|0x3
 end_define
@@ -607,6 +614,16 @@ block|,
 name|ahd_aic7902_setup
 block|}
 block|,
+block|{
+name|ID_AHA_39320LPE
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 39320LPE Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
 comment|/* Generic chip probes for devices we don't know 'exactly' */
 block|{
 name|ID_AIC7901
@@ -729,13 +746,13 @@ literal|"PCI bus mode unknown"
 block|,
 literal|"PCI bus mode unknown"
 block|,
-literal|"PCI-X 101-133Mhz"
+literal|"PCI-X 101-133MHz"
 block|,
-literal|"PCI-X 67-100Mhz"
+literal|"PCI-X 67-100MHz"
 block|,
-literal|"PCI-X 50-66Mhz"
+literal|"PCI-X 50-66MHz"
 block|,
-literal|"PCI 33 or 66Mhz"
+literal|"PCI 33 or 66MHz"
 block|}
 decl_stmt|;
 end_decl_stmt

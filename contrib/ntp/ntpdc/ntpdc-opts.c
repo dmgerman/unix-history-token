@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *    *  It has been AutoGen-ed  Sunday August 17, 2008 at 05:26:25 AM EDT  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
+comment|/*    *  EDIT THIS FILE WITH CAUTION  (ntpdc-opts.c)  *    *  It has been AutoGen-ed  Tuesday December  8, 2009 at 08:14:00 AM EST  *  From the definitions    ntpdc-opts.def  *  and the template file   options  *  * Generated from AutoOpts 29:0:4 templates.  */
 end_comment
 
 begin_comment
-comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This source file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpdc author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpdc copyright 1970-2008 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
+comment|/*  *  This file was produced by an AutoOpts template.  AutoOpts is a  *  copyrighted work.  This source file is not encumbered by AutoOpts  *  licensing, but is provided under the licensing terms chosen by the  *  ntpdc author or copyright holder.  AutoOpts is licensed under  *  the terms of the LGPL.  The redistributable library (``libopts'') is  *  licensed under the terms of either the LGPL or, at the users discretion,  *  the BSD license.  See the AutoOpts and/or libopts sources for details.  *  * This source file is copyrighted and licensed under the following terms:  *  * ntpdc copyright 1970-2009 David L. Mills and/or others - all rights reserved  *  * see html/copyright.html  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ name|tSCC
 name|zCopyright
 index|[]
 init|=
-literal|"ntpdc copyright (c) 1970-2008 David L. Mills and/or others, all rights reserved"
+literal|"ntpdc copyright (c) 1970-2009 David L. Mills and/or others, all rights reserved"
 decl_stmt|;
 name|tSCC
 name|zCopyrightNotice
@@ -1489,7 +1489,7 @@ name|tSCC
 name|zUsageTitle
 index|[]
 init|=
-literal|"ntpdc - vendor-specific NTP query program - Ver. 4.2.4p5\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
+literal|"ntpdc - vendor-specific NTP query program - Ver. 4.2.4p8\n\ USAGE:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... [ host ...]\n"
 decl_stmt|;
 name|tSCC
 name|zRcName
@@ -1514,7 +1514,7 @@ name|tSCC
 name|zBugsAddr
 index|[]
 init|=
-literal|"http://bugs.ntp.isc.org, bugs@ntp.org"
+literal|"http://bugs.ntp.org, bugs@ntp.org"
 decl_stmt|;
 define|#
 directive|define
@@ -1532,7 +1532,7 @@ index|[]
 init|=
 name|NTPDC_FULL_VERSION
 decl_stmt|;
-comment|/* extracted from /usr/local/gnu/share/autogen/optcode.tpl near line 408 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 408 */
 if|#
 directive|if
 name|defined
@@ -1716,7 +1716,7 @@ comment|/* defined DEBUG */
 endif|#
 directive|endif
 comment|/* defined(TEST_NTPDC_OPTS) */
-comment|/* extracted from /usr/local/gnu/share/autogen/optmain.tpl near line 92 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optmain.tpl near line 92 */
 if|#
 directive|if
 name|defined
@@ -1776,7 +1776,7 @@ block|}
 endif|#
 directive|endif
 comment|/* defined TEST_NTPDC_OPTS */
-comment|/* extracted from /usr/local/gnu/share/autogen/optcode.tpl near line 514 */
+comment|/* extracted from /usr/local/gnu/autogen-5.9.1/share/autogen/optcode.tpl near line 514 */
 if|#
 directive|if
 name|ENABLE_NLS

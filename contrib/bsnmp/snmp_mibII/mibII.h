@@ -683,6 +683,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* interfaces' data poll interval */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mibII_poll_ticks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* restart the data poll timer */
+end_comment
+
+begin_function_decl
+name|void
+name|mibif_restart_mibII_poll_timer
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MIBII_POLL_TICKS
+value|100
+end_define
+
+begin_comment
 comment|/* get interfaces and interface addresses. */
 end_comment
 

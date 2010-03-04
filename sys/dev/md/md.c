@@ -543,7 +543,6 @@ name|md_softc_list
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|md_softc_list
 argument_list|)
 expr_stmt|;
@@ -3984,6 +3983,19 @@ name|MD_AUTOUNIT
 operator||
 name|MD_FORCE
 operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
+name|mdio
+operator|->
+name|md_base
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

@@ -578,14 +578,14 @@ comment|/* I/O buffer */
 name|int
 name|kflag
 decl_stmt|;
-comment|/* command-line encryptiooon key */
+comment|/* command-line encryption key */
 name|setproctitle
 argument_list|(
 literal|"-"
 argument_list|)
 expr_stmt|;
 comment|/* Hide command-line arguments */
-comment|/* initialize the initialization vctor */
+comment|/* initialize the initialization vector */
 name|MEMZERO
 argument_list|(
 name|ivec

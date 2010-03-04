@@ -44,5 +44,12 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

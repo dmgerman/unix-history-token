@@ -430,7 +430,7 @@ name|XPT_REL_SIMQ
 init|=
 literal|0x05
 block|,
-comment|/* Release a frozen SIM queue */
+comment|/* Release a frozen device queue */
 name|XPT_SASYNC_CB
 init|=
 literal|0x06
@@ -474,6 +474,11 @@ init|=
 literal|0x0c
 block|,
 comment|/* Device statistics (error counts, etc.) */
+name|XPT_FREEZE_QUEUE
+init|=
+literal|0x0d
+block|,
+comment|/* Freeze device queue */
 comment|/* SCSI Control Functions: 0x10->0x1F */
 name|XPT_ABORT
 init|=
@@ -1022,7 +1027,7 @@ literal|252
 index|]
 decl_stmt|;
 name|u_int8_t
-name|reserved
+name|inq_flags
 decl_stmt|;
 name|u_int8_t
 name|serial_num_len
@@ -2270,12 +2275,17 @@ define|#
 directive|define
 name|RELSIM_RELEASE_AFTER_QEMPTY
 value|0x08
+define|#
+directive|define
+name|RELSIM_RELEASE_RUNLEVEL
+value|0x10
 name|u_int32_t
 name|openings
 decl_stmt|;
 name|u_int32_t
 name|release_timeout
 decl_stmt|;
+comment|/* Abstract argument. */
 name|u_int32_t
 name|qfrozen_cnt
 decl_stmt|;
@@ -2714,6 +2724,42 @@ end_struct
 
 begin_struct
 struct|struct
+name|ccb_trans_settings_ata
+block|{
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* Which fields to honor */
+define|#
+directive|define
+name|CTS_ATA_VALID_MODE
+value|0x01
+define|#
+directive|define
+name|CTS_ATA_VALID_BYTECOUNT
+value|0x02
+define|#
+directive|define
+name|CTS_ATA_VALID_ATAPI
+value|0x20
+name|int
+name|mode
+decl_stmt|;
+comment|/* Mode */
+name|u_int
+name|bytecount
+decl_stmt|;
+comment|/* Length of PIO transaction */
+name|u_int
+name|atapi
+decl_stmt|;
+comment|/* Length of ATAPI CDB */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ccb_trans_settings_sata
 block|{
 name|u_int
@@ -2722,20 +2768,52 @@ decl_stmt|;
 comment|/* Which fields to honor */
 define|#
 directive|define
-name|CTS_SATA_VALID_SPEED
+name|CTS_SATA_VALID_MODE
 value|0x01
 define|#
 directive|define
-name|CTS_SATA_VALID_PM
+name|CTS_SATA_VALID_BYTECOUNT
 value|0x02
-name|u_int32_t
-name|bitrate
+define|#
+directive|define
+name|CTS_SATA_VALID_REVISION
+value|0x04
+define|#
+directive|define
+name|CTS_SATA_VALID_PM
+value|0x08
+define|#
+directive|define
+name|CTS_SATA_VALID_TAGS
+value|0x10
+define|#
+directive|define
+name|CTS_SATA_VALID_ATAPI
+value|0x20
+name|int
+name|mode
 decl_stmt|;
-comment|/* Mbps */
+comment|/* Legacy PATA mode */
+name|u_int
+name|bytecount
+decl_stmt|;
+comment|/* Length of PIO transaction */
+name|int
+name|revision
+decl_stmt|;
+comment|/* SATA revision */
 name|u_int
 name|pm_present
 decl_stmt|;
 comment|/* PM is present (XPT->SIM) */
+name|u_int
+name|tags
+decl_stmt|;
+comment|/* Number of allowed tags */
+name|u_int
+name|atapi
+decl_stmt|;
+comment|/* Length of ATAPI CDB */
 block|}
 struct|;
 end_struct
@@ -2798,6 +2876,10 @@ decl_stmt|;
 name|struct
 name|ccb_trans_settings_sas
 name|sas
+decl_stmt|;
+name|struct
+name|ccb_trans_settings_ata
+name|ata
 decl_stmt|;
 name|struct
 name|ccb_trans_settings_sata

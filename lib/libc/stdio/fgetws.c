@@ -352,7 +352,6 @@ name|error
 goto|;
 operator|*
 name|wsp
-operator|++
 operator|=
 literal|L'
 expr|\0'

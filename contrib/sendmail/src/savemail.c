@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.313 2006/11/29 00:20:41 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.314 2009/12/18 17:08:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2871,6 +2871,9 @@ name|SM_DELIVER
 argument_list|)
 expr_stmt|;
 comment|/* restore state */
+operator|(
+name|void
+operator|)
 name|dropenvelope
 argument_list|(
 name|ee

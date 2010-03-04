@@ -637,7 +637,9 @@ end_comment
 begin_function
 name|void
 name|ftree_notsel
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

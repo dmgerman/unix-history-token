@@ -208,7 +208,8 @@ decl_stmt|;
 comment|/* length of file in bytes */
 block|}
 name|HD_CPIO
-typedef|;
+name|__aligned
+typedef|(1);
 end_typedef
 
 begin_define
@@ -351,7 +352,8 @@ index|]
 decl_stmt|;
 block|}
 name|HD_BCPIO
-typedef|;
+name|__aligned
+typedef|(1);
 end_typedef
 
 begin_ifdef
@@ -570,7 +572,8 @@ decl_stmt|;
 comment|/* 0 OR CRC of bytes of FILE data */
 block|}
 name|HD_VCPIO
-typedef|;
+name|__aligned
+typedef|(1);
 end_typedef
 
 begin_define

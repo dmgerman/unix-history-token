@@ -863,12 +863,10 @@ begin_function
 name|int
 name|__elf_is_okay__
 parameter_list|(
-name|ehdr
-parameter_list|)
 name|Elf_Ehdr
 modifier|*
 name|ehdr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

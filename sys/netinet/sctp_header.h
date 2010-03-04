@@ -126,6 +126,7 @@ name|time
 decl_stmt|;
 comment|/* time in ms to extend cookie */
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -382,9 +383,7 @@ decl_stmt|;
 comment|/* type = 0x8008  len = x */
 name|uint8_t
 name|chunk_types
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -639,9 +638,7 @@ name|length
 decl_stmt|;
 name|uint8_t
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -840,27 +837,6 @@ name|SCTP_PACKED
 struct|;
 end_struct
 
-begin_comment
-comment|/* EY Following 3 structs define NR Selective Ack (NR_SACK) chunk */
-end_comment
-
-begin_struct
-struct|struct
-name|sctp_nr_gap_ack_block
-block|{
-name|uint16_t
-name|start
-decl_stmt|;
-comment|/* NR Gap Ack block start */
-name|uint16_t
-name|end
-decl_stmt|;
-comment|/* NR Gap Ack block end */
-block|}
-name|SCTP_PACKED
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|sctp_nr_sack
@@ -890,7 +866,6 @@ name|reserved
 decl_stmt|;
 comment|/* not currently used */
 comment|/* struct sctp_gap_ack_block's follow */
-comment|/* struct sctp_nr_gap_ack_block's follow */
 comment|/* uint32_t duplicate_tsn's follow */
 block|}
 name|SCTP_PACKED
@@ -1385,9 +1360,7 @@ name|reserved
 decl_stmt|;
 name|uint8_t
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1420,9 +1393,7 @@ decl_stmt|;
 comment|/* last TSN I assigned outbound */
 name|uint16_t
 name|list_of_streams
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
@@ -1443,9 +1414,7 @@ name|request_seq
 decl_stmt|;
 name|uint16_t
 name|list_of_streams
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
@@ -1533,6 +1502,7 @@ name|uint16_t
 name|reserved
 decl_stmt|;
 block|}
+name|SCTP_PACKED
 struct|;
 end_struct
 
@@ -1725,9 +1695,7 @@ decl_stmt|;
 comment|/* type = 0x8002 */
 name|uint8_t
 name|random_data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1745,9 +1713,7 @@ decl_stmt|;
 comment|/* type = 0x8003 */
 name|uint8_t
 name|chunk_types
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1765,9 +1731,7 @@ decl_stmt|;
 comment|/* type = 0x8004 */
 name|uint16_t
 name|hmac_ids
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1790,9 +1754,7 @@ name|hmac_id
 decl_stmt|;
 name|uint8_t
 name|hmac
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED

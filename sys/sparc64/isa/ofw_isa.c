@@ -212,6 +212,8 @@ operator|+
 name|r
 operator|->
 name|size
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -241,7 +243,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"ofw_isa_map_iorange: iorange crosses pci "
+literal|"ofw_isa_map_iorange: iorange crosses PCI "
 literal|"ranges (%#lx not in %#lx - %#lx)"
 argument_list|,
 operator|*

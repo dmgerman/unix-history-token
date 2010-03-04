@@ -1333,7 +1333,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENOSPC
+name|g
 operator|)
 return|;
 operator|*

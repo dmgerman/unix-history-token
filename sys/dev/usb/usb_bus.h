@@ -206,6 +206,7 @@ name|uint8_t
 name|do_probe
 decl_stmt|;
 comment|/* set if USB BUS should be re-probed */
+comment|/*  	 * The scratch area can only be used inside the explore thread 	 * belonging to the give serial bus. 	 */
 union|union
 block|{
 name|struct
@@ -225,7 +226,7 @@ decl_stmt|;
 name|uint8_t
 name|data
 index|[
-literal|128
+literal|255
 index|]
 decl_stmt|;
 block|}

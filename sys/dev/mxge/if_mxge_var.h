@@ -939,6 +939,15 @@ name|callout
 name|co_hdl
 decl_stmt|;
 name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|struct
+name|task
+name|watchdog_task
+decl_stmt|;
+name|struct
 name|sysctl_oid
 modifier|*
 name|slice_sysctl_tree
@@ -958,6 +967,10 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* eeprom mac address */
+name|uint16_t
+name|pectl
+decl_stmt|;
+comment|/* save PCIe CTL state */
 name|char
 name|product_code_string
 index|[

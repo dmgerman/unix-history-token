@@ -30,6 +30,10 @@ begin_comment
 comment|/*XXX The cprestore instruction is a "dummy" to shut up as(1). */
 end_comment
 
+begin_comment
+comment|/*XXX This is not MIPS64 safe. */
+end_comment
+
 begin_define
 define|#
 directive|define

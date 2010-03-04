@@ -185,24 +185,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
+name|pfilheadhead
 argument_list|,
-argument|pfil_head
+name|pfil_head
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-name|pfil_head_list
-operator|=
-name|LIST_HEAD_INITIALIZER
+name|VNET_DEFINE
 argument_list|(
-operator|&
+expr|struct
+name|pfilheadhead
+argument_list|,
 name|pfil_head_list
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_pfil_head_list
+value|VNET(pfil_head_list)
+end_define
 
 begin_comment
 comment|/*  * pfil_run_hooks() runs the specified packet filter hooks.  */
@@ -372,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_head_register() registers a pfil_head with the packet filter  * hook mechanism.  */
+comment|/*  * pfil_head_register() registers a pfil_head with the packet filter hook  * mechanism.  */
 end_comment
 
 begin_function
@@ -397,7 +406,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|lph
 argument_list|,
-argument|&pfil_head_list
+argument|&V_pfil_head_list
 argument_list|,
 argument|ph_list
 argument_list|)
@@ -429,7 +438,9 @@ name|PFIL_LIST_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
 block|}
 block|}
@@ -463,7 +474,7 @@ expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|pfil_head_list
+name|V_pfil_head_list
 argument_list|,
 name|ph
 argument_list|,
@@ -592,7 +603,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|ph
 argument_list|,
-argument|&pfil_head_list
+argument|&V_pfil_head_list
 argument_list|,
 argument|ph_list
 argument_list|)
@@ -918,7 +929,9 @@ name|ph
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|locked_error
 label|:
@@ -956,13 +969,15 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * pfil_remove_hook removes a specific function from the packet filter  * hook list.  */
+comment|/*  * pfil_remove_hook removes a specific function from the packet filter hook  * list.  */
 end_comment
 
 begin_function
@@ -1097,7 +1112,9 @@ name|ph
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -1153,9 +1170,11 @@ operator|->
 name|pfil_arg
 condition|)
 return|return
+operator|(
 name|EEXIST
+operator|)
 return|;
-comment|/* 	 * insert the input list in reverse order of the output list 	 * so that the same path is followed in or out of the kernel. 	 */
+comment|/* 	 * Insert the input list in reverse order of the output list so that 	 * the same path is followed in or out of the kernel. 	 */
 if|if
 condition|(
 name|flags
@@ -1182,7 +1201,9 @@ name|pfil_link
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1275,14 +1296,144 @@ name|M_IFADDR
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Stuff that must be initialized for every instance (including the first of  * course).  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vnet_pfil_init
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|LIST_INIT
+argument_list|(
+operator|&
+name|V_pfil_head_list
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Called for the removal of each instance.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vnet_pfil_uninit
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+comment|/*  XXX should panic if list is not empty */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Define startup order. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFIL_SYSINIT_ORDER
+value|SI_SUB_PROTO_BEGIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFIL_MODEVENT_ORDER
+value|(SI_ORDER_FIRST)
+end_define
+
+begin_comment
+comment|/* On boot slot in here. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFIL_VNET_ORDER
+value|(PFIL_MODEVENT_ORDER + 2)
+end_define
+
+begin_comment
+comment|/* Later still. */
+end_comment
+
+begin_comment
+comment|/*  * Starting up.  *  * VNET_SYSINIT is called for each existing vnet and each new vnet.  */
+end_comment
+
+begin_expr_stmt
+name|VNET_SYSINIT
+argument_list|(
+name|vnet_pfil_init
+argument_list|,
+name|PFIL_SYSINIT_ORDER
+argument_list|,
+name|PFIL_VNET_ORDER
+argument_list|,
+name|vnet_pfil_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Closing up shop.  These are done in REVERSE ORDER.  Not called on reboot.  *  * VNET_SYSUNINIT is called for each exiting vnet as it exits.  */
+end_comment
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|vnet_pfil_uninit
+argument_list|,
+name|PFIL_SYSINIT_ORDER
+argument_list|,
+name|PFIL_VNET_ORDER
+argument_list|,
+name|vnet_pfil_uninit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

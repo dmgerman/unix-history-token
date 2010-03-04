@@ -116,6 +116,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|USE_APM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USE_APM
 end_ifdef
 
@@ -1326,7 +1343,9 @@ begin_function
 specifier|static
 name|void
 name|acline_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|acline_mib_len
 operator|=

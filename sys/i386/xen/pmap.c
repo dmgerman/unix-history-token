@@ -396,12 +396,35 @@ name|PMAP_DIAGNOSTIC
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC_GNU_INLINE__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PMAP_INLINE
-value|__gnu89_inline
+value|inline
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PMAP_INLINE
+value|extern inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -830,15 +853,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pt_entry_t
-modifier|*
-name|CMAP1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|pt_entry_t
 modifier|*
@@ -848,10 +862,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|CADDR1
-init|=
-literal|0
-decl_stmt|,
 name|ptvmmap
 init|=
 literal|0
@@ -1056,7 +1066,7 @@ name|OID_AUTO
 argument_list|,
 name|pg_ps_enabled
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pg_ps_enabled
@@ -1447,6 +1457,27 @@ name|flags
 parameter_list|,
 name|int
 name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
+
+begin_function_decl
+specifier|static
+name|void
+name|pmap_set_pg
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1893,17 +1924,25 @@ argument|sysmaps->CADDR2
 argument_list|,
 literal|1
 argument_list|)
-block|}
-name|SYSMAP
+name|PT_SET_MA
 argument_list|(
-argument|caddr_t
+name|sysmaps
+operator|->
+name|CADDR1
 argument_list|,
-argument|CMAP1
-argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
+literal|0
 argument_list|)
+expr_stmt|;
+name|PT_SET_MA
+argument_list|(
+name|sysmaps
+operator|->
+name|CADDR2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|SYSMAP
 argument_list|(
 argument|caddr_t
@@ -1994,13 +2033,6 @@ expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
-expr_stmt|;
-name|PT_SET_MA
-argument_list|(
-name|CADDR1
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Leave in place an identity mapping (virt == phys) for the low 1 MB 	 * physical memory region that is used by the ACPI wakeup code.  This 	 * mapping must not have PG_G set.  	 */
 ifndef|#
@@ -2185,11 +2217,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XEN
+end_ifndef
+
 begin_comment
 comment|/*  * Set PG_G on kernel pages.  Only the BSP calls this when SMP is turned on.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pmap_set_pg
 parameter_list|(
@@ -2341,6 +2380,11 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize a vm_page's machine-dependent fields.  */
@@ -4138,6 +4182,9 @@ operator|!=
 name|newpf
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PT_SET_MA
 argument_list|(
 name|PADDR2
@@ -4150,6 +4197,9 @@ name|PG_A
 operator||
 name|PG_M
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|CTR3
 argument_list|(
@@ -13343,6 +13393,14 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|vm_paddr_t
+name|ma
+init|=
+name|xpmap_ptom
+argument_list|(
+name|pa
+argument_list|)
+decl_stmt|;
 name|va
 operator|=
 operator|(
@@ -13356,11 +13414,20 @@ operator|*
 name|PAGE_SIZE
 operator|)
 expr_stmt|;
-name|pmap_kenter
+name|PT_SET_MA
 argument_list|(
 name|va
 argument_list|,
-name|pa
+operator|(
+name|ma
+operator|&
+operator|~
+name|PAGE_MASK
+operator|)
+operator||
+name|PG_V
+operator||
+name|pgeflag
 argument_list|)
 expr_stmt|;
 name|invlpg
@@ -18034,6 +18101,22 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pmap_sync_icache
+parameter_list|(
+name|pmap_t
+name|pm
+parameter_list|,
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_size_t
+name|sz
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

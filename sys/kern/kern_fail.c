@@ -1858,7 +1858,6 @@ name|fe_count
 operator|=
 name|units
 expr_stmt|;
-empty_stmt|;
 block|}
 else|else
 block|{
@@ -2012,7 +2011,6 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|p

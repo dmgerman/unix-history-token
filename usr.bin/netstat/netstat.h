@@ -111,6 +111,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|noutputs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how much outputs before we exit */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|numeric_addr
 decl_stmt|;
 end_decl_stmt
@@ -150,17 +161,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* show protocol statistics */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show i/f watchdog timers */
 end_comment
 
 begin_decl_stmt
@@ -301,6 +301,24 @@ name|uintmax_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|xsocket
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
@@ -836,6 +854,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|netisr_stats
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|hostpr
 parameter_list|(
 name|u_long
@@ -1240,6 +1268,8 @@ begin_function_decl
 name|void
 name|unixpr
 parameter_list|(
+name|u_long
+parameter_list|,
 name|u_long
 parameter_list|,
 name|u_long

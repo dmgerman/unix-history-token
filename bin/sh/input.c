@@ -277,7 +277,6 @@ comment|/* input line number */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
 name|int
 name|parsenleft
 decl_stmt|;
@@ -414,13 +413,19 @@ name|INCLUDE
 literal|"input.h"
 name|INCLUDE
 literal|"error.h"
-name|INIT
-block|{
-specifier|extern
+name|MKINIT
 name|char
 name|basebuf
 index|[]
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|INIT
+end_macro
+
+begin_block
+block|{
 name|basepf
 operator|.
 name|nextc
@@ -430,12 +435,19 @@ operator|.
 name|buf
 operator|=
 name|basebuf
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|RESET
+end_macro
+
+begin_block
 block|{
 name|popallfiles
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|exception
@@ -450,7 +462,7 @@ literal|0
 expr_stmt|;
 comment|/* clear input buffer */
 block|}
-end_expr_stmt
+end_block
 
 begin_macro
 name|SHELLPROC
@@ -815,7 +827,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|out2str
+name|out2fmt_flush
 argument_list|(
 literal|"sh: turning off NDELAY mode\n"
 argument_list|)
@@ -1243,7 +1255,7 @@ name|sp
 decl_stmt|;
 name|INTOFF
 expr_stmt|;
-comment|/*dprintf("*** calling pushstring: %s, %d\n", s, len);*/
+comment|/*out2fmt_flush("*** calling pushstring: %s, %d\n", s, len);*/
 if|if
 condition|(
 name|parsefile
@@ -1386,7 +1398,7 @@ name|sp
 operator|->
 name|prevlleft
 expr_stmt|;
-comment|/*dprintf("*** calling popstring: restoring to '%s'\n", parsenextc);*/
+comment|/*out2fmt_flush("*** calling popstring: restoring to '%s'\n", parsenextc);*/
 if|if
 condition|(
 name|sp
@@ -1439,6 +1451,7 @@ begin_function
 name|void
 name|setinputfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1862,6 +1875,67 @@ operator|->
 name|linno
 expr_stmt|;
 name|INTON
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return current file (to go back to it later using popfilesupto()).  */
+end_comment
+
+begin_function
+name|struct
+name|parsefile
+modifier|*
+name|getcurrentfile
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|parsefile
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Pop files until the given file is on top again. Useful for regular  * builtins that read shell commands from files or strings.  * If the given file is not an active file, an error is raised.  */
+end_comment
+
+begin_function
+name|void
+name|popfilesupto
+parameter_list|(
+name|struct
+name|parsefile
+modifier|*
+name|file
+parameter_list|)
+block|{
+while|while
+condition|(
+name|parsefile
+operator|!=
+name|file
+operator|&&
+name|parsefile
+operator|!=
+operator|&
+name|basepf
+condition|)
+name|popfile
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|parsefile
+operator|!=
+name|file
+condition|)
+name|error
+argument_list|(
+literal|"popfilesupto() misused"
+argument_list|)
 expr_stmt|;
 block|}
 end_function

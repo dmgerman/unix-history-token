@@ -83,12 +83,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -171,31 +165,6 @@ define|#
 directive|define
 name|OLDFRMTD
 value|"%e %b  %Y"
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|UT_NAMESIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|UT_NAMESIZE
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|UT_GRPSIZE
-value|6
 end_define
 
 begin_decl_stmt
@@ -386,15 +355,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s%2u %-*s %-*s "
+literal|"%s%2u %-12s %-12s "
 argument_list|,
 name|f_mode
 argument_list|,
 name|sbp
 operator|->
 name|st_nlink
-argument_list|,
-name|UT_NAMESIZE
 argument_list|,
 name|name_uid
 argument_list|(
@@ -404,8 +371,6 @@ name|st_uid
 argument_list|,
 literal|1
 argument_list|)
-argument_list|,
-name|UT_GRPSIZE
 argument_list|,
 name|name_gid
 argument_list|(

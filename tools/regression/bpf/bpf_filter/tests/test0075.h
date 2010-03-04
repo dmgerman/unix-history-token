@@ -29,7 +29,7 @@ name|BPF_LD
 operator|+
 name|BPF_MEM
 argument_list|,
-literal|0xffffffff
+literal|0x8fffffff
 argument_list|)
 block|,
 name|BPF_STMT
@@ -120,14 +120,14 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BPF_JIT_COMPILER
+name|__amd64__
 end_ifdef
 
 begin_decl_stmt
 name|int
 name|expect_signal
 init|=
-name|SIGSEGV
+name|SIGBUS
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ begin_decl_stmt
 name|int
 name|expect_signal
 init|=
-name|SIGBUS
+name|SIGSEGV
 decl_stmt|;
 end_decl_stmt
 

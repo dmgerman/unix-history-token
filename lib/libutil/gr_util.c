@@ -508,8 +508,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|line_size
-operator|=
 name|snprintf
 argument_list|(
 name|line

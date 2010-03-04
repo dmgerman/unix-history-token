@@ -106,6 +106,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|pathopt
@@ -127,35 +128,39 @@ begin_comment
 comment|/* last exec error */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|shellexec
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+argument_list|,
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+argument_list|,
+specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|char
 modifier|*
 name|padvance
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -179,6 +184,7 @@ begin_function_decl
 name|void
 name|find_command
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -188,6 +194,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -198,6 +205,7 @@ begin_function_decl
 name|int
 name|find_builtin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -240,6 +248,7 @@ begin_function_decl
 name|void
 name|addcmdentry
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -254,6 +263,7 @@ begin_function_decl
 name|void
 name|defun
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -268,6 +278,7 @@ begin_function_decl
 name|int
 name|unsetfunc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -285,6 +296,10 @@ modifier|*
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

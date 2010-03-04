@@ -333,8 +333,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FFS_MAXID
+name|FFS_SET_CWD
 value|12
+end_define
+
+begin_comment
+comment|/* set current directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_SET_DOTDOT
+value|13
+end_define
+
+begin_comment
+comment|/* set inode number for ".." */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_UNLINK
+value|14
+end_define
+
+begin_comment
+comment|/* remove a name in the filesystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|15
 end_define
 
 begin_comment
@@ -499,7 +532,7 @@ name|int32_t
 name|fs_old_dsize
 decl_stmt|;
 comment|/* number of data blocks in fs */
-name|int32_t
+name|u_int32_t
 name|fs_ncg
 decl_stmt|;
 comment|/* number of cylinder groups */
@@ -579,7 +612,7 @@ name|int32_t
 name|fs_nindir
 decl_stmt|;
 comment|/* value of NINDIR */
-name|int32_t
+name|u_int32_t
 name|fs_inopb
 decl_stmt|;
 comment|/* value of INOPB */
@@ -644,7 +677,7 @@ name|int32_t
 name|fs_old_cpg
 decl_stmt|;
 comment|/* cylinders per group */
-name|int32_t
+name|u_int32_t
 name|fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
@@ -779,22 +812,22 @@ name|int64_t
 name|fs_pendingblocks
 decl_stmt|;
 comment|/* (u) blocks being freed */
-name|int32_t
+name|u_int32_t
 name|fs_pendinginodes
 decl_stmt|;
 comment|/* (u) inodes being freed */
-name|int32_t
+name|ino_t
 name|fs_snapinum
 index|[
 name|FSMAXSNAP
 index|]
 decl_stmt|;
 comment|/* list of snapshot inode numbers */
-name|int32_t
+name|u_int32_t
 name|fs_avgfilesize
 decl_stmt|;
 comment|/* expected average file size */
-name|int32_t
+name|u_int32_t
 name|fs_avgfpdir
 decl_stmt|;
 comment|/* expected # of files per directory */
@@ -991,14 +1024,14 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
-comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that ACLs are administratively enabled for the  * file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_MULTILABEL indicates that the TrustedBSD MAC Framework  * should attempt to back MAC labels into extended attributes on the  * file system rather than maintain a single mount label for all  * objects.  */
+comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that POSIX.1e ACLs are administratively enabled  * for the file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_NFS4ACLS indicates that NFSv4 ACLs are administratively  * enabled.  This flag is mutually exclusive with FS_ACLS.  FS_MULTILABEL  * indicates that the TrustedBSD MAC Framework should attempt to back MAC  * labels into extended attributes on the file system rather than maintain  * a single mount label for all objects.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FS_UNCLEAN
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -1009,7 +1042,7 @@ begin_define
 define|#
 directive|define
 name|FS_DOSOFTDEP
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -1020,7 +1053,7 @@ begin_define
 define|#
 directive|define
 name|FS_NEEDSFSCK
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -1031,7 +1064,7 @@ begin_define
 define|#
 directive|define
 name|FS_INDEXDIRS
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -1042,18 +1075,18 @@ begin_define
 define|#
 directive|define
 name|FS_ACLS
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
-comment|/* file system has ACLs enabled */
+comment|/* file system has POSIX.1e ACLs enabled */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FS_MULTILABEL
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -1064,7 +1097,7 @@ begin_define
 define|#
 directive|define
 name|FS_GJOURNAL
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -1075,11 +1108,22 @@ begin_define
 define|#
 directive|define
 name|FS_FLAGS_UPDATED
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* flags have been moved to new location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_NFS4ACLS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* file system has NFSv4 ACLs enabled */
 end_comment
 
 begin_comment
@@ -1216,7 +1260,7 @@ name|int32_t
 name|cg_old_time
 decl_stmt|;
 comment|/* time last written */
-name|int32_t
+name|u_int32_t
 name|cg_cgx
 decl_stmt|;
 comment|/* we are the cgx'th cylinder group */
@@ -1228,7 +1272,7 @@ name|int16_t
 name|cg_old_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|int32_t
+name|u_int32_t
 name|cg_ndblk
 decl_stmt|;
 comment|/* number of data blocks this cg */
@@ -1237,19 +1281,19 @@ name|csum
 name|cg_cs
 decl_stmt|;
 comment|/* cylinder summary information */
-name|int32_t
+name|u_int32_t
 name|cg_rotor
 decl_stmt|;
 comment|/* position of last used block */
-name|int32_t
+name|u_int32_t
 name|cg_frotor
 decl_stmt|;
 comment|/* position of last used frag */
-name|int32_t
+name|u_int32_t
 name|cg_irotor
 decl_stmt|;
 comment|/* position of last used inode */
-name|int32_t
+name|u_int32_t
 name|cg_frsum
 index|[
 name|MAXFRAG
@@ -1264,39 +1308,39 @@ name|int32_t
 name|cg_old_boff
 decl_stmt|;
 comment|/* (u_int16) free block positions */
-name|int32_t
+name|u_int32_t
 name|cg_iusedoff
 decl_stmt|;
 comment|/* (u_int8) used inode map */
-name|int32_t
+name|u_int32_t
 name|cg_freeoff
 decl_stmt|;
 comment|/* (u_int8) free block map */
-name|int32_t
+name|u_int32_t
 name|cg_nextfreeoff
 decl_stmt|;
 comment|/* (u_int8) next available space */
-name|int32_t
+name|u_int32_t
 name|cg_clustersumoff
 decl_stmt|;
 comment|/* (u_int32) counts of avail clusters */
-name|int32_t
+name|u_int32_t
 name|cg_clusteroff
 decl_stmt|;
 comment|/* (u_int8) free cluster map */
-name|int32_t
+name|u_int32_t
 name|cg_nclusterblks
 decl_stmt|;
 comment|/* number of clusters this cg */
-name|int32_t
+name|u_int32_t
 name|cg_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|int32_t
+name|u_int32_t
 name|cg_initediblk
 decl_stmt|;
 comment|/* last initialized inode */
-name|int32_t
+name|u_int32_t
 name|cg_unrefs
 decl_stmt|;
 comment|/* number of unreferenced inodes */
@@ -1522,7 +1566,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|((x) / (fs)->fs_ipg)
+value|(((ino_t)(x)) / (fs)->fs_ipg)
 end_define
 
 begin_define
@@ -1535,7 +1579,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((ufs2_daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+value|((ufs2_daddr_t)(cgimin(fs, ino_to_cg(fs, (ino_t)(x))) +		\ 	    (blkstofrags((fs), ((((ino_t)(x)) % (fs)->fs_ipg) / INOPB(fs))))))
 end_define
 
 begin_define
@@ -1547,7 +1591,7 @@ name|fs
 parameter_list|,
 name|x
 parameter_list|)
-value|((x) % INOPB(fs))
+value|(((ino_t)(x)) % INOPB(fs))
 end_define
 
 begin_comment

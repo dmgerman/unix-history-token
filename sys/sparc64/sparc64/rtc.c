@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The `rtc' device is a MC146818 compatible clock found on the ISA  * bus and EBus. The EBus variant actually is the Real-Time Clock  * function of a National Semiconductor PC87317/PC97317 which also  * provides Advanced Power Control functionality.  */
+comment|/*  * The `rtc' device is found on the ISA bus and the EBus.  The ISA version  * always is a MC146818 compatible clock while the EBus variant either is the  * MC146818 compatible Real-Time Clock function of a National Semiconductor  * PC87317/PC97317 which also provides Advanced Power Control functionality  * or a Texas Instruments bq4802.  */
 end_comment
 
 begin_include
@@ -382,11 +382,7 @@ argument_list|,
 name|mc146818_settime
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|KOBJMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -439,6 +435,7 @@ name|u_int
 name|pc87317_getcent
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -449,8 +446,10 @@ name|void
 name|pc87317_setcent
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|u_int
+name|cent
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,6 +478,33 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* The bq4802 is not supported, yet. */
+if|if
+condition|(
+name|ofw_bus_get_compat
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|ofw_bus_get_compat
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+literal|"bq4802"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev

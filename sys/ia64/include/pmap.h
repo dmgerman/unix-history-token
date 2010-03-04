@@ -150,10 +150,6 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* base RID for pmap */
-name|int
-name|pm_active
-decl_stmt|;
-comment|/* active flag */
 name|struct
 name|pmap_statistics
 name|pm_stats
@@ -425,6 +421,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_offset_t
+name|pmap_alloc_vhpt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmap_bootstrap
 parameter_list|(
@@ -494,7 +499,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)

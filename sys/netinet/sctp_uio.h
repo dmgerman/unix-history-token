@@ -80,6 +80,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Compatibility to previous define's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sctp_stream_reset_events
+value|sctp_stream_reset_event
+end_define
+
+begin_comment
 comment|/* On/Off setup for subscription to events */
 end_comment
 
@@ -118,7 +129,7 @@ name|uint8_t
 name|sctp_sender_dry_event
 decl_stmt|;
 name|uint8_t
-name|sctp_stream_reset_events
+name|sctp_stream_reset_event
 decl_stmt|;
 block|}
 struct|;
@@ -944,9 +955,7 @@ name|ssf_assoc_id
 decl_stmt|;
 name|uint8_t
 name|ssf_data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1222,9 +1231,7 @@ name|strreset_assoc_id
 decl_stmt|;
 name|uint16_t
 name|strreset_list
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1438,6 +1445,17 @@ directive|define
 name|SCTP_SENDER_DRY_EVENT
 value|0x000a
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP__NOTIFICATIONS_STOPPED_EVENT
+value|0x000b
+end_define
+
+begin_comment
+comment|/* we dont send this */
+end_comment
 
 begin_comment
 comment|/*  * socket option structs  */
@@ -1760,9 +1778,7 @@ name|sca_keynumber
 decl_stmt|;
 name|uint8_t
 name|sca_key
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1781,9 +1797,7 @@ name|shmac_number_of_idents
 decl_stmt|;
 name|uint16_t
 name|shmac_idents
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1809,17 +1823,6 @@ end_define
 
 begin_comment
 comment|/* default, mandatory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_AUTH_HMAC_ID_MD5
-value|0x0002
-end_define
-
-begin_comment
-comment|/* deprecated */
 end_comment
 
 begin_define
@@ -1881,9 +1884,7 @@ name|gauth_assoc_id
 decl_stmt|;
 name|uint8_t
 name|gauth_chunks
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -1912,9 +1913,7 @@ name|gaids_number_of_ids
 decl_stmt|;
 name|sctp_assoc_t
 name|gaids_assoc_id
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -2077,9 +2076,7 @@ decl_stmt|;
 comment|/* 0 == ALL */
 name|uint16_t
 name|strrst_list
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* list if strrst_num_streams is not 0 */
 block|}
@@ -2567,9 +2564,7 @@ comment|/* end at this one */
 name|struct
 name|sctp_cwnd_log
 name|log
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;

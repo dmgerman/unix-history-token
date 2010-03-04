@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.84 2008/06/26 06:10:09 djm Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.85 2009/04/14 16:33:42 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -5287,6 +5287,10 @@ condition|(
 name|errno
 operator|==
 name|EOPNOTSUPP
+operator|||
+name|errno
+operator|==
+name|ENOSYS
 ifdef|#
 directive|ifdef
 name|EXDEV
@@ -6572,7 +6576,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"C:f:l:che"
+literal|"f:l:che"
 argument_list|)
 operator|)
 operator|!=

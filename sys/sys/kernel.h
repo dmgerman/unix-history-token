@@ -230,6 +230,11 @@ init|=
 literal|0x2100000
 block|,
 comment|/* CPU resource(s)*/
+name|SI_SUB_RANDOM
+init|=
+literal|0x2120000
+block|,
+comment|/* random number generator */
 name|SI_SUB_KDTRACE
 init|=
 literal|0x2140000

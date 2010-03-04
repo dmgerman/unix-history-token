@@ -187,6 +187,14 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
+comment|/* tcgetattr with ICANON may hang */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_TCGETATTR_ICANON */
+end_comment
+
+begin_comment
 comment|/* updwtmpx is broken (if present) */
 end_comment
 
@@ -222,12 +230,9 @@ begin_comment
 comment|/* Define if you want to specify the path to your utmp file */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CONF_UTMP_FILE
-value|"/var/run/utmp"
-end_define
+begin_comment
+comment|/* #undef CONF_UTMP_FILE */
+end_comment
 
 begin_comment
 comment|/* Define if you want to specify the path to your wtmpx file */
@@ -241,12 +246,9 @@ begin_comment
 comment|/* Define if you want to specify the path to your wtmp file */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CONF_WTMP_FILE
-value|"/var/log/wtmp"
-end_define
+begin_comment
+comment|/* #undef CONF_WTMP_FILE */
+end_comment
 
 begin_comment
 comment|/* Define if your platform needs to skip post auth file descriptor passing */
@@ -300,28 +302,31 @@ begin_comment
 comment|/* Define if you don't want to use utmp */
 end_comment
 
-begin_comment
-comment|/* #undef DISABLE_UTMP */
-end_comment
+begin_define
+define|#
+directive|define
+name|DISABLE_UTMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you don't want to use utmpx */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DISABLE_UTMPX
-value|1
-end_define
+begin_comment
+comment|/* #undef DISABLE_UTMPX */
+end_comment
 
 begin_comment
 comment|/* Define if you don't want to use wtmp */
 end_comment
 
-begin_comment
-comment|/* #undef DISABLE_WTMP */
-end_comment
+begin_define
+define|#
+directive|define
+name|DISABLE_WTMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you don't want to use wtmpx */
@@ -346,11 +351,19 @@ value|200
 end_define
 
 begin_comment
-comment|/* f_fsid has members */
+comment|/* fsid_t has member val */
 end_comment
 
 begin_comment
 comment|/* #undef FSID_HAS_VAL */
+end_comment
+
+begin_comment
+comment|/* fsid_t has member __val */
+end_comment
+
+begin_comment
+comment|/* #undef FSID_HAS___VAL */
 end_comment
 
 begin_comment
@@ -900,9 +913,12 @@ begin_comment
 comment|/* Define to 1 if you have the `endutxent' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ENDUTXENT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ENDUTXENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if your system has /etc/default/login */
@@ -1305,25 +1321,34 @@ begin_comment
 comment|/* Define to 1 if you have the `getutxent' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETUTXENT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getutxid' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETUTXID */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXID
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `getutxline' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GETUTXLINE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXLINE
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `get_default_context_with_level' function. */
@@ -1418,20 +1443,20 @@ begin_comment
 comment|/* Define if you have ut_host in utmp.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_HOST_IN_UTMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_HOST_IN_UTMP */
+end_comment
 
 begin_comment
 comment|/* Define if you have ut_host in utmpx.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_HOST_IN_UTMPX */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_HOST_IN_UTMPX
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<iaf.h> header file. */
@@ -1461,9 +1486,12 @@ begin_comment
 comment|/* Define if you have ut_id in utmpx.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_ID_IN_UTMPX */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_ID_IN_UTMPX
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `inet_aton' function. */
@@ -1550,6 +1578,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_IN_ADDR_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `in_port_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN_PORT_T
 value|1
 end_define
 
@@ -1692,12 +1731,9 @@ begin_comment
 comment|/* Define if your libraries define login() */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LOGIN
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LOGIN */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<login_cap.h> header file. */
@@ -1733,23 +1769,17 @@ begin_comment
 comment|/* Define to 1 if you have the `logout' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LOGOUT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LOGOUT */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `logwtmp' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LOGWTMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LOGWTMP */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if the system has the type `long double'. */
@@ -2105,9 +2135,12 @@ begin_comment
 comment|/* Define to 1 if you have the `pututxline' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PUTUTXLINE */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PUTUTXLINE
+value|1
+end_define
 
 begin_comment
 comment|/* Define if your password has a pw_change field */
@@ -2433,9 +2466,12 @@ begin_comment
 comment|/* Define to 1 if you have the `setutxent' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SETUTXENT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SETUTXENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setvbuf' function. */
@@ -3195,12 +3231,9 @@ begin_comment
 comment|/* Define if you have ut_time in utmp.h */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_TIME_IN_UTMP
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_TIME_IN_UTMP */
+end_comment
 
 begin_comment
 comment|/* Define if you have ut_time in utmpx.h */
@@ -3252,9 +3285,12 @@ begin_comment
 comment|/* Define if you have ut_tv in utmpx.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_TV_IN_UTMPX */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_TV_IN_UTMPX
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have ut_type in utmp.h */
@@ -3268,9 +3304,12 @@ begin_comment
 comment|/* Define if you have ut_type in utmpx.h */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_TYPE_IN_UTMPX */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_TYPE_IN_UTMPX
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<ucred.h> header file. */
@@ -3398,20 +3437,20 @@ begin_comment
 comment|/* Define to 1 if you have the<utmpx.h> header file. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_UTMPX_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_UTMPX_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<utmp.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_UTMP_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_UTMP_H */
+end_comment
 
 begin_comment
 comment|/* define if you have u_char data type */
@@ -3845,6 +3884,14 @@ comment|/* #undef NO_X11_UNIX_SOCKETS */
 end_comment
 
 begin_comment
+comment|/* Define if EVP_DigestUpdate returns void */
+end_comment
+
+begin_comment
+comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
+end_comment
+
+begin_comment
 comment|/* libcrypto is missing AES 192 and 256 bit functions */
 end_comment
 
@@ -4094,6 +4141,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SSH_AUDIT_EVENTS */
+end_comment
+
+begin_comment
+comment|/* Windows is sensitive to read buffer size */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_IOBUFSZ */
 end_comment
 
 begin_comment
@@ -4347,12 +4402,39 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+name|__LITTLE_ENDIAN__
+end_elif
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* # undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if xauth is found in your path */

@@ -117,6 +117,9 @@ name|uint8_t
 name|sc_pci_secbus
 decl_stmt|;
 name|uint8_t
+name|sc_pci_subbus
+decl_stmt|;
+name|uint8_t
 name|sc_pci_hpbcfg
 index|[
 literal|16

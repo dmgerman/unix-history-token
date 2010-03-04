@@ -175,6 +175,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_MRVL_8042
+value|0x4357
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_MRVL_8048
 value|0x435A
 end_define
@@ -242,6 +249,13 @@ name|DEVICEID_MRVL_436C
 value|0x436C
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4380
+value|0x4380
+end_define
+
 begin_comment
 comment|/*  * D-Link gigabit ethernet device ID  */
 end_comment
@@ -251,6 +265,13 @@ define|#
 directive|define
 name|DEVICEID_DLINK_DGE550SX
 value|0x4001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_DLINK_DGE560SX
+value|0x4002
 end_define
 
 begin_define
@@ -6286,6 +6307,28 @@ end_define
 
 begin_comment
 comment|/* Chip ID for YUKON-2 FE+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_SUPR
+value|0xb9
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Supreme */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_UL_2
+value|0xba
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Ultra 2 */
 end_comment
 
 begin_define
@@ -16747,6 +16790,9 @@ decl_stmt|;
 name|uint16_t
 name|msk_tso_mtu
 decl_stmt|;
+name|uint32_t
+name|msk_last_csum
+decl_stmt|;
 name|int
 name|msk_tx_prod
 decl_stmt|;
@@ -16932,6 +16978,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSK_INT_HOLDOFF_DEFAULT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSK_TX_TIMEOUT
 value|5
 end_define
@@ -16942,6 +16995,23 @@ directive|define
 name|MSK_PUT_WM
 value|10
 end_define
+
+begin_struct
+struct|struct
+name|msk_mii_data
+block|{
+name|int
+name|port
+decl_stmt|;
+name|uint32_t
+name|pmd
+decl_stmt|;
+name|int
+name|mii_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Forward decl. */
@@ -17113,7 +17183,7 @@ name|resource
 modifier|*
 name|msk_irq
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* IRQ resources */
@@ -17125,9 +17195,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* irq handler handle */
 name|device_t
@@ -17146,6 +17213,12 @@ name|uint8_t
 name|msk_num_port
 decl_stmt|;
 name|int
+name|msk_expcap
+decl_stmt|;
+name|int
+name|msk_pcixcap
+decl_stmt|;
+name|int
 name|msk_ramsize
 decl_stmt|;
 comment|/* amount of SRAM on NIC */
@@ -17153,9 +17226,6 @@ name|uint32_t
 name|msk_pmd
 decl_stmt|;
 comment|/* physical media type */
-name|uint32_t
-name|msk_coppertype
-decl_stmt|;
 name|uint32_t
 name|msk_intrmask
 decl_stmt|;
@@ -17227,19 +17297,13 @@ name|bus_addr_t
 name|msk_stat_ring_paddr
 decl_stmt|;
 name|int
+name|msk_int_holdoff
+decl_stmt|;
+name|int
 name|msk_process_limit
 decl_stmt|;
 name|int
 name|msk_stat_cons
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|msk_tq
-decl_stmt|;
-name|struct
-name|task
-name|msk_int_task
 decl_stmt|;
 name|struct
 name|mtx
@@ -17445,10 +17509,6 @@ comment|/* parent controller */
 name|struct
 name|msk_hw_stats
 name|msk_stats
-decl_stmt|;
-name|struct
-name|task
-name|msk_tx_task
 decl_stmt|;
 name|int
 name|msk_if_flags

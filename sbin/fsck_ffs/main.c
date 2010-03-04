@@ -1809,7 +1809,29 @@ name|usedsoftdep
 condition|)
 name|pfatal
 argument_list|(
-literal|"INTERNAL ERROR: dups with -p"
+literal|"INTERNAL ERROR: dups with %s%s%s"
+argument_list|,
+name|preen
+condition|?
+literal|"-p"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|preen
+operator|&&
+name|usedsoftdep
+operator|)
+condition|?
+literal|" and "
+else|:
+literal|""
+argument_list|,
+name|usedsoftdep
+condition|?
+literal|"softupdates"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|printf

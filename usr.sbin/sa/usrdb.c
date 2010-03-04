@@ -376,7 +376,9 @@ end_comment
 begin_function
 name|int
 name|usracct_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|BTREEINFO
 name|bti
@@ -420,7 +422,9 @@ end_function
 begin_function
 name|void
 name|usracct_destroy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|db_destroy
 argument_list|(
@@ -717,7 +721,9 @@ end_comment
 begin_function
 name|int
 name|usracct_update
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|BTREEINFO
 name|bti
@@ -758,7 +764,9 @@ end_function
 begin_function
 name|void
 name|usracct_print
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|DBT
 name|key

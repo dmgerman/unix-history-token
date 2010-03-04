@@ -392,10 +392,6 @@ name|md
 operator|->
 name|md_mkeys
 expr_stmt|;
-name|nkey
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|nkey

@@ -102,12 +102,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_PROT_OVERRIDE_WRITE
+name|VM_PROT_COPY
 value|((vm_prot_t) 0x08)
 end_define
 
 begin_comment
-comment|/* copy-on-write */
+comment|/* copy-on-read */
 end_comment
 
 begin_define

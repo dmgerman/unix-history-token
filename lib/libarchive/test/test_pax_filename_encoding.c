@@ -229,13 +229,17 @@ comment|/* 	 * We need a starting locale which has invalid sequences. 	 * de_DE.
 comment|/* If it doesn't exist, just warn and return. */
 if|if
 condition|(
+name|LOCALE_UTF8
+operator|==
+name|NULL
+operator|||
 name|NULL
 operator|==
 name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
-name|LOCALE_DE
+name|LOCALE_UTF8
 argument_list|)
 condition|)
 block|{
@@ -244,7 +248,7 @@ argument_list|(
 literal|"invalid encoding tests require a suitable locale;"
 literal|" %s not available on this system"
 argument_list|,
-name|LOCALE_DE
+name|LOCALE_UTF8
 argument_list|)
 expr_stmt|;
 return|return;
@@ -518,18 +522,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -540,8 +532,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now read the entries back. 	 */
 name|assert
 argument_list|(
@@ -718,18 +708,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_read_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -740,8 +718,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -862,6 +838,30 @@ name|skipping
 argument_list|(
 literal|"Cannot test conversion failures because \"C\" "
 literal|"locale on this system has no invalid characters."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Skip test if archive_entry_update_pathname_utf8() is broken. */
+comment|/* In particular, this is currently broken on Win32 because 	 * setlocale() does not set the default encoding for CP_ACP. */
+name|entry
+operator|=
+name|archive_entry_new
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|archive_entry_update_pathname_utf8
+argument_list|(
+name|entry
+argument_list|,
+name|badname_utf8
+argument_list|)
+condition|)
+block|{
+name|skipping
+argument_list|(
+literal|"Cannot test conversion failures."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1194,18 +1194,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_write_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -1216,8 +1204,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now read the entries back. 	 */
 name|assert
 argument_list|(
@@ -1503,18 +1489,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_read_finish
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -1525,8 +1499,6 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

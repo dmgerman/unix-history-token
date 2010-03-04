@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<opt_xtrace.h>
+file|"opt_xtrace.h"
 end_include
 
 begin_include

@@ -75,29 +75,6 @@ directive|include
 file|<zlib.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Hmmm... This is necessary, but means that we can't correctly extract  * even uncompressed entries on platforms that lack zlib. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|crc32
-parameter_list|(
-name|crc
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
-value|(unsigned long)0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -132,6 +109,23 @@ include|#
 directive|include
 file|"archive_endian.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ZLIB_H
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"archive_crc32.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

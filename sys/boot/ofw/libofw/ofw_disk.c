@@ -219,7 +219,7 @@ name|opened_devs
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|opened_dev
+name|opened_devs
 argument_list|)
 expr_stmt|;
 end_expr_stmt

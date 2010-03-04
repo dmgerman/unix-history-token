@@ -1053,6 +1053,11 @@ comment|/* Verify validity of the ACL we read in. */
 block|if (acl_valid(acl) == -1) { 		errno = EINVAL; 		goto error_label; 	}
 endif|#
 directive|endif
+name|free
+argument_list|(
+name|mybuf_p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|acl

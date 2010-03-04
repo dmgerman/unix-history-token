@@ -972,12 +972,6 @@ name|dp
 operator|->
 name|d_drv1
 expr_stmt|;
-name|sc
-operator|=
-name|dsc
-operator|->
-name|sc
-expr_stmt|;
 if|if
 condition|(
 name|dsc
@@ -989,6 +983,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|sc
+operator|=
+name|dsc
+operator|->
+name|sc
+expr_stmt|;
 if|if
 condition|(
 name|ips_get_free_cmd

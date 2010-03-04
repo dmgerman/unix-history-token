@@ -1132,6 +1132,97 @@ end_define
 begin_define
 define|#
 directive|define
+name|AHCI_EM_LOC
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_CTL
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_MR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_TM
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_RST
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_LED
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_SAFTE
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_SES2
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_SGPIO
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_SMB
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_XMT
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_ALHD
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_EM_PM
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AHCI_CAP2
 value|0x24
 end_define
@@ -1433,7 +1524,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHCI_P_CMD_ISP
+name|AHCI_P_CMD_MPSP
 value|0x00080000
 end_define
 
@@ -1442,6 +1533,27 @@ define|#
 directive|define
 name|AHCI_P_CMD_CPD
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_ESP
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_FBSCP
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_CMD_APSTE
+value|0x00800000
 end_define
 
 begin_define
@@ -1568,6 +1680,69 @@ define|#
 directive|define
 name|AHCI_P_FBS
 value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_EN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEC
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_SDE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEV
+value|0x00000f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DEV_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_ADO
+value|0x0000f000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_ADO_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DWE
+value|0x000f0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHCI_P_FBS_DWE_SHIFT
+value|16
 end_define
 
 begin_comment
@@ -1871,7 +2046,7 @@ name|AHCI_SLOT_LOADING
 block|,
 name|AHCI_SLOT_RUNNING
 block|,
-name|AHCI_SLOT_WAITING
+name|AHCI_SLOT_EXECUTING
 block|}
 enum|;
 end_enum
@@ -1909,6 +2084,29 @@ name|callout
 name|timeout
 decl_stmt|;
 comment|/* Execution timeout */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ahci_device
+block|{
+name|int
+name|revision
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|u_int
+name|bytecount
+decl_stmt|;
+name|u_int
+name|atapi
+decl_stmt|;
+name|u_int
+name|tags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1969,6 +2167,13 @@ name|uint32_t
 name|caps2
 decl_stmt|;
 comment|/* Controller capabilities */
+name|uint32_t
+name|chcaps
+decl_stmt|;
+comment|/* Channel capabilities */
+name|int
+name|quirks
+decl_stmt|;
 name|int
 name|numslots
 decl_stmt|;
@@ -1977,10 +2182,6 @@ name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
-name|int
-name|sata_rev
-decl_stmt|;
-comment|/* Maximum allowed SATA generation */
 name|struct
 name|ahci_slot
 name|slot
@@ -2009,6 +2210,14 @@ name|int
 name|pm_present
 decl_stmt|;
 comment|/* PM presence reported */
+name|int
+name|fbs_enabled
+decl_stmt|;
+comment|/* FIS-based switching enabled */
+name|uint32_t
+name|oslots
+decl_stmt|;
+comment|/* Occupied slots */
 name|uint32_t
 name|rslots
 decl_stmt|;
@@ -2017,18 +2226,48 @@ name|uint32_t
 name|aslots
 decl_stmt|;
 comment|/* Slots with atomic commands  */
+name|uint32_t
+name|eslots
+decl_stmt|;
+comment|/* Slots in error */
+name|uint32_t
+name|toslots
+decl_stmt|;
+comment|/* Slots in timeout */
 name|int
 name|numrslots
 decl_stmt|;
 comment|/* Number of running slots */
 name|int
+name|numrslotspd
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Number of running slots per dev */
+name|int
 name|numtslots
 decl_stmt|;
 comment|/* Number of tagged slots */
 name|int
+name|numtslotspd
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Number of tagged slots per dev */
+name|int
+name|numhslots
+decl_stmt|;
+comment|/* Number of holden slots */
+name|int
 name|readlog
 decl_stmt|;
 comment|/* Our READ LOG active */
+name|int
+name|fatalerr
+decl_stmt|;
+comment|/* Fatal error happend */
 name|int
 name|lastslot
 decl_stmt|;
@@ -2048,6 +2287,22 @@ name|callout
 name|pm_timer
 decl_stmt|;
 comment|/* Power management events */
+name|struct
+name|ahci_device
+name|user
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* User-specified settings */
+name|struct
+name|ahci_device
+name|curr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Current settings */
 block|}
 struct|;
 end_struct
@@ -2124,6 +2379,13 @@ name|uint32_t
 name|caps2
 decl_stmt|;
 comment|/* Controller capabilities */
+name|uint32_t
+name|capsem
+decl_stmt|;
+comment|/* Controller capabilities */
+name|int
+name|quirks
+decl_stmt|;
 name|int
 name|numirqs
 decl_stmt|;

@@ -453,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|PKG_INSTALL_VERSION
-value|20090902
+value|20100122
 end_define
 
 begin_define

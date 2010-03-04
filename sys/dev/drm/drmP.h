@@ -171,6 +171,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -178,6 +184,12 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -208,6 +220,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
 end_include
 
 begin_include
@@ -359,12 +383,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dev/drm/drm_linux_list.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dev/drm/drm_atomic.h"
 end_include
 
@@ -372,6 +390,12 @@ begin_include
 include|#
 directive|include
 file|"dev/drm/drm_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm_linux_list.h"
 end_include
 
 begin_include
@@ -714,6 +738,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|DRM_MEM_MM
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|DRM_MEM_HASHTAB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_hw_drm
@@ -1004,6 +1044,30 @@ begin_comment
 comment|/* nothing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|unlikely
+parameter_list|(
+name|x
+parameter_list|)
+value|__builtin_expect(!!(x), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|container_of
+parameter_list|(
+name|ptr
+parameter_list|,
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|({			\ 	__typeof( ((type *)0)->member ) *__mptr = (ptr);	\ 	(type *)( (char *)__mptr - offsetof(type,member) );})
+end_define
+
 begin_enum
 enum|enum
 block|{
@@ -1147,21 +1211,12 @@ begin_comment
 comment|/* DRM_READMEMORYBARRIER() prevents reordering of reads.  * DRM_WRITEMEMORYBARRIER() prevents reordering of writes.  * DRM_MEMORYBARRIER() prevents reordering of reads and writes.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|DRM_READMEMORYBARRIER
 parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%esp)" : : : "memory");
+value|rmb()
 end_define
 
 begin_define
@@ -1169,7 +1224,7 @@ define|#
 directive|define
 name|DRM_WRITEMEMORYBARRIER
 parameter_list|()
-value|__asm __volatile("" : : : "memory");
+value|wmb()
 end_define
 
 begin_define
@@ -1177,79 +1232,8 @@ define|#
 directive|define
 name|DRM_MEMORYBARRIER
 parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%esp)" : : : "memory");
+value|mb()
 end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|DRM_READMEMORYBARRIER
-parameter_list|()
-value|alpha_mb();
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_WRITEMEMORYBARRIER
-parameter_list|()
-value|alpha_wmb();
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_MEMORYBARRIER
-parameter_list|()
-value|alpha_mb();
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|DRM_READMEMORYBARRIER
-parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_WRITEMEMORYBARRIER
-parameter_list|()
-value|__asm __volatile("" : : : "memory");
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_MEMORYBARRIER
-parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -12,6 +12,8 @@ enum|enum
 block|{
 name|URTW_8187B_BULK_RX
 block|,
+name|URTW_8187B_BULK_TX_STATUS
+block|,
 name|URTW_8187B_BULK_TX_BE
 block|,
 name|URTW_8187B_BULK_TX_BK
@@ -24,7 +26,7 @@ name|URTW_8187B_BULK_TX_EP12
 block|,
 name|URTW_8187B_N_XFERS
 init|=
-literal|6
+literal|7
 block|}
 enum|;
 end_enum
@@ -144,6 +146,13 @@ name|URTW_TX_MAXSIZE
 value|0x9c4
 end_define
 
+begin_define
+define|#
+directive|define
+name|URTW_TX_MAXRETRY
+value|11
+end_define
+
 begin_struct
 struct|struct
 name|urtw_rx_radiotap_header
@@ -206,6 +215,21 @@ name|URTW_TX_RADIOTAP_PRESENT
 define|\
 value|((1<< IEEE80211_RADIOTAP_FLAGS) |				\ 	 (1<< IEEE80211_RADIOTAP_CHANNEL))
 end_define
+
+begin_struct
+struct|struct
+name|urtw_stats
+block|{
+name|unsigned
+name|int
+name|txrates
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -539,6 +563,21 @@ index|]
 decl_stmt|;
 name|uint8_t
 name|sc_txpwr_ofdm_base
+decl_stmt|;
+name|uint8_t
+name|sc_acmctl
+decl_stmt|;
+name|uint64_t
+name|sc_txstatus
+decl_stmt|;
+comment|/* only for 8187B */
+name|struct
+name|task
+name|sc_updateslot_task
+decl_stmt|;
+name|struct
+name|urtw_stats
+name|sc_stats
 decl_stmt|;
 name|struct
 name|urtw_rx_radiotap_header

@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/semaphore.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_semaphore.h>
 end_include
 

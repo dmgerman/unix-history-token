@@ -1522,6 +1522,9 @@ operator|(
 name|lc
 operator|->
 name|negative_sign
+index|[
+literal|0
+index|]
 operator|==
 literal|'\0'
 operator|)
@@ -1622,6 +1625,9 @@ operator|(
 name|lc
 operator|->
 name|negative_sign
+index|[
+literal|0
+index|]
 operator|==
 literal|'\0'
 operator|)

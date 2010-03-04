@@ -6022,6 +6022,13 @@ name|done
 goto|;
 do|do
 block|{
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ss
+argument_list|)
+expr_stmt|;
 name|inlen
 operator|=
 name|recvfrom

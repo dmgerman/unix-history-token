@@ -2920,6 +2920,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
+operator|||
+name|signum
+operator|==
+literal|0
 condition|)
 goto|goto
 name|out

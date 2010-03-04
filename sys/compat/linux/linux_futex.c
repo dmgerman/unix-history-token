@@ -2294,7 +2294,6 @@ operator|(
 name|error
 operator|)
 return|;
-empty_stmt|;
 block|}
 name|td
 operator|->

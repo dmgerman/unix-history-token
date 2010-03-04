@@ -2003,35 +2003,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-comment|/* 	 * On the GNU tar mailing list, some people working with new 	 * Linux filesystems observed that system xattrs used as 	 * layout hints need to be restored before the file contents 	 * are written, so this can't be done at file close. 	 */
-if|if
-condition|(
-name|a
-operator|->
-name|todo
-operator|&
-name|TODO_XATTR
-condition|)
-block|{
-name|int
-name|r2
-init|=
-name|set_xattrs
-argument_list|(
-name|a
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|r2
-operator|<
-name|ret
-condition|)
-name|ret
-operator|=
-name|r2
-expr_stmt|;
-block|}
+comment|/* 	 * TODO: There are rumours that some extended attributes must 	 * be restored before file data is written.  If this is true, 	 * then we either need to write all extended attributes both 	 * before and after restoring the data, or find some rule for 	 * determining which must go first and which last.  Due to the 	 * many ways people are using xattrs, this may prove to be an 	 * intractable problem. 	 */
 ifdef|#
 directive|ifdef
 name|HAVE_FCHDIR
@@ -2045,6 +2017,8 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|r
+operator|=
 name|fchdir
 argument_list|(
 name|a
@@ -2052,6 +2026,30 @@ operator|->
 name|restore_pwd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|!=
+literal|0
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+name|errno
+argument_list|,
+literal|"chdir() failure"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ARCHIVE_FATAL
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|a
@@ -3229,7 +3227,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * Explicitly stat the file as some platforms might not 		 * implement the XSI option to extend files via ftruncate. 		 */
+comment|/* 		 * Not all platforms implement the XSI option to 		 * extend files via ftruncate.  Stat() the file again 		 * to see what happened. 		 */
 name|a
 operator|->
 name|pst
@@ -3254,6 +3252,7 @@ operator|(
 name|ret
 operator|)
 return|;
+comment|/* We can use lseek()/write() to extend the file if 		 * ftruncate didn't work or isn't available. */
 if|if
 condition|(
 name|a
@@ -3261,7 +3260,7 @@ operator|->
 name|st
 operator|.
 name|st_size
-operator|!=
+operator|<
 name|a
 operator|->
 name|filesize
@@ -3283,9 +3282,7 @@ name|fd
 argument_list|,
 name|a
 operator|->
-name|st
-operator|.
-name|st_size
+name|filesize
 operator|-
 literal|1
 argument_list|,
@@ -3507,6 +3504,35 @@ name|int
 name|r2
 init|=
 name|set_acls
+argument_list|(
+name|a
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|r2
+operator|<
+name|ret
+condition|)
+name|ret
+operator|=
+name|r2
+expr_stmt|;
+block|}
+comment|/* 	 * Security-related extended attributes (such as 	 * security.capability on Linux) have to be restored last, 	 * since they're implicitly removed by other file changes. 	 */
+if|if
+condition|(
+name|a
+operator|->
+name|todo
+operator|&
+name|TODO_XATTR
+condition|)
+block|{
+name|int
+name|r2
+init|=
+name|set_xattrs
 argument_list|(
 name|a
 argument_list|)
@@ -4842,6 +4868,7 @@ comment|/*  * Returns 0 if creation succeeds, or else returns errno value from  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|create_filesystem_object
 parameter_list|(
@@ -4883,6 +4910,17 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|HAVE_LINK
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+else|#
+directive|else
 name|r
 operator|=
 name|link
@@ -4973,6 +5011,8 @@ operator|(
 name|r
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 name|linkname
 operator|=
@@ -4989,6 +5029,10 @@ name|linkname
 operator|!=
 name|NULL
 condition|)
+block|{
+if|#
+directive|if
+name|HAVE_SYMLINK
 return|return
 name|symlink
 argument_list|(
@@ -5003,6 +5047,16 @@ name|errno
 else|:
 literal|0
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
 comment|/* 	 * The remaining system calls all set permissions, so let's 	 * try to take advantage of that to avoid an extra chmod() 	 * call.  (Recall that umask is set to zero right now!) 	 */
 comment|/* Mode we want for the final restored object (w/o file type bits). */
 name|final_mode
@@ -5094,6 +5148,7 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 else|#
 directive|else
 comment|/* TODO: Find a better way to warn about our inability 		 * to restore a char device node. */
@@ -5105,7 +5160,6 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_MKNOD */
-break|break;
 case|case
 name|AE_IFBLK
 case|:
@@ -5132,6 +5186,7 @@ name|entry
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 else|#
 directive|else
 comment|/* TODO: Find a better way to warn about our inability 		 * to restore a block device node. */
@@ -5143,7 +5198,6 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_MKNOD */
-break|break;
 case|case
 name|AE_IFDIR
 case|:
@@ -5251,6 +5305,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+break|break;
 else|#
 directive|else
 comment|/* TODO: Find a better way to warn about our inability 		 * to restore a fifo. */
@@ -5262,7 +5317,6 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_MKFIFO */
-break|break;
 block|}
 comment|/* All the system calls above set errno on failure. */
 if|if
@@ -6246,6 +6300,10 @@ begin_comment
 comment|/*  * TODO: Someday, integrate this with the deep dir support; they both  * scan the path and both can be optimized by comparing against other  * recent paths.  */
 end_comment
 
+begin_comment
+comment|/* TODO: Extend this to support symlinks on Windows Vista and later. */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -6257,6 +6315,27 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_LSTAT
+argument_list|)
+comment|/* Platform doesn't have lstat, so we can't look for symlinks. */
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
+return|return
+operator|(
+name|ARCHIVE_OK
+operator|)
+return|;
+else|#
+directive|else
 name|char
 modifier|*
 name|pn
@@ -6630,6 +6709,8 @@ operator|(
 name|ARCHIVE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -7305,10 +7386,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|r
-operator|=
-name|ARCHIVE_OK
-expr_stmt|;
 comment|/* Check for special names and just skip them. */
 name|slash
 operator|=
@@ -7945,14 +8022,133 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UTIMES
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UTIMENSAT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_FUTIMENS
+argument_list|)
+end_if
 
 begin_comment
-comment|/*  * The utimes()-family functions provide high resolution and  * a way to set time on an fd or a symlink.  We prefer them  * when they're available.  */
+comment|/*   * utimensat() and futimens() are defined in POSIX.1-2008. They provide ns  * resolution and setting times on fd and on symlinks, too.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|set_time
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|time_t
+name|atime
+parameter_list|,
+name|long
+name|atime_nsec
+parameter_list|,
+name|time_t
+name|mtime
+parameter_list|,
+name|long
+name|mtime_nsec
+parameter_list|)
+block|{
+name|struct
+name|timespec
+name|ts
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|ts
+index|[
+literal|0
+index|]
+operator|.
+name|tv_sec
+operator|=
+name|atime
+expr_stmt|;
+name|ts
+index|[
+literal|0
+index|]
+operator|.
+name|tv_nsec
+operator|=
+name|atime_nsec
+expr_stmt|;
+name|ts
+index|[
+literal|1
+index|]
+operator|.
+name|tv_sec
+operator|=
+name|mtime
+expr_stmt|;
+name|ts
+index|[
+literal|1
+index|]
+operator|.
+name|tv_nsec
+operator|=
+name|mtime_nsec
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>=
+literal|0
+condition|)
+return|return
+name|futimens
+argument_list|(
+name|fd
+argument_list|,
+name|ts
+argument_list|)
+return|;
+return|return
+name|utimensat
+argument_list|(
+name|AT_FDCWD
+argument_list|,
+name|name
+argument_list|,
+name|ts
+argument_list|,
+name|AT_SYMLINK_NOFOLLOW
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_UTIMES
+end_elif
+
+begin_comment
+comment|/*  * The utimes()-family functions provide Âµs-resolution and  * a way to set time on an fd or a symlink.  We prefer them  * when they're available and utimensat/futimens aren't there.  */
 end_comment
 
 begin_function

@@ -4260,6 +4260,13 @@ name|struct
 name|mtx
 name|ti_mtx
 decl_stmt|;
+name|struct
+name|callout
+name|ti_watchdog
+decl_stmt|;
+name|int
+name|ti_timer
+decl_stmt|;
 name|ti_flag_vals
 name|ti_flags
 decl_stmt|;

@@ -256,6 +256,21 @@ define|\
 value|static __inline uint32_t					\ mips_rd_ ## n (void)						\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n (uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_RDRW32_COP0_SEL
+parameter_list|(
+name|n
+parameter_list|,
+name|r
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|static __inline uint32_t					\ mips_rd_ ## n ## s(void)						\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n ## s(uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -272,10 +287,12 @@ name|void
 parameter_list|)
 block|{
 asm|__asm __volatile (
+literal|".set push\n"
 literal|".set mips64\n"
 literal|".word 0x041f0000\n"
+comment|/* xxx ICACHE */
 literal|"nop\n"
-literal|".set mips0\n"
+literal|".set pop\n"
 operator|:
 operator|:
 block|)
@@ -304,6 +321,42 @@ argument_list|(
 name|config
 argument_list|,
 name|MIPS_COP_0_CONFIG
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|config
+argument_list|,
+name|MIPS_COP_0_CONFIG
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|config
+argument_list|,
+name|MIPS_COP_0_CONFIG
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|config
+argument_list|,
+name|MIPS_COP_0_CONFIG
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -433,6 +486,42 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchlo
+argument_list|,
+name|MIPS_COP_0_WATCH_LO
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchlo
+argument_list|,
+name|MIPS_COP_0_WATCH_LO
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchlo
+argument_list|,
+name|MIPS_COP_0_WATCH_LO
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MIPS_RDRW32_COP0
 argument_list|(
 name|watchhi
@@ -442,54 +531,50 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|mips_rd_config_sel1
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|v0
-decl_stmt|;
-asm|__asm __volatile("mfc0 %[v0], $16, 1 ;"
-block|:
-index|[
-name|v0
-index|]
-literal|"=&r"
-operator|(
-name|v0
-operator|)
-block|)
-function|;
-end_function
-
 begin_expr_stmt
-name|mips_barrier
-argument_list|()
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchhi
+argument_list|,
+name|MIPS_COP_0_WATCH_HI
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-operator|(
-name|v0
-operator|)
-return|;
-end_return
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchhi
+argument_list|,
+name|MIPS_COP_0_WATCH_HI
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RDRW32_COP0_SEL
+argument_list|(
+name|watchhi
+argument_list|,
+name|MIPS_COP_0_WATCH_HI
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_undef
-unit|}
 undef|#
 directive|undef
 name|MIPS_RDRW32_COP0
 end_undef
 
 begin_function
-unit|static
+specifier|static
 name|__inline
 name|register_t
 name|intr_disable

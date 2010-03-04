@@ -174,7 +174,6 @@ name|led_list
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|led_list
 argument_list|)
 expr_stmt|;

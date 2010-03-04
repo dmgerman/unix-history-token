@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -23,18 +29,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -435,6 +429,16 @@ operator|)
 return|;
 comment|/* out of memory */
 block|}
+comment|/* make sure memory is initialised */
+name|memset
+argument_list|(
+name|lub_config
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|lub_interface
 operator|=
 operator|(

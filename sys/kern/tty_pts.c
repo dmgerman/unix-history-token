@@ -210,37 +210,6 @@ name|pts_pool
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|pts_maxdev
-init|=
-literal|999
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_UINT
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pts_maxdev
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|pts_maxdev
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum amount of pts(4) pseudo-terminals"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1391,6 +1360,10 @@ argument_list|,
 name|cmd
 argument_list|,
 name|data
+argument_list|,
+name|fp
+operator|->
+name|f_flag
 argument_list|,
 name|td
 argument_list|)
@@ -2925,36 +2898,6 @@ name|EAGAIN
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|unit
-operator|>
-name|pts_maxdev
-condition|)
-block|{
-name|free_unr
-argument_list|(
-name|pts_pool
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|chgptscnt
-argument_list|(
-name|uid
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
-block|}
 comment|/* Allocate TTY and softc. */
 name|psc
 operator|=
@@ -2980,7 +2923,7 @@ name|psc
 operator|->
 name|pts_inwait
 argument_list|,
-literal|"pts inwait"
+literal|"ptsin"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -2990,7 +2933,7 @@ name|psc
 operator|->
 name|pts_outwait
 argument_list|,
-literal|"pts outwait"
+literal|"ptsout"
 argument_list|)
 expr_stmt|;
 name|psc
@@ -3215,7 +3158,7 @@ name|psc
 operator|->
 name|pts_inwait
 argument_list|,
-literal|"pts inwait"
+literal|"ptsin"
 argument_list|)
 expr_stmt|;
 name|cv_init
@@ -3225,7 +3168,7 @@ name|psc
 operator|->
 name|pts_outwait
 argument_list|,
-literal|"pts outwait"
+literal|"ptsout"
 argument_list|)
 expr_stmt|;
 name|psc

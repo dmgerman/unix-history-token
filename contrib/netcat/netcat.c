@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.92 2008/09/19 13:24:41 sobrado Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.93 2009/06/05 00:18:10 claudio Exp $ */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -444,6 +450,12 @@ comment|/* IP Type of Service */
 end_comment
 
 begin_decl_stmt
+name|u_int
+name|rdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|timeout
 init|=
@@ -699,6 +711,17 @@ name|socksv
 decl_stmt|,
 name|ipsec_count
 decl_stmt|;
+name|int
+name|numfibs
+decl_stmt|;
+name|size_t
+name|intsize
+init|=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
 name|char
 modifier|*
 name|host
@@ -773,6 +796,10 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+name|rdomain
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 literal|1
@@ -812,7 +839,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46e:DEdhi:jklnoI:O:P:p:rSs:tT:Uuvw:X:x:z"
+literal|"46DdEe:hI:i:jklnO:oP:p:rSs:tT:UuV:vw:X:x:z"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1115,6 +1142,72 @@ case|:
 name|uflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"net.fibs"
+argument_list|,
+operator|&
+name|numfibs
+argument_list|,
+operator|&
+name|intsize
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Multiple FIBS not supported"
+argument_list|)
+expr_stmt|;
+name|rdomain
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|strtonum
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|numfibs
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"FIB %s: %s"
+argument_list|,
+name|errstr
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2654,6 +2747,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|rdomain
+condition|)
+block|{
+if|if
+condition|(
+name|setfib
+argument_list|(
+name|rdomain
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setfib"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Bind to a local port or source address if specified. */
 if|if
 condition|(
@@ -3019,6 +3135,29 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|rdomain
+condition|)
+block|{
+if|if
+condition|(
+name|setfib
+argument_list|(
+name|rdomain
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setfib"
+argument_list|)
+expr_stmt|;
+block|}
 name|ret
 operator|=
 name|setsockopt
@@ -4576,7 +4715,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-o		Terminate on EOF on input\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
+literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-o		Terminate on EOF on input\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-V fib	Specify alternate routing table (FIB)\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4738,8 +4877,8 @@ literal|"usage: nc [-46DdhklnorStUuvz] [-I length] [-i interval] [-O length]\n"
 endif|#
 directive|endif
 literal|"\t  [-P proxy_username] [-p source_port] [-s source_ip_address] [-T ToS]\n"
-literal|"\t  [-w timeout] [-X proxy_protocol] [-x proxy_address[:port]] [hostname]\n"
-literal|"\t  [port]\n"
+literal|"\t  [-V fib] [-w timeout] [-X proxy_protocol]\n"
+literal|"\t  [-x proxy_address[:port]] [hostname] [port]\n"
 argument_list|)
 expr_stmt|;
 if|if

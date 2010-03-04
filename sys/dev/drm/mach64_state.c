@@ -3764,10 +3764,6 @@ decl_stmt|;
 name|drm_mach64_sarea_t
 modifier|*
 name|sarea_priv
-init|=
-name|dev_priv
-operator|->
-name|sarea_priv
 decl_stmt|;
 name|drm_mach64_vertex_t
 modifier|*
@@ -3798,6 +3794,12 @@ operator|-
 name|EINVAL
 return|;
 block|}
+name|sarea_priv
+operator|=
+name|dev_priv
+operator|->
+name|sarea_priv
+expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
 literal|"pid=%d buf=%p used=%lu discard=%d\n"

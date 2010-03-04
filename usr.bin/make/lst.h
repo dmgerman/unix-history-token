@@ -19,12 +19,6 @@ begin_comment
 comment|/*-  * lst.h --  *	Header for using the list library  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"util.h"
-end_include
-
 begin_comment
 comment|/*  * Structure of a list node.  */
 end_comment

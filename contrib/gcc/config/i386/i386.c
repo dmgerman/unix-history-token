@@ -8486,7 +8486,7 @@ name|TARGET_64BIT
 condition|?
 literal|"x86-64"
 else|:
-literal|"i386"
+literal|"i486"
 expr_stmt|;
 if|if
 condition|(

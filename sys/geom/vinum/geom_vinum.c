@@ -566,10 +566,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
 name|gp
 operator|=
 name|pp

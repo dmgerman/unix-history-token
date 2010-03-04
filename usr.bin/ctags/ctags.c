@@ -1048,6 +1048,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|sp

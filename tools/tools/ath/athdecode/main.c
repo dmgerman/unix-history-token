@@ -576,7 +576,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"ar%uChipReset, channel %u Mhz"
+literal|"ar%uChipReset, channel %u MHz"
 argument_list|,
 name|state
 operator|.
@@ -595,7 +595,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"ar%uPerCalibration, channel %u Mhz"
+literal|"ar%uPerCalibration, channel %u MHz"
 argument_list|,
 name|state
 operator|.
@@ -614,7 +614,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"ar%uSetChannel, channel %u Mhz"
+literal|"ar%uSetChannel, channel %u MHz"
 argument_list|,
 name|state
 operator|.

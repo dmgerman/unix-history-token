@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.170 2008/11/04 08:22:13 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.171 2009/03/05 07:18:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -252,6 +252,12 @@ begin_include
 include|#
 directive|include
 file|"uidswap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"schnorr.h"
 end_include
 
 begin_include

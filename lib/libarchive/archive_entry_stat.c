@@ -216,7 +216,7 @@ name|st
 operator|->
 name|st_ino
 operator|=
-name|archive_entry_ino
+name|archive_entry_ino64
 argument_list|(
 name|entry
 argument_list|)

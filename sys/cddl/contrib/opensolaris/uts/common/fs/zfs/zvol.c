@@ -1326,10 +1326,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|BIO_DELETE
-case|:
-case|case
 name|BIO_GETATTR
+case|:
+if|if
+condition|(
+name|g_handleattr_int
+argument_list|(
+name|bp
+argument_list|,
+literal|"ZFS::iszvol"
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
+case|case
+name|BIO_DELETE
 case|:
 default|default:
 name|g_io_deliver

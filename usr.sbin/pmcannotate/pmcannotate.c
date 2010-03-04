@@ -1396,7 +1396,9 @@ begin_function
 specifier|static
 name|void
 name|fqueue_deleteall
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|aggent
@@ -1988,7 +1990,9 @@ begin_function
 specifier|static
 name|void
 name|general_deleteall
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|entry

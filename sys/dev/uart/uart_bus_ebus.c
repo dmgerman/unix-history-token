@@ -283,6 +283,14 @@ name|cmpt
 argument_list|,
 literal|"su16550"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|cmpt
+argument_list|,
+literal|"su16552"
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * On AXi and AXmp boards the NS16550 (used to connect 		 * keyboard/mouse) share their IRQ lines with the i8042. 		 * Any IRQ activity (typically during attach) of the 		 * NS16550 used to connect the keyboard when actually the 		 * PS/2 keyboard is selected in OFW causes interaction 		 * with the OBP i8042 driver resulting in a hang and vice 		 * versa. As RS232 keyboards and mice obviously aren't 		 * meant to be used in parallel with PS/2 ones on these 		 * boards don't attach to the NS16550 in case the RS232 		 * keyboard isn't selected in order to prevent such hangs. 		 */

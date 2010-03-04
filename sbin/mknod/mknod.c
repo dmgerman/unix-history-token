@@ -142,7 +142,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mknod name [b | c] major minor [owner:group]\n"
+literal|"usage: mknod name\n"
+literal|"       mknod name [b | c] major minor [owner:group]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -394,6 +395,10 @@ if|if
 condition|(
 name|argc
 operator|!=
+literal|2
+operator|&&
+name|argc
+operator|!=
 literal|5
 operator|&&
 name|argc
@@ -403,6 +408,13 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>=
+literal|5
+condition|)
+block|{
 name|mode
 operator|=
 literal|0666
@@ -595,6 +607,20 @@ argument_list|,
 literal|"major or minor number too large"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|mode
+operator|=
+literal|0666
+operator||
+name|S_IFCHR
+expr_stmt|;
+name|dev
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|uid
 operator|=
 name|gid

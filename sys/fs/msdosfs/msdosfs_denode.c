@@ -375,7 +375,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Do the MALLOC before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if MALLOC should block. 	 */
+comment|/* 	 * Do the malloc before the getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if malloc should block. 	 */
 name|ldep
 operator|=
 name|malloc
@@ -389,6 +389,8 @@ argument_list|,
 name|M_MSDOSFSNODE
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Directory entry was not in cache, have to create a vnode and 	 * copy it from the passed disk buffer. 	 */
@@ -429,18 +431,6 @@ return|return
 name|error
 return|;
 block|}
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ldep
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ldep
-argument_list|)
-expr_stmt|;
 name|nvp
 operator|->
 name|v_data
@@ -477,14 +467,6 @@ name|de_inode
 operator|=
 name|inode
 expr_stmt|;
-name|fc_purge
-argument_list|(
-name|ldep
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* init the fat cache for this denode */
 name|lockmgr
 argument_list|(
 name|nvp
@@ -496,6 +478,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|fc_purge
+argument_list|(
+name|ldep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* init the fat cache for this denode */
 name|error
 operator|=
 name|insmntque
@@ -574,17 +564,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX: Not sure this is right */
-name|nvp
+operator|*
+name|depp
 operator|=
 name|xvp
-expr_stmt|;
-name|ldep
 operator|->
-name|de_vnode
-operator|=
-name|nvp
+name|v_data
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|ldep
 operator|->
@@ -2184,6 +2175,15 @@ literal|0
 index|]
 operator|==
 name|SLOT_DELETED
+operator|||
+name|dep
+operator|->
+name|de_Name
+index|[
+literal|0
+index|]
+operator|==
+name|SLOT_EMPTY
 condition|)
 goto|goto
 name|out
@@ -2310,6 +2310,15 @@ literal|0
 index|]
 operator|==
 name|SLOT_DELETED
+operator|||
+name|dep
+operator|->
+name|de_Name
+index|[
+literal|0
+index|]
+operator|==
+name|SLOT_EMPTY
 condition|)
 name|vrecycle
 argument_list|(

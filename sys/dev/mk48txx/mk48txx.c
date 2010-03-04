@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	from: NetBSD: mk48txx.c,v 1.15 2004/07/05 09:24:31 pk Exp  */
+comment|/*-  * Copyright (c) 2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	$NetBSD: mk48txx.c,v 1.25 2008/04/28 20:23:50 martin Exp $  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T59 time-of-day chip subroutines.  */
+comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T59 time-of-day chip subroutines  */
 end_comment
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/watchdog.h>
 end_include
 
@@ -99,8 +105,10 @@ name|uint8_t
 name|mk48txx_def_nvrd
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|off
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -111,10 +119,13 @@ name|void
 name|mk48txx_def_nvwr
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|,
 name|int
+name|off
 parameter_list|,
 name|uint8_t
+name|v
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -126,16 +137,21 @@ name|mk48txx_watchdog
 parameter_list|(
 name|void
 modifier|*
+name|arg
 parameter_list|,
 name|u_int
+name|cmd
 parameter_list|,
 name|int
 modifier|*
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 block|{
 specifier|const
@@ -149,15 +165,16 @@ decl_stmt|;
 name|bus_size_t
 name|clkoff
 decl_stmt|;
-name|int
+name|u_int
 name|flags
 decl_stmt|;
 define|#
 directive|define
 name|MK48TXX_EXT_REGISTERS
 value|1
-comment|/* Has extended register set */
+comment|/* Has extended register set. */
 block|}
+decl|const
 name|mk48txx_models
 index|[]
 init|=
@@ -570,7 +587,7 @@ argument_list|,
 literal|1000000
 argument_list|)
 expr_stmt|;
-comment|/* 1 second resolution. */
+comment|/* 1 second resolution */
 if|if
 condition|(
 operator|(
@@ -788,20 +805,23 @@ name|MK48TXX_DAY_MASK
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Map dow from 1 - 7 to 0 - 6; FROMBCD() isn't necessary here. */
+block|ct.dow = FROMREG(MK48TXX_IWDAY, MK48TXX_WDAY_MASK) - 1;
+else|#
+directive|else
+comment|/* 	 * Set dow = -1 because some drivers (for example the NetBSD and 	 * OpenBSD mk48txx(4)) don't set it correctly. 	 */
 name|ct
 operator|.
 name|dow
 operator|=
-name|FROMREG
-argument_list|(
-name|MK48TXX_IWDAY
-argument_list|,
-name|MK48TXX_WDAY_MASK
-argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 name|ct
 operator|.
 name|mon
@@ -1305,15 +1325,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|bus_space_read_1
+name|bus_read_1
 argument_list|(
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
+name|sc_res
 argument_list|,
 name|off
 argument_list|)
@@ -1349,15 +1365,11 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|bus_space_write_1
+name|bus_write_1
 argument_list|(
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
+name|sc_res
 argument_list|,
 name|off
 argument_list|,

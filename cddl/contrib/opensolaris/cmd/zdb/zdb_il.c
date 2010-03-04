@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Print intent log header and statistics.  */
@@ -1915,7 +1908,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n    ZIL header: claim_txg %llu, seq %llu\n"
+literal|"\n    ZIL header: claim_txg %llu, claim_seq %llu"
 argument_list|,
 operator|(
 name|u_longlong_t
@@ -1929,7 +1922,29 @@ name|u_longlong_t
 operator|)
 name|zh
 operator|->
+name|zh_claim_seq
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" replay_seq %llu, flags 0x%llx\n"
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|zh
+operator|->
 name|zh_replay_seq
+argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
+name|zh
+operator|->
+name|zh_flags
 argument_list|)
 expr_stmt|;
 if|if

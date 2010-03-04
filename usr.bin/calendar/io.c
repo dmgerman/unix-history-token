@@ -2404,9 +2404,6 @@ operator|!
 name|doall
 condition|)
 return|return;
-operator|(
-name|void
-operator|)
 name|rewind
 argument_list|(
 name|fp

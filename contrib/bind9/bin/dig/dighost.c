@@ -12900,6 +12900,15 @@ argument_list|(
 literal|"in cancel handler"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|query
+operator|->
+name|sock
+operator|!=
+name|NULL
+condition|)
+block|{
 name|isc_socket_detach
 argument_list|(
 operator|&
@@ -12925,6 +12934,7 @@ argument_list|,
 name|sockcount
 argument_list|)
 expr_stmt|;
+block|}
 name|query
 operator|->
 name|waiting_connect

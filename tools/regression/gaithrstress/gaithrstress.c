@@ -1156,9 +1156,8 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(

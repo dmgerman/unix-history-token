@@ -914,6 +914,19 @@ operator|*
 literal|3
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SC_PIXEL_MODE
+name|u_char
+name|palette2
+index|[
+literal|256
+operator|*
+literal|3
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifndef|#
@@ -1137,6 +1150,10 @@ name|int
 name|mouse_cut_end
 decl_stmt|;
 comment|/* mouse cut end pos */
+name|int
+name|mouse_level
+decl_stmt|;
+comment|/* xterm mouse protocol */
 name|struct
 name|proc
 modifier|*
@@ -1550,6 +1567,23 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+specifier|const
+name|char
+modifier|*
+name|sc_term_fkeystr_t
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|c
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|sc_term_sw
 block|{
@@ -1617,6 +1651,10 @@ decl_stmt|;
 name|sc_term_input_t
 modifier|*
 name|te_input
+decl_stmt|;
+name|sc_term_fkeystr_t
+modifier|*
+name|te_fkeystr
 decl_stmt|;
 block|}
 name|sc_term_sw_t
@@ -2373,6 +2411,9 @@ name|p
 parameter_list|,
 name|int
 name|count
+parameter_list|,
+name|int
+name|wakeup
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2866,6 +2907,17 @@ name|fontsize
 parameter_list|,
 name|int
 name|font_width
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sc_support_pixel_mode
+parameter_list|(
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl

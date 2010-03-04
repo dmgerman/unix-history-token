@@ -1709,6 +1709,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* number of fields accumulated here */
+name|strcpy
+argument_list|(
+name|inputFS
+argument_list|,
+operator|*
+name|FS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strlen

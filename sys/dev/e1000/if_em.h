@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|EM_DEFAULT_TXD
-value|EM_MAX_TXD_82543
+value|1024
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|EM_DEFAULT_RXD
-value|EM_MAX_RXD_82543
+value|1024
 end_define
 
 begin_comment
@@ -132,14 +132,14 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * This parameter controls the duration of transmit watchdog timer.  */
+comment|/*  * This parameter controls the max duration of transmit watchdog.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_TX_TIMEOUT
-value|5
+name|EM_WATCHDOG
+value|(10 * hz)
 end_define
 
 begin_comment
@@ -297,6 +297,13 @@ define|#
 directive|define
 name|EM_EEPROM_APME
 value|0x400;
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_82544_APME
+value|0x0004;
 end_define
 
 begin_comment
@@ -861,8 +868,11 @@ name|struct
 name|callout
 name|tx_fifo_timer
 decl_stmt|;
+name|bool
+name|watchdog_check
+decl_stmt|;
 name|int
-name|watchdog_timer
+name|watchdog_time
 decl_stmt|;
 name|int
 name|msi
@@ -931,11 +941,14 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* Management and WOL features */
-name|int
+name|u32
 name|wol
 decl_stmt|;
-name|int
+name|bool
 name|has_manage
+decl_stmt|;
+name|bool
+name|has_amt
 decl_stmt|;
 comment|/* Info about the board itself */
 name|uint8_t
@@ -1129,6 +1142,28 @@ decl_stmt|;
 name|boolean_t
 name|in_detach
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|EM_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
+decl_stmt|;
+name|struct
+name|nettimer
+name|clock
+decl_stmt|;
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|e1000_hw_stats
 name|stats

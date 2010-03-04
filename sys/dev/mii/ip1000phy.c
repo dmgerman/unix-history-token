@@ -1543,6 +1543,7 @@ name|model
 operator|==
 name|MII_MODEL_ICPLUS_IP1001
 condition|)
+block|{
 name|reg
 operator|=
 name|PHY_READ
@@ -1552,6 +1553,11 @@ argument_list|,
 name|IP1000PHY_MII_ANAR
 argument_list|)
 expr_stmt|;
+name|reg
+operator||=
+name|IP1000PHY_ANAR_NP
+expr_stmt|;
+block|}
 name|reg
 operator||=
 name|IP1000PHY_ANAR_10T

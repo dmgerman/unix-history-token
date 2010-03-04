@@ -336,7 +336,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * First, find the process for this pid.  If we are workig on a dump, 	 * either locate the thread dumptid is refering to or proc0. 	 * Based on either, take the address of the ucred. 	 */
+comment|/* 	 * First, find the process for this pid.  If we are working on a 	 * dump, either locate the thread dumptid is refering to or proc0. 	 * Based on either, take the address of the ucred. 	 */
 name|credp
 operator|=
 literal|0

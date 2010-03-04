@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2009 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.80 2007/10/12 00:19:44 ca Exp $"
+literal|"@(#)$Id: ldap.c,v 1.83 2009/06/19 22:02:26 guenther Exp $"
 argument_list|)
 end_macro
 
@@ -4006,15 +4006,48 @@ operator|=
 name|ETIMEDOUT
 expr_stmt|;
 else|else
+block|{
+name|int
+name|rc
+decl_stmt|;
+comment|/* 		**  We may have gotten an LDAP_RES_SEARCH_RESULT response 		**  with an error inside it, so we have to extract that 		**  with ldap_parse_result().  This can happen when talking 		**  to an LDAP proxy whose backend has gone down. 		*/
 name|save_errno
 operator|=
-name|sm_ldap_geterrno
+name|ldap_parse_result
 argument_list|(
 name|lmap
 operator|->
 name|ldap_ld
+argument_list|,
+name|lmap
+operator|->
+name|ldap_res
+argument_list|,
+operator|&
+name|rc
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|save_errno
+operator|==
+name|LDAP_SUCCESS
+condition|)
+name|save_errno
+operator|=
+name|rc
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|save_errno
@@ -4888,6 +4921,33 @@ name|defined
 argument_list|(
 name|LDAP_OPT_NETWORK_TIMEOUT
 argument_list|)
+if|if
+condition|(
+name|lmap
+operator|->
+name|ldap_networktmo
+operator|>
+literal|0
+condition|)
+block|{
+name|struct
+name|timeval
+name|tmo
+decl_stmt|;
+name|tmo
+operator|.
+name|tv_sec
+operator|=
+name|lmap
+operator|->
+name|ldap_networktmo
+expr_stmt|;
+name|tmo
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 name|ldap_set_option
 argument_list|(
 name|ld
@@ -4895,11 +4955,10 @@ argument_list|,
 name|LDAP_OPT_NETWORK_TIMEOUT
 argument_list|,
 operator|&
-name|lmap
-operator|->
-name|ldap_networktmo
+name|tmo
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* _FFR_LDAP_NETWORK_TIMEOUT&& defined(LDAP_OPT_NETWORK_TIMEOUT) */

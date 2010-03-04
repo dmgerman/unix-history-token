@@ -302,6 +302,12 @@ name|f_flags
 operator||=
 name|F_RAW
 expr_stmt|;
+name|f
+operator|->
+name|f_rabuf
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|fd

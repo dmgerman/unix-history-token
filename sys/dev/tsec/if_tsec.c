@@ -3344,14 +3344,20 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
 block|{
 comment|/* Get packet from the queue */
-name|IF_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -3511,7 +3517,7 @@ name|fcb_inserted
 argument_list|)
 condition|)
 block|{
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp

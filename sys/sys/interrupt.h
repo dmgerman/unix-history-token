@@ -71,10 +71,13 @@ comment|/* Argument to pass to handlers. */
 name|int
 name|ih_flags
 decl_stmt|;
-specifier|const
 name|char
-modifier|*
 name|ih_name
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
 decl_stmt|;
 comment|/* Name of handler. */
 name|struct
@@ -182,6 +185,8 @@ name|char
 name|ie_name
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* Individual event name. */
@@ -189,6 +194,8 @@ name|char
 name|ie_fullname
 index|[
 name|MAXCOMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -646,6 +653,27 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|int
+name|intr_event_describe_handler
+parameter_list|(
+name|struct
+name|intr_event
+modifier|*
+name|ie
+parameter_list|,
+name|void
+modifier|*
+name|cookie
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|descr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

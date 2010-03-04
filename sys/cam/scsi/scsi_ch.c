@@ -1295,8 +1295,7 @@ name|xpt_schedule
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|5
+name|CAM_PRIORITY_DEV
 argument_list|)
 expr_stmt|;
 return|return
@@ -2291,6 +2290,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Don't wedge this device's queue */
+if|if
+condition|(
+operator|(
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_DEV_QFRZN
+operator|)
+operator|!=
+literal|0
+condition|)
 name|cam_release_devq
 argument_list|(
 name|done_ccb
@@ -3135,8 +3148,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_move_medium
@@ -3471,8 +3483,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_exchange_medium
@@ -3677,8 +3688,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_position_to_element
@@ -4380,8 +4390,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_read_element_status
@@ -4924,8 +4933,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_initialize_element_status
@@ -5277,8 +5285,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 name|scsi_send_volume_tag
@@ -5419,8 +5426,7 @@ name|cam_periph_getccb
 argument_list|(
 name|periph
 argument_list|,
-comment|/*priority*/
-literal|1
+name|CAM_PRIORITY_NORMAL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The scsi_mode_sense_data structure is just a convenience 	 * structure that allows us to easily calculate the worst-case 	 * storage size of the mode sense buffer. 	 */
