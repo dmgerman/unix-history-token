@@ -1865,13 +1865,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Fall back to hardcoded boothowto flags and metadata. */
-name|boothowto
-operator|=
-name|RB_VERBOSE
-operator||
-name|RB_SINGLE
-expr_stmt|;
+comment|/* Fall back to hardcoded metadata. */
 name|lastaddr
 operator|=
 name|fake_preload_metadata
