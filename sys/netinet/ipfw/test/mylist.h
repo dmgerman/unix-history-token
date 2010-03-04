@@ -60,7 +60,7 @@ parameter_list|(
 name|struct
 name|list_head
 modifier|*
-name|new
+name|o
 parameter_list|,
 name|struct
 name|list_head
@@ -77,15 +77,15 @@ name|next
 operator|->
 name|prev
 operator|=
-name|new
+name|o
 expr_stmt|;
-name|new
+name|o
 operator|->
 name|next
 operator|=
 name|next
 expr_stmt|;
-name|new
+name|o
 operator|->
 name|prev
 operator|=
@@ -95,7 +95,7 @@ name|prev
 operator|->
 name|next
 operator|=
-name|new
+name|o
 expr_stmt|;
 block|}
 end_function
@@ -109,7 +109,7 @@ parameter_list|(
 name|struct
 name|list_head
 modifier|*
-name|new
+name|o
 parameter_list|,
 name|struct
 name|list_head
@@ -119,7 +119,7 @@ parameter_list|)
 block|{
 name|__list_add
 argument_list|(
-name|new
+name|o
 argument_list|,
 name|head
 operator|->
