@@ -9247,7 +9247,7 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
-comment|/* NOTE about compute space: 	 * NP 	= dn_cfg.schk_count 	 * NSI 	= dn_cfg.si_count 	 * NF 	= dn_cfg.fsk_count 	 * NQ 	= dn_cfg.queue_count 	 * - ipfw pipe show 	 *   (NP/2)*(dn_link + dn_sch + dn_id + dn_fs) only half scheduler 	 *                             link, scheduler template, flowset 	 *                             integrated in scheduler and header 	 *                             for flowset list 	 *   (NSI)*(dn_flow + dn_queue) all scheduler instance + one 	 *                              queue per instance 	 * - ipfw sched show 	 *   (NP/2)*(dn_link + dn_sch + dn_id + dn_fs) only half scheduler 	 *                             link, scheduler template, flowset 	 *                             integrated in scheduler and header 	 *                             for flowset list 	 *   (NSI * dn_flow) all scheduler instances 	 *   (NF * sizeof(uint_32)) space for flowset list linked to scheduler 	 *   (NQ * dn_queue) all queue [XXXfor now not listed] 	 * - ipfw queue show 	 *   (NF * dn_fs) all flowset 	 *   (NQ * dn_queue) all queues 	 */
+comment|/* NOTE about compute space: 	 * NP 	= dn_cfg.schk_count 	 * NSI 	= dn_cfg.si_count 	 * NF 	= dn_cfg.fsk_count 	 * NQ 	= dn_cfg.queue_count 	 * - ipfw pipe show 	 *   (NP/2)*(dn_link + dn_sch + dn_id + dn_fs) only half scheduler 	 *                             link, scheduler template, flowset 	 *                             integrated in scheduler and header 	 *                             for flowset list 	 *   (NSI)*(dn_flow) all scheduler instance (includes 	 *                              the queue instance) 	 * - ipfw sched show 	 *   (NP/2)*(dn_link + dn_sch + dn_id + dn_fs) only half scheduler 	 *                             link, scheduler template, flowset 	 *                             integrated in scheduler and header 	 *                             for flowset list 	 *   (NSI * dn_flow) all scheduler instances 	 *   (NF * sizeof(uint_32)) space for flowset list linked to scheduler 	 *   (NQ * dn_queue) all queue [XXXfor now not listed] 	 * - ipfw queue show 	 *   (NF * dn_fs) all flowset 	 *   (NQ * dn_queue) all queues 	 */
 switch|switch
 condition|(
 name|cmd
@@ -9261,6 +9261,7 @@ operator|-
 literal|1
 return|;
 comment|/* XXX where do LINK and SCH differ ? */
+comment|/* 'ipfw sched show' could list all queues associated to 	 * a scheduler. This feature for now is disabled 	 */
 case|case
 name|DN_LINK
 case|:
@@ -9290,18 +9291,6 @@ name|profile_size
 operator|)
 operator|/
 literal|2
-expr_stmt|;
-name|need
-operator|+=
-name|dn_cfg
-operator|.
-name|si_count
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dn_queue
-argument_list|)
 expr_stmt|;
 name|need
 operator|+=
@@ -11037,6 +11026,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|callout_drain
+argument_list|(
+operator|&
+name|dn_timeout
+argument_list|)
+expr_stmt|;
 name|DN_BH_WLOCK
 argument_list|()
 expr_stmt|;
@@ -11047,12 +11042,6 @@ expr_stmt|;
 name|ip_dn_io_ptr
 operator|=
 name|NULL
-expr_stmt|;
-name|callout_stop
-argument_list|(
-operator|&
-name|dn_timeout
-argument_list|)
 expr_stmt|;
 name|dummynet_flush
 argument_list|()
