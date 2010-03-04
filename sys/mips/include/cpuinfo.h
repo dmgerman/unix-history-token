@@ -57,6 +57,9 @@ decl_stmt|;
 name|u_int8_t
 name|icache_virtual
 decl_stmt|;
+name|boolean_t
+name|cache_coherent_dma
+decl_stmt|;
 struct|struct
 block|{
 name|u_int32_t
@@ -89,6 +92,14 @@ struct|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mips_cpuinfo
+name|cpuinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* TODO: Merge above structure with NetBSD's below. */
