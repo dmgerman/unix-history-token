@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -615,6 +609,26 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_function_decl
+name|int
+name|fls
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
