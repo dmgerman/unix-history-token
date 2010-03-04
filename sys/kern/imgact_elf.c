@@ -5739,8 +5739,6 @@ directive|ifdef
 name|COMPRESS_USER_CORES
 name|done
 label|:
-endif|#
-directive|endif
 if|if
 condition|(
 name|core_buf
@@ -5761,6 +5759,8 @@ argument_list|(
 name|gzfile
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|hdr
