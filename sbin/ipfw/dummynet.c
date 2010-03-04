@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002-2003,2010 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $FreeBSD$  *  * dummynet support  */
+comment|/*  * Copyright (c) 2002-2003,2010 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * $FreeBSD$  *  * dummynet support  */
 end_comment
 
 begin_include
@@ -5935,9 +5935,13 @@ name|oid
 decl_stmt|,
 modifier|*
 name|x
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|i
 decl_stmt|,
 name|l
 init|=
@@ -5999,6 +6003,7 @@ expr_stmt|;
 comment|/* list sched */
 break|break;
 block|}
+comment|/* Request the buffer size (in oid.id)*/
 name|ret
 operator|=
 name|do_cmd
@@ -6033,17 +6038,38 @@ name|oid
 argument_list|)
 condition|)
 return|return;
+comment|/* Try max 10 times 	 * Buffer is correct if l != 0. 	 * If l == 0 no buffer is sent, maybe because kernel requires  	 * a greater buffer, so try with the new size in x->id. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
 name|l
 operator|=
 name|oid
 operator|.
 name|id
-expr_stmt|;
+init|;
+name|i
+operator|<
+literal|10
+condition|;
+name|i
+operator|++
+operator|,
+name|l
+operator|=
+name|x
+operator|->
+name|id
+control|)
+block|{
 name|x
 operator|=
-name|safe_calloc
+name|safe_realloc
 argument_list|(
-literal|1
+name|x
 argument_list|,
 name|l
 argument_list|)
@@ -6069,6 +6095,31 @@ operator|&
 name|l
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+operator|||
+name|x
+operator|->
+name|id
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|oid
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+name|l
+operator|!=
+literal|0
+condition|)
+break|break;
+comment|/* ok */
+block|}
 comment|// printf("%s returns %d need %d\n", __FUNCTION__, ret, oid.id);
 comment|// XXX filter on ac, av
 name|list_pipes

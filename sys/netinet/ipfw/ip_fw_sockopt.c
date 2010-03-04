@@ -5138,6 +5138,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dst
+operator|->
+name|opcode
+operator|>
+name|O_NAT
+condition|)
+comment|/* O_REASS doesn't exists in 7.2 version, so 			 * decrement opcode if it is after O_REASS 			 */
+name|dst
+operator|->
+name|opcode
+operator|--
+expr_stmt|;
+if|if
+condition|(
 name|ccmdlen
 operator|>
 name|ll
@@ -5308,6 +5322,20 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|->
+name|opcode
+operator|>
+name|O_NAT
+condition|)
+comment|/* O_REASS doesn't exists in 7.2 version, so 			 * increment opcode if it is after O_REASS 			 */
+name|dst
+operator|->
+name|opcode
+operator|++
 expr_stmt|;
 if|if
 condition|(
