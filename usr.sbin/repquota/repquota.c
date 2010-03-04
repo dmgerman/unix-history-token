@@ -127,6 +127,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -152,12 +158,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
 end_include
 
 begin_comment
@@ -1051,7 +1051,9 @@ literal|"%*s           Block  limits                    File  limits\n"
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)
@@ -1065,7 +1067,9 @@ literal|"User%*s  used   soft   hard  grace     used    soft    hard  grace\n"
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)
@@ -1160,7 +1164,9 @@ literal|"%-*s "
 argument_list|,
 name|max
 argument_list|(
-name|UT_NAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 literal|10
 argument_list|)
@@ -1256,16 +1262,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %7llu %7llu %7llu %6s\n"
+literal|"  %7ju %7ju %7ju %6s\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dqbuf
 operator|.
 name|dqb_curinodes
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dqbuf
 operator|.
 name|dqb_isoftlimit
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dqbuf
 operator|.
 name|dqb_ihardlimit
@@ -1332,8 +1347,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %6llu"
+literal|" %6ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dbtokb
 argument_list|(
 name|blocks
