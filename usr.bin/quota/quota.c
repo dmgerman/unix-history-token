@@ -264,10 +264,6 @@ name|timeprt
 parameter_list|(
 name|int64_t
 name|seconds
-parameter_list|,
-name|int
-modifier|*
-name|needfree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1275,14 +1271,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|bgrace
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|igrace
-decl_stmt|;
-name|int
-name|bfree
-decl_stmt|,
-name|ifree
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|lines
@@ -1335,11 +1330,7 @@ control|)
 block|{
 name|msgi
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1417,11 +1408,7 @@ expr_stmt|;
 block|}
 name|msgb
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1561,19 +1548,11 @@ condition|(
 operator|(
 name|msgi
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|||
 name|msgb
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 operator|&&
 name|lines
@@ -1596,11 +1575,7 @@ if|if
 condition|(
 name|msgi
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -1617,11 +1592,7 @@ if|if
 condition|(
 name|msgb
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 name|printf
 argument_list|(
@@ -1741,11 +1712,7 @@ argument_list|,
 operator|(
 name|msgb
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|' '
@@ -1805,11 +1772,7 @@ argument_list|,
 operator|(
 name|msgb
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|' '
@@ -1861,9 +1824,6 @@ operator|->
 name|dqblk
 operator|.
 name|dqb_btime
-argument_list|,
-operator|&
-name|bfree
 argument_list|)
 expr_stmt|;
 if|if
@@ -1881,9 +1841,6 @@ operator|->
 name|dqblk
 operator|.
 name|dqb_itime
-argument_list|,
-operator|&
-name|ifree
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1893,11 +1850,7 @@ argument_list|,
 operator|(
 name|msgb
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|""
@@ -1916,11 +1869,7 @@ argument_list|,
 operator|(
 name|msgi
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|' '
@@ -1948,11 +1897,7 @@ argument_list|,
 operator|(
 name|msgi
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 condition|?
 literal|""
@@ -1965,8 +1910,6 @@ condition|(
 name|msgb
 operator|!=
 name|NULL
-operator|&&
-name|bfree
 condition|)
 name|free
 argument_list|(
@@ -1978,8 +1921,6 @@ condition|(
 name|msgi
 operator|!=
 name|NULL
-operator|&&
-name|ifree
 condition|)
 name|free
 argument_list|(
@@ -2036,7 +1977,7 @@ name|qup
 parameter_list|)
 block|{
 name|time_t
-name|time
+name|t
 decl_stmt|;
 name|printf
 argument_list|(
@@ -2166,7 +2107,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|time
+name|t
 operator|=
 name|qup
 operator|->
@@ -2181,7 +2122,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2219,7 +2160,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|time
+name|t
 operator|=
 name|qup
 operator|->
@@ -2234,7 +2175,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|time
+name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2346,10 +2287,6 @@ name|timeprt
 parameter_list|(
 name|int64_t
 name|seconds
-parameter_list|,
-name|int
-modifier|*
-name|needfree
 parameter_list|)
 block|{
 name|time_t
@@ -2384,14 +2321,29 @@ operator|>
 name|seconds
 condition|)
 block|{
-operator|*
-name|needfree
+if|if
+condition|(
+operator|(
+name|buf
 operator|=
-literal|0
+name|strdup
+argument_list|(
+literal|"none"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup() failed in timeprt()"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|"none"
+name|buf
 operator|)
 return|;
 block|}
@@ -2453,13 +2405,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"asprintf failed in timeprt(1)"
+literal|"asprintf() failed in timeprt(1)"
 argument_list|)
-expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -2504,13 +2451,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"asprintf failed in timeprt(2)"
+literal|"asprintf() failed in timeprt(2)"
 argument_list|)
-expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -2539,13 +2481,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"asprintf failed in timeprt(3)"
+literal|"asprintf() failed in timeprt(3)"
 argument_list|)
-expr_stmt|;
-operator|*
-name|needfree
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
