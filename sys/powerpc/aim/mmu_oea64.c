@@ -7303,11 +7303,16 @@ name|pvo_pmap
 operator|==
 name|pmap
 condition|)
+block|{
+name|UNLOCK_TABLE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|++
@@ -8956,7 +8961,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Note: drop the table around the UMA allocation in 		 * case the UMA allocator needs to manipulate the page 		 * table. The mapping we are working with is already 		 * protected by the PMAP lock. 		 */
+comment|/* 		 * Note: drop the table lock around the UMA allocation in 		 * case the UMA allocator needs to manipulate the page 		 * table. The mapping we are working with is already 		 * protected by the PMAP lock. 		 */
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
