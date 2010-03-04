@@ -1208,7 +1208,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<machine/stdarg.h>
 end_include
 
 begin_function
@@ -1233,26 +1233,20 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"rpcsec_gss: "
 argument_list|)
 expr_stmt|;
-name|vfprintf
+name|vprintf
 argument_list|(
-name|stderr
-argument_list|,
 name|fmt
 argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1294,10 +1288,8 @@ name|msg_ctx
 init|=
 literal|0
 decl_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"rpcsec_gss: %s: "
 argument_list|,
 name|m
