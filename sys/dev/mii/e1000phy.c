@@ -1186,9 +1186,6 @@ break|break;
 case|case
 name|MII_MODEL_MARVELL_E1116
 case|:
-case|case
-name|MII_MODEL_MARVELL_E1149
-case|:
 name|page
 operator|=
 name|PHY_READ

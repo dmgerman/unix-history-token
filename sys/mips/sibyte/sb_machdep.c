@@ -816,6 +816,13 @@ expr_stmt|;
 name|mips_cpu_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Sibyte has a L1 data cache coherent with DMA. This includes 	 * on-chip network interfaces as well as PCI/HyperTransport bus 	 * masters. 	 */
+name|cpuinfo
+operator|.
+name|cache_coherent_dma
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	 * XXX 	 * The kernel is running in 32-bit mode but the CFE is running in 	 * 64-bit mode. So the SR_KX bit in the status register is turned 	 * on by the CFE every time we call into it - for e.g. CFE_CONSOLE. 	 * 	 * This means that if get a TLB miss for any address above 0xc0000000 	 * and the SR_KX bit is set then we will end up in the XTLB exception 	 * vector. 	 * 	 * For now work around this by copying the TLB exception handling 	 * code to the XTLB exception vector. 	 */
 block|{
 name|bcopy

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: sdlz.c,v 1.18.50.2 2009/04/21 23:47:18 tbox Exp $ */
+comment|/* $Id: sdlz.c,v 1.18.50.3 2009/06/26 06:25:44 marka Exp $ */
 end_comment
 
 begin_comment
@@ -4987,6 +4987,7 @@ name|current
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|dns_name_equal
@@ -5005,6 +5006,20 @@ operator|(
 name|ISC_R_SUCCESS
 operator|)
 return|;
+name|sdlziter
+operator|->
+name|current
+operator|=
+name|ISC_LIST_NEXT
+argument_list|(
+name|sdlziter
+operator|->
+name|current
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ISC_R_NOTFOUND

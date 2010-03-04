@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: aclconf.c,v 1.22.34.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: aclconf.c,v 1.22.34.4 2009/10/01 23:47:17 tbox Exp $ */
 end_comment
 
 begin_include
@@ -809,6 +809,10 @@ specifier|const
 name|cfg_obj_t
 modifier|*
 name|cctx
+parameter_list|,
+name|isc_boolean_t
+modifier|*
+name|has_negative
 parameter_list|)
 block|{
 specifier|const
@@ -831,6 +835,17 @@ name|n
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|has_negative
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|has_negative
+operator|=
+name|ISC_FALSE
+expr_stmt|;
 for|for
 control|(
 name|elt
@@ -870,6 +885,7 @@ argument_list|(
 name|ce
 argument_list|)
 condition|)
+block|{
 name|ce
 operator|=
 name|cfg_tuple_get
@@ -879,6 +895,18 @@ argument_list|,
 literal|"value"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|has_negative
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|has_negative
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cfg_obj_istype
@@ -903,6 +931,9 @@ name|ce
 argument_list|)
 condition|)
 block|{
+name|isc_boolean_t
+name|negative
+decl_stmt|;
 name|n
 operator|+=
 name|count_acl_elements
@@ -910,7 +941,17 @@ argument_list|(
 name|ce
 argument_list|,
 name|cctx
+argument_list|,
+operator|&
+name|negative
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|negative
+condition|)
+name|n
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -1004,6 +1045,8 @@ argument_list|(
 name|cacl
 argument_list|,
 name|cctx
+argument_list|,
+name|NULL
 argument_list|)
 operator|+
 literal|1
@@ -1161,6 +1204,8 @@ argument_list|(
 name|caml
 argument_list|,
 name|cctx
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else

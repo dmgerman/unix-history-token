@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.51.34.3 2009/05/29 02:17:43 marka Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.51.34.4 2009/11/10 20:01:41 each Exp $ */
 end_comment
 
 begin_comment
@@ -283,16 +283,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-djqvD] [-c class] [-o output] "
+literal|"usage: %s [-djqvD] [-c class] "
 literal|"[-f inputformat] [-F outputformat] "
 literal|"[-t directory] [-w directory] [-k (ignore|warn|fail)] "
 literal|"[-n (ignore|warn|fail)] [-m (ignore|warn|fail)] "
 literal|"[-i (full|full-sibling|local|local-sibling|none)] "
 literal|"[-M (ignore|warn|fail)] [-S (ignore|warn|fail)] "
 literal|"[-W (ignore|warn)] "
-literal|"zonename filename\n"
+literal|"%s zonename filename\n"
 argument_list|,
 name|prog_name
+argument_list|,
+name|progmode
+operator|==
+name|progmode_check
+condition|?
+literal|"[-o filename]"
+else|:
+literal|"{-o filename}"
 argument_list|)
 expr_stmt|;
 name|exit

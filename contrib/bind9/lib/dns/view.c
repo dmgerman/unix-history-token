@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: view.c,v 1.150.84.2 2009/01/29 23:47:44 tbox Exp $ */
+comment|/* $Id: view.c,v 1.150.84.3 2009/11/12 23:39:23 marka Exp $ */
 end_comment
 
 begin_comment
@@ -6256,8 +6256,8 @@ operator|(
 name|result
 operator|)
 return|;
-return|return
-operator|(
+name|result
+operator|=
 name|dns_view_gettsig
 argument_list|(
 name|view
@@ -6266,6 +6266,18 @@ name|keyname
 argument_list|,
 name|keyp
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|result
+operator|==
+name|ISC_R_NOTFOUND
+operator|)
+condition|?
+name|ISC_R_FAILURE
+else|:
+name|result
 operator|)
 return|;
 block|}

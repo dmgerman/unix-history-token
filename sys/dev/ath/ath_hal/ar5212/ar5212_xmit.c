@@ -139,9 +139,7 @@ return|;
 comment|/* 	 * Disable interrupts while futzing with the fifo level. 	 */
 name|omask
 operator|=
-name|ah
-operator|->
-name|ah_setInterrupts
+name|ath_hal_setInterrupts
 argument_list|(
 name|ah
 argument_list|,
@@ -238,9 +236,7 @@ operator|=
 name|newLevel
 expr_stmt|;
 comment|/* re-enable chip interrupts */
-name|ah
-operator|->
-name|ah_setInterrupts
+name|ath_hal_setInterrupts
 argument_list|(
 name|ah
 argument_list|,

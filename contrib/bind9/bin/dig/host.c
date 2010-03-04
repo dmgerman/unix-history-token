@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: host.c,v 1.116.216.2 2009/05/06 23:47:18 tbox Exp $ */
+comment|/* $Id: host.c,v 1.116.216.3 2009/09/08 23:28:20 marka Exp $ */
 end_comment
 
 begin_comment
@@ -4043,6 +4043,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|usesearch
+operator|=
+name|ISC_TRUE
+expr_stmt|;
 block|}
 name|lookup
 operator|->
@@ -4058,10 +4062,6 @@ name|lookup
 argument_list|,
 name|link
 argument_list|)
-expr_stmt|;
-name|usesearch
-operator|=
-name|ISC_TRUE
 expr_stmt|;
 block|}
 end_function
