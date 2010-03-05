@@ -248,12 +248,14 @@ name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
+name|__unused
 parameter_list|,
 comment|/* from shared loader */
 name|struct
 name|ps_strings
 modifier|*
 name|ps_strings
+name|__unused
 parameter_list|)
 block|{
 name|int
