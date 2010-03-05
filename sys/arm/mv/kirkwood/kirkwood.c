@@ -734,7 +734,7 @@ name|dev
 decl_stmt|,
 name|rev
 decl_stmt|;
-comment|/* 	 * On Kirkwood TCLK is not configurable and depends on silicon 	 * revision: 	 * - A0 has TCLK hardcoded to 200 MHz. 	 * - Z0 and others have TCLK hardcoded to 166 MHz. 	 */
+comment|/* 	 * On Kirkwood TCLK is not configurable and depends on silicon 	 * revision: 	 * - A0 and A1 have TCLK hardcoded to 200 MHz. 	 * - Z0 and others have TCLK hardcoded to 166 MHz. 	 */
 name|soc_id
 argument_list|(
 operator|&
@@ -750,9 +750,15 @@ name|dev
 operator|==
 name|MV_DEV_88F6281
 operator|&&
+operator|(
 name|rev
 operator|==
 literal|2
+operator|||
+name|rev
+operator|==
+literal|3
+operator|)
 condition|)
 return|return
 operator|(
