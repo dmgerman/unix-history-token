@@ -752,7 +752,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No pointer back to NS node in buffer obj %p"
+literal|"No pointer back to namespace node in buffer object %p"
 operator|,
 name|ObjDesc
 operator|)
@@ -867,7 +867,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No pointer back to NS node in package %p"
+literal|"No pointer back to namespace node in package %p"
 operator|,
 name|ObjDesc
 operator|)
@@ -1395,7 +1395,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown field creation opcode %02x"
+literal|"Unknown field creation opcode 0x%02X"
 operator|,
 name|AmlOpcode
 operator|)
@@ -1437,7 +1437,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] at %d exceeds Buffer [%4.4s] size %d (bits)"
+literal|"Field [%4.4s] at %u exceeds Buffer [%4.4s] size %u (bits)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1731,7 +1731,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(%s) bad operand(s) (%X)"
+literal|"(%s) bad operand(s), status 0x%X"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -3839,7 +3839,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown control opcode=%X Op=%p"
+literal|"Unknown control opcode=0x%X Op=%p"
 operator|,
 name|Op
 operator|->

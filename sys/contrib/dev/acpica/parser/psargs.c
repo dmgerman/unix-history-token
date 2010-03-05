@@ -1094,7 +1094,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid ArgType %X"
+literal|"Invalid ArgType 0x%X"
 operator|,
 name|ArgType
 operator|)
@@ -1831,7 +1831,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid ArgType: %X"
+literal|"Invalid ArgType: 0x%X"
 operator|,
 name|ArgType
 operator|)

@@ -498,7 +498,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown TargetType %X in Index/Reference object %p"
+literal|"Unknown TargetType 0x%X in Index/Reference object %p"
 operator|,
 name|StackDesc
 operator|->
@@ -610,7 +610,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Reference type %X in %p"
+literal|"Unknown Reference type 0x%X in %p"
 operator|,
 name|RefType
 operator|,
@@ -942,7 +942,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Not a NS node %p [%s]"
+literal|"Not a namespace node %p [%s]"
 operator|,
 name|Node
 operator|,
@@ -1193,7 +1193,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Reference Class %2.2X"
+literal|"Unknown Reference Class 0x%2.2X"
 operator|,
 name|ObjDesc
 operator|->

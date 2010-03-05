@@ -732,7 +732,7 @@ name|Module
 operator|,
 name|Line
 operator|,
-literal|"Could not allocate size %X"
+literal|"Could not allocate size %u"
 operator|,
 operator|(
 name|UINT32

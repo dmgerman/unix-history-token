@@ -588,7 +588,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Null parameter: Node %p Name %X ReturnNode %p"
+literal|"Null parameter: Node %p Name 0x%X ReturnNode %p"
 operator|,
 name|Node
 operator|,

@@ -517,7 +517,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%d)"
+literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -792,6 +792,10 @@ decl_stmt|;
 name|UINT8
 name|PreviousSyncLevel
 decl_stmt|;
+name|ACPI_THREAD_STATE
+modifier|*
+name|OwnerThread
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|ExReleaseMutex
@@ -809,14 +813,18 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The mutex must have been previously acquired in order to release it */
-if|if
-condition|(
-operator|!
+name|OwnerThread
+operator|=
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
+name|OwnerThread
+expr_stmt|;
+comment|/* The mutex must have been previously acquired in order to release it */
+if|if
+condition|(
+operator|!
 name|OwnerThread
 condition|)
 block|{
@@ -881,10 +889,6 @@ comment|/*      * The Mutex is owned, but this thread must be the owner.      * 
 if|if
 condition|(
 operator|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
 name|OwnerThread
 operator|->
 name|ThreadId
@@ -934,10 +938,6 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|void
 argument_list|,
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
 name|OwnerThread
 operator|->
 name|ThreadId
@@ -960,9 +960,7 @@ name|Mutex
 operator|.
 name|SyncLevel
 operator|!=
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|CurrentSyncLevel
 condition|)
@@ -972,7 +970,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %d current %d"
+literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %u current %u"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1006,9 +1004,7 @@ block|}
 comment|/*      * Get the previous SyncLevel from the head of the acquired mutex list.      * This handles the case where several mutexes at the same level have been      * acquired, but are not released in reverse order.      */
 name|PreviousSyncLevel
 operator|=
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|AcquiredMutexList
 operator|->
@@ -1049,9 +1045,7 @@ literal|0
 condition|)
 block|{
 comment|/* Restore the previous SyncLevel */
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|CurrentSyncLevel
 operator|=

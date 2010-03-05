@@ -180,7 +180,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not allocate size %d"
+literal|"Could not allocate size %u"
 operator|,
 name|SizeNeeded
 operator|)
@@ -531,7 +531,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Bad character %02x in name, at %p"
+literal|"Bad character 0x%02x in name, at %p"
 operator|,
 operator|*
 name|AmlAddress

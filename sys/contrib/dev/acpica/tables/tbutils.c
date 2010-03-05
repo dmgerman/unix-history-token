@@ -547,7 +547,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Incorrect checksum in table [%4.4s] - %2.2X, should be %2.2X"
+literal|"Incorrect checksum in table [%4.4s] - 0x%2.2X, should be 0x%2.2X"
 operator|,
 name|Table
 operator|->
@@ -1088,7 +1088,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"64-bit Physical Address in XSDT is too large (%8.8X%8.8X),"
+literal|"64-bit Physical Address in XSDT is too large (0x%8.8X%8.8X),"
 literal|" truncating"
 operator|,
 name|ACPI_FORMAT_UINT64

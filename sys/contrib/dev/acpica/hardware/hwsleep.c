@@ -477,7 +477,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Sleep values out of range: A=%X B=%X"
+literal|"Sleep values out of range: A=0x%X B=0x%X"
 operator|,
 name|AcpiGbl_SleepTypeA
 operator|,

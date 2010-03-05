@@ -608,7 +608,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Argument count mismatch for method %s %d %d"
+literal|"Argument count mismatch for method %s %u %u"
 operator|,
 name|NextExternal
 operator|->

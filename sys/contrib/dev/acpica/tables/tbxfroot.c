@@ -242,7 +242,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not map memory at %8.8X for length %X"
+literal|"Could not map memory at 0x%8.8X for length %u"
 operator|,
 name|ACPI_EBDA_PTR_LOCATION
 operator|,
@@ -308,7 +308,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not map memory at %8.8X for length %X"
+literal|"Could not map memory at 0x%8.8X for length %u"
 operator|,
 name|PhysicalAddress
 operator|,
@@ -392,7 +392,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not map memory at %8.8X for length %X"
+literal|"Could not map memory at 0x%8.8X for length %u"
 operator|,
 name|ACPI_HI_RSDP_WINDOW_BASE
 operator|,

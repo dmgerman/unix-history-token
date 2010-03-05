@@ -3045,8 +3045,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"GPE0 block (GPE 0 to %d) overlaps the GPE1 block "
-literal|"(GPE %d to %d) - Ignoring GPE1"
+literal|"GPE0 block (GPE 0 to %u) overlaps the GPE1 block "
+literal|"(GPE %u to %u) - Ignoring GPE1"
 operator|,
 name|GpeNumberMax
 operator|,

@@ -354,6 +354,25 @@ block|}
 end_function
 
 begin_function
+name|void
+name|AcpiExDoDebugObject
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceDesc
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|UINT32
+name|Index
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_function
 name|ACPI_STATUS
 name|AcpiExReadDataFromField
 parameter_list|(

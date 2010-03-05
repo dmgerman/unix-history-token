@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100121
+value|0x20100304
 end_define
 
 begin_include
@@ -128,6 +128,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT32
 name|AcpiGbl_TraceFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_EnableAmlDebugObject
 decl_stmt|;
 end_decl_stmt
 

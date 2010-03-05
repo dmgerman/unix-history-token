@@ -1116,7 +1116,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not disable fixed event %d"
+literal|"Could not disable fixed event %u"
 operator|,
 operator|(
 name|UINT32

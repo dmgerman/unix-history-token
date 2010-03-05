@@ -15208,6 +15208,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|AcpiGbl_EnableAmlDebugObject
+operator|=
+name|TRUE
+expr_stmt|;
 name|layer
 operator|=
 name|getenv

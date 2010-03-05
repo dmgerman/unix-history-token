@@ -495,7 +495,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Null Object! Obj=%p State=%p Num=%X"
+literal|"Null Object! Obj=%p State=%p Num=%u"
 operator|,
 name|Object
 operator|,
@@ -624,7 +624,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Result stack overflow: State=%p Num=%X"
+literal|"Result stack overflow: State=%p Num=%u"
 operator|,
 name|WalkState
 operator|,
@@ -861,7 +861,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Object stack overflow! Obj=%p State=%p #Ops=%X"
+literal|"Object stack overflow! Obj=%p State=%p #Ops=%u"
 operator|,
 name|Object
 operator|,
@@ -989,7 +989,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Object stack underflow! Count=%X State=%p #Ops=%X"
+literal|"Object stack underflow! Count=%X State=%p #Ops=%u"
 operator|,
 name|PopCount
 operator|,
@@ -1030,7 +1030,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Count=%X State=%p #Ops=%X\n"
+literal|"Count=%X State=%p #Ops=%u\n"
 operator|,
 name|PopCount
 operator|,

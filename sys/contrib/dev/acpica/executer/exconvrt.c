@@ -1463,7 +1463,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Bad destination type during conversion: %X"
+literal|"Bad destination type during conversion: 0x%X"
 operator|,
 name|DestinationType
 operator|)
@@ -1487,7 +1487,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Target type ID 0x%X AmlOpcode %X DestType %s"
+literal|"Unknown Target type ID 0x%X AmlOpcode 0x%X DestType %s"
 operator|,
 name|GET_CURRENT_ARG_TYPE
 argument_list|(
