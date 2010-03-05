@@ -776,6 +776,40 @@ name|ISPFW_VERSION
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ISPFW_KLD
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISPFW_KLD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -783,7 +817,7 @@ name|RMACRO
 parameter_list|(
 name|token
 parameter_list|)
-value|do {						\ 	if (token##_loaded)						\ 		break;							\ 	if (firmware_register(#token, token##_risc_code,		\ 	    token##_risc_code[3] * sizeof(token##_risc_code[3]),	\ 	    ISPFW_VERSION, NULL) == NULL) {				\ 		printf("%s: unable to register firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded++;						\ 	printf("%s: registered firmware<%s>\n", MODULE_NAME, #token);	\ } while (0)
+value|do {						\ 	if (token##_loaded)						\ 		break;							\ 	if (firmware_register(#token, token##_risc_code,		\ 	    token##_risc_code[3] * sizeof(token##_risc_code[3]),	\ 	    ISPFW_VERSION, NULL) == NULL) {				\ 		printf("%s: unable to register firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded++;						\ 	if (bootverbose || ISPFW_KLD)					\ 		printf("%s: registered firmware<%s>\n", MODULE_NAME, 	\ 		    #token);						\ } while (0)
 end_define
 
 begin_define
@@ -793,7 +827,7 @@ name|UMACRO
 parameter_list|(
 name|token
 parameter_list|)
-value|do {						\ 	if (!token##_loaded)						\ 		break;							\ 	if (firmware_unregister(#token) != 0) {				\ 		printf("%s: unable to unregister firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded--;						\ 	printf("%s: unregistered firmware<%s>\n", MODULE_NAME, #token);\ } while (0)
+value|do {						\ 	if (!token##_loaded)						\ 		break;							\ 	if (firmware_unregister(#token) != 0) {				\ 		printf("%s: unable to unregister firmware<%s>\n",	\ 		    MODULE_NAME, #token);				\ 		break;							\ 	}								\ 	token##_loaded--;						\ 	if (bootverbose || ISPFW_KLD)					\ 		printf("%s: unregistered firmware<%s>\n", MODULE_NAME,	\ 		    #token);						\ } while (0)
 end_define
 
 begin_function
