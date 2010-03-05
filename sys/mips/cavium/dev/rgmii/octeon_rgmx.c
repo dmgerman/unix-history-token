@@ -8692,8 +8692,6 @@ name|chipid
 operator|=
 name|octeon_get_chipid
 argument_list|()
-operator|&
-literal|0xffffff00
 expr_stmt|;
 switch|switch
 condition|(
