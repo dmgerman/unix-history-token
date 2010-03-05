@@ -194,6 +194,33 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|__start
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|,
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|ps_strings
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* The entry function. */
 end_comment

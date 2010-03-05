@@ -122,26 +122,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|_start
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|void
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -208,6 +188,25 @@ init|=
 literal|""
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|_start
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The entry function. */
