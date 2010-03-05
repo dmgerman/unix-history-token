@@ -5918,6 +5918,22 @@ expr_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
+comment|/* Get terminal width / height with ncurses. */
+name|getmaxyx
+argument_list|(
+name|stdscr
+argument_list|,
+name|pmcstat_displayheight
+argument_list|,
+name|pmcstat_displaywidth
+argument_list|)
+expr_stmt|;
+name|pmcstat_displayheight
+operator|--
+expr_stmt|;
+name|pmcstat_displaywidth
+operator|--
+expr_stmt|;
 name|atexit
 argument_list|(
 name|pmcstat_topexit
