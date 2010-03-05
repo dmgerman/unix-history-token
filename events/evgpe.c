@@ -1513,7 +1513,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE[%2X]"
+literal|"Unable to clear GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1596,7 +1596,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE[%2X]"
+literal|"Unable to clear GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1636,7 +1636,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE[%2X]"
+literal|"Unable to disable GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1675,7 +1675,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to queue handler for GPE[%2X] - event disabled"
+literal|"Unable to queue handler for GPE[0x%2X] - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1690,7 +1690,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No handler or method for GPE[%2X], disabling event"
+literal|"No handler or method for GPE[0x%2X], disabling event"
 operator|,
 name|GpeNumber
 operator|)
@@ -1719,7 +1719,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE[%2X]"
+literal|"Unable to disable GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)

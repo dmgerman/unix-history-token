@@ -177,7 +177,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Needed Region, found type %X (%s)"
+literal|"Needed Region, found type 0x%X (%s)"
 operator|,
 name|RgnDesc
 operator|->
@@ -394,7 +394,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] access width (%d bytes) too large for region [%4.4s] (length %X)"
+literal|"Field [%4.4s] access width (%u bytes) too large for region [%4.4s] (length %u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -435,7 +435,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field [%4.4s] Base+Offset+Width %X+%X+%X is beyond end of region [%4.4s] (length %X)"
+literal|"Field [%4.4s] Base+Offset+Width %u+%u+%u is beyond end of region [%4.4s] (length %u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -701,7 +701,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Region %s(%X) not implemented"
+literal|"Region %s(0x%X) not implemented"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -734,7 +734,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Region %s(%X) has no handler"
+literal|"Region %s(0x%X) has no handler"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -1287,7 +1287,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Wrong object type in field I/O %X"
+literal|"Wrong object type in field I/O %u"
 operator|,
 name|ObjDesc
 operator|->
@@ -1536,7 +1536,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown UpdateRule value: %X"
+literal|"Unknown UpdateRule value: 0x%X"
 operator|,
 operator|(
 name|ObjDesc
@@ -1688,7 +1688,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Field size %X (bits) is too large for buffer (%X)"
+literal|"Field size %u (bits) is too large for buffer (%u)"
 operator|,
 name|ObjDesc
 operator|->

@@ -162,7 +162,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Reference Class %2.2X"
+literal|"Unknown Reference Class 0x%2.2X"
 operator|,
 name|ObjDesc
 operator|->
@@ -194,7 +194,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid descriptor type %X"
+literal|"Invalid descriptor type 0x%X"
 operator|,
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
@@ -623,7 +623,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid object type: %X"
+literal|"Invalid object type: 0x%X"
 operator|,
 name|Operand0
 operator|->
@@ -917,7 +917,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid object type: %X"
+literal|"Invalid object type: 0x%X"
 operator|,
 name|Operand0
 operator|->

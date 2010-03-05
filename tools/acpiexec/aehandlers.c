@@ -2106,7 +2106,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Request on [%4.4s] is beyond region limit Req-%X+%X, Base=%X, Len-%X"
+literal|"Request on [%4.4s] is beyond region limit Req-0x%X+0x%X, Base=0x%X, Len-0x%X"
 operator|,
 operator|(
 name|RegionObject

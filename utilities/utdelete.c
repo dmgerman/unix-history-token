@@ -1062,7 +1062,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown action (%X)"
+literal|"Unknown action (0x%X)"
 operator|,
 name|Action
 operator|)
@@ -1083,7 +1083,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Large Reference Count (%X) in object %p"
+literal|"Large Reference Count (0x%X) in object %p"
 operator|,
 name|Count
 operator|,

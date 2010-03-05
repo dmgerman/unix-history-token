@@ -819,7 +819,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid opcode in field list: %X"
+literal|"Invalid opcode in field list: 0x%X"
 operator|,
 name|Arg
 operator|->

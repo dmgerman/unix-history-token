@@ -770,7 +770,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown ASF sub-table type %X\n"
+literal|"\n**** Unknown ASF sub-table type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -1361,7 +1361,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown DMAR sub-table type %X\n\n"
+literal|"\n**** Unknown DMAR sub-table type 0x%X\n\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -2093,7 +2093,7 @@ default|default:
 comment|/* Cannot continue on unknown type - no length */
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown HEST sub-table type %X\n"
+literal|"\n**** Unknown HEST sub-table type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -2411,7 +2411,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown IVRS sub-table type %X\n"
+literal|"\n**** Unknown IVRS sub-table type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -2610,7 +2610,7 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n**** Unknown IVRS device entry type/length: "
-literal|"%.2X/%X at offset %.4X: (header below)\n"
+literal|"0x%.2X/0x%X at offset 0x%.4X: (header below)\n"
 argument_list|,
 name|EntryType
 argument_list|,
@@ -2899,7 +2899,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown MADT sub-table type %X\n\n"
+literal|"\n**** Unknown MADT sub-table type 0x%X\n\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -3672,7 +3672,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown SRAT sub-table type %X\n"
+literal|"\n**** Unknown SRAT sub-table type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->

@@ -200,7 +200,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not construct external pathname; index=%X, size=%X, Path=%s"
+literal|"Could not construct external pathname; index=%u, size=%u, Path=%s"
 operator|,
 operator|(
 name|UINT32

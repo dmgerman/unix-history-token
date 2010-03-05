@@ -775,7 +775,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus or IPMI write requires Buffer of length %X, found length %X"
+literal|"SMBus or IPMI write requires Buffer of length %u, found length %u"
 operator|,
 name|Length
 operator|,

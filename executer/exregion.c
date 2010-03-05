@@ -158,7 +158,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid SystemMemory width %d"
+literal|"Invalid SystemMemory width %u"
 operator|,
 name|BitWidth
 operator|)
@@ -348,7 +348,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not map memory at %8.8X%8.8X, size %X"
+literal|"Could not map memory at 0x%8.8X%8.8X, size %u"
 operator|,
 name|ACPI_FORMAT_NATIVE_UINT
 argument_list|(

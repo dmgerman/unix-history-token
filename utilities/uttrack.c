@@ -420,7 +420,7 @@ name|Module
 operator|,
 name|Line
 operator|,
-literal|"Could not allocate size %X"
+literal|"Could not allocate size %u"
 operator|,
 operator|(
 name|UINT32
@@ -1437,7 +1437,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%d(%X) Outstanding allocations"
+literal|"%d(0x%X) Outstanding allocations"
 operator|,
 name|NumOutstanding
 operator|,

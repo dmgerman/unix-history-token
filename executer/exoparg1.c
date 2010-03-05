@@ -152,7 +152,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -374,7 +374,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -475,7 +475,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -990,7 +990,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Integer too large to convert to BCD: %8.8X%8.8X"
+literal|"Integer too large to convert to BCD: 0x%8.8X%8.8X"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1388,7 +1388,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -2483,7 +2483,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Index TargetType %X in reference object %p"
+literal|"Unknown Index TargetType 0x%X in reference object %p"
 operator|,
 name|Operand
 index|[
@@ -2559,7 +2559,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown class in reference(%p) - %2.2X"
+literal|"Unknown class in reference(%p) - 0x%2.2X"
 operator|,
 name|Operand
 index|[
@@ -2593,7 +2593,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->

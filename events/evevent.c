@@ -628,7 +628,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No installed handler for fixed event [%08X]"
+literal|"No installed handler for fixed event [0x%08X]"
 operator|,
 name|Event
 operator|)

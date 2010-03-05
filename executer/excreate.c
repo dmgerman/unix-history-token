@@ -611,7 +611,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid AddressSpace type %X"
+literal|"Invalid AddressSpace type 0x%X"
 operator|,
 name|RegionSpace
 operator|)
@@ -628,7 +628,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_LOAD
 operator|,
-literal|"Region Type - %s (%X)\n"
+literal|"Region Type - %s (0x%X)\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(

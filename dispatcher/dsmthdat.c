@@ -651,7 +651,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Local index %d is invalid (max %d)"
+literal|"Local index %u is invalid (max %u)"
 operator|,
 name|Index
 operator|,
@@ -693,7 +693,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Arg index %d is invalid (max %d)"
+literal|"Arg index %u is invalid (max %u)"
 operator|,
 name|Index
 operator|,
@@ -726,7 +726,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Type %d is invalid"
+literal|"Type %u is invalid"
 operator|,
 name|Type
 operator|)
@@ -1016,7 +1016,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Uninitialized Arg[%d] at node %p"
+literal|"Uninitialized Arg[%u] at node %p"
 operator|,
 name|Index
 operator|,
@@ -1044,7 +1044,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Not a Arg/Local opcode: %X"
+literal|"Not a Arg/Local opcode: 0x%X"
 operator|,
 name|Type
 operator|)

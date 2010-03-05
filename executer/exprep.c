@@ -582,7 +582,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown field access type %X"
+literal|"Unknown field access type 0x%X"
 operator|,
 name|Access
 operator|)
@@ -911,7 +911,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Needed Region, found type %X (%s)"
+literal|"Needed Region, found type 0x%X (%s)"
 operator|,
 name|Type
 operator|,

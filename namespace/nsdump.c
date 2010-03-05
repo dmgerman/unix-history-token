@@ -510,7 +510,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid ACPI Object Type %08X"
+literal|"Invalid ACPI Object Type 0x%08X"
 operator|,
 name|Type
 operator|)

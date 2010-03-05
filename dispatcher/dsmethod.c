@@ -457,7 +457,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex for method [%4.4s], current SyncLevel is too large (%d)"
+literal|"Cannot acquire Mutex for method [%4.4s], current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(

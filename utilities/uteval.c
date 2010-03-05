@@ -648,7 +648,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Type returned from %s was incorrect: %s, expected Btypes: %X"
+literal|"Type returned from %s was incorrect: %s, expected Btypes: 0x%X"
 operator|,
 name|Path
 operator|,

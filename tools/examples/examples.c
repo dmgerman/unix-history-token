@@ -663,7 +663,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Received a notify %X"
+literal|"Received a notify 0x%X"
 operator|,
 name|Value
 operator|)
@@ -920,7 +920,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"_OSI returned %.8X"
+literal|"_OSI returned 0x%8.8X"
 operator|,
 operator|(
 name|UINT32

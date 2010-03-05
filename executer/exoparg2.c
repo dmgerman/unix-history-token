@@ -243,7 +243,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -428,7 +428,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -1088,7 +1088,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Index (%X%8.8X) is beyond end of object"
+literal|"Index (0x%8.8X%8.8X) is beyond end of object"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1152,7 +1152,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -1501,7 +1501,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->

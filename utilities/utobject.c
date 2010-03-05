@@ -519,7 +519,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not allocate size %X"
+literal|"Could not allocate size %u"
 operator|,
 operator|(
 name|UINT32
@@ -646,7 +646,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not allocate size %X"
+literal|"Could not allocate size %u"
 operator|,
 operator|(
 name|UINT32
@@ -1132,7 +1132,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"Cannot convert to external object - "
-literal|"unsupported Reference Class [%s] %X in object %p"
+literal|"unsupported Reference Class [%s] 0x%X in object %p"
 operator|,
 name|AcpiUtGetReferenceName
 argument_list|(
@@ -1163,7 +1163,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"Cannot convert to external object - "
-literal|"unsupported type [%s] %X in object %p"
+literal|"unsupported type [%s] 0x%X in object %p"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(

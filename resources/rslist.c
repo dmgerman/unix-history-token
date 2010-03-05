@@ -156,7 +156,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Could not convert AML resource (Type %X)"
+literal|"Could not convert AML resource (Type 0x%X)"
 operator|,
 operator|*
 name|Aml
@@ -277,7 +277,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid descriptor type (%X) in resource list"
+literal|"Invalid descriptor type (0x%X) in resource list"
 operator|,
 name|Resource
 operator|->
@@ -328,7 +328,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Could not convert resource (type %X) to AML"
+literal|"Could not convert resource (type 0x%X) to AML"
 operator|,
 name|Resource
 operator|->

@@ -2105,6 +2105,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_TABLE_MCHI"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_TABLE_MSCT"
 block|,
 name|SRC_TYPE_STRUCT

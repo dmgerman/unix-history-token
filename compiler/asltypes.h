@@ -269,51 +269,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* An entry in the Reserved Name information table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASL_RSVD_RETURN_VALUE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_RSVD_RESOURCE_NAME
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASL_RSVD_SCOPE
-value|0x04
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|asl_reserved_info
-block|{
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-name|UINT8
-name|NumArguments
-decl_stmt|;
-name|UINT8
-name|Flags
-decl_stmt|;
-block|}
-name|ASL_RESERVED_INFO
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* Parse tree walk info structure */
 end_comment
 
@@ -1111,7 +1066,7 @@ comment|/*    ASL_MSG_RESERVED_METHOD */
 literal|"Reserved name must be a control method"
 block|,
 comment|/*    ASL_MSG_RESERVED_OPERAND_TYPE */
-literal|"Invalid operand type for reserved name, must be"
+literal|"Invalid object type for reserved name, must be"
 block|,
 comment|/*    ASL_MSG_RESERVED_RETURN_VALUE */
 literal|"Reserved method must return a value"

@@ -369,7 +369,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Illegal I/O port address/length above 64K: 0x%p/%X"
+literal|"Illegal I/O port address/length above 64K: %p/0x%X"
 operator|,
 name|ACPI_CAST_PTR
 argument_list|(
