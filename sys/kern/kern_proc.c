@@ -4515,7 +4515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill in information that is thread specific.  Must be called with p_slock  * locked.  If 'preferthread' is set, overwrite certain process-related  * fields that are maintained for both threads and processes.  */
+comment|/*  * Fill in information that is thread specific.  Must be called with  * target process locked.  If 'preferthread' is set, overwrite certain  * process-related fields that are maintained for both threads and  * processes.  */
 end_comment
 
 begin_function
@@ -4959,16 +4959,17 @@ name|ki_rqindex
 operator|=
 literal|0
 expr_stmt|;
-name|SIGSETOR
-argument_list|(
+if|if
+condition|(
+name|preferthread
+condition|)
 name|kp
 operator|->
 name|ki_siglist
-argument_list|,
+operator|=
 name|td
 operator|->
 name|td_siglist
-argument_list|)
 expr_stmt|;
 name|kp
 operator|->
