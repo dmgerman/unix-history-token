@@ -264,6 +264,34 @@ begin_comment
 comment|/* system tune hint */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_guest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Running as virtual machine guest? */
+end_comment
+
+begin_comment
+comment|/*  * Detected virtual machine guest types. The intention is to expand  * and/or add to the VM_GUEST_VM type if specific VM functionality is  * ever implemented (e.g. vendor-specific paravirtualization features).  */
+end_comment
+
+begin_enum
+enum|enum
+name|VM_GUEST
+block|{
+name|VM_GUEST_NO
+init|=
+literal|0
+block|,
+name|VM_GUEST_VM
+block|}
+enum|;
+end_enum
+
 begin_ifdef
 ifdef|#
 directive|ifdef
