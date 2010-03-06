@@ -1005,6 +1005,25 @@ name|flags
 operator||=
 name|ND6_IFF_ACCEPT_RTADV
 expr_stmt|;
+if|if
+condition|(
+name|V_ip6_defroute_rtadv
+operator|&&
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LOOPBACK
+operator|)
+condition|)
+name|nd
+operator|->
+name|flags
+operator||=
+name|ND6_IFF_DEFROUTE_RTADV
+expr_stmt|;
 comment|/* XXX: we cannot call nd6_setmtu since ifp is not fully initialized */
 name|nd6_setmtu0
 argument_list|(
@@ -3322,9 +3341,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|V_ip6_forwarding
-operator|&&
 name|ND_IFINFO
 argument_list|(
 name|ifp
@@ -3797,11 +3813,17 @@ name|dstaddr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the default router list is empty, all addresses are regarded 	 * as on-link, and thus, as a neighbor. 	 * XXX: we restrict the condition to hosts, because routers usually do 	 * not have the "default router list". 	 */
+comment|/* 	 * If the default router list is empty, all addresses are regarded 	 * as on-link, and thus, as a neighbor. 	 */
 if|if
 condition|(
-operator|!
-name|V_ip6_forwarding
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
 operator|&&
 name|TAILQ_FIRST
 argument_list|(
@@ -3979,8 +4001,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|V_ip6_forwarding
+name|ND_IFINFO
+argument_list|(
+name|ln
+operator|->
+name|lle_tbl
+operator|->
+name|llt_ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
 condition|)
 block|{
 name|int
@@ -6501,9 +6533,6 @@ condition|(
 name|do_update
 operator|&&
 name|router
-operator|&&
-operator|!
-name|V_ip6_forwarding
 operator|&&
 name|ND_IFINFO
 argument_list|(

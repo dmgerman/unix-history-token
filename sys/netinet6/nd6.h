@@ -244,6 +244,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ND6_IFF_DEFROUTE_RTADV
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|ND6_CREATE
 value|LLE_CREATE
 end_define

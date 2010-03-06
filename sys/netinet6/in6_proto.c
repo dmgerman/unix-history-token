@@ -1553,6 +1553,26 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
+name|ip6_defroute_rtadv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip6_disable_isrouter_rtadvif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
 name|ip6_maxfragpackets
 argument_list|)
 expr_stmt|;
@@ -2311,6 +2331,57 @@ literal|0
 argument_list|,
 literal|"Default value of per-interface flag for accepting ICMPv6 Router"
 literal|"Advertisement messages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_DEFROUTE_RTADV
+argument_list|,
+name|defroute_rtadv
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_defroute_rtadv
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default value of per-interface flag to control whether routers "
+literal|"sending ICMPv6 RA messages on that interface are added into the "
+literal|"default router list."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_DISABLE_ISROUTER_RTADVIF
+argument_list|,
+name|disable_isrouter_rtadvif
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_disable_isrouter_rtadvif
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Always set 0 to R flag in ICMPv6 NA messages when accepting RA"
+literal|" on the interface."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

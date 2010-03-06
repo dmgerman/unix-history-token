@@ -984,6 +984,34 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|ip6_defroute_rtadv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Add a route in RA to defroute list.*/
+end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|ip6_disable_isrouter_rtadvif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Disable R-bit in NA on RA 						  * receiving IF. */
+end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|ip6_keepfaith
 argument_list|)
 expr_stmt|;
@@ -1220,6 +1248,20 @@ define|#
 directive|define
 name|V_ip6_accept_rtadv
 value|VNET(ip6_accept_rtadv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_defroute_rtadv
+value|VNET(ip6_defroute_rtadv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_disable_isrouter_rtadvif
+value|VNET(ip6_disable_isrouter_rtadvif)
 end_define
 
 begin_define

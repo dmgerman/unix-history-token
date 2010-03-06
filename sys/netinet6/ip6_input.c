@@ -743,6 +743,14 @@ name|V_ip6_accept_rtadv
 operator|=
 literal|0
 expr_stmt|;
+name|V_ip6_defroute_rtadv
+operator|=
+literal|1
+expr_stmt|;
+name|V_ip6_disable_isrouter_rtadvif
+operator|=
+literal|0
+expr_stmt|;
 name|V_ip6_log_interval
 operator|=
 literal|5
