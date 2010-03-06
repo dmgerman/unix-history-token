@@ -2798,8 +2798,28 @@ argument_list|,
 name|imm_i_0_16
 argument_list|)
 expr_stmt|;
-comment|//  tmp_V4f = __builtin_ia32_roundss(tmp_V4f, tmp_V4f, imm_i_0_16);
-comment|//  tmp_V2d = __builtin_ia32_roundsd(tmp_V2d, tmp_V2d, imm_i_0_16);
+name|tmp_V4f
+operator|=
+name|__builtin_ia32_roundss
+argument_list|(
+name|tmp_V4f
+argument_list|,
+name|tmp_V4f
+argument_list|,
+name|imm_i_0_16
+argument_list|)
+expr_stmt|;
+name|tmp_V2d
+operator|=
+name|__builtin_ia32_roundsd
+argument_list|(
+name|tmp_V2d
+argument_list|,
+name|tmp_V2d
+argument_list|,
+name|imm_i_0_16
+argument_list|)
+expr_stmt|;
 name|tmp_V2d
 operator|=
 name|__builtin_ia32_roundpd

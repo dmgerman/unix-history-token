@@ -59,9 +59,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// X86 builtins
+comment|/// ARM builtins
 name|namespace
-name|X86
+name|ARM
 block|{
 enum|enum
 block|{
@@ -88,7 +88,7 @@ parameter_list|)
 value|BI##ID,
 include|#
 directive|include
-file|"clang/Basic/BuiltinsX86.def"
+file|"clang/Basic/BuiltinsARM.def"
 name|LastTSBuiltin
 block|}
 enum|;
@@ -123,6 +123,40 @@ value|BI##ID,
 include|#
 directive|include
 file|"clang/Basic/BuiltinsPPC.def"
+name|LastTSBuiltin
+block|}
+enum|;
+block|}
+comment|/// X86 builtins
+name|namespace
+name|X86
+block|{
+enum|enum
+block|{
+name|LastTIBuiltin
+init|=
+name|clang
+operator|::
+name|Builtin
+operator|::
+name|FirstTSBuiltin
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|BUILTIN
+parameter_list|(
+name|ID
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|ATTRS
+parameter_list|)
+value|BI##ID,
+include|#
+directive|include
+file|"clang/Basic/BuiltinsX86.def"
 name|LastTSBuiltin
 block|}
 enum|;

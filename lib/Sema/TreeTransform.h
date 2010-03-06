@@ -3018,6 +3018,8 @@ name|PerformObjectMemberConversion
 argument_list|(
 name|BaseExpr
 argument_list|,
+name|Qualifier
+argument_list|,
 name|Member
 argument_list|)
 condition|)

@@ -2361,6 +2361,7 @@ name|linkage
 operator|=
 literal|"NoLinkage"
 expr_stmt|;
+break|break;
 case|case
 name|CXLinkage_Internal
 case|:
@@ -2368,6 +2369,7 @@ name|linkage
 operator|=
 literal|"Internal"
 expr_stmt|;
+break|break;
 case|case
 name|CXLinkage_UniqueExternal
 case|:
@@ -2375,6 +2377,7 @@ name|linkage
 operator|=
 literal|"UniqueExternal"
 expr_stmt|;
+break|break;
 case|case
 name|CXLinkage_External
 case|:
@@ -2382,6 +2385,7 @@ name|linkage
 operator|=
 literal|"External"
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(

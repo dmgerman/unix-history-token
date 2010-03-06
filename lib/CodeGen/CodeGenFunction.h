@@ -5429,6 +5429,20 @@ name|llvm
 operator|::
 name|Value
 operator|*
+name|EmitARMBuiltinExpr
+argument_list|(
+argument|unsigned BuiltinID
+argument_list|,
+argument|const CallExpr *E
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
 name|EmitX86BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID

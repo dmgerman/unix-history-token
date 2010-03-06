@@ -1014,7 +1014,7 @@ begin_comment
 comment|/// allows for graceful error recovery.
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|setInvalidDecl
 parameter_list|(
@@ -1023,13 +1023,8 @@ name|Invalid
 init|=
 name|true
 parameter_list|)
-block|{
-name|InvalidDecl
-operator|=
-name|Invalid
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|bool

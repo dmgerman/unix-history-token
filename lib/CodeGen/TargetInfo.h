@@ -183,6 +183,53 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Determines the DWARF register number for the stack pointer, for
+comment|/// exception-handling purposes.  Implements __builtin_dwarf_sp_column.
+comment|///
+comment|/// Returns -1 if the operation is unsupported by this target.
+name|virtual
+name|int
+name|getDwarfEHStackPointer
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenModule
+operator|&
+name|M
+argument_list|)
+decl|const
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/// Initializes the given DWARF EH register-size table, a char*.
+comment|/// Implements __builtin_init_dwarf_reg_size_table.
+comment|///
+comment|/// Returns true if the operation is unsupported by this target.
+name|virtual
+name|bool
+name|initDwarfEHRegSizeTable
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Address
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// Performs the code-generation required to convert a return
 comment|/// address as stored by the system into the actual address of the
 comment|/// next instruction that will be executed.

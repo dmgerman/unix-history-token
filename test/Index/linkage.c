@@ -59,6 +59,16 @@ name|n
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|wibble
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// CHECK: EnumDecl=Baz:3:6 (Definition)linkage=External
 end_comment
@@ -76,7 +86,7 @@ comment|// CHECK: FunctionDecl=foo:5:6linkage=External
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=w:6:12linkage=External
+comment|// CHECK: VarDecl=w:6:12linkage=Internal
 end_comment
 
 begin_comment
@@ -84,19 +94,27 @@ comment|// CHECK: FunctionDecl=bar:7:6 (Definition)linkage=External
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=y:7:14 (Definition)linkage=External
+comment|// CHECK: ParmDecl=y:7:14 (Definition)linkage=NoLinkage
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=z:8:14 (Definition)linkage=External
+comment|// CHECK: VarDecl=z:8:14 (Definition)linkage=NoLinkage
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=k:9:7 (Definition)linkage=External
+comment|// CHECK: VarDecl=k:9:7 (Definition)linkage=NoLinkage
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=n:11:12
+comment|// CHECK: VarDecl=n:11:12linkage=External
+end_comment
+
+begin_comment
+comment|// CHECK: FunctionDecl=wibble:12:12linkage=Internal
+end_comment
+
+begin_comment
+comment|// CHECL: ParmDecl=:12:22 (Definition)linkage=NoLinkage
 end_comment
 
 end_unit

@@ -621,7 +621,7 @@ label|:
 goto|goto *
 name|P
 goto|;
-comment|// expected-error {{illegal indirect goto in protected scope, unknown effect on scopes}}
+comment|// expected-warning {{illegal indirect goto in protected scope, unknown effect on scopes}}
 goto|goto
 name|L3
 goto|;
@@ -642,7 +642,7 @@ block|,
 comment|// Ok.
 operator|&&
 name|L3
-comment|// expected-error {{address taken of label in protected scope, jump to it would have unknown effect on scope}}
+comment|// expected-warning {{address taken of label in protected scope, jump to it would have unknown effect on scope}}
 block|}
 decl_stmt|;
 block|}

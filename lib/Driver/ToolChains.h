@@ -1166,7 +1166,98 @@ operator|&
 name|Triple
 argument_list|)
 block|; }
-block|;   }
+block|;
+comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
+comment|/// all subcommands. See http://tce.cs.tut.fi for our peculiar target.
+name|class
+name|VISIBILITY_HIDDEN
+name|TCEToolChain
+operator|:
+name|public
+name|ToolChain
+block|{
+name|public
+operator|:
+name|TCEToolChain
+argument_list|(
+specifier|const
+name|HostInfo
+operator|&
+name|Host
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+operator|~
+name|TCEToolChain
+argument_list|()
+block|;
+name|virtual
+name|DerivedArgList
+operator|*
+name|TranslateArgs
+argument_list|(
+argument|InputArgList&Args
+argument_list|,
+argument|const char *BoundArch
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|IsUnwindTablesDefault
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|char
+operator|*
+name|GetDefaultRelocationModel
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|char
+operator|*
+name|GetForcedPicModel
+argument_list|()
+specifier|const
+block|;
+name|private
+operator|:
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+block|,
+name|Tool
+operator|*
+operator|>
+name|Tools
+block|;  }
+block|;  }
 comment|// end namespace toolchains
 block|}
 comment|// end namespace driver

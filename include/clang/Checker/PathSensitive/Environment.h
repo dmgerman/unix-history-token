@@ -108,9 +108,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|AnalysisContext
-decl_stmt|;
-name|class
 name|EnvironmentManager
 decl_stmt|;
 name|class
@@ -146,29 +143,18 @@ comment|// Data.
 name|BindingsTy
 name|ExprBindings
 decl_stmt|;
-name|AnalysisContext
-modifier|*
-name|ACtx
-decl_stmt|;
 name|Environment
 argument_list|(
 argument|BindingsTy eb
-argument_list|,
-argument|AnalysisContext *aCtx
 argument_list|)
 block|:
 name|ExprBindings
 argument_list|(
-name|eb
-argument_list|)
-operator|,
-name|ACtx
-argument_list|(
-argument|aCtx
+argument|eb
 argument_list|)
 block|{}
 name|public
-operator|:
+label|:
 typedef|typedef
 name|BindingsTy
 operator|::
@@ -245,17 +231,6 @@ name|ValMgr
 argument_list|)
 decl|const
 decl_stmt|;
-name|AnalysisContext
-operator|&
-name|getAnalysisContext
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|ACtx
-return|;
-block|}
 comment|/// Profile - Profile the contents of an Environment object for use
 comment|///  in a FoldingSet.
 specifier|static
@@ -364,9 +339,7 @@ argument_list|()
 block|{}
 name|Environment
 name|getInitialEnvironment
-argument_list|(
-argument|AnalysisContext *ACtx
-argument_list|)
+argument_list|()
 block|{
 return|return
 name|Environment
@@ -375,8 +348,6 @@ name|F
 operator|.
 name|GetEmptyMap
 argument_list|()
-argument_list|,
-name|ACtx
 argument_list|)
 return|;
 block|}

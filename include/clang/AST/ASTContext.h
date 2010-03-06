@@ -2150,6 +2150,11 @@ name|unsigned
 name|NumProtocols
 init|=
 literal|0
+parameter_list|,
+name|unsigned
+name|Quals
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// getTypeOfType - GCC extension.

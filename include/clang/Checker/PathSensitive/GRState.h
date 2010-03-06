@@ -459,21 +459,6 @@ operator|*
 name|StateMgr
 return|;
 block|}
-comment|/// getAnalysisContext - Return the AnalysisContext associated with this
-comment|/// state.
-name|AnalysisContext
-operator|&
-name|getAnalysisContext
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Env
-operator|.
-name|getAnalysisContext
-argument_list|()
-return|;
-block|}
 comment|/// getEnvironment - Return the environment associated with this state.
 comment|///  The environment is the mapping from expressions to values.
 specifier|const
@@ -550,7 +535,6 @@ operator|*
 name|V
 argument_list|)
 block|{
-comment|// FIXME: Do we need to include the AnalysisContext in the profile?
 name|V
 operator|->
 name|Env
@@ -1424,6 +1408,10 @@ name|raw_ostream
 operator|&
 name|Out
 argument_list|,
+name|CFG
+operator|&
+name|C
+argument_list|,
 specifier|const
 name|char
 operator|*
@@ -1442,9 +1430,13 @@ decl|const
 decl_stmt|;
 name|void
 name|printStdErr
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|CFG
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|printDOT
 argument_list|(
@@ -1453,6 +1445,10 @@ operator|::
 name|raw_ostream
 operator|&
 name|Out
+argument_list|,
+name|CFG
+operator|&
+name|C
 argument_list|)
 decl|const
 decl_stmt|;

@@ -198,54 +198,6 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|t22
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(weakref
-parameter_list|(
-function_decl|"t8"
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// CHECK: @t22 = alias weak void ()* @t8
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|t23
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(weakref
-operator|,
-function_decl|alias
-parameter_list|(
-function_decl|"t8"
-end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// CHECK: @t23 = alias weak void ()* @t8
-end_comment
-
 begin_comment
 comment|// CHECK: declare extern_weak i32 @t15()
 end_comment

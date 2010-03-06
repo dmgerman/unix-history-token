@@ -5229,6 +5229,10 @@ modifier|*
 modifier|&
 name|From
 parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
 name|CXXMethodDecl
 modifier|*
 name|Method
@@ -5267,6 +5271,10 @@ name|Expr
 modifier|*
 modifier|&
 name|From
+parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
 parameter_list|,
 name|NamedDecl
 modifier|*

@@ -221,7 +221,15 @@ operator|<<
 literal|28
 operator|)
 block|,
-name|BLOCK_HAS_OBJC_TYPE
+name|BLOCK_USE_STRET
+init|=
+operator|(
+literal|1
+operator|<<
+literal|29
+operator|)
+block|,
+name|BLOCK_HAS_SIGNATURE
 init|=
 operator|(
 literal|1

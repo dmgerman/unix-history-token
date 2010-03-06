@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -419,6 +425,22 @@ name|GlobalValue
 operator|*
 operator|>
 name|GlobalDeclMap
+expr_stmt|;
+comment|// WeakRefReferences - A set of references that have only been seen via
+comment|// a weakref so far. This is used to remove the weak of the reference if we ever
+comment|// see a direct reference or a definition.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+operator|,
+literal|10
+operator|>
+name|WeakRefReferences
 expr_stmt|;
 comment|/// \brief Contains the strings used for mangled names.
 comment|///
@@ -741,6 +763,11 @@ name|getTargetCodeGenInfo
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isTargetDarwin
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getDeclVisibilityMode - Compute the visibility of the decl \arg D.
 name|LangOptions
 operator|::
@@ -972,6 +999,19 @@ name|GlobalDecl
 name|BaseOGD
 parameter_list|)
 function_decl|;
+comment|/// GetWeakRefReference - Get a reference to the target of VD.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetWeakRefReference
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|)
+expr_stmt|;
 comment|/// BuildThunk - Build a thunk for the given method.
 name|llvm
 operator|::

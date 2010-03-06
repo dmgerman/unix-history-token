@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -116,10 +116,6 @@ asm|("" : : "i" (t6));
 block|}
 end_function
 
-begin_comment
-comment|// RUN: grep "T7 NAMED: \$1" %t
-end_comment
-
 begin_function
 name|void
 name|t7
@@ -131,12 +127,10 @@ block|{
 asm|__asm__
 specifier|volatile
 asm|("T7 NAMED: %[input]" : "+r"(a): [input] "i" (4));
+comment|// CHECK: @t7(i32
+comment|// CHECK: T7 NAMED: $1
 block|}
 end_function
-
-begin_comment
-comment|// RUN: grep "T8 NAMED MODIFIER: \${0:c}" %t
-end_comment
 
 begin_function
 name|void
@@ -146,6 +140,8 @@ block|{
 asm|__asm__
 specifier|volatile
 asm|("T8 NAMED MODIFIER: %c[input]" :: [input] "i" (4));
+comment|// CHECK: @t8()
+comment|// CHECK: T8 NAMED MODIFIER: ${0:c}
 block|}
 end_function
 
@@ -173,10 +169,6 @@ begin_comment
 comment|// PR3908
 end_comment
 
-begin_comment
-comment|// RUN: grep "PR3908 \$1 \$3 \$2 \$0" %t
-end_comment
-
 begin_function
 name|void
 name|t10
@@ -186,6 +178,8 @@ name|r
 parameter_list|)
 block|{
 asm|__asm__("PR3908 %[lf] %[xx] %[li] %[r]" : [r] "+r" (r) : [lf] "mx" (0), [li] "mr" (0), [xx] "x" ((double)(0)));
+comment|// CHECK: @t10(
+comment|// CHECK:PR3908 $1 $3 $2 $0
 block|}
 end_function
 
@@ -340,6 +334,54 @@ asm|asm ( "nop;"        :"=%c" (a)        : "r" (b)        );
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// PR6475
+end_comment
+
+begin_function
+name|void
+name|t17
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+asm|__asm__ ( "nop": "=m"(i));
+comment|// CHECK: @t17()
+comment|// CHECK: call void asm "nop", "=*m,
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/6841383>
+end_comment
+
+begin_function
+name|int
+name|t18
+parameter_list|(
+name|unsigned
+name|data
+parameter_list|)
+block|{
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+asm|asm("xyz" :"=a"(a), "=d"(b) : "a"(data));
+return|return
+name|a
+operator|+
+name|b
+return|;
+comment|// CHECK: t18(i32
+comment|// CHECK: = call {{.*}}asm "xyz"
+comment|// CHECK-NEXT: extractvalue
+comment|// CHECK-NEXT: extractvalue
 block|}
 end_function
 

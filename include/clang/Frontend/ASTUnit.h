@@ -284,6 +284,32 @@ literal|4
 operator|>
 name|TemporaryFiles
 expr_stmt|;
+comment|/// \brief Simple hack to allow us to assert that ASTUnit is not being
+comment|/// used concurrently, which is not supported.
+comment|///
+comment|/// Clients should create instances of the ConcurrencyCheck class whenever
+comment|/// using the ASTUnit in a way that isn't intended to be concurrent, which is
+comment|/// just about any usage.
+name|unsigned
+name|int
+name|ConcurrencyCheckValue
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|int
+name|CheckLocked
+init|=
+literal|28573289
+decl_stmt|;
+specifier|static
+specifier|const
+name|unsigned
+name|int
+name|CheckUnlocked
+init|=
+literal|9803453
+decl_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -305,6 +331,62 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|public
 label|:
+name|class
+name|ConcurrencyCheck
+block|{
+specifier|volatile
+name|ASTUnit
+modifier|&
+name|Self
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|ConcurrencyCheck
+argument_list|(
+name|ASTUnit
+operator|&
+name|Self
+argument_list|)
+operator|:
+name|Self
+argument_list|(
+argument|Self
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Self
+operator|.
+name|ConcurrencyCheckValue
+operator|==
+name|CheckUnlocked
+operator|&&
+literal|"Concurrent access to ASTUnit!"
+argument_list|)
+block|;
+name|Self
+operator|.
+name|ConcurrencyCheckValue
+operator|=
+name|CheckLocked
+block|;     }
+operator|~
+name|ConcurrencyCheck
+argument_list|()
+block|{
+name|Self
+operator|.
+name|ConcurrencyCheckValue
+operator|=
+name|CheckUnlocked
+block|;     }
+block|}
+empty_stmt|;
+name|friend
+name|class
+name|ConcurrencyCheck
+decl_stmt|;
 name|ASTUnit
 argument_list|(
 argument|bool MainFileIsAST

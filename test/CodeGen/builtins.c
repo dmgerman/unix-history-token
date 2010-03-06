@@ -923,6 +923,15 @@ name|N
 operator|)
 argument_list|)
 expr_stmt|;
+name|P
+argument_list|(
+name|signbit
+argument_list|,
+operator|(
+literal|1.0
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
