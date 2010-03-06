@@ -275,6 +275,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STATUS_DF
+value|0x20
+end_define
+
+begin_comment
+comment|/* Device fault */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|STATUS_DRQ
 value|0x08
 end_define
@@ -550,7 +561,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cf_cmd_identify
 parameter_list|(
 name|void
@@ -560,7 +571,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cf_cmd_write
 parameter_list|(
 name|uint32_t
@@ -575,7 +586,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cf_cmd_read
 parameter_list|(
 name|uint32_t
@@ -590,7 +601,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cf_wait_busy
 parameter_list|(
 name|void
@@ -600,7 +611,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|cf_send_cmd
 parameter_list|(
 name|uint32_t
@@ -727,6 +738,9 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 comment|/* 	* Handle actual I/O requests. The request is passed down through 	* the bio struct. 	*/
 if|if
 condition|(
@@ -798,6 +812,8 @@ operator|&
 name|BIO_READ
 condition|)
 block|{
+name|error
+operator|=
 name|cf_cmd_read
 argument_list|(
 name|bp
@@ -832,6 +848,8 @@ operator|&
 name|BIO_WRITE
 condition|)
 block|{
+name|error
+operator|=
 name|cf_cmd_write
 argument_list|(
 name|bp
@@ -855,6 +873,40 @@ operator|->
 name|bio_data
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s: unrecognized bio_cmd %x.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|bp
+operator|->
+name|bio_cmd
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOTSUP
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|g_io_deliver
+argument_list|(
+name|bp
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|bp
 operator|->
@@ -921,7 +973,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cf_cmd_read
 parameter_list|(
 name|uint32_t
@@ -949,6 +1001,9 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|ptr_8
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|//#define OCTEON_VISUAL_CF_0 1
 ifdef|#
@@ -989,6 +1044,8 @@ name|nr_sectors
 operator|--
 condition|)
 block|{
+name|error
+operator|=
 name|cf_send_cmd
 argument_list|(
 name|lba
@@ -996,6 +1053,28 @@ argument_list|,
 name|CMD_READ_SECTOR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: cf_send_cmd(CMD_READ_SECTOR) failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|bus_width
@@ -1150,6 +1229,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1159,7 +1243,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cf_cmd_write
 parameter_list|(
 name|uint32_t
@@ -1186,6 +1270,9 @@ decl_stmt|;
 name|uint8_t
 modifier|*
 name|ptr_8
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|//#define OCTEON_VISUAL_CF_1 1
 ifdef|#
@@ -1226,6 +1313,8 @@ name|nr_sectors
 operator|--
 condition|)
 block|{
+name|error
+operator|=
 name|cf_send_cmd
 argument_list|(
 name|lba
@@ -1233,6 +1322,28 @@ argument_list|,
 name|CMD_WRITE_SECTOR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: cf_send_cmd(CMD_WRITE_SECTOR) failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|bus_width
@@ -1389,6 +1500,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1398,7 +1514,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cf_cmd_identify
 parameter_list|(
 name|void
@@ -1409,6 +1525,9 @@ name|count
 decl_stmt|;
 name|uint8_t
 name|status
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -1493,9 +1612,18 @@ index|]
 operator|=
 name|CMD_IDENTIFY
 expr_stmt|;
+name|error
+operator|=
 name|cf_wait_busy
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|count
@@ -1523,6 +1651,7 @@ index|[
 name|TF_DATA
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1602,9 +1731,18 @@ literal|8
 operator|)
 expr_stmt|;
 comment|/* this includes TF_COMMAND */
+name|error
+operator|=
 name|cf_wait_busy
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|count
@@ -1666,6 +1804,29 @@ operator|>>
 literal|8
 expr_stmt|;
 block|}
+block|}
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: identify failed: %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|cf_swap_ascii
 argument_list|(
@@ -1749,6 +1910,11 @@ operator|.
 name|lba_capacity
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1758,7 +1924,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cf_send_cmd
 parameter_list|(
 name|uint32_t
@@ -2005,19 +2171,22 @@ literal|8
 operator|)
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|cf_wait_busy
 argument_list|()
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ------------------------------------------------------------------- *  *                      cf_wait_busy()                                 *  * ------------------------------------------------------------------- *  *  * Wait until the drive finishes a given command and data is  * ready to be transferred. This is done by repeatedly checking   * the BSY and DRQ bits of the status register. When the controller  * is ready for data transfer, it clears the BSY bit and sets the   * DRQ bit.  *  */
+comment|/* ------------------------------------------------------------------- *  *                      cf_wait_busy()                                 *  * ------------------------------------------------------------------- *  *  * Wait until the drive finishes a given command and data is  * ready to be transferred. This is done by repeatedly checking   * the BSY bit of the status register. When the controller is ready for  * data transfer, it clears the BSY bit and sets the DRQ bit.  *  * If the DF bit is ever set, we return error.  *  * This code originally spun on DRQ.  If that behavior turns out to be  * necessary, a flag can be added or this function can be called  * repeatedly as long as it is returning ENXIO.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|cf_wait_busy
 parameter_list|(
 name|void
@@ -2083,16 +2252,34 @@ name|STATUS_BSY
 operator|)
 operator|==
 name|STATUS_BSY
-operator|||
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|status
 operator|&
-name|STATUS_DRQ
+name|STATUS_DF
 operator|)
 operator|!=
-name|STATUS_DRQ
+literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"%s: device fault (status=%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 name|DELAY
 argument_list|(
 name|WAIT_DELAY
@@ -2143,16 +2330,34 @@ name|STATUS_BSY
 operator|)
 operator|==
 name|STATUS_BSY
-operator|||
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|status
 operator|&
-name|STATUS_DRQ
+name|STATUS_DF
 operator|)
 operator|!=
-name|STATUS_DRQ
+literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"%s: device fault (status=%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 name|DELAY
 argument_list|(
 name|WAIT_DELAY
@@ -2176,6 +2381,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|STATUS_DRQ
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: device not ready (status=%x)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|OCTEON_VISUAL_CF_2
@@ -2188,6 +2419,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2288,12 +2524,10 @@ argument_list|,
 literal|"Octeon Compact Flash Driver"
 argument_list|)
 expr_stmt|;
-name|cf_cmd_identify
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|cf_cmd_identify
+argument_list|()
 operator|)
 return|;
 block|}
