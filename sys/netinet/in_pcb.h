@@ -1283,6 +1283,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INP_INFO_TRY_UPGRADE
+parameter_list|(
+name|ipi
+parameter_list|)
+value|rw_try_upgrade(&(ipi)->ipi_lock)
+end_define
+
+begin_define
+define|#
+directive|define
 name|INP_INFO_RUNLOCK
 parameter_list|(
 name|ipi
