@@ -933,7 +933,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Maximum line length (%zu) exceeded"
+literal|"Maximum line length (%d) exceeded"
 argument_list|,
 name|LINE_MAX
 argument_list|)
@@ -1010,7 +1010,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Maximum line length (%zu) exceeded"
+literal|"Maximum line length (%d) exceeded"
 argument_list|,
 name|LINE_MAX
 argument_list|)
