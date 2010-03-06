@@ -483,6 +483,21 @@ name|Context
 argument_list|)
 return|;
 block|}
+specifier|const
+name|Type
+modifier|*
+name|getInt8PtrTy
+parameter_list|()
+block|{
+return|return
+name|Type
+operator|::
+name|getInt8PtrTy
+argument_list|(
+name|Context
+argument_list|)
+return|;
+block|}
 comment|/// getCurrentFunctionReturnType - Get the return type of the current function
 comment|/// that we're emitting into.
 specifier|const

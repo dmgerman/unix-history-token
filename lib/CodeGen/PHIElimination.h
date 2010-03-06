@@ -344,44 +344,6 @@ literal|4
 operator|>
 name|ImpDefs
 expr_stmt|;
-comment|// Lowered PHI nodes may be reused. We provide special DenseMap traits to
-comment|// match PHI nodes with identical arguments.
-name|struct
-name|PHINodeTraits
-range|:
-name|public
-name|DenseMapInfo
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-block|{
-specifier|static
-name|unsigned
-name|getHashValue
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|PtrVal
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|isEqual
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|LHS
-argument_list|,
-specifier|const
-name|MachineInstr
-operator|*
-name|RHS
-argument_list|)
-block|;     }
-decl_stmt|;
 comment|// Map reusable lowered PHI node -> incoming join register.
 typedef|typedef
 name|DenseMap
@@ -391,7 +353,7 @@ operator|*
 operator|,
 name|unsigned
 operator|,
-name|PHINodeTraits
+name|MachineInstrExpressionTrait
 operator|>
 name|LoweredPHIMap
 expr_stmt|;

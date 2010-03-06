@@ -898,14 +898,6 @@ operator|*
 name|N
 argument_list|)
 block|;
-name|void
-name|CannotYetSelectIntrinsic
-argument_list|(
-name|SDNode
-operator|*
-name|N
-argument_list|)
-block|;
 name|private
 operator|:
 name|void

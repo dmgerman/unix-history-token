@@ -432,6 +432,16 @@ name|use_end
 argument_list|()
 return|;
 block|}
+comment|/// hasOneUse - Return true if there is exactly one instruction using the
+comment|/// specified register.
+name|bool
+name|hasOneUse
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// use_nodbg_iterator/use_nodbg_begin/use_nodbg_end - Walk all uses of the
 comment|/// specified register, skipping those marked as Debug.
 typedef|typedef
@@ -495,6 +505,16 @@ name|use_nodbg_end
 argument_list|()
 return|;
 block|}
+comment|/// hasOneNonDBGUse - Return true if there is exactly one non-Debug
+comment|/// instruction using the specified register.
+name|bool
+name|hasOneNonDBGUse
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// replaceRegWith - Replace all instances of FromReg with ToReg in the
 comment|/// machine function.  This is like llvm-level X->replaceAllUsesWith(Y),
 comment|/// except that it also changes any definitions of the register as well.

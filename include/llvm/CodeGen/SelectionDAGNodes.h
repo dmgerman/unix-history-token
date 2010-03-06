@@ -2388,6 +2388,13 @@ name|OperandsNeedDelete
 range|:
 literal|1
 decl_stmt|;
+comment|/// HasDebugValue - This tracks whether this node has one or more dbg_value
+comment|/// nodes corresponding to it.
+name|uint16_t
+name|HasDebugValue
+range|:
+literal|1
+decl_stmt|;
 name|protected
 label|:
 comment|/// SubclassData - This member is defined by this class, but is not used for
@@ -2396,7 +2403,7 @@ comment|/// This field is initialized to zero by the ctor.
 name|uint16_t
 name|SubclassData
 range|:
-literal|15
+literal|14
 decl_stmt|;
 name|private
 label|:
@@ -2541,6 +2548,29 @@ return|return
 operator|~
 name|NodeType
 return|;
+block|}
+comment|/// getHasDebugValue - get this bit.
+name|bool
+name|getHasDebugValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDebugValue
+return|;
+block|}
+comment|/// setHasDebugValue - set this bit.
+name|void
+name|setHasDebugValue
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|HasDebugValue
+operator|=
+name|b
+expr_stmt|;
 block|}
 comment|/// use_empty - Return true if there are no uses of this node.
 comment|///
@@ -3928,6 +3958,11 @@ operator|,
 name|OperandsNeedDelete
 argument_list|(
 name|true
+argument_list|)
+operator|,
+name|HasDebugValue
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|SubclassData

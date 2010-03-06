@@ -2835,14 +2835,33 @@ name|ComplexPattern
 operator|&
 name|Pattern
 block|;
+comment|/// MatchNumber - This is the recorded nodes slot that contains the node we want to
+comment|/// match against.
+name|unsigned
+name|MatchNumber
+block|;
+comment|/// Name - The name of the node we're matching, for comment emission.
+name|std
+operator|::
+name|string
+name|Name
+block|;
+comment|/// FirstResult - This is the first slot in the RecordedNodes list that the
+comment|/// result of the match populates.
+name|unsigned
+name|FirstResult
+block|;
 name|public
 operator|:
 name|CheckComplexPatMatcher
 argument_list|(
-specifier|const
-name|ComplexPattern
-operator|&
-name|pattern
+argument|const ComplexPattern&pattern
+argument_list|,
+argument|unsigned matchnumber
+argument_list|,
+argument|const std::string&name
+argument_list|,
+argument|unsigned firstresult
 argument_list|)
 operator|:
 name|Matcher
@@ -2852,7 +2871,22 @@ argument_list|)
 block|,
 name|Pattern
 argument_list|(
-argument|pattern
+name|pattern
+argument_list|)
+block|,
+name|MatchNumber
+argument_list|(
+name|matchnumber
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|name
+argument_list|)
+block|,
+name|FirstResult
+argument_list|(
+argument|firstresult
 argument_list|)
 block|{}
 specifier|const
@@ -2864,6 +2898,36 @@ specifier|const
 block|{
 return|return
 name|Pattern
+return|;
+block|}
+name|unsigned
+name|getMatchNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MatchNumber
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|string
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+name|unsigned
+name|getFirstResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FirstResult
 return|;
 block|}
 specifier|static
@@ -2928,6 +2992,18 @@ name|Pattern
 operator|==
 operator|&
 name|Pattern
+operator|&&
+name|cast
+operator|<
+name|CheckComplexPatMatcher
+operator|>
+operator|(
+name|M
+operator|)
+operator|->
+name|MatchNumber
+operator|==
+name|MatchNumber
 return|;
 block|}
 name|virtual
@@ -2945,6 +3021,8 @@ name|intptr_t
 argument_list|)
 operator|&
 name|Pattern
+operator|^
+name|MatchNumber
 return|;
 block|}
 expr|}

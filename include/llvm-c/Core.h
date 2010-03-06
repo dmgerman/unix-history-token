@@ -227,6 +227,12 @@ literal|1
 operator|<<
 literal|15
 block|,
+name|LLVMAlignment
+init|=
+literal|31
+operator|<<
+literal|16
+block|,
 name|LLVMNoCaptureAttribute
 init|=
 literal|1
@@ -256,6 +262,12 @@ init|=
 literal|1
 operator|<<
 literal|25
+block|,
+name|LLVMStackAlignment
+init|=
+literal|7
+operator|<<
+literal|26
 block|}
 name|LLVMAttribute
 typedef|;

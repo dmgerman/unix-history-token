@@ -93,6 +93,9 @@ name|class
 name|TargetInstrDesc
 decl_stmt|;
 name|class
+name|SDDbgValue
+decl_stmt|;
+name|class
 name|InstrEmitter
 block|{
 name|MachineFunction
@@ -355,6 +358,38 @@ parameter_list|(
 name|SDNode
 modifier|*
 name|Node
+parameter_list|)
+function_decl|;
+comment|/// EmitDbgValue - Generate any debug info that refers to this Node.  Constant
+comment|/// dbg_value is not handled here.
+name|void
+name|EmitDbgValue
+argument_list|(
+name|SDNode
+operator|*
+name|Node
+argument_list|,
+name|DenseMap
+operator|<
+name|SDValue
+argument_list|,
+name|unsigned
+operator|>
+operator|&
+name|VRBaseMap
+argument_list|,
+name|SDDbgValue
+operator|*
+name|sd
+argument_list|)
+decl_stmt|;
+comment|/// EmitDbgValue - Generate a constant DBG_VALUE.  No node is involved.
+name|void
+name|EmitDbgValue
+parameter_list|(
+name|SDDbgValue
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 comment|/// EmitNode - Generate machine code for a node and needed dependencies.

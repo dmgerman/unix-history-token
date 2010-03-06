@@ -417,6 +417,16 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
+comment|/// GetStringLength - If we can compute the length of the string pointed to by
+comment|/// the specified pointer, return 'len+1'.  If we can't, return 0.
+name|uint64_t
+name|GetStringLength
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

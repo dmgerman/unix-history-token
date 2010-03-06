@@ -461,24 +461,20 @@ begin_comment
 comment|// method "always inline" because it is performance sensitive.
 end_comment
 
+begin_comment
+comment|// GCC 3.4 supported this but is buggy in various cases and produces
+end_comment
+
+begin_comment
+comment|// unimplemented errors, just use it in GCC 4.0 and later.
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|(
 name|__GNUC__
 operator|>
 literal|3
-operator|||
-operator|(
-name|__GNUC__
-operator|==
-literal|3
-operator|&&
-name|__GNUC_MINOR__
-operator|>=
-literal|4
-operator|)
-operator|)
 end_if
 
 begin_define

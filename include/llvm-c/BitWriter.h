@@ -34,18 +34,7 @@ block|{
 endif|#
 directive|endif
 comment|/*===-- Operations on modules ---------------------------------------------===*/
-comment|/* Writes a module to an open file descriptor. Returns 0 on success.    Closes the Handle. Use dup first if this is not what you want. */
-name|int
-name|LLVMWriteBitcodeToFileHandle
-parameter_list|(
-name|LLVMModuleRef
-name|M
-parameter_list|,
-name|int
-name|Handle
-parameter_list|)
-function_decl|;
-comment|/* Writes a module to the specified path. Returns 0 on success. */
+comment|/** Writes a module to the specified path. Returns 0 on success. */
 name|int
 name|LLVMWriteBitcodeToFile
 parameter_list|(
@@ -56,6 +45,34 @@ specifier|const
 name|char
 modifier|*
 name|Path
+parameter_list|)
+function_decl|;
+comment|/** Writes a module to an open file descriptor. Returns 0 on success. */
+name|int
+name|LLVMWriteBitcodeToFD
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|int
+name|FD
+parameter_list|,
+name|int
+name|ShouldClose
+parameter_list|,
+name|int
+name|Unbuffered
+parameter_list|)
+function_decl|;
+comment|/** Deprecated for LLVMWriteBitcodeToFD. Writes a module to an open file     descriptor. Returns 0 on success. Closes the Handle. */
+name|int
+name|LLVMWriteBitcodeToFileHandle
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|int
+name|Handle
 parameter_list|)
 function_decl|;
 ifdef|#

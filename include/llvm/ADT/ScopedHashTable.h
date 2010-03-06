@@ -738,7 +738,7 @@ name|TopLevelMap
 index|[
 name|Key
 index|]
-operator|.
+operator|->
 name|getValue
 argument_list|()
 return|;

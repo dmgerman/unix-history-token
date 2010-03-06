@@ -339,7 +339,7 @@ end_comment
 begin_function
 name|CAMLprim
 name|value
-name|llvm_genericvalue_of_value
+name|llvm_genericvalue_of_pointer
 parameter_list|(
 name|value
 name|V
@@ -575,7 +575,7 @@ end_comment
 begin_function
 name|CAMLprim
 name|value
-name|llvm_genericvalue_as_value
+name|llvm_genericvalue_as_pointer
 parameter_list|(
 name|value
 name|GenVal
@@ -988,7 +988,7 @@ end_comment
 begin_function
 name|CAMLprim
 name|value
-name|llvm_ee_add_mp
+name|llvm_ee_add_module
 parameter_list|(
 name|LLVMModuleRef
 name|M
@@ -1017,7 +1017,7 @@ end_comment
 begin_function
 name|CAMLprim
 name|LLVMModuleRef
-name|llvm_ee_remove_mp
+name|llvm_ee_remove_module
 parameter_list|(
 name|LLVMModuleRef
 name|M
