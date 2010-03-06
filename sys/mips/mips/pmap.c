@@ -879,7 +879,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This structure is for large memory  * above 512Meg. We can't (in 32 bit mode)  * just use the direct mapped MIPS_CACHED_TO_PHYS()  * macros since we can't see the memory and must  * map it in when we need to access it. In 64  * bit mode this goes away.  */
+comment|/* This structure is for large memory  * above 512Meg. We can't (in 32 bit mode)  * just use the direct mapped MIPS_KSEG0_TO_PHYS()  * macros since we can't see the memory and must  * map it in when we need to access it. In 64  * bit mode this goes away.  */
 end_comment
 
 begin_decl_stmt
@@ -1178,7 +1178,7 @@ expr_stmt|;
 block|}
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|pa
 argument_list|)
@@ -3888,7 +3888,7 @@ name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|pteva
 argument_list|)
@@ -4098,7 +4098,7 @@ operator|(
 name|pd_entry_t
 operator|*
 operator|)
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -4388,7 +4388,7 @@ argument_list|)
 expr_stmt|;
 name|pteva
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|ptepa
 argument_list|)
@@ -4560,7 +4560,7 @@ name|m
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|pteva
 argument_list|)
@@ -4663,7 +4663,7 @@ name|ptdpg
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|pmap
 operator|->
@@ -4966,7 +4966,7 @@ operator|(
 name|pt_entry_t
 operator|*
 operator|)
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|ptppaddr
 argument_list|)
@@ -7915,7 +7915,7 @@ name|mpte
 operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|pteva
 argument_list|)
@@ -8239,7 +8239,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|pa
 argument_list|)
@@ -8861,7 +8861,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phys
 argument_list|)
@@ -9145,7 +9145,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phys
 argument_list|)
@@ -9392,7 +9392,7 @@ condition|)
 block|{
 name|va
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phys
 argument_list|)
@@ -9734,7 +9734,7 @@ argument_list|)
 expr_stmt|;
 name|mips_dcache_wbinv_range_index
 argument_list|(
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phy_dst
 argument_list|)
@@ -9744,14 +9744,14 @@ argument_list|)
 expr_stmt|;
 name|va_src
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phy_src
 argument_list|)
 expr_stmt|;
 name|va_dst
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phy_dst
 argument_list|)
@@ -9827,7 +9827,7 @@ block|{
 comment|/* one side needs mapping - dest */
 name|va_src
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phy_src
 argument_list|)
@@ -9892,7 +9892,7 @@ block|{
 comment|/* one side needs mapping - src */
 name|va_dst
 operator|=
-name|MIPS_PHYS_TO_CACHED
+name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|phy_dst
 argument_list|)
@@ -13437,7 +13437,7 @@ if|if
 condition|(
 name|va
 operator|<
-name|MIPS_CACHED_MEMORY_ADDR
+name|MIPS_KSEG0_START
 condition|)
 block|{
 comment|/* user virtual address */
@@ -13493,15 +13493,15 @@ if|if
 condition|(
 name|va
 operator|>=
-name|MIPS_CACHED_MEMORY_ADDR
+name|MIPS_KSEG0_START
 operator|&&
 name|va
 operator|<
-name|MIPS_UNCACHED_MEMORY_ADDR
+name|MIPS_KSEG1_START
 condition|)
 name|pa
 operator|=
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|va
 argument_list|)
@@ -13511,7 +13511,7 @@ if|if
 condition|(
 name|va
 operator|>=
-name|MIPS_UNCACHED_MEMORY_ADDR
+name|MIPS_KSEG1_START
 operator|&&
 name|va
 operator|<
@@ -13519,7 +13519,7 @@ name|MIPS_KSEG2_START
 condition|)
 name|pa
 operator|=
-name|MIPS_UNCACHED_TO_PHYS
+name|MIPS_KSEG1_TO_PHYS
 argument_list|(
 name|va
 argument_list|)
@@ -13552,7 +13552,7 @@ operator|)
 condition|)
 name|pa
 operator|=
-name|MIPS_CACHED_TO_PHYS
+name|MIPS_KSEG0_TO_PHYS
 argument_list|(
 name|va
 argument_list|)
