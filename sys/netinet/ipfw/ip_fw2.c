@@ -9759,7 +9759,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* run the callout_drain */
-name|ipfw_flush_tables
+name|ipfw_destroy_tables
 argument_list|(
 name|chain
 argument_list|)
