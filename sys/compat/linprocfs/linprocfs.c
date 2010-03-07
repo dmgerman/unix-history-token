@@ -5485,6 +5485,47 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Filler function for proc/pid/fd  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|linprocfs_dofdescfs
+parameter_list|(
+name|PFS_FILL_ARGS
+parameter_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|==
+name|curproc
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"/dev/fd"
+argument_list|)
+expr_stmt|;
+else|else
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"unknown"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Constructor  */
 end_comment
 
@@ -5972,6 +6013,24 @@ argument_list|,
 name|NULL
 argument_list|,
 name|PFS_RD
+argument_list|)
+expr_stmt|;
+name|pfs_create_link
+argument_list|(
+name|dir
+argument_list|,
+literal|"fd"
+argument_list|,
+operator|&
+name|linprocfs_dofdescfs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* /proc/scsi/... */
