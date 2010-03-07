@@ -779,7 +779,7 @@ begin_decl_stmt
 name|int
 name|Qflag
 init|=
-literal|0
+name|RTF_PROTO2
 decl_stmt|;
 end_decl_stmt
 
@@ -2008,17 +2008,9 @@ name|ep
 operator|!=
 literal|'\0'
 operator|||
-operator|(
-name|proto
-operator|<
-literal|1
-operator|)
-operator|||
-operator|(
 literal|3
 operator|<
 name|proto
-operator|)
 condition|)
 block|{
 name|fatal
@@ -2028,6 +2020,16 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|if
+condition|(
+name|proto
+operator|==
+literal|0
+condition|)
+name|Pflag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|proto
@@ -2088,17 +2090,9 @@ name|ep
 operator|!=
 literal|'\0'
 operator|||
-operator|(
-name|proto
-operator|<
-literal|1
-operator|)
-operator|||
-operator|(
 literal|3
 operator|<
 name|proto
-operator|)
 condition|)
 block|{
 name|fatal
@@ -2108,6 +2102,16 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|if
+condition|(
+name|proto
+operator|==
+literal|0
+condition|)
+name|Qflag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|proto
@@ -14198,6 +14202,22 @@ condition|)
 return|return;
 endif|#
 directive|endif
+comment|/* Ignore RTF_PROTO<num> mismached routes */
+comment|/* 	 * XXX: can we know if it is a connected network route or not? 	 *      RTF_WASCLONED was the flag for that, but we no longer 	 *      use it.  Rely on Qflag instead here. 	 */
+if|if
+condition|(
+name|Qflag
+operator|&&
+operator|!
+operator|(
+name|rtm
+operator|->
+name|rtm_flags
+operator|&
+name|Qflag
+operator|)
+condition|)
+return|return;
 comment|/* 	 * do not look at dynamic routes. 	 * netbsd/openbsd cloned routes have UGHD. 	 */
 if|if
 condition|(
