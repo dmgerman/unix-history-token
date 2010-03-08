@@ -8383,6 +8383,11 @@ name|NULL
 condition|)
 block|{
 comment|/* FIFO already exist, don't touch it */
+name|err
+operator|=
+literal|0
+expr_stmt|;
+comment|/* and this is not an error */
 goto|goto
 name|error
 goto|;
