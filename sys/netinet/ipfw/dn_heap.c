@@ -1307,7 +1307,7 @@ name|void
 modifier|*
 function_decl|(
 modifier|*
-name|new
+name|newh
 function_decl|)
 parameter_list|(
 name|uintptr_t
@@ -1329,7 +1329,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Initialize, allocating bucket pointers inline.  * Recycle previous record if possible.  * If the 'new' function is not supplied, we assume that the  * key passed to ht_find is the same object to be stored in.  */
+comment|/*  * Initialize, allocating bucket pointers inline.  * Recycle previous record if possible.  * If the 'newh' function is not supplied, we assume that the  * key passed to ht_find is the same object to be stored in.  */
 end_comment
 
 begin_function
@@ -1384,7 +1384,7 @@ name|void
 modifier|*
 function_decl|(
 modifier|*
-name|new
+name|newh
 function_decl|)
 parameter_list|(
 name|uintptr_t
@@ -1664,9 +1664,9 @@ name|match
 expr_stmt|;
 name|ht
 operator|->
-name|new
+name|newh
 operator|=
-name|new
+name|newh
 expr_stmt|;
 block|}
 return|return
@@ -2029,11 +2029,11 @@ name|p
 operator|=
 name|ht
 operator|->
-name|new
+name|newh
 condition|?
 name|ht
 operator|->
-name|new
+name|newh
 argument_list|(
 name|key
 argument_list|,
@@ -2048,7 +2048,7 @@ operator|*
 operator|)
 name|key
 expr_stmt|;
-comment|// printf("%s new returns %p\n", __FUNCTION__, p);
+comment|// printf("%s newh returns %p\n", __FUNCTION__, p);
 if|if
 condition|(
 name|p
