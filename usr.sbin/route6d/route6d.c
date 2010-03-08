@@ -272,6 +272,13 @@ name|MAXFILTER
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|RT_DUMP_MAXRETRY
+value|15
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -13973,6 +13980,15 @@ expr_stmt|;
 comment|/* No flags */
 do|do
 block|{
+if|if
+condition|(
+name|retry
+condition|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|retry
 operator|++
 expr_stmt|;
@@ -14068,7 +14084,7 @@ do|while
 condition|(
 name|retry
 operator|<
-literal|15
+name|RT_DUMP_MAXRETRY
 operator|&&
 name|errmsg
 operator|!=
@@ -14288,22 +14304,6 @@ condition|)
 return|return;
 endif|#
 directive|endif
-comment|/* Ignore RTF_PROTO<num> mismached routes */
-comment|/* 	 * XXX: can we know if it is a connected network route or not? 	 *      RTF_WASCLONED was the flag for that, but we no longer 	 *      use it.  Rely on Qflag instead here. 	 */
-if|if
-condition|(
-name|Qflag
-operator|&&
-operator|!
-operator|(
-name|rtm
-operator|->
-name|rtm_flags
-operator|&
-name|Qflag
-operator|)
-condition|)
-return|return;
 comment|/* XXX: Ignore connected routes. */
 if|if
 condition|(
@@ -14313,7 +14313,13 @@ name|rtm
 operator|->
 name|rtm_flags
 operator|&
+operator|(
 name|RTF_GATEWAY
+operator||
+name|RTF_HOST
+operator||
+name|RTF_STATIC
+operator|)
 operator|)
 condition|)
 return|return;
@@ -15867,6 +15873,12 @@ operator|=
 name|RTF_UP
 operator||
 name|RTF_GATEWAY
+expr_stmt|;
+name|rtm
+operator|->
+name|rtm_flags
+operator||=
+name|Qflag
 expr_stmt|;
 if|if
 condition|(
