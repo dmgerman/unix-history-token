@@ -1149,6 +1149,27 @@ operator|->
 name|mr_addr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rec
+operator|->
+name|mr_status
+operator|&
+name|MC_STATUS_MISCV
+condition|)
+name|printf
+argument_list|(
+literal|"MCA: Misc 0x%llx\n"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|rec
+operator|->
+name|mr_misc
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
