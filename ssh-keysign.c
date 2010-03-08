@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.29 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.30 2010/01/13 01:20:20 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1070,7 +1070,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"cannot get sockname for fd"
+literal|"cannot get local name for fd"
 argument_list|)
 expr_stmt|;
 name|data

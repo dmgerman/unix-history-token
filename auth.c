@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.80 2008/11/04 07:58:09 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.86 2010/03/05 02:58:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -257,6 +257,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"authfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"monitor_wrap.h"
 end_include
 
@@ -344,10 +350,6 @@ modifier|*
 name|passwd
 init|=
 name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|shell
 decl_stmt|;
 name|u_int
 name|i
@@ -576,9 +578,33 @@ literal|0
 return|;
 block|}
 block|}
-comment|/* 	 * Get the shell from the password data.  An empty shell field is 	 * legal, and means /bin/sh. 	 */
+comment|/* 	 * Deny if shell does not exist or is not executable unless we 	 * are chrooting. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|chroot_directory
+operator|==
+name|NULL
+operator|||
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|chroot_directory
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|char
+modifier|*
 name|shell
-operator|=
+init|=
+name|xstrdup
+argument_list|(
 operator|(
 name|pw
 operator|->
@@ -595,8 +621,9 @@ else|:
 name|pw
 operator|->
 name|pw_shell
-expr_stmt|;
-comment|/* deny if shell does not exists or is not executable */
+argument_list|)
+decl_stmt|;
+comment|/* empty = /bin/sh */
 if|if
 condition|(
 name|stat
@@ -612,12 +639,18 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because shell %.100s does not exist"
+literal|"User %.100s not allowed because shell %.100s "
+literal|"does not exist"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
 argument_list|,
+name|shell
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
 name|shell
 argument_list|)
 expr_stmt|;
@@ -655,7 +688,8 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %.100s not allowed because shell %.100s is not executable"
+literal|"User %.100s not allowed because shell %.100s "
+literal|"is not executable"
 argument_list|,
 name|pw
 operator|->
@@ -664,9 +698,20 @@ argument_list|,
 name|shell
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|shell
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+name|xfree
+argument_list|(
+name|shell
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2007,7 +2052,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* If are passed the homedir then we can stop */
+comment|/* If are past the homedir then we can stop */
 if|if
 condition|(
 name|comparehome
@@ -2119,9 +2164,29 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+name|debug
+argument_list|(
+literal|"Could not open keyfile '%s': %s"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 if|if
 condition|(
 name|fstat
@@ -2306,6 +2371,24 @@ name|get_remote_ipaddr
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETAUTHDB
+argument_list|)
+name|aix_setauthdb
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pw
 operator|=
 name|getpwnam
@@ -2313,6 +2396,62 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETAUTHDB
+argument_list|)
+name|aix_restoreauthdb
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+comment|/* 	 * Windows usernames are case-insensitive.  To avoid later problems 	 * when trying to match the username, the user is only allowed to 	 * login if the username is given in the same case as stored in the 	 * user database. 	 */
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|user
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|logit
+argument_list|(
+literal|"Login name %.100s does not match stored username %.100s"
+argument_list|,
+name|user
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+name|pw
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pw
@@ -2496,6 +2635,114 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns 1 if key is revoked by revoked_keys_file, 0 otherwise */
+end_comment
+
+begin_function
+name|int
+name|auth_key_is_revoked
+parameter_list|(
+name|Key
+modifier|*
+name|key
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|key_fp
+decl_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|revoked_keys_file
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+switch|switch
+condition|(
+name|key_in_file
+argument_list|(
+name|key
+argument_list|,
+name|options
+operator|.
+name|revoked_keys_file
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* key not revoked */
+return|return
+literal|0
+return|;
+case|case
+operator|-
+literal|1
+case|:
+comment|/* Error opening revoked_keys_file: refuse all keys */
+name|error
+argument_list|(
+literal|"Revoked keys file is unreadable: refusing public key "
+literal|"authentication"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+case|case
+literal|1
+case|:
+comment|/* Key revoked */
+name|key_fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"WARNING: authentication attempt with a revoked "
+literal|"%s key %s "
+argument_list|,
+name|key_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|key_fp
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|key_fp
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|fatal
+argument_list|(
+literal|"key_in_file returned junk"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_fdpass.c,v 1.18 2008/11/30 11:59:26 dtucker Exp $ */
+comment|/* $OpenBSD: monitor_fdpass.c,v 1.19 2010/01/12 00:58:25 djm Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,23 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_POLL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<poll.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -153,6 +170,10 @@ literal|'\0'
 decl_stmt|;
 name|ssize_t
 name|n
+decl_stmt|;
+name|struct
+name|pollfd
+name|pfd
 decl_stmt|;
 name|memset
 argument_list|(
@@ -286,6 +307,18 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+name|pfd
+operator|.
+name|fd
+operator|=
+name|sock
+expr_stmt|;
+name|pfd
+operator|.
+name|events
+operator|=
+name|POLLOUT
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -315,6 +348,7 @@ operator|==
 name|EINTR
 operator|)
 condition|)
+block|{
 name|debug3
 argument_list|(
 literal|"%s: sendmsg(%d): %s"
@@ -329,6 +363,21 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|poll
+argument_list|(
+operator|&
+name|pfd
+argument_list|,
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|n
@@ -475,6 +524,10 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|struct
+name|pollfd
+name|pfd
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -560,6 +613,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|pfd
+operator|.
+name|fd
+operator|=
+name|sock
+expr_stmt|;
+name|pfd
+operator|.
+name|events
+operator|=
+name|POLLIN
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -589,6 +654,7 @@ operator|==
 name|EINTR
 operator|)
 condition|)
+block|{
 name|debug3
 argument_list|(
 literal|"%s: recvmsg: %s"
@@ -601,6 +667,21 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|poll
+argument_list|(
+operator|&
+name|pfd
+argument_list|,
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|n

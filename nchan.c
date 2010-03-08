@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: nchan.c,v 1.62 2008/11/07 18:50:18 stevesk Exp $ */
+comment|/* $OpenBSD: nchan.c,v 1.63 2010/01/26 01:28:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -579,7 +579,11 @@ name|c
 operator|->
 name|flags
 operator|&
+operator|(
 name|CHAN_CLOSE_SENT
+operator||
+name|CHAN_LOCAL
+operator|)
 operator|)
 condition|)
 name|chan_send_eof2
@@ -1043,6 +1047,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHAN_LOCAL
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|c
 operator|->
 name|flags
@@ -1064,6 +1080,7 @@ name|flags
 operator||=
 name|CHAN_CLOSE_RCVD
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -1136,6 +1153,17 @@ break|break;
 case|case
 name|CHAN_INPUT_WAIT_DRAIN
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHAN_LOCAL
+operator|)
+condition|)
 name|chan_send_eof2
 argument_list|(
 name|c
@@ -1826,6 +1854,28 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+if|if
+condition|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHAN_LOCAL
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"channel %d: is dead (local)"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 if|if

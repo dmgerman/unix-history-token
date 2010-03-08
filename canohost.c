@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: canohost.c,v 1.65 2009/05/27 06:31:25 andreas Exp $ */
+comment|/* $OpenBSD: canohost.c,v 1.66 2010/01/13 01:20:20 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1360,18 +1366,79 @@ modifier|*
 name|get_local_name
 parameter_list|(
 name|int
-name|sock
+name|fd
 parameter_list|)
 block|{
-return|return
+name|char
+modifier|*
+name|host
+decl_stmt|,
+name|myname
+index|[
+name|NI_MAXHOST
+index|]
+decl_stmt|;
+comment|/* Assume we were passed a socket */
+if|if
+condition|(
+operator|(
+name|host
+operator|=
 name|get_socket_address
 argument_list|(
-name|sock
+name|fd
 argument_list|,
 literal|0
 argument_list|,
 name|NI_NAMEREQD
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|host
+return|;
+comment|/* Handle the case where we were passed a pipe */
+if|if
+condition|(
+name|gethostname
+argument_list|(
+name|myname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|myname
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"get_local_name: gethostname: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|host
+operator|=
+name|xstrdup
+argument_list|(
+name|myname
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|host
 return|;
 block|}
 end_function

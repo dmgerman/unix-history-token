@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.78 2009/01/22 10:02:34 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.81 2010/01/09 23:04:13 dtucker Exp $ */
 end_comment
 
 begin_comment

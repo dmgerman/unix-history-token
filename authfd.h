@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.h,v 1.36 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: authfd.h,v 1.37 2009/08/27 17:44:52 djm Exp $ */
 end_comment
 
 begin_comment
@@ -350,23 +350,6 @@ modifier|*
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ssh_add_identity
-parameter_list|(
-name|AuthenticationConnection
-modifier|*
-parameter_list|,
-name|Key
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

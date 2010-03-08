@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pathnames.h,v 1.17 2008/12/29 02:23:26 stevesk Exp $ */
+comment|/* $OpenBSD: pathnames.h,v 1.19 2010/02/11 20:37:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -322,6 +322,28 @@ define|#
 directive|define
 name|_PATH_SSH_KEY_SIGN
 value|"/usr/libexec/ssh-keysign"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Location of ssh-pkcs11-helper to support keys in tokens */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SSH_PKCS11_HELPER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SSH_PKCS11_HELPER
+value|"/usr/libexec/ssh-pkcs11-helper"
 end_define
 
 begin_endif

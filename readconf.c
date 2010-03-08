@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.c,v 1.177 2009/06/27 09:35:06 andreas Exp $ */
+comment|/* $OpenBSD: readconf.c,v 1.183 2010/02/08 10:50:20 markus Exp $ */
 end_comment
 
 begin_comment
@@ -269,7 +269,7 @@ name|oHostKeyAlgorithms
 block|,
 name|oBindAddress
 block|,
-name|oSmartcardDevice
+name|oPKCS11Provider
 block|,
 name|oClearAllForwardings
 block|,
@@ -737,17 +737,29 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|SMARTCARD
+name|ENABLE_PKCS11
 block|{
 literal|"smartcarddevice"
 block|,
-name|oSmartcardDevice
+name|oPKCS11Provider
+block|}
+block|,
+block|{
+literal|"pkcs11provider"
+block|,
+name|oPKCS11Provider
 block|}
 block|,
 else|#
 directive|else
 block|{
 literal|"smartcarddevice"
+block|,
+name|oUnsupported
+block|}
+block|,
+block|{
+literal|"pkcs11provider"
 block|,
 name|oUnsupported
 block|}
@@ -2660,14 +2672,14 @@ goto|goto
 name|parse_string
 goto|;
 case|case
-name|oSmartcardDevice
+name|oPKCS11Provider
 case|:
 name|charptr
 operator|=
 operator|&
 name|options
 operator|->
-name|smartcard_device
+name|pkcs11_provider
 expr_stmt|;
 goto|goto
 name|parse_string
@@ -5072,7 +5084,7 @@ name|NULL
 expr_stmt|;
 name|options
 operator|->
-name|smartcard_device
+name|pkcs11_provider
 operator|=
 name|NULL
 expr_stmt|;
@@ -5647,8 +5659,6 @@ name|options
 operator|->
 name|protocol
 operator|=
-name|SSH_PROTO_1
-operator||
 name|SSH_PROTO_2
 expr_stmt|;
 if|if

@@ -391,6 +391,16 @@ argument_list|,
 name|dialog
 argument_list|)
 expr_stmt|;
+name|gtk_window_set_keep_above
+argument_list|(
+name|GTK_WINDOW
+argument_list|(
+name|dialog
+argument_list|)
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 comment|/* Grab focus */
 name|gtk_widget_show_now
 argument_list|(

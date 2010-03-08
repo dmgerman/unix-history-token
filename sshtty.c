@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshtty.c,v 1.13 2008/05/19 15:45:07 djm Exp $ */
+comment|/* $OpenBSD: sshtty.c,v 1.14 2010/01/09 05:04:24 djm Exp $ */
 end_comment
 
 begin_comment
@@ -88,7 +88,8 @@ begin_function
 name|void
 name|leave_raw_mode
 parameter_list|(
-name|void
+name|int
+name|quiet
 parameter_list|)
 block|{
 if|if
@@ -115,11 +116,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|perror
 argument_list|(
 literal|"tcsetattr"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|_in_raw_mode
 operator|=
@@ -132,7 +140,8 @@ begin_function
 name|void
 name|enter_raw_mode
 parameter_list|(
-name|void
+name|int
+name|quiet
 parameter_list|)
 block|{
 name|struct
@@ -156,6 +165,11 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|perror
 argument_list|(
 literal|"tcgetattr"
@@ -280,11 +294,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|perror
 argument_list|(
 literal|"tcsetattr"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|_in_raw_mode
 operator|=

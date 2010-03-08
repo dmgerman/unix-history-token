@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.h,v 1.62 2008/11/04 08:22:12 djm Exp $ */
+comment|/* $OpenBSD: auth.h,v 1.65 2010/03/04 10:36:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1021,6 +1021,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|auth_key_is_revoked
+parameter_list|(
+name|Key
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|HostStatus
 name|check_key_in_hostfiles
 parameter_list|(
@@ -1063,7 +1073,17 @@ end_function_decl
 begin_function_decl
 name|Key
 modifier|*
-name|get_hostkey_by_type
+name|get_hostkey_public_by_type
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Key
+modifier|*
+name|get_hostkey_private_by_type
 parameter_list|(
 name|int
 parameter_list|)

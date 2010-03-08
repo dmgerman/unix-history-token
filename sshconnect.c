@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.214 2009/05/28 16:50:16 andreas Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.220 2010/03/04 10:36:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -76,6 +76,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -243,6 +249,12 @@ begin_include
 include|#
 directive|include
 file|"roaming.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh2.h"
 end_include
 
 begin_include
@@ -853,6 +865,7 @@ name|sock
 operator|<
 literal|0
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"socket: %.100s"
@@ -861,6 +874,20 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|fcntl
+argument_list|(
+name|sock
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 comment|/* Bind the socket to an alternative local IP address */
@@ -2711,6 +2738,89 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|check_host_cert
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|host
+parameter_list|,
+specifier|const
+name|Key
+modifier|*
+name|host_key
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|reason
+decl_stmt|;
+if|if
+condition|(
+name|key_cert_check_authority
+argument_list|(
+name|host_key
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|host
+argument_list|,
+operator|&
+name|reason
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s"
+argument_list|,
+name|reason
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|buffer_len
+argument_list|(
+operator|&
+name|host_key
+operator|->
+name|cert
+operator|->
+name|constraints
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Certificate for %s contains unsupported constraint(s)"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * check whether the supplied host key is valid, return -1 if the key  * is not valid. the user_hostfile will not be updated if 'readonly' is true.  */
 end_comment
@@ -2774,16 +2884,16 @@ block|{
 name|Key
 modifier|*
 name|file_key
+decl_stmt|,
+modifier|*
+name|raw_key
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|type
-init|=
-name|key_type
-argument_list|(
-name|host_key
-argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -2819,6 +2929,8 @@ name|ip_status
 decl_stmt|;
 name|int
 name|r
+decl_stmt|,
+name|want_cert
 decl_stmt|,
 name|local
 init|=
@@ -3114,11 +3226,34 @@ name|port
 argument_list|)
 expr_stmt|;
 block|}
+name|retry
+label|:
+name|want_cert
+operator|=
+name|key_is_cert
+argument_list|(
+name|host_key
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|key_type
+argument_list|(
+name|host_key
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Store the host key from the known host file in here so that we can 	 * compare it with the key for the IP address. 	 */
 name|file_key
 operator|=
 name|key_new
 argument_list|(
+name|key_is_cert
+argument_list|(
+name|host_key
+argument_list|)
+condition|?
+name|KEY_UNSPEC
+else|:
 name|host_key
 operator|->
 name|type
@@ -3173,9 +3308,12 @@ name|host_line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Also perform check for the ip address, skip the check if we are 	 * localhost or the hostname was an ip address to begin with 	 */
+comment|/* 	 * Also perform check for the ip address, skip the check if we are 	 * localhost, looking for a certificate, or the hostname was an ip 	 * address to begin with. 	 */
 if|if
 condition|(
+operator|!
+name|want_cert
+operator|&&
 name|options
 operator|.
 name|check_host_ip
@@ -3291,22 +3429,49 @@ case|:
 comment|/* The host is known and the key matches. */
 name|debug
 argument_list|(
-literal|"Host '%.200s' is known and matches the %s host key."
+literal|"Host '%.200s' is known and matches the %s host %s."
 argument_list|,
 name|host
 argument_list|,
 name|type
+argument_list|,
+name|want_cert
+condition|?
+literal|"certificate"
+else|:
+literal|"key"
 argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"Found key in %s:%d"
+literal|"Found %s in %s:%d"
+argument_list|,
+name|want_cert
+condition|?
+literal|"certificate"
+else|:
+literal|"key"
 argument_list|,
 name|host_file
 argument_list|,
 name|host_line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|want_cert
+operator|&&
+operator|!
+name|check_host_cert
+argument_list|(
+name|hostname
+argument_list|,
+name|host_key
+argument_list|)
+condition|)
+goto|goto
+name|fail
+goto|;
 if|if
 condition|(
 name|options
@@ -3321,6 +3486,8 @@ block|{
 if|if
 condition|(
 name|readonly
+operator|||
+name|want_cert
 condition|)
 name|logit
 argument_list|(
@@ -3484,6 +3651,8 @@ block|}
 if|if
 condition|(
 name|readonly
+operator|||
+name|want_cert
 condition|)
 goto|goto
 name|fail
@@ -3841,8 +4010,92 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|HOST_REVOKED
+case|:
+name|error
+argument_list|(
+literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"@       WARNING: REVOKED HOST KEY DETECTED!               @"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"The %s host key for %s is marked as revoked."
+argument_list|,
+name|type
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"This could mean that a stolen key is being used to"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"impersonate this host."
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If strict host key checking is in use, the user will have 		 * to edit the key manually and we can only abort. 		 */
+if|if
+condition|(
+name|options
+operator|.
+name|strict_host_key_checking
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s host key for %.200s was revoked and you have "
+literal|"requested strict checking."
+argument_list|,
+name|type
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+goto|goto
+name|continue_unsafe
+goto|;
+case|case
 name|HOST_CHANGED
 case|:
+if|if
+condition|(
+name|want_cert
+condition|)
+block|{
+comment|/* 			 * This is only a debug() since it is valid to have 			 * CAs with wildcard DNS matches that don't match 			 * all hosts that one might visit. 			 */
+name|debug
+argument_list|(
+literal|"Host certificate authority does not "
+literal|"match %s in %s:%d"
+argument_list|,
+name|CA_MARKER
+argument_list|,
+name|host_file
+argument_list|,
+name|host_line
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|readonly
@@ -3999,6 +4252,8 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|continue_unsafe
+label|:
 comment|/* 		 * If strict host key checking has not been requested, allow 		 * the connection but without MITM-able authentication or 		 * forwarding. 		 */
 if|if
 condition|(
@@ -4202,7 +4457,7 @@ literal|"Error: forwarding disabled due to host key "
 literal|"check failure"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX Should permit the user to change to use the new id. 		 * This could be done by converting the host key to an 		 * identifying sentence, tell that the host identifies itself 		 * by that sentence, and ask the user if he/she whishes to 		 * accept the authentication. 		 */
+comment|/* 		 * XXX Should permit the user to change to use the new id. 		 * This could be done by converting the host key to an 		 * identifying sentence, tell that the host identifies itself 		 * by that sentence, and ask the user if he/she wishes to 		 * accept the authentication. 		 */
 break|break;
 case|case
 name|HOST_FOUND
@@ -4374,6 +4629,61 @@ literal|0
 return|;
 name|fail
 label|:
+if|if
+condition|(
+name|want_cert
+operator|&&
+name|host_status
+operator|!=
+name|HOST_REVOKED
+condition|)
+block|{
+comment|/* 		 * No matching certificate. Downgrade cert to raw key and 		 * search normally. 		 */
+name|debug
+argument_list|(
+literal|"No matching CA found. Retry with plain key"
+argument_list|)
+expr_stmt|;
+name|raw_key
+operator|=
+name|key_from_private
+argument_list|(
+name|host_key
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|key_drop_cert
+argument_list|(
+name|raw_key
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"Couldn't drop certificate"
+argument_list|)
+expr_stmt|;
+name|host_key
+operator|=
+name|raw_key
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+if|if
+condition|(
+name|raw_key
+operator|!=
+name|NULL
+condition|)
+name|key_free
+argument_list|(
+name|raw_key
+argument_list|)
+expr_stmt|;
 name|xfree
 argument_list|(
 name|ip
@@ -4422,8 +4732,15 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
+comment|/* XXX certs are not yet supported for DNS */
 if|if
 condition|(
+operator|!
+name|key_is_cert
+argument_list|(
+name|host_key
+argument_list|)
+operator|&&
 name|options
 operator|.
 name|verify_host_key_dns
