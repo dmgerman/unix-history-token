@@ -1603,7 +1603,7 @@ operator|||
 operator|*
 name|y
 operator|>=
-name|pmcstat_displaywidth
+name|pmcstat_displayheight
 condition|)
 return|return
 literal|1

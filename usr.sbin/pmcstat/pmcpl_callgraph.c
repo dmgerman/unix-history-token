@@ -2392,7 +2392,7 @@ condition|)
 block|{
 name|PMCSTAT_PRINTW
 argument_list|(
-literal|"..."
+literal|" ..."
 argument_list|)
 expr_stmt|;
 break|break;
