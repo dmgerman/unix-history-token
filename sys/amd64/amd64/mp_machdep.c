@@ -874,6 +874,13 @@ name|apic_id
 index|]
 operator|.
 name|cpu_present
+operator|||
+name|cpu_info
+index|[
+name|apic_id
+index|]
+operator|.
+name|cpu_disabled
 condition|)
 continue|continue;
 comment|/* 		 * If the current group has members and we're not a logical 		 * cpu, create a new group. 		 */
