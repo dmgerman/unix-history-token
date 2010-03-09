@@ -6070,7 +6070,7 @@ literal|"LRM"
 block|,
 literal|"TWINAX"
 block|,
-literal|"TWINAX"
+literal|"TWINAX-L"
 block|,
 literal|"unknown"
 block|}
