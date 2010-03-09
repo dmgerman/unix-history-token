@@ -131,7 +131,7 @@ name|void
 name|DS1672_Init
 parameter_list|()
 block|{
-name|uint8_t
+name|char
 name|buf
 index|[]
 init|=
