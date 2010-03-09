@@ -900,6 +900,27 @@ operator|)
 return|;
 if|if
 condition|(
+name|SIZE_MAX
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|buf
+argument_list|)
+operator|<
+name|n
+operator|+
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"conversion buffer length overflow"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|buf
 operator|=
