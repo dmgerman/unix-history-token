@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -130,12 +136,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_kern.h>
 end_include
 
@@ -155,12 +155,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/psl.h>
 end_include
 
 begin_function
