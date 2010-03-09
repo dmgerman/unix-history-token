@@ -2398,6 +2398,16 @@ name|rt_ifp
 operator|==
 name|NULL
 operator|)
+operator|||
+operator|!
+name|RT_LINK_IS_UP
+argument_list|(
+name|fle
+operator|->
+name|f_rt
+operator|->
+name|rt_ifp
+argument_list|)
 condition|)
 return|return
 operator|(

@@ -1434,6 +1434,16 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|RT_LINK_IS_UP
+parameter_list|(
+name|ifp
+parameter_list|)
+value|((ifp)->if_link_state == LINK_STATE_UP)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT_LOCK_INIT
 parameter_list|(
 name|_rt
