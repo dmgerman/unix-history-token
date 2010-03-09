@@ -194,7 +194,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
