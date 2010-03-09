@@ -201,6 +201,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|workaround_erratum383
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|_udatasel
 decl_stmt|;
 end_decl_stmt
