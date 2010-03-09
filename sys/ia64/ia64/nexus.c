@@ -189,8 +189,6 @@ name|struct
 name|rman
 name|irq_rman
 decl_stmt|,
-name|drq_rman
-decl_stmt|,
 name|port_rman
 decl_stmt|,
 name|mem_rman
@@ -836,59 +834,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"nexus_probe irq_rman"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * ISA DMA on PCI systems is implemented in the ISA part of each 	 * PCI->ISA bridge and the channels can be duplicated if there are 	 * multiple bridges.  (eg: laptops with docking stations) 	 */
-name|drq_rman
-operator|.
-name|rm_start
-operator|=
-literal|0
-expr_stmt|;
-name|drq_rman
-operator|.
-name|rm_end
-operator|=
-literal|7
-expr_stmt|;
-name|drq_rman
-operator|.
-name|rm_type
-operator|=
-name|RMAN_ARRAY
-expr_stmt|;
-name|drq_rman
-operator|.
-name|rm_descr
-operator|=
-literal|"DMA request lines"
-expr_stmt|;
-comment|/* XXX drq 0 not available on some machines */
-if|if
-condition|(
-name|rman_init
-argument_list|(
-operator|&
-name|drq_rman
-argument_list|)
-operator|||
-name|rman_manage_region
-argument_list|(
-operator|&
-name|drq_rman
-argument_list|,
-name|drq_rman
-operator|.
-name|rm_start
-argument_list|,
-name|drq_rman
-operator|.
-name|rm_end
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"nexus_probe drq_rman"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * However, IO ports and Memory truely are global at this level, 	 * as are APIC interrupts (however many IO APICS there turn out 	 * to be on large systems..) 	 */
@@ -1575,15 +1520,6 @@ name|rm
 operator|=
 operator|&
 name|irq_rman
-expr_stmt|;
-break|break;
-case|case
-name|SYS_RES_DRQ
-case|:
-name|rm
-operator|=
-operator|&
-name|drq_rman
 expr_stmt|;
 break|break;
 case|case
