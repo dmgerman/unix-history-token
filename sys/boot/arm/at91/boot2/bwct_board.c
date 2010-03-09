@@ -387,11 +387,26 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SDRAM_128M
+argument_list|)
 name|printf
 argument_list|(
-literal|"AT92RM9200 180MHz\n"
+literal|"AT92RM9200 180MHz 128MB\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"AT92RM9200 180MHz 64MB\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Initialising USART0\n"
