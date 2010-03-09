@@ -337,7 +337,7 @@ comment|/* bytes/sector in hardware */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|fsize
 init|=
 literal|0
@@ -349,7 +349,7 @@ comment|/* fragment size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|bsize
 init|=
 literal|0
@@ -361,7 +361,7 @@ comment|/* block size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbsize
 init|=
 literal|0
@@ -373,7 +373,7 @@ comment|/* maximum clustering */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxblkspercg
 init|=
 name|MAXBLKSPERCG
@@ -409,7 +409,7 @@ comment|/* optimization preference (space or time) */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|density
 decl_stmt|;
 end_decl_stmt
@@ -419,7 +419,7 @@ comment|/* number of bytes per inode */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxcontig
 init|=
 literal|0
@@ -431,7 +431,7 @@ comment|/* max contiguous blocks to allocate */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
@@ -441,7 +441,7 @@ comment|/* maximum blocks per file in a cyl group */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesize
 init|=
 name|AVFILESIZ
@@ -453,7 +453,7 @@ comment|/* expected average file size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesperdir
 init|=
 name|AFPDIR
@@ -906,7 +906,7 @@ literal|'a'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -939,7 +939,7 @@ literal|'b'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1002,7 +1002,7 @@ literal|'c'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1035,7 +1035,7 @@ literal|'d'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1068,7 +1068,7 @@ literal|'e'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1101,7 +1101,7 @@ literal|'f'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1134,7 +1134,7 @@ literal|'g'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1167,7 +1167,7 @@ literal|'h'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1200,7 +1200,7 @@ literal|'i'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -2770,7 +2770,7 @@ expr_stmt|;
 if|if
 condition|(
 name|rval
-operator|!=
+operator|<
 literal|0
 condition|)
 return|return
@@ -2783,6 +2783,10 @@ condition|(
 name|num64
 operator|>
 name|INT_MAX
+operator|||
+name|num64
+operator|<
+name|INT_MIN
 condition|)
 block|{
 name|errno

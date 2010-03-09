@@ -216,7 +216,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|fsize
 decl_stmt|;
 end_decl_stmt
@@ -227,7 +227,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|bsize
 decl_stmt|;
 end_decl_stmt
@@ -238,7 +238,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxbsize
 decl_stmt|;
 end_decl_stmt
@@ -249,7 +249,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxblkspercg
 decl_stmt|;
 end_decl_stmt
@@ -282,7 +282,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|density
 decl_stmt|;
 end_decl_stmt
@@ -293,7 +293,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxcontig
 decl_stmt|;
 end_decl_stmt
@@ -304,7 +304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
@@ -315,7 +315,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|avgfilesize
 decl_stmt|;
 end_decl_stmt
@@ -326,7 +326,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int64_t
+name|int
 name|avgfilesperdir
 decl_stmt|;
 end_decl_stmt
