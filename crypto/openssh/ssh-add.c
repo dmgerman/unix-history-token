@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.90 2007/09/09 11:38:01 sobrado Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.94 2010/03/01 11:07:06 otto Exp $ */
 end_comment
 
 begin_comment
@@ -456,6 +456,9 @@ block|{
 name|Key
 modifier|*
 name|private
+decl_stmt|,
+modifier|*
+name|cert
 decl_stmt|;
 name|char
 modifier|*
@@ -468,6 +471,9 @@ name|msg
 index|[
 literal|1024
 index|]
+decl_stmt|,
+modifier|*
+name|certpath
 decl_stmt|;
 name|int
 name|fd
@@ -736,35 +742,6 @@ literal|"The user has to confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ssh_add_identity
-argument_list|(
-name|ac
-argument_list|,
-name|private
-argument_list|,
-name|comment
-argument_list|)
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Identity added: %s (%s)\n"
-argument_list|,
-name|filename
-argument_list|,
-name|comment
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 block|{
 name|fprintf
@@ -777,6 +754,145 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now try to add the certificate flavour too */
+name|xasprintf
+argument_list|(
+operator|&
+name|certpath
+argument_list|,
+literal|"%s-cert.pub"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cert
+operator|=
+name|key_load_public
+argument_list|(
+name|certpath
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Graft with private bits */
+if|if
+condition|(
+name|key_to_certified
+argument_list|(
+name|private
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: key_to_certified failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|key_cert_copy
+argument_list|(
+name|cert
+argument_list|,
+name|private
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ssh_add_identity_constrained
+argument_list|(
+name|ac
+argument_list|,
+name|private
+argument_list|,
+name|comment
+argument_list|,
+name|lifetime
+argument_list|,
+name|confirm
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Certificate added: %s (%s)\n"
+argument_list|,
+name|certpath
+argument_list|,
+name|private
+operator|->
+name|cert
+operator|->
+name|key_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lifetime
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Lifetime set to %d seconds\n"
+argument_list|,
+name|lifetime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|confirm
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"The user has to confirm each "
+literal|"use of the key\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+argument_list|(
+literal|"Certificate %s (%s) add failed"
+argument_list|,
+name|certpath
+argument_list|,
+name|private
+operator|->
+name|cert
+operator|->
+name|key_id
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|xfree
+argument_list|(
+name|certpath
+argument_list|)
+expr_stmt|;
 name|xfree
 argument_list|(
 name|comment
@@ -825,7 +941,7 @@ name|pin
 operator|=
 name|read_passphrase
 argument_list|(
-literal|"Enter passphrase for smartcard: "
+literal|"Enter passphrase for PKCS#11: "
 argument_list|,
 name|RP_ALLOW_STDIN
 argument_list|)
@@ -1434,25 +1550,20 @@ argument_list|,
 literal|"  -c          Require confirmation to sign using identities\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMARTCARD
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -s reader   Add key in smartcard reader.\n"
+literal|"  -s pkcs11   Add keys from PKCS#11 provider.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -e reader   Remove key in smartcard reader.\n"
+literal|"  -e pkcs11   Remove keys provided by PKCS#11 provider.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1486,7 +1597,7 @@ name|NULL
 decl_stmt|;
 name|char
 modifier|*
-name|sc_reader_id
+name|pkcs11provider
 init|=
 name|NULL
 decl_stmt|;
@@ -1677,7 +1788,7 @@ goto|;
 case|case
 literal|'s'
 case|:
-name|sc_reader_id
+name|pkcs11provider
 operator|=
 name|optarg
 expr_stmt|;
@@ -1689,7 +1800,7 @@ name|deleting
 operator|=
 literal|1
 expr_stmt|;
-name|sc_reader_id
+name|pkcs11provider
 operator|=
 name|optarg
 expr_stmt|;
@@ -1751,7 +1862,7 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-name|sc_reader_id
+name|pkcs11provider
 operator|!=
 name|NULL
 condition|)
@@ -1765,7 +1876,7 @@ argument_list|,
 operator|!
 name|deleting
 argument_list|,
-name|sc_reader_id
+name|pkcs11provider
 argument_list|)
 operator|==
 operator|-

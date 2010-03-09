@@ -340,6 +340,16 @@ value|1
 end_define
 
 begin_comment
+comment|/* Enable for PKCS#11 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_PKCS11
+end_define
+
+begin_comment
 comment|/* Builtin PRNG command timeout */
 end_comment
 
@@ -1381,6 +1391,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `group_from_gid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GROUP_FROM_GID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<gssapi_generic.h> header file. */
 end_comment
 
@@ -1661,14 +1682,6 @@ directive|define
 name|HAVE_LIBPAM
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `sectok' library (-lsectok). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSECTOK */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `socket' library (-lsocket). */
@@ -2253,14 +2266,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<sectok.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SECTOK_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have SecureWare-based protected password database */
 end_comment
 
@@ -2340,6 +2345,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setgroupent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETGROUPENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setgroups' function. */
 end_comment
 
@@ -2368,6 +2384,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SETLUID */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setpassent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPASSENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setpcred' function. */
@@ -3388,6 +3415,17 @@ comment|/* #undef HAVE_USERSEC_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `user_from_uid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USER_FROM_UID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<util.h> header file. */
 end_comment
 
@@ -3742,6 +3780,14 @@ comment|/* #undef LINK_OPNOTSUPP_ERRNO */
 end_comment
 
 begin_comment
+comment|/* Adjust Linux out-of-memory killer */
+end_comment
+
+begin_comment
+comment|/* #undef LINUX_OOM_ADJUST */
+end_comment
+
+begin_comment
 comment|/* max value of long long calculated by configure */
 end_comment
 
@@ -4093,14 +4139,6 @@ comment|/* #undef SKEYCHALLENGE_4ARG */
 end_comment
 
 begin_comment
-comment|/* Define if you want smartcard support */
-end_comment
-
-begin_comment
-comment|/* #undef SMARTCARD */
-end_comment
-
-begin_comment
 comment|/* Define as const if snprintf() can declare const char *fmt */
 end_comment
 
@@ -4292,14 +4330,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you want smartcard support using OpenSC */
-end_comment
-
-begin_comment
-comment|/* #undef USE_OPENSC */
-end_comment
-
-begin_comment
 comment|/* Enable OpenSSL engine support */
 end_comment
 
@@ -4327,14 +4357,6 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_PIPES */
-end_comment
-
-begin_comment
-comment|/* Define if you want smartcard support using sectok */
-end_comment
-
-begin_comment
-comment|/* #undef USE_SECTOK */
 end_comment
 
 begin_comment
@@ -4402,7 +4424,7 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: scp.c,v 1.164 2008/10/10 04:55:16 stevesk Exp $ */
+comment|/* $OpenBSD: scp.c,v 1.165 2009/12/20 07:28:36 guenther Exp $ */
 end_comment
 
 begin_comment
@@ -897,14 +897,32 @@ name|remuser
 operator|!=
 name|NULL
 condition|)
+block|{
 name|addargs
 argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"-l%s"
+literal|"-l"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"%s"
 argument_list|,
 name|remuser
+argument_list|)
+expr_stmt|;
+block|}
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"--"
 argument_list|)
 expr_stmt|;
 name|addargs
@@ -1519,9 +1537,17 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"-%c%s"
+literal|"-%c"
 argument_list|,
 name|ch
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1535,7 +1561,15 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"-p%s"
+literal|"-p"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|"%s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -2578,6 +2612,14 @@ argument_list|(
 operator|&
 name|alist
 argument_list|,
+literal|"--"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|alist
+argument_list|,
 literal|"%s"
 argument_list|,
 name|host
@@ -2658,7 +2700,7 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -t %s"
+literal|"%s -t -- %s"
 argument_list|,
 name|cmd
 argument_list|,
@@ -2865,6 +2907,14 @@ argument_list|(
 operator|&
 name|alist
 argument_list|,
+literal|"--"
+argument_list|)
+expr_stmt|;
+name|addargs
+argument_list|(
+operator|&
+name|alist
+argument_list|,
 literal|"%s"
 argument_list|,
 name|argv
@@ -2990,7 +3040,7 @@ argument_list|(
 operator|&
 name|bp
 argument_list|,
-literal|"%s -f %s"
+literal|"%s -f -- %s"
 argument_list|,
 name|cmd
 argument_list|,
