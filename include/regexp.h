@@ -15,6 +15,23 @@ directive|define
 name|_REGEXP_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"this file includes<regexp.h> which is deprecated, use<regex.h> instead"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Definitions etc. for regexp(3) routines.  *  * Caveat:  this is V8 regexp(3) [actually, a reimplementation thereof],  * not the System V one.  */
 end_comment
