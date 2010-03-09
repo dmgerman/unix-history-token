@@ -203,7 +203,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|linelen
+name|extralen
 index|[
 literal|7
 index|]
@@ -1703,6 +1703,14 @@ name|flag_month
 operator|=
 name|optarg
 expr_stmt|;
+name|before
+operator|=
+literal|0
+expr_stmt|;
+name|after
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'o'
@@ -1877,6 +1885,25 @@ operator|*
 name|argv
 operator|++
 expr_stmt|;
+name|before
+operator|=
+literal|0
+expr_stmt|;
+name|after
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|=
+name|strtol
+argument_list|(
+name|flag_month
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|1
@@ -1909,6 +1936,19 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|before
+operator|==
+operator|-
+literal|1
+operator|&&
+name|after
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|before
 operator|=
 literal|0
@@ -1921,6 +1961,7 @@ name|m
 operator|=
 literal|1
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0
@@ -2539,12 +2580,9 @@ name|MW
 parameter_list|(
 name|mw
 parameter_list|,
-name|ms
-parameter_list|,
-name|ml
+name|me
 parameter_list|)
-define|\
-value|strlen(ms)> (ml) ? (mw) + 9 : (mw)
+value|((mw) + me)
 end_define
 
 begin_define
@@ -3106,7 +3144,20 @@ name|printf
 argument_list|(
 literal|"%-*s  "
 argument_list|,
+name|MW
+argument_list|(
 name|mw
+argument_list|,
+name|year
+index|[
+name|j
+index|]
+operator|.
+name|extralen
+index|[
+name|i
+index|]
+argument_list|)
 argument_list|,
 name|year
 index|[
@@ -3541,17 +3592,7 @@ index|[
 name|j
 index|]
 operator|.
-name|lines
-index|[
-name|i
-index|]
-argument_list|,
-name|year
-index|[
-name|j
-index|]
-operator|.
-name|linelen
+name|extralen
 index|[
 name|i
 index|]
@@ -4017,12 +4058,12 @@ literal|'\0'
 expr_stmt|;
 name|mlines
 operator|->
-name|linelen
+name|extralen
 index|[
 name|i
 index|]
 operator|=
-name|k
+name|l
 expr_stmt|;
 block|}
 comment|/* fill the weeknumbers */
@@ -4595,6 +4636,15 @@ name|l
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|mlines
+operator|->
+name|extralen
+index|[
+name|i
+index|]
+operator|=
+name|l
 expr_stmt|;
 block|}
 block|}
