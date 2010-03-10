@@ -7109,7 +7109,7 @@ operator|==
 name|BGE_CHIPREV_5704_BX
 condition|)
 block|{
-comment|/* 		 *  Fix data corruption casued by non-qword write with WB. 		 *  Fix master abort in PCI mode. 		 *  Fix PCI latency timer. 		 */
+comment|/* 		 *  Fix data corruption caused by non-qword write with WB. 		 *  Fix master abort in PCI mode. 		 *  Fix PCI latency timer. 		 */
 name|val
 operator|=
 name|pci_read_config
