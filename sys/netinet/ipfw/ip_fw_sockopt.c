@@ -4000,7 +4000,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ip_fw
+name|ip_fw7
 argument_list|)
 argument_list|)
 expr_stmt|;

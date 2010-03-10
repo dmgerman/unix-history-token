@@ -1979,6 +1979,8 @@ name|struct
 name|dn_id
 modifier|*
 name|buf
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|base
@@ -2327,6 +2329,17 @@ name|char
 operator|*
 operator|)
 name|base
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+condition|)
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
 return|return
