@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|FTYPE_LNG
-value|-1
+value|5
 end_define
 
 begin_comment
