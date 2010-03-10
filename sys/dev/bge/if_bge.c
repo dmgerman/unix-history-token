@@ -15605,7 +15605,7 @@ argument_list|,
 name|BGE_32BITTIME_66MHZ
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable PCI-X relaxed ordering to ensure status block update 	 * comes first than packet buffer DMA. Otherwise driver may 	 * read stale status block. 	 */
+comment|/* 	 * Disable PCI-X relaxed ordering to ensure status block update 	 * comes first then packet buffer DMA. Otherwise driver may 	 * read stale status block. 	 */
 if|if
 condition|(
 name|sc
