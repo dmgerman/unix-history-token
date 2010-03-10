@@ -743,6 +743,11 @@ comment|/// \brief An UnresolvedUsingType record.
 name|TYPE_UNRESOLVED_USING
 init|=
 literal|26
+block|,
+comment|/// \brief An InjectedClassNameType record.
+name|TYPE_INJECTED_CLASS_NAME
+init|=
+literal|27
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic

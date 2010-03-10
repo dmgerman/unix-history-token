@@ -327,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -339,7 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -351,7 +351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -363,7 +363,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -376,7 +376,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -389,7 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -400,7 +400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -412,7 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -424,7 +424,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -436,7 +436,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -449,7 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -462,7 +462,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}}
 end_comment
 
 begin_decl_stmt
@@ -474,7 +474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}} expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -486,7 +486,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}} expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_comment
@@ -501,7 +501,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -512,7 +512,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -523,7 +523,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -534,7 +534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -546,7 +546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}} expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_decl_stmt
@@ -558,7 +558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{Use of "long" with "__vector" is deprecated}} expected-error {{cannot use "double" with "__vector"}}
+comment|// expected-warning {{Use of 'long' with '__vector' is deprecated}} expected-error {{cannot use 'double' with '__vector'}}
 end_comment
 
 begin_function

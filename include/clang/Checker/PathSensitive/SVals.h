@@ -465,6 +465,12 @@ name|getAsLocSymbol
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get the symbol in the SVal or its base region.
+name|SymbolRef
+name|getLocSymbolInBase
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getAsSymbol - If this Sval wraps a symbol return that SymbolRef.
 comment|///  Otherwise return a SymbolRef where 'isValid()' returns false.
 name|SymbolRef

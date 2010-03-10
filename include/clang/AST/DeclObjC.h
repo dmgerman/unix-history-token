@@ -560,9 +560,14 @@ name|objcDeclQualifier
 range|:
 literal|6
 decl_stmt|;
-comment|// Type of this method.
+comment|// Result type of this method.
 name|QualType
 name|MethodDeclType
+decl_stmt|;
+comment|// Type source information for the result type.
+name|TypeSourceInfo
+modifier|*
+name|ResultTInfo
 decl_stmt|;
 comment|/// ParamInfo - List of pointers to VarDecls for the formal parameters of this
 comment|/// Method.
@@ -604,6 +609,8 @@ argument_list|,
 argument|Selector SelInfo
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *ResultTInfo
 argument_list|,
 argument|DeclContext *contextDecl
 argument_list|,
@@ -660,6 +667,11 @@ operator|,
 name|MethodDeclType
 argument_list|(
 name|T
+argument_list|)
+operator|,
+name|ResultTInfo
+argument_list|(
+name|ResultTInfo
 argument_list|)
 operator|,
 name|EndLoc
@@ -728,6 +740,10 @@ name|SelInfo
 parameter_list|,
 name|QualType
 name|T
+parameter_list|,
+name|TypeSourceInfo
+modifier|*
+name|ResultTInfo
 parameter_list|,
 name|DeclContext
 modifier|*
@@ -911,6 +927,29 @@ block|{
 name|MethodDeclType
 operator|=
 name|T
+expr_stmt|;
+block|}
+name|TypeSourceInfo
+operator|*
+name|getResultTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResultTInfo
+return|;
+block|}
+name|void
+name|setResultTypeSourceInfo
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TInfo
+parameter_list|)
+block|{
+name|ResultTInfo
+operator|=
+name|TInfo
 expr_stmt|;
 block|}
 comment|// Iterator access to formal parameters.

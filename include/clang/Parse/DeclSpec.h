@@ -976,6 +976,9 @@ name|ProtocolLocs
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|writtenBS
+argument_list|()
 block|{   }
 operator|~
 name|DeclSpec

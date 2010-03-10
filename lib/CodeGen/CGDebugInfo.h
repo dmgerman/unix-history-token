@@ -155,13 +155,15 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-name|bool
-name|isMainCompileUnitCreated
-decl_stmt|;
 name|llvm
 operator|::
 name|DIFactory
 name|DebugFactory
+expr_stmt|;
+name|llvm
+operator|::
+name|DICompileUnit
+name|TheCU
 expr_stmt|;
 name|SourceLocation
 name|CurLoc
@@ -173,19 +175,11 @@ operator|::
 name|DIType
 name|VTablePtrType
 expr_stmt|;
-comment|/// CompileUnitCache - Cache of previously constructed CompileUnits.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
+comment|/// FwdDeclCount - This counter is used to ensure unique names for forward
+comment|/// record decls.
 name|unsigned
-operator|,
-name|llvm
-operator|::
-name|DICompileUnit
-operator|>
-name|CompileUnitCache
-expr_stmt|;
+name|FwdDeclCount
+decl_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
 comment|// FIXME: Eliminate this map.  Be careful of iterator invalidation.
 name|std
@@ -281,7 +275,7 @@ name|CreateType
 argument_list|(
 argument|const BuiltinType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -291,7 +285,7 @@ name|CreateType
 argument_list|(
 argument|const ComplexType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -301,7 +295,7 @@ name|CreateQualifiedType
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -311,7 +305,7 @@ name|CreateType
 argument_list|(
 argument|const TypedefType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -321,7 +315,7 @@ name|CreateType
 argument_list|(
 argument|const ObjCObjectPointerType *Ty
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -331,7 +325,7 @@ name|CreateType
 argument_list|(
 argument|const PointerType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -341,7 +335,7 @@ name|CreateType
 argument_list|(
 argument|const BlockPointerType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -351,7 +345,7 @@ name|CreateType
 argument_list|(
 argument|const FunctionType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -361,7 +355,7 @@ name|CreateType
 argument_list|(
 argument|const TagType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -371,7 +365,7 @@ name|CreateType
 argument_list|(
 argument|const RecordType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -381,7 +375,7 @@ name|CreateType
 argument_list|(
 argument|const ObjCInterfaceType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -391,7 +385,7 @@ name|CreateType
 argument_list|(
 argument|const EnumType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -401,7 +395,7 @@ name|CreateType
 argument_list|(
 argument|const VectorType *Ty
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -411,7 +405,7 @@ name|CreateType
 argument_list|(
 argument|const ArrayType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -421,7 +415,7 @@ name|CreateType
 argument_list|(
 argument|const LValueReferenceType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -431,7 +425,7 @@ name|CreateType
 argument_list|(
 argument|const MemberPointerType *Ty
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -441,7 +435,7 @@ name|getOrCreateMethodType
 argument_list|(
 argument|const CXXMethodDecl *Method
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -449,7 +443,7 @@ operator|::
 name|DIType
 name|getOrCreateVTablePtrType
 argument_list|(
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -473,7 +467,7 @@ argument|const Type *Ty
 argument_list|,
 argument|QualType PointeeTy
 argument_list|,
-argument|llvm::DICompileUnit U
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -483,7 +477,7 @@ name|CreateCXXMemberFunction
 argument_list|(
 argument|const CXXMethodDecl *Method
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|,
 argument|llvm::DICompositeType&RecordTy
 argument_list|)
@@ -498,8 +492,8 @@ name|Decl
 argument_list|,
 name|llvm
 operator|::
-name|DICompileUnit
-name|U
+name|DIFile
+name|F
 argument_list|,
 name|llvm
 operator|::
@@ -529,8 +523,8 @@ name|Decl
 argument_list|,
 name|llvm
 operator|::
-name|DICompileUnit
-name|Unit
+name|DIFile
+name|F
 argument_list|,
 name|llvm
 operator|::
@@ -560,8 +554,8 @@ name|Decl
 argument_list|,
 name|llvm
 operator|::
-name|DICompileUnit
-name|U
+name|DIFile
+name|F
 argument_list|,
 name|llvm
 operator|::
@@ -585,8 +579,8 @@ name|Decl
 argument_list|,
 name|llvm
 operator|::
-name|DICompileUnit
-name|Unit
+name|DIFile
+name|F
 argument_list|,
 name|llvm
 operator|::
@@ -877,12 +871,17 @@ operator|&
 name|CU
 argument_list|)
 expr_stmt|;
-comment|/// getOrCreateCompileUnit - Get the compile unit from the cache or create a
-comment|/// new one if necessary.
+comment|/// CreateCompileUnit - Create new compile unit.
+name|void
+name|CreateCompileUnit
+parameter_list|()
+function_decl|;
+comment|/// getOrCreateFile - Get the file debug info descriptor for the input
+comment|/// location.
 name|llvm
 operator|::
-name|DICompileUnit
-name|getOrCreateCompileUnit
+name|DIFile
+name|getOrCreateFile
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
@@ -896,7 +895,7 @@ name|getOrCreateType
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 comment|/// CreateTypeNode - Create type metadata for a source language type.
@@ -907,7 +906,7 @@ name|CreateTypeNode
 argument_list|(
 argument|QualType Ty
 argument_list|,
-argument|llvm::DICompileUnit Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the

@@ -1751,6 +1751,10 @@ comment|//  message expression.
 name|unsigned
 name|NumArgs
 block|;
+comment|/// \brief The location of the class name in a class message.
+name|SourceLocation
+name|ClassNameLoc
+block|;
 comment|// A unigue name for this message.
 name|Selector
 name|SelName
@@ -1822,6 +1826,8 @@ argument|ASTContext&C
 argument_list|,
 argument|IdentifierInfo *clsName
 argument_list|,
+argument|SourceLocation clsNameLoc
+argument_list|,
 argument|Selector selInfo
 argument_list|,
 argument|QualType retType
@@ -1845,6 +1851,8 @@ argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|ObjCInterfaceDecl *cls
+argument_list|,
+argument|SourceLocation clsNameLoc
 argument_list|,
 argument|Selector selInfo
 argument_list|,
@@ -2037,19 +2045,68 @@ name|MethodProto
 operator|=
 name|MD
 block|; }
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
+comment|/// \brief Describes the class receiver of a message send.
+expr|struct
+name|ClassInfo
+block|{
+comment|/// \brief The interface declaration for the class that is
+comment|/// receiving the message. May be NULL.
 name|ObjCInterfaceDecl
 operator|*
-operator|,
+name|Decl
+block|;
+comment|/// \brief The name of the class that is receiving the
+comment|/// message. This will never be NULL.
 name|IdentifierInfo
 operator|*
-operator|>
+name|Name
+block|;
+comment|/// \brief The source location of the class name.
+name|SourceLocation
+name|Loc
+block|;
 name|ClassInfo
-expr_stmt|;
+argument_list|()
+operator|:
+name|Decl
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Name
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Loc
+argument_list|()
+block|{ }
+name|ClassInfo
+argument_list|(
+argument|ObjCInterfaceDecl *Decl
+argument_list|,
+argument|IdentifierInfo *Name
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|Decl
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|Name
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{ }
+block|}
+block|;
 comment|/// getClassInfo - For class methods, this returns both the ObjCInterfaceDecl*
 comment|///  and IdentifierInfo* of the invoked class.  Both can be NULL if this
 comment|///  is an instance message, and the ObjCInterfaceDecl* can be NULL if none
@@ -2058,30 +2115,18 @@ name|ClassInfo
 name|getClassInfo
 argument_list|()
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+block|;
 name|void
 name|setClassInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|ClassInfo
-modifier|&
+operator|&
 name|C
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|/// getClassName - For class methods, this returns the invoked class,
-end_comment
-
-begin_comment
 comment|///  and returns NULL otherwise.  For instance methods, use getReceiver.
-end_comment
-
-begin_expr_stmt
 name|IdentifierInfo
 operator|*
 name|getClassName
@@ -2092,16 +2137,10 @@ return|return
 name|getClassInfo
 argument_list|()
 operator|.
-name|second
+name|Name
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getNumArgs - Return the number of actual arguments to this call.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumArgs
 argument_list|()
@@ -2111,20 +2150,16 @@ return|return
 name|NumArgs
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setNumArgs
-parameter_list|(
-name|unsigned
-name|nArgs
-parameter_list|)
+argument_list|(
+argument|unsigned nArgs
+argument_list|)
 block|{
 name|NumArgs
 operator|=
 name|nArgs
-expr_stmt|;
+block|;
 comment|// FIXME: should always allocate SubExprs via the ASTContext's
 comment|// allocator.
 if|if
@@ -2144,20 +2179,13 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// getArg - Return the specified argument.
-end_comment
-
-begin_function
 name|Expr
-modifier|*
+operator|*
 name|getArg
-parameter_list|(
-name|unsigned
-name|Arg
-parameter_list|)
+argument_list|(
+argument|unsigned Arg
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2167,7 +2195,7 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|cast
 operator|<
@@ -2183,18 +2211,14 @@ index|]
 operator|)
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 specifier|const
 name|Expr
-modifier|*
+operator|*
 name|getArg
 argument_list|(
-name|unsigned
-name|Arg
+argument|unsigned Arg
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -2204,7 +2228,7 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|cast
 operator|<
@@ -2220,23 +2244,14 @@ index|]
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// setArg - Set the specified argument.
-end_comment
-
-begin_function
 name|void
 name|setArg
-parameter_list|(
-name|unsigned
-name|Arg
-parameter_list|,
-name|Expr
-modifier|*
-name|ArgExpr
-parameter_list|)
+argument_list|(
+argument|unsigned Arg
+argument_list|,
+argument|Expr *ArgExpr
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2246,7 +2261,7 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-expr_stmt|;
+block|;
 name|SubExprs
 index|[
 name|Arg
@@ -2255,11 +2270,7 @@ name|ARGS_START
 index|]
 operator|=
 name|ArgExpr
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|;   }
 name|SourceLocation
 name|getLeftLoc
 argument_list|()
@@ -2269,9 +2280,6 @@ return|return
 name|LBracloc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|SourceLocation
 name|getRightLoc
 argument_list|()
@@ -2281,45 +2289,31 @@ return|return
 name|RBracloc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setLeftLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|LBracloc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+block|; }
 name|void
 name|setRightLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|RBracloc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_function
+block|; }
 name|void
 name|setSourceRange
-parameter_list|(
-name|SourceRange
-name|R
-parameter_list|)
+argument_list|(
+argument|SourceRange R
+argument_list|)
 block|{
 name|LBracloc
 operator|=
@@ -2327,18 +2321,14 @@ name|R
 operator|.
 name|getBegin
 argument_list|()
-expr_stmt|;
+block|;
 name|RBracloc
 operator|=
 name|R
 operator|.
 name|getEnd
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|;   }
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -2354,18 +2344,12 @@ name|RBracloc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -2376,50 +2360,33 @@ operator|==
 name|ObjCMessageExprClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ObjCMessageExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const ObjCMessageExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|()
+block|;
 name|virtual
 name|child_iterator
 name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_typedef
+argument_list|()
+block|;
 typedef|typedef
 name|ExprIterator
 name|arg_iterator
 typedef|;
-end_typedef
+end_decl_stmt
 
 begin_typedef
 typedef|typedef

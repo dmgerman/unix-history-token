@@ -2552,6 +2552,12 @@ operator|*
 operator|>
 name|SpecializedTemplate
 block|;
+comment|/// \brief The type-as-written of an explicit template specialization.
+comment|/// Does not apply to implicit specializations.
+name|TypeSourceInfo
+operator|*
+name|TypeAsWritten
+block|;
 comment|/// \brief The template arguments used to describe this specialization.
 name|TemplateArgumentList
 name|TemplateArgs
@@ -2874,16 +2880,25 @@ comment|/// the user. This will be a class template specialization type.
 name|void
 name|setTypeAsWritten
 argument_list|(
-argument|QualType T
+argument|TypeSourceInfo *T
 argument_list|)
 block|{
-name|TypeForDecl
+name|TypeAsWritten
 operator|=
 name|T
-operator|.
-name|getTypePtr
-argument_list|()
 block|;   }
+comment|/// \brief Gets the type of this specialization as it was written by
+comment|/// the user, if it was so written.
+name|TypeSourceInfo
+operator|*
+name|getTypeAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeAsWritten
+return|;
+block|}
 name|void
 name|Profile
 argument_list|(
@@ -3026,6 +3041,7 @@ operator|*
 name|TemplateParams
 block|;
 comment|/// \brief The source info for the template arguments as written.
+comment|/// FIXME: redundant with TypeAsWritten?
 name|TemplateArgumentLoc
 operator|*
 name|ArgsAsWritten
@@ -3131,6 +3147,8 @@ argument_list|,
 argument|TemplateArgumentListBuilder&Builder
 argument_list|,
 argument|const TemplateArgumentListInfo&ArgInfos
+argument_list|,
+argument|QualType CanonInjectedType
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|)
@@ -3606,8 +3624,8 @@ argument_list|(
 argument|QualType T
 argument_list|)
 block|;
-comment|/// \brief Retrieve the type of the injected-class-name for this
-comment|/// class template.
+comment|/// \brief Retrieve the template specialization type of the
+comment|/// injected-class-name for this class template.
 comment|///
 comment|/// The injected-class-name for a class template \c X is \c
 comment|/// X<template-args>, where \c template-args is formed from the
@@ -3621,7 +3639,7 @@ comment|///   typedef array this_type; // "array" is equivalent to "array<T, N>"
 comment|/// };
 comment|/// \endcode
 name|QualType
-name|getInjectedClassNameType
+name|getInjectedClassNameSpecialization
 argument_list|(
 name|ASTContext
 operator|&

@@ -6389,10 +6389,6 @@ name|TemplateTypeParmDecl
 block|;
 name|friend
 name|class
-name|ClassTemplateSpecializationDecl
-block|;
-name|friend
-name|class
 name|TagType
 block|;
 name|protected

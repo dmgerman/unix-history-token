@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function
@@ -1838,7 +1838,7 @@ name|x
 operator|+
 name|y
 decl_stmt|;
-comment|// FIXME: Eventually this should be reported as a dead store.
+comment|// expected-warning{{Value stored to 'z' during its initialization is never read}}
 block|}
 argument_list|()
 expr_stmt|;
@@ -2079,6 +2079,54 @@ name|z
 return|;
 block|}
 end_block
+
+begin_function
+name|int
+name|f26_nestedblocks
+parameter_list|()
+block|{
+name|int
+name|z
+decl_stmt|;
+name|z
+operator|=
+literal|1
+expr_stmt|;
+specifier|__block
+name|int
+name|y
+init|=
+literal|0
+decl_stmt|;
+lambda|^
+block|{
+name|int
+name|k
+decl_stmt|;
+name|k
+operator|=
+literal|1
+expr_stmt|;
+comment|// expected-warning{{Value stored to 'k' is never read}}
+lambda|^
+block|{
+name|y
+operator|=
+name|z
+operator|+
+literal|1
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+return|return
+name|y
+return|;
+block|}
+end_function
 
 end_unit
 

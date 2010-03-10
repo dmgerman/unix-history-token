@@ -145,11 +145,6 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|SuppressTagKind
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|SuppressScope
 argument_list|(
 name|false
@@ -206,13 +201,6 @@ comment|/// typedef struct { int x, y; } Point;
 comment|/// \endcode
 name|bool
 name|SuppressTag
-range|:
-literal|1
-decl_stmt|;
-comment|/// \brief If we are printing a tag type, suppresses printing of the
-comment|/// kind of tag, e.g., "struct", "union", "enum".
-name|bool
-name|SuppressTagKind
 range|:
 literal|1
 decl_stmt|;

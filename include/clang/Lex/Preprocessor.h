@@ -947,7 +947,7 @@ name|getCurrentFileLexer
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getPPCallbacks/setPPCallbacks - Accessors for preprocessor callbacks.
+comment|/// getPPCallbacks/addPPCallbacks - Accessors for preprocessor callbacks.
 comment|/// Note that this class takes ownership of any PPCallbacks object given to
 comment|/// it.
 name|PPCallbacks
@@ -961,7 +961,7 @@ name|Callbacks
 return|;
 block|}
 name|void
-name|setPPCallbacks
+name|addPPCallbacks
 parameter_list|(
 name|PPCallbacks
 modifier|*

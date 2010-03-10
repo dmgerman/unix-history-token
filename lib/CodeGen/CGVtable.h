@@ -702,27 +702,6 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-comment|/// GenerateClassData - Generate all the class data requires to be generated
-comment|/// upon definition of a KeyFunction.  This includes the vtable, the
-comment|/// rtti data structure and the VTT.
-comment|///
-comment|/// \param Linkage - The desired linkage of the vtable, the RTTI and the VTT.
-name|void
-name|GenerateClassData
-argument_list|(
-name|llvm
-operator|::
-name|GlobalVariable
-operator|::
-name|LinkageTypes
-name|Linkage
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-decl_stmt|;
 name|llvm
 operator|::
 name|GlobalVariable
@@ -919,6 +898,27 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
+comment|/// GenerateClassData - Generate all the class data requires to be generated
+comment|/// upon definition of a KeyFunction.  This includes the vtable, the
+comment|/// rtti data structure and the VTT.
+comment|///
+comment|/// \param Linkage - The desired linkage of the vtable, the RTTI and the VTT.
+name|void
+name|GenerateClassData
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|::
+name|LinkageTypes
+name|Linkage
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

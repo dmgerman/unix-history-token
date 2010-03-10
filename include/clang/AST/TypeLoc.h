@@ -1845,6 +1845,22 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Wrapper for source info for injected class names of class
+comment|/// templates.
+name|class
+name|InjectedClassNameTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TypeSpecTypeLoc
+block|,
+name|InjectedClassNameTypeLoc
+block|,
+name|InjectedClassNameType
+operator|>
+block|{ }
+block|;
 comment|/// \brief Wrapper for source info for unresolved typename using decls.
 name|class
 name|UnresolvedUsingTypeLoc

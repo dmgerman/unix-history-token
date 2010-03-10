@@ -10359,6 +10359,183 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief The injected class name of a C++ class template.  Used to
+comment|/// record that a type was spelled with a bare identifier rather than
+comment|/// as a template-id; the equivalent for non-templated classes is just
+comment|/// RecordType.
+comment|///
+comment|/// For consistency, template instantiation turns these into RecordTypes.
+comment|///
+comment|/// The desugared form is always a unqualified TemplateSpecializationType.
+comment|/// The canonical form is always either a TemplateSpecializationType
+comment|/// (when dependent) or a RecordType (otherwise).
+name|class
+name|InjectedClassNameType
+operator|:
+name|public
+name|Type
+block|{
+name|CXXRecordDecl
+operator|*
+name|Decl
+block|;
+name|QualType
+name|UnderlyingType
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|InjectedClassNameType
+argument_list|(
+argument|CXXRecordDecl *D
+argument_list|,
+argument|QualType TST
+argument_list|,
+argument|QualType Canon
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|InjectedClassName
+argument_list|,
+name|Canon
+argument_list|,
+name|Canon
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|)
+block|,
+name|Decl
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|UnderlyingType
+argument_list|(
+argument|TST
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|TemplateSpecializationType
+operator|>
+operator|(
+name|TST
+operator|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|TST
+operator|.
+name|hasQualifiers
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|TST
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|==
+name|Canon
+argument_list|)
+block|;   }
+name|public
+operator|:
+name|QualType
+name|getUnderlyingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnderlyingType
+return|;
+block|}
+specifier|const
+name|TemplateSpecializationType
+operator|*
+name|getUnderlyingTST
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|TemplateSpecializationType
+operator|>
+operator|(
+name|UnderlyingType
+operator|.
+name|getTypePtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|CXXRecordDecl
+operator|*
+name|getDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Decl
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnderlyingType
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|InjectedClassName
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InjectedClassNameType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents a type that was referred to via a qualified
 comment|/// name, e.g., N::M::type.
 comment|///
@@ -13245,9 +13422,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -13276,16 +13450,14 @@ operator|->
 name|isObjCClassType
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|} inline
+specifier|inline
 name|bool
 name|Type
 operator|::

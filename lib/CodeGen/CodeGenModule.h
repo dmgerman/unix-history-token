@@ -1684,6 +1684,16 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|>
+name|DeferredVtables
+expr_stmt|;
 name|private
 label|:
 comment|/// UniqueMangledName - Unique a name by (if necessary) inserting it into the

@@ -310,5 +310,39 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|f7
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|x
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|4
+argument_list|)
+decl_stmt|;
+name|free
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+name|x
+index|[
+literal|0
+index|]
+operator|=
+literal|'a'
+expr_stmt|;
+comment|// expected-warning{{Use dynamically allocated memory after it is freed.}}
+block|}
+end_function
+
 end_unit
 

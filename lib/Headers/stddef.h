@@ -29,6 +29,18 @@ name|ptrdiff_t
 expr_stmt|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T
+end_define
+
 begin_typedef
 typedef|typedef
 name|__typeof__
@@ -39,11 +51,28 @@ name|size_t
 expr_stmt|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|__cplusplus
 end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WCHAR_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_WCHAR_T
+end_define
 
 begin_typedef
 typedef|typedef
@@ -60,6 +89,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|NULL
+end_undef
 
 begin_ifdef
 ifdef|#

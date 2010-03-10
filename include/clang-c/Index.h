@@ -948,6 +948,15 @@ name|enum
 name|CXCursorKind
 parameter_list|)
 function_decl|;
+comment|/***  * \brief Determine whether the given cursor represents a currently  *  unexposed piece of the AST (e.g., CXCursor_UnexposedStmt).  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isUnexposed
+parameter_list|(
+name|enum
+name|CXCursorKind
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Describe the linkage of the entity referred to by a cursor.  */
 enum|enum
 name|CXLinkageKind

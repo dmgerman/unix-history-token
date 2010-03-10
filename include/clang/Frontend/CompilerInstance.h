@@ -1307,12 +1307,12 @@ operator|*
 name|OS
 argument_list|)
 decl_stmt|;
-comment|/// ClearOutputFiles - Clear the output file list, destroying the contained
+comment|/// clearOutputFiles - Clear the output file list, destroying the contained
 comment|/// output streams.
 comment|///
 comment|/// \param EraseFiles - If true, attempt to erase the files from disk.
 name|void
-name|ClearOutputFiles
+name|clearOutputFiles
 parameter_list|(
 name|bool
 name|EraseFiles
