@@ -67278,15 +67278,6 @@ modifier|*
 name|tsf
 parameter_list|)
 block|{
-name|struct
-name|bwn_softc
-modifier|*
-name|sc
-init|=
-name|mac
-operator|->
-name|mac_sc
-decl_stmt|;
 name|uint32_t
 name|low
 decl_stmt|,
@@ -67296,7 +67287,9 @@ name|KASSERT
 argument_list|(
 name|siba_get_revid
 argument_list|(
-name|sc
+name|mac
+operator|->
+name|mac_sc
 operator|->
 name|sc_dev
 argument_list|)
