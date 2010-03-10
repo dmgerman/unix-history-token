@@ -114,6 +114,9 @@ decl_stmt|;
 name|DebugLoc
 name|DL
 decl_stmt|;
+name|unsigned
+name|Order
+decl_stmt|;
 name|public
 label|:
 comment|// Constructor for non-constants.
@@ -128,6 +131,8 @@ argument_list|,
 argument|uint64_t off
 argument_list|,
 argument|DebugLoc dl
+argument_list|,
+argument|unsigned O
 argument_list|)
 block|:
 name|Node
@@ -157,7 +162,12 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
-argument|dl
+name|dl
+argument_list|)
+operator|,
+name|Order
+argument_list|(
+argument|O
 argument_list|)
 block|{}
 comment|// Constructor for constants.
@@ -170,6 +180,8 @@ argument_list|,
 argument|uint64_t off
 argument_list|,
 argument|DebugLoc dl
+argument_list|,
+argument|unsigned O
 argument_list|)
 operator|:
 name|Node
@@ -199,7 +211,12 @@ argument_list|)
 operator|,
 name|DL
 argument_list|(
-argument|dl
+name|dl
+argument_list|)
+operator|,
+name|Order
+argument_list|(
+argument|O
 argument_list|)
 block|{}
 comment|// Returns the MDNode pointer.
@@ -275,6 +292,16 @@ parameter_list|()
 block|{
 return|return
 name|DL
+return|;
+block|}
+comment|// Returns the SDNodeOrder.  This is the order of the preceding node in the
+comment|// input.
+name|unsigned
+name|getOrder
+parameter_list|()
+block|{
+return|return
+name|Order
 return|;
 block|}
 block|}

@@ -130,6 +130,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -240,10 +243,11 @@ operator|*
 name|MF
 argument_list|)
 block|;
-comment|/// RecordSourceLine - Register a source line with debug info. Returns a
-comment|/// unique label ID used to generate a label and provide correspondence to
+comment|/// RecordSourceLine - Register a source line with debug info. Returns the
+comment|/// unique label that was emitted and which provides correspondence to
 comment|/// the source line list.
-name|unsigned
+name|MCSymbol
+operator|*
 name|RecordSourceLine
 argument_list|(
 argument|unsigned Line
@@ -268,9 +272,14 @@ block|;
 name|void
 name|BeginScope
 argument_list|(
-argument|const MachineInstr *MI
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
 argument_list|,
-argument|unsigned Label
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
 block|;
 name|void

@@ -2587,6 +2587,17 @@ comment|///
 comment|/// When -enable-frame-index-scavenging is enabled, the virtual register
 comment|/// allocated for this frame index is returned and its value is stored in
 comment|/// *Value.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|int
+operator|>
+name|FrameIndexValue
+expr_stmt|;
 name|virtual
 name|unsigned
 name|eliminateFrameIndex
@@ -2599,7 +2610,7 @@ argument_list|,
 name|int
 name|SPAdj
 argument_list|,
-name|int
+name|FrameIndexValue
 operator|*
 name|Value
 operator|=

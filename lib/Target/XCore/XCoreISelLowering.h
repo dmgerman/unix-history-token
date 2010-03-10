@@ -129,6 +129,15 @@ block|,
 comment|// Corresponds to LSUB instruction
 name|LSUB
 block|,
+comment|// Corresponds to LMUL instruction
+name|LMUL
+block|,
+comment|// Corresponds to MACCU instruction
+name|MACCU
+block|,
+comment|// Corresponds to MACCS instruction
+name|MACCS
+block|,
 comment|// Jumptable branch.
 name|BR_JT
 block|,
@@ -410,6 +419,22 @@ argument|SelectionDAG&DAG
 argument_list|)
 block|;
 name|SDValue
+name|LowerUMUL_LOHI
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerSMUL_LOHI
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
 name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
@@ -434,6 +459,18 @@ specifier|const
 block|;
 comment|// Expand specifics
 name|SDValue
+name|TryExpandADDWithMul
+argument_list|(
+name|SDNode
+operator|*
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+block|;
+name|SDValue
 name|ExpandADDSUB
 argument_list|(
 name|SDNode
@@ -452,6 +489,25 @@ argument_list|(
 argument|SDNode *N
 argument_list|,
 argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|computeMaskedBitsForTargetNode
+argument_list|(
+argument|const SDValue Op
+argument_list|,
+argument|const APInt&Mask
+argument_list|,
+argument|APInt&KnownZero
+argument_list|,
+argument|APInt&KnownOne
+argument_list|,
+argument|const SelectionDAG&DAG
+argument_list|,
+argument|unsigned Depth =
+literal|0
 argument_list|)
 specifier|const
 block|;

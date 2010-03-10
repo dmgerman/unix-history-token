@@ -151,6 +151,13 @@ argument_list|(
 argument|unsigned RegEnum
 argument_list|)
 block|;
+specifier|static
+name|unsigned
+name|getRegisterFromNumbering
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
@@ -221,7 +228,7 @@ argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
-argument|int *Value = NULL
+argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)
@@ -274,6 +281,18 @@ name|getEHHandlerRegister
 argument_list|()
 specifier|const
 block|;
+comment|/// targetHandlesStackFrameRounding - Returns true if the target is
+comment|/// responsible for rounding up the stack frame (probably at emitPrologue
+comment|/// time).
+name|bool
+name|targetHandlesStackFrameRounding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 name|int
 name|getDwarfRegNum
 argument_list|(

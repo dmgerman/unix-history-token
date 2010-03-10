@@ -444,6 +444,124 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isSimplePredicateNode - Return true if this is a simple predicate that
+comment|/// operates on the node or its children without potential side effects or a
+comment|/// change of the current node.
+name|bool
+name|isSimplePredicateNode
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+case|case
+name|CheckSame
+case|:
+case|case
+name|CheckPatternPredicate
+case|:
+case|case
+name|CheckPredicate
+case|:
+case|case
+name|CheckOpcode
+case|:
+case|case
+name|CheckType
+case|:
+case|case
+name|CheckChildType
+case|:
+case|case
+name|CheckInteger
+case|:
+case|case
+name|CheckCondCode
+case|:
+case|case
+name|CheckValueType
+case|:
+case|case
+name|CheckAndImm
+case|:
+case|case
+name|CheckOrImm
+case|:
+case|case
+name|CheckFoldableChainNode
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
+comment|/// isSimplePredicateOrRecordNode - Return true if this is a record node or
+comment|/// a simple predicate.
+name|bool
+name|isSimplePredicateOrRecordNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSimplePredicateNode
+argument_list|()
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|RecordNode
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|RecordChild
+return|;
+block|}
+comment|/// unlinkNode - Unlink the specified node from this chain.  If Other == this,
+comment|/// we unlink the next pointer and return it.  Otherwise we unlink Other from
+comment|/// the list and return this.
+name|Matcher
+modifier|*
+name|unlinkNode
+parameter_list|(
+name|Matcher
+modifier|*
+name|Other
+parameter_list|)
+function_decl|;
+comment|/// canMoveBefore - Return true if this matcher is the same as Other, or if
+comment|/// we can move this matcher past all of the nodes in-between Other and this
+comment|/// node.  Other must be equal to or before this.
+name|bool
+name|canMoveBefore
+argument_list|(
+specifier|const
+name|Matcher
+operator|*
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// canMoveBefore - Return true if it is safe to move the current matcher
+comment|/// across the specified one.
+name|bool
+name|canMoveBeforeNode
+argument_list|(
+specifier|const
+name|Matcher
+operator|*
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isContradictory - Return true of these two matchers could never match on
 comment|/// the same node.
 name|bool
@@ -2819,6 +2937,13 @@ name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
+specifier|const
+block|;
+name|bool
+name|isContradictoryImpl
+argument_list|(
+argument|const Matcher *M
+argument_list|)
 specifier|const
 block|; }
 block|;

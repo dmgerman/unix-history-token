@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"DwarfLabel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -110,6 +104,9 @@ name|TargetData
 decl_stmt|;
 name|class
 name|MCSymbol
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes the one attribute of a
@@ -795,8 +792,6 @@ name|isString
 block|,
 name|isLabel
 block|,
-name|isAsIsLabel
-block|,
 name|isSectionOffset
 block|,
 name|isDelta
@@ -1246,26 +1241,27 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEDwarfLabel - A Dwarf internal label expression DIE.
+comment|/// DIELabel - A label expression DIE.
 comment|//
 name|class
-name|DIEDwarfLabel
+name|DIELabel
 range|:
 name|public
 name|DIEValue
 block|{
 specifier|const
-name|DWLabel
+name|MCSymbol
+operator|*
 name|Label
 block|;
 name|public
 operator|:
 name|explicit
-name|DIEDwarfLabel
+name|DIELabel
 argument_list|(
 specifier|const
-name|DWLabel
-operator|&
+name|MCSymbol
+operator|*
 name|L
 argument_list|)
 operator|:
@@ -1308,7 +1304,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const DIEDwarfLabel *
+argument|const DIELabel *
 argument_list|)
 block|{
 return|return
@@ -1348,109 +1344,6 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEObjectLabel - A label to an object in code or data.
-comment|//
-name|class
-name|DIEObjectLabel
-range|:
-name|public
-name|DIEValue
-block|{
-specifier|const
-name|MCSymbol
-operator|*
-name|Sym
-block|;
-name|public
-operator|:
-name|explicit
-name|DIEObjectLabel
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|S
-argument_list|)
-operator|:
-name|DIEValue
-argument_list|(
-name|isAsIsLabel
-argument_list|)
-block|,
-name|Sym
-argument_list|(
-argument|S
-argument_list|)
-block|{}
-comment|/// EmitValue - Emit label value.
-comment|///
-name|virtual
-name|void
-name|EmitValue
-argument_list|(
-argument|DwarfPrinter *D
-argument_list|,
-argument|unsigned Form
-argument_list|)
-specifier|const
-block|;
-comment|/// SizeOf - Determine size of label value in bytes.
-comment|///
-name|virtual
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|const TargetData *TD
-argument_list|,
-argument|unsigned Form
-argument_list|)
-specifier|const
-block|;
-comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEObjectLabel *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEValue *L
-argument_list|)
-block|{
-return|return
-name|L
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|isAsIsLabel
-return|;
-block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|virtual
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
-block|;
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
 comment|/// DIESectionOffset - A section offset DIE.
 comment|///
 name|class
@@ -1460,11 +1353,13 @@ name|public
 name|DIEValue
 block|{
 specifier|const
-name|DWLabel
+name|MCSymbol
+operator|*
 name|Label
 block|;
 specifier|const
-name|DWLabel
+name|MCSymbol
+operator|*
 name|Section
 block|;
 name|bool
@@ -1472,22 +1367,15 @@ name|IsEH
 operator|:
 literal|1
 block|;
-name|bool
-name|UseSet
-operator|:
-literal|1
-block|;
 name|public
 operator|:
 name|DIESectionOffset
 argument_list|(
-argument|const DWLabel&Lab
+argument|const MCSymbol *Lab
 argument_list|,
-argument|const DWLabel&Sec
+argument|const MCSymbol *Sec
 argument_list|,
 argument|bool isEH = false
-argument_list|,
-argument|bool useSet = true
 argument_list|)
 operator|:
 name|DIEValue
@@ -1507,12 +1395,7 @@ argument_list|)
 block|,
 name|IsEH
 argument_list|(
-name|isEH
-argument_list|)
-block|,
-name|UseSet
-argument_list|(
-argument|useSet
+argument|isEH
 argument_list|)
 block|{}
 comment|/// EmitValue - Emit section offset.
@@ -1593,11 +1476,13 @@ name|public
 name|DIEValue
 block|{
 specifier|const
-name|DWLabel
+name|MCSymbol
+operator|*
 name|LabelHi
 block|;
 specifier|const
-name|DWLabel
+name|MCSymbol
+operator|*
 name|LabelLo
 block|;
 name|public
@@ -1605,13 +1490,13 @@ operator|:
 name|DIEDelta
 argument_list|(
 specifier|const
-name|DWLabel
-operator|&
+name|MCSymbol
+operator|*
 name|Hi
 argument_list|,
 specifier|const
-name|DWLabel
-operator|&
+name|MCSymbol
+operator|*
 name|Lo
 argument_list|)
 operator|:

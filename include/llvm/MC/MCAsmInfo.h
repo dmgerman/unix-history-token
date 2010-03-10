@@ -490,26 +490,6 @@ name|bool
 name|DwarfUsesInlineInfoSection
 decl_stmt|;
 comment|// Defaults to false.
-comment|/// Is_EHSymbolPrivate - If set, the "_foo.eh" is made private so that it
-comment|/// doesn't show up in the symbol table of the object file.
-name|bool
-name|Is_EHSymbolPrivate
-decl_stmt|;
-comment|// Defaults to true.
-comment|/// GlobalEHDirective - This is the directive used to make exception frame
-comment|/// tables globally visible.
-specifier|const
-name|char
-modifier|*
-name|GlobalEHDirective
-decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// SupportsWeakEmptyEHFrame - True if target assembler and linker will
-comment|/// handle a weak_definition of constant 0 for an omitted EH frame.
-name|bool
-name|SupportsWeakOmittedEHFrame
-decl_stmt|;
-comment|// Defaults to true.
 comment|/// DwarfSectionOffsetDirective - Special section offset directive.
 specifier|const
 name|char
@@ -1145,35 +1125,6 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesInlineInfoSection
-return|;
-block|}
-name|bool
-name|is_EHSymbolPrivate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Is_EHSymbolPrivate
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getGlobalEHDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GlobalEHDirective
-return|;
-block|}
-name|bool
-name|getSupportsWeakOmittedEHFrame
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportsWeakOmittedEHFrame
 return|;
 block|}
 specifier|const

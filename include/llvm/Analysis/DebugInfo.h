@@ -150,16 +150,6 @@ name|MDNode
 modifier|*
 name|DbgNode
 decl_stmt|;
-comment|/// DIDescriptor constructor.  If the specified node is non-null, check
-comment|/// to make sure that the tag in the descriptor matches 'RequiredTag'.  If
-comment|/// not, the debug info is corrupt and we ignore it.
-name|DIDescriptor
-argument_list|(
-argument|MDNode *N
-argument_list|,
-argument|unsigned RequiredTag
-argument_list|)
-empty_stmt|;
 name|StringRef
 name|getStringField
 argument_list|(
@@ -261,13 +251,13 @@ argument|N
 argument_list|)
 block|{}
 name|bool
-name|isNull
+name|Verify
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DbgNode
-operator|==
+operator|!=
 literal|0
 return|;
 block|}
@@ -365,6 +355,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isFile
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isCompileUnit
 argument_list|()
 specifier|const
@@ -423,8 +418,6 @@ operator|:
 name|DIDescriptor
 argument_list|(
 argument|N
-argument_list|,
-argument|dwarf::DW_TAG_subrange_type
 argument_list|)
 block|{}
 name|int64_t
@@ -527,20 +520,7 @@ name|DIDescriptor
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isScope
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{}
 name|virtual
 operator|~
 name|DIScope
@@ -580,20 +560,7 @@ name|DIScope
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isCompileUnit
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{}
 name|unsigned
 name|getLanguage
 argument_list|()
@@ -711,6 +678,84 @@ argument_list|()
 specifier|const
 block|;   }
 block|;
+comment|/// DIFile - This is a wrapper for a file.
+name|class
+name|DIFile
+operator|:
+name|public
+name|DIScope
+block|{
+name|public
+operator|:
+name|explicit
+name|DIFile
+argument_list|(
+name|MDNode
+operator|*
+name|N
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|DIScope
+argument_list|(
+argument|N
+argument_list|)
+block|{
+if|if
+condition|(
+name|DbgNode
+operator|&&
+operator|!
+name|isFile
+argument_list|()
+condition|)
+name|DbgNode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|1
+argument_list|)
+return|;
+block|}
+name|StringRef
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringField
+argument_list|(
+literal|2
+argument_list|)
+return|;
+block|}
+name|DICompileUnit
+name|getCompileUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DICompileUnit
+operator|>
+operator|(
+literal|3
+operator|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// DIEnumerator - A wrapper for an enumerator (e.g. X and Y in 'enum {X,Y}').
 comment|/// FIXME: it seems strange that this doesn't have either a reference to the
 comment|/// type/precision or a file/line pair for location info.
@@ -735,8 +780,6 @@ operator|:
 name|DIDescriptor
 argument_list|(
 argument|N
-argument_list|,
-argument|dwarf::DW_TAG_enumerator
 argument_list|)
 block|{}
 name|StringRef
@@ -772,7 +815,7 @@ name|class
 name|DIType
 operator|:
 name|public
-name|DIDescriptor
+name|DIScope
 block|{
 name|public
 operator|:
@@ -825,20 +868,6 @@ block|}
 block|;
 name|protected
 operator|:
-name|DIType
-argument_list|(
-argument|MDNode *N
-argument_list|,
-argument|unsigned Tag
-argument_list|)
-operator|:
-name|DIDescriptor
-argument_list|(
-argument|N
-argument_list|,
-argument|Tag
-argument_list|)
-block|{}
 comment|// This ctor is used when the Tag has already been validated by a derived
 comment|// ctor.
 name|DIType
@@ -852,7 +881,7 @@ argument_list|,
 name|bool
 argument_list|)
 operator|:
-name|DIDescriptor
+name|DIScope
 argument_list|(
 argument|N
 argument_list|)
@@ -884,16 +913,19 @@ operator|~
 name|DIType
 argument_list|()
 block|{}
-name|DIDescriptor
+name|DIScope
 name|getContext
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getDescriptorField
-argument_list|(
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
 literal|1
-argument_list|)
+operator|)
 return|;
 block|}
 name|StringRef
@@ -913,6 +945,15 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getFieldAs
 operator|<
@@ -921,6 +962,23 @@ operator|>
 operator|(
 literal|3
 operator|)
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|3
+operator|)
+block|;
+return|return
+name|F
+operator|.
+name|getCompileUnit
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1098,6 +1156,52 @@ operator|!=
 literal|0
 return|;
 block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DbgNode
+operator|&&
+operator|(
+name|isBasicType
+argument_list|()
+operator|||
+name|isDerivedType
+argument_list|()
+operator|||
+name|isCompositeType
+argument_list|()
+operator|)
+return|;
+block|}
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCompileUnit
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCompileUnit
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+block|}
 comment|/// dump - print type.
 name|void
 name|dump
@@ -1127,8 +1231,6 @@ operator|:
 name|DIType
 argument_list|(
 argument|N
-argument_list|,
-argument|dwarf::DW_TAG_base_type
 argument_list|)
 block|{}
 name|unsigned
@@ -1201,20 +1303,7 @@ argument|true
 argument_list|,
 argument|true
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isDerivedType
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{}
 name|DIType
 name|getTypeDerivedFrom
 argument_list|()
@@ -1365,16 +1454,14 @@ operator|:
 name|explicit
 name|DIGlobal
 argument_list|(
-argument|MDNode *N
-argument_list|,
-argument|unsigned RequiredTag
+name|MDNode
+operator|*
+name|N
 argument_list|)
 operator|:
 name|DIDescriptor
 argument_list|(
 argument|N
-argument_list|,
-argument|RequiredTag
 argument_list|)
 block|{}
 name|public
@@ -1384,16 +1471,19 @@ operator|~
 name|DIGlobal
 argument_list|()
 block|{}
-name|DIDescriptor
+name|DIScope
 name|getContext
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getDescriptorField
-argument_list|(
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
 literal|2
-argument_list|)
+operator|)
 return|;
 block|}
 name|StringRef
@@ -1437,6 +1527,15 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getFieldAs
 operator|<
@@ -1445,6 +1544,23 @@ operator|>
 operator|(
 literal|6
 operator|)
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+block|;
+return|return
+name|F
+operator|.
+name|getCompileUnit
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1530,30 +1646,20 @@ name|DIScope
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isSubprogram
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|DIDescriptor
+block|{}
+name|DIScope
 name|getContext
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getDescriptorField
-argument_list|(
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
 literal|2
-argument_list|)
+operator|)
 return|;
 block|}
 name|StringRef
@@ -1597,6 +1703,15 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getFieldAs
 operator|<
@@ -1605,6 +1720,23 @@ operator|>
 operator|(
 literal|6
 operator|)
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+block|;
+return|return
+name|F
+operator|.
+name|getCompileUnit
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1655,10 +1787,9 @@ argument_list|)
 block|;
 if|if
 condition|(
-operator|!
 name|DCT
 operator|.
-name|isNull
+name|Verify
 argument_list|()
 condition|)
 block|{
@@ -1836,11 +1967,11 @@ operator|*
 name|F
 argument_list|)
 block|;   }
-block|;
+decl_stmt|;
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
 name|class
 name|DIGlobalVariable
-operator|:
+range|:
 name|public
 name|DIGlobal
 block|{
@@ -1859,8 +1990,6 @@ operator|:
 name|DIGlobal
 argument_list|(
 argument|N
-argument_list|,
-argument|dwarf::DW_TAG_variable
 argument_list|)
 block|{}
 name|GlobalVariable
@@ -1888,12 +2017,12 @@ name|dump
 argument_list|()
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
 comment|/// DIVariable - This is a wrapper for a variable (e.g. parameter, local,
 comment|/// global etc).
 name|class
 name|DIVariable
-operator|:
+range|:
 name|public
 name|DIDescriptor
 block|{
@@ -1913,30 +2042,20 @@ name|DIDescriptor
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isVariable
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|DIDescriptor
+block|{}
+name|DIScope
 name|getContext
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getDescriptorField
-argument_list|(
+name|getFieldAs
+operator|<
+name|DIScope
+operator|>
+operator|(
 literal|1
-argument_list|)
+operator|)
 return|;
 block|}
 name|StringRef
@@ -1956,6 +2075,15 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getFieldAs
 operator|<
@@ -1964,6 +2092,23 @@ operator|>
 operator|(
 literal|3
 operator|)
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|3
+operator|)
+block|;
+return|return
+name|F
+operator|.
+name|getCompileUnit
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -1998,7 +2143,7 @@ name|bool
 name|Verify
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// HasComplexAddr - Return true if the variable has a complex address.
 name|bool
 name|hasComplexAddress
@@ -2016,13 +2161,14 @@ name|unsigned
 name|getNumAddrElements
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 name|uint64_t
 name|getAddrElement
 argument_list|(
-argument|unsigned Idx
+name|unsigned
+name|Idx
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|getUInt64Field
@@ -2053,12 +2199,22 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|;   }
-block|;
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// DILexicalBlock - This is a wrapper for a lexical block.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DILexicalBlock
-operator|:
+range|:
 name|public
 name|DIScope
 block|{
@@ -2078,20 +2234,7 @@ name|DIScope
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isLexicalBlock
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{}
 name|DIScope
 name|getContext
 argument_list|()
@@ -2182,20 +2325,7 @@ name|DIScope
 argument_list|(
 argument|N
 argument_list|)
-block|{
-if|if
-condition|(
-name|DbgNode
-operator|&&
-operator|!
-name|isNameSpace
-argument_list|()
-condition|)
-name|DbgNode
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{}
 name|DIScope
 name|getContext
 argument_list|()
@@ -2254,6 +2384,15 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getFieldAs
 operator|<
@@ -2262,6 +2401,23 @@ operator|>
 operator|(
 literal|3
 operator|)
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|3
+operator|)
+block|;
+return|return
+name|F
+operator|.
+name|getCompileUnit
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -2381,7 +2537,11 @@ name|getDirectory
 argument_list|()
 return|;
 block|}
-expr|}
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+block|;   }
 block|;
 comment|/// DIFactory - This object assists with the construction of the various
 comment|/// descriptors.
@@ -2488,6 +2648,17 @@ argument|unsigned RunTimeVer =
 literal|0
 argument_list|)
 block|;
+comment|/// CreateFile -  Create a new descriptor for the specified file.
+name|DIFile
+name|CreateFile
+argument_list|(
+argument|StringRef Filename
+argument_list|,
+argument|StringRef Directory
+argument_list|,
+argument|DICompileUnit CU
+argument_list|)
+block|;
 comment|/// CreateEnumerator - Create a single enumerator value.
 name|DIEnumerator
 name|CreateEnumerator
@@ -2505,7 +2676,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2528,7 +2699,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2554,7 +2725,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2580,7 +2751,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2605,7 +2776,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2645,7 +2816,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNumber
 argument_list|,
@@ -2678,7 +2849,7 @@ argument|StringRef DisplayName
 argument_list|,
 argument|StringRef LinkageName
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
@@ -2722,7 +2893,7 @@ argument|StringRef DisplayName
 argument_list|,
 argument|StringRef LinkageName
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
@@ -2745,7 +2916,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
@@ -2763,7 +2934,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|const std::string&Name
 argument_list|,
-argument|DICompileUnit CompileUnit
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNo
 argument_list|,
@@ -2798,7 +2969,7 @@ argument|DIDescriptor Context
 argument_list|,
 argument|StringRef Name
 argument_list|,
-argument|DICompileUnit CU
+argument|DIFile F
 argument_list|,
 argument|unsigned LineNo
 argument_list|)
@@ -3238,10 +3409,11 @@ literal|64
 operator|>
 name|NodesSeen
 block|;   }
-block|; }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

@@ -107,6 +107,8 @@ operator|:
 expr|enum
 name|ARMArchEnum
 block|{
+name|V4
+block|,
 name|V4T
 block|,
 name|V5T
@@ -138,7 +140,7 @@ block|,
 name|Thumb2
 block|}
 block|;
-comment|/// ARMArchVersion - ARM architecture version: V4T (base), V5T, V5TE,
+comment|/// ARMArchVersion - ARM architecture version: V4, V4T (base), V5T, V5TE,
 comment|/// V6, V6T2, V7A.
 name|ARMArchEnum
 name|ARMArchVersion

@@ -78,12 +78,21 @@ block|{
 name|LLVMDebugVersion
 init|=
 operator|(
-literal|7
+literal|8
 operator|<<
 literal|16
 operator|)
 block|,
 comment|// Current version of debug information.
+name|LLVMDebugVersion7
+init|=
+operator|(
+literal|7
+operator|<<
+literal|16
+operator|)
+block|,
+comment|// Constant for version 7.
 name|LLVMDebugVersion6
 init|=
 operator|(

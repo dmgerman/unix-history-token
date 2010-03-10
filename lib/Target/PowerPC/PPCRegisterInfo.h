@@ -257,7 +257,7 @@ argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
 argument_list|,
-argument|int *Value = NULL
+argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

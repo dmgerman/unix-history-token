@@ -398,6 +398,19 @@ argument_list|,
 argument|MCContext&Ctx
 argument_list|)
 block|;
+comment|/// CreateTemp - Create a reference to an assembler temporary label with the
+comment|/// specified name.
+specifier|static
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|CreateTemp
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|;
 comment|/// @}
 comment|/// @name Accessors
 comment|/// @{

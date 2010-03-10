@@ -1214,6 +1214,12 @@ name|Opc
 operator|==
 name|ARM
 operator|::
+name|MOVPCRX
+operator|||
+name|Opc
+operator|==
+name|ARM
+operator|::
 name|tBRIND
 return|;
 block|}

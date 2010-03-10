@@ -262,29 +262,6 @@ block|{
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
 comment|//
-comment|/// CompileUnitMap - A map of global variables representing compile units to
-comment|/// compile units.
-name|DenseMap
-operator|<
-name|Value
-operator|*
-block|,
-name|CompileUnit
-operator|*
-operator|>
-name|CompileUnitMap
-block|;
-comment|/// CompileUnits - All the compile units in this module.
-comment|///
-name|SmallVector
-operator|<
-name|CompileUnit
-operator|*
-block|,
-literal|8
-operator|>
-name|CompileUnits
-block|;
 comment|/// ModuleCU - All DIEs are inserted in ModuleCU.
 name|CompileUnit
 operator|*
@@ -594,7 +571,8 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 operator|,
 name|DIE
 operator|*
@@ -875,30 +853,9 @@ name|unsigned
 name|Form
 parameter_list|,
 specifier|const
-name|DWLabel
-modifier|&
-name|Label
-parameter_list|)
-function_decl|;
-comment|/// addObjectLabel - Add an non-Dwarf label attribute data and value.
-comment|///
-name|void
-name|addObjectLabel
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|unsigned
-name|Attribute
-parameter_list|,
-name|unsigned
-name|Form
-parameter_list|,
-specifier|const
 name|MCSymbol
 modifier|*
-name|Sym
+name|Label
 parameter_list|)
 function_decl|;
 comment|/// addSectionOffset - Add a section offset label attribute data and value.
@@ -917,24 +874,19 @@ name|unsigned
 name|Form
 parameter_list|,
 specifier|const
-name|DWLabel
-modifier|&
+name|MCSymbol
+modifier|*
 name|Label
 parameter_list|,
 specifier|const
-name|DWLabel
-modifier|&
+name|MCSymbol
+modifier|*
 name|Section
 parameter_list|,
 name|bool
 name|isEH
 init|=
 name|false
-parameter_list|,
-name|bool
-name|useSet
-init|=
-name|true
 parameter_list|)
 function_decl|;
 comment|/// addDelta - Add a label delta attribute data and value.
@@ -953,13 +905,13 @@ name|unsigned
 name|Form
 parameter_list|,
 specifier|const
-name|DWLabel
-modifier|&
+name|MCSymbol
+modifier|*
 name|Hi
 parameter_list|,
 specifier|const
-name|DWLabel
-modifier|&
+name|MCSymbol
+modifier|*
 name|Lo
 parameter_list|)
 function_decl|;
@@ -1278,7 +1230,6 @@ modifier|*
 name|constructEnumTypeDIE
 parameter_list|(
 name|DIEnumerator
-modifier|*
 name|ETy
 parameter_list|)
 function_decl|;
@@ -1318,16 +1269,6 @@ name|bool
 name|MakeDecl
 init|=
 name|false
-parameter_list|)
-function_decl|;
-comment|/// findCompileUnit - Get the compile unit for the given descriptor.
-comment|///
-name|CompileUnit
-modifier|*
-name|findCompileUnit
-parameter_list|(
-name|DICompileUnit
-name|Unit
 parameter_list|)
 function_decl|;
 comment|/// getUpdatedDbgScope - Find or create DbgScope assicated with
@@ -1731,10 +1672,11 @@ modifier|*
 name|MF
 parameter_list|)
 function_decl|;
-comment|/// recordSourceLine - Records location information and associates it with a
-comment|/// label. Returns a unique label ID used to generate a label and provide
-comment|/// correspondence to the source line list.
-name|unsigned
+comment|/// recordSourceLine - Register a source line with debug info. Returns the
+comment|/// unique label that was emitted and which provides correspondence to
+comment|/// the source line list.
+name|MCSymbol
+modifier|*
 name|recordSourceLine
 parameter_list|(
 name|unsigned
@@ -1805,7 +1747,8 @@ name|MachineInstr
 modifier|*
 name|MI
 parameter_list|,
-name|unsigned
+name|MCSymbol
+modifier|*
 name|Label
 parameter_list|)
 function_decl|;

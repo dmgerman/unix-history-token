@@ -798,42 +798,13 @@ name|LabelID
 parameter_list|)
 block|{
 comment|// Remap to zero to indicate deletion.
-name|RemapLabel
-argument_list|(
-name|LabelID
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// RemapLabel - Indicate that a label has been merged into another.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function
-name|void
-name|RemapLabel
-parameter_list|(
-name|unsigned
-name|OldLabelID
-parameter_list|,
-name|unsigned
-name|NewLabelID
-parameter_list|)
-block|{
 name|assert
 argument_list|(
 literal|0
 operator|<
-name|OldLabelID
+name|LabelID
 operator|&&
-name|OldLabelID
+name|LabelID
 operator|<=
 name|LabelIDList
 operator|.
@@ -843,41 +814,33 @@ operator|&&
 literal|"Old label ID out of range."
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|NewLabelID
-operator|<=
-name|LabelIDList
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"New label ID out of range."
-argument_list|)
-expr_stmt|;
 name|LabelIDList
 index|[
-name|OldLabelID
+name|LabelID
 operator|-
 literal|1
 index|]
 operator|=
-name|NewLabelID
+literal|0
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/// MappedLabel - Find out the label's final ID.  Zero indicates deletion.
+comment|/// isLabelDeleted - Return true if the label was deleted.
 end_comment
 
 begin_comment
-comment|/// ID != Mapped ID indicates that the label was folded into another label.
+comment|/// FIXME: This should eventually be eliminated and use the 'is emitted' bit
+end_comment
+
+begin_comment
+comment|/// on MCSymbol.
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|MappedLabel
+name|bool
+name|isLabelDeleted
 argument_list|(
 name|unsigned
 name|LabelID
@@ -898,14 +861,16 @@ argument_list|)
 expr_stmt|;
 return|return
 name|LabelID
-condition|?
+operator|==
+literal|0
+operator|||
 name|LabelIDList
 index|[
 name|LabelID
 operator|-
 literal|1
 index|]
-else|:
+operator|==
 literal|0
 return|;
 block|}

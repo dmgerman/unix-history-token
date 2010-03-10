@@ -157,6 +157,10 @@ range|:
 name|public
 name|TargetLowering
 block|{
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|// FrameIndex for start of varargs area.
 name|public
 operator|:
 name|explicit
@@ -271,6 +275,14 @@ argument_list|)
 block|;
 name|SDValue
 name|LowerSELECT_CC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+block|;
+name|SDValue
+name|LowerVASTART
 argument_list|(
 argument|SDValue Op
 argument_list|,

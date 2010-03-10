@@ -229,6 +229,23 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// growCachedCostInfo - update the cached cost info for Caller after Callee
+comment|/// has been inlined.
+name|virtual
+name|void
+name|growCachedCostInfo
+argument_list|(
+name|Function
+operator|*
+name|Caller
+argument_list|,
+name|Function
+operator|*
+name|Callee
+argument_list|)
+operator|=
+literal|0
+block|;
 comment|/// removeDeadFunctions - Remove dead functions that are not included in
 comment|/// DNR (Do Not Remove) list.
 name|bool

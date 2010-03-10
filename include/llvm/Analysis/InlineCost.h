@@ -624,6 +624,21 @@ name|FunctionInfo
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// growCachedCostInfo - update the cached cost info for Caller after Callee
+comment|/// has been inlined. If Callee is NULL it means a dead call has been
+comment|/// eliminated.
+name|void
+name|growCachedCostInfo
+parameter_list|(
+name|Function
+modifier|*
+name|Caller
+parameter_list|,
+name|Function
+modifier|*
+name|Callee
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

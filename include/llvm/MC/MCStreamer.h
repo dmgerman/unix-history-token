@@ -507,6 +507,24 @@ name|unsigned
 name|AddrSpace
 parameter_list|)
 function_decl|;
+comment|/// EmitSymbolValue - Special case of EmitValue that avoids the client
+comment|/// having to pass in a MCExpr for MCSymbols.
+name|virtual
+name|void
+name|EmitSymbolValue
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|,
+name|unsigned
+name|AddrSpace
+parameter_list|)
+function_decl|;
 comment|/// EmitGPRel32Value - Emit the expression @p Value into the output as a
 comment|/// gprel32 (32-bit GP relative) value.
 comment|///

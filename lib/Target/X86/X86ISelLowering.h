@@ -395,6 +395,9 @@ comment|// according to %al. An operator is needed so that this can be expanded
 comment|// with control flow.
 name|VASTART_SAVE_XMM_REGS
 block|,
+comment|// MINGW_ALLOCA - MingW's __alloca call to do stack probing.
+name|MINGW_ALLOCA
+block|,
 comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
 comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
 comment|// Atomic 64-bit binary operations.
@@ -415,6 +418,9 @@ block|,
 name|ATOMNAND64_DAG
 block|,
 name|ATOMSWAP64_DAG
+comment|// WARNING: Do not add anything in the end unless you want the node to
+comment|// have memop! In fact, starting from ATOMADD64_DAG all opcodes will be
+comment|// thought as target memory ops!
 block|}
 enum|;
 block|}
@@ -2170,6 +2176,20 @@ operator|*
 name|EmitLoweredSelect
 argument_list|(
 argument|MachineInstr *I
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|DenseMap<MachineBasicBlock*
+argument_list|,
+argument|MachineBasicBlock*> *EM
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitLoweredMingwAlloca
+argument_list|(
+argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|,

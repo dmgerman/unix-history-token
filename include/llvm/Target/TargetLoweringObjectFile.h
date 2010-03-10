@@ -258,6 +258,23 @@ name|MCSection
 modifier|*
 name|DwarfMacroInfoSection
 decl_stmt|;
+comment|/// SupportsWeakEmptyEHFrame - True if target object file supports a
+comment|/// weak_definition of constant 0 for an omitted EH frame.
+name|bool
+name|SupportsWeakOmittedEHFrame
+decl_stmt|;
+comment|/// IsFunctionEHSymbolGlobal - This flag is set to true if the ".eh" symbol
+comment|/// for a function should be marked .globl.
+name|bool
+name|IsFunctionEHSymbolGlobal
+decl_stmt|;
+comment|/// IsFunctionEHFrameSymbolPrivate - This flag is set to true if the
+comment|/// "EH_frame" symbol for EH information should be an assembler temporary (aka
+comment|/// private linkage, aka an L or .L label) or false if it should be a normal
+comment|/// non-.globl label.  This defaults to true.
+name|bool
+name|IsFunctionEHFrameSymbolPrivate
+decl_stmt|;
 name|public
 label|:
 name|MCContext
@@ -298,6 +315,33 @@ operator|=
 operator|&
 name|ctx
 expr_stmt|;
+block|}
+name|bool
+name|isFunctionEHSymbolGlobal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFunctionEHSymbolGlobal
+return|;
+block|}
+name|bool
+name|isFunctionEHFrameSymbolPrivate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFunctionEHFrameSymbolPrivate
+return|;
+block|}
+name|bool
+name|getSupportsWeakOmittedEHFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsWeakOmittedEHFrame
+return|;
 block|}
 specifier|const
 name|MCSection

@@ -994,6 +994,7 @@ name|FormatMaxPadding
 operator|=
 literal|3
 argument_list|)
+decl|const
 decl_stmt|;
 name|private
 label|:

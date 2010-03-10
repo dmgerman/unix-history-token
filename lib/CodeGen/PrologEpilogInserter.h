@@ -297,7 +297,9 @@ name|std
 operator|::
 name|pair
 operator|<
-name|int
+name|TargetRegisterInfo
+operator|::
+name|FrameIndexValue
 operator|,
 name|int
 operator|>

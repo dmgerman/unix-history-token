@@ -3063,7 +3063,7 @@ return|;
 block|}
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove lowering.
-comment|/// It returns EVT::iAny if SelectionDAG should be responsible for
+comment|/// It returns EVT::Other if SelectionDAG should be responsible for
 comment|/// determining it.
 name|virtual
 name|EVT
@@ -3090,7 +3090,7 @@ block|{
 return|return
 name|MVT
 operator|::
-name|iAny
+name|Other
 return|;
 block|}
 comment|/// usesUnderscoreSetJmp - Determine if we should use _setjmp or setjmp

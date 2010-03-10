@@ -345,6 +345,10 @@ name|mutable
 name|unsigned
 name|Counter
 decl_stmt|;
+name|mutable
+name|unsigned
+name|SetCounter
+decl_stmt|;
 comment|// Private state for processDebugLoc()
 name|mutable
 specifier|const
@@ -692,6 +696,27 @@ name|EmitInt64
 argument_list|(
 name|uint64_t
 name|Value
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// EmitLabelDifference - Emit something like ".long Hi-Lo" where the size
+comment|/// in bytes of the directive is specified by Size and Hi/Lo specify the
+comment|/// labels.  This implicitly uses .set if it is available.
+name|void
+name|EmitLabelDifference
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Hi
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Lo
+argument_list|,
+name|unsigned
+name|Size
 argument_list|)
 decl|const
 decl_stmt|;

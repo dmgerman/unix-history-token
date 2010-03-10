@@ -139,17 +139,6 @@ argument_list|()
 expr_stmt|;
 comment|/// @name Symbol Managment
 comment|/// @{
-comment|/// CreateSymbol - Create a new symbol with the specified @p Name.
-comment|///
-comment|/// @param Name - The symbol name, which must be unique across all symbols.
-name|MCSymbol
-modifier|*
-name|CreateSymbol
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
 comment|/// GetOrCreateSymbol - Lookup the symbol inside with the specified
 comment|/// @p Name.  If it exists, return it.  If not, create a forward
 comment|/// reference and return it.
@@ -173,20 +162,31 @@ modifier|&
 name|Name
 parameter_list|)
 function_decl|;
-comment|/// CreateTemporarySymbol - Create a new temporary symbol with the specified
-comment|/// @p Name.
+comment|/// GetOrCreateTemporarySymbol - Create a new assembler temporary symbol
+comment|/// with the specified @p Name if it doesn't exist or return the existing
+comment|/// one if it does.
 comment|///
 comment|/// @param Name - The symbol name, for debugging purposes only, temporary
 comment|/// symbols do not surive assembly. If non-empty the name must be unique
 comment|/// across all symbols.
 name|MCSymbol
 modifier|*
-name|CreateTemporarySymbol
+name|GetOrCreateTemporarySymbol
 parameter_list|(
 name|StringRef
 name|Name
 init|=
 literal|""
+parameter_list|)
+function_decl|;
+name|MCSymbol
+modifier|*
+name|GetOrCreateTemporarySymbol
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|Name
 parameter_list|)
 function_decl|;
 comment|/// LookupSymbol - Get the symbol for \p Name, or null.
