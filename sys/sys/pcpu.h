@@ -463,7 +463,7 @@ comment|/* 	 * Dynamic per-cpu data area. 	 */
 name|uintptr_t
 name|pc_dynamic
 decl_stmt|;
-comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields contants. 	 * If only to make kernel debugging easier... 	 */
+comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields constant. 	 * If only to make kernel debugging easier... 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;
 block|}
