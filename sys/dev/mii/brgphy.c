@@ -727,7 +727,9 @@ operator|!=
 name|HS21_BCM_CHIPID
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|sysenv
 operator|=
@@ -743,7 +745,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -762,7 +766,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 return|return
 operator|(
