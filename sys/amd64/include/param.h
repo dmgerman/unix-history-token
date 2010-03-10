@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|MAXCPU
-value|32
+value|16
 end_define
 
 begin_else
