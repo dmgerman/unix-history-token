@@ -1655,12 +1655,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PMC_PO_IN_FLUSH
+name|PMC_PO_SHUTDOWN
 value|0x00000010
 end_define
 
 begin_comment
-comment|/* in the middle of a flush */
+comment|/* in the process of shutdown */
 end_comment
 
 begin_define
