@@ -137,7 +137,7 @@ name|flags
 parameter_list|,
 name|file
 parameter_list|)
-value|{		\ 	._flags = (flags),		\ 	._file = (file),		\ 	._cookie = __sF + (file),	\ 	._close = __sclose,		\ 	._read = __sread,		\ 	._seek = __sseek,		\ 	._write = __swrite,		\ }
+value|{		\ 	._flags = (flags),		\ 	._file = (file),		\ 	._cookie = __sF + (file),	\ 	._close = __sclose,		\ 	._read = __sread,		\ 	._seek = __sseek,		\ 	._write = __swrite,		\ 	._fl_mutex = PTHREAD_MUTEX_INITIALIZER, \ }
 end_define
 
 begin_comment
@@ -372,6 +372,13 @@ decl_stmt|;
 specifier|static
 name|FILE
 name|empty
+init|=
+block|{
+operator|.
+name|_fl_mutex
+operator|=
+name|PTHREAD_MUTEX_INITIALIZER
+block|}
 decl_stmt|;
 name|FILE
 modifier|*
@@ -698,7 +705,7 @@ name|_size
 operator|=
 literal|0
 expr_stmt|;
-comment|/*	fp->_lock = NULL; */
+comment|/*	fp->_fl_mutex = NULL; */
 comment|/* once set always set (reused) */
 name|fp
 operator|->
