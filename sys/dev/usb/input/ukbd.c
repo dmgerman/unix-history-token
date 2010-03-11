@@ -4482,6 +4482,11 @@ literal|0
 condition|)
 block|{
 name|uint8_t
+name|apple_keys
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
 name|temp_id
 decl_stmt|;
 comment|/* investigate if this is an Apple Keyboard */
@@ -4513,9 +4518,7 @@ operator|&
 name|flags
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|sc_kbd_id
+name|temp_id
 argument_list|)
 condition|)
 block|{
@@ -4533,6 +4536,24 @@ name|UKBD_FLAG_APPLE_EJECT
 operator||
 name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple eject-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_kbd_id
+operator|=
+name|temp_id
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hid_locate
@@ -4579,24 +4600,30 @@ name|UKBD_FLAG_APPLE_FN
 operator||
 name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
-if|if
-condition|(
-name|temp_id
-operator|!=
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple FN-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|sc_kbd_id
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"HID IDs mismatch\n"
-argument_list|)
+operator|=
+name|temp_id
 expr_stmt|;
 block|}
-block|}
-block|}
-else|else
+if|if
+condition|(
+name|apple_keys
+operator|==
+literal|0
+condition|)
 block|{
 comment|/*  			 * Assume the first HID ID contains the 			 * keyboard data 			 */
 name|hid_report_size
