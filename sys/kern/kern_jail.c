@@ -3909,7 +3909,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|td
@@ -3920,7 +3920,7 @@ name|p_sysent
 operator|->
 name|sv_flags
 operator|&
-name|SV_IA32
+name|SV_ILP32
 condition|)
 block|{
 name|uint32_t
@@ -10216,7 +10216,7 @@ name|done_deref
 goto|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|td
@@ -10227,7 +10227,7 @@ name|p_sysent
 operator|->
 name|sv_flags
 operator|&
-name|SV_IA32
+name|SV_ILP32
 condition|)
 block|{
 name|uint32_t

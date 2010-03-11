@@ -26,13 +26,13 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifndef
 
 begin_error
 error|#
 directive|error
-literal|"Unable to compile Linux-emulator due to missing COMPAT_IA32 option!"
+literal|"Unable to compile Linux-emulator due to missing COMPAT_FREEBSD32 option!"
 end_error
 
 begin_endif

@@ -2017,7 +2017,7 @@ name|td_pcb
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|ia32_savectx
 argument_list|(
 name|oldpcb
@@ -2113,7 +2113,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|ia32_restorectx
 argument_list|(
 name|newpcb
@@ -2203,7 +2203,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|ia32_restorectx
 argument_list|(
 name|newpcb

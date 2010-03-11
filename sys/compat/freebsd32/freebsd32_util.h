@@ -203,6 +203,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|register_t
+modifier|*
+name|freebsd32_copyout_strings
+parameter_list|(
+name|struct
+name|image_params
+modifier|*
+name|imgp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
