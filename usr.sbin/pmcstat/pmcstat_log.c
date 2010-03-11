@@ -6723,14 +6723,6 @@ name|pmc_flush_logfile
 argument_list|()
 operator|<
 literal|0
-operator|||
-name|pmc_configure_logfile
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-operator|<
-literal|0
 condition|)
 name|err
 argument_list|(
@@ -6738,17 +6730,6 @@ name|EX_OSERR
 argument_list|,
 literal|"ERROR: logging failed"
 argument_list|)
-expr_stmt|;
-name|args
-operator|.
-name|pa_flags
-operator|&=
-operator|~
-operator|(
-name|FLAG_HAS_OUTPUT_LOGFILE
-operator||
-name|FLAG_HAS_PIPE
-operator|)
 expr_stmt|;
 return|return
 operator|(
