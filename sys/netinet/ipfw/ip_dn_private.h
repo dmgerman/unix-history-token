@@ -955,8 +955,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* helper structure to copy objects returned to userland */
+comment|/*  * copy_range is a template for requests for ranges of pipes/queues/scheds.  * The number of ranges is variable and can be derived by o.len.  * As a default, we use a small number of entries so that the struct  * fits easily on the stack and is sufficient for most common requests.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RANGES
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|copy_range
+block|{
+name|struct
+name|dn_id
+name|o
+decl_stmt|;
+name|uint32_t
+name|r
+index|[
+literal|2
+operator|*
+name|DEFAULT_RANGES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -977,7 +1004,9 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|int
+name|struct
+name|copy_range
+modifier|*
 name|extra
 decl_stmt|;
 comment|/* extra filtering */
