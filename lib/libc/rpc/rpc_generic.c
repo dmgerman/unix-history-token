@@ -834,12 +834,6 @@ decl_stmt|;
 name|int
 name|main_thread
 decl_stmt|;
-specifier|static
-name|thread_key_t
-name|tcp_key
-decl_stmt|,
-name|udp_key
-decl_stmt|;
 if|if
 condition|(
 operator|(
