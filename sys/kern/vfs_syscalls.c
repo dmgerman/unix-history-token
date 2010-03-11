@@ -5142,7 +5142,7 @@ name|mode
 argument_list|)
 expr_stmt|;
 comment|/* XXX: audit dirfd */
-comment|/* 	 * Only one of the O_EXEC, O_RDONLY, O_WRONLY and O_RDWR may 	 * be specified. 	 */
+comment|/* 	 * Only one of the O_EXEC, O_RDONLY, O_WRONLY and O_RDWR flags 	 * may be specified. 	 */
 if|if
 condition|(
 name|flags
