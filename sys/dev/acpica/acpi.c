@@ -7774,22 +7774,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OBJECTS
 operator|,
-literal|"first bus_generic_attach\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|bus_generic_attach
-argument_list|(
-name|bus
-argument_list|)
-expr_stmt|;
-comment|/*      * Some of these children may have attached others as part of their attach      * process (eg. the root PCI bus driver), so rescan.      */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_OBJECTS
-operator|,
-literal|"second bus_generic_attach\n"
+literal|"acpi bus_generic_attach\n"
 operator|)
 argument_list|)
 expr_stmt|;
