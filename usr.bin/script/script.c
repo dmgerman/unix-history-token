@@ -706,7 +706,6 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
-else|else
 name|close
 argument_list|(
 name|slave
