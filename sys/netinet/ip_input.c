@@ -1644,6 +1644,8 @@ name|V_ip_ft
 operator|=
 name|flowtable_alloc
 argument_list|(
+literal|"ipv4"
+argument_list|,
 name|V_ip_output_flowtable_size
 argument_list|,
 name|FL_PCPU
