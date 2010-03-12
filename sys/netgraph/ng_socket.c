@@ -2407,6 +2407,17 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* Store a hint for netstat(1). */
+name|priv
+operator|->
+name|node_id
+operator|=
+name|priv
+operator|->
+name|node
+operator|->
+name|nd_ID
+expr_stmt|;
 comment|/* Link the node and the private data. */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
