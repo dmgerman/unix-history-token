@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**************************************************************************  Copyright (c) 2008-2010, BitGravity Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the BitGravity Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
+comment|/**************************************************************************  Copyright (c) 2008-2009, BitGravity Inc. All rights reserved.  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:   1. Redistributions of source code must retain the above copyright notice,     this list of conditions and the following disclaimer.   2. Neither the name of the BitGravity Corporation nor the names of its     contributors may be used to endorse or promote products derived from     this software without specific prior written permission.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ***************************************************************************/
 end_comment
 
 begin_include
@@ -1283,7 +1283,7 @@ name|sb
 parameter_list|,
 name|field
 parameter_list|)
-value|sbuf_printf((sb), "\t%s=%jd", #field, fs->ft_##field)
+value|sbuf_printf((sb), "\t%s: %jd\n", #field, fs->ft_##field)
 end_define
 
 begin_function
@@ -1292,31 +1292,16 @@ name|void
 name|fs_print
 parameter_list|(
 name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
 name|flowtable_stats
 modifier|*
 name|fs
 parameter_list|)
 block|{
-name|struct
-name|sbuf
-modifier|*
-name|sb
-decl_stmt|;
-name|sb
-operator|=
-name|sbuf_new
-argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-literal|32
-operator|*
-literal|1024
-argument_list|,
-name|SBUF_FIXEDLEN
-argument_list|)
-expr_stmt|;
 name|FS_PRINT
 argument_list|(
 name|sb
@@ -1373,11 +1358,6 @@ argument_list|,
 name|lookups
 argument_list|)
 expr_stmt|;
-name|sbuf_finish
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1386,6 +1366,11 @@ specifier|static
 name|void
 name|flowtable_show_stats
 parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|,
 name|struct
 name|flowtable
 modifier|*
@@ -1585,6 +1570,8 @@ expr_stmt|;
 block|}
 name|fs_print
 argument_list|(
+name|sb
+argument_list|,
 name|pfs
 argument_list|)
 expr_stmt|;
@@ -1604,6 +1591,29 @@ name|flowtable
 modifier|*
 name|ft
 decl_stmt|;
+name|struct
+name|sbuf
+modifier|*
+name|sb
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|sb
+operator|=
+name|sbuf_new
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|64
+operator|*
+literal|1024
+argument_list|,
+name|SBUF_FIXEDLEN
+argument_list|)
+expr_stmt|;
 name|ft
 operator|=
 name|V_flow_list_head
@@ -1615,9 +1625,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|sbuf_printf
 argument_list|(
-literal|"name: %s\n"
+name|sb
+argument_list|,
+literal|"\ntable name: %s\n"
 argument_list|,
 name|ft
 operator|->
@@ -1626,6 +1638,8 @@ argument_list|)
 expr_stmt|;
 name|flowtable_show_stats
 argument_list|(
+name|sb
+argument_list|,
 name|ft
 argument_list|)
 expr_stmt|;
@@ -1636,9 +1650,38 @@ operator|->
 name|ft_next
 expr_stmt|;
 block|}
+name|sbuf_finish
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|SYSCTL_OUT
+argument_list|(
+name|req
+argument_list|,
+name|sbuf_data
+argument_list|(
+name|sb
+argument_list|)
+argument_list|,
+name|sbuf_len
+argument_list|(
+name|sb
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1653,17 +1696,17 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
 name|sysctl_flowtable_stats
 argument_list|,
-literal|"IU"
+literal|"A"
 argument_list|,
 literal|"flowtable statistics"
 argument_list|)
