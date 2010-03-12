@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Xin LI<delphij@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009, 2010 Xin LI<delphij@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * Portable strlen() for 32-bit and 64-bit systems.  *  * Rationale: it is generally much more efficient to do word length  * operations and avoid branches on modern computer systems, as  * compared to byte-length operations with a lot of branches.  *  * The expression:  *  *	((x - 0x01....01)& ~x& 0x80....80)  *  * would evaluate to a non-zero value iff any of the bytes in the  * original word is zero.  However, we can further reduce ~1/3 of  * time if we consider that strlen() usually operate on 7-bit ASCII  * by employing the following expression, which allows false positive  * when high bit of 1 and use the tail case to catch these case:  *  *	((x - 0x01....01)& 0x80....80)  *  * This is more than 5.2 times as fast as the raw implementation on  * Intel T7300 under long mode for strings longer than word length.  */
+comment|/*  * Portable strlen() for 32-bit and 64-bit systems.  *  * Rationale: it is generally much more efficient to do word length  * operations and avoid branches on modern computer systems, as  * compared to byte-length operations with a lot of branches.  *  * The expression:  *  *	((x - 0x01....01)& ~x& 0x80....80)  *  * would evaluate to a non-zero value iff any of the bytes in the  * original word is zero.  *  * On multi-issue processors, we can divide the above expression into:  *	a)  (x - 0x01....01)  *	b) (~x& 0x80....80)  *	c) a& b  *  * Where, a) and b) can be partially computed in parallel.  *  * The algorithm above is found on "Hacker's Delight" by  * Henry S. Warren, Jr.  */
 end_comment
 
 begin_comment
@@ -162,7 +162,58 @@ name|long
 modifier|*
 name|lp
 decl_stmt|;
-comment|/* Skip the first few bytes until we have an aligned p */
+name|long
+name|va
+decl_stmt|,
+name|vb
+decl_stmt|;
+comment|/* 	 * Before trying the hard (unaligned byte-by-byte access) way 	 * to figure out whether there is a nul character, try to see 	 * if there is a nul character is within this accessible word 	 * first. 	 * 	 * p and (p& ~LONGPTR_MASK) must be equally accessible since 	 * they always fall in the same memory page, as long as page 	 * boundaries is integral multiple of word size. 	 */
+name|lp
+operator|=
+operator|(
+specifier|const
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|str
+operator|&
+operator|~
+name|LONGPTR_MASK
+operator|)
+expr_stmt|;
+name|va
+operator|=
+operator|(
+operator|*
+name|lp
+operator|-
+name|mask01
+operator|)
+expr_stmt|;
+name|vb
+operator|=
+operator|(
+operator|(
+operator|~
+operator|*
+name|lp
+operator|)
+operator|&
+name|mask80
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|va
+operator|&
+name|vb
+condition|)
+comment|/* Check if we have \0 in the first part */
 for|for
 control|(
 name|p
@@ -210,16 +261,33 @@ condition|;
 name|lp
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|va
+operator|=
 operator|(
 operator|*
 name|lp
 operator|-
 name|mask01
 operator|)
+expr_stmt|;
+name|vb
+operator|=
+operator|(
+operator|(
+operator|~
+operator|*
+name|lp
+operator|)
 operator|&
 name|mask80
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|va
+operator|&
+name|vb
 condition|)
 block|{
 name|p
@@ -282,6 +350,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 comment|/* NOTREACHED */
 return|return
