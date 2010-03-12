@@ -283,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|PMAP_INLINE
-value|inline
+value|__attribute__((__gnu_inline__)) inline
 end_define
 
 begin_else
