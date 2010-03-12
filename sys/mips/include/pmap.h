@@ -915,6 +915,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Function to save TLB contents so that they may be inspected in the debugger.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|pmap_save_tlb
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

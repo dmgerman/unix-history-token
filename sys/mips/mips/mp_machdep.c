@@ -457,6 +457,9 @@ name|cpu
 index|]
 argument_list|)
 expr_stmt|;
+name|pmap_save_tlb
+argument_list|()
+expr_stmt|;
 comment|/* Indicate we are stopped */
 name|atomic_set_int
 argument_list|(
