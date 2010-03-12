@@ -67,6 +67,9 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|uint32_t
+name|offset
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3146,6 +3146,12 @@ block|{
 name|sctp_delayed_cksum
 argument_list|(
 name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sw_csum

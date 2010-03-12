@@ -2425,6 +2425,17 @@ block|{
 name|sctp_delayed_cksum
 argument_list|(
 name|m
+argument_list|,
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sw_csum
@@ -3053,6 +3064,8 @@ block|{
 name|sctp_delayed_cksum
 argument_list|(
 name|m0
+argument_list|,
+name|hlen
 argument_list|)
 expr_stmt|;
 name|m0
