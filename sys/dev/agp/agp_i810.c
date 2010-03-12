@@ -657,6 +657,26 @@ literal|"Intel G41 SVGA controller"
 block|}
 block|,
 block|{
+literal|0x00428086
+block|,
+name|CHIP_G4X
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Ironlake (D) SVGA controller"
+block|}
+block|,
+block|{
+literal|0x00468086
+block|,
+name|CHIP_G4X
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Ironlake (M) SVGA controller"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
