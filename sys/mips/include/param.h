@@ -410,7 +410,7 @@ comment|/* xxx: why is this only one? */
 end_comment
 
 begin_comment
-comment|/*  * NOTE: In FreeBSD, Uarea's don't have a fixed address.  *	 Therefore, any code imported from OpenBSD which depends on  *	 UADDR, UVPN and KERNELSTACK requires porting.  * XXX: 3 stack pages?  Not 4 which would be more efficient from a tlb  * XXX: point of view.  */
+comment|/*  * The kernel stack needs to be aligned on a (PAGE_SIZE * 2) boundary.  *  * Although we allocate 3 pages for the kernel stack we end up using  * only the 2 pages that are aligned on a (PAGE_SIZE * 2) boundary.  */
 end_comment
 
 begin_define
@@ -428,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|KSTACK_GUARD_PAGES
-value|0
+value|1
 end_define
 
 begin_comment
