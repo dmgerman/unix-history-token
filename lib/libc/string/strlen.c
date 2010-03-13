@@ -207,6 +207,9 @@ operator|&
 name|mask80
 operator|)
 expr_stmt|;
+name|lp
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|va
@@ -220,12 +223,14 @@ name|p
 operator|=
 name|str
 init|;
-operator|(
-name|uintptr_t
-operator|)
 name|p
-operator|&
-name|LONGPTR_MASK
+operator|<
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|lp
 condition|;
 name|p
 operator|++
@@ -247,15 +252,6 @@ return|;
 comment|/* Scan the rest of the string using word sized operation */
 for|for
 control|(
-name|lp
-operator|=
-operator|(
-specifier|const
-name|unsigned
-name|long
-operator|*
-operator|)
-name|p
 init|;
 condition|;
 name|lp
