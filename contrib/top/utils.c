@@ -1402,7 +1402,9 @@ name|format_k2
 parameter_list|(
 name|amt
 parameter_list|)
-name|int
+name|unsigned
+name|long
+name|long
 name|amt
 decl_stmt|;
 block|{
