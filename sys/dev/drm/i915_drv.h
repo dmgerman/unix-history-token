@@ -2635,7 +2635,7 @@ name|IS_G33
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x29C2 ||	\ 			(dev)->pci_device == 0x29B2 ||	\ 			(dev)->pci_device == 0x29D2 ||  \ 			IS_IGD(DEV))
+value|((dev)->pci_device == 0x29C2 ||	\ 			(dev)->pci_device == 0x29B2 ||	\ 			(dev)->pci_device == 0x29D2 ||  \ 			IS_IGD(dev))
 end_define
 
 begin_define
