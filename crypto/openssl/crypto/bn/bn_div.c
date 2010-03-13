@@ -47,7 +47,7 @@ comment|/* The next 2 are needed so we can do a dv->d[0]|=1 later 	 * since BN_l
 end_comment
 
 begin_comment
-unit|BN_zero(dv); 	bn_wexpand(dv,1); 	dv->top=1;  	if (!BN_lshift(D,D,nm-nd)) goto end; 	for (i=nm-nd; i>=0; i--) 		{ 		if (!BN_lshift1(dv,dv)) goto end; 		if (BN_ucmp(rem,D)>= 0) 			{ 			dv->d[0]|=1; 			if (!BN_usub(rem,rem,D)) goto end; 			}
+unit|BN_zero(dv); 	if(bn_wexpand(dv,1) == NULL) goto end; 	dv->top=1;  	if (!BN_lshift(D,D,nm-nd)) goto end; 	for (i=nm-nd; i>=0; i--) 		{ 		if (!BN_lshift1(dv,dv)) goto end; 		if (BN_ucmp(rem,D)>= 0) 			{ 			dv->d[0]|=1; 			if (!BN_usub(rem,rem,D)) goto end; 			}
 comment|/* CAN IMPROVE (and have now :=) */
 end_comment
 
@@ -525,6 +525,14 @@ operator|==
 name|NULL
 operator|||
 name|res
+operator|==
+name|NULL
+operator|||
+name|tmp
+operator|==
+name|NULL
+operator|||
+name|snum
 operator|==
 name|NULL
 condition|)

@@ -24,6 +24,50 @@ file|<openssl/err.h>
 end_include
 
 begin_comment
+comment|/* Internal only functions: only ever used here */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|int_ERR_lib_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|int_EVP_MD_init_engine_callbacks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|int_EVP_CIPHER_init_engine_callbacks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|int_RAND_init_engine_callbacks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Perform any essential OpenSSL initialization operations.  * Currently only sets FIPS callbacks  */
 end_comment
 
@@ -60,9 +104,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|OPENSSL_ENGINE
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|int_EVP_MD_init_engine_callbacks
 argument_list|()
 expr_stmt|;

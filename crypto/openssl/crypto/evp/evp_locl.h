@@ -221,7 +221,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, \ 			(cbits + 7)/8, key_len, iv_len, \ 		flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -272,8 +272,6 @@ name|block_size
 parameter_list|,
 name|key_len
 parameter_list|, \
-name|iv_len
-parameter_list|,
 name|flags
 parameter_list|,
 name|init_key
@@ -287,7 +285,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  0, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -322,7 +320,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_comment

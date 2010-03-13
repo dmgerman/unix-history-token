@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/dsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<openssl/bn.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
 end_include
 
 begin_undef

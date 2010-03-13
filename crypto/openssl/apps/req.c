@@ -7609,6 +7609,9 @@ operator|!
 name|batch
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|fgets
 argument_list|(
 name|buf
@@ -7618,7 +7621,10 @@ name|buf
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 block|}
 else|else
 block|{
@@ -7966,6 +7972,9 @@ operator|!
 name|batch
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|fgets
 argument_list|(
 name|buf
@@ -7975,7 +7984,10 @@ name|buf
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 block|}
 else|else
 block|{

@@ -5296,6 +5296,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|sk_SSL_CIPHER_sort
+argument_list|(
+operator|*
+name|cipher_list_by_id
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -5309,7 +5318,7 @@ unit|}  char
 operator|*
 name|SSL_CIPHER_description
 argument_list|(
-argument|SSL_CIPHER *cipher
+argument|const SSL_CIPHER *cipher
 argument_list|,
 argument|char *buf
 argument_list|,

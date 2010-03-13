@@ -598,6 +598,9 @@ operator|->
 name|meth
 operator|->
 name|flags
+operator|&
+operator|~
+name|DSA_FLAG_NON_FIPS_ALLOW
 expr_stmt|;
 name|CRYPTO_new_ex_data
 argument_list|(

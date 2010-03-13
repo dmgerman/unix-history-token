@@ -7465,6 +7465,9 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 comment|/* Don't do anything much if we have not done the handshake or 	 * we don't want to send messages :-) */
 if|if
 condition|(
@@ -7532,6 +7535,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* our shutdown alert has been sent now, and if it still needs 	 	 * to be written, s->s3->alert_dispatch will be true */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|alert_dispatch
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* return WANT_WRITE */
 block|}
 elseif|else
 if|if
@@ -7547,6 +7565,8 @@ comment|/* resend it if not sent */
 if|#
 directive|if
 literal|1
+name|ret
+operator|=
 name|s
 operator|->
 name|method
@@ -7556,6 +7576,21 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* we only get to return -1 here the 2nd/Nth 			 * invocation, we must  have already signalled 			 * return 0 upon a previous invoation, 			 * return WANT_WRITE */
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -7590,6 +7625,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|shutdown
+operator|&
+name|SSL_RECEIVED_SHUTDOWN
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* return WANT_READ */
+block|}
 block|}
 if|if
 condition|(
@@ -8070,15 +8125,6 @@ operator|->
 name|flags
 operator|&
 name|SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-literal|1
 condition|)
 return|return
 operator|(
