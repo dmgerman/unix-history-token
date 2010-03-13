@@ -61,8 +61,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|strncpy
 argument_list|(
@@ -76,7 +78,9 @@ name|L_cuserid
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
