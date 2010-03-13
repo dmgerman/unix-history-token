@@ -3279,7 +3279,7 @@ name|cmdentry
 operator|.
 name|special
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -4328,6 +4328,26 @@ name|redirect
 argument_list|,
 name|mode
 argument_list|)
+expr_stmt|;
+comment|/* 		 * If there is no command word, redirection errors should 		 * not be fatal but assignment errors should. 		 */
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|EV_BACKCMD
+operator|)
+condition|)
+name|cmdentry
+operator|.
+name|special
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
