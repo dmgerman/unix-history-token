@@ -368,7 +368,7 @@ name|errx
 argument_list|(
 literal|3
 argument_list|,
-literal|"two sem_open calls for same semaphore do not return same address."
+literal|"two sem_open calls for same semaphore do not return same address"
 argument_list|)
 expr_stmt|;
 if|if
