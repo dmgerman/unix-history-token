@@ -11722,6 +11722,13 @@ operator||
 name|IEEE80211_C_TXPMGT
 comment|/* capable of txpow mgt */
 expr_stmt|;
+name|ic
+operator|->
+name|ic_flags_ext
+operator||=
+name|IEEE80211_FEXT_SWBMISS
+expr_stmt|;
+comment|/* s/w bmiss */
 comment|/* call MI attach routine. */
 name|ieee80211_ifattach
 argument_list|(
