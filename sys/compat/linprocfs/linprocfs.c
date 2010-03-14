@@ -816,7 +816,7 @@ literal|"fxsr"
 block|,
 literal|"xmm"
 block|,
-literal|"b26"
+literal|"sse2"
 block|,
 literal|"b27"
 block|,
