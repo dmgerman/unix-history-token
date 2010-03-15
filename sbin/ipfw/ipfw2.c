@@ -942,6 +942,8 @@ name|TOK_UID
 block|,
 name|TOK_JAIL
 block|,
+name|TOK_DSCP
+block|,
 operator|-
 literal|1
 block|}
@@ -1098,6 +1100,12 @@ block|{
 literal|"ipprecedence"
 block|,
 name|TOK_IPPRECEDENCE
+block|}
+block|,
+block|{
+literal|"dscp"
+block|,
+name|TOK_DSCP
 block|}
 block|,
 block|{
@@ -17671,11 +17679,13 @@ name|j
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|av
 index|[
 literal|0
 index|]
-operator|&&
+operator|||
+operator|!
 name|av
 index|[
 literal|1
