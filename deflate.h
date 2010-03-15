@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2004 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2009 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -620,6 +620,10 @@ name|int
 name|bi_valid
 decl_stmt|;
 comment|/* Number of valid bits in bi_buf.  All bits above the last valid bit      * are always zero.      */
+name|ulg
+name|high_water
+decl_stmt|;
+comment|/* High water mark offset in window for initialized bytes -- bytes above      * this are set to zero in order to avoid memory check warnings when      * longest match routines access bytes past the input.  This is then      * updated to the new high water mark.      */
 block|}
 name|FAR
 name|deflate_state
@@ -665,6 +669,17 @@ end_define
 
 begin_comment
 comment|/* In order to simplify the code, particularly on 16 bit machines, match  * distances are limited to MAX_DIST instead of WSIZE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WIN_INIT
+value|MAX_MATCH
+end_define
+
+begin_comment
+comment|/* Number of bytes after end of data in window to initialize in order to avoid    memory checker errors from longest match routines */
 end_comment
 
 begin_comment
@@ -723,7 +738,7 @@ name|ulg
 name|stored_len
 operator|,
 name|int
-name|eof
+name|last
 operator|)
 argument_list|)
 decl_stmt|;
@@ -761,7 +776,7 @@ name|ulg
 name|stored_len
 operator|,
 name|int
-name|eof
+name|last
 operator|)
 argument_list|)
 decl_stmt|;
