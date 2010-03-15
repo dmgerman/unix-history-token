@@ -2078,7 +2078,7 @@ name|flags
 init|=
 name|pkt
 operator|->
-name|flags
+name|_flags
 operator|&
 operator|(
 name|TH_FIN

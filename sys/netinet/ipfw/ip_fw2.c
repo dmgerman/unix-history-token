@@ -3463,7 +3463,12 @@ name|is_ipv6
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint8_t
+name|icmp6_type
+init|=
+literal|0
+decl_stmt|;
+name|uint16_t
 name|ext_hd
 init|=
 literal|0
@@ -3671,11 +3676,7 @@ expr|struct
 name|icmp6_hdr
 argument_list|)
 expr_stmt|;
-name|args
-operator|->
-name|f_id
-operator|.
-name|flags
+name|icmp6_type
 operator|=
 name|ICMP6
 argument_list|(
@@ -3716,11 +3717,12 @@ argument_list|)
 operator|->
 name|th_sport
 expr_stmt|;
+comment|/* save flags for dynamic rules */
 name|args
 operator|->
 name|f_id
 operator|.
-name|flags
+name|_flags
 operator|=
 name|TCP
 argument_list|(
@@ -4061,7 +4063,7 @@ name|args
 operator|->
 name|f_id
 operator|.
-name|frag_id6
+name|extra
 operator|=
 name|ntohl
 argument_list|(
@@ -4583,11 +4585,12 @@ argument_list|)
 operator|->
 name|th_sport
 expr_stmt|;
+comment|/* save flags for dynamic rules */
 name|args
 operator|->
 name|f_id
 operator|.
-name|flags
+name|_flags
 operator|=
 name|TCP
 argument_list|(
@@ -4642,19 +4645,7 @@ expr|struct
 name|icmphdr
 argument_list|)
 expr_stmt|;
-name|args
-operator|->
-name|f_id
-operator|.
-name|flags
-operator|=
-name|ICMP
-argument_list|(
-name|ulp
-argument_list|)
-operator|->
-name|icmp_type
-expr_stmt|;
+comment|//args->f_id.flags = ICMP(ulp)->icmp_type;
 break|break;
 default|default:
 break|break;
@@ -5532,6 +5523,26 @@ operator|=
 name|src_ip
 operator|.
 name|s_addr
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|v
+operator|==
+literal|6
+condition|)
+comment|/* dscp */
+name|key
+operator|=
+operator|(
+name|ip
+operator|->
+name|ip_tos
+operator|>>
+literal|2
+operator|)
+operator|&
+literal|0x3f
 expr_stmt|;
 elseif|else
 if|if
@@ -8383,11 +8394,7 @@ operator|||
 operator|(
 name|is_icmp6_query
 argument_list|(
-name|args
-operator|->
-name|f_id
-operator|.
-name|flags
+name|icmp6_type
 argument_list|)
 operator|==
 literal|1

@@ -448,13 +448,20 @@ name|dn_alg_head
 name|schedlist
 decl_stmt|;
 comment|/* list of algorithms */
-comment|/* Store the fs/sch to scan when draining. The value is the 	 * bucket number of the hash table  	 **/
+comment|/* Store the fs/sch to scan when draining. The value is the 	 * bucket number of the hash table. Expire can be disabled 	 * with net.inet.ip.dummynet.expire=0, or it happens every 	 * expire ticks. 	 **/
 name|int
 name|drain_fs
 decl_stmt|;
 name|int
 name|drain_sch
 decl_stmt|;
+name|uint32_t
+name|expire
+decl_stmt|;
+name|uint32_t
+name|expire_cycle
+decl_stmt|;
+comment|/* tick count */
 comment|/* if the upper half is busy doing something long, 	 * can set the busy flag and we will enqueue packets in 	 * a queue for later processing. 	 */
 name|int
 name|busy

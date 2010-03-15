@@ -2028,7 +2028,7 @@ name|args
 operator|->
 name|f_id
 operator|.
-name|frag_id6
+name|extra
 argument_list|,
 name|ntohs
 argument_list|(

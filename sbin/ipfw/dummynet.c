@@ -537,7 +537,15 @@ block|{
 name|printf
 argument_list|(
 literal|"    "
-literal|"mask: 0x%02x 0x%08x/0x%04x -> 0x%08x/0x%04x\n"
+literal|"mask: %s 0x%02x 0x%08x/0x%04x -> 0x%08x/0x%04x\n"
+argument_list|,
+name|id
+operator|->
+name|extra
+condition|?
+literal|"queue,"
+else|:
+literal|""
 argument_list|,
 name|id
 operator|->
@@ -578,7 +586,15 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n        mask: proto: 0x%02x, flow_id: 0x%08x,  "
+literal|"\n        mask: %sproto: 0x%02x, flow_id: 0x%08x,  "
+argument_list|,
+name|id
+operator|->
+name|extra
+condition|?
+literal|"queue,"
+else|:
+literal|""
 argument_list|,
 name|id
 operator|->
@@ -709,7 +725,7 @@ expr_stmt|;
 comment|/* XXX: Should check for IPv4 flows */
 name|printf
 argument_list|(
-literal|"%3u "
+literal|"%3u%c"
 argument_list|,
 operator|(
 name|ni
@@ -720,6 +736,14 @@ name|id
 operator|)
 operator|&
 literal|0xff
+argument_list|,
+name|id
+operator|->
+name|extra
+condition|?
+literal|'*'
+else|:
+literal|' '
 argument_list|)
 expr_stmt|;
 if|if
@@ -4278,7 +4302,7 @@ block|{
 case|case
 name|TOK_ALL
 case|:
-comment|/* 				     * special case, all bits significant 				     */
+comment|/* 				     * special case, all bits significant 				     * except 'extra' (the queue number) 				     */
 name|mask
 operator|->
 name|dst_ip
@@ -4337,6 +4361,24 @@ expr_stmt|;
 name|mask
 operator|->
 name|flow_id6
+operator|=
+operator|~
+literal|0
+expr_stmt|;
+operator|*
+name|flags
+operator||=
+name|DN_HAVE_MASK
+expr_stmt|;
+goto|goto
+name|end_mask
+goto|;
+case|case
+name|TOK_QUEUE
+case|:
+name|mask
+operator|->
+name|extra
 operator|=
 operator|~
 literal|0
@@ -4671,10 +4713,8 @@ argument_list|,
 literal|"proto mask must be 8 bit"
 argument_list|)
 expr_stmt|;
-name|fs
+name|mask
 operator|->
-name|flow_mask
-operator|.
 name|proto
 operator|=
 operator|(
