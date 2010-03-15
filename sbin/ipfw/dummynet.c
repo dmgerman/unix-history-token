@@ -2296,6 +2296,11 @@ operator|*
 name|end
 operator|==
 literal|'M'
+operator|||
+operator|*
+name|end
+operator|==
+literal|'m'
 condition|)
 block|{
 name|end
