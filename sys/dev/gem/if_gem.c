@@ -1649,7 +1649,7 @@ name|gem_mediastatus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Fall back on an internal PHY if no external PHY was found. 	 */
+comment|/* 	 * Fall back on an internal PHY if no external PHY was found. 	 * Note that with Apple (K2) GMACs GEM_MIF_CONFIG_MDI0 can't be 	 * trusted when the firmware has powered down the chip. 	 */
 if|if
 condition|(
 name|error
@@ -1657,12 +1657,19 @@ operator|!=
 literal|0
 operator|&&
 operator|(
+operator|(
 name|v
 operator|&
 name|GEM_MIF_CONFIG_MDI0
 operator|)
 operator|!=
 literal|0
+operator|||
+name|GEM_IS_APPLE
+argument_list|(
+name|sc
+argument_list|)
+operator|)
 condition|)
 block|{
 name|v
