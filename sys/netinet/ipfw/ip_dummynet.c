@@ -4394,7 +4394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Specific function to copy a queue.  * It copies only the common part of a queue, and correctly set  * the length  */
+comment|/* Specific function to copy a queue.  * Copies only the user-visible part of a queue (which is in  * a struct dn_flow), and sets len accordingly.  */
 end_comment
 
 begin_function
@@ -4445,9 +4445,10 @@ init|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dn_queue
+name|dn_flow
 argument_list|)
 decl_stmt|;
+comment|/* see above comment */
 if|if
 condition|(
 name|have
@@ -9674,7 +9675,7 @@ operator|/
 literal|2
 expr_stmt|;
 block|}
-comment|/* XXX queue space might be variable */
+comment|/* 	 * When exporting a queue to userland, only pass up the 	 * struct dn_flow, which is the only visible part. 	 */
 if|if
 condition|(
 name|x
@@ -9690,7 +9691,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|dn_queue
+name|dn_flow
 argument_list|)
 expr_stmt|;
 if|if
