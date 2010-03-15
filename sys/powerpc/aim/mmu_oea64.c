@@ -9823,6 +9823,8 @@ operator|)
 operator|&
 operator|~
 operator|(
+name|LPTE_M
+operator||
 name|LPTE_CHG
 operator||
 name|LPTE_REF
@@ -10836,7 +10838,7 @@ name|pte
 operator|.
 name|pte_lo
 operator|&
-name|PTE_RPGN
+name|LPTE_RPGN
 operator|)
 operator||
 operator|(
