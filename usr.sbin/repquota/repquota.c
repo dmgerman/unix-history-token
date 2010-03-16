@@ -1091,7 +1091,7 @@ operator|=
 literal|0
 init|;
 name|id
-operator|<
+operator|<=
 name|maxid
 condition|;
 name|id

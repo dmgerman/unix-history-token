@@ -232,6 +232,17 @@ begin_comment
 comment|/* set usage (64-bit version) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|Q_GETQUOTASIZE
+value|0x0A00
+end_define
+
+begin_comment
+comment|/* get bit-size of quota file fields */
+end_comment
+
 begin_comment
 comment|/*  * The following structure defines the format of the disk quota file  * (as it appears on disk) - the file is an array of these structures  * indexed by user or group number.  The setquota system call establishes  * the vnode for each quota file (a pointer is retained in the ufsmount  * structure).  */
 end_comment
@@ -968,6 +979,28 @@ end_function_decl
 begin_function_decl
 name|int
 name|setuse
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getquotasize
 parameter_list|(
 name|struct
 name|thread
