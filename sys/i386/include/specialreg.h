@@ -2482,14 +2482,14 @@ begin_define
 define|#
 directive|define
 name|MCG_CTL_ENABLE
-value|0xffffffffffffffffUL
+value|0xffffffffffffffffULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MCG_CTL_DISABLE
-value|0x0000000000000000UL
+value|0x0000000000000000ULL
 end_define
 
 begin_define
@@ -2536,70 +2536,70 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_MCA_ERROR
-value|0x000000000000ffffUL
+value|0x000000000000ffffULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MODEL_ERROR
-value|0x00000000ffff0000UL
+value|0x00000000ffff0000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OTHER_INFO
-value|0x01ffffff00000000UL
+value|0x01ffffff00000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_PCC
-value|0x0200000000000000UL
+value|0x0200000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_ADDRV
-value|0x0400000000000000UL
+value|0x0400000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MISCV
-value|0x0800000000000000UL
+value|0x0800000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_EN
-value|0x1000000000000000UL
+value|0x1000000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_UC
-value|0x2000000000000000UL
+value|0x2000000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OVER
-value|0x4000000000000000UL
+value|0x4000000000000000ULL
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_VAL
-value|0x8000000000000000UL
+value|0x8000000000000000ULL
 end_define
 
 begin_comment
