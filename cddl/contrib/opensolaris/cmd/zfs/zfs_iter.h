@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -70,6 +70,10 @@ define|#
 directive|define
 name|ZFS_ITER_PROP_LISTSNAPS
 value|(1<< 2)
+define|#
+directive|define
+name|ZFS_ITER_DEPTH_LIMIT
+value|(1<< 3)
 name|int
 name|zfs_for_each
 parameter_list|(
@@ -90,6 +94,8 @@ parameter_list|,
 name|zprop_list_t
 modifier|*
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|zfs_iter_f
 parameter_list|,

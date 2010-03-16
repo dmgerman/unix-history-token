@@ -961,8 +961,8 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tget [-rHp] [-o field[,...]] "
-literal|"[-s source[,...]]\n"
+literal|"\tget [-rHp] [-d max] "
+literal|"[-o field[,...]] [-s source[,...]]\n"
 literal|"\t<\"all\" | property[,...]> "
 literal|"[filesystem|volume|snapshot] ...\n"
 argument_list|)
@@ -1021,8 +1021,8 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tlist [-rH] [-o property[,...]] "
-literal|"[-t type[,...]] [-s property] ...\n"
+literal|"\tlist [-rH][-d max] "
+literal|"[-o property[,...]] [-t type[,...]] [-s property] ...\n"
 literal|"\t    [-S property] ... "
 literal|"[filesystem|volume|snapshot] ...\n"
 argument_list|)
@@ -1977,6 +1977,112 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|parse_depth
+parameter_list|(
+name|char
+modifier|*
+name|opt
+parameter_list|,
+name|int
+modifier|*
+name|flags
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
+name|int
+name|depth
+decl_stmt|;
+name|depth
+operator|=
+operator|(
+name|int
+operator|)
+name|strtol
+argument_list|(
+name|opt
+argument_list|,
+operator|&
+name|tmp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|tmp
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"%s is not an integer\n"
+argument_list|)
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|depth
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"Depth can not be negative.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|flags
+operator||=
+operator|(
+name|ZFS_ITER_DEPTH_LIMIT
+operator||
+name|ZFS_ITER_RECURSE
+operator|)
+expr_stmt|;
+return|return
+operator|(
+name|depth
 operator|)
 return|;
 block|}
@@ -4861,6 +4967,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|limit
+init|=
+literal|0
+decl_stmt|;
 name|zprop_list_t
 name|fake_name
 init|=
@@ -4929,7 +5040,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":o:s:rHp"
+literal|":d:o:s:rHp"
 argument_list|)
 operator|)
 operator|!=
@@ -4950,6 +5061,20 @@ operator|.
 name|cb_literal
 operator|=
 name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|limit
+operator|=
+name|parse_depth
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|flags
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5459,6 +5584,8 @@ name|cb
 operator|.
 name|cb_proplist
 argument_list|,
+name|limit
+argument_list|,
 name|get_callback
 argument_list|,
 operator|&
@@ -5930,6 +6057,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+literal|0
+argument_list|,
 name|inherit_recurse_cb
 argument_list|,
 name|propname
@@ -5953,6 +6082,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|inherit_cb
 argument_list|,
@@ -6893,6 +7024,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+literal|0
+argument_list|,
 name|upgrade_set_callback
 argument_list|,
 operator|&
@@ -6991,6 +7124,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+literal|0
+argument_list|,
 name|upgrade_list_callback
 argument_list|,
 operator|&
@@ -7030,6 +7165,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|upgrade_list_callback
 argument_list|,
@@ -7071,7 +7208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * list [-rH] [-o property[,property]...] [-t type[,type]...]  *      [-s property [-s property]...] [-S property [-S property]...]  *<dataset> ...  *  * 	-r	Recurse over all children  * 	-H	Scripted mode; elide headers and separate columns by tabs  * 	-o	Control which fields to display.  * 	-t	Control which object types to display.  *	-s	Specify sort columns, descending order.  *	-S	Specify sort columns, ascending order.  *  * When given no arguments, lists all filesystems in the system.  * Otherwise, list the specified datasets, optionally recursing down them if  * '-r' is specified.  */
+comment|/*  * list [-r][-d max] [-H] [-o property[,property]...] [-t type[,type]...]  *      [-s property [-s property]...] [-S property [-S property]...]  *<dataset> ...  *  * 	-r	Recurse over all children  * 	-d	Limit recursion by depth.  * 	-H	Scripted mode; elide headers and separate columns by tabs  * 	-o	Control which fields to display.  * 	-t	Control which object types to display.  *	-s	Specify sort columns, descending order.  *	-S	Specify sort columns, ascending order.  *  * When given no arguments, lists all filesystems in the system.  * Otherwise, list the specified datasets, optionally recursing down them if  * '-r' is specified.  */
 end_comment
 
 begin_typedef
@@ -7721,6 +7858,11 @@ modifier|*
 name|value
 decl_stmt|;
 name|int
+name|limit
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 name|zfs_sort_column_t
@@ -7748,7 +7890,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":o:rt:Hs:S:"
+literal|":d:o:rt:Hs:S:"
 argument_list|)
 operator|)
 operator|!=
@@ -7767,6 +7909,20 @@ case|:
 name|fields
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|limit
+operator|=
+name|parse_depth
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|flags
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -8120,6 +8276,8 @@ operator|&
 name|cb
 operator|.
 name|cb_proplist
+argument_list|,
+name|limit
 argument_list|,
 name|list_callback
 argument_list|,
@@ -9817,6 +9975,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|set_callback
 argument_list|,
@@ -12736,6 +12896,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|unallow_callback
 argument_list|,
