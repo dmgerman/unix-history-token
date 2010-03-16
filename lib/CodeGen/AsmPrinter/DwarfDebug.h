@@ -177,8 +177,9 @@ name|unsigned
 name|SourceID
 decl_stmt|;
 comment|// Source ID number.
-name|unsigned
-name|LabelID
+name|MCSymbol
+modifier|*
+name|Label
 decl_stmt|;
 comment|// Label in code ID number.
 name|public
@@ -191,7 +192,7 @@ argument|unsigned C
 argument_list|,
 argument|unsigned S
 argument_list|,
-argument|unsigned I
+argument|MCSymbol *label
 argument_list|)
 block|:
 name|Line
@@ -209,9 +210,9 @@ argument_list|(
 name|S
 argument_list|)
 operator|,
-name|LabelID
+name|Label
 argument_list|(
-argument|I
+argument|label
 argument_list|)
 block|{}
 comment|// Accessors
@@ -242,13 +243,14 @@ return|return
 name|SourceID
 return|;
 block|}
-name|unsigned
-name|getLabelID
+name|MCSymbol
+operator|*
+name|getLabel
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LabelID
+name|Label
 return|;
 block|}
 block|}
@@ -378,15 +380,31 @@ operator|*
 operator|>
 name|DIEValues
 block|;
-comment|/// StringPool - A UniqueVector of strings used by indirect references.
-comment|///
-name|UniqueVector
+comment|/// StringPool - A String->Symbol mapping of strings used by indirect
+comment|/// references.
+name|StringMap
 operator|<
 name|std
 operator|::
-name|string
+name|pair
+operator|<
+name|MCSymbol
+operator|*
+block|,
+name|unsigned
 operator|>
+expr|>
 name|StringPool
+block|;
+name|unsigned
+name|NextStringPoolNumber
+block|;
+name|MCSymbol
+operator|*
+name|getStringPoolEntry
+argument_list|(
+argument|StringRef Str
+argument_list|)
 block|;
 comment|/// SectionMap - Provides a unique id per text section.
 comment|///
@@ -429,7 +447,8 @@ name|DbgScope
 operator|*
 name|CurrentFnDbgScope
 block|;
-comment|/// DbgScopeMap - Tracks the scopes in the current function.
+comment|/// DbgScopeMap - Tracks the scopes in the current function.  Owns the
+comment|/// contained DbgScope*s.
 comment|///
 name|DenseMap
 operator|<
@@ -454,7 +473,7 @@ operator|>
 name|ConcreteScopes
 block|;
 comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
-comment|/// not included DbgScopeMap.
+comment|/// not included DbgScopeMap.  AbstractScopes owns its DbgScope*s.
 name|DenseMap
 operator|<
 name|MDNode
@@ -474,7 +493,8 @@ literal|4
 operator|>
 name|AbstractScopesList
 block|;
-comment|/// AbstractVariables - Collection on abstract variables.
+comment|/// AbstractVariables - Collection on abstract variables.  Owned by the
+comment|/// DbgScopes in AbstractScopes.
 name|DenseMap
 operator|<
 name|MDNode
@@ -775,8 +795,6 @@ parameter_list|(
 name|DIE
 modifier|*
 name|Entry
-init|=
-name|NULL
 parameter_list|)
 function_decl|;
 comment|/// addUInt - Add an unsigned integer attribute data and value.
@@ -1330,6 +1348,24 @@ modifier|&
 name|Loc
 parameter_list|)
 function_decl|;
+name|DbgVariable
+modifier|*
+name|findAbstractVariable
+parameter_list|(
+name|DIVariable
+modifier|&
+name|Var
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|DILocation
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// updateSubprogramScopeDIE - Find DIE for the given subprogram and
 comment|/// attach appropriate DW_AT_low_pc and DW_AT_high_pc attributes.
 comment|/// If there are global variables in this scope then create and insert
@@ -1552,8 +1588,7 @@ name|StringRef
 name|FileName
 parameter_list|)
 function_decl|;
-name|CompileUnit
-modifier|*
+name|void
 name|constructCompileUnit
 parameter_list|(
 name|MDNode

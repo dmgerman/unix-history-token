@@ -114,6 +114,9 @@ decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
 comment|/// MachineCodeEmitter - This class defines two sorts of methods: those for
 comment|/// emitting the actual bytes of machine code, and those for emitting auxillary
 comment|/// structures, such as jump tables, relocations, etc.
@@ -1108,8 +1111,9 @@ name|virtual
 name|void
 name|emitLabel
 parameter_list|(
-name|uint64_t
-name|LabelID
+name|MCSymbol
+modifier|*
+name|Label
 parameter_list|)
 init|=
 literal|0
@@ -1294,15 +1298,16 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getLabelAddress - Return the address of the specified LabelID, only usable
+comment|/// getLabelAddress - Return the address of the specified Label, only usable
 comment|/// after the LabelID has been emitted.
 comment|///
 name|virtual
 name|uintptr_t
 name|getLabelAddress
 argument_list|(
-name|uint64_t
-name|LabelID
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
 decl|const
 init|=

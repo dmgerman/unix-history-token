@@ -115,7 +115,8 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 block|,
 name|CalleeSavedInfo
 operator|>
@@ -263,7 +264,8 @@ name|std
 operator|::
 name|pair
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 block|,
 name|CalleeSavedInfo
 operator|>

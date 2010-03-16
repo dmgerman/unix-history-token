@@ -198,8 +198,8 @@ name|Size2Bytes
 init|=
 literal|4
 block|,
-comment|// IndexMode - Unindex, pre-indexed, or post-indexed. Only valid for load
-comment|// and store ops
+comment|// IndexMode - Unindex, pre-indexed, or post-indexed are valid for load
+comment|// and store ops only.  Generic "updating" flag is used for ld/st multiple.
 name|IndexModeShift
 init|=
 literal|7
@@ -217,6 +217,10 @@ block|,
 name|IndexModePost
 init|=
 literal|2
+block|,
+name|IndexModeUpd
+init|=
+literal|3
 block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Instruction encoding formats.

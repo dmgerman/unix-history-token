@@ -185,7 +185,7 @@ name|virtual
 name|void
 name|emitLabel
 argument_list|(
-argument|uint64_t LabelID
+argument|MCSymbol *Label
 argument_list|)
 block|{
 name|assert
@@ -199,7 +199,7 @@ name|virtual
 name|uintptr_t
 name|getLabelAddress
 argument_list|(
-argument|uint64_t Label
+argument|MCSymbol *Label
 argument_list|)
 specifier|const
 block|{

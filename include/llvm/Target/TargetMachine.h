@@ -112,6 +112,9 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
@@ -632,6 +635,11 @@ range|:
 name|public
 name|TargetMachine
 block|{
+name|std
+operator|::
+name|string
+name|TargetTriple
+block|;
 name|protected
 operator|:
 comment|// Can only create subclasses.
@@ -650,6 +658,8 @@ operator|&
 name|TargetTriple
 argument_list|)
 block|;
+name|private
+operator|:
 comment|/// addCommonCodeGenPasses - Add standard LLVM codegen passes used for
 comment|/// both emitting to assembly files or machine code output.
 comment|///
@@ -661,10 +671,10 @@ argument_list|,
 argument|CodeGenOpt::Level
 argument_list|,
 argument|bool DisableVerify
+argument_list|,
+argument|MCContext *&OutCtx
 argument_list|)
 block|;
-name|private
-operator|:
 name|virtual
 name|void
 name|setCodeModelForJIT

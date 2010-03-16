@@ -267,6 +267,8 @@ name|FileType
 block|{
 name|AsmFile
 block|,
+name|ObjectFile
+block|,
 name|CFile
 block|}
 block|;
@@ -399,44 +401,17 @@ name|LLC
 operator|*
 name|createLLC
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Argv0
+argument|const char *Argv0
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Message
+argument|std::string&Message
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|Args
-operator|=
+argument|const std::vector<std::string> *Args =
 literal|0
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|GCCArgs
-operator|=
+argument|const std::vector<std::string> *GCCArgs =
 literal|0
+argument_list|,
+argument|bool UseIntegratedAssembler = false
 argument_list|)
 block|;
 specifier|static
@@ -783,44 +758,22 @@ name|GCC
 operator|*
 name|gcc
 block|;
+name|bool
+name|UseIntegratedAssembler
+block|;
 name|public
 operator|:
 name|LLC
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|llcPath
+argument|const std::string&llcPath
 argument_list|,
-name|GCC
-operator|*
-name|Gcc
+argument|GCC *Gcc
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|Args
+argument|const std::vector<std::string> *Args
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|*
-name|GCCArgs
+argument|const std::vector<std::string> *GCCArgs
+argument_list|,
+argument|bool useIntegratedAssembler
 argument_list|)
 operator|:
 name|LLCPath
@@ -830,7 +783,12 @@ argument_list|)
 block|,
 name|gcc
 argument_list|(
-argument|Gcc
+name|Gcc
+argument_list|)
+block|,
+name|UseIntegratedAssembler
+argument_list|(
+argument|useIntegratedAssembler
 argument_list|)
 block|{
 name|ToolArgs

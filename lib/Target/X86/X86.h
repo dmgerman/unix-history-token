@@ -80,9 +80,6 @@ name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
-name|MCAssembler
-decl_stmt|;
-name|class
 name|MCCodeEmitter
 decl_stmt|;
 name|class
@@ -189,27 +186,33 @@ function_decl|;
 name|TargetAsmBackend
 modifier|*
 name|createX86_32AsmBackend
-parameter_list|(
+argument_list|(
 specifier|const
 name|Target
-modifier|&
-parameter_list|,
-name|MCAssembler
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+argument_list|)
+decl_stmt|;
 name|TargetAsmBackend
 modifier|*
 name|createX86_64AsmBackend
-parameter_list|(
+argument_list|(
 specifier|const
 name|Target
-modifier|&
-parameter_list|,
-name|MCAssembler
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+argument_list|)
+decl_stmt|;
 comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
 comment|/// allocated function into raw machine code in a dynamically
 comment|/// allocated chunk of memory.

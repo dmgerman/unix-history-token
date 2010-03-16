@@ -177,6 +177,17 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createScalarReplAggregatesPass function. */
+name|void
+name|LLVMAddScalarReplAggregatesPassWithThreshold
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|,
+name|int
+name|Threshold
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createSimplifyLibCallsPass function. */
 name|void
 name|LLVMAddSimplifyLibCallsPass
@@ -204,6 +215,14 @@ function_decl|;
 comment|/** See llvm::demotePromoteMemoryToRegisterPass function. */
 name|void
 name|LLVMAddDemoteMemoryToRegisterPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createVerifierPass function. */
+name|void
+name|LLVMAddVerifierPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM

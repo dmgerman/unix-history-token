@@ -369,18 +369,9 @@ name|TargetMachine
 modifier|&
 name|TM
 parameter_list|,
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
 name|MCStreamer
 modifier|&
 name|Streamer
-parameter_list|,
-specifier|const
-name|MCAsmInfo
-modifier|*
-name|T
 parameter_list|)
 function_decl|;
 name|public
@@ -762,16 +753,6 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printLabel - This method prints a local label used by debug and
-comment|/// exception handling tables.
-name|void
-name|printLabel
-argument_list|(
-name|unsigned
-name|Id
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// printDeclare - This method prints a local variable declaration used by
 comment|/// debug tables.
 name|void
@@ -781,20 +762,6 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// GetGlobalValueSymbol - Return the MCSymbol for the specified global
-comment|/// value.
-name|virtual
-name|MCSymbol
-modifier|*
-name|GetGlobalValueSymbol
-argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
 argument_list|)
 decl|const
 decl_stmt|;
@@ -887,11 +854,6 @@ name|MCSymbol
 modifier|*
 name|GetBlockAddressSymbol
 argument_list|(
-specifier|const
-name|Function
-operator|*
-name|F
-argument_list|,
 specifier|const
 name|BasicBlock
 operator|*

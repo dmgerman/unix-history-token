@@ -386,12 +386,23 @@ decl_stmt|;
 comment|/// EmitDbgValue - Generate a constant DBG_VALUE.  No node is involved.
 name|void
 name|EmitDbgValue
-parameter_list|(
+argument_list|(
 name|SDDbgValue
-modifier|*
+operator|*
 name|sd
-parameter_list|)
-function_decl|;
+argument_list|,
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+argument_list|,
+name|MachineBasicBlock
+operator|*
+operator|>
+operator|*
+name|EM
+argument_list|)
+decl_stmt|;
 comment|/// EmitNode - Generate machine code for a node and needed dependencies.
 comment|///
 name|void

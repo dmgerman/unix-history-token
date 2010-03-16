@@ -400,9 +400,6 @@ comment|//===-------------------------------------------------------------------
 comment|/// DIE - A structured debug information entry.  Has an abbreviation which
 comment|/// describes it's organization.
 name|class
-name|CompileUnit
-decl_stmt|;
-name|class
 name|DIEValue
 decl_stmt|;
 name|class
@@ -631,19 +628,6 @@ operator|=
 name|S
 expr_stmt|;
 block|}
-name|void
-name|setParent
-parameter_list|(
-name|DIE
-modifier|*
-name|P
-parameter_list|)
-block|{
-name|Parent
-operator|=
-name|P
-expr_stmt|;
-block|}
 comment|/// addValue - Add a value and attributes to a DIE.
 comment|///
 name|void
@@ -746,10 +730,9 @@ argument_list|)
 expr_stmt|;
 name|Child
 operator|->
-name|setParent
-argument_list|(
+name|Parent
+operator|=
 name|this
-argument_list|)
 expr_stmt|;
 block|}
 ifndef|#
@@ -1595,6 +1578,7 @@ name|DIEValue
 block|{
 name|DIE
 operator|*
+specifier|const
 name|Entry
 block|;
 name|public
@@ -1627,16 +1611,6 @@ return|return
 name|Entry
 return|;
 block|}
-name|void
-name|setEntry
-argument_list|(
-argument|DIE *E
-argument_list|)
-block|{
-name|Entry
-operator|=
-name|E
-block|; }
 comment|/// EmitValue - Emit debug information entry offset.
 comment|///
 name|virtual

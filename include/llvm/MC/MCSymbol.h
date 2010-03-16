@@ -62,19 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -113,12 +101,11 @@ name|MCSection
 modifier|*
 name|AbsolutePseudoSection
 decl_stmt|;
-comment|/// Name - The name of the symbol.
-name|std
-operator|::
-name|string
+comment|/// Name - The name of the symbol.  The referred-to string data is actually
+comment|/// held by the StringMap that lives in MCContext.
+name|StringRef
 name|Name
-expr_stmt|;
+decl_stmt|;
 comment|/// Section - The section the symbol is defined in. This is null for
 comment|/// undefined symbols, and the special AbsolutePseudoSection value for
 comment|/// absolute symbols.
@@ -150,14 +137,14 @@ name|MCContext
 decl_stmt|;
 name|MCSymbol
 argument_list|(
-argument|StringRef _Name
+argument|StringRef name
 argument_list|,
-argument|bool _IsTemporary
+argument|bool isTemporary
 argument_list|)
 block|:
 name|Name
 argument_list|(
-name|_Name
+name|name
 argument_list|)
 operator|,
 name|Section
@@ -172,7 +159,7 @@ argument_list|)
 operator|,
 name|IsTemporary
 argument_list|(
-argument|_IsTemporary
+argument|isTemporary
 argument_list|)
 block|{}
 name|MCSymbol
@@ -196,11 +183,7 @@ comment|// DO NOT IMPLEMENT
 name|public
 label|:
 comment|/// getName - Get the symbol name.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const

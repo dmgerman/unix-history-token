@@ -131,6 +131,9 @@ name|class
 name|MachineJumpTableInfo
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -282,6 +285,10 @@ name|TargetMachine
 modifier|&
 name|Target
 decl_stmt|;
+name|MCContext
+modifier|&
+name|Ctx
+decl_stmt|;
 comment|// RegInfo - Information about each register in use in the function.
 name|MachineRegisterInfo
 modifier|*
@@ -375,7 +382,7 @@ name|MachineFunction
 operator|&
 argument_list|)
 expr_stmt|;
-comment|// intentionally unimplemented
+comment|// DO NOT IMPLEMENT
 name|void
 name|operator
 init|=
@@ -385,7 +392,7 @@ name|MachineFunction
 operator|&
 operator|)
 decl_stmt|;
-comment|// intentionally unimplemented
+comment|// DO NOT IMPLEMENT
 name|public
 label|:
 name|MachineFunction
@@ -395,12 +402,24 @@ argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
 argument|unsigned FunctionNum
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
 empty_stmt|;
 operator|~
 name|MachineFunction
 argument_list|()
 expr_stmt|;
+name|MCContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ctx
+return|;
+block|}
 comment|/// getFunction - Return the LLVM function that this machine code represents
 comment|///
 name|Function

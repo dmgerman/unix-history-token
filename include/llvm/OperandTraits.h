@@ -74,7 +74,7 @@ name|namespace
 name|llvm
 block|{
 comment|//===----------------------------------------------------------------------===//
-comment|//                          FixedNumOperands Trait Class
+comment|//                          FixedNumOperand Trait Class
 comment|//===----------------------------------------------------------------------===//
 comment|/// FixedNumOperandTraits - determine the allocation regime of the Use array
 comment|/// when it is a prefix to the User object, and the number of Use objects is
@@ -178,8 +178,10 @@ block|;   }
 block|; }
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|//                          OptionalOperands Trait Class
+comment|//                          OptionalOperand Trait Class
 comment|//===----------------------------------------------------------------------===//
+comment|/// OptionalOperandTraits - when the number of operands may change at runtime.
+comment|/// Naturally it may only decrease, because the allocations may not change.
 name|template
 operator|<
 name|unsigned

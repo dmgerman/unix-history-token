@@ -330,6 +330,15 @@ operator|=
 name|Style
 block|; }
 name|bool
+name|hasCMov
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCMov
+return|;
+block|}
+name|bool
 name|hasMMX
 argument_list|()
 specifier|const

@@ -88,6 +88,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|MachineLocation
 block|{
 name|private
@@ -295,53 +298,55 @@ endif|#
 directive|endif
 block|}
 empty_stmt|;
+comment|/// MachineMove - This class represents the save or restore of a callee saved
+comment|/// register that exception or debug info needs to know about.
 name|class
 name|MachineMove
 block|{
 name|private
 label|:
-name|unsigned
-name|LabelID
+comment|/// Label - Symbol for post-instruction address when result of move takes
+comment|/// effect.
+name|MCSymbol
+modifier|*
+name|Label
 decl_stmt|;
-comment|// Label ID number for post-instruction
-comment|// address when result of move takes
-comment|// effect.
+comment|// Move to& from location.
 name|MachineLocation
 name|Destination
-decl_stmt|;
-comment|// Move to location.
-name|MachineLocation
+decl_stmt|,
 name|Source
 decl_stmt|;
-comment|// Move from location.
 name|public
 label|:
 name|MachineMove
 argument_list|()
 operator|:
-name|LabelID
+name|Label
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|Destination
-argument_list|()
-operator|,
-name|Source
-argument_list|()
 block|{}
 name|MachineMove
 argument_list|(
-argument|unsigned ID
+name|MCSymbol
+operator|*
+name|label
 argument_list|,
-argument|MachineLocation&D
+specifier|const
+name|MachineLocation
+operator|&
+name|D
 argument_list|,
-argument|MachineLocation&S
+specifier|const
+name|MachineLocation
+operator|&
+name|S
 argument_list|)
 operator|:
-name|LabelID
+name|Label
 argument_list|(
-name|ID
+name|label
 argument_list|)
 operator|,
 name|Destination
@@ -355,13 +360,14 @@ argument|S
 argument_list|)
 block|{}
 comment|// Accessors
-name|unsigned
-name|getLabelID
+name|MCSymbol
+operator|*
+name|getLabel
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LabelID
+name|Label
 return|;
 block|}
 specifier|const

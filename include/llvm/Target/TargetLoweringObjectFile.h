@@ -89,6 +89,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCExpr
 decl_stmt|;
 name|class
@@ -101,7 +104,7 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MCContext
+name|MCStreamer
 decl_stmt|;
 name|class
 name|GlobalValue
@@ -730,14 +733,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// getSymbolForDwarfGlobalReference - Return an MCExpr to use for a reference
+comment|/// getExprForDwarfGlobalReference - Return an MCExpr to use for a reference
 comment|/// to the specified global variable from exception handling information.
 comment|///
 name|virtual
 specifier|const
 name|MCExpr
 modifier|*
-name|getSymbolForDwarfGlobalReference
+name|getExprForDwarfGlobalReference
 argument_list|(
 specifier|const
 name|GlobalValue
@@ -754,19 +757,27 @@ name|MMI
 argument_list|,
 name|unsigned
 name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
+comment|///
 specifier|const
 name|MCExpr
 modifier|*
-name|getSymbolForDwarfReference
+name|getExprForDwarfReference
 argument_list|(
 specifier|const
 name|MCSymbol
 operator|*
 name|Sym
+argument_list|,
+name|Mangler
+operator|*
+name|Mang
 argument_list|,
 name|MachineModuleInfo
 operator|*
@@ -774,6 +785,10 @@ name|MMI
 argument_list|,
 name|unsigned
 name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;

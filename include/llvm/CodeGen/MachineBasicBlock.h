@@ -82,9 +82,6 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MCContext
-decl_stmt|;
-name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -1545,15 +1542,11 @@ block|}
 comment|/// getSymbol - Return the MCSymbol for this basic block.
 comment|///
 name|MCSymbol
-modifier|*
+operator|*
 name|getSymbol
-argument_list|(
-name|MCContext
-operator|&
-name|Ctx
-argument_list|)
-decl|const
-decl_stmt|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|// Methods used to maintain doubly linked list of blocks...

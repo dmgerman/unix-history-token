@@ -77,6 +77,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -238,6 +244,13 @@ name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|,
+expr|struct
+name|stat
+operator|*
+name|FileInfo
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
@@ -360,6 +373,13 @@ name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|,
+expr|struct
+name|stat
+operator|*
+name|FileInfo
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

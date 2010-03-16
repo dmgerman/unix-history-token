@@ -167,7 +167,7 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MCSymbol
 decl_stmt|;
 name|namespace
 name|GC
@@ -202,15 +202,16 @@ name|PointKind
 name|Kind
 expr_stmt|;
 comment|//< The kind of the safe point.
-name|unsigned
-name|Num
+name|MCSymbol
+modifier|*
+name|Label
 decl_stmt|;
-comment|//< Usually a label.
+comment|//< A label.
 name|GCPoint
 argument_list|(
 argument|GC::PointKind K
 argument_list|,
-argument|unsigned N
+argument|MCSymbol *L
 argument_list|)
 block|:
 name|Kind
@@ -218,9 +219,9 @@ argument_list|(
 name|K
 argument_list|)
 operator|,
-name|Num
+name|Label
 argument_list|(
-argument|N
+argument|L
 argument_list|)
 block|{}
 block|}
@@ -427,8 +428,9 @@ operator|::
 name|PointKind
 name|Kind
 argument_list|,
-name|unsigned
-name|Num
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
 block|{
 name|SafePoints
@@ -439,7 +441,7 @@ name|GCPoint
 argument_list|(
 name|Kind
 argument_list|,
-name|Num
+name|Label
 argument_list|)
 argument_list|)
 expr_stmt|;

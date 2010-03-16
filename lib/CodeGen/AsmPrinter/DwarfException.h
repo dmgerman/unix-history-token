@@ -321,58 +321,6 @@ name|LandingPadInfo
 operator|*
 name|R
 argument_list|)
-block|;    struct
-name|KeyInfo
-block|{
-specifier|static
-specifier|inline
-name|unsigned
-name|getEmptyKey
-argument_list|()
-block|{
-return|return
-operator|-
-literal|1U
-return|;
-block|}
-specifier|static
-specifier|inline
-name|unsigned
-name|getTombstoneKey
-argument_list|()
-block|{
-return|return
-operator|-
-literal|2U
-return|;
-block|}
-specifier|static
-name|unsigned
-name|getHashValue
-argument_list|(
-argument|const unsigned&Key
-argument_list|)
-block|{
-return|return
-name|Key
-return|;
-block|}
-specifier|static
-name|bool
-name|isEqual
-argument_list|(
-argument|unsigned LHS
-argument_list|,
-argument|unsigned RHS
-argument_list|)
-block|{
-return|return
-name|LHS
-operator|==
-name|RHS
-return|;
-block|}
-expr|}
 block|;
 comment|/// PadRange - Structure holding a try-range and the associated landing pad.
 block|struct
@@ -390,11 +338,10 @@ block|;
 typedef|typedef
 name|DenseMap
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 operator|,
 name|PadRange
-operator|,
-name|KeyInfo
 operator|>
 name|RangeMapType
 expr_stmt|;
@@ -412,29 +359,33 @@ block|;
 name|unsigned
 name|Previous
 block|;   }
-block|;
+decl_stmt|;
 comment|/// CallSiteEntry - Structure describing an entry in the call-site table.
-block|struct
+struct|struct
 name|CallSiteEntry
 block|{
 comment|// The 'try-range' is BeginLabel .. EndLabel.
-name|unsigned
+name|MCSymbol
+modifier|*
 name|BeginLabel
-block|;
+decl_stmt|;
 comment|// zero indicates the start of the function.
-name|unsigned
+name|MCSymbol
+modifier|*
 name|EndLabel
-block|;
+decl_stmt|;
 comment|// zero indicates the end of the function.
 comment|// The landing pad starts at PadLabel.
-name|unsigned
+name|MCSymbol
+modifier|*
 name|PadLabel
-block|;
+decl_stmt|;
 comment|// zero indicates that there is no landing pad.
 name|unsigned
 name|Action
-block|;   }
-block|;
+decl_stmt|;
+block|}
+struct|;
 comment|/// ComputeActionsTable - Compute the actions table and gather the first
 comment|/// action index for each landing pad site.
 name|unsigned
@@ -464,18 +415,18 @@ operator|>
 operator|&
 name|FirstActions
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// CallToNoUnwindFunction - Return `true' if this is a call to a function
 comment|/// marked `nounwind'. Return `false' otherwise.
 name|bool
 name|CallToNoUnwindFunction
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineInstr
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// ComputeCallSiteTable - Compute the call-site table.  The entry for an
 comment|/// invoke has a try-range containing the call, a non-zero landing pad and an
 comment|/// appropriate action.  The entry for an ordinary call has a try-range
@@ -516,28 +467,13 @@ operator|>
 operator|&
 name|FirstActions
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|EmitExceptionTable
-argument_list|()
-block|;
-comment|/// CreateLabelDiff - Emit a label and subtract it from the expression we
-comment|/// already have.  This is equivalent to emitting "foo - .", but we have to
-comment|/// emit the label for "." directly.
-specifier|const
-name|MCExpr
-operator|*
-name|CreateLabelDiff
-argument_list|(
-argument|const MCExpr *ExprRef
-argument_list|,
-argument|const char *LabelName
-argument_list|,
-argument|unsigned Index
-argument_list|)
-block|;
+parameter_list|()
+function_decl|;
 name|public
-operator|:
+label|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Main entry points.
 comment|//
@@ -556,61 +492,70 @@ name|MCAsmInfo
 operator|*
 name|T
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 operator|~
 name|DwarfException
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// BeginModule - Emit all exception information that should come prior to the
 comment|/// content.
 name|void
 name|BeginModule
-argument_list|(
-argument|Module *m
-argument_list|,
-argument|MachineModuleInfo *mmi
-argument_list|)
+parameter_list|(
+name|Module
+modifier|*
+name|m
+parameter_list|,
+name|MachineModuleInfo
+modifier|*
+name|mmi
+parameter_list|)
 block|{
 name|this
 operator|->
 name|M
 operator|=
 name|m
-block|;
+expr_stmt|;
 name|this
 operator|->
 name|MMI
 operator|=
 name|mmi
-block|;   }
+expr_stmt|;
+block|}
 comment|/// EndModule - Emit all exception information that should come after the
 comment|/// content.
 name|void
 name|EndModule
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// BeginFunction - Gather pre-function exception information.  Assumes being
 comment|/// emitted immediately after the function entry point.
 name|void
 name|BeginFunction
-argument_list|(
+parameter_list|(
 specifier|const
 name|MachineFunction
-operator|*
+modifier|*
 name|MF
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EndFunction - Gather and emit post-function exception information.
 name|void
 name|EndFunction
-argument_list|()
-block|; }
-decl_stmt|;
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm
 end_comment
 

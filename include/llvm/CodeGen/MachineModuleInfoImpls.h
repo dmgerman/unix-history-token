@@ -91,33 +91,32 @@ operator|<
 name|MCSymbol
 operator|*
 block|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 name|FnStubs
 block|;
 comment|/// GVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something like
-comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo".
+comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo". The extra bit
+comment|/// is true if this GV is external.
 name|DenseMap
 operator|<
 name|MCSymbol
 operator|*
 block|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 name|GVStubs
 block|;
 comment|/// HiddenGVStubs - Darwin '$non_lazy_ptr' stubs.  The key is something like
 comment|/// "Lfoo$non_lazy_ptr", the value is something like "_foo".  Unlike GVStubs
-comment|/// these are for things with hidden visibility.
+comment|/// these are for things with hidden visibility. The extra bit is true if
+comment|/// this GV is external.
 name|DenseMap
 operator|<
 name|MCSymbol
 operator|*
 block|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 name|HiddenGVStubs
 block|;
@@ -134,8 +133,7 @@ argument_list|(
 argument|const MachineModuleInfo&
 argument_list|)
 block|{}
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|&
 name|getFnStubEntry
 argument_list|(
@@ -156,8 +154,7 @@ name|Sym
 index|]
 return|;
 block|}
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|&
 name|getGVStubEntry
 argument_list|(
@@ -178,8 +175,7 @@ name|Sym
 index|]
 return|;
 block|}
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|&
 name|getHiddenGVStubEntry
 argument_list|(
@@ -254,8 +250,7 @@ operator|<
 name|MCSymbol
 operator|*
 block|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 name|GVStubs
 block|;
@@ -272,8 +267,7 @@ argument_list|(
 argument|const MachineModuleInfo&
 argument_list|)
 block|{}
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|&
 name|getGVStubEntry
 argument_list|(

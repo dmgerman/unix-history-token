@@ -103,6 +103,9 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|TargetAsmBackend
+decl_stmt|;
+name|class
 name|Twine
 decl_stmt|;
 name|class
@@ -762,11 +765,6 @@ name|formatted_raw_ostream
 modifier|&
 name|OS
 parameter_list|,
-specifier|const
-name|MCAsmInfo
-modifier|&
-name|MAI
-parameter_list|,
 name|bool
 name|isLittleEndian
 parameter_list|,
@@ -791,9 +789,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|// FIXME: These two may end up getting rolled into a single
-comment|// createObjectStreamer interface, which implements the assembler backend, and
-comment|// is parameterized on an output object file writer.
 comment|/// createMachOStream - Create a machine code streamer which will generative
 comment|/// Mach-O format object files.
 name|MCStreamer
@@ -804,6 +799,10 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
+name|TargetAsmBackend
+modifier|&
+name|TAB
+parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
@@ -811,21 +810,6 @@ parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
-parameter_list|)
-function_decl|;
-comment|/// createELFStreamer - Create a machine code streamer which will generative
-comment|/// ELF format object files.
-name|MCStreamer
-modifier|*
-name|createELFStreamer
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
 parameter_list|)
 function_decl|;
 block|}

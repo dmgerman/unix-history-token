@@ -176,6 +176,11 @@ comment|/// imms (including global addresses).
 name|bool
 name|UseMovt
 block|;
+comment|/// HasFP16 - True if subtarget supports half-precision FP (We support VFP+HF
+comment|/// only so far)
+name|bool
+name|HasFP16
+block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -228,10 +233,10 @@ name|getMaxInlineSizeThreshold
 argument_list|()
 specifier|const
 block|{
-comment|// FIXME: For now, we don't lower memcpy's to loads / stores for Thumb.
-comment|// Change this once Thumb ldmia / stmia support is added.
+comment|// FIXME: For now, we don't lower memcpy's to loads / stores for Thumb1.
+comment|// Change this once Thumb1 ldmia / stmia support is added.
 return|return
-name|isThumb
+name|isThumb1Only
 argument_list|()
 operator|?
 literal|0
@@ -370,6 +375,15 @@ name|hasNEON
 argument_list|()
 operator|&&
 name|UseNEONForSinglePrecisionFP
+return|;
+block|}
+name|bool
+name|hasFP16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFP16
 return|;
 block|}
 name|bool

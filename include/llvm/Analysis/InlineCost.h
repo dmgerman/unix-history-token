@@ -83,6 +83,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -131,6 +137,17 @@ name|NumInsts
 decl_stmt|,
 name|NumBlocks
 decl_stmt|;
+comment|/// NumBBInsts - Keeps track of basic block code size estimates.
+name|DenseMap
+operator|<
+specifier|const
+name|BasicBlock
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|NumBBInsts
+expr_stmt|;
 comment|/// NumCalls - Keep track of the number of calls to 'big' functions.
 name|unsigned
 name|NumCalls

@@ -553,10 +553,10 @@ name|unsigned
 name|reg
 parameter_list|)
 function_decl|;
-comment|/// conflictsWithPhysRegRef - Similar to conflictsWithPhysRegRef except
-comment|/// it can check use as well.
+comment|/// conflictsWithSubPhysRegRef - Similar to conflictsWithPhysRegRef except
+comment|/// it checks for sub-register reference and it can check use as well.
 name|bool
-name|conflictsWithPhysRegRef
+name|conflictsWithSubPhysRegRef
 argument_list|(
 name|LiveInterval
 operator|&

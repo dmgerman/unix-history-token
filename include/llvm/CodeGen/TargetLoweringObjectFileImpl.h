@@ -282,14 +282,14 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
-comment|/// getSymbolForDwarfGlobalReference - Return an MCExpr to use for a reference
+comment|/// getExprForDwarfGlobalReference - Return an MCExpr to use for a reference
 comment|/// to the specified global variable from exception handling information.
 comment|///
 name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getSymbolForDwarfGlobalReference
+name|getExprForDwarfGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -298,6 +298,8 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|,
 argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|; }
@@ -567,13 +569,13 @@ return|return
 name|NonLazySymbolPointerSection
 return|;
 block|}
-comment|/// getSymbolForDwarfGlobalReference - The mach-o version of this method
+comment|/// getExprForDwarfGlobalReference - The mach-o version of this method
 comment|/// defaults to returning a stub reference.
 name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getSymbolForDwarfGlobalReference
+name|getExprForDwarfGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -582,6 +584,8 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|,
 argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|;

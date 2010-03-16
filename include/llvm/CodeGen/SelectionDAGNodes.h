@@ -173,6 +173,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -702,6 +705,14 @@ comment|//   3) rounding imm
 comment|//   4) saturation imm
 comment|//   5) ISD::CvtCode indicating the type of conversion to do
 name|CONVERT_RNDSAT
+block|,
+comment|// FP16_TO_FP32, FP32_TO_FP16 - These operators are used to perform
+comment|// promotions and truncation for half-precision (16 bit) floating
+comment|// numbers. We need special nodes since FP16 is a storage-only type with
+comment|// special semantics of operations.
+name|FP16_TO_FP32
+block|,
+name|FP32_TO_FP16
 block|,
 comment|// FNEG, FABS, FSQRT, FSIN, FCOS, FPOWI, FPOW,
 comment|// FLOG, FLOG2, FLOG10, FEXP, FEXP2,
@@ -4086,6 +4097,11 @@ name|Opc
 argument_list|)
 operator|,
 name|OperandsNeedDelete
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|HasDebugValue
 argument_list|(
 name|false
 argument_list|)
@@ -7805,7 +7821,7 @@ block|}
 expr|}
 block|;
 name|class
-name|LabelSDNode
+name|EHLabelSDNode
 operator|:
 name|public
 name|SDNode
@@ -7813,27 +7829,28 @@ block|{
 name|SDUse
 name|Chain
 block|;
-name|unsigned
-name|LabelID
+name|MCSymbol
+operator|*
+name|Label
 block|;
 name|friend
 name|class
 name|SelectionDAG
 block|;
-name|LabelSDNode
+name|EHLabelSDNode
 argument_list|(
-argument|unsigned NodeTy
-argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SDValue ch
 argument_list|,
-argument|unsigned id
+argument|MCSymbol *L
 argument_list|)
 operator|:
 name|SDNode
 argument_list|(
-name|NodeTy
+name|ISD
+operator|::
+name|EH_LABEL
 argument_list|,
 name|dl
 argument_list|,
@@ -7845,9 +7862,9 @@ name|Other
 argument_list|)
 argument_list|)
 block|,
-name|LabelID
+name|Label
 argument_list|(
-argument|id
+argument|L
 argument_list|)
 block|{
 name|InitOperands
@@ -7860,20 +7877,21 @@ argument_list|)
 block|;   }
 name|public
 operator|:
-name|unsigned
-name|getLabelID
+name|MCSymbol
+operator|*
+name|getLabel
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LabelID
+name|Label
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LabelSDNode *
+argument|const EHLabelSDNode *
 argument_list|)
 block|{
 return|return

@@ -88,44 +88,6 @@ name|TM
 argument_list|)
 block|; }
 decl_stmt|;
-comment|// FIXME: This subclass isn't 100% necessary. It will become obsolete once we
-comment|//        can place all LSDAs into the TEXT section. See
-comment|//<rdar://problem/6804645>.
-name|class
-name|ARMMachOTargetObjectFile
-range|:
-name|public
-name|TargetLoweringObjectFileMachO
-block|{
-name|public
-operator|:
-name|ARMMachOTargetObjectFile
-argument_list|()
-operator|:
-name|TargetLoweringObjectFileMachO
-argument_list|()
-block|{}
-name|virtual
-name|void
-name|Initialize
-argument_list|(
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
-argument_list|)
-block|;
-name|virtual
-name|unsigned
-name|getTTypeEncoding
-argument_list|()
-specifier|const
-block|; }
-decl_stmt|;
 block|}
 end_decl_stmt
 

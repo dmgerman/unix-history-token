@@ -157,18 +157,9 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
 name|MCStreamer
 operator|&
 name|Streamer
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|T
 argument_list|)
 operator|:
 name|AsmPrinter
@@ -177,11 +168,7 @@ argument|O
 argument_list|,
 argument|TM
 argument_list|,
-argument|Ctx
-argument_list|,
 argument|Streamer
-argument_list|,
-argument|T
 argument_list|)
 block|{
 name|Subtarget
@@ -259,6 +246,15 @@ argument_list|)
 block|;   }
 name|virtual
 name|void
+name|EmitStartOfAsmFile
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+block|;
+name|virtual
+name|void
 name|EmitEndOfAsmFile
 argument_list|(
 name|Module
@@ -284,15 +280,6 @@ name|MachineOperand
 operator|&
 name|MO
 argument_list|)
-block|;
-name|virtual
-name|MCSymbol
-operator|*
-name|GetGlobalValueSymbol
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|)
-specifier|const
 block|;
 comment|// These methods are used by the tablegen'erated instruction printer.
 name|void

@@ -619,6 +619,17 @@ operator|::
 name|FirstVirtualRegister
 index|]
 block|;
+comment|/// DbgValueVec - Remember DBG_VALUEs that refer to a particular
+comment|/// register.
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+name|DbgValueVec
+block|;
 comment|/// PendingLoads - Remember where unknown loads are after the most recent
 comment|/// unknown store, as we iterate. As with Defs and Uses, this is here
 comment|/// to minimize construction/destruction.

@@ -1182,8 +1182,9 @@ name|virtual
 name|void
 name|emitLabel
 parameter_list|(
-name|uint64_t
-name|LabelID
+name|MCSymbol
+modifier|*
+name|Label
 parameter_list|)
 init|=
 literal|0
@@ -1514,11 +1515,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getLabelAddress - Return the address of the specified LabelID, only usable
+comment|/// getLabelAddress - Return the address of the specified Label, only usable
 end_comment
 
 begin_comment
-comment|/// after the LabelID has been emitted.
+comment|/// after the Label has been emitted.
 end_comment
 
 begin_comment
@@ -1530,8 +1531,9 @@ name|virtual
 name|uintptr_t
 name|getLabelAddress
 argument_list|(
-name|uint64_t
-name|LabelID
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
 decl|const
 init|=

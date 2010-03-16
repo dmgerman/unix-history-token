@@ -417,13 +417,9 @@ comment|/// frame.
 name|void
 name|EmitFrameMoves
 argument_list|(
-specifier|const
-name|char
+name|MCSymbol
 operator|*
 name|BaseLabel
-argument_list|,
-name|unsigned
-name|BaseLabelID
 argument_list|,
 specifier|const
 name|std

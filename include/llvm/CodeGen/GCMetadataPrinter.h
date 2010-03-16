@@ -111,6 +111,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|MCAsmInfo
+decl_stmt|;
 comment|/// GCMetadataPrinterRegistry - The GC assembly printer registry uses all the
 comment|/// defaults from Registry.
 typedef|typedef

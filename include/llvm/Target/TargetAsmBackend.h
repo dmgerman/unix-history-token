@@ -48,6 +48,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCSection
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 comment|/// TargetAsmBackend - Generic interface to target specific assembler backends.
@@ -104,6 +107,62 @@ specifier|const
 block|{
 return|return
 name|TheTarget
+return|;
+block|}
+comment|/// hasAbsolutizedSet - Check whether this target "absolutizes"
+comment|/// assignments. That is, given code like:
+comment|///   a:
+comment|///   ...
+comment|///   b:
+comment|///   tmp = a - b
+comment|///       .long tmp
+comment|/// will the value of 'tmp' be a relocatable expression, or the assembly time
+comment|/// value of L0 - L1. This distinction is only relevant for platforms that
+comment|/// support scattered symbols, since in the absence of scattered symbols (a -
+comment|/// b) cannot change after assembly.
+name|virtual
+name|bool
+name|hasAbsolutizedSet
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// hasScatteredSymbols - Check whether this target supports scattered
+comment|/// symbols. If so, the assembler should assume that atoms can be scattered by
+comment|/// the linker. In particular, this means that the offsets between symbols
+comment|/// which are in distinct atoms is not known at link time, and the assembler
+comment|/// must generate fixups and relocations appropriately.
+comment|///
+comment|/// Note that the assembler currently does not reason about atoms, instead it
+comment|/// assumes all temporary symbols reside in the "current atom".
+name|virtual
+name|bool
+name|hasScatteredSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// doesSectionRequireSymbols - Check whether the given section requires that
+comment|/// all symbols (even temporaries) have symbol table entries.
+name|virtual
+name|bool
+name|doesSectionRequireSymbols
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+name|Section
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
 return|;
 block|}
 block|}

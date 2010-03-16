@@ -8744,7 +8744,7 @@ name|ReturnInst
 operator|>
 operator|:
 name|public
-name|OptionalOperandTraits
+name|VariadicOperandTraits
 operator|<
 operator|>
 block|{ }

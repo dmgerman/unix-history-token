@@ -327,8 +327,20 @@ name|FLOOR_F80
 block|,
 name|FLOOR_PPCF128
 block|,
+name|COPYSIGN_F32
+block|,
+name|COPYSIGN_F64
+block|,
+name|COPYSIGN_F80
+block|,
+name|COPYSIGN_PPCF128
+block|,
 comment|// CONVERSION
 name|FPEXT_F32_F64
+block|,
+name|FPEXT_F16_F32
+block|,
+name|FPROUND_F32_F16
 block|,
 name|FPROUND_F64_F32
 block|,

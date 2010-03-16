@@ -69,9 +69,6 @@ name|class
 name|MCStreamer
 decl_stmt|;
 name|class
-name|MCValue
-decl_stmt|;
-name|class
 name|SMLoc
 decl_stmt|;
 name|class

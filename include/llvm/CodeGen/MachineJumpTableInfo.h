@@ -173,6 +173,10 @@ comment|///      .set L4_5_set_123, LBB123 - LJTI1_2
 comment|///      .word L4_5_set_123
 name|EK_LabelDifference32
 block|,
+comment|/// EK_Inline - Jump table entries are emitted inline at their point of
+comment|/// use. It is the responsibility of the target to emit the entries.
+name|EK_Inline
+block|,
 comment|/// EK_Custom32 - Each entry is a 32-bit value that is custom lowered by the
 comment|/// TargetLowering::LowerCustomJumpTableEntry hook.
 name|EK_Custom32

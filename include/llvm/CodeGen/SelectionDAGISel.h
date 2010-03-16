@@ -881,15 +881,6 @@ operator|*
 name|N
 argument_list|)
 block|;
-name|SDNode
-operator|*
-name|Select_EH_LABEL
-argument_list|(
-name|SDNode
-operator|*
-name|N
-argument_list|)
-block|;
 name|void
 name|CannotYetSelect
 argument_list|(

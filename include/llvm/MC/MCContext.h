@@ -66,6 +66,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCExpr
 decl_stmt|;
 name|class
@@ -105,6 +108,12 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+comment|/// The MCAsmInfo for this target.
+specifier|const
+name|MCAsmInfo
+modifier|&
+name|MAI
+decl_stmt|;
 comment|/// Sections - Bindings of names to allocated sections.
 name|StringMap
 operator|<
@@ -121,6 +130,11 @@ operator|*
 operator|>
 name|Symbols
 expr_stmt|;
+comment|/// NextUniqueID - The next ID to dole out to an unnamed assembler temporary
+comment|/// symbol.
+name|unsigned
+name|NextUniqueID
+decl_stmt|;
 comment|/// Allocator - Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
@@ -130,15 +144,39 @@ name|Allocator
 decl_stmt|;
 name|public
 label|:
+name|explicit
 name|MCContext
-argument_list|()
-expr_stmt|;
+parameter_list|(
+specifier|const
+name|MCAsmInfo
+modifier|&
+name|MAI
+parameter_list|)
+function_decl|;
 operator|~
 name|MCContext
 argument_list|()
 expr_stmt|;
+specifier|const
+name|MCAsmInfo
+operator|&
+name|getAsmInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MAI
+return|;
+block|}
 comment|/// @name Symbol Managment
 comment|/// @{
+comment|/// CreateTempSymbol - Create and return a new assembler temporary symbol
+comment|/// with a unique but unspecified name.
+name|MCSymbol
+modifier|*
+name|CreateTempSymbol
+parameter_list|()
+function_decl|;
 comment|/// GetOrCreateSymbol - Lookup the symbol inside with the specified
 comment|/// @p Name.  If it exists, return it.  If not, create a forward
 comment|/// reference and return it.
@@ -150,6 +188,11 @@ name|GetOrCreateSymbol
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|,
+name|bool
+name|isTemporary
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|MCSymbol
@@ -160,6 +203,11 @@ specifier|const
 name|Twine
 modifier|&
 name|Name
+parameter_list|,
+name|bool
+name|isTemporary
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// GetOrCreateTemporarySymbol - Create a new assembler temporary symbol

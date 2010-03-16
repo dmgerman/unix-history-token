@@ -812,6 +812,11 @@ modifier|*
 name|Instr
 decl_stmt|;
 comment|// Alternatively, a MachineInstr.
+name|MachineInstr
+modifier|*
+name|DbgInstr
+decl_stmt|;
+comment|// A dbg_value referencing this.
 name|public
 label|:
 name|SUnit
@@ -1021,6 +1026,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|DbgInstr
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|OrigNode
 argument_list|(
 literal|0
@@ -1155,6 +1165,11 @@ argument_list|(
 name|instr
 argument_list|)
 operator|,
+name|DbgInstr
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|OrigNode
 argument_list|(
 literal|0
@@ -1280,6 +1295,11 @@ literal|0
 argument_list|)
 operator|,
 name|Instr
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|DbgInstr
 argument_list|(
 literal|0
 argument_list|)
@@ -1481,6 +1501,49 @@ argument_list|)
 block|;
 return|return
 name|Instr
+return|;
+block|}
+comment|/// setDbgInstr - Assign the debug instruction for the SUnit.
+comment|/// This may be used during post-regalloc scheduling.
+name|void
+name|setDbgInstr
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Node
+operator|&&
+literal|"Setting debug MachineInstr of SUnit with SDNode!"
+argument_list|)
+expr_stmt|;
+name|DbgInstr
+operator|=
+name|MI
+expr_stmt|;
+block|}
+comment|/// getDbgInstr - Return the debug MachineInstr for this SUnit.
+comment|/// This may be used during post-regalloc scheduling.
+name|MachineInstr
+operator|*
+name|getDbgInstr
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Node
+operator|&&
+literal|"Reading debug MachineInstr of SUnit with SDNode!"
+argument_list|)
+block|;
+return|return
+name|DbgInstr
 return|;
 block|}
 comment|/// addPred - This adds the specified edge as a pred of the current node if

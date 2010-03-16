@@ -330,6 +330,13 @@ name|bool
 name|UsesELFSectionDirectiveForBSS
 decl_stmt|;
 comment|// Defaults to false.
+comment|/// HasMicrosoftFastStdCallMangling - True if this target uses microsoft
+comment|/// style mangling for functions with X86_StdCall/X86_FastCall calling
+comment|/// convention.
+name|bool
+name|HasMicrosoftFastStdCallMangling
+decl_stmt|;
+comment|// Defaults to false.
 comment|//===--- Alignment Information ----------------------------------------===//
 comment|/// AlignDirective - The directive used to emit round up to an alignment
 comment|/// boundary.
@@ -698,6 +705,15 @@ specifier|const
 block|{
 return|return
 name|UsesELFSectionDirectiveForBSS
+return|;
+block|}
+name|bool
+name|hasMicrosoftFastStdCallMangling
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMicrosoftFastStdCallMangling
 return|;
 block|}
 comment|// Accessors.

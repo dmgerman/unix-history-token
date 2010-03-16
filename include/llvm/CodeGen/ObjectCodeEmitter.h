@@ -352,28 +352,6 @@ argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
-comment|/// emitLabel - Emits a label
-name|virtual
-name|void
-name|emitLabel
-argument_list|(
-argument|uint64_t LabelID
-argument_list|)
-operator|=
-literal|0
-block|;
-comment|/// getLabelAddress - Return the address of the specified LabelID, only usable
-comment|/// after the LabelID has been emitted.
-name|virtual
-name|uintptr_t
-name|getLabelAddress
-argument_list|(
-argument|uint64_t LabelID
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
 comment|/// emitJumpTables - Emit all the jump tables for a given jump table info
 comment|/// record to the appropriate section.
 name|virtual

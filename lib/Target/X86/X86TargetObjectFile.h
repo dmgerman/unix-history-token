@@ -68,8 +68,8 @@ block|{
 name|class
 name|X86TargetMachine
 decl_stmt|;
-comment|/// X8664_MachoTargetObjectFile - This TLOF implementation is used for
-comment|/// Darwin/x86-64.
+comment|/// X8664_MachoTargetObjectFile - This TLOF implementation is used for Darwin
+comment|/// x86-64.
 name|class
 name|X8664_MachoTargetObjectFile
 range|:
@@ -82,7 +82,7 @@ name|virtual
 specifier|const
 name|MCExpr
 operator|*
-name|getSymbolForDwarfGlobalReference
+name|getExprForDwarfGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -91,6 +91,8 @@ argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|,
 argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|;   }

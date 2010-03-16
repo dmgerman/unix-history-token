@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -97,6 +103,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|MCAsmLayout
+decl_stmt|;
+name|class
 name|MCAssembler
 decl_stmt|;
 name|class
@@ -116,6 +125,12 @@ name|MCSectionData
 decl_stmt|;
 name|class
 name|MCSymbol
+decl_stmt|;
+name|class
+name|MCValue
+decl_stmt|;
+name|class
+name|TargetAsmBackend
 decl_stmt|;
 comment|/// MCAsmFixup - Represent a fixed size region of bytes inside some fragment
 comment|/// which needs to be rewritten. This region will either be rewritten by the
@@ -519,6 +534,45 @@ block|}
 comment|/// @}
 comment|/// @name Fixup Access
 comment|/// @{
+name|void
+name|addFixup
+parameter_list|(
+name|MCAsmFixup
+name|Fixup
+parameter_list|)
+block|{
+comment|// Enforce invariant that fixups are in offset order.
+name|assert
+argument_list|(
+operator|(
+name|Fixups
+operator|.
+name|empty
+argument_list|()
+operator|||
+name|Fixup
+operator|.
+name|Offset
+operator|>
+name|Fixups
+operator|.
+name|back
+argument_list|()
+operator|.
+name|Offset
+operator|)
+operator|&&
+literal|"Fixups must be added in order!"
+argument_list|)
+expr_stmt|;
+name|Fixups
+operator|.
+name|push_back
+argument_list|(
+name|Fixup
+argument_list|)
+expr_stmt|;
+block|}
 name|std
 operator|::
 name|vector
@@ -678,7 +732,8 @@ comment|/// cannot be satisfied in this width then this fragment is ignored.
 name|unsigned
 name|MaxBytesToEmit
 block|;
-comment|/// EmitNops - true when aligning code and optimal nops to be used for filling
+comment|/// EmitNops - true when aligning code and optimal nops to be used for
+comment|/// filling.
 name|bool
 name|EmitNops
 block|;
@@ -1977,6 +2032,30 @@ name|Offset
 operator|=
 name|Value
 block|; }
+name|uint64_t
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getFragment
+argument_list|()
+operator|&&
+literal|"Invalid getAddress() on undefined symbol!"
+argument_list|)
+block|;
+return|return
+name|getFragment
+argument_list|()
+operator|->
+name|getAddress
+argument_list|()
+operator|+
+name|getOffset
+argument_list|()
+return|;
+block|}
 comment|/// @}
 comment|/// @name Symbol Attributes
 comment|/// @{
@@ -2235,6 +2314,10 @@ name|MCContext
 modifier|&
 name|Context
 decl_stmt|;
+name|TargetAsmBackend
+modifier|&
+name|Backend
+decl_stmt|;
 name|raw_ostream
 modifier|&
 name|OS
@@ -2251,6 +2334,34 @@ name|MCSymbolData
 operator|>
 name|Symbols
 expr_stmt|;
+comment|/// The map of sections to their associated assembler backend data.
+comment|//
+comment|// FIXME: Avoid this indirection?
+name|DenseMap
+operator|<
+specifier|const
+name|MCSection
+operator|*
+operator|,
+name|MCSectionData
+operator|*
+operator|>
+name|SectionMap
+expr_stmt|;
+comment|/// The map of symbols to their associated assembler backend data.
+comment|//
+comment|// FIXME: Avoid this indirection?
+name|DenseMap
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+name|MCSymbolData
+operator|*
+operator|>
+name|SymbolMap
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -2266,6 +2377,20 @@ literal|1
 decl_stmt|;
 name|private
 label|:
+comment|/// Check whether a fixup can be satisfied, or whether it needs to be relaxed
+comment|/// (increased in size, in order to hold its value correctly).
+name|bool
+name|FixupNeedsRelaxation
+parameter_list|(
+name|MCAsmFixup
+modifier|&
+name|Fixup
+parameter_list|,
+name|MCDataFragment
+modifier|*
+name|DF
+parameter_list|)
+function_decl|;
 comment|/// LayoutSection - Assign offsets and sizes to the fragments in the section
 comment|/// \arg SD, and update the section size. The section file offset should
 comment|/// already have been computed.
@@ -2277,6 +2402,54 @@ modifier|&
 name|SD
 parameter_list|)
 function_decl|;
+comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
+comment|/// were adjusted.
+name|bool
+name|LayoutOnce
+parameter_list|()
+function_decl|;
+comment|// FIXME: Make protected once we factor out object writer classes.
+name|public
+label|:
+comment|/// Evaluate a fixup to a relocatable expression and the value which should be
+comment|/// placed into the fixup.
+comment|///
+comment|/// \param Layout The layout to use for evaluation.
+comment|/// \param Fixup The fixup to evaluate.
+comment|/// \param DF The fragment the fixup is inside.
+comment|/// \param Target [out] On return, the relocatable expression the fixup
+comment|/// evaluates to.
+comment|/// \param Value [out] On return, the value of the fixup as currently layed
+comment|/// out.
+comment|/// \return Whether the fixup value was fully resolved. This is true if the
+comment|/// \arg Value result is fixed, otherwise the value may change due to
+comment|/// relocation.
+name|bool
+name|EvaluateFixup
+argument_list|(
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|,
+name|MCAsmFixup
+operator|&
+name|Fixup
+argument_list|,
+name|MCDataFragment
+operator|*
+name|DF
+argument_list|,
+name|MCValue
+operator|&
+name|Target
+argument_list|,
+name|uint64_t
+operator|&
+name|Value
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// Construct a new assembler instance.
@@ -2292,6 +2465,10 @@ argument_list|(
 name|MCContext
 operator|&
 name|_Context
+argument_list|,
+name|TargetAsmBackend
+operator|&
+name|_Backend
 argument_list|,
 name|raw_ostream
 operator|&
@@ -2310,6 +2487,16 @@ specifier|const
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|TargetAsmBackend
+operator|&
+name|getBackend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Backend
 return|;
 block|}
 comment|/// Finish - Do final processing and write the object to the output stream.
@@ -2552,6 +2739,197 @@ name|IndirectSymbols
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|/// @}
+comment|/// @name Backend Data Access
+comment|/// @{
+name|MCSectionData
+modifier|&
+name|getSectionData
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+name|Section
+argument_list|)
+decl|const
+block|{
+name|MCSectionData
+modifier|*
+name|Entry
+init|=
+name|SectionMap
+operator|.
+name|lookup
+argument_list|(
+operator|&
+name|Section
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|Entry
+operator|&&
+literal|"Missing section data!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Entry
+return|;
+block|}
+name|MCSectionData
+modifier|&
+name|getOrCreateSectionData
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|&
+name|Section
+parameter_list|,
+name|bool
+modifier|*
+name|Created
+init|=
+literal|0
+parameter_list|)
+block|{
+name|MCSectionData
+modifier|*
+modifier|&
+name|Entry
+init|=
+name|SectionMap
+index|[
+operator|&
+name|Section
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|Created
+condition|)
+operator|*
+name|Created
+operator|=
+operator|!
+name|Entry
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Entry
+condition|)
+name|Entry
+operator|=
+name|new
+name|MCSectionData
+argument_list|(
+name|Section
+argument_list|,
+name|this
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Entry
+return|;
+block|}
+name|MCSymbolData
+modifier|&
+name|getSymbolData
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Symbol
+argument_list|)
+decl|const
+block|{
+name|MCSymbolData
+modifier|*
+name|Entry
+init|=
+name|SymbolMap
+operator|.
+name|lookup
+argument_list|(
+operator|&
+name|Symbol
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|Entry
+operator|&&
+literal|"Missing symbol data!"
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Entry
+return|;
+block|}
+name|MCSymbolData
+modifier|&
+name|getOrCreateSymbolData
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|&
+name|Symbol
+parameter_list|,
+name|bool
+modifier|*
+name|Created
+init|=
+literal|0
+parameter_list|)
+block|{
+name|MCSymbolData
+modifier|*
+modifier|&
+name|Entry
+init|=
+name|SymbolMap
+index|[
+operator|&
+name|Symbol
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|Created
+condition|)
+operator|*
+name|Created
+operator|=
+operator|!
+name|Entry
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Entry
+condition|)
+name|Entry
+operator|=
+name|new
+name|MCSymbolData
+argument_list|(
+name|Symbol
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|this
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|Entry
 return|;
 block|}
 comment|/// @}

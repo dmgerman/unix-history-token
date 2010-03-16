@@ -749,8 +749,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|unsigned
-name|char
+name|MVT
+operator|::
+name|SimpleValueType
 operator|>
 name|getRegisterVTs
 argument_list|(

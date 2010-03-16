@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Target/Mangler.h - Self-contained name mangler ----*- C++ -*-===//
+comment|//===-- llvm/Target/Mangler.h - Self-contained name mangler -----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -96,7 +96,13 @@ name|class
 name|SmallVectorImpl
 expr_stmt|;
 name|class
-name|MCAsmInfo
+name|MCContext
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|TargetData
 decl_stmt|;
 name|class
 name|Mangler
@@ -118,10 +124,14 @@ block|}
 enum|;
 name|private
 label|:
-specifier|const
-name|MCAsmInfo
+name|MCContext
 modifier|&
-name|MAI
+name|Context
+decl_stmt|;
+specifier|const
+name|TargetData
+modifier|&
+name|TD
 decl_stmt|;
 comment|/// AnonGlobalIDs - We need to give global values the same name every time
 comment|/// they are mangled.  This keeps track of the number we give to anonymous
@@ -144,19 +154,26 @@ name|NextAnonGlobalID
 decl_stmt|;
 name|public
 label|:
-comment|// Mangler ctor - if a prefix is specified, it will be prepended onto all
-comment|// symbols.
 name|Mangler
 argument_list|(
-specifier|const
-name|MCAsmInfo
+name|MCContext
 operator|&
-name|mai
+name|context
+argument_list|,
+specifier|const
+name|TargetData
+operator|&
+name|td
 argument_list|)
 operator|:
-name|MAI
+name|Context
 argument_list|(
-name|mai
+name|context
+argument_list|)
+operator|,
+name|TD
+argument_list|(
+name|td
 argument_list|)
 operator|,
 name|NextAnonGlobalID
@@ -164,19 +181,40 @@ argument_list|(
 literal|1
 argument_list|)
 block|{}
+comment|/// getSymbol - Return the MCSymbol for the specified global value.  This
+comment|/// symbol is the main label that is the address of the global.
+name|MCSymbol
+operator|*
+name|getSymbol
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+expr_stmt|;
 comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
 comment|/// and the specified global variable's name.  If the global variable doesn't
 comment|/// have a name, this fills in a unique name for the global.
 name|void
 name|getNameWithPrefix
 argument_list|(
-argument|SmallVectorImpl<char>&OutName
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|OutName
 argument_list|,
-argument|const GlobalValue *GV
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
 argument_list|,
-argument|bool isImplicitlyPrivate
+name|bool
+name|isImplicitlyPrivate
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/// getNameWithPrefix - Fill OutName with the name of the appropriate prefix
 comment|/// and the specified name as the global variable name.  GVName must not be
 comment|/// empty.

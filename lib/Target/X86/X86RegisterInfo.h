@@ -435,7 +435,7 @@ name|emitCalleeSavedFrameMoves
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|unsigned LabelId
+argument|MCSymbol *Label
 argument_list|,
 argument|unsigned FramePtr
 argument_list|)

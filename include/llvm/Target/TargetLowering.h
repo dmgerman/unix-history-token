@@ -1364,20 +1364,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// getWidenVectorType: given a vector type, returns the type to widen to
-comment|/// (e.g., v7i8 to v8i8). If the vector type is legal, it returns itself.
-comment|/// If there is no vector type that we want to widen to, returns MVT::Other
-comment|/// When and were to widen is target dependent based on the cost of
-comment|/// scalarizing vs using the wider vector type.
-name|virtual
-name|EVT
-name|getWidenVectorType
-argument_list|(
-name|EVT
-name|VT
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// isFPImmLegal - Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will materialize
 comment|/// the FP immediate as a load from a constant pool.

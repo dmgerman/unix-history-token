@@ -242,18 +242,9 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
 name|MCStreamer
 operator|&
 name|Streamer
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 argument_list|;     typedef
 name|TargetAsmBackend
@@ -268,9 +259,12 @@ name|Target
 operator|&
 name|T
 argument_list|,
-name|MCAssembler
+specifier|const
+name|std
+operator|::
+name|string
 operator|&
-name|A
+name|TT
 argument_list|)
 argument_list|;     typedef
 name|TargetAsmLexer
@@ -676,14 +670,18 @@ return|;
 block|}
 comment|/// createAsmBackend - Create a target specific assembly parser.
 comment|///
+comment|/// \arg Triple - The target triple string.
 comment|/// \arg Backend - The target independent assembler object.
 name|TargetAsmBackend
 modifier|*
 name|createAsmBackend
 argument_list|(
-name|MCAssembler
+specifier|const
+name|std
+operator|::
+name|string
 operator|&
-name|Backend
+name|Triple
 argument_list|)
 decl|const
 block|{
@@ -701,7 +699,7 @@ argument_list|(
 operator|*
 name|this
 argument_list|,
-name|Backend
+name|Triple
 argument_list|)
 return|;
 block|}
@@ -769,7 +767,7 @@ argument_list|)
 return|;
 block|}
 comment|/// createAsmPrinter - Create a target specific assembly printer pass.  This
-comment|/// takes ownership of the MCContext and MCStreamer objects but not the MAI.
+comment|/// takes ownership of the MCStreamer object.
 name|AsmPrinter
 modifier|*
 name|createAsmPrinter
@@ -782,18 +780,9 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
-name|MCContext
-operator|&
-name|Ctx
-argument_list|,
 name|MCStreamer
 operator|&
 name|Streamer
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|MAI
 argument_list|)
 decl|const
 block|{
@@ -812,11 +801,7 @@ name|OS
 argument_list|,
 name|TM
 argument_list|,
-name|Ctx
-argument_list|,
 name|Streamer
-argument_list|,
-name|MAI
 argument_list|)
 return|;
 block|}
@@ -2335,7 +2320,7 @@ name|Allocator
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|MCAssembler&Backend
+argument|const std::string&Triple
 argument_list|)
 block|{
 return|return
@@ -2344,7 +2329,7 @@ name|AsmBackendImpl
 argument_list|(
 name|T
 argument_list|,
-name|Backend
+name|Triple
 argument_list|)
 return|;
 block|}
@@ -2580,11 +2565,7 @@ argument|formatted_raw_ostream&OS
 argument_list|,
 argument|TargetMachine&TM
 argument_list|,
-argument|MCContext&Ctx
-argument_list|,
 argument|MCStreamer&Streamer
-argument_list|,
-argument|const MCAsmInfo *MAI
 argument_list|)
 block|{
 return|return
@@ -2595,11 +2576,7 @@ name|OS
 argument_list|,
 name|TM
 argument_list|,
-name|Ctx
-argument_list|,
 name|Streamer
-argument_list|,
-name|MAI
 argument_list|)
 return|;
 block|}

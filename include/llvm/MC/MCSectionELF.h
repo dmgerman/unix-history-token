@@ -77,9 +77,9 @@ range|:
 name|public
 name|MCSection
 block|{
-name|std
-operator|::
-name|string
+comment|/// SectionName - This is the name of the section.  The referenced memory is
+comment|/// owned by TargetLoweringObjectFileELF's ELFUniqueMap.
+name|StringRef
 name|SectionName
 block|;
 comment|/// Type - This is the sh_type field of a section, drawn from the enums below.
@@ -119,9 +119,6 @@ block|,
 name|SectionName
 argument_list|(
 name|Section
-operator|.
-name|str
-argument_list|()
 argument_list|)
 block|,
 name|Type
@@ -362,10 +359,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|StringRef
-argument_list|(
 name|SectionName
-argument_list|)
 return|;
 block|}
 name|unsigned

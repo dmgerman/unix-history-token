@@ -63,6 +63,9 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
+name|MCAsmLayout
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -175,6 +178,9 @@ comment|/// @{
 comment|/// EvaluateAsAbsolute - Try to evaluate the expression to an absolute value.
 comment|///
 comment|/// @param Res - The absolute value, if evaluation succeeds.
+comment|/// @param Layout - The assembler layout object to use for evaluating symbol
+comment|/// values. If not given, then only non-symbolic expressions will be
+comment|/// evaluated.
 comment|/// @result - True on success.
 name|bool
 name|EvaluateAsAbsolute
@@ -182,6 +188,13 @@ argument_list|(
 name|int64_t
 operator|&
 name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -189,6 +202,7 @@ comment|/// EvaluateAsRelocatable - Try to evaluate the expression to a relocata
 comment|/// value, i.e. an expression of the fixed form (a - b + constant).
 comment|///
 comment|/// @param Res - The relocatable value, if evaluation succeeds.
+comment|/// @param Layout - The assembler layout object to use for evaluating values.
 comment|/// @result - True on success.
 name|bool
 name|EvaluateAsRelocatable
@@ -196,6 +210,13 @@ argument_list|(
 name|MCValue
 operator|&
 name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -341,18 +362,53 @@ operator|:
 name|public
 name|MCExpr
 block|{
+name|public
+operator|:
+expr|enum
+name|VariantKind
+block|{
+name|VK_None
+block|,
+name|VK_Invalid
+block|,
+name|VK_GOT
+block|,
+name|VK_GOTOFF
+block|,
+name|VK_GOTPCREL
+block|,
+name|VK_GOTTPOFF
+block|,
+name|VK_INDNTPOFF
+block|,
+name|VK_NTPOFF
+block|,
+name|VK_PLT
+block|,
+name|VK_TLSGD
+block|,
+name|VK_TPOFF
+block|}
+block|;
+name|private
+operator|:
+comment|/// The symbol being referenced.
 specifier|const
 name|MCSymbol
 operator|*
 name|Symbol
 block|;
+comment|/// The symbol reference modifier.
+specifier|const
+name|VariantKind
+name|Kind
+block|;
 name|explicit
 name|MCSymbolRefExpr
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|_Symbol
+argument|const MCSymbol *_Symbol
+argument_list|,
+argument|VariantKind _Kind
 argument_list|)
 operator|:
 name|MCExpr
@@ -364,7 +420,12 @@ argument_list|)
 block|,
 name|Symbol
 argument_list|(
-argument|_Symbol
+name|_Symbol
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+argument|_Kind
 argument_list|)
 block|{}
 name|public
@@ -377,14 +438,35 @@ name|MCSymbolRefExpr
 operator|*
 name|Create
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
+argument|const MCSymbol *Symbol
+argument_list|,
+argument|MCContext&Ctx
+argument_list|)
+block|{
+return|return
+name|MCSymbolRefExpr
+operator|::
+name|Create
+argument_list|(
 name|Symbol
 argument_list|,
-name|MCContext
-operator|&
+name|VK_None
+argument_list|,
 name|Ctx
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|Create
+argument_list|(
+argument|const MCSymbol *Symbol
+argument_list|,
+argument|VariantKind Kind
+argument_list|,
+argument|MCContext&Ctx
 argument_list|)
 block|;
 specifier|static
@@ -394,6 +476,8 @@ operator|*
 name|Create
 argument_list|(
 argument|StringRef Name
+argument_list|,
+argument|VariantKind Kind
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
@@ -407,6 +491,8 @@ operator|*
 name|CreateTemp
 argument_list|(
 argument|StringRef Name
+argument_list|,
+argument|VariantKind Kind
 argument_list|,
 argument|MCContext&Ctx
 argument_list|)
@@ -426,6 +512,32 @@ operator|*
 name|Symbol
 return|;
 block|}
+name|VariantKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// @}
+comment|/// @name Static Utility Functions
+comment|/// @{
+specifier|static
+name|StringRef
+name|getVariantKindName
+argument_list|(
+argument|VariantKind Kind
+argument_list|)
+block|;
+specifier|static
+name|VariantKind
+name|getVariantKindForName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
 comment|/// @}
 specifier|static
 name|bool
@@ -1398,6 +1510,8 @@ name|bool
 name|EvaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
+argument_list|,
+argument|const MCAsmLayout *Layout
 argument_list|)
 specifier|const
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/CodeGen/SDDbgValue.h - SD dbg_value handling--------*- C++ -*-===//
+comment|//===-- llvm/CodeGen/SDNodeDbgValue.h - SelectionDAG dbg_value --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SDDBGVALUE_H
+name|LLVM_CODEGEN_SDNODEDBGVALUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SDDBGVALUE_H
+name|LLVM_CODEGEN_SDNODEDBGVALUE_H
 end_define
 
 begin_include
@@ -85,25 +85,65 @@ name|class
 name|Value
 decl_stmt|;
 comment|/// SDDbgValue - Holds the information from a dbg_value node through SDISel.
-comment|/// Either Const or Node is nonzero, but not both.
 comment|/// We do not use SDValue here to avoid including its header.
 name|class
 name|SDDbgValue
+block|{
+name|public
+label|:
+enum|enum
+name|DbgValueKind
+block|{
+name|SDNODE
+init|=
+literal|0
+block|,
+comment|// value is the result of an expression
+name|CONST
+init|=
+literal|1
+block|,
+comment|// value is a constant
+name|FRAMEIX
+init|=
+literal|2
+comment|// value is contents of a stack location
+block|}
+enum|;
+name|private
+label|:
+name|enum
+name|DbgValueKind
+name|kind
+decl_stmt|;
+union|union
+block|{
+struct|struct
 block|{
 name|SDNode
 modifier|*
 name|Node
 decl_stmt|;
-comment|// valid for non-constants
+comment|// valid for expressions
 name|unsigned
 name|ResNo
 decl_stmt|;
-comment|// valid for non-constants
+comment|// valid for expressions
+block|}
+name|s
+struct|;
 name|Value
 modifier|*
 name|Const
 decl_stmt|;
 comment|// valid for constants
+name|unsigned
+name|FrameIx
+decl_stmt|;
+comment|// valid for stack objects
+block|}
+name|u
+union|;
 name|MDNode
 modifier|*
 name|mdPtr
@@ -135,21 +175,6 @@ argument_list|,
 argument|unsigned O
 argument_list|)
 block|:
-name|Node
-argument_list|(
-name|N
-argument_list|)
-operator|,
-name|ResNo
-argument_list|(
-name|R
-argument_list|)
-operator|,
-name|Const
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|mdPtr
 argument_list|(
 name|mdP
@@ -169,7 +194,27 @@ name|Order
 argument_list|(
 argument|O
 argument_list|)
-block|{}
+block|{
+name|kind
+operator|=
+name|SDNODE
+block|;
+name|u
+operator|.
+name|s
+operator|.
+name|Node
+operator|=
+name|N
+block|;
+name|u
+operator|.
+name|s
+operator|.
+name|ResNo
+operator|=
+name|R
+block|;   }
 comment|// Constructor for constants.
 name|SDDbgValue
 argument_list|(
@@ -184,21 +229,6 @@ argument_list|,
 argument|unsigned O
 argument_list|)
 operator|:
-name|Node
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ResNo
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Const
-argument_list|(
-name|C
-argument_list|)
-operator|,
 name|mdPtr
 argument_list|(
 name|mdP
@@ -218,18 +248,81 @@ name|Order
 argument_list|(
 argument|O
 argument_list|)
-block|{}
+block|{
+name|kind
+operator|=
+name|CONST
+block|;
+name|u
+operator|.
+name|Const
+operator|=
+name|C
+block|;   }
+comment|// Constructor for frame indices.
+name|SDDbgValue
+argument_list|(
+argument|MDNode *mdP
+argument_list|,
+argument|unsigned FI
+argument_list|,
+argument|uint64_t off
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|unsigned O
+argument_list|)
+operator|:
+name|mdPtr
+argument_list|(
+name|mdP
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+name|off
+argument_list|)
+operator|,
+name|DL
+argument_list|(
+name|dl
+argument_list|)
+operator|,
+name|Order
+argument_list|(
+argument|O
+argument_list|)
+block|{
+name|kind
+operator|=
+name|FRAMEIX
+block|;
+name|u
+operator|.
+name|FrameIx
+operator|=
+name|FI
+block|;   }
+comment|// Returns the kind.
+name|DbgValueKind
+name|getKind
+argument_list|()
+block|{
+return|return
+name|kind
+return|;
+block|}
 comment|// Returns the MDNode pointer.
 name|MDNode
-operator|*
+modifier|*
 name|getMDPtr
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|mdPtr
 return|;
 block|}
-comment|// Returns the SDNode* (valid for non-constants only).
+comment|// Returns the SDNode* for a register ref
 name|SDNode
 modifier|*
 name|getSDNode
@@ -237,30 +330,40 @@ parameter_list|()
 block|{
 name|assert
 argument_list|(
-operator|!
-name|Const
+name|kind
+operator|==
+name|SDNODE
 argument_list|)
 expr_stmt|;
 return|return
+name|u
+operator|.
+name|s
+operator|.
 name|Node
 return|;
 block|}
-comment|// Returns the ResNo (valid for non-constants only).
+comment|// Returns the ResNo for a register ref
 name|unsigned
 name|getResNo
 parameter_list|()
 block|{
 name|assert
 argument_list|(
-operator|!
-name|Const
+name|kind
+operator|==
+name|SDNODE
 argument_list|)
 expr_stmt|;
 return|return
+name|u
+operator|.
+name|s
+operator|.
 name|ResNo
 return|;
 block|}
-comment|// Returns the Value* for a constant (invalid for non-constants).
+comment|// Returns the Value* for a constant
 name|Value
 modifier|*
 name|getConst
@@ -268,12 +371,33 @@ parameter_list|()
 block|{
 name|assert
 argument_list|(
-operator|!
-name|Node
+name|kind
+operator|==
+name|CONST
 argument_list|)
 expr_stmt|;
 return|return
+name|u
+operator|.
 name|Const
+return|;
+block|}
+comment|// Returns the FrameIx for a stack object
+name|unsigned
+name|getFrameIx
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|kind
+operator|==
+name|FRAMEIX
+argument_list|)
+expr_stmt|;
+return|return
+name|u
+operator|.
+name|FrameIx
 return|;
 block|}
 comment|// Returns the offset.

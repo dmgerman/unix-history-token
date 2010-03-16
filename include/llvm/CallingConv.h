@@ -100,6 +100,11 @@ name|Cold
 init|=
 literal|9
 block|,
+comment|// GHC - Calling convention used by the Glasgow Haskell Compiler (GHC).
+name|GHC
+init|=
+literal|10
+block|,
 comment|// Target - This is the start of the target-specific calling conventions,
 comment|// e.g. fastcall and thiscall on X86.
 name|FirstTargetCC

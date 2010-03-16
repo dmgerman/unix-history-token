@@ -1240,19 +1240,6 @@ operator|)
 return|;
 comment|// f32 is when SSE1
 block|}
-comment|/// getWidenVectorType: given a vector type, returns the type to widen
-comment|/// to (e.g., v7i8 to v8i8). If the vector type is legal, it returns itself.
-comment|/// If there is no vector type that we want to widen to, returns EVT::Other
-comment|/// When and were to widen is target dependent based on the cost of
-comment|/// scalarizing vs using the wider vector type.
-name|virtual
-name|EVT
-name|getWidenVectorType
-argument_list|(
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 comment|/// createFastISel - This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|virtual
@@ -1454,6 +1441,10 @@ argument_list|,
 argument|CallingConv::ID CalleeCC
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|bool isCalleeStructRet
+argument_list|,
+argument|bool isCallerStructRet
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,

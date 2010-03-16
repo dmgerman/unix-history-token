@@ -170,6 +170,8 @@ range|:
 name|public
 name|MCSection
 block|{
+comment|// FIXME: This memory is leaked because MCSectionCOFF is bump pointer
+comment|// allocated and this never gets freed.
 name|std
 operator|::
 name|string

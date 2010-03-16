@@ -130,55 +130,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/UniqueVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineLocation.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
@@ -190,19 +142,61 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Metadata.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Dwarf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/System/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_decl_stmt
@@ -215,13 +209,10 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
-name|MCSymbol
+name|GlobalVariable
 decl_stmt|;
 name|class
 name|MDNode
-decl_stmt|;
-name|class
-name|GlobalVariable
 decl_stmt|;
 name|class
 name|MachineBasicBlock
@@ -247,6 +238,18 @@ name|MachineModuleInfoImpl
 block|{
 name|public
 label|:
+typedef|typedef
+name|PointerIntPair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|StubValueTy
+expr_stmt|;
 name|virtual
 operator|~
 name|MachineModuleInfoImpl
@@ -264,8 +267,7 @@ operator|<
 name|MCSymbol
 operator|*
 operator|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 expr|>
 name|SymbolListTy
@@ -282,11 +284,9 @@ operator|<
 name|MCSymbol
 operator|*
 argument_list|,
-name|MCSymbol
-operator|*
+name|StubValueTy
 operator|>
 operator|&
-name|Map
 argument_list|)
 decl_stmt|;
 block|}
@@ -305,7 +305,8 @@ decl_stmt|;
 comment|// Landing pad block.
 name|SmallVector
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 operator|,
 literal|1
 operator|>
@@ -314,14 +315,16 @@ expr_stmt|;
 comment|// Labels prior to invoke.
 name|SmallVector
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 operator|,
 literal|1
 operator|>
 name|EndLabels
 expr_stmt|;
 comment|// Labels after invoke.
-name|unsigned
+name|MCSymbol
+modifier|*
 name|LandingPadLabel
 decl_stmt|;
 comment|// Label at beginning of landing pad.
@@ -359,11 +362,14 @@ argument_list|)
 operator|,
 name|Personality
 argument_list|(
-argument|NULL
+literal|0
 argument_list|)
 block|{}
 block|}
 struct|;
+name|class
+name|MMIAddrLabelMap
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MachineModuleInfo - This class contains meta information specific to a
 comment|/// module.  Queries can be made by different debugging and exception handling
@@ -375,24 +381,16 @@ range|:
 name|public
 name|ImmutablePass
 block|{
+comment|/// Context - This is the MCContext used for the entire code generator.
+name|MCContext
+name|Context
+block|;
 comment|/// ObjFileMMI - This is the object-file-format-specific implementation of
 comment|/// MachineModuleInfoImpl, which lets targets accumulate whatever info they
 comment|/// want.
 name|MachineModuleInfoImpl
 operator|*
 name|ObjFileMMI
-block|;
-comment|// LabelIDList - One entry per assigned label.  Normally the entry is equal to
-comment|// the list index(+1).  If the entry is zero then the label has been deleted.
-comment|// Any other value indicates the label has been deleted by is mapped to
-comment|// another label.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|LabelIDList
 block|;
 comment|// FrameMoves - List of moves done by a function's prolog.  Used to construct
 comment|// frame maps by debug and exception handling consumers.
@@ -418,7 +416,8 @@ comment|// Map of invoke call site index values to associated begin EH_LABEL for
 comment|// the current function.
 name|DenseMap
 operator|<
-name|unsigned
+name|MCSymbol
+operator|*
 block|,
 name|unsigned
 operator|>
@@ -484,6 +483,12 @@ literal|32
 operator|>
 name|UsedFunctions
 block|;
+comment|/// AddrLabelSymbols - This map keeps track of which symbol is being used for
+comment|/// the specified basic block's address of label.
+name|MMIAddrLabelMap
+operator|*
+name|AddrLabelSymbols
+block|;
 name|bool
 name|CallsEHReturn
 block|;
@@ -541,6 +546,16 @@ decl_stmt|;
 name|MachineModuleInfo
 argument_list|()
 expr_stmt|;
+comment|// DUMMY CONSTRUCTOR, DO NOT CALL.
+name|MachineModuleInfo
+argument_list|(
+specifier|const
+name|MCAsmInfo
+operator|&
+name|MAI
+argument_list|)
+expr_stmt|;
+comment|// Real constructor.
 operator|~
 name|MachineModuleInfo
 argument_list|()
@@ -559,6 +574,26 @@ name|void
 name|EndFunction
 parameter_list|()
 function_decl|;
+specifier|const
+name|MCContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Context
+return|;
+block|}
+name|MCContext
+modifier|&
+name|getContext
+parameter_list|()
+block|{
+return|return
+name|Context
+return|;
+block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for
 comment|/// backends that would like to do so.
 comment|///
@@ -743,140 +778,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// NextLabelID - Return the next unique label id.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_function
-name|unsigned
-name|NextLabelID
-parameter_list|()
-block|{
-name|unsigned
-name|ID
-init|=
-operator|(
-name|unsigned
-operator|)
-name|LabelIDList
-operator|.
-name|size
-argument_list|()
-operator|+
-literal|1
-decl_stmt|;
-name|LabelIDList
-operator|.
-name|push_back
-argument_list|(
-name|ID
-argument_list|)
-expr_stmt|;
-return|return
-name|ID
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// InvalidateLabel - Inhibit use of the specified label # from
-end_comment
-
-begin_comment
-comment|/// MachineModuleInfo, for example because the code was deleted.
-end_comment
-
-begin_function
-name|void
-name|InvalidateLabel
-parameter_list|(
-name|unsigned
-name|LabelID
-parameter_list|)
-block|{
-comment|// Remap to zero to indicate deletion.
-name|assert
-argument_list|(
-literal|0
-operator|<
-name|LabelID
-operator|&&
-name|LabelID
-operator|<=
-name|LabelIDList
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Old label ID out of range."
-argument_list|)
-expr_stmt|;
-name|LabelIDList
-index|[
-name|LabelID
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// isLabelDeleted - Return true if the label was deleted.
-end_comment
-
-begin_comment
-comment|/// FIXME: This should eventually be eliminated and use the 'is emitted' bit
-end_comment
-
-begin_comment
-comment|/// on MCSymbol.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|isLabelDeleted
-argument_list|(
-name|unsigned
-name|LabelID
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|LabelID
-operator|<=
-name|LabelIDList
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Debug label ID out of range."
-argument_list|)
-expr_stmt|;
-return|return
-name|LabelID
-operator|==
-literal|0
-operator|||
-name|LabelIDList
-index|[
-name|LabelID
-operator|-
-literal|1
-index|]
-operator|==
-literal|0
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getFrameMoves - Returns a reference to a list of moves done in the current
 end_comment
 
@@ -906,7 +807,100 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|//===-EH-----------------------------------------------------------------===//
+comment|/// getAddrLabelSymbol - Return the symbol to be used for the specified basic
+end_comment
+
+begin_comment
+comment|/// block when its address is taken.  This cannot be its normal LBB label
+end_comment
+
+begin_comment
+comment|/// because the block may be accessed outside its containing function.
+end_comment
+
+begin_function_decl
+name|MCSymbol
+modifier|*
+name|getAddrLabelSymbol
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getAddrLabelSymbolToEmit - Return the symbol to be used for the specified
+end_comment
+
+begin_comment
+comment|/// basic block when its address is taken.  If other blocks were RAUW'd to
+end_comment
+
+begin_comment
+comment|/// this one, we may have to emit them as well, return the whole set.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|MCSymbol
+operator|*
+operator|>
+name|getAddrLabelSymbolToEmit
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// takeDeletedSymbolsForFunction - If the specified function has had any
+end_comment
+
+begin_comment
+comment|/// references to address-taken blocks generated, but the block got deleted,
+end_comment
+
+begin_comment
+comment|/// return the symbol now so we can emit it.  This prevents emitting a
+end_comment
+
+begin_comment
+comment|/// reference to a symbol that has no definition.
+end_comment
+
+begin_decl_stmt
+name|void
+name|takeDeletedSymbolsForFunction
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|MCSymbol
+operator|*
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//===- EH ---------------------------------------------------------------===//
 end_comment
 
 begin_comment
@@ -945,10 +939,12 @@ name|MachineBasicBlock
 modifier|*
 name|LandingPad
 parameter_list|,
-name|unsigned
+name|MCSymbol
+modifier|*
 name|BeginLabel
 parameter_list|,
-name|unsigned
+name|MCSymbol
+modifier|*
 name|EndLabel
 parameter_list|)
 function_decl|;
@@ -963,7 +959,8 @@ comment|/// landing pad entry.
 end_comment
 
 begin_function_decl
-name|unsigned
+name|MCSymbol
+modifier|*
 name|addLandingPad
 parameter_list|(
 name|MachineBasicBlock
@@ -1239,7 +1236,8 @@ begin_function
 name|void
 name|setCallSiteBeginLabel
 parameter_list|(
-name|unsigned
+name|MCSymbol
+modifier|*
 name|BeginLabel
 parameter_list|,
 name|unsigned
@@ -1264,7 +1262,8 @@ begin_function
 name|unsigned
 name|getCallSiteBeginLabel
 parameter_list|(
-name|unsigned
+name|MCSymbol
+modifier|*
 name|BeginLabel
 parameter_list|)
 block|{

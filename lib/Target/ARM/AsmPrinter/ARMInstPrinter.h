@@ -356,7 +356,39 @@ argument|unsigned OpNum
 argument_list|)
 block|{}
 name|void
+name|printT2AddrModeImm8s4OffsetOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|{}
+name|void
 name|printT2AddrModeSoRegOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|{}
+name|void
+name|printCPSOptionOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|{}
+name|void
+name|printMSRMaskOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|{}
+name|void
+name|printNegZeroOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

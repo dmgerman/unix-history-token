@@ -3197,9 +3197,13 @@ expr_stmt|;
 comment|/// isLCSSAForm - Return true if the Loop is in LCSSA form
 name|bool
 name|isLCSSAForm
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|DominatorTree
+operator|&
+name|DT
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isLoopSimplifyForm - Return true if the Loop is in the form that
 comment|/// the LoopSimplify form transforms loops to, which is sometimes called
 comment|/// normal form.

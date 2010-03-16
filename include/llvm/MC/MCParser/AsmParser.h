@@ -133,9 +133,6 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
-name|MCValue
-decl_stmt|;
-name|class
 name|SourceMgr
 decl_stmt|;
 name|class
@@ -242,7 +239,9 @@ argument_list|()
 block|;
 name|bool
 name|Run
-argument_list|()
+argument_list|(
+argument|bool NoInitialTextSection
+argument_list|)
 block|;
 name|void
 name|AddDirectiveHandler

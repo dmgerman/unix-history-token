@@ -389,12 +389,6 @@ operator|~
 name|MDNode
 argument_list|()
 expr_stmt|;
-comment|/// replaceAllOperandsWithNull - This is used while destroying llvm context to
-comment|/// gracefully delete all nodes. This method replaces all operands with null.
-name|void
-name|replaceAllOperandsWithNull
-parameter_list|()
-function_decl|;
 name|protected
 label|:
 name|explicit
@@ -631,16 +625,7 @@ block|}
 name|void
 name|setIsNotUniqued
 parameter_list|()
-block|{
-name|setValueSubclassData
-argument_list|(
-name|getSubclassDataFromValue
-argument_list|()
-operator||
-name|NotUniquedBit
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that
 comment|// any future subclasses cannot accidentally use it.
 name|void

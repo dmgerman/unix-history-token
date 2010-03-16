@@ -102,6 +102,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
 comment|/// MachineOperand class - Representation of each machine instruction operand.
 comment|///
 name|class
@@ -143,7 +146,10 @@ name|MO_BlockAddress
 block|,
 comment|///< Address of a basic block
 name|MO_Metadata
+block|,
 comment|///< Metadata reference (for debug info)
+name|MO_MCSymbol
+comment|///< MCSymbol reference (for debug/eh info)
 block|}
 enum|;
 name|private
@@ -248,6 +254,11 @@ modifier|*
 name|MD
 decl_stmt|;
 comment|// For MO_Metadata.
+name|MCSymbol
+modifier|*
+name|Sym
+decl_stmt|;
+comment|// For MO_MCSymbol
 struct|struct
 block|{
 comment|// For MO_Register.
@@ -549,6 +560,17 @@ return|return
 name|OpKind
 operator|==
 name|MO_Metadata
+return|;
+block|}
+name|bool
+name|isMCSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_MCSymbol
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1136,6 +1158,26 @@ operator|.
 name|Val
 operator|.
 name|BA
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getMCSymbol
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isMCSymbol
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|Sym
 return|;
 block|}
 comment|/// getOffset - Return the offset from the symbol in this operand. This always
@@ -1942,6 +1984,35 @@ operator|.
 name|MD
 operator|=
 name|Meta
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
+name|CreateMCSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_MCSymbol
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|Sym
+operator|=
+name|Sym
 expr_stmt|;
 return|return
 name|Op

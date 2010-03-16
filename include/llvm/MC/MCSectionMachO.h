@@ -507,6 +507,20 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|unsigned
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeAndAttributes
+operator|&
+name|SECTION_TYPE
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// ParseSectionSpecifier - Parse the section specifier indicated by "Spec".
 end_comment
