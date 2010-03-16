@@ -368,6 +368,12 @@ label|:
 name|PipedJob
 argument_list|()
 expr_stmt|;
+name|virtual
+operator|~
+name|PipedJob
+argument_list|()
+expr_stmt|;
+comment|/// Add a command to the piped job (taking ownership).
 name|void
 name|addCommand
 parameter_list|(
@@ -536,6 +542,12 @@ label|:
 name|JobList
 argument_list|()
 expr_stmt|;
+name|virtual
+operator|~
+name|JobList
+argument_list|()
+expr_stmt|;
+comment|/// Add a job to the list (taking ownership).
 name|void
 name|addJob
 parameter_list|(

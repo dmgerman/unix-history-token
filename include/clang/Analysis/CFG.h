@@ -1576,6 +1576,7 @@ name|bool
 name|AddScopes
 init|=
 name|false
+comment|/* NOT FULLY IMPLEMENTED.                                                  NOT READY FOR GENERAL USE. */
 parameter_list|)
 function_decl|;
 comment|/// createBlock - Create a new block in the CFG.  The CFG owns the block;

@@ -152,39 +152,25 @@ decl_stmt|;
 name|unsigned
 name|NonVirtualAlignment
 decl_stmt|;
+comment|/// PrimaryBase - the primary base class (if one exists) of the class
+comment|/// we're laying out.
 name|ASTRecordLayout
 operator|::
 name|PrimaryBaseInfo
 name|PrimaryBase
 expr_stmt|;
-typedef|typedef
-name|llvm
+comment|/// Bases - base classes and their offsets in the record.
+name|ASTRecordLayout
 operator|::
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
-operator|,
-literal|4
-operator|>
-name|BaseOffsetsTy
-expr_stmt|;
-comment|/// Bases - base classes and their offsets from the record.
-name|BaseOffsetsTy
+name|BaseOffsetsMapTy
 name|Bases
-decl_stmt|;
-comment|// VBases - virtual base classes and their offsets from the record.
-name|BaseOffsetsTy
+expr_stmt|;
+comment|// VBases - virtual base classes and their offsets in the record.
+name|ASTRecordLayout
+operator|::
+name|BaseOffsetsMapTy
 name|VBases
-decl_stmt|;
+expr_stmt|;
 comment|/// IndirectPrimaryBases - Virtual base classes, direct or indirect, that are
 comment|/// primary base classes for some other direct or indirect base class.
 name|llvm
@@ -198,6 +184,27 @@ operator|,
 literal|32
 operator|>
 name|IndirectPrimaryBases
+expr_stmt|;
+comment|/// FirstNearlyEmptyVBase - The first nearly empty virtual base class in
+comment|/// inheritance graph order. Used for determining the primary base class.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|FirstNearlyEmptyVBase
+decl_stmt|;
+comment|/// VisitedVirtualBases - A set of all the visited virtual bases, used to
+comment|/// avoid visiting virtual bases more than once.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|VisitedVirtualBases
 expr_stmt|;
 comment|/// EmptyClassOffsets - A map from offsets to empty record decls.
 typedef|typedef
@@ -282,8 +289,9 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+comment|/// DeterminePrimaryBase - Determine the primary base of the given class.
 name|void
-name|SelectPrimaryBase
+name|DeterminePrimaryBase
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
@@ -298,12 +306,6 @@ specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
-parameter_list|,
-specifier|const
-name|CXXRecordDecl
-modifier|*
-modifier|&
-name|FirstPrimary
 parameter_list|)
 function_decl|;
 comment|/// IdentifyPrimaryBases - Identify all virtual base classes, direct or
@@ -318,30 +320,6 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-name|void
-name|setPrimaryBase
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|Base
-parameter_list|,
-name|bool
-name|IsVirtual
-parameter_list|)
-block|{
-name|PrimaryBase
-operator|=
-name|ASTRecordLayout
-operator|::
-name|PrimaryBaseInfo
-argument_list|(
-name|Base
-argument_list|,
-name|IsVirtual
-argument_list|)
-expr_stmt|;
-block|}
 name|bool
 name|IsNearlyEmpty
 argument_list|(
@@ -352,6 +330,55 @@ name|RD
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// LayoutNonVirtualBases - Determines the primary base class (if any) and
+comment|/// lays it out. Will then proceed to lay out all non-virtual base clasess.
+name|void
+name|LayoutNonVirtualBases
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+comment|/// LayoutNonVirtualBase - Lays out a single non-virtual base.
+name|void
+name|LayoutNonVirtualBase
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+comment|/// LayoutVirtualBases - Lays out all the virtual bases.
+name|void
+name|LayoutVirtualBases
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|MostDerivedClass
+parameter_list|)
+function_decl|;
+comment|/// LayoutVirtualBase - Lays out a single virtual base.
+name|void
+name|LayoutVirtualBase
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 comment|/// LayoutBase - Will lay out a base and return the offset where it was
 comment|/// placed, in bits.
 name|uint64_t
@@ -363,93 +390,6 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-name|void
-name|LayoutVtable
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-name|void
-name|LayoutNonVirtualBases
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-name|void
-name|LayoutBaseNonVirtually
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|,
-name|bool
-name|IsVBase
-parameter_list|)
-function_decl|;
-name|void
-name|LayoutVirtualBase
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-name|void
-name|LayoutVirtualBases
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|Class
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|PB
-argument_list|,
-name|uint64_t
-name|Offset
-argument_list|,
-name|llvm
-operator|::
-name|SmallSet
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-argument_list|,
-literal|32
-operator|>
-operator|&
-name|mark
-argument_list|,
-name|llvm
-operator|::
-name|SmallSet
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-argument_list|,
-literal|32
-operator|>
-operator|&
-name|IndirectPrimary
-argument_list|)
-decl_stmt|;
 comment|/// canPlaceRecordAtOffset - Return whether a record (either a base class
 comment|/// or a field) can be placed at the given offset.
 comment|/// Returns false if placing the record will result in two components
@@ -509,16 +449,6 @@ name|FD
 parameter_list|,
 name|uint64_t
 name|Offset
-parameter_list|)
-function_decl|;
-comment|/// getBaseOffset - Get the offset of a direct base class.
-name|uint64_t
-name|getBaseOffset
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|Base
 parameter_list|)
 function_decl|;
 comment|/// FinishLayout - Finalize record layout. Adjust record size based on the

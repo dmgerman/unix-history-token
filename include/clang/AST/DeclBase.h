@@ -2782,6 +2782,8 @@ name|DC
 parameter_list|)
 block|{
 return|return
+name|DC
+operator|&&
 name|this
 operator|->
 name|getPrimaryContext

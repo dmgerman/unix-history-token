@@ -81,6 +81,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -990,20 +993,11 @@ name|getBuffer
 argument_list|()
 specifier|const
 block|;
-comment|/// getBufferData - Return a pointer to the start and end of the source buffer
-comment|/// data for the specified FileID.
-name|std
+comment|/// getBufferData - Return a StringRef to the source buffer data for the
+comment|/// specified FileID.
+name|llvm
 operator|::
-name|pair
-operator|<
-specifier|const
-name|char
-operator|*
-block|,
-specifier|const
-name|char
-operator|*
-operator|>
+name|StringRef
 name|getBufferData
 argument_list|()
 specifier|const

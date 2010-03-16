@@ -1750,16 +1750,6 @@ name|PropertyId
 argument_list|)
 decl|const
 decl_stmt|;
-name|ObjCPropertyDecl
-modifier|*
-name|FindPropertyVisibleInPrimaryClass
-argument_list|(
-name|IdentifierInfo
-operator|*
-name|PropertyId
-argument_list|)
-decl|const
-decl_stmt|;
 comment|// Marks the end of the container.
 name|SourceRange
 name|getAtEndRange
@@ -2030,13 +2020,6 @@ block|;
 comment|/// Protocols referenced in interface header declaration
 name|ObjCProtocolList
 name|ReferencedProtocols
-block|;
-comment|/// Instance variables in the interface. This list is completely redundant.
-name|ObjCList
-operator|<
-name|ObjCIvarDecl
-operator|>
-name|IVars
 block|;
 comment|/// List of categories defined for this class.
 comment|/// FIXME: Why is this a linked list??
@@ -2532,6 +2515,19 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|ObjCPropertyDecl
+modifier|*
+name|FindPropertyVisibleInPrimaryClass
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|PropertyId
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// isSuperClassOf - Return true if this class is the specified class or is a
@@ -6201,6 +6197,22 @@ return|return
 name|PropertyIvarDecl
 return|;
 block|}
+comment|/// Lookup a property by name in the specified DeclContext.
+specifier|static
+name|ObjCPropertyDecl
+operator|*
+name|findPropertyDecl
+argument_list|(
+specifier|const
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|propertyID
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof

@@ -389,6 +389,8 @@ name|ConcurrencyCheck
 decl_stmt|;
 name|ASTUnit
 argument_list|(
+argument|Diagnostic&Diag
+argument_list|,
 argument|bool MainFileIsAST
 argument_list|)
 empty_stmt|;

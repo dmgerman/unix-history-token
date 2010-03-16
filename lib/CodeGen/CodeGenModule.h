@@ -1639,6 +1639,8 @@ block|,
 name|GVA_StrongExternal
 block|,
 name|GVA_TemplateInstantiation
+block|,
+name|GVA_ExplicitTemplateInstantiation
 block|}
 enum|;
 name|llvm

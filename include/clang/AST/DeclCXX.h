@@ -36,7 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  This file defines the C++ Decl subclasses.
+comment|//  This file defines the C++ Decl subclasses, other than those for
+end_comment
+
+begin_comment
+comment|//  templates (in DeclTemplate.h) and friends (in DeclFriend.h).
 end_comment
 
 begin_comment
@@ -122,6 +126,9 @@ name|CXXRecordDecl
 decl_stmt|;
 name|class
 name|CXXMemberLookupCriteria
+decl_stmt|;
+name|class
+name|FriendDecl
 decl_stmt|;
 comment|/// \brief Represents any kind of function declaration, whether it is a
 comment|/// concrete function or a function template.
@@ -750,6 +757,13 @@ comment|/// Definition - The declaration which defines this record.
 name|CXXRecordDecl
 operator|*
 name|Definition
+block|;
+comment|/// FirstFriend - The first friend declaration in this class, or
+comment|/// null if there aren't any.  This is actually currently stored
+comment|/// in reverse order.
+name|FriendDecl
+operator|*
+name|FirstFriend
 block|;    }
 operator|*
 name|DefinitionData
@@ -811,48 +825,6 @@ name|MemberSpecializationInfo
 operator|*
 operator|>
 name|TemplateOrInstantiation
-block|;
-name|void
-name|getNestedVisibleConversionFunctions
-argument_list|(
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-name|CanQualType
-argument_list|,
-literal|8
-operator|>
-operator|&
-name|TopConversionsTypeSet
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-name|CanQualType
-argument_list|,
-literal|8
-operator|>
-operator|&
-name|HiddenConversionTypes
-argument_list|)
-block|;
-name|void
-name|collectConversionFunctions
-argument_list|(
-argument|llvm::SmallPtrSet<CanQualType
-argument_list|,
-literal|8
-argument|>& ConversionsTypeSet
-argument_list|)
-specifier|const
 block|;
 name|protected
 operator|:
@@ -1515,6 +1487,47 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// An iterator over friend declarations.  All of these are defined
+end_comment
+
+begin_comment
+comment|/// in DeclFriend.h.
+end_comment
+
+begin_decl_stmt
+name|class
+name|friend_iterator
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|friend_iterator
+name|friend_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|friend_iterator
+name|friend_end
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|pushFriendDecl
+parameter_list|(
+name|FriendDecl
+modifier|*
+name|FD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// hasConstCopyConstructor - Determines whether this class has a
 end_comment
 
@@ -1913,44 +1926,6 @@ name|UnresolvedSetImpl
 modifier|*
 name|getVisibleConversionFunctions
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// addVisibleConversionFunction - Add a new conversion function to the
-end_comment
-
-begin_comment
-comment|/// list of visible conversion functions.
-end_comment
-
-begin_function_decl
-name|void
-name|addVisibleConversionFunction
-parameter_list|(
-name|CXXConversionDecl
-modifier|*
-name|ConvDecl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Add a new conversion function template to the list of visible
-end_comment
-
-begin_comment
-comment|/// conversion functions.
-end_comment
-
-begin_function_decl
-name|void
-name|addVisibleConversionFunction
-parameter_list|(
-name|FunctionTemplateDecl
-modifier|*
-name|ConvDecl
-parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -5532,229 +5507,6 @@ return|return
 name|K
 operator|==
 name|CXXConversion
-return|;
-block|}
-expr|}
-block|;
-comment|/// FriendDecl - Represents the declaration of a friend entity,
-comment|/// which can be a function, a type, or a templated function or type.
-comment|//  For example:
-comment|///
-comment|/// @code
-comment|/// template<typename T> class A {
-comment|///   friend int foo(T);
-comment|///   friend class B;
-comment|///   friend T; // only in C++0x
-comment|///   template<typename U> friend class C;
-comment|///   template<typename U> friend A& operator+=(A&, const U&) { ... }
-comment|/// };
-comment|/// @endcode
-comment|///
-comment|/// The semantic context of a friend decl is its declaring class.
-name|class
-name|FriendDecl
-operator|:
-name|public
-name|Decl
-block|{
-name|public
-operator|:
-typedef|typedef
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
-name|NamedDecl
-operator|*
-operator|,
-name|Type
-operator|*
-operator|>
-name|FriendUnion
-expr_stmt|;
-name|private
-operator|:
-comment|// The declaration that's a friend of this class.
-name|FriendUnion
-name|Friend
-block|;
-comment|// Location of the 'friend' specifier.
-name|SourceLocation
-name|FriendLoc
-block|;
-comment|// FIXME: Hack to keep track of whether this was a friend function
-comment|// template specialization.
-name|bool
-name|WasSpecialization
-block|;
-name|FriendDecl
-argument_list|(
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|FriendUnion Friend
-argument_list|,
-argument|SourceLocation FriendL
-argument_list|)
-operator|:
-name|Decl
-argument_list|(
-name|Decl
-operator|::
-name|Friend
-argument_list|,
-name|DC
-argument_list|,
-name|L
-argument_list|)
-block|,
-name|Friend
-argument_list|(
-name|Friend
-argument_list|)
-block|,
-name|FriendLoc
-argument_list|(
-name|FriendL
-argument_list|)
-block|,
-name|WasSpecialization
-argument_list|(
-argument|false
-argument_list|)
-block|{   }
-name|public
-operator|:
-specifier|static
-name|FriendDecl
-operator|*
-name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|FriendUnion Friend_
-argument_list|,
-argument|SourceLocation FriendL
-argument_list|)
-block|;
-comment|/// If this friend declaration names an (untemplated but
-comment|/// possibly dependent) type, return the type;  otherwise
-comment|/// return null.  This is used only for C++0x's unelaborated
-comment|/// friend type declarations.
-name|Type
-operator|*
-name|getFriendType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Friend
-operator|.
-name|dyn_cast
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-comment|/// If this friend declaration doesn't name an unelaborated
-comment|/// type, return the inner declaration.
-name|NamedDecl
-operator|*
-name|getFriendDecl
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Friend
-operator|.
-name|dyn_cast
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-comment|/// Retrieves the location of the 'friend' keyword.
-name|SourceLocation
-name|getFriendLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FriendLoc
-return|;
-block|}
-name|bool
-name|wasSpecialization
-argument_list|()
-specifier|const
-block|{
-return|return
-name|WasSpecialization
-return|;
-block|}
-name|void
-name|setSpecialization
-argument_list|(
-argument|bool WS
-argument_list|)
-block|{
-name|WasSpecialization
-operator|=
-name|WS
-block|; }
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
-block|{
-return|return
-name|classofKind
-argument_list|(
-name|D
-operator|->
-name|getKind
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FriendDecl *D
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
-block|{
-return|return
-name|K
-operator|==
-name|Decl
-operator|::
-name|Friend
 return|;
 block|}
 expr|}

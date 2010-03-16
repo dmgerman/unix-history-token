@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclFriend.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclTemplate.h"
 end_include
 

@@ -366,7 +366,7 @@ comment|/**  * \brief Describes the severity of a particular diagnostic.  */
 enum|enum
 name|CXDiagnosticSeverity
 block|{
-comment|/**    * \brief A diagnostic that has been suppressed, e.g., by a command-line     * option.    */
+comment|/**    * \brief A diagnostic that has been suppressed, e.g., by a command-line    * option.    */
 name|CXDiagnostic_Ignored
 init|=
 literal|0
@@ -442,13 +442,13 @@ name|CXDiagnostic_DisplayColumn
 init|=
 literal|0x02
 block|,
-comment|/**    * \brief If displaying the source-location information of the    * diagnostic, also include information about source ranges in a    * machine-parsable format.    *    * This option corresponds to the clang flag     * \c -fdiagnostics-print-source-range-info.    */
+comment|/**    * \brief If displaying the source-location information of the    * diagnostic, also include information about source ranges in a    * machine-parsable format.    *    * This option corresponds to the clang flag    * \c -fdiagnostics-print-source-range-info.    */
 name|CXDiagnostic_DisplaySourceRanges
 init|=
 literal|0x04
 block|}
 enum|;
-comment|/**  * \brief Format the given diagnostic in a manner that is suitable for display.  *  * This routine will format the given diagnostic to a string, rendering  * the diagnostic according to the various options given. The   * \c clang_defaultDiagnosticDisplayOptions() function returns the set of   * options that most closely mimics the behavior of the clang compiler.  *  * \param Diagnostic The diagnostic to print.  *  * \param Options A set of options that control the diagnostic display,   * created by combining \c CXDiagnosticDisplayOptions values.  *  * \returns A new string containing for formatted diagnostic.  */
+comment|/**  * \brief Format the given diagnostic in a manner that is suitable for display.  *  * This routine will format the given diagnostic to a string, rendering  * the diagnostic according to the various options given. The  * \c clang_defaultDiagnosticDisplayOptions() function returns the set of  * options that most closely mimics the behavior of the clang compiler.  *  * \param Diagnostic The diagnostic to print.  *  * \param Options A set of options that control the diagnostic display,  * created by combining \c CXDiagnosticDisplayOptions values.  *  * \returns A new string containing for formatted diagnostic.  */
 name|CINDEX_LINKAGE
 name|CXString
 name|clang_formatDiagnostic
@@ -502,7 +502,7 @@ parameter_list|(
 name|CXDiagnostic
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve a source range associated with the diagnostic.  *  * A diagnostic's source ranges highlight important elements in the source  * code. On the command line, Clang displays source ranges by  * underlining them with '~' characters.   *  * \param Diagnostic the diagnostic whose range is being extracted.  *  * \param Range the zero-based index specifying which range to   *  * \returns the requested source range.  */
+comment|/**  * \brief Retrieve a source range associated with the diagnostic.  *  * A diagnostic's source ranges highlight important elements in the source  * code. On the command line, Clang displays source ranges by  * underlining them with '~' characters.  *  * \param Diagnostic the diagnostic whose range is being extracted.  *  * \param Range the zero-based index specifying which range to  *  * \returns the requested source range.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
 name|clang_getDiagnosticRange
@@ -1075,6 +1075,89 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C class.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCClass
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|class_name
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C category.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCCategory
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|class_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|category_name
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C protocol.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCProtocol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|protocol_name
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C instance variable and  *   the USR for its containing class.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCIvar
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|CXString
+name|classUSR
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C method and  *   the USR for its containing class.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCMethod
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|isInstanceMethod
+parameter_list|,
+name|CXString
+name|classUSR
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Construct a USR for a specified Objective-C property and the USR  *  for its containing class.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_constructUSR_ObjCProperty
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|property
+parameter_list|,
+name|CXString
+name|classUSR
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve a name for the entity referenced by this cursor.  */
 name|CINDEX_LINKAGE
 name|CXString
@@ -1536,7 +1619,7 @@ name|clang_getClangVersion
 parameter_list|()
 function_decl|;
 comment|/**  * \brief Return a version string, suitable for showing to a user, but not  *        intended to be parsed (the format is not guaranteed to be stable).  */
-comment|/**   * \brief Visitor invoked for each file in a translation unit    *        (used with clang_getInclusions()).   *   * This visitor function will be invoked by clang_getInclusions() for each   * file included (either at the top-level or by #include directives) within   * a translation unit.  The first argument is the file being included, and   * the second and third arguments provide the inclusion stack.  The   * array is sorted in order of immediate inclusion.  For example,   * the first element refers to the location that included 'included_file'.   */
+comment|/**   * \brief Visitor invoked for each file in a translation unit   *        (used with clang_getInclusions()).   *   * This visitor function will be invoked by clang_getInclusions() for each   * file included (either at the top-level or by #include directives) within   * a translation unit.  The first argument is the file being included, and   * the second and third arguments provide the inclusion stack.  The   * array is sorted in order of immediate inclusion.  For example,   * the first element refers to the location that included 'included_file'.   */
 typedef|typedef
 name|void
 function_decl|(

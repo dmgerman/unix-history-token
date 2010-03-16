@@ -1507,6 +1507,26 @@ modifier|&
 name|Dst
 parameter_list|)
 function_decl|;
+name|void
+name|VisitCXXConstructExpr
+parameter_list|(
+specifier|const
+name|CXXConstructExpr
+modifier|*
+name|E
+parameter_list|,
+name|SVal
+name|Dest
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
 comment|/// Create a C++ temporary object for an rvalue.
 name|void
 name|CreateCXXTemporaryObject

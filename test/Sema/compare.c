@@ -2403,5 +2403,50 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|// PR4807
+end_comment
+
+begin_function
+name|int
+name|test5
+parameter_list|(
+name|unsigned
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+operator|(
+name|x
+operator|<
+literal|0
+operator|)
+comment|// expected-warning {{comparison of unsigned expression< 0 is always false}}
+operator|&&
+operator|(
+literal|0
+operator|>
+name|x
+operator|)
+comment|// expected-warning {{comparison of 0> unsigned expression is always false}}
+operator|&&
+operator|(
+name|x
+operator|>=
+literal|0
+operator|)
+comment|// expected-warning {{comparison of unsigned expression>= 0 is always true}}
+operator|&&
+operator|(
+literal|0
+operator|<=
+name|x
+operator|)
+return|;
+comment|// expected-warning {{comparison of 0<= unsigned expression is always true}}
+block|}
+end_function
+
 end_unit
 

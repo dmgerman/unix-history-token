@@ -1116,6 +1116,7 @@ name|arglist_type
 name|ActualArgs
 block|;
 comment|/// The list of arguments we synthesized.
+name|mutable
 name|arglist_type
 name|SynthesizedArgs
 block|;

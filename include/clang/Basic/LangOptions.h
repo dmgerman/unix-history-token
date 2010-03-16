@@ -197,6 +197,12 @@ literal|1
 decl_stmt|;
 comment|// Allow writable strings
 name|unsigned
+name|ConstStrings
+range|:
+literal|1
+decl_stmt|;
+comment|// Add const qualifier to strings (-Wwrite-strings)
+name|unsigned
 name|LaxVectorConversions
 range|:
 literal|1
@@ -511,6 +517,8 @@ operator|=
 name|PascalStrings
 operator|=
 name|WritableStrings
+operator|=
+name|ConstStrings
 operator|=
 literal|0
 expr_stmt|;

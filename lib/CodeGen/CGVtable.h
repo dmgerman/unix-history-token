@@ -598,8 +598,9 @@ operator|*
 operator|>
 name|ClassPairTy
 expr_stmt|;
-comment|/// VirtualBaseClassIndicies - Contains the index into the vtable where the
-comment|/// offsets for virtual bases of a class are stored.
+comment|/// VirtualBaseClassOffsetOffsets - Contains the vtable offset (relative to
+comment|/// the address point) in bytes where the offsets for virtual bases of a class
+comment|/// are stored.
 typedef|typedef
 name|llvm
 operator|::
@@ -609,10 +610,10 @@ name|ClassPairTy
 operator|,
 name|int64_t
 operator|>
-name|VirtualBaseClassIndiciesTy
+name|VirtualBaseClassOffsetOffsetsMapTy
 expr_stmt|;
-name|VirtualBaseClassIndiciesTy
-name|VirtualBaseClassIndicies
+name|VirtualBaseClassOffsetOffsetsMapTy
+name|VirtualBaseClassOffsetOffsets
 decl_stmt|;
 comment|/// Vtables - All the vtables which have been defined.
 name|llvm
@@ -786,13 +787,13 @@ name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
-comment|/// getVirtualBaseOffsetIndex - Return the index (relative to the vtable
-comment|/// address point) where the offset of the virtual base that contains the
-comment|/// given Base is stored, otherwise, if no virtual base contains the given
+comment|/// getVirtualBaseOffsetOffset - Return the offset in bytes (relative to the
+comment|/// vtable address point) where the offset of the virtual base that contains
+comment|/// the given base is stored, otherwise, if no virtual base contains the given
 comment|/// class, return 0.  Base must be a virtual base class or an unambigious
 comment|/// base.
 name|int64_t
-name|getVirtualBaseOffsetIndex
+name|getVirtualBaseOffsetOffset
 parameter_list|(
 specifier|const
 name|CXXRecordDecl

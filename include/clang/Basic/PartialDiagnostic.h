@@ -190,6 +190,9 @@ index|]
 decl_stmt|;
 block|}
 struct|;
+comment|// NOTE: Sema assumes that PartialDiagnostic is location-invariant
+comment|// in the sense that its bits can be safely memcpy'ed and destructed
+comment|// in the new location.
 comment|/// DiagID - The diagnostic ID.
 name|mutable
 name|unsigned

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -102,6 +108,9 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -110,6 +119,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|Diagnostic
+decl_stmt|;
+name|class
 name|SourceManager
 decl_stmt|;
 name|class
@@ -117,9 +129,6 @@ name|FileManager
 decl_stmt|;
 name|class
 name|FileEntry
-decl_stmt|;
-name|class
-name|IdentifierTokenInfo
 decl_stmt|;
 name|class
 name|LineTableInfo
@@ -183,9 +192,12 @@ comment|/// if SourceLineCache is non-null.
 name|unsigned
 name|NumLines
 decl_stmt|;
-comment|/// getBuffer - Returns the memory buffer for the associated content.  If
-comment|/// there is an error opening this buffer the first time, this manufactures
-comment|/// a temporary buffer and returns a non-empty error string.
+comment|/// getBuffer - Returns the memory buffer for the associated content.
+comment|///
+comment|/// \param Diag Object through which diagnostics will be emitted it the
+comment|/// buffer cannot be retrieved.
+comment|///
+comment|/// \param Invalid If non-NULL, will be set \c true if an error occurred.
 specifier|const
 name|llvm
 operator|::
@@ -193,7 +205,9 @@ name|MemoryBuffer
 operator|*
 name|getBuffer
 argument_list|(
-argument|std::string *ErrorStr =
+argument|Diagnostic&Diag
+argument_list|,
+argument|bool *Invalid =
 literal|0
 argument_list|)
 specifier|const
@@ -890,6 +904,11 @@ comment|/// location specifies where it was expanded.
 name|class
 name|SourceManager
 block|{
+comment|/// \brief Diagnostic object.
+name|Diagnostic
+modifier|&
+name|Diag
+decl_stmt|;
 name|mutable
 name|llvm
 operator|::
@@ -1041,8 +1060,17 @@ decl_stmt|;
 name|public
 label|:
 name|SourceManager
-argument_list|()
+argument_list|(
+name|Diagnostic
+operator|&
+name|Diag
+argument_list|)
 operator|:
+name|Diag
+argument_list|(
+name|Diag
+argument_list|)
+operator|,
 name|ExternalSLocEntries
 argument_list|(
 literal|0
@@ -1310,6 +1338,9 @@ literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Retrieve the memory buffer associated with the given file.
+comment|///
+comment|/// \param Invalid If non-NULL, will be set \c true if an error
+comment|/// occurs while retrieving the memory buffer.
 specifier|const
 name|llvm
 operator|::
@@ -1321,6 +1352,12 @@ specifier|const
 name|FileEntry
 operator|*
 name|File
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// \brief Override the contents of the given source file by providing an
@@ -1363,7 +1400,7 @@ name|getBuffer
 argument_list|(
 argument|FileID FID
 argument_list|,
-argument|std::string *Error =
+argument|bool *Invalid =
 literal|0
 argument_list|)
 specifier|const
@@ -1382,7 +1419,9 @@ argument_list|()
 operator|->
 name|getBuffer
 argument_list|(
-name|Error
+name|Diag
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 block|}
@@ -1412,23 +1451,20 @@ operator|->
 name|Entry
 return|;
 block|}
-comment|/// getBufferData - Return a pointer to the start and end of the source buffer
-comment|/// data for the specified FileID.
-name|std
+comment|/// getBufferData - Return a StringRef to the source buffer data for the
+comment|/// specified FileID.
+comment|///
+comment|/// \param FID The file ID whose contents will be returned.
+comment|/// \param Invalid If non-NULL, will be set true if an error occurred.
+name|llvm
 operator|::
-name|pair
-operator|<
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|>
+name|StringRef
 name|getBufferData
 argument_list|(
 argument|FileID FID
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1891,6 +1927,14 @@ begin_comment
 comment|/// in the appropriate spelling MemoryBuffer.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Invalid If non-NULL, will be set \c true if an error occurs.
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -1899,6 +1943,12 @@ name|getCharacterData
 argument_list|(
 name|SourceLocation
 name|SL
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1933,6 +1983,12 @@ name|FID
 argument_list|,
 name|unsigned
 name|FilePos
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1944,6 +2000,12 @@ name|getSpellingColumnNumber
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1955,6 +2017,12 @@ name|getInstantiationColumnNumber
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1985,6 +2053,12 @@ name|FID
 argument_list|,
 name|unsigned
 name|FilePos
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1996,6 +2070,12 @@ name|getInstantiationLineNumber
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2007,6 +2087,12 @@ name|getSpellingLineNumber
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2032,6 +2118,12 @@ name|getBufferName
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2633,7 +2725,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}      const
+unit|}    const
 name|SrcMgr
 operator|::
 name|SLocEntry

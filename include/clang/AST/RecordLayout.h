@@ -366,34 +366,28 @@ comment|/// PrimaryBase - The primary base info for this record.
 name|PrimaryBaseInfo
 name|PrimaryBase
 decl_stmt|;
+comment|/// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|BaseOffsetsMapTy
+expr_stmt|;
 comment|/// BaseOffsets - Contains a map from base classes to their offset.
-comment|/// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
+name|BaseOffsetsMapTy
 name|BaseOffsets
-expr_stmt|;
+decl_stmt|;
 comment|/// VBaseOffsets - Contains a map from vbase classes to their offset.
-comment|/// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
+name|BaseOffsetsMapTy
 name|VBaseOffsets
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 comment|/// CXXInfo - If the record layout is for a C++ record, this will have
@@ -426,6 +420,12 @@ argument|unsigned fieldcount
 argument_list|)
 empty_stmt|;
 comment|// Constructor for C++ records.
+typedef|typedef
+name|CXXRecordLayoutInfo
+operator|::
+name|BaseOffsetsMapTy
+name|BaseOffsetsMapTy
+expr_stmt|;
 name|ASTRecordLayout
 argument_list|(
 argument|ASTContext&Ctx
@@ -446,17 +446,9 @@ argument|unsigned nonvirtualalign
 argument_list|,
 argument|const PrimaryBaseInfo&PrimaryBase
 argument_list|,
-argument|const std::pair<const CXXRecordDecl *
+argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
-argument|uint64_t> *bases
-argument_list|,
-argument|unsigned numbases
-argument_list|,
-argument|const std::pair<const CXXRecordDecl *
-argument_list|,
-argument|uint64_t> *vbases
-argument_list|,
-argument|unsigned numvbases
+argument|const BaseOffsetsMapTy& VBaseOffsets
 argument_list|)
 empty_stmt|;
 operator|~

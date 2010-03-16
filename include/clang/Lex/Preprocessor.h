@@ -1765,12 +1765,17 @@ comment|/// token is the characters used to represent the token in the source fi
 comment|/// after trigraph expansion and escaped-newline folding.  In particular, this
 comment|/// wants to get the true, uncanonicalized, spelling of things like digraphs
 comment|/// UCNs, etc.
+comment|///
+comment|/// \param Invalid If non-NULL, will be set \c true if an error occurs.
 name|std
 operator|::
 name|string
 name|getSpelling
 argument_list|(
 argument|const Token&Tok
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1799,6 +1804,12 @@ specifier|const
 name|LangOptions
 operator|&
 name|Features
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// getSpelling - This method is used to get the spelling of a token into a
@@ -1824,6 +1835,12 @@ name|char
 operator|*
 operator|&
 name|Buffer
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1838,6 +1855,9 @@ argument_list|(
 argument|const Token&Tok
 argument_list|,
 argument|llvm::SmallVectorImpl<char>&Buffer
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1850,6 +1870,12 @@ specifier|const
 name|Token
 operator|&
 name|Tok
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -2282,10 +2308,8 @@ name|ConcatenateIncludeName
 argument_list|(
 name|llvm
 operator|::
-name|SmallVector
+name|SmallString
 operator|<
-name|char
-argument_list|,
 literal|128
 operator|>
 operator|&
