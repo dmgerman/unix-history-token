@@ -1614,7 +1614,7 @@ name|cb_depth_limit
 operator|=
 name|limit
 expr_stmt|;
-comment|/* 	 * If cb_proplist is provided then in the zfs_handles created  we 	 * retain only those properties listed in cb_proplist and sortcol. 	 * The rest are pruned. So, the caller should make sure that no other 	 * properties other than those listed in cb_proplist/sortcol are 	 * accessed. 	 * 	 * If cb_proplist is NULL then we retain all the properties. 	 */
+comment|/* 	 * If cb_proplist is provided then in the zfs_handles created  we 	 * retain only those properties listed in cb_proplist and sortcol. 	 * The rest are pruned. So, the caller should make sure that no other 	 * properties other than those listed in cb_proplist/sortcol are 	 * accessed. 	 * 	 * If cb_proplist is NULL then we retain all the properties.  We 	 * always retain the zoned property, which some other properties 	 * need (userquota& friends), and the createtxg property, which 	 * we need to sort snapshots. 	 */
 if|if
 condition|(
 name|cb
@@ -1714,6 +1714,24 @@ operator|->
 name|sc_next
 expr_stmt|;
 block|}
+name|cb
+operator|.
+name|cb_props_table
+index|[
+name|ZFS_PROP_ZONED
+index|]
+operator|=
+name|B_TRUE
+expr_stmt|;
+name|cb
+operator|.
+name|cb_props_table
+index|[
+name|ZFS_PROP_CREATETXG
+index|]
+operator|=
+name|B_TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
