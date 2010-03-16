@@ -1438,7 +1438,7 @@ name|RT_LINK_IS_UP
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(((ifp)->if_flags&		    \ 				  (IFF_LOOPBACK | IFF_POINTOPOINT)) \ 				 || (ifp)->if_link_state == LINK_STATE_UP)
+value|(!((ifp)->if_capabilities& IFCAP_LINKSTATE) \ 				 || (ifp)->if_link_state == LINK_STATE_UP)
 end_define
 
 begin_define
