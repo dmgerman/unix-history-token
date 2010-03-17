@@ -628,10 +628,11 @@ name|hysteresis
 range|:
 literal|8
 decl_stmt|,
-name|role
+name|def_role
 range|:
 literal|2
 decl_stmt|,
+comment|/* default role */
 name|gdt_running
 range|:
 literal|1
@@ -729,9 +730,9 @@ name|simqfrozen
 range|:
 literal|3
 decl_stmt|,
-name|role
+name|def_role
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|iid
 range|:
@@ -1683,7 +1684,7 @@ parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->role : ISP_SPI_PC(isp, chan)->role)
+value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->def_role : ISP_SPI_PC(isp, chan)->def_role)
 end_define
 
 begin_define
@@ -1698,7 +1699,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->role = val;	\ 	}
+value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->def_role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->def_role = val;	\ 	}
 end_define
 
 begin_define
