@@ -4862,6 +4862,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|nsems_max
 argument_list|,
 operator|&
@@ -5133,6 +5136,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|nsems_max
 argument_list|,
 operator|&
@@ -5396,6 +5402,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|nsems_max
 argument_list|,
 operator|&
@@ -5561,6 +5570,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|nsems_max
 argument_list|,
