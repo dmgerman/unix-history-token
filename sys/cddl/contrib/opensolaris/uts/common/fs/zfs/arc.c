@@ -1932,7 +1932,7 @@ begin_define
 define|#
 directive|define
 name|HT_LOCK_PAD
-value|128
+value|CACHE_LINE_SIZE
 end_define
 
 begin_struct
