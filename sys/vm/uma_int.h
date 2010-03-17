@@ -176,6 +176,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * align field or structure to cache line  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_ALIGN
+value|__aligned(CACHE_LINE_SIZE)
+end_define
+
+begin_comment
 comment|/*  * Structures for per cpu queues.  */
 end_comment
 
@@ -205,6 +216,7 @@ index|[]
 decl_stmt|;
 comment|/* actual allocation storage */
 block|}
+name|UMA_ALIGN
 struct|;
 end_struct
 
@@ -238,6 +250,7 @@ name|uc_frees
 decl_stmt|;
 comment|/* Count of frees */
 block|}
+name|UMA_ALIGN
 struct|;
 end_struct
 
@@ -730,8 +743,17 @@ name|uma_fini
 name|uz_fini
 decl_stmt|;
 comment|/* Discards memory */
+name|u_int32_t
+name|uz_flags
+decl_stmt|;
+comment|/* Flags inherited from kegs */
+name|u_int32_t
+name|uz_size
+decl_stmt|;
+comment|/* Size inherited from kegs */
 name|u_int64_t
 name|uz_allocs
+name|UMA_ALIGN
 decl_stmt|;
 comment|/* Total number of allocations */
 name|u_int64_t
@@ -742,14 +764,6 @@ name|u_int64_t
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
-name|u_int32_t
-name|uz_flags
-decl_stmt|;
-comment|/* Flags inherited from kegs */
-name|u_int32_t
-name|uz_size
-decl_stmt|;
-comment|/* Size inherited from kegs */
 name|uint16_t
 name|uz_fills
 decl_stmt|;
@@ -765,6 +779,7 @@ name|uz_cpu
 index|[
 literal|1
 index|]
+name|UMA_ALIGN
 decl_stmt|;
 comment|/* Per cpu caches */
 block|}
@@ -858,6 +873,12 @@ directive|define
 name|UMA_ZFLAG_INHERIT
 value|(UMA_ZFLAG_INTERNAL | UMA_ZFLAG_CACHEONLY | \ 				    UMA_ZFLAG_BUCKET)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|UMA_ALIGN
+end_undef
 
 begin_ifdef
 ifdef|#
