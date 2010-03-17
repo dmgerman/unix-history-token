@@ -1756,7 +1756,7 @@ name|pcs
 operator|->
 name|pcs_nstrays
 argument_list|,
-literal|"Number of stray vectors"
+literal|"Number of stray interrupts"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3439,6 +3439,9 @@ name|bootinfo
 operator|.
 name|bi_systab
 argument_list|)
+expr_stmt|;
+name|ia64_xiv_init
+argument_list|()
 expr_stmt|;
 name|ia64_sal_init
 argument_list|()

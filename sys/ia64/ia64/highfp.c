@@ -144,7 +144,7 @@ name|ipi_send
 argument_list|(
 name|cpu
 argument_list|,
-name|IPI_HIGH_FP
+name|ia64_ipi_highfp
 argument_list|)
 expr_stmt|;
 name|error

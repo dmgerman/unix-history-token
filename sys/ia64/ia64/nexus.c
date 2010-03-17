@@ -783,14 +783,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* suppress attach message for neatness */
-comment|/*  	 * XXX working notes: 	 * 	 * - IRQ resource creation should be moved to the PIC/APIC driver. 	 * - DRQ resource creation should be moved to the DMAC driver. 	 * - The above should be sorted to probe earlier than any child busses. 	 * 	 * - Leave I/O and memory creation here, as child probes may need them. 	 *   (especially eg. ACPI) 	 */
-comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 * 	 * XXX We depend on the AT PIC driver correctly claiming IRQ 2 	 *     to prevent its reuse elsewhere in the !APIC_IO case. 	 */
-name|irq_rman
-operator|.
-name|rm_start
-operator|=
-literal|0
-expr_stmt|;
 name|irq_rman
 operator|.
 name|rm_type
@@ -805,9 +797,17 @@ literal|"Interrupt request lines"
 expr_stmt|;
 name|irq_rman
 operator|.
+name|rm_start
+operator|=
+literal|0
+expr_stmt|;
+name|irq_rman
+operator|.
 name|rm_end
 operator|=
-literal|255
+name|IA64_NXIVS
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -836,7 +836,6 @@ argument_list|(
 literal|"nexus_probe irq_rman"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * However, IO ports and Memory truely are global at this level, 	 * as are APIC interrupts (however many IO APICS there turn out 	 * to be on large systems..) 	 */
 name|port_rman
 operator|.
 name|rm_start
