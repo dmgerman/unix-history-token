@@ -1696,11 +1696,6 @@ modifier|*
 name|dp1
 decl_stmt|;
 name|struct
-name|ufs2_dinode
-modifier|*
-name|dp2
-decl_stmt|;
-name|struct
 name|csum
 modifier|*
 name|cs
@@ -2206,7 +2201,7 @@ name|cs_nifree
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * XXX Newfs writes out two blocks of initialized inodes 	 *     unconditionally.  Should we check here to make sure that they 	 *     were actually written? 	 */
+comment|/* 	 * For the old file system, we have to initialize all the inodes. 	 */
 if|if
 condition|(
 name|sblock
@@ -2229,11 +2224,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|2
-operator|*
-name|sblock
-operator|.
-name|fs_frag
+literal|0
 init|;
 name|i
 operator|<
@@ -2263,15 +2254,6 @@ operator|*
 operator|)
 name|iobuf
 expr_stmt|;
-name|dp2
-operator|=
-operator|(
-expr|struct
-name|ufs2_dinode
-operator|*
-operator|)
-name|iobuf
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FSIRAND
@@ -2292,14 +2274,6 @@ condition|;
 name|j
 operator|++
 control|)
-if|if
-condition|(
-name|sblock
-operator|.
-name|fs_magic
-operator|==
-name|FS_UFS1_MAGIC
-condition|)
 block|{
 name|dp1
 operator|->
@@ -2309,19 +2283,6 @@ name|random
 argument_list|()
 expr_stmt|;
 name|dp1
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|dp2
-operator|->
-name|di_gen
-operator|=
-name|random
-argument_list|()
-expr_stmt|;
-name|dp2
 operator|++
 expr_stmt|;
 block|}
