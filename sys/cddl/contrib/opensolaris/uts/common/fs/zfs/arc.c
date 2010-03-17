@@ -413,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|ARCS_LOCK_PAD
-value|128
+value|CACHE_LINE_SIZE
 end_define
 
 begin_struct
@@ -501,8 +501,10 @@ index|[
 name|ARC_BUFC_NUMLISTS
 index|]
 name|__aligned
-decl|(128
-decl_stmt|);
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
 block|}
 name|arc_state_t
 typedef|;
@@ -1991,7 +1993,11 @@ name|ht_locks
 index|[
 name|BUF_LOCKS
 index|]
-decl_stmt|;
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
 block|}
 name|buf_hash_table_t
 typedef|;
