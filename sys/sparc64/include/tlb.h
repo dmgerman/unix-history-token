@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 2008, 2010 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -156,10 +156,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLB_PCXR_PGSZ_MASK
-define|\
-value|((((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_PCXR_N_PGSZ0_SHIFT) |	\ 	(((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_PCXR_N_PGSZ1_SHIFT) |	\ 	(((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_PCXR_P_PGSZ0_SHIFT) |	\ 	(((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_PCXR_P_PGSZ1_SHIFT))
+name|TLB_CXR_PGSZ_MASK
+value|(~TLB_CXR_CTX_MASK)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_PCXR_N_IPGSZ0_SHIFT
+value|(53)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_PCXR_N_IPGSZ1_SHIFT
+value|(50)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII, VIIIfx */
+end_comment
 
 begin_define
 define|#
@@ -178,6 +199,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|TLB_PCXR_N_PGSZ_I_SHIFT
+value|(55)
+end_define
+
+begin_comment
+comment|/* US-IV+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_PCXR_P_IPGSZ0_SHIFT
+value|(24)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_PCXR_P_IPGSZ1_SHIFT
+value|(27)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TLB_PCXR_P_PGSZ0_SHIFT
 value|(16)
 end_define
@@ -189,13 +243,20 @@ name|TLB_PCXR_P_PGSZ1_SHIFT
 value|(19)
 end_define
 
+begin_comment
+comment|/*  * Note that the US-IV+ documentation appears to have TLB_PCXR_P_PGSZ_I_SHIFT  * and TLB_PCXR_P_PGSZ0_SHIFT erroneously inverted.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TLB_SCXR_PGSZ_MASK
-define|\
-value|((((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_SCXR_S_PGSZ0_SHIFT) |	\ 	(((1UL<< TLB_CXR_PGSZ_BITS) - 1)<< TLB_SCXR_S_PGSZ1_SHIFT))
+name|TLB_PCXR_P_PGSZ_I_SHIFT
+value|(22)
 end_define
+
+begin_comment
+comment|/* US-IV+ */
+end_comment
 
 begin_define
 define|#
@@ -305,7 +366,7 @@ value|(2)
 end_define
 
 begin_comment
-comment|/* USIII and beyond only */
+comment|/* US-III and beyond only */
 end_comment
 
 begin_define
@@ -492,8 +553,51 @@ end_define
 begin_define
 define|#
 directive|define
+name|MMU_SFSR_GET_FT
+parameter_list|(
+name|sfsr
+parameter_list|)
+define|\
+value|(((sfsr)>> MMU_SFSR_FT_SHIFT)& ((1UL<< MMU_SFSR_FT_SIZE) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_SFSR_GET_CT
+parameter_list|(
+name|sfsr
+parameter_list|)
+define|\
+value|(((sfsr)>> MMU_SFSR_CT_SHIFT)& ((1UL<< MMU_SFSR_CT_SIZE) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_SFSR_E
+value|(1UL<< MMU_SFSR_E_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_SFSR_PR
+value|(1UL<< MMU_SFSR_PR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMU_SFSR_W
 value|(1UL<< MMU_SFSR_W_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_SFSR_OW
+value|(1UL<< MMU_SFSR_OW_SHIFT)
 end_define
 
 begin_define

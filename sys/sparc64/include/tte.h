@@ -39,6 +39,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_RSVD2_SHIFT
+value|(49)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SIZE2_SHIFT
+value|(48)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_DIAG_SF_SHIFT
 value|(41)
 end_define
@@ -48,6 +62,27 @@ define|#
 directive|define
 name|TD_RSVD_CH_SHIFT
 value|(43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_OC_SHIFT
+value|(47)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_PT_SHIFT
+value|TD_RSVD_CH_SHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_VE_SHIFT
+value|(41)
 end_define
 
 begin_define
@@ -81,9 +116,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_RSVD2_BITS
+value|(1)
+end_define
+
+begin_comment
+comment|/* US-IV+, SPARC64 VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_SIZE2_BITS
+value|(1)
+end_define
+
+begin_comment
+comment|/* US-IV+, SPARC64 VI, VII, VIIIfx */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TD_DIAG_SF_BITS
 value|(9)
 end_define
+
+begin_comment
+comment|/* US-I, II{,e,i} */
+end_comment
 
 begin_define
 define|#
@@ -92,6 +153,43 @@ name|TD_RSVD_CH_BITS
 value|(7)
 end_define
 
+begin_comment
+comment|/* US-III{,i,+}, US-IV, SPARC64 V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_OC_BITS
+value|(1)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_PT_BITS
+value|(5)
+end_define
+
+begin_comment
+comment|/* US-IV+, SPARC64 VI, VII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_VE_BITS
+value|(7)
+end_define
+
+begin_comment
+comment|/* SPARC64 VIIIfx */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -99,12 +197,31 @@ name|TD_PA_CH_BITS
 value|(30)
 end_define
 
+begin_comment
+comment|/* US-III{,i,+}, US-IV{,+}, SPARC64 V */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_PA_OC_BITS
+value|(34)
+end_define
+
+begin_comment
+comment|/* SPARC64 VI, VII */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TD_PA_SF_BITS
 value|(28)
 end_define
+
+begin_comment
+comment|/* US-I, II{,e,i}, SPARC64 VIIIfx */
+end_comment
 
 begin_define
 define|#
@@ -137,6 +254,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_RSVD2_MASK
+value|((1UL<< TD_RSVD2_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SIZE2_MASK
+value|((1UL<< TD_SIZE2_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_DIAG_SF_MASK
 value|((1UL<< TD_DIAG_SF_BITS) - 1)
 end_define
@@ -151,8 +282,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_RSVD_OC_MASK
+value|((1UL<< TD_RSVD_OC_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_PT_MASK
+value|((1UL<< TD_RSVD_PT_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_RSVD_VE_MASK
+value|((1UL<< TD_RSVD_VE_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_PA_CH_MASK
 value|((1UL<< TD_PA_CH_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_PA_OC_MASK
+value|((1UL<< TD_PA_OC_BITS) - 1)
 end_define
 
 begin_define
@@ -207,6 +366,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|TS_32M
+value|(4UL)
+end_define
+
+begin_comment
+comment|/* US-IV+, SPARC64 VI, VII only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_256M
+value|(5UL)
+end_define
+
+begin_comment
+comment|/* US-IV+, SPARC64 VI, VII only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_2G
+value|(6UL)
+end_define
+
+begin_comment
+comment|/* SPARC64 VIIIfx only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TS_MIN
 value|TS_8K
 end_define
@@ -251,6 +443,30 @@ define|#
 directive|define
 name|TD_4M
 value|(TS_4M<< TD_SIZE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_32M
+define|\
+value|(((TS_32M& TD_SIZE_MASK)<< TD_SIZE_SHIFT) |			\ 	(TD_SIZE2_MASK<< TD_SIZE2_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_256M
+define|\
+value|(((TS_256M& TD_SIZE_MASK)<< TD_SIZE_SHIFT) |			\ 	(TD_SIZE2_MASK<< TD_SIZE2_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_2G
+define|\
+value|(((TS_2G& TD_SIZE_MASK)<< TD_SIZE_SHIFT) |			\ 	(TD_SIZE2_MASK<< TD_SIZE2_SHIFT))
 end_define
 
 begin_define
@@ -494,7 +710,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(((tp)->tte_data& TD_P) != 0 ? \ 	 (kernel_pmap) : \ 	 (PHYS_TO_VM_PAGE(pmap_kextract((vm_offset_t)(tp)))->md.pmap))
+value|(((tp)->tte_data& TD_P) != 0 ?	(kernel_pmap) :			\ 	(PHYS_TO_VM_PAGE(pmap_kextract((vm_offset_t)(tp)))->md.pmap))
 end_define
 
 begin_define
