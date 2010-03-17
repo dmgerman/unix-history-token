@@ -2201,7 +2201,7 @@ name|cs_nifree
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * XXX Newfs writes out two blocks of initialized inodes 	 *     unconditionally.  Should we check here to make sure that they 	 *     were actually written? 	 */
+comment|/* 	 * For the old file system, we have to initialize all the inodes. 	 */
 if|if
 condition|(
 name|sblock
@@ -2224,11 +2224,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|2
-operator|*
-name|sblock
-operator|.
-name|fs_frag
+literal|0
 init|;
 name|i
 operator|<
