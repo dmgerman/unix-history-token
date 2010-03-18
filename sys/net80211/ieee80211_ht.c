@@ -148,6 +148,7 @@ literal|16
 index|]
 init|=
 block|{
+comment|/*  20Mhz  SGI 40Mhz  SGI */
 block|{
 literal|13
 block|,
@@ -1304,7 +1305,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ht_announce
+name|ht_rateprint
 parameter_list|(
 name|struct
 name|ieee80211com
@@ -1319,17 +1320,14 @@ name|struct
 name|ieee80211_htrateset
 modifier|*
 name|rs
+parameter_list|,
+name|int
+name|maxmcs
+parameter_list|,
+name|int
+name|ratetype
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -1337,18 +1335,6 @@ name|rate
 decl_stmt|,
 name|mword
 decl_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"%s MCS: "
-argument_list|,
-name|ieee80211_phymode_name
-index|[
-name|mode
-index|]
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1360,6 +1346,10 @@ operator|<
 name|rs
 operator|->
 name|rs_nrates
+operator|&&
+name|i
+operator|<
+name|maxmcs
 condition|;
 name|i
 operator|++
@@ -1393,6 +1383,66 @@ operator|!=
 name|IFM_IEEE80211_MCS
 condition|)
 continue|continue;
+switch|switch
+condition|(
+name|ratetype
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|rate
+operator|=
+name|ieee80211_htrates
+index|[
+name|rs
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|ht20_rate_800ns
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|rate
+operator|=
+name|ieee80211_htrates
+index|[
+name|rs
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|ht20_rate_400ns
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|rate
+operator|=
+name|ieee80211_htrates
+index|[
+name|rs
+operator|->
+name|rs_rates
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|ht40_rate_800ns
+expr_stmt|;
+break|break;
+default|default:
 name|rate
 operator|=
 name|ieee80211_htrates
@@ -1407,6 +1457,8 @@ index|]
 operator|.
 name|ht40_rate_400ns
 expr_stmt|;
+break|break;
+block|}
 name|printf
 argument_list|(
 literal|"%s%d%sMbps"
@@ -1444,6 +1496,165 @@ block|}
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ht_announce
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_htrateset
+modifier|*
+name|rs
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|ic
+operator|->
+name|ic_ifp
+decl_stmt|;
+name|int
+name|maxmcs
+init|=
+name|ic
+operator|->
+name|ic_rxstream
+operator|*
+literal|8
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|modestr
+init|=
+name|ieee80211_phymode_name
+index|[
+name|mode
+index|]
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|maxmcs
+operator|<=
+literal|16
+argument_list|,
+operator|(
+literal|"maxmcs> 16"
+operator|)
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%d MCS rates\n"
+argument_list|,
+name|maxmcs
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%s MCS 20Mhz: "
+argument_list|,
+name|modestr
+argument_list|)
+expr_stmt|;
+name|ht_rateprint
+argument_list|(
+name|ic
+argument_list|,
+name|mode
+argument_list|,
+name|rs
+argument_list|,
+name|maxmcs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%s MCS 20Mhz SGI: "
+argument_list|,
+name|modestr
+argument_list|)
+expr_stmt|;
+name|ht_rateprint
+argument_list|(
+name|ic
+argument_list|,
+name|mode
+argument_list|,
+name|rs
+argument_list|,
+name|maxmcs
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%s MCS 40Mhz: "
+argument_list|,
+name|modestr
+argument_list|)
+expr_stmt|;
+name|ht_rateprint
+argument_list|(
+name|ic
+argument_list|,
+name|mode
+argument_list|,
+name|rs
+argument_list|,
+name|maxmcs
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"%s MCS 40Mhz SGI: "
+argument_list|,
+name|modestr
+argument_list|)
+expr_stmt|;
+name|ht_rateprint
+argument_list|(
+name|ic
+argument_list|,
+name|mode
+argument_list|,
+name|rs
+argument_list|,
+name|maxmcs
+argument_list|,
+literal|3
 argument_list|)
 expr_stmt|;
 block|}
@@ -3122,7 +3333,7 @@ operator|->
 name|rxa_wnd
 condition|)
 block|{
-comment|/* 		 * Common case (hopefully): in the BA window. 		 * Sec 9.10.7.6 a) (D2.04 p.118 line 47) 		 */
+comment|/* 		 * Common case (hopefully): in the BA window. 		 * Sec 9.10.7.6.2 a) (p.137) 		 */
 ifdef|#
 directive|ifdef
 name|IEEE80211_AMPDU_AGE
@@ -3319,7 +3530,7 @@ operator|<
 name|IEEE80211_SEQ_BA_RANGE
 condition|)
 block|{
-comment|/* 		 * Outside the BA window, but within range; 		 * flush the reorder q and move the window. 		 * Sec 9.10.7.6 b) (D2.04 p.118 line 60) 		 */
+comment|/* 		 * Outside the BA window, but within range; 		 * flush the reorder q and move the window. 		 * Sec 9.10.7.6.2 b) (p.138) 		 */
 name|IEEE80211_NOTE
 argument_list|(
 name|vap
@@ -3389,7 +3600,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		 * Outside the BA window and out of range; toss. 		 * Sec 9.10.7.6 c) (D2.04 p.119 line 16) 		 */
+comment|/* 		 * Outside the BA window and out of range; toss. 		 * Sec 9.10.7.6.2 c) (p.138) 		 */
 name|IEEE80211_DISCARD_MAC
 argument_list|(
 name|vap
@@ -3671,7 +3882,7 @@ operator|<
 name|IEEE80211_SEQ_BA_RANGE
 condition|)
 block|{
-comment|/* 		 * Flush the reorder q up to rxseq and move the window. 		 * Sec 9.10.7.6 a) (D2.04 p.119 line 22) 		 */
+comment|/* 		 * Flush the reorder q up to rxseq and move the window. 		 * Sec 9.10.7.6.3 a) (p.138) 		 */
 name|IEEE80211_NOTE
 argument_list|(
 name|vap
@@ -3744,7 +3955,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Out of range; toss. 		 * Sec 9.10.7.6 b) (D2.04 p.119 line 41) 		 */
+comment|/* 		 * Out of range; toss. 		 * Sec 9.10.7.6.3 b) (p.138) 		 */
 name|IEEE80211_DISCARD_MAC
 argument_list|(
 name|vap
@@ -7039,7 +7250,7 @@ decl_stmt|;
 name|uint16_t
 name|args
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 name|int
@@ -7260,6 +7471,13 @@ expr_stmt|;
 name|args
 index|[
 literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|args
+index|[
+literal|4
 index|]
 operator|=
 literal|0
@@ -8179,7 +8397,7 @@ decl_stmt|;
 name|uint16_t
 name|args
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 name|int
@@ -8266,6 +8484,14 @@ index|[
 literal|1
 index|]
 operator|=
+literal|0
+expr_stmt|;
+comment|/* NB: status code not used */
+name|args
+index|[
+literal|2
+index|]
+operator|=
 name|IEEE80211_BAPS_POLICY_IMMEDIATE
 operator||
 name|SM
@@ -8284,7 +8510,7 @@ argument_list|)
 expr_stmt|;
 name|args
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 literal|0
@@ -8306,12 +8532,12 @@ name|dialogtoken
 argument_list|,
 name|args
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 name|args
 index|[
-literal|2
+literal|3
 index|]
 argument_list|)
 condition|)
@@ -8372,7 +8598,7 @@ comment|/* allocate token */
 comment|/* NB: after calling ic_addba_request so driver can set txa_start */
 name|args
 index|[
-literal|3
+literal|4
 index|]
 operator|=
 name|SM
@@ -9556,7 +9782,7 @@ name|IEEE80211_MSG_11N
 argument_list|,
 name|ni
 argument_list|,
-literal|"send ADDBA %s: dialogtoken %d "
+literal|"send ADDBA %s: dialogtoken %d status %d "
 literal|"baparamset 0x%x (tid %d) batimeout 0x%x baseqctl 0x%x"
 argument_list|,
 operator|(
@@ -9579,11 +9805,16 @@ index|[
 literal|1
 index|]
 argument_list|,
+name|args
+index|[
+literal|2
+index|]
+argument_list|,
 name|MS
 argument_list|(
 name|args
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 name|IEEE80211_BAPS_TID
@@ -9591,12 +9822,12 @@ argument_list|)
 argument_list|,
 name|args
 index|[
-literal|2
+literal|3
 index|]
 argument_list|,
 name|args
 index|[
-literal|3
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -9694,6 +9925,12 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* dialog token */
+if|if
+condition|(
+name|action
+operator|==
+name|IEEE80211_ACTION_BA_ADDBA_RESPONSE
+condition|)
 name|ADDSHORT
 argument_list|(
 name|frm
@@ -9704,7 +9941,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* baparamset */
+comment|/* status code */
 name|ADDSHORT
 argument_list|(
 name|frm
@@ -9712,6 +9949,17 @@ argument_list|,
 name|args
 index|[
 literal|2
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* baparamset */
+name|ADDSHORT
+argument_list|(
+name|frm
+argument_list|,
+name|args
+index|[
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -9728,7 +9976,7 @@ name|frm
 argument_list|,
 name|args
 index|[
-literal|3
+literal|4
 index|]
 argument_list|)
 expr_stmt|;

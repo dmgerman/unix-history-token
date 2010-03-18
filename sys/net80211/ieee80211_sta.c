@@ -7272,12 +7272,30 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m0
+name|m
 parameter_list|,
 name|int
 name|subtype
 parameter_list|)
-block|{ }
+block|{
+switch|switch
+condition|(
+name|subtype
+condition|)
+block|{
+case|case
+name|IEEE80211_FC0_SUBTYPE_BAR
+case|:
+name|ieee80211_recv_bar
+argument_list|(
+name|ni
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 end_function
 
 end_unit
