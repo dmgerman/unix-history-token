@@ -13626,20 +13626,17 @@ name|ASF_STACKUP
 expr_stmt|;
 if|if
 condition|(
+name|BGE_IS_575X_PLUS
+argument_list|(
 name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5750
+argument_list|)
 condition|)
-block|{
 name|sc
 operator|->
 name|bge_asf_mode
 operator||=
 name|ASF_NEW_HANDSHAKE
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* Try to reset the chip again the nice way. */
@@ -17838,7 +17835,7 @@ name|sc
 operator|->
 name|bge_asf_count
 operator|=
-literal|5
+literal|2
 expr_stmt|;
 name|bge_writemem_ind
 argument_list|(
