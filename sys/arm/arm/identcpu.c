@@ -1520,6 +1520,13 @@ literal|"CPU_ARM11"
 block|}
 block|,
 comment|/* CPU_CLASS_ARM11J */
+block|{
+literal|"Marvell"
+block|,
+literal|"CPU_MARVELL"
+block|}
+block|,
+comment|/* CPU_CLASS_MARVELL */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1780,6 +1787,9 @@ name|CPU_CLASS_XSCALE
 case|:
 case|case
 name|CPU_CLASS_ARM11J
+case|:
+case|case
+name|CPU_CLASS_MARVELL
 case|:
 if|if
 condition|(
