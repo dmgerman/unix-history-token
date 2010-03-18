@@ -1533,9 +1533,7 @@ decl_stmt|;
 name|int
 name|maxmcs
 init|=
-name|ic
-operator|->
-name|ic_rxstream
+literal|2
 operator|*
 literal|8
 decl_stmt|;
