@@ -340,18 +340,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void * calloc(int items, size_t size) {     return(malloc(items * size)); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
