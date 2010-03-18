@@ -1049,11 +1049,6 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|parent
 operator|=
 name|device_get_parent
