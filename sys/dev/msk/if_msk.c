@@ -8827,7 +8827,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8844,7 +8844,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8863,7 +8863,7 @@ name|msk_clock
 operator|=
 literal|125
 expr_stmt|;
-comment|/* 125 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8915,7 +8915,7 @@ name|msk_clock
 operator|=
 literal|100
 expr_stmt|;
-comment|/* 100 Mhz */
+comment|/* 100 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8932,7 +8932,7 @@ name|msk_clock
 operator|=
 literal|50
 expr_stmt|;
-comment|/* 50 Mhz */
+comment|/* 50 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8974,7 +8974,7 @@ name|msk_clock
 operator|=
 literal|156
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 156 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -8989,9 +8989,9 @@ name|sc
 operator|->
 name|msk_clock
 operator|=
-literal|156
+literal|125
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 125 MHz */
 name|sc
 operator|->
 name|msk_pflags
@@ -9006,7 +9006,7 @@ name|msk_clock
 operator|=
 literal|156
 expr_stmt|;
-comment|/* 156 Mhz */
+comment|/* 156 MHz */
 break|break;
 block|}
 comment|/* Allocate IRQ resources. */
@@ -19077,13 +19077,9 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|uint16_t
+name|uint8_t
+modifier|*
 name|eaddr
-index|[
-name|ETHER_ADDR_LEN
-operator|/
-literal|2
-index|]
 decl_stmt|;
 name|uint16_t
 name|gmac
@@ -19093,8 +19089,6 @@ name|reg
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|i
 decl_stmt|;
 name|MSK_IF_LOCK_ASSERT
 argument_list|(
@@ -19447,33 +19441,13 @@ name|gmac
 argument_list|)
 expr_stmt|;
 comment|/* Set station address. */
-name|bcopy
-argument_list|(
+name|eaddr
+operator|=
 name|IF_LLADDR
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
-name|eaddr
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ETHER_ADDR_LEN
-operator|/
-literal|2
-condition|;
-name|i
-operator|++
-control|)
 name|GMAC_WRITE_2
 argument_list|(
 name|sc
@@ -19483,32 +19457,72 @@ operator|->
 name|msk_port
 argument_list|,
 name|GM_SRC_ADDR_1L
-operator|+
-name|i
-operator|*
-literal|4
 argument_list|,
 name|eaddr
 index|[
-name|i
+literal|0
 index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ETHER_ADDR_LEN
-operator|/
+name|GMAC_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|GM_SRC_ADDR_1M
+argument_list|,
+name|eaddr
+index|[
 literal|2
-condition|;
-name|i
-operator|++
-control|)
+index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|3
+index|]
+operator|<<
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
+name|GMAC_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|GM_SRC_ADDR_1H
+argument_list|,
+name|eaddr
+index|[
+literal|4
+index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|5
+index|]
+operator|<<
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
 name|GMAC_WRITE_2
 argument_list|(
 name|sc
@@ -19518,15 +19532,70 @@ operator|->
 name|msk_port
 argument_list|,
 name|GM_SRC_ADDR_2L
-operator|+
-name|i
-operator|*
-literal|4
 argument_list|,
 name|eaddr
 index|[
-name|i
+literal|0
 index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
+name|GMAC_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|GM_SRC_ADDR_2M
+argument_list|,
+name|eaddr
+index|[
+literal|2
+index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|3
+index|]
+operator|<<
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
+name|GMAC_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|GM_SRC_ADDR_2H
+argument_list|,
+name|eaddr
+index|[
+literal|4
+index|]
+operator||
+operator|(
+name|eaddr
+index|[
+literal|5
+index|]
+operator|<<
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Disable interrupts for counter overflows. */
