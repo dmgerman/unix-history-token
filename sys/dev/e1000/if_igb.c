@@ -4013,7 +4013,8 @@ goto|;
 comment|/* If nothing queued go right to xmit */
 if|if
 condition|(
-name|drbr_empty
+operator|!
+name|drbr_needs_enqueue
 argument_list|(
 name|ifp
 argument_list|,

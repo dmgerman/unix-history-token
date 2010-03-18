@@ -1134,6 +1134,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|TXQ_RING_NEEDS_ENQUEUE
+parameter_list|(
+name|qs
+parameter_list|)
+define|\
+value|drbr_needs_enqueue((qs)->port->ifp, (qs)->txq[TXQ_ETH].txq_mr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TXQ_RING_FLUSH
 parameter_list|(
 name|qs
@@ -9031,7 +9042,8 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|TXQ_RING_EMPTY
+operator|!
+name|TXQ_RING_NEEDS_ENQUEUE
 argument_list|(
 name|qs
 argument_list|)
