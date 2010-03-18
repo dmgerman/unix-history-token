@@ -183,7 +183,6 @@ begin_define
 define|#
 directive|define
 name|UMA_ALIGN
-value|__aligned(CACHE_LINE_SIZE)
 end_define
 
 begin_comment
