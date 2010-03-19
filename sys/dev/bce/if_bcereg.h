@@ -4164,6 +4164,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_MFW_VER_PTR
+value|0x00000014c
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_BC_STATE_RESET_TYPE
 value|0x000001c0
 end_define
@@ -4468,8 +4475,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCE_BC_CONDITION
+name|BCE_BC_STATE_CONDITION
 value|0x000001c8
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_UNKNOWN
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_IPMI
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_UMP
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_NCSI
+value|0x00006000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_NONE
+value|0x0000e000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_MFW_RUN_MASK
+value|0x0000e000
 end_define
 
 begin_define
@@ -35790,8 +35839,17 @@ name|bce_name
 decl_stmt|;
 comment|/* Name string */
 comment|/* Tracks the version of bootcode firmware. */
-name|u32
+name|char
 name|bce_bc_ver
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
+name|bce_mfw_ver
+index|[
+literal|32
+index|]
 decl_stmt|;
 comment|/* Tracks the state of the firmware.  0 = Running while any     */
 comment|/* other value indicates that the firmware is not responding.   */
