@@ -147,6 +147,16 @@ define|\
 value|static int syscallname##_syscall32 = FREEBSD32_SYS_##syscallname; \ static struct sysent syscallname##_sysent32 = {         \     (sizeof(struct syscallname ## _args )               \      / sizeof(register_t)),                             \     (sy_call_t *)& syscallname                          \ };                                                      \ SYSCALL32_MODULE(syscallname,                           \& syscallname##_syscall32,& syscallname##_sysent32,\     NULL, NULL);
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCALL32_INIT_HELPER
+parameter_list|(
+name|syscallname
+parameter_list|)
+value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\     },								\     .syscall_no = FREEBSD32_SYS_##syscallname			\ }
+end_define
+
 begin_function_decl
 name|int
 name|syscall32_register
@@ -199,6 +209,30 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syscall32_helper_register
+parameter_list|(
+name|struct
+name|syscall_helper_data
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syscall32_helper_unregister
+parameter_list|(
+name|struct
+name|syscall_helper_data
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl
