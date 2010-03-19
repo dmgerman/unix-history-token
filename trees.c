@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2005 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2009 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -821,8 +821,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|local
-name|void
-name|set_data_type
+name|int
+name|detect_data_type
 name|OF
 argument_list|(
 operator|(
@@ -1109,12 +1109,13 @@ operator|->
 name|bi_buf
 operator||=
 operator|(
+name|ush
+operator|)
 name|value
 operator|<<
 name|s
 operator|->
 name|bi_valid
-operator|)
 expr_stmt|;
 name|put_short
 argument_list|(
@@ -1157,6 +1158,9 @@ name|s
 operator|->
 name|bi_buf
 operator||=
+operator|(
+name|ush
+operator|)
 name|value
 operator|<<
 name|s
@@ -1194,7 +1198,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|{ int len = length;\   if (s->bi_valid> (int)Buf_size - len) {\     int val = value;\     s->bi_buf |= (val<< s->bi_valid);\     put_short(s, s->bi_buf);\     s->bi_buf = (ush)val>> (Buf_size - s->bi_valid);\     s->bi_valid += len - Buf_size;\   } else {\     s->bi_buf |= (value)<< s->bi_valid;\     s->bi_valid += len;\   }\ }
+value|{ int len = length;\   if (s->bi_valid> (int)Buf_size - len) {\     int val = value;\     s->bi_buf |= (ush)val<< s->bi_valid;\     put_short(s, s->bi_buf);\     s->bi_buf = (ush)val>> (Buf_size - s->bi_valid);\     s->bi_valid += len - Buf_size;\   } else {\     s->bi_buf |= (ush)(value)<< s->bi_valid;\     s->bi_valid += len;\   }\ }
 end_define
 
 begin_endif
@@ -1273,6 +1277,9 @@ name|static_init_done
 condition|)
 return|return;
 comment|/* For some embedded targets, global variables are not initialized: */
+ifdef|#
+directive|ifdef
+name|NO_INIT_GLOBAL_POINTERS
 name|static_l_desc
 operator|.
 name|static_tree
@@ -1303,6 +1310,8 @@ name|extra_bits
 operator|=
 name|extra_blbits
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialize the mapping length (0..255) -> length code (0..28) */
 name|length
 operator|=
@@ -4859,7 +4868,7 @@ name|buf
 parameter_list|,
 name|stored_len
 parameter_list|,
-name|eof
+name|last
 parameter_list|)
 name|deflate_state
 modifier|*
@@ -4875,9 +4884,9 @@ name|stored_len
 decl_stmt|;
 comment|/* length of input block */
 name|int
-name|eof
+name|last
 decl_stmt|;
-comment|/* true if this is the last block for a file */
+comment|/* one if this is the last block for a file */
 block|{
 name|send_bits
 argument_list|(
@@ -4889,7 +4898,7 @@ operator|<<
 literal|1
 operator|)
 operator|+
-name|eof
+name|last
 argument_list|,
 literal|3
 argument_list|)
@@ -5080,7 +5089,7 @@ name|buf
 parameter_list|,
 name|stored_len
 parameter_list|,
-name|eof
+name|last
 parameter_list|)
 name|deflate_state
 modifier|*
@@ -5096,9 +5105,9 @@ name|stored_len
 decl_stmt|;
 comment|/* length of input block */
 name|int
-name|eof
+name|last
 decl_stmt|;
-comment|/* true if this is the last block for a file */
+comment|/* one if this is the last block for a file */
 block|{
 name|ulg
 name|opt_lenb
@@ -5125,10 +5134,6 @@ block|{
 comment|/* Check if the file is binary or text */
 if|if
 condition|(
-name|stored_len
-operator|>
-literal|0
-operator|&&
 name|s
 operator|->
 name|strm
@@ -5137,7 +5142,13 @@ name|data_type
 operator|==
 name|Z_UNKNOWN
 condition|)
-name|set_data_type
+name|s
+operator|->
+name|strm
+operator|->
+name|data_type
+operator|=
+name|detect_data_type
 argument_list|(
 name|s
 argument_list|)
@@ -5360,7 +5371,7 @@ name|buf
 argument_list|,
 name|stored_len
 argument_list|,
-name|eof
+name|last
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5405,7 +5416,7 @@ operator|<<
 literal|1
 operator|)
 operator|+
-name|eof
+name|last
 argument_list|,
 literal|3
 argument_list|)
@@ -5455,7 +5466,7 @@ operator|<<
 literal|1
 operator|)
 operator|+
-name|eof
+name|last
 argument_list|,
 literal|3
 argument_list|)
@@ -5543,7 +5554,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|eof
+name|last
 condition|)
 block|{
 name|bi_windup
@@ -5583,7 +5594,7 @@ name|compressed_len
 operator|-
 literal|7
 operator|*
-name|eof
+name|last
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6196,10 +6207,10 @@ operator|.
 name|Len
 expr_stmt|;
 block|}
-comment|/* ===========================================================================  * Set the data type to BINARY or TEXT, using a crude approximation:  * set it to Z_TEXT if all symbols are either printable characters (33 to 255)  * or white spaces (9 to 13, or 32); or set it to Z_BINARY otherwise.  * IN assertion: the fields Freq of dyn_ltree are set.  */
+comment|/* ===========================================================================  * Check if the data type is TEXT or BINARY, using the following algorithm:  * - TEXT if the two conditions below are satisfied:  *    a) There are no non-portable control characters belonging to the  *       "black list" (0..6, 14..25, 28..31).  *    b) There is at least one printable character belonging to the  *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).  * - BINARY otherwise.  * - The following partially-portable control characters form a  *   "gray list" that is ignored in this detection algorithm:  *   (7 {BEL}, 8 {BS}, 11 {VT}, 12 {FF}, 26 {SUB}, 27 {ESC}).  * IN assertion: the fields Freq of dyn_ltree are set.  */
 name|local
-name|void
-name|set_data_type
+name|int
+name|detect_data_type
 parameter_list|(
 name|s
 parameter_list|)
@@ -6208,9 +6219,17 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+comment|/* black_mask is the bit mask of black-listed bytes      * set bits 0..6, 14..25, and 28..31      * 0xf3ffc07f = binary 11110011111111111100000001111111      */
+name|unsigned
+name|long
+name|black_mask
+init|=
+literal|0xf3ffc07fUL
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+comment|/* Check for non-textual ("black-listed") bytes. */
 for|for
 control|(
 name|n
@@ -6218,75 +6237,112 @@ operator|=
 literal|0
 init|;
 name|n
-operator|<
-literal|9
+operator|<=
+literal|31
 condition|;
 name|n
 operator|++
+operator|,
+name|black_mask
+operator|>>=
+literal|1
 control|)
 if|if
 condition|(
-name|s
-operator|->
-name|dyn_ltree
-index|[
-name|n
-index|]
-operator|.
-name|Freq
-operator|!=
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|n
-operator|==
-literal|9
-condition|)
-for|for
-control|(
-name|n
-operator|=
-literal|14
-init|;
-name|n
-operator|<
-literal|32
-condition|;
-name|n
-operator|++
-control|)
-if|if
-condition|(
-name|s
-operator|->
-name|dyn_ltree
-index|[
-name|n
-index|]
-operator|.
-name|Freq
-operator|!=
-literal|0
-condition|)
-break|break;
-name|s
-operator|->
-name|strm
-operator|->
-name|data_type
-operator|=
 operator|(
-name|n
-operator|==
-literal|32
+name|black_mask
+operator|&
+literal|1
 operator|)
-condition|?
-name|Z_TEXT
-else|:
+operator|&&
+operator|(
+name|s
+operator|->
+name|dyn_ltree
+index|[
+name|n
+index|]
+operator|.
+name|Freq
+operator|!=
+literal|0
+operator|)
+condition|)
+return|return
 name|Z_BINARY
-expr_stmt|;
+return|;
+comment|/* Check for textual ("white-listed") bytes. */
+if|if
+condition|(
+name|s
+operator|->
+name|dyn_ltree
+index|[
+literal|9
+index|]
+operator|.
+name|Freq
+operator|!=
+literal|0
+operator|||
+name|s
+operator|->
+name|dyn_ltree
+index|[
+literal|10
+index|]
+operator|.
+name|Freq
+operator|!=
+literal|0
+operator|||
+name|s
+operator|->
+name|dyn_ltree
+index|[
+literal|13
+index|]
+operator|.
+name|Freq
+operator|!=
+literal|0
+condition|)
+return|return
+name|Z_TEXT
+return|;
+for|for
+control|(
+name|n
+operator|=
+literal|32
+init|;
+name|n
+operator|<
+name|LITERALS
+condition|;
+name|n
+operator|++
+control|)
+if|if
+condition|(
+name|s
+operator|->
+name|dyn_ltree
+index|[
+name|n
+index|]
+operator|.
+name|Freq
+operator|!=
+literal|0
+condition|)
+return|return
+name|Z_TEXT
+return|;
+comment|/* There are no "black-listed" or "white-listed" bytes:      * this stream either is empty or has tolerated ("gray-listed") bytes only.      */
+return|return
+name|Z_BINARY
+return|;
 block|}
 comment|/* ===========================================================================  * Reverse the first len bits of a code, using straightforward code (a faster  * method would use a table)  * IN assertion: 1<= len<= 15  */
 name|local
