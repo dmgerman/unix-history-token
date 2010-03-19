@@ -12446,11 +12446,6 @@ block|{
 goto|goto
 name|out
 goto|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 endif|#
 directive|endif
