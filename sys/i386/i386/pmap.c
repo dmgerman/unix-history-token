@@ -4222,7 +4222,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * No targeted cache flush methods are supported by CPU, 		 * or the supplied range is bigger then 2MB. 		 * Globally invalidate cache. 		 */
+comment|/* 		 * No targeted cache flush methods are supported by CPU, 		 * or the supplied range is bigger than 2MB. 		 * Globally invalidate cache. 		 */
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
