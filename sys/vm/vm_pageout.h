@@ -80,6 +80,20 @@ name|VM_SWAP_IDLE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_OOM_MEM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OOM_SWAPZ
+value|2
+end_define
+
 begin_comment
 comment|/*  *	Exported routines.  */
 end_comment
@@ -148,6 +162,16 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_pageout_oom
+parameter_list|(
+name|int
+name|shortage
 parameter_list|)
 function_decl|;
 end_function_decl
