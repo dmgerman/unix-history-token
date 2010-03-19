@@ -2125,14 +2125,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
-comment|/* may be set to #if 1 by ./configure */
+comment|/* was set to #if 0 by ./configure */
 end_comment
 
 begin_define
@@ -2278,14 +2278,39 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This is hard-configured for FreeBSD, since zlib doesn't actually support  * using the system off_t for offsets unless off_t is no longer than long.  * To minimize the diff, we just "undef z_off_t" rather than modifying  * the following lines.  */
+comment|/*  * This is hard-configured for FreeBSD.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_define
+define|#
+directive|define
 name|z_off_t
-end_undef
+value|off_t
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FILE_OFFSET_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FILE_OFFSET_BITS
+value|64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
