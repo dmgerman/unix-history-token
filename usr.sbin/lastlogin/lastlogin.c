@@ -318,7 +318,7 @@ name|tv_sec
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%-10s %-8s %-22s %s"
+literal|"%-10s %-8s %-22.22s %s"
 argument_list|,
 name|u
 operator|->
