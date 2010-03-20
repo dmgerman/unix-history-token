@@ -4909,35 +4909,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Zero a page of physical memory by temporarily mapping it into the tlb.  */
-end_comment
-
-begin_function
-name|void
-name|moea64_zero_page
-parameter_list|(
-name|mmu_t
-name|mmu
-parameter_list|,
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|moea64_zero_page_area
-argument_list|(
-name|mmu
-argument_list|,
-name|m
-argument_list|,
-literal|0
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * This goes through and sets the physical address of our  * special scratch PTE to the PA we want to zero or copy. Because  * of locking issues (this can get called in pvo_enter() by  * the UMA allocator), we can't use most other utility functions here  */
 end_comment
 
@@ -5233,9 +5204,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Zero a page of physical memory by temporarily mapping it  */
+end_comment
+
 begin_function
 name|void
-name|moea64_zero_page_idle
+name|moea64_zero_page
 parameter_list|(
 name|mmu_t
 name|mmu
@@ -5243,6 +5218,91 @@ parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|)
+block|{
+name|vm_offset_t
+name|pa
+init|=
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+decl_stmt|;
+name|vm_offset_t
+name|off
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|moea64_initialized
+condition|)
+name|panic
+argument_list|(
+literal|"moea64_zero_page: can't zero pa %#x"
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea64_scratchpage_mtx
+argument_list|)
+expr_stmt|;
+name|moea64_set_scratchpage_pa
+argument_list|(
+literal|0
+argument_list|,
+name|pa
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|off
+operator|=
+literal|0
+init|;
+name|off
+operator|<
+name|PAGE_SIZE
+condition|;
+name|off
+operator|+=
+name|cacheline_size
+control|)
+asm|__asm __volatile("dcbz 0,%0" ::
+literal|"r"
+operator|(
+name|moea64_scratchpage_va
+index|[
+literal|0
+index|]
+operator|+
+name|off
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_scratchpage_mtx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+unit|}  void
+name|moea64_zero_page_idle
+argument_list|(
+argument|mmu_t mmu
+argument_list|,
+argument|vm_page_t m
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|moea64_zero_page
 argument_list|(
@@ -5252,7 +5312,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  */
