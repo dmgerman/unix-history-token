@@ -322,17 +322,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|db_dump_tlb
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|db_addr_t
 name|branch_taken
 parameter_list|(
