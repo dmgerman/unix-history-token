@@ -124,6 +124,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|timecounter
+modifier|*
+name|platform_timecounter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|uint64_t
 name|cycles_per_tick
@@ -322,6 +330,17 @@ name|tc_init
 argument_list|(
 operator|&
 name|counter_timecounter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|platform_timecounter
+operator|!=
+name|NULL
+condition|)
+name|tc_init
+argument_list|(
+name|platform_timecounter
 argument_list|)
 expr_stmt|;
 block|}

@@ -108,6 +108,19 @@ name|clocks_running
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The 'platform_timecounter' pointer may be used to register a  * platform-specific timecounter.  *  * A default timecounter based on the CP0 COUNT register is always registered.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timecounter
+modifier|*
+name|platform_timecounter
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
