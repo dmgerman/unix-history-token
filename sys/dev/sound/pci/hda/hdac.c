@@ -3327,8 +3327,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC270
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0270)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC272
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0272)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC273
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0273)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC275
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0275)
 end_define
 
 begin_define
@@ -3350,6 +3371,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC663
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0663)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC665
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0665)
 end_define
 
 begin_define
@@ -3413,6 +3441,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC889
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0889)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC892
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0892)
 end_define
 
 begin_define
@@ -4069,6 +4104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CX20583
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5067)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_CXXXXX
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0xffff)
 end_define
@@ -4520,6 +4562,13 @@ begin_define
 define|#
 directive|define
 name|HDA_CODEC_INTELG45_4
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2804)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELG45_5
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
 end_define
 
@@ -4601,9 +4650,27 @@ literal|"Realtek ALC269"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC270
+block|,
+literal|"Realtek ALC270"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC272
 block|,
 literal|"Realtek ALC272"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC273
+block|,
+literal|"Realtek ALC273"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC275
+block|,
+literal|"Realtek ALC275"
 block|}
 block|,
 block|{
@@ -4622,6 +4689,12 @@ block|{
 name|HDA_CODEC_ALC663
 block|,
 literal|"Realtek ALC663"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC665
+block|,
+literal|"Realtek ALC665"
 block|}
 block|,
 block|{
@@ -4676,6 +4749,12 @@ block|{
 name|HDA_CODEC_ALC889
 block|,
 literal|"Realtek ALC889"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC892
+block|,
+literal|"Realtek ALC892"
 block|}
 block|,
 block|{
@@ -5117,6 +5196,12 @@ literal|"Conexant CX20582 (Pebble)"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CX20583
+block|,
+literal|"Conexant CX20583 (Pebble HSF)"
+block|}
+block|,
+block|{
 name|HDA_CODEC_VT1708_8
 block|,
 literal|"VIA VT1708_8"
@@ -5466,6 +5551,12 @@ block|}
 block|,
 block|{
 name|HDA_CODEC_INTELG45_4
+block|,
+literal|"Intel G45 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELG45_5
 block|,
 literal|"Intel G45 HDMI"
 block|}
