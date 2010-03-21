@@ -2839,9 +2839,6 @@ name|virtual_avail
 operator|=
 name|va
 expr_stmt|;
-name|invltlb
-argument_list|()
-expr_stmt|;
 comment|/* Initialize the PAT MSR. */
 name|pmap_init_pat
 argument_list|()
