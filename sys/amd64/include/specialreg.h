@@ -2922,13 +2922,6 @@ name|MSR_MC0_CTL_MASK
 value|0xc0010044
 end_define
 
-begin_define
-define|#
-directive|define
-name|MSR_MC1_CTL_MASK
-value|0xc0010045
-end_define
-
 begin_comment
 comment|/* VIA ACE crypto featureset: for via_feature_rng */
 end_comment
