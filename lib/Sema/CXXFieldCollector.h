@@ -165,6 +165,17 @@ name|getCurNumFields
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|FieldCount
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"no currently-parsed class"
+argument_list|)
+block|;
 return|return
 name|FieldCount
 operator|.

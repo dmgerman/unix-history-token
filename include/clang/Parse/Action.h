@@ -673,25 +673,6 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Invoked for each comment in the source code, providing the source
-end_comment
-
-begin_comment
-comment|/// range that contains the comment.
-end_comment
-
-begin_function
-name|virtual
-name|void
-name|ActOnComment
-parameter_list|(
-name|SourceRange
-name|Comment
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -3145,6 +3126,14 @@ begin_comment
 comment|/// the definition of a tag (enumeration, class, struct, or union).
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The scope is the scope of the tag definition.
+end_comment
+
 begin_function
 name|virtual
 name|void
@@ -3159,6 +3148,37 @@ name|TagDecl
 parameter_list|,
 name|SourceLocation
 name|RBraceLoc
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// ActOnTagDefinitionError - Invoked if there's an unrecoverable
+end_comment
+
+begin_comment
+comment|/// error parsing the definition of a tag.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The scope is the scope of the tag definition.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnTagDefinitionError
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|TagDecl
 parameter_list|)
 block|{ }
 end_function

@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=i686-apple-darwin9> %t1
 end_comment
 
 begin_comment
+comment|// RUN: grep @llvm.memory.barrier %t1 | count 42
+end_comment
+
+begin_comment
 comment|// RUN: grep @llvm.atomic.load.add.i32 %t1 | count 3
 end_comment
 

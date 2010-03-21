@@ -102,6 +102,19 @@ literal|1
 decl_stmt|;
 comment|/// -dA, -fverbose-asm.
 name|unsigned
+name|CXAAtExit
+range|:
+literal|1
+decl_stmt|;
+comment|/// Use __cxa_atexit for calling destructors.
+name|unsigned
+name|CXXCtorDtorAliases
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit complete ctors/dtors as linker
+comment|/// aliases to base ctors when possible.
+name|unsigned
 name|DebugInfo
 range|:
 literal|1
@@ -209,13 +222,6 @@ literal|1
 decl_stmt|;
 comment|/// Control whether the module should be run
 comment|/// through the LLVM Verifier.
-name|unsigned
-name|CXXCtorDtorAliases
-range|:
-literal|1
-decl_stmt|;
-comment|/// Emit complete ctors/dtors as linker
-comment|/// aliases to base ctors when possible.
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
@@ -271,6 +277,14 @@ name|CodeGenOptions
 argument_list|()
 block|{
 name|AsmVerbose
+operator|=
+literal|0
+expr_stmt|;
+name|CXAAtExit
+operator|=
+literal|1
+expr_stmt|;
+name|CXXCtorDtorAliases
 operator|=
 literal|0
 expr_stmt|;
@@ -341,10 +355,6 @@ expr_stmt|;
 name|VerifyModule
 operator|=
 literal|1
-expr_stmt|;
-name|CXXCtorDtorAliases
-operator|=
-literal|0
 expr_stmt|;
 name|Inlining
 operator|=

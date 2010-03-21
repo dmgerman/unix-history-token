@@ -61,16 +61,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|__v4si
-name|__attribute__
-typedef|((
-name|__vector_size__
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|short
 name|__v8hi
 name|__attribute__

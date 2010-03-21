@@ -204,9 +204,6 @@ name|namespace
 name|clang
 block|{
 name|class
-name|AnalysisContext
-decl_stmt|;
-name|class
 name|ASTContext
 decl_stmt|;
 name|class
@@ -1019,6 +1016,46 @@ block|,
 name|Target
 argument_list|(
 name|Target
+argument_list|)
+block|,
+name|NamingClass
+argument_list|(
+name|NamingClass
+argument_list|)
+block|,
+name|Diag
+argument_list|(
+literal|0
+argument_list|)
+block|{     }
+name|AccessedEntity
+argument_list|(
+argument|MemberNonce _
+argument_list|,
+argument|CXXRecordDecl *NamingClass
+argument_list|,
+argument|DeclAccessPair FoundDecl
+argument_list|)
+operator|:
+name|Access
+argument_list|(
+name|FoundDecl
+operator|.
+name|getAccess
+argument_list|()
+argument_list|)
+block|,
+name|IsMember
+argument_list|(
+name|true
+argument_list|)
+block|,
+name|Target
+argument_list|(
+name|FoundDecl
+operator|.
+name|getDecl
+argument_list|()
 argument_list|)
 block|,
 name|NamingClass
@@ -2436,17 +2473,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function_decl
-name|virtual
-name|void
-name|ActOnComment
-parameter_list|(
-name|SourceRange
-name|Comment
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -3205,6 +3231,26 @@ parameter_list|(
 name|Declarator
 modifier|&
 name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DiagnoseShadow
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
+parameter_list|,
+specifier|const
+name|LookupResult
+modifier|&
+name|R
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4334,6 +4380,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// ActOnTagDefinitionError - Invoked when there was an unrecoverable
+end_comment
+
+begin_comment
+comment|/// error parsing the definition of a tag.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|ActOnTagDefinitionError
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|TagDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|EnumConstantDecl
 modifier|*
@@ -5438,8 +5507,8 @@ name|NamedDecl
 modifier|*
 name|Function
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|Expr
 modifier|*
@@ -5464,8 +5533,8 @@ name|FunctionDecl
 modifier|*
 name|Function
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|Expr
 modifier|*
@@ -5530,12 +5599,8 @@ begin_function_decl
 name|void
 name|AddMethodCandidate
 parameter_list|(
-name|NamedDecl
-modifier|*
-name|Decl
-parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|QualType
 name|ObjectType
@@ -5573,8 +5638,8 @@ name|CXXMethodDecl
 modifier|*
 name|Method
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -5616,8 +5681,8 @@ name|FunctionTemplateDecl
 modifier|*
 name|MethodTmpl
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -5664,8 +5729,8 @@ name|FunctionTemplateDecl
 modifier|*
 name|FunctionTemplate
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 specifier|const
 name|TemplateArgumentListInfo
@@ -5705,8 +5770,8 @@ name|CXXConversionDecl
 modifier|*
 name|Conversion
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -5734,8 +5799,8 @@ name|FunctionTemplateDecl
 modifier|*
 name|FunctionTemplate
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -5763,8 +5828,8 @@ name|CXXConversionDecl
 modifier|*
 name|Conversion
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|CXXRecordDecl
 modifier|*
@@ -6345,20 +6410,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// CheckUnreachable - Check for unreachable code.
-end_comment
-
-begin_function_decl
-name|void
-name|CheckUnreachable
-parameter_list|(
-name|AnalysisContext
-modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// CheckCallReturnType - Checks that a call expression's return type is
 end_comment
 
@@ -6396,40 +6447,6 @@ comment|/// Helpers for dealing with blocks and functions.
 end_comment
 
 begin_function_decl
-name|void
-name|CheckFallThroughForFunctionDef
-parameter_list|(
-name|Decl
-modifier|*
-name|D
-parameter_list|,
-name|Stmt
-modifier|*
-name|Body
-parameter_list|,
-name|AnalysisContext
-modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|CheckFallThroughForBlock
-parameter_list|(
-name|QualType
-name|BlockTy
-parameter_list|,
-name|Stmt
-modifier|*
-parameter_list|,
-name|AnalysisContext
-modifier|&
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|CheckParmsForFunctionDef
 parameter_list|(
@@ -6458,39 +6475,6 @@ parameter_list|(
 name|Declarator
 modifier|&
 name|D
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_enum
-enum|enum
-name|ControlFlowKind
-block|{
-name|NeverFallThrough
-init|=
-literal|0
-block|,
-name|MaybeFallThrough
-init|=
-literal|1
-block|,
-name|AlwaysFallThrough
-init|=
-literal|2
-block|,
-name|NeverFallThroughOrReturn
-init|=
-literal|3
-block|}
-enum|;
-end_enum
-
-begin_function_decl
-name|ControlFlowKind
-name|CheckFallThrough
-parameter_list|(
-name|AnalysisContext
-modifier|&
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12495,24 +12479,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// MarkBaseAndMemberDestructorsReferenced - Given a destructor decl,
+comment|/// MarkBaseAndMemberDestructorsReferenced - Given a record decl,
 end_comment
 
 begin_comment
-comment|/// mark all its non-trivial member and base destructor declarations
+comment|/// mark all the non-trivial destructors of its members and bases as
 end_comment
 
 begin_comment
-comment|/// as referenced.
+comment|/// referenced.
 end_comment
 
 begin_function_decl
 name|void
 name|MarkBaseAndMemberDestructorsReferenced
 parameter_list|(
-name|CXXDestructorDecl
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXXRecordDecl
 modifier|*
-name|Destructor
+name|Record
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13306,12 +13293,8 @@ name|UnresolvedMemberExpr
 modifier|*
 name|E
 parameter_list|,
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13324,12 +13307,28 @@ name|UnresolvedLookupExpr
 modifier|*
 name|E
 parameter_list|,
-name|NamedDecl
-modifier|*
-name|D
+name|DeclAccessPair
+name|FoundDecl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|AccessResult
+name|CheckAllocationAccess
+parameter_list|(
+name|SourceLocation
+name|OperatorLoc
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|SourceRange
+name|PlacementRange
+parameter_list|,
+name|CXXRecordDecl
+modifier|*
+name|NamingClass
+parameter_list|,
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13404,12 +13403,8 @@ name|Expr
 modifier|*
 name|ArgExpr
 parameter_list|,
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|)
 function_decl|;
 end_function_decl

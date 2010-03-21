@@ -145,6 +145,14 @@ literal|1
 decl_stmt|;
 comment|/// Initialize the preprocessor with the compiler
 comment|/// and target specific predefines.
+name|unsigned
+name|DetailedRecord
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether we should maintain a detailed
+comment|/// record of all macro definitions and
+comment|/// instantiations.
 comment|/// The implicit PCH included at the start of the translation unit, or empty.
 name|std
 operator|::
@@ -312,7 +320,12 @@ argument_list|()
 operator|:
 name|UsePredefines
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|DetailedRecord
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|void

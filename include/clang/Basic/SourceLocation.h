@@ -959,29 +959,44 @@ specifier|const
 block|;
 name|unsigned
 name|getInstantiationLineNumber
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getInstantiationColumnNumber
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getSpellingLineNumber
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getSpellingColumnNumber
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 specifier|const
 name|char
 operator|*
 name|getCharacterData
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 specifier|const
@@ -990,7 +1005,10 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|getBuffer
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 comment|/// getBufferData - Return a StringRef to the source buffer data for the
@@ -999,7 +1017,10 @@ name|llvm
 operator|::
 name|StringRef
 name|getBufferData
-argument_list|()
+argument_list|(
+argument|bool *Invalid =
+literal|0
+argument_list|)
 specifier|const
 block|;
 comment|/// getDecomposedLoc - Decompose the specified location into a raw FileID +

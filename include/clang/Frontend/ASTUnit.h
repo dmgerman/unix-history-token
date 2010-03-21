@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Lex/PreprocessingRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceManager.h"
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/System/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_include
@@ -172,6 +184,27 @@ comment|///
 name|class
 name|ASTUnit
 block|{
+name|public
+label|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|FileID
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|PreprocessedEntity
+operator|*
+operator|>
+expr|>
+name|PreprocessedEntitiesByFileMap
+expr_stmt|;
+name|private
+label|:
 name|FileManager
 name|FileMgr
 decl_stmt|;
@@ -284,6 +317,16 @@ literal|4
 operator|>
 name|TemporaryFiles
 expr_stmt|;
+comment|/// \brief A mapping from file IDs to the set of preprocessed entities
+comment|/// stored in that file.
+comment|///
+comment|/// FIXME: This is just an optimization hack to avoid searching through
+comment|/// many preprocessed entities during cursor traversal in the CIndex library.
+comment|/// Ideally, we would just be able to perform a binary search within the
+comment|/// list of preprocessed entities.
+name|PreprocessedEntitiesByFileMap
+name|PreprocessedEntitiesByFile
+decl_stmt|;
 comment|/// \brief Simple hack to allow us to assert that ASTUnit is not being
 comment|/// used concurrently, which is not supported.
 comment|///
@@ -621,6 +664,17 @@ argument_list|)
 block|;
 return|return
 name|TopLevelDecls
+return|;
+block|}
+comment|/// \brief Retrieve the mapping from File IDs to the preprocessed entities
+comment|/// within that file.
+name|PreprocessedEntitiesByFileMap
+modifier|&
+name|getPreprocessedEntitiesByFile
+parameter_list|()
+block|{
+return|return
+name|PreprocessedEntitiesByFile
 return|;
 block|}
 comment|// Retrieve the diagnostics associated with this AST

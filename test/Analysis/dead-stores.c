@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function
@@ -29,6 +29,7 @@ name|k
 decl_stmt|,
 name|y
 decl_stmt|;
+comment|// expected-warning{{unused variable 'k'}} expected-warning{{unused variable 'y'}}
 name|int
 name|abc
 init|=
@@ -43,7 +44,7 @@ literal|3
 operator|*
 literal|5
 decl_stmt|;
-comment|// expected-warning {{never read}}
+comment|// expected-warning {{never read}} expected-warning{{unused variable 'idx'}}
 block|}
 end_function
 
@@ -75,7 +76,7 @@ name|b
 operator|+
 literal|1
 decl_stmt|;
-comment|// expected-warning {{never read}}
+comment|// expected-warning {{never read}} expected-warning{{unused variable 'd'}}
 name|printf
 argument_list|(
 literal|"%s"
@@ -178,7 +179,7 @@ init|=
 operator|&
 name|x
 decl_stmt|;
-comment|// expected-warning{{never read}}
+comment|// expected-warning{{never read}} expected-warning{{unused variable 'p'}}
 block|}
 end_function
 
@@ -435,7 +436,7 @@ name|x
 init|=
 name|y
 decl_stmt|;
-comment|// expected-warning{{never read}}
+comment|// expected-warning{{unused variable 'x'}}
 return|return
 literal|1
 return|;
@@ -464,6 +465,32 @@ decl_stmt|;
 comment|// no-warning
 return|return
 literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f12c
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+comment|// Allow initialiation of scalar variables by parameters as a form of
+comment|// defensive programming.
+name|int
+name|x
+init|=
+name|y
+decl_stmt|;
+comment|// no-warning
+name|x
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|x
 return|;
 block|}
 end_function
@@ -596,6 +623,7 @@ index|[
 name|count
 index|]
 decl_stmt|;
+comment|// expected-warning{{unused variable 'z'}}
 block|}
 end_function
 
@@ -1796,7 +1824,7 @@ operator|>
 literal|1
 operator|)
 decl_stmt|;
-comment|// expected-warning{{Value stored to 'shouldLog' during its initialization is never read}}
+comment|// expected-warning{{Value stored to 'shouldLog' during its initialization is never read}} expected-warning{{unused variable 'shouldLog'}}
 lambda|^
 block|{
 name|f23_aux
@@ -1838,7 +1866,7 @@ name|x
 operator|+
 name|y
 decl_stmt|;
-comment|// expected-warning{{Value stored to 'z' during its initialization is never read}}
+comment|// expected-warning{{Value stored to 'z' during its initialization is never read}} expected-warning{{unused variable 'z'}}
 block|}
 argument_list|()
 expr_stmt|;

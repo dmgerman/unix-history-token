@@ -843,11 +843,6 @@ comment|///  this ASTContext object.
 name|LangOptions
 name|LangOpts
 decl_stmt|;
-comment|/// \brief Whether we have already loaded comment source ranges from an
-comment|/// external source.
-name|bool
-name|LoadedExternalComments
-decl_stmt|;
 comment|/// MallocAlloc/BumpAlloc - The allocator objects used to create AST objects.
 name|bool
 name|FreeMemory
@@ -861,22 +856,6 @@ name|llvm
 operator|::
 name|BumpPtrAllocator
 name|BumpAlloc
-expr_stmt|;
-comment|/// \brief Mapping from declarations to their comments, once we have
-comment|/// already looked up the comment associated with a given declaration.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Decl
-operator|*
-operator|,
-name|std
-operator|::
-name|string
-operator|>
-name|DeclComments
 expr_stmt|;
 name|public
 label|:
@@ -926,16 +905,6 @@ decl_stmt|;
 name|QualType
 name|ObjCSelRedefinitionType
 decl_stmt|;
-comment|/// \brief Source ranges for all of the comments in the source file,
-comment|/// sorted in order of appearance in the translation unit.
-name|std
-operator|::
-name|vector
-operator|<
-name|SourceRange
-operator|>
-name|Comments
-expr_stmt|;
 name|SourceManager
 modifier|&
 name|getSourceManager
@@ -1227,17 +1196,6 @@ return|return
 name|TUDecl
 return|;
 block|}
-specifier|const
-name|char
-modifier|*
-name|getCommentForDecl
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
 comment|// Builtin Types.
 name|CanQualType
 name|VoidTy
@@ -3871,6 +3829,14 @@ parameter_list|)
 function_decl|;
 comment|// C99 6.2.7p1
 name|bool
+name|typesAreBlockPointerCompatible
+parameter_list|(
+name|QualType
+parameter_list|,
+name|QualType
+parameter_list|)
+function_decl|;
+name|bool
 name|isObjCIdType
 argument_list|(
 name|QualType
@@ -3965,6 +3931,20 @@ name|RHS
 parameter_list|)
 function_decl|;
 name|bool
+name|canAssignObjCInterfacesInBlockPointer
+parameter_list|(
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|LHSOPT
+parameter_list|,
+specifier|const
+name|ObjCObjectPointerType
+modifier|*
+name|RHSOPT
+parameter_list|)
+function_decl|;
+name|bool
 name|areComparableObjCPointerTypes
 parameter_list|(
 name|QualType
@@ -3995,6 +3975,11 @@ parameter_list|(
 name|QualType
 parameter_list|,
 name|QualType
+parameter_list|,
+name|bool
+name|OfBlockPointer
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|QualType
@@ -4003,6 +3988,11 @@ parameter_list|(
 name|QualType
 parameter_list|,
 name|QualType
+parameter_list|,
+name|bool
+name|OfBlockPointer
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// UsualArithmeticConversionsType - handles the various conversions
@@ -4493,7 +4483,7 @@ comment|/// @code
 end_comment
 
 begin_comment
-comment|/// // Default alignment (16)
+comment|/// // Default alignment (8)
 end_comment
 
 begin_comment
@@ -4505,7 +4495,7 @@ comment|/// // Specific alignment
 end_comment
 
 begin_comment
-comment|/// IntegerLiteral *Ex2 = new (Context, 8) IntegerLiteral(arguments);
+comment|/// IntegerLiteral *Ex2 = new (Context, 4) IntegerLiteral(arguments);
 end_comment
 
 begin_comment
@@ -4659,7 +4649,7 @@ comment|/// @code
 end_comment
 
 begin_comment
-comment|/// // Default alignment (16)
+comment|/// // Default alignment (8)
 end_comment
 
 begin_comment
@@ -4671,7 +4661,7 @@ comment|/// // Specific alignment
 end_comment
 
 begin_comment
-comment|/// char *data = new (Context, 8) char[10];
+comment|/// char *data = new (Context, 4) char[10];
 end_comment
 
 begin_comment
@@ -4734,7 +4724,7 @@ argument_list|,
 name|size_t
 name|Alignment
 operator|=
-literal|16
+literal|8
 argument_list|)
 name|throw
 argument_list|()

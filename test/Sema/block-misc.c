@@ -1052,6 +1052,14 @@ literal|7
 index|]
 decl_stmt|;
 comment|// expected-note {{declared at}}
+specifier|__block
+name|int
+name|b
+index|[
+literal|10
+index|]
+decl_stmt|;
+comment|// expected-note {{declared at}}
 name|a
 index|[
 literal|1
@@ -1065,6 +1073,15 @@ operator|(
 name|void
 operator|)
 name|a
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|// expected-error {{cannot refer to declaration with an array type inside block}}
+operator|(
+name|void
+operator|)
+name|b
 index|[
 literal|1
 index|]

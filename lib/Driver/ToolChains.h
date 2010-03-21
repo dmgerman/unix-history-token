@@ -355,6 +355,15 @@ return|return
 name|TargetIsIPhoneOS
 return|;
 block|}
+name|bool
+name|isTargetInitialized
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetInitialized
+return|;
+block|}
 name|void
 name|getTargetVersion
 argument_list|(

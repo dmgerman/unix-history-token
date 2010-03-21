@@ -130,9 +130,6 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|Source
-decl_stmt|;
-name|class
 name|SourceManager
 decl_stmt|;
 name|class

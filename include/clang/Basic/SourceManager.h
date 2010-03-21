@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -162,12 +168,22 @@ name|ContentCache
 block|{
 comment|/// Buffer - The actual buffer containing the characters from the input
 comment|/// file.  This is owned by the ContentCache object.
+comment|/// The bit indicates whether the buffer is invalid.
 name|mutable
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
 operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
 name|Buffer
 expr_stmt|;
 name|public
@@ -244,13 +260,26 @@ name|assert
 argument_list|(
 operator|!
 name|Buffer
+operator|.
+name|getPointer
+argument_list|()
 operator|&&
 literal|"MemoryBuffer already set."
 argument_list|)
 expr_stmt|;
 name|Buffer
-operator|=
+operator|.
+name|setPointer
+argument_list|(
 name|B
+argument_list|)
+expr_stmt|;
+name|Buffer
+operator|.
+name|setInt
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Replace the existing buffer (which will be deleted)
@@ -279,6 +308,8 @@ operator|:
 name|Buffer
 argument_list|(
 literal|0
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|Entry
@@ -314,6 +345,8 @@ operator|:
 name|Buffer
 argument_list|(
 literal|0
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|SourceLineCache
@@ -332,6 +365,9 @@ argument_list|(
 name|RHS
 operator|.
 name|Buffer
+operator|.
+name|getPointer
+argument_list|()
 operator|==
 literal|0
 operator|&&

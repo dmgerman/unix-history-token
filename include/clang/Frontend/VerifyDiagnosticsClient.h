@@ -63,9 +63,6 @@ name|class
 name|Diagnostic
 decl_stmt|;
 name|class
-name|SourceMgr
-decl_stmt|;
-name|class
 name|TextDiagnosticBuffer
 decl_stmt|;
 comment|/// VerifyDiagnosticsClient - Create a diagnostic client which will use markers

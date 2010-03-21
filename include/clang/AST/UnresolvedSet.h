@@ -440,6 +440,16 @@ name|getAccess
 argument_list|()
 return|;
 block|}
+name|DeclAccessPair
+name|getPair
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|ir
+return|;
+block|}
 name|NamedDecl
 operator|*
 name|operator

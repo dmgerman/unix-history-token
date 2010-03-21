@@ -413,8 +413,6 @@ name|LV_MemberFunction
 block|,
 name|LV_SubObjCPropertySetting
 block|,
-name|LV_SubObjCPropertyGetterSetting
-block|,
 name|LV_ClassTemporary
 block|}
 block|;
@@ -473,8 +471,6 @@ block|,
 name|MLV_MemberFunction
 block|,
 name|MLV_SubObjCPropertySetting
-block|,
-name|MLV_SubObjCPropertyGetterSetting
 block|,
 name|MLV_ClassTemporary
 block|}

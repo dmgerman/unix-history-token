@@ -183,6 +183,9 @@ decl_stmt|;
 name|class
 name|DirectoryLookup
 decl_stmt|;
+name|class
+name|PreprocessingRecord
+decl_stmt|;
 comment|/// Preprocessor - This object engages in a tight little dance with the lexer to
 comment|/// efficiently preprocess tokens.  Lexers know only about tokens within a
 comment|/// single source file, and don't know anything about preprocessor-level issues
@@ -645,6 +648,15 @@ name|TokenLexerCache
 index|[
 name|TokenLexerCacheSize
 index|]
+decl_stmt|;
+comment|/// \brief A record of the macro definitions and instantiations that
+comment|/// occurred during preprocessing.
+comment|///
+comment|/// This is an optional side structure that can be enabled with
+comment|/// \c createPreprocessingRecord() prior to preprocessing.
+name|PreprocessingRecord
+modifier|*
+name|Record
 decl_stmt|;
 name|private
 label|:
@@ -1192,9 +1204,27 @@ modifier|*
 name|Handler
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the preprocessing record, or NULL if there is no
+comment|/// preprocessing record.
+name|PreprocessingRecord
+operator|*
+name|getPreprocessingRecord
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Record
+return|;
+block|}
+comment|/// \brief Create a new preprocessing record, which will keep track of
+comment|/// all macro expansions, macro definitions, etc.
+name|void
+name|createPreprocessingRecord
+parameter_list|()
+function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
 comment|/// which implicitly adds the builtin defines etc.
-name|void
+name|bool
 name|EnterMainSourceFile
 parameter_list|()
 function_decl|;
@@ -1940,6 +1970,8 @@ name|Tok
 operator|.
 name|getLocation
 argument_list|()
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 block|}

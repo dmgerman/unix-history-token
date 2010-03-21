@@ -250,6 +250,12 @@ operator|::
 name|string
 name|CCCGenericGCCName
 expr_stmt|;
+comment|/// The file to log CC_PRINT_OPTIONS output to, if enabled.
+specifier|const
+name|char
+modifier|*
+name|CCPrintOptionsFilename
+decl_stmt|;
 comment|/// Whether the driver should follow g++ like behavior.
 name|unsigned
 name|CCCIsCXX
@@ -265,6 +271,13 @@ decl_stmt|;
 comment|/// Only print tool bindings, don't build any jobs.
 name|unsigned
 name|CCCPrintBindings
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set CC_PRINT_OPTIONS mode, which is like -v but logs the commands to
+comment|/// CCPrintOptionsFilename or to stderr.
+name|unsigned
+name|CCPrintOptions
 range|:
 literal|1
 decl_stmt|;

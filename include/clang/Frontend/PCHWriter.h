@@ -136,6 +136,9 @@ name|class
 name|LabelStmt
 decl_stmt|;
 name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
 name|MemorizeStatCalls
 decl_stmt|;
 name|class
@@ -578,6 +581,32 @@ name|uint64_t
 operator|>
 name|MacroOffsets
 expr_stmt|;
+comment|/// \brief Mapping from macro definitions (as they occur in the preprocessing
+comment|/// record) to the index into the macro definitions table.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MacroDefinition
+operator|*
+operator|,
+name|pch
+operator|::
+name|IdentID
+operator|>
+name|MacroDefinitions
+expr_stmt|;
+comment|/// \brief Mapping from the macro definition indices in \c MacroDefinitions
+comment|/// to the corresponding offsets within the preprocessor block.
+name|std
+operator|::
+name|vector
+operator|<
+name|uint32_t
+operator|>
+name|MacroDefinitionOffsets
+expr_stmt|;
 comment|/// \brief Declarations encountered that might be external
 comment|/// definitions.
 comment|///
@@ -722,14 +751,6 @@ name|PP
 parameter_list|)
 function_decl|;
 name|void
-name|WriteComments
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
-name|void
 name|WriteType
 parameter_list|(
 name|QualType
@@ -827,6 +848,9 @@ comment|/// searching for source files and headers.
 comment|///
 comment|/// \param isysroot if non-NULL, write a relocatable PCH file whose headers
 comment|/// are relative to the given system root.
+comment|///
+comment|/// \param PPRec Record of the preprocessing actions that occurred while
+comment|/// preprocessing this file, e.g., macro instantiations
 name|void
 name|WritePCH
 parameter_list|(
@@ -980,6 +1004,18 @@ name|II
 index|]
 return|;
 block|}
+comment|/// \brief Retrieve the ID number corresponding to the given macro
+comment|/// definition.
+name|pch
+operator|::
+name|IdentID
+name|getMacroDefinitionID
+argument_list|(
+name|MacroDefinition
+operator|*
+name|MD
+argument_list|)
+expr_stmt|;
 comment|/// \brief Emit a reference to a type.
 name|void
 name|AddTypeRef

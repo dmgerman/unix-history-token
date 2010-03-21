@@ -280,6 +280,9 @@ decl_stmt|;
 name|class
 name|CGObjCRuntime
 decl_stmt|;
+name|class
+name|MangleBuffer
+decl_stmt|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
 comment|/// while generating LLVM code.
 name|class
@@ -398,34 +401,6 @@ name|Function
 operator|*
 name|MemSetFn
 expr_stmt|;
-comment|/// GlobalDeclMap - Mapping of decl names (represented as unique
-comment|/// character pointers from either the identifier table or the set
-comment|/// of mangled names) to global variables we have already
-comment|/// emitted. Note that the entries in this map are the actual
-comment|/// globals and therefore may not be of the same type as the decl,
-comment|/// they should be bitcasted on retrieval. Also note that the
-comment|/// globals are keyed on their source mangled name, not the global name
-comment|/// (which may change with attributes such as asm-labels).  The key
-comment|/// to this map should be generated using getMangledName().
-comment|///
-comment|/// Note that this map always lines up exactly with the contents of the LLVM
-comment|/// IR symbol table, but this is quicker to query since it is doing uniqued
-comment|/// pointer lookups instead of full string lookups.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|char
-operator|*
-operator|,
-name|llvm
-operator|::
-name|GlobalValue
-operator|*
-operator|>
-name|GlobalDeclMap
-expr_stmt|;
 comment|// WeakRefReferences - A set of references that have only been seen via
 comment|// a weakref so far. This is used to remove the weak of the reference if we ever
 comment|// see a direct reference or a definition.
@@ -442,30 +417,14 @@ literal|10
 operator|>
 name|WeakRefReferences
 expr_stmt|;
-comment|/// \brief Contains the strings used for mangled names.
-comment|///
-comment|/// FIXME: Eventually, this should map from the semantic/canonical
-comment|/// declaration for each global entity to its mangled name (if it
-comment|/// has one).
-name|llvm
-operator|::
-name|StringSet
-operator|<
-operator|>
-name|MangledNames
-expr_stmt|;
 comment|/// DeferredDecls - This contains all the decls which have definitions but
 comment|/// which are deferred for emission and therefore should only be output if
 comment|/// they are actually used.  If a decl is in this, then it is known to have
-comment|/// not been referenced yet.  The key to this map is a uniqued mangled name.
+comment|/// not been referenced yet.
 name|llvm
 operator|::
-name|DenseMap
+name|StringMap
 operator|<
-specifier|const
-name|char
-operator|*
-operator|,
 name|GlobalDecl
 operator|>
 name|DeferredDecls
@@ -538,7 +497,7 @@ operator|*
 operator|>
 name|ConstantStringMap
 expr_stmt|;
-comment|/// CXXGlobalInits - Variables with global initializers that need to run
+comment|/// CXXGlobalInits - Global variables with initializers that need to run
 comment|/// before main.
 name|std
 operator|::
@@ -550,6 +509,29 @@ name|Constant
 operator|*
 operator|>
 name|CXXGlobalInits
+expr_stmt|;
+comment|/// CXXGlobalDtors - Global destructor functions and arguments that need to
+comment|/// run on termination.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+expr|>
+name|CXXGlobalDtors
 expr_stmt|;
 comment|/// CFConstantStringClassRef - Cached reference to the class for constant
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
@@ -1303,6 +1285,24 @@ name|C
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// AddCXXDtorEntry - Add a destructor and object to add to the C++ global
+comment|/// destructor function.
+name|void
+name|AddCXXDtorEntry
+argument_list|(
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|DtorFn
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Object
+argument_list|)
+decl_stmt|;
 comment|/// CreateRuntimeFunction - Create a new runtime function with the specified
 comment|/// type and name.
 name|llvm
@@ -1311,17 +1311,9 @@ name|Constant
 operator|*
 name|CreateRuntimeFunction
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|FunctionType
-operator|*
-name|Ty
+argument|const llvm::FunctionType *Ty
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
 expr_stmt|;
 comment|/// CreateRuntimeVariable - Create a new runtime global variable with the
@@ -1332,17 +1324,9 @@ name|Constant
 operator|*
 name|CreateRuntimeVariable
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|Ty
+argument|const llvm::Type *Ty
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
 expr_stmt|;
 name|void
@@ -1568,33 +1552,37 @@ modifier|&
 name|CallingConv
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|void
 name|getMangledName
 parameter_list|(
-specifier|const
-name|GlobalDecl
+name|MangleBuffer
 modifier|&
+name|Buffer
+parameter_list|,
+name|GlobalDecl
 name|D
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|void
 name|getMangledName
 parameter_list|(
+name|MangleBuffer
+modifier|&
+name|Buffer
+parameter_list|,
 specifier|const
 name|NamedDecl
 modifier|*
 name|ND
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|void
 name|getMangledCXXCtorName
 parameter_list|(
+name|MangleBuffer
+modifier|&
+name|Buffer
+parameter_list|,
 specifier|const
 name|CXXConstructorDecl
 modifier|*
@@ -1604,11 +1592,13 @@ name|CXXCtorType
 name|Type
 parameter_list|)
 function_decl|;
-specifier|const
-name|char
-modifier|*
+name|void
 name|getMangledCXXDtorName
 parameter_list|(
+name|MangleBuffer
+modifier|&
+name|Buffer
+parameter_list|,
 specifier|const
 name|CXXDestructorDecl
 modifier|*
@@ -1698,31 +1688,22 @@ name|DeferredVtables
 expr_stmt|;
 name|private
 label|:
-comment|/// UniqueMangledName - Unique a name by (if necessary) inserting it into the
-comment|/// MangledNames string map.
-specifier|const
-name|char
-modifier|*
-name|UniqueMangledName
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|NameStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|NameEnd
-parameter_list|)
-function_decl|;
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GetGlobalValue
+argument_list|(
+argument|llvm::StringRef Ref
+argument_list|)
+expr_stmt|;
 name|llvm
 operator|::
 name|Constant
 operator|*
 name|GetOrCreateLLVMFunction
 argument_list|(
-argument|const char *MangledName
+argument|llvm::StringRef MangledName
 argument_list|,
 argument|const llvm::Type *Ty
 argument_list|,
@@ -1735,22 +1716,11 @@ name|Constant
 operator|*
 name|GetOrCreateLLVMGlobal
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|MangledName
+argument|llvm::StringRef MangledName
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|PointerType
-operator|*
-name|PTy
+argument|const llvm::PointerType *PTy
 argument_list|,
-specifier|const
-name|VarDecl
-operator|*
-name|D
+argument|const VarDecl *D
 argument_list|)
 expr_stmt|;
 comment|/// SetCommonAttributes - Set attributes which are common to any
@@ -1842,10 +1812,8 @@ function_decl|;
 name|void
 name|EmitAliasDefinition
 parameter_list|(
-specifier|const
-name|ValueDecl
-modifier|*
-name|D
+name|GlobalDecl
+name|GD
 parameter_list|)
 function_decl|;
 name|void
@@ -1945,9 +1913,14 @@ name|CXXDtorType
 name|Type
 parameter_list|)
 function_decl|;
-comment|/// EmitCXXGlobalInitFunc - Emit a function that initializes C++ globals.
+comment|/// EmitCXXGlobalInitFunc - Emit the function that initializes C++ globals.
 name|void
 name|EmitCXXGlobalInitFunc
+parameter_list|()
+function_decl|;
+comment|/// EmitCXXGlobalDtorFunc - Emit the function that destroys C++ globals.
+name|void
+name|EmitCXXGlobalDtorFunc
 parameter_list|()
 function_decl|;
 name|void

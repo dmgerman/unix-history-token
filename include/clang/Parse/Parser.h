@@ -284,16 +284,6 @@ name|PragmaHandler
 operator|>
 name|WeakHandler
 expr_stmt|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|clang
-operator|::
-name|CommentHandler
-operator|>
-name|CommentHandler
-expr_stmt|;
 comment|/// Whether the '>' token acts as an operator or not. This will be
 comment|/// true except when we are parsing an expression within a C++
 comment|/// template argument list, where the '>' closes the template

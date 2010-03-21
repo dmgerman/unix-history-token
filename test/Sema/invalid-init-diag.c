@@ -23,7 +23,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-error {{incompatible type initializing 'int', expected 'struct<anonymous>'}}
+comment|// expected-error {{incompatible type initializing 'int', expected 'struct<anonymous}}
 end_comment
 
 end_unit

@@ -128,6 +128,9 @@ comment|///< Generate pre-tokenized header.
 name|InheritanceView
 block|,
 comment|///< View C++ inheritance for a specified class.
+name|InitOnly
+block|,
+comment|///< Only execute frontend initialization.
 name|ParseNoop
 block|,
 comment|///< Parse with noop callbacks.
@@ -210,14 +213,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Disable memory freeing on exit.
-name|unsigned
-name|EmptyInputOnly
-range|:
-literal|1
-decl_stmt|;
-comment|///< Force input files to be treated
-comment|/// as if they were empty, for timing
-comment|/// the frontend startup.
 name|unsigned
 name|RelocatablePCH
 range|:
@@ -346,10 +341,6 @@ operator|=
 literal|1
 expr_stmt|;
 name|DisableFree
-operator|=
-literal|0
-expr_stmt|;
-name|EmptyInputOnly
 operator|=
 literal|0
 expr_stmt|;

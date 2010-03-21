@@ -199,7 +199,7 @@ parameter_list|)
 function_decl|;
 comment|/// ProcessWarningOptions - Initialize the diagnostic client and process the
 comment|/// warning options specified on the command line.
-name|bool
+name|void
 name|ProcessWarningOptions
 parameter_list|(
 name|Diagnostic

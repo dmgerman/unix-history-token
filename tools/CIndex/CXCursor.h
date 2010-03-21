@@ -97,6 +97,12 @@ name|class
 name|Expr
 decl_stmt|;
 name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
+name|MacroInstantiation
+decl_stmt|;
+name|class
 name|NamedDecl
 decl_stmt|;
 name|class
@@ -304,6 +310,70 @@ argument_list|(
 argument|CXCursor C
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a preprocessing directive cursor.
+name|CXCursor
+name|MakePreprocessingDirectiveCursor
+parameter_list|(
+name|SourceRange
+name|Range
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a given preprocessing directive to retrieve its source range.
+name|SourceRange
+name|getCursorPreprocessingDirective
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a macro definition cursor.
+name|CXCursor
+name|MakeMacroDefinitionCursor
+parameter_list|(
+name|MacroDefinition
+modifier|*
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a given macro definition cursor to retrieve its
+comment|/// source range.
+name|MacroDefinition
+modifier|*
+name|getCursorMacroDefinition
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a macro instantiation cursor.
+name|CXCursor
+name|MakeMacroInstantiationCursor
+parameter_list|(
+name|MacroInstantiation
+modifier|*
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a given macro instantiation cursor to retrieve its
+comment|/// source range.
+name|MacroInstantiation
+modifier|*
+name|getCursorMacroInstantiation
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 name|Decl
 modifier|*
 name|getCursorDecl

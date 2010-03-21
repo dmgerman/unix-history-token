@@ -69,11 +69,51 @@ name|class
 name|FixItRewriter
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
+comment|// Custom Consumer Actions
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|InitOnlyAction
+range|:
+name|public
+name|FrontendAction
+block|{
+name|virtual
+name|void
+name|ExecuteAction
+argument_list|()
+block|;
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|)
+block|;
+name|public
+operator|:
+comment|// Don't claim to only use the preprocessor, we want to follow the AST path,
+comment|// but do nothing.
+name|virtual
+name|bool
+name|usesPreprocessorOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
 comment|// AST Consumer Actions
 comment|//===----------------------------------------------------------------------===//
 name|class
 name|AnalysisAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -89,10 +129,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|ASTPrintAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -108,10 +148,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|ASTPrintXMLAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -127,10 +167,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|ASTDumpAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -146,10 +186,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|ASTViewAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -165,10 +205,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|DeclContextPrintAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -184,10 +224,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|DumpRecordAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -203,10 +243,10 @@ argument_list|,
 argument|llvm::StringRef InFile
 argument_list|)
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|FixItAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{
@@ -265,10 +305,10 @@ operator|~
 name|FixItAction
 argument_list|()
 block|; }
-decl_stmt|;
+block|;
 name|class
 name|GeneratePCHAction
-range|:
+operator|:
 name|public
 name|ASTFrontendAction
 block|{

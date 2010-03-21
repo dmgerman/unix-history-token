@@ -760,9 +760,13 @@ name|CXCursor_NotImplemented
 init|=
 literal|72
 block|,
+name|CXCursor_InvalidCode
+init|=
+literal|73
+block|,
 name|CXCursor_LastInvalid
 init|=
-literal|72
+name|CXCursor_InvalidCode
 block|,
 comment|/* Expressions */
 name|CXCursor_FirstExpr
@@ -838,6 +842,27 @@ block|,
 name|CXCursor_LastAttr
 init|=
 name|CXCursor_IBOutletAttr
+block|,
+comment|/* Preprocessing */
+name|CXCursor_PreprocessingDirective
+init|=
+literal|500
+block|,
+name|CXCursor_MacroDefinition
+init|=
+literal|501
+block|,
+name|CXCursor_MacroInstantiation
+init|=
+literal|502
+block|,
+name|CXCursor_FirstPreprocessing
+init|=
+name|CXCursor_PreprocessingDirective
+block|,
+name|CXCursor_LastPreprocessing
+init|=
+name|CXCursor_MacroInstantiation
 block|}
 enum|;
 comment|/**  * \brief A cursor representing some element in the abstract syntax tree for  * a translation unit.  *  * The cursor abstraction unifies the different kinds of entities in a  * program--declaration, statements, expressions, references to declarations,  * etc.--under a single "cursor" abstraction with a common set of operations.  * Common operation for a cursor include: getting the physical location in  * a source file where the cursor points, getting the name associated with a  * cursor, and retrieving cursors for any child nodes of a particular cursor.  *  * Cursors can be produced in two specific ways.  * clang_getTranslationUnitCursor() produces a cursor for a translation unit,  * from which one can use clang_visitChildren() to explore the rest of the  * translation unit. clang_getCursor() maps from a physical source location  * to the entity that resides at that location, allowing one to map from the  * source code into the AST.  */
@@ -943,6 +968,15 @@ comment|/**  * \brief Determine whether the given cursor kind represents a trans
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isTranslationUnit
+parameter_list|(
+name|enum
+name|CXCursorKind
+parameter_list|)
+function_decl|;
+comment|/***  * \brief Determine whether the given cursor represents a preprocessing  * element, such as a preprocessor directive or macro instantiation.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isPreprocessing
 parameter_list|(
 name|enum
 name|CXCursorKind

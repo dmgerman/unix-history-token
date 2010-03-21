@@ -1323,9 +1323,18 @@ comment|///
 comment|/// Always a FunctionDecl.
 comment|/// For conversion decls, the naming class is the source type.
 comment|/// For construct decls, the naming class is the target type.
-name|DeclAccessPair
+struct|struct
+block|{
+name|FunctionDecl
+modifier|*
 name|Function
 decl_stmt|;
+name|DeclAccessPair
+name|FoundDecl
+decl_stmt|;
+block|}
+name|Function
+struct|;
 comment|/// \brief When Kind = SK_ConversionSequence, the implicit conversion
 comment|/// sequence
 name|ImplicitConversionSequence
@@ -1663,8 +1672,8 @@ name|FunctionDecl
 modifier|*
 name|Function
 parameter_list|,
-name|AccessSpecifier
-name|Access
+name|DeclAccessPair
+name|FoundDecl
 parameter_list|,
 name|QualType
 name|T

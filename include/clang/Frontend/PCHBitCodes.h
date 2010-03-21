@@ -351,12 +351,7 @@ name|ORIGINAL_FILE_NAME
 init|=
 literal|19
 block|,
-comment|/// \brief Record code for the sorted array of source ranges where
-comment|/// comments were encountered in the source code.
-name|COMMENT_RANGES
-init|=
-literal|20
-block|,
+comment|/// Record #20 intentionally left blank.
 comment|/// \brief Record code for the version control branch and revision
 comment|/// information of the compiler used to build this PCH file.
 name|VERSION_CONTROL_BRANCH_REVISION
@@ -367,6 +362,12 @@ comment|/// \brief Record code for the array of unused static functions.
 name|UNUSED_STATIC_FUNCS
 init|=
 literal|22
+block|,
+comment|/// \brief Record code for the table of offsets to macro definition
+comment|/// entries in the preprocessing record.
+name|MACRO_DEFINITION_OFFSETS
+init|=
+literal|23
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -403,12 +404,6 @@ comment|/// information about #line directives.
 name|SM_LINE_TABLE
 init|=
 literal|5
-block|,
-comment|/// \brief Describes one header file info [isImport, DirInfo, NumIncludes]
-comment|/// ControllingMacro is optional.
-name|SM_HEADER_FILE_INFO
-init|=
-literal|6
 block|}
 enum|;
 comment|/// \brief Record types used within a preprocessor block.
@@ -435,6 +430,17 @@ comment|/// [PP_TOKEN, SLoc, Length, IdentInfoID, Kind, Flags]
 name|PP_TOKEN
 init|=
 literal|3
+block|,
+comment|/// \brief Describes a macro instantiation within the preprocessing
+comment|/// record.
+name|PP_MACRO_INSTANTIATION
+init|=
+literal|4
+block|,
+comment|/// \brief Describes a macro definition within the preprocessing record.
+name|PP_MACRO_DEFINITION
+init|=
+literal|5
 block|}
 enum|;
 comment|/// \defgroup PCHAST Precompiled header AST constants

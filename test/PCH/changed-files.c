@@ -9,36 +9,98 @@ name|m0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|s1
+init|=
+name|m1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|s2
+init|=
+name|m0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|// RUN: echo '#define m0 ""'> %t.h
+comment|// FIXME: This test fails inexplicably on Windows in a manner that makes it
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+comment|// look like standard error isn't getting flushed properly.
 end_comment
 
 begin_comment
-comment|// RUN: echo ''> %t.h
+comment|// RUN: true
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -include-pch %t.h.pch %s 2>&1 | grep "size of file"
+comment|// RUNx: echo '#define m0 ""'> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: echo '#define m0 000'> %t.h
+comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+comment|// RUNx: echo ''> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: echo ''> %t.h
+comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -include-pch %t.h.pch %s 2>&1 | grep "size of file"
+comment|// RUNx: grep "modified" %t.stderr
+end_comment
+
+begin_comment
+comment|// RUNx: echo '#define m0 000'> %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: echo ''> %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+end_comment
+
+begin_comment
+comment|// RUNx: grep "modified" %t.stderr
+end_comment
+
+begin_comment
+comment|// RUNx: echo '#define m0 000'> %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: echo "#define m1 'abcd'">> %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: echo ''> %t.h
+end_comment
+
+begin_comment
+comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+end_comment
+
+begin_comment
+comment|// RUNx: grep "modified" %t.stderr
 end_comment
 
 end_unit

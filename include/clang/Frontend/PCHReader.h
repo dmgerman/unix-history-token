@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/PreprocessingRecord.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -242,6 +248,9 @@ name|class
 name|LabelStmt
 decl_stmt|;
 name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
 name|NamedDecl
 decl_stmt|;
 name|class
@@ -360,6 +369,9 @@ specifier|const
 name|HeaderFileInfo
 modifier|&
 name|HFI
+parameter_list|,
+name|unsigned
+name|ID
 parameter_list|)
 block|{}
 comment|/// \brief Receives __COUNTER__ value.
@@ -454,10 +466,9 @@ name|virtual
 name|void
 name|ReadHeaderFileInfo
 argument_list|(
-specifier|const
-name|HeaderFileInfo
-operator|&
-name|HFI
+argument|const HeaderFileInfo&HFI
+argument_list|,
+argument|unsigned ID
 argument_list|)
 block|;
 name|virtual
@@ -465,6 +476,17 @@ name|void
 name|ReadCounter
 argument_list|(
 argument|unsigned Value
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|Error
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Msg
 argument_list|)
 block|; }
 decl_stmt|;
@@ -485,6 +507,9 @@ name|PCHReader
 range|:
 name|public
 name|ExternalPreprocessorSource
+decl_stmt|,
+name|public
+name|ExternalPreprocessingRecordSource
 decl_stmt|,
 name|public
 name|ExternalSemaSource
@@ -510,6 +535,10 @@ block|,
 name|IgnorePCH
 block|}
 enum|;
+name|friend
+name|class
+name|PCHValidator
+decl_stmt|;
 name|private
 label|:
 comment|/// \ brief The receiver of some callbacks invoked by PCHReader.
@@ -775,14 +804,29 @@ literal|16
 operator|>
 name|SelectorsLoaded
 expr_stmt|;
-comment|/// \brief A sorted array of source ranges containing comments.
-name|SourceRange
+comment|/// \brief Offsets of all of the macro definitions in the preprocessing
+comment|/// record in the PCH file.
+specifier|const
+name|uint32_t
 modifier|*
-name|Comments
+name|MacroDefinitionOffsets
 decl_stmt|;
-comment|/// \brief The number of source ranges in the Comments array.
+comment|/// \brief The macro definitions we have already loaded.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|MacroDefinition
+operator|*
+operator|,
+literal|16
+operator|>
+name|MacroDefinitionsLoaded
+expr_stmt|;
+comment|/// \brief The number of preallocated preprocessing entities in the
+comment|/// preprocessing record.
 name|unsigned
-name|NumComments
+name|NumPreallocatedPreprocessingEntities
 decl_stmt|;
 comment|/// \brief The set of external definitions stored in the the PCH
 comment|/// file.
@@ -1231,7 +1275,7 @@ comment|/// \brief Produce an error diagnostic and return true.
 comment|///
 comment|/// This routine should only be used for fatal errors that have to
 comment|/// do with non-routine failures (e.g., corrupted PCH file).
-name|bool
+name|void
 name|Error
 parameter_list|(
 specifier|const
@@ -1383,13 +1427,7 @@ name|Preprocessor
 modifier|&
 name|pp
 parameter_list|)
-block|{
-name|PP
-operator|=
-operator|&
-name|pp
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// \brief Sets and initializes the given Context.
 name|void
 name|InitializeContext
@@ -1461,26 +1499,12 @@ return|return
 name|SuggestedPredefines
 return|;
 block|}
-comment|/// \brief Reads the source ranges that correspond to comments from
-comment|/// an external AST source.
-comment|///
-comment|/// \param Comments the contents of this vector will be
-comment|/// replaced with the sorted set of source ranges corresponding to
-comment|/// comments in the source code.
+comment|/// \brief Read preprocessed entities into the
 name|virtual
 name|void
-name|ReadComments
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|SourceRange
-operator|>
-operator|&
-name|Comments
-argument_list|)
-decl_stmt|;
+name|ReadPreprocessedEntities
+parameter_list|()
+function_decl|;
 comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
 comment|/// given TemplateArgument kind.
 name|TemplateArgumentLocInfo
@@ -2024,6 +2048,17 @@ name|void
 name|ReadDefinedMacros
 parameter_list|()
 function_decl|;
+comment|/// \brief Retrieve the macro definition with the given ID.
+name|MacroDefinition
+modifier|*
+name|getMacroDefinition
+argument_list|(
+name|pch
+operator|::
+name|IdentID
+name|ID
+argument_list|)
+decl_stmt|;
 comment|/// \brief Retrieve the AST context that this PCH reader
 comment|/// supplements.
 name|ASTContext
@@ -2215,6 +2250,22 @@ name|Offset
 decl_stmt|;
 block|}
 struct|;
+specifier|inline
+name|void
+name|PCHValidator
+operator|::
+name|Error
+argument_list|(
+argument|const char *Msg
+argument_list|)
+block|{
+name|Reader
+operator|.
+name|Error
+argument_list|(
+name|Msg
+argument_list|)
+block|; }
 block|}
 end_decl_stmt
 

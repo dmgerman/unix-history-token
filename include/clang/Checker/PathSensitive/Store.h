@@ -586,6 +586,11 @@ name|Stmt
 operator|*
 name|Loc
 argument_list|,
+specifier|const
+name|StackFrameContext
+operator|*
+name|LCtx
+argument_list|,
 name|SymbolReaper
 operator|&
 name|SymReaper

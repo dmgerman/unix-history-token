@@ -758,7 +758,7 @@ parameter_list|,
 name|unsigned
 name|alignment
 init|=
-literal|16
+literal|8
 parameter_list|)
 function|throw
 parameter_list|()
@@ -791,7 +791,7 @@ parameter_list|,
 name|unsigned
 name|alignment
 init|=
-literal|16
+literal|8
 parameter_list|)
 function|throw
 parameter_list|()

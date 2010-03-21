@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|CLANG_VERSION_MINOR
-value|1
+value|5
 end_define
 
 begin_comment

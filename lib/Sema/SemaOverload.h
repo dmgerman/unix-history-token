@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/UnresolvedSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -1450,6 +1456,12 @@ name|FunctionDecl
 modifier|*
 name|Function
 decl_stmt|;
+comment|/// FoundDecl - The original declaration that was looked up /
+comment|/// invented / otherwise found, together with its access.
+comment|/// Might be a UsingShadowDecl or a FunctionTemplateDecl.
+name|DeclAccessPair
+name|FoundDecl
+decl_stmt|;
 comment|// BuiltinTypes - Provides the return and parameter types of a
 comment|// built-in overload candidate. Only valid when Function is NULL.
 struct|struct
@@ -1510,23 +1522,6 @@ name|unsigned
 name|char
 name|FailureKind
 decl_stmt|;
-comment|/// PathAccess - The 'path access' to the given function/conversion.
-comment|/// Actually an AccessSpecifier.
-name|unsigned
-name|Access
-decl_stmt|;
-name|AccessSpecifier
-name|getAccess
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AccessSpecifier
-argument_list|(
-name|Access
-argument_list|)
-return|;
-block|}
 comment|/// A structure used to record information about a failed
 comment|/// template argument deduction.
 struct|struct

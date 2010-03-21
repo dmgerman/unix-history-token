@@ -2008,6 +2008,11 @@ name|Stmt
 modifier|*
 name|Loc
 parameter_list|,
+specifier|const
+name|StackFrameContext
+modifier|*
+name|LCtx
+parameter_list|,
 name|SymbolReaper
 modifier|&
 name|SymReaper
