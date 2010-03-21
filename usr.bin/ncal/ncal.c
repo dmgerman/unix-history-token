@@ -1592,7 +1592,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"A:B:3Jbd:eH:hjm:ops:wy"
+literal|"3A:B:Cd:eH:hjJm:Nops:wy"
 argument_list|)
 operator|)
 operator|!=
@@ -1718,11 +1718,19 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'b'
+literal|'C'
 case|:
 name|flag_backward
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|flag_backward
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2552,11 +2560,12 @@ parameter_list|)
 block|{
 name|fputs
 argument_list|(
-literal|"usage: cal [-hjy] [[month] year]\n"
-literal|"       cal [-hj] [-m month] [year]\n"
-literal|"       ncal [-hJjpwy] [-s country_code] [[month] year]\n"
-literal|"       ncal [-hJeo] [year]\n"
-literal|"for debug the highlighting: [-b] [-H yyyy-mm-dd] [-d yyyy-mm]\n"
+literal|"Usage: cal [general options] [-hjy] [[month] year]\n"
+literal|"       cal [general options] [-hj] [-m month] [year]\n"
+literal|"       ncal [general options] [-hJjpwy] [-s country_code] [[month] year]\n"
+literal|"       ncal [general options] [-hJeo] [year]\n"
+literal|"General options: [-NC3] [-A months] [-B months]\n"
+literal|"For debug the highlighting: [-H yyyy-mm-dd] [-d yyyy-mm]\n"
 argument_list|,
 name|stderr
 argument_list|)
