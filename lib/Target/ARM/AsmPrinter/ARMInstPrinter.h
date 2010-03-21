@@ -231,6 +231,14 @@ argument|unsigned OpNum
 argument_list|)
 block|;
 name|void
+name|printAddrMode6OffsetOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|)
+block|;
+name|void
 name|printAddrModePCOperand
 argument_list|(
 argument|const MCInst *MI
@@ -264,7 +272,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeRROperand
 argument_list|(
@@ -272,7 +280,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeRI5Operand
 argument_list|(
@@ -282,7 +290,7 @@ argument|unsigned OpNum
 argument_list|,
 argument|unsigned Scale
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeS1Operand
 argument_list|(
@@ -290,7 +298,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeS2Operand
 argument_list|(
@@ -298,7 +306,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeS4Operand
 argument_list|(
@@ -306,7 +314,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printThumbAddrModeSPOperand
 argument_list|(
@@ -314,7 +322,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2SOOperand
 argument_list|(
@@ -322,7 +330,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeImm12Operand
 argument_list|(
@@ -330,7 +338,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeImm8Operand
 argument_list|(
@@ -338,7 +346,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeImm8s4Operand
 argument_list|(
@@ -346,7 +354,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeImm8OffsetOperand
 argument_list|(
@@ -354,7 +362,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeImm8s4OffsetOperand
 argument_list|(
@@ -362,7 +370,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printT2AddrModeSoRegOperand
 argument_list|(
@@ -370,7 +378,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printCPSOptionOperand
 argument_list|(
@@ -378,7 +386,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printMSRMaskOperand
 argument_list|(
@@ -386,7 +394,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printNegZeroOperand
 argument_list|(
@@ -394,7 +402,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printPredicateOperand
 argument_list|(
@@ -460,7 +468,7 @@ argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printNoHashImmediate
 argument_list|(
@@ -474,17 +482,17 @@ name|printVFPf32ImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
-argument|int OpNum
+argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printVFPf64ImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
-argument|int OpNum
+argument|unsigned OpNum
 argument_list|)
-block|{}
+block|;
 name|void
 name|printHex8ImmOperand
 argument_list|(

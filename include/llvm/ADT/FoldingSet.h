@@ -95,6 +95,9 @@ decl_stmt|;
 name|class
 name|APInt
 decl_stmt|;
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 comment|/// This folding set used for two purposes:
 comment|///   1. Given information about a node we want to create, look up the unique
 comment|///      instance of the node in the set.  If the node already exists, return
@@ -431,6 +434,75 @@ block|; }
 block|}
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
+comment|/// FoldingSetNodeIDRef - This class describes a reference to an interned
+comment|/// FoldingSetNodeID, which can be a useful to store node id data rather
+comment|/// than using plain FoldingSetNodeIDs, since the 32-element SmallVector
+comment|/// is often much larger than necessary, and the possibility of heap
+comment|/// allocation means it requires a non-trivial destructor call.
+name|class
+name|FoldingSetNodeIDRef
+block|{
+name|unsigned
+modifier|*
+name|Data
+decl_stmt|;
+name|size_t
+name|Size
+decl_stmt|;
+name|public
+label|:
+name|FoldingSetNodeIDRef
+argument_list|()
+operator|:
+name|Data
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|FoldingSetNodeIDRef
+argument_list|(
+argument|unsigned *D
+argument_list|,
+argument|size_t S
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+name|D
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+argument|S
+argument_list|)
+block|{}
+name|unsigned
+operator|*
+name|getData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+name|size_t
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Size
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|//===--------------------------------------------------------------------===//
 comment|/// FoldingSetNodeID - This class is used to gather all the unique data bits of
 comment|/// a node.  When all the bits are gathered this class is used to produce a
 comment|/// hash value for the node.
@@ -453,23 +525,18 @@ label|:
 name|FoldingSetNodeID
 argument_list|()
 block|{}
-comment|/// getRawData - Return the ith entry in the Bits data.
-comment|///
-name|unsigned
-name|getRawData
+name|FoldingSetNodeID
 argument_list|(
-name|unsigned
-name|i
+argument|FoldingSetNodeIDRef Ref
 argument_list|)
-decl|const
-block|{
-return|return
+block|:
 name|Bits
-index|[
-name|i
-index|]
-return|;
-block|}
+argument_list|(
+argument|Ref.getData()
+argument_list|,
+argument|Ref.getData() + Ref.getSize()
+argument_list|)
+block|{}
 comment|/// Add* - Add various data types to Bit data.
 comment|///
 name|void
@@ -608,6 +675,18 @@ name|RHS
 operator|)
 specifier|const
 expr_stmt|;
+comment|/// Intern - Copy this node's data to a memory region allocated from the
+comment|/// given allocator and return a FoldingSetNodeIDRef describing the
+comment|/// interned data.
+name|FoldingSetNodeIDRef
+name|Intern
+argument_list|(
+name|BumpPtrAllocator
+operator|&
+name|Allocator
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|// Convenience type to hide the implementation of the folding set.

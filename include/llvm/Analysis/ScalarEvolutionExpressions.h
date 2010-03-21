@@ -133,14 +133,9 @@ name|V
 block|;
 name|SCEVConstant
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-name|ConstantInt
-operator|*
-name|v
+argument|ConstantInt *v
 argument_list|)
 operator|:
 name|SCEV
@@ -301,7 +296,7 @@ name|Ty
 block|;
 name|SCEVCastExpr
 argument_list|(
-argument|const FoldingSetNodeID&ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|unsigned SCEVTy
 argument_list|,
@@ -472,20 +467,11 @@ name|ScalarEvolution
 block|;
 name|SCEVTruncateExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|op
+argument|const SCEV *op
 argument_list|,
-specifier|const
-name|Type
-operator|*
-name|ty
+argument|const Type *ty
 argument_list|)
 block|;
 name|public
@@ -546,20 +532,11 @@ name|ScalarEvolution
 block|;
 name|SCEVZeroExtendExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|op
+argument|const SCEV *op
 argument_list|,
-specifier|const
-name|Type
-operator|*
-name|ty
+argument|const Type *ty
 argument_list|)
 block|;
 name|public
@@ -620,20 +597,11 @@ name|ScalarEvolution
 block|;
 name|SCEVSignExtendExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|op
+argument|const SCEV *op
 argument_list|,
-specifier|const
-name|Type
-operator|*
-name|ty
+argument|const Type *ty
 argument_list|)
 block|;
 name|public
@@ -690,23 +658,29 @@ name|SCEV
 block|{
 name|protected
 operator|:
-name|SmallVector
-operator|<
+comment|// Since SCEVs are immutable, ScalarEvolution allocates operand
+comment|// arrays with its SCEVAllocator, so this class just needs a simple
+comment|// pointer rather than a more elaborate vector-like data structure.
+comment|// This also avoids the need for a non-trivial destructor.
 specifier|const
 name|SCEV
 operator|*
-block|,
-literal|8
-operator|>
+specifier|const
+operator|*
 name|Operands
+block|;
+name|size_t
+name|NumOperands
 block|;
 name|SCEVNAryExpr
 argument_list|(
-argument|const FoldingSetNodeID&ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|enum SCEVTypes T
 argument_list|,
-argument|const SmallVectorImpl<const SCEV *>&ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEV
@@ -718,26 +692,23 @@ argument_list|)
 block|,
 name|Operands
 argument_list|(
-argument|ops.begin()
-argument_list|,
-argument|ops.end()
+name|O
+argument_list|)
+block|,
+name|NumOperands
+argument_list|(
+argument|N
 argument_list|)
 block|{}
 name|public
 operator|:
-name|unsigned
+name|size_t
 name|getNumOperands
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|unsigned
-operator|)
-name|Operands
-operator|.
-name|size
-argument_list|()
+name|NumOperands
 return|;
 block|}
 specifier|const
@@ -753,10 +724,7 @@ name|assert
 argument_list|(
 name|i
 operator|<
-name|Operands
-operator|.
-name|size
-argument_list|()
+name|NumOperands
 operator|&&
 literal|"Operand index out of range!"
 argument_list|)
@@ -768,33 +736,14 @@ name|i
 index|]
 return|;
 block|}
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|getOperands
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Operands
-return|;
-block|}
 typedef|typedef
-name|SmallVectorImpl
-operator|<
 specifier|const
 name|SCEV
-operator|*
-operator|>
-operator|::
-name|const_iterator
+modifier|*
+specifier|const
+modifier|*
 name|op_iterator
-expr_stmt|;
+typedef|;
 name|op_iterator
 name|op_begin
 argument_list|()
@@ -802,9 +751,6 @@ specifier|const
 block|{
 return|return
 name|Operands
-operator|.
-name|begin
-argument_list|()
 return|;
 block|}
 name|op_iterator
@@ -814,9 +760,8 @@ specifier|const
 block|{
 return|return
 name|Operands
-operator|.
-name|end
-argument_list|()
+operator|+
+name|NumOperands
 return|;
 block|}
 name|virtual
@@ -1183,11 +1128,13 @@ name|protected
 operator|:
 name|SCEVCommutativeExpr
 argument_list|(
-argument|const FoldingSetNodeID&ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|enum SCEVTypes T
 argument_list|,
-argument|const SmallVectorImpl<const SCEV *>&ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1196,7 +1143,9 @@ argument|ID
 argument_list|,
 argument|T
 argument_list|,
-argument|ops
+argument|O
+argument_list|,
+argument|N
 argument_list|)
 block|{}
 name|public
@@ -1287,20 +1236,11 @@ name|ScalarEvolution
 block|;
 name|SCEVAddExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1309,7 +1249,9 @@ argument|ID
 argument_list|,
 argument|scAddExpr
 argument_list|,
-argument|ops
+argument|O
+argument_list|,
+argument|N
 argument_list|)
 block|{     }
 name|public
@@ -1397,20 +1339,11 @@ name|ScalarEvolution
 block|;
 name|SCEVMulExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -1419,7 +1352,9 @@ argument|ID
 argument_list|,
 argument|scMulExpr
 argument_list|,
-argument|ops
+argument|O
+argument_list|,
+argument|N
 argument_list|)
 block|{     }
 name|public
@@ -1493,20 +1428,11 @@ name|RHS
 block|;
 name|SCEVUDivExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|lhs
+argument|const SCEV *lhs
 argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|rhs
+argument|const SCEV *rhs
 argument_list|)
 operator|:
 name|SCEV
@@ -1721,25 +1647,13 @@ name|L
 block|;
 name|SCEVAddRecExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|ops
+argument|const SCEV *const *O
 argument_list|,
-specifier|const
-name|Loop
-operator|*
-name|l
+argument|size_t N
+argument_list|,
+argument|const Loop *l
 argument_list|)
 operator|:
 name|SCEVNAryExpr
@@ -1748,7 +1662,9 @@ name|ID
 argument_list|,
 name|scAddRecExpr
 argument_list|,
-name|ops
+name|O
+argument_list|,
+name|N
 argument_list|)
 block|,
 name|L
@@ -1765,10 +1681,7 @@ literal|0
 init|,
 name|e
 init|=
-name|Operands
-operator|.
-name|size
-argument_list|()
+name|NumOperands
 init|;
 name|i
 operator|!=
@@ -2058,20 +1971,11 @@ name|ScalarEvolution
 block|;
 name|SCEVSMaxExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -2080,7 +1984,9 @@ argument|ID
 argument_list|,
 argument|scSMaxExpr
 argument_list|,
-argument|ops
+argument|O
+argument_list|,
+argument|N
 argument_list|)
 block|{
 comment|// Max never overflows.
@@ -2155,20 +2061,11 @@ name|ScalarEvolution
 block|;
 name|SCEVUMaxExpr
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|SCEV
-operator|*
-operator|>
-operator|&
-name|ops
+argument|const SCEV *const *O
+argument_list|,
+argument|size_t N
 argument_list|)
 operator|:
 name|SCEVCommutativeExpr
@@ -2177,7 +2074,9 @@ argument|ID
 argument_list|,
 argument|scUMaxExpr
 argument_list|,
-argument|ops
+argument|O
+argument_list|,
+argument|N
 argument_list|)
 block|{
 comment|// Max never overflows.
@@ -2258,14 +2157,9 @@ name|V
 block|;
 name|SCEVUnknown
 argument_list|(
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
-name|Value
-operator|*
-name|v
+argument|Value *v
 argument_list|)
 operator|:
 name|SCEV

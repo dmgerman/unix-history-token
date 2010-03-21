@@ -68,7 +68,10 @@ name|reloc_pcrel_1byte
 block|,
 comment|// 8-bit pcrel, e.g. branch_1
 name|reloc_riprel_4byte
+block|,
 comment|// 32-bit rip-relative
+name|reloc_riprel_4byte_movq_load
+comment|// 32-bit rip-relative in movq
 block|}
 enum|;
 block|}

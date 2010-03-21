@@ -113,6 +113,12 @@ directive|include
 file|"Thumb2InstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -371,11 +377,13 @@ operator|:
 name|public
 name|ARMBaseTargetMachine
 block|{
+comment|// Either Thumb1InstrInfo or Thumb2InstrInfo.
+name|OwningPtr
+operator|<
 name|ARMBaseInstrInfo
-operator|*
+operator|>
 name|InstrInfo
 block|;
-comment|// either Thumb1InstrInfo or Thumb2InstrInfo
 specifier|const
 name|TargetData
 name|DataLayout
@@ -455,6 +463,9 @@ specifier|const
 block|{
 return|return
 name|InstrInfo
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|virtual

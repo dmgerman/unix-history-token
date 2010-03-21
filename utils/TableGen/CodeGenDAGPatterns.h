@@ -66,24 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<set>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<algorithm>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CodeGenTarget.h"
 end_include
 
@@ -103,6 +85,30 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -144,17 +150,6 @@ comment|/// value is needed.
 name|namespace
 name|EEVT
 block|{
-enum|enum
-name|DAGISelGenValueType
-block|{
-comment|// FIXME: Remove EEVT::isUnknown!
-name|isUnknown
-init|=
-name|MVT
-operator|::
-name|LAST_VALUETYPE
-block|}
-enum|;
 comment|/// TypeSet - This is either empty if it's completely unknown, or holds a set
 comment|/// of types.  It is used during type inference because register classes can
 comment|/// have multiple possible types and we don't know which one they get until
@@ -176,7 +171,7 @@ name|MVT
 operator|::
 name|SimpleValueType
 operator|,
-literal|2
+literal|4
 operator|>
 name|TypeVec
 expr_stmt|;
@@ -348,6 +343,29 @@ argument_list|)
 block|;
 return|return
 name|TypeVec
+return|;
+block|}
+name|bool
+name|isVoid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeVec
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+operator|&&
+name|TypeVec
+index|[
+literal|0
+index|]
+operator|==
+name|MVT
+operator|::
+name|isVoid
 return|;
 block|}
 comment|/// hasIntegerTypes - Return true if this TypeSet contains any integer value
@@ -531,6 +549,39 @@ operator|.
 name|TypeVec
 return|;
 block|}
+name|private
+label|:
+comment|/// FillWithPossibleTypes - Set to all legal types and return true, only
+comment|/// valid on completely unknown type sets.  If Pred is non-null, only MVTs
+comment|/// that pass the predicate are added.
+name|bool
+name|FillWithPossibleTypes
+argument_list|(
+name|TreePattern
+operator|&
+name|TP
+argument_list|,
+name|bool
+argument_list|(
+operator|*
+name|Pred
+argument_list|)
+argument_list|(
+name|MVT
+operator|::
+name|SimpleValueType
+argument_list|)
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|PredicateName
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}
@@ -669,24 +720,6 @@ name|TP
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getOperandNum - Return the node corresponding to operand #OpNo in tree
-comment|/// N, which has NumResults results.
-name|TreePatternNode
-modifier|*
-name|getOperandNum
-argument_list|(
-name|unsigned
-name|OpNo
-argument_list|,
-name|TreePatternNode
-operator|*
-name|N
-argument_list|,
-name|unsigned
-name|NumResults
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -820,8 +853,10 @@ return|;
 block|}
 comment|/// getKnownType - If the type constraints on this node imply a fixed type
 comment|/// (e.g. all stores return void, etc), then return it as an
-comment|/// MVT::SimpleValueType.  Otherwise, return EEVT::isUnknown.
-name|unsigned
+comment|/// MVT::SimpleValueType.  Otherwise, return MVT::Other.
+name|MVT
+operator|::
+name|SimpleValueType
 name|getKnownType
 argument_list|()
 specifier|const
@@ -934,13 +969,18 @@ begin_decl_stmt
 name|class
 name|TreePatternNode
 block|{
-comment|/// The type of this node.  Before and during type inference, this may be a
-comment|/// set of possible types.  After (successful) type inference, this is a
-comment|/// single type.
+comment|/// The type of each node result.  Before and during type inference, each
+comment|/// result may be a set of possible types.  After (successful) type inference,
+comment|/// each is a single concrete type.
+name|SmallVector
+operator|<
 name|EEVT
 operator|::
 name|TypeSet
-name|Type
+operator|,
+literal|1
+operator|>
+name|Types
 expr_stmt|;
 comment|/// Operator - The Record for the operator if this is an interior node (not
 comment|/// a leaf).
@@ -992,22 +1032,13 @@ name|public
 label|:
 name|TreePatternNode
 argument_list|(
-name|Record
-operator|*
-name|Op
+argument|Record *Op
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|TreePatternNode
-operator|*
-operator|>
-operator|&
-name|Ch
+argument|const std::vector<TreePatternNode*>&Ch
+argument_list|,
+argument|unsigned NumResults
 argument_list|)
-operator|:
+block|:
 name|Operator
 argument_list|(
 name|Op
@@ -1027,12 +1058,19 @@ name|Children
 argument_list|(
 argument|Ch
 argument_list|)
-block|{ }
+block|{
+name|Types
+operator|.
+name|resize
+argument_list|(
+name|NumResults
+argument_list|)
+block|;   }
 name|TreePatternNode
 argument_list|(
-name|Init
-operator|*
-name|val
+argument|Init *val
+argument_list|,
+argument|unsigned NumResults
 argument_list|)
 comment|// leaf ctor
 operator|:
@@ -1050,7 +1088,14 @@ name|TransformFn
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+block|{
+name|Types
+operator|.
+name|resize
+argument_list|(
+name|NumResults
+argument_list|)
+block|;   }
 operator|~
 name|TreePatternNode
 argument_list|()
@@ -1096,31 +1141,69 @@ literal|0
 return|;
 block|}
 comment|// Type accessors.
-name|MVT
-operator|::
-name|SimpleValueType
-name|getType
+name|unsigned
+name|getNumTypes
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Type
+name|Types
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|MVT
+operator|::
+name|SimpleValueType
+name|getType
+argument_list|(
+argument|unsigned ResNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|getConcrete
 argument_list|()
 return|;
 block|}
 specifier|const
+name|SmallVectorImpl
+operator|<
+name|EEVT
+operator|::
+name|TypeSet
+operator|>
+operator|&
+name|getExtTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Types
+return|;
+block|}
+specifier|const
 name|EEVT
 operator|::
 name|TypeSet
 operator|&
 name|getExtType
-argument_list|()
+argument_list|(
+argument|unsigned ResNo
+argument_list|)
 specifier|const
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 return|;
 block|}
 name|EEVT
@@ -1128,15 +1211,23 @@ operator|::
 name|TypeSet
 operator|&
 name|getExtType
-argument_list|()
+argument_list|(
+argument|unsigned ResNo
+argument_list|)
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 return|;
 block|}
 name|void
 name|setType
 argument_list|(
+name|unsigned
+name|ResNo
+argument_list|,
 specifier|const
 name|EEVT
 operator|::
@@ -1145,18 +1236,27 @@ operator|&
 name|T
 argument_list|)
 block|{
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|=
 name|T
 expr_stmt|;
 block|}
 name|bool
 name|hasTypeSet
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|ResNo
+argument_list|)
+decl|const
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|isConcrete
 argument_list|()
@@ -1164,11 +1264,17 @@ return|;
 block|}
 name|bool
 name|isTypeCompletelyUnknown
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|ResNo
+argument_list|)
+decl|const
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|isCompletelyUnknown
 argument_list|()
@@ -1176,11 +1282,17 @@ return|;
 block|}
 name|bool
 name|isTypeDynamicallyResolved
-argument_list|()
-specifier|const
+argument_list|(
+name|unsigned
+name|ResNo
+argument_list|)
+decl|const
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|isDynamicallyResolved
 argument_list|()
@@ -1622,6 +1734,9 @@ comment|///
 name|bool
 name|UpdateNodeType
 argument_list|(
+name|unsigned
+name|ResNo
+argument_list|,
 specifier|const
 name|EEVT
 operator|::
@@ -1635,7 +1750,10 @@ name|TP
 argument_list|)
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|MergeInTypeInfo
 argument_list|(
@@ -1648,6 +1766,9 @@ block|}
 name|bool
 name|UpdateNodeType
 argument_list|(
+name|unsigned
+name|ResNo
+argument_list|,
 name|MVT
 operator|::
 name|SimpleValueType
@@ -1659,7 +1780,10 @@ name|TP
 argument_list|)
 block|{
 return|return
-name|Type
+name|Types
+index|[
+name|ResNo
+index|]
 operator|.
 name|MergeInTypeInfo
 argument_list|(
@@ -1683,10 +1807,36 @@ name|ContainsUnresolvedType
 argument_list|()
 specifier|const
 block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Types
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
 if|if
 condition|(
 operator|!
-name|hasTypeSet
+name|Types
+index|[
+name|i
+index|]
+operator|.
+name|isConcrete
 argument_list|()
 condition|)
 return|return
@@ -3491,6 +3641,40 @@ operator|&&
 literal|"Invalid pattern fragment request!"
 argument_list|)
 expr_stmt|;
+return|return
+name|PatternFragments
+operator|.
+name|find
+argument_list|(
+name|R
+argument_list|)
+operator|->
+name|second
+return|;
+block|}
+name|TreePattern
+modifier|*
+name|getPatternFragmentIfRead
+argument_list|(
+name|Record
+operator|*
+name|R
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|PatternFragments
+operator|.
+name|count
+argument_list|(
+name|R
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|PatternFragments
 operator|.

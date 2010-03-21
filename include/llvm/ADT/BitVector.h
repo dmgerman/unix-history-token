@@ -1887,6 +1887,10 @@ operator|*
 name|BITWORD_SIZE
 condition|)
 block|{
+if|if
+condition|(
+name|Size
+condition|)
 name|std
 operator|::
 name|copy

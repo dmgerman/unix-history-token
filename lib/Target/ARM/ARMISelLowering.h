@@ -184,12 +184,6 @@ comment|// sint to FP within a FP register.
 name|UITOF
 block|,
 comment|// uint to FP within a FP register.
-name|F16_TO_F32
-block|,
-comment|// Half FP to single FP within a FP register.
-name|F32_TO_F16
-block|,
-comment|// Single FP to half FP within a FP register.
 name|SRL_FLAG
 block|,
 comment|// V,Flag = srl_flag X -> srl X, 1 + save carry out.

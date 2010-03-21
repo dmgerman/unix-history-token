@@ -195,15 +195,14 @@ comment|// don't want it to be automatically run, so we need to represent the sp
 comment|// something else.  An array of char would work great, but might not be
 comment|// aligned sufficiently.  Instead, we either use GCC extensions, or some
 comment|// number of union instances for the space, which guarantee maximal alignment.
+struct|struct
+name|U
+block|{
 ifdef|#
 directive|ifdef
 name|__GNUC__
-typedef|typedef
 name|char
-name|U
-typedef|;
-name|U
-name|FirstEl
+name|X
 name|__attribute__
 argument_list|(
 operator|(
@@ -214,7 +213,6 @@ decl_stmt|;
 else|#
 directive|else
 union|union
-name|U
 block|{
 name|double
 name|D
@@ -232,10 +230,13 @@ modifier|*
 name|P
 decl_stmt|;
 block|}
-name|FirstEl
+name|X
 union|;
 endif|#
 directive|endif
+block|}
+name|FirstEl
+struct|;
 comment|// Space after 'FirstEl' is clobbered, do not add any instance vars after it.
 name|protected
 label|:

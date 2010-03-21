@@ -147,7 +147,12 @@ argument_list|)
 block|,
 name|Color
 argument_list|(
-argument|color
+name|color
+argument_list|)
+block|,
+name|Size
+argument_list|(
+literal|0
 argument_list|)
 block|{     }
 name|public

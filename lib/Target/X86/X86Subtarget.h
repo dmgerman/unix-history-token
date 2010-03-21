@@ -814,28 +814,6 @@ name|getSpecialAddressLatency
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// enablePostRAScheduler - X86 target is enabling post-alloc scheduling
-comment|/// at 'More' optimization level.
-name|bool
-name|enablePostRAScheduler
-argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|,
-name|TargetSubtarget
-operator|::
-name|AntiDepBreakMode
-operator|&
-name|Mode
-argument_list|,
-name|RegClassVector
-operator|&
-name|CriticalPathRCs
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 end_decl_stmt
 

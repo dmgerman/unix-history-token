@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Check that the -opt switch works.  * RUN: llvmc %s -opt -o %t  * RUN: %abs_tmp | grep hello  */
+comment|/*  * Check that the -opt switch works.  * RUN: llvmc %s -opt -o %t  * RUN: %abs_tmp | grep hello  * XFAIL: vg_leak  */
 end_comment
 
 begin_include

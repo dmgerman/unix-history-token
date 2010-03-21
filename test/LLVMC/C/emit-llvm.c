@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: llvmc -c -emit-llvm -o - %s | llvm-dis | grep "@f0()" | count 1
 end_comment
 
+begin_comment
+comment|// XFAIL: vg_leak
+end_comment
+
 begin_function
 name|int
 name|f0

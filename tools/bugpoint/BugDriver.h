@@ -192,6 +192,9 @@ decl_stmt|;
 name|unsigned
 name|MemoryLimit
 decl_stmt|;
+name|bool
+name|UseValgrind
+decl_stmt|;
 comment|// FIXME: sort out public/private distinctions...
 name|friend
 name|class
@@ -214,6 +217,8 @@ argument_list|,
 argument|unsigned timeout
 argument_list|,
 argument|unsigned memlimit
+argument_list|,
+argument|bool use_valgrind
 argument_list|,
 argument|LLVMContext& ctxt
 argument_list|)

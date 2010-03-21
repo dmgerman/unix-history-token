@@ -238,10 +238,10 @@ name|TD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getJumpTableIndex - Create a new jump table or return an existing one.
+comment|/// createJumpTableIndex - Create a new jump table.
 comment|///
 name|unsigned
-name|getJumpTableIndex
+name|createJumpTableIndex
 argument_list|(
 specifier|const
 name|std

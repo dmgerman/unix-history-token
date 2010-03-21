@@ -120,6 +120,27 @@ specifier|inline
 specifier|const
 name|char
 modifier|*
+name|getAddrOpcStr
+parameter_list|(
+name|AddrOpc
+name|Op
+parameter_list|)
+block|{
+return|return
+name|Op
+operator|==
+name|sub
+condition|?
+literal|"-"
+else|:
+literal|""
+return|;
+block|}
+specifier|static
+specifier|inline
+specifier|const
+name|char
+modifier|*
 name|getShiftOpcStr
 parameter_list|(
 name|ShiftOpc
@@ -321,83 +342,6 @@ name|db
 case|:
 return|return
 literal|"db"
-return|;
-block|}
-block|}
-specifier|static
-specifier|inline
-specifier|const
-name|char
-modifier|*
-name|getAMSubModeAltStr
-parameter_list|(
-name|AMSubMode
-name|Mode
-parameter_list|,
-name|bool
-name|isLD
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|Mode
-condition|)
-block|{
-default|default:
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unknown addressing sub-mode!"
-argument_list|)
-expr_stmt|;
-case|case
-name|ARM_AM
-operator|::
-name|ia
-case|:
-return|return
-name|isLD
-condition|?
-literal|"fd"
-else|:
-literal|"ea"
-return|;
-case|case
-name|ARM_AM
-operator|::
-name|ib
-case|:
-return|return
-name|isLD
-condition|?
-literal|"ed"
-else|:
-literal|"fa"
-return|;
-case|case
-name|ARM_AM
-operator|::
-name|da
-case|:
-return|return
-name|isLD
-condition|?
-literal|"fa"
-else|:
-literal|"ed"
-return|;
-case|case
-name|ARM_AM
-operator|::
-name|db
-case|:
-return|return
-name|isLD
-condition|?
-literal|"ea"
-else|:
-literal|"fd"
 return|;
 block|}
 block|}
@@ -1933,9 +1877,6 @@ comment|//    IA - Increment after
 comment|//    IB - Increment before
 comment|//    DA - Decrement after
 comment|//    DB - Decrement before
-comment|//
-comment|// If the 4th bit (writeback)is set, then the base register is updated after
-comment|// the memory transfer.
 specifier|static
 specifier|inline
 name|AMSubMode
@@ -1963,11 +1904,6 @@ name|getAM4ModeImm
 parameter_list|(
 name|AMSubMode
 name|SubMode
-parameter_list|,
-name|bool
-name|WB
-init|=
-name|false
 parameter_list|)
 block|{
 return|return
@@ -1975,34 +1911,6 @@ operator|(
 name|int
 operator|)
 name|SubMode
-operator||
-operator|(
-operator|(
-name|int
-operator|)
-name|WB
-operator|<<
-literal|3
-operator|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|getAM4WBFlag
-parameter_list|(
-name|unsigned
-name|Mode
-parameter_list|)
-block|{
-return|return
-operator|(
-name|Mode
-operator|>>
-literal|3
-operator|)
-operator|&
-literal|1
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -2017,9 +1925,9 @@ comment|// The first operand is always a Reg.  The second operand encodes the
 comment|// operation in bit 8 and the immediate in bits 0-7.
 comment|//
 comment|// This is also used for FP load/store multiple ops. The second operand
-comment|// encodes the writeback mode in bit 8 and the number of registers (or 2
-comment|// times the number of registers for DPR ops) in bits 0-7. In addition,
-comment|// bits 9-11 encode one of the following two sub-modes:
+comment|// encodes the number of registers (or 2 times the number of registers
+comment|// for DPR ops) in bits 0-7. In addition, bits 8-10 encode one of the
+comment|// following two sub-modes:
 comment|//
 comment|//    IA - Increment after
 comment|//    DB - Decrement before
@@ -2108,9 +2016,6 @@ parameter_list|(
 name|AMSubMode
 name|SubMode
 parameter_list|,
-name|bool
-name|WB
-parameter_list|,
 name|unsigned
 name|char
 name|Offset
@@ -2138,15 +2043,6 @@ name|int
 operator|)
 name|SubMode
 operator|<<
-literal|9
-operator|)
-operator||
-operator|(
-operator|(
-name|int
-operator|)
-name|WB
-operator|<<
 literal|8
 operator|)
 operator||
@@ -2170,32 +2066,11 @@ argument_list|(
 operator|(
 name|AM5Opc
 operator|>>
-literal|9
+literal|8
 operator|)
 operator|&
 literal|0x7
 argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|getAM5WBFlag
-parameter_list|(
-name|unsigned
-name|AM5Opc
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|AM5Opc
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|1
-operator|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -2204,48 +2079,11 @@ comment|//===-------------------------------------------------------------------
 comment|//
 comment|// This is used for NEON load / store instructions.
 comment|//
-comment|// addrmode6 := reg with optional writeback and alignment
+comment|// addrmode6 := reg with optional alignment
 comment|//
-comment|// This is stored in four operands [regaddr, regupdate, opc, align].  The
-comment|// first is the address register.  The second register holds the value of
-comment|// a post-access increment for writeback or reg0 if no writeback or if the
-comment|// writeback increment is the size of the memory access.  The third
-comment|// operand encodes whether there is writeback to the address register. The
-comment|// fourth operand is the value of the alignment specifier to use or zero if
-comment|// no explicit alignment.
-specifier|static
-specifier|inline
-name|unsigned
-name|getAM6Opc
-parameter_list|(
-name|bool
-name|WB
-init|=
-name|false
-parameter_list|)
-block|{
-return|return
-operator|(
-name|int
-operator|)
-name|WB
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|getAM6WBFlag
-parameter_list|(
-name|unsigned
-name|Mode
-parameter_list|)
-block|{
-return|return
-name|Mode
-operator|&
-literal|1
-return|;
-block|}
+comment|// This is stored in two operands [regaddr, align].  The first is the
+comment|// address register.  The second operand is the value of the alignment
+comment|// specifier to use or zero if no explicit alignment.
 block|}
 comment|// end namespace ARM_AM
 block|}

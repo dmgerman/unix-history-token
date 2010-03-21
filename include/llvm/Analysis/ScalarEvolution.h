@@ -192,8 +192,13 @@ name|class
 name|SCEV
 range|:
 name|public
-name|FastFoldingSetNode
+name|FoldingSetNode
 block|{
+comment|/// FastID - A reference to an Interned FoldingSetNodeID for this node.
+comment|/// The ScalarEvolution's BumpPtrAllocator holds the data.
+name|FoldingSetNodeIDRef
+name|FastID
+block|;
 comment|// The SCEV baseclass this node corresponds to
 specifier|const
 name|unsigned
@@ -240,12 +245,12 @@ operator|:
 name|explicit
 name|SCEV
 argument_list|(
-argument|const FoldingSetNodeID&ID
+argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|unsigned SCEVTy
 argument_list|)
 operator|:
-name|FastFoldingSetNode
+name|FastID
 argument_list|(
 name|ID
 argument_list|)
@@ -269,6 +274,17 @@ return|return
 name|SCEVType
 return|;
 block|}
+comment|/// Profile - FoldingSet support.
+name|void
+name|Profile
+argument_list|(
+argument|FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|FastID
+block|; }
 comment|/// isLoopInvariant - Return true if the value of this SCEV is unchanging in
 comment|/// the specified loop.
 name|virtual

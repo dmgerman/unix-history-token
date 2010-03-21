@@ -355,7 +355,8 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// NumDefs - Number of def operands declared.
+comment|/// NumDefs - Number of def operands declared, this is the number of
+comment|/// elements in the instruction's (outs) list.
 comment|///
 name|unsigned
 name|NumDefs
@@ -369,6 +370,19 @@ operator|<
 name|OperandInfo
 operator|>
 name|OperandList
+expr_stmt|;
+comment|/// ImplicitDefs/ImplicitUses - These are lists of registers that are
+comment|/// implicitly defined and used by the instruction.
+name|std
+operator|::
+name|vector
+operator|<
+name|Record
+operator|*
+operator|>
+name|ImplicitDefs
+operator|,
+name|ImplicitUses
 expr_stmt|;
 comment|// Various boolean values we track for the instruction.
 name|bool

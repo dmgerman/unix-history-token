@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Check that the 'include' options work.  * RUN: echo "int x;\n"> %t1.inc  * RUN: llvmc -include %t1.inc -fsyntax-only %s  */
+comment|/*  * Check that the 'include' options work.  * RUN: echo "int x;\n"> %t1.inc  * RUN: llvmc -include %t1.inc -fsyntax-only %s  * XFAIL: vg_leak  */
 end_comment
 
 begin_function

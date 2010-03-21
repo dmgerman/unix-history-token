@@ -182,7 +182,6 @@ name|TT
 argument_list|)
 expr_stmt|;
 typedef|typedef
-specifier|const
 name|MCAsmInfo
 modifier|*
 function_decl|(
@@ -302,7 +301,6 @@ operator|&
 name|P
 argument_list|)
 argument_list|;     typedef
-specifier|const
 name|MCDisassembler
 operator|*
 call|(
@@ -593,7 +591,6 @@ comment|/// \arg Triple - This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
-specifier|const
 name|MCAsmInfo
 modifier|*
 name|createAsmInfo
@@ -805,7 +802,6 @@ name|Streamer
 argument_list|)
 return|;
 block|}
-specifier|const
 name|MCDisassembler
 operator|*
 name|createMCDisassembler
@@ -2094,7 +2090,6 @@ block|;     }
 name|private
 operator|:
 specifier|static
-specifier|const
 name|MCAsmInfo
 operator|*
 name|Allocator

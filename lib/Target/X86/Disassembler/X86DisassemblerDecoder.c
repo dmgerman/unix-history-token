@@ -4912,7 +4912,7 @@ name|dbgprintf
 argument_list|(
 name|insn
 argument_list|,
-literal|"Read from 0x%llx to 0x%llx: length %llu"
+literal|"Read from 0x%llx to 0x%llx: length %zu"
 argument_list|,
 name|startLoc
 argument_list|,

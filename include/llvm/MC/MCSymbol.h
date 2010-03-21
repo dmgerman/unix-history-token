@@ -88,7 +88,6 @@ comment|///
 comment|/// If the symbol is defined/emitted into the current translation unit, the
 comment|/// Section member is set to indicate what section it lives in.  Otherwise, if
 comment|/// it is a reference to an external entity, it has a null section.
-comment|///
 name|class
 name|MCSymbol
 block|{
@@ -221,6 +220,22 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// isInSection - Check if this symbol is defined in some section (i.e., it
+comment|/// is defined but not absolute).
+name|bool
+name|isInSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDefined
+argument_list|()
+operator|&&
+operator|!
+name|isAbsolute
+argument_list|()
+return|;
+block|}
 comment|/// isUndefined - Check if this symbol undefined (i.e., implicitly defined).
 name|bool
 name|isUndefined
@@ -256,12 +271,7 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
-name|isUndefined
-argument_list|()
-operator|&&
-operator|!
-name|isAbsolute
+name|isInSection
 argument_list|()
 operator|&&
 literal|"Invalid accessor!"

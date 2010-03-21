@@ -284,45 +284,7 @@ name|Instruction
 modifier|*
 name|I
 parameter_list|)
-block|{
-name|BasicBlock
-operator|::
-name|iterator
-name|IP
-operator|=
-name|I
-expr_stmt|;
-while|while
-condition|(
-name|isInsertedInstruction
-argument_list|(
-name|IP
-argument_list|)
-condition|)
-operator|++
-name|IP
-expr_stmt|;
-name|Builder
-operator|.
-name|SetInsertPoint
-argument_list|(
-name|IP
-operator|->
-name|getParent
-argument_list|()
-argument_list|,
-name|IP
-argument_list|)
-expr_stmt|;
-return|return
-name|expandCodeFor
-argument_list|(
-name|SH
-argument_list|,
-name|Ty
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// setIVIncInsertPos - Set the current IV increment loop and position.
 name|void
 name|setIVIncInsertPos
@@ -390,6 +352,19 @@ block|{
 name|CanonicalMode
 operator|=
 name|false
+expr_stmt|;
+block|}
+comment|/// clearInsertPoint - Clear the current insertion point. This is useful
+comment|/// if the instruction that had been serving as the insertion point may
+comment|/// have been deleted.
+name|void
+name|clearInsertPoint
+parameter_list|()
+block|{
+name|Builder
+operator|.
+name|ClearInsertionPoint
+argument_list|()
 expr_stmt|;
 block|}
 name|private

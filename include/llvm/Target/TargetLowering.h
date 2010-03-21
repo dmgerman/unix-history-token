@@ -1303,7 +1303,6 @@ comment|/// getTgtMemIntrinsic: Given an intrinsic, checks if on the target the
 comment|/// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
 comment|/// this is the case, it returns true and store the intrinsic
 comment|/// information into the IntrinsicInfo that was passed to the function.
-typedef|typedef
 struct|struct
 name|IntrinsicInfo
 block|{
@@ -1342,8 +1341,7 @@ name|writeMem
 decl_stmt|;
 comment|// writes memory?
 block|}
-name|IntrinisicInfo
-typedef|;
+struct|;
 name|virtual
 name|bool
 name|getTgtMemIntrinsic

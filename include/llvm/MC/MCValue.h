@@ -82,10 +82,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MCSymbolRefExpr
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -104,7 +107,7 @@ name|class
 name|MCValue
 block|{
 specifier|const
-name|MCSymbol
+name|MCSymbolRefExpr
 modifier|*
 name|SymA
 decl_stmt|,
@@ -126,7 +129,7 @@ name|Cst
 return|;
 block|}
 specifier|const
-name|MCSymbol
+name|MCSymbolRefExpr
 operator|*
 name|getSymA
 argument_list|()
@@ -137,7 +140,7 @@ name|SymA
 return|;
 block|}
 specifier|const
-name|MCSymbol
+name|MCSymbolRefExpr
 operator|*
 name|getSymB
 argument_list|()
@@ -202,12 +205,12 @@ name|MCValue
 name|get
 parameter_list|(
 specifier|const
-name|MCSymbol
+name|MCSymbolRefExpr
 modifier|*
 name|SymA
 parameter_list|,
 specifier|const
-name|MCSymbol
+name|MCSymbolRefExpr
 modifier|*
 name|SymB
 init|=

@@ -112,10 +112,16 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCCodeEmitter
+decl_stmt|;
+name|class
 name|MCExpr
 decl_stmt|;
 name|class
 name|MCFragment
+decl_stmt|;
+name|class
+name|MCObjectWriter
 decl_stmt|;
 name|class
 name|MCSection
@@ -135,9 +141,11 @@ decl_stmt|;
 comment|/// MCAsmFixup - Represent a fixed size region of bytes inside some fragment
 comment|/// which needs to be rewritten. This region will either be rewritten by the
 comment|/// assembler or cause a relocation entry to be generated.
-struct|struct
+name|class
 name|MCAsmFixup
 block|{
+name|public
+label|:
 comment|/// Offset - The offset inside the fragment which needs to be rewritten.
 name|uint64_t
 name|Offset
@@ -151,12 +159,6 @@ decl_stmt|;
 comment|/// Kind - The fixup kind.
 name|MCFixupKind
 name|Kind
-decl_stmt|;
-comment|/// FixedValue - The value to replace the fix up by.
-comment|//
-comment|// FIXME: This should not be here.
-name|uint64_t
-name|FixedValue
 decl_stmt|;
 name|public
 label|:
@@ -182,16 +184,11 @@ argument_list|)
 operator|,
 name|Kind
 argument_list|(
-name|_Kind
-argument_list|)
-operator|,
-name|FixedValue
-argument_list|(
-literal|0
+argument|_Kind
 argument_list|)
 block|{}
 block|}
-struct|;
+empty_stmt|;
 name|class
 name|MCFragment
 range|:
@@ -2287,6 +2284,17 @@ operator|<
 name|IndirectSymbolData
 operator|>
 operator|::
+name|const_iterator
+name|const_indirect_symbol_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|IndirectSymbolData
+operator|>
+operator|::
 name|iterator
 name|indirect_symbol_iterator
 expr_stmt|;
@@ -2317,6 +2325,10 @@ decl_stmt|;
 name|TargetAsmBackend
 modifier|&
 name|Backend
+decl_stmt|;
+name|MCCodeEmitter
+modifier|&
+name|Emitter
 decl_stmt|;
 name|raw_ostream
 modifier|&
@@ -2377,40 +2389,6 @@ literal|1
 decl_stmt|;
 name|private
 label|:
-comment|/// Check whether a fixup can be satisfied, or whether it needs to be relaxed
-comment|/// (increased in size, in order to hold its value correctly).
-name|bool
-name|FixupNeedsRelaxation
-parameter_list|(
-name|MCAsmFixup
-modifier|&
-name|Fixup
-parameter_list|,
-name|MCDataFragment
-modifier|*
-name|DF
-parameter_list|)
-function_decl|;
-comment|/// LayoutSection - Assign offsets and sizes to the fragments in the section
-comment|/// \arg SD, and update the section size. The section file offset should
-comment|/// already have been computed.
-name|void
-name|LayoutSection
-parameter_list|(
-name|MCSectionData
-modifier|&
-name|SD
-parameter_list|)
-function_decl|;
-comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
-comment|/// were adjusted.
-name|bool
-name|LayoutOnce
-parameter_list|()
-function_decl|;
-comment|// FIXME: Make protected once we factor out object writer classes.
-name|public
-label|:
 comment|/// Evaluate a fixup to a relocatable expression and the value which should be
 comment|/// placed into the fixup.
 comment|///
@@ -2450,6 +2428,105 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Check whether a fixup can be satisfied, or whether it needs to be relaxed
+comment|/// (increased in size, in order to hold its value correctly).
+name|bool
+name|FixupNeedsRelaxation
+parameter_list|(
+name|MCAsmFixup
+modifier|&
+name|Fixup
+parameter_list|,
+name|MCDataFragment
+modifier|*
+name|DF
+parameter_list|)
+function_decl|;
+comment|/// LayoutSection - Assign offsets and sizes to the fragments in the section
+comment|/// \arg SD, and update the section size. The section file offset should
+comment|/// already have been computed.
+name|void
+name|LayoutSection
+parameter_list|(
+name|MCSectionData
+modifier|&
+name|SD
+parameter_list|)
+function_decl|;
+comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
+comment|/// were adjusted.
+name|bool
+name|LayoutOnce
+parameter_list|()
+function_decl|;
+name|public
+label|:
+comment|/// Find the symbol which defines the atom containing given address, inside
+comment|/// the given section, or null if there is no such symbol.
+comment|//
+comment|// FIXME: Eliminate this, it is very slow.
+specifier|const
+name|MCSymbolData
+modifier|*
+name|getAtomForAddress
+argument_list|(
+specifier|const
+name|MCSectionData
+operator|*
+name|Section
+argument_list|,
+name|uint64_t
+name|Address
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Find the symbol which defines the atom containing the given symbol, or
+comment|/// null if there is no such symbol.
+comment|//
+comment|// FIXME: Eliminate this, it is very slow.
+specifier|const
+name|MCSymbolData
+modifier|*
+name|getAtom
+argument_list|(
+specifier|const
+name|MCSymbolData
+operator|*
+name|Symbol
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Check whether a particular symbol is visible to the linker and is required
+comment|/// in the symbol table, or whether it can be discarded by the assembler. This
+comment|/// also effects whether the assembler treats the label as potentially
+comment|/// defining a separate atom.
+name|bool
+name|isSymbolLinkerVisible
+argument_list|(
+specifier|const
+name|MCSymbolData
+operator|*
+name|SD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Emit the section contents using the given object writer.
+comment|//
+comment|// FIXME: Should MCAssembler always have a reference to the object writer?
+name|void
+name|WriteSectionData
+argument_list|(
+specifier|const
+name|MCSectionData
+operator|*
+name|Section
+argument_list|,
+name|MCObjectWriter
+operator|*
+name|OW
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// Construct a new assembler instance.
@@ -2469,6 +2546,10 @@ argument_list|,
 name|TargetAsmBackend
 operator|&
 name|_Backend
+argument_list|,
+name|MCCodeEmitter
+operator|&
+name|_Emitter
 argument_list|,
 name|raw_ostream
 operator|&
@@ -2497,6 +2578,16 @@ specifier|const
 block|{
 return|return
 name|Backend
+return|;
+block|}
+name|MCCodeEmitter
+operator|&
+name|getEmitter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Emitter
 return|;
 block|}
 comment|/// Finish - Do final processing and write the object to the output stream.
@@ -2718,9 +2809,33 @@ name|begin
 argument_list|()
 return|;
 block|}
+name|const_indirect_symbol_iterator
+name|indirect_symbol_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IndirectSymbols
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
 name|indirect_symbol_iterator
 name|indirect_symbol_end
 parameter_list|()
+block|{
+return|return
+name|IndirectSymbols
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_indirect_symbol_iterator
+name|indirect_symbol_end
+argument_list|()
+specifier|const
 block|{
 return|return
 name|IndirectSymbols

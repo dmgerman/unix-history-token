@@ -213,6 +213,44 @@ argument_list|()
 block|; }
 expr|}
 block|;  }
+name|template
+operator|<
+name|class
+name|AllocatorType
+operator|,
+name|class
+name|T
+operator|,
+name|size_t
+name|Size
+operator|,
+name|size_t
+name|Align
+operator|>
+specifier|inline
+name|void
+operator|*
+name|operator
+name|new
+argument_list|(
+argument|size_t
+argument_list|,
+argument|llvm::RecyclingAllocator<AllocatorType
+argument_list|,
+argument|T
+argument_list|,
+argument|Size
+argument_list|,
+argument|Align>&Allocator
+argument_list|)
+block|{
+return|return
+name|Allocator
+operator|.
+name|Allocate
+argument_list|()
+return|;
+block|}
 end_decl_stmt
 
 begin_endif

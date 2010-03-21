@@ -11145,6 +11145,22 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/// setCalledFunction - Set the function called.
+name|void
+name|setCalledFunction
+argument_list|(
+argument|Value* Fn
+argument_list|)
+block|{
+name|Op
+operator|<
+literal|0
+operator|>
+operator|(
+operator|)
+operator|=
+name|Fn
+block|;   }
 comment|// get*Dest - Return the destination basic blocks...
 name|BasicBlock
 operator|*

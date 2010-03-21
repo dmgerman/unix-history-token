@@ -80,6 +80,20 @@ comment|/// MCFixupKindInfo - Target independent information on a fixup kind.
 struct|struct
 name|MCFixupKindInfo
 block|{
+enum|enum
+name|FixupKindFlags
+block|{
+comment|/// Is this fixup kind PCrelative. This is used by the assembler backend to
+comment|/// evaluate fixup values in a target independent manner when possible.
+name|FKF_IsPCRel
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|}
+enum|;
 comment|/// A target specific name for the fixup kind. The names will be unique for
 comment|/// distinct kinds on any given target.
 specifier|const
@@ -99,6 +113,10 @@ comment|/// The number of bits written by this fixup. The bits are assumed to be
 comment|/// contiguous.
 name|unsigned
 name|TargetSize
+decl_stmt|;
+comment|/// Flags describing additional information on this fixup kind.
+name|unsigned
+name|Flags
 decl_stmt|;
 block|}
 struct|;

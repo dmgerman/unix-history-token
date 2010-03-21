@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<set>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -429,15 +435,15 @@ name|PMAI
 block|;
 name|std
 operator|::
-name|list
+name|set
 operator|<
-specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 name|LibcallDecls
 block|;
-comment|// List of extern decls.
+comment|// Sorted& uniqued set of extern decls.
 name|std
 operator|::
 name|vector

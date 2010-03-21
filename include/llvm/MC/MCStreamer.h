@@ -746,7 +746,8 @@ comment|/// assembly for the native target, suitable for compiling with a native
 comment|/// assembler.
 comment|///
 comment|/// \param InstPrint - If given, the instruction printer to use. If not given
-comment|/// the MCInst representation will be printed.
+comment|/// the MCInst representation will be printed.  This method takes ownership of
+comment|/// InstPrint.
 comment|///
 comment|/// \param CE - If given, a code emitter to use to show the instruction
 comment|/// encoding inline with the assembly.

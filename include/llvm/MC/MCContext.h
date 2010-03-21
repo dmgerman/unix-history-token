@@ -215,18 +215,24 @@ comment|/// with the specified @p Name if it doesn't exist or return the existin
 comment|/// one if it does.
 comment|///
 comment|/// @param Name - The symbol name, for debugging purposes only, temporary
-comment|/// symbols do not surive assembly. If non-empty the name must be unique
-comment|/// across all symbols.
+comment|/// symbols do not surive assembly.
 name|MCSymbol
 modifier|*
 name|GetOrCreateTemporarySymbol
 parameter_list|(
 name|StringRef
 name|Name
-init|=
-literal|""
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|GetOrCreateSymbol
+argument_list|(
+name|Name
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 name|MCSymbol
 modifier|*
 name|GetOrCreateTemporarySymbol
