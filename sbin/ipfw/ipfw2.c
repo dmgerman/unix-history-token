@@ -14321,7 +14321,7 @@ argument_list|(
 name|ipfw_insn_sa
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In the kernel we assume AF_INET and use only 		 * sin_port and sin_addr. 		 */
+comment|/* 		 * In the kernel we assume AF_INET and use only 		 * sin_port and sin_addr. Remember to set sin_len as 		 * the routing code seems to use it too. 		 */
 name|p
 operator|->
 name|sa
@@ -14329,6 +14329,18 @@ operator|.
 name|sin_family
 operator|=
 name|AF_INET
+expr_stmt|;
+name|p
+operator|->
+name|sa
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
