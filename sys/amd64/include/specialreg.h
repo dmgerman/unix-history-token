@@ -1733,70 +1733,70 @@ begin_define
 define|#
 directive|define
 name|MTRR_CAP_WC
-value|0x0000000000000400UL
+value|0x0000000000000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_CAP_FIXED
-value|0x0000000000000100UL
+value|0x0000000000000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_CAP_VCNT
-value|0x00000000000000ffUL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_ENABLE
-value|0x0000000000000800UL
+value|0x0000000000000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_FIXED_ENABLE
-value|0x0000000000000400UL
+value|0x0000000000000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_DEF_TYPE
-value|0x00000000000000ffUL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSBASE_PHYSBASE
-value|0x000ffffffffff000UL
+value|0x000ffffffffff000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSBASE_TYPE
-value|0x00000000000000ffUL
+value|0x00000000000000ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSMASK_PHYSMASK
-value|0x000ffffffffff000UL
+value|0x000ffffffffff000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MTRR_PHYSMASK_VALID
-value|0x0000000000000800UL
+value|0x0000000000000800
 end_define
 
 begin_comment
@@ -1983,14 +1983,14 @@ begin_define
 define|#
 directive|define
 name|MCG_CTL_ENABLE
-value|0xffffffffffffffffUL
+value|0xffffffffffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MCG_CTL_DISABLE
-value|0x0000000000000000UL
+value|0x0000000000000000
 end_define
 
 begin_define
@@ -2051,28 +2051,28 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_MCA_ERROR
-value|0x000000000000ffffUL
+value|0x000000000000ffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MODEL_ERROR
-value|0x00000000ffff0000UL
+value|0x00000000ffff0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OTHER_INFO
-value|0x01ffffff00000000UL
+value|0x01ffffff00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_COR_COUNT
-value|0x001fffc000000000UL
+value|0x001fffc000000000
 end_define
 
 begin_comment
@@ -2083,7 +2083,7 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_TES_STATUS
-value|0x0060000000000000UL
+value|0x0060000000000000
 end_define
 
 begin_comment
@@ -2094,7 +2094,7 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_AR
-value|0x0080000000000000UL
+value|0x0080000000000000
 end_define
 
 begin_comment
@@ -2105,7 +2105,7 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_S
-value|0x0100000000000000UL
+value|0x0100000000000000
 end_define
 
 begin_comment
@@ -2116,56 +2116,56 @@ begin_define
 define|#
 directive|define
 name|MC_STATUS_PCC
-value|0x0200000000000000UL
+value|0x0200000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_ADDRV
-value|0x0400000000000000UL
+value|0x0400000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_MISCV
-value|0x0800000000000000UL
+value|0x0800000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_EN
-value|0x1000000000000000UL
+value|0x1000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_UC
-value|0x2000000000000000UL
+value|0x2000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_OVER
-value|0x4000000000000000UL
+value|0x4000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_STATUS_VAL
-value|0x8000000000000000UL
+value|0x8000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_MISC_RA_LSB
-value|0x000000000000003fUL
+value|0x000000000000003f
 end_define
 
 begin_comment
@@ -2176,7 +2176,7 @@ begin_define
 define|#
 directive|define
 name|MC_MISC_ADDRESS_MODE
-value|0x00000000000001c0UL
+value|0x00000000000001c0
 end_define
 
 begin_comment
@@ -2187,14 +2187,14 @@ begin_define
 define|#
 directive|define
 name|MC_CTL2_THRESHOLD
-value|0x0000000000003fffUL
+value|0x0000000000003fff
 end_define
 
 begin_define
 define|#
 directive|define
 name|MC_CTL2_CMCI_EN
-value|0x0000000040000000UL
+value|0x0000000040000000
 end_define
 
 begin_comment
