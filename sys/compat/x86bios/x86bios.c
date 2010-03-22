@@ -2728,6 +2728,9 @@ name|x86bios_rom
 operator|+
 name|X86BIOS_ROM_BASE
 operator|-
+operator|(
+name|vm_offset_t
+operator|)
 name|x86bios_rom_phys
 operator|)
 argument_list|)
