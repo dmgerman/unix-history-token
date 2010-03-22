@@ -179,11 +179,37 @@ begin_comment
 comment|/*  * align field or structure to cache line  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UMA_ALIGN
+value|__aligned(CACHE_LINE_SIZE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|UMA_ALIGN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structures for per cpu queues.  */
@@ -215,7 +241,6 @@ index|[]
 decl_stmt|;
 comment|/* actual allocation storage */
 block|}
-name|UMA_ALIGN
 struct|;
 end_struct
 
@@ -778,7 +803,6 @@ name|uz_cpu
 index|[
 literal|1
 index|]
-name|UMA_ALIGN
 decl_stmt|;
 comment|/* Per cpu caches */
 block|}
