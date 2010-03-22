@@ -353,11 +353,6 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-name|ia64_set_eoi
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|PCPU_INC
 argument_list|(
 name|md
@@ -372,9 +367,6 @@ index|[
 name|INTRCNT_CLOCK
 index|]
 operator|++
-expr_stmt|;
-name|ia64_srlz_d
-argument_list|()
 expr_stmt|;
 name|itc
 operator|=
@@ -506,6 +498,9 @@ operator|-
 name|adj
 argument_list|)
 expr_stmt|;
+name|ia64_srlz_d
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|count
@@ -580,9 +575,6 @@ argument_list|,
 name|adj
 argument_list|)
 expr_stmt|;
-name|ia64_srlz_d
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -641,7 +633,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start the real-time and statistics clocks. We use cr.itc and cr.itm  * to implement a 1000hz clock.  */
+comment|/*  * Start the real-time and statistics clocks. We use ar.itc and cr.itm  * to implement a 1000hz clock.  */
 end_comment
 
 begin_function
