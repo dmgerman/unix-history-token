@@ -876,6 +876,25 @@ name|IFCAP_VLAN_HWFILTER
 argument_list|,
 name|setifcap
 argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-vlanhwtso"
+argument_list|,
+operator|-
+name|IFCAP_VLAN_HWTSO
+argument_list|,
+name|setifcap
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"vlanhwtso"
+argument_list|,
+name|IFCAP_VLAN_HWTSO
+argument_list|,
+name|setifcap
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
