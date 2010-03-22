@@ -170,6 +170,37 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|thread
+operator|*
+name|__curthread
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|thread
+operator|*
+name|td
+block|;
+asm|__asm __volatile("ld8.acq %0=[r13]" : "=r"(td));
+return|return
+operator|(
+name|td
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|curthread
+value|(__curthread())
+end_define
+
 begin_define
 define|#
 directive|define
