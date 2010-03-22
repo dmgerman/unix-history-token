@@ -1892,6 +1892,16 @@ operator|>=
 name|UIO_MX
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|dp
+argument_list|,
+name|UIO_MX
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|i
@@ -1905,16 +1915,6 @@ case|case
 literal|1
 case|:
 comment|/* `..' */
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dp
-argument_list|,
-name|UIO_MX
-argument_list|)
-expr_stmt|;
 name|dp
 operator|->
 name|d_fileno
@@ -1980,26 +1980,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-block|{
-name|FILEDESC_UNLOCK_FAST
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|dp
-argument_list|,
-name|UIO_MX
-argument_list|)
-expr_stmt|;
+break|break;
 name|dp
 operator|->
 name|d_namlen
@@ -2037,7 +2018,16 @@ name|FD_DESC
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * And ship to userland 		 */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_namlen
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * And ship to userland 			 */
 name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
@@ -2066,6 +2056,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 name|i
 operator|++
 expr_stmt|;
