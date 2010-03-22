@@ -2027,10 +2027,13 @@ operator|->
 name|si_drv1
 decl_stmt|;
 name|int
-name|timed_out
+name|error
 decl_stmt|;
 name|int
-name|error
+name|non_block
+decl_stmt|;
+name|int
+name|timed_out
 decl_stmt|;
 comment|/* 	 * Restrict application to use a buffer the same size as 	 * as kernel buffers. 	 */
 if|if
@@ -2048,6 +2051,18 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|non_block
+operator|=
+operator|(
+operator|(
+name|ioflag
+operator|&
+name|O_NONBLOCK
+operator|)
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
 name|BPFD_LOCK
 argument_list|(
 name|d
@@ -2107,14 +2122,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|d
-operator|->
-name|bd_immediate
-operator|||
-name|timed_out
-operator|)
-operator|&&
 name|d
 operator|->
 name|bd_slen
@@ -2122,13 +2129,26 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * A packet(s) either arrived since the previous 			 * read or arrived while we were asleep. 			 * Rotate the buffers and return what's here. 			 */
+comment|/* 			 * A packet(s) either arrived since the previous 			 * read or arrived while we were asleep. 			 */
+if|if
+condition|(
+name|d
+operator|->
+name|bd_immediate
+operator|||
+name|non_block
+operator|||
+name|timed_out
+condition|)
+block|{
+comment|/* 				 * Rotate the buffers and return what's here 				 * if we are in immediate mode, non-blocking 				 * flag is set, or this descriptor timed out. 				 */
 name|ROTATE_BUFFERS
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/* 		 * No data is available, check to see if the bpf device 		 * is still pointed at a real interface.  If not, return 		 * ENXIO so that the userland process knows to rebind 		 * it before using it again. 		 */
 if|if
@@ -2153,9 +2173,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ioflag
-operator|&
-name|O_NONBLOCK
+name|non_block
 condition|)
 block|{
 name|BPFD_UNLOCK
