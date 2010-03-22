@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2008 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -166,7 +166,7 @@ name|whave
 decl_stmt|;
 comment|/* valid bytes in the window */
 name|unsigned
-name|write
+name|wnext
 decl_stmt|;
 comment|/* window write index */
 name|unsigned
@@ -208,7 +208,7 @@ name|dmask
 decl_stmt|;
 comment|/* mask for first level of distance codes */
 name|code
-name|this
+name|here
 decl_stmt|;
 comment|/* retrieved table entry */
 name|unsigned
@@ -319,11 +319,11 @@ name|state
 operator|->
 name|whave
 expr_stmt|;
-name|write
+name|wnext
 operator|=
 name|state
 operator|->
-name|write
+name|wnext
 expr_stmt|;
 name|window
 operator|=
@@ -428,7 +428,7 @@ operator|+=
 literal|8
 expr_stmt|;
 block|}
-name|this
+name|here
 operator|=
 name|lcode
 index|[
@@ -445,7 +445,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -464,7 +464,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|op
 argument_list|)
@@ -482,13 +482,13 @@ argument_list|(
 operator|(
 name|stderr
 operator|,
-name|this
+name|here
 operator|.
 name|val
 operator|>=
 literal|0x20
 operator|&&
-name|this
+name|here
 operator|.
 name|val
 operator|<
@@ -498,7 +498,7 @@ literal|"inflate:         literal '%c'\n"
 else|:
 literal|"inflate:         literal 0x%02x\n"
 operator|,
-name|this
+name|here
 operator|.
 name|val
 operator|)
@@ -514,7 +514,7 @@ name|unsigned
 name|char
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|val
 argument_list|)
@@ -535,7 +535,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|val
 argument_list|)
@@ -660,7 +660,7 @@ operator|+=
 literal|8
 expr_stmt|;
 block|}
-name|this
+name|here
 operator|=
 name|dcode
 index|[
@@ -677,7 +677,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|bits
 argument_list|)
@@ -696,7 +696,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|op
 argument_list|)
@@ -715,7 +715,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|this
+name|here
 operator|.
 name|val
 argument_list|)
@@ -879,6 +879,13 @@ operator|>
 name|whave
 condition|)
 block|{
+if|if
+condition|(
+name|state
+operator|->
+name|sane
+condition|)
+block|{
 name|strm
 operator|->
 name|msg
@@ -897,6 +904,97 @@ name|BAD
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|INFLATE_ALLOW_INVALID_DISTANCE_TOOFAR_ARRR
+if|if
+condition|(
+name|len
+operator|<=
+name|op
+operator|-
+name|whave
+condition|)
+block|{
+do|do
+block|{
+name|PUP
+argument_list|(
+name|out
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|len
+condition|)
+do|;
+continue|continue;
+block|}
+name|len
+operator|-=
+name|op
+operator|-
+name|whave
+expr_stmt|;
+do|do
+block|{
+name|PUP
+argument_list|(
+name|out
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|op
+operator|>
+name|whave
+condition|)
+do|;
+if|if
+condition|(
+name|op
+operator|==
+literal|0
+condition|)
+block|{
+name|from
+operator|=
+name|out
+operator|-
+name|dist
+expr_stmt|;
+do|do
+block|{
+name|PUP
+argument_list|(
+name|out
+argument_list|)
+operator|=
+name|PUP
+argument_list|(
+name|from
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|len
+condition|)
+do|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+block|}
 name|from
 operator|=
 name|window
@@ -905,7 +1003,7 @@ name|OFF
 expr_stmt|;
 if|if
 condition|(
-name|write
+name|wnext
 operator|==
 literal|0
 condition|)
@@ -960,7 +1058,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|write
+name|wnext
 operator|<
 name|op
 condition|)
@@ -970,13 +1068,13 @@ name|from
 operator|+=
 name|wsize
 operator|+
-name|write
+name|wnext
 operator|-
 name|op
 expr_stmt|;
 name|op
 operator|-=
-name|write
+name|wnext
 expr_stmt|;
 if|if
 condition|(
@@ -1017,7 +1115,7 @@ name|OFF
 expr_stmt|;
 if|if
 condition|(
-name|write
+name|wnext
 operator|<
 name|len
 condition|)
@@ -1025,7 +1123,7 @@ block|{
 comment|/* some from start of window */
 name|op
 operator|=
-name|write
+name|wnext
 expr_stmt|;
 name|len
 operator|-=
@@ -1065,7 +1163,7 @@ block|{
 comment|/* contiguous in window */
 name|from
 operator|+=
-name|write
+name|wnext
 operator|-
 name|op
 expr_stmt|;
@@ -1285,11 +1383,11 @@ literal|0
 condition|)
 block|{
 comment|/* 2nd level distance code */
-name|this
+name|here
 operator|=
 name|dcode
 index|[
-name|this
+name|here
 operator|.
 name|val
 operator|+
@@ -1346,11 +1444,11 @@ literal|0
 condition|)
 block|{
 comment|/* 2nd level length code */
-name|this
+name|here
 operator|=
 name|lcode
 index|[
-name|this
+name|here
 operator|.
 name|val
 operator|+
@@ -1550,7 +1648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    inflate_fast() speedups that turned out slower (on a PowerPC G3 750CXe):    - Using bit fields for code structure    - Different op definition to avoid& for extra bits (do& for table bits)    - Three separate decoding do-loops for direct, window, and write == 0    - Special case for distance> 1 copies to do overlapped load and store copy    - Explicit branch predictions (based on measured branch probabilities)    - Deferring match copy and interspersed it with decoding subsequent codes    - Swapping literal/length else    - Swapping window/direct else    - Larger unrolled copy loops (three is about right)    - Moving len -= 3 statement into middle of loop  */
+comment|/*    inflate_fast() speedups that turned out slower (on a PowerPC G3 750CXe):    - Using bit fields for code structure    - Different op definition to avoid& for extra bits (do& for table bits)    - Three separate decoding do-loops for direct, window, and wnext == 0    - Special case for distance> 1 copies to do overlapped load and store copy    - Explicit branch predictions (based on measured branch probabilities)    - Deferring match copy and interspersed it with decoding subsequent codes    - Swapping literal/length else    - Swapping window/direct else    - Larger unrolled copy loops (three is about right)    - Moving len -= 3 statement into middle of loop  */
 end_comment
 
 begin_endif
