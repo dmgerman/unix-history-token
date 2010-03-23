@@ -177,6 +177,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ofw_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|mem_region64
@@ -1170,6 +1178,18 @@ name|status
 init|=
 name|FALSE
 decl_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|ofw_mutex
+argument_list|,
+literal|"open firmware"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ofwcall
@@ -1292,6 +1312,12 @@ operator|(
 name|vm_offset_t
 operator|)
 name|args
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ofw_mutex
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile(	"\t"
@@ -1481,6 +1507,15 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ofw_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
