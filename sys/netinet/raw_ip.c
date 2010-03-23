@@ -255,7 +255,7 @@ value|VNET(ripcbinfo)
 end_define
 
 begin_comment
-comment|/*  * Control and data hooks for ipfw and dummynet.  * The data hooks are not used here but it is convenient  * to keep them all in one place.  */
+comment|/*  * Control and data hooks for ipfw, dummynet, divert and so on.  * The data hooks are not used here but it is convenient  * to keep them all in one place.  */
 end_comment
 
 begin_expr_stmt
@@ -293,8 +293,6 @@ name|struct
 name|sockopt
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -309,18 +307,52 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|m
 parameter_list|,
 name|int
-name|dir
 parameter_list|,
 name|struct
 name|ip_fw_args
 modifier|*
-name|fwa
 parameter_list|)
-init|=
-name|NULL
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|ip_divert_ptr
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|ng_ipfw_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
