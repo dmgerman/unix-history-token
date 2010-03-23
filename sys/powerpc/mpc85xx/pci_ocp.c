@@ -1156,7 +1156,7 @@ operator|)
 condition|?
 literal|0
 else|:
-literal|30
+literal|31
 operator|)
 return|;
 block|}
@@ -1495,6 +1495,12 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dev
+operator|=
+name|dev
 expr_stmt|;
 name|sc
 operator|->
@@ -2549,7 +2555,7 @@ name|int
 name|bus
 parameter_list|,
 name|int
-name|maxslot
+name|nslots
 parameter_list|)
 block|{
 name|int
@@ -2598,7 +2604,7 @@ literal|0
 init|;
 name|slot
 operator|<
-name|maxslot
+name|nslots
 condition|;
 name|slot
 operator|++
@@ -3271,7 +3277,7 @@ operator|==
 name|PCIS_BRIDGE_PCI
 operator|)
 condition|?
-literal|31
+literal|32
 else|:
 literal|1
 argument_list|)
@@ -3932,7 +3938,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|maxslot
+name|nslots
 decl_stmt|;
 name|sc
 operator|=
@@ -4233,7 +4239,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|maxslot
+name|nslots
 operator|=
 operator|(
 name|sc
@@ -4243,7 +4249,7 @@ operator|)
 condition|?
 literal|1
 else|:
-literal|31
+literal|32
 expr_stmt|;
 name|pci_ocp_init
 argument_list|(
@@ -4253,7 +4259,7 @@ name|sc
 operator|->
 name|sc_busnr
 argument_list|,
-name|maxslot
+name|nslots
 argument_list|)
 expr_stmt|;
 name|device_add_child
