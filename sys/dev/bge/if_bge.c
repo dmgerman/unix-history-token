@@ -13238,7 +13238,7 @@ name|sc
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * BCM5754 and BCM5787 shares the same ASIC id so 		 * explicit device id check is required. 		 */
+comment|/* 		 * BCM5754 and BCM5787 shares the same ASIC id so 		 * explicit device id check is required. 		 * Due to unknown reason TSO does not work on BCM5755M. 		 */
 if|if
 condition|(
 name|pci_get_device
@@ -13254,6 +13254,13 @@ name|dev
 argument_list|)
 operator|!=
 name|BCOM_DEVICEID_BCM5754M
+operator|&&
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|BCOM_DEVICEID_BCM5755M
 condition|)
 name|sc
 operator|->
