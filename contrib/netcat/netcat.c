@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.93 2009/06/05 00:18:10 claudio Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.95 2010/02/27 00:58:56 nicm Exp $ */
 end_comment
 
 begin_comment
@@ -2212,9 +2212,12 @@ literal|"tcp"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
-literal|"Connection to %s %s port [%s/%s] succeeded!\n"
+name|stderr
+argument_list|,
+literal|"Connection to %s %s port [%s/%s] "
+literal|"succeeded!\n"
 argument_list|,
 name|host
 argument_list|,
@@ -3750,18 +3753,20 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+literal|3
+condition|)
+return|return;
 name|end
 operator|=
 name|buf
 operator|+
 name|size
-expr_stmt|;
-name|obuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+operator|-
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -3784,7 +3789,7 @@ name|p
 operator|!=
 name|IAC
 condition|)
-break|break;
+continue|continue;
 name|obuf
 index|[
 literal|0
@@ -3818,6 +3823,7 @@ index|]
 operator|=
 name|DONT
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -3841,11 +3847,8 @@ index|]
 operator|=
 name|WONT
 expr_stmt|;
-if|if
-condition|(
-name|obuf
-condition|)
-block|{
+else|else
+continue|continue;
 name|p
 operator|++
 expr_stmt|;
@@ -3856,13 +3859,6 @@ index|]
 operator|=
 operator|*
 name|p
-expr_stmt|;
-name|obuf
-index|[
-literal|3
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3884,14 +3880,6 @@ argument_list|(
 literal|"Write Error!"
 argument_list|)
 expr_stmt|;
-name|obuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
