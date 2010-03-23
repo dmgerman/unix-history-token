@@ -2073,6 +2073,14 @@ name|ic_htcaps
 expr_stmt|;
 name|vap
 operator|->
+name|iv_htextcaps
+operator|=
+name|ic
+operator|->
+name|ic_htextcaps
+expr_stmt|;
+name|vap
+operator|->
 name|iv_opmode
 operator|=
 name|opmode

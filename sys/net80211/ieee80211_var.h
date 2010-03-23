@@ -560,6 +560,10 @@ name|ic_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
 name|uint32_t
+name|ic_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
+name|uint32_t
 name|ic_cryptocaps
 decl_stmt|;
 comment|/* crypto capabilities */
@@ -1384,8 +1388,11 @@ function_decl|;
 name|uint64_t
 name|ic_spare
 index|[
-literal|8
+literal|7
 index|]
+decl_stmt|;
+name|uint32_t
+name|ic_spare2
 decl_stmt|;
 block|}
 struct|;
@@ -1500,6 +1507,10 @@ name|uint32_t
 name|iv_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
+name|uint32_t
+name|iv_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
 name|enum
 name|ieee80211_opmode
 name|iv_opmode
