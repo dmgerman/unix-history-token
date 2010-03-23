@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -57,7 +57,7 @@ begin_define
 define|#
 directive|define
 name|NPOOL
-value|50
+value|200
 end_define
 
 begin_comment
@@ -73,19 +73,6 @@ end_define
 
 begin_comment
 comment|/* In seconds */
-end_comment
-
-begin_decl_stmt
-name|public
-name|int
-name|lnloop
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Are we in the line num loop? */
 end_comment
 
 begin_decl_stmt
@@ -159,6 +146,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sc_height
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|screen_trashed
 decl_stmt|;
 end_decl_stmt
 
@@ -598,11 +592,6 @@ argument_list|,
 name|NULL_PARG
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the lnloop flag here, so if the user interrupts while 	 * we are calculating line numbers, the signal handler will  	 * turn off line numbers (linenums=0). 	 */
-name|lnloop
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -701,6 +690,41 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/*  * Turn off line numbers because the user has interrupted  * a lengthy line number calculation.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|abort_long
+parameter_list|()
+block|{
+if|if
+condition|(
+name|linenums
+operator|==
+name|OPT_ONPLUS
+condition|)
+comment|/* 		 * We were displaying line numbers, so need to repaint. 		 */
+name|screen_trashed
+operator|=
+literal|1
+expr_stmt|;
+name|linenums
+operator|=
+literal|0
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Line numbers turned off"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -916,7 +940,19 @@ if|if
 condition|(
 name|ABORT_SIGS
 argument_list|()
-operator|||
+condition|)
+block|{
+name|abort_long
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|cpos
 operator|==
 name|NULL_POSITION
@@ -930,10 +966,6 @@ name|longish
 argument_list|()
 expr_stmt|;
 block|}
-name|lnloop
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 		 * We might as well cache it. 		 */
 name|add_lnum
 argument_list|(
@@ -1021,7 +1053,19 @@ if|if
 condition|(
 name|ABORT_SIGS
 argument_list|()
-operator|||
+condition|)
+block|{
+name|abort_long
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|cpos
 operator|==
 name|NULL_POSITION
@@ -1035,10 +1079,6 @@ name|longish
 argument_list|()
 expr_stmt|;
 block|}
-name|lnloop
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 		 * We might as well cache it. 		 */
 name|add_lnum
 argument_list|(
@@ -1229,7 +1269,14 @@ if|if
 condition|(
 name|ABORT_SIGS
 argument_list|()
-operator|||
+condition|)
+return|return
+operator|(
+name|NULL_POSITION
+operator|)
+return|;
+if|if
+condition|(
 name|cpos
 operator|==
 name|NULL_POSITION
@@ -1305,7 +1352,14 @@ if|if
 condition|(
 name|ABORT_SIGS
 argument_list|()
-operator|||
+condition|)
+return|return
+operator|(
+name|NULL_POSITION
+operator|)
+return|;
+if|if
+condition|(
 name|cpos
 operator|==
 name|NULL_POSITION

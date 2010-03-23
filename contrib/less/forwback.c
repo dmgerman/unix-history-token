@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -22,17 +22,6 @@ include|#
 directive|include
 file|"position.h"
 end_include
-
-begin_decl_stmt
-name|public
-name|int
-name|hit_eof
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Keeps track of how many times we hit end of file */
-end_comment
 
 begin_decl_stmt
 name|public
@@ -196,13 +185,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see if the end of file is currently "displayed".  */
+comment|/*  * Check to see if the end of file is currently displayed.  */
 end_comment
 
 begin_function
-specifier|static
-name|void
-name|eof_check
+name|public
+name|int
+name|eof_displayed
 parameter_list|()
 block|{
 name|POSITION
@@ -212,13 +201,24 @@ if|if
 condition|(
 name|ignore_eoi
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
-name|ABORT_SIGS
+name|ch_length
 argument_list|()
+operator|==
+name|NULL_POSITION
 condition|)
-return|return;
+comment|/* 		 * If the file length is not known, 		 * we can't possibly be displaying EOF. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * If the bottom line is empty, we are at EOF. 	 * If the bottom line ends at the file length, 	 * we must be just at EOF. 	 */
 name|pos
 operator|=
@@ -227,8 +227,8 @@ argument_list|(
 name|BOTTOM_PLUS_ONE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
+operator|(
 name|pos
 operator|==
 name|NULL_POSITION
@@ -237,10 +237,55 @@ name|pos
 operator|==
 name|ch_length
 argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check to see if the entire file is currently displayed.  */
+end_comment
+
+begin_function
+name|public
+name|int
+name|entire_file_displayed
+parameter_list|()
+block|{
+name|POSITION
+name|pos
+decl_stmt|;
+comment|/* Make sure last line of file is displayed. */
+if|if
+condition|(
+operator|!
+name|eof_displayed
+argument_list|()
 condition|)
-name|hit_eof
-operator|++
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Make sure first line of file is displayed. */
+name|pos
+operator|=
+name|position
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|pos
+operator|==
+name|NULL_POSITION
+operator|||
+name|pos
+operator|==
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -623,30 +668,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ignore_eoi
-condition|)
-name|hit_eof
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|eof
-operator|&&
-operator|!
-name|ABORT_SIGS
-argument_list|()
-condition|)
-name|hit_eof
-operator|++
-expr_stmt|;
-else|else
-name|eof_check
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|nlines
 operator|==
 literal|0
@@ -738,10 +759,6 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|hit_eof
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -799,9 +816,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|eof_check
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|nlines
@@ -872,7 +886,8 @@ condition|(
 name|get_quit_at_eof
 argument_list|()
 operator|&&
-name|hit_eof
+name|eof_displayed
+argument_list|()
 operator|&&
 operator|!
 operator|(
@@ -981,9 +996,6 @@ else|else
 block|{
 name|eof_bell
 argument_list|()
-expr_stmt|;
-name|hit_eof
-operator|++
 expr_stmt|;
 return|return;
 block|}

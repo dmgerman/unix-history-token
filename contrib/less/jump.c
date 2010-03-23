@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -18,13 +18,6 @@ include|#
 directive|include
 file|"position.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hit_eof
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -101,6 +94,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*  	 * Note; lastmark will be called later by jump_loc, but it fails 	 * because the position table has been cleared by pos_clear below. 	 * So call it here before calling pos_clear. 	 */
+name|lastmark
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Position the last line in the file at the last screen line. 	 * Go back one line from the end of the file 	 * to get to the beginning of the last line. 	 */
 name|pos_clear
 argument_list|()
@@ -596,6 +593,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
 if|if
 condition|(
 name|show_attn
@@ -605,6 +605,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* 	 * Line is not on screen. 	 * Seek to the desired location. 	 */
@@ -697,6 +699,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
 if|if
 condition|(
 name|show_attn
@@ -706,6 +711,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 name|pos
@@ -728,10 +735,6 @@ block|}
 block|}
 name|lastmark
 argument_list|()
-expr_stmt|;
-name|hit_eof
-operator|=
-literal|0
 expr_stmt|;
 name|squished
 operator|=
@@ -816,6 +819,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|HILITE_SEARCH
 if|if
 condition|(
 name|show_attn
@@ -825,6 +831,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 block|}

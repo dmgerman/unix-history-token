@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -247,6 +247,16 @@ begin_decl_stmt
 name|public
 name|long
 name|jump_sline_fraction
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|public
+name|long
+name|shift_count_fraction
 init|=
 operator|-
 literal|1
@@ -2122,19 +2132,18 @@ block|,
 operator|&
 name|pound_optname
 block|,
-name|NUMBER
+name|STRING
 block|,
 literal|0
 block|,
-operator|&
-name|shift_count
-block|,
 name|NULL
+block|,
+name|opt_shift
 block|,
 block|{
 literal|"Horizontal shift: "
 block|,
-literal|"Horizontal shift %d positions"
+literal|"0123456789."
 block|,
 name|NULL
 block|}

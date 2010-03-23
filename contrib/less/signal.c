@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -118,6 +118,9 @@ name|int
 name|type
 decl_stmt|;
 block|{
+name|bell
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|OS2
@@ -173,6 +176,7 @@ condition|)
 name|intread
 argument_list|()
 expr_stmt|;
+comment|/* May longjmp */
 block|}
 end_function
 
@@ -768,6 +772,9 @@ expr_stmt|;
 name|calc_jump_sline
 argument_list|()
 expr_stmt|;
+name|calc_shift_count
+argument_list|()
+expr_stmt|;
 name|screen_trashed
 operator|=
 literal|1
@@ -792,42 +799,6 @@ argument_list|(
 name|QUIT_OK
 argument_list|)
 expr_stmt|;
-name|bell
-argument_list|()
-expr_stmt|;
-comment|/* 		 * {{ You may wish to replace the bell() with  		 *    error("Interrupt", NULL_PARG); }} 		 */
-comment|/* 		 * If we were interrupted while in the "calculating  		 * line numbers" loop, turn off line numbers. 		 */
-if|if
-condition|(
-name|lnloop
-condition|)
-block|{
-name|lnloop
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|linenums
-operator|==
-literal|2
-condition|)
-name|screen_trashed
-operator|=
-literal|1
-expr_stmt|;
-name|linenums
-operator|=
-literal|0
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Line numbers turned off"
-argument_list|,
-name|NULL_PARG
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function

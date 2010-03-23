@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -147,6 +147,10 @@ decl_stmt|;
 if|#
 directive|if
 name|MSDOS_COMPILER
+operator|&&
+name|MSDOS_COMPILER
+operator|!=
+name|WIN32C
 name|char
 name|cwd
 index|[
@@ -194,6 +198,27 @@ block|}
 if|#
 directive|if
 name|MSDOS_COMPILER
+if|#
+directive|if
+name|MSDOS_COMPILER
+operator|==
+name|WIN32C
+if|if
+condition|(
+operator|*
+name|cmd
+operator|==
+literal|'\0'
+condition|)
+name|cmd
+operator|=
+name|getenv
+argument_list|(
+literal|"COMSPEC"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 comment|/* 	 * Working directory is global on MSDOS. 	 * The child might change the working directory, so we 	 * must save and restore CWD across calls to "system", 	 * or else we won't find our file when we return and 	 * try to "reedit_ifile" it. 	 */
 name|getcwd
 argument_list|(
@@ -202,6 +227,8 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	 * Close the current input file. 	 */
@@ -572,6 +599,10 @@ expr_stmt|;
 if|#
 directive|if
 name|MSDOS_COMPILER
+operator|&&
+name|MSDOS_COMPILER
+operator|!=
+name|WIN32C
 comment|/* 	 * Restore the previous directory (possibly 	 * changed by the child program we just ran). 	 */
 name|chdir
 argument_list|(

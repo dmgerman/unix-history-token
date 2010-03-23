@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_define
@@ -788,7 +788,7 @@ name|IS_CSI_START
 parameter_list|(
 name|c
 parameter_list|)
-value|((c) == ESC || ((unsigned char)(c)) == CSI)
+value|(((LWCHAR)(c)) == ESC || (((LWCHAR)(c)) == CSI))
 end_define
 
 begin_ifndef
@@ -1779,6 +1779,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SRCH_FILTER
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Search is for '&' (filter) command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SRCH_REVERSE
 parameter_list|(
 name|t
@@ -2242,6 +2253,54 @@ directive|define
 name|FAKE_HELPFILE
 value|"@/\\less/\\help/\\file/\\@"
 end_define
+
+begin_comment
+comment|/* Flags for cvt_text */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVT_TO_LC
+value|01
+end_define
+
+begin_comment
+comment|/* Convert upper-case to lower-case */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVT_BS
+value|02
+end_define
+
+begin_comment
+comment|/* Do backspace processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVT_CRLF
+value|04
+end_define
+
+begin_comment
+comment|/* Remove CR after LF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVT_ANSI
+value|010
+end_define
+
+begin_comment
+comment|/* Remove ANSI escape sequences */
+end_comment
 
 begin_include
 include|#

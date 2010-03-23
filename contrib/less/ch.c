@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2007  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -87,6 +87,30 @@ begin_comment
 comment|/*  * Pool of buffers holding the most recently used blocks of the input file.  * The buffer pool is kept as a doubly-linked circular list,  * in order from most- to least-recently used.  * The circular list is anchored by the file state "thisfile".  */
 end_comment
 
+begin_struct
+struct|struct
+name|bufnode
+block|{
+name|struct
+name|bufnode
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+name|struct
+name|bufnode
+modifier|*
+name|hnext
+decl_stmt|,
+modifier|*
+name|hprev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -99,20 +123,8 @@ struct|struct
 name|buf
 block|{
 name|struct
-name|buf
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|hnext
-decl_stmt|,
-modifier|*
-name|hprev
+name|bufnode
+name|node
 decl_stmt|;
 name|BLOCKNUM
 name|block
@@ -132,30 +144,15 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|buflist
-block|{
-comment|/* -- Following members must match struct buf */
-name|struct
-name|buf
-modifier|*
-name|buf_next
-decl_stmt|,
-modifier|*
-name|buf_prev
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|buf_hnext
-decl_stmt|,
-modifier|*
-name|buf_hprev
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|bufnode_buf
+parameter_list|(
+name|bn
+parameter_list|)
+value|((struct buf *) bn)
+end_define
 
 begin_comment
 comment|/*  * The file state is maintained in a filestate structure.  * A pointer to the filestate is kept in the ifile structure.  */
@@ -173,15 +170,11 @@ struct|struct
 name|filestate
 block|{
 name|struct
-name|buf
-modifier|*
-name|buf_next
-decl_stmt|,
-modifier|*
-name|buf_prev
+name|bufnode
+name|buflist
 decl_stmt|;
 name|struct
-name|buflist
+name|bufnode
 name|hashtbl
 index|[
 name|BUFHASH_SIZE
@@ -217,14 +210,14 @@ begin_define
 define|#
 directive|define
 name|ch_bufhead
-value|thisfile->buf_next
+value|thisfile->buflist.next
 end_define
 
 begin_define
 define|#
 directive|define
 name|ch_buftail
-value|thisfile->buf_prev
+value|thisfile->buflist.prev
 end_define
 
 begin_define
@@ -280,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|END_OF_CHAIN
-value|((struct buf *)&thisfile->buf_next)
+value|(&thisfile->buflist)
 end_define
 
 begin_define
@@ -290,7 +283,7 @@ name|END_OF_HCHAIN
 parameter_list|(
 name|h
 parameter_list|)
-value|((struct buf *)&thisfile->hashtbl[h])
+value|(&thisfile->hashtbl[h])
 end_define
 
 begin_define
@@ -303,6 +296,58 @@ parameter_list|)
 value|((blk)& (BUFHASH_SIZE-1))
 end_define
 
+begin_comment
+comment|/*  * Macros to manipulate the list of buffers in thisfile->buflist.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOR_BUFS
+parameter_list|(
+name|bn
+parameter_list|)
+define|\
+value|for (bn = ch_bufhead;  bn != END_OF_CHAIN;  bn = bn->next)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_RM
+parameter_list|(
+name|bn
+parameter_list|)
+define|\
+value|(bn)->next->prev = (bn)->prev; \ 	(bn)->prev->next = (bn)->next;
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_INS_HEAD
+parameter_list|(
+name|bn
+parameter_list|)
+define|\
+value|(bn)->next = ch_bufhead; \ 	(bn)->prev = END_OF_CHAIN; \ 	ch_bufhead->prev = (bn); \ 	ch_bufhead = (bn);
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUF_INS_TAIL
+parameter_list|(
+name|bn
+parameter_list|)
+define|\
+value|(bn)->next = END_OF_CHAIN; \ 	(bn)->prev = ch_buftail; \ 	ch_buftail->next = (bn); \ 	ch_buftail = (bn);
+end_define
+
+begin_comment
+comment|/*  * Macros to manipulate the list of buffers in thisfile->hashtbl[n].  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -310,34 +355,34 @@ name|FOR_BUFS_IN_CHAIN
 parameter_list|(
 name|h
 parameter_list|,
-name|bp
+name|bn
 parameter_list|)
 define|\
-value|for (bp = thisfile->hashtbl[h].buf_hnext;  \ 	     bp != END_OF_HCHAIN(h);  bp = bp->hnext)
+value|for (bn = thisfile->hashtbl[h].hnext;  \ 	     bn != END_OF_HCHAIN(h);  bn = bn->hnext)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HASH_RM
+name|BUF_HASH_RM
 parameter_list|(
-name|bp
+name|bn
 parameter_list|)
 define|\
-value|(bp)->hnext->hprev = (bp)->hprev; \ 	(bp)->hprev->hnext = (bp)->hnext;
+value|(bn)->hnext->hprev = (bn)->hprev; \ 	(bn)->hprev->hnext = (bn)->hnext;
 end_define
 
 begin_define
 define|#
 directive|define
-name|HASH_INS
+name|BUF_HASH_INS
 parameter_list|(
-name|bp
+name|bn
 parameter_list|,
 name|h
 parameter_list|)
 define|\
-value|(bp)->hnext = thisfile->hashtbl[h].buf_hnext; \ 	(bp)->hprev = END_OF_HCHAIN(h); \ 	thisfile->hashtbl[h].buf_hnext->hprev = (bp); \ 	thisfile->hashtbl[h].buf_hnext = (bp);
+value|(bn)->hnext = thisfile->hashtbl[h].hnext; \ 	(bn)->hprev = END_OF_HCHAIN(h); \ 	thisfile->hashtbl[h].hnext->hprev = (bn); \ 	thisfile->hashtbl[h].hnext = (bn);
 end_define
 
 begin_decl_stmt
@@ -463,20 +508,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the character pointed to by the read pointer.  * ch_get() is a macro which is more efficient to call  * than fch_get (the function), in the usual case   * that the block desired is at the head of the chain.  */
+comment|/*  * Get the character pointed to by the read pointer.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ch_get
-parameter_list|()
-value|((ch_block == ch_bufhead->block&& \ 		     ch_offset< ch_bufhead->datasize) ? \ 			ch_bufhead->data[ch_offset] : fch_get())
-end_define
 
 begin_function
 name|int
-name|fch_get
+name|ch_get
 parameter_list|()
 block|{
 specifier|register
@@ -484,6 +521,12 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+specifier|register
+name|struct
+name|bufnode
+modifier|*
+name|bn
 decl_stmt|;
 specifier|register
 name|int
@@ -514,6 +557,44 @@ operator|(
 name|EOI
 operator|)
 return|;
+comment|/* 	 * Quick check for the common case where  	 * the desired char is in the head buffer. 	 */
+if|if
+condition|(
+name|ch_bufhead
+operator|!=
+name|END_OF_CHAIN
+condition|)
+block|{
+name|bp
+operator|=
+name|bufnode_buf
+argument_list|(
+name|ch_bufhead
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ch_block
+operator|==
+name|bp
+operator|->
+name|block
+operator|&&
+name|ch_offset
+operator|<
+name|bp
+operator|->
+name|datasize
+condition|)
+return|return
+name|bp
+operator|->
+name|data
+index|[
+name|ch_offset
+index|]
+return|;
+block|}
 name|slept
 operator|=
 name|FALSE
@@ -530,9 +611,16 @@ name|FOR_BUFS_IN_CHAIN
 argument_list|(
 argument|h
 argument_list|,
-argument|bp
+argument|bn
 argument_list|)
 block|{
+name|bp
+operator|=
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -551,22 +639,33 @@ operator|->
 name|datasize
 condition|)
 comment|/* 				 * Need more data in this buffer. 				 */
-goto|goto
-name|read_more
-goto|;
+break|break;
 goto|goto
 name|found
 goto|;
 block|}
 block|}
-comment|/* 	 * Block is not in a buffer.   	 * Take the least recently used buffer  	 * and read the desired block into it. 	 * If the LRU buffer has data in it,  	 * then maybe allocate a new buffer. 	 */
+if|if
+condition|(
+name|bn
+operator|==
+name|END_OF_HCHAIN
+argument_list|(
+name|h
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Block is not in a buffer.   		 * Take the least recently used buffer  		 * and read the desired block into it. 		 * If the LRU buffer has data in it,  		 * then maybe allocate a new buffer. 		 */
 if|if
 condition|(
 name|ch_buftail
 operator|==
 name|END_OF_CHAIN
 operator|||
+name|bufnode_buf
+argument_list|(
 name|ch_buftail
+argument_list|)
 operator|->
 name|block
 operator|!=
@@ -574,7 +673,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * There is no empty buffer to use. 		 * Allocate a new buffer if: 		 * 1. We can't seek on this file and -b is not in effect; or 		 * 2. We haven't allocated the max buffers for this file yet. 		 */
+comment|/* 			 * There is no empty buffer to use. 			 * Allocate a new buffer if: 			 * 1. We can't seek on this file and -b is not in effect; or 			 * 2. We haven't allocated the max buffers for this file yet. 			 */
 if|if
 condition|(
 operator|(
@@ -603,19 +702,26 @@ condition|(
 name|ch_addbuf
 argument_list|()
 condition|)
-comment|/* 				 * Allocation failed: turn off autobuf. 				 */
+comment|/* 					 * Allocation failed: turn off autobuf. 					 */
 name|autobuf
 operator|=
 name|OPT_OFF
 expr_stmt|;
 block|}
-name|bp
+name|bn
 operator|=
 name|ch_buftail
 expr_stmt|;
-name|HASH_RM
-argument_list|(
 name|bp
+operator|=
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
+expr_stmt|;
+name|BUF_HASH_RM
+argument_list|(
+name|bn
 argument_list|)
 expr_stmt|;
 comment|/* Remove from old hash chain. */
@@ -631,14 +737,15 @@ name|datasize
 operator|=
 literal|0
 expr_stmt|;
-name|HASH_INS
+name|BUF_HASH_INS
 argument_list|(
-name|bp
+name|bn
 argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
 comment|/* Insert into new hash chain. */
+block|}
 name|read_more
 label|:
 name|pos
@@ -1074,61 +1181,29 @@ if|if
 condition|(
 name|ch_bufhead
 operator|!=
-name|bp
+name|bn
 condition|)
 block|{
 comment|/* 		 * Move the buffer to the head of the buffer chain. 		 * This orders the buffer chain, most- to least-recently used. 		 */
-name|bp
-operator|->
-name|next
-operator|->
-name|prev
-operator|=
-name|bp
-operator|->
-name|prev
-expr_stmt|;
-name|bp
-operator|->
-name|prev
-operator|->
-name|next
-operator|=
-name|bp
-operator|->
-name|next
-expr_stmt|;
-name|bp
-operator|->
-name|next
-operator|=
-name|ch_bufhead
-expr_stmt|;
-name|bp
-operator|->
-name|prev
-operator|=
-name|END_OF_CHAIN
-expr_stmt|;
-name|ch_bufhead
-operator|->
-name|prev
-operator|=
-name|bp
-expr_stmt|;
-name|ch_bufhead
-operator|=
-name|bp
-expr_stmt|;
-comment|/* 		 * Move to head of hash chain too. 		 */
-name|HASH_RM
+name|BUF_RM
 argument_list|(
-name|bp
+name|bn
 argument_list|)
 expr_stmt|;
-name|HASH_INS
+name|BUF_INS_HEAD
 argument_list|(
-name|bp
+name|bn
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Move to head of hash chain too. 		 */
+name|BUF_HASH_RM
+argument_list|(
+name|bn
+argument_list|)
+expr_stmt|;
+name|BUF_HASH_INS
+argument_list|(
+name|bn
 argument_list|,
 name|h
 argument_list|)
@@ -1297,6 +1372,12 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|struct
+name|bufnode
+modifier|*
+name|bn
+decl_stmt|;
 name|int
 name|warned
 init|=
@@ -1334,47 +1415,23 @@ name|block
 operator|++
 control|)
 block|{
-for|for
-control|(
-name|bp
-operator|=
-name|ch_bufhead
-init|;
-condition|;
-name|bp
-operator|=
-name|bp
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-name|bp
-operator|==
-name|END_OF_CHAIN
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|warned
-condition|)
-block|{
-name|error
+name|int
+name|wrote
+init|=
+name|FALSE
+decl_stmt|;
+name|FOR_BUFS
 argument_list|(
-literal|"Warning: log file is incomplete"
-argument_list|,
-name|NULL_PARG
+argument|bn
+argument_list|)
+block|{
+name|bp
+operator|=
+name|bufnode_buf
+argument_list|(
+name|bn
 argument_list|)
 expr_stmt|;
-name|warned
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-break|break;
-block|}
 if|if
 condition|(
 name|bp
@@ -1401,8 +1458,33 @@ operator|->
 name|datasize
 argument_list|)
 expr_stmt|;
+name|wrote
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|wrote
+operator|&&
+operator|!
+name|warned
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Warning: log file is incomplete"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
+name|warned
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1435,6 +1517,12 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
+name|struct
+name|bufnode
+modifier|*
+name|bn
+decl_stmt|;
+specifier|register
 name|int
 name|h
 decl_stmt|;
@@ -1449,9 +1537,16 @@ name|FOR_BUFS_IN_CHAIN
 argument_list|(
 argument|h
 argument_list|,
-argument|bp
+argument|bn
 argument_list|)
 block|{
+name|bp
+operator|=
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1720,12 +1815,15 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|buf
+name|bufnode
 modifier|*
-name|bp
-decl_stmt|,
+name|bn
+decl_stmt|;
+specifier|register
+name|struct
+name|bufnode
 modifier|*
-name|firstbp
+name|firstbn
 decl_stmt|;
 comment|/* 	 * Try a plain ch_seek first. 	 */
 if|if
@@ -1744,15 +1842,13 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * Can't get to position 0. 	 * Look thru the buffers for the one closest to position 0. 	 */
-name|firstbp
-operator|=
-name|bp
+name|firstbn
 operator|=
 name|ch_bufhead
 expr_stmt|;
 if|if
 condition|(
-name|bp
+name|firstbn
 operator|==
 name|END_OF_CHAIN
 condition|)
@@ -1761,35 +1857,38 @@ operator|(
 literal|1
 operator|)
 return|;
-while|while
-condition|(
-operator|(
-name|bp
-operator|=
-name|bp
-operator|->
-name|next
-operator|)
-operator|!=
-name|END_OF_CHAIN
-condition|)
+name|FOR_BUFS
+argument_list|(
+argument|bn
+argument_list|)
+block|{
 if|if
 condition|(
-name|bp
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
 operator|->
 name|block
 operator|<
-name|firstbp
+name|bufnode_buf
+argument_list|(
+name|firstbn
+argument_list|)
 operator|->
 name|block
 condition|)
-name|firstbp
+name|firstbn
 operator|=
-name|bp
+name|bn
 expr_stmt|;
+block|}
 name|ch_block
 operator|=
-name|firstbp
+name|bufnode_buf
+argument_list|(
+name|firstbn
+argument_list|)
 operator|->
 name|block
 expr_stmt|;
@@ -2111,9 +2210,9 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|buf
+name|bufnode
 modifier|*
-name|bp
+name|bn
 decl_stmt|;
 if|if
 condition|(
@@ -2140,29 +2239,22 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Initialize all the buffers. 	 */
-for|for
-control|(
-name|bp
-operator|=
-name|ch_bufhead
-init|;
-name|bp
-operator|!=
-name|END_OF_CHAIN
-condition|;
-name|bp
-operator|=
-name|bp
-operator|->
-name|next
-control|)
-name|bp
+name|FOR_BUFS
+argument_list|(
+argument|bn
+argument_list|)
+block|{
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
 operator|->
 name|block
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 comment|/* 	 * Figure out the size of the file, if we can. 	 */
 name|ch_fsize
 operator|=
@@ -2254,6 +2346,12 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|struct
+name|bufnode
+modifier|*
+name|bn
+decl_stmt|;
 comment|/* 	 * Allocate and initialize a new buffer and link it  	 * onto the tail of the buffer list. 	 */
 name|bp
 operator|=
@@ -2294,31 +2392,21 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|bn
+operator|=
+operator|&
 name|bp
 operator|->
-name|next
-operator|=
-name|END_OF_CHAIN
+name|node
 expr_stmt|;
-name|bp
-operator|->
-name|prev
-operator|=
-name|ch_buftail
-expr_stmt|;
-name|ch_buftail
-operator|->
-name|next
-operator|=
-name|bp
-expr_stmt|;
-name|ch_buftail
-operator|=
-name|bp
-expr_stmt|;
-name|HASH_INS
+name|BUF_INS_TAIL
 argument_list|(
-name|bp
+name|bn
+argument_list|)
+expr_stmt|;
+name|BUF_HASH_INS
+argument_list|(
+name|bn
 argument_list|,
 literal|0
 argument_list|)
@@ -2366,7 +2454,7 @@ index|[
 name|h
 index|]
 operator|.
-name|buf_hnext
+name|hnext
 operator|=
 name|END_OF_HCHAIN
 argument_list|(
@@ -2380,7 +2468,7 @@ index|[
 name|h
 index|]
 operator|.
-name|buf_hprev
+name|hprev
 operator|=
 name|END_OF_HCHAIN
 argument_list|(
@@ -2403,9 +2491,9 @@ parameter_list|()
 block|{
 specifier|register
 name|struct
-name|buf
+name|bufnode
 modifier|*
-name|bp
+name|bn
 decl_stmt|;
 while|while
 condition|(
@@ -2414,33 +2502,21 @@ operator|!=
 name|END_OF_CHAIN
 condition|)
 block|{
-name|bp
+name|bn
 operator|=
 name|ch_bufhead
 expr_stmt|;
-name|bp
-operator|->
-name|next
-operator|->
-name|prev
-operator|=
-name|bp
-operator|->
-name|prev
-expr_stmt|;
-name|bp
-operator|->
-name|prev
-operator|->
-name|next
-operator|=
-name|bp
-operator|->
-name|next
+name|BUF_RM
+argument_list|(
+name|bn
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|bp
+name|bufnode_buf
+argument_list|(
+name|bn
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2579,11 +2655,15 @@ argument_list|)
 expr_stmt|;
 name|thisfile
 operator|->
-name|buf_next
+name|buflist
+operator|.
+name|next
 operator|=
 name|thisfile
 operator|->
-name|buf_prev
+name|buflist
+operator|.
+name|prev
 operator|=
 name|END_OF_CHAIN
 expr_stmt|;
@@ -2842,7 +2922,7 @@ literal|0
 end_if
 
 begin_endif
-unit|public void ch_dump(struct filestate *fs) { 	struct buf *bp; 	unsigned char *s;  	if (fs == NULL) 	{ 		printf(" --no filestate\n"); 		return; 	} 	printf(" file %d, flags %x, fpos %x, fsize %x, blk/off %x/%x\n", 		fs->file, fs->flags, fs->fpos,  		fs->fsize, fs->block, fs->offset); 	printf(" %d bufs:\n", fs->nbufs); 	for (bp = fs->buf_next; bp != (struct buf *)fs;  bp = bp->next) 	{ 		printf("%x: blk %x, size %x \"", 			bp, bp->block, bp->datasize); 		for (s = bp->data;  s< bp->data + 30;  s++) 			if (*s>= ' '&& *s< 0x7F) 				printf("%c", *s); 			else 				printf("."); 		printf("\"\n"); 	} }
+unit|public void ch_dump(struct filestate *fs) { 	struct buf *bp; 	struct bufnode *bn; 	unsigned char *s;  	if (fs == NULL) 	{ 		printf(" --no filestate\n"); 		return; 	} 	printf(" file %d, flags %x, fpos %x, fsize %x, blk/off %x/%x\n", 		fs->file, fs->flags, fs->fpos,  		fs->fsize, fs->block, fs->offset); 	printf(" %d bufs:\n", fs->nbufs); 	for (bn = fs->next; bn !=&fs->buflist;  bn = bn->next) 	{ 		bp = bufnode_buf(bn); 		printf("%x: blk %x, size %x \"", 			bp, bp->block, bp->datasize); 		for (s = bp->data;  s< bp->data + 30;  s++) 			if (*s>= ' '&& *s< 0x7F) 				printf("%c", *s); 			else 				printf("."); 		printf("\"\n"); 	} }
 endif|#
 directive|endif
 end_endif
