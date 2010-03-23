@@ -16790,6 +16790,9 @@ decl_stmt|;
 name|uint16_t
 name|msk_tso_mtu
 decl_stmt|;
+name|uint32_t
+name|msk_last_csum
+decl_stmt|;
 name|int
 name|msk_tx_prod
 decl_stmt|;
@@ -17173,7 +17176,7 @@ name|resource
 modifier|*
 name|msk_irq
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* IRQ resources */
@@ -17185,9 +17188,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|msk_intrhand
-index|[
-literal|2
-index|]
 decl_stmt|;
 comment|/* irq handler handle */
 name|device_t
@@ -17204,6 +17204,12 @@ name|msk_bustype
 decl_stmt|;
 name|uint8_t
 name|msk_num_port
+decl_stmt|;
+name|int
+name|msk_expcap
+decl_stmt|;
+name|int
+name|msk_pcixcap
 decl_stmt|;
 name|int
 name|msk_ramsize
