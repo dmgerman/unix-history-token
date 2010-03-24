@@ -1906,6 +1906,11 @@ directive|endif
 block|}
 else|else
 block|{
+name|vput
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|devvp
@@ -1914,17 +1919,12 @@ name|pmp
 operator|->
 name|pm_devvp
 condition|)
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
+operator|)
+return|;
 comment|/* XXX needs translation */
-else|else
-name|vput
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
