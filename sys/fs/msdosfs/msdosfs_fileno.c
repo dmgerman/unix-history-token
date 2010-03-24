@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/msdosfs/bpb.h>
 end_include
 
@@ -90,29 +84,6 @@ argument_list|,
 literal|"msdosfs_fileno"
 argument_list|,
 literal|"MSDOSFS fileno mapping node"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|fileno_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|fileno
-argument_list|,
-operator|&
-name|fileno_mtx
-argument_list|,
-literal|"MSDOSFS fileno"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -412,10 +383,9 @@ operator|)
 name|fileno
 operator|)
 return|;
-name|mtx_lock
+name|MSDOSFS_LOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 name|key
@@ -452,10 +422,9 @@ name|mf
 operator|->
 name|mf_fileno32
 expr_stmt|;
-name|mtx_unlock
+name|MSDOSFS_UNLOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -477,10 +446,9 @@ argument_list|(
 literal|"msdosfs_fileno_map: wraparound"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|MSDOSFS_UNLOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 name|mf
@@ -498,10 +466,9 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|MSDOSFS_LOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 name|tmf
@@ -532,10 +499,9 @@ name|tmf
 operator|->
 name|mf_fileno32
 expr_stmt|;
-name|mtx_unlock
+name|MSDOSFS_UNLOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 name|free
@@ -580,10 +546,9 @@ argument_list|,
 name|mf
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|MSDOSFS_UNLOCK_MP
 argument_list|(
-operator|&
-name|fileno_mtx
+name|pmp
 argument_list|)
 expr_stmt|;
 return|return
