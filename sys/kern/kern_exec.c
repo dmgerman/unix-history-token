@@ -5445,7 +5445,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5521,7 +5521,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
