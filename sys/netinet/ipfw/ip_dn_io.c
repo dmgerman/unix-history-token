@@ -3580,7 +3580,29 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* fast io */
+comment|/* fast io, rename the tag * to carry reinject info. */
+name|struct
+name|m_tag
+modifier|*
+name|tag
+init|=
+name|m_tag_first
+argument_list|(
+name|m
+argument_list|)
+decl_stmt|;
+name|tag
+operator|->
+name|m_tag_cookie
+operator|=
+name|MTAG_IPFW_RULE
+expr_stmt|;
+name|tag
+operator|->
+name|m_tag_id
+operator|=
+literal|0
+expr_stmt|;
 name|io_pkt_fast
 operator|++
 expr_stmt|;
