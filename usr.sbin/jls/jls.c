@@ -2167,7 +2167,7 @@ operator|&
 operator|(
 operator|(
 expr|struct
-name|in_addr
+name|in6_addr
 operator|*
 operator|)
 name|params
