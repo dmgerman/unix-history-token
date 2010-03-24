@@ -865,7 +865,7 @@ parameter_list|,
 name|color
 parameter_list|)
 define|\
-value|switch (scp->sc->adp->va_info.vi_depth) {			\ 		case 32:						\ 			writel(pos, vga_palette32[color]);		\ 			break;						\ 		case 24:						\ 			writew(pos, vga_palette32[color]);		\ 			writeb(pos + 2, vga_palette32[color]>> 16);	\ 			break;						\ 		case 16:						\ 			if (scp->sc->adp->va_info.vi_pixel_fsizes[1] == 5)\ 				writew(pos, vga_palette15[color]);	\ 			else						\ 				writew(pos, vga_palette16[color]);	\ 			break;						\ 		case 15:						\ 			writew(pos, vga_palette15[color]);		\ 			break;						\ 		case 8:							\ 			writeb(pos, (uint8_t)color);			\ 		}
+value|switch (scp->sc->adp->va_info.vi_depth) {			\ 		case 32:						\ 			writel(pos, vga_palette32[color]);		\ 			break;						\ 		case 24:						\ 			if (((pos)& 1) == 0) {				\ 				writew(pos, vga_palette32[color]);	\ 				writeb(pos + 2, vga_palette32[color]>> 16);\ 			} else {					\ 				writeb(pos, vga_palette32[color]);	\ 				writew(pos + 1, vga_palette32[color]>> 8);\ 			}						\ 			break;						\ 		case 16:						\ 			if (scp->sc->adp->va_info.vi_pixel_fsizes[1] == 5)\ 				writew(pos, vga_palette15[color]);	\ 			else						\ 				writew(pos, vga_palette16[color]);	\ 			break;						\ 		case 15:						\ 			writew(pos, vga_palette15[color]);		\ 			break;						\ 		case 8:							\ 			writeb(pos, (uint8_t)color);			\ 		}
 end_define
 
 begin_decl_stmt
