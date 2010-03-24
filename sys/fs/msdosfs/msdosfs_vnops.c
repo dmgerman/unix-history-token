@@ -6314,13 +6314,6 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|dvp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Truncate the directory that is being deleted. 	 */
 name|error
 operator|=
@@ -6345,15 +6338,6 @@ expr_stmt|;
 name|cache_purge
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|vn_lock
-argument_list|(
-name|dvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|out
