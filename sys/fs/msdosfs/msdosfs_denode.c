@@ -467,14 +467,6 @@ name|de_inode
 operator|=
 name|inode
 expr_stmt|;
-name|fc_purge
-argument_list|(
-name|ldep
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* init the fat cache for this denode */
 name|lockmgr
 argument_list|(
 name|nvp
@@ -486,6 +478,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|fc_purge
+argument_list|(
+name|ldep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* init the fat cache for this denode */
 name|error
 operator|=
 name|insmntque
