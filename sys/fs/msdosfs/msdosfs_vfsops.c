@@ -159,6 +159,17 @@ directive|include
 file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|msdosfs_lock_msg
+index|[]
+init|=
+literal|"fatlk"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Mount options that we support. */
 end_comment
@@ -2301,6 +2312,22 @@ name|pm_bo
 operator|=
 name|bo
 expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|pmp
+operator|->
+name|pm_fatlock
+argument_list|,
+literal|0
+argument_list|,
+name|msdosfs_lock_msg
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize ownerships and permissions, since nothing else will 	 * initialize them iff we are mounting root. 	 */
 name|pmp
 operator|->
@@ -3592,6 +3619,14 @@ condition|(
 name|pmp
 condition|)
 block|{
+name|lockdestroy
+argument_list|(
+operator|&
+name|pmp
+operator|->
+name|pm_fatlock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pmp
@@ -3996,6 +4031,14 @@ condition|)
 name|msdosfs_fileno_free
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|lockdestroy
+argument_list|(
+operator|&
+name|pmp
+operator|->
+name|pm_fatlock
 argument_list|)
 expr_stmt|;
 name|free
