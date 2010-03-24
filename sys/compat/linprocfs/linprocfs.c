@@ -5485,6 +5485,12 @@ name|vfsconf
 modifier|*
 name|vfsp
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|vfsp
@@ -5521,6 +5527,12 @@ name|vfc_name
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
