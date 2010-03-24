@@ -9116,21 +9116,11 @@ name|mapping_array_size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* EY 05/13/08 - nr_sack version of the above if statement */
 if|if
 condition|(
 name|asoc
 operator|->
 name|nr_mapping_array
-operator|&&
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_nr_sack_on_off
-argument_list|)
-operator|&&
-name|asoc
-operator|->
-name|peer_supports_nr_sack
 condition|)
 block|{
 name|memset
@@ -17394,21 +17384,6 @@ operator|.
 name|mapping_array_size
 argument_list|)
 expr_stmt|;
-comment|/* 					 * EY 05/13/08 - nr_sack: to keep 					 * nr_mapping array be consistent 					 * with mapping_array 					 */
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_nr_sack_on_off
-argument_list|)
-operator|&&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_nr_sack
-condition|)
-block|{
 name|stcb
 operator|->
 name|asoc
@@ -17450,7 +17425,6 @@ operator|.
 name|nr_mapping_array_size
 argument_list|)
 expr_stmt|;
-block|}
 name|stcb
 operator|->
 name|asoc
@@ -18135,21 +18109,6 @@ operator|.
 name|mapping_array_size
 argument_list|)
 expr_stmt|;
-comment|/* 		 * EY 05/13/08 -nr_sack: to keep nr_mapping array consistent 		 * with mapping array 		 */
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_nr_sack_on_off
-argument_list|)
-operator|&&
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_nr_sack
-condition|)
-block|{
 name|stcb
 operator|->
 name|asoc
@@ -18193,7 +18152,6 @@ operator|.
 name|nr_mapping_array_size
 argument_list|)
 expr_stmt|;
-block|}
 name|atomic_add_int
 argument_list|(
 operator|&
