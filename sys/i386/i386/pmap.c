@@ -4004,9 +4004,23 @@ comment|/* If "Self Snoop" is supported, do nothing. */
 elseif|else
 if|if
 condition|(
+operator|(
 name|cpu_feature
 operator|&
 name|CPUID_CLFSH
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|eva
+operator|-
+name|sva
+operator|<
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
 condition|)
 block|{
 comment|/* 		 * Otherwise, do per-cache line flush.  Use the mfence 		 * instruction to insure that previous stores are 		 * included in the write-back.  The processor 		 * propagates flush to other processors in the cache 		 * coherence domain. 		 */
@@ -4035,7 +4049,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * No targeted cache flush methods are supported by CPU, 		 * globally invalidate cache as a last resort. 		 */
+comment|/* 		 * No targeted cache flush methods are supported by CPU, 		 * or the supplied range is bigger than 2MB. 		 * Globally invalidate cache. 		 */
 name|pmap_invalidate_cache
 argument_list|()
 expr_stmt|;
