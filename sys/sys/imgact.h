@@ -257,9 +257,9 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
+name|struct
+name|image_params
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|)

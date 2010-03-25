@@ -3354,8 +3354,6 @@ argument_list|(
 name|td
 argument_list|,
 name|imgp
-operator|->
-name|entry_addr
 argument_list|,
 operator|(
 name|u_long
@@ -3364,10 +3362,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|stack_base
-argument_list|,
-name|imgp
-operator|->
-name|ps_strings
 argument_list|)
 expr_stmt|;
 else|else
@@ -3376,8 +3370,6 @@ argument_list|(
 name|td
 argument_list|,
 name|imgp
-operator|->
-name|entry_addr
 argument_list|,
 operator|(
 name|u_long
@@ -3386,10 +3378,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|stack_base
-argument_list|,
-name|imgp
-operator|->
-name|ps_strings
 argument_list|)
 expr_stmt|;
 name|vfs_mark_atime
