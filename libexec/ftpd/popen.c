@@ -465,7 +465,16 @@ name|argc
 index|]
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|gl
+operator|.
+name|gl_pathc
+operator|>
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|pop
@@ -500,6 +509,7 @@ operator|*
 name|pop
 argument_list|)
 expr_stmt|;
+block|}
 name|globfree
 argument_list|(
 operator|&
