@@ -254,6 +254,8 @@ decl_stmt|,
 name|hflag
 decl_stmt|,
 name|vflag
+decl_stmt|,
+name|xflag
 decl_stmt|;
 name|int
 name|ch
@@ -297,6 +299,8 @@ name|hflag
 operator|=
 name|vflag
 operator|=
+name|xflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -310,7 +314,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfhv"
+literal|"HLPRfhvx"
 argument_list|)
 operator|)
 operator|!=
@@ -385,6 +389,14 @@ literal|'v'
 case|:
 name|vflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -478,6 +490,14 @@ condition|?
 name|FTS_PHYSICAL
 else|:
 name|FTS_LOGICAL
+expr_stmt|;
+if|if
+condition|(
+name|xflag
+condition|)
+name|fts_options
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 name|uid
 operator|=
@@ -1376,10 +1396,10 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: chown [-fhv] [-R [-H | -L | -P]] owner[:group]"
+literal|"usage: chown [-fhvx] [-R [-H | -L | -P]] owner[:group]"
 literal|" file ..."
 argument_list|,
-literal|"       chown [-fhv] [-R [-H | -L | -P]] :group file ..."
+literal|"       chown [-fhvx] [-R [-H | -L | -P]] :group file ..."
 argument_list|)
 expr_stmt|;
 else|else
@@ -1392,7 +1412,7 @@ name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
-literal|"usage: chgrp [-fhv] [-R [-H | -L | -P]] group file ..."
+literal|"usage: chgrp [-fhvx] [-R [-H | -L | -P]] group file ..."
 argument_list|)
 expr_stmt|;
 name|exit
