@@ -4332,7 +4332,7 @@ name|ln
 argument_list|)
 condition|)
 block|{
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
