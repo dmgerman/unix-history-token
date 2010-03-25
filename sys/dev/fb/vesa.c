@@ -923,6 +923,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MODE_TABLE_BROKEN
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -932,6 +938,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2785,6 +2796,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MODE_TABLE_BROKEN
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2845,6 +2862,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -6054,9 +6076,6 @@ block|{
 name|video_info_t
 name|info
 decl_stmt|;
-name|int
-name|bpsl
-decl_stmt|;
 if|if
 condition|(
 name|adp
@@ -6478,12 +6497,17 @@ name|info
 operator|.
 name|vi_planes
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MODE_TABLE_BROKEN
 comment|/* If VBE function returns bigger bytes per scan line, use it. */
+block|{
+name|int
 name|bpsl
-operator|=
+init|=
 name|vesa_bios_get_line_length
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|bpsl
@@ -6530,6 +6554,9 @@ operator|.
 name|vi_planes
 expr_stmt|;
 block|}
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|info
