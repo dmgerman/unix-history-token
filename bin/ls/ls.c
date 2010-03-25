@@ -2036,7 +2036,7 @@ literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
-name|fts_name
+name|fts_path
 argument_list|,
 name|strerror
 argument_list|(
