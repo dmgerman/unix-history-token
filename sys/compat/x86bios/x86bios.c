@@ -218,13 +218,6 @@ name|X86BIOS_R_SS
 value|_pad2
 end_define
 
-begin_define
-define|#
-directive|define
-name|X86BIOS_R_SP
-value|_pad3.I16_reg.x_reg
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1630,12 +1623,6 @@ operator|=
 name|x86bios_seg_phys
 operator|>>
 literal|4
-expr_stmt|;
-name|regs
-operator|->
-name|X86BIOS_R_SP
-operator|=
-literal|0xfffe
 expr_stmt|;
 block|}
 end_function
