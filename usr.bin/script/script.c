@@ -702,6 +702,11 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|slave
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flushtime
