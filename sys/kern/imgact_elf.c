@@ -4667,6 +4667,12 @@ literal|0
 expr_stmt|;
 name|imgp
 operator|->
+name|reloc_base
+operator|=
+name|addr
+expr_stmt|;
+name|imgp
+operator|->
 name|proc
 operator|->
 name|p_osrel

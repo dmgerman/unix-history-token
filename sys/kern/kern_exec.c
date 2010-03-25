@@ -1695,6 +1695,12 @@ literal|0
 expr_stmt|;
 name|imgp
 operator|->
+name|reloc_base
+operator|=
+literal|0
+expr_stmt|;
+name|imgp
+operator|->
 name|vmspace_destroyed
 operator|=
 literal|0
