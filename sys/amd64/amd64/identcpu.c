@@ -732,11 +732,31 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"  Family = %x"
+argument_list|,
+name|CPUID_TO_FAMILY
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Model = %x"
+argument_list|,
+name|CPUID_TO_MODEL
+argument_list|(
+name|cpu_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  Stepping = %u"
 argument_list|,
 name|cpu_id
 operator|&
-literal|0xf
+name|CPUID_STEPPING
 argument_list|)
 expr_stmt|;
 if|if
