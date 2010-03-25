@@ -2224,6 +2224,10 @@ argument_list|)
 operator|)
 operator|==
 name|SAFE_READ_ERROR
+operator|||
+name|status
+operator|>
+name|length
 condition|)
 return|return
 name|SAFE_READ_ERROR
