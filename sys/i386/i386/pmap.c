@@ -13678,8 +13678,10 @@ expr_stmt|;
 comment|/* 	 * Examine the first PTE in the specified PTP.  Abort if this PTE is 	 * either invalid, unused, or does not map the first 4KB physical page 	 * within a 2- or 4MB page. 	 */
 name|firstpte
 operator|=
-name|vtopte
+name|pmap_pte_quick
 argument_list|(
+name|pmap
+argument_list|,
 name|trunc_4mpage
 argument_list|(
 name|va
