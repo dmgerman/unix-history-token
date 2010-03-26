@@ -164,6 +164,15 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|ia64_finalize_intr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ia64_handle_intr
 parameter_list|(
 name|struct

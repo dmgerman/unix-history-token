@@ -80,7 +80,7 @@ define|#
 directive|define
 name|ACPI_DISABLE_IRQS
 parameter_list|()
-value|disable_intr()
+value|ia64_disable_intr()
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ define|#
 directive|define
 name|ACPI_ENABLE_IRQS
 parameter_list|()
-value|enable_intr()
+value|ia64_enable_intr()
 end_define
 
 begin_define

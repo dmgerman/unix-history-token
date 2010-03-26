@@ -1242,6 +1242,19 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ia64_finalize_intr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ia64_enable_intr
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Interrupt handlers.  */
 end_comment
@@ -1395,7 +1408,7 @@ name|TDF_NEEDRESCHED
 operator|)
 condition|)
 block|{
-name|enable_intr
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|ast
@@ -1403,7 +1416,7 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|ia64_disable_intr
 argument_list|()
 expr_stmt|;
 block|}

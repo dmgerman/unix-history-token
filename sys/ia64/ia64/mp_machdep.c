@@ -864,7 +864,7 @@ expr_stmt|;
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
-name|enable_intr
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|sched_throw
