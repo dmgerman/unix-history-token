@@ -259,15 +259,6 @@ parameter_list|)
 value|(pcpup->pc_ ## member = (value))
 end_define
 
-begin_function_decl
-name|void
-name|pcpu_initclock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

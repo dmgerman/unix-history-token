@@ -850,9 +850,11 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* kick off the clock on this AP */
-name|pcpu_initclock
-argument_list|()
+comment|/* Mask interval timer interrupts on APs. */
+name|ia64_set_itv
+argument_list|(
+literal|0x10000
+argument_list|)
 expr_stmt|;
 name|ia64_set_tpr
 argument_list|(
