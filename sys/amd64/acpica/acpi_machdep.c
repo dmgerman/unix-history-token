@@ -498,6 +498,11 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+name|ACPI_CHECKSUM_ABORT
+operator|)
 name|table_unmap
 argument_list|(
 name|table
@@ -510,6 +515,8 @@ operator|(
 name|NULL
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
