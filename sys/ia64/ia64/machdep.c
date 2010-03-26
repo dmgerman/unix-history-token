@@ -6242,6 +6242,8 @@ name|bspstore
 operator|-
 literal|16
 argument_list|,
+name|imgp
+operator|->
 name|ps_strings
 argument_list|)
 expr_stmt|;
