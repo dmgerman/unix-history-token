@@ -14425,11 +14425,11 @@ return|;
 comment|/* XXX: linux has no ENOMEM here */
 name|memcpy
 argument_list|(
-operator|&
-name|vclip
-argument_list|,
 operator|*
 name|ppvc
+argument_list|,
+operator|&
+name|vclip
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -14519,6 +14519,12 @@ name|M_LINUX
 argument_list|)
 expr_stmt|;
 block|}
+name|vw
+operator|->
+name|clips
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 literal|0
