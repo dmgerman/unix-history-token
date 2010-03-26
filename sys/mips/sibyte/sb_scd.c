@@ -65,30 +65,31 @@ directive|include
 file|"sb_scd.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
+begin_comment
+comment|/*  * We compile a 32-bit kernel to run on the SB-1 processor which is a 64-bit  * processor. It has some registers that must be accessed using 64-bit load  * and store instructions.  *  * We use the mips_ld() and mips_sd() functions to do this for us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|sb_store64
 parameter_list|(
-name|uint32_t
 name|addr
 parameter_list|,
-name|uint64_t
 name|val
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mips3_sd((uint64_t *)(addr), (val))
+end_define
 
-begin_function_decl
-specifier|extern
-name|uint64_t
+begin_define
+define|#
+directive|define
 name|sb_load64
 parameter_list|(
-name|uint32_t
 name|addr
 parameter_list|)
-function_decl|;
-end_function_decl
+value|mips3_ld((uint64_t *)(addr))
+end_define
 
 begin_comment
 comment|/*  * System Control and Debug (SCD) unit on the Sibyte ZBbus.  */
