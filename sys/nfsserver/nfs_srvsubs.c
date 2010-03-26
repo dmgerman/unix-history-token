@@ -4274,6 +4274,17 @@ argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+comment|/* Make sure the server replies ESTALE to the client. */
+name|error
+operator|=
+name|ESTALE
+expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
