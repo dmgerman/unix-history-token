@@ -1414,6 +1414,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_MC0_CTL2
+value|0x280
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_MTRRdefType
 value|0x2ff
 end_define
@@ -1926,6 +1933,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MCG_CAP_CMCI_P
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
 name|MCG_CAP_TES_P
 value|0x00000800
 end_define
@@ -1935,6 +1949,13 @@ define|#
 directive|define
 name|MCG_CAP_EXT_CNT
 value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCG_CAP_SER_P
+value|0x01000000
 end_define
 
 begin_define
@@ -2015,6 +2036,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_MC_CTL2
+parameter_list|(
+name|x
+parameter_list|)
+value|(MSR_MC0_CTL2 + (x))
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_CMCI_P */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MC_STATUS_MCA_ERROR
 value|0x000000000000ffff
 end_define
@@ -2032,6 +2067,50 @@ directive|define
 name|MC_STATUS_OTHER_INFO
 value|0x01ffffff00000000
 end_define
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_COR_COUNT
+value|0x001fffc000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_TES_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_TES_STATUS
+value|0x0060000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_TES_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_AR
+value|0x0080000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_CMCI_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_STATUS_S
+value|0x0100000000000000
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_CMCI_P */
+end_comment
 
 begin_define
 define|#
@@ -2080,6 +2159,42 @@ define|#
 directive|define
 name|MC_STATUS_VAL
 value|0x8000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_MISC_RA_LSB
+value|0x000000000000003f
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_SER_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_MISC_ADDRESS_MODE
+value|0x00000000000001c0
+end_define
+
+begin_comment
+comment|/* If MCG_CAP_SER_P */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC_CTL2_THRESHOLD
+value|0x0000000000003fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_CTL2_CMCI_EN
+value|0x0000000040000000
 end_define
 
 begin_comment
