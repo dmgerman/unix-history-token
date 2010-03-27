@@ -291,7 +291,7 @@ block|{
 name|cninit_finish
 argument_list|()
 expr_stmt|;
-name|ia64_finalize_intr
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|cold

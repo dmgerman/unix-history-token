@@ -42,6 +42,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|pcpu
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sapic
 struct_decl|;
 end_struct_decl
@@ -164,7 +170,7 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|ia64_finalize_intr
+name|ia64_bind_intr
 parameter_list|(
 name|void
 parameter_list|)
@@ -264,6 +270,19 @@ name|enum
 name|ia64_xiv_use
 parameter_list|,
 name|ia64_ihtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sapic_bind_intr
+parameter_list|(
+name|u_int
+parameter_list|,
+name|struct
+name|pcpu
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

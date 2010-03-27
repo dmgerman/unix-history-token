@@ -1582,6 +1582,10 @@ name|smp_started
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Now that all CPUs are up and running, bind interrupts to each of 	 * them. 	 */
+name|ia64_bind_intr
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
