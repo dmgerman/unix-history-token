@@ -3917,7 +3917,7 @@ name|fd
 operator|->
 name|fd_provider
 argument_list|,
-name|EXDEV
+name|ENXIO
 argument_list|)
 expr_stmt|;
 name|fd
