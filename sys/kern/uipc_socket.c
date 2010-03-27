@@ -3425,6 +3425,13 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If protocol is connection-based, can only connect once. 	 * Otherwise, if connected, try to disconnect first.  This allows 	 * user to disconnect by connecting to, e.g., a null address. 	 */
 if|if
 condition|(
@@ -3474,13 +3481,6 @@ name|so_error
 operator|=
 literal|0
 expr_stmt|;
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 call|(
@@ -3501,10 +3501,10 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
