@@ -21,6 +21,23 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -78,6 +95,29 @@ parameter_list|)
 value|do {					\ 	if (g_label_debug>= (lvl)) {					\ 		printf("GEOM_LABEL");					\ 		if (g_label_debug> 0)					\ 			printf("[%u]", lvl);				\ 		printf(": ");						\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 	}								\ } while (0)
 end_define
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_geom_label
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|G_LABEL_INIT
+parameter_list|(
+name|kind
+parameter_list|,
+name|label
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_NODE(_kern_geom_label, OID_AUTO, kind, CTLFLAG_RD,	\ 	    NULL, "");							\ 	SYSCTL_INT(_kern_geom_label_##kind, OID_AUTO, enable, 		\ 	    CTLFLAG_RW,&label.ld_enabled, 1, descr);			\ 	TUNABLE_INT("kern.geom.label." __XSTRING(kind) ".enable",	\&label.ld_enabled)
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -110,6 +150,9 @@ name|char
 modifier|*
 name|ld_dir
 decl_stmt|;
+name|int
+name|ld_enabled
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -120,7 +163,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ufs_id
@@ -129,7 +171,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ufs_volume
@@ -138,7 +179,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_iso9660
@@ -147,7 +187,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_msdosfs
@@ -156,7 +195,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ext2fs
@@ -165,7 +203,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_reiserfs
@@ -174,7 +211,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ntfs
@@ -183,7 +219,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_gpt
@@ -192,7 +227,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_gpt_uuid

@@ -530,7 +530,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ufs_volume
@@ -545,12 +544,16 @@ operator|.
 name|ld_dir
 operator|=
 name|G_LABEL_UFS_VOLUME_DIR
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|g_label_desc
 name|g_label_ufs_id
@@ -565,9 +568,38 @@ operator|.
 name|ld_dir
 operator|=
 name|G_LABEL_UFS_ID_DIR
+block|,
+operator|.
+name|ld_enabled
+operator|=
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|ufsid
+argument_list|,
+name|g_label_ufs_id
+argument_list|,
+literal|"Create device nodes for UFS file system IDs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|G_LABEL_INIT
+argument_list|(
+name|ufs
+argument_list|,
+name|g_label_ufs_volume
+argument_list|,
+literal|"Create device nodes for UFS volume names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
