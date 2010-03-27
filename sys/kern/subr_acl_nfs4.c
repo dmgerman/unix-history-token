@@ -304,6 +304,18 @@ operator|.
 name|mask
 expr_stmt|;
 block|}
+comment|/* 	 * VAPPEND is just a modifier for VWRITE; if the caller asked 	 * for 'VAPPEND | VWRITE', we want to check for ACL_APPEND_DATA only. 	 */
+if|if
+condition|(
+name|access_mask
+operator|&
+name|ACL_APPEND_DATA
+condition|)
+name|access_mask
+operator|&=
+operator|~
+name|ACL_WRITE_DATA
+expr_stmt|;
 return|return
 operator|(
 name|access_mask
