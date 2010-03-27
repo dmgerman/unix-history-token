@@ -3684,7 +3684,14 @@ name|vmove
 condition|)
 name|panic
 argument_list|(
-literal|"interface not in it's own ifnet list"
+literal|"%s: ifp=%p not on the ifnet tailq %p"
+argument_list|,
+name|__func__
+argument_list|,
+name|ifp
+argument_list|,
+operator|&
+name|V_ifnet
 argument_list|)
 expr_stmt|;
 else|else
