@@ -753,6 +753,11 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|V_tcptw_zone
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
