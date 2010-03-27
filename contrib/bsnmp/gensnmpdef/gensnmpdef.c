@@ -123,7 +123,7 @@ name|tdefs
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|tdef
+name|tdefs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
