@@ -3802,6 +3802,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdaccess
+parameter_list|(
+name|struct
+name|vop_access_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdaccessx
 parameter_list|(
 name|struct

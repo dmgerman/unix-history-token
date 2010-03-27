@@ -127,6 +127,32 @@ name|group_matched
 decl_stmt|,
 name|i
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|accmode
+operator|&
+operator|~
+operator|(
+name|VEXEC
+operator||
+name|VWRITE
+operator||
+name|VREAD
+operator||
+name|VADMIN
+operator||
+name|VAPPEND
+operator|)
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"invalid bit in accmode"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Look for a normal, non-privileged way to access the file/directory 	 * as requested.  If it exists, go with that.  Otherwise, attempt to 	 * use privileges granted via priv_granted.  In some cases, which 	 * privileges to use may be ambiguous due to "best match", in which 	 * case fall back on first match for the time being. 	 */
 if|if
 condition|(
