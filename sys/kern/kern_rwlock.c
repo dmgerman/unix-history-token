@@ -800,7 +800,9 @@ operator|==
 name|RW_UNLOCKED
 argument_list|,
 operator|(
-literal|"rw lock not unlocked"
+literal|"rw lock %p not unlocked"
+operator|,
+name|rw
 operator|)
 argument_list|)
 expr_stmt|;
@@ -813,7 +815,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"rw lock still recursed"
+literal|"rw lock %p still recursed"
+operator|,
+name|rw
 operator|)
 argument_list|)
 expr_stmt|;
