@@ -4051,10 +4051,12 @@ operator|~
 name|CR4_PGE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Although preemption at this point could be detrimental to 		 * performance, it would not lead to an error. 		 */
+comment|/* 		 * Although preemption at this point could be detrimental to 		 * performance, it would not lead to an error.  PG_G is simply 		 * ignored if CR4.PGE is clear.  Moreover, in case this block 		 * is re-entered, the load_cr4() either above or below will 		 * modify CR4.PGE flushing the TLB. 		 */
 name|load_cr4
 argument_list|(
 name|cr4
+operator||
+name|CR4_PGE
 argument_list|)
 expr_stmt|;
 block|}
