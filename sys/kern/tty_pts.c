@@ -2187,7 +2187,7 @@ argument_list|)
 expr_stmt|;
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|dev
 operator|->
@@ -2195,7 +2195,7 @@ name|si_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|dev
 operator|->
@@ -2203,7 +2203,7 @@ name|si_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|dev
 operator|->

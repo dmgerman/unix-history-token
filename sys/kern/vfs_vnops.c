@@ -3663,7 +3663,7 @@ name|va_size
 expr_stmt|;
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|vap
 operator|->
@@ -3671,7 +3671,7 @@ name|va_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|vap
 operator|->
@@ -3679,7 +3679,7 @@ name|va_mtime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|vap
 operator|->
@@ -3687,7 +3687,7 @@ name|va_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|=
 name|vap
 operator|->

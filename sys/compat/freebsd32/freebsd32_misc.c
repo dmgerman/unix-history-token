@@ -9513,7 +9513,7 @@ argument_list|,
 operator|*
 name|out
 argument_list|,
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 name|TS_CP
@@ -9524,7 +9524,7 @@ argument_list|,
 operator|*
 name|out
 argument_list|,
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 name|TS_CP
@@ -9535,7 +9535,7 @@ argument_list|,
 operator|*
 name|out
 argument_list|,
-name|st_ctimespec
+name|st_ctim
 argument_list|)
 expr_stmt|;
 name|CP

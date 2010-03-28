@@ -422,15 +422,15 @@ name|st_rdev
 decl_stmt|;
 name|struct
 name|timespec32
-name|st_atimespec
+name|st_atim
 decl_stmt|;
 name|struct
 name|timespec32
-name|st_mtimespec
+name|st_mtim
 decl_stmt|;
 name|struct
 name|timespec32
-name|st_ctimespec
+name|st_ctim
 decl_stmt|;
 name|off_t
 name|st_size
@@ -449,7 +449,7 @@ name|st_gen
 decl_stmt|;
 name|struct
 name|timespec32
-name|st_birthtimespec
+name|st_birthtim
 decl_stmt|;
 name|unsigned
 name|int

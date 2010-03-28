@@ -1044,7 +1044,7 @@ expr_stmt|;
 comment|/* XXX */
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|ks
 operator|->
@@ -1052,7 +1052,7 @@ name|ks_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|ks
 operator|->
@@ -1060,7 +1060,7 @@ name|ks_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|ks
 operator|->
@@ -1068,7 +1068,7 @@ name|ks_mtime
 expr_stmt|;
 name|sb
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|=
 name|ks
 operator|->
