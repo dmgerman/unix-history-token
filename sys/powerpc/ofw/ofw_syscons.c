@@ -159,6 +159,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ofwfb_ignore_mmap_checks
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +198,7 @@ name|ofwfb_ignore_mmap_checks
 argument_list|,
 literal|0
 argument_list|,
-literal|"relax mmap bounds checking"
+literal|"relaxed mmap bounds checking"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
