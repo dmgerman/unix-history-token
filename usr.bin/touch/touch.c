@@ -772,7 +772,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 if|if
@@ -791,7 +791,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We're adjusting the times based on the file times, not a 		 * specified time (that gets handled above). 		 */
@@ -816,7 +816,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 name|tv
@@ -845,7 +845,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 name|tv
@@ -1668,7 +1668,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 name|TIMESPEC_TO_TIMEVAL
@@ -1680,7 +1680,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 block|}

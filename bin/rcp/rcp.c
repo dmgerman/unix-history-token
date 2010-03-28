@@ -2069,7 +2069,7 @@ name|long
 operator|)
 name|stb
 operator|.
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 argument_list|,
@@ -2078,7 +2078,7 @@ name|long
 operator|)
 name|stb
 operator|.
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 argument_list|)
@@ -2504,7 +2504,7 @@ name|long
 operator|)
 name|statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 argument_list|,
@@ -2513,7 +2513,7 @@ name|long
 operator|)
 name|statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 argument_list|)
