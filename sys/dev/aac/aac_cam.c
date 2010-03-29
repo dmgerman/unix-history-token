@@ -976,7 +976,7 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|aac_srb32
+name|aac_srb
 modifier|*
 name|srb
 decl_stmt|;
@@ -1721,7 +1721,7 @@ name|srb
 operator|=
 operator|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 operator|*
 operator|)
 operator|&
@@ -1987,7 +1987,7 @@ name|ScsiPortCommand
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -1995,7 +1995,7 @@ literal|1
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2016,7 +2016,7 @@ name|data_ptr
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2060,7 +2060,7 @@ operator|=
 operator|&
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 expr_stmt|;
 block|}
 block|}
@@ -2078,7 +2078,7 @@ else|else
 block|{
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgCount
 operator|=
@@ -2086,7 +2086,7 @@ literal|0
 expr_stmt|;
 name|srb
 operator|->
-name|sg_map32
+name|sg_map
 operator|.
 name|SgEntry
 index|[
@@ -2246,7 +2246,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aac_srb32
+name|aac_srb
 argument_list|)
 expr_stmt|;
 name|aac_enqueue_ready
