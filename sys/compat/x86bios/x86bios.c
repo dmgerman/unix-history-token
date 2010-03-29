@@ -1195,7 +1195,7 @@ name|R_IP
 operator|=
 name|iv
 operator|&
-literal|0x000f
+literal|0xffff
 expr_stmt|;
 name|emu
 operator|->
@@ -1206,7 +1206,7 @@ operator|=
 operator|(
 name|iv
 operator|>>
-literal|12
+literal|16
 operator|)
 operator|&
 literal|0xffff
