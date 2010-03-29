@@ -1515,6 +1515,9 @@ parameter_list|,
 name|int
 modifier|*
 name|y
+parameter_list|,
+name|int
+name|maxy
 parameter_list|)
 block|{
 name|int
@@ -1603,7 +1606,7 @@ operator|||
 operator|*
 name|y
 operator|>=
-name|pmcstat_displayheight
+name|maxy
 condition|)
 return|return
 literal|1
@@ -1734,6 +1737,8 @@ operator|+
 literal|1
 argument_list|,
 name|y
+argument_list|,
+name|maxy
 argument_list|)
 condition|)
 return|return
@@ -2134,6 +2139,16 @@ operator|>=
 name|pmcstat_displaywidth
 condition|)
 block|{
+name|maxy
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|y
+operator|>=
+name|maxy
+condition|)
+break|break;
 name|PMCSTAT_PRINTW
 argument_list|(
 literal|"\n%*s"
@@ -2316,6 +2331,10 @@ name|x
 argument_list|,
 operator|&
 name|y
+argument_list|,
+name|pmcstat_displayheight
+operator|-
+literal|2
 argument_list|)
 condition|)
 block|{
