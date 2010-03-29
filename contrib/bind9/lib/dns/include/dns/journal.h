@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: journal.h,v 1.33.120.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: journal.h,v 1.33.120.4 2009/11/04 23:47:25 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -446,8 +446,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_journal_rollforward2
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_uint32_t
+name|resign
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  *  * Requires:  *\li   'mctx' is a valid memory context.  *\li	'db' is a valid database which does not have a version  *           open for writing.  *\li   'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *\li	DNS_R_NOJOURNAL when journal does not exist.  *\li	ISC_R_NOTFOUND when current serial in not in journal.  *\li	ISC_R_RANGE when current serial in not in journals range.  *\li	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
+comment|/*%<  * Roll forward (play back) the journal file "filename" into the  * database "db".  This should be called when the server starts  * after a shutdown or crash.  'resign' is how many seconds before  * a RRSIG is due to expire it should be scheduled to be regenerated.  *  * Requires:  *\li	dns_journal_rollforward() requires that DNS_JOURNALOPT_RESIGN  *	is not set.  *\li   'mctx' is a valid memory context.  *\li	'db' is a valid database which does not have a version  *           open for writing.  *\li   'filename' is the name of the journal file belonging to 'db'.  *  * Returns:  *\li	DNS_R_NOJOURNAL when journal does not exist.  *\li	ISC_R_NOTFOUND when current serial in not in journal.  *\li	ISC_R_RANGE when current serial in not in journals range.  *\li	ISC_R_SUCCESS journal has been applied successfully to database.  *	others  */
 end_comment
 
 begin_function_decl

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: dnssectool.c,v 1.45.334.4 2009/06/08 23:47:00 tbox Exp $ */
+comment|/* $Id: dnssectool.c,v 1.45.334.5 2009/06/22 05:05:00 marka Exp $ */
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"%s: fatal: "
 argument_list|,
 name|program
 argument_list|)

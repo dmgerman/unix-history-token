@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: name.h,v 1.126.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: name.h,v 1.126.332.3 2009/12/24 00:34:59 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -83,17 +83,6 @@ end_comment
 begin_comment
 comment|/*****  ***** Names  *****  ***** A 'name' is a handle to a binary region.  It contains a sequence of one  ***** or more DNS wire format labels of type 00 (ordinary).  ***** Note that all names are not required to end with the root label,  ***** as they are in the actual DNS wire protocol.  *****/
 end_comment
-
-begin_comment
-comment|/***  *** Compression pointer chaining limit  ***/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DNS_POINTER_MAXHOPS
-value|16
-end_define
 
 begin_comment
 comment|/***  *** Types  ***/

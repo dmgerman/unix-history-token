@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: server.h,v 1.93.120.2 2009/01/29 23:47:44 tbox Exp $ */
+comment|/* $Id: server.h,v 1.93.120.3 2009/07/11 04:23:53 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -824,6 +824,10 @@ parameter_list|,
 name|char
 modifier|*
 name|args
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|text
 parameter_list|)
 function_decl|;
 end_function_decl

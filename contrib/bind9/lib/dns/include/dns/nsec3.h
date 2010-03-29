@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: nsec3.h,v 1.5.48.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: nsec3.h,v 1.5.48.3 2009/10/06 21:20:18 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -61,6 +61,13 @@ include|#
 directive|include
 file|<dns/types.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|DNS_NSEC3_SALTSIZE
+value|255
+end_define
 
 begin_comment
 comment|/*  * hash = 1, flags =1, iterations = 2, salt length = 1, salt = 255 (max)  * hash length = 1, hash = 255 (max), bitmap = 8192 + 512 (max)  */

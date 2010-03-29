@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.117.334.4 2009/05/06 11:41:57 fdupont Exp $ */
+comment|/* $Id: nslookup.c,v 1.117.334.5 2009/10/20 01:11:22 marka Exp $ */
 end_comment
 
 begin_include
@@ -1689,6 +1689,15 @@ name|dns_rdata_reset
 argument_list|(
 operator|&
 name|rdata
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tttl = %u\n"
+argument_list|,
+name|rdataset
+operator|->
+name|ttl
 argument_list|)
 expr_stmt|;
 name|loopresult
