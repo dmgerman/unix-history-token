@@ -1157,7 +1157,7 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/* prevent conflicts among the writers */
+comment|/* arbitrate writers */
 name|chain
 operator|->
 name|reap
@@ -1173,16 +1173,16 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* delete rules with given number (0 is special means all) */
+comment|/* delete rules number N (N == 0 means all) */
 case|case
 literal|1
 case|:
-comment|/* delete all rules with given set number, rule->set == rulenum */
+comment|/* delete all rules in set N */
 case|case
 literal|5
 case|:
-comment|/* delete rules with given number and with given set number. 		 * rulenum - given rule number; 		 * new_set - given set number. 		 */
-comment|/* locate first rule to delete (start), the one after the 		 * last one (end), and count how many rules to delete (n) 		 */
+comment|/* delete rules with number N and set "new_set". */
+comment|/* 		 * Locate first rule to delete (start), the rule after 		 * the last one to delete (end), and count how many 		 * rules to delete (n) 		 */
 name|n
 operator|=
 literal|0
@@ -1195,6 +1195,10 @@ literal|1
 condition|)
 block|{
 comment|/* look for a specific set, must scan all */
+name|new_set
+operator|=
+name|rulenum
+expr_stmt|;
 for|for
 control|(
 name|start
@@ -1222,7 +1226,7 @@ name|chain
 operator|->
 name|map
 index|[
-name|start
+name|i
 index|]
 operator|->
 name|set
@@ -1378,7 +1382,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* copy the initial part of the map */
+comment|/* 		 * bcopy the initial part of the map, then individually 		 * copy all matching entries between start and end, 		 * and then bcopy the final part. 		 * Once we are done we can swap maps and clean up the 		 * deleted rules (unfortunately we need to repeat a 		 * convoluted test). 		 */
 if|if
 condition|(
 name|start
@@ -1403,7 +1407,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* copy active rules between start and end */
 for|for
 control|(
 name|i
@@ -1431,24 +1434,33 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|rule
 operator|->
 name|set
-operator|!=
+operator|==
 name|RESVD_SET
-operator|&&
-operator|(
+operator|||
 name|cmd
 operator|==
 literal|0
 operator|||
+operator|(
 name|rule
 operator|->
 name|set
 operator|==
 name|new_set
+operator|&&
+operator|(
+name|cmd
+operator|==
+literal|1
+operator|||
+name|rule
+operator|->
+name|rulenum
+operator|==
+name|rulenum
 operator|)
 operator|)
 condition|)
@@ -1466,7 +1478,6 @@ name|i
 index|]
 expr_stmt|;
 block|}
-comment|/* finally the tail */
 name|bcopy
 argument_list|(
 name|chain
@@ -1525,6 +1536,9 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|l
+decl_stmt|;
 name|rule
 operator|=
 name|map
@@ -1532,35 +1546,47 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* same test as above */
 if|if
 condition|(
 name|rule
 operator|->
 name|set
-operator|!=
+operator|==
 name|RESVD_SET
-operator|&&
-operator|(
+operator|||
 name|cmd
 operator|==
 literal|0
 operator|||
+operator|(
 name|rule
 operator|->
 name|set
 operator|==
 name|new_set
+operator|&&
+operator|(
+name|cmd
+operator|==
+literal|1
+operator|||
+name|rule
+operator|->
+name|rulenum
+operator|==
+name|rulenum
+operator|)
 operator|)
 condition|)
-block|{
-name|int
+continue|continue;
 name|l
-init|=
+operator|=
 name|RULESIZE
 argument_list|(
 name|rule
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|chain
 operator|->
 name|static_len
@@ -1586,7 +1612,6 @@ name|reap
 operator|=
 name|rule
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -2097,7 +2122,7 @@ name|cleared
 condition|)
 block|{
 comment|/* we did not find any matching rules */
-name|IPFW_WUNLOCK
+name|IPFW_UH_RUNLOCK
 argument_list|(
 name|chain
 argument_list|)
