@@ -1349,8 +1349,6 @@ operator|&
 name|pmc_kthread_mtx
 argument_list|)
 expr_stmt|;
-name|sigpipe_retry
-label|:
 comment|/* process the request */
 name|PMCDBG
 argument_list|(
@@ -1477,15 +1475,6 @@ name|error
 condition|)
 block|{
 comment|/* XXX some errors are recoverable */
-if|if
-condition|(
-name|error
-operator|==
-name|EPIPE
-condition|)
-goto|goto
-name|sigpipe_retry
-goto|;
 comment|/* send a SIGIO to the owner and exit */
 name|PROC_LOCK
 argument_list|(
