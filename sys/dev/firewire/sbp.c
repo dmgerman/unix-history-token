@@ -14129,6 +14129,9 @@ endif|#
 directive|endif
 literal|"(seg=%d/%d)\n"
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|s
 operator|->
 name|ds_len
