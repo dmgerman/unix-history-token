@@ -5661,12 +5661,6 @@ name|cm_timestamp
 operator|=
 name|time_uptime
 expr_stmt|;
-name|cm
-operator|->
-name|cm_queue
-operator|=
-name|AAC_ADAP_NORM_CMD_QUEUE
-expr_stmt|;
 comment|/* build the FIB */
 name|fib
 operator|=
@@ -6536,12 +6530,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* Put the command on the ready queue and get things going */
-name|cm
-operator|->
-name|cm_queue
-operator|=
-name|AAC_ADAP_NORM_CMD_QUEUE
-expr_stmt|;
 name|aac_enqueue_ready
 argument_list|(
 name|cm
@@ -6737,6 +6725,12 @@ operator|->
 name|cm_private
 operator|=
 name|NULL
+expr_stmt|;
+name|cm
+operator|->
+name|cm_queue
+operator|=
+name|AAC_ADAP_NORM_CMD_QUEUE
 expr_stmt|;
 name|cm
 operator|->
