@@ -3432,13 +3432,6 @@ name|m
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s dropped by enqueue\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
 comment|/* packet was dropped by enqueue() */
 name|m
 operator|=
