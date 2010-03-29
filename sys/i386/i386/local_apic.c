@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_atpic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -716,6 +722,53 @@ name|lapic_resume
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The atrtc device is compiled in only if atpic is present.  * If it is not, force lapic to take care of all the clocks.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ATPIC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lapic_allclocks
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.lapic_allclocks"
+argument_list|,
+operator|&
+name|lapic_allclocks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lapic_allclocks
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1807,11 +1860,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called by cpu_initclocks() on the BSP to setup the local APIC timer so  * that it can drive hardclock, statclock, and profclock.  This function  * returns true if it is able to use the local APIC timer to drive the  * clocks and false if it is not able.  */
+comment|/*  * Called by cpu_initclocks() on the BSP to setup the local APIC timer so  * that it can drive hardclock, statclock, and profclock.   */
 end_comment
 
 begin_function
-name|int
+name|enum
+name|lapic_clock
 name|lapic_setup_clock
 parameter_list|(
 name|void
@@ -1832,7 +1886,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|LAPIC_CLOCK_NONE
 operator|)
 return|;
 if|if
@@ -1857,7 +1911,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|LAPIC_CLOCK_NONE
 operator|)
 return|;
 comment|/* Start off with a divisor of 2 (power on reset default). */
@@ -1938,7 +1992,14 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We want to run stathz in the neighborhood of 128hz.  We would 	 * like profhz to run as often as possible, so we let it run on 	 * each clock tick.  We try to honor the requested 'hz' value as 	 * much as possible. 	 * 	 * If 'hz' is above 1500, then we just let the lapic timer 	 * (and profhz) run at hz.  If 'hz' is below 1500 but above 	 * 750, then we let the lapic timer run at 2 * 'hz'.  If 'hz' 	 * is below 750 then we let the lapic timer run at 4 * 'hz'. 	 */
+comment|/* 	 * We want to run stathz in the neighborhood of 128hz.  We would 	 * like profhz to run as often as possible, so we let it run on 	 * each clock tick.  We try to honor the requested 'hz' value as 	 * much as possible. 	 * 	 * If 'hz' is above 1500, then we just let the lapic timer 	 * (and profhz) run at hz.  If 'hz' is below 1500 but above 	 * 750, then we let the lapic timer run at 2 * 'hz'.  If 'hz' 	 * is below 750 then we let the lapic timer run at 4 * 'hz'. 	 * 	 * Please note that stathz and profhz are set only if all the 	 * clocks are handled through the local APIC. 	 */
+if|if
+condition|(
+name|lapic_allclocks
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|hz
@@ -1969,6 +2030,25 @@ name|hz
 operator|*
 literal|4
 expr_stmt|;
+block|}
+else|else
+name|lapic_timer_hz
+operator|=
+name|hz
+expr_stmt|;
+name|lapic_timer_period
+operator|=
+name|value
+operator|/
+name|lapic_timer_hz
+expr_stmt|;
+if|if
+condition|(
+name|lapic_allclocks
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|lapic_timer_hz
@@ -1994,12 +2074,7 @@ name|profhz
 operator|=
 name|lapic_timer_hz
 expr_stmt|;
-name|lapic_timer_period
-operator|=
-name|value
-operator|/
-name|lapic_timer_hz
-expr_stmt|;
+block|}
 comment|/* 	 * Start up the timer on the BSP.  The APs will kick off their 	 * timer during lapic_setup(). 	 */
 name|lapic_timer_periodic
 argument_list|(
@@ -2011,7 +2086,13 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|lapic_allclocks
+operator|==
+literal|0
+condition|?
+name|LAPIC_CLOCK_HARDCLOCK
+else|:
+name|LAPIC_CLOCK_ALL
 operator|)
 return|;
 block|}
@@ -3270,6 +3351,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lapic_allclocks
+operator|!=
+literal|0
+condition|)
+block|{
 comment|/* Fire statclock at stathz. */
 name|la
 operator|->
@@ -3342,6 +3430,7 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|critical_exit
 argument_list|()
