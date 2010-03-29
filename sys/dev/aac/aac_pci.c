@@ -2523,25 +2523,6 @@ name|aac_sa_interface
 expr_stmt|;
 break|break;
 case|case
-name|AAC_HWIF_FALCON
-case|:
-name|fwprintf
-argument_list|(
-name|sc
-argument_list|,
-name|HBA_FLAGS_DBG_INIT_B
-argument_list|,
-literal|"set hardware up for Falcon/PPC"
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|aac_if
-operator|=
-name|aac_fa_interface
-expr_stmt|;
-break|break;
-case|case
 name|AAC_HWIF_RKT
 case|:
 name|fwprintf
