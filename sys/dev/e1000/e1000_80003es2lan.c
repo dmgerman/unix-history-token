@@ -1081,7 +1081,14 @@ name|asf_firmware_present
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Set if manageability features are enabled. */
+comment|/* FWSM register */
+name|mac
+operator|->
+name|has_fwsm
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* ARC supported; valid only if manageability features are enabled. */
 name|mac
 operator|->
 name|arc_subsystem_valid

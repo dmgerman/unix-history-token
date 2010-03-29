@@ -1422,7 +1422,14 @@ name|asf_firmware_present
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Set if manageability features are enabled. */
+comment|/* FWSM register */
+name|mac
+operator|->
+name|has_fwsm
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* ARC supported; valid only if manageability features are enabled. */
 name|mac
 operator|->
 name|arc_subsystem_valid
@@ -5070,16 +5077,6 @@ name|hw
 operator|->
 name|phy
 decl_stmt|;
-name|struct
-name|e1000_mac_info
-modifier|*
-name|mac
-init|=
-operator|&
-name|hw
-operator|->
-name|mac
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5097,11 +5094,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_mng_mode
+name|e1000_enable_mng_pass_thru
 argument_list|(
 name|hw
 argument_list|)
@@ -5968,14 +5961,28 @@ parameter_list|)
 block|{
 name|u32
 name|dtxswc
-init|=
+decl_stmt|;
+switch|switch
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|e1000_82576
+case|:
+name|dtxswc
+operator|=
 name|E1000_READ_REG
 argument_list|(
 name|hw
 argument_list|,
 name|E1000_DTXSWC
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|enable
@@ -5999,6 +6006,11 @@ argument_list|,
 name|dtxswc
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+comment|/* Currently no other hardware supports loopback */
+break|break;
+block|}
 block|}
 end_function
 

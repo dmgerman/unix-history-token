@@ -848,6 +848,17 @@ name|HV_KMRN_MDIO_SLOW
 value|0x0400
 end_define
 
+begin_comment
+comment|/* PHY Power Management Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_CTRL
+value|PHY_REG(770, 17)
+end_define
+
 begin_define
 define|#
 directive|define

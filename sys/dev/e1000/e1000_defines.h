@@ -2137,6 +2137,50 @@ begin_comment
 comment|/* SMBus Clock Out Shift */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_MANC2H_PORT_623
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Port 0x26f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MANC2H_PORT_664
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Port 0x298 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDEF_PORT_623
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Port 0x26f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDEF_PORT_664
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Port 0x298 */
+end_comment
+
 begin_comment
 comment|/* Receive Control */
 end_comment
@@ -2937,6 +2981,28 @@ end_define
 
 begin_comment
 comment|/* enable link status from external                                            * LINK_0 and LINK_1 pins */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_LANPHYPC_OVERRIDE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* SW control of LANPHYPC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_LANPHYPC_VALUE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* SW value of LANPHYPC */
 end_comment
 
 begin_define
@@ -6925,6 +6991,21 @@ value|0x0000FFFF
 end_define
 
 begin_comment
+comment|/* E1000_EITR_CNT_IGNR is only for 82576 and newer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EITR_CNT_IGNR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Don't reset counters on write */
+end_comment
+
+begin_comment
 comment|/* Transmit Descriptor Control */
 end_comment
 
@@ -10098,6 +10179,27 @@ define|#
 directive|define
 name|PCIE_LINK_WIDTH_SHIFT
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_LINK_SPEED_MASK
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_LINK_SPEED_2500
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_LINK_SPEED_5000
+value|0x02
 end_define
 
 begin_define

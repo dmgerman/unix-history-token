@@ -1406,26 +1406,6 @@ name|asf_firmware_present
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Set if manageability features are enabled. */
-name|mac
-operator|->
-name|arc_subsystem_valid
-operator|=
-operator|(
-name|E1000_READ_REG
-argument_list|(
-name|hw
-argument_list|,
-name|E1000_FWSM
-argument_list|)
-operator|&
-name|E1000_FWSM_MODE_MASK
-operator|)
-condition|?
-name|TRUE
-else|:
-name|FALSE
-expr_stmt|;
 comment|/* Adaptive IFS supported */
 name|mac
 operator|->
@@ -1597,6 +1577,33 @@ name|led_on
 operator|=
 name|e1000_led_on_generic
 expr_stmt|;
+comment|/* FWSM register */
+name|mac
+operator|->
+name|has_fwsm
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* 		 * ARC supported; valid only if manageability features are 		 * enabled. 		 */
+name|mac
+operator|->
+name|arc_subsystem_valid
+operator|=
+operator|(
+name|E1000_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_FWSM
+argument_list|)
+operator|&
+name|E1000_FWSM_MODE_MASK
+operator|)
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
 break|break;
 case|case
 name|e1000_82574
@@ -1645,6 +1652,13 @@ operator|.
 name|led_on
 operator|=
 name|e1000_led_on_generic
+expr_stmt|;
+comment|/* FWSM register */
+name|mac
+operator|->
+name|has_fwsm
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -3903,17 +3917,18 @@ block|{
 case|case
 name|e1000_82573
 case|:
+name|e1000_enable_tx_pkt_filtering_generic
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
 case|case
 name|e1000_82574
 case|:
 case|case
 name|e1000_82583
 case|:
-name|e1000_enable_tx_pkt_filtering_generic
-argument_list|(
-name|hw
-argument_list|)
-expr_stmt|;
 name|reg_data
 operator|=
 name|E1000_READ_REG
