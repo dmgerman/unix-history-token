@@ -289,7 +289,7 @@ name|DBREG_DR7_MASK
 parameter_list|(
 name|i
 parameter_list|)
-value|((u_long)0xf<< ((i) * 4 + 16) | 0x3<< (i) * 2)
+value|(0xful<< ((i) * 4 + 16) | 0x3<< (i) * 2)
 end_define
 
 begin_define
