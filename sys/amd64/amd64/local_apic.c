@@ -618,6 +618,14 @@ name|lapic_timer_hz
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|enum
+name|lapic_clock
+name|clockcoverage
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -716,24 +724,6 @@ name|lapic_resume
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lapic_allclocks
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.lapic_allclocks"
-argument_list|,
-operator|&
-name|lapic_allclocks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1823,7 +1813,9 @@ name|enum
 name|lapic_clock
 name|lapic_setup_clock
 parameter_list|(
-name|void
+name|enum
+name|lapic_clock
+name|srcsdes
 parameter_list|)
 block|{
 name|u_long
@@ -1832,20 +1824,22 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* lapic_setup_clock() should not be called with LAPIC_CLOCK_NONE. */
+name|MPASS
+argument_list|(
+name|srcsdes
+operator|!=
+name|LAPIC_CLOCK_NONE
+argument_list|)
+expr_stmt|;
 comment|/* Can't drive the timer without a local APIC. */
 if|if
 condition|(
 name|lapic
 operator|==
 name|NULL
-condition|)
-return|return
+operator|||
 operator|(
-name|LAPIC_CLOCK_NONE
-operator|)
-return|;
-if|if
-condition|(
 name|resource_int_value
 argument_list|(
 literal|"apic"
@@ -1863,12 +1857,19 @@ operator|&&
 name|i
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
+name|clockcoverage
+operator|=
+name|LAPIC_CLOCK_NONE
+expr_stmt|;
 return|return
 operator|(
-name|LAPIC_CLOCK_NONE
+name|clockcoverage
 operator|)
 return|;
+block|}
 comment|/* Start off with a divisor of 2 (power on reset default). */
 name|lapic_timer_divisor
 operator|=
@@ -1950,9 +1951,9 @@ expr_stmt|;
 comment|/* 	 * We want to run stathz in the neighborhood of 128hz.  We would 	 * like profhz to run as often as possible, so we let it run on 	 * each clock tick.  We try to honor the requested 'hz' value as 	 * much as possible. 	 * 	 * If 'hz' is above 1500, then we just let the lapic timer 	 * (and profhz) run at hz.  If 'hz' is below 1500 but above 	 * 750, then we let the lapic timer run at 2 * 'hz'.  If 'hz' 	 * is below 750 then we let the lapic timer run at 4 * 'hz'. 	 * 	 * Please note that stathz and profhz are set only if all the 	 * clocks are handled through the local APIC. 	 */
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|srcsdes
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 if|if
@@ -1999,9 +2000,9 @@ name|lapic_timer_hz
 expr_stmt|;
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|srcsdes
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 if|if
@@ -2039,15 +2040,13 @@ expr_stmt|;
 name|lapic_timer_enable_intr
 argument_list|()
 expr_stmt|;
+name|clockcoverage
+operator|=
+name|srcsdes
+expr_stmt|;
 return|return
 operator|(
-name|lapic_allclocks
-operator|==
-literal|0
-condition|?
-name|LAPIC_CLOCK_HARDCLOCK
-else|:
-name|LAPIC_CLOCK_ALL
+name|srcsdes
 operator|)
 return|;
 block|}
@@ -3308,9 +3307,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|clockcoverage
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 comment|/* Fire statclock at stathz. */

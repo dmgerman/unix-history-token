@@ -273,6 +273,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|lapic_allclocks
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.lapic_allclocks"
+argument_list|,
+operator|&
+name|lapic_allclocks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|struct
 name|mtx
 name|clock_lock
@@ -1656,10 +1674,45 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
+name|enum
+name|lapic_clock
+name|tlsca
+decl_stmt|;
+name|int
+name|tasc
+decl_stmt|;
+comment|/* Initialize RTC. */
+name|atrtc_start
+argument_list|()
+expr_stmt|;
+name|tasc
+operator|=
+name|atrtc_setup_clock
+argument_list|()
+expr_stmt|;
+comment|/* 	 * If the atrtc successfully initialized and the users didn't force 	 * otherwise use the LAPIC in order to cater hardclock only, otherwise 	 * take in charge all the clock sources. 	 */
+name|tlsca
+operator|=
+operator|(
+name|lapic_allclocks
+operator|==
+literal|0
+operator|&&
+name|tasc
+operator|!=
+literal|0
+operator|)
+condition|?
+name|LAPIC_CLOCK_HARDCLOCK
+else|:
+name|LAPIC_CLOCK_ALL
+expr_stmt|;
 name|using_lapic_timer
 operator|=
 name|lapic_setup_clock
-argument_list|()
+argument_list|(
+name|tlsca
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If we aren't using the local APIC timer to drive the kernel 	 * clocks, setup the interrupt handler for the 8254 timer 0 so 	 * that it can drive hardclock().  Otherwise, change the 8254 	 * timecounter to user a simpler algorithm. 	 */
 if|if
@@ -1734,10 +1787,6 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize RTC. */
-name|atrtc_start
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the separate statistics clock hasn't been explicility disabled 	 * and we aren't already using the local APIC timer to drive the 	 * kernel clocks, then setup the RTC to periodically interrupt to 	 * drive statclock() and profclock(). 	 */
 if|if
 condition|(
@@ -1748,8 +1797,7 @@ condition|)
 block|{
 name|using_atrtc_timer
 operator|=
-name|atrtc_setup_clock
-argument_list|()
+name|tasc
 expr_stmt|;
 if|if
 condition|(
