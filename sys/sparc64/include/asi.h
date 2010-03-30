@@ -16,7 +16,7 @@ name|_MACHINE_ASI_H_
 end_define
 
 begin_comment
-comment|/*  * Standard v9 asis  */
+comment|/*  * Standard v9 ASIs  */
 end_comment
 
 begin_define
@@ -118,7 +118,7 @@ value|0x8b
 end_define
 
 begin_comment
-comment|/*  * UltraSPARC extensions. ASIs limited to a certain family are annotated.  */
+comment|/*  * UltraSPARC extensions - ASIs limited to a certain family are annotated.  */
 end_comment
 
 begin_define
@@ -375,7 +375,7 @@ value|0x4a
 end_define
 
 begin_comment
-comment|/* US-III Cu */
+comment|/* US-III{,+}, IV{,+} */
 end_comment
 
 begin_define
@@ -386,7 +386,7 @@ value|0x0
 end_define
 
 begin_comment
-comment|/* US-III Cu */
+comment|/* US-III{,+}, IV{,+} */
 end_comment
 
 begin_define
@@ -397,7 +397,29 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* US-III Cu */
+comment|/* US-III{,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_FIREPLANE_CONFIG_2
+value|0x10
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASI_JBUS_CONFIG_REG
+value|0x4a
+end_define
+
+begin_comment
+comment|/* US-IIIi{,+} */
 end_comment
 
 begin_define
@@ -757,6 +779,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ASI_INTR_ID
+value|0x63
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_INTR_ID
+value|0x0
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_CORE_ID
+value|0x10
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_CESR_ID
+value|0x40
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ASI_ICACHE_INSTR
 value|0x66
 end_define
@@ -955,7 +1021,7 @@ value|0x76
 end_define
 
 begin_comment
-comment|/*  * With the advent of the US-III, the numbering has changed, as additional  * registers were inserted in between. We retain the original ordering for  * now, and append an A to the inserted registers.  * Exceptions are AA_SDB_INTR_D6 and AA_SDB_INTR_D7, which were appended  * at the end.  */
+comment|/*  * With the advent of the US-III, the numbering has changed, as additional  * registers were inserted in between.  We retain the original ordering for  * now, and append an A to the inserted registers.  * Exceptions are AA_SDB_INTR_D6 and AA_SDB_INTR_D7, which were appended  * at the end.  */
 end_comment
 
 begin_define

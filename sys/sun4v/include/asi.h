@@ -821,6 +821,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ASI_FIREPLANE_CONFIG_REG
+value|0x4a
+end_define
+
+begin_comment
+comment|/* US-III{,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_FIREPLANE_CONFIG
+value|0x0
+end_define
+
+begin_comment
+comment|/* US-III{,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_FIREPLANE_ADDRESS
+value|0x8
+end_define
+
+begin_comment
+comment|/* US-III{,+}, IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_FIREPLANE_CONFIG_2
+value|0x10
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASI_JBUS_CONFIG_REG
+value|0x4a
+end_define
+
+begin_comment
+comment|/* US-IIIi{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ASI_IMMU
 value|0x50
 end_define
@@ -880,6 +935,28 @@ directive|define
 name|ASI_DTLB_TAG_READ_REG
 value|0x5e
 end_define
+
+begin_define
+define|#
+directive|define
+name|ASI_INTR_ID
+value|0x63
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_INTR_ID
+value|0x0
+end_define
+
+begin_comment
+comment|/* US-IV{,+} */
+end_comment
 
 begin_endif
 endif|#
