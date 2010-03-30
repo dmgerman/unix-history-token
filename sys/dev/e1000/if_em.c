@@ -23083,16 +23083,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"TX(%d) no descriptors avail event = %lld\n"
+literal|"TX(%d) no descriptors avail event = %ld\n"
 argument_list|,
 name|txr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|txr
 operator|->
 name|no_desc_avail
@@ -23102,16 +23098,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"TX(%d) MSIX IRQ Handled = %lld\n"
+literal|"TX(%d) MSIX IRQ Handled = %ld\n"
 argument_list|,
 name|txr
 operator|->
 name|me
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|txr
 operator|->
 name|tx_irq
@@ -23160,6 +23152,21 @@ name|rxr
 operator|++
 control|)
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"RX(%d) MSIX IRQ Handled = %ld\n"
+argument_list|,
+name|rxr
+operator|->
+name|me
+argument_list|,
+name|rxr
+operator|->
+name|rx_irq
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
