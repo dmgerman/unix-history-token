@@ -27,6 +27,23 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FPU_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
