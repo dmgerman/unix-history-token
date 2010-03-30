@@ -575,10 +575,12 @@ name|procnum
 parameter_list|)
 block|{
 return|return
+operator|(
 name|nfs_proct
 index|[
 name|procnum
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -1105,14 +1107,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|nmp
 operator|->
 name|nm_client
 operator|=
 name|client
 expr_stmt|;
-block|}
 comment|/* 	 * Protocols that do not require connections may be optionally left 	 * unconnected for servers that reply from a port other than NFS_PORT. 	 */
 if|if
 condition|(
@@ -1146,7 +1146,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1155,7 +1154,6 @@ operator|->
 name|nm_mtx
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Restore current thread's credentials. */
 name|td
 operator|->
@@ -1171,7 +1169,7 @@ operator|->
 name|nm_mtx
 argument_list|)
 expr_stmt|;
-comment|/* Initialize other non-zero congestion variables */
+comment|/* Initialize other non-zero congestion variables. */
 name|nfs_init_rtt
 argument_list|(
 name|nmp
@@ -1194,7 +1192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NFS disconnect. Clean up and unlink.  */
+comment|/*  * NFS disconnect.  Clean up and unlink.  */
 end_comment
 
 begin_function
@@ -1268,7 +1266,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1277,7 +1274,6 @@ operator|->
 name|nm_mtx
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1354,7 +1350,6 @@ name|nmp
 operator|->
 name|nm_mech_oid
 condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -1373,7 +1368,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|nmp
@@ -1805,7 +1799,7 @@ name|nm_tprintf_initial_delay
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * XXX if not already connected call nfs_connect now. Longer 	 * term, change nfs_mount to call nfs_connect unconditionally 	 * and let clnt_reconnect_create handle reconnects. 	 */
+comment|/* 	 * XXX if not already connected call nfs_connect now.  Longer 	 * term, change nfs_mount to call nfs_connect unconditionally 	 * and let clnt_reconnect_create handle reconnects. 	 */
 if|if
 condition|(
 operator|!
@@ -1874,7 +1868,7 @@ operator|=
 operator|&
 name|nf
 expr_stmt|;
-comment|/* 	 * Use a conservative timeout for RPCs other than getattr, 	 * lookup, read or write. The justification for doing "other" 	 * this way is that these RPCs happen so infrequently that 	 * timer est. would probably be stale.  Also, since many of 	 * these RPCs are non-idempotent, a conservative timeout is 	 * desired. 	 */
+comment|/* 	 * Use a conservative timeout for RPCs other than getattr, 	 * lookup, read or write.  The justification for doing "other" 	 * this way is that these RPCs happen so infrequently that 	 * timer est. would probably be stale.  Also, since many of 	 * these RPCs are non-idempotent, a conservative timeout is 	 * desired. 	 */
 name|timer
 operator|=
 name|nfs_rto_timer
@@ -1888,7 +1882,6 @@ name|timer
 operator|!=
 name|NFS_DEFAULT_TIMER
 condition|)
-block|{
 name|ext
 operator|.
 name|rc_timers
@@ -1903,16 +1896,13 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ext
 operator|.
 name|rc_timers
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
@@ -2067,12 +2057,10 @@ name|stat
 operator|==
 name|RPC_SUCCESS
 condition|)
-block|{
 name|error
 operator|=
 literal|0
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2080,12 +2068,10 @@ name|stat
 operator|==
 name|RPC_TIMEDOUT
 condition|)
-block|{
 name|error
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2093,12 +2079,10 @@ name|stat
 operator|==
 name|RPC_VERSMISMATCH
 condition|)
-block|{
 name|error
 operator|=
 name|EOPNOTSUPP
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2106,19 +2090,15 @@ name|stat
 operator|==
 name|RPC_PROGVERSMISMATCH
 condition|)
-block|{
 name|error
 operator|=
 name|EPROTONOSUPPORT
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|EACCES
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -2248,7 +2228,6 @@ name|time_second
 operator|<
 name|waituntil
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2264,7 +2243,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|tryagain
 goto|;
@@ -2281,7 +2259,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Skip wcc data on NFS errors for now. NetApp filers 		 * return corrupt postop attrs in the wcc data for NFS 		 * err EROFS. Not sure if they could return corrupt 		 * postop attrs for others errors. 		 */
+comment|/* 		 * Skip wcc data on NFS errors for now.  NetApp filers 		 * return corrupt postop attrs in the wcc data for NFS 		 * err EROFS.  Not sure if they could return corrupt 		 * postop attrs for others errors. 		 */
 if|if
 condition|(
 operator|(
@@ -2561,7 +2539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark all of an nfs mount's outstanding requests with R_SOFTTERM and  * wait for all requests to complete. This is used by forced unmounts  * to terminate any outstanding RPCs.  */
+comment|/*  * Mark all of an nfs mount's outstanding requests with R_SOFTTERM and  * wait for all requests to complete.  This is used by forced unmounts  * to terminate any outstanding RPCs.  */
 end_comment
 
 begin_function
@@ -2596,7 +2574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Any signal that can interrupt an NFS operation in an intr mount  * should be added to this set. SIGSTOP and SIGKILL cannot be masked.  */
+comment|/*  * Any signal that can interrupt an NFS operation in an intr mount  * should be added to this set.  SIGSTOP and SIGKILL cannot be masked.  */
 end_comment
 
 begin_decl_stmt
@@ -2683,7 +2661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The set/restore sigmask functions are used to (temporarily) overwrite  * the process p_sigmask during an RPC call (for example). These are also  * used in other places in the NFS client that might tsleep().  */
+comment|/*  * The set/restore sigmask functions are used to (temporarily) overwrite  * the process p_sigmask during an RPC call (for example).  These are also  * used in other places in the NFS client that might tsleep().  */
 end_comment
 
 begin_function
@@ -2733,7 +2711,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-comment|/* Remove the NFS set of signals from newset */
+comment|/* Remove the NFS set of signals from newset. */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2771,7 +2749,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * But make sure we leave the ones already masked 		 * by the process, ie. remove the signal from the 		 * temporary signalmask only if it wasn't already 		 * in p_sigmask. 		 */
+comment|/* 		 * But make sure we leave the ones already masked 		 * by the process, i.e. remove the signal from the 		 * temporary signalmask only if it wasn't already 		 * in p_sigmask. 		 */
 if|if
 condition|(
 operator|!
@@ -3237,7 +3215,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|tprintf
 argument_list|(
 name|p
@@ -3253,9 +3230,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|tprintf
 argument_list|(
 name|p
@@ -3269,7 +3244,6 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -3502,7 +3476,6 @@ if|if
 condition|(
 name|tprintfmsg
 condition|)
-block|{
 name|nfs_msg
 argument_list|(
 name|td
@@ -3520,7 +3493,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
