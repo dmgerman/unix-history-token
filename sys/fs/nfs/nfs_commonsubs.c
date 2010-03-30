@@ -9637,6 +9637,52 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Test for a lock. Return 1 if locked, 0 otherwise.  */
+end_comment
+
+begin_function
+name|APPLESTATIC
+name|int
+name|nfsv4_testlock
+parameter_list|(
+name|struct
+name|nfsv4lock
+modifier|*
+name|lp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|lp
+operator|->
+name|nfslock_lock
+operator|&
+name|NFSV4LOCK_LOCK
+operator|)
+operator|==
+literal|0
+operator|&&
+name|lp
+operator|->
+name|nfslock_usecnt
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Wake up anyone sleeping, waiting for this lock.  */
 end_comment
 

@@ -2113,6 +2113,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nfsv4_testlock
+parameter_list|(
+name|struct
+name|nfsv4lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nfsrv_mtostr
 parameter_list|(
 name|struct

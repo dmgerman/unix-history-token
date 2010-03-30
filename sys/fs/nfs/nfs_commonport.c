@@ -548,9 +548,21 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NEWNFSDIROFF
 argument_list|,
-literal|"Newnfscl_diroff"
+literal|"NFSCL diroffdiroff"
 argument_list|,
 literal|"New NFS directory offset data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSDROLLBACK
+argument_list|,
+literal|"NFSD rollback"
+argument_list|,
+literal|"New NFS local lock rollback"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
