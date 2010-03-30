@@ -130,7 +130,7 @@ decl_stmt|,
 name|y3
 decl_stmt|;
 name|FPU_DECL_CARRY
-comment|/* 	 * Since divide is not commutative, we cannot just use ORDER. 	 * Check either operand for NaN first; if there is at least one, 	 * order the signalling one (if only one) onto the right, then 	 * return it.  Otherwise we have the following cases: 	 * 	 *	Inf / Inf = NaN, plus NV exception 	 *	Inf / num = Inf [i.e., return x] 	 *	Inf / 0   = Inf [i.e., return x] 	 *	0 / Inf = 0 [i.e., return x] 	 *	0 / num = 0 [i.e., return x] 	 *	0 / 0   = NaN, plus NV exception 	 *	num / Inf = 0 	 *	num / num = num (do the divide) 	 *	num / 0   = Inf, plus DZ exception 	 */
+comment|/* 	 * Since divide is not commutative, we cannot just use ORDER. 	 * Check either operand for NaN first; if there is at least one, 	 * order the signalling one (if only one) onto the right, then 	 * return it.  Otherwise we have the following cases: 	 * 	 *	Inf / Inf = NaN, plus NV exception 	 *	Inf / num = Inf [i.e., return x #] 	 *	Inf / 0   = Inf [i.e., return x #] 	 *	0 / Inf = 0 [i.e., return x #] 	 *	0 / num = 0 [i.e., return x #] 	 *	0 / 0   = NaN, plus NV exception 	 *	num / Inf = 0 # 	 *	num / num = num (do the divide) 	 *	num / 0   = Inf #, plus DZ exception 	 * 	 * # Sign of result is XOR of operand signs. 	 */
 if|if
 condition|(
 name|ISNAN
@@ -188,13 +188,20 @@ name|fe
 argument_list|)
 operator|)
 return|;
+name|x
+operator|->
+name|fp_sign
+operator|^=
+name|y
+operator|->
+name|fp_sign
+expr_stmt|;
 return|return
 operator|(
 name|x
 operator|)
 return|;
 block|}
-comment|/* all results at this point use XOR of operand signs */
 name|x
 operator|->
 name|fp_sign
