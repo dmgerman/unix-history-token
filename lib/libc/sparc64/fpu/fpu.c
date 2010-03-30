@@ -42,19 +42,36 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<signal.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FPU_DEBUG
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<stdio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
