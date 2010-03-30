@@ -673,16 +673,41 @@ name|IXGBE_BR_SIZE
 value|4096
 end_define
 
+begin_comment
+comment|/* Offload bits in mbuf flag */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
 begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
-value|7
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
 end_define
 
-begin_comment
-comment|/* Bits in csum flags */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* For 6.X code compatibility */
