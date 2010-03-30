@@ -456,7 +456,7 @@ expr_stmt|;
 block|}
 name|__aligned
 argument_list|(
-literal|128
+name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
