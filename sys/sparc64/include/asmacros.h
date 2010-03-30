@@ -195,7 +195,7 @@ parameter_list|,
 name|msg
 parameter_list|)
 define|\
-value|brnz	r1, 8f ; \ 	 nop ; \ 	PANIC(msg, r1) ; \ 8:
+value|brnz,pt	r1, 8f ; \ 	 nop ; \ 	PANIC(msg, r1) ; \ 8:
 end_define
 
 begin_else
