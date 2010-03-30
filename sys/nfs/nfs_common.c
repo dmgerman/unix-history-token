@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * These functions support the macros and help fiddle mbuf chains for  * the nfs op functions. They do things like create the rpc header and  * copy data between mbuf chains and uio lists.  */
+comment|/*  * These functions support the macros and help fiddle mbuf chains for  * the nfs op functions.  They do things like create the rpc header and  * copy data between mbuf chains and uio lists.  */
 end_comment
 
 begin_include
@@ -770,7 +770,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|left
 operator|=
@@ -818,7 +820,9 @@ name|NULL
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 elseif|else
@@ -853,7 +857,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|mp2
 operator|->
@@ -949,7 +955,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|xfer
 operator|=
@@ -1092,7 +1100,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1313,7 +1323,9 @@ operator|+=
 name|s
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1338,6 +1350,7 @@ name|dpos
 parameter_list|)
 block|{
 return|return
+operator|(
 name|nfsm_dissect_xx_sub
 argument_list|(
 name|s
@@ -1348,6 +1361,7 @@ name|dpos
 argument_list|,
 name|M_TRYWAIT
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1372,6 +1386,7 @@ name|dpos
 parameter_list|)
 block|{
 return|return
+operator|(
 name|nfsm_dissect_xx_sub
 argument_list|(
 name|s
@@ -1382,6 +1397,7 @@ name|dpos
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1458,7 +1474,9 @@ operator|+=
 name|s
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 name|cp2
@@ -1477,7 +1495,9 @@ name|how
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|cp2
+operator|)
 return|;
 block|}
 end_function
@@ -1526,7 +1546,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EBADRPC
+operator|)
 return|;
 operator|*
 name|s
@@ -1547,10 +1569,14 @@ operator|>
 name|m
 condition|)
 return|return
+operator|(
 name|EBADRPC
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1609,7 +1635,9 @@ operator|+=
 name|s
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|t1
@@ -1630,10 +1658,14 @@ condition|(
 name|t1
 condition|)
 return|return
+operator|(
 name|t1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
