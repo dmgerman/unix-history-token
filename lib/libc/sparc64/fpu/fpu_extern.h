@@ -21,12 +21,6 @@ name|utrapframe
 struct_decl|;
 end_struct_decl
 
-begin_union_decl
-union_decl|union
-name|instr
-union_decl|;
-end_union_decl
-
 begin_struct_decl
 struct_decl|struct
 name|fpemu
