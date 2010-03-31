@@ -1018,7 +1018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number, and also do set manipulation.  * Assumes chain != NULL&& *chain != NULL.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  *	5	delete rules with given number and with given set number  */
+comment|/**  * Remove all rules with given number, and also do set manipulation.  * Assumes chain != NULL&& *chain != NULL.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules numbered "rulenum"  *	1	delete rules in set "rulenum"  *	2	move rules "rulenum" to set "new_set"  *	3	move rules from set "rulenum" to set "new_set"  *	4	swap sets "rulenum" and "new_set"  *	5	delete rules "rulenum" and set "new_set"  */
 end_comment
 
 begin_function
@@ -1173,7 +1173,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* delete rules number N (N == 0 means all) */
+comment|/* delete rules "rulenum" (rulenum == 0 matches all) */
 case|case
 literal|1
 case|:
@@ -1231,7 +1231,7 @@ index|]
 operator|->
 name|set
 operator|!=
-name|rulenum
+name|new_set
 condition|)
 continue|continue;
 if|if
@@ -1382,7 +1382,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * bcopy the initial part of the map, then individually 		 * copy all matching entries between start and end, 		 * and then bcopy the final part. 		 * Once we are done we can swap maps and clean up the 		 * deleted rules (unfortunately we need to repeat a 		 * convoluted test). 		 */
+comment|/* 		 * bcopy the initial part of the map, then individually 		 * copy all matching entries between start and end, 		 * and then bcopy the final part. 		 * Once we are done we can swap maps and clean up the 		 * deleted rules (unfortunately we need to repeat a 		 * convoluted test). Rules to keep are 		 *	(set == RESVD_SET || !match_set || !match_rule) 		 * where 		 *   match_set ::= (cmd == 0 || rule->set == new_set) 		 *   match_rule ::= (cmd == 1 || rule->rulenum == rulenum) 		 */
 if|if
 condition|(
 name|start
@@ -1440,17 +1440,20 @@ name|set
 operator|==
 name|RESVD_SET
 operator|||
+operator|!
+operator|(
 name|cmd
 operator|==
 literal|0
 operator|||
-operator|(
 name|rule
 operator|->
 name|set
 operator|==
 name|new_set
-operator|&&
+operator|)
+operator|||
+operator|!
 operator|(
 name|cmd
 operator|==
@@ -1462,8 +1465,8 @@ name|rulenum
 operator|==
 name|rulenum
 operator|)
-operator|)
 condition|)
+block|{
 name|map
 index|[
 name|ofs
@@ -1477,6 +1480,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+block|}
 block|}
 name|bcopy
 argument_list|(
@@ -1555,17 +1559,20 @@ name|set
 operator|==
 name|RESVD_SET
 operator|||
+operator|!
+operator|(
 name|cmd
 operator|==
 literal|0
 operator|||
-operator|(
 name|rule
 operator|->
 name|set
 operator|==
 name|new_set
-operator|&&
+operator|)
+operator|||
+operator|!
 operator|(
 name|cmd
 operator|==
@@ -1576,7 +1583,6 @@ operator|->
 name|rulenum
 operator|==
 name|rulenum
-operator|)
 operator|)
 condition|)
 continue|continue;
