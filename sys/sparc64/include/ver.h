@@ -204,7 +204,7 @@ comment|/* !LOCORE */
 end_comment
 
 begin_comment
-comment|/* Known implementations. */
+comment|/* Known implementations */
 end_comment
 
 begin_define
@@ -212,6 +212,55 @@ define|#
 directive|define
 name|CPU_IMPL_SPARC64
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64II
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64III
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64IV
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64V
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64VI
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64VII
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_IMPL_SPARC64VIIIfx
+value|0x08
 end_define
 
 begin_define
