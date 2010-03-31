@@ -15,11 +15,22 @@ directive|define
 name|_MACHINE_FRAME_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_REGSET_H_
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<machine/_regset.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Software trap, exception, and syscall frame.  */
