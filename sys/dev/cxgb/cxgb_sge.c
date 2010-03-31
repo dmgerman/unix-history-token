@@ -19709,7 +19709,7 @@ argument_list|,
 literal|"dump of the response queue"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19729,9 +19729,9 @@ index|[
 name|TXQ_ETH
 index|]
 operator|.
-name|txq_drops
-argument_list|,
-literal|0
+name|txq_mr
+operator|->
+name|br_drops
 argument_list|,
 literal|"#tunneled packets dropped"
 argument_list|)

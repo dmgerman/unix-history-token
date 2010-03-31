@@ -859,9 +859,6 @@ name|uint64_t
 name|txq_coalesced
 decl_stmt|;
 name|uint32_t
-name|txq_drops
-decl_stmt|;
-name|uint32_t
 name|txq_skipped
 decl_stmt|;
 name|uint32_t
