@@ -1723,7 +1723,7 @@ break|break;
 case|case
 name|IA64_VEC_NESTED_DTLB
 case|:
-comment|/* 		 * We never call trap() with this vector. We may want to 		 * do that in the future in case the nested TLB handler 		 * could not find the translation it needs. In that case 		 * we could switch to a special (hardwired) stack and 		 * come here to produce a nice panic(). 		 */
+comment|/* 		 * When the nested TLB handler encounters an unexpected 		 * condition, it'll switch to the backup stack and transfer 		 * here. All we need to do is panic. 		 */
 name|trap_panic
 argument_list|(
 name|vector
