@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -10868,6 +10874,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|INET
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -10878,6 +10887,8 @@ operator|.
 name|ctrl
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bzero
 argument_list|(
 name|q
@@ -13999,6 +14010,9 @@ operator|&
 name|IFCAP_LRO
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|ret
 operator|=
 name|tcp_lro_init
@@ -14027,6 +14041,8 @@ goto|goto
 name|err
 goto|;
 block|}
+endif|#
+directive|endif
 name|q
 operator|->
 name|lro
@@ -16382,6 +16398,9 @@ name|lro_cnt
 operator|&&
 operator|!
 name|skip_lro
+ifdef|#
+directive|ifdef
+name|INET
 operator|&&
 operator|(
 name|tcp_lro_rx
@@ -16395,6 +16414,8 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 comment|/* successfully queue'd for LRO */
@@ -16483,6 +16504,9 @@ argument_list|,
 name|ngathered
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 comment|/* Flush LRO */
 while|while
 condition|(
@@ -16527,6 +16551,8 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|sleeping
