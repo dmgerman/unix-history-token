@@ -269,11 +269,6 @@ name|defined
 argument_list|(
 name|UNDER_CE
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|NO_ERRNO_H
-argument_list|)
 end_if
 
 begin_include
@@ -524,7 +519,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* UNDER_CE&& NO_ERRNO_H */
+comment|/* UNDER_CE */
 end_comment
 
 begin_ifndef

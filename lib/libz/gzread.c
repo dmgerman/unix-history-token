@@ -3,6 +3,10 @@ begin_comment
 comment|/* gzread.c -- zlib functions for reading gzip files  * Copyright (C) 2004, 2005, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -308,6 +312,10 @@ name|state
 operator|->
 name|size
 argument_list|,
+operator|(
+name|unsigned
+operator|*
+operator|)
 operator|&
 operator|(
 name|strm

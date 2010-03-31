@@ -1192,10 +1192,10 @@ parameter_list|(
 name|voidpf
 name|opaque
 parameter_list|,
-name|unsigned
+name|uInt
 name|items
 parameter_list|,
-name|unsigned
+name|uInt
 name|size
 parameter_list|)
 block|{

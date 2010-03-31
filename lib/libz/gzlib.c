@@ -3,17 +3,33 @@ begin_comment
 comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"gzguts.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_include
+include|#
+directive|include
+file|"zutil.h"
+end_include
+
+begin_if
+if|#
+directive|if
 name|_LARGEFILE64_SOURCE
-end_ifdef
+operator|==
+literal|1
+operator|&&
+name|_LFS64_LARGEFILE
+operator|==
+literal|1
+end_if
 
 begin_define
 define|#
@@ -82,9 +98,6 @@ if|#
 directive|if
 name|defined
 name|UNDER_CE
-operator|&&
-name|defined
-name|NO_ERRNO_H
 end_if
 
 begin_comment
@@ -267,7 +280,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* UNDER_CE&& NO_ERRNO_H */
+comment|/* UNDER_CE */
 end_comment
 
 begin_comment
@@ -941,6 +954,7 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* for debugging */
 name|gz
 operator|=
 name|gz_open
@@ -1312,6 +1326,10 @@ operator|->
 name|fd
 argument_list|,
 name|offset
+operator|-
+name|state
+operator|->
+name|have
 argument_list|,
 name|SEEK_CUR
 argument_list|)
