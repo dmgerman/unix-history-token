@@ -3871,7 +3871,7 @@ name|panic
 argument_list|(
 literal|"%s: uncorrectable DMA error AFAR %#lx AFSR %#lx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4033,7 +4033,7 @@ name|panic
 argument_list|(
 literal|"%s: PCI bus %c error AFAR %#lx AFSR %#lx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
