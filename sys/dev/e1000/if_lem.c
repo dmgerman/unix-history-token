@@ -1913,7 +1913,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|poll_handler_t
-name|em_poll
+name|lem_poll
 decl_stmt|;
 end_decl_stmt
 
