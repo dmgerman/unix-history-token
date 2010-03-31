@@ -9673,7 +9673,6 @@ block|}
 end_function
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|dlerror
