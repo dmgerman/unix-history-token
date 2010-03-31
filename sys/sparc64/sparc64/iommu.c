@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1181,7 +1187,10 @@ literal|0
 operator|&&
 operator|!
 operator|(
-name|cpu_impl
+name|PCPU_GET
+argument_list|(
+name|impl
+argument_list|)
 operator|==
 name|CPU_IMPL_ULTRASPARCIIi
 operator|&&

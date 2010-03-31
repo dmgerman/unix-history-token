@@ -1116,7 +1116,8 @@ begin_function
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 name|struct
@@ -9528,7 +9529,7 @@ parameter_list|,
 name|vm_size_t
 name|sz
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_comment

@@ -349,6 +349,9 @@ name|node
 parameter_list|,
 name|u_int
 name|mid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -363,6 +366,9 @@ name|node
 parameter_list|,
 name|u_int
 name|mid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,6 +404,9 @@ name|node
 parameter_list|,
 name|u_int
 name|mid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -515,7 +524,8 @@ begin_function
 name|void
 name|mp_init
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 name|struct
@@ -753,6 +763,9 @@ name|node
 parameter_list|,
 name|u_int
 name|mid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 parameter_list|)
 block|{
@@ -770,6 +783,9 @@ name|child
 decl_stmt|;
 name|u_int
 name|cpuid
+decl_stmt|;
+name|uint32_t
+name|cpu_impl
 decl_stmt|;
 comment|/* There's no need to traverse the whole OFW tree twice. */
 if|if
@@ -859,8 +875,37 @@ name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
+literal|"implementation#"
+argument_list|,
+operator|&
+name|cpu_impl
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpu_impl
+argument_list|)
+argument_list|)
+operator|<=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"%s: couldn't determine CPU "
+literal|"implementation"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OF_getprop
+argument_list|(
+name|node
+argument_list|,
 name|cpu_cpuid_prop
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 argument_list|,
 operator|&
 name|cpuid
@@ -875,7 +920,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: can't get module ID"
+literal|"%s: couldn't determine CPU module ID"
 argument_list|,
 name|__func__
 argument_list|)
@@ -898,6 +943,8 @@ argument_list|(
 name|node
 argument_list|,
 name|cpuid
+argument_list|,
+name|cpu_impl
 argument_list|)
 expr_stmt|;
 block|}
@@ -955,6 +1002,10 @@ name|__unused
 parameter_list|,
 name|u_int
 name|mid
+name|__unused
+parameter_list|,
+name|u_int
+name|cpu_impl
 name|__unused
 parameter_list|)
 block|{
@@ -1236,6 +1287,9 @@ name|node
 parameter_list|,
 name|u_int
 name|mid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 specifier|volatile
@@ -1256,10 +1310,10 @@ name|vm_offset_t
 name|va
 decl_stmt|;
 name|u_int
-name|clock
-decl_stmt|;
-name|u_int
 name|cpuid
+decl_stmt|;
+name|uint32_t
+name|clock
 decl_stmt|;
 if|if
 condition|(
@@ -1289,7 +1343,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: can't get clock"
+literal|"%s: couldn't determine CPU frequency"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1505,6 +1559,12 @@ operator|->
 name|pc_clock
 operator|=
 name|clock
+expr_stmt|;
+name|pc
+operator|->
+name|pc_impl
+operator|=
+name|cpu_impl
 expr_stmt|;
 name|pc
 operator|->
@@ -1857,15 +1917,25 @@ name|cpu_start_args
 expr_stmt|;
 if|if
 condition|(
-name|cpu_impl
+name|pc
+operator|->
+name|pc_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
 name|cheetah_init
-argument_list|()
+argument_list|(
+name|pc
+operator|->
+name|pc_impl
+argument_list|)
 expr_stmt|;
 name|cache_enable
-argument_list|()
+argument_list|(
+name|pc
+operator|->
+name|pc_impl
+argument_list|)
 expr_stmt|;
 name|pmap_map_tsb
 argument_list|()
