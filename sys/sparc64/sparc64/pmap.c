@@ -2543,7 +2543,7 @@ argument_list|,
 name|ASI_DMMU
 argument_list|)
 operator|&
-name|TLB_SCXR_PGSZ_MASK
+name|TLB_CXR_PGSZ_MASK
 operator|)
 operator||
 name|TLB_CTX_KERNEL
@@ -9402,7 +9402,7 @@ argument_list|,
 name|ASI_DMMU
 argument_list|)
 operator|&
-name|TLB_PCXR_PGSZ_MASK
+name|TLB_CXR_PGSZ_MASK
 operator|)
 operator||
 name|context
