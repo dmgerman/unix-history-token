@@ -14898,31 +14898,16 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
+comment|/* 	 * If there is multiple PMCs for the same interrupt ignore new post 	 */
+if|if
+condition|(
 name|td
 operator|->
 name|td_pflags
 operator|&
 name|TDP_CALLCHAIN
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"[pmc,%d] thread %p already marked for callchain capture"
-operator|,
-name|__LINE__
-operator|,
-operator|(
-name|void
-operator|*
-operator|)
-name|td
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* 	 * Mark this thread as needing callchain capture. 	 * `td->td_pflags' will be safe to touch because this thread 	 * was in user space when it was interrupted. 	 */
 name|td
 operator|->
