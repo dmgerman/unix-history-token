@@ -4296,13 +4296,6 @@ operator|->
 name|pr_pmcname
 argument_list|)
 return|;
-name|err
-argument_list|(
-name|EX_SOFTWARE
-argument_list|,
-literal|"ERROR: cannot find pmcid name"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -7234,10 +7227,30 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 comment|/* If in pause mode do not refresh display. */
 if|if
 condition|(
 name|pmcstat_pause
+condition|)
+return|return;
+comment|/* Wait until PMC pop in the log. */
+name|s
+operator|=
+name|pmcstat_pmcindex_to_name
+argument_list|(
+name|pmcstat_pmcinfilter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
 condition|)
 return|return;
 comment|/* Format PMC name. */
@@ -7256,10 +7269,7 @@ argument_list|)
 argument_list|,
 literal|"[%s]"
 argument_list|,
-name|pmcstat_pmcindex_to_name
-argument_list|(
-name|pmcstat_pmcinfilter
-argument_list|)
+name|s
 argument_list|)
 expr_stmt|;
 else|else
@@ -7274,10 +7284,7 @@ argument_list|)
 argument_list|,
 literal|"%s.%d"
 argument_list|,
-name|pmcstat_pmcindex_to_name
-argument_list|(
-name|pmcstat_pmcinfilter
-argument_list|)
+name|s
 argument_list|,
 name|pmcstat_pmcinfilter
 argument_list|)
