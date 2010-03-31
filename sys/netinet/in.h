@@ -1617,6 +1617,17 @@ begin_comment
 comment|/* SCTP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_MH
+value|135
+end_define
+
+begin_comment
+comment|/* IPv6 Mobility Header */
+end_comment
+
 begin_comment
 comment|/* 101-254: Partly Unassigned */
 end_comment
