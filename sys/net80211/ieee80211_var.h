@@ -4675,6 +4675,7 @@ begin_function_decl
 name|void
 name|ieee80211_note
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4692,6 +4693,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4716,6 +4718,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4890,6 +4893,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4918,6 +4922,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_ie
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4946,6 +4951,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
