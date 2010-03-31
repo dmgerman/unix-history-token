@@ -28,7 +28,7 @@ name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.2.4 Copyright 1995-2010 Mark Adler "
+literal|" inflate 1.2.4.1 Copyright 1995-2010 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -334,9 +334,9 @@ literal|21
 block|,
 literal|16
 block|,
-literal|64
+literal|67
 block|,
-literal|195
+literal|206
 block|}
 decl_stmt|;
 specifier|static

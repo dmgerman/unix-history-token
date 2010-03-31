@@ -3,11 +3,13 @@ begin_comment
 comment|/* gzguts.h -- zlib internal header definitions for gz* operations  * Copyright (C) 2004, 2005, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|_LARGEFILE64_SOURCE
-end_ifdef
+operator|==
+literal|1
+end_if
 
 begin_ifndef
 ifndef|#
@@ -19,6 +21,7 @@ begin_define
 define|#
 directive|define
 name|_LARGEFILE_SOURCE
+value|1
 end_define
 
 begin_endif
@@ -220,9 +223,6 @@ if|#
 directive|if
 name|defined
 name|UNDER_CE
-operator|&&
-name|defined
-name|NO_ERRNO_H
 end_if
 
 begin_include
@@ -287,51 +287,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* MVS fdopen() */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__MVS__
-end_ifdef
-
-begin_pragma
-pragma|#
-directive|pragma
-name|map
-name|(
-name|fdopen
-name|,
-literal|"\174\174FDOPEN"
-name|)
-end_pragma
-
-begin_function_decl
-name|FILE
-modifier|*
-name|fdopen
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|_LARGEFILE64_SOURCE
-end_ifdef
+operator|==
+literal|1
+end_if
 
 begin_define
 define|#
@@ -594,9 +556,6 @@ if|#
 directive|if
 name|defined
 name|UNDER_CE
-operator|&&
-name|defined
-name|NO_ERRNO_H
 end_if
 
 begin_decl_stmt

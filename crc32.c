@@ -1093,7 +1093,7 @@ name|FAR
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|uInt
 name|len
 decl_stmt|;
 block|{

@@ -302,6 +302,10 @@ name|state
 operator|->
 name|size
 argument_list|,
+operator|(
+name|unsigned
+operator|*
+operator|)
 operator|&
 operator|(
 name|strm
