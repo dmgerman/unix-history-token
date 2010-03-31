@@ -911,17 +911,12 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"can't decode default resource id %d for "
-literal|"%s%d, bypassing\n"
+literal|"%s, bypassing\n"
 argument_list|,
 operator|*
 name|rid
 argument_list|,
-name|device_get_name
-argument_list|(
-name|child
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
@@ -961,15 +956,10 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s%d requested unsupported "
+literal|"device %s requested unsupported "
 literal|"I/O range 0x%lx-0x%lx\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|child
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
@@ -1000,14 +990,9 @@ operator|.
 name|dev
 argument_list|,
 literal|"device "
-literal|"%s%d requested decoded I/O range 0x%lx-0x%lx\n"
+literal|"%s requested decoded I/O range 0x%lx-0x%lx\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|child
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
@@ -1042,15 +1027,10 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"device %s%d requested unsupported "
+literal|"device %s requested unsupported "
 literal|"memory range 0x%lx-0x%lx\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|child
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
@@ -1081,14 +1061,9 @@ operator|.
 name|dev
 argument_list|,
 literal|"device "
-literal|"%s%d requested decoded memory range 0x%lx-0x%lx\n"
+literal|"%s requested decoded memory range 0x%lx-0x%lx\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|child
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|child
 argument_list|)
