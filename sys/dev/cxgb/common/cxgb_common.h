@@ -1095,6 +1095,11 @@ decl_stmt|;
 comment|/* # of entries in jumbo free list */
 name|unsigned
 name|int
+name|jumbo_buf_size
+decl_stmt|;
+comment|/* buffer size of jumbo entry */
+name|unsigned
+name|int
 name|txq_size
 index|[
 name|SGE_TXQ_PER_SET

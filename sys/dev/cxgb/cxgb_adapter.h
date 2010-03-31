@@ -513,6 +513,20 @@ name|TX_ETH_Q_SIZE
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|TX_OFLD_Q_SIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_CTRL_Q_SIZE
+value|256
+end_define
+
 begin_enum
 enum|enum
 block|{

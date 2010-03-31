@@ -1122,6 +1122,7 @@ begin_decl_stmt
 name|int
 name|cxgb_use_16k_clusters
 init|=
+operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -1138,7 +1139,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
