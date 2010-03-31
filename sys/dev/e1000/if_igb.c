@@ -5942,7 +5942,7 @@ name|DEVICE_POLLING
 end_ifdef
 
 begin_comment
-comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
+comment|/*********************************************************************  *  *  Legacy polling routine : if using this code you MUST be sure that  *  multiqueue is not defined, ie, set igb_num_queues to 1.  *  *********************************************************************/
 end_comment
 
 begin_if
@@ -6003,13 +6003,13 @@ operator|->
 name|if_softc
 decl_stmt|;
 name|struct
-name|rx_ring
+name|igb_queue
 modifier|*
-name|rxr
+name|que
 init|=
 name|adapter
 operator|->
-name|rx_rings
+name|queues
 decl_stmt|;
 name|struct
 name|tx_ring
@@ -6129,7 +6129,7 @@ name|rx_done
 operator|=
 name|igb_rxeof
 argument_list|(
-name|rxr
+name|que
 argument_list|,
 name|count
 argument_list|)
