@@ -812,6 +812,11 @@ modifier|*
 name|dev
 decl_stmt|;
 name|struct
+name|cdev
+modifier|*
+name|led_dev
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|memory

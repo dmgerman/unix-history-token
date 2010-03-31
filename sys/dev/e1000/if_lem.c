@@ -263,6 +263,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/led/led.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -1770,6 +1776,19 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|lem_led_func
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3749,6 +3768,22 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
+name|adapter
+operator|->
+name|led_dev
+operator|=
+name|led_create
+argument_list|(
+name|lem_led_func
+argument_list|,
+name|adapter
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"lem_attach: end"
@@ -3929,6 +3964,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|adapter
+operator|->
+name|led_dev
+operator|!=
+name|NULL
+condition|)
+name|led_destroy
+argument_list|(
+name|adapter
+operator|->
+name|led_dev
+argument_list|)
+expr_stmt|;
 name|EM_CORE_LOCK
 argument_list|(
 name|adapter
@@ -10254,6 +10304,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|e1000_led_off
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
+name|e1000_cleanup_led
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*********************************************************************  *  *  Determine hardware revision.  *  **********************************************************************/
 specifier|static
@@ -11841,7 +11907,7 @@ argument|) 			global_quad_port_a =
 literal|0
 argument|;                 break; 	} 	return; }
 comment|/*  * Enable PCI Wake On Lan capability  */
-argument|void lem_enable_wakeup(device_t dev) { 	struct adapter	*adapter = device_get_softc(dev); 	struct ifnet	*ifp = adapter->ifp; 	u32		pmc, ctrl, ctrl_ext, rctl; 	u16     	status;  	if ((pci_find_extcap(dev, PCIY_PMG,&pmc) !=
+argument|static void lem_enable_wakeup(device_t dev) { 	struct adapter	*adapter = device_get_softc(dev); 	struct ifnet	*ifp = adapter->ifp; 	u32		pmc, ctrl, ctrl_ext, rctl; 	u16     	status;  	if ((pci_find_extcap(dev, PCIY_PMG,&pmc) !=
 literal|0
 argument|)) 		return;
 comment|/* Advertise the wakeup capability */
@@ -11905,7 +11971,7 @@ argument|); 		return ret; 	} 	e1000_write_phy_reg_mdic(hw, IGP01E1000_PHY_PAGE_S
 literal|"Could not read PHY page 769\n"
 argument|); 		goto out; 	} 	preg |= BM_WUC_ENABLE_BIT | BM_WUC_HOST_WU_BIT; 	ret = e1000_write_phy_reg_mdic(hw, BM_WUC_ENABLE_REG, preg); 	if (ret) 		printf(
 literal|"Could not set PHY Host Wakeup bit\n"
-argument|); out: 	hw->phy.ops.release(hw);  	return ret; }
+argument|); out: 	hw->phy.ops.release(hw);  	return ret; }  static void lem_led_func(void *arg, int onoff) { 	struct adapter	*adapter = arg;  	EM_CORE_LOCK(adapter); 	if (onoff) { 		e1000_setup_led(&adapter->hw); 		e1000_led_on(&adapter->hw); 	} else { 		e1000_led_off(&adapter->hw); 		e1000_cleanup_led(&adapter->hw); 	} 	EM_CORE_UNLOCK(adapter); }
 comment|/********************************************************************* * 82544 Coexistence issue workaround. *    There are 2 issues. *       1. Transmit Hang issue. *    To detect this issue, following equation can be used... *	  SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *	  If SUM[3:0] is in between 1 to 4, we will have this issue. * *       2. DAC issue. *    To detect this issue, following equation can be used... *	  SIZE[3:0] + ADDR[2:0] = SUM[3:0]. *	  If SUM[3:0] is in between 9 to c, we will have this issue. * * *    WORKAROUND: *	  Make sure we do not have ending address *	  as 1,2,3,4(Hang) or 9,a,b,c (DAC) * *************************************************************************/
 argument|static u32 lem_fill_descriptors (bus_addr_t address, u32 length, 		PDESC_ARRAY desc_array) { 	u32 safe_terminator;
 comment|/* Since issue is sensitive to length and address.*/
