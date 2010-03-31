@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -117,12 +111,6 @@ literal|"Machine model"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|cpu_impl
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void

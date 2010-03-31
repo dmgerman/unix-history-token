@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pioctl.h>
 end_include
 
@@ -1471,7 +1477,12 @@ name|cache_flush
 argument_list|()
 expr_stmt|;
 name|cache_enable
-argument_list|()
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|impl
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|tf
 operator|->

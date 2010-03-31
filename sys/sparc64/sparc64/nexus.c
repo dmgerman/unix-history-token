@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -2491,7 +2497,10 @@ name|OF_getprop
 argument_list|(
 name|node
 argument_list|,
-name|cpu_impl
+name|PCPU_GET
+argument_list|(
+name|impl
+argument_list|)
 operator|<
 name|CPU_IMPL_ULTRASPARCIII
 condition|?

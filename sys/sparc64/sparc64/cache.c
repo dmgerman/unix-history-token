@@ -437,7 +437,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpu_impl
+name|pcpu
+operator|->
+name|pc_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)

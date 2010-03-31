@@ -206,7 +206,8 @@ typedef|typedef
 name|void
 name|cache_enable_t
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_typedef

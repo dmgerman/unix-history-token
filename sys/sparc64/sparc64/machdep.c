@@ -593,6 +593,9 @@ name|node
 parameter_list|,
 name|uint32_t
 name|bspid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1202,6 +1205,9 @@ name|node
 parameter_list|,
 name|uint32_t
 name|bspid
+parameter_list|,
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 name|char
@@ -1255,6 +1261,8 @@ argument_list|(
 name|child
 argument_list|,
 name|bspid
+argument_list|,
+name|cpu_impl
 argument_list|)
 expr_stmt|;
 if|if
@@ -1309,7 +1317,9 @@ argument_list|(
 name|node
 argument_list|,
 name|cpu_cpuid_prop
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 argument_list|,
 operator|&
 name|cpuid
@@ -1349,7 +1359,8 @@ name|char
 modifier|*
 name|cpu_cpuid_prop
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 switch|switch
@@ -1419,7 +1430,8 @@ begin_function
 name|uint32_t
 name|cpu_get_mid
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 block|{
 switch|switch
@@ -1564,6 +1576,9 @@ decl_stmt|;
 name|phandle_t
 name|root
 decl_stmt|;
+name|u_int
+name|cpu_impl
+decl_stmt|;
 name|end
 operator|=
 literal|0
@@ -1591,15 +1606,21 @@ operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
 name|cheetah_init
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear (S)TICK timer (including NPT). 	 */
 name|tick_clear
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 comment|/* 	 * UltraSparc II[e,i] based systems come up with the tick interrupt 	 * enabled and a handler that resets the tick counter, causing DELAY() 	 * to not work properly when used early in boot. 	 * UltraSPARC III based systems come up with the system tick interrupt 	 * enabled, causing an interrupt storm on startup since they are not 	 * handled. 	 */
 name|tick_stop
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize Open Firmware (needed for console). 	 */
 name|OF_init
@@ -1742,10 +1763,18 @@ name|pcpu0
 expr_stmt|;
 name|pc
 operator|->
+name|pc_impl
+operator|=
+name|cpu_impl
+expr_stmt|;
+name|pc
+operator|->
 name|pc_mid
 operator|=
 name|cpu_get_mid
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 name|pc
 operator|->
@@ -1784,6 +1813,8 @@ argument_list|,
 name|pc
 operator|->
 name|pc_mid
+argument_list|,
+name|cpu_impl
 argument_list|)
 expr_stmt|;
 if|if
@@ -2025,7 +2056,9 @@ name|pc
 argument_list|)
 expr_stmt|;
 name|cache_enable
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 name|uma_set_align
 argument_list|(
@@ -2113,13 +2146,17 @@ ifdef|#
 directive|ifdef
 name|SMP
 name|mp_init
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Initialize virtual memory and calculate physmem. 	 */
 name|pmap_bootstrap
-argument_list|()
+argument_list|(
+name|cpu_impl
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize tunables. 	 */
 name|init_param2

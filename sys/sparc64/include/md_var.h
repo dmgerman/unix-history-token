@@ -104,7 +104,8 @@ name|char
 modifier|*
 name|cpu_cpuid_prop
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,7 +114,8 @@ begin_function_decl
 name|uint32_t
 name|cpu_get_mid
 parameter_list|(
-name|void
+name|u_int
+name|cpu_impl
 parameter_list|)
 function_decl|;
 end_function_decl
