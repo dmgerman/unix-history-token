@@ -49,6 +49,12 @@ directive|undef
 name|mul_add
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|sqr
+end_undef
+
 begin_comment
 comment|/*  * "m"(a), "+m"(r)	is the way to favor DirectPath µ-code;  * "g"(0)		let the compiler to decide where does it  *			want to keep the value of zero;  */
 end_comment

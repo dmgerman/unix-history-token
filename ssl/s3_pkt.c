@@ -837,11 +837,31 @@ argument_list|,
 name|SSL_R_WRONG_VERSION_NUMBER
 argument_list|)
 expr_stmt|;
-comment|/* Send back error using their 				 * version number :-) */
+if|if
+condition|(
+operator|(
+name|s
+operator|->
+name|version
+operator|&
+literal|0xFF00
+operator|)
+operator|==
+operator|(
+name|version
+operator|&
+literal|0xFF00
+operator|)
+condition|)
+comment|/* Send back error using their minor version number :-) */
 name|s
 operator|->
 name|version
 operator|=
+operator|(
+name|unsigned
+name|short
+operator|)
 name|version
 expr_stmt|;
 name|al

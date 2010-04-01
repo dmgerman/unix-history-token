@@ -2516,12 +2516,13 @@ if|if
 condition|(
 name|GetVersion
 argument_list|()
-operator|>=
+operator|<
 literal|0x80000000
-operator|||
-operator|!
+operator|&&
 name|OPENSSL_isservice
 argument_list|()
+operator|>
+literal|0
 condition|)
 return|return;
 comment|/* Create a screen DC and a memory DC compatible to screen DC */

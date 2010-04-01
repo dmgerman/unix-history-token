@@ -4901,6 +4901,19 @@ name|ui_method
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Despite what the documentation says prompt_info can be 	 * an empty string. 	 */
+if|if
+condition|(
+name|prompt_info
+operator|&&
+operator|!
+operator|*
+name|prompt_info
+condition|)
+name|prompt_info
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|cactx
@@ -5321,8 +5334,12 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+comment|/* Despite what the documentation says wrong_info can be 	 	 * an empty string. 		 */
 if|if
 condition|(
+name|wrong_info
+operator|&&
+operator|*
 name|wrong_info
 condition|)
 name|BIO_snprintf
