@@ -221,7 +221,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, \ 			(cbits + 7)/8, key_len, iv_len, \ 		flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
 end_define
 
 begin_define

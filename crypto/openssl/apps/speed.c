@@ -1082,6 +1082,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_FORK
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -1114,15 +1120,37 @@ end_if
 begin_define
 define|#
 directive|define
-name|NO_FORK
+name|HAVE_FORK
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HAVE_FORK
 value|1
 end_define
 
-begin_elif
-elif|#
-directive|elif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_FORK
-end_elif
+end_if
 
 begin_undef
 undef|#
@@ -1139,7 +1167,6 @@ begin_define
 define|#
 directive|define
 name|NO_FORK
-value|1
 end_define
 
 begin_endif

@@ -8026,6 +8026,13 @@ operator|&
 name|princ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|krb5rc
+condition|)
+goto|goto
+name|exit
+goto|;
 name|krb5rc
 operator|=
 name|krb5_kt_get_entry

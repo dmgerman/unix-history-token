@@ -1420,6 +1420,9 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|X509_signature_print

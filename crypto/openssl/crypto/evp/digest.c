@@ -594,6 +594,11 @@ argument_list|,
 name|EVP_R_INITIALIZATION_ERROR
 argument_list|)
 expr_stmt|;
+name|ENGINE_finish
+argument_list|(
+name|impl
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

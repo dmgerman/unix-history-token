@@ -217,6 +217,10 @@ if|if
 condition|(
 name|md
 operator|->
+name|pkey_type
+operator|&&
+name|md
+operator|->
 name|type
 operator|!=
 name|md

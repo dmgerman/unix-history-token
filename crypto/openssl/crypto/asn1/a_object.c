@@ -1248,7 +1248,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Sanity check OID encoding: can't have 0x80 in subidentifiers, see: 	 * X.690 8.19.2 	 */
+comment|/* Sanity check OID encoding: can't have leading 0x80 in 	 * subidentifiers, see: X.690 8.19.2 	 */
 for|for
 control|(
 name|i
@@ -1281,6 +1281,22 @@ operator|*
 name|p
 operator|==
 literal|0x80
+operator|&&
+operator|(
+operator|!
+name|i
+operator|||
+operator|!
+operator|(
+name|p
+index|[
+operator|-
+literal|1
+index|]
+operator|&
+literal|0x80
+operator|)
+operator|)
 condition|)
 block|{
 name|ASN1err
