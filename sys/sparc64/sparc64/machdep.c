@@ -552,6 +552,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int
+name|tba_taken_over
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|sparc64_model
 index|[
@@ -1995,7 +2001,7 @@ name|kernel_tlb_slots
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for Cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
+comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
 if|if
 condition|(
 name|OF_getprop
