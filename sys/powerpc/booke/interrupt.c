@@ -499,6 +499,13 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
+name|framep
+operator|->
+name|srr1
+operator|&=
+operator|~
+name|PSL_WE
+expr_stmt|;
 block|}
 end_function
 
@@ -528,6 +535,13 @@ argument_list|)
 expr_stmt|;
 name|critical_exit
 argument_list|()
+expr_stmt|;
+name|framep
+operator|->
+name|srr1
+operator|&=
+operator|~
+name|PSL_WE
 expr_stmt|;
 block|}
 end_function

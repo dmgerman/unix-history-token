@@ -2958,15 +2958,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* 	 * Freescale E500 core RM section 6.4.1 	 */
-block|msr = msr | PSL_WE;  	__asm__("	msync;" 		"	mtmsr	%0;" 		"	isync;" 		"loop:	b	loop" :
-comment|/* no output */
-block|: 		"r" (msr));
-endif|#
-directive|endif
+comment|/* Freescale E500 core RM section 6.4.1. */
+name|msr
+operator|=
+name|msr
+operator||
+name|PSL_WE
+expr_stmt|;
+asm|__asm __volatile("msync; mtmsr %0; isync" :: "r" (msr));
 block|}
 end_function
 
