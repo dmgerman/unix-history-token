@@ -3255,6 +3255,8 @@ operator|.
 name|ata
 operator|.
 name|count
+operator|>>
+literal|8
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
