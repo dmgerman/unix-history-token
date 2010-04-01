@@ -2153,10 +2153,6 @@ name|defined
 argument_list|(
 name|Z_HAVE_UNISTD_H
 argument_list|)
-operator|||
-name|_LARGEFILE64_SOURCE
-operator|==
-literal|1
 end_if
 
 begin_include
