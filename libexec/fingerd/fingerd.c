@@ -263,6 +263,8 @@ name|prog
 operator|=
 name|_PATH_FINGER
 expr_stmt|;
+name|debug
+operator|=
 name|logging
 operator|=
 name|kflag
