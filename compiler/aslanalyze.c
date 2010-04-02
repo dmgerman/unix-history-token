@@ -2722,6 +2722,14 @@ break|break;
 case|case
 name|PARSEOP_RETURN
 case|:
+comment|/*          * If the parent is a predefined method name, attempt to typecheck          * the return value. Only static types can be validated.          */
+name|ApCheckPredefinedReturnValue
+argument_list|(
+name|Op
+argument_list|,
+name|MethodInfo
+argument_list|)
+expr_stmt|;
 comment|/*          * The parent block does not "exit" and continue execution -- the          * method is terminated here with the Return() statement.          */
 name|Op
 operator|->

@@ -912,6 +912,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ApCheckPredefinedReturnValue
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ASL_METHOD_INFO
+modifier|*
+name|MethodInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|UINT32
 name|ApCheckForPredefinedName
 parameter_list|(

@@ -1404,7 +1404,8 @@ operator|)
 operator|||
 operator|(
 name|Type
-operator|>
+operator|&
+operator|~
 name|ACPI_GPE_XRUPT_TYPE_MASK
 operator|)
 condition|)

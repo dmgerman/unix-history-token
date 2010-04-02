@@ -480,7 +480,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Table %s obtained from registry, %d bytes\n"
+literal|"Table [%s] obtained from registry, %d bytes\n"
 argument_list|,
 name|TableName
 argument_list|,
@@ -2343,7 +2343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    Local cache interfaces  *  * DESCRIPTION: Implements cache interfaces via malloc/free for testing  *              purposes only.   *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    Local cache interfaces  *  * DESCRIPTION: Implements cache interfaces via malloc/free for testing  *              purposes only.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef

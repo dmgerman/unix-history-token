@@ -93,6 +93,61 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|ErrorBuffer
+index|[
+literal|64
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Little front-end to win FormatMessage */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|OsFormatException
+parameter_list|(
+name|LONG
+name|Status
+parameter_list|)
+block|{
+name|ErrorBuffer
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|FormatMessage
+argument_list|(
+name|FORMAT_MESSAGE_FROM_SYSTEM
+argument_list|,
+name|NULL
+argument_list|,
+name|Status
+argument_list|,
+literal|0
+argument_list|,
+name|ErrorBuffer
+argument_list|,
+literal|64
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ErrorBuffer
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    OsGetTable  *  * PARAMETERS:  Signature       - ACPI Signature for desired table. must be  *                                  a null terminated string.  *  * RETURN:      Pointer to the table. NULL if failure.  *  * DESCRIPTION: Get an ACPI table from the Windows registry.  *  *****************************************************************************/
 end_comment
@@ -164,7 +219,7 @@ name|KeyBuffer
 argument_list|,
 literal|0L
 argument_list|,
-name|KEY_ALL_ACCESS
+name|KEY_READ
 argument_list|,
 operator|&
 name|Handle
@@ -197,11 +252,18 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not find %s in registry at %s\n"
+literal|"Could not find %s in registry at %s: %s (Status=0x%X)\n"
 argument_list|,
 name|Signature
 argument_list|,
 name|KeyBuffer
+argument_list|,
+name|OsFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 return|return
@@ -276,9 +338,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not open %s entry\n"
+literal|"Could not open %s entry: %s\n"
 argument_list|,
 name|Signature
+argument_list|,
+name|OsFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -350,9 +417,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not get %s registry entry\n"
+literal|"Could not get %s registry entry: %s\n"
 argument_list|,
 name|Signature
+argument_list|,
+name|OsFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -403,9 +475,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not read the %s table size\n"
+literal|"Could not read the %s table size: %s\n"
 argument_list|,
 name|Signature
+argument_list|,
+name|OsFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -464,9 +541,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not read %s data\n"
+literal|"Could not read %s data: %s\n"
 argument_list|,
 name|Signature
+argument_list|,
+name|OsFormatException
+argument_list|(
+name|Status
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsFree

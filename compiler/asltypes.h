@@ -1066,7 +1066,7 @@ comment|/*    ASL_MSG_RESERVED_METHOD */
 literal|"Reserved name must be a control method"
 block|,
 comment|/*    ASL_MSG_RESERVED_OPERAND_TYPE */
-literal|"Invalid object type for reserved name, must be"
+literal|"Invalid object type for reserved name"
 block|,
 comment|/*    ASL_MSG_RESERVED_RETURN_VALUE */
 literal|"Reserved method must return a value"
