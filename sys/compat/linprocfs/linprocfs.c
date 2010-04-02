@@ -383,11 +383,25 @@ name|T2J
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) * 100UL) / (stathz ? stathz : hz))
+value|((long)(((x) * 100ULL) / (stathz ? stathz : hz)))
 end_define
 
 begin_comment
 comment|/* ticks to jiffies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T2CS
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(((x) * 100ULL) / (stathz ? stathz : hz)))
+end_define
+
+begin_comment
+comment|/* ticks to centiseconds */
 end_comment
 
 begin_define
@@ -459,6 +473,16 @@ end_define
 begin_comment
 comment|/* pages to kbytes */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TV2J
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)->tv_sec * 100UL + (x)->tv_usec / 10000)
+end_define
 
 begin_comment
 comment|/**  * @brief Mapping of ki_stat in struct kinfo_proc to the linux state  *  * The linux procfs state field displays one of the characters RSDZTW to  * denote running, sleeping in an interruptible wait, waiting in an  * uninterruptible disk sleep, a zombie process, process is being traced  * or stopped, or process is paging respectively.  *  * Our struct kinfo_proc contains the variable ki_stat which contains a  * value out of SIDL, SRUN, SSLEEP, SSTOP, SZOMB, SWAIT and SLOCK.  *  * This character array is used with ki_stati-1 as an index and tries to  * map our states to suitable linux states.  */
@@ -2152,7 +2176,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%lld.%02ld %ld.%02ld\n"
+literal|"%lld.%02ld %ld.%02lu\n"
 argument_list|,
 operator|(
 name|long
@@ -2174,14 +2198,18 @@ name|cp_time
 index|[
 name|CP_IDLE
 index|]
+operator|/
+name|mp_ncpus
 argument_list|)
 argument_list|,
-name|T2J
+name|T2CS
 argument_list|(
 name|cp_time
 index|[
 name|CP_IDLE
 index|]
+operator|/
+name|mp_ncpus
 argument_list|)
 operator|%
 literal|100
@@ -2523,6 +2551,11 @@ name|ratelimit
 init|=
 literal|0
 decl_stmt|;
+name|vm_offset_t
+name|startcode
+decl_stmt|,
+name|startdata
+decl_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2536,6 +2569,48 @@ operator|&
 name|kp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_vmspace
+condition|)
+block|{
+name|startcode
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_taddr
+expr_stmt|;
+name|startdata
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_daddr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|startcode
+operator|=
+literal|0
+expr_stmt|;
+name|startdata
+operator|=
+literal|0
+expr_stmt|;
+block|}
+empty_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -2686,10 +2761,11 @@ literal|"tty"
 argument_list|,
 literal|"%d"
 argument_list|,
-literal|0
+name|kp
+operator|.
+name|ki_tdev
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|PS_ADD
 argument_list|(
 literal|"tpgid"
@@ -2769,9 +2845,7 @@ literal|"utime"
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|T2J
-argument_list|(
-name|tvtohz
+name|TV2J
 argument_list|(
 operator|&
 name|kp
@@ -2779,7 +2853,6 @@ operator|.
 name|ki_rusage
 operator|.
 name|ru_utime
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2789,9 +2862,7 @@ literal|"stime"
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|T2J
-argument_list|(
-name|tvtohz
+name|TV2J
 argument_list|(
 operator|&
 name|kp
@@ -2801,7 +2872,6 @@ operator|.
 name|ru_stime
 argument_list|)
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|PS_ADD
 argument_list|(
@@ -2809,9 +2879,7 @@ literal|"cutime"
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|T2J
-argument_list|(
-name|tvtohz
+name|TV2J
 argument_list|(
 operator|&
 name|kp
@@ -2821,7 +2889,6 @@ operator|.
 name|ru_utime
 argument_list|)
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|PS_ADD
 argument_list|(
@@ -2829,9 +2896,7 @@ literal|"cstime"
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|T2J
-argument_list|(
-name|tvtohz
+name|TV2J
 argument_list|(
 operator|&
 name|kp
@@ -2839,7 +2904,6 @@ operator|.
 name|ki_rusage_ch
 operator|.
 name|ru_stime
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2888,22 +2952,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* XXX: starttime is not right, it is the _same_ for _every_ process. 	   It should be the number of jiffies between system boot and process 	   start. */
 name|PS_ADD
 argument_list|(
 literal|"starttime"
 argument_list|,
 literal|"%lu"
 argument_list|,
-name|T2J
-argument_list|(
-name|tvtohz
+name|TV2J
 argument_list|(
 operator|&
 name|kp
 operator|.
 name|ki_start
 argument_list|)
+operator|-
+name|TV2J
+argument_list|(
+operator|&
+name|boottime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2955,24 +3021,26 @@ name|PS_ADD
 argument_list|(
 literal|"startcode"
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
 operator|(
-name|unsigned
+name|uintmax_t
 operator|)
-literal|0
+name|startcode
 argument_list|)
 expr_stmt|;
 name|PS_ADD
 argument_list|(
 literal|"endcode"
 argument_list|,
-literal|"%u"
+literal|"%ju"
 argument_list|,
-literal|0
+operator|(
+name|uintmax_t
+operator|)
+name|startdata
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|PS_ADD
 argument_list|(
 literal|"startstack"
@@ -3684,7 +3752,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"VmRss:\t%8ju kB\n"
+literal|"VmRSS:\t%8ju kB\n"
 argument_list|,
 name|P2K
 argument_list|(
