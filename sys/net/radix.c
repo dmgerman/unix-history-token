@@ -3680,6 +3680,13 @@ operator|&
 name|RNF_NORMAL
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|RADIX_MPATH
+argument_list|)
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3687,6 +3694,8 @@ argument_list|,
 literal|"Non-unique normal route, mask not entered\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|tt
 return|;
