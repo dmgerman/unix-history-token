@@ -6655,7 +6655,11 @@ name|NFDIR
 case|:
 name|cnflags
 operator|=
+operator|(
 name|LOCKPARENT
+operator||
+name|SAVENAME
+operator|)
 expr_stmt|;
 break|break;
 default|default:
@@ -9660,6 +9664,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -10989,6 +10995,8 @@ argument_list|,
 name|CREATE
 argument_list|,
 name|LOCKPARENT
+operator||
+name|SAVENAME
 argument_list|)
 expr_stmt|;
 name|nfsvno_setpathbuf
