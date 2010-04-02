@@ -735,7 +735,9 @@ name|bo
 operator|->
 name|bo_bsize
 operator|=
-name|DEV_BSIZE
+name|pp
+operator|->
+name|sectorsize
 expr_stmt|;
 name|gp
 operator|->
