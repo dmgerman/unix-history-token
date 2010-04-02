@@ -3129,7 +3129,7 @@ condition|(
 name|m
 operator|->
 name|m_len
-operator|<
+operator|>=
 sizeof|sizeof
 argument_list|(
 expr|struct
