@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=i686-apple-darwin9> %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.memory.barrier %t1 | count 42
+comment|// RUN: grep @llvm.memory.barrier %t1 | count 38
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// RUN: grep @llvm.atomic.cmp.swap.i32 %t1 | count 4
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.load.and.i32 %t1 | count 2
+comment|// RUN: grep @llvm.atomic.load.and.i32 %t1
 end_comment
 
 begin_comment
@@ -209,16 +209,6 @@ argument_list|)
 expr_stmt|;
 name|old
 operator|=
-name|__sync_fetch_and_nand
-argument_list|(
-operator|&
-name|val
-argument_list|,
-literal|0xb
-argument_list|)
-expr_stmt|;
-name|old
-operator|=
 name|__sync_add_and_fetch
 argument_list|(
 operator|&
@@ -260,16 +250,6 @@ expr_stmt|;
 name|old
 operator|=
 name|__sync_xor_and_fetch
-argument_list|(
-operator|&
-name|valc
-argument_list|,
-literal|5
-argument_list|)
-expr_stmt|;
-name|old
-operator|=
-name|__sync_nand_and_fetch
 argument_list|(
 operator|&
 name|valc

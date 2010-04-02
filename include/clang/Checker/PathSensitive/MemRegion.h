@@ -82,19 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Checker/PathSensitive/SymbolManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Checker/PathSensitive/SVals.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/ASTContext.h"
 end_include
 
 begin_include
@@ -112,24 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ImmutableList.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ImmutableMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -137,6 +107,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;

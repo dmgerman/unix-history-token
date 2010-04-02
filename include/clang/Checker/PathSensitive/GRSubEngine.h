@@ -79,6 +79,9 @@ name|class
 name|CFGElement
 decl_stmt|;
 name|class
+name|ExplodedNode
+decl_stmt|;
+name|class
 name|GRState
 decl_stmt|;
 name|class
@@ -171,9 +174,9 @@ modifier|*
 name|B
 parameter_list|,
 specifier|const
-name|GRState
+name|ExplodedNode
 modifier|*
-name|St
+name|Pred
 parameter_list|,
 name|GRBlockCounter
 name|BC

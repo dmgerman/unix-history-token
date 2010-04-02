@@ -327,7 +327,97 @@ comment|/// template specialization to a function template.
 name|TPOC_Other
 block|}
 enum|;
+comment|/// \brief Captures a template argument whose value has been deduced
+comment|/// via c++ template argument deduction.
+name|class
+name|DeducedTemplateArgument
+range|:
+name|public
+name|TemplateArgument
+block|{
+comment|/// \brief For a non-type template argument, whether the value was
+comment|/// deduced from an array bound.
+name|bool
+name|DeducedFromArrayBound
+block|;
+name|public
+operator|:
+name|DeducedTemplateArgument
+argument_list|()
+operator|:
+name|TemplateArgument
+argument_list|()
+block|,
+name|DeducedFromArrayBound
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
+name|DeducedTemplateArgument
+argument_list|(
+argument|const TemplateArgument&Arg
+argument_list|,
+argument|bool DeducedFromArrayBound = false
+argument_list|)
+operator|:
+name|TemplateArgument
+argument_list|(
+name|Arg
+argument_list|)
+block|,
+name|DeducedFromArrayBound
+argument_list|(
+argument|DeducedFromArrayBound
+argument_list|)
+block|{ }
+comment|/// \brief Construct an integral non-type template argument that
+comment|/// has been deduced, possible from an array bound.
+name|DeducedTemplateArgument
+argument_list|(
+argument|const llvm::APSInt&Value
+argument_list|,
+argument|QualType ValueType
+argument_list|,
+argument|bool DeducedFromArrayBound
+argument_list|)
+operator|:
+name|TemplateArgument
+argument_list|(
+name|Value
+argument_list|,
+name|ValueType
+argument_list|)
+block|,
+name|DeducedFromArrayBound
+argument_list|(
+argument|DeducedFromArrayBound
+argument_list|)
+block|{ }
+comment|/// \brief For a non-type template argument, determine whether the
+comment|/// template argument was deduced from an array bound.
+name|bool
+name|wasDeducedFromArrayBound
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeducedFromArrayBound
+return|;
 block|}
+comment|/// \brief Specify whether the given non-type template argument
+comment|/// was deduced from an array bound.
+name|void
+name|setDeducedFromArrayBound
+argument_list|(
+argument|bool Deduced
+argument_list|)
+block|{
+name|DeducedFromArrayBound
+operator|=
+name|Deduced
+block|;     }
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

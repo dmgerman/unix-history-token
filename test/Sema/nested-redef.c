@@ -13,8 +13,7 @@ name|X
 block|{ }
 name|x
 struct|;
-comment|// expected-error{{nested redefinition of 'X'}} \
-comment|// expected-error{{field has incomplete type}}
+comment|// expected-error{{nested redefinition of 'X'}}
 block|}
 struct|;
 end_struct

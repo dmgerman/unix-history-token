@@ -145,6 +145,9 @@ name|CFG
 modifier|*
 name|cfg
 decl_stmt|;
+name|bool
+name|builtCFG
+decl_stmt|;
 name|LiveVariables
 modifier|*
 name|liveness
@@ -192,6 +195,11 @@ operator|,
 name|cfg
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|builtCFG
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|liveness

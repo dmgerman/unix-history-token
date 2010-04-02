@@ -4386,16 +4386,16 @@ block|{ }
 block|;
 comment|// FIXME: locations for the typename keyword and nested name specifier.
 name|class
-name|TypenameTypeLoc
+name|DependentNameTypeLoc
 operator|:
 name|public
 name|InheritingConcreteTypeLoc
 operator|<
 name|TypeSpecTypeLoc
 block|,
-name|TypenameTypeLoc
+name|DependentNameTypeLoc
 block|,
-name|TypenameType
+name|DependentNameType
 operator|>
 block|{ }
 block|;  }

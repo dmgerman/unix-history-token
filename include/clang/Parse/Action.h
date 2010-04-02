@@ -7404,6 +7404,10 @@ name|LBrac
 parameter_list|,
 name|SourceLocation
 name|RBrac
+parameter_list|,
+name|AttributeList
+modifier|*
+name|AttrList
 parameter_list|)
 block|{   }
 end_function

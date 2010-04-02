@@ -161,12 +161,6 @@ directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<list>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -371,9 +365,9 @@ decl_stmt|;
 name|MangleContext
 name|MangleCtx
 decl_stmt|;
-comment|/// VtableInfo - Holds information about C++ vtables.
-name|CGVtableInfo
-name|VtableInfo
+comment|/// VTables - Holds information about C++ vtables.
+name|CodeGenVTables
+name|VTables
 decl_stmt|;
 name|CGObjCRuntime
 modifier|*
@@ -695,13 +689,13 @@ return|return
 name|MangleCtx
 return|;
 block|}
-name|CGVtableInfo
+name|CodeGenVTables
 modifier|&
-name|getVtableInfo
+name|getVTables
 parameter_list|()
 block|{
 return|return
-name|VtableInfo
+name|VTables
 return|;
 block|}
 name|Diagnostic
@@ -942,6 +936,7 @@ argument_list|(
 argument|QualType Ty
 argument_list|)
 expr_stmt|;
+comment|/// GetAddrOfThunk - Get the address of the thunk for the given global decl.
 name|llvm
 operator|::
 name|Constant
@@ -950,37 +945,9 @@ name|GetAddrOfThunk
 argument_list|(
 argument|GlobalDecl GD
 argument_list|,
-argument|const ThunkAdjustment&ThisAdjustment
+argument|const ThunkInfo&Thunk
 argument_list|)
 expr_stmt|;
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetAddrOfCovariantThunk
-argument_list|(
-argument|GlobalDecl GD
-argument_list|,
-argument|const CovariantThunkAdjustment&ThisAdjustment
-argument_list|)
-expr_stmt|;
-name|void
-name|BuildThunksForVirtual
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|)
-function_decl|;
-name|void
-name|BuildThunksForVirtualRecursive
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|,
-name|GlobalDecl
-name|BaseOGD
-parameter_list|)
-function_decl|;
 comment|/// GetWeakRefReference - Get a reference to the target of VD.
 name|llvm
 operator|::
@@ -992,34 +959,6 @@ specifier|const
 name|ValueDecl
 operator|*
 name|VD
-argument_list|)
-expr_stmt|;
-comment|/// BuildThunk - Build a thunk for the given method.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|BuildThunk
-argument_list|(
-argument|GlobalDecl GD
-argument_list|,
-argument|bool Extern
-argument_list|,
-argument|const ThunkAdjustment&ThisAdjustment
-argument_list|)
-expr_stmt|;
-comment|/// BuildCoVariantThunk - Build a thunk for the given method
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|BuildCovariantThunk
-argument_list|(
-argument|const GlobalDecl&GD
-argument_list|,
-argument|bool Extern
-argument_list|,
-argument|const CovariantThunkAdjustment&Adjustment
 argument_list|)
 expr_stmt|;
 comment|/// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to
@@ -1041,22 +980,6 @@ operator|*
 name|BaseClassDecl
 argument_list|)
 expr_stmt|;
-comment|/// ComputeThunkAdjustment - Returns the two parts required to compute the
-comment|/// offset for an object.
-name|ThunkAdjustment
-name|ComputeThunkAdjustment
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|ClassDecl
-parameter_list|,
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|BaseClassDecl
-parameter_list|)
-function_decl|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
 comment|/// literal, properly padded to match the literal type. If only the address of
 comment|/// a constant is needed consider using GetAddrOfConstantStringLiteral.
@@ -1985,6 +1908,21 @@ name|EmitAnnotations
 parameter_list|(
 name|void
 parameter_list|)
+function_decl|;
+comment|/// EmitFundamentalRTTIDescriptor - Emit the RTTI descriptors for the
+comment|/// given type.
+name|void
+name|EmitFundamentalRTTIDescriptor
+parameter_list|(
+name|QualType
+name|Type
+parameter_list|)
+function_decl|;
+comment|/// EmitFundamentalRTTIDescriptors - Emit the RTTI descriptors for the
+comment|/// builtin types.
+name|void
+name|EmitFundamentalRTTIDescriptors
+parameter_list|()
 function_decl|;
 comment|/// EmitDeferred - Emit any needed decls for which code generation
 comment|/// was deferred.

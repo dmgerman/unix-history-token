@@ -153,6 +153,12 @@ decl_stmt|;
 name|class
 name|CompoundStmt
 decl_stmt|;
+name|class
+name|StoredDeclsMap
+decl_stmt|;
+name|class
+name|DependentDiagnostic
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1952,30 +1958,42 @@ name|assert
 argument_list|(
 operator|(
 name|OldNS
-operator|==
-name|IDNS_Tag
-operator|||
-name|OldNS
-operator|==
-name|IDNS_Ordinary
-operator|||
-name|OldNS
-operator|==
+operator|&
 operator|(
 name|IDNS_Tag
 operator||
 name|IDNS_Ordinary
+operator||
+name|IDNS_TagFriend
+operator||
+name|IDNS_OrdinaryFriend
 operator|)
 operator|)
 operator|&&
-literal|"unsupported namespace for undeclared friend"
+literal|"namespace includes neither ordinary nor tag"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 operator|!
-name|PreviouslyDeclared
-condition|)
+operator|(
+name|OldNS
+operator|&
+operator|~
+operator|(
+name|IDNS_Tag
+operator||
+name|IDNS_Ordinary
+operator||
+name|IDNS_TagFriend
+operator||
+name|IDNS_OrdinaryFriend
+operator|)
+operator|)
+operator|&&
+literal|"namespace includes other than ordinary or tag"
+argument_list|)
+expr_stmt|;
 name|IdentifierNamespace
 operator|=
 literal|0
@@ -1983,18 +2001,51 @@ expr_stmt|;
 if|if
 condition|(
 name|OldNS
-operator|==
+operator|&
+operator|(
 name|IDNS_Tag
+operator||
+name|IDNS_TagFriend
+operator|)
 condition|)
+block|{
 name|IdentifierNamespace
 operator||=
 name|IDNS_TagFriend
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|PreviouslyDeclared
+condition|)
+name|IdentifierNamespace
+operator||=
+name|IDNS_Tag
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|OldNS
+operator|&
+operator|(
+name|IDNS_Ordinary
+operator||
+name|IDNS_OrdinaryFriend
+operator|)
+condition|)
+block|{
 name|IdentifierNamespace
 operator||=
 name|IDNS_OrdinaryFriend
 expr_stmt|;
+if|if
+condition|(
+name|PreviouslyDeclared
+condition|)
+name|IdentifierNamespace
+operator||=
+name|IDNS_Ordinary
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2415,10 +2466,10 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// \brief Pointer to the data structure used to lookup declarations
-comment|/// within this context, which is a DenseMap<DeclarationName,
-comment|/// StoredDeclsList>.
+comment|/// within this context (or a DependentStoredDeclsMap if this is a
+comment|/// dependent context).
 name|mutable
-name|void
+name|StoredDeclsMap
 modifier|*
 name|LookupPtr
 decl_stmt|;
@@ -2816,6 +2867,27 @@ modifier|*
 name|getPrimaryContext
 parameter_list|()
 function_decl|;
+specifier|const
+name|DeclContext
+operator|*
+name|getPrimaryContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPrimaryContext
+argument_list|()
+return|;
+block|}
 comment|/// getLookupContext - Retrieve the innermost non-transparent
 comment|/// context of this context, which corresponds to the innermost
 comment|/// location from which name lookup can find the entities in this
@@ -4113,6 +4185,34 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// These are all defined in DependentDiagnostic.h.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ddiag_iterator
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|inline
+name|ddiag_iterator
+name|ddiag_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|ddiag_iterator
+name|ddiag_end
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Low-level accessors
 end_comment
 
@@ -4121,7 +4221,7 @@ comment|/// \brief Retrieve the internal representation of the lookup structure.
 end_comment
 
 begin_expr_stmt
-name|void
+name|StoredDeclsMap
 operator|*
 name|getLookupPtr
 argument_list|()
@@ -4298,6 +4398,26 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|DependentDiagnostic
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|StoredDeclsMap
+modifier|*
+name|CreateStoredDeclsMap
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

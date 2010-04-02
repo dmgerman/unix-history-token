@@ -36,71 +36,75 @@ comment|// look like standard error isn't getting flushed properly.
 end_comment
 
 begin_comment
-comment|// RUN: true
+comment|// RUN: false
 end_comment
 
 begin_comment
-comment|// RUNx: echo '#define m0 ""'> %t.h
+comment|// XFAIL: *
 end_comment
 
 begin_comment
-comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+comment|// RUN: echo '#define m0 ""'> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: echo ''> %t.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t.h.pch %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+comment|// RUN: echo ''> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: grep "modified" %t.stderr
+comment|// RUN: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
 end_comment
 
 begin_comment
-comment|// RUNx: echo '#define m0 000'> %t.h
+comment|// RUN: grep "modified" %t.stderr
 end_comment
 
 begin_comment
-comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+comment|// RUN: echo '#define m0 000'> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: echo ''> %t.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t.h.pch %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+comment|// RUN: echo ''> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: grep "modified" %t.stderr
+comment|// RUN: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
 end_comment
 
 begin_comment
-comment|// RUNx: echo '#define m0 000'> %t.h
+comment|// RUN: grep "modified" %t.stderr
 end_comment
 
 begin_comment
-comment|// RUNx: echo "#define m1 'abcd'">> %t.h
+comment|// RUN: echo '#define m0 000'> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: %clang_cc1 -emit-pch -o %t.h.pch %t.h
+comment|// RUN: echo "#define m1 'abcd'">> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: echo ''> %t.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t.h.pch %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+comment|// RUN: echo ''> %t.h
 end_comment
 
 begin_comment
-comment|// RUNx: grep "modified" %t.stderr
+comment|// RUN: not %clang_cc1 -include-pch %t.h.pch %s 2> %t.stderr
+end_comment
+
+begin_comment
+comment|// RUN: grep "modified" %t.stderr
 end_comment
 
 end_unit

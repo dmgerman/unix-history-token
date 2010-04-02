@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/PartialDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/NestedNameSpecifier.h"
 end_include
 
@@ -2985,38 +2991,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// getNoReturnAttr - Returns true if the type has the noreturn attribute,
-end_comment
-
-begin_comment
-comment|/// false otherwise.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|getNoReturnAttr
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getCallConv - Returns the calling convention of the type if the type
-end_comment
-
-begin_comment
-comment|/// is a function type, CC_Default otherwise.
-end_comment
-
-begin_expr_stmt
-name|CallingConv
-name|getCallConv
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
 begin_label
 name|private
 label|:
@@ -3813,6 +3787,12 @@ return|;
 block|}
 name|bool
 name|isOverloadableType
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine wither this type is a C++ elaborated-type-specifier.
+name|bool
+name|isElaboratedTypeSpecifier
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7289,6 +7269,12 @@ name|NoReturn
 operator|:
 literal|1
 block|;
+comment|/// RegParm - How many arguments to pass inreg.
+name|unsigned
+name|RegParm
+operator|:
+literal|3
+block|;
 comment|/// CallConv - The calling convention used by the function.
 name|unsigned
 name|CallConv
@@ -7298,6 +7284,238 @@ block|;
 comment|// The type returned by the function.
 name|QualType
 name|ResultType
+block|;
+name|public
+operator|:
+comment|// This class is used for passing arround the information needed to
+comment|// construct a call. It is not actually used for storage, just for
+comment|// factoring together common arguments.
+comment|// If you add a field (say Foo), other than the obvious places (both, constructors,
+comment|// compile failures), what you need to update is
+comment|// * Operetor==
+comment|// * getFoo
+comment|// * withFoo
+comment|// * functionType. Add Foo, getFoo.
+comment|// * ASTContext::getFooType
+comment|// * ASTContext::mergeFunctionTypes
+comment|// * FunctionNoProtoType::Profile
+comment|// * FunctionProtoType::Profile
+comment|// * TypePrinter::PrintFunctionProto
+comment|// * PCH read and write
+comment|// * Codegen
+name|class
+name|ExtInfo
+block|{
+name|public
+operator|:
+comment|// Constructor with no defaults. Use this when you know that you
+comment|// have all the elements (when reading a PCH file for example).
+name|ExtInfo
+argument_list|(
+argument|bool noReturn
+argument_list|,
+argument|unsigned regParm
+argument_list|,
+argument|CallingConv cc
+argument_list|)
+operator|:
+name|NoReturn
+argument_list|(
+name|noReturn
+argument_list|)
+block|,
+name|RegParm
+argument_list|(
+name|regParm
+argument_list|)
+block|,
+name|CC
+argument_list|(
+argument|cc
+argument_list|)
+block|{}
+comment|// Constructor with all defaults. Use when for example creating a
+comment|// function know to use defaults.
+name|ExtInfo
+argument_list|()
+operator|:
+name|NoReturn
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|RegParm
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|CC
+argument_list|(
+argument|CC_Default
+argument_list|)
+block|{}
+name|bool
+name|getNoReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoReturn
+return|;
+block|}
+name|unsigned
+name|getRegParm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegParm
+return|;
+block|}
+name|CallingConv
+name|getCC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CC
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ExtInfo
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|getNoReturn
+argument_list|()
+operator|==
+name|Other
+operator|.
+name|getNoReturn
+argument_list|()
+operator|&&
+name|getRegParm
+argument_list|()
+operator|==
+name|Other
+operator|.
+name|getRegParm
+argument_list|()
+operator|&&
+name|getCC
+argument_list|()
+operator|==
+name|Other
+operator|.
+name|getCC
+argument_list|()
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|ExtInfo
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|Other
+operator|)
+return|;
+block|}
+comment|// Note that we don't have setters. That is by design, use
+comment|// the following with methods instead of mutating these objects.
+name|ExtInfo
+name|withNoReturn
+argument_list|(
+argument|bool noReturn
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ExtInfo
+argument_list|(
+name|noReturn
+argument_list|,
+name|getRegParm
+argument_list|()
+argument_list|,
+name|getCC
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|ExtInfo
+name|withRegParm
+argument_list|(
+argument|unsigned RegParm
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ExtInfo
+argument_list|(
+name|getNoReturn
+argument_list|()
+argument_list|,
+name|RegParm
+argument_list|,
+name|getCC
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|ExtInfo
+name|withCallingConv
+argument_list|(
+argument|CallingConv cc
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ExtInfo
+argument_list|(
+name|getNoReturn
+argument_list|()
+argument_list|,
+name|getRegParm
+argument_list|()
+argument_list|,
+name|cc
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+comment|// True if we have __attribute__((noreturn))
+name|bool
+name|NoReturn
+block|;
+comment|// The value passed to __attribute__((regparm(x)))
+name|unsigned
+name|RegParm
+block|;
+comment|// The calling convention as specified via
+comment|// __attribute__((cdecl|stdcall||fastcall))
+name|CallingConv
+name|CC
+block|;   }
 block|;
 name|protected
 operator|:
@@ -7315,9 +7533,7 @@ argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
 argument_list|,
-argument|bool noReturn = false
-argument_list|,
-argument|CallingConv callConv = CC_Default
+argument|const ExtInfo&Info
 argument_list|)
 operator|:
 name|Type
@@ -7341,12 +7557,26 @@ argument_list|)
 block|,
 name|NoReturn
 argument_list|(
-name|noReturn
+name|Info
+operator|.
+name|getNoReturn
+argument_list|()
+argument_list|)
+block|,
+name|RegParm
+argument_list|(
+name|Info
+operator|.
+name|getRegParm
+argument_list|()
 argument_list|)
 block|,
 name|CallConv
 argument_list|(
-name|callConv
+name|Info
+operator|.
+name|getCC
+argument_list|()
 argument_list|)
 block|,
 name|ResultType
@@ -7383,6 +7613,15 @@ return|return
 name|ResultType
 return|;
 block|}
+name|unsigned
+name|getRegParmType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegParm
+return|;
+block|}
 name|bool
 name|getNoReturnAttr
 argument_list|()
@@ -7402,6 +7641,25 @@ operator|(
 name|CallingConv
 operator|)
 name|CallConv
+return|;
+block|}
+name|ExtInfo
+name|getExtInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExtInfo
+argument_list|(
+name|NoReturn
+argument_list|,
+name|RegParm
+argument_list|,
+operator|(
+name|CallingConv
+operator|)
+name|CallConv
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -7468,9 +7726,7 @@ argument|QualType Result
 argument_list|,
 argument|QualType Canonical
 argument_list|,
-argument|bool NoReturn = false
-argument_list|,
-argument|CallingConv CallConv = CC_Default
+argument|const ExtInfo&Info
 argument_list|)
 operator|:
 name|FunctionType
@@ -7488,9 +7744,7 @@ argument_list|,
 comment|/*Dependent=*/
 argument|false
 argument_list|,
-argument|NoReturn
-argument_list|,
-argument|CallConv
+argument|Info
 argument_list|)
 block|{}
 name|friend
@@ -7537,10 +7791,7 @@ argument_list|,
 name|getResultType
 argument_list|()
 argument_list|,
-name|getNoReturnAttr
-argument_list|()
-argument_list|,
-name|getCallConv
+name|getExtInfo
 argument_list|()
 argument_list|)
 block|;   }
@@ -7552,23 +7803,37 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType ResultType
 argument_list|,
-argument|bool NoReturn
-argument_list|,
-argument|CallingConv CallConv
+argument|const ExtInfo&Info
 argument_list|)
 block|{
 name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|CallConv
+name|Info
+operator|.
+name|getCC
+argument_list|()
 argument_list|)
 block|;
 name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|NoReturn
+name|Info
+operator|.
+name|getRegParm
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Info
+operator|.
+name|getNoReturn
+argument_list|()
 argument_list|)
 block|;
 name|ID
@@ -7696,9 +7961,7 @@ argument|unsigned numExs
 argument_list|,
 argument|QualType Canonical
 argument_list|,
-argument|bool NoReturn
-argument_list|,
-argument|CallingConv CallConv
+argument|const ExtInfo&Info
 argument_list|)
 operator|:
 name|FunctionType
@@ -7727,9 +7990,7 @@ name|numArgs
 argument_list|)
 operator|)
 argument_list|,
-name|NoReturn
-argument_list|,
-name|CallConv
+name|Info
 argument_list|)
 block|,
 name|NumArgs
@@ -8142,9 +8403,7 @@ argument|unsigned NumExceptions
 argument_list|,
 argument|exception_iterator Exs
 argument_list|,
-argument|bool NoReturn
-argument_list|,
-argument|CallingConv CallConv
+argument|const ExtInfo&ExtInfo
 argument_list|)
 block|; }
 block|;
@@ -10536,6 +10795,31 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief The elaboration keyword that precedes a qualified type name or
+comment|/// introduces an elaborated-type-specifier.
+block|enum
+name|ElaboratedTypeKeyword
+block|{
+comment|/// \brief No keyword precedes the qualified type name.
+name|ETK_None
+block|,
+comment|/// \brief The "typename" keyword precedes the qualified type name, e.g.,
+comment|/// \c typename T::type.
+name|ETK_Typename
+block|,
+comment|/// \brief The "class" keyword introduces the elaborated-type-specifier.
+name|ETK_Class
+block|,
+comment|/// \brief The "struct" keyword introduces the elaborated-type-specifier.
+name|ETK_Struct
+block|,
+comment|/// \brief The "union" keyword introduces the elaborated-type-specifier.
+name|ETK_Union
+block|,
+comment|/// \brief The "enum" keyword introduces the elaborated-type-specifier.
+name|ETK_Enum
+block|}
+block|;
 comment|/// \brief Represents a type that was referred to via a qualified
 comment|/// name, e.g., N::M::type.
 comment|///
@@ -10712,20 +10996,17 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a 'typename' specifier that names a type within
-comment|/// a dependent type, e.g., "typename T::type".
+comment|/// \brief Represents a qualified type name for which the type name is
+comment|/// dependent.
 comment|///
-comment|/// TypenameType has a very similar structure to QualifiedNameType,
-comment|/// which also involves a nested-name-specifier following by a type,
-comment|/// and (FIXME!) both can even be prefixed by the 'typename'
-comment|/// keyword. However, the two types serve very different roles:
-comment|/// QualifiedNameType is a non-semantic type that serves only as sugar
-comment|/// to show how a particular type was written in the source
-comment|/// code. TypenameType, on the other hand, only occurs when the
-comment|/// nested-name-specifier is dependent, such that we cannot resolve
-comment|/// the actual type until after instantiation.
+comment|/// DependentNameType represents a class of dependent types that involve a
+comment|/// dependent nested-name-specifier (e.g., "T::") followed by a (dependent)
+comment|/// name of a type. The DependentNameType may start with a "typename" (for a
+comment|/// typename-specifier), "class", "struct", "union", or "enum" (for a
+comment|/// dependent elaborated-type-specifier), or nothing (in contexts where we
+comment|/// know that we must be referring to a type, e.g., in a base class specifier).
 name|class
-name|TypenameType
+name|DependentNameType
 operator|:
 name|public
 name|Type
@@ -10735,6 +11016,10 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+comment|/// \brief The keyword used to elaborate this type.
+name|ElaboratedTypeKeyword
+name|Keyword
+block|;
 comment|/// \brief The nested name specifier containing the qualifier.
 name|NestedNameSpecifier
 operator|*
@@ -10759,8 +11044,10 @@ comment|/// \brief The type that this typename specifier refers to.
 name|NameType
 name|Name
 block|;
-name|TypenameType
+name|DependentNameType
 argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|const IdentifierInfo *Name
@@ -10770,11 +11057,16 @@ argument_list|)
 operator|:
 name|Type
 argument_list|(
-name|Typename
+name|DependentName
 argument_list|,
 name|CanonType
 argument_list|,
 name|true
+argument_list|)
+block|,
+name|Keyword
+argument_list|(
+name|Keyword
 argument_list|)
 block|,
 name|NNS
@@ -10794,11 +11086,13 @@ operator|->
 name|isDependent
 argument_list|()
 operator|&&
-literal|"TypenameType requires a dependent nested-name-specifier"
+literal|"DependentNameType requires a dependent nested-name-specifier"
 argument_list|)
 block|;   }
-name|TypenameType
+name|DependentNameType
 argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|const TemplateSpecializationType *Ty
@@ -10808,11 +11102,16 @@ argument_list|)
 operator|:
 name|Type
 argument_list|(
-name|Typename
+name|DependentName
 argument_list|,
 name|CanonType
 argument_list|,
 name|true
+argument_list|)
+block|,
+name|Keyword
+argument_list|(
+name|Keyword
 argument_list|)
 block|,
 name|NNS
@@ -10832,7 +11131,7 @@ operator|->
 name|isDependent
 argument_list|()
 operator|&&
-literal|"TypenameType requires a dependent nested-name-specifier"
+literal|"DependentNameType requires a dependent nested-name-specifier"
 argument_list|)
 block|;   }
 name|friend
@@ -10842,6 +11141,16 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
+comment|/// \brief Retrieve the keyword used to elaborate this type.
+name|ElaboratedTypeKeyword
+name|getKeyword
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Keyword
+return|;
+block|}
 comment|/// \brief Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
@@ -10934,6 +11243,8 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|,
+name|Keyword
+argument_list|,
 name|NNS
 argument_list|,
 name|Name
@@ -10945,11 +11256,20 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|NameType Name
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Keyword
+argument_list|)
+block|;
 name|ID
 operator|.
 name|AddPointer
@@ -10980,14 +11300,14 @@ operator|->
 name|getTypeClass
 argument_list|()
 operator|==
-name|Typename
+name|DependentName
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const TypenameType *T
+argument|const DependentNameType *T
 argument_list|)
 block|{
 return|return
@@ -12458,25 +12778,15 @@ operator|::
 name|GCNone
 return|;
 block|}
-comment|/// getNoReturnAttr - Returns true if the type has the noreturn attribute,
-comment|/// false otherwise.
 specifier|inline
-name|bool
-name|QualType
+name|FunctionType
 operator|::
-name|getNoReturnAttr
-argument_list|()
-specifier|const
+name|ExtInfo
+name|getFunctionExtInfo
+argument_list|(
+argument|const Type&t
+argument_list|)
 block|{
-name|QualType
-name|CT
-operator|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-block|;
 if|if
 condition|(
 specifier|const
@@ -12484,9 +12794,8 @@ name|PointerType
 modifier|*
 name|PT
 init|=
-name|getTypePtr
-argument_list|()
-operator|->
+name|t
+operator|.
 name|getAs
 operator|<
 name|PointerType
@@ -12517,7 +12826,7 @@ condition|)
 return|return
 name|FT
 operator|->
-name|getNoReturnAttr
+name|getExtInfo
 argument_list|()
 return|;
 block|}
@@ -12529,9 +12838,8 @@ name|FunctionType
 modifier|*
 name|FT
 init|=
-name|getTypePtr
-argument_list|()
-operator|->
+name|t
+operator|.
 name|getAs
 operator|<
 name|FunctionType
@@ -12542,174 +12850,31 @@ condition|)
 return|return
 name|FT
 operator|->
-name|getNoReturnAttr
+name|getExtInfo
 argument_list|()
 return|;
 return|return
-name|false
+name|FunctionType
+operator|::
+name|ExtInfo
+argument_list|()
 return|;
 block|}
-comment|/// getCallConv - Returns the calling convention of the type if the type
-comment|/// is a function type, CC_Default otherwise.
 specifier|inline
-name|CallingConv
-name|QualType
+name|FunctionType
 operator|::
-name|getCallConv
-argument_list|()
-specifier|const
+name|ExtInfo
+name|getFunctionExtInfo
+argument_list|(
+argument|QualType t
+argument_list|)
 block|{
-if|if
-condition|(
-specifier|const
-name|PointerType
-modifier|*
-name|PT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|PointerType
-operator|>
-operator|(
-operator|)
-condition|)
 return|return
-name|PT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|.
-name|getCallConv
-argument_list|()
-return|;
-elseif|else
-if|if
-condition|(
-specifier|const
-name|ReferenceType
-modifier|*
-name|RT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|ReferenceType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|RT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|.
-name|getCallConv
-argument_list|()
-return|;
-elseif|else
-if|if
-condition|(
-specifier|const
-name|MemberPointerType
-modifier|*
-name|MPT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|MemberPointerType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|MPT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|.
-name|getCallConv
-argument_list|()
-return|;
-elseif|else
-if|if
-condition|(
-specifier|const
-name|BlockPointerType
-modifier|*
-name|BPT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|BlockPointerType
-operator|>
-operator|(
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-specifier|const
-name|FunctionType
-modifier|*
-name|FT
-init|=
-name|BPT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|FunctionType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|FT
-operator|->
-name|getCallConv
-argument_list|()
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-specifier|const
-name|FunctionType
-modifier|*
-name|FT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|FunctionType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|FT
-operator|->
-name|getCallConv
-argument_list|()
-return|;
-return|return
-name|CC_Default
+name|getFunctionExtInfo
+argument_list|(
+operator|*
+name|t
+argument_list|)
 return|;
 block|}
 comment|/// isMoreQualifiedThan - Determine whether this type is more
@@ -13454,9 +13619,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -13492,16 +13654,14 @@ operator|::
 name|ObjCSel
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|} inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -13731,6 +13891,57 @@ argument_list|)
 block|;
 return|return
 name|DB
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Insertion operator for partial diagnostics.  This allows sending QualType's
+end_comment
+
+begin_comment
+comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|PartialDiagnostic
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|PartialDiagnostic
+operator|&
+name|PD
+operator|,
+name|QualType
+name|T
+operator|)
+block|{
+name|PD
+operator|.
+name|AddTaggedVal
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+operator|)
+argument_list|,
+name|Diagnostic
+operator|::
+name|ak_qualtype
+argument_list|)
+block|;
+return|return
+name|PD
 return|;
 block|}
 end_expr_stmt

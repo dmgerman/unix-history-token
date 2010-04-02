@@ -29,7 +29,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 modifier|*
 name|__attribute__
@@ -169,7 +169,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(

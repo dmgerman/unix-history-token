@@ -227,7 +227,7 @@ argument|unsigned NumRanges
 argument_list|,
 argument|SourceManager&SM
 argument_list|,
-argument|const CodeModificationHint *Hints
+argument|const FixItHint *Hints
 argument_list|,
 argument|unsigned NumHints
 argument_list|,

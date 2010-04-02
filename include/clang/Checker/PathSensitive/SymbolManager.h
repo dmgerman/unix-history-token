@@ -78,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/Analyses/LiveVariables.h"
+file|"clang/Analysis/AnalysisContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
@@ -109,6 +103,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -137,13 +134,6 @@ decl_stmt|;
 name|class
 name|StackFrameContext
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
-name|clang
-block|{
 name|class
 name|SymExpr
 range|:
@@ -1090,6 +1080,17 @@ argument_list|(
 argument|t
 argument_list|)
 block|{}
+name|BinaryOperator
+operator|::
+name|Opcode
+name|getOpcode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Op
+return|;
+block|}
 specifier|const
 name|SymExpr
 operator|*

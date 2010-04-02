@@ -104,7 +104,7 @@ operator|<
 name|NamedDecl
 operator|*
 operator|,
-name|Type
+name|TypeSourceInfo
 operator|*
 operator|>
 name|FriendUnion
@@ -203,7 +203,7 @@ comment|/// If this friend declaration names an (untemplated but
 comment|/// possibly dependent) type, return the type;  otherwise
 comment|/// return null.  This is used only for C++0x's unelaborated
 comment|/// friend type declarations.
-name|Type
+name|TypeSourceInfo
 operator|*
 name|getFriendType
 argument_list|()
@@ -214,7 +214,7 @@ name|Friend
 operator|.
 name|dyn_cast
 operator|<
-name|Type
+name|TypeSourceInfo
 operator|*
 operator|>
 operator|(

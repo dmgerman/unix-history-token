@@ -139,6 +139,13 @@ name|CharacteristicKind
 name|FileType
 argument_list|)
 block|{   }
+comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
+comment|/// reach, no subsequent callbacks will be made.
+name|virtual
+name|void
+name|EndOfMainFile
+parameter_list|()
+block|{   }
 comment|/// Ident - This callback is invoked when a #ident or #sccs directive is read.
 comment|///
 name|virtual
@@ -311,6 +318,21 @@ name|Reason
 argument_list|,
 name|FileType
 argument_list|)
+block|;   }
+name|virtual
+name|void
+name|EndOfMainFile
+argument_list|()
+block|{
+name|First
+operator|->
+name|EndOfMainFile
+argument_list|()
+block|;
+name|Second
+operator|->
+name|EndOfMainFile
+argument_list|()
 block|;   }
 name|virtual
 name|void

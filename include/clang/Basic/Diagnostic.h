@@ -291,7 +291,7 @@ comment|/// should also provide full recovery from such errors, such that
 comment|/// suppressing the diagnostic output can still result in successful
 comment|/// compilation.
 name|class
-name|CodeModificationHint
+name|FixItHint
 block|{
 name|public
 label|:
@@ -313,7 +313,7 @@ name|CodeToInsert
 expr_stmt|;
 comment|/// \brief Empty code modification hint, indicating that no code
 comment|/// modification is known.
-name|CodeModificationHint
+name|FixItHint
 argument_list|()
 operator|:
 name|RemoveRange
@@ -344,7 +344,7 @@ block|}
 comment|/// \brief Create a code modification hint that inserts the given
 comment|/// code string at a specific location.
 specifier|static
-name|CodeModificationHint
+name|FixItHint
 name|CreateInsertion
 argument_list|(
 name|SourceLocation
@@ -356,7 +356,7 @@ name|StringRef
 name|Code
 argument_list|)
 block|{
-name|CodeModificationHint
+name|FixItHint
 name|Hint
 decl_stmt|;
 name|Hint
@@ -378,14 +378,14 @@ block|}
 comment|/// \brief Create a code modification hint that removes the given
 comment|/// source range.
 specifier|static
-name|CodeModificationHint
+name|FixItHint
 name|CreateRemoval
 parameter_list|(
 name|SourceRange
 name|RemoveRange
 parameter_list|)
 block|{
-name|CodeModificationHint
+name|FixItHint
 name|Hint
 decl_stmt|;
 name|Hint
@@ -401,7 +401,7 @@ block|}
 comment|/// \brief Create a code modification hint that replaces the given
 comment|/// source range with the given code string.
 specifier|static
-name|CodeModificationHint
+name|FixItHint
 name|CreateReplacement
 argument_list|(
 name|SourceRange
@@ -413,7 +413,7 @@ name|StringRef
 name|Code
 argument_list|)
 block|{
-name|CodeModificationHint
+name|FixItHint
 name|Hint
 decl_stmt|;
 name|Hint
@@ -683,6 +683,24 @@ decl_stmt|;
 name|ArgToStringFnTy
 name|ArgToStringFn
 decl_stmt|;
+comment|/// \brief ID of the "delayed" diagnostic, which is a (typically
+comment|/// fatal) diagnostic that had to be delayed because it was found
+comment|/// while emitting another diagnostic.
+name|unsigned
+name|DelayedDiagID
+decl_stmt|;
+comment|/// \brief First string argument for the delayed diagnostic.
+name|std
+operator|::
+name|string
+name|DelayedDiagArg1
+expr_stmt|;
+comment|/// \brief Second string argument for the delayed diagnostic.
+name|std
+operator|::
+name|string
+name|DelayedDiagArg2
+expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -1197,6 +1215,30 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+comment|/// \brief Enumeration describing how the the emission of a diagnostic should
+comment|/// be treated when it occurs during C++ template argument deduction.
+enum|enum
+name|SFINAEResponse
+block|{
+comment|/// \brief The diagnostic should not be reported, but it should cause
+comment|/// template argument deduction to fail.
+comment|///
+comment|/// The vast majority of errors that occur during template argument
+comment|/// deduction fall into this category.
+name|SFINAE_SubstitutionFailure
+block|,
+comment|/// \brief The diagnostic should be suppressed entirely.
+comment|///
+comment|/// Warnings generally fall into this category.
+name|SFINAE_Suppress
+block|,
+comment|/// \brief The diagnostic should be reported.
+comment|///
+comment|/// The diagnostic should be reported. Various fatal errors (e.g.,
+comment|/// template instantiation depth exceeded) fall into this category.
+name|SFINAE_Report
+block|}
+enum|;
 comment|/// \brief Determines whether the given built-in diagnostic ID is
 comment|/// for an error that is suppressed if it occurs during C++ template
 comment|/// argument deduction.
@@ -1206,8 +1248,8 @@ comment|/// deduction fails but no diagnostic is emitted. Certain classes of
 comment|/// errors, such as those errors that involve C++ access control,
 comment|/// are not SFINAE errors.
 specifier|static
-name|bool
-name|isBuiltinSFINAEDiag
+name|SFINAEResponse
+name|getDiagnosticSFINAEResponse
 parameter_list|(
 name|unsigned
 name|DiagID
@@ -1248,6 +1290,61 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+comment|/// \brief Determine whethere there is already a diagnostic in flight.
+name|bool
+name|isDiagnosticInFlight
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurDiagID
+operator|!=
+operator|~
+literal|0U
+return|;
+block|}
+comment|/// \brief Set the "delayed" diagnostic that will be emitted once
+comment|/// the current diagnostic completes.
+comment|///
+comment|///  If a diagnostic is already in-flight but the front end must
+comment|///  report a problem (e.g., with an inconsistent file system
+comment|///  state), this routine sets a "delayed" diagnostic that will be
+comment|///  emitted after the current diagnostic completes. This should
+comment|///  only be used for fatal errors detected at inconvenient
+comment|///  times. If emitting a delayed diagnostic causes a second delayed
+comment|///  diagnostic to be introduced, that second delayed diagnostic
+comment|///  will be ignored.
+comment|///
+comment|/// \param DiagID The ID of the diagnostic being delayed.
+comment|///
+comment|/// \param Arg1 A string argument that will be provided to the
+comment|/// diagnostic. A copy of this string will be stored in the
+comment|/// Diagnostic object itself.
+comment|///
+comment|/// \param Arg2 A string argument that will be provided to the
+comment|/// diagnostic. A copy of this string will be stored in the
+comment|/// Diagnostic object itself.
+name|void
+name|SetDelayedDiagnostic
+argument_list|(
+name|unsigned
+name|DiagID
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Arg1
+operator|=
+literal|""
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Arg2
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
 comment|/// \brief Clear out the current diagnostic.
 name|void
 name|Clear
@@ -1261,6 +1358,11 @@ expr_stmt|;
 block|}
 name|private
 label|:
+comment|/// \brief Report the delayed diagnostic.
+name|void
+name|ReportDelayed
+parameter_list|()
+function_decl|;
 comment|/// getDiagnosticMappingInfo - Return the mapping info currently set for the
 comment|/// specified builtin diagnostic.  This returns the high bit encoding, or zero
 comment|/// if the field is completely uninitialized.
@@ -1435,10 +1537,10 @@ name|char
 name|NumDiagRanges
 decl_stmt|;
 comment|/// \brief The number of code modifications hints in the
-comment|/// CodeModificationHints array.
+comment|/// FixItHints array.
 name|unsigned
 name|char
-name|NumCodeModificationHints
+name|NumFixItHints
 decl_stmt|;
 comment|/// DiagArgumentsKind - This is an array of ArgumentKind::ArgumentKind enum
 comment|/// values, with one for each argument.  This specifies whether the argument
@@ -1481,17 +1583,17 @@ index|]
 decl_stmt|;
 enum|enum
 block|{
-name|MaxCodeModificationHints
+name|MaxFixItHints
 init|=
 literal|3
 block|}
 enum|;
-comment|/// CodeModificationHints - If valid, provides a hint with some code
+comment|/// FixItHints - If valid, provides a hint with some code
 comment|/// to insert, remove, or modify at a particular position.
-name|CodeModificationHint
-name|CodeModificationHints
+name|FixItHint
+name|FixItHints
 index|[
-name|MaxCodeModificationHints
+name|MaxFixItHints
 index|]
 decl_stmt|;
 comment|/// ProcessDiag - This is the method used to report a diagnostic that is
@@ -1533,7 +1635,7 @@ name|NumArgs
 decl_stmt|,
 name|NumRanges
 decl_stmt|,
-name|NumCodeModificationHints
+name|NumFixItHints
 decl_stmt|;
 name|void
 name|operator
@@ -1572,7 +1674,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|NumCodeModificationHints
+name|NumFixItHints
 argument_list|(
 literal|0
 argument_list|)
@@ -1610,11 +1712,11 @@ name|D
 operator|.
 name|NumRanges
 block|;
-name|NumCodeModificationHints
+name|NumFixItHints
 operator|=
 name|D
 operator|.
-name|NumCodeModificationHints
+name|NumFixItHints
 block|;   }
 comment|/// \brief Simple enumeration value used to give a name to the
 comment|/// suppress-diagnostic constructor.
@@ -1647,7 +1749,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|NumCodeModificationHints
+name|NumFixItHints
 argument_list|(
 literal|0
 argument_list|)
@@ -1662,63 +1764,7 @@ comment|/// diagnostic was suppressed.
 name|bool
 name|Emit
 argument_list|()
-block|{
-comment|// If DiagObj is null, then its soul was stolen by the copy ctor
-comment|// or the user called Emit().
-if|if
-condition|(
-name|DiagObj
-operator|==
-literal|0
-condition|)
-return|return
-name|false
-return|;
-comment|// When emitting diagnostics, we set the final argument count into
-comment|// the Diagnostic object.
-name|DiagObj
-operator|->
-name|NumDiagArgs
-operator|=
-name|NumArgs
 expr_stmt|;
-name|DiagObj
-operator|->
-name|NumDiagRanges
-operator|=
-name|NumRanges
-expr_stmt|;
-name|DiagObj
-operator|->
-name|NumCodeModificationHints
-operator|=
-name|NumCodeModificationHints
-expr_stmt|;
-comment|// Process the diagnostic, sending the accumulated information to the
-comment|// DiagnosticClient.
-name|bool
-name|Emitted
-init|=
-name|DiagObj
-operator|->
-name|ProcessDiag
-argument_list|()
-decl_stmt|;
-comment|// Clear out the current diagnostic object.
-name|DiagObj
-operator|->
-name|Clear
-argument_list|()
-expr_stmt|;
-comment|// This diagnostic is dead.
-name|DiagObj
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|Emitted
-return|;
-block|}
 comment|/// Destructor - The dtor emits the diagnostic if it hasn't already
 comment|/// been emitted.
 operator|~
@@ -1901,10 +1947,10 @@ name|R
 expr_stmt|;
 block|}
 name|void
-name|AddCodeModificationHint
+name|AddFixItHint
 argument_list|(
 specifier|const
-name|CodeModificationHint
+name|FixItHint
 operator|&
 name|Hint
 argument_list|)
@@ -1920,13 +1966,13 @@ condition|)
 return|return;
 name|assert
 argument_list|(
-name|NumCodeModificationHints
+name|NumFixItHints
 operator|<
 name|Diagnostic
 operator|::
-name|MaxCodeModificationHints
+name|MaxFixItHints
 operator|&&
-literal|"Too many code modification hints!"
+literal|"Too many fix-it hints!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1935,9 +1981,9 @@ name|DiagObj
 condition|)
 name|DiagObj
 operator|->
-name|CodeModificationHints
+name|FixItHints
 index|[
-name|NumCodeModificationHints
+name|NumFixItHints
 operator|++
 index|]
 operator|=
@@ -1945,13 +1991,7 @@ name|Hint
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -1981,9 +2021,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2023,9 +2060,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2057,9 +2091,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2091,9 +2122,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2125,9 +2153,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2167,25 +2192,10 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Adds a DeclContext to the diagnostic. The enable_if template magic is here
-end_comment
-
-begin_comment
 comment|// so that we only match those arguments that are (statically) DeclContexts;
-end_comment
-
-begin_comment
 comment|// other arguments that derive from DeclContext (e.g., RecordDecls) will not
-end_comment
-
-begin_comment
 comment|// match.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2246,9 +2256,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2278,9 +2285,6 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2294,14 +2298,14 @@ operator|&
 name|DB
 operator|,
 specifier|const
-name|CodeModificationHint
+name|FixItHint
 operator|&
 name|Hint
 operator|)
 block|{
 name|DB
 operator|.
-name|AddCodeModificationHint
+name|AddFixItHint
 argument_list|(
 name|Hint
 argument_list|)
@@ -2310,21 +2314,9 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Report - Issue the message to the client.  DiagID is a member of the
-end_comment
-
-begin_comment
 comment|/// diag::kind enum.  This actually returns a new instance of DiagnosticBuilder
-end_comment
-
-begin_comment
 comment|/// which emits the diagnostics (through ProcessDiag) when it is destroyed.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
 name|Diagnostic
@@ -2361,9 +2353,6 @@ name|this
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
 name|Diagnostic
@@ -2383,33 +2372,12 @@ name|DiagID
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// DiagnosticInfo
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// DiagnosticInfo - This is a little helper class (which is basically a smart
-end_comment
-
-begin_comment
 comment|/// pointer that forward info from Diagnostic) that allows clients to enquire
-end_comment
-
-begin_comment
 comment|/// about the currently in-flight diagnostic.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DiagnosticInfo
 block|{
@@ -2777,20 +2745,20 @@ index|]
 return|;
 block|}
 name|unsigned
-name|getNumCodeModificationHints
+name|getNumFixItHints
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DiagObj
 operator|->
-name|NumCodeModificationHints
+name|NumFixItHints
 return|;
 block|}
 specifier|const
-name|CodeModificationHint
+name|FixItHint
 modifier|&
-name|getCodeModificationHint
+name|getFixItHint
 argument_list|(
 name|unsigned
 name|Idx
@@ -2800,28 +2768,28 @@ block|{
 return|return
 name|DiagObj
 operator|->
-name|CodeModificationHints
+name|FixItHints
 index|[
 name|Idx
 index|]
 return|;
 block|}
 specifier|const
-name|CodeModificationHint
+name|FixItHint
 operator|*
-name|getCodeModificationHints
+name|getFixItHints
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DiagObj
 operator|->
-name|NumCodeModificationHints
+name|NumFixItHints
 operator|?
 operator|&
 name|DiagObj
 operator|->
-name|CodeModificationHints
+name|FixItHints
 index|[
 literal|0
 index|]
@@ -2873,17 +2841,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/**  * \brief Represents a diagnostic in a form that can be serialized and  * deserialized.  */
-end_comment
-
-begin_decl_stmt
 name|class
 name|StoredDiagnostic
 block|{
@@ -2912,7 +2871,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|CodeModificationHint
+name|FixItHint
 operator|>
 name|FixIts
 expr_stmt|;
@@ -3039,7 +2998,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|CodeModificationHint
+name|FixItHint
 operator|>
 operator|::
 name|const_iterator
@@ -3125,21 +3084,9 @@ name|MemoryEnd
 parameter_list|)
 function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// DiagnosticClient - This is an abstract interface implemented by clients of
-end_comment
-
-begin_comment
 comment|/// the front-end, which formats and prints fully processed diagnostics.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DiagnosticClient
 block|{
@@ -3216,14 +3163,11 @@ init|=
 literal|0
 decl_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

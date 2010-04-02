@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -verify -fsyntax-only %s
+comment|// RUN: %clang_cc1 -verify -Wunused-variable -fsyntax-only %s
 end_comment
 
 begin_function_decl
@@ -90,6 +90,71 @@ end_empty_stmt
 begin_comment
 comment|// expected-error {{attribute requires 0 argument(s)}}
 end_comment
+
+begin_struct
+struct|struct
+name|Test0_unused
+block|{}
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|Test0_not_unused
+block|{}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|int
+name|Int_unused
+name|__attribute__
+typedef|((
+name|unused
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|Int_not_unused
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|test0
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-warning {{unused variable}}
+name|Int_not_unused
+name|i0
+decl_stmt|;
+comment|// expected-warning {{unused variable}}
+name|Int_unused
+name|i1
+decl_stmt|;
+name|struct
+name|Test0_not_unused
+name|s0
+decl_stmt|;
+comment|// expected-warning {{unused variable}}
+name|struct
+name|Test0_unused
+name|s1
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

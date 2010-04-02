@@ -807,17 +807,33 @@ comment|// OrigNamespace points to the original namespace declaration.
 comment|// OrigNamespace of the first namespace decl points to itself.
 name|NamespaceDecl
 modifier|*
-name|OrigNamespace
-decl_stmt|,
-modifier|*
 name|NextNamespace
 decl_stmt|;
-comment|// The (most recently entered) anonymous namespace inside this
-comment|// namespace.
+comment|/// \brief A pointer to either the original namespace definition for
+comment|/// this namespace (if the boolean value is false) or the anonymous
+comment|/// namespace that lives just inside this namespace (if the boolean
+comment|/// value is true).
+comment|///
+comment|/// We can combine these two notions because the anonymous namespace
+comment|/// must only be stored in one of the namespace declarations (so all
+comment|/// of the namespace declarations can find it). We therefore choose
+comment|/// the original namespace declaration, since all of the namespace
+comment|/// declarations have a link directly to it; the original namespace
+comment|/// declaration itself only needs to know that it is the original
+comment|/// namespace declaration (which the boolean indicates).
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|NamespaceDecl
-modifier|*
-name|AnonymousNamespace
-decl_stmt|;
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|OrigOrAnonNamespace
+expr_stmt|;
 name|NamespaceDecl
 argument_list|(
 argument|DeclContext *DC
@@ -840,21 +856,21 @@ argument_list|)
 operator|,
 name|DeclContext
 argument_list|(
-argument|Namespace
+name|Namespace
 argument_list|)
-block|{
-name|OrigNamespace
-operator|=
-name|this
-block|;
+operator|,
 name|NextNamespace
-operator|=
+argument_list|(
 literal|0
-block|;
-name|AnonymousNamespace
-operator|=
+argument_list|)
+operator|,
+name|OrigOrAnonNamespace
+argument_list|(
 literal|0
-block|;   }
+argument_list|,
+argument|true
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|static
@@ -937,10 +953,33 @@ name|getOriginalNamespace
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|OrigOrAnonNamespace
+operator|.
+name|getInt
+argument_list|()
+condition|)
 return|return
-name|OrigNamespace
+name|const_cast
+operator|<
+name|NamespaceDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+return|;
+return|return
+name|OrigOrAnonNamespace
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setOriginalNamespace
 parameter_list|(
@@ -949,11 +988,32 @@ modifier|*
 name|ND
 parameter_list|)
 block|{
-name|OrigNamespace
-operator|=
+if|if
+condition|(
 name|ND
+operator|!=
+name|this
+condition|)
+block|{
+name|OrigOrAnonNamespace
+operator|.
+name|setPointer
+argument_list|(
+name|ND
+argument_list|)
+expr_stmt|;
+name|OrigOrAnonNamespace
+operator|.
+name|setInt
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_expr_stmt
 name|NamespaceDecl
 operator|*
 name|getAnonymousNamespace
@@ -961,9 +1021,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AnonymousNamespace
+name|getOriginalNamespace
+argument_list|()
+operator|->
+name|OrigOrAnonNamespace
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setAnonymousNamespace
 parameter_list|(
@@ -996,11 +1065,20 @@ operator|==
 name|this
 argument_list|)
 expr_stmt|;
-name|AnonymousNamespace
-operator|=
+name|getOriginalNamespace
+argument_list|()
+operator|->
+name|OrigOrAnonNamespace
+operator|.
+name|setPointer
+argument_list|(
 name|D
+argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|virtual
 name|NamespaceDecl
 modifier|*
@@ -1008,9 +1086,13 @@ name|getCanonicalDecl
 parameter_list|()
 block|{
 return|return
-name|OrigNamespace
+name|getOriginalNamespace
+argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|NamespaceDecl
 operator|*
@@ -1019,9 +1101,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|OrigNamespace
+name|getOriginalNamespace
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -1038,6 +1124,9 @@ name|RBracLoc
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLBracLoc
 argument_list|()
@@ -1047,6 +1136,9 @@ return|return
 name|LBracLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getRBracLoc
 argument_list|()
@@ -1056,6 +1148,9 @@ return|return
 name|RBracLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setLBracLoc
 parameter_list|(
@@ -1068,6 +1163,9 @@ operator|=
 name|LBrace
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setRBracLoc
 parameter_list|(
@@ -1080,7 +1178,13 @@ operator|=
 name|RBrace
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1101,6 +1205,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1115,6 +1222,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -1129,6 +1239,9 @@ operator|==
 name|Namespace
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
 modifier|*
@@ -1158,6 +1271,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|NamespaceDecl
 modifier|*
@@ -1187,14 +1303,10 @@ operator|)
 operator|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_comment
+unit|};
 comment|/// ValueDecl - Represent the declaration of a variable (in which case it is
 end_comment
 
@@ -8026,15 +8138,15 @@ name|HasFlexibleArrayMember
 operator|:
 literal|1
 block|;
-comment|/// AnonymousStructOrUnion - Whether this is the type of an
-comment|/// anonymous struct or union.
+comment|/// AnonymousStructOrUnion - Whether this is the type of an anonymous struct
+comment|/// or union.
 name|bool
 name|AnonymousStructOrUnion
 operator|:
 literal|1
 block|;
-comment|/// HasObjectMember - This is true if this struct has at least one
-comment|/// member containing an object
+comment|/// HasObjectMember - This is true if this struct has at least one member
+comment|/// containing an object.
 name|bool
 name|HasObjectMember
 operator|:

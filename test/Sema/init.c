@@ -450,6 +450,8 @@ name|s1
 name|s2
 init|=
 block|{
+comment|// expected-error {{variable has incomplete type 'struct s1'}}  \
+comment|// expected-note {{forward declaration of 'struct s1'}}
 operator|.
 name|a
 operator|=

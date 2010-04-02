@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/GlobalVariable.h"
 end_include
 
@@ -96,30 +90,21 @@ block|{
 name|class
 name|CodeGenModule
 decl_stmt|;
-comment|/// ThunkAdjustment - Virtual and non-virtual adjustment for thunks.
-name|class
-name|ThunkAdjustment
+comment|/// ReturnAdjustment - A return adjustment.
+struct|struct
+name|ReturnAdjustment
 block|{
-name|public
-label|:
-name|ThunkAdjustment
-argument_list|(
-argument|int64_t NonVirtual
-argument_list|,
-argument|int64_t Virtual
-argument_list|)
-block|:
+comment|/// NonVirtual - The non-virtual adjustment from the derived object to its
+comment|/// nearest virtual base.
+name|int64_t
 name|NonVirtual
-argument_list|(
-name|NonVirtual
-argument_list|)
-operator|,
-name|Virtual
-argument_list|(
-argument|Virtual
-argument_list|)
-block|{ }
-name|ThunkAdjustment
+decl_stmt|;
+comment|/// VBaseOffsetOffset - The offset (in bytes), relative to the address point
+comment|/// of the virtual base class offset.
+name|int64_t
+name|VBaseOffsetOffset
+decl_stmt|;
+name|ReturnAdjustment
 argument_list|()
 operator|:
 name|NonVirtual
@@ -127,81 +112,395 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Virtual
+name|VBaseOffsetOffset
 argument_list|(
 literal|0
 argument_list|)
 block|{ }
-comment|// isEmpty - Return whether this thunk adjustment is empty.
 name|bool
 name|isEmpty
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|NonVirtual
-operator|==
-literal|0
 operator|&&
-name|Virtual
-operator|==
-literal|0
+operator|!
+name|VBaseOffsetOffset
 return|;
 block|}
-comment|/// NonVirtual - The non-virtual adjustment.
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ReturnAdjustment
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ReturnAdjustment
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|LHS
+operator|.
+name|NonVirtual
+operator|==
+name|RHS
+operator|.
+name|NonVirtual
+operator|&&
+name|LHS
+operator|.
+name|VBaseOffsetOffset
+operator|==
+name|RHS
+operator|.
+name|VBaseOffsetOffset
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ReturnAdjustment
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ReturnAdjustment
+operator|&
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+name|LHS
+operator|.
+name|NonVirtual
+operator|<
+name|RHS
+operator|.
+name|NonVirtual
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|LHS
+operator|.
+name|NonVirtual
+operator|==
+name|RHS
+operator|.
+name|NonVirtual
+operator|&&
+name|LHS
+operator|.
+name|VBaseOffsetOffset
+operator|<
+name|RHS
+operator|.
+name|VBaseOffsetOffset
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// ThisAdjustment - A 'this' pointer adjustment.
+struct|struct
+name|ThisAdjustment
+block|{
+comment|/// NonVirtual - The non-virtual adjustment from the derived object to its
+comment|/// nearest virtual base.
 name|int64_t
 name|NonVirtual
 decl_stmt|;
-comment|/// Virtual - The virtual adjustment.
+comment|/// VCallOffsetOffset - The offset (in bytes), relative to the address point,
+comment|/// of the virtual call offset.
 name|int64_t
-name|Virtual
+name|VCallOffsetOffset
 decl_stmt|;
-block|}
-empty_stmt|;
-comment|/// CovariantThunkAdjustment - Adjustment of the 'this' pointer and the
-comment|/// return pointer for covariant thunks.
-name|class
-name|CovariantThunkAdjustment
-block|{
-name|public
-label|:
-name|CovariantThunkAdjustment
-argument_list|(
-specifier|const
-name|ThunkAdjustment
-operator|&
 name|ThisAdjustment
-argument_list|,
-specifier|const
-name|ThunkAdjustment
-operator|&
-name|ReturnAdjustment
-argument_list|)
+argument_list|()
 operator|:
-name|ThisAdjustment
+name|NonVirtual
 argument_list|(
-name|ThisAdjustment
+literal|0
 argument_list|)
 operator|,
-name|ReturnAdjustment
+name|VCallOffsetOffset
 argument_list|(
-argument|ReturnAdjustment
+literal|0
 argument_list|)
 block|{ }
-name|CovariantThunkAdjustment
+name|bool
+name|isEmpty
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|NonVirtual
+operator|&&
+operator|!
+name|VCallOffsetOffset
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ThisAdjustment
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ThisAdjustment
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|LHS
+operator|.
+name|NonVirtual
+operator|==
+name|RHS
+operator|.
+name|NonVirtual
+operator|&&
+name|LHS
+operator|.
+name|VCallOffsetOffset
+operator|==
+name|RHS
+operator|.
+name|VCallOffsetOffset
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ThisAdjustment
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ThisAdjustment
+operator|&
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+name|LHS
+operator|.
+name|NonVirtual
+operator|<
+name|RHS
+operator|.
+name|NonVirtual
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|LHS
+operator|.
+name|NonVirtual
+operator|==
+name|RHS
+operator|.
+name|NonVirtual
+operator|&&
+name|LHS
+operator|.
+name|VCallOffsetOffset
+operator|<
+name|RHS
+operator|.
+name|VCallOffsetOffset
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// ThunkInfo - The 'this' pointer adjustment as well as an optional return
+end_comment
+
+begin_comment
+comment|/// adjustment for a thunk.
+end_comment
+
+begin_struct
+struct|struct
+name|ThunkInfo
+block|{
+comment|/// This - The 'this' pointer adjustment.
+name|ThisAdjustment
+name|This
+decl_stmt|;
+comment|/// Return - The return adjustment.
+name|ReturnAdjustment
+name|Return
+decl_stmt|;
+name|ThunkInfo
 argument_list|()
 block|{ }
-name|ThunkAdjustment
+name|ThunkInfo
+argument_list|(
+specifier|const
 name|ThisAdjustment
-expr_stmt|;
-name|ThunkAdjustment
+operator|&
+name|This
+argument_list|,
+specifier|const
 name|ReturnAdjustment
-decl_stmt|;
+operator|&
+name|Return
+argument_list|)
+operator|:
+name|This
+argument_list|(
+name|This
+argument_list|)
+operator|,
+name|Return
+argument_list|(
+argument|Return
+argument_list|)
+block|{ }
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|ThunkInfo
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ThunkInfo
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|LHS
+operator|.
+name|This
+operator|==
+name|RHS
+operator|.
+name|This
+operator|&&
+name|LHS
+operator|.
+name|Return
+operator|==
+name|RHS
+operator|.
+name|Return
+return|;
 block|}
-empty_stmt|;
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ThunkInfo
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|ThunkInfo
+operator|&
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+name|LHS
+operator|.
+name|This
+operator|<
+name|RHS
+operator|.
+name|This
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|LHS
+operator|.
+name|This
+operator|==
+name|RHS
+operator|.
+name|This
+operator|&&
+name|LHS
+operator|.
+name|Return
+operator|<
+name|RHS
+operator|.
+name|Return
+return|;
+block|}
+name|bool
+name|isEmpty
+argument_list|()
+decl|const
+block|{
+return|return
+name|This
+operator|.
+name|isEmpty
+argument_list|()
+operator|&&
+name|Return
+operator|.
+name|isEmpty
+argument_list|()
+return|;
+block|}
+end_struct
+
+begin_comment
+unit|};
 comment|// BaseSubobject - Uniquely identifies a direct or indirect base class.
+end_comment
+
+begin_comment
 comment|// Stores both the base class decl and the offset from the most derived class to
+end_comment
+
+begin_comment
 comment|// the base class.
+end_comment
+
+begin_decl_stmt
 name|class
 name|BaseSubobject
 block|{
@@ -291,13 +590,19 @@ name|BaseOffset
 return|;
 block|}
 block|}
-empty_stmt|;
-block|}
-comment|// end namespace CodeGen
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
+comment|// end namespace CodeGen
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 
@@ -479,94 +784,12 @@ name|namespace
 name|CodeGen
 block|{
 name|class
-name|CGVtableInfo
+name|CodeGenVTables
 block|{
-name|public
-operator|:
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|GlobalDecl
-operator|,
-name|ThunkAdjustment
-operator|>
-expr|>
-name|AdjustmentVectorTy
-expr_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|uint64_t
-operator|>
-name|CtorVtable_t
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|CtorVtable_t
-operator|,
-name|int64_t
-operator|>
-name|AddrSubMap_t
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|AddrSubMap_t
-operator|*
-operator|>
-name|AddrMap_t
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|AddrMap_t
-operator|*
-operator|>
-name|AddressPoints
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|BaseSubobject
-operator|,
-name|uint64_t
-operator|>
-name|AddressPointsMapTy
-expr_stmt|;
-name|private
-label|:
 name|CodeGenModule
-modifier|&
+operator|&
 name|CGM
-decl_stmt|;
+block|;
 comment|/// MethodVtableIndices - Contains the index (relative to the vtable address
 comment|/// point) where the function pointer for a virtual function is stored.
 typedef|typedef
@@ -582,7 +805,7 @@ name|MethodVtableIndicesTy
 expr_stmt|;
 name|MethodVtableIndicesTy
 name|MethodVtableIndices
-decl_stmt|;
+block|;
 typedef|typedef
 name|std
 operator|::
@@ -614,7 +837,7 @@ name|VirtualBaseClassOffsetOffsetsMapTy
 expr_stmt|;
 name|VirtualBaseClassOffsetOffsetsMapTy
 name|VirtualBaseClassOffsetOffsets
-decl_stmt|;
+expr_stmt|;
 comment|/// Vtables - All the vtables which have been defined.
 name|llvm
 operator|::
@@ -648,27 +871,200 @@ expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
-name|DenseMap
+name|SmallVector
 operator|<
-name|GlobalDecl
+name|ThunkInfo
 operator|,
-name|AdjustmentVectorTy
+literal|1
 operator|>
-name|SavedAdjustmentsTy
+name|ThunkInfoVectorTy
 expr_stmt|;
-name|SavedAdjustmentsTy
-name|SavedAdjustments
-decl_stmt|;
+typedef|typedef
 name|llvm
 operator|::
-name|DenseSet
+name|DenseMap
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|*
+operator|,
+name|ThunkInfoVectorTy
+operator|>
+name|ThunksMapTy
+expr_stmt|;
+comment|/// Thunks - Contains all thunks that a given method decl will need.
+name|ThunksMapTy
+name|Thunks
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
 operator|<
 specifier|const
 name|CXXRecordDecl
 operator|*
+operator|,
+name|uint64_t
+operator|*
 operator|>
-name|SavedAdjustmentRecords
+name|VTableLayoutMapTy
 expr_stmt|;
+comment|/// VTableLayoutMap - Stores the vtable layout for all record decls.
+comment|/// The layout is stored as an array of 64-bit integers, where the first
+comment|/// integer is the number of vtable entries in the layout, and the subsequent
+comment|/// integers are the vtable components.
+name|VTableLayoutMapTy
+name|VTableLayoutMap
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|BaseSubobject
+operator|>
+operator|,
+name|uint64_t
+operator|>
+name|AddressPointsMapTy
+expr_stmt|;
+comment|/// Address points - Address points for all vtables.
+name|AddressPointsMapTy
+name|AddressPoints
+decl_stmt|;
+comment|/// VTableAddressPointsMapTy - Address points for a single vtable.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|BaseSubobject
+operator|,
+name|uint64_t
+operator|>
+name|VTableAddressPointsMapTy
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|uint64_t
+operator|,
+name|ThunkInfo
+operator|>
+operator|,
+literal|1
+operator|>
+name|VTableThunksTy
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|VTableThunksTy
+operator|>
+name|VTableThunksMapTy
+expr_stmt|;
+comment|/// VTableThunksMap - Contains thunks needed by vtables.
+name|VTableThunksMapTy
+name|VTableThunksMap
+decl_stmt|;
+name|uint64_t
+name|getNumVTableComponents
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VTableLayoutMap
+operator|.
+name|count
+argument_list|(
+name|RD
+argument_list|)
+operator|&&
+literal|"No vtable layout for this class!"
+argument_list|)
+expr_stmt|;
+return|return
+name|VTableLayoutMap
+operator|.
+name|lookup
+argument_list|(
+name|RD
+argument_list|)
+index|[
+literal|0
+index|]
+return|;
+block|}
+specifier|const
+name|uint64_t
+modifier|*
+name|getVTableComponentsData
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VTableLayoutMap
+operator|.
+name|count
+argument_list|(
+name|RD
+argument_list|)
+operator|&&
+literal|"No vtable layout for this class!"
+argument_list|)
+expr_stmt|;
+name|uint64_t
+modifier|*
+name|Components
+init|=
+name|VTableLayoutMap
+operator|.
+name|lookup
+argument_list|(
+name|RD
+argument_list|)
+decl_stmt|;
+return|return
+operator|&
+name|Components
+index|[
+literal|1
+index|]
+return|;
+block|}
 typedef|typedef
 name|llvm
 operator|::
@@ -678,10 +1074,36 @@ name|ClassPairTy
 operator|,
 name|uint64_t
 operator|>
-name|SubVTTIndiciesTy
+name|SubVTTIndiciesMapTy
 expr_stmt|;
-name|SubVTTIndiciesTy
+comment|/// SubVTTIndicies - Contains indices into the various sub-VTTs.
+name|SubVTTIndiciesMapTy
 name|SubVTTIndicies
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|BaseSubobject
+operator|>
+operator|,
+name|uint64_t
+operator|>
+name|SecondaryVirtualPointerIndicesMapTy
+expr_stmt|;
+comment|/// SecondaryVirtualPointerIndices - Contains the secondary virtual pointer
+comment|/// indices.
+name|SecondaryVirtualPointerIndicesMapTy
+name|SecondaryVirtualPointerIndices
 decl_stmt|;
 comment|/// getNumVirtualFunctionPointers - Return the number of virtual function
 comment|/// pointers in the vtable for a given record decl.
@@ -707,27 +1129,6 @@ name|llvm
 operator|::
 name|GlobalVariable
 operator|*
-name|GenerateVtable
-argument_list|(
-argument|llvm::GlobalVariable::LinkageTypes Linkage
-argument_list|,
-argument|bool GenerateDefinition
-argument_list|,
-argument|const CXXRecordDecl *LayoutClass
-argument_list|,
-argument|const CXXRecordDecl *RD
-argument_list|,
-argument|uint64_t Offset
-argument_list|,
-argument|bool IsVirtual
-argument_list|,
-argument|AddressPointsMapTy& AddressPoints
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
 name|GenerateVTT
 argument_list|(
 argument|llvm::GlobalVariable::LinkageTypes Linkage
@@ -737,9 +1138,61 @@ argument_list|,
 argument|const CXXRecordDecl *RD
 argument_list|)
 expr_stmt|;
+comment|/// EmitThunk - Emit a single thunk.
+name|void
+name|EmitThunk
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|,
+specifier|const
+name|ThunkInfo
+modifier|&
+name|Thunk
+parameter_list|)
+function_decl|;
+comment|/// EmitThunks - Emit the associated thunks for the given global decl.
+name|void
+name|EmitThunks
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
+comment|/// ComputeVTableRelatedInformation - Compute and store all vtable related
+comment|/// information (vtable layout, vbase offset offsets, thunks etc) for the
+comment|/// given record decl.
+name|void
+name|ComputeVTableRelatedInformation
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+comment|/// CreateVTableInitializer - Create a vtable initializer for the given record
+comment|/// decl.
+comment|/// \param Components - The vtable components; this is really an array of
+comment|/// VTableComponents.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|CreateVTableInitializer
+argument_list|(
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|const uint64_t *Components
+argument_list|,
+argument|unsigned NumComponents
+argument_list|,
+argument|const VTableThunksTy&VTableThunks
+argument_list|)
+expr_stmt|;
 name|public
 label|:
-name|CGVtableInfo
+name|CodeGenVTables
 argument_list|(
 name|CodeGenModule
 operator|&
@@ -777,6 +1230,20 @@ modifier|*
 name|Base
 parameter_list|)
 function_decl|;
+comment|/// getSecondaryVirtualPointerIndex - Return the index in the VTT where the
+comment|/// virtual pointer for the given subobject is located.
+name|uint64_t
+name|getSecondaryVirtualPointerIndex
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|BaseSubobject
+name|Base
+parameter_list|)
+function_decl|;
 comment|/// getMethodVtableIndex - Return the index (relative to the vtable address
 comment|/// point) where the function pointer for the given virtual function is
 comment|/// stored.
@@ -806,80 +1273,73 @@ modifier|*
 name|VBase
 parameter_list|)
 function_decl|;
-name|AdjustmentVectorTy
-modifier|*
-name|getAdjustments
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|)
-function_decl|;
-comment|/// getVtableAddressPoint - returns the address point of the vtable for the
-comment|/// given record decl.
-comment|/// FIXME: This should return a list of address points.
+comment|/// getAddressPoint - Get the address point of the given subobject in the
+comment|/// class decl.
 name|uint64_t
-name|getVtableAddressPoint
+name|getAddressPoint
 parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|)
-function_decl|;
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|getVtable
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
-comment|/// CtorVtableInfo - Information about a constructor vtable.
-struct|struct
-name|CtorVtableInfo
-block|{
-comment|/// Vtable - The vtable itself.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|Vtable
-expr_stmt|;
-comment|/// AddressPoints - The address points in this constructor vtable.
-name|AddressPointsMapTy
-name|AddressPoints
-decl_stmt|;
-name|CtorVtableInfo
-argument_list|()
-operator|:
-name|Vtable
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-block|}
-struct|;
-name|CtorVtableInfo
-name|getCtorVtable
-parameter_list|(
-specifier|const
-name|CXXRecordDecl
-modifier|*
-name|RD
-parameter_list|,
-specifier|const
 name|BaseSubobject
-modifier|&
 name|Base
 parameter_list|,
-name|bool
-name|BaseIsVirtual
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
 parameter_list|)
 function_decl|;
+comment|/// GetAddrOfVTable - Get the address of the vtable for the given record decl.
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GetAddrOfVTable
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+expr_stmt|;
+comment|/// EmitVTableDefinition - Emit the definition of the given vtable.
+name|void
+name|EmitVTableDefinition
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|VTable
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|::
+name|LinkageTypes
+name|Linkage
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl_stmt|;
+comment|/// GenerateConstructionVTable - Generate a construction vtable for the given
+comment|/// base subobject.
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GenerateConstructionVTable
+argument_list|(
+argument|const CXXRecordDecl *RD
+argument_list|,
+argument|const BaseSubobject&Base
+argument_list|,
+argument|bool BaseIsVirtual
+argument_list|,
+argument|VTableAddressPointsMapTy& AddressPoints
+argument_list|)
+expr_stmt|;
 name|llvm
 operator|::
 name|GlobalVariable
@@ -892,14 +1352,16 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
+comment|// EmitVTableRelatedData - Will emit any thunks that the global decl might
+comment|// have, as well as the vtable itself if the global decl is the key function.
 name|void
-name|MaybeEmitVtable
+name|EmitVTableRelatedData
 parameter_list|(
 name|GlobalDecl
 name|GD
 parameter_list|)
 function_decl|;
-comment|/// GenerateClassData - Generate all the class data requires to be generated
+comment|/// GenerateClassData - Generate all the class data required to be generated
 comment|/// upon definition of a KeyFunction.  This includes the vtable, the
 comment|/// rtti data structure and the VTT.
 comment|///

@@ -44,6 +44,22 @@ comment|//  which represent a path-sensitive, intra-procedural "exploded graph."
 end_comment
 
 begin_comment
+comment|//  See "Precise interprocedural dataflow analysis via graph reachability"
+end_comment
+
+begin_comment
+comment|//  by Reps, Horwitz, and Sagiv
+end_comment
+
+begin_comment
+comment|//  (http://portal.acm.org/citation.cfm?id=199462) for the definition of an
+end_comment
+
+begin_comment
+comment|//  exploded graph.
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

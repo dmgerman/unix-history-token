@@ -178,7 +178,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: xorps
+comment|// CHECK: xor
 end_comment
 
 begin_function

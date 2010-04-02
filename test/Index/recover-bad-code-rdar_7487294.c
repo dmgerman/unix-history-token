@@ -47,9 +47,5 @@ begin_comment
 comment|// CHECK:  help
 end_comment
 
-begin_comment
-comment|// CHECK: 14:102: error: expected '}'
-end_comment
-
 end_unit
 

@@ -211,6 +211,12 @@ name|UseStandardIncludes
 range|:
 literal|1
 decl_stmt|;
+comment|/// Include the system standard C++ library include search directories.
+name|unsigned
+name|UseStandardCXXIncludes
+range|:
+literal|1
+decl_stmt|;
 comment|/// Whether header search information should be output as for -v.
 name|unsigned
 name|Verbose
@@ -236,6 +242,11 @@ name|true
 argument_list|)
 operator|,
 name|UseStandardIncludes
+argument_list|(
+name|true
+argument_list|)
+operator|,
+name|UseStandardCXXIncludes
 argument_list|(
 name|true
 argument_list|)

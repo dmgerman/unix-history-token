@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Checker/PathSensitive/SymbolManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Checker/PathSensitive/SVals.h"
 end_include
 

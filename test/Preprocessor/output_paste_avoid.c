@@ -90,14 +90,21 @@ name|test
 argument_list|(
 argument|str
 argument_list|)
+comment|// Should expand to L "str" not L"str"
+comment|// CHECK: E: L "str"
+comment|// Should avoid producing>>=.
+define|#
+directive|define
+name|equal
+value|=
+name|F
+operator|:
+operator|>>
+name|equal
 end_expr_stmt
 
 begin_comment
-comment|// Should expand to L "str" not L"str"
-end_comment
-
-begin_comment
-comment|// CHECK: E: L "str"
+comment|// CHECK: F:>> =
 end_comment
 
 end_unit

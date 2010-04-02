@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Checker/PathSensitive/AnalysisManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Checker/PathSensitive/GRSubEngine.h"
 end_include
 
@@ -132,16 +126,13 @@ name|namespace
 name|clang
 block|{
 name|class
-name|PathDiagnosticClient
-decl_stmt|;
-name|class
-name|Diagnostic
-decl_stmt|;
-name|class
-name|ObjCForCollectionStmt
+name|AnalysisManager
 decl_stmt|;
 name|class
 name|Checker
+decl_stmt|;
+name|class
+name|ObjCForCollectionStmt
 decl_stmt|;
 name|class
 name|GRExprEngine
@@ -579,9 +570,9 @@ modifier|*
 name|B
 parameter_list|,
 specifier|const
-name|GRState
+name|ExplodedNode
 modifier|*
-name|St
+name|Pred
 parameter_list|,
 name|GRBlockCounter
 name|BC
@@ -849,8 +840,6 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-name|protected
-label|:
 comment|/// CheckerVisit - Dispatcher for performing checker-specific logic
 comment|///  at specific statements.
 name|void
@@ -1527,6 +1516,43 @@ modifier|&
 name|Dst
 parameter_list|)
 function_decl|;
+name|void
+name|VisitCXXMemberCallExpr
+parameter_list|(
+specifier|const
+name|CXXMemberCallExpr
+modifier|*
+name|MCE
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
+name|void
+name|VisitAggExpr
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+name|SVal
+name|Dest
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
 comment|/// Create a C++ temporary object for an rvalue.
 name|void
 name|CreateCXXTemporaryObject
@@ -1542,6 +1568,23 @@ parameter_list|,
 name|ExplodedNodeSet
 modifier|&
 name|Dst
+parameter_list|)
+function_decl|;
+comment|/// Synthesize CXXThisRegion.
+specifier|const
+name|CXXThisRegion
+modifier|*
+name|getCXXThisRegion
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|MD
+parameter_list|,
+specifier|const
+name|StackFrameContext
+modifier|*
+name|SFC
 parameter_list|)
 function_decl|;
 comment|/// EvalEagerlyAssume - Given the nodes in 'Src', eagerly assume symbolic

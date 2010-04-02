@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CodeGenModule.h"
 end_include
 
@@ -963,6 +957,79 @@ expr_stmt|;
 name|PerformCleanup
 operator|=
 name|false
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|/// CXXTemporariesCleanupScope - Enters a new scope for catching live
+comment|/// temporaries, all of which will be popped once the scope is exited.
+name|class
+name|CXXTemporariesCleanupScope
+block|{
+name|CodeGenFunction
+modifier|&
+name|CGF
+decl_stmt|;
+name|size_t
+name|NumLiveTemporaries
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
+name|CXXTemporariesCleanupScope
+argument_list|(
+specifier|const
+name|CXXTemporariesCleanupScope
+operator|&
+argument_list|)
+expr_stmt|;
+name|CXXTemporariesCleanupScope
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|CXXTemporariesCleanupScope
+operator|&
+operator|)
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|CXXTemporariesCleanupScope
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|)
+operator|:
+name|CGF
+argument_list|(
+name|CGF
+argument_list|)
+operator|,
+name|NumLiveTemporaries
+argument_list|(
+argument|CGF.LiveTemporaries.size()
+argument_list|)
+block|{ }
+operator|~
+name|CXXTemporariesCleanupScope
+argument_list|()
+block|{
+while|while
+condition|(
+name|CGF
+operator|.
+name|LiveTemporaries
+operator|.
+name|size
+argument_list|()
+operator|>
+name|NumLiveTemporaries
+condition|)
+name|CGF
+operator|.
+name|PopCXXTemporary
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1816,58 +1883,25 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
-comment|/// DynamicTypeAdjust - Do the non-virtual and virtual adjustments on an
-comment|/// object pointer to alter the dynamic type of the pointer.  Used by
-comment|/// GenerateCovariantThunk for building thunks.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DynamicTypeAdjust
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|V
-argument_list|,
-specifier|const
-name|ThunkAdjustment
-operator|&
-name|Adjustment
-argument_list|)
-expr_stmt|;
-comment|/// GenerateThunk - Generate a thunk for the given method
-name|llvm
-operator|::
-name|Constant
-operator|*
+comment|/// GenerateThunk - Generate a thunk for the given method.
+name|void
 name|GenerateThunk
 argument_list|(
-argument|llvm::Function *Fn
-argument_list|,
-argument|GlobalDecl GD
-argument_list|,
-argument|bool Extern
-argument_list|,
-argument|const ThunkAdjustment&ThisAdjustment
-argument_list|)
-expr_stmt|;
 name|llvm
 operator|::
-name|Constant
+name|Function
 operator|*
-name|GenerateCovariantThunk
-argument_list|(
-argument|llvm::Function *Fn
+name|Fn
 argument_list|,
-argument|GlobalDecl GD
+name|GlobalDecl
+name|GD
 argument_list|,
-argument|bool Extern
-argument_list|,
-argument|const CovariantThunkAdjustment&Adjustment
+specifier|const
+name|ThunkInfo
+operator|&
+name|Thunk
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|void
 name|EmitCtorPrologue
 parameter_list|(
@@ -1880,8 +1914,75 @@ name|CXXCtorType
 name|Type
 parameter_list|)
 function_decl|;
+comment|/// InitializeVTablePointer - Initialize the vtable pointer of the given
+comment|/// subobject.
+comment|///
+comment|/// \param BaseIsMorallyVirtual - Whether the base subobject is a virtual base
+comment|/// or a direct or indirect base of a virtual base.
 name|void
-name|InitializeVtablePtrs
+name|InitializeVTablePointer
+argument_list|(
+name|BaseSubobject
+name|Base
+argument_list|,
+name|bool
+name|BaseIsMorallyVirtual
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|VTable
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|VTableClass
+argument_list|)
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|VisitedVirtualBasesSetTy
+expr_stmt|;
+name|void
+name|InitializeVTablePointers
+argument_list|(
+name|BaseSubobject
+name|Base
+argument_list|,
+name|bool
+name|BaseIsMorallyVirtual
+argument_list|,
+name|bool
+name|BaseIsNonVirtualPrimaryBase
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|VTable
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|VTableClass
+argument_list|,
+name|VisitedVirtualBasesSetTy
+operator|&
+name|VBases
+argument_list|)
+decl_stmt|;
+name|void
+name|InitializeVTablePointers
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
@@ -1889,36 +1990,6 @@ modifier|*
 name|ClassDecl
 parameter_list|)
 function_decl|;
-name|void
-name|InitializeVtablePtrsRecursive
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
-argument_list|,
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|Vtable
-argument_list|,
-name|CGVtableInfo
-operator|::
-name|AddrSubMap_t
-operator|&
-name|AddressPoints
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|ThisPtr
-argument_list|,
-name|uint64_t
-name|Offset
-argument_list|)
-decl_stmt|;
 name|void
 name|SynthesizeCXXCopyConstructor
 parameter_list|(
@@ -6329,6 +6400,25 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// EmitCallArg - Emit a single call argument.
+end_comment
+
+begin_function_decl
+name|RValue
+name|EmitCallArg
+parameter_list|(
+specifier|const
+name|Expr
+modifier|*
+name|E
+parameter_list|,
+name|QualType
+name|ArgType
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -6491,25 +6581,6 @@ name|BI
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// EmitCallArg - Emit a single call argument.
-end_comment
-
-begin_function_decl
-name|RValue
-name|EmitCallArg
-parameter_list|(
-specifier|const
-name|Expr
-modifier|*
-name|E
-parameter_list|,
-name|QualType
-name|ArgType
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.

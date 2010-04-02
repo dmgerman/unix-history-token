@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -637,6 +643,397 @@ name|Other
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+comment|/// \brief Uniquely identifies a virtual method within a class
+comment|/// hierarchy by the method itself and a class subobject number.
+struct|struct
+name|UniqueVirtualMethod
+block|{
+name|UniqueVirtualMethod
+argument_list|()
+operator|:
+name|Method
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Subobject
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|InVirtualSubobject
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|UniqueVirtualMethod
+argument_list|(
+argument|CXXMethodDecl *Method
+argument_list|,
+argument|unsigned Subobject
+argument_list|,
+argument|const CXXRecordDecl *InVirtualSubobject
+argument_list|)
+operator|:
+name|Method
+argument_list|(
+name|Method
+argument_list|)
+operator|,
+name|Subobject
+argument_list|(
+name|Subobject
+argument_list|)
+operator|,
+name|InVirtualSubobject
+argument_list|(
+argument|InVirtualSubobject
+argument_list|)
+block|{ }
+comment|/// \brief The overriding virtual method.
+name|CXXMethodDecl
+operator|*
+name|Method
+expr_stmt|;
+comment|/// \brief The subobject in which the overriding virtual method
+comment|/// resides.
+name|unsigned
+name|Subobject
+decl_stmt|;
+comment|/// \brief The virtual base class subobject of which this overridden
+comment|/// virtual method is a part. Note that this records the closest
+comment|/// derived virtual base class subobject.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|InVirtualSubobject
+decl_stmt|;
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|UniqueVirtualMethod
+operator|&
+name|X
+operator|,
+specifier|const
+name|UniqueVirtualMethod
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Method
+operator|==
+name|Y
+operator|.
+name|Method
+operator|&&
+name|X
+operator|.
+name|Subobject
+operator|==
+name|Y
+operator|.
+name|Subobject
+operator|&&
+name|X
+operator|.
+name|InVirtualSubobject
+operator|==
+name|Y
+operator|.
+name|InVirtualSubobject
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|UniqueVirtualMethod
+operator|&
+name|X
+operator|,
+specifier|const
+name|UniqueVirtualMethod
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|X
+operator|==
+name|Y
+operator|)
+return|;
+block|}
+block|}
+struct|;
+comment|/// \brief The set of methods that override a given virtual method in
+comment|/// each subobject where it occurs.
+comment|///
+comment|/// The first part of the pair is the subobject in which the
+comment|/// overridden virtual function occurs, while the second part of the
+comment|/// pair is the virtual method that overrides it (including the
+comment|/// subobject in which that virtual function occurs).
+name|class
+name|OverridingMethods
+block|{
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|UniqueVirtualMethod
+operator|,
+literal|4
+operator|>
+expr|>
+name|Overrides
+expr_stmt|;
+name|public
+label|:
+comment|// Iterate over the set of subobjects that have overriding methods.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|UniqueVirtualMethod
+operator|,
+literal|4
+operator|>
+expr|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|UniqueVirtualMethod
+operator|,
+literal|4
+operator|>
+expr|>
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|Overrides
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Overrides
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|Overrides
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Overrides
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Overrides
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|// Iterate over the set of overriding virtual methods in a given
+comment|// subobject.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|UniqueVirtualMethod
+operator|,
+literal|4
+operator|>
+operator|::
+name|iterator
+name|overriding_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|UniqueVirtualMethod
+operator|,
+literal|4
+operator|>
+operator|::
+name|const_iterator
+name|overriding_const_iterator
+expr_stmt|;
+comment|// Add a new overriding method for a particular subobject.
+name|void
+name|add
+parameter_list|(
+name|unsigned
+name|OverriddenSubobject
+parameter_list|,
+name|UniqueVirtualMethod
+name|Overriding
+parameter_list|)
+function_decl|;
+comment|// Add all of the overriding methods from "other" into overrides for
+comment|// this method. Used when merging the overrides from multiple base
+comment|// class subobjects.
+name|void
+name|add
+parameter_list|(
+specifier|const
+name|OverridingMethods
+modifier|&
+name|Other
+parameter_list|)
+function_decl|;
+comment|// Replace all overriding virtual methods in all subobjects with the
+comment|// given virtual method.
+name|void
+name|replaceAll
+parameter_list|(
+name|UniqueVirtualMethod
+name|Overriding
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// \brief A mapping from each virtual member function to its set of
+comment|/// final overriders.
+comment|///
+comment|/// Within a class hierarchy for a given derived class, each virtual
+comment|/// member function in that hierarchy has one or more "final
+comment|/// overriders" (C++ [class.virtual]p2). A final overrider for a
+comment|/// virtual function "f" is the virtual function that will actually be
+comment|/// invoked when dispatching a call to "f" through the
+comment|/// vtable. Well-formed classes have a single final overrider for each
+comment|/// virtual function; in abstract classes, the final overrider for at
+comment|/// least one virtual function is a pure virtual function. Due to
+comment|/// multiple, virtual inheritance, it is possible for a class to have
+comment|/// more than one final overrider. Athough this is an error (per C++
+comment|/// [class.virtual]p2), it is not considered an error here: the final
+comment|/// overrider map can represent multiple final overriders for a
+comment|/// method, and it is up to the client to determine whether they are
+comment|/// problem. For example, the following class \c D has two final
+comment|/// overriders for the virtual function \c A::f(), one in \c C and one
+comment|/// in \c D:
+comment|///
+comment|/// \code
+comment|///   struct A { virtual void f(); };
+comment|///   struct B : virtual A { virtual void f(); };
+comment|///   struct C : virtual A { virtual void f(); };
+comment|///   struct D : B, C { };
+comment|/// \endcode
+comment|///
+comment|/// This data structure contaings a mapping from every virtual
+comment|/// function *that does not override an existing virtual function* and
+comment|/// in every subobject where that virtual function occurs to the set
+comment|/// of virtual functions that override it. Thus, the same virtual
+comment|/// function \c A::f can actually occur in multiple subobjects of type
+comment|/// \c A due to multiple inheritance, and may be overriden by
+comment|/// different virtual functions in each, as in the following example:
+comment|///
+comment|/// \code
+comment|///   struct A { virtual void f(); };
+comment|///   struct B : A { virtual void f(); };
+comment|///   struct C : A { virtual void f(); };
+comment|///   struct D : B, C { };
+comment|/// \endcode
+comment|///
+comment|/// Unlike in the previous example, where the virtual functions \c
+comment|/// B::f and \c C::f both overrode \c A::f in the same subobject of
+comment|/// type \c A, in this example the two virtual functions both override
+comment|/// \c A::f but in *different* subobjects of type A. This is
+comment|/// represented by numbering the subobjects in which the overridden
+comment|/// and the overriding virtual member functions are located. Subobject
+comment|/// 0 represents the virtua base class subobject of that type, while
+comment|/// subobject numbers greater than 0 refer to non-virtual base class
+comment|/// subobjects of that type.
+name|class
+name|CXXFinalOverriderMap
+range|:
+name|public
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|*
+decl_stmt|,
+name|OverridingMethods
+decl|>
+block|{ }
 empty_stmt|;
 block|}
 end_decl_stmt

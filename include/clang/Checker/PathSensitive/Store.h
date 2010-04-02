@@ -83,24 +83,6 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang

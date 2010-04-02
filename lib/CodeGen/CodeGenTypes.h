@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -190,77 +184,11 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|CGRecordLayout
+decl_stmt|;
+name|class
 name|CodeGenTypes
 decl_stmt|;
-comment|/// CGRecordLayout - This class handles struct and union layout info while
-comment|/// lowering AST types to LLVM types.
-name|class
-name|CGRecordLayout
-block|{
-name|CGRecordLayout
-argument_list|()
-expr_stmt|;
-comment|// DO NOT IMPLEMENT
-comment|/// LLVMType - The LLVMType corresponding to this record layout.
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|LLVMType
-expr_stmt|;
-comment|/// ContainsPointerToDataMember - Whether one of the fields in this record
-comment|/// layout is a pointer to data member, or a struct that contains pointer to
-comment|/// data member.
-name|bool
-name|ContainsPointerToDataMember
-decl_stmt|;
-name|public
-label|:
-name|CGRecordLayout
-argument_list|(
-argument|const llvm::Type *T
-argument_list|,
-argument|bool ContainsPointerToDataMember
-argument_list|)
-block|:
-name|LLVMType
-argument_list|(
-name|T
-argument_list|)
-operator|,
-name|ContainsPointerToDataMember
-argument_list|(
-argument|ContainsPointerToDataMember
-argument_list|)
-block|{ }
-comment|/// getLLVMType - Return llvm type associated with this record.
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|getLLVMType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LLVMType
-return|;
-block|}
-comment|/// containsPointerToDataMember - Whether this struct contains pointers to
-comment|/// data members.
-name|bool
-name|containsPointerToDataMember
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ContainsPointerToDataMember
-return|;
-block|}
-block|}
-empty_stmt|;
 comment|/// CodeGenTypes - This class organizes the cross-module state that is used
 comment|/// while lowering AST types to LLVM types.
 name|class
@@ -363,8 +291,6 @@ name|InterfaceTypes
 expr_stmt|;
 comment|/// CGRecordLayouts - This maps llvm struct type with corresponding
 comment|/// record layout info.
-comment|/// FIXME : If CGRecordLayout is less than 16 bytes then use
-comment|/// inline it in the map.
 name|llvm
 operator|::
 name|DenseMap
@@ -378,20 +304,6 @@ operator|*
 operator|>
 name|CGRecordLayouts
 expr_stmt|;
-comment|/// FieldInfo - This maps struct field with corresponding llvm struct type
-comment|/// field no. This info is populated by record organizer.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FieldDecl
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|FieldInfo
-expr_stmt|;
 comment|/// FunctionInfos - Hold memoized CGFunctionInfo results.
 name|llvm
 operator|::
@@ -401,60 +313,8 @@ name|CGFunctionInfo
 operator|>
 name|FunctionInfos
 expr_stmt|;
-name|public
-label|:
-struct|struct
-name|BitFieldInfo
-block|{
-name|BitFieldInfo
-argument_list|(
-argument|unsigned FieldNo
-argument_list|,
-argument|unsigned Start
-argument_list|,
-argument|unsigned Size
-argument_list|)
-block|:
-name|FieldNo
-argument_list|(
-name|FieldNo
-argument_list|)
-operator|,
-name|Start
-argument_list|(
-name|Start
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-argument|Size
-argument_list|)
-block|{}
-name|unsigned
-name|FieldNo
-expr_stmt|;
-name|unsigned
-name|Start
-decl_stmt|;
-name|unsigned
-name|Size
-decl_stmt|;
-block|}
-struct|;
 name|private
 label|:
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FieldDecl
-operator|*
-operator|,
-name|BitFieldInfo
-operator|>
-name|BitFields
-expr_stmt|;
 comment|/// TypeCache - This map keeps cache of llvm::Types (through PATypeHolder)
 comment|/// and maps llvm::Types to corresponding clang::Type. llvm::PATypeHolder is
 comment|/// used instead of llvm::Type because it allows us to bypass potential
@@ -666,22 +526,11 @@ modifier|&
 name|getCGRecordLayout
 argument_list|(
 specifier|const
-name|TagDecl
+name|RecordDecl
 operator|*
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getLLVMFieldNo - Return llvm::StructType element number
-comment|/// that corresponds to the field FD.
-name|unsigned
-name|getLLVMFieldNo
-parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|FD
-parameter_list|)
-function_decl|;
 comment|/// UpdateCompletedType - When we find the full definition for a TagDecl,
 comment|/// replace the 'opaque' type we previously made for it if applicable.
 name|void
@@ -792,12 +641,7 @@ name|Args
 argument_list|,
 name|Ty
 operator|->
-name|getCallConv
-argument_list|()
-argument_list|,
-name|Ty
-operator|->
-name|getNoReturnAttr
+name|getExtInfo
 argument_list|()
 argument_list|)
 return|;
@@ -850,42 +694,44 @@ specifier|const
 name|CGFunctionInfo
 modifier|&
 name|getFunctionInfo
-parameter_list|(
+argument_list|(
 name|QualType
 name|ResTy
-parameter_list|,
+argument_list|,
 specifier|const
 name|CallArgList
-modifier|&
+operator|&
 name|Args
-parameter_list|,
-name|CallingConv
-name|CC
-parameter_list|,
-name|bool
-name|NoReturn
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|FunctionType
+operator|::
+name|ExtInfo
+operator|&
+name|Info
+argument_list|)
+decl_stmt|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
 name|getFunctionInfo
-parameter_list|(
+argument_list|(
 name|QualType
 name|ResTy
-parameter_list|,
+argument_list|,
 specifier|const
 name|FunctionArgList
-modifier|&
+operator|&
 name|Args
-parameter_list|,
-name|CallingConv
-name|CC
-parameter_list|,
-name|bool
-name|NoReturn
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|FunctionType
+operator|::
+name|ExtInfo
+operator|&
+name|Info
+argument_list|)
+decl_stmt|;
 comment|/// Retrieves the ABI information for the given function signature.
 comment|///
 comment|/// \param ArgTys - must all actually be canonical as params
@@ -907,59 +753,28 @@ operator|>
 operator|&
 name|ArgTys
 argument_list|,
-name|CallingConv
-name|CC
-argument_list|,
-name|bool
-name|NoReturn
+specifier|const
+name|FunctionType
+operator|::
+name|ExtInfo
+operator|&
+name|Info
 argument_list|)
 decl_stmt|;
+comment|/// \brief Compute a new LLVM record layout object for the given record.
+name|CGRecordLayout
+modifier|*
+name|ComputeRecordLayout
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|// These are internal details of CGT that shouldn't be used externally.
-comment|/// addFieldInfo - Assign field number to field FD.
-name|void
-name|addFieldInfo
-parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|FD
-parameter_list|,
-name|unsigned
-name|FieldNo
-parameter_list|)
-function_decl|;
-comment|/// addBitFieldInfo - Assign a start bit and a size to field FD.
-name|void
-name|addBitFieldInfo
-parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|FD
-parameter_list|,
-name|unsigned
-name|FieldNo
-parameter_list|,
-name|unsigned
-name|Start
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-comment|/// getBitFieldInfo - Return the BitFieldInfo  that corresponds to the field
-comment|/// FD.
-name|BitFieldInfo
-name|getBitFieldInfo
-parameter_list|(
-specifier|const
-name|FieldDecl
-modifier|*
-name|FD
-parameter_list|)
-function_decl|;
 comment|/// ConvertTagDeclType - Lay out a tagged decl type like struct or union or
 comment|/// enum.
 specifier|const

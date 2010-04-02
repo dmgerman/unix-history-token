@@ -223,6 +223,14 @@ return|return
 literal|4
 comment|// expected-error {{expected ';' after return statement}}
 block|}
+name|void
+name|test8
+parameter_list|()
+block|{
+comment|// Should not skip '}' and produce a "expected '}'" error.
+name|undecl
+comment|// expected-error {{use of undeclared identifier 'undecl'}}
+block|}
 end_function
 
 end_unit

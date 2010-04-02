@@ -81,7 +81,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -118,7 +118,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -147,7 +147,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -184,7 +184,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -213,7 +213,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -250,7 +250,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -279,7 +279,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -316,7 +316,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -345,7 +345,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -393,7 +393,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -420,7 +420,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -452,7 +452,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -484,7 +484,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -516,7 +516,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -548,7 +548,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -588,7 +588,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -629,7 +629,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -669,7 +669,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -709,7 +709,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -746,7 +746,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -783,7 +783,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -820,7 +820,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -857,7 +857,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -894,7 +894,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -931,7 +931,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -968,7 +968,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1005,7 +1005,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1042,7 +1042,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1079,7 +1079,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1116,7 +1116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1153,7 +1153,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1190,7 +1190,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1227,7 +1227,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1264,7 +1264,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1301,7 +1301,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1338,7 +1338,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1375,7 +1375,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1412,7 +1412,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1449,7 +1449,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1486,7 +1486,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1523,7 +1523,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1560,7 +1560,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1597,7 +1597,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1629,7 +1629,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1661,7 +1661,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1693,7 +1693,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1725,7 +1725,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1757,7 +1757,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1789,7 +1789,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1821,7 +1821,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1853,7 +1853,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1885,7 +1885,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1917,7 +1917,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -1944,7 +1944,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -1971,7 +1971,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2001,7 +2001,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -2028,7 +2028,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -2055,7 +2055,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -2092,7 +2092,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2126,7 +2126,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2163,7 +2163,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -2193,7 +2193,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -2220,7 +2220,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -2250,7 +2250,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -2280,7 +2280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2310,7 +2310,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|double
 name|__attribute__
 argument_list|(
@@ -2337,7 +2337,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2368,7 +2368,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2417,7 +2417,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2456,7 +2456,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2485,7 +2485,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2519,7 +2519,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2562,7 +2562,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2605,7 +2605,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2636,7 +2636,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2667,7 +2667,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2701,7 +2701,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2735,7 +2735,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2765,7 +2765,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -2805,7 +2805,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -2840,7 +2840,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -2885,7 +2885,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -2919,7 +2919,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -2951,7 +2951,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -2996,7 +2996,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -3031,7 +3031,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -3066,7 +3066,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3106,7 +3106,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3146,7 +3146,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3186,7 +3186,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -3215,7 +3215,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3244,7 +3244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3285,7 +3285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3326,7 +3326,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3367,7 +3367,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3408,7 +3408,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3449,7 +3449,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3490,7 +3490,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3531,7 +3531,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3572,7 +3572,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3613,7 +3613,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3654,7 +3654,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3695,7 +3695,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3736,7 +3736,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3777,7 +3777,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3817,7 +3817,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -3855,7 +3855,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3893,7 +3893,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3931,7 +3931,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -3971,7 +3971,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4011,7 +4011,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4051,7 +4051,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -4080,7 +4080,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4109,7 +4109,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4150,7 +4150,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4191,7 +4191,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4232,7 +4232,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4273,7 +4273,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4302,7 +4302,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4332,7 +4332,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4361,7 +4361,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4390,7 +4390,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4424,7 +4424,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4462,7 +4462,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4503,7 +4503,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4541,7 +4541,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4582,7 +4582,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4614,7 +4614,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4646,7 +4646,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4684,7 +4684,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4725,7 +4725,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4763,7 +4763,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4804,7 +4804,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4838,7 +4838,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4876,7 +4876,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4917,7 +4917,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4955,7 +4955,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -4996,7 +4996,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5028,7 +5028,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5060,7 +5060,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5100,7 +5100,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5140,7 +5140,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5180,7 +5180,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5220,7 +5220,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5260,7 +5260,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5300,7 +5300,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5332,7 +5332,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5364,7 +5364,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5402,7 +5402,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -5437,7 +5437,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|long
 name|long
 name|__attribute__
@@ -5465,7 +5465,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|long
 name|long
 name|__attribute__
@@ -5498,7 +5498,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -5528,7 +5528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5558,7 +5558,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5588,7 +5588,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5632,7 +5632,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5669,7 +5669,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -5710,7 +5710,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|long
 name|long
 name|__attribute__
@@ -5743,7 +5743,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5770,7 +5770,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5807,7 +5807,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5846,7 +5846,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5882,7 +5882,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5924,7 +5924,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -5971,7 +5971,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6038,7 +6038,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6145,7 +6145,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6177,7 +6177,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6216,7 +6216,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6254,7 +6254,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6300,7 +6300,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6362,7 +6362,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6404,7 +6404,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6451,7 +6451,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6518,7 +6518,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6625,7 +6625,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -6655,7 +6655,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6685,7 +6685,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6724,7 +6724,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6767,7 +6767,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6803,7 +6803,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6835,7 +6835,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6867,7 +6867,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6899,7 +6899,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6927,7 +6927,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6950,7 +6950,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(
@@ -6973,7 +6973,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7014,7 +7014,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7055,7 +7055,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7096,7 +7096,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -7134,7 +7134,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7184,7 +7184,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -7253,7 +7253,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7342,7 +7342,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7407,7 +7407,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7460,7 +7460,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7501,7 +7501,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7590,7 +7590,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7655,7 +7655,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7708,7 +7708,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7749,7 +7749,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m64
 name|__attribute__
 argument_list|(
@@ -7779,7 +7779,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7814,7 +7814,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -7852,7 +7852,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -7890,7 +7890,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -7928,7 +7928,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -7969,7 +7969,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -7996,7 +7996,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -8023,7 +8023,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -8050,7 +8050,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -8077,7 +8077,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -8104,7 +8104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -8131,7 +8131,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|void
 name|__attribute__
 argument_list|(

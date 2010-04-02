@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/IdentifierTable.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Type.h"
 end_include
 

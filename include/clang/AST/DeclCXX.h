@@ -128,6 +128,9 @@ name|class
 name|CXXMemberLookupCriteria
 decl_stmt|;
 name|class
+name|CXXFinalOverriderMap
+decl_stmt|;
+name|class
 name|FriendDecl
 decl_stmt|;
 comment|/// \brief Represents any kind of function declaration, whether it is a
@@ -826,6 +829,19 @@ operator|*
 operator|>
 name|TemplateOrInstantiation
 block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|CheckConversionFunction
+argument_list|(
+name|NamedDecl
+operator|*
+name|D
+argument_list|)
+block|;
+endif|#
+directive|endif
 name|protected
 operator|:
 name|CXXRecordDecl
@@ -1913,6 +1929,30 @@ block|}
 end_function
 
 begin_comment
+comment|/// Removes a conversion function from this class.  The conversion
+end_comment
+
+begin_comment
+comment|/// function must currently be a member of this class.  Furthermore,
+end_comment
+
+begin_comment
+comment|/// this class must currently be in the process of being defined.
+end_comment
+
+begin_function_decl
+name|void
+name|removeConversion
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|Old
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getVisibleConversionFunctions - get all conversion functions visible
 end_comment
 
@@ -1930,42 +1970,46 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// addConversionFunction - Add a new conversion function to the
+comment|/// addConversionFunction - Registers a conversion function which
 end_comment
 
 begin_comment
-comment|/// list of conversion functions.
+comment|/// this class declares directly.
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|addConversionFunction
 parameter_list|(
-name|CXXConversionDecl
+name|NamedDecl
 modifier|*
-name|ConvDecl
+name|Decl
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Add a new conversion function template to the list of conversion
-end_comment
-
-begin_comment
-comment|/// functions.
-end_comment
-
-begin_function_decl
-name|void
-name|addConversionFunction
-parameter_list|(
-name|FunctionTemplateDecl
-modifier|*
-name|ConvDecl
-parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|CheckConversionFunction
+argument_list|(
+name|Decl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|// We intentionally don't use the decl's access here because it
+comment|// hasn't been set yet.  That's really just a misdesign in Sema.
+name|data
+argument_list|()
+operator|.
+name|Conversions
+operator|.
+name|addDecl
+argument_list|(
+name|Decl
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// isAggregate - Whether this class is an aggregate (C++
@@ -3494,6 +3538,30 @@ name|UserData
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Retrieve the final overriders for each virtual member
+end_comment
+
+begin_comment
+comment|/// function in the class hierarchy where this class is the
+end_comment
+
+begin_comment
+comment|/// most-derived class in the class hierarchy.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getFinalOverriders
+argument_list|(
+name|CXXFinalOverriderMap
+operator|&
+name|FinaOverriders
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// viewInheritance - Renders and displays an inheritance diagram

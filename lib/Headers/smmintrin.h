@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===---- smmintrin.h - SSE intrinsics -------------------------------------=== * * Permission is hereby granted, free of charge, to any person obtaining a copy * of this software and associated documentation files (the "Software"), to deal * in the Software without restriction, including without limitation the rights * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell * copies of the Software, and to permit persons to whom the Software is * furnished to do so, subject to the following conditions: * * The above copyright notice and this permission notice shall be included in * all copies or substantial portions of the Software. * * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN * THE SOFTWARE. * *===-----------------------------------------------------------------------=== */
+comment|/*===---- smmintrin.h - SSE4 intrinsics ------------------------------------===  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this software and associated documentation files (the "Software"), to deal  * in the Software without restriction, including without limitation the rights  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  * copies of the Software, and to permit persons to whom the Software is  * furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN  * THE SOFTWARE.  *  *===-----------------------------------------------------------------------===  */
 end_comment
 
 begin_ifndef
@@ -304,7 +304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -351,7 +351,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -398,7 +398,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128d
 name|__attribute__
 argument_list|(
@@ -447,7 +447,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128
 name|__attribute__
 argument_list|(
@@ -496,7 +496,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -545,7 +545,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -596,7 +596,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -616,16 +616,15 @@ name|__V2
 argument_list|)
 block|{
 return|return
-operator|(
+call|(
 name|__m128i
-operator|)
-name|__builtin_ia32_pmulld128
+call|)
 argument_list|(
 operator|(
 name|__v4si
 operator|)
 name|__V1
-argument_list|,
+operator|*
 operator|(
 name|__v4si
 operator|)
@@ -637,7 +636,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -714,7 +713,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -753,7 +752,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -794,7 +793,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -835,7 +834,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -876,7 +875,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -917,7 +916,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -958,7 +957,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -999,7 +998,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1040,7 +1039,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1287,7 +1286,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1325,7 +1324,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1363,7 +1362,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -1439,7 +1438,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1484,7 +1483,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1517,7 +1516,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1550,7 +1549,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1583,7 +1582,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1616,7 +1615,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1649,7 +1648,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1686,7 +1685,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1719,7 +1718,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1752,7 +1751,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1785,7 +1784,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1818,7 +1817,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1851,7 +1850,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -1888,7 +1887,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -2357,7 +2356,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|__m128i
 name|__attribute__
 argument_list|(
@@ -2399,7 +2398,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|unsigned
 name|int
 name|__attribute__
@@ -2434,7 +2433,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|unsigned
 name|int
 name|__attribute__
@@ -2469,7 +2468,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|unsigned
 name|int
 name|__attribute__
@@ -2510,7 +2509,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|unsigned
 name|long
 name|long
@@ -2561,7 +2560,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__attribute__
 argument_list|(
@@ -2595,7 +2594,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline__
 name|long
 name|long
 name|__attribute__

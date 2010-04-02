@@ -1710,5 +1710,115 @@ comment|// expected-warning{{specified field width is missing a matching 'int' a
 block|}
 end_function
 
+begin_comment
+comment|// PR 6697 - Handle format strings where the data argument is not adjacent to the format string
+end_comment
+
+begin_function_decl
+name|void
+name|myprintf_PR_6697
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|int
+name|x
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|test_pr_6697
+parameter_list|()
+block|{
+name|myprintf_PR_6697
+argument_list|(
+literal|"%s\n"
+argument_list|,
+literal|1
+argument_list|,
+literal|"foo"
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|myprintf_PR_6697
+argument_list|(
+literal|"%s\n"
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'int'}}
+comment|// FIXME: Not everything should clearly support positional arguments,
+comment|// but we need a way to identify those cases.
+name|myprintf_PR_6697
+argument_list|(
+literal|"%1$s\n"
+argument_list|,
+literal|1
+argument_list|,
+literal|"foo"
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|myprintf_PR_6697
+argument_list|(
+literal|"%2$s\n"
+argument_list|,
+literal|1
+argument_list|,
+literal|"foo"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument position '2' exceeds the number of data arguments (1)}}
+name|myprintf_PR_6697
+argument_list|(
+literal|"%18$s\n"
+argument_list|,
+literal|1
+argument_list|,
+literal|"foo"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{data argument position '18' exceeds the number of data arguments (1)}}
+name|myprintf_PR_6697
+argument_list|(
+literal|"%1$s\n"
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'int'}}
+block|}
+end_function
+
 end_unit
 

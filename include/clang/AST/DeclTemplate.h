@@ -3835,7 +3835,7 @@ operator|<
 name|NamedDecl
 operator|*
 operator|,
-name|Type
+name|TypeSourceInfo
 operator|*
 operator|>
 name|FriendUnion
@@ -3931,7 +3931,7 @@ block|;
 comment|/// If this friend declaration names a templated type (or
 comment|/// a dependent member type of a templated type), return that
 comment|/// type;  otherwise return null.
-name|Type
+name|TypeSourceInfo
 operator|*
 name|getFriendType
 argument_list|()
@@ -3942,7 +3942,7 @@ name|Friend
 operator|.
 name|dyn_cast
 operator|<
-name|Type
+name|TypeSourceInfo
 operator|*
 operator|>
 operator|(

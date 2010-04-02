@@ -1618,6 +1618,19 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine whether this initialization is a direct reference
+comment|/// binding (C++ [dcl.init.ref]).
+name|bool
+name|isDirectReferenceBinding
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this initialization failed due to an ambiguity.
+name|bool
+name|isAmbiguous
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Add a new step in the initialization that resolves the address
 comment|/// of an overloaded function to a specific function declaration.
 comment|///
@@ -1629,6 +1642,9 @@ parameter_list|(
 name|FunctionDecl
 modifier|*
 name|Function
+parameter_list|,
+name|DeclAccessPair
+name|Found
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step in the initialization that performs a derived-to-

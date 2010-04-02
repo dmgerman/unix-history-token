@@ -75,7 +75,7 @@ name|p
 operator|=
 literal|3
 expr_stmt|;
-comment|// expected-warning{{Dereference of null pointer loaded from variable}}
+comment|// expected-warning{{Dereference of null pointer (loaded from variable 'p')}}
 block|}
 block|}
 end_function

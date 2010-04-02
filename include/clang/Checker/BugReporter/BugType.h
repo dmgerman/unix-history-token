@@ -62,7 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<llvm/ADT/FoldingSet.h>
+file|"clang/Checker/BugReporter/BugReporter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
@@ -75,18 +81,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|BugReportEquivClass
-decl_stmt|;
-name|class
-name|BugReporter
-decl_stmt|;
-name|class
-name|BuiltinBugReport
-decl_stmt|;
-name|class
-name|BugReporterContext
-decl_stmt|;
 name|class
 name|ExplodedNode
 decl_stmt|;

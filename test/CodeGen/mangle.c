@@ -276,5 +276,38 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @_Z4foo9Dv4_f
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( vector_size(
+literal|16
+argument|) )
+argument_list|)
+name|float
+name|float4
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|__overloadable__
+operator|)
+argument_list|)
+name|foo9
+argument_list|(
+name|float4
+name|f
+argument_list|)
+block|{}
+end_decl_stmt
+
 end_unit
 

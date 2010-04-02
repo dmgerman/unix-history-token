@@ -5487,6 +5487,18 @@ range|:
 name|public
 name|Expr
 block|{
+comment|/// Extra data stored in some member expressions.
+block|struct
+name|MemberNameQualifier
+operator|:
+name|public
+name|NameQualifier
+block|{
+name|NamedDecl
+operator|*
+name|FoundDecl
+block|;   }
+block|;
 comment|/// Base - the expression for the base pointer or structure references.  In
 comment|/// X.F, this is "X".
 name|Stmt
@@ -5510,10 +5522,11 @@ operator|:
 literal|1
 block|;
 comment|/// \brief True if this member expression used a nested-name-specifier to
-comment|/// refer to the member, e.g., "x->Base::f". When true, a NameQualifier
+comment|/// refer to the member, e.g., "x->Base::f", or found its member via a using
+comment|/// declaration.  When true, a MemberNameQualifier
 comment|/// structure is allocated immediately after the MemberExpr.
 name|bool
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 operator|:
 literal|1
 block|;
@@ -5521,30 +5534,27 @@ comment|/// \brief True if this member expression specified a template argument 
 comment|/// explicitly, e.g., x->f<int>. When true, an ExplicitTemplateArgumentList
 comment|/// structure (and its TemplateArguments) are allocated immediately after
 comment|/// the MemberExpr or, if the member expression also has a qualifier, after
-comment|/// the NameQualifier structure.
+comment|/// the MemberNameQualifier structure.
 name|bool
 name|HasExplicitTemplateArgumentList
 operator|:
 literal|1
 block|;
 comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
-name|NameQualifier
+name|MemberNameQualifier
 operator|*
 name|getMemberQualifier
 argument_list|()
 block|{
-if|if
-condition|(
-operator|!
-name|HasQualifier
-condition|)
-return|return
-literal|0
-return|;
+name|assert
+argument_list|(
+name|HasQualifierOrFoundDecl
+argument_list|)
+block|;
 return|return
 name|reinterpret_cast
 operator|<
-name|NameQualifier
+name|MemberNameQualifier
 operator|*
 operator|>
 operator|(
@@ -5554,15 +5564,9 @@ literal|1
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
-end_comment
-
-begin_expr_stmt
 specifier|const
-name|NameQualifier
+name|MemberNameQualifier
 operator|*
 name|getMemberQualifier
 argument_list|()
@@ -5582,21 +5586,12 @@ name|getMemberQualifier
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the explicit template argument list that followed the
-end_comment
-
-begin_comment
 comment|/// member template name, if any.
-end_comment
-
-begin_function
 name|ExplicitTemplateArgumentList
-modifier|*
+operator|*
 name|getExplicitTemplateArgumentList
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -5609,7 +5604,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 condition|)
 return|return
 name|reinterpret_cast
@@ -5623,6 +5618,9 @@ operator|+
 literal|1
 operator|)
 return|;
+end_decl_stmt
+
+begin_return
 return|return
 name|reinterpret_cast
 operator|<
@@ -5636,10 +5634,10 @@ operator|+
 literal|1
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 end_comment
 
@@ -5648,7 +5646,7 @@ comment|/// member template name, if any.
 end_comment
 
 begin_expr_stmt
-specifier|const
+unit|const
 name|ExplicitTemplateArgumentList
 operator|*
 name|getExplicitTemplateArgumentList
@@ -5670,31 +5668,6 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
-
-begin_macro
-name|MemberExpr
-argument_list|(
-argument|Expr *base
-argument_list|,
-argument|bool isarrow
-argument_list|,
-argument|NestedNameSpecifier *qual
-argument_list|,
-argument|SourceRange qualrange
-argument_list|,
-argument|ValueDecl *memberdecl
-argument_list|,
-argument|SourceLocation l
-argument_list|,
-argument|const TemplateArgumentListInfo *targs
-argument_list|,
-argument|QualType ty
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_label
 name|public
@@ -5755,7 +5728,7 @@ argument_list|(
 name|isarrow
 argument_list|)
 operator|,
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 argument_list|(
 name|false
 argument_list|)
@@ -5779,7 +5752,7 @@ argument_list|,
 name|Empty
 argument_list|)
 operator|,
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 argument_list|(
 name|false
 argument_list|)
@@ -5805,6 +5778,8 @@ argument_list|,
 argument|SourceRange qualrange
 argument_list|,
 argument|ValueDecl *memberdecl
+argument_list|,
+argument|NamedDecl *founddecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
@@ -5896,6 +5871,38 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Retrieves the declaration found by lookup.
+end_comment
+
+begin_expr_stmt
+name|NamedDecl
+operator|*
+name|getFoundDecl
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|HasQualifierOrFoundDecl
+condition|)
+return|return
+name|getMemberDecl
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getMemberQualifier
+argument_list|()
+operator|->
+name|FoundDecl
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Determines whether this member expression actually had
 end_comment
 
@@ -5907,14 +5914,20 @@ begin_comment
 comment|/// x->Base::foo.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|hasQualifier
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
-name|HasQualifier
+name|getQualifier
+argument_list|()
+operator|!=
+literal|0
 return|;
 block|}
 end_expr_stmt
@@ -5940,7 +5953,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 condition|)
 return|return
 name|SourceRange
@@ -5980,7 +5993,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|HasQualifier
+name|HasQualifierOrFoundDecl
 condition|)
 return|return
 literal|0
@@ -6751,6 +6764,10 @@ name|CK_BaseToDerived
 block|,
 comment|/// CK_DerivedToBase - Derived to base class casts.
 name|CK_DerivedToBase
+block|,
+comment|/// CK_UncheckedDerivedToBase - Derived to base class casts that
+comment|/// assume that the derived pointer is not null.
+name|CK_UncheckedDerivedToBase
 block|,
 comment|/// CK_Dynamic - Dynamic cast.
 name|CK_Dynamic

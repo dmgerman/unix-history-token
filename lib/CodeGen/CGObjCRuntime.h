@@ -80,12 +80,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/DeclObjC.h"
 end_include
 

@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CGBuilder.h"
 end_include
 
@@ -181,10 +175,9 @@ name|unsigned
 name|FwdDeclCount
 decl_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
-comment|// FIXME: Eliminate this map.  Be careful of iterator invalidation.
-name|std
+name|llvm
 operator|::
-name|map
+name|DenseMap
 operator|<
 name|void
 operator|*
@@ -238,6 +231,20 @@ name|llvm
 operator|::
 name|BumpPtrAllocator
 name|DebugInfoNames
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+name|llvm
+operator|::
+name|WeakVH
+operator|>
+name|DIFileCache
 expr_stmt|;
 name|llvm
 operator|::

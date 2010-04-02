@@ -1138,6 +1138,30 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Change this lookup's redeclaration kind.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setRedeclarationKind
+argument_list|(
+name|Sema
+operator|::
+name|RedeclarationKind
+name|RK
+argument_list|)
+block|{
+name|Redecl
+operator|=
+name|RK
+expr_stmt|;
+name|configure
+argument_list|()
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|void
 name|print

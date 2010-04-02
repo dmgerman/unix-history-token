@@ -110,9 +110,6 @@ block|{
 name|class
 name|SourceManager
 decl_stmt|;
-name|class
-name|FileEntry
-decl_stmt|;
 comment|/// FileID - This is an opaque identifier used by SourceManager which refers to
 comment|/// a source file (MemoryBuffer) along with its #include path and #line data.
 comment|///

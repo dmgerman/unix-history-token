@@ -132,7 +132,7 @@ operator|->
 name|x
 operator|++
 return|;
-comment|// expected-warning{{Dereference of null pointer}}
+comment|// expected-warning{{Field access results in a dereference of a null pointer (loaded from variable 'p')}}
 block|}
 end_function
 
@@ -251,7 +251,7 @@ return|return
 operator|*
 name|q
 return|;
-comment|// expected-warning{{Dereference of null pointer loaded from variable 'q'}}
+comment|// expected-warning{{Dereference of null pointer (loaded from variable 'q')}}
 block|}
 end_function
 

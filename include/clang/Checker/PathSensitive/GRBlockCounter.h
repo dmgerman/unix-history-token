@@ -82,6 +82,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|StackFrameContext
+decl_stmt|;
+name|class
 name|GRBlockCounter
 block|{
 name|void
@@ -113,6 +116,8 @@ block|{}
 name|unsigned
 name|getNumVisited
 argument_list|(
+argument|const StackFrameContext *CallSite
+argument_list|,
 argument|unsigned BlockID
 argument_list|)
 specifier|const
@@ -148,6 +153,11 @@ name|IncrementCount
 parameter_list|(
 name|GRBlockCounter
 name|BC
+parameter_list|,
+specifier|const
+name|StackFrameContext
+modifier|*
+name|CallSite
 parameter_list|,
 name|unsigned
 name|BlockID

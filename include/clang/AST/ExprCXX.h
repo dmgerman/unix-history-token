@@ -4362,9 +4362,10 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
-argument_list|,
-name|CC_Default
+name|FunctionType
+operator|::
+name|ExtInfo
+argument_list|()
 argument_list|)
 argument_list|)
 argument_list|,

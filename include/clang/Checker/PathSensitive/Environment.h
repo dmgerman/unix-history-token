@@ -76,31 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ImmutableMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Checker/PathSensitive/SVals.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/FoldingSet.h"
+file|"llvm/ADT/ImmutableMap.h"
 end_include
 
 begin_decl_stmt

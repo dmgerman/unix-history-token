@@ -88,6 +88,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|FileEntry
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class

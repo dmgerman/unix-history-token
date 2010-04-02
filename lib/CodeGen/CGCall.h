@@ -250,6 +250,10 @@ name|ArgInfo
 operator|*
 name|Args
 block|;
+comment|/// How many arguments to pass inreg.
+name|unsigned
+name|RegParm
+block|;
 name|public
 operator|:
 typedef|typedef
@@ -268,6 +272,8 @@ argument_list|(
 argument|unsigned CallingConvention
 argument_list|,
 argument|bool NoReturn
+argument_list|,
+argument|unsigned RegParm
 argument_list|,
 argument|CanQualType ResTy
 argument_list|,
@@ -380,6 +386,15 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+name|unsigned
+name|getRegParm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegParm
+return|;
+block|}
 name|CanQualType
 name|getReturnType
 argument_list|()
@@ -449,6 +464,13 @@ argument_list|(
 name|NoReturn
 argument_list|)
 expr_stmt|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|RegParm
+argument_list|)
+expr_stmt|;
 name|getReturnType
 argument_list|()
 operator|.
@@ -498,9 +520,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|unsigned CallingConvention
-argument_list|,
-argument|bool NoReturn
+argument|const FunctionType::ExtInfo&Info
 argument_list|,
 argument|CanQualType ResTy
 argument_list|,
@@ -513,14 +533,30 @@ name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|CallingConvention
+name|Info
+operator|.
+name|getCC
+argument_list|()
 argument_list|)
 block|;
 name|ID
 operator|.
 name|AddBoolean
 argument_list|(
-name|NoReturn
+name|Info
+operator|.
+name|getNoReturn
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Info
+operator|.
+name|getRegParm
+argument_list|()
 argument_list|)
 block|;
 name|ResTy

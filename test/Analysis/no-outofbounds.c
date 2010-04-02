@@ -8,10 +8,6 @@ comment|// RUN: %clang_cc1 -analyzer-check-objc-mem -analyze -analyzer-experimen
 end_comment
 
 begin_comment
-comment|// XFAIL: *
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -60,6 +56,31 @@ operator|+
 name|y
 index|[
 literal|2
+index|]
+decl_stmt|;
+comment|// no-warning
+name|short
+modifier|*
+name|z
+init|=
+operator|(
+name|short
+operator|*
+operator|)
+operator|&
+name|x
+decl_stmt|;
+name|short
+name|s
+init|=
+name|z
+index|[
+literal|0
+index|]
+operator|+
+name|z
+index|[
+literal|1
 index|]
 decl_stmt|;
 comment|// no-warning

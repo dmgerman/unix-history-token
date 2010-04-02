@@ -1228,6 +1228,12 @@ name|bool
 name|EnterMainSourceFile
 parameter_list|()
 function_decl|;
+comment|/// EndSourceFile - Inform the preprocessor callbacks that processing is
+comment|/// complete.
+name|void
+name|EndSourceFile
+parameter_list|()
+function_decl|;
 comment|/// EnterSourceFile - Add a source file to the top of the include stack and
 comment|/// start lexing tokens from it instead of the current buffer.  Return true
 comment|/// and fill in ErrorStr with the error information on failure.
