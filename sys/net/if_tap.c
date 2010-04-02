@@ -2429,6 +2429,13 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_UP
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -2628,6 +2635,13 @@ operator|&
 name|tp
 operator|->
 name|tap_mtx
+argument_list|)
+expr_stmt|;
+name|if_link_state_change
+argument_list|(
+name|ifp
+argument_list|,
+name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 name|funsetown
