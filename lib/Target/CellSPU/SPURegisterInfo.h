@@ -175,6 +175,19 @@ argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 block|;
+comment|//! Allow for scavenging, so we can get scratch registers when needed.
+name|virtual
+name|bool
+name|requiresRegisterScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|//! Return the reserved registers
 name|BitVector
 name|getReservedRegs
@@ -301,7 +314,30 @@ argument_list|,
 argument|bool isEH
 argument_list|)
 specifier|const
-block|;   }
+block|;
+comment|//! Convert D-form load/store to X-form load/store
+comment|/*!       Converts a regiser displacement load/store into a register-indexed       load/store for large stack frames, when the stack frame exceeds the       range of a s10 displacement.      */
+name|int
+name|convertDFormToXForm
+argument_list|(
+argument|int dFormOpcode
+argument_list|)
+specifier|const
+block|;
+comment|//! Acquire an unused register in an emergency.
+name|unsigned
+name|findScratchRegister
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|RegScavenger *RS
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|int SPAdj
+argument_list|)
+specifier|const
+block|;        }
 decl_stmt|;
 block|}
 end_decl_stmt

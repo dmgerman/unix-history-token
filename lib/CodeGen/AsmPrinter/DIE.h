@@ -564,6 +564,7 @@ return|return
 name|Children
 return|;
 block|}
+specifier|const
 name|SmallVector
 operator|<
 name|DIEValue
@@ -574,6 +575,7 @@ operator|>
 operator|&
 name|getValues
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Values
@@ -675,10 +677,17 @@ name|Size
 return|;
 block|}
 comment|/// addSiblingOffset - Add a sibling offset field to the front of the DIE.
+comment|/// The caller is responsible for deleting the return value at or after the
+comment|/// same time it destroys this DIE.
 comment|///
-name|void
+name|DIEValue
+modifier|*
 name|addSiblingOffset
-parameter_list|()
+parameter_list|(
+name|BumpPtrAllocator
+modifier|&
+name|A
+parameter_list|)
 function_decl|;
 comment|/// addChild - Add a child to the DIE.
 comment|///
@@ -1308,129 +1317,6 @@ name|getType
 argument_list|()
 operator|==
 name|isLabel
-return|;
-block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|virtual
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
-block|;
-endif|#
-directive|endif
-block|}
-decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|/// DIESectionOffset - A section offset DIE.
-comment|///
-name|class
-name|DIESectionOffset
-range|:
-name|public
-name|DIEValue
-block|{
-specifier|const
-name|MCSymbol
-operator|*
-name|Label
-block|;
-specifier|const
-name|MCSymbol
-operator|*
-name|Section
-block|;
-name|bool
-name|IsEH
-operator|:
-literal|1
-block|;
-name|public
-operator|:
-name|DIESectionOffset
-argument_list|(
-argument|const MCSymbol *Lab
-argument_list|,
-argument|const MCSymbol *Sec
-argument_list|,
-argument|bool isEH = false
-argument_list|)
-operator|:
-name|DIEValue
-argument_list|(
-name|isSectionOffset
-argument_list|)
-block|,
-name|Label
-argument_list|(
-name|Lab
-argument_list|)
-block|,
-name|Section
-argument_list|(
-name|Sec
-argument_list|)
-block|,
-name|IsEH
-argument_list|(
-argument|isEH
-argument_list|)
-block|{}
-comment|/// EmitValue - Emit section offset.
-comment|///
-name|virtual
-name|void
-name|EmitValue
-argument_list|(
-argument|DwarfPrinter *D
-argument_list|,
-argument|unsigned Form
-argument_list|)
-specifier|const
-block|;
-comment|/// SizeOf - Determine size of section offset value in bytes.
-comment|///
-name|virtual
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|const TargetData *TD
-argument_list|,
-argument|unsigned Form
-argument_list|)
-specifier|const
-block|;
-comment|// Implement isa/cast/dyncast.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIESectionOffset *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const DIEValue *D
-argument_list|)
-block|{
-return|return
-name|D
-operator|->
-name|getType
-argument_list|()
-operator|==
-name|isSectionOffset
 return|;
 block|}
 ifndef|#

@@ -329,6 +329,15 @@ argument_list|)
 block|;
 name|virtual
 name|bool
+name|addPreEmitPass
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|)
+block|;
+name|virtual
+name|bool
 name|addCodeEmitter
 argument_list|(
 argument|PassManagerBase&PM

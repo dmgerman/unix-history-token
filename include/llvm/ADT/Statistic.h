@@ -118,6 +118,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|Statistic
 block|{
 name|public
@@ -492,6 +495,25 @@ name|DESC
 parameter_list|)
 define|\
 value|static llvm::Statistic VARNAME = { DEBUG_TYPE, DESC, 0, 0 }
+comment|/// \brief Enable the collection and printing of statistics.
+name|void
+name|EnableStatistics
+parameter_list|()
+function_decl|;
+comment|/// \brief Print statistics to the file returned by CreateInfoOutputFile().
+name|void
+name|PrintStatistics
+parameter_list|()
+function_decl|;
+comment|/// \brief Print statistics to the given output stream.
+name|void
+name|PrintStatistics
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

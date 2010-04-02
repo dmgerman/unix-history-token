@@ -155,6 +155,11 @@ comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
 block|;
+comment|/// SlowVMLx - If the VFP2 instructions are available, indicates whether
+comment|/// the VML[AS] instructions are slow (if so, don't use them).
+name|bool
+name|SlowVMLx
+block|;
 comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
 name|bool
 name|IsThumb
@@ -375,6 +380,19 @@ name|hasNEON
 argument_list|()
 operator|&&
 name|UseNEONForSinglePrecisionFP
+return|;
+block|}
+name|bool
+name|useVMLx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasVFP2
+argument_list|()
+operator|&&
+operator|!
+name|SlowVMLx
 return|;
 block|}
 name|bool

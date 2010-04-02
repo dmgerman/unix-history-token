@@ -126,6 +126,13 @@ modifier|*
 name|createX86FloatingPointStackifierPass
 parameter_list|()
 function_decl|;
+comment|/// createSSEDomainFixPass - This pass twiddles SSE opcodes to prevent domain
+comment|/// crossings.
+name|FunctionPass
+modifier|*
+name|createSSEDomainFixPass
+parameter_list|()
+function_decl|;
 comment|/// createX87FPRegKillInserterPass - This function returns a pass which
 comment|/// inserts FP_REG_KILL instructions where needed.
 comment|///

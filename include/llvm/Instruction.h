@@ -75,6 +75,12 @@ directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -130,6 +136,10 @@ name|BasicBlock
 modifier|*
 name|Parent
 decl_stmt|;
+name|NewDebugLoc
+name|DbgLoc
+decl_stmt|;
+comment|// 'dbg' Metadata cache.
 enum|enum
 block|{
 comment|/// HasMetadataBit - This is a bit stored in the SubClassData field which
@@ -468,14 +478,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|getSubclassDataFromValue
+operator|!
+name|DbgLoc
+operator|.
+name|isUnknown
 argument_list|()
-operator|&
-name|HasMetadataBit
-operator|)
-operator|!=
-literal|0
+operator|||
+name|hasMetadataHashEntry
+argument_list|()
+return|;
+block|}
+comment|/// hasMetadataOtherThanDebugLoc - Return true if this instruction has
+comment|/// metadata attached to it other than a debug location.
+name|bool
+name|hasMetadataOtherThanDebugLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasMetadataHashEntry
+argument_list|()
 return|;
 block|}
 comment|/// getMetadata - Get the metadata of given kind attached to this Instruction.
@@ -568,6 +590,39 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// getAllMetadataOtherThanDebugLoc - This does the same thing as
+comment|/// getAllMetadata, except that it filters out the debug location.
+name|void
+name|getAllMetadataOtherThanDebugLoc
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>
+expr|>
+operator|&
+name|MDs
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|hasMetadataOtherThanDebugLoc
+argument_list|()
+condition|)
+name|getAllMetadataOtherThanDebugLocImpl
+argument_list|(
+name|MDs
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// setMetadata - Set the metadata of the specified kind to the specified
 comment|/// node.  This updates/replaces metadata if already present, or removes it if
 comment|/// Node is null.
@@ -595,8 +650,81 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
+comment|/// setDbgMetadata - This is just an optimized helper function that is
+comment|/// equivalent to setMetadata("dbg", Node);
+name|void
+name|setDbgMetadata
+parameter_list|(
+name|MDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+comment|/// getDbgMetadata - This is just an optimized helper function that is
+comment|/// equivalent to calling getMetadata("dbg").
+name|MDNode
+operator|*
+name|getDbgMetadata
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DbgLoc
+operator|.
+name|getAsMDNode
+argument_list|(
+name|getContext
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// setDebugLoc - Set the debug location information for this instruction.
+name|void
+name|setDebugLoc
+parameter_list|(
+specifier|const
+name|NewDebugLoc
+modifier|&
+name|Loc
+parameter_list|)
+block|{
+name|DbgLoc
+operator|=
+name|Loc
+expr_stmt|;
+block|}
+comment|/// getDebugLoc - Return the debug location for this node as a DebugLoc.
+specifier|const
+name|NewDebugLoc
+operator|&
+name|getDebugLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DbgLoc
+return|;
+block|}
 name|private
 label|:
+comment|/// hasMetadataHashEntry - Return true if we have an entry in the on-the-side
+comment|/// metadata hash.
+name|bool
+name|hasMetadataHashEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+name|HasMetadataBit
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
 comment|// These are all implemented in Metadata.cpp.
 name|MDNode
 modifier|*
@@ -620,6 +748,25 @@ decl|const
 decl_stmt|;
 name|void
 name|getAllMetadataImpl
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+name|MDNode
+operator|*
+operator|>
+expr|>
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|getAllMetadataOtherThanDebugLocImpl
 argument_list|(
 name|SmallVectorImpl
 operator|<
@@ -1082,7 +1229,7 @@ argument_list|()
 return|;
 block|}
 name|void
-name|setHasMetadata
+name|setHasMetadataHashEntry
 parameter_list|(
 name|bool
 name|V

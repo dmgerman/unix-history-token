@@ -235,6 +235,7 @@ return|;
 block|}
 comment|/// has_error - Return the value of the flag in this raw_ostream indicating
 comment|/// whether an output error has been encountered.
+comment|/// This doesn't implicitly flush any pending output.
 name|bool
 name|has_error
 argument_list|()

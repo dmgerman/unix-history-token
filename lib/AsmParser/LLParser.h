@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -298,6 +304,35 @@ name|Module
 modifier|*
 name|M
 decl_stmt|;
+comment|// Instruction metadata resolution.  Each instruction can have a list of
+comment|// MDRef info associated with them.
+struct|struct
+name|MDRef
+block|{
+name|SMLoc
+name|Loc
+decl_stmt|;
+name|unsigned
+name|MDKind
+decl_stmt|,
+name|MDSlot
+decl_stmt|;
+block|}
+struct|;
+name|DenseMap
+operator|<
+name|Instruction
+operator|*
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|MDRef
+operator|>
+expr|>
+name|ForwardRefInstMetadata
+expr_stmt|;
 comment|// Type resolution handling data structures.
 name|std
 operator|::
@@ -896,22 +931,12 @@ parameter_list|)
 function_decl|;
 name|bool
 name|ParseInstructionMetadata
-argument_list|(
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-argument_list|,
-name|MDNode
-operator|*
-operator|>
-expr|>
-operator|&
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|)
+function_decl|;
 name|bool
 name|ParseOptionalCommaAlign
 parameter_list|(
@@ -1096,6 +1121,19 @@ name|MDNode
 modifier|*
 modifier|&
 name|Result
+parameter_list|)
+function_decl|;
+name|bool
+name|ParseMDNodeID
+parameter_list|(
+name|MDNode
+modifier|*
+modifier|&
+name|Result
+parameter_list|,
+name|unsigned
+modifier|&
+name|SlotNo
 parameter_list|)
 function_decl|;
 comment|// Type Parsing.

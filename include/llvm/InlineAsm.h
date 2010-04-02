@@ -92,12 +92,70 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+struct_decl|struct
+name|InlineAsmKeyType
+struct_decl|;
+name|template
+operator|<
+name|class
+name|ValType
+operator|,
+name|class
+name|TypeClass
+operator|,
+name|class
+name|ConstantClass
+operator|,
+name|bool
+name|HasLargeKey
+operator|>
+name|class
+name|ConstantUniqueMap
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|ConstantClass
+operator|,
+name|class
+name|TypeClass
+operator|,
+name|class
+name|ValType
+operator|>
+expr|struct
+name|ConstantCreator
+expr_stmt|;
 name|class
 name|InlineAsm
 range|:
 name|public
 name|Value
 block|{
+name|friend
+expr|struct
+name|ConstantCreator
+operator|<
+name|InlineAsm
+block|,
+name|PointerType
+block|,
+name|InlineAsmKeyType
+operator|>
+block|;
+name|friend
+name|class
+name|ConstantUniqueMap
+operator|<
+name|InlineAsmKeyType
+block|,
+name|PointerType
+block|,
+name|InlineAsm
+block|,
+name|false
+operator|>
+block|;
 name|InlineAsm
 argument_list|(
 specifier|const
@@ -131,20 +189,26 @@ name|IsAlignStack
 block|;
 name|InlineAsm
 argument_list|(
-argument|const FunctionType *Ty
+argument|const PointerType *Ty
 argument_list|,
-argument|StringRef AsmString
+argument|const std::string&AsmString
 argument_list|,
-argument|StringRef Constraints
+argument|const std::string&Constraints
 argument_list|,
 argument|bool hasSideEffects
 argument_list|,
-argument|bool isAlignStack = false
+argument|bool isAlignStack
 argument_list|)
 block|;
 name|virtual
 operator|~
 name|InlineAsm
+argument_list|()
+block|;
+comment|/// When the ConstantUniqueMap merges two types and makes two InlineAsms
+comment|/// identical, it destroys one of them with this method.
+name|void
+name|destroyConstant
 argument_list|()
 block|;
 name|public

@@ -170,11 +170,8 @@ range|:
 name|public
 name|MCSection
 block|{
-comment|// FIXME: This memory is leaked because MCSectionCOFF is bump pointer
-comment|// allocated and this never gets freed.
-name|std
-operator|::
-name|string
+comment|// The memory for this string is stored in the same MCContext as *this.
+name|StringRef
 name|Name
 block|;
 comment|/// IsDirective - This is true if the section name is a directive, not
@@ -225,11 +222,7 @@ argument_list|,
 argument|MCContext&Ctx
 argument_list|)
 block|;
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const

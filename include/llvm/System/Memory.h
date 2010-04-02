@@ -90,6 +90,16 @@ name|public
 label|:
 name|MemoryBlock
 argument_list|()
+operator|:
+name|Address
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
 name|MemoryBlock
 argument_list|(
@@ -97,7 +107,7 @@ argument|void *addr
 argument_list|,
 argument|size_t size
 argument_list|)
-block|:
+operator|:
 name|Address
 argument_list|(
 name|addr

@@ -60,11 +60,25 @@ name|class
 name|MCDataFragment
 decl_stmt|;
 name|class
+name|MCInst
+decl_stmt|;
+name|class
+name|MCInstFragment
+decl_stmt|;
+name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
 name|MCSection
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|Target
 decl_stmt|;
@@ -263,6 +277,72 @@ name|Fragment
 argument_list|,
 name|uint64_t
 name|Value
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// MayNeedRelaxation - Check whether the given instruction may need
+comment|/// relaxation.
+comment|///
+comment|/// \arg Inst - The instruction to test.
+comment|/// \arg Fixups - The actual fixups this instruction encoded to, for potential
+comment|/// use by the target backend.
+name|virtual
+name|bool
+name|MayNeedRelaxation
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|Inst
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|MCAsmFixup
+operator|>
+operator|&
+name|Fixups
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// RelaxInstruction - Relax the instruction in the given fragment to the next
+comment|/// wider instruction.
+name|virtual
+name|void
+name|RelaxInstruction
+argument_list|(
+specifier|const
+name|MCInstFragment
+operator|*
+name|IF
+argument_list|,
+name|MCInst
+operator|&
+name|Res
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// WriteNopData - Write an (optimal) nop sequence of Count bytes to the given
+comment|/// output. If the target cannot generate such a sequence, it should return an
+comment|/// error.
+comment|///
+comment|/// \return - True on success.
+name|virtual
+name|bool
+name|WriteNopData
+argument_list|(
+name|uint64_t
+name|Count
+argument_list|,
+name|MCObjectWriter
+operator|*
+name|OW
 argument_list|)
 decl|const
 init|=

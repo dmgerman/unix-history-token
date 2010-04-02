@@ -129,30 +129,30 @@ name|DeleteIt
 decl_stmt|;
 name|public
 label|:
+name|FileRemover
+argument_list|()
+operator|:
+name|DeleteIt
+argument_list|(
+argument|false
+argument_list|)
+block|{}
 name|explicit
 name|FileRemover
 argument_list|(
-specifier|const
-name|sys
-operator|::
-name|Path
-operator|&
-name|filename
+argument|const sys::Path&filename
 argument_list|,
-name|bool
-name|deleteIt
-operator|=
-name|true
+argument|bool deleteIt = true
 argument_list|)
-range|:
+operator|:
 name|Filename
 argument_list|(
 name|filename
 argument_list|)
-decl_stmt|,
+operator|,
 name|DeleteIt
 argument_list|(
-name|deleteIt
+argument|deleteIt
 argument_list|)
 block|{}
 operator|~
@@ -172,22 +172,55 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/// setFile - Give ownership of the file to the FileRemover so it will
+comment|/// be removed when the object is destroyed.  If the FileRemover already
+comment|/// had ownership of a file, remove it first.
+name|void
+name|setFile
+argument_list|(
+argument|const sys::Path&filename
+argument_list|,
+argument|bool deleteIt = true
+argument_list|)
+block|{
+if|if
+condition|(
+name|DeleteIt
+condition|)
+name|Filename
+operator|.
+name|eraseFromDisk
+argument_list|()
+expr_stmt|;
+name|Filename
+operator|=
+name|filename
+expr_stmt|;
+name|DeleteIt
+operator|=
+name|deleteIt
+expr_stmt|;
+block|}
 comment|/// releaseFile - Take ownership of the file away from the FileRemover so it
 comment|/// will not be removed when the object is destroyed.
 name|void
 name|releaseFile
-argument_list|()
+parameter_list|()
 block|{
 name|DeleteIt
 operator|=
 name|false
-block|; }
+expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

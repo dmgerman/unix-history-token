@@ -424,6 +424,10 @@ name|OPC_EmitConvertToTarget
 block|,
 name|OPC_EmitMergeInputChains
 block|,
+name|OPC_EmitMergeInputChains1_0
+block|,
+name|OPC_EmitMergeInputChains1_1
+block|,
 name|OPC_EmitCopyToReg
 block|,
 name|OPC_EmitNodeXForm

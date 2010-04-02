@@ -157,6 +157,9 @@ decl_stmt|;
 name|unsigned
 name|Order
 decl_stmt|;
+name|bool
+name|Invalid
+decl_stmt|;
 name|public
 label|:
 comment|// Constructor for non-constants.
@@ -192,7 +195,12 @@ argument_list|)
 operator|,
 name|Order
 argument_list|(
-argument|O
+name|O
+argument_list|)
+operator|,
+name|Invalid
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|kind
@@ -246,7 +254,12 @@ argument_list|)
 operator|,
 name|Order
 argument_list|(
-argument|O
+name|O
+argument_list|)
+operator|,
+name|Invalid
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|kind
@@ -290,7 +303,12 @@ argument_list|)
 operator|,
 name|Order
 argument_list|(
-argument|O
+name|O
+argument_list|)
+operator|,
+name|Invalid
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|kind
@@ -426,6 +444,26 @@ parameter_list|()
 block|{
 return|return
 name|Order
+return|;
+block|}
+comment|// setIsInvalidated / isInvalidated - Setter / getter of the "Invalidated"
+comment|// property. A SDDbgValue is invalid if the SDNode that produces the value is
+comment|// deleted.
+name|void
+name|setIsInvalidated
+parameter_list|()
+block|{
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|bool
+name|isInvalidated
+parameter_list|()
+block|{
+return|return
+name|Invalid
 return|;
 block|}
 block|}

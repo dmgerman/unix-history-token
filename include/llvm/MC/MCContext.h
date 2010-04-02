@@ -188,54 +188,11 @@ name|GetOrCreateSymbol
 parameter_list|(
 name|StringRef
 name|Name
-parameter_list|,
-name|bool
-name|isTemporary
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|MCSymbol
 modifier|*
 name|GetOrCreateSymbol
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|Name
-parameter_list|,
-name|bool
-name|isTemporary
-init|=
-name|false
-parameter_list|)
-function_decl|;
-comment|/// GetOrCreateTemporarySymbol - Create a new assembler temporary symbol
-comment|/// with the specified @p Name if it doesn't exist or return the existing
-comment|/// one if it does.
-comment|///
-comment|/// @param Name - The symbol name, for debugging purposes only, temporary
-comment|/// symbols do not surive assembly.
-name|MCSymbol
-modifier|*
-name|GetOrCreateTemporarySymbol
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|)
-block|{
-return|return
-name|GetOrCreateSymbol
-argument_list|(
-name|Name
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
-name|MCSymbol
-modifier|*
-name|GetOrCreateTemporarySymbol
 parameter_list|(
 specifier|const
 name|Twine

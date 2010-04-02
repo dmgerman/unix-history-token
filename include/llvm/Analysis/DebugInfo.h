@@ -1923,9 +1923,35 @@ name|getFilename
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getCompileUnit
 argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+block|;
+return|return
+name|F
 operator|.
 name|getFilename
 argument_list|()
@@ -1936,39 +1962,92 @@ name|getDirectory
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion7
+condition|)
 return|return
 name|getCompileUnit
 argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+expr_stmt|;
+return|return
+name|F
 operator|.
 name|getDirectory
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Verify - Verify that a subprogram descriptor is well formed.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|Verify
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// dump - print subprogram.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// describes - Return true if this subprogram provides debugging
+end_comment
+
+begin_comment
 comment|/// information for the function F.
+end_comment
+
+begin_function_decl
 name|bool
 name|describes
-argument_list|(
+parameter_list|(
 specifier|const
 name|Function
-operator|*
+modifier|*
 name|F
-argument_list|)
-block|;   }
-decl_stmt|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+unit|};
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DIGlobalVariable
 range|:
@@ -2018,8 +2097,17 @@ argument_list|()
 specifier|const
 block|;   }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// DIVariable - This is a wrapper for a variable (e.g. parameter, local,
+end_comment
+
+begin_comment
 comment|/// global etc).
+end_comment
+
+begin_decl_stmt
 name|class
 name|DIVariable
 range|:
@@ -2111,6 +2199,9 @@ name|getCompileUnit
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getLineNumber
 argument_list|()
@@ -2123,6 +2214,9 @@ literal|4
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|DIType
 name|getType
 argument_list|()
@@ -2138,13 +2232,25 @@ literal|5
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Verify - Verify that a variable descriptor is well formed.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|Verify
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// HasComplexAddr - Return true if the variable has a complex address.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasComplexAddress
 argument_list|()
@@ -2157,11 +2263,17 @@ operator|>
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getNumAddrElements
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|uint64_t
 name|getAddrElement
 argument_list|(
@@ -2179,8 +2291,17 @@ literal|6
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isBlockByrefVariable - Return true if the variable was declared as
+end_comment
+
+begin_comment
 comment|/// a "__block" variable (Apple Blocks).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isBlockByrefVariable
 argument_list|()
@@ -2194,20 +2315,22 @@ name|isBlockByrefStruct
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// dump - print variable.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// DILexicalBlock - This is a wrapper for a lexical block.
 end_comment
 

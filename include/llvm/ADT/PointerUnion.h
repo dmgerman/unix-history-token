@@ -618,6 +618,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
+specifier|inline
 name|PointerUnion
 name|getFromOpaqueValue
 parameter_list|(
@@ -1238,6 +1239,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
+specifier|inline
 name|PointerUnion3
 name|getFromOpaqueValue
 parameter_list|(
@@ -1964,6 +1966,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
+specifier|inline
 name|PointerUnion4
 name|getFromOpaqueValue
 parameter_list|(

@@ -937,7 +937,7 @@ name|FIRST_TARGET_MEMORY_OPCODE
 init|=
 name|BUILTIN_OP_END
 operator|+
-literal|80
+literal|100
 decl_stmt|;
 comment|/// Node predicates
 comment|/// isBuildVectorAllOnes - Return true if the specified node is a

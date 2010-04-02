@@ -223,6 +223,10 @@ argument_list|,
 argument|LLVMContext& ctxt
 argument_list|)
 empty_stmt|;
+operator|~
+name|BugDriver
+argument_list|()
+expr_stmt|;
 specifier|const
 name|char
 operator|*

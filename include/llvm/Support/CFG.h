@@ -388,9 +388,9 @@ name|BasicBlock
 operator|,
 name|Value
 operator|::
-name|use_const_iterator
+name|const_use_iterator
 operator|>
-name|pred_const_iterator
+name|const_pred_iterator
 expr_stmt|;
 end_typedef
 
@@ -415,7 +415,7 @@ end_function
 
 begin_function
 specifier|inline
-name|pred_const_iterator
+name|const_pred_iterator
 name|pred_begin
 parameter_list|(
 specifier|const
@@ -425,7 +425,7 @@ name|BB
 parameter_list|)
 block|{
 return|return
-name|pred_const_iterator
+name|const_pred_iterator
 argument_list|(
 name|BB
 argument_list|)
@@ -456,7 +456,7 @@ end_function
 
 begin_function
 specifier|inline
-name|pred_const_iterator
+name|const_pred_iterator
 name|pred_end
 parameter_list|(
 specifier|const
@@ -466,7 +466,7 @@ name|BB
 parameter_list|)
 block|{
 return|return
-name|pred_const_iterator
+name|const_pred_iterator
 argument_list|(
 name|BB
 argument_list|,
@@ -1670,7 +1670,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|pred_const_iterator
+name|const_pred_iterator
 name|ChildIteratorType
 typedef|;
 end_typedef

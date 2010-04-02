@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -88,6 +94,9 @@ name|raw_ostream
 decl_stmt|;
 name|class
 name|MCAsmInfo
+decl_stmt|;
+name|class
+name|MCInstPrinter
 decl_stmt|;
 name|class
 name|MCExpr
@@ -532,6 +541,37 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Dump the MCInst as prettily as possible using the additional MC
+comment|/// structures, if given. Operators are separated by the \arg Separator
+comment|/// string.
+name|void
+name|dump_pretty
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|MCInstPrinter
+operator|*
+name|Printer
+operator|=
+literal|0
+argument_list|,
+name|StringRef
+name|Separator
+operator|=
+literal|" "
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

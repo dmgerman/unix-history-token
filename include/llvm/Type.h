@@ -2300,20 +2300,21 @@ unit|};
 name|template
 operator|<
 operator|>
-specifier|inline
-name|bool
+expr|struct
 name|isa_impl
 operator|<
 name|PointerType
 operator|,
 name|Type
 operator|>
-operator|(
-specifier|const
-name|Type
-operator|&
-name|Ty
-operator|)
+block|{
+specifier|static
+specifier|inline
+name|bool
+name|doit
+argument_list|(
+argument|const Type&Ty
+argument_list|)
 block|{
 return|return
 name|Ty
@@ -2329,6 +2330,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|raw_ostream
 operator|&
 name|operator

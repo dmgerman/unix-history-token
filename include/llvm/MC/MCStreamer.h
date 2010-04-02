@@ -231,7 +231,7 @@ block|{}
 comment|/// @}
 comment|/// @name Symbol& Section Management
 comment|/// @{
-comment|/// getCurrentSection - Return the current seciton that the streamer is
+comment|/// getCurrentSection - Return the current section that the streamer is
 comment|/// emitting code to.
 specifier|const
 name|MCSection
@@ -811,6 +811,11 @@ parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
+parameter_list|,
+name|bool
+name|RelaxAll
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

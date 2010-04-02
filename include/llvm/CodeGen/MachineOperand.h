@@ -1018,6 +1018,30 @@ operator|=
 name|Val
 expr_stmt|;
 block|}
+name|void
+name|setIsDebug
+parameter_list|(
+name|bool
+name|Val
+init|=
+name|true
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+name|IsDef
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+expr_stmt|;
+name|IsDebug
+operator|=
+name|Val
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Accessors for various operand types.
 comment|//===--------------------------------------------------------------------===//

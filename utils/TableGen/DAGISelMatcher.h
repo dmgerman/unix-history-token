@@ -2167,7 +2167,7 @@ block|}
 expr|}
 block|;
 comment|/// CheckTypeMatcher - This checks to see if the current node has the
-comment|/// specified type, if not it fails to match.
+comment|/// specified type at the specified result, if not it fails to match.
 name|class
 name|CheckTypeMatcher
 operator|:
@@ -2179,11 +2179,16 @@ operator|::
 name|SimpleValueType
 name|Type
 block|;
+name|unsigned
+name|ResNo
+block|;
 name|public
 operator|:
 name|CheckTypeMatcher
 argument_list|(
 argument|MVT::SimpleValueType type
+argument_list|,
+argument|unsigned resno
 argument_list|)
 operator|:
 name|Matcher
@@ -2193,7 +2198,12 @@ argument_list|)
 block|,
 name|Type
 argument_list|(
-argument|type
+name|type
+argument_list|)
+block|,
+name|ResNo
+argument_list|(
+argument|resno
 argument_list|)
 block|{}
 name|MVT
@@ -2205,6 +2215,15 @@ specifier|const
 block|{
 return|return
 name|Type
+return|;
+block|}
+name|unsigned
+name|getResNo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResNo
 return|;
 block|}
 specifier|static

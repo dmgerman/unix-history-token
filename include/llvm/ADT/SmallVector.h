@@ -1154,16 +1154,46 @@ argument_list|,
 argument|It2 Dest
 argument_list|)
 block|{
-comment|// Use memcpy for PODs: std::uninitialized_copy optimizes to memmove, memcpy
-comment|// is better.
+comment|// Arbitrary iterator types; just use the basic implementation.
+name|std
+operator|::
+name|uninitialized_copy
+argument_list|(
+name|I
+argument_list|,
+name|E
+argument_list|,
+name|Dest
+argument_list|)
+block|;   }
+comment|/// uninitialized_copy - Copy the range [I, E) onto the uninitialized memory
+comment|/// starting with "Dest", constructing elements into it as needed.
+name|template
+operator|<
+name|typename
+name|T1
+block|,
+name|typename
+name|T2
+operator|>
+specifier|static
+name|void
+name|uninitialized_copy
+argument_list|(
+argument|T1 *I
+argument_list|,
+argument|T1 *E
+argument_list|,
+argument|T2 *Dest
+argument_list|)
+block|{
+comment|// Use memcpy for PODs iterated by pointers (which includes SmallVector
+comment|// iterators): std::uninitialized_copy optimizes to memmove, but we can
+comment|// use memcpy here.
 name|memcpy
 argument_list|(
-operator|&
-operator|*
 name|Dest
 argument_list|,
-operator|&
-operator|*
 name|I
 argument_list|,
 operator|(
@@ -2742,21 +2772,32 @@ begin_comment
 comment|// Replace the overwritten part.
 end_comment
 
-begin_expr_stmt
-name|std
-operator|::
-name|copy
-argument_list|(
-name|From
-argument_list|,
-name|From
-operator|+
+begin_for
+for|for
+control|(
+init|;
 name|NumOverwritten
-argument_list|,
+operator|>
+literal|0
+condition|;
+operator|--
+name|NumOverwritten
+control|)
+block|{
+operator|*
 name|I
-argument_list|)
+operator|=
+operator|*
+name|From
 expr_stmt|;
-end_expr_stmt
+operator|++
+name|I
+expr_stmt|;
+operator|++
+name|From
+expr_stmt|;
+block|}
+end_for
 
 begin_comment
 comment|// Insert the non-overwritten middle part.
@@ -2768,8 +2809,6 @@ operator|->
 name|uninitialized_copy
 argument_list|(
 name|From
-operator|+
-name|NumOverwritten
 argument_list|,
 name|To
 argument_list|,

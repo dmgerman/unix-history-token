@@ -1605,12 +1605,21 @@ name|dropAllReferences
 parameter_list|()
 function_decl|;
 comment|/// hasAddressTaken - returns true if there are any uses of this function
-comment|/// other than direct calls or invokes to it.
+comment|/// other than direct calls or invokes to it. Optionally passes back the
+comment|/// offending user for diagnostic purposes.
+comment|///
 name|bool
 name|hasAddressTaken
-argument_list|()
+argument_list|(
 specifier|const
-expr_stmt|;
+name|User
+operator|*
+operator|*
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that

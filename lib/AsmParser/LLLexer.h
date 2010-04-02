@@ -235,6 +235,7 @@ specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getStrVal
 argument_list|()
 specifier|const

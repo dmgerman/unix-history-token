@@ -501,9 +501,10 @@ comment|/// whose element is VT.
 name|bool
 name|EnforceVectorEltTypeIs
 argument_list|(
-name|MVT
+name|EEVT
 operator|::
-name|SimpleValueType
+name|TypeSet
+operator|&
 name|VT
 argument_list|,
 name|TreePattern
@@ -790,6 +791,8 @@ return|return
 name|NumResults
 return|;
 block|}
+comment|/// getNumOperands - This is the number of operands required or -1 if
+comment|/// variadic.
 name|int
 name|getNumOperands
 argument_list|()
@@ -858,7 +861,9 @@ name|MVT
 operator|::
 name|SimpleValueType
 name|getKnownType
-argument_list|()
+argument_list|(
+argument|unsigned ResNo
+argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// hasProperty - Return true if this node has the specified property.
@@ -1115,18 +1120,25 @@ return|;
 block|}
 name|void
 name|setName
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|N
-argument_list|)
+parameter_list|)
 block|{
 name|Name
-operator|=
+operator|.
+name|assign
+argument_list|(
 name|N
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|N
+operator|.
+name|end
+argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 name|bool
@@ -2398,9 +2410,12 @@ name|TreePatternNode
 modifier|*
 name|ParseTreePattern
 parameter_list|(
-name|DagInit
+name|Init
 modifier|*
 name|DI
+parameter_list|,
+name|StringRef
+name|OpName
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2945,6 +2960,18 @@ name|getPredicateCheck
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Compute the complexity metric for the input pattern.  This roughly
+comment|/// corresponds to the number of nodes that are covered.
+name|unsigned
+name|getPatternComplexity
+argument_list|(
+specifier|const
+name|CodeGenDAGPatterns
+operator|&
+name|CGP
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

@@ -926,7 +926,12 @@ literal|2
 operator|<<
 name|SegOvrShift
 block|,
-comment|// Bits 22 -> 23 are unused
+comment|// Execution domain for SSE instructions in bits 22, 23.
+comment|// 0 in bits 22-23 means normal, non-SSE instruction.
+name|SSEDomainShift
+init|=
+literal|22
+block|,
 name|OpcodeShift
 init|=
 literal|24
@@ -2095,6 +2100,35 @@ argument_list|(
 name|MachineFunction
 operator|*
 name|MF
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// GetSSEDomain - Return the SSE execution domain of MI as the first element,
+comment|/// and a bitmask of possible arguments to SetSSEDomain ase the second.
+name|std
+operator|::
+name|pair
+operator|<
+name|uint16_t
+operator|,
+name|uint16_t
+operator|>
+name|GetSSEDomain
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// SetSSEDomain - Set the SSEDomain of MI.
+name|void
+name|SetSSEDomain
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+name|Domain
 argument_list|)
 decl|const
 decl_stmt|;

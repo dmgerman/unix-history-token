@@ -168,9 +168,6 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MDNode
-decl_stmt|;
-name|class
 name|DwarfWriter
 decl_stmt|;
 name|class
@@ -348,13 +345,6 @@ decl_stmt|;
 name|mutable
 name|unsigned
 name|SetCounter
-decl_stmt|;
-comment|// Private state for processDebugLoc()
-name|mutable
-specifier|const
-name|MDNode
-modifier|*
-name|PrevDLT
 decl_stmt|;
 name|protected
 label|:

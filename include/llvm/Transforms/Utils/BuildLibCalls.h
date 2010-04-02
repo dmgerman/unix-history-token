@@ -238,6 +238,41 @@ operator|*
 name|TD
 argument_list|)
 decl_stmt|;
+comment|/// EmitMemCpyChk - Emit a call to the __memcpy_chk function to the builder.
+comment|/// This expects that the Len and ObjSize have type 'intptr_t' and Dst/Src
+comment|/// are pointers.
+name|Value
+modifier|*
+name|EmitMemCpyChk
+argument_list|(
+name|Value
+operator|*
+name|Dst
+argument_list|,
+name|Value
+operator|*
+name|Src
+argument_list|,
+name|Value
+operator|*
+name|Len
+argument_list|,
+name|Value
+operator|*
+name|ObjSize
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|)
+decl_stmt|;
 comment|/// EmitMemMove - Emit a call to the memmove function to the builder.  This
 comment|/// always expects that the size has type 'intptr_t' and Dst/Src are pointers.
 name|Value

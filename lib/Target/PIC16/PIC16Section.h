@@ -98,16 +98,12 @@ name|PIC16SectionType
 name|T
 block|;
 comment|/// Name of the section to uniquely identify it.
-name|std
-operator|::
-name|string
+name|StringRef
 name|Name
 block|;
 comment|/// User can specify an address at which a section should be placed.
 comment|/// Negative value here means user hasn't specified any.
-name|std
-operator|::
-name|string
+name|StringRef
 name|Address
 block|;
 comment|/// Overlay information - Sections with same color can be overlaid on
@@ -121,11 +117,11 @@ name|Size
 block|;
 name|PIC16Section
 argument_list|(
-argument|const StringRef&name
+argument|StringRef name
 argument_list|,
 argument|SectionKind K
 argument_list|,
-argument|const std::string&addr
+argument|StringRef addr
 argument_list|,
 argument|int color
 argument_list|)
@@ -158,11 +154,7 @@ block|{     }
 name|public
 operator|:
 comment|/// Return the name of the section.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -172,11 +164,7 @@ name|Name
 return|;
 block|}
 comment|/// Return the Address of the section.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|StringRef
 name|getAddress
 argument_list|()
 specifier|const
@@ -226,6 +214,8 @@ operator|=
 name|size
 block|; }
 comment|/// Conatined data objects.
+comment|// FIXME: This vector is leaked because sections are allocated with a
+comment|//        BumpPtrAllocator.
 name|std
 operator|::
 name|vector
@@ -318,11 +308,11 @@ name|PIC16Section
 operator|*
 name|Create
 argument_list|(
-argument|const StringRef&Name
+argument|StringRef Name
 argument_list|,
 argument|PIC16SectionType Ty
 argument_list|,
-argument|const std::string&Address
+argument|StringRef Address
 argument_list|,
 argument|int Color
 argument_list|,

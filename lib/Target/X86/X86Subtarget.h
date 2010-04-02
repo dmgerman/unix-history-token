@@ -190,6 +190,10 @@ comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
 block|;
+comment|/// IsUAMemFast - True if unaligned memory access is fast.
+name|bool
+name|IsUAMemFast
+block|;
 comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
 comment|///                  operands. This may require setting a feature bit in the
 comment|///                  processor.
@@ -480,6 +484,15 @@ specifier|const
 block|{
 return|return
 name|IsBTMemSlow
+return|;
+block|}
+name|bool
+name|isUnalignedMemAccessFast
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUAMemFast
 return|;
 block|}
 name|bool

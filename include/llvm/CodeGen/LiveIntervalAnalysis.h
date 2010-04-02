@@ -220,7 +220,9 @@ name|indexes_
 block|;
 comment|/// Special pool allocator for VNInfo's (LiveInterval val#).
 comment|///
-name|BumpPtrAllocator
+name|VNInfo
+operator|::
+name|Allocator
 name|VNInfoAllocator
 block|;
 typedef|typedef
@@ -958,10 +960,12 @@ name|renumberIndexes
 argument_list|()
 expr_stmt|;
 block|}
-name|BumpPtrAllocator
-modifier|&
+name|VNInfo
+operator|::
+name|Allocator
+operator|&
 name|getVNInfoAllocator
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|VNInfoAllocator

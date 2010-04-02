@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
@@ -369,16 +375,19 @@ name|SrcLineInfo
 operator|>
 name|Lines
 block|;
-comment|/// DIEValues - A list of all the unique values in use.
-comment|///
+comment|/// DIEBlocks - A list of all the DIEBlocks in use.
 name|std
 operator|::
 name|vector
 operator|<
-name|DIEValue
+name|DIEBlock
 operator|*
 operator|>
-name|DIEValues
+name|DIEBlocks
+block|;
+comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
 block|;
 comment|/// StringPool - A String->Symbol mapping of strings used by indirect
 comment|/// references.
@@ -484,6 +493,8 @@ operator|*
 operator|>
 name|AbstractScopes
 block|;
+comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
+comment|/// a function. This list is cleared during endFunction().
 name|SmallVector
 operator|<
 name|DbgScope
@@ -504,6 +515,21 @@ name|DbgVariable
 operator|*
 operator|>
 name|AbstractVariables
+block|;
+comment|/// DbgValueStartMap - Tracks starting scope of variable DIEs.
+comment|/// If the scope of an object begins sometime after the low pc value for the
+comment|/// scope most closely enclosing the object, the object entry may have a
+comment|/// DW_AT_start_scope attribute.
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+block|,
+name|DbgVariable
+operator|*
+operator|>
+name|DbgValueStartMap
 block|;
 comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
 comment|/// (at the end of the module) as DW_AT_inline.
@@ -634,6 +660,14 @@ name|unsigned
 operator|>
 name|CompileUnitOffsets
 expr_stmt|;
+comment|/// Previous instruction's location information. This is used to determine
+comment|/// label location to indicate scope boundries in dwarf debug info.
+name|mutable
+specifier|const
+name|MDNode
+modifier|*
+name|PrevDILoc
+decl_stmt|;
 comment|/// DebugTimer - Timer for the Dwarf debug writer.
 name|Timer
 modifier|*
@@ -874,37 +908,6 @@ specifier|const
 name|MCSymbol
 modifier|*
 name|Label
-parameter_list|)
-function_decl|;
-comment|/// addSectionOffset - Add a section offset label attribute data and value.
-comment|///
-name|void
-name|addSectionOffset
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|unsigned
-name|Attribute
-parameter_list|,
-name|unsigned
-name|Form
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Section
-parameter_list|,
-name|bool
-name|isEH
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|/// addDelta - Add a label delta attribute data and value.
@@ -1773,7 +1776,7 @@ name|void
 name|collectVariableInfo
 parameter_list|()
 function_decl|;
-comment|/// beginScope - Process beginning of a scope starting at Label.
+comment|/// beginScope - Process beginning of a scope.
 name|void
 name|beginScope
 parameter_list|(
@@ -1781,10 +1784,6 @@ specifier|const
 name|MachineInstr
 modifier|*
 name|MI
-parameter_list|,
-name|MCSymbol
-modifier|*
-name|Label
 parameter_list|)
 function_decl|;
 comment|/// endScope - Prcess end of a scope.

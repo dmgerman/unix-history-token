@@ -243,25 +243,6 @@ operator|*
 name|MF
 argument_list|)
 block|;
-comment|/// RecordSourceLine - Register a source line with debug info. Returns the
-comment|/// unique label that was emitted and which provides correspondence to
-comment|/// the source line list.
-name|MCSymbol
-operator|*
-name|RecordSourceLine
-argument_list|(
-argument|unsigned Line
-argument_list|,
-argument|unsigned Col
-argument_list|,
-argument|MDNode *Scope
-argument_list|)
-block|;
-comment|/// getRecordSourceLineCount - Count source lines.
-name|unsigned
-name|getRecordSourceLineCount
-argument_list|()
-block|;
 comment|/// ShouldEmitDwarfDebug - Returns true if Dwarf debugging declarations should
 comment|/// be emitted.
 name|bool
@@ -276,10 +257,6 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI
-argument_list|,
-name|MCSymbol
-operator|*
-name|Label
 argument_list|)
 block|;
 name|void

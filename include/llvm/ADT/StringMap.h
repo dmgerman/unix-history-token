@@ -858,6 +858,49 @@ operator|)
 argument_list|)
 return|;
 block|}
+comment|/// GetStringMapEntryFromKeyData - Given key data that is known to be embedded
+comment|/// into a StringMapEntry, return the StringMapEntry itself.
+specifier|static
+name|StringMapEntry
+operator|&
+name|GetStringMapEntryFromKeyData
+argument_list|(
+argument|const char *KeyData
+argument_list|)
+block|{
+name|char
+operator|*
+name|Ptr
+operator|=
+name|const_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
+name|KeyData
+operator|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|StringMapEntry
+operator|<
+name|ValueTy
+operator|>
+argument_list|)
+block|;
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+name|StringMapEntry
+operator|*
+operator|>
+operator|(
+name|Ptr
+operator|)
+return|;
+block|}
 comment|/// Destroy - Destroy this StringMapEntry, releasing memory back to the
 comment|/// specified allocator.
 name|template

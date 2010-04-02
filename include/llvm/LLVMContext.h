@@ -118,6 +118,16 @@ operator|~
 name|LLVMContext
 argument_list|()
 expr_stmt|;
+comment|// Pinned metadata names, which always have the same value.  This is a
+comment|// compile-time performance optimization, not a correctness optimization.
+enum|enum
+block|{
+name|MD_dbg
+init|=
+literal|1
+comment|// "dbg" -> 1.
+block|}
+enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
 comment|/// This ID is uniqued across modules in the current LLVMContext.
 name|unsigned

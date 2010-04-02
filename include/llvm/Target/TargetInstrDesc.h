@@ -520,6 +520,44 @@ return|return
 name|ImplicitUses
 return|;
 block|}
+comment|/// getNumImplicitUses - Return the number of implicit uses this instruction
+comment|/// has.
+name|unsigned
+name|getNumImplicitUses
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ImplicitUses
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|unsigned
+name|i
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+init|;
+name|ImplicitUses
+index|[
+name|i
+index|]
+condition|;
+operator|++
+name|i
+control|)
+comment|/*empty*/
+empty_stmt|;
+return|return
+name|i
+return|;
+block|}
 comment|/// getImplicitDefs - Return a list of registers that are potentially
 comment|/// written by any instance of this machine instruction.  For example, on X86,
 comment|/// many instructions implicitly set the flags register.  In this case, they
@@ -541,8 +579,55 @@ return|return
 name|ImplicitDefs
 return|;
 block|}
+comment|/// getNumImplicitDefs - Return the number of implicit defs this instruction
+comment|/// has.
+name|unsigned
+name|getNumImplicitDefs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ImplicitDefs
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|unsigned
+name|i
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+init|;
+name|ImplicitDefs
+index|[
+name|i
+index|]
+condition|;
+operator|++
+name|i
+control|)
+comment|/*empty*/
+empty_stmt|;
+return|return
+name|i
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// hasImplicitUseOfPhysReg - Return true if this instruction implicitly
+end_comment
+
+begin_comment
 comment|/// uses the specified physical register.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|hasImplicitUseOfPhysReg
 argument_list|(
@@ -583,8 +668,17 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// hasImplicitDefOfPhysReg - Return true if this instruction implicitly
+end_comment
+
+begin_comment
 comment|/// defines the specified physical register.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|hasImplicitDefOfPhysReg
 argument_list|(
@@ -625,13 +719,37 @@ return|return
 name|false
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getRegClassBarriers - Return a list of register classes that are
+end_comment
+
+begin_comment
 comment|/// completely clobbered by this machine instruction. For example, on X86
+end_comment
+
+begin_comment
 comment|/// the call instructions will completely clobber all the registers in the
+end_comment
+
+begin_comment
 comment|/// fp stack and XMM classes.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method returns null if the instruction doesn't completely clobber
+end_comment
+
+begin_comment
 comment|/// any register class.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -644,11 +762,29 @@ return|return
 name|RCBarriers
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getSchedClass - Return the scheduling class for this instruction.  The
+end_comment
+
+begin_comment
 comment|/// scheduling class is an index into the InstrItineraryData table.  This
+end_comment
+
+begin_comment
 comment|/// returns zero if there is no known scheduling information for the
+end_comment
+
+begin_comment
 comment|/// instruction.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getSchedClass
 argument_list|()
@@ -658,6 +794,9 @@ return|return
 name|SchedClass
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isReturn
 argument_list|()
@@ -675,6 +814,9 @@ name|Return
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isCall
 argument_list|()
@@ -692,9 +834,21 @@ name|Call
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isBarrier - Returns true if the specified instruction stops control flow
+end_comment
+
+begin_comment
 comment|/// from executing the instruction immediately following it.  Examples include
+end_comment
+
+begin_comment
 comment|/// unconditional branches and return instructions.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isBarrier
 argument_list|()
@@ -712,12 +866,33 @@ name|Barrier
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isTerminator - Returns true if this instruction part of the terminator for
+end_comment
+
+begin_comment
 comment|/// a basic block.  Typically this is things like return and branch
+end_comment
+
+begin_comment
 comment|/// instructions.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Various passes use this to insert code into the bottom of a basic block,
+end_comment
+
+begin_comment
 comment|/// but before control flow occurs.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTerminator
 argument_list|()
@@ -735,10 +910,25 @@ name|Terminator
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isBranch - Returns true if this is a conditional, unconditional, or
+end_comment
+
+begin_comment
 comment|/// indirect branch.  Predicates below can be used to discriminate between
+end_comment
+
+begin_comment
 comment|/// these cases, and the TargetInstrInfo::AnalyzeBranch method can be used to
+end_comment
+
+begin_comment
 comment|/// get more information.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isBranch
 argument_list|()
@@ -756,8 +946,17 @@ name|Branch
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isIndirectBranch - Return true if this is an indirect branch, such as a
+end_comment
+
+begin_comment
 comment|/// branch through a register.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isIndirectBranch
 argument_list|()
@@ -775,10 +974,25 @@ name|IndirectBranch
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isConditionalBranch - Return true if this is a branch which may fall
+end_comment
+
+begin_comment
 comment|/// through to the next instruction or may transfer control flow to some other
+end_comment
+
+begin_comment
 comment|/// block.  The TargetInstrInfo::AnalyzeBranch method can be used to get more
+end_comment
+
+begin_comment
 comment|/// information about this branch.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isConditionalBranch
 argument_list|()
@@ -797,10 +1011,25 @@ name|isIndirectBranch
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isUnconditionalBranch - Return true if this is a branch which always
+end_comment
+
+begin_comment
 comment|/// transfers control flow to some other block.  The
+end_comment
+
+begin_comment
 comment|/// TargetInstrInfo::AnalyzeBranch method can be used to get more information
+end_comment
+
+begin_comment
 comment|/// about this branch.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isUnconditionalBranch
 argument_list|()
@@ -818,10 +1047,25 @@ name|isIndirectBranch
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// isPredicable - Return true if this instruction has a predicate operand that
+end_comment
+
+begin_comment
 comment|// controls execution.  It may be set to 'always', or may be set to other
+end_comment
+
+begin_comment
 comment|/// values.   There are various methods in TargetInstrInfo that can be used to
+end_comment
+
+begin_comment
 comment|/// control and modify the predicate in this instruction.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isPredicable
 argument_list|()
@@ -839,9 +1083,21 @@ name|Predicable
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isNotDuplicable - Return true if this instruction cannot be safely
+end_comment
+
+begin_comment
 comment|/// duplicated.  For example, if the instruction has a unique labels attached
+end_comment
+
+begin_comment
 comment|/// to it, duplicating it would cause multiple definition errors.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isNotDuplicable
 argument_list|()
@@ -859,8 +1115,17 @@ name|NotDuplicable
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasDelaySlot - Returns true if the specified instruction has a delay slot
+end_comment
+
+begin_comment
 comment|/// which must be filled by the code generator.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasDelaySlot
 argument_list|()
@@ -878,14 +1143,41 @@ name|DelaySlot
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// canFoldAsLoad - Return true for instructions that can be folded as
+end_comment
+
+begin_comment
 comment|/// memory operands in other instructions. The most common use for this
+end_comment
+
+begin_comment
 comment|/// is instructions that are simple loads from memory that don't modify
+end_comment
+
+begin_comment
 comment|/// the loaded value in any way, but it can also be used for instructions
+end_comment
+
+begin_comment
 comment|/// that can be expressed as constant-pool loads, such as V_SETALLONES
+end_comment
+
+begin_comment
 comment|/// on x86, to allow them to be folded when it is beneficial.
+end_comment
+
+begin_comment
 comment|/// This should only be set on instructions that return a value in their
+end_comment
+
+begin_comment
 comment|/// only virtual register definition.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|canFoldAsLoad
 argument_list|()
@@ -903,12 +1195,33 @@ name|FoldableAsLoad
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Side Effect Analysis
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// mayLoad - Return true if this instruction could possibly read memory.
+end_comment
+
+begin_comment
 comment|/// Instructions with this flag set are not necessarily simple load
+end_comment
+
+begin_comment
 comment|/// instructions, they may load a value and modify it, for example.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|mayLoad
 argument_list|()
@@ -926,10 +1239,25 @@ name|MayLoad
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// mayStore - Return true if this instruction could possibly modify memory.
+end_comment
+
+begin_comment
 comment|/// Instructions with this flag set are not necessarily simple store
+end_comment
+
+begin_comment
 comment|/// instructions, they may store a modified value based on their operands, or
+end_comment
+
+begin_comment
 comment|/// may not actually modify anything, for example.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|mayStore
 argument_list|()
@@ -947,19 +1275,61 @@ name|MayStore
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasUnmodeledSideEffects - Return true if this instruction has side
+end_comment
+
+begin_comment
 comment|/// effects that are not modeled by other flags.  This does not return true
+end_comment
+
+begin_comment
 comment|/// for instructions whose effects are captured by:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|///  1. Their operand list and implicit definition/use list.  Register use/def
+end_comment
+
+begin_comment
 comment|///     info is explicit for instructions.
+end_comment
+
+begin_comment
 comment|///  2. Memory accesses.  Use mayLoad/mayStore.
+end_comment
+
+begin_comment
 comment|///  3. Calling, branching, returning: use isCall/isReturn/isBranch.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Examples of side effects would be modifying 'invisible' machine state like
+end_comment
+
+begin_comment
 comment|/// a control register, flushing a cache, modifying a register invisible to
+end_comment
+
+begin_comment
 comment|/// LLVM, etc.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasUnmodeledSideEffects
 argument_list|()
@@ -977,19 +1347,61 @@ name|UnmodeledSideEffects
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Flags that indicate whether an instruction can be modified by a method.
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// isCommutable - Return true if this may be a 2- or 3-address
+end_comment
+
+begin_comment
 comment|/// instruction (of the form "X = op Y, Z, ..."), which produces the same
+end_comment
+
+begin_comment
 comment|/// result if Y and Z are exchanged.  If this flag is set, then the
+end_comment
+
+begin_comment
 comment|/// TargetInstrInfo::commuteInstruction method may be used to hack on the
+end_comment
+
+begin_comment
 comment|/// instruction.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that this flag may be set on instructions that are only commutable
+end_comment
+
+begin_comment
 comment|/// sometimes.  In these cases, the call to commuteInstruction will fail.
+end_comment
+
+begin_comment
 comment|/// Also note that some instructions require non-trivial modification to
+end_comment
+
+begin_comment
 comment|/// commute them.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCommutable
 argument_list|()
@@ -1007,20 +1419,65 @@ name|Commutable
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isConvertibleTo3Addr - Return true if this is a 2-address instruction
+end_comment
+
+begin_comment
 comment|/// which can be changed into a 3-address instruction if needed.  Doing this
+end_comment
+
+begin_comment
 comment|/// transformation can be profitable in the register allocator, because it
+end_comment
+
+begin_comment
 comment|/// means that the instruction can use a 2-address form if possible, but
+end_comment
+
+begin_comment
 comment|/// degrade into a less efficient form if the source and dest register cannot
+end_comment
+
+begin_comment
 comment|/// be assigned to the same register.  For example, this allows the x86
+end_comment
+
+begin_comment
 comment|/// backend to turn a "shl reg, 3" instruction into an LEA instruction, which
+end_comment
+
+begin_comment
 comment|/// is the same speed as the shift but has bigger code size.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If this returns true, then the target must implement the
+end_comment
+
+begin_comment
 comment|/// TargetInstrInfo::convertToThreeAddress method for this instruction, which
+end_comment
+
+begin_comment
 comment|/// is allowed to fail if the transformation isn't valid for this specific
+end_comment
+
+begin_comment
 comment|/// instruction (e.g. shl reg, 4 on x86).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isConvertibleTo3Addr
 argument_list|()
@@ -1038,14 +1495,41 @@ name|ConvertibleTo3Addr
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// usesCustomInsertionHook - Return true if this instruction requires
+end_comment
+
+begin_comment
 comment|/// custom insertion support when the DAG scheduler is inserting it into a
+end_comment
+
+begin_comment
 comment|/// machine basic block.  If this is true for the instruction, it basically
+end_comment
+
+begin_comment
 comment|/// means that it is a pseudo instruction used at SelectionDAG time that is
+end_comment
+
+begin_comment
 comment|/// expanded out into magic code by the target when MachineInstrs are formed.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If this is true, the TargetLoweringInfo::InsertAtEndOfBasicBlock method
+end_comment
+
+begin_comment
 comment|/// is used to insert this into the MachineBasicBlock.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|usesCustomInsertionHook
 argument_list|()
@@ -1063,10 +1547,25 @@ name|UsesCustomInserter
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isRematerializable - Returns true if this instruction is a candidate for
+end_comment
+
+begin_comment
 comment|/// remat.  This flag is deprecated, please don't use it anymore.  If this
+end_comment
+
+begin_comment
 comment|/// flag is set, the isReallyTriviallyReMaterializable() method is called to
+end_comment
+
+begin_comment
 comment|/// verify the instruction is really rematable.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isRematerializable
 argument_list|()
@@ -1084,12 +1583,33 @@ name|Rematerializable
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isAsCheapAsAMove - Returns true if this instruction has the same cost (or
+end_comment
+
+begin_comment
 comment|/// less) than a move instruction. This is useful during certain types of
+end_comment
+
+begin_comment
 comment|/// optimizations (e.g., remat during two-address conversion or machine licm)
+end_comment
+
+begin_comment
 comment|/// where we would like to remat or hoist the instruction, but not if it costs
+end_comment
+
+begin_comment
 comment|/// more than moving the instruction into the appropriate register. Note, we
+end_comment
+
+begin_comment
 comment|/// are not marking copies from and to the same register class with this flag.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isAsCheapAsAMove
 argument_list|()
@@ -1107,12 +1627,33 @@ name|CheapAsAMove
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasExtraSrcRegAllocReq - Returns true if this instruction source operands
+end_comment
+
+begin_comment
 comment|/// have special register allocation requirements that are not captured by the
+end_comment
+
+begin_comment
 comment|/// operand register classes. e.g. ARM::STRD's two source registers must be an
+end_comment
+
+begin_comment
 comment|/// even / odd pair, ARM::STM registers have to be in ascending order.
+end_comment
+
+begin_comment
 comment|/// Post-register allocation passes should not attempt to change allocations
+end_comment
+
+begin_comment
 comment|/// for sources of instructions with this flag.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasExtraSrcRegAllocReq
 argument_list|()
@@ -1130,12 +1671,33 @@ name|ExtraSrcRegAllocReq
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasExtraDefRegAllocReq - Returns true if this instruction def operands
+end_comment
+
+begin_comment
 comment|/// have special register allocation requirements that are not captured by the
+end_comment
+
+begin_comment
 comment|/// operand register classes. e.g. ARM::LDRD's two def registers must be an
+end_comment
+
+begin_comment
 comment|/// even / odd pair, ARM::LDM registers have to be in ascending order.
+end_comment
+
+begin_comment
 comment|/// Post-register allocation passes should not attempt to change allocations
+end_comment
+
+begin_comment
 comment|/// for definitions of instructions with this flag.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasExtraDefRegAllocReq
 argument_list|()
@@ -1153,12 +1715,10 @@ name|ExtraDefRegAllocReq
 operator|)
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

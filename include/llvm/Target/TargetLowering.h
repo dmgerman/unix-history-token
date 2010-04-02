@@ -2126,138 +2126,6 @@ name|Custom
 operator|)
 return|;
 block|}
-comment|/// getConvertAction - Return how the conversion should be treated:
-comment|/// either it is legal, needs to be promoted to a larger size, needs to be
-comment|/// expanded to some other code sequence, or the target has a custom expander
-comment|/// for it.
-name|LegalizeAction
-name|getConvertAction
-argument_list|(
-name|EVT
-name|FromVT
-argument_list|,
-name|EVT
-name|ToVT
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|FromVT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-operator|<
-name|array_lengthof
-argument_list|(
-name|ConvertActions
-argument_list|)
-operator|&&
-operator|(
-name|unsigned
-operator|)
-name|ToVT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-operator|<
-sizeof|sizeof
-argument_list|(
-name|ConvertActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
-operator|&&
-literal|"Table isn't big enough!"
-argument_list|)
-expr_stmt|;
-return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
-operator|(
-name|ConvertActions
-index|[
-name|FromVT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-index|]
-operator|>>
-operator|(
-literal|2
-operator|*
-name|ToVT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-operator|)
-operator|)
-operator|&
-literal|3
-argument_list|)
-return|;
-block|}
-comment|/// isConvertLegal - Return true if the specified conversion is legal
-comment|/// on this target.
-name|bool
-name|isConvertLegal
-argument_list|(
-name|EVT
-name|FromVT
-argument_list|,
-name|EVT
-name|ToVT
-argument_list|)
-decl|const
-block|{
-return|return
-name|isTypeLegal
-argument_list|(
-name|FromVT
-argument_list|)
-operator|&&
-name|isTypeLegal
-argument_list|(
-name|ToVT
-argument_list|)
-operator|&&
-operator|(
-name|getConvertAction
-argument_list|(
-name|FromVT
-argument_list|,
-name|ToVT
-argument_list|)
-operator|==
-name|Legal
-operator|||
-name|getConvertAction
-argument_list|(
-name|FromVT
-argument_list|,
-name|ToVT
-argument_list|)
-operator|==
-name|Custom
-operator|)
-return|;
-block|}
 comment|/// getCondCodeAction - Return how the condition code should be treated:
 comment|/// either it is legal, needs to be expanded to some other code sequence,
 comment|/// or the target has a custom expander for it.
@@ -3047,8 +2915,11 @@ return|;
 block|}
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove lowering.
-comment|/// It returns EVT::Other if SelectionDAG should be responsible for
-comment|/// determining it.
+comment|/// If DstAlign is zero that means it's safe to destination alignment can
+comment|/// satisfy any constraint. Similarly if SrcAlign is zero it means there isn't
+comment|/// a need to check it against alignment requirement, probably because the
+comment|/// source does not need to be loaded. It returns EVT::Other if SelectionDAG
+comment|/// should be responsible for determining it.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -3057,13 +2928,13 @@ name|uint64_t
 name|Size
 argument_list|,
 name|unsigned
-name|Align
+name|DstAlign
+argument_list|,
+name|unsigned
+name|SrcAlign
 argument_list|,
 name|bool
-name|isSrcConst
-argument_list|,
-name|bool
-name|isSrcStr
+name|SafeToUseFP
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -4123,7 +3994,7 @@ operator|)
 expr_stmt|;
 block|}
 comment|/// setLoadExtAction - Indicate that the specified load with extension does
-comment|/// not work with the with specified type and indicate what to do about it.
+comment|/// not work with the specified type and indicate what to do about it.
 name|void
 name|setLoadExtAction
 parameter_list|(
@@ -4197,7 +4068,7 @@ literal|2
 expr_stmt|;
 block|}
 comment|/// setTruncStoreAction - Indicate that the specified truncating store does
-comment|/// not work with the with specified type and indicate what to do about it.
+comment|/// not work with the specified type and indicate what to do about it.
 name|void
 name|setTruncStoreAction
 parameter_list|(
@@ -4280,7 +4151,7 @@ literal|2
 expr_stmt|;
 block|}
 comment|/// setIndexedLoadAction - Indicate that the specified indexed load does or
-comment|/// does not work with the with specified type and indicate what to do abort
+comment|/// does not work with the specified type and indicate what to do abort
 comment|/// it. NOTE: All indexed mode loads are initialized to Expand in
 comment|/// TargetLowering.cpp
 name|void
@@ -4348,7 +4219,7 @@ name|Action
 expr_stmt|;
 block|}
 comment|/// setIndexedStoreAction - Indicate that the specified indexed store does or
-comment|/// does not work with the with specified type and indicate what to do about
+comment|/// does not work with the specified type and indicate what to do about
 comment|/// it. NOTE: All indexed mode stores are initialized to Expand in
 comment|/// TargetLowering.cpp
 name|void
@@ -4413,89 +4284,6 @@ operator|(
 name|uint8_t
 operator|)
 name|Action
-expr_stmt|;
-block|}
-comment|/// setConvertAction - Indicate that the specified conversion does or does
-comment|/// not work with the with specified type and indicate what to do about it.
-name|void
-name|setConvertAction
-parameter_list|(
-name|MVT
-name|FromVT
-parameter_list|,
-name|MVT
-name|ToVT
-parameter_list|,
-name|LegalizeAction
-name|Action
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|FromVT
-operator|.
-name|SimpleTy
-operator|<
-name|array_lengthof
-argument_list|(
-name|ConvertActions
-argument_list|)
-operator|&&
-operator|(
-name|unsigned
-operator|)
-name|ToVT
-operator|.
-name|SimpleTy
-operator|<
-name|MVT
-operator|::
-name|LAST_VALUETYPE
-operator|&&
-literal|"Table isn't big enough!"
-argument_list|)
-expr_stmt|;
-name|ConvertActions
-index|[
-name|FromVT
-operator|.
-name|SimpleTy
-index|]
-operator|&=
-operator|~
-operator|(
-name|uint64_t
-argument_list|(
-literal|3UL
-argument_list|)
-operator|<<
-name|ToVT
-operator|.
-name|SimpleTy
-operator|*
-literal|2
-operator|)
-expr_stmt|;
-name|ConvertActions
-index|[
-name|FromVT
-operator|.
-name|SimpleTy
-index|]
-operator||=
-operator|(
-name|uint64_t
-operator|)
-name|Action
-operator|<<
-name|ToVT
-operator|.
-name|SimpleTy
-operator|*
-literal|2
 expr_stmt|;
 block|}
 comment|/// setCondCodeAction - Indicate that the specified condition code is or isn't
@@ -6349,19 +6137,6 @@ index|[
 name|ISD
 operator|::
 name|LAST_INDEXED_MODE
-index|]
-decl_stmt|;
-comment|/// ConvertActions - For each conversion from source type to destination type,
-comment|/// keep a LegalizeAction that indicates how instruction selection should
-comment|/// deal with the conversion.
-comment|/// Currently, this is used only for floating->floating conversions
-comment|/// (FP_EXTEND and FP_ROUND).
-name|uint64_t
-name|ConvertActions
-index|[
-name|MVT
-operator|::
-name|LAST_VALUETYPE
 index|]
 decl_stmt|;
 comment|/// CondCodeActions - For each condition code (ISD::CondCode) keep a

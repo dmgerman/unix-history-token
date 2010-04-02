@@ -109,7 +109,9 @@ name|MachineFunctionPass
 block|{
 comment|/// Special pool allocator for VNInfo's (LiveInterval val#).
 comment|///
-name|BumpPtrAllocator
+name|VNInfo
+operator|::
+name|Allocator
 name|VNInfoAllocator
 block|;
 comment|/// S2IMap - Stack slot indices to live interval mapping.
@@ -516,10 +518,12 @@ operator|->
 name|second
 return|;
 block|}
-name|BumpPtrAllocator
-modifier|&
+name|VNInfo
+operator|::
+name|Allocator
+operator|&
 name|getVNInfoAllocator
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|VNInfoAllocator

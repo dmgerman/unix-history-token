@@ -94,6 +94,9 @@ name|class
 name|DagInit
 decl_stmt|;
 name|class
+name|CodeGenTarget
+decl_stmt|;
+name|class
 name|CodeGenInstruction
 block|{
 name|public
@@ -675,6 +678,18 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// HasOneImplicitDefWithKnownVT - If the instruction has at least one
+comment|/// implicit def and it has a known VT, return the VT, otherwise return
+comment|/// MVT::Other.
+name|MVT
+operator|::
+name|SimpleValueType
+name|HasOneImplicitDefWithKnownVT
+argument_list|(
+argument|const CodeGenTarget&TargetInfo
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 

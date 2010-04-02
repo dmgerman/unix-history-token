@@ -72,7 +72,7 @@ name|class
 name|MCAssembler
 decl_stmt|;
 name|class
-name|MCDataFragment
+name|MCFragment
 decl_stmt|;
 name|class
 name|MCValue
@@ -121,7 +121,9 @@ name|RecordRelocation
 argument_list|(
 argument|const MCAssembler&Asm
 argument_list|,
-argument|const MCDataFragment&Fragment
+argument|const MCAsmLayout&Layout
+argument_list|,
+argument|const MCFragment *Fragment
 argument_list|,
 argument|const MCAsmFixup&Fixup
 argument_list|,
@@ -138,6 +140,11 @@ specifier|const
 name|MCAssembler
 operator|&
 name|Asm
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
 argument_list|)
 block|; }
 decl_stmt|;

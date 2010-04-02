@@ -2338,6 +2338,7 @@ directive|ifdef
 name|XDEBUG
 name|assert
 argument_list|(
+operator|(
 operator|!
 name|DFSInfoValid
 operator|||
@@ -2356,6 +2357,9 @@ argument_list|(
 name|A
 argument_list|)
 operator|)
+operator|)
+operator|&&
+literal|"Tree walk disagrees with dfs numbers!"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2522,17 +2526,6 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|!
-name|this
-operator|->
-name|isPostDominator
-argument_list|()
-operator|&&
-literal|"This is not implemented for post dominators"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
 name|A
 operator|->
 name|getParent
@@ -2546,7 +2539,17 @@ operator|&&
 literal|"Two blocks are not in same function"
 argument_list|)
 expr_stmt|;
-comment|// If either A or B is a entry block then it is nearest common dominator.
+comment|// If either A or B is a entry block then it is nearest common dominator
+comment|// (for forward-dominators).
+if|if
+condition|(
+operator|!
+name|this
+operator|->
+name|isPostDominator
+argument_list|()
+condition|)
+block|{
 name|NodeT
 modifier|&
 name|Entry
@@ -2575,6 +2578,7 @@ return|return
 operator|&
 name|Entry
 return|;
+block|}
 comment|// If B dominates A then B is nearest common dominator.
 if|if
 condition|(

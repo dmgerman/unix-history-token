@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---- llvm/DebugLoc.h - Debug Location Information ----------*- C++ -*-===//
+comment|//===---- llvm/Support/DebugLoc.h - Debug Location Information --*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -82,6 +82,215 @@ block|{
 name|class
 name|MDNode
 decl_stmt|;
+name|class
+name|LLVMContext
+decl_stmt|;
+comment|/// DebugLoc - Debug location id.  This is carried by Instruction, SDNode,
+comment|/// and MachineInstr to compactly encode file/line/scope information for an
+comment|/// operation.
+name|class
+name|NewDebugLoc
+block|{
+comment|/// LineCol - This 32-bit value encodes the line and column number for the
+comment|/// location, encoded as 24-bits for line and 8 bits for col.  A value of 0
+comment|/// for either means unknown.
+name|unsigned
+name|LineCol
+decl_stmt|;
+comment|/// ScopeIdx - This is an opaque ID# for Scope/InlinedAt information,
+comment|/// decoded by LLVMContext.  0 is unknown.
+name|int
+name|ScopeIdx
+decl_stmt|;
+name|public
+label|:
+name|NewDebugLoc
+argument_list|()
+operator|:
+name|LineCol
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|ScopeIdx
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|// Defaults to unknown.
+comment|/// get - Get a new DebugLoc that corresponds to the specified line/col
+comment|/// scope/inline location.
+specifier|static
+name|NewDebugLoc
+name|get
+argument_list|(
+argument|unsigned Line
+argument_list|,
+argument|unsigned Col
+argument_list|,
+argument|MDNode *Scope
+argument_list|,
+argument|MDNode *InlinedAt =
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/// getFromDILocation - Translate the DILocation quad into a NewDebugLoc.
+specifier|static
+name|NewDebugLoc
+name|getFromDILocation
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isUnknown - Return true if this is an unknown location.
+name|bool
+name|isUnknown
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ScopeIdx
+operator|==
+literal|0
+return|;
+block|}
+name|unsigned
+name|getLine
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|LineCol
+operator|<<
+literal|8
+operator|)
+operator|>>
+literal|8
+return|;
+comment|// Mask out column.
+block|}
+name|unsigned
+name|getCol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LineCol
+operator|>>
+literal|24
+return|;
+block|}
+comment|/// getScope - This returns the scope pointer for this DebugLoc, or null if
+comment|/// invalid.
+name|MDNode
+modifier|*
+name|getScope
+argument_list|(
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getInlinedAt - This returns the InlinedAt pointer for this DebugLoc, or
+comment|/// null if invalid or not present.
+name|MDNode
+modifier|*
+name|getInlinedAt
+argument_list|(
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getScopeAndInlinedAt - Return both the Scope and the InlinedAt values.
+name|void
+name|getScopeAndInlinedAt
+argument_list|(
+name|MDNode
+operator|*
+operator|&
+name|Scope
+argument_list|,
+name|MDNode
+operator|*
+operator|&
+name|IA
+argument_list|,
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getAsMDNode - This method converts the compressed DebugLoc node into a
+comment|/// DILocation compatible MDNode.
+name|MDNode
+modifier|*
+name|getAsMDNode
+argument_list|(
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|NewDebugLoc
+operator|&
+name|DL
+operator|)
+specifier|const
+block|{
+return|return
+name|LineCol
+operator|==
+name|DL
+operator|.
+name|LineCol
+operator|&&
+name|ScopeIdx
+operator|==
+name|DL
+operator|.
+name|ScopeIdx
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|NewDebugLoc
+operator|&
+name|DL
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|DL
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// DebugLoc - Debug location id. This is carried by SDNode and MachineInstr
 comment|/// to index into a vector of unique debug location tuples.
 name|class

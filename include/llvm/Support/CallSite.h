@@ -40,7 +40,19 @@ comment|// This file defines the CallSite class, which is a handy wrapper for co
 end_comment
 
 begin_comment
-comment|// wants to treat Call and Invoke instructions in a generic way.
+comment|// wants to treat Call and Invoke instructions in a generic way. When in non-
+end_comment
+
+begin_comment
+comment|// mutation context (e.g. an analysis) ImmutableCallSite should be used.
+end_comment
+
+begin_comment
+comment|// Finally, when some degree of customization is necessary between these two
+end_comment
+
+begin_comment
+comment|// extremes, CallSiteBase<> can be supplied with fine-tuned parameters.
 end_comment
 
 begin_comment
@@ -48,31 +60,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// NOTE: This class is supposed to have "value semantics". So it should be
+comment|// NOTE: These classes are supposed to have "value semantics". So they should be
 end_comment
 
 begin_comment
-comment|// passed by value, not by reference; it should not be "new"ed or "delete"d. It
+comment|// passed by value, not by reference; they should not be "new"ed or "delete"d.
 end_comment
 
 begin_comment
-comment|// is efficiently copyable, assignable and constructable, with cost equivalent
+comment|// They are efficiently copyable, assignable and constructable, with cost
 end_comment
 
 begin_comment
-comment|// to copying a pointer (notice that it has only a single data member).
+comment|// equivalent to copying a pointer (notice that they have only a single data
 end_comment
 
 begin_comment
-comment|// The internal representation carries a flag which indicates which of the two
+comment|// member). The internal representation carries a flag which indicates which of
 end_comment
 
 begin_comment
-comment|// variants is enclosed. This allows for cheaper checks when various accessors
+comment|// the two variants is enclosed. This allows for cheaper checks when various
 end_comment
 
 begin_comment
-comment|// of CallSite are employed.
+comment|// accessors of CallSite are employed.
 end_comment
 
 begin_comment
@@ -135,23 +147,70 @@ decl_stmt|;
 name|class
 name|InvokeInst
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|FunTy
+operator|=
+specifier|const
+name|Function
+operator|,
+name|typename
+name|ValTy
+operator|=
+specifier|const
+name|Value
+operator|,
+name|typename
+name|UserTy
+operator|=
+specifier|const
+name|User
+operator|,
+name|typename
+name|InstrTy
+operator|=
+specifier|const
+name|Instruction
+operator|,
+name|typename
+name|CallTy
+operator|=
+specifier|const
+name|CallInst
+operator|,
+name|typename
+name|InvokeTy
+operator|=
+specifier|const
+name|InvokeInst
+operator|,
+name|typename
+name|IterTy
+operator|=
+name|User
+operator|::
+name|const_op_iterator
+operator|>
 name|class
-name|CallSite
+name|CallSiteBase
 block|{
+name|protected
+operator|:
 name|PointerIntPair
 operator|<
-name|Instruction
+name|InstrTy
 operator|*
-operator|,
+block|,
 literal|1
-operator|,
+block|,
 name|bool
 operator|>
 name|I
-expr_stmt|;
+block|;
 name|public
-label|:
-name|CallSite
+operator|:
+name|CallSiteBase
 argument_list|()
 operator|:
 name|I
@@ -161,102 +220,96 @@ argument_list|,
 argument|false
 argument_list|)
 block|{}
-name|CallSite
+name|CallSiteBase
 argument_list|(
-name|CallInst
+name|CallTy
 operator|*
 name|CI
 argument_list|)
 operator|:
 name|I
 argument_list|(
-argument|reinterpret_cast<Instruction*>(CI)
+argument|reinterpret_cast<InstrTy*>(CI)
 argument_list|,
 argument|true
 argument_list|)
 block|{}
-name|CallSite
+name|CallSiteBase
 argument_list|(
-name|InvokeInst
+name|InvokeTy
 operator|*
 name|II
 argument_list|)
 operator|:
 name|I
 argument_list|(
-argument|reinterpret_cast<Instruction*>(II)
+argument|reinterpret_cast<InstrTy*>(II)
 argument_list|,
 argument|false
 argument_list|)
 block|{}
-name|CallSite
+name|CallSiteBase
 argument_list|(
-name|Instruction
-operator|*
-name|C
+argument|ValTy *II
 argument_list|)
-expr_stmt|;
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|CallSite
-operator|&
-name|CS
-operator|)
-specifier|const
 block|{
-return|return
-name|I
-operator|==
-name|CS
-operator|.
-name|I
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|CallSite
-operator|&
-name|CS
-operator|)
-specifier|const
+operator|*
+name|this
+operator|=
+name|get
+argument_list|(
+name|II
+argument_list|)
+block|; }
+name|CallSiteBase
+argument_list|(
+argument|InstrTy *II
+argument_list|)
 block|{
-return|return
+name|assert
+argument_list|(
+name|II
+operator|&&
+literal|"Null instruction given?"
+argument_list|)
+block|;
+operator|*
+name|this
+operator|=
+name|get
+argument_list|(
+name|II
+argument_list|)
+block|;
+name|assert
+argument_list|(
 name|I
-operator|!=
-name|CS
 operator|.
-name|I
-return|;
-block|}
-comment|/// CallSite::get - This static method is sort of like a constructor.  It will
-comment|/// create an appropriate call site for a Call or Invoke instruction, but it
-comment|/// can also create a null initialized CallSite object for something which is
-comment|/// NOT a call site.
+name|getPointer
+argument_list|()
+argument_list|)
+block|;   }
+comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
+comment|/// will create an appropriate call site for a Call or Invoke instruction, but
+comment|/// it can also create a null initialized CallSiteBase object for something
+comment|/// which is NOT a call site.
 comment|///
 specifier|static
-name|CallSite
+name|CallSiteBase
 name|get
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|ValTy *V
+argument_list|)
 block|{
 if|if
 condition|(
-name|Instruction
+name|InstrTy
 modifier|*
-name|I
+name|II
 init|=
 name|dyn_cast
 operator|<
-name|Instruction
+name|InstrTy
 operator|>
 operator|(
 name|V
@@ -265,7 +318,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|I
+name|II
 operator|->
 name|getOpcode
 argument_list|()
@@ -275,22 +328,22 @@ operator|::
 name|Call
 condition|)
 return|return
-name|CallSite
+name|CallSiteBase
 argument_list|(
 name|reinterpret_cast
 operator|<
-name|CallInst
+name|CallTy
 operator|*
 operator|>
 operator|(
-name|I
+name|II
 operator|)
 argument_list|)
 return|;
 elseif|else
 if|if
 condition|(
-name|I
+name|II
 operator|->
 name|getOpcode
 argument_list|()
@@ -300,155 +353,21 @@ operator|::
 name|Invoke
 condition|)
 return|return
-name|CallSite
+name|CallSiteBase
 argument_list|(
 name|reinterpret_cast
 operator|<
-name|InvokeInst
+name|InvokeTy
 operator|*
 operator|>
 operator|(
-name|I
+name|II
 operator|)
 argument_list|)
 return|;
 block|}
 return|return
-name|CallSite
-argument_list|()
-return|;
-block|}
-comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
-comment|/// call.
-name|CallingConv
-operator|::
-name|ID
-name|getCallingConv
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setCallingConv
-argument_list|(
-name|CallingConv
-operator|::
-name|ID
-name|CC
-argument_list|)
-decl_stmt|;
-comment|/// getAttributes/setAttributes - get or set the parameter attributes of
-comment|/// the call.
-specifier|const
-name|AttrListPtr
-operator|&
-name|getAttributes
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setAttributes
-parameter_list|(
-specifier|const
-name|AttrListPtr
-modifier|&
-name|PAL
-parameter_list|)
-function_decl|;
-comment|/// paramHasAttr - whether the call or the callee has the given attribute.
-name|bool
-name|paramHasAttr
-argument_list|(
-name|uint16_t
-name|i
-argument_list|,
-name|Attributes
-name|attr
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
-name|uint16_t
-name|getParamAlignment
-argument_list|(
-name|uint16_t
-name|i
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Determine if the call does not access memory.
-name|bool
-name|doesNotAccessMemory
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotAccessMemory
-parameter_list|(
-name|bool
-name|doesNotAccessMemory
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call does not access or only reads memory.
-name|bool
-name|onlyReadsMemory
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setOnlyReadsMemory
-parameter_list|(
-name|bool
-name|onlyReadsMemory
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call cannot return.
-name|bool
-name|doesNotReturn
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotReturn
-parameter_list|(
-name|bool
-name|doesNotReturn
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call cannot unwind.
-name|bool
-name|doesNotThrow
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotThrow
-parameter_list|(
-name|bool
-name|doesNotThrow
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// getType - Return the type of the instruction that generated this call site
-comment|///
-specifier|const
-name|Type
-operator|*
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getInstruction
-argument_list|()
-operator|->
-name|getType
+name|CallSiteBase
 argument_list|()
 return|;
 block|}
@@ -485,9 +404,7 @@ name|getInt
 argument_list|()
 return|;
 block|}
-comment|/// getInstruction - Return the instruction this call site corresponds to
-comment|///
-name|Instruction
+name|InstrTy
 operator|*
 name|getInstruction
 argument_list|()
@@ -500,28 +417,36 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-comment|/// getCaller - Return the caller function for this call site
-comment|///
-name|Function
+name|InstrTy
 operator|*
-name|getCaller
+name|operator
+operator|->
+expr|(
+block|)
+specifier|const
+block|{
+return|return
+name|I
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
+name|operator
+name|bool
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getInstruction
-argument_list|()
-operator|->
-name|getParent
-argument_list|()
-operator|->
-name|getParent
+name|I
+operator|.
+name|getPointer
 argument_list|()
 return|;
 block|}
 comment|/// getCalledValue - Return the pointer to function that is being called...
 comment|///
-name|Value
+name|ValTy
 operator|*
 name|getCalledValue
 argument_list|()
@@ -536,19 +461,15 @@ literal|"Not a call or invoke instruction!"
 argument_list|)
 block|;
 return|return
-name|getInstruction
+operator|*
+name|getCallee
 argument_list|()
-operator|->
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
 return|;
 block|}
 comment|/// getCalledFunction - Return the function being called if this is a direct
 comment|/// call, otherwise return null (if it's an indirect call).
 comment|///
-name|Function
+name|FunTy
 operator|*
 name|getCalledFunction
 argument_list|()
@@ -557,7 +478,7 @@ block|{
 return|return
 name|dyn_cast
 operator|<
-name|Function
+name|FunTy
 operator|>
 operator|(
 name|getCalledValue
@@ -569,11 +490,9 @@ comment|/// setCalledFunction - Set the callee to the specified value...
 comment|///
 name|void
 name|setCalledFunction
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
+argument_list|(
+argument|Value *V
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -582,19 +501,35 @@ argument_list|()
 operator|&&
 literal|"Not a call or invoke instruction!"
 argument_list|)
-expr_stmt|;
-name|getInstruction
+block|;
+operator|*
+name|getCallee
 argument_list|()
-operator|->
-name|setOperand
-argument_list|(
-literal|0
-argument_list|,
+operator|=
 name|V
+block|;   }
+comment|/// isCallee - Determine whether the passed iterator points to the
+comment|/// callee operand's Use.
+comment|///
+name|bool
+name|isCallee
+argument_list|(
+argument|value_use_iterator<UserTy> UI
 argument_list|)
-expr_stmt|;
+specifier|const
+block|{
+return|return
+name|getCallee
+argument_list|()
+operator|==
+operator|&
+name|UI
+operator|.
+name|getUse
+argument_list|()
+return|;
 block|}
-name|Value
+name|ValTy
 modifier|*
 name|getArgument
 argument_list|(
@@ -672,58 +607,70 @@ name|newVal
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Given an operand number, returns the argument that corresponds to it.
-comment|/// OperandNo must be a valid operand number that actually corresponds to an
-comment|/// argument.
+comment|/// Given a value use iterator, returns the argument that corresponds to it.
+comment|/// Iterator must actually correspond to an argument.
 name|unsigned
 name|getArgumentNo
 argument_list|(
-name|unsigned
-name|OperandNo
+name|value_use_iterator
+operator|<
+name|UserTy
+operator|>
+name|I
 argument_list|)
 decl|const
 block|{
 name|assert
 argument_list|(
-name|OperandNo
-operator|>=
-name|getArgumentOffset
+name|getInstruction
 argument_list|()
 operator|&&
-literal|"Operand number passed was not "
-literal|"a valid argument"
+literal|"Not a call or invoke instruction!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|arg_begin
+argument_list|()
+operator|<=
+operator|&
+name|I
+operator|.
+name|getUse
+argument_list|()
+operator|&&
+operator|&
+name|I
+operator|.
+name|getUse
+argument_list|()
+operator|<
+name|arg_end
+argument_list|()
+operator|&&
+literal|"Argument # out of range!"
 argument_list|)
 expr_stmt|;
 return|return
-name|OperandNo
+operator|&
+name|I
+operator|.
+name|getUse
+argument_list|()
 operator|-
-name|getArgumentOffset
+name|arg_begin
 argument_list|()
 return|;
 block|}
-comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
-comment|/// argument to the called function.
-name|bool
-name|hasArgument
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|Arg
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// arg_iterator - The type of iterator to use when looping over actual
 comment|/// arguments at this call site...
 typedef|typedef
-name|User
-operator|::
-name|op_iterator
+name|IterTy
 name|arg_iterator
-expr_stmt|;
+typedef|;
 comment|/// arg_begin/arg_end - Return iterators corresponding to the actual argument
 comment|/// list for a call site.
-name|arg_iterator
+name|IterTy
 name|arg_begin
 argument_list|()
 specifier|const
@@ -738,8 +685,10 @@ argument_list|)
 block|;
 comment|// Skip non-arguments
 return|return
-name|getInstruction
-argument_list|()
+operator|(
+operator|*
+name|this
+operator|)
 operator|->
 name|op_begin
 argument_list|()
@@ -748,16 +697,21 @@ name|getArgumentOffset
 argument_list|()
 return|;
 block|}
-name|arg_iterator
+name|IterTy
 name|arg_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getInstruction
-argument_list|()
+operator|(
+operator|*
+name|this
+operator|)
 operator|->
 name|op_end
+argument_list|()
+operator|-
+name|getArgumentEndOffset
 argument_list|()
 return|;
 block|}
@@ -790,6 +744,506 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+name|private
+label|:
+comment|/// Returns the operand number of the first argument
+name|unsigned
+name|getArgumentOffset
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+return|return
+literal|1
+return|;
+comment|// Skip Function (ATM)
+else|else
+return|return
+literal|0
+return|;
+comment|// Args are at the front
+block|}
+name|unsigned
+name|getArgumentEndOffset
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+comment|// Unchanged (ATM)
+else|else
+return|return
+literal|3
+return|;
+comment|// Skip BB, BB, Function
+block|}
+name|IterTy
+name|getCallee
+argument_list|()
+specifier|const
+block|{
+comment|// FIXME: this is slow, since we do not have the fast versions
+comment|// of the op_*() functions here. See CallSite::getCallee.
+comment|//
+if|if
+condition|(
+name|isCall
+argument_list|()
+condition|)
+return|return
+name|getInstruction
+argument_list|()
+operator|->
+name|op_begin
+argument_list|()
+return|;
+comment|// Unchanged (ATM)
+else|else
+return|return
+name|getInstruction
+argument_list|()
+operator|->
+name|op_end
+argument_list|()
+operator|-
+literal|3
+return|;
+comment|// Skip BB, BB, Function
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/// ImmutableCallSite - establish a view to a call site for examination
+end_comment
+
+begin_decl_stmt
+name|class
+name|ImmutableCallSite
+range|:
+name|public
+name|CallSiteBase
+operator|<
+operator|>
+block|{
+typedef|typedef
+name|CallSiteBase
+operator|<
+operator|>
+name|_Base
+expr_stmt|;
+name|public
+operator|:
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|CI
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|InvokeInst
+operator|*
+name|II
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|II
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_decl_stmt
+unit|};
+name|class
+name|CallSite
+range|:
+name|public
+name|CallSiteBase
+operator|<
+name|Function
+decl_stmt|,
+name|Value
+decl_stmt|,
+name|User
+decl_stmt|,
+name|Instruction
+decl_stmt|,
+name|CallInst
+decl_stmt|,
+name|InvokeInst
+decl_stmt|,
+name|User
+decl|::
+name|op_iterator
+decl|>
+block|{
+typedef|typedef
+name|CallSiteBase
+operator|<
+name|Function
+operator|,
+name|Value
+operator|,
+name|User
+operator|,
+name|Instruction
+operator|,
+name|CallInst
+operator|,
+name|InvokeInst
+operator|,
+name|User
+operator|::
+name|op_iterator
+operator|>
+name|_Base
+expr_stmt|;
+name|public
+label|:
+name|CallSite
+argument_list|()
+block|{}
+name|CallSite
+argument_list|(
+argument|_Base B
+argument_list|)
+block|:
+name|_Base
+argument_list|(
+argument|B
+argument_list|)
+block|{}
+name|CallSite
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|CI
+argument_list|)
+block|{}
+name|CallSite
+argument_list|(
+name|InvokeInst
+operator|*
+name|II
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|CallSite
+argument_list|(
+name|Instruction
+operator|*
+name|II
+argument_list|)
+operator|:
+name|_Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CallSite
+operator|&
+name|CS
+operator|)
+specifier|const
+block|{
+return|return
+name|I
+operator|==
+name|CS
+operator|.
+name|I
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|CallSite
+operator|&
+name|CS
+operator|)
+specifier|const
+block|{
+return|return
+name|I
+operator|!=
+name|CS
+operator|.
+name|I
+return|;
+block|}
+comment|/// CallSite::get - This static method is sort of like a constructor.  It will
+comment|/// create an appropriate call site for a Call or Invoke instruction, but it
+comment|/// can also create a null initialized CallSite object for something which is
+comment|/// NOT a call site.
+comment|///
+specifier|static
+name|CallSite
+name|get
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+return|return
+name|_Base
+operator|::
+name|get
+argument_list|(
+name|V
+argument_list|)
+return|;
+block|}
+comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
+comment|/// call.
+name|CallingConv
+operator|::
+name|ID
+name|getCallingConv
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setCallingConv
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CC
+argument_list|)
+decl_stmt|;
+comment|/// getAttributes/setAttributes - get or set the parameter attributes of
+comment|/// the call.
+specifier|const
+name|AttrListPtr
+operator|&
+name|getAttributes
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setAttributes
+parameter_list|(
+specifier|const
+name|AttrListPtr
+modifier|&
+name|PAL
+parameter_list|)
+function_decl|;
+comment|/// paramHasAttr - whether the call or the callee has the given attribute.
+name|bool
+name|paramHasAttr
+argument_list|(
+name|uint16_t
+name|i
+argument_list|,
+name|Attributes
+name|attr
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
+name|uint16_t
+name|getParamAlignment
+argument_list|(
+name|uint16_t
+name|i
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @brief Return true if the call should not be inlined.
+name|bool
+name|isNoInline
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setIsNoInline
+parameter_list|(
+name|bool
+name|Value
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// @brief Determine if the call does not access memory.
+name|bool
+name|doesNotAccessMemory
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDoesNotAccessMemory
+parameter_list|(
+name|bool
+name|doesNotAccessMemory
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// @brief Determine if the call does not access or only reads memory.
+name|bool
+name|onlyReadsMemory
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setOnlyReadsMemory
+parameter_list|(
+name|bool
+name|onlyReadsMemory
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// @brief Determine if the call cannot return.
+name|bool
+name|doesNotReturn
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDoesNotReturn
+parameter_list|(
+name|bool
+name|doesNotReturn
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// @brief Determine if the call cannot unwind.
+name|bool
+name|doesNotThrow
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setDoesNotThrow
+parameter_list|(
+name|bool
+name|doesNotThrow
+init|=
+name|true
+parameter_list|)
+function_decl|;
+comment|/// getType - Return the type of the instruction that generated this call site
+comment|///
+specifier|const
+name|Type
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+comment|/// getCaller - Return the caller function for this call site
+comment|///
+name|Function
+operator|*
+name|getCaller
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+return|;
+block|}
+comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
+comment|/// argument to the called function.
+name|bool
+name|hasArgument
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|Arg
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|operator
 operator|<
@@ -811,59 +1265,24 @@ name|getInstruction
 argument_list|()
 return|;
 block|}
-name|bool
-name|isCallee
-argument_list|(
-name|Value
-operator|::
-name|use_iterator
-name|UI
-argument_list|)
-decl|const
-block|{
-return|return
-name|getInstruction
-argument_list|()
-operator|->
-name|op_begin
-argument_list|()
-operator|==
-operator|&
-name|UI
-operator|.
-name|getUse
-argument_list|()
-return|;
-block|}
 name|private
 label|:
-comment|/// Returns the operand number of the first argument
-name|unsigned
-name|getArgumentOffset
+name|User
+operator|::
+name|op_iterator
+name|getCallee
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|isCall
-argument_list|()
-condition|)
-return|return
-literal|1
-return|;
-comment|// Skip Function
-else|else
-return|return
-literal|3
-return|;
-comment|// Skip Function, BB, BB
-block|}
-block|}
-empty_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 
