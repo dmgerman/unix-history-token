@@ -11609,87 +11609,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize a device's wake GPE. */
-end_comment
-
-begin_function
-name|int
-name|acpi_wake_init
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-block|{
-name|struct
-name|acpi_prw_data
-name|prw
-decl_stmt|;
-comment|/* Evaluate _PRW to find the GPE. */
-if|if
-condition|(
-name|acpi_parse_prw
-argument_list|(
-name|acpi_get_handle
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-operator|&
-name|prw
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-comment|/* Set the requested type for the GPE (runtime, wake, or both). */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|AcpiSetGpeType
-argument_list|(
-name|prw
-operator|.
-name|gpe_handle
-argument_list|,
-name|prw
-operator|.
-name|gpe_bit
-argument_list|,
-name|type
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"set GPE type failed\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Enable or disable the device's wake GPE. */
 end_comment
 
@@ -11759,7 +11678,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_GPE_TYPE_WAKE_RUN
 argument_list|)
 expr_stmt|;
 if|if
@@ -11807,7 +11726,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_GPE_TYPE_WAKE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11914,7 +11833,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_GPE_TYPE_WAKE
 argument_list|)
 expr_stmt|;
 if|if
@@ -12082,7 +12001,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_GPE_TYPE_WAKE_RUN
 argument_list|)
 expr_stmt|;
 if|if

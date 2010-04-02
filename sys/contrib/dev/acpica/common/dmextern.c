@@ -374,6 +374,19 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ParentPath
+index|[
+literal|1
+index|]
+condition|)
+block|{
+comment|/*          * If ParentPath is not just a simple '\', increment the length          * for the required dot separator (ParentPath.Path)          */
+name|Length
+operator|++
+expr_stmt|;
+block|}
 name|Fullpath
 operator|=
 name|ACPI_ALLOCATE_ZEROED

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100304
+value|0x20100331
 end_define
 
 begin_include
@@ -135,6 +135,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 name|AcpiGbl_EnableAmlDebugObject
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_CopyDsdtLocally
 decl_stmt|;
 end_decl_stmt
 
@@ -949,7 +956,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiSetGpeType
+name|AcpiSetGpe
 parameter_list|(
 name|ACPI_HANDLE
 name|GpeDevice
@@ -958,7 +965,7 @@ name|UINT32
 name|GpeNumber
 parameter_list|,
 name|UINT8
-name|Type
+name|Action
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -973,8 +980,8 @@ parameter_list|,
 name|UINT32
 name|GpeNumber
 parameter_list|,
-name|UINT32
-name|Flags
+name|UINT8
+name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -989,8 +996,8 @@ parameter_list|,
 name|UINT32
 name|GpeNumber
 parameter_list|,
-name|UINT32
-name|Flags
+name|UINT8
+name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1004,9 +1011,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT32
-name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1020,9 +1024,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT32
-name|Flags
 parameter_list|,
 name|ACPI_EVENT_STATUS
 modifier|*

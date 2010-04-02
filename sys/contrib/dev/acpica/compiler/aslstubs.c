@@ -337,23 +337,6 @@ block|}
 end_function
 
 begin_function
-name|ACPI_STATUS
-name|AcpiEvCheckForWakeOnlyGpe
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|AcpiExDoDebugObject
 parameter_list|(

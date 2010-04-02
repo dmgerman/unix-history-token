@@ -1919,17 +1919,14 @@ name|GpeBlock
 operator|->
 name|RegisterCount
 argument_list|,
-name|ACPI_MUL_8
-argument_list|(
 name|GpeBlock
 operator|->
-name|RegisterCount
-argument_list|)
+name|GpeCount
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    GPE range:    0x%X to 0x%X\n"
+literal|"    GPE range:    0x%X to 0x%X on interrupt %u\n"
 argument_list|,
 name|GpeBlock
 operator|->
@@ -1942,12 +1939,14 @@ operator|+
 operator|(
 name|GpeBlock
 operator|->
-name|RegisterCount
-operator|*
-literal|8
-operator|)
+name|GpeCount
 operator|-
 literal|1
+operator|)
+argument_list|,
+name|GpeXruptInfo
+operator|->
+name|InterruptNumber
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2019,17 +2018,32 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Reg %u:  WakeEnable %2.2X, RunEnable %2.2X  Status %8.8X%8.8X Enable %8.8X%8.8X\n"
+literal|"    Reg %u: (GPE %.2X-%.2X)  RunEnable %2.2X WakeEnable %2.2X"
+literal|" Status %8.8X%8.8X Enable %8.8X%8.8X\n"
 argument_list|,
 name|i
 argument_list|,
 name|GpeRegisterInfo
 operator|->
-name|EnableForWake
+name|BaseGpeNumber
+argument_list|,
+name|GpeRegisterInfo
+operator|->
+name|BaseGpeNumber
+operator|+
+operator|(
+name|ACPI_GPE_REGISTER_WIDTH
+operator|-
+literal|1
+operator|)
 argument_list|,
 name|GpeRegisterInfo
 operator|->
 name|EnableForRun
+argument_list|,
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -2097,12 +2111,12 @@ name|ACPI_GPE_DISPATCH_MASK
 operator|)
 condition|)
 block|{
-comment|/* This GPE is not used (no method or handler) */
+comment|/* This GPE is not used (no method or handler), ignore it */
 continue|continue;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"        GPE %.3X: %p Flags %2.2X: "
+literal|"        GPE %.2X: %p  RunRefs %2.2X   WakeRefs %2.2X Flags %2.2X ("
 argument_list|,
 name|GpeBlock
 operator|->
@@ -2114,9 +2128,18 @@ name|GpeEventInfo
 argument_list|,
 name|GpeEventInfo
 operator|->
+name|RuntimeCount
+argument_list|,
+name|GpeEventInfo
+operator|->
+name|WakeupCount
+argument_list|,
+name|GpeEventInfo
+operator|->
 name|Flags
 argument_list|)
 expr_stmt|;
+comment|/* Decode the flags byte */
 if|if
 condition|(
 name|GpeEventInfo
@@ -2140,62 +2163,18 @@ literal|"Edge,  "
 argument_list|)
 expr_stmt|;
 block|}
-switch|switch
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_TYPE_MASK
-condition|)
-block|{
-case|case
-name|ACPI_GPE_TYPE_WAKE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"WakeOnly: "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_RUNTIME
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|" RunOnly: "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_WAKE_RUN
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|" WakeRun: "
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|AcpiOsPrintf
-argument_list|(
-literal|" NotUsed: "
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|GpeEventInfo
 operator|->
 name|Flags
 operator|&
-name|ACPI_GPE_WAKE_ENABLED
+name|ACPI_GPE_CAN_WAKE
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Wake 1 "
+literal|"CanWake, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2203,30 +2182,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Wake 0 "
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_RUN_ENABLED
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Run 1], "
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"Run 0], "
+literal|"RunOnly, "
 argument_list|)
 expr_stmt|;
 block|}
@@ -2282,7 +2238,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n"
+literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}

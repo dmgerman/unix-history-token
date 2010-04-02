@@ -754,11 +754,27 @@ operator|.
 name|ExpectedBtypes
 condition|)
 block|{
+name|ApGetExpectedTypes
+argument_list|(
+name|StringBuffer
+argument_list|,
+name|PredefinedNames
+index|[
+name|Index
+index|]
+operator|.
+name|Info
+operator|.
+name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%4.4s"
+literal|"%s required for %4.4s"
+argument_list|,
+name|StringBuffer
 argument_list|,
 name|PredefinedNames
 index|[
@@ -783,6 +799,152 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPredefinedReturnValue  *  * PARAMETERS:  Op              - A parse node of type "RETURN".  *              MethodInfo      - Saved info about this method  *  * RETURN:      None  *  * DESCRIPTION: If method is a predefined name, attempt to validate the return  *              value. Only "static" types can be validated - a simple return  *              of an integer/string/buffer/package or a named reference to  *              a static object. Values such as a Localx or Argx or a control  *              method invocation are not checked.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|ApCheckPredefinedReturnValue
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ASL_METHOD_INFO
+modifier|*
+name|MethodInfo
+parameter_list|)
+block|{
+name|UINT32
+name|Index
+decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ReturnValueOp
+decl_stmt|;
+comment|/* Check parent method for a match against the predefined name list */
+name|Index
+operator|=
+name|ApCheckForPredefinedName
+argument_list|(
+name|MethodInfo
+operator|->
+name|Op
+argument_list|,
+name|MethodInfo
+operator|->
+name|Op
+operator|->
+name|Asl
+operator|.
+name|NameSeg
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Index
+condition|)
+block|{
+case|case
+name|ACPI_NOT_RESERVED_NAME
+case|:
+comment|/* No underscore or _Txx or _xxx name not matched */
+case|case
+name|ACPI_PREDEFINED_NAME
+case|:
+comment|/* Resource Name or reserved scope name */
+case|case
+name|ACPI_COMPILER_RESERVED_NAME
+case|:
+comment|/* A _Txx that was not emitted by compiler */
+case|case
+name|ACPI_EVENT_RESERVED_NAME
+case|:
+comment|/* _Lxx, _Exx, and _Qxx methods */
+comment|/* Just return, nothing to do */
+return|return;
+default|default:
+comment|/* a real predefined ACPI name */
+comment|/* Exit if no return value expected */
+if|if
+condition|(
+operator|!
+name|PredefinedNames
+index|[
+name|Index
+index|]
+operator|.
+name|Info
+operator|.
+name|ExpectedBtypes
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Get the object returned, it is the next argument */
+name|ReturnValueOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+switch|switch
+condition|(
+name|ReturnValueOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+condition|)
+block|{
+case|case
+name|PARSEOP_ZERO
+case|:
+case|case
+name|PARSEOP_ONE
+case|:
+case|case
+name|PARSEOP_ONES
+case|:
+case|case
+name|PARSEOP_INTEGER
+case|:
+case|case
+name|PARSEOP_STRING_LITERAL
+case|:
+case|case
+name|PARSEOP_BUFFER
+case|:
+case|case
+name|PARSEOP_PACKAGE
+case|:
+comment|/* Static data return object - check against expected type */
+name|ApCheckObjectType
+argument_list|(
+name|ReturnValueOp
+argument_list|,
+name|PredefinedNames
+index|[
+name|Index
+index|]
+operator|.
+name|Info
+operator|.
+name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/*              * All other ops are very difficult or impossible to typecheck at              * compile time. These include all Localx, Argx, and method              * invocations. Also, NAMESEG and NAMESTRING because the type of              * any named object can be changed at runtime (for example,              * CopyObject will change the type of the target object.)              */
+break|break;
+block|}
 block|}
 block|}
 end_function
@@ -1095,7 +1257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckForSpecialName  *  * PARAMETERS:  Op              - A parse node  *              Name            - NameSeg to check  *  * RETURN:      None  *  * DESCRIPTION: Check for the "special" predefined names -   *              _Lxx, _Exx, _Qxx, and _T_x  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckForSpecialName  *  * PARAMETERS:  Op              - A parse node  *              Name            - NameSeg to check  *  * RETURN:      None  *  * DESCRIPTION: Check for the "special" predefined names -  *              _Lxx, _Exx, _Qxx, and _T_x  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1276,7 +1438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckObjectType  *  * PARAMETERS:  Op              - A parse node  *              ExpectedBtypes  - Bitmap of expected return type(s)  *  * RETURN:      None  *  * DESCRIPTION: Check if the object type is one of the types that is expected  *              by the predefined name. Only a limited number of object types  *              can be returned by the predefined names.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckObjectType  *  * PARAMETERS:  Op              - Current parse node  *              ExpectedBtypes  - Bitmap of expected return type(s)  *  * RETURN:      None  *  * DESCRIPTION: Check if the object type is one of the types that is expected  *              by the predefined name. Only a limited number of object types  *              can be returned by the predefined names.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1295,13 +1457,6 @@ block|{
 name|UINT32
 name|ReturnBtype
 decl_stmt|;
-name|char
-name|TypeBuffer
-index|[
-literal|48
-index|]
-decl_stmt|;
-comment|/* Room for 5 types */
 switch|switch
 condition|(
 name|Op
@@ -1311,6 +1466,15 @@ operator|.
 name|ParseOpcode
 condition|)
 block|{
+case|case
+name|PARSEOP_ZERO
+case|:
+case|case
+name|PARSEOP_ONE
+case|:
+case|case
+name|PARSEOP_ONES
+case|:
 case|case
 name|PARSEOP_INTEGER
 case|:
@@ -1349,7 +1513,7 @@ goto|goto
 name|TypeErrorExit
 goto|;
 block|}
-comment|/* Is the object one of the expected types? */
+comment|/* Exit if the object is one of the expected types */
 if|if
 condition|(
 name|ReturnBtype
@@ -1364,9 +1528,27 @@ label|:
 comment|/* Format the expected types and emit an error message */
 name|ApGetExpectedTypes
 argument_list|(
-name|TypeBuffer
+name|StringBuffer
 argument_list|,
 name|ExpectedBtypes
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"found %s, requires %s"
+argument_list|,
+name|UtGetOpName
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+argument_list|)
+argument_list|,
+name|StringBuffer
 argument_list|)
 expr_stmt|;
 name|AslError
@@ -1377,7 +1559,7 @@ name|ASL_MSG_RESERVED_OPERAND_TYPE
 argument_list|,
 name|Op
 argument_list|,
-name|TypeBuffer
+name|MsgBuffer
 argument_list|)
 expr_stmt|;
 block|}
