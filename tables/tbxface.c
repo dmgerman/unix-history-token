@@ -350,7 +350,7 @@ argument_list|,
 name|CurrentSize
 argument_list|)
 expr_stmt|;
-comment|/* Update the root table descriptor */
+comment|/*      * Update the root table descriptor. The new size will be the current      * number of tables plus the increment, independent of the reserved      * size of the original table list.      */
 name|AcpiGbl_RootTableList
 operator|.
 name|Tables
@@ -360,7 +360,11 @@ expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
 name|Size
-operator|+=
+operator|=
+name|AcpiGbl_RootTableList
+operator|.
+name|Count
+operator|+
 name|ACPI_ROOT_TABLE_SIZE_INCREMENT
 expr_stmt|;
 name|AcpiGbl_RootTableList
