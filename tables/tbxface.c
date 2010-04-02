@@ -964,18 +964,6 @@ argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
-comment|/*      * Save the DSDT pointer for simple access. This is the mapped memory      * address. We must take care here because the address of the .Tables      * array can change dynamically as tables are loaded at run-time      */
-name|AcpiGbl_DSDT
-operator|=
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-name|ACPI_TABLE_INDEX_DSDT
-index|]
-operator|.
-name|Pointer
-expr_stmt|;
 comment|/*      * Load the namespace. The DSDT is required, but any SSDT and      * PSDT tables are optional. Verify the DSDT.      */
 if|if
 condition|(
@@ -987,9 +975,17 @@ operator|||
 operator|!
 name|ACPI_COMPARE_NAME
 argument_list|(
-name|AcpiGbl_DSDT
-operator|->
+operator|&
+operator|(
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|ACPI_TABLE_INDEX_DSDT
+index|]
+operator|.
 name|Signature
+operator|)
 argument_list|,
 name|ACPI_SIG_DSDT
 argument_list|)
@@ -1017,6 +1013,18 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/*      * Save the DSDT pointer for simple access. This is the mapped memory      * address. We must take care here because the address of the .Tables      * array can change dynamically as tables are loaded at run-time. Note:      * .Pointer field is not validated until after call to AcpiTbVerifyTable.      */
+name|AcpiGbl_DSDT
+operator|=
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|ACPI_TABLE_INDEX_DSDT
+index|]
+operator|.
+name|Pointer
+expr_stmt|;
 comment|/*      * Optionally copy the entire DSDT to local memory (instead of simply      * mapping it.) There are some BIOSs that corrupt or replace the original      * DSDT, creating the need for this option. Default is FALSE, do not copy      * the DSDT.      */
 if|if
 condition|(
