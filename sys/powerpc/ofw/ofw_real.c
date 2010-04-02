@@ -3151,6 +3151,8 @@ operator|)
 literal|"close"
 block|,
 literal|1
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -3704,6 +3706,8 @@ operator|)
 literal|"release"
 block|,
 literal|2
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -3766,6 +3770,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"enter"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware
@@ -3810,6 +3818,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"exit"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware
