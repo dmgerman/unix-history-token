@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm-bc -o - | opt -std-compile-opts | llvm-dis | grep 'ret i32 6'
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -O3 -emit-llvm -o - | grep 'ret i32 6'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -x c++ %s -emit-llvm-bc -o - | opt -std-compile-opts | llvm-dis | grep 'ret i32 7'
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -x c++ %s -O3 -emit-llvm -o - | grep 'ret i32 7'
 end_comment
 
 begin_enum

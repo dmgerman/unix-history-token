@@ -3069,7 +3069,7 @@ name|private
 operator|:
 name|ObjCIvarDecl
 argument_list|(
-argument|DeclContext *DC
+argument|ObjCContainerDecl *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|,
@@ -3118,7 +3118,7 @@ name|Create
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|DeclContext *DC
+argument|ObjCContainerDecl *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|,
@@ -3132,6 +3132,17 @@ argument|AccessControl ac
 argument_list|,
 argument|Expr *BW = NULL
 argument_list|)
+block|;
+comment|/// \brief Return the class interface that this ivar is logically contained
+comment|/// in; this is either the interface where the ivar was declared, or the
+comment|/// interface the ivar is conceptually a part of in the case of synthesized
+comment|/// ivars.
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|getContainingInterface
+argument_list|()
+specifier|const
 block|;
 name|void
 name|setAccessControl

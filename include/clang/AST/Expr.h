@@ -793,6 +793,30 @@ name|isDefaultArgument
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Determine whether this expression directly creates a
+comment|/// temporary object (of class type).
+name|bool
+name|isTemporaryObject
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemporaryObject
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// \brief If this expression directly creates a temporary object of
+comment|/// class type, return the expression that actually constructs that
+comment|/// temporary object.
+specifier|const
+name|Expr
+operator|*
+name|getTemporaryObject
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|Expr
 operator|*
