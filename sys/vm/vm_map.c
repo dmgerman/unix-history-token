@@ -1189,8 +1189,22 @@ operator|.
 name|max_offset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Comment out the pmap_release call for now. The 	 * vmspace_zone is marked as UMA_ZONE_NOFREE, and bugs cause 	 * pmap.resident_count to be != 0 on exit sometimes. 	 */
-comment|/* 	pmap_release(vmspace_pmap(vm)); */
+name|pmap_release
+argument_list|(
+name|vmspace_pmap
+argument_list|(
+name|vm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vm
+operator|->
+name|vm_map
+operator|.
+name|pmap
+operator|=
+name|NULL
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|vmspace_zone
