@@ -509,6 +509,12 @@ name|ksiginfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|image_params
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
