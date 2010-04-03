@@ -2089,6 +2089,70 @@ else|:
 name|x
 return|;
 block|}
+comment|/// SignExtend32 - Sign extend B-bit number x to 32-bit int.
+comment|/// Usage int32_t r = SignExtend32<5>(x);
+name|template
+operator|<
+name|unsigned
+name|B
+operator|>
+specifier|inline
+name|int32_t
+name|SignExtend32
+argument_list|(
+argument|int32_t x
+argument_list|)
+block|{
+return|return
+operator|(
+name|x
+operator|<<
+operator|(
+literal|32
+operator|-
+name|B
+operator|)
+operator|)
+operator|>>
+operator|(
+literal|32
+operator|-
+name|B
+operator|)
+return|;
+block|}
+comment|/// SignExtend64 - Sign extend B-bit number x to 64-bit int.
+comment|/// Usage int64_t r = SignExtend64<5>(x);
+name|template
+operator|<
+name|unsigned
+name|B
+operator|>
+specifier|inline
+name|int64_t
+name|SignExtend64
+argument_list|(
+argument|int32_t x
+argument_list|)
+block|{
+return|return
+operator|(
+name|x
+operator|<<
+operator|(
+literal|64
+operator|-
+name|B
+operator|)
+operator|)
+operator|>>
+operator|(
+literal|64
+operator|-
+name|B
+operator|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

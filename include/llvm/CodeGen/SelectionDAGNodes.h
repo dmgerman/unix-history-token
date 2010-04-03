@@ -5134,7 +5134,7 @@ name|SDNode
 argument_list|(
 argument|ISD::HANDLENODE
 argument_list|,
-argument|DebugLoc::getUnknownLoc()
+argument|DebugLoc()
 argument_list|,
 argument|getSDVTList(MVT::Other)
 argument_list|)
@@ -6302,8 +6302,6 @@ operator|::
 name|Constant
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -6469,8 +6467,6 @@ operator|::
 name|ConstantFP
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -6826,8 +6822,6 @@ operator|::
 name|FrameIndex
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -6933,8 +6927,6 @@ operator|::
 name|JumpTable
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7076,8 +7068,6 @@ operator|::
 name|ConstantPool
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7147,8 +7137,6 @@ operator|::
 name|ConstantPool
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7387,8 +7375,6 @@ operator|::
 name|BasicBlock
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7558,8 +7544,6 @@ operator|::
 name|SRCVALUE
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7647,8 +7631,6 @@ operator|::
 name|Register
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7738,8 +7720,6 @@ argument_list|(
 name|NodeTy
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -7961,8 +7941,6 @@ operator|::
 name|ExternalSymbol
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -8072,8 +8050,6 @@ operator|::
 name|CONDCODE
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList
@@ -8925,8 +8901,6 @@ operator|::
 name|VALUETYPE
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|getSDVTList

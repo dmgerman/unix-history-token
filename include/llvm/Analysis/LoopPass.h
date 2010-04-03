@@ -136,6 +136,18 @@ argument_list|,
 argument|pid
 argument_list|)
 block|{}
+comment|/// getPrinterPass - Get a pass to print the function corresponding
+comment|/// to a Loop.
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
 comment|// runOnLoop - This method should be implemented by the subclass to perform
 comment|// whatever action is necessary for the specified Loop.
 name|virtual

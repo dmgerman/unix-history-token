@@ -593,6 +593,24 @@ name|DisassemblerMode
 name|mode
 parameter_list|)
 function_decl|;
+comment|/* x86DisassemblerDebug - C-accessible function for printing a message to  *   debugs()  * @param file  - The name of the file printing the debug message.  * @param line  - The line number that printed the debug message.  * @param s     - The message to print.  */
+name|void
+name|x86DisassemblerDebug
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

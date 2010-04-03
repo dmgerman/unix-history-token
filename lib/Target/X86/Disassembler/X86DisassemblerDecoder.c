@@ -6,16 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_comment
-comment|/* for assert()     */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -79,6 +69,13 @@ name|FALSE
 value|0
 end_define
 
+begin_typedef
+typedef|typedef
+name|int8_t
+name|bool
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -108,16 +105,41 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|unreachable
+name|debug
 parameter_list|(
 name|s
 parameter_list|)
-define|\
-value|do {                                                      \     fprintf(stderr, "%s:%d: %s\n", __FILE__, __LINE__, s);  \     exit(-1);                                               \   } while (0);
+value|do { x86DisassemblerDebug(__FILE__, __LINE__, s); } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|debug
+parameter_list|(
+name|s
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * contextForAttrs - Client for the instruction context table.  Takes a set of  *   attributes and returns the appropriate decode context.  *  * @param attrMask  - Attributes, from the enumeration attributeBits.  * @return          - The InstructionContext to use when looking up an  *                    an instruction with these attributes.  */
@@ -227,11 +249,6 @@ name|modrm_type
 operator|!=
 name|MODRM_ONEENTRY
 return|;
-name|unreachable
-argument_list|(
-literal|"Unknown opcode type"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -239,7 +256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * decode - Reads the appropriate instruction table to obtain the unique ID of  *   an instruction.  *  * @param type        - See modRMRequired().  * @param insnContext - See modRMRequired().  * @param opcode      - See modRMRequired().  * @param modRM       - The ModR/M byte if required, or any value if not.  */
+comment|/*  * decode - Reads the appropriate instruction table to obtain the unique ID of  *   an instruction.  *  * @param type        - See modRMRequired().  * @param insnContext - See modRMRequired().  * @param opcode      - See modRMRequired().  * @param modRM       - The ModR/M byte if required, or any value if not.  * @return            - The UID of the instruction, or 0 on failure.  */
 end_comment
 
 begin_function
@@ -271,11 +288,14 @@ name|type
 condition|)
 block|{
 default|default:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Unknown opcode type"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 case|case
 name|ONEBYTE
 case|:
@@ -361,11 +381,14 @@ name|modrm_type
 condition|)
 block|{
 default|default:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Corrupt table!  Unknown modrm_type"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 case|case
 name|MODRM_ONEENTRY
 case|:
@@ -418,9 +441,6 @@ name|modRM
 index|]
 return|;
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1024,11 +1044,15 @@ name|SEG_OVERRIDE_GS
 expr_stmt|;
 break|break;
 default|default:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Unhandled override"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -2961,11 +2985,15 @@ break|break;
 case|case
 literal|0x3
 case|:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Cannot have Mod = 0b11 and a SIB byte"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 break|break;
 default|default:
@@ -3757,11 +3785,11 @@ parameter_list|,
 name|prefix
 parameter_list|)
 define|\
-value|static uint8_t name(struct InternalInstruction *insn,   \                       OperandType type,                   \                       uint8_t index,                      \                       uint8_t *valid) {                   \     *valid = 1;                                           \     switch (type) {                                       \     default:                                              \       unreachable("Unhandled register type");             \     case TYPE_Rv:                                         \       return base + index;                                \     case TYPE_R8:                                         \       if(insn->rexPrefix&&                               \          index>= 4&& index<= 7) {                      \         return prefix##_SPL + (index - 4);                \       } else {                                            \         return prefix##_AL + index;                       \       }                                                   \     case TYPE_R16:                                        \       return prefix##_AX + index;                         \     case TYPE_R32:                                        \       return prefix##_EAX + index;                        \     case TYPE_R64:                                        \       return prefix##_RAX + index;                        \     case TYPE_XMM128:                                     \     case TYPE_XMM64:                                      \     case TYPE_XMM32:                                      \     case TYPE_XMM:                                        \       return prefix##_XMM0 + index;                       \     case TYPE_MM64:                                       \     case TYPE_MM32:                                       \     case TYPE_MM:                                         \       if(index> 7)                                       \         *valid = 0;                                       \       return prefix##_MM0 + index;                        \     case TYPE_SEGMENTREG:                                 \       if(index> 5)                                       \         *valid = 0;                                       \       return prefix##_ES + index;                         \     case TYPE_DEBUGREG:                                   \       if(index> 7)                                       \         *valid = 0;                                       \       return prefix##_DR0 + index;                        \     case TYPE_CR32:                                       \       if(index> 7)                                       \         *valid = 0;                                       \       return prefix##_ECR0 + index;                       \     case TYPE_CR64:                                       \       if(index> 8)                                       \         *valid = 0;                                       \       return prefix##_RCR0 + index;                       \     }                                                     \   }
+value|static uint8_t name(struct InternalInstruction *insn,   \                       OperandType type,                   \                       uint8_t index,                      \                       uint8_t *valid) {                   \     *valid = 1;                                           \     switch (type) {                                       \     default:                                              \       debug("Unhandled register type");                   \       *valid = 0;                                         \       return 0;                                           \     case TYPE_Rv:                                         \       return base + index;                                \     case TYPE_R8:                                         \       if (insn->rexPrefix&&                              \          index>= 4&& index<= 7) {                      \         return prefix##_SPL + (index - 4);                \       } else {                                            \         return prefix##_AL + index;                       \       }                                                   \     case TYPE_R16:                                        \       return prefix##_AX + index;                         \     case TYPE_R32:                                        \       return prefix##_EAX + index;                        \     case TYPE_R64:                                        \       return prefix##_RAX + index;                        \     case TYPE_XMM128:                                     \     case TYPE_XMM64:                                      \     case TYPE_XMM32:                                      \     case TYPE_XMM:                                        \       return prefix##_XMM0 + index;                       \     case TYPE_MM64:                                       \     case TYPE_MM32:                                       \     case TYPE_MM:                                         \       if (index> 7)                                      \         *valid = 0;                                       \       return prefix##_MM0 + index;                        \     case TYPE_SEGMENTREG:                                 \       if (index> 5)                                      \         *valid = 0;                                       \       return prefix##_ES + index;                         \     case TYPE_DEBUGREG:                                   \       if (index> 7)                                      \         *valid = 0;                                       \       return prefix##_DR0 + index;                        \     case TYPE_CR32:                                       \       if (index> 7)                                      \         *valid = 0;                                       \       return prefix##_ECR0 + index;                       \     case TYPE_CR64:                                       \       if (index> 8)                                      \         *valid = 0;                                       \       return prefix##_RCR0 + index;                       \     }                                                     \   }
 end_define
 
 begin_comment
-comment|/*  * fixup*Value - Consults an operand type to determine the meaning of the  *   reg or R/M field.  If the operand is an XMM operand, for example, an  *   operand would be XMM0 instead of AX, which readModRM() would otherwise  *   misinterpret it as.  *  * @param insn  - The instruction containing the operand.  * @param type  - The operand type.  * @param index - The existing value of the field as reported by readModRM().  * @param valid - The address of a uint8_t.  The target is set to 1 if the  *                field is valid for the register class; 0 if not.  */
+comment|/*  * fixup*Value - Consults an operand type to determine the meaning of the  *   reg or R/M field.  If the operand is an XMM operand, for example, an  *   operand would be XMM0 instead of AX, which readModRM() would otherwise  *   misinterpret it as.  *  * @param insn  - The instruction containing the operand.  * @param type  - The operand type.  * @param index - The existing value of the field as reported by readModRM().  * @param valid - The address of a uint8_t.  The target is set to 1 if the  *                field is valid for the register class; 0 if not.  * @return      - The proper value.  */
 end_comment
 
 begin_macro
@@ -3827,11 +3855,15 @@ name|encoding
 condition|)
 block|{
 default|default:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Expected a REG or R/M encoding in fixupReg"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 case|case
 name|ENCODING_REG
 case|:
@@ -3938,12 +3970,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * readOpcodeModifier - Reads an operand from the opcode field of an   *   instruction.  Handles AddRegFrm instructions.  *  * @param insn    - The instruction whose opcode field is to be read.  * @param inModRM - Indicates that the opcode field is to be read from the  *                  ModR/M extension; useful for escape opcodes  */
+comment|/*  * readOpcodeModifier - Reads an operand from the opcode field of an   *   instruction.  Handles AddRegFrm instructions.  *  * @param insn    - The instruction whose opcode field is to be read.  * @param inModRM - Indicates that the opcode field is to be read from the  *                  ModR/M extension; useful for escape opcodes  * @return        - 0 on success; nonzero otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|readOpcodeModifier
 parameter_list|(
 name|struct
@@ -3965,7 +3997,9 @@ name|insn
 operator|->
 name|consumedOpcodeModifier
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|insn
 operator|->
 name|consumedOpcodeModifier
@@ -3982,19 +4016,27 @@ name|modifierType
 condition|)
 block|{
 default|default:
-name|unreachable
+name|debug
 argument_list|(
 literal|"Unknown modifier type."
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 case|case
 name|MODIFIER_NONE
 case|:
-name|unreachable
+name|debug
 argument_list|(
 literal|"No modifier but an operand expects one."
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 case|case
 name|MODIFIER_OPCODE
 case|:
@@ -4012,7 +4054,9 @@ name|spec
 operator|->
 name|modifierBase
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 case|case
 name|MODIFIER_MODRM
 case|:
@@ -4030,18 +4074,20 @@ name|spec
 operator|->
 name|modifierBase
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * readOpcodeRegister - Reads an operand from the opcode field of an   *   instruction and interprets it appropriately given the operand width.  *   Handles AddRegFrm instructions.  *  * @param insn  - See readOpcodeModifier().  * @param size  - The width (in bytes) of the register being specified.  *                1 means AL and friends, 2 means AX, 4 means EAX, and 8 means  *                RAX.  */
+comment|/*  * readOpcodeRegister - Reads an operand from the opcode field of an   *   instruction and interprets it appropriately given the operand width.  *   Handles AddRegFrm instructions.  *  * @param insn  - See readOpcodeModifier().  * @param size  - The width (in bytes) of the register being specified.  *                1 means AL and friends, 2 means AX, 4 means EAX, and 8 means  *                RAX.  * @return      - 0 on success; nonzero otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|readOpcodeRegister
 parameter_list|(
 name|struct
@@ -4060,11 +4106,17 @@ argument_list|,
 literal|"readOpcodeRegister()"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|readOpcodeModifier
 argument_list|(
 name|insn
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|size
@@ -4204,7 +4256,6 @@ call|)
 argument_list|(
 name|MODRM_REG_EAX
 operator|+
-operator|+
 operator|(
 operator|(
 name|bFromREX
@@ -4257,6 +4308,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -4305,11 +4359,17 @@ name|numImmediatesConsumed
 operator|==
 literal|2
 condition|)
-name|unreachable
+block|{
+name|debug
 argument_list|(
 literal|"Already consumed two immediates"
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|size
@@ -4658,6 +4718,8 @@ break|break;
 case|case
 name|ENCODING_Iv
 case|:
+if|if
+condition|(
 name|readImmediate
 argument_list|(
 name|insn
@@ -4666,11 +4728,16 @@ name|insn
 operator|->
 name|immediateSize
 argument_list|)
-expr_stmt|;
-break|break;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 case|case
 name|ENCODING_Ia
 case|:
+if|if
+condition|(
 name|readImmediate
 argument_list|(
 name|insn
@@ -4679,72 +4746,111 @@ name|insn
 operator|->
 name|addressSize
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_RB
 case|:
+if|if
+condition|(
 name|readOpcodeRegister
 argument_list|(
 name|insn
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_RW
 case|:
+if|if
+condition|(
 name|readOpcodeRegister
 argument_list|(
 name|insn
 argument_list|,
 literal|2
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_RD
 case|:
+if|if
+condition|(
 name|readOpcodeRegister
 argument_list|(
 name|insn
 argument_list|,
 literal|4
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_RO
 case|:
+if|if
+condition|(
 name|readOpcodeRegister
 argument_list|(
 name|insn
 argument_list|,
 literal|8
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_Rv
 case|:
+if|if
+condition|(
 name|readOpcodeRegister
 argument_list|(
 name|insn
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 break|break;
 case|case
 name|ENCODING_I
 case|:
+if|if
+condition|(
 name|readOpcodeModifier
 argument_list|(
 name|insn
 argument_list|)
-expr_stmt|;
-break|break;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 case|case
 name|ENCODING_DUP
 case|:

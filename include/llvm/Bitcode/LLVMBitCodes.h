@@ -764,7 +764,17 @@ comment|// INBOUNDS_GEP: [n x operands]
 name|FUNC_CODE_INST_INDIRECTBR
 init|=
 literal|31
+block|,
 comment|// INDIRECTBR: [opty, op0, op1, ...]
+name|FUNC_CODE_DEBUG_LOC
+init|=
+literal|32
+block|,
+comment|// DEBUG_LOC: [Line,Col,ScopeVal, IAVal]
+name|FUNC_CODE_DEBUG_LOC_AGAIN
+init|=
+literal|33
+comment|// DEBUG_LOC_AGAIN
 block|}
 enum|;
 block|}

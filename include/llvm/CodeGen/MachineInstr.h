@@ -70,6 +70,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetInstrDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist.h"
 end_include
 
@@ -88,19 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineOperand.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetInstrDesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetOpcodes.h"
+file|"llvm/ADT/DenseMapInfo.h"
 end_include
 
 begin_include

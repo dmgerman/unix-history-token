@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -514,12 +520,9 @@ name|pair
 operator|<
 name|unsigned
 operator|,
-name|TrackingVH
-operator|<
-name|MDNode
+name|DebugLoc
 operator|>
-expr|>
-name|UnsignedAndMDNodePair
+name|UnsignedDebugLocPair
 expr_stmt|;
 typedef|typedef
 name|SmallVector
@@ -533,7 +536,7 @@ operator|<
 name|MDNode
 operator|>
 operator|,
-name|UnsignedAndMDNodePair
+name|UnsignedDebugLocPair
 operator|>
 operator|,
 literal|4
@@ -1401,11 +1404,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// setVariableDbgInfo - Collect information used to emit debugging information
+comment|/// setVariableDbgInfo - Collect information used to emit debugging
 end_comment
 
 begin_comment
-comment|/// of a variable.
+comment|/// information of a variable.
 end_comment
 
 begin_function
@@ -1419,9 +1422,8 @@ parameter_list|,
 name|unsigned
 name|Slot
 parameter_list|,
-name|MDNode
-modifier|*
-name|Scope
+name|DebugLoc
+name|Loc
 parameter_list|)
 block|{
 name|VariableDbgInfo
@@ -1440,7 +1442,7 @@ name|make_pair
 argument_list|(
 name|Slot
 argument_list|,
-name|Scope
+name|Loc
 argument_list|)
 argument_list|)
 argument_list|)

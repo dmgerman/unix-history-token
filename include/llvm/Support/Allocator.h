@@ -719,9 +719,11 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
 name|Slab
 operator|+
 literal|1
+operator|)
 init|;
 name|Ptr
 operator|<

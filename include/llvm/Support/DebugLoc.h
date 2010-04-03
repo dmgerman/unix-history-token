@@ -54,26 +54,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_DEBUGLOC_H
+name|LLVM_SUPPORT_DEBUGLOC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_DEBUGLOC_H
+name|LLVM_SUPPORT_DEBUGLOC_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
 
 begin_decl_stmt
 name|namespace
@@ -89,7 +77,7 @@ comment|/// DebugLoc - Debug location id.  This is carried by Instruction, SDNod
 comment|/// and MachineInstr to compactly encode file/line/scope information for an
 comment|/// operation.
 name|class
-name|NewDebugLoc
+name|DebugLoc
 block|{
 comment|/// LineCol - This 32-bit value encodes the line and column number for the
 comment|/// location, encoded as 24-bits for line and 8 bits for col.  A value of 0
@@ -104,7 +92,7 @@ name|ScopeIdx
 decl_stmt|;
 name|public
 label|:
-name|NewDebugLoc
+name|DebugLoc
 argument_list|()
 operator|:
 name|LineCol
@@ -121,7 +109,7 @@ comment|// Defaults to unknown.
 comment|/// get - Get a new DebugLoc that corresponds to the specified line/col
 comment|/// scope/inline location.
 specifier|static
-name|NewDebugLoc
+name|DebugLoc
 name|get
 argument_list|(
 argument|unsigned Line
@@ -134,9 +122,9 @@ argument|MDNode *InlinedAt =
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/// getFromDILocation - Translate the DILocation quad into a NewDebugLoc.
+comment|/// getFromDILocation - Translate the DILocation quad into a DebugLoc.
 specifier|static
-name|NewDebugLoc
+name|DebugLoc
 name|getFromDILocation
 parameter_list|(
 name|MDNode
@@ -248,7 +236,7 @@ name|operator
 operator|==
 operator|(
 specifier|const
-name|NewDebugLoc
+name|DebugLoc
 operator|&
 name|DL
 operator|)
@@ -273,131 +261,6 @@ name|operator
 operator|!=
 operator|(
 specifier|const
-name|NewDebugLoc
-operator|&
-name|DL
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
-name|DL
-operator|)
-return|;
-block|}
-block|}
-empty_stmt|;
-comment|/// DebugLoc - Debug location id. This is carried by SDNode and MachineInstr
-comment|/// to index into a vector of unique debug location tuples.
-name|class
-name|DebugLoc
-block|{
-name|unsigned
-name|Idx
-decl_stmt|;
-name|public
-label|:
-name|DebugLoc
-argument_list|()
-operator|:
-name|Idx
-argument_list|(
-argument|~
-literal|0U
-argument_list|)
-block|{}
-comment|// Defaults to invalid.
-specifier|static
-name|DebugLoc
-name|getUnknownLoc
-argument_list|()
-block|{
-name|DebugLoc
-name|L
-block|;
-name|L
-operator|.
-name|Idx
-operator|=
-operator|~
-literal|0U
-block|;
-return|return
-name|L
-return|;
-block|}
-specifier|static
-name|DebugLoc
-name|get
-parameter_list|(
-name|unsigned
-name|idx
-parameter_list|)
-block|{
-name|DebugLoc
-name|L
-decl_stmt|;
-name|L
-operator|.
-name|Idx
-operator|=
-name|idx
-expr_stmt|;
-return|return
-name|L
-return|;
-block|}
-name|unsigned
-name|getIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Idx
-return|;
-block|}
-comment|/// isUnknown - Return true if there is no debug info for the SDNode /
-comment|/// MachineInstr.
-name|bool
-name|isUnknown
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Idx
-operator|==
-operator|~
-literal|0U
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|DebugLoc
-operator|&
-name|DL
-operator|)
-specifier|const
-block|{
-return|return
-name|Idx
-operator|==
-name|DL
-operator|.
-name|Idx
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
 name|DebugLoc
 operator|&
 name|DL
@@ -416,38 +279,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// DebugLocTracker - This class tracks debug location information.
-comment|///
-struct|struct
-name|DebugLocTracker
-block|{
-comment|/// DebugLocations - A vector of unique DebugLocTuple's.
-comment|///
-name|std
-operator|::
-name|vector
-operator|<
-name|MDNode
-operator|*
-operator|>
-name|DebugLocations
-expr_stmt|;
-comment|/// DebugIdMap - This maps DebugLocTuple's to indices into the
-comment|/// DebugLocations vector.
-name|DenseMap
-operator|<
-name|MDNode
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|DebugIdMap
-expr_stmt|;
-name|DebugLocTracker
-argument_list|()
-block|{}
-block|}
-struct|;
 block|}
 end_decl_stmt
 

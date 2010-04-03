@@ -1223,14 +1223,6 @@ argument_list|,
 argument|CodeGenOpt::Level ol
 argument_list|)
 block|:
-name|CurDebugLoc
-argument_list|(
-name|DebugLoc
-operator|::
-name|getUnknownLoc
-argument_list|()
-argument_list|)
-operator|,
 name|SDNodeOrder
 argument_list|(
 literal|0

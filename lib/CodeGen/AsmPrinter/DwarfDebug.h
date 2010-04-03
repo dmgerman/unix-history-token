@@ -662,11 +662,8 @@ name|CompileUnitOffsets
 expr_stmt|;
 comment|/// Previous instruction's location information. This is used to determine
 comment|/// label location to indicate scope boundries in dwarf debug info.
-name|mutable
-specifier|const
-name|MDNode
-modifier|*
-name|PrevDILoc
+name|DebugLoc
+name|PrevInstLoc
 decl_stmt|;
 comment|/// DebugTimer - Timer for the Dwarf debug writer.
 name|Timer
@@ -1346,8 +1343,7 @@ parameter_list|,
 name|unsigned
 name|FrameIdx
 parameter_list|,
-name|DILocation
-modifier|&
+name|DebugLoc
 name|Loc
 parameter_list|)
 function_decl|;
@@ -1364,8 +1360,7 @@ name|MachineInstr
 modifier|*
 name|MI
 parameter_list|,
-name|DILocation
-modifier|&
+name|DebugLoc
 name|Loc
 parameter_list|)
 function_decl|;

@@ -166,7 +166,7 @@ begin_decl_stmt
 name|class
 name|IRBuilderBase
 block|{
-name|NewDebugLoc
+name|DebugLoc
 name|CurDbgLocation
 decl_stmt|;
 name|protected
@@ -297,7 +297,7 @@ name|void
 name|SetCurrentDebugLocation
 parameter_list|(
 specifier|const
-name|NewDebugLoc
+name|DebugLoc
 modifier|&
 name|L
 parameter_list|)
@@ -310,7 +310,7 @@ block|}
 comment|/// getCurrentDebugLocation - Get location information used by debugging
 comment|/// information.
 specifier|const
-name|NewDebugLoc
+name|DebugLoc
 operator|&
 name|getCurrentDebugLocation
 argument_list|()

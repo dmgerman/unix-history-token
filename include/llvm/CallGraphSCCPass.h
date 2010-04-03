@@ -146,6 +146,18 @@ argument_list|,
 argument|pid
 argument_list|)
 block|{}
+comment|/// createPrinterPass - Get a pass that prints the Module
+comment|/// corresponding to a CallGraph.
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
 comment|/// doInitialization - This method is called before the SCC's of the program
 comment|/// has been processed, allowing the pass to do initialization as necessary.
 name|virtual

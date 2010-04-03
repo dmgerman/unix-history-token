@@ -124,12 +124,6 @@ name|class
 name|DbgDeclareInst
 decl_stmt|;
 name|class
-name|DebugLoc
-decl_stmt|;
-struct_decl|struct
-name|DebugLocTracker
-struct_decl|;
-name|class
 name|Instruction
 decl_stmt|;
 name|class
@@ -3221,20 +3215,6 @@ operator|::
 name|string
 operator|&
 name|Dir
-argument_list|)
-block|;
-comment|/// ExtractDebugLocation - Extract debug location information
-comment|/// from DILocation.
-name|DebugLoc
-name|ExtractDebugLocation
-argument_list|(
-name|DILocation
-operator|&
-name|Loc
-argument_list|,
-name|DebugLocTracker
-operator|&
-name|DebugLocInfo
 argument_list|)
 block|;
 comment|/// getDISubprogram - Find subprogram that is enclosing this scope.

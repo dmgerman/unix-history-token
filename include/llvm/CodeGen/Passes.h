@@ -83,6 +83,9 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
+name|MachineFunctionPass
+decl_stmt|;
+name|class
 name|PassInfo
 decl_stmt|;
 name|class
@@ -107,7 +110,7 @@ parameter_list|()
 function_decl|;
 comment|/// MachineFunctionPrinter pass - This pass prints out the machine function to
 comment|/// the given stream, as a debugging tool.
-name|FunctionPass
+name|MachineFunctionPass
 modifier|*
 name|createMachineFunctionPrinterPass
 argument_list|(

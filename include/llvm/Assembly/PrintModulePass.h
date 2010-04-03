@@ -99,17 +99,26 @@ comment|/// module to the specified raw_ostream.
 name|ModulePass
 modifier|*
 name|createPrintModulePass
-parameter_list|(
+argument_list|(
 name|raw_ostream
-modifier|*
+operator|*
 name|OS
-parameter_list|,
+argument_list|,
 name|bool
 name|DeleteStream
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
 comment|/// createPrintFunctionPass - Create and return a pass that prints
 comment|/// functions to the specified raw_ostream as they are processed.
 name|FunctionPass

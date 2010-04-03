@@ -94,18 +94,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
@@ -118,7 +106,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineInstr.h"
+file|"llvm/ADT/PointerIntPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include

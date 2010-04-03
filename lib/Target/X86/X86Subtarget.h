@@ -178,6 +178,10 @@ comment|/// HasAVX - Target has AVX instructions
 name|bool
 name|HasAVX
 block|;
+comment|/// HasAES - Target has AES instructions
+name|bool
+name|HasAES
+block|;
 comment|/// HasFMA3 - Target has 3-operand fused multiply-add
 name|bool
 name|HasFMA3
@@ -457,6 +461,15 @@ specifier|const
 block|{
 return|return
 name|HasAVX
+return|;
+block|}
+name|bool
+name|hasAES
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAES
 return|;
 block|}
 name|bool

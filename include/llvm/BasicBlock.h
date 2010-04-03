@@ -494,6 +494,33 @@ name|getFirstNonPHI
 argument_list|()
 return|;
 block|}
+comment|// Same as above, but also skip debug intrinsics.
+name|Instruction
+modifier|*
+name|getFirstNonPHIOrDbg
+parameter_list|()
+function_decl|;
+specifier|const
+name|Instruction
+operator|*
+name|getFirstNonPHIOrDbg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstNonPHIOrDbg
+argument_list|()
+return|;
+block|}
 comment|/// removeFromParent - This method unlinks 'this' from the containing
 comment|/// function, but does not delete it.
 comment|///

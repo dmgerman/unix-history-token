@@ -110,9 +110,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|DILocation
-decl_stmt|;
-name|class
 name|Value
 decl_stmt|;
 name|class
@@ -360,10 +357,6 @@ comment|// Default debug location. Used to print out the debug label at the begi
 comment|// of a function.
 name|DebugLoc
 name|DefaultDebugLoc
-decl_stmt|;
-comment|// Tracks debug locations.
-name|DebugLocTracker
-name|DebugLocInfo
 decl_stmt|;
 comment|/// FunctionNumber - This provides a unique ID for each function emitted in
 comment|/// this translation unit.
@@ -1451,15 +1444,6 @@ decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Debug location.
 comment|//
-comment|/// getDILocation - Get the DILocation for a given DebugLoc object.
-name|DILocation
-name|getDILocation
-argument_list|(
-name|DebugLoc
-name|DL
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getDefaultDebugLoc - Get the default debug location for the machine
 comment|/// function.
 name|DebugLoc
@@ -1484,16 +1468,6 @@ name|DefaultDebugLoc
 operator|=
 name|DL
 expr_stmt|;
-block|}
-comment|/// getDebugLocInfo - Get the debug info location tracker.
-name|DebugLocTracker
-modifier|&
-name|getDebugLocInfo
-parameter_list|()
-block|{
-return|return
-name|DebugLocInfo
-return|;
 block|}
 block|}
 empty_stmt|;

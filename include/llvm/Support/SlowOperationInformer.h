@@ -172,6 +172,7 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|public
 label|:
+name|explicit
 name|SlowOperationInformer
 argument_list|(
 specifier|const
@@ -181,7 +182,7 @@ name|string
 operator|&
 name|Name
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 operator|~
 name|SlowOperationInformer
 argument_list|()

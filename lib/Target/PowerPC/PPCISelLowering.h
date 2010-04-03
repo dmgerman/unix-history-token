@@ -764,12 +764,15 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
-comment|/// and store operations as a result of memset, memcpy, and memmove lowering.
-comment|/// If DstAlign is zero that means it's safe to destination alignment can
-comment|/// satisfy any constraint. Similarly if SrcAlign is zero it means there
-comment|/// isn't a need to check it against alignment requirement, probably because
-comment|/// the source does not need to be loaded. It returns EVT::Other if
-comment|/// SelectionDAG should be responsible for determining it.
+comment|/// and store operations as a result of memset, memcpy, and memmove
+comment|/// lowering. If DstAlign is zero that means it's safe to destination
+comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
+comment|/// means there isn't a need to check it against alignment requirement,
+comment|/// probably because the source does not need to be loaded. If
+comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
+comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
+comment|/// from memory. It returns EVT::Other if SelectionDAG should be responsible
+comment|/// for determining it.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -780,7 +783,7 @@ argument|unsigned DstAlign
 argument_list|,
 argument|unsigned SrcAlign
 argument_list|,
-argument|bool SafeToUseFP
+argument|bool NonScalarIntSafe
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

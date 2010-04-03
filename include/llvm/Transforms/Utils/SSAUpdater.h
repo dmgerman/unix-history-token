@@ -90,16 +90,11 @@ comment|/// set of values.
 name|class
 name|SSAUpdater
 block|{
-name|public
-label|:
-name|class
-name|BBInfo
-decl_stmt|;
-name|private
-label|:
 comment|/// AvailableVals - This keeps track of which value to use on a per-block
-comment|/// basis.  When we insert PHI nodes, we keep track of them here.
-comment|//typedef DenseMap<BasicBlock*, Value*> AvailableValsTy;
+comment|/// basis.  When we insert PHI nodes, we keep track of them here.  We use
+comment|/// TrackingVH's for the value of the map because we RAUW PHI nodes when we
+comment|/// eliminate them, and want the TrackingVH's to track this.
+comment|//typedef DenseMap<BasicBlock*, TrackingVH<Value>> AvailableValsTy;
 name|void
 modifier|*
 name|AV
@@ -110,19 +105,13 @@ name|Value
 modifier|*
 name|PrototypeValue
 decl_stmt|;
-comment|/// BBMap - The GetValueAtEndOfBlock method maintains this mapping from
-comment|/// basic blocks to BBInfo structures.
-comment|/// typedef DenseMap<BasicBlock*, BBInfo*> BBMapTy;
+comment|/// IncomingPredInfo - We use this as scratch space when doing our recursive
+comment|/// walk.  This should only be used in GetValueInBlockInternal, normally it
+comment|/// should be empty.
+comment|//std::vector<std::pair<BasicBlock*, TrackingVH<Value>>> IncomingPredInfo;
 name|void
 modifier|*
-name|BM
-decl_stmt|;
-comment|/// Allocator - The GetValueAtEndOfBlock method uses this BumpPtrAllocator to
-comment|/// hold its internal data.  The allocator and its storage is created and
-comment|/// discarded for each invocation of GetValueAtEndOfBlock.
-name|void
-modifier|*
-name|BPA
+name|IPI
 decl_stmt|;
 comment|/// InsertedPHIs - If this is non-null, the SSAUpdater adds all PHI nodes that
 comment|/// it creates to the vector.
@@ -252,72 +241,6 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
-parameter_list|)
-function_decl|;
-name|void
-name|FindPHIPlacement
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|,
-name|BBInfo
-modifier|*
-name|Info
-parameter_list|,
-name|bool
-modifier|&
-name|Changed
-parameter_list|,
-name|unsigned
-name|Counter
-parameter_list|)
-function_decl|;
-name|void
-name|FindAvailableVal
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|,
-name|BBInfo
-modifier|*
-name|Info
-parameter_list|,
-name|unsigned
-name|Counter
-parameter_list|)
-function_decl|;
-name|void
-name|FindExistingPHI
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|BB
-parameter_list|)
-function_decl|;
-name|bool
-name|CheckIfPHIMatches
-parameter_list|(
-name|PHINode
-modifier|*
-name|PHI
-parameter_list|)
-function_decl|;
-name|void
-name|RecordMatchingPHI
-parameter_list|(
-name|PHINode
-modifier|*
-name|PHI
-parameter_list|)
-function_decl|;
-name|void
-name|ClearPHITags
-parameter_list|(
-name|PHINode
-modifier|*
-name|PHI
 parameter_list|)
 function_decl|;
 name|void

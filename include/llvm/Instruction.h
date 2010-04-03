@@ -136,7 +136,7 @@ name|BasicBlock
 modifier|*
 name|Parent
 decl_stmt|;
-name|NewDebugLoc
+name|DebugLoc
 name|DbgLoc
 decl_stmt|;
 comment|// 'dbg' Metadata cache.
@@ -683,7 +683,7 @@ name|void
 name|setDebugLoc
 parameter_list|(
 specifier|const
-name|NewDebugLoc
+name|DebugLoc
 modifier|&
 name|Loc
 parameter_list|)
@@ -695,7 +695,7 @@ expr_stmt|;
 block|}
 comment|/// getDebugLoc - Return the debug location for this node as a DebugLoc.
 specifier|const
-name|NewDebugLoc
+name|DebugLoc
 operator|&
 name|getDebugLoc
 argument_list|()

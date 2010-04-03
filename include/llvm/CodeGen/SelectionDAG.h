@@ -2354,8 +2354,6 @@ operator|::
 name|CALLSEQ_START
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|VTs
@@ -2443,8 +2441,6 @@ operator|::
 name|CALLSEQ_END
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|NodeTys
@@ -2494,8 +2490,6 @@ operator|::
 name|UNDEF
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|VT
@@ -2519,8 +2513,6 @@ operator|::
 name|GLOBAL_OFFSET_TABLE
 argument_list|,
 name|DebugLoc
-operator|::
-name|getUnknownLoc
 argument_list|()
 argument_list|,
 name|VT

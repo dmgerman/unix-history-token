@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -400,6 +406,28 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// dump - Print to stderr.
+comment|/// createPrinterPass - Get a Pass appropriate to print the IR this
+comment|/// pass operates one (Module, Function or MachineFunction).
+name|virtual
+name|Pass
+modifier|*
+name|createPrinterPass
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// Each pass is responsible for assigning a pass manager to itself.
 comment|/// PMS is the stack of available pass manager.
 name|virtual
@@ -713,6 +741,17 @@ name|Pass
 block|{
 name|public
 operator|:
+comment|/// createPrinterPass - Get a module printer pass.
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
 comment|/// runOnModule - Virtual method overriden by subclasses to process the module
 comment|/// being operated on.
 name|virtual
@@ -902,6 +941,17 @@ argument_list|,
 argument|pid
 argument_list|)
 block|{}
+comment|/// createPrinterPass - Get a function printer pass.
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
 comment|/// doInitialization - Virtual method overridden by subclasses to do
 comment|/// any necessary per-module initialization.
 comment|///
@@ -1026,6 +1076,17 @@ argument_list|,
 argument|pid
 argument_list|)
 block|{}
+comment|/// createPrinterPass - Get a function printer pass.
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
 comment|/// doInitialization - Virtual method overridden by subclasses to do
 comment|/// any necessary per-module initialization.
 comment|///
