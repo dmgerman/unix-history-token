@@ -6918,8 +6918,6 @@ name|inp
 argument_list|,
 name|sa
 argument_list|,
-literal|1
-argument_list|,
 operator|&
 name|error
 argument_list|,
@@ -22026,8 +22024,6 @@ argument_list|(
 name|inp
 argument_list|,
 name|addr
-argument_list|,
-literal|1
 argument_list|,
 operator|&
 name|error

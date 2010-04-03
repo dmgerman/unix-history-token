@@ -389,13 +389,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sctp_slide_mapping_arrays
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sctp_sack_check
 parameter_list|(
 name|struct
 name|sctp_tcb
 modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|,

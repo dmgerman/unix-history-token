@@ -1556,18 +1556,6 @@ operator|->
 name|initial_tsn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * EY 05/13/08 - nr_sack: initialize nr_mapping array's base tsn 	 * like above 	 */
-name|asoc
-operator|->
-name|nr_mapping_array_base_tsn
-operator|=
-name|ntohl
-argument_list|(
-name|init
-operator|->
-name|initial_tsn
-argument_list|)
-expr_stmt|;
 name|asoc
 operator|->
 name|tsn_last_delivered
@@ -9133,7 +9121,7 @@ literal|0
 argument_list|,
 name|asoc
 operator|->
-name|nr_mapping_array_size
+name|mapping_array_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -9873,8 +9861,6 @@ argument_list|(
 name|inp
 argument_list|,
 name|init_src
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|error
@@ -15936,23 +15922,15 @@ break|break;
 case|case
 name|SCTP_SELECTIVE_ACK
 case|:
+case|case
+name|SCTP_NR_SELECTIVE_ACK
+case|:
 comment|/* resend the sack */
 name|sctp_send_sack
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* EY for nr_sacks */
-case|case
-name|SCTP_NR_SELECTIVE_ACK
-case|:
-name|sctp_send_nr_sack
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-comment|/* EY resend the nr-sack */
 break|break;
 case|case
 name|SCTP_HEARTBEAT_REQUEST
@@ -17396,18 +17374,6 @@ name|asoc
 operator|.
 name|highest_tsn_inside_map
 expr_stmt|;
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|nr_mapping_array_base_tsn
-operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|mapping_array_base_tsn
-expr_stmt|;
 name|memset
 argument_list|(
 name|stcb
@@ -17422,7 +17388,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|nr_mapping_array_size
+name|mapping_array_size
 argument_list|)
 expr_stmt|;
 name|stcb
@@ -18121,20 +18087,6 @@ name|asoc
 operator|.
 name|highest_tsn_inside_map
 expr_stmt|;
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|nr_mapping_array_base_tsn
-operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|highest_tsn_inside_map
-operator|+
-literal|1
-expr_stmt|;
 name|memset
 argument_list|(
 name|stcb
@@ -18149,7 +18101,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|nr_mapping_array_size
+name|mapping_array_size
 argument_list|)
 expr_stmt|;
 name|atomic_add_int
@@ -27872,8 +27824,6 @@ expr_stmt|;
 name|sctp_sack_check
 argument_list|(
 name|stcb
-argument_list|,
-literal|1
 argument_list|,
 name|was_a_gap
 argument_list|,
