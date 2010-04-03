@@ -6636,6 +6636,22 @@ condition|)
 name|pungetc
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+name|PEOF
+condition|)
+name|synerror
+argument_list|(
+literal|"Unexpected end of line in substitution"
+argument_list|)
+expr_stmt|;
 else|else
 name|USTPUTC
 argument_list|(
@@ -6703,6 +6719,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|||
+name|c
+operator|==
+name|PEOF
+condition|)
+name|synerror
+argument_list|(
+literal|"Unexpected end of line in substitution"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
