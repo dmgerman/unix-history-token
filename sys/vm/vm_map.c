@@ -287,6 +287,9 @@ parameter_list|(
 name|vm_map_t
 name|map
 parameter_list|,
+name|pmap_t
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|min
 parameter_list|,
@@ -984,23 +987,16 @@ name|vm
 operator|->
 name|vm_map
 argument_list|,
+name|vmspace_pmap
+argument_list|(
+name|vm
+argument_list|)
+argument_list|,
 name|min
 argument_list|,
 name|max
 argument_list|)
 expr_stmt|;
-name|vm
-operator|->
-name|vm_map
-operator|.
-name|pmap
-operator|=
-name|vmspace_pmap
-argument_list|(
-name|vm
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|vm
 operator|->
 name|vm_refcnt
@@ -2643,16 +2639,12 @@ name|_vm_map_init
 argument_list|(
 name|result
 argument_list|,
+name|pmap
+argument_list|,
 name|min
 argument_list|,
 name|max
 argument_list|)
-expr_stmt|;
-name|result
-operator|->
-name|pmap
-operator|=
-name|pmap
 expr_stmt|;
 return|return
 operator|(
@@ -2663,7 +2655,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize an existing vm_map structure  * such as that in the vmspace structure.  * The pmap is set elsewhere.  */
+comment|/*  * Initialize an existing vm_map structure  * such as that in the vmspace structure.  */
 end_comment
 
 begin_function
@@ -2673,6 +2665,9 @@ name|_vm_map_init
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+name|pmap_t
+name|pmap
 parameter_list|,
 name|vm_offset_t
 name|min
@@ -2709,6 +2704,12 @@ operator|->
 name|system_map
 operator|=
 literal|0
+expr_stmt|;
+name|map
+operator|->
+name|pmap
+operator|=
+name|pmap
 expr_stmt|;
 name|map
 operator|->
@@ -2756,6 +2757,9 @@ parameter_list|(
 name|vm_map_t
 name|map
 parameter_list|,
+name|pmap_t
+name|pmap
+parameter_list|,
 name|vm_offset_t
 name|min
 parameter_list|,
@@ -2766,6 +2770,8 @@ block|{
 name|_vm_map_init
 argument_list|(
 name|map
+argument_list|,
+name|pmap
 argument_list|,
 name|min
 argument_list|,

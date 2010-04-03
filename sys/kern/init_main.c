@@ -2227,6 +2227,12 @@ name|vmspace0
 operator|.
 name|vm_map
 argument_list|,
+name|vmspace_pmap
+argument_list|(
+operator|&
+name|vmspace0
+argument_list|)
+argument_list|,
 name|p
 operator|->
 name|p_sysent
@@ -2238,18 +2244,6 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_maxuser
-argument_list|)
-expr_stmt|;
-name|vmspace0
-operator|.
-name|vm_map
-operator|.
-name|pmap
-operator|=
-name|vmspace_pmap
-argument_list|(
-operator|&
-name|vmspace0
 argument_list|)
 expr_stmt|;
 comment|/*- 	 * call the init and ctor for the new thread and proc 	 * we wait to do this until all other structures 	 * are fairly sane. 	 */

@@ -1368,9 +1368,9 @@ begin_function_decl
 name|void
 name|vm_map_init
 parameter_list|(
-name|struct
-name|vm_map
-modifier|*
+name|vm_map_t
+parameter_list|,
+name|pmap_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|,
