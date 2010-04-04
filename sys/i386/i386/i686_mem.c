@@ -3238,18 +3238,10 @@ case|:
 case|case
 name|CPU_VENDOR_AMD
 case|:
-break|break;
 case|case
 name|CPU_VENDOR_CENTAUR
 case|:
-if|if
-condition|(
-name|cpu_exthigh
-operator|>=
-literal|0x80000008
-condition|)
 break|break;
-comment|/* FALLTHROUGH */
 default|default:
 return|return;
 block|}
