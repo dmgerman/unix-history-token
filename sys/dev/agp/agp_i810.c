@@ -188,6 +188,9 @@ comment|/* G965 */
 name|CHIP_G33
 block|,
 comment|/* G33/Q33/Q35 */
+name|CHIP_IGD
+block|,
+comment|/* Pineview */
 name|CHIP_G4X
 block|,
 comment|/* G45/Q45 */
@@ -587,6 +590,26 @@ literal|"Intel Q33 SVGA controller"
 block|}
 block|,
 block|{
+literal|0xA0018086
+block|,
+name|CHIP_IGD
+block|,
+literal|0x00010000
+block|,
+literal|"Intel Pineview SVGA controller"
+block|}
+block|,
+block|{
+literal|0xA0118086
+block|,
+name|CHIP_IGD
+block|,
+literal|0x00010000
+block|,
+literal|"Intel Pineview (M) SVGA controller"
+block|}
+block|,
+block|{
 literal|0x2A028086
 block|,
 name|CHIP_I965
@@ -623,7 +646,7 @@ name|CHIP_G4X
 block|,
 literal|0x00020000
 block|,
-literal|"Intel 4 Series SVGA controller"
+literal|"Intel Eaglelake SVGA controller"
 block|}
 block|,
 block|{
@@ -654,6 +677,26 @@ block|,
 literal|0x00020000
 block|,
 literal|"Intel G41 SVGA controller"
+block|}
+block|,
+block|{
+literal|0x00428086
+block|,
+name|CHIP_G4X
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Ironlake (D) SVGA controller"
+block|}
+block|,
+block|{
+literal|0x00468086
+block|,
+name|CHIP_G4X
+block|,
+literal|0x00020000
+block|,
+literal|"Intel Ironlake (M) SVGA controller"
 block|}
 block|,
 block|{
@@ -1126,6 +1169,9 @@ case|case
 name|CHIP_G33
 case|:
 case|case
+name|CHIP_IGD
+case|:
+case|case
 name|CHIP_G4X
 case|:
 name|deven
@@ -1380,6 +1426,9 @@ case|case
 name|CHIP_G33
 case|:
 case|case
+name|CHIP_IGD
+case|:
+case|case
 name|CHIP_G4X
 case|:
 name|device_printf
@@ -1538,6 +1587,9 @@ case|:
 case|case
 name|CHIP_G33
 case|:
+case|case
+name|CHIP_IGD
+case|:
 name|sc
 operator|->
 name|sc_res_spec
@@ -1600,6 +1652,12 @@ operator|->
 name|chiptype
 operator|!=
 name|CHIP_G33
+operator|&&
+name|sc
+operator|->
+name|chiptype
+operator|!=
+name|CHIP_IGD
 operator|&&
 name|sc
 operator|->
@@ -2139,6 +2197,12 @@ name|sc
 operator|->
 name|chiptype
 operator|==
+name|CHIP_IGD
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
 name|CHIP_G4X
 condition|)
 block|{
@@ -2362,6 +2426,9 @@ return|;
 block|}
 break|break;
 case|case
+name|CHIP_IGD
+case|:
+case|case
 name|CHIP_G4X
 case|:
 name|gtt_size
@@ -2502,6 +2569,12 @@ name|sc
 operator|->
 name|chiptype
 operator|==
+name|CHIP_IGD
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
 name|CHIP_G4X
 condition|)
 block|{
@@ -2547,6 +2620,12 @@ name|sc
 operator|->
 name|chiptype
 operator|==
+name|CHIP_IGD
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
 name|CHIP_G4X
 condition|)
 block|{
@@ -2586,6 +2665,12 @@ name|sc
 operator|->
 name|chiptype
 operator|==
+name|CHIP_IGD
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
 name|CHIP_G4X
 condition|)
 block|{
@@ -2620,6 +2705,12 @@ operator|->
 name|chiptype
 operator|==
 name|CHIP_G33
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
+name|CHIP_IGD
 operator|||
 name|sc
 operator|->
@@ -3368,6 +3459,9 @@ case|case
 name|CHIP_G33
 case|:
 case|case
+name|CHIP_IGD
+case|:
+case|case
 name|CHIP_G4X
 case|:
 return|return
@@ -3442,6 +3536,12 @@ operator|->
 name|chiptype
 operator|==
 name|CHIP_G33
+operator|||
+name|sc
+operator|->
+name|chiptype
+operator|==
+name|CHIP_IGD
 operator|||
 name|sc
 operator|->
@@ -3524,6 +3624,9 @@ name|CHIP_I915
 case|:
 case|case
 name|CHIP_G33
+case|:
+case|case
+name|CHIP_IGD
 case|:
 name|bus_write_4
 argument_list|(
