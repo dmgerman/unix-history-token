@@ -2820,14 +2820,11 @@ block|}
 break|break;
 block|}
 empty_stmt|;
-comment|/* we need a room for additional \n symbol */
 if|if
 condition|(
 name|bufsize
 operator|<=
 name|resultbuflen
-operator|+
-literal|1
 operator|+
 name|_ALIGNBYTES
 operator|+
@@ -2863,7 +2860,7 @@ name|buffer
 index|[
 name|resultbuflen
 operator|+
-literal|2
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -2905,7 +2902,6 @@ name|NS_RETURN
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * servent_unpack expects lines terminated with \n -- 		 * make it happy 		 */
 name|memcpy
 argument_list|(
 name|buffer
@@ -2918,15 +2914,6 @@ expr_stmt|;
 name|buffer
 index|[
 name|resultbuflen
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-name|buffer
-index|[
-name|resultbuflen
-operator|+
-literal|1
 index|]
 operator|=
 literal|'\0'
