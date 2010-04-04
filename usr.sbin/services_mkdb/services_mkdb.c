@@ -1623,12 +1623,12 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p
+name|p2
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|p2
 operator|=
 name|strdup
 argument_list|(
@@ -1652,7 +1652,7 @@ name|sl_add
 argument_list|(
 name|s
 argument_list|,
-name|p
+name|p2
 argument_list|)
 expr_stmt|;
 block|}
@@ -1702,12 +1702,12 @@ condition|)
 block|{
 name|char
 modifier|*
-name|p
+name|p2
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|p2
 operator|=
 name|strdup
 argument_list|(
@@ -1731,7 +1731,7 @@ name|sl_add
 argument_list|(
 name|s
 argument_list|,
-name|p
+name|p2
 argument_list|)
 expr_stmt|;
 block|}
