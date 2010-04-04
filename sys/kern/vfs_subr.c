@@ -12716,6 +12716,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_NFS4ACLS
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_EXRDONLY
 argument_list|)
 expr_stmt|;
