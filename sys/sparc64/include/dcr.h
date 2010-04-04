@@ -138,6 +138,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|DCR_BPM_1HIST_GSHARE
+value|(0UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_2HIST_GSHARE
+value|(1UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_PC
+value|(2UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_2HIST_MIXED
+value|(3UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DCR_JPE
 value|(1UL<< 15)
 end_define
