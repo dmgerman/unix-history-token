@@ -6971,7 +6971,7 @@ comment|/* Since the Readdir vnode ops vary, put the entire functions in here. *
 end_comment
 
 begin_comment
-comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of DIRBLKSIZ<= NFS_MAXREADDIR  * - calls nfsvno_readdir()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The NFSM_CLGET macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the nfsvno_readdir()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_fileno == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * - it trims out records with d_type == DT_WHT  *	these cannot be seen through NFS (unless we extend the protocol)  * NB: It is tempting to set eof to true if the nfsvno_readdir() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  *     The alternate call nfsrvd_readdirplus() does lookups as well.  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
+comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of DIRBLKSIZ<= NFS_MAXREADDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The NFSM_CLGET macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it trims out records with d_fileno == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * - it trims out records with d_type == DT_WHT  *	these cannot be seen through NFS (unless we extend the protocol)  *     The alternate call nfsrvd_readdirplus() does lookups as well.  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
 end_comment
 
 begin_function
@@ -7189,6 +7189,10 @@ name|NFS_SRVMAXDATA
 argument_list|(
 name|nd
 argument_list|)
+operator|||
+name|cnt
+operator|<
+literal|0
 condition|)
 name|cnt
 operator|=
@@ -7256,6 +7260,42 @@ comment|/* 		 * va_filerev is not sufficient as a cookie verifier, 		 * since it
 block|if (!nd->nd_repstat&& toff&& verf != at.na_filerev) 			nd->nd_repstat = NFSERR_BAD_COOKIE;
 endif|#
 directive|endif
+block|}
+if|if
+condition|(
+name|nd
+operator|->
+name|nd_repstat
+operator|==
+literal|0
+operator|&&
+name|cnt
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|nd
+operator|->
+name|nd_flag
+operator|&
+name|ND_NFSV2
+condition|)
+comment|/* NFSv2 does not have NFSERR_TOOSMALL */
+name|nd
+operator|->
+name|nd_repstat
+operator|=
+name|EPERM
+expr_stmt|;
+else|else
+name|nd
+operator|->
+name|nd_repstat
+operator|=
+name|NFSERR_TOOSMALL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8463,6 +8503,10 @@ name|NFS_SRVMAXDATA
 argument_list|(
 name|nd
 argument_list|)
+operator|||
+name|cnt
+operator|<
+literal|0
 condition|)
 name|cnt
 operator|=
@@ -8475,7 +8519,7 @@ comment|/* 	 * siz is a "hint" of how much directory information (name, fileid, 
 if|if
 condition|(
 name|siz
-operator|==
+operator|<=
 literal|0
 condition|)
 name|siz
