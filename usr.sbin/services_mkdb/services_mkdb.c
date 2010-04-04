@@ -1223,9 +1223,14 @@ literal|1
 argument_list|,
 literal|"Cannot allocate %zu bytes"
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|PMASK
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX: change NULL to "\0\0#" when fparseln fixed */
@@ -1559,6 +1564,9 @@ literal|1
 argument_list|,
 literal|"Cannot allocate %zu bytes"
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|PROTOMAX
 argument_list|)
 expr_stmt|;
