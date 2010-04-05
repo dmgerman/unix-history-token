@@ -983,7 +983,7 @@ index|]
 argument_list|,
 name|FHC_ICLR
 argument_list|,
-literal|0x0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2089,7 +2089,7 @@ name|fica_memres
 argument_list|,
 name|FHC_ICLR
 argument_list|,
-literal|0x0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 operator|(

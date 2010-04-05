@@ -2422,7 +2422,7 @@ name|sc
 argument_list|,
 name|intrclr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 name|PSYCHO_WRITE8
@@ -5433,7 +5433,7 @@ name|pica
 operator|->
 name|pica_clr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 block|}
