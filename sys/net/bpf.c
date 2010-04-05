@@ -7226,6 +7226,8 @@ condition|(
 name|d
 operator|->
 name|bd_rfilter
+operator|!=
+name|NULL
 condition|)
 block|{
 name|free
@@ -7243,6 +7245,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BPF_JITTER
+if|if
+condition|(
+name|d
+operator|->
+name|bd_bfilter
+operator|!=
+name|NULL
+condition|)
 name|bpf_destroy_jit_filter
 argument_list|(
 name|d
@@ -7258,6 +7268,8 @@ condition|(
 name|d
 operator|->
 name|bd_wfilter
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
