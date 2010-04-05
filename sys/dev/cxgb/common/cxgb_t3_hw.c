@@ -15364,12 +15364,6 @@ name|SECONDS
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_CHELSIO_T3_CORE
-end_ifdef
-
 begin_comment
 comment|/**  *	t3_tp_set_coalescing_size - set receive coalescing size  *	@adap: the adapter  *	@size: the receive coalescing size  *	@psh: whether a set PSH bit should deliver coalesced data  *  *	Set the receive coalescing size and PSH bit handling.  */
 end_comment
@@ -17051,11 +17045,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  *	t3_config_trace_filter - configure one of the tracing filters  *	@adapter: the adapter  *	@tp: the desired trace filter parameters  *	@filter_index: which filter to configure  *	@invert: if set non-matching packets are traced instead of matching ones  *	@enable: whether to enable or disable the filter  *  *	Configures one of the tracing filters available in HW.  */
@@ -20770,9 +20759,6 @@ condition|)
 goto|goto
 name|out_err
 goto|;
-ifdef|#
-directive|ifdef
-name|CONFIG_CHELSIO_T3_CORE
 name|t3_tp_set_coalescing_size
 argument_list|(
 name|adapter
@@ -20823,8 +20809,6 @@ operator|.
 name|tp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|is_pcie
@@ -22411,18 +22395,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|t3_sge_prep
-argument_list|(
-name|adapter
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|params
-operator|.
-name|sge
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|adapter
@@ -22718,6 +22690,18 @@ operator|->
 name|cm
 argument_list|)
 expr_stmt|;
+name|t3_sge_prep
+argument_list|(
+name|adapter
+argument_list|,
+operator|&
+name|adapter
+operator|->
+name|params
+operator|.
+name|sge
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_offload
@@ -22769,9 +22753,6 @@ argument_list|,
 name|MC5_MODE_144_BIT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_CHELSIO_T3_CORE
 name|init_mtus
 argument_list|(
 name|adapter
@@ -22796,8 +22777,6 @@ operator|.
 name|b_wnd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|early_hw_init
 argument_list|(

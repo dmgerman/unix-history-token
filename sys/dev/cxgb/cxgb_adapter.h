@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp_lro.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -134,23 +140,6 @@ include|#
 directive|include
 file|<sys/mbufq.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_lro.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -514,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|RSPQ_Q_SIZE
-value|1024
+value|2048
 end_define
 
 begin_define
@@ -522,6 +511,20 @@ define|#
 directive|define
 name|TX_ETH_Q_SIZE
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_OFLD_Q_SIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_CTRL_Q_SIZE
+value|256
 end_define
 
 begin_enum
@@ -560,12 +563,6 @@ name|PIO_LEN
 value|(WR_LEN - sizeof(struct cpl_tx_pkt_lso))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
-end_ifdef
-
 begin_struct
 struct|struct
 name|lro_state
@@ -581,11 +578,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -645,6 +637,9 @@ name|pure_rsps
 decl_stmt|;
 name|uint32_t
 name|unhandled_irqs
+decl_stmt|;
+name|uint32_t
+name|starved
 decl_stmt|;
 name|bus_addr_t
 name|phys_addr
@@ -881,9 +876,6 @@ name|uint64_t
 name|txq_coalesced
 decl_stmt|;
 name|uint32_t
-name|txq_drops
-decl_stmt|;
-name|uint32_t
 name|txq_skipped
 decl_stmt|;
 name|uint32_t
@@ -998,15 +990,10 @@ index|[
 name|SGE_RXQ_PER_SET
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LRO_SUPPORTED
 name|struct
 name|lro_state
 name|lro
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sge_txq
 name|txq

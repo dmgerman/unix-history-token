@@ -1095,6 +1095,11 @@ decl_stmt|;
 comment|/* # of entries in jumbo free list */
 name|unsigned
 name|int
+name|jumbo_buf_size
+decl_stmt|;
+comment|/* buffer size of jumbo entry */
+name|unsigned
+name|int
 name|txq_size
 index|[
 name|SGE_TXQ_PER_SET
@@ -1378,9 +1383,6 @@ name|adapter_info
 modifier|*
 name|info
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_CHELSIO_T3_CORE
 name|unsigned
 name|short
 name|mtus
@@ -1402,8 +1404,6 @@ index|[
 name|NCCTRL_WIN
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|nports
@@ -2610,12 +2610,6 @@ modifier|*
 name|adap
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CONFIG_CHELSIO_T3_CORE
-argument_list|)
 return|return
 name|adap
 operator|->
@@ -2623,13 +2617,6 @@ name|params
 operator|.
 name|offload
 return|;
-else|#
-directive|else
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3989,12 +3976,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_CHELSIO_T3_CORE
-end_ifdef
-
 begin_function_decl
 name|int
 name|t3_tp_set_coalescing_size
@@ -4274,11 +4255,6 @@ name|n
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
