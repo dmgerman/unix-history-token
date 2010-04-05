@@ -1573,6 +1573,8 @@ block|{
 name|sctp_delayed_cksum
 argument_list|(
 name|m
+argument_list|,
+name|iphlen
 argument_list|)
 expr_stmt|;
 name|sw_csum
