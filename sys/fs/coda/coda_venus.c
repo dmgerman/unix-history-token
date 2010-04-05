@@ -287,6 +287,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -369,6 +370,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -496,6 +498,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -630,6 +633,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -943,6 +947,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1059,6 +1064,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1170,6 +1176,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1275,6 +1282,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1432,6 +1440,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1517,6 +1526,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1540,6 +1550,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -1675,6 +1686,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1709,6 +1721,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -1866,6 +1879,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -1986,10 +2000,12 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|tfid
@@ -2117,10 +2133,12 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|tfid
@@ -2276,6 +2294,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2304,6 +2323,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
@@ -2445,6 +2465,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2565,6 +2586,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2732,6 +2754,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2893,6 +2916,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
+name|struct
 name|CodaFid
 modifier|*
 name|fid
@@ -2908,6 +2932,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
+name|struct
 name|CodaFid
 modifier|*
 name|VFid
