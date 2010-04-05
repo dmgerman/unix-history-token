@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -992,17 +992,12 @@ name|hw
 operator|->
 name|mac
 decl_stmt|;
-name|s32
-name|ret_val
-init|=
-name|E1000_SUCCESS
-decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_init_mac_params_80003es2lan"
 argument_list|)
 expr_stmt|;
-comment|/* Set media type */
+comment|/* Set media type and media-dependent function pointers */
 switch|switch
 condition|(
 name|hw
@@ -1021,6 +1016,22 @@ name|media_type
 operator|=
 name|e1000_media_type_internal_serdes
 expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_check_for_serdes_link_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_setup_fiber_serdes_link_generic
+expr_stmt|;
 break|break;
 default|default:
 name|hw
@@ -1030,6 +1041,22 @@ operator|.
 name|media_type
 operator|=
 name|e1000_media_type_copper
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|check_for_link
+operator|=
+name|e1000_check_for_copper_link_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|setup_physical_interface
+operator|=
+name|e1000_setup_copper_link_80003es2lan
 expr_stmt|;
 break|break;
 block|}
@@ -1054,7 +1081,14 @@ name|asf_firmware_present
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* Set if manageability features are enabled. */
+comment|/* FWSM register */
+name|mac
+operator|->
+name|has_fwsm
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* ARC supported; valid only if manageability features are enabled. */
 name|mac
 operator|->
 name|arc_subsystem_valid
@@ -1072,6 +1106,13 @@ operator|)
 condition|?
 name|TRUE
 else|:
+name|FALSE
+expr_stmt|;
+comment|/* Adaptive IFS not supported */
+name|mac
+operator|->
+name|adaptive_ifs
+operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Function pointers */
@@ -1111,84 +1152,6 @@ name|setup_link
 operator|=
 name|e1000_setup_link_generic
 expr_stmt|;
-comment|/* physical interface link setup */
-name|mac
-operator|->
-name|ops
-operator|.
-name|setup_physical_interface
-operator|=
-operator|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|media_type
-operator|==
-name|e1000_media_type_copper
-operator|)
-condition|?
-name|e1000_setup_copper_link_80003es2lan
-else|:
-name|e1000_setup_fiber_serdes_link_generic
-expr_stmt|;
-comment|/* check for link */
-switch|switch
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|media_type
-condition|)
-block|{
-case|case
-name|e1000_media_type_copper
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_copper_link_generic
-expr_stmt|;
-break|break;
-case|case
-name|e1000_media_type_fiber
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_fiber_link_generic
-expr_stmt|;
-break|break;
-case|case
-name|e1000_media_type_internal_serdes
-case|:
-name|mac
-operator|->
-name|ops
-operator|.
-name|check_for_link
-operator|=
-name|e1000_check_for_serdes_link_generic
-expr_stmt|;
-break|break;
-default|default:
-name|ret_val
-operator|=
-operator|-
-name|E1000_ERR_CONFIG
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-break|break;
-block|}
 comment|/* check management mode */
 name|mac
 operator|->
@@ -1224,15 +1187,6 @@ operator|.
 name|clear_vfta
 operator|=
 name|e1000_clear_vfta_generic
-expr_stmt|;
-comment|/* setting MTA */
-name|mac
-operator|->
-name|ops
-operator|.
-name|mta_set
-operator|=
-name|e1000_mta_set_generic
 expr_stmt|;
 comment|/* read mac address */
 name|mac
@@ -1314,10 +1268,20 @@ name|get_link_up_info
 operator|=
 name|e1000_get_link_up_info_80003es2lan
 expr_stmt|;
-name|out
-label|:
+comment|/* set lan id for port to determine which phy lock to use */
+name|hw
+operator|->
+name|mac
+operator|.
+name|ops
+operator|.
+name|set_lan_id
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
 return|return
-name|ret_val
+name|E1000_SUCCESS
 return|;
 block|}
 end_function
@@ -1370,11 +1334,6 @@ operator|.
 name|init_params
 operator|=
 name|e1000_init_phy_params_80003es2lan
-expr_stmt|;
-name|e1000_get_bus_info_pcie_generic
-argument_list|(
-name|hw
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1988,7 +1947,20 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_80003es2lan
+operator|.
+name|mdic_wa_enable
+operator|==
+name|TRUE
+condition|)
+block|{
+comment|/* 		 * The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -2058,6 +2030,23 @@ argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ret_val
+operator|=
+name|e1000_read_phy_reg_mdic
+argument_list|(
+name|hw
+argument_list|,
+name|MAX_PHY_REG_ADDRESS
+operator|&
+name|offset
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+block|}
 name|e1000_release_phy_80003es2lan
 argument_list|(
 name|hw
@@ -2184,7 +2173,20 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * The "ready" bit in the MDIC register may be incorrectly set 	 * before the device has completed the "Page Select" MDI 	 * transaction.  So we wait 200us after each MDI command... 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_80003es2lan
+operator|.
+name|mdic_wa_enable
+operator|==
+name|TRUE
+condition|)
+block|{
+comment|/* 		 * The "ready" bit in the MDIC register may be incorrectly set 		 * before the device has completed the "Page Select" MDI 		 * transaction.  So we wait 200us after each MDI command... 		 */
 name|usec_delay
 argument_list|(
 literal|200
@@ -2254,6 +2256,23 @@ argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|ret_val
+operator|=
+name|e1000_write_phy_reg_mdic
+argument_list|(
+name|hw
+argument_list|,
+name|MAX_PHY_REG_ADDRESS
+operator|&
+name|offset
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+block|}
 name|e1000_release_phy_80003es2lan
 argument_list|(
 name|hw
@@ -2844,12 +2863,13 @@ condition|(
 name|index
 operator|>=
 name|GG82563_CABLE_LENGTH_TABLE_SIZE
-operator|+
+operator|-
 literal|5
 condition|)
 block|{
 name|ret_val
 operator|=
+operator|-
 name|E1000_ERR_PHY
 expr_stmt|;
 goto|goto
@@ -3218,14 +3238,12 @@ if|if
 condition|(
 name|ret_val
 condition|)
-block|{
 name|DEBUGOUT
 argument_list|(
 literal|"Error initializing identification LED\n"
 argument_list|)
 expr_stmt|;
 comment|/* This is not fatal and we should not stop init due to this */
-block|}
 comment|/* Disabling VLAN filtering */
 name|DEBUGOUT
 argument_list|(
@@ -3477,6 +3495,58 @@ argument_list|,
 name|reg_data
 argument_list|)
 expr_stmt|;
+comment|/* default to TRUE to enable the MDIC W/A */
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_80003es2lan
+operator|.
+name|mdic_wa_enable
+operator|=
+name|TRUE
+expr_stmt|;
+name|ret_val
+operator|=
+name|e1000_read_kmrn_reg_80003es2lan
+argument_list|(
+name|hw
+argument_list|,
+name|E1000_KMRNCTRLSTA_OFFSET
+operator|>>
+name|E1000_KMRNCTRLSTA_OFFSET_SHIFT
+argument_list|,
+operator|&
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ret_val
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+name|E1000_KMRNCTRLSTA_OPMODE_MASK
+operator|)
+operator|==
+name|E1000_KMRNCTRLSTA_OPMODE_INBAND_MDIO
+condition|)
+name|hw
+operator|->
+name|dev_spec
+operator|.
+name|_80003es2lan
+operator|.
+name|mdic_wa_enable
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 comment|/* 	 * Clear all of the statistics registers (clear on read).  It is 	 * important that we do this after we have tried to establish link 	 * because the symbol error count will increment wildly if there 	 * is no link. 	 */
 name|e1000_clear_hw_cntrs_80003es2lan
 argument_list|(
@@ -3731,12 +3801,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|phy
 operator|->
 name|reset_disable
 condition|)
-block|{
+goto|goto
+name|skip_reset
+goto|;
 name|ret_val
 operator|=
 name|hw
@@ -3795,7 +3866,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 		 * Options: 		 *   MDI/MDI-X = 0 (default) 		 *   0 - Auto for all speeds 		 *   1 - MDI mode 		 *   2 - MDI-X mode 		 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 		 */
+comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
 name|ret_val
 operator|=
 name|hw
@@ -3859,7 +3930,7 @@ name|GG82563_PSCR_CROSSOVER_MODE_AUTO
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Options: 		 *   disable_polarity_correction = 0 (default) 		 *       Automatic Correction for Reversed Cable Polarity 		 *   0 - Disabled 		 *   1 - Enabled 		 */
+comment|/* 	 * Options: 	 *   disable_polarity_correction = 0 (default) 	 *       Automatic Correction for Reversed Cable Polarity 	 *   0 - Disabled 	 *   1 - Enabled 	 */
 name|data
 operator|&=
 operator|~
@@ -3927,7 +3998,8 @@ goto|goto
 name|out
 goto|;
 block|}
-block|}
+name|skip_reset
+label|:
 comment|/* Bypass Rx and Tx FIFO's */
 name|ret_val
 operator|=

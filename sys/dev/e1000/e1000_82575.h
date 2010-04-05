@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -48,6 +48,34 @@ name|E1000_RAR_ENTRIES_82576
 value|24
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_RAR_ENTRIES_82580
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SW_SYNCH_MB
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STAT_DEV_RST_SET
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_DEV_RST
+value|0x20000000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -58,7 +86,7 @@ begin_struct
 struct|struct
 name|e1000_adv_data_desc
 block|{
-name|u64
+name|__le64
 name|buffer_addr
 decl_stmt|;
 comment|/* Address of the descriptor's data buffer */
@@ -478,6 +506,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_SRRCTL_TIMESTAMP
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_SRRCTL_DROP_EN
 value|0x80000000
 end_define
@@ -550,6 +585,13 @@ define|#
 directive|define
 name|E1000_MRQC_RSS_FIELD_IPV6_UDP_EX
 value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_ENABLE_RSS_8Q
+value|0x00000002
 end_define
 
 begin_define
@@ -746,11 +788,11 @@ name|e1000_adv_rx_desc
 block|{
 struct|struct
 block|{
-name|u64
+name|__le64
 name|pkt_addr
 decl_stmt|;
 comment|/* Packet buffer address */
-name|u64
+name|__le64
 name|hdr_addr
 decl_stmt|;
 comment|/* Header buffer address */
@@ -763,19 +805,19 @@ struct|struct
 block|{
 union|union
 block|{
-name|u32
+name|__le32
 name|data
 decl_stmt|;
 struct|struct
 block|{
-name|u16
+name|__le16
 name|pkt_info
 decl_stmt|;
-comment|/* RSS type, Packet type */
-name|u16
+comment|/*RSS type, Pkt type*/
+name|__le16
 name|hdr_info
 decl_stmt|;
-comment|/* Split Header, 				        	       * header buffer length */
+comment|/* Split Header, 				        	          * header buffer len*/
 block|}
 name|hs_rss
 struct|;
@@ -784,17 +826,17 @@ name|lo_dword
 union|;
 union|union
 block|{
-name|u32
+name|__le32
 name|rss
 decl_stmt|;
 comment|/* RSS Hash */
 struct|struct
 block|{
-name|u16
+name|__le16
 name|ip_id
 decl_stmt|;
 comment|/* IP id */
-name|u16
+name|__le16
 name|csum
 decl_stmt|;
 comment|/* Packet Checksum */
@@ -809,15 +851,15 @@ name|lower
 struct|;
 struct|struct
 block|{
-name|u32
+name|__le32
 name|status_error
 decl_stmt|;
 comment|/* ext status/error */
-name|u16
+name|__le16
 name|length
 decl_stmt|;
 comment|/* Packet length */
-name|u16
+name|__le16
 name|vlan
 decl_stmt|;
 comment|/* VLAN tag */
@@ -873,6 +915,28 @@ directive|define
 name|E1000_RXDADV_SPH
 value|0x8000
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_STAT_TS
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Pkt was time stamped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXDADV_STAT_TSIP
+value|0x08000
+end_define
+
+begin_comment
+comment|/* timestamp in packet */
+end_comment
 
 begin_define
 define|#
@@ -1208,14 +1272,14 @@ name|e1000_adv_tx_desc
 block|{
 struct|struct
 block|{
-name|u64
+name|__le64
 name|buffer_addr
 decl_stmt|;
 comment|/* Address of descriptor's data buf */
-name|u32
+name|__le32
 name|cmd_type_len
 decl_stmt|;
-name|u32
+name|__le32
 name|olinfo_status
 decl_stmt|;
 block|}
@@ -1223,14 +1287,14 @@ name|read
 struct|;
 struct|struct
 block|{
-name|u64
+name|__le64
 name|rsvd
 decl_stmt|;
 comment|/* Reserved */
-name|u32
+name|__le32
 name|nxtseq_seed
 decl_stmt|;
-name|u32
+name|__le32
 name|status
 decl_stmt|;
 block|}
@@ -1461,16 +1525,16 @@ begin_struct
 struct|struct
 name|e1000_adv_tx_context_desc
 block|{
-name|u32
+name|__le32
 name|vlan_macip_lens
 decl_stmt|;
-name|u32
+name|__le32
 name|seqnum_seed
 decl_stmt|;
-name|u32
+name|__le32
 name|type_tucmd_mlhl
 decl_stmt|;
-name|u32
+name|__le32
 name|mss_l4len_idx
 decl_stmt|;
 block|}
@@ -1946,6 +2010,55 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_FTQF_VF_BP
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_1588_TIME_STAMP
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_MASK
+value|0xF0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_MASK_PROTO_BP
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_MASK_SOURCE_ADDR_BP
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_MASK_DEST_ADDR_BP
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FTQF_MASK_SOURCE_PORT_BP
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_NVM_APME_82575
 value|0x0400
 end_define
@@ -2217,6 +2330,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_VMVIR_VLANA_DEFAULT
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Always use default VLAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VMVIR_VLANA_NEVER
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Never insert VLAN tag */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_VF_INIT_TIMEOUT
 value|200
 end_define
@@ -2256,8 +2391,68 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_TCTL_EXT_COLD
+value|0x000FFC00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TCTL_EXT_COLD_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DTXCTL_8023LL
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DTXCTL_VLAN_ADDED
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DTXCTL_OOS_ENABLE
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DTXCTL_MDP_EN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DTXCTL_SPOOF_INT
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALL_QUEUES
 value|0xFFFF
+end_define
+
+begin_comment
+comment|/* RX packet buffer size defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RXPBS_SIZE_MASK_82576
+value|0x0000007F
 end_define
 
 begin_function_decl
@@ -2286,6 +2481,16 @@ name|hw
 parameter_list|,
 name|bool
 name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u16
+name|e1000_rxpbs_adjust_82580
+parameter_list|(
+name|u32
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

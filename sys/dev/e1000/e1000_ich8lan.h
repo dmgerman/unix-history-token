@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -692,6 +692,184 @@ name|HV_TNCRS_LOWER
 value|PHY_REG(778, 30)
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_FCRTV_PCH
+value|0x05F40
+end_define
+
+begin_comment
+comment|/* PCH Flow Control Refresh Timer Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_K1_CONFIG
+value|0x1B
+end_define
+
+begin_comment
+comment|/* NVM K1 Config Word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_NVM_K1_ENABLE
+value|0x1
+end_define
+
+begin_comment
+comment|/* NVM Enable K1 bit */
+end_comment
+
+begin_comment
+comment|/* SMBus Address Phy Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR
+value|PHY_REG(768, 26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR_PEC_EN
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SMB_ADDR_VALID
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Strapping Option Register - RO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STRAP
+value|0x0000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STRAP_SMBUS_ADDRESS_MASK
+value|0x00FE0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_STRAP_SMBUS_ADDRESS_SHIFT
+value|17
+end_define
+
+begin_comment
+comment|/* OEM Bits Phy Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_OEM_BITS
+value|PHY_REG(768, 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_OEM_BITS_LPLU
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Low Power Link Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_OEM_BITS_GBE_DIS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Gigabit Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_OEM_BITS_RESTART_AN
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Restart Auto-negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCD_CFG_PHY_ADDR_BIT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Phy address bit from LCD Config word */
+end_comment
+
+begin_comment
+comment|/* KMRN Mode Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_KMRN_MODE_CTRL
+value|PHY_REG(769, 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_KMRN_MDIO_SLOW
+value|0x0400
+end_define
+
+begin_comment
+comment|/* PHY Power Management Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_PM_CTRL
+value|PHY_REG(770, 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_FLAG_TIMEOUT
+value|1000
+end_define
+
+begin_comment
+comment|/* SW Semaphore flag timeout in milliseconds */
+end_comment
+
 begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
@@ -826,6 +1004,36 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_configure_k1_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|k1_enable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_oem_bits_config_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|d0_config
 parameter_list|)
 function_decl|;
 end_function_decl

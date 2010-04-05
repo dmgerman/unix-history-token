@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -105,6 +105,72 @@ end_define
 
 begin_comment
 comment|/* MDI Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDICNFG
+value|0x00E04
+end_define
+
+begin_comment
+comment|/* MDI Config - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_REGISTER_SET_SIZE
+value|0x20000
+end_define
+
+begin_comment
+comment|/* CSR Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEPROM_INIT_CTRL_WORD_2
+value|0x0F
+end_define
+
+begin_comment
+comment|/* EEPROM Init Ctrl Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BARCTRL
+value|0x5BBC
+end_define
+
+begin_comment
+comment|/* BAR ctrl reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BARCTRL_FLSIZE
+value|0x0700
+end_define
+
+begin_comment
+comment|/* BAR ctrl Flsize */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BARCTRL_CSRSIZE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* BAR ctrl CSR size */
 end_comment
 
 begin_define
@@ -951,52 +1017,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E1000_RXCTL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0C014 + (0x40 * (_n)))
+name|E1000_IRPBS
+value|0x02404
 end_define
 
-begin_define
-define|#
-directive|define
-name|E1000_RQDPC
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0C030 + (0x40 * (_n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_TXCTL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0E014 + (0x40 * (_n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RXCTL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0C014 + (0x40 * (_n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_RQDPC
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x0C030 + (0x40 * (_n)))
-end_define
+begin_comment
+comment|/* Same as RXPBS, renamed for newer adapters - RW */
+end_comment
 
 begin_define
 define|#
@@ -1077,6 +1104,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_RXCTL
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x02814 + ((_n) * 0x100)) : \                                          (0x0C014 + ((_n) * 0x40)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_RXCTRL
+parameter_list|(
+name|_n
+parameter_list|)
+value|E1000_RXCTL(_n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_RDT
 parameter_list|(
 name|_n
@@ -1092,6 +1139,16 @@ parameter_list|(
 name|_n
 parameter_list|)
 value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : \                                          (0x0C028 + ((_n) * 0x40)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_RQDPC
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x02830 + ((_n) * 0x100)) : \                                          (0x0C030 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1137,6 +1194,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_TXCTL
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x03814 + ((_n) * 0x100)) : \                                          (0x0E014 + ((_n) * 0x40)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DCA_TXCTRL
+parameter_list|(
+name|_n
+parameter_list|)
+value|E1000_TXCTL(_n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_TDT
 parameter_list|(
 name|_n
@@ -1157,36 +1234,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_TARC
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x03840 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_TXCTRL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x03814 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_DCA_RXCTRL
-parameter_list|(
-name|_n
-parameter_list|)
-value|(0x02814 + (_n<< 8))
-end_define
-
-begin_define
-define|#
-directive|define
 name|E1000_TDWBAL
 parameter_list|(
 name|_n
@@ -1202,6 +1249,16 @@ parameter_list|(
 name|_n
 parameter_list|)
 value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : \                                          (0x0E03C + ((_n) * 0x40)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TARC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x03840 + ((_n) * 0x100))
 end_define
 
 begin_define
@@ -1372,6 +1429,17 @@ end_define
 
 begin_comment
 comment|/* Tx Packet Buffer Size - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_ITPBS
+value|0x03404
+end_define
+
+begin_comment
+comment|/* Same as TXPBS, renamed for newer adpaters - RW */
 end_comment
 
 begin_define
@@ -2297,6 +2365,111 @@ end_define
 begin_comment
 comment|/* Interrupt Cause Receiver Overrun Count */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CRC_OFFSET
+value|0x05F50
+end_define
+
+begin_comment
+comment|/* CRC Offset register */
+end_comment
+
+begin_comment
+comment|/* Virtualization statistical counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPRC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010010 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPTC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010014 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGORC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010018 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGOTC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010034 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFMPRC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010038 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPRLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010040 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPTLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010044 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGORLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010048 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGOTLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010050 + (0x100 * (_n)))
+end_define
 
 begin_define
 define|#
@@ -3409,6 +3582,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MDEF
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x05890 + (4 * (_n)))
+end_define
+
+begin_comment
+comment|/* Mngmt Decision Filters */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_SW_FW_SYNC
 value|0x05B5C
 end_define
@@ -3580,6 +3767,17 @@ end_define
 
 begin_comment
 comment|/* DCA Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_UFUSE
+value|0x05B78
+end_define
+
+begin_comment
+comment|/* UFUSE - RO */
 end_comment
 
 begin_define
@@ -4004,6 +4202,16 @@ begin_comment
 comment|/* VLAN Virtual Machine                                                        * Filter - RW */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_VMVIR
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x03700 + (4 * (_n)))
+end_define
+
 begin_comment
 comment|/* Time Sync */
 end_comment
@@ -4138,6 +4346,28 @@ end_define
 
 begin_comment
 comment|/* Increment attributes register - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TSAUXC
+value|0x0B640
+end_define
+
+begin_comment
+comment|/* Timesync Auxiliary Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SYSTIMR
+value|0x0B6F8
+end_define
+
+begin_comment
+comment|/* System time register Residue */
 end_comment
 
 begin_define
@@ -4626,6 +4856,98 @@ end_define
 begin_comment
 comment|/* Tx BCN Control Low */
 end_comment
+
+begin_comment
+comment|/* DMA Coalescing registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMACR
+value|0x02508
+end_define
+
+begin_comment
+comment|/* Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCTXTH
+value|0x03550
+end_define
+
+begin_comment
+comment|/* Transmit Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCTLX
+value|0x02514
+end_define
+
+begin_comment
+comment|/* Time to Lx Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCRTRH
+value|0x05DD0
+end_define
+
+begin_comment
+comment|/* Receive Packet Rate Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DMCCNT
+value|0x05DD4
+end_define
+
+begin_comment
+comment|/* Current RX Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FCRTC
+value|0x02170
+end_define
+
+begin_comment
+comment|/* Flow Control Rx high watermark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCIEMISC
+value|0x05BB8
+end_define
+
+begin_comment
+comment|/* PCIE misc config register */
+end_comment
+
+begin_comment
+comment|/* PCIe Parity Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCIEERRSTS
+value|0x05BA8
+end_define
 
 begin_endif
 endif|#
