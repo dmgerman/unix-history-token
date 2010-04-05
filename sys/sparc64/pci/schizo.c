@@ -4213,7 +4213,7 @@ argument_list|(
 literal|"%s: PCI bus %c error AFAR %#llx AFSR %#llx PCI CSR %#llx "
 literal|"IOMMU %#llx STATUS %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4445,7 +4445,7 @@ name|panic
 argument_list|(
 literal|"%s: uncorrectable DMA error AFAR %#llx AFSR %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4630,7 +4630,7 @@ name|panic
 argument_list|(
 literal|"%s: %s error %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
