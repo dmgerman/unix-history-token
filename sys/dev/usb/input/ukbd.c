@@ -4597,8 +4597,6 @@ operator|->
 name|sc_flags
 operator||=
 name|UKBD_FLAG_APPLE_FN
-operator||
-name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
