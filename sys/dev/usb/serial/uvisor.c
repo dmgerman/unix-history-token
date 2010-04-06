@@ -1004,6 +1004,15 @@ argument_list|)
 block|,
 name|UVISOR_DEV
 argument_list|(
+name|ALPHASMART
+argument_list|,
+name|DANA_SYNC
+argument_list|,
+name|UVISOR_FLAG_PALM4
+argument_list|)
+block|,
+name|UVISOR_DEV
+argument_list|(
 name|GARMIN
 argument_list|,
 name|IQUE_3600
