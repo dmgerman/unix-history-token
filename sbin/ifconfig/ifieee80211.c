@@ -23221,6 +23221,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|LINE_BREAK
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 if|if
