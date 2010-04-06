@@ -82,10 +82,6 @@ name|public
 operator|:
 name|X86ATTInstPrinter
 argument_list|(
-name|raw_ostream
-operator|&
-name|O
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&
@@ -94,8 +90,6 @@ argument_list|)
 operator|:
 name|MCInstPrinter
 argument_list|(
-argument|O
-argument_list|,
 argument|MAI
 argument_list|)
 block|{}
@@ -107,6 +101,10 @@ specifier|const
 name|MCInst
 operator|*
 name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 block|;
 name|virtual
@@ -125,6 +123,10 @@ specifier|const
 name|MCInst
 operator|*
 name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 block|;
 specifier|static
@@ -151,6 +153,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -159,6 +163,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -167,6 +173,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -175,6 +183,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -183,6 +193,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -191,6 +203,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -198,6 +212,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -206,6 +222,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -213,6 +231,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -221,6 +241,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -228,6 +250,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -236,6 +260,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -243,6 +269,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -251,6 +279,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -258,6 +288,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -266,6 +298,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -273,6 +307,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -281,6 +317,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -288,6 +326,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -296,6 +336,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -303,6 +345,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -311,6 +355,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -318,6 +364,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -326,6 +374,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printMemReference
@@ -333,6 +383,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -341,6 +393,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printLeaMemReference
@@ -348,6 +402,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -356,6 +412,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printLeaMemReference
@@ -363,6 +421,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 name|void
@@ -371,6 +431,8 @@ argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|{
 name|printLeaMemReference
@@ -378,6 +440,8 @@ argument_list|(
 name|MI
 argument_list|,
 name|OpNo
+argument_list|,
+name|O
 argument_list|)
 block|;   }
 block|}

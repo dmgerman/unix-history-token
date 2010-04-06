@@ -701,6 +701,34 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// isReachableFromEntry - Return true if A is dominated by the entry
+end_comment
+
+begin_comment
+comment|/// block of the function containing it.
+end_comment
+
+begin_function
+name|bool
+name|isReachableFromEntry
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|A
+parameter_list|)
+block|{
+return|return
+name|DT
+operator|->
+name|isReachableFromEntry
+argument_list|(
+name|A
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|virtual
 name|void

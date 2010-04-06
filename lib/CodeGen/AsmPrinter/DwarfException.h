@@ -62,42 +62,41 @@ end_define
 begin_include
 include|#
 directive|include
-file|"DIE.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DwarfPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/AsmPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 struct_decl|struct
 name|LandingPadInfo
 struct_decl|;
 name|class
 name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MachineMove
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
+name|class
+name|MachineFunction
 decl_stmt|;
 name|class
 name|MCAsmInfo
@@ -106,39 +105,53 @@ name|class
 name|MCExpr
 decl_stmt|;
 name|class
+name|MCSymbol
+decl_stmt|;
+name|class
 name|Timer
 decl_stmt|;
 name|class
-name|raw_ostream
+name|Function
+decl_stmt|;
+name|class
+name|AsmPrinter
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// DwarfException - Emits Dwarf exception handling directives.
 comment|///
 name|class
 name|DwarfException
-range|:
-name|public
-name|DwarfPrinter
-block|{   struct
+block|{
+comment|/// Asm - Target of Dwarf emission.
+name|AsmPrinter
+modifier|*
+name|Asm
+decl_stmt|;
+comment|/// MMI - Collected machine module information.
+name|MachineModuleInfo
+modifier|*
+name|MMI
+decl_stmt|;
+struct|struct
 name|FunctionEHFrameInfo
 block|{
 name|MCSymbol
-operator|*
+modifier|*
 name|FunctionEHSym
-block|;
+decl_stmt|;
 comment|// L_foo.eh
 name|unsigned
 name|Number
-block|;
+decl_stmt|;
 name|unsigned
 name|PersonalityIndex
-block|;
+decl_stmt|;
 name|bool
 name|hasCalls
-block|;
+decl_stmt|;
 name|bool
 name|hasLandingPads
-block|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -146,12 +159,12 @@ operator|<
 name|MachineMove
 operator|>
 name|Moves
-block|;
+expr_stmt|;
 specifier|const
 name|Function
-operator|*
+modifier|*
 name|function
-block|;
+decl_stmt|;
 name|FunctionEHFrameInfo
 argument_list|(
 argument|MCSymbol *EHSym
@@ -168,44 +181,44 @@ argument|const std::vector<MachineMove>&M
 argument_list|,
 argument|const Function *f
 argument_list|)
-operator|:
+block|:
 name|FunctionEHSym
 argument_list|(
 name|EHSym
 argument_list|)
-block|,
+operator|,
 name|Number
 argument_list|(
 name|Num
 argument_list|)
-block|,
+operator|,
 name|PersonalityIndex
 argument_list|(
 name|P
 argument_list|)
-block|,
+operator|,
 name|hasCalls
 argument_list|(
 name|hC
 argument_list|)
-block|,
+operator|,
 name|hasLandingPads
 argument_list|(
 name|hL
 argument_list|)
-block|,
+operator|,
 name|Moves
 argument_list|(
 name|M
 argument_list|)
-block|,
+operator|,
 name|function
 argument_list|(
 argument|f
 argument_list|)
 block|{ }
 block|}
-block|;
+struct|;
 name|std
 operator|::
 name|vector
@@ -213,64 +226,68 @@ operator|<
 name|FunctionEHFrameInfo
 operator|>
 name|EHFrames
-block|;
+expr_stmt|;
 comment|/// UsesLSDA - Indicates whether an FDE that uses the CIE at the given index
 comment|/// uses an LSDA. If so, then we need to encode that information in the CIE's
 comment|/// augmentation.
 name|DenseMap
 operator|<
 name|unsigned
-block|,
+operator|,
 name|bool
 operator|>
 name|UsesLSDA
-block|;
+expr_stmt|;
 comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
 comment|/// be emitted.
 name|bool
 name|shouldEmitTable
-block|;
+decl_stmt|;
 comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
 comment|/// should be emitted.
 name|bool
 name|shouldEmitMoves
-block|;
+decl_stmt|;
 comment|/// shouldEmitTableModule - Per-module flag to indicate if EH tables
 comment|/// should be emitted.
 name|bool
 name|shouldEmitTableModule
-block|;
+decl_stmt|;
 comment|/// shouldEmitFrameModule - Per-module flag to indicate if frame moves
 comment|/// should be emitted.
 name|bool
 name|shouldEmitMovesModule
-block|;
+decl_stmt|;
 comment|/// ExceptionTimer - Timer for the Dwarf exception writer.
 name|Timer
-operator|*
+modifier|*
 name|ExceptionTimer
-block|;
+decl_stmt|;
 comment|/// EmitCIE - Emit a Common Information Entry (CIE). This holds information
 comment|/// that is shared among many Frame Description Entries.  There is at least
 comment|/// one CIE in every non-empty .debug_frame section.
 name|void
 name|EmitCIE
-argument_list|(
-argument|const Function *Personality
-argument_list|,
-argument|unsigned Index
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|Personality
+parameter_list|,
+name|unsigned
+name|Index
+parameter_list|)
+function_decl|;
 comment|/// EmitFDE - Emit the Frame Description Entry (FDE) for the function.
 name|void
 name|EmitFDE
-argument_list|(
+parameter_list|(
 specifier|const
 name|FunctionEHFrameInfo
-operator|&
+modifier|&
 name|EHFrameInfo
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// EmitExceptionTable - Emit landing pads and actions.
 comment|///
 comment|/// The general organization of the table is complex, but the basic concepts
@@ -294,47 +311,48 @@ comment|/// SharedTypeIds - How many leading type ids two landing pads have in c
 specifier|static
 name|unsigned
 name|SharedTypeIds
-argument_list|(
+parameter_list|(
 specifier|const
 name|LandingPadInfo
-operator|*
+modifier|*
 name|L
-argument_list|,
+parameter_list|,
 specifier|const
 name|LandingPadInfo
-operator|*
+modifier|*
 name|R
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// PadLT - Order landing pads lexicographically by type id.
 specifier|static
 name|bool
 name|PadLT
-argument_list|(
+parameter_list|(
 specifier|const
 name|LandingPadInfo
-operator|*
+modifier|*
 name|L
-argument_list|,
+parameter_list|,
 specifier|const
 name|LandingPadInfo
-operator|*
+modifier|*
 name|R
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// PadRange - Structure holding a try-range and the associated landing pad.
-block|struct
+struct|struct
 name|PadRange
 block|{
 comment|// The index of the landing pad.
 name|unsigned
 name|PadIndex
-block|;
+decl_stmt|;
 comment|// The index of the begin and end labels in the landing pad's label lists.
 name|unsigned
 name|RangeIndex
-block|;   }
-block|;
+decl_stmt|;
+block|}
+struct|;
 typedef|typedef
 name|DenseMap
 operator|<
@@ -346,20 +364,21 @@ operator|>
 name|RangeMapType
 expr_stmt|;
 comment|/// ActionEntry - Structure describing an entry in the actions table.
-block|struct
+struct|struct
 name|ActionEntry
 block|{
 name|int
 name|ValueForTypeID
-block|;
+decl_stmt|;
 comment|// The value to write - may not be equal to the type id.
 name|int
 name|NextAction
-block|;
+decl_stmt|;
 name|unsigned
 name|Previous
-block|;   }
 decl_stmt|;
+block|}
+struct|;
 comment|/// CallSiteEntry - Structure describing an entry in the call-site table.
 struct|struct
 name|CallSiteEntry
@@ -479,52 +498,15 @@ comment|// Main entry points.
 comment|//
 name|DwarfException
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
 name|AsmPrinter
 operator|*
 name|A
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|T
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|DwarfException
 argument_list|()
 expr_stmt|;
-comment|/// BeginModule - Emit all exception information that should come prior to the
-comment|/// content.
-name|void
-name|BeginModule
-parameter_list|(
-name|Module
-modifier|*
-name|m
-parameter_list|,
-name|MachineModuleInfo
-modifier|*
-name|mmi
-parameter_list|)
-block|{
-name|this
-operator|->
-name|M
-operator|=
-name|m
-expr_stmt|;
-name|this
-operator|->
-name|MMI
-operator|=
-name|mmi
-expr_stmt|;
-block|}
 comment|/// EndModule - Emit all exception information that should come after the
 comment|/// content.
 name|void
@@ -548,14 +530,11 @@ name|EndFunction
 parameter_list|()
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End of namespace llvm
 end_comment
 

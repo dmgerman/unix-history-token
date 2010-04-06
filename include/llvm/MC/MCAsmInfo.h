@@ -451,17 +451,6 @@ name|ProtectedVisibilityAttr
 decl_stmt|;
 comment|// Defaults to MCSA_Protected
 comment|//===--- Dwarf Emission Directives -----------------------------------===//
-comment|/// AbsoluteDebugSectionOffsets - True if we should emit abolute section
-comment|/// offsets for debug information.
-name|bool
-name|AbsoluteDebugSectionOffsets
-decl_stmt|;
-comment|// Defaults to false.
-comment|/// AbsoluteEHSectionOffsets - True if we should emit abolute section
-comment|/// offsets for EH information. Defaults to false.
-name|bool
-name|AbsoluteEHSectionOffsets
-decl_stmt|;
 comment|/// HasLEB128 - True if target asm supports leb128 directives.
 name|bool
 name|HasLEB128
@@ -1054,24 +1043,6 @@ specifier|const
 block|{
 return|return
 name|ProtectedVisibilityAttr
-return|;
-block|}
-name|bool
-name|isAbsoluteDebugSectionOffsets
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AbsoluteDebugSectionOffsets
-return|;
-block|}
-name|bool
-name|isAbsoluteEHSectionOffsets
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AbsoluteEHSectionOffsets
 return|;
 block|}
 name|bool

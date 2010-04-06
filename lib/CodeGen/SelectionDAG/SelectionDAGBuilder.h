@@ -219,9 +219,6 @@ name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
-name|MachineFunction
-decl_stmt|;
-name|class
 name|MachineInstr
 decl_stmt|;
 name|class

@@ -2100,11 +2100,12 @@ specifier|inline
 name|int32_t
 name|SignExtend32
 argument_list|(
-argument|int32_t x
+argument|uint32_t x
 argument_list|)
 block|{
 return|return
-operator|(
+name|int32_t
+argument_list|(
 name|x
 operator|<<
 operator|(
@@ -2112,7 +2113,7 @@ literal|32
 operator|-
 name|B
 operator|)
-operator|)
+argument_list|)
 operator|>>
 operator|(
 literal|32
@@ -2132,11 +2133,12 @@ specifier|inline
 name|int64_t
 name|SignExtend64
 argument_list|(
-argument|int32_t x
+argument|uint64_t x
 argument_list|)
 block|{
 return|return
-operator|(
+name|int64_t
+argument_list|(
 name|x
 operator|<<
 operator|(
@@ -2144,7 +2146,7 @@ literal|64
 operator|-
 name|B
 operator|)
-operator|)
+argument_list|)
 operator|>>
 operator|(
 literal|64

@@ -1047,6 +1047,9 @@ name|unsigned
 name|Align
 parameter_list|,
 name|bool
+name|isVolatile
+parameter_list|,
+name|bool
 name|AlwaysInline
 parameter_list|,
 specifier|const

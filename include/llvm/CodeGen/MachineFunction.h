@@ -128,6 +128,9 @@ name|class
 name|MachineJumpTableInfo
 decl_stmt|;
 name|class
+name|MachineModuleInfo
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -286,6 +289,10 @@ name|MCContext
 modifier|&
 name|Ctx
 decl_stmt|;
+name|MachineModuleInfo
+modifier|&
+name|MMI
+decl_stmt|;
 comment|// RegInfo - Information about each register in use in the function.
 name|MachineRegisterInfo
 modifier|*
@@ -353,8 +360,8 @@ expr_stmt|;
 name|BasicBlockListType
 name|BasicBlocks
 decl_stmt|;
-comment|// Default debug location. Used to print out the debug label at the beginning
-comment|// of a function.
+comment|/// Default debug location. Used to print out the debug label at the beginning
+comment|/// of a function.
 name|DebugLoc
 name|DefaultDebugLoc
 decl_stmt|;
@@ -364,7 +371,7 @@ comment|///
 name|unsigned
 name|FunctionNumber
 decl_stmt|;
-comment|// The alignment of the function.
+comment|/// The alignment of the function.
 name|unsigned
 name|Alignment
 decl_stmt|;
@@ -396,13 +403,23 @@ argument|const TargetMachine&TM
 argument_list|,
 argument|unsigned FunctionNum
 argument_list|,
-argument|MCContext&Ctx
+argument|MachineModuleInfo&MMI
 argument_list|)
 empty_stmt|;
 operator|~
 name|MachineFunction
 argument_list|()
 expr_stmt|;
+name|MachineModuleInfo
+operator|&
+name|getMMI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMI
+return|;
+block|}
 name|MCContext
 operator|&
 name|getContext

@@ -153,6 +153,43 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// setInlineAsmDiagnosticHandler - This method sets a handler that is invoked
+comment|/// when problems with inline asm are detected by the backend.  The first
+comment|/// argument is a function pointer (of type SourceMgr::DiagHandlerTy) and the
+comment|/// second is a context pointer that gets passed into the DiagHandler.
+comment|///
+comment|/// LLVMContext doesn't take ownership or interpreter either of these
+comment|/// pointers.
+name|void
+name|setInlineAsmDiagnosticHandler
+parameter_list|(
+name|void
+modifier|*
+name|DiagHandler
+parameter_list|,
+name|void
+modifier|*
+name|DiagContext
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// getInlineAsmDiagnosticHandler - Return the diagnostic handler set by
+comment|/// setInlineAsmDiagnosticHandler.
+name|void
+operator|*
+name|getInlineAsmDiagnosticHandler
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getInlineAsmDiagnosticContext - Return the diagnostic context set by
+comment|/// setInlineAsmDiagnosticHandler.
+name|void
+operator|*
+name|getInlineAsmDiagnosticContext
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that

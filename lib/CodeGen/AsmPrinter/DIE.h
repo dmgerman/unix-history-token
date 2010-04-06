@@ -97,12 +97,6 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
-name|DwarfPrinter
-decl_stmt|;
-name|class
-name|TargetData
-decl_stmt|;
-name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -373,7 +367,7 @@ comment|///
 name|void
 name|Emit
 argument_list|(
-argument|const DwarfPrinter *DP
+argument|AsmPrinter *AP
 argument_list|)
 specifier|const
 block|;
@@ -834,9 +828,9 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-name|DwarfPrinter
+name|AsmPrinter
 operator|*
-name|D
+name|AP
 argument_list|,
 name|unsigned
 name|Form
@@ -851,10 +845,9 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-specifier|const
-name|TargetData
+name|AsmPrinter
 operator|*
-name|TD
+name|AP
 argument_list|,
 name|unsigned
 name|Form
@@ -1057,7 +1050,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|DwarfPrinter *D
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1069,7 +1062,7 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *TD
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1156,7 +1149,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|DwarfPrinter *D
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1168,7 +1161,7 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned
 comment|/*Form*/
@@ -1273,7 +1266,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|DwarfPrinter *D
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1285,7 +1278,7 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *TD
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1390,7 +1383,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|DwarfPrinter *D
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1402,7 +1395,7 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *TD
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1503,7 +1496,7 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-argument|DwarfPrinter *D
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1515,7 +1508,7 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-argument|const TargetData *TD
+argument|AsmPrinter *AP
 argument_list|,
 argument|unsigned Form
 argument_list|)
@@ -1618,10 +1611,9 @@ comment|///
 name|unsigned
 name|ComputeSize
 argument_list|(
-specifier|const
-name|TargetData
+name|AsmPrinter
 operator|*
-name|TD
+name|AP
 argument_list|)
 expr_stmt|;
 comment|/// BestForm - Choose the best form for data.
@@ -1688,9 +1680,9 @@ name|virtual
 name|void
 name|EmitValue
 argument_list|(
-name|DwarfPrinter
+name|AsmPrinter
 operator|*
-name|D
+name|AP
 argument_list|,
 name|unsigned
 name|Form
@@ -1703,10 +1695,9 @@ name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
-specifier|const
-name|TargetData
+name|AsmPrinter
 operator|*
-name|TD
+name|AP
 argument_list|,
 name|unsigned
 name|Form

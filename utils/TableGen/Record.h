@@ -7449,14 +7449,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|// Like getValue, but allow dotting into members: X.Y
-name|RecordVal
-operator|*
-name|getDottedValue
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
 name|void
 name|addTemplateArg
 argument_list|(

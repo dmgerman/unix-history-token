@@ -187,6 +187,9 @@ name|Err
 operator|=
 name|SMDiagnostic
 argument_list|(
+name|SMLoc
+argument_list|()
+argument_list|,
 name|Buffer
 operator|->
 name|getBufferIdentifier
@@ -284,6 +287,9 @@ name|Err
 operator|=
 name|SMDiagnostic
 argument_list|(
+name|SMLoc
+argument_list|()
+argument_list|,
 name|Filename
 argument_list|,
 operator|-
@@ -399,6 +405,9 @@ name|Err
 operator|=
 name|SMDiagnostic
 argument_list|(
+name|SMLoc
+argument_list|()
+argument_list|,
 name|Buffer
 operator|->
 name|getBufferIdentifier
@@ -489,6 +498,9 @@ name|Err
 operator|=
 name|SMDiagnostic
 argument_list|(
+name|SMLoc
+argument_list|()
+argument_list|,
 name|Filename
 argument_list|,
 operator|-

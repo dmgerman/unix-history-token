@@ -66,11 +66,6 @@ name|MCInstPrinter
 block|{
 name|protected
 label|:
-comment|/// O - The main stream to emit instruction text to.
-name|raw_ostream
-modifier|&
-name|O
-decl_stmt|;
 comment|/// CommentStream - a stream that comments can be emitted to if desired.
 comment|/// Each comment must end with a newline.  This will be null if verbose
 comment|/// assembly emission is disable.
@@ -87,21 +82,12 @@ name|public
 label|:
 name|MCInstPrinter
 argument_list|(
-name|raw_ostream
-operator|&
-name|o
-argument_list|,
 specifier|const
 name|MCAsmInfo
 operator|&
 name|mai
 argument_list|)
 operator|:
-name|O
-argument_list|(
-name|o
-argument_list|)
-operator|,
 name|CommentStream
 argument_list|(
 literal|0
@@ -132,7 +118,7 @@ operator|&
 name|OS
 expr_stmt|;
 block|}
-comment|/// printInst - Print the specified MCInst to the current raw_ostream.
+comment|/// printInst - Print the specified MCInst to the specified raw_ostream.
 comment|///
 name|virtual
 name|void
@@ -142,6 +128,10 @@ specifier|const
 name|MCInst
 modifier|*
 name|MI
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
 parameter_list|)
 init|=
 literal|0

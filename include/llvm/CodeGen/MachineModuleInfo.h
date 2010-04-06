@@ -391,6 +391,11 @@ comment|/// Context - This is the MCContext used for the entire code generator.
 name|MCContext
 name|Context
 block|;
+comment|/// TheModule - This is the LLVM Module being worked on.
+name|Module
+operator|*
+name|TheModule
+block|;
 comment|/// ObjFileMMI - This is the object-file-format-specific implementation of
 comment|/// MachineModuleInfoImpl, which lets targets accumulate whatever info they
 comment|/// want.
@@ -595,6 +600,29 @@ parameter_list|()
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|void
+name|setModule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+block|{
+name|TheModule
+operator|=
+name|M
+expr_stmt|;
+block|}
+name|Module
+operator|*
+name|getModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheModule
 return|;
 block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for

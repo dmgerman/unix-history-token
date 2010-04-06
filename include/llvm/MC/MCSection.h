@@ -162,6 +162,20 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// isBaseAddressKnownZero - Return true if we know that this section will
+comment|/// get a base address of zero.  In cases where we know that this is true we
+comment|/// can emit section offsets as direct references to avoid a subtraction
+comment|/// from the base of the section, saving a relocation.
+name|virtual
+name|bool
+name|isBaseAddressKnownZero
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 block|}
 empty_stmt|;
 name|class

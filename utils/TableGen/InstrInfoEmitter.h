@@ -198,26 +198,6 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|)
 decl_stmt|;
-name|void
-name|emitShiftedValue
-parameter_list|(
-name|Record
-modifier|*
-name|R
-parameter_list|,
-name|StringInit
-modifier|*
-name|Val
-parameter_list|,
-name|IntInit
-modifier|*
-name|Shift
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|)
-function_decl|;
 comment|// Itinerary information.
 name|void
 name|GatherItinClasses

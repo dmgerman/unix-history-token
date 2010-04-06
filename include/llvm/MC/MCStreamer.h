@@ -184,11 +184,23 @@ return|;
 block|}
 comment|/// @name Assembly File Formatting.
 comment|/// @{
-comment|/// isVerboseAsm - Return true if this streamer supports verbose assembly at
-comment|/// all.
+comment|/// isVerboseAsm - Return true if this streamer supports verbose assembly
+comment|/// and if it is enabled.
 name|virtual
 name|bool
 name|isVerboseAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// hasRawTextSupport - Return true if this asm streamer supports emitting
+comment|/// unformatted text to the .s file with EmitRawText.
+name|virtual
+name|bool
+name|hasRawTextSupport
 argument_list|()
 specifier|const
 block|{
@@ -719,6 +731,26 @@ name|Inst
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+comment|/// EmitRawText - If this file is backed by a assembly streamer, this dumps
+comment|/// the specified string in the output .s file.  This capability is
+comment|/// indicated by the hasRawTextSupport() predicate.  By default this aborts.
+name|virtual
+name|void
+name|EmitRawText
+parameter_list|(
+name|StringRef
+name|String
+parameter_list|)
+function_decl|;
+name|void
+name|EmitRawText
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|String
+parameter_list|)
 function_decl|;
 comment|/// Finish - Finish emission of machine code and flush any output.
 name|virtual

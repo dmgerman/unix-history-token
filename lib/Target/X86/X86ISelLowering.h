@@ -1257,14 +1257,6 @@ name|MachineFunction
 operator|&
 name|mf
 argument_list|,
-name|MachineModuleInfo
-operator|*
-name|mmi
-argument_list|,
-name|DwarfWriter
-operator|*
-name|dw
-argument_list|,
 name|DenseMap
 operator|<
 specifier|const
@@ -2039,6 +2031,8 @@ argument|SDValue Size
 argument_list|,
 argument|unsigned Align
 argument_list|,
+argument|bool isVolatile
+argument_list|,
 argument|const Value *DstSV
 argument_list|,
 argument|uint64_t DstSVOff
@@ -2060,6 +2054,8 @@ argument_list|,
 argument|SDValue Size
 argument_list|,
 argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
 argument_list|,
 argument|bool AlwaysInline
 argument_list|,
@@ -2233,14 +2229,6 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|mf
-argument_list|,
-name|MachineModuleInfo
-operator|*
-name|mmi
-argument_list|,
-name|DwarfWriter
-operator|*
-name|dw
 argument_list|,
 name|DenseMap
 operator|<

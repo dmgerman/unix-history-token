@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -87,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits>
 end_include
 
 begin_include
@@ -118,9 +100,6 @@ name|class
 name|Type
 decl_stmt|;
 name|class
-name|MachineModuleInfo
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -129,13 +108,14 @@ decl_stmt|;
 name|class
 name|TargetFrameInfo
 decl_stmt|;
+name|class
+name|BitVector
+decl_stmt|;
 comment|/// The CalleeSavedInfo class tracks the information need to locate where a
 comment|/// callee saved register in the current frame.
 name|class
 name|CalleeSavedInfo
 block|{
-name|private
-label|:
 name|unsigned
 name|Reg
 decl_stmt|;
@@ -421,15 +401,6 @@ literal|8
 operator|>
 name|SpillObjects
 expr_stmt|;
-comment|/// MMI - This field is set (via setMachineModuleInfo) by a module info
-comment|/// consumer (ex. DwarfWriter) to indicate that frame layout information
-comment|/// should be acquired.  Typically, it's the responsibility of the target's
-comment|/// TargetRegisterInfo prologue/epilogue emitting code to inform
-comment|/// MachineModuleInfo of frame layouts.
-name|MachineModuleInfo
-modifier|*
-name|MMI
-decl_stmt|;
 comment|/// TargetFrameInfo - Target information about frame layout.
 comment|///
 specifier|const
@@ -487,10 +458,6 @@ block|;
 name|CSIValid
 operator|=
 name|false
-block|;
-name|MMI
-operator|=
-literal|0
 block|;   }
 comment|/// hasStackObjects - Return true if there are any stack objects in this
 comment|/// function.
@@ -1470,33 +1437,6 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getMachineModuleInfo - Used by a prologue/epilogue
-comment|/// emitter (TargetRegisterInfo) to provide frame layout information.
-name|MachineModuleInfo
-operator|*
-name|getMachineModuleInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MMI
-return|;
-block|}
-comment|/// setMachineModuleInfo - Used by a meta info consumer (DwarfWriter) to
-comment|/// indicate that frame layout information should be gathered.
-name|void
-name|setMachineModuleInfo
-parameter_list|(
-name|MachineModuleInfo
-modifier|*
-name|mmi
-parameter_list|)
-block|{
-name|MMI
-operator|=
-name|mmi
-expr_stmt|;
-block|}
 comment|/// print - Used by the MachineFunction printer to print information about
 comment|/// stack objects.  Implemented in MachineFunction.cpp
 comment|///

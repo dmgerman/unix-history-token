@@ -241,6 +241,8 @@ name|bool
 name|Run
 argument_list|(
 argument|bool NoInitialTextSection
+argument_list|,
+argument|bool NoFinalize = false
 argument_list|)
 block|;
 name|void

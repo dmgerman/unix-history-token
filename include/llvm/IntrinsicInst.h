@@ -718,6 +718,47 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+name|ConstantInt
+operator|*
+name|getVolatileCst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|getOperand
+argument_list|(
+literal|5
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+name|bool
+name|isVolatile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getVolatileCst
+argument_list|()
+operator|->
+name|getZExtValue
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// getDest - This is just like getRawDest, but it strips off any cast
 comment|/// instructions that feed it, giving the original input.  The returned
 comment|/// value is guaranteed to be a pointer.
@@ -806,6 +847,19 @@ argument_list|(
 literal|4
 argument_list|,
 name|A
+argument_list|)
+block|;     }
+name|void
+name|setVolatile
+argument_list|(
+argument|Constant* V
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+literal|5
+argument_list|,
+name|V
 argument_list|)
 block|;     }
 specifier|const

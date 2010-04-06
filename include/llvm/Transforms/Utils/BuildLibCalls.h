@@ -226,6 +226,9 @@ argument_list|,
 name|unsigned
 name|Align
 argument_list|,
+name|bool
+name|isVolatile
+argument_list|,
 name|IRBuilder
 operator|<
 operator|>
@@ -293,6 +296,9 @@ name|Len
 argument_list|,
 name|unsigned
 name|Align
+argument_list|,
+name|bool
+name|isVolatile
 argument_list|,
 name|IRBuilder
 operator|<
@@ -381,6 +387,9 @@ argument_list|,
 name|Value
 operator|*
 name|Len
+argument_list|,
+name|bool
+name|isVolatile
 argument_list|,
 name|IRBuilder
 operator|<

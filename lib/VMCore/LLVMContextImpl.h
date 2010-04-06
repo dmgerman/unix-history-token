@@ -629,6 +629,13 @@ name|LLVMContextImpl
 block|{
 name|public
 label|:
+name|void
+modifier|*
+name|InlineAsmDiagHandler
+decl_stmt|,
+modifier|*
+name|InlineAsmDiagContext
+decl_stmt|;
 typedef|typedef
 name|DenseMap
 operator|<

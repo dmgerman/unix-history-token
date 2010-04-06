@@ -116,9 +116,6 @@ name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineModuleInfo
-decl_stmt|;
-name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class

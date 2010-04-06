@@ -119,12 +119,6 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
-name|MachineModuleInfo
-decl_stmt|;
-name|class
-name|DwarfWriter
-decl_stmt|;
-name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -926,14 +920,6 @@ argument_list|,
 name|MachineFunction
 operator|&
 name|MF
-argument_list|,
-name|MachineModuleInfo
-operator|*
-name|MMI
-argument_list|,
-name|DwarfWriter
-operator|*
-name|DW
 argument_list|,
 specifier|const
 name|TargetInstrInfo

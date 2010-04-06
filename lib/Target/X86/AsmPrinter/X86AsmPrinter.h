@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/DwarfWriter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineModuleInfo.h"
 end_include
 
@@ -149,10 +143,6 @@ operator|:
 name|explicit
 name|X86AsmPrinter
 argument_list|(
-name|formatted_raw_ostream
-operator|&
-name|O
-argument_list|,
 name|TargetMachine
 operator|&
 name|TM
@@ -164,8 +154,6 @@ argument_list|)
 operator|:
 name|AsmPrinter
 argument_list|(
-argument|O
-argument_list|,
 argument|TM
 argument_list|,
 argument|Streamer
@@ -207,43 +195,6 @@ operator|*
 name|Subtarget
 return|;
 block|}
-name|void
-name|getAnalysisUsage
-argument_list|(
-argument|AnalysisUsage&AU
-argument_list|)
-specifier|const
-block|{
-name|AU
-operator|.
-name|setPreservesAll
-argument_list|()
-block|;
-name|AU
-operator|.
-name|addRequired
-operator|<
-name|MachineModuleInfo
-operator|>
-operator|(
-operator|)
-block|;
-name|AU
-operator|.
-name|addRequired
-operator|<
-name|DwarfWriter
-operator|>
-operator|(
-operator|)
-block|;
-name|AsmPrinter
-operator|::
-name|getAnalysisUsage
-argument_list|(
-name|AU
-argument_list|)
-block|;   }
 name|virtual
 name|void
 name|EmitStartOfAsmFile
@@ -279,6 +230,10 @@ specifier|const
 name|MachineOperand
 operator|&
 name|MO
+argument_list|,
+name|raw_ostream
+operator|&
+name|O
 argument_list|)
 block|;
 comment|// These methods are used by the tablegen'erated instruction printer.
@@ -288,6 +243,8 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|,
 argument|const char *Modifier =
 literal|0
@@ -299,211 +256,18 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
-name|void
-name|printopaquemem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printi8mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printi16mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printi32mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printi64mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printi128mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printf32mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printf64mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printf80mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printf128mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printlea32mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printLeaMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printlea64mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printLeaMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|)
-block|;   }
-name|void
-name|printlea64_32mem
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|)
-block|{
-name|printLeaMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|,
-literal|"subreg64"
-argument_list|)
-block|;   }
 name|bool
 name|printAsmMRegister
 argument_list|(
 argument|const MachineOperand&MO
 argument_list|,
 argument|char Mode
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|bool
@@ -516,6 +280,8 @@ argument_list|,
 argument|unsigned AsmVariant
 argument_list|,
 argument|const char *ExtraCode
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|bool
@@ -528,6 +294,8 @@ argument_list|,
 argument|unsigned AsmVariant
 argument_list|,
 argument|const char *ExtraCode
+argument_list|,
+argument|raw_ostream&OS
 argument_list|)
 block|;
 name|void
@@ -545,6 +313,8 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
@@ -553,6 +323,8 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&O
 argument_list|,
 argument|const char *Modifier=NULL
 argument_list|)
@@ -564,6 +336,8 @@ argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned Op
 argument_list|,
+argument|raw_ostream&O
+argument_list|,
 argument|const char *Modifier=NULL
 argument_list|)
 block|;
@@ -573,11 +347,15 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned Op
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
 name|PrintPICBaseSymbol
-argument_list|()
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
 specifier|const
 block|;
 name|bool
@@ -586,6 +364,19 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|F
+argument_list|)
+block|;
+name|void
+name|PrintDebugValueComment
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 block|; }
 decl_stmt|;

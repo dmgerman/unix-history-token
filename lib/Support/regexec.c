@@ -801,10 +801,6 @@ name|smatcher
 argument_list|(
 name|g
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|string
 argument_list|,
 name|nmatch
@@ -822,10 +818,6 @@ name|lmatcher
 argument_list|(
 name|g
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|string
 argument_list|,
 name|nmatch

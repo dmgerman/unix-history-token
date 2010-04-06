@@ -62,43 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"DIE.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"DwarfPrinter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/AsmPrinter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Analysis/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"DIE.h"
 end_include
 
 begin_include
@@ -116,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -134,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_decl_stmt
@@ -157,6 +127,9 @@ name|class
 name|MachineFrameInfo
 decl_stmt|;
 name|class
+name|MachineLocation
+decl_stmt|;
+name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
@@ -164,6 +137,54 @@ name|MCAsmInfo
 decl_stmt|;
 name|class
 name|Timer
+decl_stmt|;
+name|class
+name|DIEAbbrev
+decl_stmt|;
+name|class
+name|DIE
+decl_stmt|;
+name|class
+name|DIEBlock
+decl_stmt|;
+name|class
+name|DIEEntry
+decl_stmt|;
+name|class
+name|DIEnumerator
+decl_stmt|;
+name|class
+name|DIDescriptor
+decl_stmt|;
+name|class
+name|DIVariable
+decl_stmt|;
+name|class
+name|DIGlobal
+decl_stmt|;
+name|class
+name|DIGlobalVariable
+decl_stmt|;
+name|class
+name|DISubprogram
+decl_stmt|;
+name|class
+name|DIBasicType
+decl_stmt|;
+name|class
+name|DIDerivedType
+decl_stmt|;
+name|class
+name|DIType
+decl_stmt|;
+name|class
+name|DINameSpace
+decl_stmt|;
+name|class
+name|DISubrange
+decl_stmt|;
+name|class
+name|DICompositeType
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// SrcLineInfo - This class is used to record source line correspondence.
@@ -263,18 +284,25 @@ block|}
 empty_stmt|;
 name|class
 name|DwarfDebug
-range|:
-name|public
-name|DwarfPrinter
 block|{
+comment|/// Asm - Target of Dwarf emission.
+name|AsmPrinter
+modifier|*
+name|Asm
+decl_stmt|;
+comment|/// MMI - Collected machine module information.
+name|MachineModuleInfo
+modifier|*
+name|MMI
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attributes used to construct specific Dwarf sections.
 comment|//
 comment|/// ModuleCU - All DIEs are inserted in ModuleCU.
 name|CompileUnit
-operator|*
+modifier|*
 name|ModuleCU
-block|;
+decl_stmt|;
 comment|/// AbbreviationsSet - Used to uniquely define abbreviations.
 comment|///
 name|FoldingSet
@@ -282,7 +310,7 @@ operator|<
 name|DIEAbbrev
 operator|>
 name|AbbreviationsSet
-block|;
+expr_stmt|;
 comment|/// Abbreviations - A list of all the unique abbreviations in use.
 comment|///
 name|std
@@ -293,7 +321,7 @@ name|DIEAbbrev
 operator|*
 operator|>
 name|Abbreviations
-block|;
+expr_stmt|;
 comment|/// DirectoryIdMap - Directory name to directory id map.
 comment|///
 name|StringMap
@@ -301,18 +329,18 @@ operator|<
 name|unsigned
 operator|>
 name|DirectoryIdMap
-block|;
+expr_stmt|;
 comment|/// DirectoryNames - A list of directory names.
 name|SmallVector
 operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 literal|8
 operator|>
 name|DirectoryNames
-block|;
+expr_stmt|;
 comment|/// SourceFileIdMap - Source file name to source file id map.
 comment|///
 name|StringMap
@@ -320,18 +348,18 @@ operator|<
 name|unsigned
 operator|>
 name|SourceFileIdMap
-block|;
+expr_stmt|;
 comment|/// SourceFileNames - A list of source file names.
 name|SmallVector
 operator|<
 name|std
 operator|::
 name|string
-block|,
+operator|,
 literal|8
 operator|>
 name|SourceFileNames
-block|;
+expr_stmt|;
 comment|/// SourceIdMap - Source id map, i.e. pair of directory id and source file
 comment|/// id mapped to a unique id.
 name|DenseMap
@@ -341,14 +369,14 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
-block|,
+operator|,
 name|unsigned
 operator|>
 name|SourceIdMap
-block|;
+expr_stmt|;
 comment|/// SourceIds - Reverse map from source id to directory id + file id pair.
 comment|///
 name|SmallVector
@@ -358,14 +386,14 @@ operator|::
 name|pair
 operator|<
 name|unsigned
-block|,
+operator|,
 name|unsigned
 operator|>
-block|,
+operator|,
 literal|8
 operator|>
 name|SourceIds
-block|;
+expr_stmt|;
 comment|/// Lines - List of source line correspondence.
 name|std
 operator|::
@@ -374,7 +402,7 @@ operator|<
 name|SrcLineInfo
 operator|>
 name|Lines
-block|;
+expr_stmt|;
 comment|/// DIEBlocks - A list of all the DIEBlocks in use.
 name|std
 operator|::
@@ -384,11 +412,11 @@ name|DIEBlock
 operator|*
 operator|>
 name|DIEBlocks
-block|;
+expr_stmt|;
 comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
-block|;
+decl_stmt|;
 comment|/// StringPool - A String->Symbol mapping of strings used by indirect
 comment|/// references.
 name|StringMap
@@ -399,22 +427,23 @@ name|pair
 operator|<
 name|MCSymbol
 operator|*
-block|,
+operator|,
 name|unsigned
 operator|>
 expr|>
 name|StringPool
-block|;
+expr_stmt|;
 name|unsigned
 name|NextStringPoolNumber
-block|;
+decl_stmt|;
 name|MCSymbol
-operator|*
+modifier|*
 name|getStringPoolEntry
-argument_list|(
-argument|StringRef Str
-argument_list|)
-block|;
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
 comment|/// SectionMap - Provides a unique id per text section.
 comment|///
 name|UniqueVector
@@ -424,7 +453,7 @@ name|MCSection
 operator|*
 operator|>
 name|SectionMap
-block|;
+expr_stmt|;
 comment|/// SectionSourceLines - Tracks line numbers per text section.
 comment|///
 name|std
@@ -439,23 +468,13 @@ name|SrcLineInfo
 operator|>
 expr|>
 name|SectionSourceLines
-block|;
-comment|/// didInitial - Flag to indicate if initial emission has been done.
-comment|///
-name|bool
-name|didInitial
-block|;
-comment|/// shouldEmit - Flag to indicate if debug information should be emitted.
-comment|///
-name|bool
-name|shouldEmit
-block|;
+expr_stmt|;
 comment|// CurrentFnDbgScope - Top level scope for the current function.
 comment|//
 name|DbgScope
-operator|*
+modifier|*
 name|CurrentFnDbgScope
-block|;
+decl_stmt|;
 comment|/// DbgScopeMap - Tracks the scopes in the current function.  Owns the
 comment|/// contained DbgScope*s.
 comment|///
@@ -463,59 +482,59 @@ name|DenseMap
 operator|<
 name|MDNode
 operator|*
-block|,
+operator|,
 name|DbgScope
 operator|*
 operator|>
 name|DbgScopeMap
-block|;
+expr_stmt|;
 comment|/// ConcreteScopes - Tracks the concrete scopees in the current function.
 comment|/// These scopes are also included in DbgScopeMap.
 name|DenseMap
 operator|<
 name|MDNode
 operator|*
-block|,
+operator|,
 name|DbgScope
 operator|*
 operator|>
 name|ConcreteScopes
-block|;
+expr_stmt|;
 comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
 comment|/// not included DbgScopeMap.  AbstractScopes owns its DbgScope*s.
 name|DenseMap
 operator|<
 name|MDNode
 operator|*
-block|,
+operator|,
 name|DbgScope
 operator|*
 operator|>
 name|AbstractScopes
-block|;
+expr_stmt|;
 comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
 comment|/// a function. This list is cleared during endFunction().
 name|SmallVector
 operator|<
 name|DbgScope
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|AbstractScopesList
-block|;
+expr_stmt|;
 comment|/// AbstractVariables - Collection on abstract variables.  Owned by the
 comment|/// DbgScopes in AbstractScopes.
 name|DenseMap
 operator|<
 name|MDNode
 operator|*
-block|,
+operator|,
 name|DbgVariable
 operator|*
 operator|>
 name|AbstractVariables
-block|;
+expr_stmt|;
 comment|/// DbgValueStartMap - Tracks starting scope of variable DIEs.
 comment|/// If the scope of an object begins sometime after the low pc value for the
 comment|/// scope most closely enclosing the object, the object entry may have a
@@ -525,62 +544,62 @@ operator|<
 specifier|const
 name|MachineInstr
 operator|*
-block|,
+operator|,
 name|DbgVariable
 operator|*
 operator|>
 name|DbgValueStartMap
-block|;
+expr_stmt|;
 comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
 comment|/// (at the end of the module) as DW_AT_inline.
 name|SmallPtrSet
 operator|<
 name|DIE
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|InlinedSubprogramDIEs
-block|;
+expr_stmt|;
 name|DenseMap
 operator|<
 name|DIE
 operator|*
-block|,
+operator|,
 name|MDNode
 operator|*
 operator|>
 name|ContainingTypeMap
-block|;
+expr_stmt|;
 comment|/// AbstractSubprogramDIEs - Collection of abstruct subprogram DIEs.
 name|SmallPtrSet
 operator|<
 name|DIE
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|AbstractSubprogramDIEs
-block|;
+expr_stmt|;
 comment|/// TopLevelDIEs - Collection of top level DIEs.
 name|SmallPtrSet
 operator|<
 name|DIE
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|TopLevelDIEs
-block|;
+expr_stmt|;
 name|SmallVector
 operator|<
 name|DIE
 operator|*
-block|,
+operator|,
 literal|4
 operator|>
 name|TopLevelDIEsVector
-block|;
+expr_stmt|;
 typedef|typedef
 name|SmallVector
 operator|<
@@ -711,6 +730,28 @@ name|FunctionDebugFrameInfo
 operator|>
 name|DebugFrames
 expr_stmt|;
+comment|// Section Symbols: these are assembler temporary labels that are emitted at
+comment|// the beginning of each supported dwarf section.  These are used to form
+comment|// section offsets and are created by EmitSectionLabels.
+name|MCSymbol
+modifier|*
+name|DwarfFrameSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfInfoSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfAbbrevSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|DwarfStrSectionSym
+decl_stmt|,
+modifier|*
+name|TextSectionSym
+decl_stmt|;
+name|private
+label|:
 comment|/// getSourceDirectoryAndFileIds - Return the directory and file ids that
 comment|/// maps to the source id. Source id starts at 1.
 name|std
@@ -952,22 +993,7 @@ name|DIE
 modifier|*
 name|Entry
 parameter_list|)
-block|{
-name|Die
-operator|->
-name|addValue
-argument_list|(
-name|Attribute
-argument_list|,
-name|Form
-argument_list|,
-name|createDIEEntry
-argument_list|(
-name|Entry
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// addBlock - Add block data.
 comment|///
 name|void
@@ -1424,10 +1450,10 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// emitInitial - Emit initial Dwarf declarations.  This is necessary for cc
-comment|/// tools to recognize the object file contains Dwarf information.
+comment|/// EmitSectionLabels - Emit initial Dwarf sections with a label at
+comment|/// the start of each one.
 name|void
-name|emitInitial
+name|EmitSectionLabels
 parameter_list|()
 function_decl|;
 comment|/// emitDIE - Recusively Emits a debug information entry.
@@ -1574,8 +1600,8 @@ parameter_list|()
 function_decl|;
 comment|/// GetOrCreateSourceID - Look up the source id with the given directory and
 comment|/// source file names. If none currently exists, create a new id and insert it
-comment|/// in the SourceIds map. This can update DirectoryNames and SourceFileNames maps
-comment|/// as well.
+comment|/// in the SourceIds map. This can update DirectoryNames and SourceFileNames
+comment|/// maps as well.
 name|unsigned
 name|GetOrCreateSourceID
 parameter_list|(
@@ -1626,85 +1652,6 @@ name|string
 name|Name
 argument_list|)
 decl_stmt|;
-name|public
-label|:
-comment|//===--------------------------------------------------------------------===//
-comment|// Main entry points.
-comment|//
-name|DwarfDebug
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-name|AsmPrinter
-operator|*
-name|A
-argument_list|,
-specifier|const
-name|MCAsmInfo
-operator|*
-name|T
-argument_list|)
-expr_stmt|;
-name|virtual
-operator|~
-name|DwarfDebug
-argument_list|()
-expr_stmt|;
-comment|/// ShouldEmitDwarfDebug - Returns true if Dwarf debugging declarations should
-comment|/// be emitted.
-name|bool
-name|ShouldEmitDwarfDebug
-argument_list|()
-specifier|const
-block|{
-return|return
-name|shouldEmit
-return|;
-block|}
-comment|/// beginModule - Emit all Dwarf sections that should come prior to the
-comment|/// content.
-name|void
-name|beginModule
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|,
-name|MachineModuleInfo
-modifier|*
-name|MMI
-parameter_list|)
-function_decl|;
-comment|/// endModule - Emit all Dwarf sections that should come after the content.
-comment|///
-name|void
-name|endModule
-parameter_list|()
-function_decl|;
-comment|/// beginFunction - Gather pre-function debug information.  Assumes being
-comment|/// emitted immediately after the function entry point.
-name|void
-name|beginFunction
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|*
-name|MF
-parameter_list|)
-function_decl|;
-comment|/// endFunction - Gather and emit post-function debug information.
-comment|///
-name|void
-name|endFunction
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|*
-name|MF
-parameter_list|)
-function_decl|;
 comment|/// recordSourceLine - Register a source line with debug info. Returns the
 comment|/// unique label that was emitted and which provides correspondence to
 comment|/// the source line list.
@@ -1771,6 +1718,64 @@ name|void
 name|collectVariableInfo
 parameter_list|()
 function_decl|;
+name|public
+label|:
+comment|//===--------------------------------------------------------------------===//
+comment|// Main entry points.
+comment|//
+name|DwarfDebug
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+argument_list|,
+name|Module
+operator|*
+name|M
+argument_list|)
+expr_stmt|;
+operator|~
+name|DwarfDebug
+argument_list|()
+expr_stmt|;
+comment|/// beginModule - Emit all Dwarf sections that should come prior to the
+comment|/// content.
+name|void
+name|beginModule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+comment|/// endModule - Emit all Dwarf sections that should come after the content.
+comment|///
+name|void
+name|endModule
+parameter_list|()
+function_decl|;
+comment|/// beginFunction - Gather pre-function debug information.  Assumes being
+comment|/// emitted immediately after the function entry point.
+name|void
+name|beginFunction
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
+function_decl|;
+comment|/// endFunction - Gather and emit post-function debug information.
+comment|///
+name|void
+name|endFunction
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
+function_decl|;
 comment|/// beginScope - Process beginning of a scope.
 name|void
 name|beginScope
@@ -1792,14 +1797,11 @@ name|MI
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End of namespace llvm
 end_comment
 

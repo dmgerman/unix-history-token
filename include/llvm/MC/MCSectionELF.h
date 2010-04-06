@@ -390,6 +390,25 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
+comment|/// isBaseAddressKnownZero - We know that non-allocatable sections (like
+comment|/// debug info) have a base of zero.
+name|virtual
+name|bool
+name|isBaseAddressKnownZero
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getFlags
+argument_list|()
+operator|&
+name|SHF_ALLOC
+operator|)
+operator|==
+literal|0
+return|;
+block|}
 comment|/// PrintTargetSpecificSectionFlags - Targets that define their own
 comment|/// MCSectionELF subclasses with target specific section flags should
 comment|/// implement this method if they end up adding letters to the attributes
@@ -404,9 +423,8 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|{   }
-block|}
-decl_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

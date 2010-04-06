@@ -144,9 +144,6 @@ name|class
 name|TargetMachine
 decl_stmt|;
 name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// Target - Wrapper for Target specific information.
@@ -233,10 +230,6 @@ modifier|*
 name|AsmPrinterCtorTy
 call|)
 argument_list|(
-name|formatted_raw_ostream
-operator|&
-name|OS
-argument_list|,
 name|TargetMachine
 operator|&
 name|TM
@@ -333,10 +326,6 @@ specifier|const
 name|MCAsmInfo
 operator|&
 name|MAI
-operator|,
-name|raw_ostream
-operator|&
-name|O
 operator|)
 argument_list|;     typedef
 name|MCCodeEmitter
@@ -769,10 +758,6 @@ name|AsmPrinter
 modifier|*
 name|createAsmPrinter
 argument_list|(
-name|formatted_raw_ostream
-operator|&
-name|OS
-argument_list|,
 name|TargetMachine
 operator|&
 name|TM
@@ -794,8 +779,6 @@ return|;
 return|return
 name|AsmPrinterCtorFn
 argument_list|(
-name|OS
-argument_list|,
 name|TM
 argument_list|,
 name|Streamer
@@ -835,10 +818,6 @@ specifier|const
 name|MCAsmInfo
 operator|&
 name|MAI
-argument_list|,
-name|raw_ostream
-operator|&
-name|O
 argument_list|)
 decl|const
 block|{
@@ -859,8 +838,6 @@ argument_list|,
 name|SyntaxVariant
 argument_list|,
 name|MAI
-argument_list|,
-name|O
 argument_list|)
 return|;
 block|}
@@ -2556,8 +2533,6 @@ name|AsmPrinter
 operator|*
 name|Allocator
 argument_list|(
-argument|formatted_raw_ostream&OS
-argument_list|,
 argument|TargetMachine&TM
 argument_list|,
 argument|MCStreamer&Streamer
@@ -2567,8 +2542,6 @@ return|return
 name|new
 name|AsmPrinterImpl
 argument_list|(
-name|OS
-argument_list|,
 name|TM
 argument_list|,
 name|Streamer
