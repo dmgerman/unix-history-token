@@ -353,7 +353,7 @@ directive|define
 name|U3GSP_HSDPA
 value|4
 block|{
-literal|1200000
+literal|7200000
 block|,
 literal|384000
 block|}
@@ -363,9 +363,9 @@ directive|define
 name|U3GSP_HSUPA
 value|5
 block|{
-literal|1200000
+literal|7200000
 block|,
-literal|384000
+literal|2000000
 block|}
 block|,
 define|#
@@ -375,7 +375,7 @@ value|6
 block|{
 literal|7200000
 block|,
-literal|384000
+literal|2000000
 block|}
 block|, }
 decl_stmt|;
@@ -537,6 +537,18 @@ name|USB_PRODUCT_OPTION_VODAFONEMC3G
 block|}
 block|,
 name|U3GSP_UMTS
+block|,
+name|U3GINIT_NONE
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_OPTION
+block|,
+name|USB_PRODUCT_OPTION_GTM382
+block|}
+block|,
+name|U3GSP_HSPA
 block|,
 name|U3GINIT_NONE
 block|}
