@@ -5327,20 +5327,10 @@ block|}
 if|if
 condition|(
 name|error
-operator|==
-name|USB_ERR_STALLED
+operator|!=
+name|USB_ERR_CANCELLED
 condition|)
 block|{
-comment|/* try to clear stall first */
-name|usbd_xfer_set_stall
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-goto|goto
-name|tr_setup
-goto|;
-block|}
 if|if
 condition|(
 name|error
@@ -5356,6 +5346,16 @@ argument_list|,
 literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Try to clear stall first, also if other 			 * errors occur, hence clearing stall 			 * introduces a 50 ms delay: 			 */
+name|usbd_xfer_set_stall
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+goto|goto
+name|tr_setup
+goto|;
+block|}
 break|break;
 block|}
 block|}
