@@ -593,6 +593,14 @@ literal|"nVidia nForce3 USB Controller"
 operator|)
 return|;
 case|case
+literal|0x036c10de
+case|:
+return|return
+operator|(
+literal|"nVidia nForce MCP55 USB Controller"
+operator|)
+return|;
+case|case
 literal|0x03f110de
 case|:
 return|return
