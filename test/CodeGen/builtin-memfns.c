@@ -1,22 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm< %s| FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@llvm.memset.i32' %t
+comment|// CHECK: call void @llvm.memset.p0i8.i32
 end_comment
 
 begin_comment
-comment|// RUN: grep '@llvm.memcpy.i32' %t
+comment|// CHECK: call void @llvm.memset.p0i8.i32
 end_comment
 
 begin_comment
-comment|// RUN: grep '@llvm.memmove.i32' %t
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i32
 end_comment
 
 begin_comment
-comment|// RUN: grep __builtin %t | count 0
+comment|// CHECK: call void @llvm.memmove.p0i8.p0i8.i32
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: __builtin
+end_comment
+
+begin_comment
+comment|// CHECK: ret
 end_comment
 
 begin_function

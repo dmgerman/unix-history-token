@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -179,7 +185,7 @@ expr_stmt|;
 comment|/// The diagnostics engine instance.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|Diagnostic
 operator|>
@@ -764,20 +770,6 @@ operator|*
 name|Diagnostics
 return|;
 block|}
-comment|/// takeDiagnostics - Remove the current diagnostics engine and give ownership
-comment|/// to the caller.
-name|Diagnostic
-modifier|*
-name|takeDiagnostics
-parameter_list|()
-block|{
-return|return
-name|Diagnostics
-operator|.
-name|take
-argument_list|()
-return|;
-block|}
 comment|/// setDiagnostics - Replace the current diagnostics engine; the compiler
 comment|/// instance takes ownership of \arg Value.
 name|void
@@ -1350,24 +1342,21 @@ comment|/// must extend past that of the diagnostic engine.
 comment|///
 comment|/// \return The new object on success, or null on failure.
 specifier|static
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
 name|Diagnostic
-modifier|*
+operator|>
 name|createDiagnostics
-parameter_list|(
-specifier|const
-name|DiagnosticOptions
-modifier|&
-name|Opts
-parameter_list|,
-name|int
-name|Argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|Argv
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const DiagnosticOptions&Opts
+argument_list|,
+argument|int Argc
+argument_list|,
+argument|char **Argv
+argument_list|)
+expr_stmt|;
 comment|/// Create the file manager and replace any existing one with it.
 name|void
 name|createFileManager

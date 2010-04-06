@@ -72,6 +72,58 @@ block|{
 name|namespace
 name|CodeGen
 block|{
+name|class
+name|CGBitFieldInfo
+block|{
+name|public
+label|:
+name|CGBitFieldInfo
+argument_list|(
+argument|unsigned FieldNo
+argument_list|,
+argument|unsigned Start
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|bool IsSigned
+argument_list|)
+block|:
+name|FieldNo
+argument_list|(
+name|FieldNo
+argument_list|)
+operator|,
+name|Start
+argument_list|(
+name|Start
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+name|Size
+argument_list|)
+operator|,
+name|IsSigned
+argument_list|(
+argument|IsSigned
+argument_list|)
+block|{}
+name|unsigned
+name|FieldNo
+expr_stmt|;
+name|unsigned
+name|Start
+decl_stmt|;
+name|unsigned
+name|Size
+decl_stmt|;
+name|bool
+name|IsSigned
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// CGRecordLayout - This class handles struct and union layout info while
 comment|/// lowering AST types to LLVM types.
 comment|///
@@ -101,46 +153,6 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
-name|public
-label|:
-struct|struct
-name|BitFieldInfo
-block|{
-name|BitFieldInfo
-argument_list|(
-argument|unsigned FieldNo
-argument_list|,
-argument|unsigned Start
-argument_list|,
-argument|unsigned Size
-argument_list|)
-block|:
-name|FieldNo
-argument_list|(
-name|FieldNo
-argument_list|)
-operator|,
-name|Start
-argument_list|(
-name|Start
-argument_list|)
-operator|,
-name|Size
-argument_list|(
-argument|Size
-argument_list|)
-block|{}
-name|unsigned
-name|FieldNo
-expr_stmt|;
-name|unsigned
-name|Start
-decl_stmt|;
-name|unsigned
-name|Size
-decl_stmt|;
-block|}
-struct|;
 name|private
 label|:
 comment|/// The LLVMType corresponding to this record layout.
@@ -175,7 +187,7 @@ specifier|const
 name|FieldDecl
 operator|*
 operator|,
-name|BitFieldInfo
+name|CGBitFieldInfo
 operator|>
 name|BitFields
 expr_stmt|;
@@ -275,7 +287,7 @@ block|}
 comment|/// \brief Return llvm::StructType element number that corresponds to the
 comment|/// field FD.
 specifier|const
-name|BitFieldInfo
+name|CGBitFieldInfo
 modifier|&
 name|getBitFieldInfo
 argument_list|(
@@ -304,7 +316,7 @@ specifier|const
 name|FieldDecl
 operator|*
 operator|,
-name|BitFieldInfo
+name|CGBitFieldInfo
 operator|>
 operator|::
 name|const_iterator

@@ -200,13 +200,11 @@ comment|/// Implements runtime-specific code generation functions.
 name|class
 name|CGObjCRuntime
 block|{
-name|public
+name|protected
 label|:
 comment|// Utility functions for unified ivar access. These need to
 comment|// eventually be folded into other places (the structure layout
 comment|// code).
-name|protected
-label|:
 comment|/// Compute an offset to the given ivar, suitable for passing to
 comment|/// EmitValueForIvarAtOffset.  Note that the correct handling of
 comment|/// bit-fields is carefully coordinated by these two, use caution!

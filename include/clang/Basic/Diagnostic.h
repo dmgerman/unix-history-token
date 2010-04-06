@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -449,11 +455,19 @@ comment|/// "report warnings as errors" and passes them off to the DiagnosticCli
 comment|/// reporting to the user.
 name|class
 name|Diagnostic
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|Diagnostic
+operator|>
 block|{
 name|public
-label|:
+operator|:
 comment|/// Level - The level of the diagnostic, after it has been through mapping.
-enum|enum
+expr|enum
 name|Level
 block|{
 name|Ignored
@@ -466,10 +480,10 @@ name|Error
 block|,
 name|Fatal
 block|}
-enum|;
+block|;
 comment|/// ExtensionHandling - How do we handle otherwise-unmapped extension?  This
 comment|/// is controlled by -pedantic and -pedantic-errors.
-enum|enum
+block|enum
 name|ExtensionHandling
 block|{
 name|Ext_Ignore
@@ -478,8 +492,7 @@ name|Ext_Warn
 block|,
 name|Ext_Error
 block|}
-enum|;
-enum|enum
+block|;    enum
 name|ArgumentKind
 block|{
 name|ak_std_string
@@ -512,7 +525,7 @@ comment|// NestedNameSpecifier *
 name|ak_declcontext
 comment|// DeclContext *
 block|}
-enum|;
+block|;
 comment|/// ArgumentValue - This typedef represents on argument value, which is a
 comment|/// union discriminated by ArgumentKind, with a value.
 typedef|typedef
@@ -527,7 +540,7 @@ operator|>
 name|ArgumentValue
 expr_stmt|;
 name|private
-label|:
+operator|:
 name|unsigned
 name|char
 name|AllExtensionsSilenced
@@ -1606,21 +1619,69 @@ name|ProcessDiag
 parameter_list|()
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// DiagnosticBuilder
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// DiagnosticBuilder - This is a little helper class used to produce
+end_comment
+
+begin_comment
 comment|/// diagnostics.  This is constructed by the Diagnostic::Report method, and
+end_comment
+
+begin_comment
 comment|/// allows insertion of extra information (arguments and source ranges) into the
+end_comment
+
+begin_comment
 comment|/// currently "in flight" diagnostic.  When the temporary for the builder is
+end_comment
+
+begin_comment
 comment|/// destroyed, the diagnostic is issued.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that many of these will be created as temporary objects (many call
+end_comment
+
+begin_comment
 comment|/// sites), so we want them to be small and we never want their address taken.
+end_comment
+
+begin_comment
 comment|/// This ensures that compilers with somewhat reasonable optimizers will promote
+end_comment
+
+begin_comment
 comment|/// the common fields to registers, eliminating increments of the NumArgs field,
+end_comment
+
+begin_comment
 comment|/// for example.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DiagnosticBuilder
 block|{
@@ -1991,7 +2052,13 @@ name|Hint
 expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2021,6 +2088,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2060,6 +2130,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2091,6 +2164,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2122,6 +2198,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2153,6 +2232,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2192,10 +2274,25 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Adds a DeclContext to the diagnostic. The enable_if template magic is here
+end_comment
+
+begin_comment
 comment|// so that we only match those arguments that are (statically) DeclContexts;
+end_comment
+
+begin_comment
 comment|// other arguments that derive from DeclContext (e.g., RecordDecls) will not
+end_comment
+
+begin_comment
 comment|// match.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2256,6 +2353,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2285,6 +2385,9 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -2314,9 +2417,21 @@ return|return
 name|DB
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Report - Issue the message to the client.  DiagID is a member of the
+end_comment
+
+begin_comment
 comment|/// diag::kind enum.  This actually returns a new instance of DiagnosticBuilder
+end_comment
+
+begin_comment
 comment|/// which emits the diagnostics (through ProcessDiag) when it is destroyed.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
 name|Diagnostic
@@ -2353,6 +2468,9 @@ name|this
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
 name|Diagnostic
@@ -2372,12 +2490,33 @@ name|DiagID
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// DiagnosticInfo
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// DiagnosticInfo - This is a little helper class (which is basically a smart
+end_comment
+
+begin_comment
 comment|/// pointer that forward info from Diagnostic) that allows clients to enquire
+end_comment
+
+begin_comment
 comment|/// about the currently in-flight diagnostic.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DiagnosticInfo
 block|{
@@ -2841,8 +2980,17 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/**  * \brief Represents a diagnostic in a form that can be serialized and  * deserialized.  */
+end_comment
+
+begin_decl_stmt
 name|class
 name|StoredDiagnostic
 block|{
@@ -3084,9 +3232,21 @@ name|MemoryEnd
 parameter_list|)
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// DiagnosticClient - This is an abstract interface implemented by clients of
+end_comment
+
+begin_comment
 comment|/// the front-end, which formats and prints fully processed diagnostics.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DiagnosticClient
 block|{
@@ -3163,11 +3323,14 @@ init|=
 literal|0
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

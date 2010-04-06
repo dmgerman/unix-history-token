@@ -3729,6 +3729,9 @@ parameter_list|,
 name|AttributeList
 modifier|*
 name|Attr
+parameter_list|,
+name|bool
+name|RequireSemi
 parameter_list|)
 function_decl|;
 name|DeclGroupPtrTy

@@ -157,7 +157,12 @@ argument_list|)
 operator|,
 name|ConstantArraySizeAsWritten
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|AnonymousTagLocations
+argument_list|(
+argument|true
 argument_list|)
 block|{ }
 comment|/// \brief The number of spaces to use to indent each line.
@@ -237,6 +242,14 @@ comment|/// char a[9] = "A string";
 comment|/// \endcode
 name|bool
 name|ConstantArraySizeAsWritten
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When printing an anonymous tag name, also print the location of
+comment|/// that entity (e.g., "enum<anonymous at t.h:10:5>"). Otherwise, just
+comment|/// prints "<anonymous>" for the name.
+name|bool
+name|AnonymousTagLocations
 range|:
 literal|1
 decl_stmt|;

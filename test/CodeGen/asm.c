@@ -385,5 +385,33 @@ comment|// CHECK-NEXT: extractvalue
 block|}
 end_function
 
+begin_comment
+comment|// PR6780
+end_comment
+
+begin_function
+name|int
+name|t19
+parameter_list|(
+name|unsigned
+name|data
+parameter_list|)
+block|{
+name|int
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+asm|asm("x{abc|def|ghi}z" :"=r"(a): "r"(data));
+return|return
+name|a
+operator|+
+name|b
+return|;
+comment|// CHECK: t19(i32
+comment|// CHECK: = call {{.*}}asm "x$(abc$|def$|ghi$)z"
+block|}
+end_function
+
 end_unit
 
