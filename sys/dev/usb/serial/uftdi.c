@@ -274,17 +274,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|UFTDI_IBUFSIZE
-value|64
-end_define
-
-begin_comment
-comment|/* bytes, maximum number of bytes per 					 * frame */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UFTDI_OBUFSIZE
 value|64
 end_define
@@ -703,8 +692,9 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|UFTDI_IBUFSIZE
+literal|0
 block|,
+comment|/* use wMaxPacketSize */
 operator|.
 name|flags
 operator|=
