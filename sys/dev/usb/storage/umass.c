@@ -3022,6 +3022,11 @@ operator|.
 name|short_xfer_ok
 operator|=
 literal|1
+block|,
+operator|.
+name|no_pipe_ok
+operator|=
+literal|1
 block|,}
 block|,
 operator|.
@@ -4392,21 +4397,7 @@ name|sc_xfer
 argument_list|,
 name|umass_cbi_config
 argument_list|,
-operator|(
-name|sc
-operator|->
-name|sc_proto
-operator|&
-name|UMASS_PROTO_CBI_I
-operator|)
-condition|?
 name|UMASS_T_CBI_MAX
-else|:
-operator|(
-name|UMASS_T_CBI_MAX
-operator|-
-literal|2
-operator|)
 argument_list|,
 name|sc
 argument_list|,
@@ -7515,7 +7506,7 @@ argument_list|,
 name|UMASS_T_CBI_RESET2
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|USB_ST_SETUP
 case|:
@@ -7700,9 +7691,15 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
+if|if
+condition|(
+name|error
+operator|==
+name|USB_ERR_CANCELLED
+condition|)
 name|umass_tr_error
 argument_list|(
 name|xfer
@@ -7710,7 +7707,15 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+else|else
+name|umass_transfer_start
+argument_list|(
+name|sc
+argument_list|,
+name|UMASS_T_CBI_RESET2
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -7893,7 +7898,7 @@ name|next_xfer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 case|case
 name|USB_ST_SETUP
 case|:
@@ -7917,7 +7922,7 @@ name|tr_transferred
 goto|;
 comment|/* should not happen */
 block|}
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 name|umass_tr_error
@@ -7927,7 +7932,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 end_function
@@ -8026,7 +8031,7 @@ name|UMASS_T_CBI_DATA_WRITE
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 case|case
 name|USB_ST_SETUP
 case|:
@@ -8219,7 +8224,7 @@ name|xfer
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 name|umass_tr_error
@@ -8229,7 +8234,14 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+comment|/* skip reset */
+name|sc
+operator|->
+name|sc_last_xfer_index
+operator|=
+name|UMASS_T_CBI_COMMAND
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -8413,7 +8425,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -8482,7 +8494,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 if|if
@@ -8523,7 +8535,7 @@ name|UMASS_T_CBI_DATA_RD_CS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 block|}
 block|}
 end_function
@@ -8706,7 +8718,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -8799,7 +8811,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 if|if
@@ -8840,7 +8852,7 @@ name|UMASS_T_CBI_DATA_WR_CS
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+break|break;
 block|}
 block|}
 end_function
@@ -9109,7 +9121,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 else|else
 block|{
@@ -9227,7 +9239,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 comment|/* fallthrough */
@@ -9253,7 +9265,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 default|default:
 comment|/* Error */
 name|DPRINTF
@@ -9277,7 +9289,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 end_function
