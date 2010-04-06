@@ -400,6 +400,17 @@ begin_comment
 comment|/* Requires vendor init */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|U3GINIT_HUAWEISCSI
+value|9
+end_define
+
+begin_comment
+comment|/* Requires Huawei SCSI init command */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -1789,6 +1800,15 @@ argument_list|,
 name|MOBILE
 argument_list|,
 name|U3GINIT_HUAWEI
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|HUAWEI
+argument_list|,
+name|E1752
+argument_list|,
+name|U3GINIT_HUAWEISCSI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -4759,6 +4779,21 @@ operator|=
 name|u3g_huawei_init
 argument_list|(
 name|udev
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_HUAWEISCSI
+case|:
+name|error
+operator|=
+name|usb_msc_eject
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|,
+name|MSC_EJECT_HUAWEI
 argument_list|)
 expr_stmt|;
 break|break;
