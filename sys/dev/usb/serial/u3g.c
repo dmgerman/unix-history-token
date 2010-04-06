@@ -3738,6 +3738,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|QUALCOMMINC
+argument_list|,
+name|ZTE_STOR2
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|SIERRA
 argument_list|,
 name|TRUINSTALL
