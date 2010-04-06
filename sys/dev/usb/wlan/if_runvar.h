@@ -455,12 +455,6 @@ name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
-name|struct
-name|firmware
-modifier|*
-name|fwp
-decl_stmt|;
 name|uint32_t
 name|mac_rev
 decl_stmt|;
