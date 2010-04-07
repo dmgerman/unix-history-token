@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.94 2009/04/12 10:31:14 lukem Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.97 2009/10/11 09:17:21 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -544,7 +544,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20090621"
+literal|"FreeBSD gzip 20100407"
 decl_stmt|;
 end_decl_stmt
 
@@ -810,11 +810,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -2356,11 +2366,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ... without an errno. */
@@ -6255,6 +6275,9 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
+name|ssize_t
+name|rv
+decl_stmt|;
 name|time_t
 name|timestamp
 init|=
@@ -6447,9 +6470,6 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* timestamp */
-name|ssize_t
-name|rv
-decl_stmt|;
 name|rv
 operator|=
 name|pread
@@ -9542,7 +9562,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (based on NetBSD gzip 20060927)\n"
+literal|"%s (based on NetBSD gzip 20091011)\n"
 argument_list|,
 name|gzip_version
 argument_list|)
