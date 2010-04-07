@@ -402,7 +402,9 @@ operator|==
 name|NULL
 condition|)
 comment|/* ratectl not setup */
-return|return;
+return|return
+literal|0
+return|;
 return|return
 name|vap
 operator|->
