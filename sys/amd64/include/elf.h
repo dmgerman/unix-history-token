@@ -78,6 +78,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ELF_ARCH32
+value|EM_386
+end_define
+
+begin_define
+define|#
+directive|define
 name|ELF_MACHINE_OK
 parameter_list|(
 name|x

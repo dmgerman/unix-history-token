@@ -232,7 +232,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_include
@@ -11672,7 +11672,7 @@ name|SO_RCVTIMEO
 case|:
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|SV_CURPROC_FLAG
@@ -12451,7 +12451,7 @@ name|tick
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|SV_CURPROC_FLAG

@@ -168,15 +168,15 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 argument_list|,
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1519,7 +1519,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|td
@@ -1749,7 +1749,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|td

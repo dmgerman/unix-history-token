@@ -72,7 +72,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_include
@@ -205,7 +205,7 @@ name|last_timestamp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|int
 name|wrap32
 init|=
@@ -256,7 +256,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|curproc
@@ -769,7 +769,7 @@ name|privateresident
 argument_list|,
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|wrap32
 condition|?
 name|NULL
