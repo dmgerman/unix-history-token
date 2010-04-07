@@ -10560,6 +10560,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|XPT_RESET_DEV
 case|:
@@ -12773,6 +12774,23 @@ name|status
 operator|=
 name|CAM_PROVIDE_FAIL
 expr_stmt|;
+if|if
+condition|(
+name|start_ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|&
+name|XPT_FC_DEV_QUEUED
+condition|)
+block|{
+name|xpt_done
+argument_list|(
+name|start_ccb
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 block|}
@@ -17453,7 +17471,9 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"xpt_dev_async called\n"
+literal|"%s called\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
