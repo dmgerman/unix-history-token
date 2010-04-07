@@ -5520,10 +5520,6 @@ name|ni
 operator|=
 name|NULL
 expr_stmt|;
-name|ni
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* descriptor is no longer valid */
 name|desc
 operator|->
