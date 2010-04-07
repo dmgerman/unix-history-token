@@ -5153,7 +5153,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|freebsd32_copyiniov
 parameter_list|(
