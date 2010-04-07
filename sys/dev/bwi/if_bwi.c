@@ -16665,12 +16665,6 @@ name|tb
 operator|->
 name|tb_ni
 expr_stmt|;
-name|vap
-operator|=
-name|ni
-operator|->
-name|ni_vap
-expr_stmt|;
 if|if
 condition|(
 name|tb
@@ -16698,6 +16692,12 @@ name|bwi_txbuf_hdr
 operator|*
 argument_list|)
 decl_stmt|;
+name|vap
+operator|=
+name|ni
+operator|->
+name|ni_vap
+expr_stmt|;
 comment|/* NB: update rate control only for unicast frames */
 if|if
 condition|(
