@@ -748,10 +748,15 @@ modifier|*
 name|ni_wdsvap
 decl_stmt|;
 comment|/* associated WDS vap */
+name|void
+modifier|*
+name|ni_rctls
+decl_stmt|;
+comment|/* private ratectl state */
 name|uint64_t
 name|ni_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
