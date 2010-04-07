@@ -218,6 +218,21 @@ end_define
 
 begin_struct
 struct|struct
+name|urtw_stats
+block|{
+name|unsigned
+name|int
+name|txrates
+index|[
+literal|12
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|urtw_vap
 block|{
 name|struct
@@ -559,6 +574,10 @@ comment|/* only for 8187B */
 name|struct
 name|task
 name|sc_updateslot_task
+decl_stmt|;
+name|struct
+name|urtw_stats
+name|sc_stats
 decl_stmt|;
 name|struct
 name|urtw_rx_radiotap_header
