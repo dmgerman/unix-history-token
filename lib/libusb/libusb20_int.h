@@ -623,6 +623,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|libusb20_check_connected_t
+function_decl|)
+parameter_list|(
+name|struct
+name|libusb20_device
+modifier|*
+name|pdev
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* USB transfer specific */
 end_comment
@@ -721,7 +736,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|m(n, detach_kernel_driver) \   m(n, do_request_sync) \   m(n, get_config_desc_full) \   m(n, get_config_index) \   m(n, kernel_driver_active) \   m(n, process) \   m(n, reset_device) \   m(n, set_power_mode) \   m(n, get_power_mode) \   m(n, set_alt_index) \   m(n, set_config_index) \   m(n, tr_cancel_async) \   m(n, tr_clear_stall_sync) \   m(n, tr_close) \   m(n, tr_open) \   m(n, tr_submit) \  struct libusb20_device_methods {
+value|m(n, detach_kernel_driver) \   m(n, do_request_sync) \   m(n, get_config_desc_full) \   m(n, get_config_index) \   m(n, kernel_driver_active) \   m(n, process) \   m(n, reset_device) \   m(n, check_connected) \   m(n, set_power_mode) \   m(n, get_power_mode) \   m(n, set_alt_index) \   m(n, set_config_index) \   m(n, tr_cancel_async) \   m(n, tr_clear_stall_sync) \   m(n, tr_close) \   m(n, tr_open) \   m(n, tr_submit) \  struct libusb20_device_methods {
 end_define
 
 begin_macro
