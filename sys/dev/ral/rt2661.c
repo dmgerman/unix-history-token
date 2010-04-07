@@ -4962,12 +4962,6 @@ name|ni
 operator|=
 name|NULL
 expr_stmt|;
-name|vap
-operator|=
-name|ni
-operator|->
-name|ni_vap
-expr_stmt|;
 comment|/* if no frame has been sent, ignore */
 if|if
 condition|(
@@ -4976,6 +4970,13 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+else|else
+name|vap
+operator|=
+name|ni
+operator|->
+name|ni_vap
+expr_stmt|;
 switch|switch
 condition|(
 name|RT2661_TX_RESULT
