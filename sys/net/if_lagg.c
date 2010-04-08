@@ -2434,20 +2434,6 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
-comment|/* New lagg port has to be in an idle state */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_OACTIVE
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
 comment|/* Check if port has already been associated to a lagg */
 if|if
 condition|(
