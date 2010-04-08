@@ -963,7 +963,7 @@ name|miibus_mtx
 argument_list|,
 literal|"arge mii lock"
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
