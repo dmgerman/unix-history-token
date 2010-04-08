@@ -5707,30 +5707,6 @@ operator|&
 name|options
 argument_list|)
 expr_stmt|;
-comment|/* Avoid killing the process in high-pressure swapping environments. */
-if|if
-condition|(
-name|madvise
-argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|MADV_PROTECT
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|debug
-argument_list|(
-literal|"madvise(): %.200s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Parse command-line arguments. */
 while|while
 condition|(
@@ -7734,6 +7710,33 @@ operator|.
 name|log_facility
 argument_list|,
 name|log_stderr
+argument_list|)
+expr_stmt|;
+comment|/* Avoid killing the process in high-pressure swapping environments. */
+if|if
+condition|(
+operator|!
+name|inetd_flag
+operator|&&
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|debug
+argument_list|(
+literal|"madvise(): %.200s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the random number generator. */
