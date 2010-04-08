@@ -304,7 +304,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"7.0.0"
+literal|"7.0.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -5546,6 +5546,24 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|mask
+operator|&
+name|IFCAP_VLAN_HWFILTER
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_VLAN_HWFILTER
+expr_stmt|;
+name|reinit
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|mask
 operator|&
@@ -5912,12 +5930,65 @@ argument_list|,
 name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
+comment|/* Use real VLAN Filter support? */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_HWTAGGING
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_HWFILTER
+condition|)
 comment|/* Use real VLAN Filter support */
 name|em_setup_vlan_hw_support
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|u32
+name|ctrl
+decl_stmt|;
+name|ctrl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL
+argument_list|)
+expr_stmt|;
+name|ctrl
+operator||=
+name|E1000_CTRL_VME
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_CTRL
+argument_list|,
+name|ctrl
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Set hardware offload abilities */
 name|ifp
 operator|->
@@ -12451,7 +12522,7 @@ name|if_capenable
 operator||=
 name|IFCAP_TSO4
 expr_stmt|;
-comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+comment|/* 	 * Tell the upper layer(s) we 	 * support full VLAN capability 	 */
 name|ifp
 operator|->
 name|if_data
@@ -12479,6 +12550,13 @@ operator||=
 name|IFCAP_VLAN_HWTAGGING
 operator||
 name|IFCAP_VLAN_MTU
+expr_stmt|;
+comment|/* 	** Dont turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering. 	*/
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_HWFILTER
 expr_stmt|;
 ifdef|#
 directive|ifdef
