@@ -352,6 +352,16 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_rctls
+operator|==
+name|NULL
+condition|)
+comment|/* ratectl not setup */
+return|return;
 name|vap
 operator|->
 name|iv_rate
