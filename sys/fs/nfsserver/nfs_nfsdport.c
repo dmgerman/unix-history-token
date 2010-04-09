@@ -12475,6 +12475,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+comment|/* Make sure the server replies ESTALE to the client. */
+name|error
+operator|=
+name|ESTALE
+expr_stmt|;
+if|if
+condition|(
 name|nam
 operator|&&
 operator|!
