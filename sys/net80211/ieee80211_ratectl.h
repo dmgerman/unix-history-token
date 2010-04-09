@@ -32,14 +32,14 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_RATECTL_TX_SUCCESS
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|IEEE80211_RATECTL_TX_FAILURE
-value|1
+value|0
 end_define
 
 begin_struct
