@@ -6623,7 +6623,7 @@ expr_stmt|;
 else|else
 name|newitr
 operator||=
-literal|0x8000000
+name|E1000_EITR_CNT_IGNR
 expr_stmt|;
 comment|/* save for next interrupt */
 name|que
