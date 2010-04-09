@@ -1327,6 +1327,16 @@ parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_RX_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->rx_mtx, MA_OWNED)
+end_define
+
 begin_endif
 endif|#
 directive|endif

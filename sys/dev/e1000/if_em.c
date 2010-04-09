@@ -304,7 +304,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"7.0.3"
+literal|"7.0.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -6934,6 +6934,7 @@ if|if
 condition|(
 name|more_rx
 condition|)
+block|{
 name|taskqueue_enqueue
 argument_list|(
 name|adapter
@@ -6946,6 +6947,8 @@ operator|->
 name|que_task
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 block|}
 name|em_enable_intr
 argument_list|(
@@ -7057,6 +7060,11 @@ decl_stmt|;
 name|bool
 name|more
 decl_stmt|;
+name|EM_RX_LOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 operator|++
 name|rxr
 operator|->
@@ -7071,6 +7079,11 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|)
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 if|if
@@ -7233,6 +7246,11 @@ decl_stmt|;
 name|bool
 name|more
 decl_stmt|;
+name|EM_RX_LOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 name|more
 operator|=
 name|em_rxeof
@@ -7242,6 +7260,11 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|)
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 if|if
@@ -18680,9 +18703,13 @@ expr_stmt|;
 comment|/* 	** When using MSIX interrupts we need to throttle 	** using the EITR register (82574 only) 	*/
 if|if
 condition|(
-name|adapter
+name|hw
 operator|->
-name|msix
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 for|for
 control|(
@@ -19052,7 +19079,7 @@ name|e1000_rx_desc
 modifier|*
 name|cur
 decl_stmt|;
-name|EM_RX_LOCK
+name|EM_RX_LOCK_ASSERT
 argument_list|(
 name|rxr
 argument_list|)
@@ -19597,11 +19624,6 @@ operator|->
 name|next_to_check
 operator|=
 name|i
-expr_stmt|;
-name|EM_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -20345,11 +20367,14 @@ name|IMS_ENABLE_MASK
 decl_stmt|;
 if|if
 condition|(
-name|adapter
+name|hw
 operator|->
-name|msix
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
-block|{
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -20364,6 +20389,9 @@ operator||=
 name|EM_MSIX_MASK
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -20373,11 +20401,10 @@ argument_list|,
 name|ims_mask
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|em_disable_intr
 parameter_list|(
@@ -20399,9 +20426,13 @@ name|hw
 decl_stmt|;
 if|if
 condition|(
-name|adapter
+name|hw
 operator|->
-name|msix
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_82574
 condition|)
 name|E1000_WRITE_REG
 argument_list|(
