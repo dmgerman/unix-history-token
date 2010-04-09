@@ -462,6 +462,9 @@ name|uint32_t
 name|expire_cycle
 decl_stmt|;
 comment|/* tick count */
+name|int
+name|init_done
+decl_stmt|;
 comment|/* if the upper half is busy doing something long, 	 * can set the busy flag and we will enqueue packets in 	 * a queue for later processing. 	 */
 name|int
 name|busy
@@ -881,6 +884,14 @@ name|dn_parms
 name|dn_cfg
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|//VNET_DECLARE(struct dn_parms, _base_dn_cfg);
+end_comment
+
+begin_comment
+comment|//#define dn_cfg              VNET(_base_dn_cfg)
+end_comment
 
 begin_function_decl
 name|int
