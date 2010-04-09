@@ -1162,9 +1162,7 @@ begin_function_decl
 name|int
 name|dn_compat_calc_size
 parameter_list|(
-name|struct
-name|dn_parms
-name|dn_cfg
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

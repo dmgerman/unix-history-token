@@ -2352,9 +2352,7 @@ begin_function
 name|int
 name|dn_compat_calc_size
 parameter_list|(
-name|struct
-name|dn_parms
-name|dn_cfg
+name|void
 parameter_list|)
 block|{
 name|int

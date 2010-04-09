@@ -9586,9 +9586,7 @@ comment|/* compatibility mode */
 name|need
 operator|=
 name|dn_compat_calc_size
-argument_list|(
-name|dn_cfg
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
