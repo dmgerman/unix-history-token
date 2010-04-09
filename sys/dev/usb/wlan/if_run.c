@@ -12352,12 +12352,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|uint8_t wcid;
-endif|#
-directive|endif
 name|RUN_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -12382,12 +12376,6 @@ sizeof|sizeof
 name|sta
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|wcid = RUN_AID2WCID(ni == NULL ? 0 : ni->ni_associd); 	ieee80211_amrr_node_init(&rvp->amrr,&rvp->amn[wcid], ni);
-endif|#
-directive|endif
 name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni
@@ -12935,12 +12923,6 @@ operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|wcid = RUN_AID2WCID(ni == NULL ? 0 : ni->ni_associd); 		amn =&rvp->amn[wcid];
-endif|#
-directive|endif
 comment|/* count failed TX as errors */
 name|ifp
 operator|->
