@@ -6550,6 +6550,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+name|EM_RX_LOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 name|rx_done
 operator|=
 name|em_rxeof
@@ -6557,6 +6562,11 @@ argument_list|(
 name|rxr
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -6858,6 +6868,11 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
+name|EM_RX_LOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 name|more_rx
 operator|=
 name|em_rxeof
@@ -6867,6 +6882,11 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|)
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
