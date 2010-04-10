@@ -3456,7 +3456,7 @@ literal|8192
 block|IEEE80211_HTCAP_AMSDU7935 |
 endif|#
 directive|endif
-block|IEEE80211_HTCAP_SMPS_DIS | 	    IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF;
+block|IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF; 	if (sc->hw_type == IWN_HW_REV_TYPE_6050) 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DYN; 	else 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DIS;
 endif|#
 directive|endif
 comment|/* Read MAC address, channels, etc from EEPROM. */
@@ -3968,7 +3968,7 @@ operator|->
 name|limits
 operator|=
 operator|&
-name|iwn5000_sensitivity_limits
+name|iwn1000_sensitivity_limits
 expr_stmt|;
 name|sc
 operator|->
@@ -8752,6 +8752,10 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|iwn5000_eeprom_calib_hdr
+name|hdr
+decl_stmt|;
 name|int32_t
 name|temp
 decl_stmt|,
@@ -8869,6 +8873,53 @@ name|le16toh
 argument_list|(
 name|val
 argument_list|)
+expr_stmt|;
+name|iwn_read_prom_data
+argument_list|(
+name|sc
+argument_list|,
+name|base
+argument_list|,
+operator|&
+name|hdr
+argument_list|,
+sizeof|sizeof
+name|hdr
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_CALIBRATE
+argument_list|,
+literal|"%s: calib version=%u pa type=%u voltage=%u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|hdr
+operator|.
+name|version
+argument_list|,
+name|hdr
+operator|.
+name|pa_type
+argument_list|,
+name|le16toh
+argument_list|(
+name|hdr
+operator|.
+name|volt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|calib_ver
+operator|=
+name|hdr
+operator|.
+name|version
 expr_stmt|;
 if|if
 condition|(
@@ -11337,6 +11388,12 @@ operator|->
 name|hw_type
 operator|==
 name|IWN_HW_REV_TYPE_5150
+operator|||
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_6050
 condition|)
 name|idx
 operator|=
@@ -13997,11 +14054,23 @@ name|tmp
 operator|==
 literal|0xffffffff
 condition|)
+comment|/* Shouldn't happen. */
 name|tmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Shouldn't happen. */
+elseif|else
+if|if
+condition|(
+name|tmp
+operator|&
+literal|0xc0000
+condition|)
+comment|/* Workaround a HW bug. */
+name|tmp
+operator||=
+literal|0x8000
+expr_stmt|;
 name|r1
 operator|=
 operator|(
@@ -21626,7 +21695,11 @@ name|calib
 operator|->
 name|ofdm_x4
 operator|=
-literal|90
+name|sc
+operator|->
+name|limits
+operator|->
+name|min_ofdm_x4
 expr_stmt|;
 name|calib
 operator|->
@@ -22095,17 +22168,6 @@ name|struct
 name|iwn_phy_calib
 name|cmd
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|hw_type
-operator|==
-name|IWN_HW_REV_TYPE_6050
-condition|)
-return|return
-literal|0
-return|;
 name|memset
 argument_list|(
 operator|&
@@ -22427,18 +22489,24 @@ decl_stmt|,
 name|ant
 decl_stmt|,
 name|delta
+decl_stmt|,
+name|div
 decl_stmt|;
-if|if
-condition|(
+comment|/* We collected 20 beacons and !=6050 need a 1.5 factor. */
+name|div
+operator|=
+operator|(
 name|sc
 operator|->
 name|hw_type
 operator|==
 name|IWN_HW_REV_TYPE_6050
-condition|)
-return|return
-literal|0
-return|;
+operator|)
+condition|?
+literal|20
+else|:
+literal|30
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -22533,7 +22601,7 @@ name|i
 index|]
 operator|)
 operator|/
-literal|30
+name|div
 expr_stmt|;
 comment|/* Limit to [-4.5dB,+4.5dB]. */
 name|cmd
@@ -24290,7 +24358,9 @@ name|bluetooth
 operator|.
 name|flags
 operator|=
-name|IWN_BT_COEX_MODE_4WIRE
+name|IWN_BT_COEX_CHAN_ANN
+operator||
+name|IWN_BT_COEX_BT_PRIO
 expr_stmt|;
 name|bluetooth
 operator|.
@@ -30615,6 +30685,32 @@ argument_list|,
 name|IWN_GP_DRIVER
 argument_list|,
 name|IWN_GP_DRIVER_RADIO_2X2_IPA
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_6050
+operator|&&
+name|sc
+operator|->
+name|calib_ver
+operator|>=
+literal|6
+condition|)
+block|{
+comment|/* Indicate that ROM calibration version is>=6. */
+name|IWN_SETBITS
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_GP_DRIVER
+argument_list|,
+name|IWN_GP_DRIVER_CALIB_VER6
 argument_list|)
 expr_stmt|;
 block|}
