@@ -20375,6 +20375,7 @@ name|type
 operator|==
 name|e1000_82574
 condition|)
+block|{
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -20389,9 +20390,6 @@ operator||=
 name|EM_MSIX_MASK
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -20401,10 +20399,11 @@ argument_list|,
 name|ims_mask
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|em_disable_intr
 parameter_list|(
