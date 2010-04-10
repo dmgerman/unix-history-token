@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -2439,6 +2445,11 @@ decl_stmt|;
 comment|/* queue to accumulate results */
 name|CURVNET_SET
 argument_list|(
+operator|(
+expr|struct
+name|vnet
+operator|*
+operator|)
 name|context
 argument_list|)
 expr_stmt|;
