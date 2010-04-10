@@ -9341,6 +9341,21 @@ name|c
 operator|->
 name|ic_maxregpower
 expr_stmt|;
+comment|/* Save maximum allowed TX power for this channel. */
+name|sc
+operator|->
+name|maxpwr
+index|[
+name|chan
+index|]
+operator|=
+name|channels
+index|[
+name|i
+index|]
+operator|.
+name|maxpwr
+expr_stmt|;
 if|if
 condition|(
 name|n
