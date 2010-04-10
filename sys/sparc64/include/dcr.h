@@ -77,14 +77,14 @@ value|(((1UL<< DCR_OBSDATA_CT_BITS) - 1)<< DCR_OBSDATA_SHIFT)
 end_define
 
 begin_comment
-comment|/* The following bits are valid for the UltraSPARC-III+/IV+ only. */
+comment|/* The following bits are valid for the UltraSPARC-III++/IV+ only. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DCR_IPE
-value|(1UL<< 5)
+value|(1UL<< 2)
 end_define
 
 begin_define
