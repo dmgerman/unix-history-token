@@ -311,7 +311,7 @@ name|lafe_line_reader
 argument_list|(
 name|pathname
 argument_list|,
-literal|'\n'
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
