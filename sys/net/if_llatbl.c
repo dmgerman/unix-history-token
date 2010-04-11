@@ -672,6 +672,11 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
+name|int
+name|canceled
+decl_stmt|;
+name|canceled
+operator|=
 name|callout_drain
 argument_list|(
 operator|&
@@ -681,6 +686,15 @@ name|la_timer
 argument_list|)
 expr_stmt|;
 name|LLE_WLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|canceled
+condition|)
+name|LLE_REMREF
 argument_list|(
 name|lle
 argument_list|)
