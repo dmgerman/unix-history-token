@@ -1165,6 +1165,13 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
+literal|"\""
+argument_list|,
+literal|"CDQUOTE"
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
 literal|"$"
 argument_list|,
 literal|"CVAR"
