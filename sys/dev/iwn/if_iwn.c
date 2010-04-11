@@ -4469,7 +4469,7 @@ name|ieee80211_vap_attach
 argument_list|(
 name|vap
 argument_list|,
-name|ieee80211_media_change
+name|iwn_media_change
 argument_list|,
 name|ieee80211_media_status
 argument_list|)
