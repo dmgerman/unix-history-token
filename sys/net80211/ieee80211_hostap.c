@@ -3647,6 +3647,25 @@ operator|~
 name|IEEE80211_FC1_WEP
 expr_stmt|;
 block|}
+comment|/* 		 * Pass the packet to radiotap before calling iv_recv_mgmt(). 		 * Otherwise iv_recv_mgmt() might pass another packet to 		 * radiotap, resulting in out of order packet captures. 		 */
+if|if
+condition|(
+name|ieee80211_radiotap_active_vap
+argument_list|(
+name|vap
+argument_list|)
+condition|)
+name|ieee80211_radiotap_rx
+argument_list|(
+name|vap
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|need_tap
+operator|=
+literal|0
+expr_stmt|;
 name|vap
 operator|->
 name|iv_recv_mgmt

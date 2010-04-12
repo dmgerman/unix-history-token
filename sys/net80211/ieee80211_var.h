@@ -560,6 +560,10 @@ name|ic_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
 name|uint32_t
+name|ic_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
+name|uint32_t
 name|ic_cryptocaps
 decl_stmt|;
 comment|/* crypto capabilities */
@@ -1384,8 +1388,11 @@ function_decl|;
 name|uint64_t
 name|ic_spare
 index|[
-literal|8
+literal|7
 index|]
+decl_stmt|;
+name|uint32_t
+name|ic_spare2
 decl_stmt|;
 block|}
 struct|;
@@ -1500,6 +1507,10 @@ name|uint32_t
 name|iv_htcaps
 decl_stmt|;
 comment|/* HT capabilities */
+name|uint32_t
+name|iv_htextcaps
+decl_stmt|;
+comment|/* HT extended capabilities */
 name|enum
 name|ieee80211_opmode
 name|iv_opmode
@@ -1912,6 +1923,17 @@ modifier|*
 name|iv_as
 decl_stmt|;
 comment|/* private aclator state */
+specifier|const
+name|struct
+name|ieee80211_ratectl
+modifier|*
+name|iv_rate
+decl_stmt|;
+name|void
+modifier|*
+name|iv_rs
+decl_stmt|;
+comment|/* private ratectl state */
 name|struct
 name|ieee80211_tdma_state
 modifier|*
@@ -2137,7 +2159,7 @@ function_decl|;
 name|uint64_t
 name|iv_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -4664,6 +4686,7 @@ begin_function_decl
 name|void
 name|ieee80211_note
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4681,6 +4704,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4705,6 +4729,7 @@ begin_function_decl
 name|void
 name|ieee80211_note_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4879,6 +4904,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_frame
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4907,6 +4933,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_ie
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*
@@ -4935,6 +4962,7 @@ begin_function_decl
 name|void
 name|ieee80211_discard_mac
 parameter_list|(
+specifier|const
 name|struct
 name|ieee80211vap
 modifier|*

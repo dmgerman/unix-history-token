@@ -1018,7 +1018,89 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number, and also do set manipulation.  * Assumes chain != NULL&& *chain != NULL.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  *	5	delete rules with given number and with given set number  */
+comment|/*  * Used by del_entry() to check if a rule should be kept.  * Returns 1 if the rule must be kept, 0 otherwise.  *  * Called with cmd = {0,1,5}.  * cmd == 0 matches on rule numbers, excludes rules in RESVD_SET if n == 0 ;  * cmd == 1 matches on set numbers only, rule numbers are ignored;  * cmd == 5 matches on rule and set numbers.  *  * n == 0 is a wildcard for rule numbers, there is no wildcard for sets.  *  * Rules to keep are  *	(default || reserved || !match_set || !match_number)  * where  *   default ::= (rule->rulenum == IPFW_DEFAULT_RULE)  *	// the default rule is always protected  *  *   reserved ::= (cmd == 0&& n == 0&& rule->set == RESVD_SET)  *	// RESVD_SET is protected only if cmd == 0 and n == 0 ("ipfw flush")  *  *   match_set ::= (cmd == 0 || rule->set == set)  *	// set number is ignored for cmd == 0  *  *   match_number ::= (cmd == 1 || n == 0 || n == rule->rulenum)  *	// number is ignored for cmd == 1 or n == 0  *  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|keep_rule
+parameter_list|(
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+parameter_list|,
+name|uint8_t
+name|cmd
+parameter_list|,
+name|uint8_t
+name|set
+parameter_list|,
+name|uint32_t
+name|n
+parameter_list|)
+block|{
+return|return
+operator|(
+name|rule
+operator|->
+name|rulenum
+operator|==
+name|IPFW_DEFAULT_RULE
+operator|)
+operator|||
+operator|(
+name|cmd
+operator|==
+literal|0
+operator|&&
+name|n
+operator|==
+literal|0
+operator|&&
+name|rule
+operator|->
+name|set
+operator|==
+name|RESVD_SET
+operator|)
+operator|||
+operator|!
+operator|(
+name|cmd
+operator|==
+literal|0
+operator|||
+name|rule
+operator|->
+name|set
+operator|==
+name|set
+operator|)
+operator|||
+operator|!
+operator|(
+name|cmd
+operator|==
+literal|1
+operator|||
+name|n
+operator|==
+literal|0
+operator|||
+name|n
+operator|==
+name|rule
+operator|->
+name|rulenum
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Remove all rules with given number, or do set manipulation.  * Assumes chain != NULL&& *chain != NULL.  *  * The argument is an uint32_t. The low 16 bit are the rule or set number;  * the next 8 bits are the new set; the top 8 bits indicate the command:  *  *	0	delete rules numbered "rulenum"  *	1	delete rules in set "rulenum"  *	2	move rules "rulenum" to set "new_set"  *	3	move rules from set "rulenum" to set "new_set"  *	4	swap sets "rulenum" and "new_set"  *	5	delete rules "rulenum" and set "new_set"  */
 end_comment
 
 begin_function
@@ -1031,7 +1113,7 @@ name|ip_fw_chain
 modifier|*
 name|chain
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|arg
 parameter_list|)
 block|{
@@ -1041,9 +1123,9 @@ modifier|*
 name|rule
 decl_stmt|;
 name|uint32_t
-name|rulenum
+name|num
 decl_stmt|;
-comment|/* rule or old_set */
+comment|/* rule number or old_set */
 name|uint8_t
 name|cmd
 decl_stmt|,
@@ -1053,8 +1135,6 @@ name|int
 name|start
 decl_stmt|,
 name|end
-init|=
-literal|0
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -1075,7 +1155,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|rulenum
+name|num
 operator|=
 name|arg
 operator|&
@@ -1131,7 +1211,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|rulenum
+name|num
 operator|>=
 name|IPFW_DEFAULT_RULE
 condition|)
@@ -1143,7 +1223,7 @@ else|else
 block|{
 if|if
 condition|(
-name|rulenum
+name|num
 operator|>
 name|RESVD_SET
 condition|)
@@ -1157,7 +1237,7 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/* prevent conflicts among the writers */
+comment|/* arbitrate writers */
 name|chain
 operator|->
 name|reap
@@ -1173,16 +1253,16 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* delete rules with given number (0 is special means all) */
+comment|/* delete rules "num" (num == 0 matches all) */
 case|case
 literal|1
 case|:
-comment|/* delete all rules with given set number, rule->set == rulenum */
+comment|/* delete all rules in set N */
 case|case
 literal|5
 case|:
-comment|/* delete rules with given number and with given set number. 		 * rulenum - given rule number; 		 * new_set - given set number. 		 */
-comment|/* locate first rule to delete (start), the one after the 		 * last one (end), and count how many rules to delete (n) 		 */
+comment|/* delete rules with number N and set "new_set". */
+comment|/* 		 * Locate first rule to delete (start), the rule after 		 * the last one to delete (end), and count how many 		 * rules to delete (n). Always use keep_rule() to 		 * determine which rules to keep. 		 */
 name|n
 operator|=
 literal|0
@@ -1194,7 +1274,11 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* look for a specific set, must scan all */
+comment|/* look for a specific set including RESVD_SET. 			 * Must scan the entire range, ignore num. 			 */
+name|new_set
+operator|=
+name|num
+expr_stmt|;
 for|for
 control|(
 name|start
@@ -1202,6 +1286,8 @@ operator|=
 operator|-
 literal|1
 operator|,
+name|end
+operator|=
 name|i
 operator|=
 literal|0
@@ -1218,16 +1304,21 @@ control|)
 block|{
 if|if
 condition|(
+name|keep_rule
+argument_list|(
 name|chain
 operator|->
 name|map
 index|[
-name|start
+name|i
 index|]
-operator|->
-name|set
-operator|!=
-name|rulenum
+argument_list|,
+name|cmd
+argument_list|,
+name|new_set
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -1255,13 +1346,14 @@ comment|/* first non-matching */
 block|}
 else|else
 block|{
+comment|/* Optimized search on rule numbers */
 name|start
 operator|=
 name|ipfw_find_rule
 argument_list|(
 name|chain
 argument_list|,
-name|rulenum
+name|num
 argument_list|,
 literal|0
 argument_list|)
@@ -1293,7 +1385,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|rulenum
+name|num
 operator|>
 literal|0
 operator|&&
@@ -1301,28 +1393,22 @@ name|rule
 operator|->
 name|rulenum
 operator|!=
-name|rulenum
+name|num
 condition|)
 break|break;
 if|if
 condition|(
+operator|!
+name|keep_rule
+argument_list|(
 name|rule
-operator|->
-name|set
-operator|!=
-name|RESVD_SET
-operator|&&
-operator|(
+argument_list|,
 name|cmd
-operator|==
-literal|0
-operator|||
-name|rule
-operator|->
-name|set
-operator|==
+argument_list|,
 name|new_set
-operator|)
+argument_list|,
+name|num
+argument_list|)
 condition|)
 name|n
 operator|++
@@ -1334,20 +1420,24 @@ condition|(
 name|n
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* A flush request (arg == 0) on empty ruleset 			 * returns with no error. On the contrary, 			 * if there is no match on a specific request, 			 * we return EINVAL. 			 */
+name|error
+operator|=
+operator|(
 name|arg
 operator|==
 literal|0
-condition|)
-break|break;
-comment|/* special case, flush on empty ruleset */
-comment|/* allocate the map, if needed */
-if|if
-condition|(
-name|n
-operator|>
+operator|)
+condition|?
 literal|0
-condition|)
+else|:
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+comment|/* We have something to delete. Allocate the new map */
 name|map
 operator|=
 name|get_map
@@ -1363,10 +1453,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|==
-literal|0
-operator|||
 name|map
 operator|==
 name|NULL
@@ -1378,7 +1464,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* copy the initial part of the map */
+comment|/* 1. bcopy the initial part of the map */
 if|if
 condition|(
 name|start
@@ -1403,7 +1489,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* copy active rules between start and end */
+comment|/* 2. copy active rules between start and end */
 for|for
 control|(
 name|i
@@ -1431,26 +1517,16 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
+name|keep_rule
+argument_list|(
 name|rule
-operator|->
-name|set
-operator|!=
-name|RESVD_SET
-operator|&&
-operator|(
+argument_list|,
 name|cmd
-operator|==
-literal|0
-operator|||
-name|rule
-operator|->
-name|set
-operator|==
+argument_list|,
 name|new_set
-operator|)
-operator|)
+argument_list|,
+name|num
+argument_list|)
 condition|)
 name|map
 index|[
@@ -1458,15 +1534,10 @@ name|ofs
 operator|++
 index|]
 operator|=
-name|chain
-operator|->
-name|map
-index|[
-name|i
-index|]
+name|rule
 expr_stmt|;
 block|}
-comment|/* finally the tail */
+comment|/* 3. copy the final part of the map */
 name|bcopy
 argument_list|(
 name|chain
@@ -1495,6 +1566,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 4. swap the maps (under BH_LOCK) */
 name|map
 operator|=
 name|swap_map
@@ -1510,7 +1582,7 @@ operator|-
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* now remove the rules deleted */
+comment|/* 5. now remove the rules deleted from the old map */
 for|for
 control|(
 name|i
@@ -1525,6 +1597,9 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|l
+decl_stmt|;
 name|rule
 operator|=
 name|map
@@ -1534,33 +1609,25 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|keep_rule
+argument_list|(
 name|rule
-operator|->
-name|set
-operator|!=
-name|RESVD_SET
-operator|&&
-operator|(
+argument_list|,
 name|cmd
-operator|==
-literal|0
-operator|||
-name|rule
-operator|->
-name|set
-operator|==
+argument_list|,
 name|new_set
-operator|)
+argument_list|,
+name|num
+argument_list|)
 condition|)
-block|{
-name|int
+continue|continue;
 name|l
-init|=
+operator|=
 name|RULESIZE
 argument_list|(
 name|rule
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|chain
 operator|->
 name|static_len
@@ -1587,12 +1654,12 @@ operator|=
 name|rule
 expr_stmt|;
 block|}
-block|}
 break|break;
+comment|/* 	 * In the next 3 cases the loop stops at (n_rules - 1) 	 * because the default rule is never eligible.. 	 */
 case|case
 literal|2
 case|:
-comment|/* move rules with given number to new set */
+comment|/* move rules with given RULE number to new set */
 for|for
 control|(
 name|i
@@ -1604,6 +1671,8 @@ operator|<
 name|chain
 operator|->
 name|n_rules
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -1624,7 +1693,7 @@ name|rule
 operator|->
 name|rulenum
 operator|==
-name|rulenum
+name|num
 condition|)
 name|rule
 operator|->
@@ -1637,7 +1706,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* move rules with given set number to new set */
+comment|/* move rules with given SET number to new set */
 for|for
 control|(
 name|i
@@ -1649,6 +1718,8 @@ operator|<
 name|chain
 operator|->
 name|n_rules
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -1669,7 +1740,7 @@ name|rule
 operator|->
 name|set
 operator|==
-name|rulenum
+name|num
 condition|)
 name|rule
 operator|->
@@ -1694,6 +1765,8 @@ operator|<
 name|chain
 operator|->
 name|n_rules
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -1714,7 +1787,7 @@ name|rule
 operator|->
 name|set
 operator|==
-name|rulenum
+name|num
 condition|)
 name|rule
 operator|->
@@ -1735,7 +1808,7 @@ name|rule
 operator|->
 name|set
 operator|=
-name|rulenum
+name|num
 expr_stmt|;
 block|}
 break|break;
@@ -2097,7 +2170,7 @@ name|cleared
 condition|)
 block|{
 comment|/* we did not find any matching rules */
-name|IPFW_WUNLOCK
+name|IPFW_UH_RUNLOCK
 argument_list|(
 name|chain
 argument_list|)
@@ -4000,7 +4073,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ip_fw
+name|ip_fw7
 argument_list|)
 argument_list|)
 expr_stmt|;

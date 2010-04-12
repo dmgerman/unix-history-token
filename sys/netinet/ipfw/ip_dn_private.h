@@ -448,12 +448,22 @@ name|dn_alg_head
 name|schedlist
 decl_stmt|;
 comment|/* list of algorithms */
-comment|/* Store the fs/sch to scan when draining. The value is the 	 * bucket number of the hash table  	 **/
+comment|/* Store the fs/sch to scan when draining. The value is the 	 * bucket number of the hash table. Expire can be disabled 	 * with net.inet.ip.dummynet.expire=0, or it happens every 	 * expire ticks. 	 **/
 name|int
 name|drain_fs
 decl_stmt|;
 name|int
 name|drain_sch
+decl_stmt|;
+name|uint32_t
+name|expire
+decl_stmt|;
+name|uint32_t
+name|expire_cycle
+decl_stmt|;
+comment|/* tick count */
+name|int
+name|init_done
 decl_stmt|;
 comment|/* if the upper half is busy doing something long, 	 * can set the busy flag and we will enqueue packets in 	 * a queue for later processing. 	 */
 name|int
@@ -875,6 +885,14 @@ name|dn_cfg
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|//VNET_DECLARE(struct dn_parms, _base_dn_cfg);
+end_comment
+
+begin_comment
+comment|//#define dn_cfg              VNET(_base_dn_cfg)
+end_comment
+
 begin_function_decl
 name|int
 name|dummynet_io
@@ -955,8 +973,35 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* helper structure to copy objects returned to userland */
+comment|/*  * copy_range is a template for requests for ranges of pipes/queues/scheds.  * The number of ranges is variable and can be derived by o.len.  * As a default, we use a small number of entries so that the struct  * fits easily on the stack and is sufficient for most common requests.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RANGES
+value|5
+end_define
+
+begin_struct
+struct|struct
+name|copy_range
+block|{
+name|struct
+name|dn_id
+name|o
+decl_stmt|;
+name|uint32_t
+name|r
+index|[
+literal|2
+operator|*
+name|DEFAULT_RANGES
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -977,7 +1022,9 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|int
+name|struct
+name|copy_range
+modifier|*
 name|extra
 decl_stmt|;
 comment|/* extra filtering */
@@ -1126,9 +1173,7 @@ begin_function_decl
 name|int
 name|dn_compat_calc_size
 parameter_list|(
-name|struct
-name|dn_parms
-name|dn_cfg
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

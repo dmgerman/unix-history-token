@@ -2386,7 +2386,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|IFQ_DEQUEUE
+name|IFQ_DEQUEUE_NOLOCK
 argument_list|(
 operator|&
 name|ifp

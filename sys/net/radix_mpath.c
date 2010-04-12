@@ -1055,6 +1055,15 @@ name|rt_flags
 operator|&
 name|RTF_UP
 operator|)
+operator|&&
+name|RT_LINK_IS_UP
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifp
+argument_list|)
 condition|)
 return|return;
 name|ro

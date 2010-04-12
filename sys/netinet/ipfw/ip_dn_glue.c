@@ -1979,6 +1979,8 @@ name|struct
 name|dn_id
 modifier|*
 name|buf
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|base
@@ -2329,6 +2331,17 @@ operator|)
 name|base
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+condition|)
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_DUMMYNET
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -2339,9 +2352,7 @@ begin_function
 name|int
 name|dn_compat_calc_size
 parameter_list|(
-name|struct
-name|dn_parms
-name|dn_cfg
+name|void
 parameter_list|)
 block|{
 name|int

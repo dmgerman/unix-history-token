@@ -1120,6 +1120,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ipfw_destroy_tables
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ipfw_flush_table
 parameter_list|(
@@ -1130,18 +1142,6 @@ name|ch
 parameter_list|,
 name|uint16_t
 name|tbl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipfw_flush_tables
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

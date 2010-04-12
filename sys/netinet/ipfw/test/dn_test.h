@@ -15,76 +15,48 @@ directive|define
 name|_DN_TEST_H
 end_define
 
-begin_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 include|#
 directive|include
 file|<inttypes.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<strings.h>
-end_include
-
-begin_comment
 comment|/* bzero, ffs, ... */
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_comment
 comment|/* strcmp */
-end_comment
-
-begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<sys/queue.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|debug
 decl_stmt|;
-end_decl_stmt
-
-begin_define
 define|#
 directive|define
 name|ND
@@ -95,9 +67,6 @@ name|args
 modifier|...
 parameter_list|)
 value|do {} while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|D1
@@ -108,9 +77,6 @@ name|args
 modifier|...
 parameter_list|)
 value|do {} while (0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|D
@@ -121,9 +87,6 @@ name|args
 modifier|...
 parameter_list|)
 value|fprintf(stderr, "%-8s " fmt "\n",      \         __FUNCTION__, ## args)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DX
@@ -136,9 +99,9 @@ name|args
 modifier|...
 parameter_list|)
 value|do {              \         if (debug> lev) D(fmt, ## args); } while (0)
-end_define
-
-begin_define
+ifndef|#
+directive|ifndef
+name|offsetof
 define|#
 directive|define
 name|offsetof
@@ -148,49 +111,27 @@ parameter_list|,
 name|m
 parameter_list|)
 value|(int)((&((t *)0L)->m))
-end_define
-
-begin_include
+endif|#
+directive|endif
 include|#
 directive|include
 file|<mylist.h>
-end_include
-
-begin_comment
 comment|/* prevent include of other system headers */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_NETINET_IP_VAR_H_
-end_define
-
-begin_comment
 comment|/* ip_fw_args */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_IPFW2_H
-end_define
-
-begin_define
 define|#
 directive|define
 name|_SYS_MBUF_H_
-end_define
-
-begin_enum
 enum|enum
 block|{
 name|DN_QUEUE
 block|, }
 enum|;
-end_enum
-
-begin_enum
 enum|enum
 block|{
 name|DN_SCHED_FIFO
@@ -198,9 +139,6 @@ block|,
 name|DN_SCHED_WF2QP
 block|, }
 enum|;
-end_enum
-
-begin_struct
 struct|struct
 name|dn_id
 block|{
@@ -215,9 +153,6 @@ name|id
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_fs
 block|{
@@ -260,16 +195,10 @@ name|cur
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_sch
 block|{ }
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_flow
 block|{
@@ -299,23 +228,14 @@ decl_stmt|;
 comment|/* used by the generator */
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_link
 block|{ }
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|ip_fw_args
 block|{ }
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|mbuf
 block|{
@@ -344,18 +264,12 @@ decl_stmt|;
 comment|/* config args */
 block|}
 struct|;
-end_struct
-
-begin_define
 define|#
 directive|define
 name|MALLOC_DECLARE
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|KASSERT
@@ -365,24 +279,15 @@ parameter_list|,
 name|y
 parameter_list|)
 value|do { if (!(x)) printf y ; exit(0); } while (0)
-end_define
-
-begin_struct
 struct|struct
 name|ipfw_flow_id
 block|{ }
 struct|;
-end_struct
-
-begin_typedef
 typedef|typedef
 name|void
 modifier|*
 name|module_t
 typedef|;
-end_typedef
-
-begin_struct
 struct|struct
 name|_md_t
 block|{
@@ -411,17 +316,11 @@ name|p
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_typedef
 typedef|typedef
 name|struct
 name|_md_t
 name|moduledata_t
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|DECLARE_MODULE
@@ -436,9 +335,6 @@ name|d
 parameter_list|)
 define|\
 value|moduledata_t *_g_##name =& b
-end_define
-
-begin_define
 define|#
 directive|define
 name|MODULE_DEPEND
@@ -453,38 +349,20 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|IPFW
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<dn_heap.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<ip_dn_private.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<dn_sched.h>
-end_include
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_struct
 struct|struct
 name|dn_queue
 block|{
@@ -502,16 +380,10 @@ decl_stmt|;
 comment|/* parent sched instance. */
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_schk
 block|{ }
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_fsk
 block|{
@@ -526,9 +398,6 @@ name|sched
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_sch_inst
 block|{
@@ -539,9 +408,6 @@ name|sched
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|dn_alg
 block|{
@@ -614,14 +480,19 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
-end_struct
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+name|int
+name|fls
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 specifier|static
 specifier|inline
 name|void
@@ -674,7 +545,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

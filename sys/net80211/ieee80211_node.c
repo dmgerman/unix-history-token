@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ratectl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -4707,6 +4713,11 @@ name|ni
 operator|->
 name|ni_ic
 decl_stmt|;
+name|ieee80211_ratectl_node_deinit
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_node_cleanup

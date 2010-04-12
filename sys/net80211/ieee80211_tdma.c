@@ -1459,6 +1459,14 @@ name|iv_state
 index|]
 argument_list|)
 expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|vap
+operator|->
+name|iv_swbmiss
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ts

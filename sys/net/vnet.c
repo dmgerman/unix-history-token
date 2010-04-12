@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/linker_set.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_ifdef
@@ -2232,6 +2244,77 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * EVENTHANDLER(9) extensions.  */
+end_comment
+
+begin_comment
+comment|/*  * Invoke the eventhandler function originally registered with the possibly  * registered argument for all virtual network stack instances.  *  * This iterator can only be used for eventhandlers that do not take any  * additional arguments, as we do ignore the variadic arguments from the  * EVENTHANDLER_INVOKE() call.  */
+end_comment
+
+begin_function
+name|void
+name|vnet_global_eventhandler_iterator_func
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+name|struct
+name|eventhandler_entry_vimage
+modifier|*
+name|v_ee
+decl_stmt|;
+comment|/* 	 * There is a bug here in that we should actually cast things to 	 * (struct eventhandler_entry_ ## name *)  but that's not easily 	 * possible in here so just re-using the variadic version we 	 * defined for the generic vimage case. 	 */
+name|v_ee
+operator|=
+name|arg
+expr_stmt|;
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+operator|(
+operator|(
+name|vimage_iterator_func_t
+operator|)
+name|v_ee
+operator|->
+name|func
+operator|)
+operator|(
+name|v_ee
+operator|->
+name|ee_arg
+operator|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2531,6 +2614,10 @@ end_endif
 
 begin_comment
 comment|/* VNET_DEBUG */
+end_comment
+
+begin_comment
+comment|/*  * DDB(4).  */
 end_comment
 
 begin_ifdef

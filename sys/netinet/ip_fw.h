@@ -1141,11 +1141,11 @@ literal|1
 end_if
 
 begin_comment
-comment|// moved to in.h
+comment|// should be moved to in.h
 end_comment
 
 begin_comment
-comment|/*  * This structure is used as a flow mask and a flow id for various  * parts of the code.  */
+comment|/*  * This structure is used as a flow mask and a flow id for various  * parts of the code.  * addr_type is used in userland and kernel to mark the address type.  * fib is used in the kernel to record the fib in use.  * _flags is used in the kernel to store tcp flags for dynamic rules.  */
 end_comment
 
 begin_struct
@@ -1171,13 +1171,13 @@ name|uint8_t
 name|proto
 decl_stmt|;
 name|uint8_t
-name|flags
+name|_flags
 decl_stmt|;
 comment|/* protocol-specific flags */
 name|uint8_t
 name|addr_type
 decl_stmt|;
-comment|/* 4 = ipv4, 6 = ipv6, 1=ether ? */
+comment|/* 4=ip4, 6=ip6, 1=ether ? */
 name|struct
 name|in6_addr
 name|dst_ip6
@@ -1190,8 +1190,9 @@ name|uint32_t
 name|flow_id6
 decl_stmt|;
 name|uint32_t
-name|frag_id6
+name|extra
 decl_stmt|;
+comment|/* queue/pipe or frag_id */
 block|}
 struct|;
 end_struct

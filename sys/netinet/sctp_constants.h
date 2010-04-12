@@ -2432,43 +2432,6 @@ value|32
 end_define
 
 begin_comment
-comment|/* EY 05/13/08 - nr_sack version of the previous 3 constants */
-end_comment
-
-begin_comment
-comment|/* Maximum the nr mapping array will  grow to (TSN mapping array) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_MAPPING_ARRAY
-value|512
-end_define
-
-begin_comment
-comment|/* size of the inital malloc on the nr mapping array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_INITIAL_NR_MAPPING_ARRAY
-value|16
-end_define
-
-begin_comment
-comment|/* how much we grow the nr mapping array each call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_MAPPING_ARRAY_INCR
-value|32
-end_define
-
-begin_comment
 comment|/*  * Here we define the timer types used by the implementation as arguments in  * the set/get timer type calls.  */
 end_comment
 
@@ -4340,6 +4303,20 @@ parameter_list|,
 name|gap
 parameter_list|)
 value|(arry[(gap>> 3)]&= ((~(0x01<< ((gap& 0x07))))& 0xff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CALC_TSN_TO_GAP
+parameter_list|(
+name|gap
+parameter_list|,
+name|tsn
+parameter_list|,
+name|mapping_tsn
+parameter_list|)
+value|do { \ 	                if (tsn>= mapping_tsn) { \ 						gap = tsn - mapping_tsn; \ 					} else { \ 						gap = (MAX_TSN - mapping_tsn) + tsn + 1; \ 					} \                   } while(0)
 end_define
 
 begin_define

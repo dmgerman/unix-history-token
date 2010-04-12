@@ -4181,6 +4181,11 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
+name|LLE_REMREF
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|llentry_free
 argument_list|(
 name|ln
@@ -4332,7 +4337,7 @@ name|ln
 argument_list|)
 condition|)
 block|{
-name|nd6_llinfo_settimer
+name|nd6_llinfo_settimer_locked
 argument_list|(
 name|ln
 argument_list|,
