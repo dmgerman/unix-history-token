@@ -2334,7 +2334,7 @@ comment|/* read commands */
 name|char
 name|linename
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|char
@@ -2347,9 +2347,14 @@ decl_stmt|;
 name|lineno
 operator|++
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|linename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|linename
+argument_list|)
 argument_list|,
 literal|"Line %d"
 argument_list|,
