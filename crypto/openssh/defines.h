@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.156 2009/08/28 01:21:07 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.159 2010/01/13 23:44:34 tim Exp $ */
 end_comment
 
 begin_comment
@@ -4161,6 +4161,47 @@ directive|define
 name|SSH_IOBUFSZ
 value|8192
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NSIG
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NSIG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_NSIG
+value|NSIG
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_NSIG
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.79 2009/06/27 09:35:06 andreas Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.82 2010/02/08 10:50:20 markus Exp $ */
 end_comment
 
 begin_comment
@@ -262,9 +262,9 @@ decl_stmt|;
 comment|/* local socket address for connection to sshd */
 name|char
 modifier|*
-name|smartcard_device
+name|pkcs11_provider
 decl_stmt|;
-comment|/* Smartcard reader device */
+comment|/* PKCS#11 provider */
 name|int
 name|verify_host_key_dns
 decl_stmt|;

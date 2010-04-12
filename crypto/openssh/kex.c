@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.c,v 1.81 2009/05/27 06:34:36 andreas Exp $ */
+comment|/* $OpenBSD: kex.c,v 1.82 2009/10/24 11:13:54 andreas Exp $ */
 end_comment
 
 begin_comment
@@ -131,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|"monitor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roaming.h"
 end_include
 
 begin_if
@@ -1992,6 +1998,51 @@ name|sprop
 operator|=
 name|peer
 expr_stmt|;
+block|}
+comment|/* Check whether server offers roaming */
+if|if
+condition|(
+operator|!
+name|kex
+operator|->
+name|server
+condition|)
+block|{
+name|char
+modifier|*
+name|roaming
+decl_stmt|;
+name|roaming
+operator|=
+name|match_list
+argument_list|(
+name|KEX_RESUME
+argument_list|,
+name|peer
+index|[
+name|PROPOSAL_KEX_ALGS
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|roaming
+condition|)
+block|{
+name|kex
+operator|->
+name|roaming
+operator|=
+literal|1
+expr_stmt|;
+name|xfree
+argument_list|(
+name|roaming
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Algorithm Negotiation */
 for|for

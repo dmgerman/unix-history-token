@@ -25,6 +25,10 @@ begin_comment
 comment|/* Hacks to solve the problem with linkers incapable of handling very long    symbol names.  In the case of VMS, the limit is 31 characters on VMS for    VAX. */
 end_comment
 
+begin_comment
+comment|/* Note that this affects util/libeay.num and util/ssleay.num...  you may    change those manually, but that's not recommended, as those files are    controlled centrally and updated on Unix, and the central definition    may disagree with yours, which in turn may come with shareable library    incompatibilities. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -441,6 +445,19 @@ name|X509_STORE_CTX_get_explicit_policy
 value|X509_STORE_CTX_get_expl_policy
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|X509_STORE_CTX_get0_current_issuer
+end_undef
+
+begin_define
+define|#
+directive|define
+name|X509_STORE_CTX_get0_current_issuer
+value|X509_STORE_CTX_get0_cur_issuer
+end_define
+
 begin_comment
 comment|/* Hack some long CRYPTO names */
 end_comment
@@ -655,6 +672,58 @@ define|#
 directive|define
 name|SSL_COMP_get_compression_methods
 value|SSL_COMP_get_compress_methods
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ssl_add_clienthello_renegotiate_ext
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ssl_add_clienthello_renegotiate_ext
+value|ssl_add_clienthello_reneg_ext
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ssl_add_serverhello_renegotiate_ext
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ssl_add_serverhello_renegotiate_ext
+value|ssl_add_serverhello_reneg_ext
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ssl_parse_clienthello_renegotiate_ext
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ssl_parse_clienthello_renegotiate_ext
+value|ssl_parse_clienthello_reneg_ext
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ssl_parse_serverhello_renegotiate_ext
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ssl_parse_serverhello_renegotiate_ext
+value|ssl_parse_serverhello_reneg_ext
 end_define
 
 begin_comment
@@ -1751,6 +1820,23 @@ define|#
 directive|define
 name|cms_SignerIdentifier_get0_signer_id
 value|cms_SignerId_get0_signer_id
+end_define
+
+begin_comment
+comment|/* Hack some long DTLS1 names */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|dtls1_retransmit_buffered_messages
+end_undef
+
+begin_define
+define|#
+directive|define
+name|dtls1_retransmit_buffered_messages
+value|dtls1_retransmit_buffered_msgs
 end_define
 
 begin_endif

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpassphrase.c,v 1.18 2005/08/08 08:05:34 espie Exp $	*/
+comment|/*	$OpenBSD: readpassphrase.c,v 1.22 2010/01/13 10:20:54 dtucker Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F39502-99-1-0512.  */
+comment|/*  * Copyright (c) 2000-2002, 2007 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F39502-99-1-0512.  */
 end_comment
 
 begin_comment
@@ -137,6 +137,9 @@ specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|signo
+index|[
+name|_NSIG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +183,10 @@ decl_stmt|,
 name|output
 decl_stmt|,
 name|save_errno
+decl_stmt|,
+name|i
+decl_stmt|,
+name|need_restart
 decl_stmt|;
 name|char
 name|ch
@@ -240,7 +247,36 @@ return|;
 block|}
 name|restart
 label|:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|_NSIG
+condition|;
+name|i
+operator|++
+control|)
 name|signo
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|nr
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|save_errno
+operator|=
+literal|0
+expr_stmt|;
+name|need_restart
 operator|=
 literal|0
 expr_stmt|;
@@ -576,6 +612,24 @@ operator||=
 name|ECHO
 expr_stmt|;
 block|}
+comment|/* No I/O if we are already backgrounded. */
+if|if
+condition|(
+name|signo
+index|[
+name|SIGTTOU
+index|]
+operator|!=
+literal|1
+operator|&&
+name|signo
+index|[
+name|SIGTTIN
+index|]
+operator|!=
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -608,12 +662,12 @@ name|bufsiz
 operator|-
 literal|1
 expr_stmt|;
-for|for
-control|(
 name|p
 operator|=
 name|buf
-init|;
+expr_stmt|;
+while|while
+condition|(
 operator|(
 name|nr
 operator|=
@@ -637,8 +691,7 @@ operator|&&
 name|ch
 operator|!=
 literal|'\r'
-condition|;
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -677,6 +730,9 @@ operator|)
 condition|)
 name|ch
 operator|=
+operator|(
+name|char
+operator|)
 name|tolower
 argument_list|(
 name|ch
@@ -692,6 +748,9 @@ operator|)
 condition|)
 name|ch
 operator|=
+operator|(
+name|char
+operator|)
 name|toupper
 argument_list|(
 name|ch
@@ -738,6 +797,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Restore old terminal settings and signals. */
 if|if
 condition|(
@@ -883,6 +943,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGTTOU
+argument_list|,
+operator|&
+name|savettou
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|input
@@ -898,9 +971,26 @@ name|input
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we were interrupted by a signal, resend it to ourselves 	 * now that we have restored the signal handlers. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|_NSIG
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|signo
+index|[
+name|i
+index|]
 condition|)
 block|{
 name|kill
@@ -908,12 +998,12 @@ argument_list|(
 name|getpid
 argument_list|()
 argument_list|,
-name|signo
+name|i
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|signo
+name|i
 condition|)
 block|{
 case|case
@@ -925,11 +1015,24 @@ case|:
 case|case
 name|SIGTTOU
 case|:
+name|need_restart
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|need_restart
+condition|)
 goto|goto
 name|restart
 goto|;
-block|}
-block|}
+if|if
+condition|(
+name|save_errno
+condition|)
 name|errno
 operator|=
 name|save_errno
@@ -971,8 +1074,11 @@ name|s
 parameter_list|)
 block|{
 name|signo
-operator|=
+index|[
 name|s
+index|]
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function

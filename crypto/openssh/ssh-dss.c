@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.24 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.25 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -158,11 +158,19 @@ name|key
 operator|==
 name|NULL
 operator|||
+operator|(
 name|key
 operator|->
 name|type
 operator|!=
 name|KEY_DSA
+operator|&&
+name|key
+operator|->
+name|type
+operator|!=
+name|KEY_DSA_CERT
+operator|)
 operator|||
 name|key
 operator|->
@@ -545,11 +553,19 @@ name|key
 operator|==
 name|NULL
 operator|||
+operator|(
 name|key
 operator|->
 name|type
 operator|!=
 name|KEY_DSA
+operator|&&
+name|key
+operator|->
+name|type
+operator|!=
+name|KEY_DSA_CERT
+operator|)
 operator|||
 name|key
 operator|->

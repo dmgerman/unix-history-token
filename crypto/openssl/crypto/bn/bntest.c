@@ -5805,7 +5805,6 @@ expr_stmt|;
 comment|/**/
 if|if
 condition|(
-operator|!
 name|BN_exp
 argument_list|(
 name|d
@@ -5816,6 +5815,8 @@ name|b
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(

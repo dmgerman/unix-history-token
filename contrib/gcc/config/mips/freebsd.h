@@ -84,20 +84,8 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\     %{G*} %{mips1} %{mips2} %{mips3} %{mips4} %{mips32} %{mips32r2} %{mips64} \     %{bestGnum} %{call_shared} %{no_archive} %{exact_version} \     %(fbsd_link_spec) "
+value|"\     %{EB} %{EL} %(endian_spec) \     %{G*} %{mips1} %{mips2} %{mips3} %{mips4} \     %{mips32} %{mips32r2} %{mips64} %{mips64r2} \     %{bestGnum} %{call_shared} %{no_archive} %{exact_version} \     %{mabi=32:-melf32%{EB:b}%{EL:l}tsmip_fbsd} \     %{mabi=n32:-melf32%{EB:b}%{EL:l}tsmipn32_fbsd} \     %{mabi=64:-melf64%{EB:b}%{EL:l}tsmip_fbsd} \     %{mabi=o64:-melf64%{EB:b}%{EL:l}tsmip_fbsd} \     %(fbsd_link_spec)"
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|%(endian_spec)
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Reset our STARTFILE_SPEC which was properly set in config/freebsd.h    but trashed by config/mips/elf.h.  */
@@ -117,7 +105,7 @@ value|FBSD_STARTFILE_SPEC
 end_define
 
 begin_comment
-comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  */
+comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/mips.  */
 end_comment
 
 begin_undef
@@ -244,7 +232,7 @@ value|\       if (TARGET_ABICALLS)					\ 	builtin_define ("__ABICALLS__");			\  
 end_define
 
 begin_comment
-comment|/* Default to the mips32 ISA */
+comment|/* Default ABI and ISA */
 end_comment
 
 begin_undef
@@ -253,22 +241,72 @@ directive|undef
 name|DRIVER_SELF_SPECS
 end_undef
 
+begin_if
+if|#
+directive|if
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_N32
+end_if
+
 begin_define
 define|#
 directive|define
 name|DRIVER_SELF_SPECS
 define|\
-value|"%{!march=*: -march=mips32}"
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=n32}"
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_elif
+elif|#
+directive|elif
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_64
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=64}"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_O64
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=o64}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* default to o32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips32}",   \ 	"%{!mabi=*: -mabi=32}"
+end_define
 
 begin_endif
-unit|"%{!EB:%{!EL:%(endian_spec)}}",
 endif|#
 directive|endif
 end_endif

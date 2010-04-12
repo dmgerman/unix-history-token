@@ -728,7 +728,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|({ asm ("lrv	%0,0(%1)"		\ 					:"=r"(l) : "r"(c));		\ 				   (c)+=4; (l);				})
+value|({ asm ("lrv	%0,%1"			\ 				   :"=d"(l) :"m"(*(const unsigned int *)(c));\ 				   (c)+=4; (l);				})
 end_define
 
 begin_define
@@ -740,7 +740,7 @@ name|l
 parameter_list|,
 name|c
 parameter_list|)
-value|({ asm ("strv	%0,0(%1)"		\ 					: : "r"(l),"r"(c) : "memory");	\ 				   (c)+=4; (l);				})
+value|({ asm ("strv	%1,%0"			\ 				   :"=m"(*(unsigned int *)(c)) :"d"(l));\ 				   (c)+=4; (l);				})
 end_define
 
 begin_endif

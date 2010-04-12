@@ -165,7 +165,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 operator|>
@@ -173,7 +173,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 condition|)
@@ -188,7 +188,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 operator|<
@@ -196,7 +196,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 condition|)
@@ -212,7 +212,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 operator|>
@@ -220,7 +220,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 condition|)
@@ -235,7 +235,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 operator|<
@@ -243,7 +243,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 condition|)
@@ -319,7 +319,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 operator|>
@@ -327,7 +327,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 condition|)
@@ -342,7 +342,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 operator|<
@@ -350,7 +350,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 condition|)
@@ -366,7 +366,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 operator|>
@@ -374,7 +374,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 condition|)
@@ -389,7 +389,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 operator|<
@@ -397,7 +397,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 condition|)
@@ -473,7 +473,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 operator|>
@@ -481,7 +481,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 condition|)
@@ -496,7 +496,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 operator|<
@@ -504,7 +504,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 condition|)
@@ -520,7 +520,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 operator|>
@@ -528,7 +528,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 condition|)
@@ -543,7 +543,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 operator|<
@@ -551,7 +551,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 condition|)
@@ -627,7 +627,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 operator|>
@@ -635,7 +635,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 condition|)
@@ -650,7 +650,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 operator|<
@@ -658,7 +658,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 condition|)
@@ -674,7 +674,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 operator|>
@@ -682,7 +682,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 condition|)
@@ -697,7 +697,7 @@ name|b
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 operator|<
@@ -705,7 +705,7 @@ name|a
 operator|->
 name|fts_statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 condition|)

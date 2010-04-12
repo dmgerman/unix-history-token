@@ -577,9 +577,6 @@ name|in_FIPS_mode
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
 if|if
 condition|(
 name|getenv
@@ -588,6 +585,9 @@ literal|"OPENSSL_FIPS"
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
 if|if
 condition|(
 operator|!
@@ -620,9 +620,23 @@ name|in_FIPS_mode
 operator|=
 literal|1
 expr_stmt|;
-block|}
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"FIPS mode not supported.\n"
+argument_list|)
+expr_stmt|;
+name|EXIT
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|bio_err
@@ -978,6 +992,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fgets
 argument_list|(
 name|p
@@ -986,7 +1003,10 @@ name|n
 argument_list|,
 name|stdin
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|end
+goto|;
 if|if
 condition|(
 name|p

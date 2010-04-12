@@ -200,6 +200,32 @@ name|s
 operator|=
 literal|"TLSv1"
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|x
+operator|->
+name|ssl_version
+operator|==
+name|DTLS1_VERSION
+condition|)
+name|s
+operator|=
+literal|"DTLSv1"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|x
+operator|->
+name|ssl_version
+operator|==
+name|DTLS1_BAD_VER
+condition|)
+name|s
+operator|=
+literal|"DTLSv1-bad"
+expr_stmt|;
 else|else
 name|s
 operator|=
@@ -767,7 +793,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"\n   Compression: %d"
+literal|"\n    Compression: %d"
 argument_list|,
 name|x
 operator|->
@@ -788,7 +814,7 @@ name|BIO_printf
 argument_list|(
 name|bp
 argument_list|,
-literal|"\n   Compression: %d (%s)"
+literal|"\n    Compression: %d (%s)"
 argument_list|,
 name|comp
 operator|->

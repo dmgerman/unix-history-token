@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.68 2009/06/22 05:39:28 dtucker Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.69 2010/03/07 11:57:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1724,62 +1724,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|mm_send_debug
-parameter_list|(
-name|Buffer
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-while|while
-condition|(
-name|buffer_len
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-name|msg
-operator|=
-name|buffer_get_string
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|debug3
-argument_list|(
-literal|"%s: Sending debug: %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|packet_send_debug
-argument_list|(
-literal|"%s"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
 name|int
 name|mm_key_allowed
 parameter_list|(
@@ -1960,13 +1904,6 @@ literal|"true"
 argument_list|)
 else|:
 name|NULL
-expr_stmt|;
-comment|/* Send potential debug messages */
-name|mm_send_debug
-argument_list|(
-operator|&
-name|m
-argument_list|)
 expr_stmt|;
 name|buffer_free
 argument_list|(
@@ -5871,12 +5808,6 @@ name|blob
 argument_list|)
 expr_stmt|;
 block|}
-name|mm_send_debug
-argument_list|(
-operator|&
-name|m
-argument_list|)
-expr_stmt|;
 name|buffer_free
 argument_list|(
 operator|&

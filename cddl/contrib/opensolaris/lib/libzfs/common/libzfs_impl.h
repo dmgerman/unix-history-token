@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -208,6 +208,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|zfs_mntopts
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|zfs_props_table
 decl_stmt|;
 block|}
 struct|;

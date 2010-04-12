@@ -851,13 +851,14 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|RAND_bytes
 argument_list|(
 name|salt
 argument_list|,
 name|sLen
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err

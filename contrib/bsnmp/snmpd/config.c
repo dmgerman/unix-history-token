@@ -368,7 +368,6 @@ name|macros
 operator|=
 name|LIST_HEAD_INITIALIZER
 argument_list|(
-operator|&
 name|macros
 argument_list|)
 expr_stmt|;

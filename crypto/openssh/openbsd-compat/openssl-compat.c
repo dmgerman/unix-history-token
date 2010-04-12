@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.c,v 1.8 2009/03/07 11:22:35 dtucker Exp $ */
+comment|/* $Id: openssl-compat.c,v 1.9 2010/01/28 23:54:11 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -222,6 +222,11 @@ argument_list|()
 expr_stmt|;
 name|ENGINE_register_all_complete
 argument_list|()
+expr_stmt|;
+name|OPENSSL_config
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function

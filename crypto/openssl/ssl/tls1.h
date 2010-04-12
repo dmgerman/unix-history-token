@@ -175,6 +175,11 @@ define|#
 directive|define
 name|TLSEXT_TYPE_session_ticket
 value|35
+comment|/* Temporary extension type */
+define|#
+directive|define
+name|TLSEXT_TYPE_renegotiate
+value|0xff01
 comment|/* NameType value from RFC 3546 */
 define|#
 directive|define
@@ -365,7 +370,7 @@ parameter_list|,
 name|keylen
 parameter_list|)
 define|\
-value|SSL_CTX_ctrl((ctx),SSL_CTRL_GET_TLXEXT_TICKET_KEYS,(keylen),(keys))
+value|SSL_CTX_ctrl((ctx),SSL_CTRL_GET_TLSEXT_TICKET_KEYS,(keylen),(keys))
 define|#
 directive|define
 name|SSL_CTX_set_tlsext_ticket_keys
@@ -377,7 +382,7 @@ parameter_list|,
 name|keylen
 parameter_list|)
 define|\
-value|SSL_CTX_ctrl((ctx),SSL_CTRL_SET_TLXEXT_TICKET_KEYS,(keylen),(keys))
+value|SSL_CTX_ctrl((ctx),SSL_CTRL_SET_TLSEXT_TICKET_KEYS,(keylen),(keys))
 define|#
 directive|define
 name|SSL_CTX_set_tlsext_status_cb

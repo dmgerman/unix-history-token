@@ -908,6 +908,12 @@ return|return
 name|NULL
 return|;
 block|}
+name|ERR_set_mark
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_ENGINE
@@ -1324,7 +1330,7 @@ comment|/* Whatever happened, any failed init()s are not failures in this 	 * co
 end_comment
 
 begin_expr_stmt
-name|ERR_clear_error
+name|ERR_pop_to_mark
 argument_list|()
 expr_stmt|;
 end_expr_stmt
