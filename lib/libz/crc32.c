@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2005 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
+comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-2006 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  *  * Thanks to Rodney Brown<rbrown64@csc.com.au> for his contribution of faster  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing  * tables for updating the shift register in one step with three exclusive-ors  * instead of four steps with four exclusive-ors.  This results in about a  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.  */
 end_comment
 
 begin_comment
@@ -231,7 +231,7 @@ name|REV
 parameter_list|(
 name|w
 parameter_list|)
-value|(((w)>>24)+(((w)>>8)&0xff00)+ \                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
+value|((((w)>>24)&0xff)+(((w)>>8)&0xff00)+ \                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
 end_define
 
 begin_decl_stmt
@@ -353,6 +353,23 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|local
+name|uLong
+name|crc32_combine_
+parameter_list|(
+name|uLong
+name|crc1
+parameter_list|,
+name|uLong
+name|crc2
+parameter_list|,
+name|z_off64_t
+name|len2
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -1076,7 +1093,7 @@ name|FAR
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|uInt
 name|len
 decl_stmt|;
 block|{
@@ -1816,9 +1833,9 @@ comment|/* =====================================================================
 end_comment
 
 begin_function
+name|local
 name|uLong
-name|ZEXPORT
-name|crc32_combine
+name|crc32_combine_
 parameter_list|(
 name|crc1
 parameter_list|,
@@ -1832,7 +1849,7 @@ decl_stmt|;
 name|uLong
 name|crc2
 decl_stmt|;
-name|z_off_t
+name|z_off64_t
 name|len2
 decl_stmt|;
 block|{
@@ -1859,11 +1876,11 @@ name|GF2_DIM
 index|]
 decl_stmt|;
 comment|/* odd-power-of-two zeros operator */
-comment|/* degenerate case */
+comment|/* degenerate case (also disallow negative lengths) */
 if|if
 condition|(
 name|len2
-operator|==
+operator|<=
 literal|0
 condition|)
 return|return
@@ -1875,7 +1892,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0xedb88320L
+literal|0xedb88320UL
 expr_stmt|;
 comment|/* CRC-32 polynomial */
 name|row
@@ -2005,6 +2022,78 @@ name|crc2
 expr_stmt|;
 return|return
 name|crc1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ========================================================================= */
+end_comment
+
+begin_function
+name|uLong
+name|ZEXPORT
+name|crc32_combine
+parameter_list|(
+name|crc1
+parameter_list|,
+name|crc2
+parameter_list|,
+name|len2
+parameter_list|)
+name|uLong
+name|crc1
+decl_stmt|;
+name|uLong
+name|crc2
+decl_stmt|;
+name|z_off_t
+name|len2
+decl_stmt|;
+block|{
+return|return
+name|crc32_combine_
+argument_list|(
+name|crc1
+argument_list|,
+name|crc2
+argument_list|,
+name|len2
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uLong
+name|ZEXPORT
+name|crc32_combine64
+parameter_list|(
+name|crc1
+parameter_list|,
+name|crc2
+parameter_list|,
+name|len2
+parameter_list|)
+name|uLong
+name|crc1
+decl_stmt|;
+name|uLong
+name|crc2
+decl_stmt|;
+name|z_off64_t
+name|len2
+decl_stmt|;
+block|{
+return|return
+name|crc32_combine_
+argument_list|(
+name|crc1
+argument_list|,
+name|crc2
+argument_list|,
+name|len2
+argument_list|)
 return|;
 block|}
 end_function

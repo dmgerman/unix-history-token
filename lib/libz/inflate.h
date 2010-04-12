@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2004 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inflate.h -- internal inflate state definition  * Copyright (C) 1995-2009 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -78,6 +78,9 @@ comment|/* i: same, but skip check to exit inflate on new block */
 name|STORED
 block|,
 comment|/* i: waiting for stored size (length and complement) */
+name|COPY_
+block|,
+comment|/* i/o: same as COPY below, but only first time in */
 name|COPY
 block|,
 comment|/* i/o: waiting for input or output to copy stored block */
@@ -90,9 +93,12 @@ comment|/* i: waiting for code length code lengths */
 name|CODELENS
 block|,
 comment|/* i: waiting for length/lit and distance code lengths */
+name|LEN_
+block|,
+comment|/* i: same as LEN below, but only first time in */
 name|LEN
 block|,
-comment|/* i: waiting for length/lit code */
+comment|/* i: waiting for length/lit/eob code */
 name|LENEXT
 block|,
 comment|/* i: waiting for length extra bits */
@@ -131,11 +137,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*     State transitions between above modes -      (most modes can go to the BAD or MEM mode -- not shown for clarity)      Process header:         HEAD -> (gzip) or (zlib)         (gzip) -> FLAGS -> TIME -> OS -> EXLEN -> EXTRA -> NAME         NAME -> COMMENT -> HCRC -> TYPE         (zlib) -> DICTID or TYPE         DICTID -> DICT -> TYPE     Read deflate blocks:             TYPE -> STORED or TABLE or LEN or CHECK             STORED -> COPY -> TYPE             TABLE -> LENLENS -> CODELENS -> LEN     Read deflate codes:                 LEN -> LENEXT or LIT or TYPE                 LENEXT -> DIST -> DISTEXT -> MATCH -> LEN                 LIT -> LEN     Process trailer:         CHECK -> LENGTH -> DONE  */
+comment|/*     State transitions between above modes -      (most modes can go to BAD or MEM on error -- not shown for clarity)      Process header:         HEAD -> (gzip) or (zlib) or (raw)         (gzip) -> FLAGS -> TIME -> OS -> EXLEN -> EXTRA -> NAME -> COMMENT ->                   HCRC -> TYPE         (zlib) -> DICTID or TYPE         DICTID -> DICT -> TYPE         (raw) -> TYPEDO     Read deflate blocks:             TYPE -> TYPEDO -> STORED or TABLE or LEN_ or CHECK             STORED -> COPY_ -> COPY -> TYPE             TABLE -> LENLENS -> CODELENS -> LEN_             LEN_ -> LEN     Read deflate codes in fixed or dynamic block:                 LEN -> LENEXT or LIT or TYPE                 LENEXT -> DIST -> DISTEXT -> MATCH -> LEN                 LIT -> LEN     Process trailer:         CHECK -> LENGTH -> DONE  */
 end_comment
 
 begin_comment
-comment|/* state maintained between inflate() calls.  Approximately 7K bytes. */
+comment|/* state maintained between inflate() calls.  Approximately 10K bytes. */
 end_comment
 
 begin_struct
@@ -194,7 +200,7 @@ name|whave
 decl_stmt|;
 comment|/* valid bytes in the window */
 name|unsigned
-name|write
+name|wnext
 decl_stmt|;
 comment|/* window write index */
 name|unsigned
@@ -297,6 +303,18 @@ name|ENOUGH
 index|]
 decl_stmt|;
 comment|/* space for code tables */
+name|int
+name|sane
+decl_stmt|;
+comment|/* if false, allow invalid distance too far */
+name|int
+name|back
+decl_stmt|;
+comment|/* bits back of last unprocessed length/lit */
+name|unsigned
+name|was
+decl_stmt|;
+comment|/* initial length of match */
 block|}
 struct|;
 end_struct

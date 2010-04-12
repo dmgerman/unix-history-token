@@ -137,6 +137,21 @@ directive|include
 file|"authfile.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|ssh_add_identity
+parameter_list|(
+name|auth
+parameter_list|,
+name|key
+parameter_list|,
+name|comment
+parameter_list|)
+define|\
+value|ssh_add_identity_constrained(auth, key, comment, 0, 0)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char

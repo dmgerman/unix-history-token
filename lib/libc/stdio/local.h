@@ -564,6 +564,17 @@ value|{ \ 	free((char *)(fp)->_lb._base); \ 	(fp)->_lb._base = NULL; \ }
 end_define
 
 begin_comment
+comment|/*  * Structure initializations for 'fake' FILE objects.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAKE_FILE
+value|{				\ 	._file = -1,				\ 	._fl_mutex = PTHREAD_MUTEX_INITIALIZER, \ }
+end_define
+
+begin_comment
 comment|/*  * Set the orientation for a stream. If o> 0, the stream has wide-  * orientation. If o< 0, the stream has byte-orientation.  */
 end_comment
 
