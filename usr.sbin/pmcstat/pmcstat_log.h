@@ -288,6 +288,12 @@ decl_stmt|;
 name|pmcstat_interned_string
 name|pr_pmcname
 decl_stmt|;
+name|int
+name|pr_samples
+decl_stmt|;
+name|int
+name|pr_dubious_frames
+decl_stmt|;
 name|struct
 name|pmcstat_pmcrecord
 modifier|*

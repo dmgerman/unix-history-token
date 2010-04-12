@@ -1435,6 +1435,11 @@ operator|.
 name|ps_callchain_dubious_frames
 operator|++
 expr_stmt|;
+name|pmcr
+operator|->
+name|pr_dubious_frames
+operator|++
+expr_stmt|;
 return|return;
 block|}
 name|parent
