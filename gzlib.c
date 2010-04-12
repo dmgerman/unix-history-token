@@ -12,13 +12,14 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|_LARGEFILE64_SOURCE
-operator|==
-literal|1
+argument_list|)
 operator|&&
 name|_LFS64_LARGEFILE
-operator|==
-literal|1
+operator|-
+literal|0
 end_if
 
 begin_define
@@ -720,6 +721,13 @@ operator|-
 literal|1
 condition|)
 block|{
+name|free
+argument_list|(
+name|state
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|state
@@ -1919,6 +1927,14 @@ operator|(
 name|state
 operator|->
 name|eof
+operator|&&
+name|state
+operator|->
+name|strm
+operator|.
+name|avail_in
+operator|==
+literal|0
 operator|&&
 name|state
 operator|->
