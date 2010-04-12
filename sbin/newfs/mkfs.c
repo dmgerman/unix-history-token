@@ -853,15 +853,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"increasing fragment size from %d to sector size (%jd)\n"
+literal|"increasing fragment size from %d to sector size (%d)\n"
 argument_list|,
 name|sblock
 operator|.
 name|fs_fsize
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|sectorsize
 argument_list|)
 expr_stmt|;
@@ -1739,13 +1736,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"density increased from %d to %jd\n"
+literal|"density increased from %d to %d\n"
 argument_list|,
 name|origdensity
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|density
 argument_list|)
 expr_stmt|;
@@ -1792,13 +1786,10 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Block size too small for a file system %s %jd\n"
+literal|"Block size too small for a file system %s %d\n"
 argument_list|,
 literal|"of this size. Increasing blocksize to"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|bsize
 argument_list|)
 expr_stmt|;
@@ -1994,13 +1985,10 @@ name|origdensity
 condition|)
 name|printf
 argument_list|(
-literal|"density reduced from %d to %jd\n"
+literal|"density reduced from %d to %d\n"
 argument_list|,
 name|origdensity
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|density
 argument_list|)
 expr_stmt|;

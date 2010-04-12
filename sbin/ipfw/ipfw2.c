@@ -942,6 +942,8 @@ name|TOK_UID
 block|,
 name|TOK_JAIL
 block|,
+name|TOK_DSCP
+block|,
 operator|-
 literal|1
 block|}
@@ -1098,6 +1100,12 @@ block|{
 literal|"ipprecedence"
 block|,
 name|TOK_IPPRECEDENCE
+block|}
+block|,
+block|{
+literal|"dscp"
+block|,
+name|TOK_DSCP
 block|}
 block|,
 block|{
@@ -4485,15 +4493,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_OPTIONS
-value|0x8000
+name|HAVE_IP
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|HAVE_IP
-value|(HAVE_PROTO | HAVE_SRCIP | HAVE_DSTIP)
+name|HAVE_OPTIONS
+value|0x8000
 end_define
 
 begin_function
@@ -5086,11 +5094,17 @@ argument_list|(
 literal|"check-state"
 argument_list|)
 expr_stmt|;
+comment|/* avoid printing anything else */
 name|flags
 operator|=
+name|HAVE_PROTO
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
+operator||
 name|HAVE_IP
 expr_stmt|;
-comment|/* avoid printing anything else */
 break|break;
 case|case
 name|O_ACCEPT
@@ -5632,6 +5646,12 @@ operator||=
 name|HAVE_IP
 operator||
 name|HAVE_OPTIONS
+operator||
+name|HAVE_PROTO
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
 expr_stmt|;
 block|}
 if|if
@@ -6093,6 +6113,12 @@ argument_list|(
 operator|&
 name|flags
 argument_list|,
+name|HAVE_PROTO
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
+operator||
 name|HAVE_IP
 argument_list|,
 literal|0
@@ -6249,7 +6275,13 @@ argument_list|(
 operator|&
 name|flags
 argument_list|,
+name|HAVE_PROTO
+operator||
 name|HAVE_IP
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
 operator||
 name|HAVE_OPTIONS
 argument_list|,
@@ -6353,6 +6385,12 @@ argument_list|(
 operator|&
 name|flags
 argument_list|,
+name|HAVE_PROTO
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
+operator||
 name|HAVE_IP
 operator||
 name|HAVE_OPTIONS
@@ -7376,6 +7414,12 @@ argument_list|(
 operator|&
 name|flags
 argument_list|,
+name|HAVE_PROTO
+operator||
+name|HAVE_SRCIP
+operator||
+name|HAVE_DSTIP
+operator||
 name|HAVE_IP
 argument_list|,
 literal|0
@@ -8691,6 +8735,23 @@ block|{
 name|sysctlbyname
 argument_list|(
 literal|"net.inet.ip.fw.enable"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|which
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|which
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sysctlbyname
+argument_list|(
+literal|"net.inet6.ip6.fw.enable"
 argument_list|,
 name|NULL
 argument_list|,
@@ -13891,7 +13952,6 @@ index|[
 literal|0
 index|]
 operator|&&
-operator|!
 name|av
 index|[
 literal|1
@@ -17671,11 +17731,13 @@ name|j
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|av
 index|[
 literal|0
 index|]
-operator|&&
+operator|||
+operator|!
 name|av
 index|[
 literal|1

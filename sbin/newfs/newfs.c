@@ -317,7 +317,7 @@ comment|/* file system size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
@@ -337,7 +337,7 @@ comment|/* bytes/sector in hardware */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|fsize
 init|=
 literal|0
@@ -349,7 +349,7 @@ comment|/* fragment size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|bsize
 init|=
 literal|0
@@ -361,7 +361,7 @@ comment|/* block size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbsize
 init|=
 literal|0
@@ -373,7 +373,7 @@ comment|/* maximum clustering */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxblkspercg
 init|=
 name|MAXBLKSPERCG
@@ -409,7 +409,7 @@ comment|/* optimization preference (space or time) */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|density
 decl_stmt|;
 end_decl_stmt
@@ -419,7 +419,7 @@ comment|/* number of bytes per inode */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxcontig
 init|=
 literal|0
@@ -431,7 +431,7 @@ comment|/* max contiguous blocks to allocate */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
@@ -441,7 +441,7 @@ comment|/* maximum blocks per file in a cyl group */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesize
 init|=
 name|AVFILESIZ
@@ -453,7 +453,7 @@ comment|/* expected average file size */
 end_comment
 
 begin_decl_stmt
-name|int64_t
+name|int
 name|avgfilesperdir
 init|=
 name|AFPDIR
@@ -599,6 +599,23 @@ name|void
 name|usage
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|expand_number_int
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+modifier|*
+name|num
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -833,7 +850,7 @@ literal|'S'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -889,7 +906,7 @@ literal|'a'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -922,7 +939,7 @@ literal|'b'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -985,7 +1002,7 @@ literal|'c'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1018,7 +1035,7 @@ literal|'d'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1051,7 +1068,7 @@ literal|'e'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1084,7 +1101,7 @@ literal|'f'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1117,7 +1134,7 @@ literal|'g'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1150,7 +1167,7 @@ literal|'h'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -1183,7 +1200,7 @@ literal|'i'
 case|:
 name|rval
 operator|=
-name|expand_number
+name|expand_number_int
 argument_list|(
 name|optarg
 argument_list|,
@@ -2716,6 +2733,86 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|expand_number_int
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+modifier|*
+name|num
+parameter_list|)
+block|{
+name|int64_t
+name|num64
+decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
+name|rval
+operator|=
+name|expand_number
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|num64
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|rval
+operator|)
+return|;
+if|if
+condition|(
+name|num64
+operator|>
+name|INT_MAX
+operator|||
+name|num64
+operator|<
+name|INT_MIN
+condition|)
+block|{
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+operator|*
+name|num
+operator|=
+operator|(
+name|int
+operator|)
+name|num64
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

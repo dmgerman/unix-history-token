@@ -215,6 +215,8 @@ name|TOK_IPID
 block|,
 name|TOK_IPPRECEDENCE
 block|,
+name|TOK_DSCP
+block|,
 name|TOK_IPTOS
 block|,
 name|TOK_IPTTL
