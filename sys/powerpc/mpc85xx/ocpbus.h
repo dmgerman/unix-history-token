@@ -92,6 +92,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCP85XX_TGTIF_PCI3
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCP85XX_TGTIF_LBC
 value|4
 end_define
@@ -243,6 +250,13 @@ define|#
 directive|define
 name|OCP85XX_PCI2_OFF
 value|0x0A000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCP85XX_PCI3_OFF
+value|0x0B000
 end_define
 
 begin_define

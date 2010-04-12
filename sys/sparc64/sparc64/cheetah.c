@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Jake Burkholder.  * Copyright (c) 2005, 2008 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003 Jake Burkholder.  * Copyright (c) 2005, 2008, 2010 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -119,18 +119,6 @@ directive|include
 file|<machine/vmparam.h>
 end_include
 
-begin_comment
-comment|/* A FLUSH is required after changing LSU_IC (the address is ignored). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHEETAH_FLUSH_LSU_IC
-parameter_list|()
-value|__asm __volatile("flush %%g0" : :)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -150,6 +138,9 @@ name|u_int
 name|cpu_impl
 parameter_list|)
 block|{
+name|u_long
+name|val
+decl_stmt|;
 name|register_t
 name|s
 decl_stmt|;
@@ -158,22 +149,6 @@ name|s
 operator|=
 name|intr_disable
 argument_list|()
-expr_stmt|;
-comment|/* 	 * Ensure DCR_IFPOE is disabled as long as we haven't implemented 	 * support for it (if ever) as most if not all firmware versions 	 * apparently turn it on.  Not making use of DCR_IFPOE should also 	 * avoid Cheetah erratum #109. 	 */
-name|wr
-argument_list|(
-name|asr18
-argument_list|,
-name|rd
-argument_list|(
-name|asr18
-argument_list|)
-operator|&
-operator|~
-name|DCR_IFPOE
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 comment|/* Ensure the TSB Extension Registers hold 0 as TSB_Base. */
 name|stxa
@@ -237,7 +212,7 @@ argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure that the dt512_0 is set to hold 8k pages for all three 	 * contexts and configure the dt512_1 to hold 4MB pages for them 	 * (e.g. for direct mappings). 	 * NB: according to documentation, this requires a contex demap 	 * _before_ changing the corresponding page size, but we hardly 	 * can flush our locked pages here, so we use a demap all instead. 	 */
+comment|/* 	 * Configure the first large dTLB to hold 4MB pages (e.g. for direct 	 * mappings) for all three contexts and ensure the second one is set 	 * up to hold 8k pages for them.  Note that this is constraint by 	 * US-IV+, whose large dTLBs can only hold entries of certain page 	 * sizes each. 	 * For US-IV+, additionally ensure that the large iTLB is set up to 	 * hold 8k pages for nucleus and primary context (still no secondary 	 * iMMU context. 	 * NB: according to documentation, changing the page size of the same 	 * context requires a context demap before changing the corresponding 	 * page size, but we hardly can flush our locked pages here, so we use 	 * a demap all instead. 	 */
 name|stxa
 argument_list|(
 name|TLB_DEMAP_ALL
@@ -252,36 +227,74 @@ argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+operator|(
+name|TS_4M
+operator|<<
+name|TLB_PCXR_N_PGSZ0_SHIFT
+operator|)
+operator||
+operator|(
+name|TS_8K
+operator|<<
+name|TLB_PCXR_N_PGSZ1_SHIFT
+operator|)
+operator||
+operator|(
+name|TS_4M
+operator|<<
+name|TLB_PCXR_P_PGSZ0_SHIFT
+operator|)
+operator||
+operator|(
+name|TS_8K
+operator|<<
+name|TLB_PCXR_P_PGSZ1_SHIFT
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_ULTRASPARCIVp
+condition|)
+name|val
+operator||=
+operator|(
+name|TS_8K
+operator|<<
+name|TLB_PCXR_N_PGSZ_I_SHIFT
+operator|)
+operator||
+operator|(
+name|TS_8K
+operator|<<
+name|TLB_PCXR_P_PGSZ_I_SHIFT
+operator|)
+expr_stmt|;
 name|stxa
 argument_list|(
 name|AA_DMMU_PCXR
 argument_list|,
 name|ASI_DMMU
 argument_list|,
-operator|(
-name|TS_8K
-operator|<<
-name|TLB_PCXR_N_PGSZ0_SHIFT
-operator|)
-operator||
-operator|(
-name|TS_4M
-operator|<<
-name|TLB_PCXR_N_PGSZ1_SHIFT
-operator|)
-operator||
-operator|(
-name|TS_8K
-operator|<<
-name|TLB_PCXR_P_PGSZ0_SHIFT
-operator|)
-operator||
-operator|(
-name|TS_4M
-operator|<<
-name|TLB_PCXR_P_PGSZ1_SHIFT
-operator|)
+name|val
 argument_list|)
+expr_stmt|;
+name|val
+operator|=
+operator|(
+name|TS_4M
+operator|<<
+name|TLB_SCXR_S_PGSZ0_SHIFT
+operator|)
+operator||
+operator|(
+name|TS_8K
+operator|<<
+name|TLB_SCXR_S_PGSZ1_SHIFT
+operator|)
 expr_stmt|;
 name|stxa
 argument_list|(
@@ -289,22 +302,58 @@ name|AA_DMMU_SCXR
 argument_list|,
 name|ASI_DMMU
 argument_list|,
-operator|(
-name|TS_8K
-operator|<<
-name|TLB_SCXR_S_PGSZ0_SHIFT
-operator|)
-operator||
-operator|(
-name|TS_4M
-operator|<<
-name|TLB_SCXR_S_PGSZ1_SHIFT
-operator|)
+name|val
 argument_list|)
 expr_stmt|;
 name|flush
 argument_list|(
 name|KERNBASE
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Ensure DCR_IFPOE is disabled as long as we haven't implemented 	 * support for it (if ever) as most if not all firmware versions 	 * apparently turn it on.  Not making use of DCR_IFPOE should also 	 * avoid Cheetah erratum #109. 	 */
+name|val
+operator|=
+name|rd
+argument_list|(
+name|asr18
+argument_list|)
+operator|&
+operator|~
+name|DCR_IFPOE
+expr_stmt|;
+if|if
+condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_ULTRASPARCIVp
+condition|)
+block|{
+comment|/* 		 * Ensure the branch prediction mode is set to PC indexing 		 * in order to work around US-IV+ erratum #2. 		 */
+name|val
+operator|=
+operator|(
+name|val
+operator|&
+operator|~
+name|DCR_BPM_MASK
+operator|)
+operator||
+name|DCR_BPM_PC
+expr_stmt|;
+comment|/* 		 * XXX disable dTLB parity error reporting as otherwise we 		 * get seemingly false positives when copying in the user 		 * window by simulating a fill trap on return to usermode in 		 * case single issue is disabled, which thus appears to be 		 * a CPU bug. 		 */
+name|val
+operator|&=
+operator|~
+name|DCR_DTPE
+expr_stmt|;
+block|}
+name|wr
+argument_list|(
+name|asr18
+argument_list|,
+name|val
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|intr_restore
@@ -346,7 +395,7 @@ operator|==
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
 block|{
-comment|/* Disable P$ due to Cheetah erratum #18. */
+comment|/* Disable P$ due to US-III erratum #18. */
 name|lsu
 operator|&=
 operator|~
@@ -366,8 +415,10 @@ operator||
 name|LSU_DC
 argument_list|)
 expr_stmt|;
-name|CHEETAH_FLUSH_LSU_IC
-argument_list|()
+name|flush
+argument_list|(
+name|KERNBASE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -388,6 +439,14 @@ name|addr
 decl_stmt|,
 name|lsu
 decl_stmt|;
+name|register_t
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|addr
@@ -412,16 +471,31 @@ operator|.
 name|dc_linesize
 argument_list|)
 control|)
-name|stxa_sync
-argument_list|(
+comment|/* 		 * Note that US-IV+ additionally require a membar #Sync before 		 * a load or store to ASI_DCACHE_TAG. 		 */
+asm|__asm __volatile(
+literal|"membar #Sync;"
+literal|"stxa %%g0, [%0] %1;"
+literal|"membar #Sync"
+operator|:
+operator|:
+literal|"r"
+operator|(
 name|addr
-argument_list|,
+operator|)
+operator|,
+literal|"n"
+operator|(
 name|ASI_DCACHE_TAG
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
 comment|/* The I$ must be disabled when flushing it so ensure it's off. */
+end_comment
+
+begin_expr_stmt
 name|lsu
 operator|=
 name|ldxa
@@ -431,6 +505,9 @@ argument_list|,
 name|ASI_LSU_CTL_REG
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|stxa
 argument_list|(
 literal|0
@@ -445,9 +522,17 @@ name|LSU_IC
 operator|)
 argument_list|)
 expr_stmt|;
-name|CHEETAH_FLUSH_LSU_IC
-argument_list|()
+end_expr_stmt
+
+begin_expr_stmt
+name|flush
+argument_list|(
+name|KERNBASE
+argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|addr
@@ -476,15 +561,28 @@ argument_list|)
 operator|*
 literal|2
 control|)
-name|stxa_sync
-argument_list|(
+asm|__asm __volatile(
+literal|"stxa %%g0, [%0] %1;"
+literal|"membar #Sync"
+operator|:
+operator|:
+literal|"r"
+operator|(
 name|addr
-argument_list|,
+operator|)
+operator|,
+literal|"n"
+operator|(
 name|ASI_ICACHE_TAG
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+end_for
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|stxa
 argument_list|(
 literal|0
@@ -494,23 +592,38 @@ argument_list|,
 name|lsu
 argument_list|)
 expr_stmt|;
-name|CHEETAH_FLUSH_LSU_IC
-argument_list|()
+end_expr_stmt
+
+begin_expr_stmt
+name|flush
+argument_list|(
+name|KERNBASE
+argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
+
+begin_expr_stmt
+name|intr_restore
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * Flush a physical page from the data cache.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|cheetah_dcache_page_inval
-parameter_list|(
-name|vm_paddr_t
-name|spa
-parameter_list|)
+argument_list|(
+argument|vm_paddr_t spa
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|vm_paddr_t
 name|pa
@@ -581,7 +694,7 @@ name|cookie
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Flush a physical page from the intsruction cache.  Instruction cache  * consistency is maintained by hardware.  */

@@ -370,6 +370,7 @@ name|uint16_t
 name|cksum
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 

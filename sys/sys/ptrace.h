@@ -21,6 +21,12 @@ directive|include
 file|<sys/_sigset.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -808,7 +814,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_struct_decl

@@ -122,6 +122,11 @@ name|long
 name|entry_addr
 decl_stmt|;
 comment|/* entry address of target executable */
+name|unsigned
+name|long
+name|reloc_base
+decl_stmt|;
+comment|/* load address of image */
 name|char
 name|vmspace_destroyed
 decl_stmt|;
@@ -257,9 +262,9 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
+name|struct
+name|image_params
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|)

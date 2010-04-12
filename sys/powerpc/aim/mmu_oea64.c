@@ -6688,9 +6688,6 @@ expr_stmt|;
 name|SYNC
 argument_list|()
 expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -6710,6 +6707,9 @@ name|PMAP_LOCK
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|LOCK_TABLE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6822,15 +6822,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|UNLOCK_TABLE
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7067,6 +7067,18 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
+comment|/* 	 * Shortcut the direct-mapped case when applicable.  We never put 	 * anything but 1:1 mappings below VM_MIN_KERNEL_ADDRESS. 	 */
+if|if
+condition|(
+name|va
+operator|<
+name|VM_MIN_KERNEL_ADDRESS
+condition|)
+return|return
+operator|(
+name|va
+operator|)
+return|;
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -7279,12 +7291,17 @@ condition|)
 return|return
 name|FALSE
 return|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|loops
 operator|=
 literal|0
-expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -7303,16 +7320,11 @@ name|pvo_pmap
 operator|==
 name|pmap
 condition|)
-block|{
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|TRUE
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|++
@@ -7322,9 +7334,6 @@ literal|16
 condition|)
 break|break;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|FALSE
@@ -7388,9 +7397,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -7413,9 +7419,6 @@ literal|0
 condition|)
 name|count
 operator|++
-expr_stmt|;
-name|UNLOCK_TABLE
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -8319,9 +8322,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|pvo
@@ -8380,9 +8380,6 @@ name|pmap
 argument_list|)
 expr_stmt|;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9823,6 +9820,8 @@ operator|)
 operator|&
 operator|~
 operator|(
+name|LPTE_M
+operator||
 name|LPTE_CHG
 operator||
 name|LPTE_REF
@@ -10121,8 +10120,13 @@ operator|(
 name|TRUE
 operator|)
 return|;
-name|LOCK_TABLE
-argument_list|()
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -10160,9 +10164,6 @@ argument_list|,
 name|ptebit
 argument_list|)
 expr_stmt|;
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|MOEA_PVO_CHECK
 argument_list|(
 name|pvo
@@ -10196,6 +10197,9 @@ argument_list|)
 expr_stmt|;
 comment|/* sanity check */
 comment|/* 		 * See if this pvo has a valid PTE.  if so, fetch the 		 * REF/CHG bits from the valid PTE.  If the appropriate 		 * ptebit is set, cache it and return success. 		 */
+name|LOCK_TABLE
+argument_list|()
+expr_stmt|;
 name|pt
 operator|=
 name|moea64_pvo_to_pte
@@ -10261,10 +10265,10 @@ operator|)
 return|;
 block|}
 block|}
-block|}
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|FALSE
@@ -10305,6 +10309,14 @@ decl_stmt|;
 name|uint64_t
 name|rv
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Clear the cached value. 	 */
 name|rv
 operator|=
@@ -10329,9 +10341,6 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -10347,6 +10356,9 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
+name|LOCK_TABLE
+argument_list|()
+expr_stmt|;
 name|pt
 operator|=
 name|moea64_pvo_to_pte
@@ -10437,10 +10449,10 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
-block|}
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|origbit
@@ -10836,7 +10848,7 @@ name|pte
 operator|.
 name|pte_lo
 operator|&
-name|PTE_RPGN
+name|LPTE_RPGN
 operator|)
 operator||
 operator|(

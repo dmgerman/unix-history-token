@@ -4205,6 +4205,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vop_rename_fail
+parameter_list|(
+name|struct
+name|vop_rename_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

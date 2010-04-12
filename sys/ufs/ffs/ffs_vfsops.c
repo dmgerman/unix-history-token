@@ -3175,14 +3175,6 @@ name|devvp
 operator|->
 name|v_bufobj
 operator|.
-name|bo_private
-operator|=
-name|cp
-expr_stmt|;
-name|devvp
-operator|->
-name|v_bufobj
-operator|.
 name|bo_ops
 operator|=
 operator|&
