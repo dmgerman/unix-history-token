@@ -383,6 +383,24 @@ name|name_cache_size
 value|101
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1230,6 +1248,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 else|#
@@ -1247,6 +1267,8 @@ argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
+operator||
+name|O_BINARY
 argument_list|,
 literal|0666
 argument_list|)
@@ -1687,6 +1709,8 @@ operator|->
 name|filename
 argument_list|,
 name|O_RDWR
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if
@@ -3789,6 +3813,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_NONBLOCK
+operator||
+name|O_BINARY
 argument_list|)
 decl_stmt|;
 if|if
@@ -4046,6 +4072,8 @@ argument_list|(
 name|pathname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 if|if

@@ -2565,6 +2565,12 @@ name|fexists
 argument_list|(
 name|dir
 argument_list|)
+operator|&&
+operator|!
+name|issymlink
+argument_list|(
+name|dir
+argument_list|)
 condition|)
 block|{
 if|if

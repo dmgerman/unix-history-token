@@ -712,7 +712,7 @@ name|ngpcb
 operator|.
 name|sockdata
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* unconnected data socket */
 goto|goto
@@ -745,7 +745,7 @@ if|if
 condition|(
 name|info
 operator|.
-name|node
+name|node_id
 operator|==
 literal|0
 operator|||
@@ -766,14 +766,11 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"[%lx]:"
+literal|"[%x]:"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|info
 operator|.
-name|node
+name|node_id
 argument_list|)
 expr_stmt|;
 if|if

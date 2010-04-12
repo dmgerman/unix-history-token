@@ -203,7 +203,7 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|linelen
+name|extralen
 index|[
 literal|7
 index|]
@@ -846,6 +846,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|flag_nohighlight
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user doesn't want a highlighted today */
+end_comment
+
+begin_decl_stmt
+name|int
 name|flag_weeks
 decl_stmt|;
 end_decl_stmt
@@ -875,19 +885,8 @@ comment|/* switch date for backward compatibility */
 end_comment
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|term_so
-decl_stmt|,
-modifier|*
-name|term_se
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
-name|today
+name|highlightdate
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +924,41 @@ name|t
 parameter_list|,
 name|int
 name|w
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|firstday
+parameter_list|(
+name|int
+name|y
+parameter_list|,
+name|int
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|highlight
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+modifier|*
+name|extraletters
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -984,6 +1018,50 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|monthranger
+parameter_list|(
+name|int
+name|year
+parameter_list|,
+name|int
+name|m
+parameter_list|,
+name|int
+name|jd_flag
+parameter_list|,
+name|int
+name|before
+parameter_list|,
+name|int
+name|after
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|monthrangeb
+parameter_list|(
+name|int
+name|year
+parameter_list|,
+name|int
+name|m
+parameter_list|,
+name|int
+name|jd_flag
+parameter_list|,
+name|int
+name|before
+parameter_list|,
+name|int
+name|after
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|parsemonth
 parameter_list|(
@@ -1024,19 +1102,6 @@ name|julian
 parameter_list|,
 name|int
 name|orthodox
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|firstday
-parameter_list|(
-name|int
-name|y
-parameter_list|,
-name|int
-name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1103,50 +1168,6 @@ name|void
 name|usage
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|monthranger
-parameter_list|(
-name|int
-name|year
-parameter_list|,
-name|int
-name|jd_flag
-parameter_list|,
-name|int
-name|m
-parameter_list|,
-name|int
-name|before
-parameter_list|,
-name|int
-name|after
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|monthrangeb
-parameter_list|(
-name|int
-name|year
-parameter_list|,
-name|int
-name|jd_flag
-parameter_list|,
-name|int
-name|m
-parameter_list|,
-name|int
-name|before
-parameter_list|,
-name|int
-name|after
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1223,7 +1244,7 @@ literal|0
 decl_stmt|;
 comment|/* user called cal--backward compat. */
 name|int
-name|flag_hole_year
+name|flag_wholeyear
 init|=
 literal|0
 decl_stmt|;
@@ -1239,24 +1260,67 @@ name|flag_julian_day
 init|=
 literal|0
 decl_stmt|;
-comment|/* user wants the Julian day 					 * numbers */
+comment|/* user wants the Julian day numbers */
 name|int
 name|flag_orthodox
 init|=
 literal|0
 decl_stmt|;
-comment|/* use wants Orthodox easter */
+comment|/* user wants Orthodox easter */
 name|int
 name|flag_easter
 init|=
 literal|0
 decl_stmt|;
-comment|/* use wants easter date */
+comment|/* user wants easter date */
+name|int
+name|flag_3months
+init|=
+literal|0
+decl_stmt|;
+comment|/* user wants 3 month display (-3) */
+name|int
+name|flag_after
+init|=
+literal|0
+decl_stmt|;
+comment|/* user wants to see months after */
+name|int
+name|flag_before
+init|=
+literal|0
+decl_stmt|;
+comment|/* user wants to see months before */
+name|int
+name|flag_specifiedmonth
+init|=
+literal|0
+decl_stmt|;
+comment|/* user wants to see this month (-m) */
+name|int
+name|flag_givenmonth
+init|=
+literal|0
+decl_stmt|;
+comment|/* user has specified month [n] */
+name|int
+name|flag_givenyear
+init|=
+literal|0
+decl_stmt|;
+comment|/* user has specified year [n] */
 name|char
 modifier|*
 name|cp
 decl_stmt|;
 comment|/* character pointer */
+name|char
+modifier|*
+name|flag_today
+init|=
+name|NULL
+decl_stmt|;
+comment|/* debug: use date as being today */
 name|char
 modifier|*
 name|flag_month
@@ -1270,6 +1334,7 @@ name|flag_highlightdate
 init|=
 name|NULL
 decl_stmt|;
+comment|/* debug: date to highlight */
 name|int
 name|before
 decl_stmt|,
@@ -1281,69 +1346,14 @@ modifier|*
 name|locale
 decl_stmt|;
 comment|/* locale to get country code */
-name|char
-name|tbuf
-index|[
-literal|1024
-index|]
-decl_stmt|,
-name|cbuf
-index|[
-literal|512
-index|]
-decl_stmt|,
-modifier|*
-name|b
-decl_stmt|;
-comment|/* On how to highlight on this terminal */
-name|term_se
+name|flag_nohighlight
 operator|=
-name|term_so
-operator|=
-name|NULL
+literal|0
 expr_stmt|;
-if|if
-condition|(
-name|isatty
-argument_list|(
-name|STDOUT_FILENO
-argument_list|)
-operator|&&
-name|tgetent
-argument_list|(
-name|tbuf
-argument_list|,
-name|NULL
-argument_list|)
-operator|==
-literal|1
-condition|)
-block|{
-name|b
+name|flag_weeks
 operator|=
-name|cbuf
+literal|0
 expr_stmt|;
-name|term_so
-operator|=
-name|tgetstr
-argument_list|(
-literal|"so"
-argument_list|,
-operator|&
-name|b
-argument_list|)
-expr_stmt|;
-name|term_se
-operator|=
-name|tgetstr
-argument_list|(
-literal|"se"
-argument_list|,
-operator|&
-name|b
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Use locale to determine the country code, 	 * and use the country code to determine the default 	 * switchdate and date format from the switches table. 	 */
 if|if
 condition|(
@@ -1582,7 +1592,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"A:B:3Jbd:ehjm:ops:wy"
+literal|"3A:B:Cd:eH:hjJm:Nops:wy"
 argument_list|)
 operator|)
 operator|!=
@@ -1597,9 +1607,7 @@ block|{
 case|case
 literal|'3'
 case|:
-name|before
-operator|=
-name|after
+name|flag_3months
 operator|=
 literal|1
 expr_stmt|;
@@ -1607,7 +1615,20 @@ break|break;
 case|case
 literal|'A'
 case|:
-name|after
+if|if
+condition|(
+name|flag_after
+operator|>
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Double -A specified"
+argument_list|)
+expr_stmt|;
+name|flag_after
 operator|=
 name|strtol
 argument_list|(
@@ -1620,13 +1641,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|after
-operator|<
+name|flag_after
+operator|<=
 literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Argument to -A must be positive"
 argument_list|)
@@ -1635,7 +1656,20 @@ break|break;
 case|case
 literal|'B'
 case|:
-name|before
+if|if
+condition|(
+name|flag_before
+operator|>
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Double -A specified"
+argument_list|)
+expr_stmt|;
+name|flag_before
 operator|=
 name|strtol
 argument_list|(
@@ -1648,13 +1682,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|before
-operator|<
+name|flag_before
+operator|<=
 literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Argument to -B must be positive"
 argument_list|)
@@ -1684,7 +1718,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'b'
+literal|'C'
 case|:
 name|flag_backward
 operator|=
@@ -1692,7 +1726,23 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|flag_backward
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
+case|:
+name|flag_today
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
 case|:
 name|flag_highlightdate
 operator|=
@@ -1702,11 +1752,9 @@ break|break;
 case|case
 literal|'h'
 case|:
-name|term_so
+name|flag_nohighlight
 operator|=
-name|term_se
-operator|=
-name|NULL
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1735,9 +1783,24 @@ break|break;
 case|case
 literal|'m'
 case|:
+if|if
+condition|(
+name|flag_specifiedmonth
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Double -m specified"
+argument_list|)
+expr_stmt|;
 name|flag_month
 operator|=
 name|optarg
+expr_stmt|;
+name|flag_specifiedmonth
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1874,7 +1937,7 @@ break|break;
 case|case
 literal|'y'
 case|:
-name|flag_hole_year
+name|flag_wholeyear
 operator|=
 literal|1
 expr_stmt|;
@@ -1913,6 +1976,21 @@ operator|*
 name|argv
 operator|++
 expr_stmt|;
+name|flag_givenmonth
+operator|=
+literal|1
+expr_stmt|;
+name|m
+operator|=
+name|strtol
+argument_list|(
+name|flag_month
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|1
@@ -1923,7 +2001,6 @@ name|atoi
 argument_list|(
 operator|*
 name|argv
-operator|++
 argument_list|)
 expr_stmt|;
 if|if
@@ -1940,20 +2017,16 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"year %d not in range 1..9999"
+literal|"year `%s' not in range 1..9999"
 argument_list|,
-name|y
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
-name|before
-operator|=
-literal|0
+name|argv
+operator|++
 expr_stmt|;
-name|after
-operator|=
-literal|11
-expr_stmt|;
-name|m
+name|flag_givenyear
 operator|=
 literal|1
 expr_stmt|;
@@ -1961,6 +2034,39 @@ break|break;
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|flag_today
+operator|!=
+name|NULL
+condition|)
+block|{
+name|y
+operator|=
+name|strtol
+argument_list|(
+name|flag_today
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|m
+operator|=
+name|strtol
+argument_list|(
+name|flag_today
+operator|+
+literal|5
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|time_t
 name|t
@@ -2001,28 +2107,6 @@ name|tm_mon
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|before
-operator|==
-operator|-
-literal|1
-condition|)
-name|before
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|after
-operator|==
-operator|-
-literal|1
-condition|)
-name|after
-operator|=
-literal|0
-expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -2062,6 +2146,243 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * What is not supported: 	 * -3 with -A or -B 	 *	-3 displays 3 months, -A and -B change that behaviour. 	 * -3 with -y 	 *	-3 displays 3 months, -y says display a whole year. 	 * -3 with a given year but no given month or without -m 	 *	-3 displays 3 months, no month specified doesn't make clear 	 *      which three months. 	 * -m with a given month 	 *	conflicting arguments, both specify the same field. 	 * -y with -m 	 *	-y displays the whole year, -m displays a single month. 	 * -y with a given month 	 *	-y displays the whole year, the given month displays a single 	 *	month. 	 * -y with -A or -B 	 *	-y displays the whole year, -A and -B display extra months. 	 */
+comment|/* -3 together with -A or -B. */
+if|if
+condition|(
+name|flag_3months
+operator|&&
+operator|(
+name|flag_after
+operator|||
+name|flag_before
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-3 together with -A and -B is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -3 together with -y. */
+if|if
+condition|(
+name|flag_3months
+operator|&&
+name|flag_wholeyear
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-3 together with -y is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -3 together with givenyear but no givenmonth. */
+if|if
+condition|(
+name|flag_3months
+operator|&&
+name|flag_givenyear
+operator|&&
+operator|!
+operator|(
+name|flag_givenmonth
+operator|||
+name|flag_specifiedmonth
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-3 together with a given year but no given month is "
+literal|"not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -m together with xx xxxx. */
+if|if
+condition|(
+name|flag_specifiedmonth
+operator|&&
+name|flag_givenmonth
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-m together with a given month is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -y together with -m. */
+if|if
+condition|(
+name|flag_wholeyear
+operator|&&
+name|flag_specifiedmonth
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-y together with -m is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -y together with xx xxxx. */
+if|if
+condition|(
+name|flag_wholeyear
+operator|&&
+name|flag_givenmonth
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-y together a given month is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* -y together with -A or -B. */
+if|if
+condition|(
+name|flag_wholeyear
+operator|&&
+operator|(
+name|flag_before
+operator|>
+literal|0
+operator|||
+name|flag_after
+operator|>
+literal|0
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-y together a -A or -B is not supported."
+argument_list|)
+expr_stmt|;
+comment|/* The rest should be fine. */
+comment|/* Select the period to display, in order of increasing priority .*/
+if|if
+condition|(
+name|flag_wholeyear
+operator|||
+operator|(
+name|flag_givenyear
+operator|&&
+operator|!
+operator|(
+name|flag_givenmonth
+operator|||
+name|flag_specifiedmonth
+operator|)
+operator|)
+condition|)
+block|{
+name|m
+operator|=
+literal|1
+expr_stmt|;
+name|before
+operator|=
+literal|0
+expr_stmt|;
+name|after
+operator|=
+literal|11
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_givenyear
+operator|&&
+name|flag_givenmonth
+condition|)
+block|{
+name|before
+operator|=
+literal|0
+expr_stmt|;
+name|after
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_specifiedmonth
+condition|)
+block|{
+name|before
+operator|=
+literal|0
+expr_stmt|;
+name|after
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_before
+condition|)
+block|{
+name|before
+operator|=
+name|flag_before
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_after
+condition|)
+block|{
+name|after
+operator|=
+name|flag_after
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_3months
+condition|)
+block|{
+name|before
+operator|=
+literal|1
+expr_stmt|;
+name|after
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|after
+operator|==
+operator|-
+literal|1
+condition|)
+name|after
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|before
+operator|==
+operator|-
+literal|1
+condition|)
+name|before
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Highlight a specified day or today .*/
 if|if
 condition|(
 name|flag_highlightdate
@@ -2167,7 +2488,7 @@ operator|->
 name|tm_mday
 expr_stmt|;
 block|}
-name|today
+name|highlightdate
 operator|=
 name|sndaysb
 argument_list|(
@@ -2175,6 +2496,7 @@ operator|&
 name|dt
 argument_list|)
 expr_stmt|;
+comment|/* And now we finally start to calculate and output calendars. */
 if|if
 condition|(
 name|flag_easter
@@ -2197,9 +2519,9 @@ name|monthrangeb
 argument_list|(
 name|y
 argument_list|,
-name|flag_julian_day
-argument_list|,
 name|m
+argument_list|,
+name|flag_julian_day
 argument_list|,
 name|before
 argument_list|,
@@ -2211,9 +2533,9 @@ name|monthranger
 argument_list|(
 name|y
 argument_list|,
-name|flag_julian_day
-argument_list|,
 name|m
+argument_list|,
+name|flag_julian_day
 argument_list|,
 name|before
 argument_list|,
@@ -2238,11 +2560,12 @@ parameter_list|)
 block|{
 name|fputs
 argument_list|(
-literal|"usage: cal [-hjy] [[month] year]\n"
-literal|"       cal [-hj] [-m month] [year]\n"
-literal|"       ncal [-hJjpwy] [-s country_code] [[month] year]\n"
-literal|"       ncal [-hJeo] [year]\n"
-literal|"for debug the highlighting: [-b] [-d yyyy-mm-dd]\n"
+literal|"Usage: cal [general options] [-hjy] [[month] year]\n"
+literal|"       cal [general options] [-hj] [-m month] [year]\n"
+literal|"       ncal [general options] [-hJjpwy] [-s country_code] [[month] year]\n"
+literal|"       ncal [general options] [-hJeo] [year]\n"
+literal|"General options: [-NC3] [-A months] [-B months]\n"
+literal|"For debug the highlighting: [-H yyyy-mm-dd] [-d yyyy-mm]\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -2256,7 +2579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* print the assumed switches for all countries */
+comment|/* Print the assumed switches for all countries. */
 end_comment
 
 begin_function
@@ -2380,7 +2703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* print the date of easter sunday */
+comment|/* Print the date of easter sunday. */
 end_comment
 
 begin_function
@@ -2557,12 +2880,9 @@ name|MW
 parameter_list|(
 name|mw
 parameter_list|,
-name|ms
-parameter_list|,
-name|ml
+name|me
 parameter_list|)
-define|\
-value|strlen(ms)> (ml) ? (mw) + 9 : (mw)
+value|((mw) + me)
 end_define
 
 begin_define
@@ -2611,6 +2931,10 @@ parameter_list|)
 value|(1 + (m) % 12)
 end_define
 
+begin_comment
+comment|/* Print all months for the period in the range [ before .. y-m .. after ]. */
+end_comment
+
 begin_function
 name|void
 name|monthrangeb
@@ -2619,10 +2943,10 @@ name|int
 name|y
 parameter_list|,
 name|int
-name|jd_flag
+name|m
 parameter_list|,
 name|int
-name|m
+name|jd_flag
 parameter_list|,
 name|int
 name|before
@@ -2866,7 +3190,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Year at the top */
+comment|/* Year at the top. */
 if|if
 condition|(
 name|printyearheader
@@ -2915,7 +3239,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Month names */
+comment|/* Month names. */
 for|for
 control|(
 name|i
@@ -3004,7 +3328,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Day of the week names */
+comment|/* Day of the week names. */
 for|for
 control|(
 name|i
@@ -3093,6 +3417,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* And the days of the month. */
 for|for
 control|(
 name|i
@@ -3124,7 +3449,20 @@ name|printf
 argument_list|(
 literal|"%-*s  "
 argument_list|,
+name|MW
+argument_list|(
 name|mw
+argument_list|,
+name|year
+index|[
+name|j
+index|]
+operator|.
+name|extralen
+index|[
+name|i
+index|]
+argument_list|)
 argument_list|,
 name|year
 index|[
@@ -3161,10 +3499,10 @@ name|int
 name|y
 parameter_list|,
 name|int
-name|jd_flag
+name|m
 parameter_list|,
 name|int
-name|m
+name|jd_flag
 parameter_list|,
 name|int
 name|before
@@ -3368,7 +3706,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-comment|/* Empty line between two rows of months */
+comment|/* Empty line between two rows of months. */
 if|if
 condition|(
 name|m
@@ -3380,7 +3718,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Year at the top */
+comment|/* Year at the top. */
 if|if
 condition|(
 name|printyearheader
@@ -3429,7 +3767,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Month names */
+comment|/* Month names. */
 name|wprintf
 argument_list|(
 literal|L"    "
@@ -3505,6 +3843,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* And the days of the month. */
 for|for
 control|(
 name|i
@@ -3559,17 +3898,7 @@ index|[
 name|j
 index|]
 operator|.
-name|lines
-index|[
-name|i
-index|]
-argument_list|,
-name|year
-index|[
-name|j
-index|]
-operator|.
-name|linelen
+name|extralen
 index|[
 name|i
 index|]
@@ -3592,6 +3921,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Week numbers. */
 if|if
 condition|(
 name|flag_weeks
@@ -3839,7 +4169,7 @@ argument_list|(
 name|first
 argument_list|)
 expr_stmt|;
-comment|/* Set ds (daystring) and dw (daywidth) according to the jd_flag */
+comment|/* Set ds (daystring) and dw (daywidth) according to the jd_flag. */
 if|if
 condition|(
 name|jd_flag
@@ -3912,148 +4242,6 @@ block|{
 if|if
 condition|(
 name|j
-operator|==
-name|today
-operator|&&
-operator|(
-name|term_so
-operator|!=
-name|NULL
-operator|&&
-name|term_se
-operator|!=
-name|NULL
-operator|)
-condition|)
-block|{
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|term_so
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|jd_flag
-condition|)
-name|dt
-operator|.
-name|d
-operator|=
-name|j
-operator|-
-name|jan1
-operator|+
-literal|1
-expr_stmt|;
-else|else
-name|sdateb
-argument_list|(
-name|j
-argument_list|,
-operator|&
-name|dt
-argument_list|)
-expr_stmt|;
-comment|/* separator */
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-index|[
-name|k
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-comment|/* the actual text */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-name|l
-argument_list|,
-name|ds
-operator|+
-name|dt
-operator|.
-name|d
-operator|*
-name|dw
-argument_list|,
-name|dw
-argument_list|)
-expr_stmt|;
-comment|/* highlight on */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-literal|1
-argument_list|,
-name|term_so
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-comment|/* highlight off */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-name|l
-operator|+
-name|dw
-argument_list|,
-name|term_se
-argument_list|,
-name|strlen
-argument_list|(
-name|term_se
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|term_se
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|term_so
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|j
 operator|>=
 name|first
 condition|)
@@ -4081,6 +4269,41 @@ operator|&
 name|dt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+name|highlightdate
+operator|&&
+operator|!
+name|flag_nohighlight
+condition|)
+name|highlight
+argument_list|(
+name|mlines
+operator|->
+name|lines
+index|[
+name|i
+index|]
+operator|+
+name|k
+argument_list|,
+name|ds
+operator|+
+name|dt
+operator|.
+name|d
+operator|*
+name|dw
+argument_list|,
+name|dw
+argument_list|,
+operator|&
+name|l
+argument_list|)
+expr_stmt|;
+else|else
 name|memcpy
 argument_list|(
 name|mlines
@@ -4142,15 +4365,15 @@ literal|'\0'
 expr_stmt|;
 name|mlines
 operator|->
-name|linelen
+name|extralen
 index|[
 name|i
 index|]
 operator|=
-name|k
+name|l
 expr_stmt|;
 block|}
-comment|/* fill the weeknumbers */
+comment|/* fill the weeknumbers. */
 if|if
 condition|(
 name|flag_weeks
@@ -4325,7 +4548,7 @@ operator|=
 literal|3
 expr_stmt|;
 block|}
-comment|/* Set name of month centered */
+comment|/* Set name of month centered. */
 name|memset
 argument_list|(
 operator|&
@@ -4581,148 +4804,6 @@ block|{
 if|if
 condition|(
 name|j
-operator|==
-name|today
-operator|&&
-operator|(
-name|term_so
-operator|!=
-name|NULL
-operator|&&
-name|term_se
-operator|!=
-name|NULL
-operator|)
-condition|)
-block|{
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|term_so
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|jd_flag
-condition|)
-name|dt
-operator|.
-name|d
-operator|=
-name|j
-operator|-
-name|jan1
-operator|+
-literal|1
-expr_stmt|;
-else|else
-name|sdateb
-argument_list|(
-name|j
-argument_list|,
-operator|&
-name|dt
-argument_list|)
-expr_stmt|;
-comment|/* separator */
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-index|[
-name|k
-index|]
-operator|=
-literal|' '
-expr_stmt|;
-comment|/* the actual text */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-name|l
-argument_list|,
-name|ds
-operator|+
-name|dt
-operator|.
-name|d
-operator|*
-name|dw
-argument_list|,
-name|dw
-argument_list|)
-expr_stmt|;
-comment|/* highlight on */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-literal|1
-argument_list|,
-name|term_so
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-comment|/* highlight off */
-name|memcpy
-argument_list|(
-name|mlines
-operator|->
-name|lines
-index|[
-name|i
-index|]
-operator|+
-name|k
-operator|+
-name|l
-operator|+
-name|dw
-argument_list|,
-name|term_se
-argument_list|,
-name|strlen
-argument_list|(
-name|term_se
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|term_se
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|term_so
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|j
 operator|>=
 name|first
 condition|)
@@ -4750,6 +4831,41 @@ operator|&
 name|dt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+name|highlightdate
+operator|&&
+operator|!
+name|flag_nohighlight
+condition|)
+name|highlight
+argument_list|(
+name|mlines
+operator|->
+name|lines
+index|[
+name|i
+index|]
+operator|+
+name|k
+argument_list|,
+name|ds
+operator|+
+name|dt
+operator|.
+name|d
+operator|*
+name|dw
+argument_list|,
+name|dw
+argument_list|,
+operator|&
+name|l
+argument_list|)
+expr_stmt|;
+else|else
 name|memcpy
 argument_list|(
 name|mlines
@@ -4828,12 +4944,21 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|mlines
+operator|->
+name|extralen
+index|[
+name|i
+index|]
+operator|=
+name|l
+expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Put the local names of weekdays into the wds */
+comment|/* Put the local names of weekdays into the wds. */
 end_comment
 
 begin_function
@@ -5017,7 +5142,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute the day number of the first  * existing date after the first day in month.  * (the first day in month and even the month might not exist!)  */
+comment|/*  * Compute the day number of the first existing date after the first day in  * month. (the first day in month and even the month might not exist!)  */
 end_comment
 
 begin_function
@@ -5213,7 +5338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Inverse of sndays */
+comment|/* Inverse of sndays. */
 end_comment
 
 begin_function
@@ -5262,7 +5387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Inverse of sndaysb */
+comment|/* Inverse of sndaysb. */
 end_comment
 
 begin_function
@@ -5311,7 +5436,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Center string t in string s of length w by putting enough leading blanks */
+comment|/* Center string t in string s of length w by putting enough leading blanks. */
 end_comment
 
 begin_function
@@ -5383,7 +5508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Center string t in string s of length w by putting enough leading blanks */
+comment|/* Center string t in string s of length w by putting enough leading blanks. */
 end_comment
 
 begin_function
@@ -5657,6 +5782,289 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|highlight
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+modifier|*
+name|extralen
+parameter_list|)
+block|{
+specifier|static
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|term_so
+decl_stmt|,
+modifier|*
+name|term_se
+decl_stmt|;
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|char
+name|tbuf
+index|[
+literal|1024
+index|]
+decl_stmt|,
+name|cbuf
+index|[
+literal|512
+index|]
+decl_stmt|,
+modifier|*
+name|b
+decl_stmt|;
+name|term_se
+operator|=
+name|term_so
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* On how to highlight on this type of terminal (if any). */
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+operator|&&
+name|tgetent
+argument_list|(
+name|tbuf
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|b
+operator|=
+name|cbuf
+expr_stmt|;
+name|term_so
+operator|=
+name|tgetstr
+argument_list|(
+literal|"so"
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|term_se
+operator|=
+name|tgetstr
+argument_list|(
+literal|"se"
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+block|}
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * This check is not necessary, should have been handled before calling 	 * this function. 	 */
+if|if
+condition|(
+name|flag_nohighlight
+condition|)
+block|{
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If it is a real terminal, use the data from the termcap database. 	 */
+if|if
+condition|(
+name|term_so
+operator|!=
+name|NULL
+operator|&&
+name|term_se
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* separator. */
+name|dst
+index|[
+literal|0
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|dst
+operator|++
+expr_stmt|;
+comment|/* highlight on. */
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|term_so
+argument_list|,
+name|strlen
+argument_list|(
+name|term_so
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+name|strlen
+argument_list|(
+name|term_so
+argument_list|)
+expr_stmt|;
+comment|/* the actual text. (minus leading space) */
+name|len
+operator|--
+expr_stmt|;
+name|src
+operator|++
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+name|len
+expr_stmt|;
+comment|/* highlight off. */
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+name|term_se
+argument_list|,
+name|strlen
+argument_list|(
+name|term_se
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|extralen
+operator|=
+name|strlen
+argument_list|(
+name|term_so
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|term_se
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Otherwise, print a _, backspace and the letter. 	 */
+operator|*
+name|extralen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* skip leading space. */
+name|src
+operator|++
+expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+comment|/* separator. */
+name|dst
+index|[
+literal|0
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|dst
+operator|++
+expr_stmt|;
+while|while
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* _ and backspace. */
+name|memcpy
+argument_list|(
+name|dst
+argument_list|,
+literal|"_\010"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|dst
+operator|+=
+literal|2
+expr_stmt|;
+operator|*
+name|extralen
+operator|+=
+literal|2
+expr_stmt|;
+comment|/* the character. */
+operator|*
+name|dst
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+block|}
+return|return;
 block|}
 end_function
 

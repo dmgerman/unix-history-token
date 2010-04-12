@@ -1917,7 +1917,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|st_atimespec
+name|st_atim
 argument_list|)
 expr_stmt|;
 name|TIMESPEC_TO_TIMEVAL
@@ -1931,7 +1931,7 @@ argument_list|,
 operator|&
 name|fs
 operator|->
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 if|if

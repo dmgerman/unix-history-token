@@ -445,7 +445,7 @@ expr_stmt|;
 else|else
 name|errx
 argument_list|(
-literal|2
+name|EXIT_FAILURE
 argument_list|,
 literal|"directory already set"
 argument_list|)
@@ -740,7 +740,7 @@ argument_list|)
 condition|)
 name|errx
 argument_list|(
-literal|2
+name|EXIT_FAILURE
 argument_list|,
 literal|"%s isn't a directory"
 argument_list|,
@@ -1105,9 +1105,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
-literal|2
+name|EXIT_FAILURE
 argument_list|,
 literal|"Unable to find root of source tree"
 argument_list|)
@@ -2327,7 +2327,7 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We print first part of the tamplate, replace our tag with 	 * configuration files content and later continue writing our 	 * template. 	 */
+comment|/*  	 * We print first part of the template, replace our tag with 	 * configuration files content and later continue writing our 	 * template. 	 */
 name|p
 operator|=
 name|strstr
@@ -3103,6 +3103,19 @@ name|hl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hl
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"calloc"
+argument_list|)
+expr_stmt|;
 name|hl
 operator|->
 name|h_name
@@ -3188,7 +3201,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -3214,7 +3227,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -3254,7 +3267,7 @@ name|fp
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -3280,7 +3293,7 @@ name|o
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
@@ -3411,7 +3424,7 @@ name|r
 operator|!=
 literal|0
 condition|)
-name|errx
+name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,

@@ -73,45 +73,18 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__IDSTRING
-end_ifdef
-
-begin_expr_stmt
-name|__IDSTRING
-argument_list|(
-name|dotat
-argument_list|,
-literal|"$dotat: unifdef/unifdef.c,v 1.198 2010/02/19 16:37:05 fanf2 Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FBSDID
-end_ifdef
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|const
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) $Version: unifdef-2.3 $\n"
+literal|"@(#) $FreeBSD$\n"
+literal|"@(#) $Author: Tony Finch (dot@dotat.at) $\n"
+literal|"@(#) $URL: http://dotat.at/prog/unifdef $\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* types of input lines: */
@@ -577,6 +550,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|bool
+name|symdepth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -S: output symbol depth */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
 name|text
 decl_stmt|;
 end_decl_stmt
@@ -912,6 +896,30 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|bool
+name|zerosyms
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* to format symdepth output */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|firstsym
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ditto */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|int
 name|exitstat
 decl_stmt|;
@@ -1169,6 +1177,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1210,7 +1228,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:D:U:I:o:BbcdeKklnst"
+literal|"i:D:U:I:o:bBcdeKklnsStV"
 argument_list|)
 operator|)
 operator|!=
@@ -1303,15 +1321,6 @@ case|:
 comment|/* no-op for compatibility with cpp */
 break|break;
 case|case
-literal|'B'
-case|:
-comment|/* compress blank lines around removed section */
-name|compblank
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
 literal|'b'
 case|:
 comment|/* blank deleted lines instead of omitting them */
@@ -1320,6 +1329,15 @@ literal|'l'
 case|:
 comment|/* backwards compatibility */
 name|lnblank
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+comment|/* compress blank lines around removed section */
+name|compblank
 operator|=
 name|true
 expr_stmt|;
@@ -1396,6 +1414,17 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+comment|/* list symbols with their nesting depth */
+name|symlist
+operator|=
+name|symdepth
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 comment|/* don't parse C comments */
@@ -1404,6 +1433,13 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+comment|/* print version */
+name|version
+argument_list|()
+expr_stmt|;
 default|default:
 name|usage
 argument_list|()
@@ -1474,7 +1510,7 @@ name|fopen
 argument_list|(
 name|filename
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1706,7 +1742,7 @@ name|fdopen
 argument_list|(
 name|ofd
 argument_list|,
-literal|"w+"
+literal|"wb+"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1730,7 +1766,13 @@ name|ist
 operator|.
 name|st_mode
 operator|&
-name|ACCESSPERMS
+operator|(
+name|S_IRWXU
+operator||
+name|S_IRWXG
+operator||
+name|S_IRWXO
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1742,7 +1784,7 @@ name|fopen
 argument_list|(
 name|ofilename
 argument_list|,
-literal|"w"
+literal|"wb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1775,6 +1817,74 @@ end_function
 begin_function
 specifier|static
 name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|c
+init|=
+name|copyright
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+while|while
+condition|(
+operator|*
+operator|++
+name|c
+operator|!=
+literal|'$'
+condition|)
+if|if
+condition|(
+operator|*
+name|c
+operator|==
+literal|'\0'
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|c
+operator|!=
+literal|'$'
+condition|)
+name|putc
+argument_list|(
+operator|*
+name|c
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|usage
 parameter_list|(
 name|void
@@ -1784,7 +1894,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unifdef [-BbcdeKknst] [-Ipath]"
+literal|"usage: unifdef [-bBcdeKknsStV] [-Ipath]"
 literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;
@@ -3254,6 +3364,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|debugging
+condition|)
+name|fflush
+argument_list|(
+name|output
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3269,9 +3388,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|Linetype
-name|lineval
-decl_stmt|;
 comment|/* When compressing blank lines, act as if the file 	   is preceded by a large number of blank lines. */
 name|blankmax
 operator|=
@@ -3285,14 +3401,12 @@ init|;
 condition|;
 control|)
 block|{
-name|linenum
-operator|++
-expr_stmt|;
+name|Linetype
 name|lineval
-operator|=
+init|=
 name|parseline
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|trans_table
 index|[
 name|ifstate
@@ -3308,7 +3422,9 @@ operator|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"process %s -> %s depth %d"
+literal|"process line %d %s -> %s depth %d"
+argument_list|,
+name|linenum
 argument_list|,
 name|linetype_name
 index|[
@@ -3342,6 +3458,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|symdepth
+operator|&&
+operator|!
+name|zerosyms
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fclose
@@ -3487,6 +3615,9 @@ decl_stmt|;
 name|Comment_state
 name|wascomment
 decl_stmt|;
+name|linenum
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|fgets
@@ -3573,6 +3704,10 @@ block|{
 name|linestate
 operator|=
 name|LS_HASH
+expr_stmt|;
+name|firstsym
+operator|=
+name|true
 expr_stmt|;
 name|cp
 operator|=
@@ -4040,7 +4175,9 @@ expr_stmt|;
 block|}
 name|debug
 argument_list|(
-literal|"parser %s comment %s line"
+literal|"parser line %d state %s comment %s line"
+argument_list|,
+name|linenum
 argument_list|,
 name|comment_name
 index|[
@@ -6370,9 +6507,40 @@ condition|(
 name|symlist
 condition|)
 block|{
+if|if
+condition|(
+name|symdepth
+operator|&&
+name|firstsym
+condition|)
 name|printf
 argument_list|(
-literal|"%.*s\n"
+literal|"%s%3d"
+argument_list|,
+name|zerosyms
+condition|?
+literal|""
+else|:
+literal|"\n"
+argument_list|,
+name|depth
+argument_list|)
+expr_stmt|;
+name|firstsym
+operator|=
+name|zerosyms
+operator|=
+name|false
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s%.*s%s"
+argument_list|,
+name|symdepth
+condition|?
+literal|" "
+else|:
+literal|""
 argument_list|,
 call|(
 name|int
@@ -6384,6 +6552,12 @@ name|str
 argument_list|)
 argument_list|,
 name|str
+argument_list|,
+name|symdepth
+condition|?
+literal|""
+else|:
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* we don't care about the value of the symbol */
@@ -6619,6 +6793,28 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|debug
+argument_list|(
+literal|"addsym %s=%s"
+argument_list|,
+name|symname
+index|[
+name|symind
+index|]
+argument_list|,
+name|value
+index|[
+name|symind
+index|]
+condition|?
+name|value
+index|[
+name|symind
+index|]
+else|:
+literal|"undef"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

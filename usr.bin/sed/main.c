@@ -484,7 +484,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EI:ae:f:i:ln"
+literal|"EI:ae:f:i:lnr"
 argument_list|)
 operator|)
 operator|!=
@@ -496,6 +496,10 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'r'
+case|:
+comment|/* Gnu sed compat */
 case|case
 literal|'E'
 case|:

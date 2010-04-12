@@ -1392,7 +1392,7 @@ argument_list|,
 operator|&
 name|sb
 operator|.
-name|st_mtimespec
+name|st_mtim
 argument_list|)
 expr_stmt|;
 operator|(
