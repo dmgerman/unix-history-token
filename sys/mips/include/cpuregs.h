@@ -133,35 +133,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIPS_MAX_MEM_ADDR
-value|0xbe000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_RESERVED_ADDR
-value|0xbfc80000
-end_define
-
-begin_comment
-comment|/* Map virtual address to index in mips3 r4k virtually-indexed cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS3_VA_TO_CINDEX
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((unsigned)(x)& 0xffffff | MIPS_KSEG0_START)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MIPS_PHYS_TO_XKPHYS
 parameter_list|(
 name|cca
@@ -2280,6 +2251,13 @@ define|#
 directive|define
 name|MIPS_CONFIG1_TLBSZ_SHIFT
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_MAX_TLB_ENTRIES
+value|64
 end_define
 
 begin_define

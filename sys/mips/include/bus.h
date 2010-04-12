@@ -3322,6 +3322,13 @@ name|BUS_SPACE_MAXSIZE
 value|0xFFFFFFFF
 end_define
 
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_UNRESTRICTED
+value|(~0)
+end_define
+
 begin_comment
 comment|/*   * declare generic bus space, it suits all needs in   */
 end_comment

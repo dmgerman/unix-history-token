@@ -419,7 +419,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|MipsKernTLBInvalidException
+name|MipsTLBInvalidException
 parameter_list|(
 name|void
 parameter_list|)
@@ -447,15 +447,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|MipsUserIntr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|MipsUserTLBInvalidException
 parameter_list|(
 name|void
 parameter_list|)

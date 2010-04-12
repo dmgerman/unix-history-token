@@ -2847,10 +2847,6 @@ block|{
 name|uint64_t
 name|platform_counter_freq
 decl_stmt|;
-name|boothowto
-operator||=
-name|RB_SINGLE
-expr_stmt|;
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
@@ -3287,6 +3283,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OCTEON_BOARD_TYPE_CN3010_EVB_HS5
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|OCTEON_CLOCK_MIN
 value|(100 * 1000 * 1000)
 end_define
@@ -3326,22 +3329,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|octeon_board_type
+condition|)
+block|{
+case|case
+name|OCTEON_BOARD_TYPE_NONE
+case|:
+case|case
+name|OCTEON_BOARD_TYPE_SIM
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|OCTEON_BOARD_TYPE_CN3010_EVB_HS5
+case|:
+comment|/* 		 * XXX 		 * The CAM-0100 identifies itself as type 11, revision 0.0, 		 * despite its being rather real.  Disable the revision check 		 * for type 11. 		 */
+return|return
+literal|1
+return|;
+default|default:
 if|if
 condition|(
-operator|(
-name|octeon_board_type
-operator|==
-name|OCTEON_BOARD_TYPE_NONE
-operator|)
-operator|||
-operator|(
-name|octeon_board_type
-operator|==
-name|OCTEON_BOARD_TYPE_SIM
-operator|)
-operator|||
-operator|!
 name|octeon_board_rev_major
+operator|==
+literal|0
 condition|)
 return|return
 literal|0
@@ -3349,6 +3363,7 @@ return|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 end_function
 

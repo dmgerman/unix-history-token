@@ -452,10 +452,10 @@ comment|/* external interrupt */
 function_decl|MipsKernGenException
 operator|,
 comment|/* TLB modification */
-function_decl|MipsKernTLBInvalidException
+function_decl|MipsTLBInvalidException
 operator|,
 comment|/* TLB miss (load or instr. fetch) */
-function_decl|MipsKernTLBInvalidException
+function_decl|MipsTLBInvalidException
 operator|,
 comment|/* TLB miss (store) */
 function_decl|MipsKernGenException
@@ -549,10 +549,10 @@ comment|/* 0 */
 function_decl|MipsUserGenException
 operator|,
 comment|/* 1 */
-function_decl|MipsUserTLBInvalidException
+function_decl|MipsTLBInvalidException
 operator|,
 comment|/* 2 */
-function_decl|MipsUserTLBInvalidException
+function_decl|MipsTLBInvalidException
 operator|,
 comment|/* 3 */
 function_decl|MipsUserGenException

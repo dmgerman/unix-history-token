@@ -198,13 +198,6 @@ name|NUM_MIPS_IRQS
 value|6
 end_define
 
-begin_define
-define|#
-directive|define
-name|MIPS_MEM_RID
-value|0x20
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
