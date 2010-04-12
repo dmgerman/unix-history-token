@@ -288,7 +288,7 @@ name|ktr_cpumask
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of CPUs on which KTR logging is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -328,7 +328,7 @@ name|ktr_mask
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of KTR event classes for which logging is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -357,7 +357,7 @@ name|ktr_compile
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Bitmask of KTR event classes compiled into the kernel"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -386,7 +386,7 @@ name|ktr_entries
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of entries in the KTR buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -415,7 +415,7 @@ name|ktr_version
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Version of the KTR interface"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

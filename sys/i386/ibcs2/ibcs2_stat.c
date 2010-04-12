@@ -318,7 +318,9 @@ name|ibcs2_time_t
 operator|)
 name|st
 operator|->
-name|st_atime
+name|st_atim
+operator|.
+name|tv_sec
 expr_stmt|;
 name|st4
 operator|->
@@ -329,7 +331,9 @@ name|ibcs2_time_t
 operator|)
 name|st
 operator|->
-name|st_mtime
+name|st_mtim
+operator|.
+name|tv_sec
 expr_stmt|;
 name|st4
 operator|->
@@ -340,7 +344,9 @@ name|ibcs2_time_t
 operator|)
 name|st
 operator|->
-name|st_ctime
+name|st_ctim
+operator|.
+name|tv_sec
 expr_stmt|;
 block|}
 end_function

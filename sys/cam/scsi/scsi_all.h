@@ -477,6 +477,14 @@ name|SMS_DISCONNECT_RECONNECT_PAGE
 value|0x02
 define|#
 directive|define
+name|SMS_FORMAT_DEVICE_PAGE
+value|0x03
+define|#
+directive|define
+name|SMS_GEOMETRY_PAGE
+value|0x04
+define|#
+directive|define
 name|SMS_CACHE_PAGE
 value|0x08
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -148,6 +148,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_SUBDEV_ID_82599_KX4_KR_MEZZ
+value|0x000C
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82599_CX4
 value|0x10F9
 end_define
@@ -164,6 +171,13 @@ define|#
 directive|define
 name|IXGBE_DEV_ID_82599_XAUI_LOM
 value|0x10FC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_DEV_ID_82599_T3_LOM
+value|0x151C
 end_define
 
 begin_comment
@@ -351,7 +365,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* Advanced Power Management Enable */
+comment|/* APM enabled in EEPROM */
 end_comment
 
 begin_define
@@ -2036,12 +2050,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_WUC_ADVD3WUC
+name|IXGBE_WUC_WKEN
 value|0x00000010
 end_define
 
 begin_comment
-comment|/* D3Cold wake up cap. enable*/
+comment|/* Enable PE_WAKE_N pin assertion  */
 end_comment
 
 begin_comment
@@ -5279,6 +5293,41 @@ name|IXGBE_GCR_CAP_VER2
 value|0x00040000
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_MSIX_EN
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_VT_MODE_16
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_VT_MODE_32
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_VT_MODE_64
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GCR_EXT_SRIOV
+value|(IXGBE_GCR_EXT_MSIX_EN | \                                          IXGBE_GCR_EXT_VT_MODE_64)
+end_define
+
 begin_comment
 comment|/* Time Sync Registers */
 end_comment
@@ -6492,6 +6541,28 @@ begin_comment
 comment|/* Disable RSC compl on LLI */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTL_RSCACKC
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* must set 1 when RSC enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RDRXCTL_FCOE_WRFIX
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* must set 1 when RSC enabled */
+end_comment
+
 begin_comment
 comment|/* RQTC Bit Masks and Shifts */
 end_comment
@@ -7494,6 +7565,28 @@ end_define
 
 begin_comment
 comment|/* 100BaseTX capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PHY_SET_LOW_POWER_MODE
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Set low power mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_PMD_CONTROL_ADDR
+value|0x0000
+end_define
+
+begin_comment
+comment|/* PMA/PMD Control Reg */
 end_comment
 
 begin_define
@@ -10102,7 +10195,7 @@ comment|/* bit 31 */
 end_comment
 
 begin_comment
-comment|/*  * ETQF filter list: one static filter per filter consumer. This is  *                   to avoid filter collisions later. Add new filters  *                   here!!  *  * Current filters:  *    EAPOL 802.1x (0x888e): Filter 0  *    FCoE (0x8906):         Filter 2  *    1588 (0x88f7):         Filter 3  */
+comment|/*  * ETQF filter list: one static filter per filter consumer. This is  *                   to avoid filter collisions later. Add new filters  *                   here!!  *  * Current filters:  *    EAPOL 802.1x (0x888e): Filter 0  *    FCoE (0x8906):         Filter 2  *    1588 (0x88f7):         Filter 3  *    FIP  (0x8914):         Filter 4  */
 end_comment
 
 begin_define
@@ -10124,6 +10217,13 @@ define|#
 directive|define
 name|IXGBE_ETQF_FILTER_1588
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ETQF_FILTER_FIP
+value|4
 end_define
 
 begin_comment
@@ -12091,6 +12191,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_PCI_DEVICE_STATUS
+value|0xAA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PCI_DEVICE_STATUS_TRANSACTION_PENDING
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCI_LINK_STATUS
 value|0xB2
 end_define
@@ -13051,6 +13165,17 @@ end_define
 
 begin_comment
 comment|/* 2 TX Queues per pool w/64VF's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MTQC_4TC_4TQ
+value|0x8
+end_define
+
+begin_comment
+comment|/* 4 TC if RT_ENA and VT_ENA */
 end_comment
 
 begin_define
@@ -14567,29 +14692,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_FDIRM_L3P
+name|IXGBE_FDIRM_L4P
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_FDIRM_L4P
+name|IXGBE_FDIRM_FLEX
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_FDIRM_FLEX
-value|0x00000020
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_FDIRM_DIPv6
-value|0x00000040
+value|0x00000020
 end_define
 
 begin_define
@@ -15871,6 +15989,13 @@ name|IXGBE_PHYSICAL_LAYER_10GBASE_XAUI
 value|0x1000
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_PHYSICAL_LAYER_SFP_ACTIVE_DA
+value|0x2000
+end_define
+
 begin_comment
 comment|/* Software ATR hash keys */
 end_comment
@@ -16024,6 +16149,32 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ixgbe_atr_input_masks
+block|{
+name|u32
+name|src_ip_mask
+decl_stmt|;
+name|u32
+name|dst_ip_mask
+decl_stmt|;
+name|u16
+name|src_port_mask
+decl_stmt|;
+name|u16
+name|dst_port_mask
+decl_stmt|;
+name|u16
+name|vlan_id_mask
+decl_stmt|;
+name|u16
+name|data_mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 name|ixgbe_eeprom_type
@@ -16081,13 +16232,17 @@ name|ixgbe_phy_xaui
 block|,
 name|ixgbe_phy_nl
 block|,
-name|ixgbe_phy_tw_tyco
+name|ixgbe_phy_sfp_passive_tyco
 block|,
-name|ixgbe_phy_tw_unknown
+name|ixgbe_phy_sfp_passive_unknown
+block|,
+name|ixgbe_phy_sfp_active_unknown
 block|,
 name|ixgbe_phy_sfp_avago
 block|,
 name|ixgbe_phy_sfp_ftl
+block|,
+name|ixgbe_phy_sfp_ftl_active
 block|,
 name|ixgbe_phy_sfp_unknown
 block|,
@@ -16136,6 +16291,14 @@ block|,
 name|ixgbe_sfp_type_srlr_core1
 init|=
 literal|6
+block|,
+name|ixgbe_sfp_type_da_act_lmt_core0
+init|=
+literal|7
+block|,
+name|ixgbe_sfp_type_da_act_lmt_core1
+init|=
+literal|8
 block|,
 name|ixgbe_sfp_type_not_present
 init|=
@@ -16254,18 +16417,32 @@ init|=
 literal|0
 block|,
 name|ixgbe_bus_speed_33
+init|=
+literal|33
 block|,
 name|ixgbe_bus_speed_66
+init|=
+literal|66
 block|,
 name|ixgbe_bus_speed_100
+init|=
+literal|100
 block|,
 name|ixgbe_bus_speed_120
+init|=
+literal|120
 block|,
 name|ixgbe_bus_speed_133
+init|=
+literal|133
 block|,
 name|ixgbe_bus_speed_2500
+init|=
+literal|2500
 block|,
 name|ixgbe_bus_speed_5000
+init|=
+literal|5000
 block|,
 name|ixgbe_bus_speed_reserved
 block|}
@@ -16285,8 +16462,12 @@ init|=
 literal|0
 block|,
 name|ixgbe_bus_width_pcie_x1
+init|=
+literal|1
 block|,
 name|ixgbe_bus_width_pcie_x2
+init|=
+literal|2
 block|,
 name|ixgbe_bus_width_pcie_x4
 init|=
@@ -16297,8 +16478,12 @@ init|=
 literal|8
 block|,
 name|ixgbe_bus_width_32
+init|=
+literal|32
 block|,
 name|ixgbe_bus_width_64
+init|=
+literal|64
 block|,
 name|ixgbe_bus_width_reserved
 block|}
@@ -16843,6 +17028,17 @@ name|s32
 function_decl|(
 modifier|*
 name|clear_hw_cntrs
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|enable_relaxed_ordering
 function_decl|)
 parameter_list|(
 name|struct
@@ -17592,6 +17788,28 @@ name|ixgbe_hw
 modifier|*
 parameter_list|)
 function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|check_overtemp
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|set_low_power_state
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -17620,6 +17838,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLAGS_DOUBLE_RESET_REQUIRED
+value|0x01
+end_define
 
 begin_struct
 struct|struct
@@ -17697,6 +17922,9 @@ name|orig_link_settings_stored
 decl_stmt|;
 name|bool
 name|autotry_restart
+decl_stmt|;
+name|u8
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -18006,6 +18234,20 @@ define|#
 directive|define
 name|IXGBE_ERR_EEPROM_VERSION
 value|-24
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ERR_NO_SPACE
+value|-25
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_ERR_OVERTEMP
+value|-26
 end_define
 
 begin_define

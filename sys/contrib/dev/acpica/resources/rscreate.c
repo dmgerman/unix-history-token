@@ -475,7 +475,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X]) Need sub-package, found %s"
+literal|"(PRT[%u]) Need sub-package, found %s"
 operator|,
 name|Index
 operator|,
@@ -513,7 +513,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X]) Need package of length 4, found length %d"
+literal|"(PRT[%u]) Need package of length 4, found length %u"
 operator|,
 name|Index
 operator|,
@@ -570,7 +570,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X].Address) Need Integer, found %s"
+literal|"(PRT[%u].Address) Need Integer, found %s"
 operator|,
 name|Index
 operator|,
@@ -621,7 +621,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X].Pin) Need Integer, found %s"
+literal|"(PRT[%u].Pin) Need Integer, found %s"
 operator|,
 name|Index
 operator|,
@@ -745,7 +745,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X].Source) Need name, found Reference Class %X"
+literal|"(PRT[%u].Source) Need name, found Reference Class 0x%X"
 operator|,
 name|Index
 operator|,
@@ -890,7 +890,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X].Source) Need Ref/String/Integer, found %s"
+literal|"(PRT[%u].Source) Need Ref/String/Integer, found %s"
 operator|,
 name|Index
 operator|,
@@ -947,7 +947,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"(PRT[%X].SourceIndex) Need Integer, found %s"
+literal|"(PRT[%u].SourceIndex) Need Integer, found %s"
 operator|,
 name|Index
 operator|,

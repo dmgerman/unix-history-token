@@ -72,49 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bootinfo.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cam/cam.h>
+file|<machine/intr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cam/cam_ccb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_sim.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_periph.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_xpt_sim.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/cam_debug.h>
+file|<machine/md_var.h>
 end_include
 
 begin_function_decl
@@ -318,11 +288,10 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
-name|enable_intr
+name|cninit_finish
 argument_list|()
 expr_stmt|;
-name|cninit_finish
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|cold

@@ -548,9 +548,21 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_NEWNFSDIROFF
 argument_list|,
-literal|"Newnfscl_diroff"
+literal|"NFSCL diroffdiroff"
 argument_list|,
 literal|"New NFS directory offset data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSDROLLBACK
+argument_list|,
+literal|"NFSD rollback"
+argument_list|,
+literal|"New NFS local lock rollback"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -625,14 +637,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NO_STRICT_ALIGNMENT
+end_ifdef
 
 begin_comment
 comment|/*  * These architectures don't need re-alignment, so just return.  */
@@ -657,6 +666,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !__NO_STRICT_ALIGNMENT */
+end_comment
 
 begin_comment
 comment|/*  *	newnfs_realign:  *  *	Check for badly aligned mbuf data and realign by copying the unaligned  *	portion of the data into a new mbuf chain and freeing the portions  *	of the old chain that were replaced.  *  *	We cannot simply realign the data within the existing mbuf chain  *	because the underlying buffers may contain other rpc commands and  *	we cannot afford to overwrite them.  *  *	We would prefer to avoid this situation entirely.  The situation does  *	not occur with NFS/UDP and is supposed to only occassionally occur  *	with TCP.  Use vfs.nfs.realign_count and realign_test to check this.  *  */
@@ -852,7 +865,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__i386__ */
+comment|/* __NO_STRICT_ALIGNMENT */
 end_comment
 
 begin_ifdef

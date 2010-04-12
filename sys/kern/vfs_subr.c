@@ -6287,7 +6287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * buf_splay() - splay tree core for the clean/dirty list of buffers in  * 		 a vnode.  *  *	NOTE: We have to deal with the special case of a background bitmap  *	buffer, a situation where two buffers will have the same logical  *	block offset.  We want (1) only the foreground buffer to be accessed  *	in a lookup and (2) must differentiate between the foreground and  *	background buffer in the splay tree algorithm because the splay  *	tree cannot normally handle multiple entities with the same 'index'.  *	We accomplish this by adding differentiating flags to the splay tree's  *	numerical domain.  */
+comment|/*  * buf_splay() - splay tree core for the clean/dirty list of buffers in  *		 a vnode.  *  *	NOTE: We have to deal with the special case of a background bitmap  *	buffer, a situation where two buffers will have the same logical  *	block offset.  We want (1) only the foreground buffer to be accessed  *	in a lookup and (2) must differentiate between the foreground and  *	background buffer in the splay tree algorithm because the splay  *	tree cannot normally handle multiple entities with the same 'index'.  *	We accomplish this by adding differentiating flags to the splay tree's  *	numerical domain.  */
 end_comment
 
 begin_function
@@ -9617,7 +9617,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*  	 * We don't guarantee that any particular close will 	 * trigger inactive processing so just make a best effort 	 * here at preventing a reference to a removed file.  If 	 * we don't succeed no harm is done. 	 */
+comment|/* 	 * We don't guarantee that any particular close will 	 * trigger inactive processing so just make a best effort 	 * here at preventing a reference to a removed file.  If 	 * we don't succeed no harm is done. 	 */
 if|if
 condition|(
 name|vp
@@ -12716,6 +12716,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_NFS4ACLS
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_EXRDONLY
 argument_list|)
 expr_stmt|;
@@ -12904,6 +12909,26 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
+name|MNTK_DRAINING
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_REFEXPIRE
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_EXTENDED_SHARED
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
+name|MNTK_SHARED_WRITES
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
 name|MNTK_UNMOUNT
 argument_list|)
 expr_stmt|;
@@ -12934,12 +12959,12 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
-name|MNTK_NOKNOTE
+name|MNTK_LOOKUP_SHARED
 argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
-name|MNTK_LOOKUP_SHARED
+name|MNTK_NOKNOTE
 argument_list|)
 expr_stmt|;
 undef|#
@@ -17235,6 +17260,73 @@ end_endif
 begin_comment
 comment|/* DEBUG_VFS_LOCKS */
 end_comment
+
+begin_function
+name|void
+name|vop_rename_fail
+parameter_list|(
+name|struct
+name|vop_rename_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_tvp
+operator|!=
+name|NULL
+condition|)
+name|vput
+argument_list|(
+name|ap
+operator|->
+name|a_tvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_tdvp
+operator|==
+name|ap
+operator|->
+name|a_tvp
+condition|)
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_tdvp
+argument_list|)
+expr_stmt|;
+else|else
+name|vput
+argument_list|(
+name|ap
+operator|->
+name|a_tdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fdvp
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|ap
+operator|->
+name|a_fvp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void

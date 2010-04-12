@@ -2168,6 +2168,10 @@ name|ACPI_NUM_GPE
 value|256
 end_define
 
+begin_comment
+comment|/* Actions for AcpiSetGpe */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2183,7 +2187,32 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-+-+-+---+---+-+  * |7|6|5|4:3|2:1|0|  * +-+-+-+---+---+-+  *  | | |  |   |  |  *  | | |  |   |  +--- Interrupt type: Edge or Level Triggered  *  | | |  |   +--- Type: Wake-only, Runtime-only, or wake/runtime  *  | | |  +--- Type of dispatch -- to method, handler, or none  *  | | +--- Enabled for runtime?  *  | +--- Enabled for wake?  *  +--- Unused  */
+comment|/* GpeTypes for AcpiEnableGpe and AcpiDisableGpe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_WAKE
+value|(UINT8) 0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_RUNTIME
+value|(UINT8) 0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_TYPE_WAKE_RUN
+value|(UINT8) 0x03
+end_define
+
+begin_comment
+comment|/*  * GPE info flags - Per GPE  * +-------+---+-+-+  * |  7:4  |3:2|1|0|  * +-------+---+-+-+  *     |     |  | |  *     |     |  | +--- Interrupt type: edge or level triggered  *     |     |  +----- GPE can wake the system  *     |     +-------- Type of dispatch:to method, handler, or none  *     +--------------<Reserved>  */
 end_comment
 
 begin_define
@@ -2210,54 +2239,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_TYPE_MASK
-value|(UINT8) 0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_WAKE_RUN
-value|(UINT8) 0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_WAKE
+name|ACPI_GPE_CAN_WAKE
 value|(UINT8) 0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_TYPE_RUNTIME
-value|(UINT8) 0x04
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACPI_GPE_DISPATCH_MASK
-value|(UINT8) 0x18
+value|(UINT8) 0x0C
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_DISPATCH_HANDLER
-value|(UINT8) 0x08
+value|(UINT8) 0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_DISPATCH_METHOD
-value|(UINT8) 0x10
+value|(UINT8) 0x08
 end_define
 
 begin_define
@@ -2268,94 +2272,7 @@ value|(UINT8) 0x00
 end_define
 
 begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_ENABLE_MASK
-value|(UINT8) 0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_ENABLED
-value|(UINT8) 0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_RUN_DISABLED
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_ENABLE_MASK
-value|(UINT8) 0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_ENABLED
-value|(UINT8) 0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_WAKE_DISABLED
-value|(UINT8) 0x00
-end_define
-
-begin_comment
-comment|/* Default */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_ENABLE_MASK
-value|(UINT8) 0x60
-end_define
-
-begin_comment
-comment|/* Both run/wake */
-end_comment
-
-begin_comment
 comment|/*  * Flags for GPE and Lock interfaces  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_ENABLE
-value|0x2
-end_define
-
-begin_comment
-comment|/* AcpiGpeEnable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_WAKE_DISABLE
-value|0x2
-end_define
-
-begin_comment
-comment|/* AcpiGpeDisable */
 end_comment
 
 begin_define

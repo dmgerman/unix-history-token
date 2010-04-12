@@ -1075,7 +1075,7 @@ case|case
 literal|'r'
 case|:
 comment|/* reserved names */
-name|MpDisplayReservedNames
+name|ApDisplayReservedNames
 argument_list|()
 expr_stmt|;
 name|exit

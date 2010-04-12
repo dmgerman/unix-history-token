@@ -509,6 +509,12 @@ name|ksiginfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|image_params
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -566,14 +572,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2601,11 +2601,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_IGDG
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->pci_device == 0xa001)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_IGDGM
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->pci_device == 0xa011)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_IGD
+parameter_list|(
+name|dev
+parameter_list|)
+value|(IS_IGDG(dev) || IS_IGDGM(dev))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_G33
 parameter_list|(
 name|dev
 parameter_list|)
-value|((dev)->pci_device == 0x29C2 ||	\ 			(dev)->pci_device == 0x29B2 ||	\ 			(dev)->pci_device == 0x29D2)
+value|((dev)->pci_device == 0x29C2 ||	\ 			(dev)->pci_device == 0x29B2 ||	\ 			(dev)->pci_device == 0x29D2 ||  \ 			IS_IGD(dev))
 end_define
 
 begin_define
@@ -2625,7 +2655,7 @@ name|IS_MOBILE
 parameter_list|(
 name|dev
 parameter_list|)
-value|(IS_I830(dev) || IS_I85X(dev) || IS_I915GM(dev) || \ 			IS_I945GM(dev) || IS_I965GM(dev) || IS_GM45(dev))
+value|(IS_I830(dev) || IS_I85X(dev) || IS_I915GM(dev) || \ 			IS_I945GM(dev) || IS_I965GM(dev) || IS_GM45(dev) || \ 			IS_IGD(dev))
 end_define
 
 begin_define

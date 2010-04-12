@@ -498,6 +498,16 @@ literal|"Memory Mapped Configuration table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_MCHI
+block|,
+name|AcpiDmTableInfoMchi
+block|,
+name|NULL
+block|,
+literal|"Management Controller Host Interface table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_MSCT
 block|,
 name|NULL
@@ -2340,7 +2350,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"**** Invalid table opcode [%X] ****\n"
+literal|"**** Invalid table opcode [0x%X] ****\n"
 operator|,
 name|Info
 operator|->

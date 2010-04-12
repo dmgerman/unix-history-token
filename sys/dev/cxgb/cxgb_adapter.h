@@ -503,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|RSPQ_Q_SIZE
-value|1024
+value|2048
 end_define
 
 begin_define
@@ -511,6 +511,20 @@ define|#
 directive|define
 name|TX_ETH_Q_SIZE
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_OFLD_Q_SIZE
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_CTRL_Q_SIZE
+value|256
 end_define
 
 begin_enum
@@ -623,6 +637,9 @@ name|pure_rsps
 decl_stmt|;
 name|uint32_t
 name|unhandled_irqs
+decl_stmt|;
+name|uint32_t
+name|starved
 decl_stmt|;
 name|bus_addr_t
 name|phys_addr
@@ -857,9 +874,6 @@ name|txq_watchdog
 decl_stmt|;
 name|uint64_t
 name|txq_coalesced
-decl_stmt|;
-name|uint32_t
-name|txq_drops
 decl_stmt|;
 name|uint32_t
 name|txq_skipped

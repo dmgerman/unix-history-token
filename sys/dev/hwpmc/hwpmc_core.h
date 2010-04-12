@@ -71,6 +71,9 @@ block|{
 name|uint32_t
 name|pm_iap_config
 decl_stmt|;
+name|uint32_t
+name|pm_iap_rsp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -154,6 +157,13 @@ parameter_list|)
 value|(((C)& 0xFF)<< 24)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IA_OFFCORE_RSP_MASK
+value|0xF7FF
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -220,22 +230,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IAP_PMC1
-value|0x0C2
-end_define
-
-begin_define
-define|#
-directive|define
 name|IAP_EVSEL0
 value|0x186
-end_define
-
-begin_define
-define|#
-directive|define
-name|IAP_EVSEL1
-value|0x187
 end_define
 
 begin_comment
@@ -277,6 +273,24 @@ name|IA_GLOBAL_STATUS_FLAG_OVFBUF
 value|(1ULL<< 62)
 end_define
 
+begin_comment
+comment|/*  * Offcore response configuration.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA_OFFCORE_RSP0
+value|0x1A6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA_OFFCORE_RSP1
+value|0x1A7
+end_define
+
 begin_struct
 struct|struct
 name|pmc_md_iaf_pmc
@@ -294,6 +308,9 @@ name|pmc_md_iap_pmc
 block|{
 name|uint32_t
 name|pm_iap_evsel
+decl_stmt|;
+name|uint32_t
+name|pm_iap_rsp
 decl_stmt|;
 block|}
 struct|;

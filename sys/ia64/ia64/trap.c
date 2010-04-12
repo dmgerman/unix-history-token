@@ -1481,7 +1481,7 @@ modifier|*
 name|tf
 parameter_list|)
 block|{
-name|disable_intr
+name|ia64_disable_intr
 argument_list|()
 expr_stmt|;
 while|while
@@ -1497,7 +1497,7 @@ name|TDF_NEEDRESCHED
 operator|)
 condition|)
 block|{
-name|enable_intr
+name|ia64_enable_intr
 argument_list|()
 expr_stmt|;
 name|ast
@@ -1505,7 +1505,7 @@ argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|ia64_disable_intr
 argument_list|()
 expr_stmt|;
 block|}

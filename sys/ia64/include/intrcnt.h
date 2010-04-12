@@ -21,36 +21,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTRCNT_ISA_IRQ
-value|(INTRCNT_CLOCK + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRCNT_ISA_IRQ_LEN
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRCNT_OTHER_BASE
-value|(INTRCNT_ISA_IRQ + INTRCNT_ISA_IRQ_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRCNT_OTHER_LEN
-value|240
-end_define
-
-begin_define
-define|#
-directive|define
 name|INTRCNT_COUNT
-value|(INTRCNT_OTHER_BASE + INTRCNT_OTHER_LEN)
+value|256
 end_define
 
 begin_comment

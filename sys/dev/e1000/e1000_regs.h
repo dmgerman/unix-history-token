@@ -2377,6 +2377,100 @@ begin_comment
 comment|/* CRC Offset register */
 end_comment
 
+begin_comment
+comment|/* Virtualization statistical counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPRC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010010 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPTC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010014 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGORC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010018 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGOTC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010034 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFMPRC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010038 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPRLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010040 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGPTLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010044 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGORLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010048 + (0x100 * (_n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PFVFGOTLBC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x010050 + (0x100 * (_n)))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -3483,6 +3577,20 @@ end_define
 
 begin_comment
 comment|/* Management Control To Host - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDEF
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x05890 + (4 * (_n)))
+end_define
+
+begin_comment
+comment|/* Mngmt Decision Filters */
 end_comment
 
 begin_define

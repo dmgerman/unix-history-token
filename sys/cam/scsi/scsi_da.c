@@ -3484,6 +3484,15 @@ literal|"can't remove sysctl context\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Nullify our periph pointer here to try and catch 	 * race conditions in callbacks/downcalls. 	 */
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_drv1
+operator|=
+name|NULL
+expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|softc

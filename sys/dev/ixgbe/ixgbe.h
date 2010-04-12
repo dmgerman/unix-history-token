@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2009, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ begin_define
 define|#
 directive|define
 name|IXGBE_RX_HDR
-value|256
+value|128
 end_define
 
 begin_define
@@ -673,16 +673,41 @@ name|IXGBE_BR_SIZE
 value|4096
 end_define
 
+begin_comment
+comment|/* Offload bits in mbuf flag */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
 begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
-value|7
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
 end_define
 
-begin_comment
-comment|/* Bits in csum flags */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* For 6.X code compatibility */
@@ -861,6 +886,11 @@ name|mbuf
 modifier|*
 name|m_pack
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|fmp
+decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
@@ -902,7 +932,66 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The transmit ring, one per tx queue  */
+comment|/* ** Driver queue struct: this is the interrupt container **  for the associated tx and rx ring. */
+end_comment
+
+begin_struct
+struct|struct
+name|ix_queue
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+name|u32
+name|msix
+decl_stmt|;
+comment|/* This queue's MSIX vector */
+name|u32
+name|eims
+decl_stmt|;
+comment|/* This queue's EIMS bit */
+name|u32
+name|eitr_setting
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+decl_stmt|;
+name|struct
+name|rx_ring
+modifier|*
+name|rxr
+decl_stmt|;
+name|struct
+name|task
+name|que_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|u64
+name|irqs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The transmit ring, one per queue  */
 end_comment
 
 begin_struct
@@ -921,9 +1010,6 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
 name|bool
 name|watchdog_check
 decl_stmt|;
@@ -935,22 +1021,9 @@ name|ixgbe_adv_tx_desc
 modifier|*
 name|tx_base
 decl_stmt|;
-specifier|volatile
-name|u32
-name|tx_hwb
-decl_stmt|;
 name|struct
 name|ixgbe_dma_alloc
 name|txdma
-decl_stmt|;
-name|struct
-name|task
-name|tx_task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|tq
 decl_stmt|;
 name|u32
 name|next_avail_desc
@@ -991,16 +1064,6 @@ name|br
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* Interrupt resources */
-name|void
-modifier|*
-name|tag
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IXGBE_FDIR
@@ -1012,15 +1075,16 @@ name|atr_count
 decl_stmt|;
 endif|#
 directive|endif
+name|u32
+name|bytes
+decl_stmt|;
+comment|/* used for AIM */
+name|u32
+name|packets
+decl_stmt|;
 comment|/* Soft Stats */
-name|u32
-name|no_tx_desc_avail
-decl_stmt|;
-name|u32
-name|no_tx_desc_late
-decl_stmt|;
 name|u64
-name|tx_irq
+name|no_desc_avail
 decl_stmt|;
 name|u64
 name|total_packets
@@ -1049,21 +1113,6 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
-name|u32
-name|payload
-decl_stmt|;
-name|struct
-name|task
-name|rx_task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|tq
-decl_stmt|;
 name|union
 name|ixgbe_adv_rx_desc
 modifier|*
@@ -1086,13 +1135,20 @@ decl_stmt|;
 name|bool
 name|hw_rsc
 decl_stmt|;
-name|unsigned
-name|int
-name|last_refreshed
+name|bool
+name|discard
 decl_stmt|;
-name|unsigned
-name|int
+name|u32
+name|next_to_refresh
+decl_stmt|;
+name|u32
 name|next_to_check
+decl_stmt|;
+name|char
+name|mtx_name
+index|[
+literal|16
+index|]
 decl_stmt|;
 name|struct
 name|ixgbe_rx_buf
@@ -1105,28 +1161,12 @@ decl_stmt|;
 name|bus_dmamap_t
 name|spare_map
 decl_stmt|;
-name|char
-name|mtx_name
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|u32
 name|bytes
 decl_stmt|;
 comment|/* Used for AIM calc */
 name|u32
-name|eitr_setting
-decl_stmt|;
-comment|/* Interrupt resources */
-name|void
-modifier|*
-name|tag
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res
+name|packets
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
@@ -1140,6 +1180,9 @@ name|rx_packets
 decl_stmt|;
 name|u64
 name|rx_bytes
+decl_stmt|;
+name|u64
+name|rx_discarded
 decl_stmt|;
 name|u64
 name|rsc_num
@@ -1273,7 +1316,7 @@ name|struct
 name|task
 name|msf_task
 decl_stmt|;
-comment|/* Multispeed Fiber tasklet */
+comment|/* Multispeed Fiber */
 ifdef|#
 directive|ifdef
 name|IXGBE_FDIR
@@ -1290,6 +1333,12 @@ name|struct
 name|taskqueue
 modifier|*
 name|tq
+decl_stmt|;
+comment|/* 	** Queues:  	**   This is the irq holder, it has 	**   and RX/TX pair or rings associated 	**   with it. 	*/
+name|struct
+name|ix_queue
+modifier|*
+name|queues
 decl_stmt|;
 comment|/* 	 * Transmit rings: 	 *	Allocated at run time, an array of rings. 	 */
 name|struct
@@ -1310,33 +1359,11 @@ name|int
 name|num_rx_desc
 decl_stmt|;
 name|u64
-name|rx_mask
+name|que_mask
 decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IXGBE_IEEE1588
-comment|/* IEEE 1588 precision time support */
-name|struct
-name|cyclecounter
-name|cycles
-decl_stmt|;
-name|struct
-name|nettimer
-name|clock
-decl_stmt|;
-name|struct
-name|nettime_compare
-name|compare
-decl_stmt|;
-name|struct
-name|hwtstamp_ctrl
-name|hwtstamp
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
@@ -1585,10 +1612,10 @@ case|case
 name|ixgbe_phy_sfp_unknown
 case|:
 case|case
-name|ixgbe_phy_tw_tyco
+name|ixgbe_phy_sfp_passive_tyco
 case|:
 case|case
-name|ixgbe_phy_tw_unknown
+name|ixgbe_phy_sfp_passive_unknown
 case|:
 return|return
 name|TRUE

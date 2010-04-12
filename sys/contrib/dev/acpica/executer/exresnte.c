@@ -602,7 +602,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unsupported Reference type %X"
+literal|"Unsupported Reference type 0x%X"
 operator|,
 name|SourceDesc
 operator|->
@@ -626,7 +626,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Node %p - Unknown object type %X"
+literal|"Node %p - Unknown object type 0x%X"
 operator|,
 name|Node
 operator|,

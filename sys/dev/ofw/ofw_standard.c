@@ -827,7 +827,6 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -917,7 +916,6 @@ modifier|*
 name|returns
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1056,7 +1054,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1137,7 +1134,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1218,7 +1214,6 @@ name|phandle_t
 name|node
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1299,7 +1294,6 @@ name|ihandle_t
 name|instance
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1385,7 +1379,6 @@ modifier|*
 name|propname
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1490,7 +1483,6 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1616,7 +1608,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1738,7 +1729,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1861,7 +1851,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -1968,7 +1957,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2059,7 +2047,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2168,7 +2155,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2286,7 +2272,6 @@ modifier|*
 name|args_and_returns
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2513,7 +2498,6 @@ modifier|*
 name|device
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2603,7 +2587,6 @@ name|ihandle_t
 name|instance
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2628,6 +2611,8 @@ operator|)
 literal|"close"
 block|,
 literal|1
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -2668,7 +2653,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2778,7 +2762,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2883,7 +2866,6 @@ name|uint64_t
 name|pos
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -2995,7 +2977,6 @@ name|u_int
 name|align
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3109,7 +3090,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3137,6 +3117,8 @@ operator|)
 literal|"release"
 block|,
 literal|2
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
@@ -3180,7 +3162,6 @@ name|ofw_t
 name|ofw
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3200,6 +3181,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"enter"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware
@@ -3225,7 +3210,6 @@ name|ofw_t
 name|ofw
 parameter_list|)
 block|{
-specifier|static
 struct|struct
 block|{
 name|cell_t
@@ -3245,6 +3229,10 @@ operator|(
 name|cell_t
 operator|)
 literal|"exit"
+block|,
+literal|0
+block|,
+literal|0
 block|, 	}
 struct|;
 name|openfirmware

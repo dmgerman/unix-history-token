@@ -1699,7 +1699,7 @@ name|SYSCALL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 elseif|else
 if|if
 condition|(

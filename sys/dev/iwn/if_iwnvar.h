@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnvar.h,v 1.16 2009/11/04 17:46:52 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnvar.h,v 1.17 2010/02/17 18:23:00 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -253,10 +253,6 @@ name|ieee80211_node
 name|ni
 decl_stmt|;
 comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|amn
-decl_stmt|;
 name|uint16_t
 name|disable_tid
 decl_stmt|;
@@ -660,14 +656,6 @@ name|struct
 name|ieee80211vap
 name|iv_vap
 decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|iv_amrr
-decl_stmt|;
-name|struct
-name|callout
-name|iv_amrr_to
-decl_stmt|;
 name|uint8_t
 name|iv_ridx
 decl_stmt|;
@@ -934,6 +922,9 @@ index|]
 decl_stmt|;
 name|uint16_t
 name|rfcfg
+decl_stmt|;
+name|uint8_t
+name|calib_ver
 decl_stmt|;
 name|char
 name|eeprom_domain

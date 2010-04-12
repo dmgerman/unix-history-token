@@ -31,14 +31,14 @@ begin_define
 define|#
 directive|define
 name|IGB_MIN_TXD
-value|80
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_TXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -56,14 +56,14 @@ begin_define
 define|#
 directive|define
 name|IGB_MIN_RXD
-value|80
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_RXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -919,7 +919,7 @@ literal|16
 index|]
 decl_stmt|;
 name|u32
-name|last_cleaned
+name|next_to_refresh
 decl_stmt|;
 name|u32
 name|next_to_check
@@ -930,19 +930,13 @@ modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|rx_htag
+name|htag
 decl_stmt|;
 comment|/* dma tag for rx head */
-name|bus_dmamap_t
-name|rx_hspare_map
-decl_stmt|;
 name|bus_dma_tag_t
-name|rx_ptag
+name|ptag
 decl_stmt|;
 comment|/* dma tag for rx packet */
-name|bus_dmamap_t
-name|rx_pspare_map
-decl_stmt|;
 comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
 name|mbuf
@@ -998,6 +992,11 @@ name|struct
 name|device
 modifier|*
 name|dev
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|led_dev
 decl_stmt|;
 name|struct
 name|resource
@@ -1276,11 +1275,11 @@ modifier|*
 name|m_pack
 decl_stmt|;
 name|bus_dmamap_t
-name|head_map
+name|hmap
 decl_stmt|;
-comment|/* bus_dma map for packet */
+comment|/* bus_dma map for header */
 name|bus_dmamap_t
-name|pack_map
+name|pmap
 decl_stmt|;
 comment|/* bus_dma map for packet */
 block|}

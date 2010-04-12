@@ -935,7 +935,7 @@ name|st_blksize
 expr_stmt|;
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|shmfd
 operator|->
@@ -943,7 +943,7 @@ name|shm_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|shmfd
 operator|->
@@ -951,7 +951,7 @@ name|shm_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|shmfd
 operator|->
@@ -959,7 +959,7 @@ name|shm_mtime
 expr_stmt|;
 name|sb
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|=
 name|shmfd
 operator|->

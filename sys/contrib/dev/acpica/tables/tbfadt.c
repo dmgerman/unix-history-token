@@ -664,7 +664,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"FADT (revision %u) is longer than ACPI 2.0 version, "
-literal|"truncating length 0x%X to 0x%X"
+literal|"truncating length %u to %u"
 operator|,
 name|Table
 operator|->
@@ -919,7 +919,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"32/64X address mismatch in %s: %8.8X/%8.8X%8.8X, using 32"
+literal|"32/64X address mismatch in %s: 0x%8.8X/0x%8.8X%8.8X, using 32"
 operator|,
 name|FadtInfoTable
 index|[
@@ -1033,7 +1033,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"32/64X FACS address mismatch in FADT - "
-literal|"%8.8X/%8.8X%8.8X, using 32"
+literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
 operator|,
 name|AcpiGbl_FADT
 operator|.
@@ -1086,7 +1086,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"32/64X DSDT address mismatch in FADT - "
-literal|"%8.8X/%8.8X%8.8X, using 32"
+literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
 operator|,
 name|AcpiGbl_FADT
 operator|.
@@ -1197,7 +1197,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"32/64X length mismatch in %s: %d/%d"
+literal|"32/64X length mismatch in %s: %u/%u"
 operator|,
 name|Name
 operator|,
@@ -1243,7 +1243,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"Required field %s has zero address and/or length:"
-literal|" %8.8X%8.8X/%X"
+literal|" 0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
 operator|,
@@ -1301,7 +1301,7 @@ operator|(
 name|AE_INFO
 operator|,
 literal|"Optional field %s has zero address or length: "
-literal|"%8.8X%8.8X/%X"
+literal|"0x%8.8X%8.8X/0x%X"
 operator|,
 name|Name
 operator|,
@@ -1424,7 +1424,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid length for %s: %d, using default %d"
+literal|"Invalid length for %s: %u, using default %u"
 operator|,
 name|FadtInfoTable
 index|[

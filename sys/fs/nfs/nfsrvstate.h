@@ -576,6 +576,33 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * This structure is used to keep track of local locks that might need  * to be rolled back.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsrollback
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|nfsrollback
+argument_list|)
+name|rlck_list
+expr_stmt|;
+name|uint64_t
+name|rlck_first
+decl_stmt|;
+name|uint64_t
+name|rlck_end
+decl_stmt|;
+name|int
+name|rlck_type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * This structure refers to a file for which lock(s) and/or open(s) exist.  * Searched via hash table on file handle or found via the back pointer from an  * open or lock owner.  */
 end_comment
 
@@ -607,6 +634,22 @@ argument_list|)
 name|lf_lock
 expr_stmt|;
 comment|/* Lock list */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfslock
+argument_list|)
+name|lf_locallock
+expr_stmt|;
+comment|/* Local lock list */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|nfsrollback
+argument_list|)
+name|lf_rollback
+expr_stmt|;
+comment|/* Local lock rollback list */
 name|LIST_ENTRY
 argument_list|(
 argument|nfslockfile
@@ -618,6 +661,15 @@ name|fhandle_t
 name|lf_fh
 decl_stmt|;
 comment|/* The file handle */
+name|struct
+name|nfsv4lock
+name|lf_locallock_lck
+decl_stmt|;
+comment|/* serialize local locking */
+name|int
+name|lf_usecount
+decl_stmt|;
+comment|/* Ref count for locking */
 block|}
 struct|;
 end_struct

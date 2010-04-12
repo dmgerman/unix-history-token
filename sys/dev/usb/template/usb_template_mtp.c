@@ -691,6 +691,10 @@ name|struct
 name|usb_device_request
 modifier|*
 name|req
+parameter_list|,
+name|uint16_t
+modifier|*
+name|plen
 parameter_list|)
 block|{
 specifier|static

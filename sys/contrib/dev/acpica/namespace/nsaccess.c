@@ -551,7 +551,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unsupported initial type value %X"
+literal|"Unsupported initial type value 0x%X"
 operator|,
 name|InitVal
 operator|->

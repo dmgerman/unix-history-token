@@ -574,6 +574,10 @@ define|#
 directive|define
 name|SIIS_Q_SNTF
 value|1
+define|#
+directive|define
+name|SIIS_Q_NOMSI
+value|2
 block|}
 name|siis_ids
 index|[]
@@ -607,6 +611,8 @@ block|,
 literal|2
 block|,
 name|SIIS_Q_SNTF
+operator||
+name|SIIS_Q_NOMSI
 block|}
 block|,
 block|{
@@ -617,6 +623,8 @@ block|,
 literal|2
 block|,
 name|SIIS_Q_SNTF
+operator||
+name|SIIS_Q_NOMSI
 block|}
 block|,
 block|{
@@ -627,6 +635,8 @@ block|,
 literal|2
 block|,
 name|SIIS_Q_SNTF
+operator||
+name|SIIS_Q_NOMSI
 block|}
 block|,
 block|{
@@ -637,6 +647,8 @@ block|,
 literal|1
 block|,
 name|SIIS_Q_SNTF
+operator||
+name|SIIS_Q_NOMSI
 block|}
 block|,
 block|{
@@ -647,6 +659,8 @@ block|,
 literal|1
 block|,
 name|SIIS_Q_SNTF
+operator||
+name|SIIS_Q_NOMSI
 block|}
 block|,
 block|{
@@ -1567,7 +1581,15 @@ decl_stmt|;
 name|int
 name|msi
 init|=
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|SIIS_Q_NOMSI
+condition|?
 literal|0
+else|:
+literal|1
 decl_stmt|;
 comment|/* Process hints. */
 name|resource_int_value

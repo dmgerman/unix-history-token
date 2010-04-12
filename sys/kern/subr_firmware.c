@@ -196,7 +196,7 @@ begin_define
 define|#
 directive|define
 name|FIRMWARE_MAX
-value|30
+value|50
 end_define
 
 begin_decl_stmt

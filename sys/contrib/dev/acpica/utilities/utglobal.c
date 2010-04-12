@@ -2029,6 +2029,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Miscellaneous variables */
+name|AcpiGbl_DSDT
+operator|=
+name|NULL
+expr_stmt|;
 name|AcpiGbl_CmSingleStep
 operator|=
 name|FALSE

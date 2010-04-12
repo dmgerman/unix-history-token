@@ -345,6 +345,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * exdebug - AML debug object  */
+end_comment
+
+begin_function_decl
+name|void
+name|AcpiExDoDebugObject
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceDesc
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|UINT32
+name|Index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * exfield - ACPI AML (p-code) execution - field manipulation  */
 end_comment
 

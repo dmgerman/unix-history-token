@@ -576,7 +576,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid Object Type %X"
+literal|"Invalid Object Type 0x%X"
 operator|,
 name|Type
 operator|)
@@ -1967,7 +1967,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid Object Type %X"
+literal|"Invalid Object Type 0x%X"
 operator|,
 name|Type
 operator|)

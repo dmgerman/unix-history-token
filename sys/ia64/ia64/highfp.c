@@ -144,7 +144,7 @@ name|ipi_send
 argument_list|(
 name|cpu
 argument_list|,
-name|IPI_HIGH_FP
+name|ia64_ipi_highfp
 argument_list|)
 expr_stmt|;
 name|error
@@ -320,25 +320,6 @@ name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ia64_highfp_mtx
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|tf
-operator|->
-name|tf_special
-operator|.
-name|psr
-operator|&
-name|IA64_PSR_DFH
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"(tf->tf_special.psr& IA64_PSR_DFH) == 0"
-operator|)
 argument_list|)
 expr_stmt|;
 name|cpu

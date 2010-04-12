@@ -266,7 +266,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not enable fixed event %X"
+literal|"Could not enable fixed event 0x%X"
 operator|,
 name|Event
 operator|)
@@ -435,7 +435,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not write to fixed event enable register %X"
+literal|"Could not write to fixed event enable register 0x%X"
 operator|,
 name|Event
 operator|)
@@ -1404,7 +1404,8 @@ operator|)
 operator|||
 operator|(
 name|Type
-operator|>
+operator|&
+operator|~
 name|ACPI_GPE_XRUPT_TYPE_MASK
 operator|)
 condition|)

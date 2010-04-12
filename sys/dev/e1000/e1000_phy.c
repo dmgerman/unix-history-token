@@ -11523,7 +11523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_phy_force_speed_duplex_82577 - Force speed/duplex for I82577 PHY  *  @hw: pointer to the HW structure  *  *  Calls the PHY setup function to force speed and duplex.  Clears the  *  auto-crossover to force MDI manually.  Waits for link and returns  *  successful if link up is successful, else -E1000_ERR_PHY (-2).  **/
+comment|/**  *  e1000_phy_force_speed_duplex_82577 - Force speed/duplex for I82577 PHY  *  @hw: pointer to the HW structure  *  *  Calls the PHY setup function to force speed and duplex.  **/
 end_comment
 
 begin_function
@@ -11613,69 +11613,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Clear Auto-Crossover to force MDI manually.  82577 requires MDI 	 * forced whenever speed and duplex are forced. 	 */
-name|ret_val
-operator|=
-name|phy
-operator|->
-name|ops
-operator|.
-name|read_reg
-argument_list|(
-name|hw
-argument_list|,
-name|I82577_PHY_CTRL_2
-argument_list|,
-operator|&
-name|phy_data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-name|phy_data
-operator|&=
-operator|~
-name|I82577_PHY_CTRL2_AUTO_MDIX
-expr_stmt|;
-name|phy_data
-operator|&=
-operator|~
-name|I82577_PHY_CTRL2_FORCE_MDI_MDIX
-expr_stmt|;
-name|ret_val
-operator|=
-name|phy
-operator|->
-name|ops
-operator|.
-name|write_reg
-argument_list|(
-name|hw
-argument_list|,
-name|I82577_PHY_CTRL_2
-argument_list|,
-name|phy_data
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_val
-condition|)
-goto|goto
-name|out
-goto|;
-name|DEBUGOUT1
-argument_list|(
-literal|"I82577_PHY_CTRL_2: %X\n"
-argument_list|,
-name|phy_data
-argument_list|)
-expr_stmt|;
 name|usec_delay
 argument_list|(
 literal|1

@@ -664,6 +664,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|usb_detach_device
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|usb_error_t
 name|usb_reset_iface_endpoints
 parameter_list|(

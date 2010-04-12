@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: x86emu.c,v 1.4 2009/06/18 14:19:21 pirofti Exp $	*/
+comment|/*	$OpenBSD: x86emu.c,v 1.5 2010/02/17 15:09:47 pirofti Exp $	*/
 end_comment
 
 begin_comment
@@ -4093,7 +4093,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * return offset from the SIB Byte  */
+comment|/*  * Return offset from the SIB Byte.  */
 end_comment
 
 begin_function
@@ -23350,7 +23350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------- Implementation ----------------------------*/
+comment|/*  * Implementation  */
 end_comment
 
 begin_define
@@ -25843,11 +25843,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* * Carry Chain Calculation * * This represents a somewhat expensive calculation which is * apparently required to emulate the setting of the OF and AF flag. * The latter is not so important, but the former is.  The overflow * flag is the XOR of the top two bits of the carry chain for an * addition (similar for subtraction).  Since we do not want to * simulate the addition in a bitwise manner, we try to calculate the * carry chain given the two operands and the result. * * So, given the following table, which represents the addition of two * bits, we can derive a formula for the carry chain. * * a   b   cin   r     cout * 0   0   0     0     0 * 0   0   1     1     0 * 0   1   0     1     0 * 0   1   1     0     1 * 1   0   0     1     0 * 1   0   1     0     1 * 1   1   0     0     1 * 1   1   1     1     1 * * Construction of table for cout: * * ab * r  \  00   01   11  10 * |------------------ * 0  |   0    1    1   1 * 1  |   0    0    1   0 * * By inspection, one gets:  cc = ab +  r'(a + b) * * That represents alot of operations, but NO CHOICE.... * * Borrow Chain Calculation. * * The following table represents the subtraction of two bits, from * which we can derive a formula for the borrow chain. * * a   b   bin   r     bout * 0   0   0     0     0 * 0   0   1     1     1 * 0   1   0     1     1 * 0   1   1     0     1 * 1   0   0     1     0 * 1   0   1     0     0 * 1   1   0     0     0 * 1   1   1     1     1 * * Construction of table for cout: * * ab * r  \  00   01   11  10 * |------------------ * 0  |   0    1    0   0 * 1  |   1    1    1   0 * * By inspection, one gets:  bc = a'b +  r(a' + b) *  */
+comment|/*  * Carry Chain Calculation  *  * This represents a somewhat expensive calculation which is  * apparently required to emulate the setting of the OF and AF flag.  * The latter is not so important, but the former is.  The overflow  * flag is the XOR of the top two bits of the carry chain for an  * addition (similar for subtraction).  Since we do not want to  * simulate the addition in a bitwise manner, we try to calculate the  * carry chain given the two operands and the result.  *  * So, given the following table, which represents the addition of two  * bits, we can derive a formula for the carry chain.  *  * a   b   cin   r     cout  * 0   0   0     0     0  * 0   0   1     1     0  * 0   1   0     1     0  * 0   1   1     0     1  * 1   0   0     1     0  * 1   0   1     0     1  * 1   1   0     0     1  * 1   1   1     1     1  *  * Construction of table for cout:  *  * ab  * r  \  00   01   11  10  * |------------------  * 0  |   0    1    1   1  * 1  |   0    0    1   0  *  * By inspection, one gets:  cc = ab +  r'(a + b)  *  * That represents alot of operations, but NO CHOICE....  *  * Borrow Chain Calculation.  *  * The following table represents the subtraction of two bits, from  * which we can derive a formula for the borrow chain.  *  * a   b   bin   r     bout  * 0   0   0     0     0  * 0   0   1     1     1  * 0   1   0     1     1  * 0   1   1     0     1  * 1   0   0     1     0  * 1   0   1     0     0  * 1   1   0     0     0  * 1   1   1     1     1  *  * Construction of table for cout:  *  * ab  * r  \  00   01   11  10  * |------------------  * 0  |   0    1    0   0  * 1  |   1    1    1   0  *  * By inspection, one gets:  bc = a'b +  r(a' + b)  *  */
 end_comment
 
 begin_comment
-comment|/*------------------------- Global Variables ------------------------------*/
+comment|/*  * Global Variables  */
 end_comment
 
 begin_decl_stmt
@@ -29498,7 +29498,7 @@ decl_stmt|,
 name|cf
 decl_stmt|;
 comment|/* s is the rotate distance.  It varies from 0 - 8. */
-comment|/* have 	 *  	 * CF  B_7 B_6 B_5 B_4 B_3 B_2 B_1 B_0 	 *  	 * want to rotate through the carry by "s" bits.  We could loop, but 	 * that's inefficient.  So the width is 9, and we split into three 	 * parts: 	 *  	 * The new carry flag   (was B_n) the stuff in B_n-1 .. B_0 the stuff in 	 * B_7 .. B_n+1 	 *  	 * The new rotate is done mod 9, and given this, for a rotation of n bits 	 * (mod 9) the new carry flag is then located n bits from the MSB. 	 * The low part is then shifted up cnt bits, and the high part is or'd 	 * in.  Using CAPS for new values, and lowercase for the original 	 * values, this can be expressed as: 	 *  	 * IF n> 0 1) CF<-  b_(8-n) 2) B_(7) .. B_(n)<-  b_(8-(n+1)) .. b_0 	 * 3) B_(n-1)<- cf 4) B_(n-2) .. B_0<-  b_7 .. b_(8-(n-1)) */
+comment|/* have 	 *  	 * CF  B_7 B_6 B_5 B_4 B_3 B_2 B_1 B_0 	 *  	 * want to rotate through the carry by "s" bits.  We could loop, but 	 * that's inefficient.  So the width is 9, and we split into three 	 * parts: 	 *  	 * The new carry flag   (was B_n) the stuff in B_n-1 .. B_0 the stuff 	 * in B_7 .. B_n+1 	 *  	 * The new rotate is done mod 9, and given this, for a rotation of n 	 * bits (mod 9) the new carry flag is then located n bits from the MSB. 	 * The low part is then shifted up cnt bits, and the high part is or'd 	 * in.  Using CAPS for new values, and lowercase for the original 	 * values, this can be expressed as: 	 *  	 * IF n> 0 1) CF<-  b_(8-n) 2) B_(7) .. B_(n)<-  b_(8-(n+1)) .. b_0 	 * 3) B_(n-1)<- cf 4) B_(n-2) .. B_0<-  b_7 .. b_(8-(n-1)) 	 */
 name|res
 operator|=
 name|d
@@ -29532,9 +29532,7 @@ operator|)
 operator|&
 literal|0x1
 expr_stmt|;
-comment|/* get the low stuff which rotated into the range B_7 .. B_cnt */
-comment|/* B_(7) .. B_(n)<-  b_(8-(n+1)) .. b_0  */
-comment|/* note that the right hand side done by the mask */
+comment|/*  		 * Get the low stuff which rotated into the range B_7 .. B_cnt 		 * B_(7) .. B_(n)<-  b_(8-(n+1)) .. b_0 		 * note that the right hand side done by the mask. 		 */
 name|res
 operator|=
 operator|(
@@ -29545,9 +29543,7 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* now the high stuff which rotated around into the positions 		 * B_cnt-2 .. B_0 */
-comment|/* B_(n-2) .. B_0<-  b_7 .. b_(8-(n-1)) */
-comment|/* shift it downward, 7-(n-2) = 9-n positions. and mask off 		 * the result before or'ing in. */
+comment|/*  		 * now the high stuff which rotated around into the positions 		 * B_cnt-2 .. B_0 		 * B_(n-2) .. B_0<-  b_7 .. b_(8-(n-1)) 		 * shift it downward, 7-(n-2) = 9-n positions. and mask off 		 * the result before or'ing in. 		 */
 name|mask
 operator|=
 operator|(
@@ -29995,7 +29991,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* rotate right through carry */
-comment|/* s is the rotate distance.  It varies from 0 - 8. d is the byte 	 * object rotated. 	 *  	 * have 	 *  	 * CF  B_7 B_6 B_5 B_4 B_3 B_2 B_1 B_0 	 *  	 * The new rotate is done mod 9, and given this, for a rotation of n bits 	 * (mod 9) the new carry flag is then located n bits from the LSB. 	 * The low part is then shifted up cnt bits, and the high part is or'd 	 * in.  Using CAPS for new values, and lowercase for the original 	 * values, this can be expressed as: 	 *  	 * IF n> 0 1) CF<-  b_(n-1) 2) B_(8-(n+1)) .. B_(0)<-  b_(7) .. b_(n) 	 * 3) B_(8-n)<- cf 4) B_(7) .. B_(8-(n-1))<-  b_(n-2) .. b_(0) */
+comment|/* s is the rotate distance.  It varies from 0 - 8. d is the byte 	 * object rotated. 	 *  	 * have 	 *  	 * CF  B_7 B_6 B_5 B_4 B_3 B_2 B_1 B_0 	 *  	 * The new rotate is done mod 9, and given this, for a rotation of n 	 * bits (mod 9) the new carry flag is then located n bits from the LSB. 	 * The low part is then shifted up cnt bits, and the high part is or'd 	 * in.  Using CAPS for new values, and lowercase for the original 	 * values, this can be expressed as: 	 *  	 * IF n> 0  	 *	1) CF<-  b_(n-1)  	 *	2) B_(8-(n+1)) .. B_(0)<-  b_(7) .. b_(n) 	 * 	3) B_(8-n)<- cf 4) B_(7) .. B_(8-(n-1))<-  b_(n-2) .. b_(0) 	 */
 name|res
 operator|=
 name|d
