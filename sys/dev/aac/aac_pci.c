@@ -967,7 +967,7 @@ name|AAC_HWIF_I960RX
 block|,
 literal|0
 block|,
-literal|"Adaptec SAS RAID 4000SAS"
+literal|"Adaptec RAID 4000"
 block|}
 block|,
 block|{

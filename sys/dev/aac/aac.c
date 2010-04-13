@@ -9168,8 +9168,8 @@ block|{
 name|ip
 operator|->
 name|InitFlags
-operator|=
-name|INITFLAGS_NEW_COMM_SUPPORTED
+operator||=
+name|AAC_INITFLAGS_NEW_COMM_SUPPORTED
 expr_stmt|;
 name|device_printf
 argument_list|(

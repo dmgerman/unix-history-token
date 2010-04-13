@@ -154,6 +154,12 @@ literal|71
 block|}
 block|,
 block|{
+literal|"device busy (spinning up)"
+block|,
+literal|72
+block|}
+block|,
+block|{
 literal|"bad file handle"
 block|,
 literal|10001
@@ -217,6 +223,12 @@ block|{
 literal|"stale ACL"
 block|,
 literal|10011
+block|}
+block|,
+block|{
+literal|"bus reset - command aborted"
+block|,
+literal|20001
 block|}
 block|,
 block|{
