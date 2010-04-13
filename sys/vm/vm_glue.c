@@ -2101,6 +2101,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2159,17 +2161,6 @@ name|i
 index|]
 operator|=
 name|m
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_wire
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
