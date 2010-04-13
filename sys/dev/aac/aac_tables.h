@@ -18,217 +18,217 @@ block|{
 block|{
 literal|"OK"
 block|,
-literal|0
+name|ST_OK
 block|}
 block|,
 block|{
 literal|"operation not permitted"
 block|,
-literal|1
+name|ST_PERM
 block|}
 block|,
 block|{
 literal|"not found"
 block|,
-literal|2
+name|ST_NOENT
 block|}
 block|,
 block|{
 literal|"I/O error"
 block|,
-literal|5
+name|ST_IO
 block|}
 block|,
 block|{
 literal|"device not configured"
 block|,
-literal|6
+name|ST_NXIO
 block|}
 block|,
 block|{
 literal|"too big"
 block|,
-literal|7
+name|ST_E2BIG
 block|}
 block|,
 block|{
 literal|"permission denied"
 block|,
-literal|13
+name|ST_ACCES
 block|}
 block|,
 block|{
 literal|"file exists"
 block|,
-literal|17
+name|ST_EXIST
 block|}
 block|,
 block|{
 literal|"cross-device link"
 block|,
-literal|18
+name|ST_XDEV
 block|}
 block|,
 block|{
 literal|"operation not supported by device"
 block|,
-literal|19
+name|ST_NODEV
 block|}
 block|,
 block|{
 literal|"not a directory"
 block|,
-literal|20
+name|ST_NOTDIR
 block|}
 block|,
 block|{
 literal|"is a directory"
 block|,
-literal|21
+name|ST_ISDIR
 block|}
 block|,
 block|{
 literal|"invalid argument"
 block|,
-literal|22
+name|ST_INVAL
 block|}
 block|,
 block|{
 literal|"file too large"
 block|,
-literal|27
+name|ST_FBIG
 block|}
 block|,
 block|{
 literal|"no space on device"
 block|,
-literal|28
+name|ST_NOSPC
 block|}
 block|,
 block|{
 literal|"readonly filesystem"
 block|,
-literal|30
+name|ST_ROFS
 block|}
 block|,
 block|{
 literal|"too many links"
 block|,
-literal|31
+name|ST_MLINK
 block|}
 block|,
 block|{
 literal|"operation would block"
 block|,
-literal|35
+name|ST_WOULDBLOCK
 block|}
 block|,
 block|{
 literal|"file name too long"
 block|,
-literal|63
+name|ST_NAMETOOLONG
 block|}
 block|,
 block|{
 literal|"directory not empty"
 block|,
-literal|66
+name|ST_NOTEMPTY
 block|}
 block|,
 block|{
 literal|"quota exceeded"
 block|,
-literal|69
+name|ST_DQUOT
 block|}
 block|,
 block|{
 literal|"stale file handle"
 block|,
-literal|70
+name|ST_STALE
 block|}
 block|,
 block|{
 literal|"too many levels of remote in path"
 block|,
-literal|71
+name|ST_REMOTE
 block|}
 block|,
 block|{
 literal|"device busy (spinning up)"
 block|,
-literal|72
+name|ST_NOT_READY
 block|}
 block|,
 block|{
 literal|"bad file handle"
 block|,
-literal|10001
+name|ST_BADHANDLE
 block|}
 block|,
 block|{
 literal|"not sync"
 block|,
-literal|10002
+name|ST_NOT_SYNC
 block|}
 block|,
 block|{
 literal|"bad cookie"
 block|,
-literal|10003
+name|ST_BAD_COOKIE
 block|}
 block|,
 block|{
 literal|"operation not supported"
 block|,
-literal|10004
+name|ST_NOTSUPP
 block|}
 block|,
 block|{
 literal|"too small"
 block|,
-literal|10005
+name|ST_TOOSMALL
 block|}
 block|,
 block|{
 literal|"server fault"
 block|,
-literal|10006
+name|ST_SERVERFAULT
 block|}
 block|,
 block|{
 literal|"bad type"
 block|,
-literal|10007
+name|ST_BADTYPE
 block|}
 block|,
 block|{
 literal|"jukebox"
 block|,
-literal|10008
+name|ST_JUKEBOX
 block|}
 block|,
 block|{
 literal|"not mounted"
 block|,
-literal|10009
+name|ST_NOTMOUNTED
 block|}
 block|,
 block|{
 literal|"in maintenance mode"
 block|,
-literal|10010
+name|ST_MAINTMODE
 block|}
 block|,
 block|{
 literal|"stale ACL"
 block|,
-literal|10011
+name|ST_STALEACL
 block|}
 block|,
 block|{
 literal|"bus reset - command aborted"
 block|,
-literal|20001
+name|ST_BUS_RESET
 block|}
 block|,
 block|{
