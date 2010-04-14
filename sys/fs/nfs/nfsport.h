@@ -2105,6 +2105,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFSSTATEMUTEXPTR
+value|(&nfs_state_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFSREQSPINLOCK
 value|extern struct mtx nfs_req_mutex
 end_define
@@ -2870,6 +2877,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NEWNFSDROLLBACK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2994,6 +3009,13 @@ define|#
 directive|define
 name|M_NFSDIRECTIO
 value|M_NEWNFSDIRECTIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_NFSDROLLBACK
+value|M_NEWNFSDROLLBACK
 end_define
 
 begin_define
