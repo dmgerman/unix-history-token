@@ -2016,13 +2016,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): copyin failed\n"
+literal|"pid %d (%s): sigreturn copyin failed\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -2052,13 +2056,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): mc_flags %x\n"
+literal|"pid %d (%s): sigreturn mc_flags %x\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|ucp
 operator|->
@@ -2108,13 +2116,17 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): rflags = 0x%lx\n"
+literal|"pid %d (%s): sigreturn rflags = 0x%lx\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|rflags
 argument_list|)
@@ -2143,13 +2155,17 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): cs = 0x%x\n"
+literal|"pid %d (%s): sigreturn cs = 0x%x\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
@@ -2223,13 +2239,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): set_fpcontext\n"
+literal|"pid %d (%s): sigreturn set_fpcontext err %d\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 return|return
