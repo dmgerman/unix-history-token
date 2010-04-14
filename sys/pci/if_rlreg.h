@@ -1006,7 +1006,7 @@ begin_define
 define|#
 directive|define
 name|RL_HWREV_8102EL_SPIN1
-value|0x24c00000
+value|0x24C00000
 end_define
 
 begin_define
@@ -1160,7 +1160,7 @@ begin_define
 define|#
 directive|define
 name|RL_HWREV_8101
-value|0x74c00000
+value|0x74C00000
 end_define
 
 begin_define
