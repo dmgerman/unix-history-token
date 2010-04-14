@@ -304,7 +304,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"7.0.4"
+literal|"7.0.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -7009,6 +7009,9 @@ name|txr
 operator|->
 name|adapter
 decl_stmt|;
+name|bool
+name|more
+decl_stmt|;
 operator|++
 name|txr
 operator|->
@@ -7019,6 +7022,8 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+name|more
+operator|=
 name|em_txeof
 argument_list|(
 name|txr
@@ -7029,6 +7034,24 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|more
+condition|)
+name|taskqueue_enqueue
+argument_list|(
+name|txr
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|txr
+operator|->
+name|tx_task
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Reenable this interrupt */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
