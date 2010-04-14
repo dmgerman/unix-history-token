@@ -1028,7 +1028,7 @@ literal|"vendor_id\t: %.20s\n"
 literal|"cpu family\t: %d\n"
 literal|"model\t\t: %d\n"
 literal|"model name\t: %s\n"
-literal|"stepping\t: %d\n"
+literal|"stepping\t: %d\n\n"
 argument_list|,
 name|i
 argument_list|,
