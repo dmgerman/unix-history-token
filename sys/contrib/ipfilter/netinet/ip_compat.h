@@ -6649,23 +6649,6 @@ parameter_list|)
 value|;
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|in_cksum
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
