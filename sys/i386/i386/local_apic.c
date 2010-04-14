@@ -366,10 +366,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX: should thermal be an NMI? */
-end_comment
-
-begin_comment
 comment|/* Global defaults for local APIC LVT entries. */
 end_comment
 
@@ -435,7 +431,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
@@ -1023,7 +1019,29 @@ index|]
 operator|=
 name|IRQ_TIMER
 expr_stmt|;
-comment|/* XXX: error/thermal interrupts */
+comment|/* Local APIC error interrupt. */
+name|setidt
+argument_list|(
+name|APIC_ERROR_INT
+argument_list|,
+name|IDTVEC
+argument_list|(
+name|errorint
+argument_list|)
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX: Thermal interrupt */
 block|}
 end_function
 
@@ -1235,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pcm: 0x%08x\n"
+literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pmc: 0x%08x\n"
 argument_list|,
 name|lapic
 operator|->
@@ -1477,7 +1495,29 @@ name|lapic_timer_enable_intr
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* XXX: Error and thermal LVTs */
+comment|/* Program error LVT and clear any existing errors. */
+name|lapic
+operator|->
+name|lvt_error
+operator|=
+name|lvt_mode
+argument_list|(
+name|la
+argument_list|,
+name|LVT_ERROR
+argument_list|,
+name|lapic
+operator|->
+name|lvt_error
+argument_list|)
+expr_stmt|;
+name|lapic
+operator|->
+name|esr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: Thermal LVT */
 if|if
 condition|(
 name|cpu_vendor_id
@@ -3474,6 +3514,47 @@ operator|->
 name|lvt_timer
 operator|=
 name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lapic_handle_error
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int32_t
+name|esr
+decl_stmt|;
+comment|/* 	 * Read the contents of the error status register.  Write to 	 * the register first before reading from it to force the APIC 	 * to update its value to indicate any errors that have 	 * occurred since the previous write to the register. 	 */
+name|lapic
+operator|->
+name|esr
+operator|=
+literal|0
+expr_stmt|;
+name|esr
+operator|=
+name|lapic
+operator|->
+name|esr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU%d: local APIC error 0x%x\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
+name|lapic_eoi
+argument_list|()
 expr_stmt|;
 block|}
 end_function

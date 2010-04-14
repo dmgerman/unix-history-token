@@ -437,6 +437,11 @@ argument_list|)
 decl_stmt|,
 name|IDTVEC
 argument_list|(
+name|errorint
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
 name|spuriousint
 argument_list|)
 decl_stmt|,
@@ -826,6 +831,15 @@ name|lapic_ipi_wait
 parameter_list|(
 name|int
 name|delay
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_handle_error
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
