@@ -828,6 +828,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_PMCH
+value|0x006F
+end_define
+
+begin_comment
+comment|/* 8 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_MAXRXPKTLEN
 value|0x00DA
 end_define
@@ -1010,6 +1021,13 @@ define|#
 directive|define
 name|RL_HWREV_8168DP
 value|0x28800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8168E
+value|0x2C000000
 end_define
 
 begin_define
@@ -4440,6 +4458,10 @@ define|#
 directive|define
 name|RL_FLAG_AUTOPAD
 value|0x0002
+define|#
+directive|define
+name|RL_FLAG_PHYWAKE_PM
+value|0x0004
 define|#
 directive|define
 name|RL_FLAG_PHYWAKE
