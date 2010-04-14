@@ -4314,13 +4314,6 @@ name|pr_pmcname
 argument_list|)
 operator|)
 return|;
-name|err
-argument_list|(
-name|EX_SOFTWARE
-argument_list|,
-literal|"ERROR: cannot find pmcid"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -4414,13 +4407,6 @@ condition|)
 return|return
 name|pr
 return|;
-name|err
-argument_list|(
-name|EX_SOFTWARE
-argument_list|,
-literal|"ERROR: invalid pmcindex"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;

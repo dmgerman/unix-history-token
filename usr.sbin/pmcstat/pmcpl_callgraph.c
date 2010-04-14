@@ -2498,6 +2498,18 @@ argument_list|(
 name|pmcstat_pmcinfilter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pmcr
+condition|)
+name|err
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"ERROR: invalid pmcindex"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We pull out all callgraph nodes in the top-level hash table 	 * with a matching PMC index.  We then sort these based on the 	 * frequency of occurrence.  Each callgraph node is then 	 * printed. 	 */
 name|nsamples
 operator|=
