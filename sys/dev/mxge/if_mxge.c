@@ -23905,6 +23905,8 @@ operator||
 name|IFCAP_TSO4
 operator||
 name|IFCAP_VLAN_MTU
+operator||
+name|IFCAP_LINKSTATE
 expr_stmt|;
 ifdef|#
 directive|ifdef
