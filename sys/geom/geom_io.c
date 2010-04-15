@@ -1277,12 +1277,18 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
-comment|/* Zero sectorsize is a probably lack of media */
+comment|/* Zero sectorsize or mediasize is probably a lack of media. */
 if|if
 condition|(
 name|pp
 operator|->
 name|sectorsize
+operator|==
+literal|0
+operator|||
+name|pp
+operator|->
+name|mediasize
 operator|==
 literal|0
 condition|)

@@ -242,40 +242,6 @@ comment|/*  * The virtual network stack allocator provides storage for virtualiz
 end_comment
 
 begin_comment
-comment|/*  * Location of the kernel's 'set_vnet' linker set.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
-modifier|*
-name|__start_set_vnet
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|uintptr_t
-modifier|*
-name|__stop_set_vnet
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|VNET_START
-value|(uintptr_t)&__start_set_vnet
-end_define
-
-begin_define
-define|#
-directive|define
-name|VNET_STOP
-value|(uintptr_t)&__stop_set_vnet
-end_define
-
-begin_comment
 comment|/*  * Number of bytes of data in the 'set_vnet' linker set, and hence the total  * size of all kernel virtualized global variables, and the malloc(9) type  * that will be used to allocate it.  */
 end_comment
 

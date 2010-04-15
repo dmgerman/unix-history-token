@@ -1094,6 +1094,11 @@ name|error
 operator|)
 return|;
 block|}
+name|pci_enable_busmaster
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Reset controller */
 name|siis_resume
 argument_list|(
