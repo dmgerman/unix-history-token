@@ -1496,6 +1496,24 @@ name|nfso_cred
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+name|NFSCLOPEN_SETCRED
+condition|)
+comment|/* 		 * This is a new local open on a delegation. It needs 		 * to have credentials so that an open can be done 		 * against the server during recovery. 		 */
+name|newnfs_copyincred
+argument_list|(
+name|cred
+argument_list|,
+operator|&
+name|op
+operator|->
+name|nfso_cred
+argument_list|)
+expr_stmt|;
 comment|/* 	     * nfso_opencnt is the count of how many VOP_OPEN()s have 	     * been done on this Open successfully and a VOP_CLOSE() 	     * is expected for each of these. 	     * If error is non-zero, don't increment it, since the Open 	     * hasn't succeeded yet. 	     */
 if|if
 condition|(

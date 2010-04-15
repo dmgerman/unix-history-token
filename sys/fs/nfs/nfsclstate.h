@@ -508,6 +508,13 @@ name|NFSCLOPEN_DOOPENDOWNGRADE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSCLOPEN_SETCRED
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|nfscllockowner
