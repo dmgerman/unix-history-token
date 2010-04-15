@@ -3078,7 +3078,7 @@ name|ggiocreate
 operator|.
 name|gctl_maxcount
 operator|=
-literal|128
+name|G_GATE_MAX_QUEUE_SIZE
 expr_stmt|;
 name|ggiocreate
 operator|.
