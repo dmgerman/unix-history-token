@@ -343,7 +343,7 @@ define|#
 directive|define
 name|BCE_DWORD_PRINTFB
 define|\
-value|"\020"					\ 	"\40b31"				\ 	"\37b30"				\ 	"\36b29"				\ 	"\35b28"				\ 	"\34b27"				\ 	"\33b26"				\ 	"\32b25"				\ 	"\31b24"				\ 	"\30b23"				\ 	"\27b22"				\ 	"\26b21"				\ 	"\25b20"				\ 	"\24b19"				\ 	"\23b18"				\ 	"\22b17"				\ 	"\21b16"				\ 	"\20b15"				\ 	"\17b14"				\ 	"\16b13"				\ 	"\15b12"				\ 	"\14b11"				\ 	"\13b10"				\ 	"\12b9"					\ 	"\11b8"					\ 	"\10b7"					\ 	"\07b6"					\ 	"\06b5"					\ 	"\05b4"					\ 	"\04b3"					\ 	"\03b2"					\ 	"\02b1"					\ 	"\01b0"
+value|"\020"			\ 	"\40b31"		\ 	"\37b30"		\ 	"\36b29"		\ 	"\35b28"		\ 	"\34b27"		\ 	"\33b26"		\ 	"\32b25"		\ 	"\31b24"		\ 	"\30b23"		\ 	"\27b22"		\ 	"\26b21"		\ 	"\25b20"		\ 	"\24b19"		\ 	"\23b18"		\ 	"\22b17"		\ 	"\21b16"		\ 	"\20b15"		\ 	"\17b14"		\ 	"\16b13"		\ 	"\15b12"		\ 	"\14b11"		\ 	"\13b10"		\ 	"\12b9"			\ 	"\11b8"			\ 	"\10b7"			\ 	"\07b6"			\ 	"\06b5"			\ 	"\05b4"			\ 	"\04b3"			\ 	"\03b2"			\ 	"\02b1"			\ 	"\01b0"
 end_define
 
 begin_comment
@@ -355,7 +355,7 @@ define|#
 directive|define
 name|BCE_BMCR_PRINTFB
 define|\
-value|"\020"					\ 	"\20Reset"				\ 	"\17Loopback"			\ 	"\16Spd0"				\ 	"\15AnegEna"			\ 	"\14PwrDn"				\ 	"\13Isolate"			\ 	"\12RstrtAneg"			\ 	"\11FD"					\ 	"\10CollTst"			\ 	"\07Spd1"				\ 	"\06Rsrvd"				\ 	"\05Rsrvd"				\ 	"\04Rsrvd"				\ 	"\03Rsrvd"				\ 	"\02Rsrvd"				\ 	"\01Rsrvd"
+value|"\020"			\ 	"\20Reset"		\ 	"\17Loopback"		\ 	"\16Spd0"		\ 	"\15AnegEna"		\ 	"\14PwrDn"		\ 	"\13Isolate"		\ 	"\12RstrtAneg"		\ 	"\11FD"			\ 	"\10CollTst"		\ 	"\07Spd1"		\ 	"\06Rsrvd"		\ 	"\05Rsrvd"		\ 	"\04Rsrvd"		\ 	"\03Rsrvd"		\ 	"\02Rsrvd"		\ 	"\01Rsrvd"
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ define|#
 directive|define
 name|BCE_BMSR_PRINTFB
 define|\
-value|"\020"					\ 	"\20Cap100T4"			\ 	"\17Cap100XFD"			\ 	"\16Cap100XHD"			\ 	"\15Cap10FD"			\ 	"\14Cap10HD"			\ 	"\13Cap100T2FD"			\ 	"\12Cap100T2HD"			\ 	"\11ExtStsPrsnt"		\ 	"\10Rsrvd"				\ 	"\07PrmblSupp"			\ 	"\06AnegCmpl"			\ 	"\05RemFaultDet"		\ 	"\04AnegCap"			\ 	"\03LnkUp"				\ 	"\02JabberDet"			\ 	"\01ExtCapSupp"
+value|"\020"			\ 	"\20Cap100T4"		\ 	"\17Cap100XFD"		\ 	"\16Cap100XHD"		\ 	"\15Cap10FD"		\ 	"\14Cap10HD"		\ 	"\13Cap100T2FD"		\ 	"\12Cap100T2HD"		\ 	"\11ExtStsPrsnt"	\ 	"\10Rsrvd"		\ 	"\07PrmblSupp"		\ 	"\06AnegCmpl"		\ 	"\05RemFaultDet"	\ 	"\04AnegCap"		\ 	"\03LnkUp"		\ 	"\02JabberDet"		\ 	"\01ExtCapSupp"
 end_define
 
 begin_comment
@@ -379,7 +379,7 @@ define|#
 directive|define
 name|BCE_ANAR_PRINTFB
 define|\
-value|"\020"					\ 	"\20AdvNxtPg"			\ 	"\17Rsrvd"				\ 	"\16AdvRemFault"		\ 	"\15Rsrvd"				\ 	"\14AdvAsymPause"		\ 	"\13AdvPause"			\ 	"\12Adv100T4"			\ 	"\11Adv100FD"			\ 	"\10Adv100HD"			\ 	"\07Adv10FD"			\ 	"\06Adv10HD"			\ 	"\05Rsrvd"				\ 	"\04Rsrvd"				\ 	"\03Rsrvd"				\ 	"\02Rsrvd"				\ 	"\01Adv802.3"
+value|"\020"			\ 	"\20AdvNxtPg"		\ 	"\17Rsrvd"		\ 	"\16AdvRemFault"	\ 	"\15Rsrvd"		\ 	"\14AdvAsymPause"	\ 	"\13AdvPause"		\ 	"\12Adv100T4"		\ 	"\11Adv100FD"		\ 	"\10Adv100HD"		\ 	"\07Adv10FD"		\ 	"\06Adv10HD"		\ 	"\05Rsrvd"		\ 	"\04Rsrvd"		\ 	"\03Rsrvd"		\ 	"\02Rsrvd"		\ 	"\01Adv802.3"
 end_define
 
 begin_comment
@@ -391,7 +391,7 @@ define|#
 directive|define
 name|BCE_ANLPAR_PRINTFB
 define|\
-value|"\020"					\ 	"\20CapNxtPg"			\ 	"\17Ack"				\ 	"\16CapRemFault"	 	\ 	"\15Rsrvd"				\ 	"\14CapAsymPause"		\ 	"\13CapPause"			\ 	"\12Cap100T4"			\ 	"\11Cap100FD"			\ 	"\10Cap100HD"			\ 	"\07Cap10FD"			\ 	"\06Cap10HD"			\ 	"\05Rsrvd"				\ 	"\04Rsrvd"				\ 	"\03Rsrvd"				\ 	"\02Rsrvd"				\ 	"\01Cap802.3"
+value|"\020"			\ 	"\20CapNxtPg"		\ 	"\17Ack"		\ 	"\16CapRemFault"	\ 	"\15Rsrvd"		\ 	"\14CapAsymPause"	\ 	"\13CapPause"		\ 	"\12Cap100T4"		\ 	"\11Cap100FD"		\ 	"\10Cap100HD"		\ 	"\07Cap10FD"		\ 	"\06Cap10HD"		\ 	"\05Rsrvd"		\ 	"\04Rsrvd"		\ 	"\03Rsrvd"		\ 	"\02Rsrvd"		\ 	"\01Cap802.3"
 end_define
 
 begin_comment
@@ -403,7 +403,7 @@ define|#
 directive|define
 name|BCE_1000CTL_PRINTFB
 define|\
-value|"\020"					\ 	"\20Test3"				\ 	"\17Test2"				\ 	"\16Test1"				\ 	"\15MasterSlave"		\ 	"\14ForceMaster"		\ 	"\13SwitchDev" 			\ 	"\12Adv1000TFD"			\ 	"\11Adv1000THD"			\ 	"\10Rsrvd"				\ 	"\07Rsrvd"				\ 	"\06Rsrvd"				\ 	"\05Rsrvd"				\ 	"\04Rsrvd"				\ 	"\03Rsrvd"				\ 	"\02Rsrvd"				\ 	"\01Rsrvd"
+value|"\020"			\ 	"\20Test3"		\ 	"\17Test2"		\ 	"\16Test1"		\ 	"\15MasterSlave"	\ 	"\14ForceMaster"	\ 	"\13SwitchDev" 		\ 	"\12Adv1000TFD"		\ 	"\11Adv1000THD"		\ 	"\10Rsrvd"		\ 	"\07Rsrvd"		\ 	"\06Rsrvd"		\ 	"\05Rsrvd"		\ 	"\04Rsrvd"		\ 	"\03Rsrvd"		\ 	"\02Rsrvd"		\ 	"\01Rsrvd"
 end_define
 
 begin_comment
@@ -415,7 +415,7 @@ define|#
 directive|define
 name|BCE_1000STS_PRINTFB
 define|\
-value|"\020"					\ 	"\20MstrSlvFault"		\ 	"\17Master"				\ 	"\16LclRcvrOk"			\ 	"\15RemRcvrOk"			\ 	"\14Cap1000FD"			\ 	"\13Cpa1000HD"			\ 	"\12Rsrvd"				\ 	"\11Rsrvd"
+value|"\020"			\ 	"\20MstrSlvFault"	\ 	"\17Master"		\ 	"\16LclRcvrOk"		\ 	"\15RemRcvrOk"		\ 	"\14Cap1000FD"		\ 	"\13Cpa1000HD"		\ 	"\12Rsrvd"		\ 	"\11Rsrvd"
 end_define
 
 begin_comment
@@ -427,7 +427,7 @@ define|#
 directive|define
 name|BCE_EXTSTS_PRINTFB
 define|\
-value|"\020"					\ 	"\20b15"				\ 	"\17b14"				\ 	"\16b13"				\ 	"\15b12"				\ 	"\14Rsrvd"				\ 	"\13Rsrvd"				\ 	"\12Rsrvd"				\ 	"\11Rsrvd"				\ 	"\10Rsrvd"				\ 	"\07Rsrvd"				\ 	"\06Rsrvd" 				\ 	"\05Rsrvd"				\ 	"\04Rsrvd"				\ 	"\03Rsrvd"				\ 	"\02Rsrvd"				\ 	"\01Rsrvd"
+value|"\020"			\ 	"\20b15"		\ 	"\17b14"		\ 	"\16b13"		\ 	"\15b12"		\ 	"\14Rsrvd"		\ 	"\13Rsrvd"		\ 	"\12Rsrvd"		\ 	"\11Rsrvd"		\ 	"\10Rsrvd"		\ 	"\07Rsrvd"		\ 	"\06Rsrvd" 		\ 	"\05Rsrvd"		\ 	"\04Rsrvd"		\ 	"\03Rsrvd"		\ 	"\02Rsrvd"		\ 	"\01Rsrvd"
 end_define
 
 begin_comment
@@ -439,19 +439,11 @@ define|#
 directive|define
 name|BCE_AUXSTS_PRINTFB
 define|\
-value|"\020"					\ 	"\20AnegCmpl"			\ 	"\17AnegCmplAck"		\ 	"\16AnegAckDet"			\ 	"\15AnegAblDet"			\ 	"\14AnegNextPgWait"		\ 	"\13HCD"				\ 	"\12HCD" 				\ 	"\11HCD" 				\ 	"\10PrlDetFault"		\ 	"\07RemFault"			\ 	"\06PgRcvd"				\ 	"\05LnkPrtnrAnegAbl"	\ 	"\04LnkPrtnrNPAbl"		\ 	"\03LnkUp"				\ 	"\02EnaPauseRcv"		\ 	"\01EnaPausXmit"
+value|"\020"			\ 	"\20AnegCmpl"		\ 	"\17AnegCmplAck"	\ 	"\16AnegAckDet"		\ 	"\15AnegAblDet"		\ 	"\14AnegNextPgWait"	\ 	"\13HCD"		\ 	"\12HCD" 		\ 	"\11HCD" 		\ 	"\10PrlDetFault"	\ 	"\07RemFault"		\ 	"\06PgRcvd"		\ 	"\05LnkPrtnrAnegAbl"	\ 	"\04LnkPrtnrNPAbl"	\ 	"\03LnkUp"		\ 	"\02EnaPauseRcv"	\ 	"\01EnaPausXmit"
 end_define
 
 begin_comment
-comment|/* Remove before release. */
-end_comment
-
-begin_comment
-comment|/* #define BCE_DEBUG 1 */
-end_comment
-
-begin_comment
-comment|/* #define BCE_NVRAM_WRITE_SUPPORT */
+comment|/*   * Remove before release:   *  * #define BCE_DEBUG  * #define BCE_NVRAM_WRITE_SUPPORT  * #define BCE_JUMBO_HDRSPLIT  */
 end_comment
 
 begin_comment
@@ -1134,6 +1126,7 @@ name|BCE_MSG_LEVEL
 parameter_list|(
 name|lv
 parameter_list|)
+define|\
 value|((lv& BCE_LEVEL_MASK)<= (bce_debug& BCE_LEVEL_MASK))
 end_define
 
@@ -1154,22 +1147,6 @@ name|BCE_DEBUG
 end_ifdef
 
 begin_comment
-comment|/*  * Calculate the time delta between two reads  * of the 25MHz free running clock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCE_TIME_DELTA
-parameter_list|(
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(start> end ? (start - end) : \ 	(~start + end + 1))
-end_define
-
-begin_comment
 comment|/* Print a message based on the logging level and code path. */
 end_comment
 
@@ -1188,7 +1165,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_LOG_MSG(level)) {							\ 		device_printf(sc->bce_dev, format, ## args);						\ 	}
+value|if (BCE_LOG_MSG(level)) {				\ 		device_printf(sc->bce_dev, format, ## args);	\ 	}
 end_define
 
 begin_comment
@@ -1204,7 +1181,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {						\ 		args;					\ 	} while (0)
+value|do {							\ 		args;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -1222,7 +1199,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_LOG_MSG(msg)) {		\ 		args;					\ 	}
+value|if (BCE_LOG_MSG(msg)) {					\ 		args;						\ 	}
 end_define
 
 begin_comment
@@ -1240,7 +1217,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_MSG_LEVEL(level)) { \ 		args;					\ 	}
+value|if (BCE_MSG_LEVEL(level)) { 				\ 		args;						\ 	}
 end_define
 
 begin_comment
@@ -1258,7 +1235,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BCE_CODE_PATH(cp)) { 	\ 		args; 					\ 	}
+value|if (BCE_CODE_PATH(cp)) { 				\ 		args; 						\ 	}
 end_define
 
 begin_comment
@@ -1276,7 +1253,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (cond) {													\ 		args;													\ 	}
+value|if (cond) {						\ 		args;						\ 	}
 end_define
 
 begin_comment
@@ -1321,7 +1298,7 @@ parameter_list|(
 name|cond
 parameter_list|)
 define|\
-value|u32 bce_debug_temp = bce_debug;								\ 	bce_debug |= cond;
+value|u32 bce_debug_temp = bce_debug;				\ 	bce_debug |= cond;
 end_define
 
 begin_comment
@@ -1425,7 +1402,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|switch(reg) {															\ 		case 0x00: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (BMCR   ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_BMCR_PRINTFB); break;										\ 		case 0x01: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (BMSR   ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_BMSR_PRINTFB); break;										\ 		case 0x04: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (ANAR   ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_ANAR_PRINTFB); break;										\ 		case 0x05: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (ANLPAR ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_ANLPAR_PRINTFB); break;										\ 		case 0x09: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (1000CTL), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_1000CTL_PRINTFB); break;									\ 		case 0x0a: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (1000STS), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_1000STS_PRINTFB); break;									\ 		case 0x0f: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (EXTSTS ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_EXTSTS_PRINTFB); break;										\ 		case 0x19: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X (AUXSTS ), val = 0x%b\n",			\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,		\ 			BCE_AUXSTS_PRINTFB); break;										\ 		default: DBPRINT(sc, BCE_INSANE_PHY,								\ 			"%s(): phy = %d, reg = 0x%04X, val = 0x%04X\n",					\ 			__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff);		\ 	}
+value|switch(reg) {								\ case 0x00: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (BMCR   ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_BMCR_PRINTFB); break;					\ case 0x01: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (BMSR   ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_BMSR_PRINTFB); break;					\ case 0x04: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (ANAR   ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_ANAR_PRINTFB); break;					\ case 0x05: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (ANLPAR ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_ANLPAR_PRINTFB); break;					\ case 0x09: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (1000CTL), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_1000CTL_PRINTFB); break;					\ case 0x0a: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (1000STS), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_1000STS_PRINTFB); break;					\ case 0x0f: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (EXTSTS ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_EXTSTS_PRINTFB); break;					\ case 0x19: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X (AUXSTS ), val = 0x%b\n",		\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff,	\ 	BCE_AUXSTS_PRINTFB); break;					\ default: DBPRINT(sc, BCE_INSANE_PHY,					\ 	"%s(): phy = %d, reg = 0x%04X, val = 0x%04X\n",			\ 	__FUNCTION__, phy, (u16) reg& 0xffff, (u16) val& 0xffff);	\ 	}
 end_define
 
 begin_else
@@ -2552,7 +2529,7 @@ begin_define
 define|#
 directive|define
 name|FLASH_STRAP_MASK
-value|(BCE_NVM_CFG1_FLASH_MODE | \ 										 BCE_NVM_CFG1_BUFFER_MODE  | \ 										 BCE_NVM_CFG1_PROTECT_MODE | \ 										 BCE_NVM_CFG1_FLASH_SIZE)
+value|(BCE_NVM_CFG1_FLASH_MODE |	\     BCE_NVM_CFG1_BUFFER_MODE | BCE_NVM_CFG1_PROTECT_MODE |	\     BCE_NVM_CFG1_FLASH_SIZE)
 end_define
 
 begin_define
@@ -2828,6 +2805,20 @@ define|#
 directive|define
 name|BCE_FW_MSG_STATUS_OK
 value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_FW_MSG_STATUS_INVALID_ARGS
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_FW_MSG_STATUS_DRV_PRSNT
+value|0x00020000
 end_define
 
 begin_define
@@ -4147,21 +4138,24 @@ begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_NONE
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					  0x00010000)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | 0x00010000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_PCI
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					  0x00020000)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | 0x00020000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_VAUX
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					  0x00030000)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | 0x00030000)
 end_define
 
 begin_define
@@ -4175,35 +4169,40 @@ begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_DRV_RESET
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					    DRV_MSG_CODE_RESET)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | DRV_MSG_CODE_RESET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_DRV_UNLOAD
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					     DRV_MSG_CODE_UNLOAD)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | DRV_MSG_CODE_UNLOAD)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_DRV_SHUTDOWN
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					       DRV_MSG_CODE_SHUTDOWN)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | DRV_MSG_CODE_SHUTDOWN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_DRV_WOL
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					  DRV_MSG_CODE_WOL)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | DRV_MSG_CODE_WOL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_RESET_TYPE_DRV_DIAG
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					   DRV_MSG_CODE_DIAG)
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | DRV_MSG_CODE_DIAG)
 end_define
 
 begin_define
@@ -4213,7 +4212,8 @@ name|BCE_BC_STATE_RESET_TYPE_VALUE
 parameter_list|(
 name|msg
 parameter_list|)
-value|(BCE_BC_STATE_RESET_TYPE_SIG | \ 					     (msg))
+define|\
+value|(BCE_BC_STATE_RESET_TYPE_SIG | (msg))
 end_define
 
 begin_define
@@ -4436,6 +4436,88 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_CONDITION_INIT_POR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_INIT_VAUX_AVAIL
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_INIT_PCI_AVAIL
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_INIT_PCI_RESET
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_INIT_HD_RESET
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* 5709/16 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_DRV_PRESENT
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_LOW_POWER_LINK
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_CORE_RST_OCCURRED
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* 5709/16 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_UNUSED
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_BUSY_EXPROM
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* 5706/08 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BCE_CONDITION_MFW_RUN_UNKNOWN
 value|0x00000000
 end_define
@@ -4475,11 +4557,89 @@ name|BCE_CONDITION_MFW_RUN_MASK
 value|0x0000e000
 end_define
 
+begin_comment
+comment|/* 5709/16 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PM_STATE_MASK
+value|0x00030000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PM_STATE_FULL
+value|0x00030000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PM_STATE_PREP
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PM_STATE_UNPREP
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PM_RESERVED
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* 5709/16 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_RXMODE_KEEP_VLAN
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_DRV_WOL_ENABLED
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_PORT_DISABLED
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_DRV_MAYBE_OUT
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCE_CONDITION_DPFW_DEAD
+value|0x00400000
+end_define
+
 begin_define
 define|#
 directive|define
 name|BCE_BC_STATE_DEBUG_CMD
-value|0x1dc
+value|0x000001dc
 end_define
 
 begin_define
@@ -4550,6 +4710,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
+define|\
 value|device_printf(sc->bce_dev, fmt, ##args)
 end_define
 
@@ -4562,6 +4723,7 @@ name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
+define|\
 value|mtx_init(&(_sc)->bce_mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
 end_define
 
@@ -4667,6 +4829,7 @@ name|offset
 parameter_list|,
 name|val
 parameter_list|)
+define|\
 value|bus_space_write_4(sc->bce_btag, sc->bce_bhandle, offset, val)
 end_define
 
@@ -4681,6 +4844,7 @@ name|offset
 parameter_list|,
 name|val
 parameter_list|)
+define|\
 value|bus_space_write_2(sc->bce_btag, sc->bce_bhandle, offset, val)
 end_define
 
@@ -4693,6 +4857,7 @@ name|sc
 parameter_list|,
 name|offset
 parameter_list|)
+define|\
 value|bus_space_read_4(sc->bce_btag, sc->bce_bhandle, offset)
 end_define
 
@@ -4768,6 +4933,7 @@ name|reg
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|REG_WR(sc, reg, (REG_RD(sc, reg) | (x)))
 end_define
 
@@ -4782,6 +4948,7 @@ name|reg
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|REG_WR(sc, reg, (REG_RD(sc, reg)& ~(x)))
 end_define
 
@@ -4798,6 +4965,7 @@ name|x
 parameter_list|,
 name|s
 parameter_list|)
+define|\
 value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s) | (x)), s)
 end_define
 
@@ -4814,6 +4982,7 @@ name|x
 parameter_list|,
 name|s
 parameter_list|)
+define|\
 value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s)& ~(x)), s)
 end_define
 
@@ -5703,7 +5872,7 @@ define|#
 directive|define
 name|BCE_L2FHDR_PRINTFB
 define|\
-value|"\20"					\ 	"\40UDP_XSUM_ERR"		\ 	"\37b30"				\ 	"\36b29"				\ 	"\35TCP_XSUM_ERR"		\ 	"\34b27"				\ 	"\33b26"				\ 	"\32b25"				\ 	"\31b24"				\ 	"\30b23"				\ 	"\27b22"				\ 	"\26GIANT_ERR"			\ 	"\25SHORT_ERR"			\ 	"\24ALIGN_ERR"			\ 	"\23PHY_ERR"			\ 	"\22CRC_ERR"			\ 	"\21SPLIT"				\ 	"\20UDP"				\ 	"\17TCP"				\ 	"\16IP"					\ 	"\15b12"				\ 	"\14b11"				\ 	"\13b10"				\ 	"\12b09"				\ 	"\11RSS"				\ 	"\10SNAP"				\ 	"\07VLAN"				\ 	"\06P4"					\ 	"\05P3"					\ 	"\04P2"
+value|"\20"			\ 	"\40UDP_XSUM_ERR"	\ 	"\37b30"		\ 	"\36b29"		\ 	"\35TCP_XSUM_ERR"	\ 	"\34b27"		\ 	"\33b26"		\ 	"\32b25"		\ 	"\31b24"		\ 	"\30b23"		\ 	"\27b22"		\ 	"\26GIANT_ERR"		\ 	"\25SHORT_ERR"		\ 	"\24ALIGN_ERR"		\ 	"\23PHY_ERR"		\ 	"\22CRC_ERR"		\ 	"\21SPLIT"		\ 	"\20UDP"		\ 	"\17TCP"		\ 	"\16IP"			\ 	"\15b12"		\ 	"\14b11"		\ 	"\13b10"		\ 	"\12b09"		\ 	"\11RSS"		\ 	"\10SNAP"		\ 	"\07VLAN"		\ 	"\06P4"			\ 	"\05P3"			\ 	"\04P2"
 end_define
 
 begin_comment
@@ -6044,6 +6213,7 @@ begin_define
 define|#
 directive|define
 name|BCE_L2CTX_RX_CTX_TYPE_SIZE_L2
+define|\
 value|((0x20/20)<<BCE_L2CTX_RX_CTX_SIZE_SHIFT)
 end_define
 
@@ -34398,249 +34568,6 @@ name|NUM_MC_HASH_REGISTERS
 value|8
 end_define
 
-begin_comment
-comment|/* PHY_ID1: bits 31-16; PHY_ID2: bits 15-0.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BCM5706_PHY_ID
-value|0x00206160
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_ID
-parameter_list|(
-name|id
-parameter_list|)
-value|((id)& 0xfffffff0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_REV_ID
-parameter_list|(
-name|id
-parameter_list|)
-value|((id)& 0xf)
-end_define
-
-begin_comment
-comment|/* 5708 Serdes PHY registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_UP1
-value|0xb
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_UP1_2G5
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_BLK_ADDR
-value|0x1f
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_BLK_ADDR_DIG
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_BLK_ADDR_DIG3
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_BLK_ADDR_TX_MISC
-value|0x0005
-end_define
-
-begin_comment
-comment|/* Digital Block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_CTL1
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_CTL1_FIBER_MODE
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_CTL1_AUTODET_EN
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_CTL2
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_CTL2_PLLEL_DET_EN
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1
-value|0x14
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SGMII
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_LINK
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_FD
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SPEED_MASK
-value|0x0018
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SPEED_10
-value|0x0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SPEED_100
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SPEED_1G
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_SPEED_2G5
-value|0x0018
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_TX_PAUSE
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_1000X_STAT1_RX_PAUSE
-value|0x0040
-end_define
-
-begin_comment
-comment|/* Digital3 Block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_DIG_3_0
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_DIG_3_0_USE_IEEE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Tx/Misc Block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_TX_ACTL1
-value|0x15
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_TX_ACTL1_DRIVER_VCM
-value|0x30
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCM5708S_TX_ACTL3
-value|0x17
-end_define
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESH
-value|92
-end_define
-
 begin_define
 define|#
 directive|define
@@ -34691,7 +34618,7 @@ name|BCM_PAGES
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x) + BCM_PAGE_SIZE - 1)& BCM_PAGE_MASK)>> BCM_PAGE_BITS)
+value|((((x) + BCM_PAGE_SIZE - 1)& \     BCM_PAGE_MASK)>> BCM_PAGE_BITS)
 end_define
 
 begin_comment
@@ -34751,7 +34678,7 @@ name|NEXT_TX_BD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& USABLE_TX_BD_PER_PAGE) ==	\ 		(USABLE_TX_BD_PER_PAGE - 1)) ?					  	\ 		(x) + 2 : (x) + 1
+value|(((x)& USABLE_TX_BD_PER_PAGE) ==	\     (USABLE_TX_BD_PER_PAGE - 1)) ? (x) + 2 : (x) + 1
 end_define
 
 begin_define
@@ -34841,7 +34768,7 @@ name|NEXT_RX_BD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& USABLE_RX_BD_PER_PAGE) ==	\ 		(USABLE_RX_BD_PER_PAGE - 1)) ?					\ 		(x) + 2 : (x) + 1
+value|(((x)& USABLE_RX_BD_PER_PAGE) ==	\     (USABLE_RX_BD_PER_PAGE - 1)) ? (x) + 2 : (x) + 1
 end_define
 
 begin_define
@@ -34937,7 +34864,7 @@ name|NEXT_PG_BD
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)& USABLE_PG_BD_PER_PAGE) ==	\ 		(USABLE_PG_BD_PER_PAGE - 1)) ?					\ 		(x) + 2 : (x) + 1
+value|(((x)& USABLE_PG_BD_PER_PAGE) ==	\     (USABLE_PG_BD_PER_PAGE - 1)) ? (x) + 2 : (x) + 1
 end_define
 
 begin_define
@@ -35388,6 +35315,13 @@ name|BCE_DMA_BOUNDARY
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCE_MAX_CONTEXT
+value|4
+end_define
+
 begin_comment
 comment|/* The BCM5708 has a problem with addresses greater that 40bits. */
 end_comment
@@ -35476,7 +35410,7 @@ begin_define
 define|#
 directive|define
 name|BCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 							IFCAP_HWCSUM | IFCAP_JUMBO_MTU)
+value|(IFCAP_VLAN_MTU | 			\     IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM | IFCAP_JUMBO_MTU)
 end_define
 
 begin_else
@@ -35488,7 +35422,7 @@ begin_define
 define|#
 directive|define
 name|BCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 							IFCAP_HWCSUM | IFCAP_JUMBO_MTU | IFCAP_VLAN_HWCSUM)
+value|(IFCAP_VLAN_MTU |			\     IFCAP_VLAN_HWTAGGING | IFCAP_HWCSUM |			\     IFCAP_JUMBO_MTU | IFCAP_VLAN_HWCSUM)
 end_define
 
 begin_endif
@@ -35607,55 +35541,53 @@ begin_struct
 struct|struct
 name|bce_softc
 block|{
-comment|/* MUST start with ifnet pointer (see definition of miibus_statchg()) */
+comment|/* Interface info */
 name|struct
 name|ifnet
 modifier|*
 name|bce_ifp
 decl_stmt|;
-comment|/* Interface info */
+comment|/* Parent device handle */
 name|device_t
 name|bce_dev
 decl_stmt|;
-comment|/* Parent device handle */
+comment|/* Interface number */
 name|u_int8_t
 name|bce_unit
 decl_stmt|;
-comment|/* Interface number */
+comment|/* Device resource handle */
 name|struct
 name|resource
 modifier|*
 name|bce_res_mem
 decl_stmt|;
-comment|/* Device resource handle */
+comment|/* TBI media info */
 name|struct
 name|ifmedia
 name|bce_ifmedia
 decl_stmt|;
-comment|/* TBI media info */
+comment|/* Device bus tag */
 name|bus_space_tag_t
 name|bce_btag
 decl_stmt|;
-comment|/* Device bus tag */
+comment|/* Device bus handle */
 name|bus_space_handle_t
 name|bce_bhandle
 decl_stmt|;
-comment|/* Device bus handle */
+comment|/* Device virtual memory handle */
 name|vm_offset_t
 name|bce_vhandle
 decl_stmt|;
-comment|/* Device virtual memory handle */
+comment|/* IRQ Resource Handle */
 name|struct
 name|resource
 modifier|*
 name|bce_res_irq
 decl_stmt|;
-comment|/* IRQ Resource Handle */
 name|struct
 name|mtx
 name|bce_mtx
 decl_stmt|;
-comment|/* Mutex */
 comment|/* Interrupt handler. */
 name|driver_intr_t
 modifier|*
@@ -35689,9 +35621,8 @@ name|BCE_PCI_32BIT_FLAG
 value|0x00000002
 define|#
 directive|define
-name|BCE_ONE_TDMA_FLAG
+name|BCE_RESERVED_FLAG
 value|0x00000004
-comment|/* Deprecated */
 define|#
 directive|define
 name|BCE_NO_WOL_FLAG
@@ -35786,37 +35717,37 @@ decl_stmt|;
 name|bus_addr_t
 name|max_bus_addr
 decl_stmt|;
+comment|/* PCI bus speed */
 name|u16
 name|bus_speed_mhz
 decl_stmt|;
-comment|/* PCI bus speed */
+comment|/* PCIe link width */
 name|u16
 name|link_width
 decl_stmt|;
-comment|/* PCIe link width */
+comment|/* PCIe link speed */
 name|u16
 name|link_speed
 decl_stmt|;
-comment|/* PCIe link speed */
+comment|/* Flash NVRAM settings */
 name|struct
 name|flash_spec
 modifier|*
 name|bce_flash_info
 decl_stmt|;
-comment|/* Flash NVRAM settings */
+comment|/* Flash NVRAM size */
 name|u32
 name|bce_flash_size
 decl_stmt|;
-comment|/* Flash NVRAM size */
+comment|/* Shared Memory base address */
 name|u32
 name|bce_shmem_base
 decl_stmt|;
-comment|/* Shared Memory base address */
+comment|/* Name string */
 name|char
 modifier|*
 name|bce_name
 decl_stmt|;
-comment|/* Name string */
 comment|/* Tracks the version of bootcode firmware. */
 name|char
 name|bce_bc_ver
@@ -35824,27 +35755,28 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+comment|/* Tracks the version of management firmware. */
 name|char
 name|bce_mfw_ver
 index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* Tracks the state of the firmware.  0 = Running while any     */
-comment|/* other value indicates that the firmware is not responding.   */
+comment|/*  	 * Tracks the state of the firmware.  0 = Running while any 	 * other value indicates that the firmware is not responding. 	 */
 name|u16
 name|bce_fw_timed_out
 decl_stmt|;
-comment|/* An incrementing sequence used to coordinate messages passed   */
-comment|/* from the driver to the firmware.                              */
+comment|/*  	 * An incrementing sequence used to coordinate messages passed 	 * from the driver to the firmware. 	 */
 name|u16
 name|bce_fw_wr_seq
 decl_stmt|;
-comment|/* An incrementing sequence used to let the firmware know that   */
-comment|/* the driver is still operating.  Without the pulse, management */
-comment|/* firmware such as IPMI or UMP will operate in OS absent state. */
+comment|/*  	 * An incrementing sequence used to let the firmware know that 	 * the driver is still operating.  Without the pulse, management 	 * firmware such as IPMI or UMP will operate in OS absent state. 	 */
 name|u16
 name|bce_fw_drv_pulse_wr_seq
+decl_stmt|;
+comment|/* Tracks whether firmware has lost the driver's pulse. */
+name|u16
+name|bce_drv_cardiac_arrest
 decl_stmt|;
 comment|/* Ethernet MAC address. */
 name|u_char
@@ -35853,9 +35785,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* These setting are used by the host coalescing (HC) block to   */
-comment|/* to control how often the status block, statistics block and   */
-comment|/* interrupts are generated.                                     */
+comment|/*  	 * These setting are used by the host coalescing (HC) block to 	 * to control how often the status block, statistics block and 	 * interrupts are generated. 	 */
 name|u16
 name|bce_tx_quick_cons_trip_int
 decl_stmt|;
@@ -35869,12 +35799,6 @@ name|u16
 name|bce_rx_quick_cons_trip
 decl_stmt|;
 name|u16
-name|bce_comp_prod_trip_int
-decl_stmt|;
-name|u16
-name|bce_comp_prod_trip
-decl_stmt|;
-name|u16
 name|bce_tx_ticks_int
 decl_stmt|;
 name|u16
@@ -35885,6 +35809,16 @@ name|bce_rx_ticks_int
 decl_stmt|;
 name|u16
 name|bce_rx_ticks
+decl_stmt|;
+name|u32
+name|bce_stats_ticks
+decl_stmt|;
+comment|/* ToDo: Can these be removed? */
+name|u16
+name|bce_comp_prod_trip_int
+decl_stmt|;
+name|u16
+name|bce_comp_prod_trip
 decl_stmt|;
 name|u16
 name|bce_com_ticks_int
@@ -35897,9 +35831,6 @@ name|bce_cmd_ticks_int
 decl_stmt|;
 name|u16
 name|bce_cmd_ticks
-decl_stmt|;
-name|u32
-name|bce_stats_ticks
 decl_stmt|;
 comment|/* The address of the integrated PHY on the MII bus. */
 name|int
@@ -35916,20 +35847,20 @@ decl_stmt|;
 name|u16
 name|rx_cons
 decl_stmt|;
+comment|/* Counts the bytes used in the RX chain. */
 name|u32
 name|rx_prod_bseq
 decl_stmt|;
-comment|/* Counts the bytes used.  */
 name|u16
 name|tx_prod
 decl_stmt|;
 name|u16
 name|tx_cons
 decl_stmt|;
+comment|/* Counts the bytes used in the TX chain. */
 name|u32
 name|tx_prod_bseq
 decl_stmt|;
-comment|/* Counts the bytes used.  */
 ifdef|#
 directive|ifdef
 name|BCE_JUMBO_HDRSPLIT
@@ -35942,7 +35873,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|bce_link
+name|bce_link_up
 decl_stmt|;
 name|struct
 name|callout
@@ -35952,10 +35883,10 @@ name|struct
 name|callout
 name|bce_pulse_callout
 decl_stmt|;
+comment|/* Ticks until chip reset */
 name|int
 name|watchdog_timer
 decl_stmt|;
-comment|/* ticks until chip reset */
 comment|/* Frame size and mbuf allocation size for RX frames. */
 name|u32
 name|max_frame_size
@@ -36074,11 +36005,9 @@ name|status_block
 modifier|*
 name|status_block
 decl_stmt|;
-comment|/* Virtual address */
 name|bus_addr_t
 name|status_block_paddr
 decl_stmt|;
-comment|/* Physical address */
 comment|/* Driver maintained status block values. */
 name|u16
 name|last_status_idx
@@ -36101,11 +36030,9 @@ name|statistics_block
 modifier|*
 name|stats_block
 decl_stmt|;
-comment|/* Virtual address */
 name|bus_addr_t
 name|stats_block_paddr
 decl_stmt|;
-comment|/* Physical address */
 comment|/* H/W maintained context block. */
 name|int
 name|ctx_pages
@@ -36113,28 +36040,26 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|ctx_tag
 decl_stmt|;
-comment|/* DRC - Fix hard coded value. */
+comment|/* BCM5709/16 use host memory for context. */
 name|bus_dmamap_t
 name|ctx_map
 index|[
-literal|4
+name|BCE_MAX_CONTEXT
 index|]
 decl_stmt|;
 name|void
 modifier|*
 name|ctx_block
 index|[
-literal|4
+name|BCE_MAX_CONTEXT
 index|]
 decl_stmt|;
-comment|/* Virtual address */
 name|bus_addr_t
 name|ctx_paddr
 index|[
-literal|4
+name|BCE_MAX_CONTEXT
 index|]
 decl_stmt|;
-comment|/* Physical address */
 comment|/* Bus tag for RX/TX mbufs. */
 name|bus_dma_tag_t
 name|rx_mbuf_tag
@@ -36410,6 +36335,14 @@ decl_stmt|;
 name|u32
 name|dma_map_addr_rx_failed_count
 decl_stmt|;
+comment|/* Host coalescing block command register */
+name|u32
+name|hc_command
+decl_stmt|;
+comment|/* Bootcode state */
+name|u32
+name|bc_state
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|BCE_DEBUG
@@ -36426,14 +36359,6 @@ decl_stmt|;
 name|u32
 name|dma_map_addr_failed_sim_count
 decl_stmt|;
-endif|#
-directive|endif
-name|u32
-name|hc_command
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_DEBUG
 comment|/* Track the number of enqueued mbufs. */
 name|int
 name|debug_tx_mbuf_alloc
@@ -36462,6 +36387,9 @@ decl_stmt|;
 name|u32
 name|tx_interrupts
 decl_stmt|;
+name|u32
+name|phy_interrupts
+decl_stmt|;
 comment|/* Track interrupt time (25MHz clock). */
 name|u64
 name|rx_intr_time
@@ -36469,39 +36397,39 @@ decl_stmt|;
 name|u64
 name|tx_intr_time
 decl_stmt|;
+comment|/* Lowest number of rx_bd's free. */
 name|u32
 name|rx_low_watermark
 decl_stmt|;
-comment|/* Lowest number of rx_bd's free. */
+comment|/* Number of times the RX chain was empty. */
 name|u32
 name|rx_empty_count
 decl_stmt|;
-comment|/* Number of times the RX chain was empty. */
 ifdef|#
 directive|ifdef
 name|BCE_JUMBO_HDRSPLIT
+comment|/* Lowest number of pages free. */
 name|u32
 name|pg_low_watermark
 decl_stmt|;
-comment|/* Lowest number of pages free. */
+comment|/* Number of times the page chain was empty. */
 name|u32
 name|pg_empty_count
 decl_stmt|;
-comment|/* Number of times the page chain was empty. */
 endif|#
 directive|endif
+comment|/* Greatest number of tx_bd's used. */
 name|u32
 name|tx_hi_watermark
 decl_stmt|;
-comment|/* Greatest number of tx_bd's used. */
+comment|/* Number of times the TX chain was full. */
 name|u32
 name|tx_full_count
 decl_stmt|;
-comment|/* Number of times the TX chain was full. */
+comment|/* Number of TSO frames enqueued. */
 name|u32
 name|requested_tso_frames
 decl_stmt|;
-comment|/* Number of TSO frames enqueued. */
 endif|#
 directive|endif
 block|}
