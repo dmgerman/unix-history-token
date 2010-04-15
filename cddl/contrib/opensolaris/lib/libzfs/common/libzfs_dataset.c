@@ -19000,8 +19000,13 @@ argument_list|,
 name|curr
 argument_list|)
 decl_stmt|;
+comment|/* 		 * We leave user:props in the nvlist, so there will be 		 * some ZPROP_INVAL.  To be extra safe, don't prune 		 * those. 		 */
 if|if
 condition|(
+name|zfs_prop
+operator|!=
+name|ZPROP_INVAL
+operator|&&
 name|props
 index|[
 name|zfs_prop
