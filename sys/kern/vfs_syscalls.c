@@ -5456,13 +5456,13 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
+comment|/* 	 * Store the vnode, for any f_type. Typically, the vnode use 	 * count is decremented by direct call to vn_closefile() for 	 * files that switched type in the cdevsw fdopen() method. 	 */
 name|fp
 operator|->
 name|f_vnode
 operator|=
 name|vp
 expr_stmt|;
-comment|/* XXX Does devfs need this? */
 comment|/* 	 * If the file wasn't claimed by devfs bind it to the normal 	 * vnode operations here. 	 */
 if|if
 condition|(
