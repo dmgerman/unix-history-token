@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_MAX
-value|4
+value|6
 end_define
 
 begin_comment
@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom") \ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom") \ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7") \ 	__PMC_CPU(INTEL_WESTMERE, 0x8C,   "Intel Westmere")
 end_define
 
 begin_enum
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CPU_LAST
-value|PMC_CPU_INTEL_COREI7
+value|PMC_CPU_INTEL_WESTMERE
 end_define
 
 begin_comment
@@ -170,19 +170,21 @@ comment|/* Intel Pentium-IV counters */
 value|\ 	__PMC_CLASS(IAF)
 comment|/* Intel Core2/Atom, fixed function */
 value|\ 	__PMC_CLASS(IAP)
+comment|/* Intel Core...Atom, programmable */
+value|\ 	__PMC_CLASS(UCF)
+comment|/* Intel Uncore programmable */
+value|\ 	__PMC_CLASS(UCP)
+comment|/* Intel Uncore fixed function */
+value|\  enum pmc_class {
 end_define
 
-begin_comment
-comment|/* Intel Core...Atom, programmable */
-end_comment
-
-begin_enum
-enum|enum
-name|pmc_class
-block|{
+begin_undef
 undef|#
 directive|undef
 name|__PMC_CLASS
+end_undef
+
+begin_define
 define|#
 directive|define
 name|__PMC_CLASS
@@ -190,13 +192,15 @@ parameter_list|(
 name|N
 parameter_list|)
 value|PMC_CLASS_##N ,
+end_define
+
+begin_macro
 name|__PMC_CLASSES
 argument_list|()
-block|}
-enum|;
-end_enum
+end_macro
 
 begin_define
+unit|};
 define|#
 directive|define
 name|PMC_CLASS_FIRST
@@ -207,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_LAST
-value|PMC_CLASS_IAP
+value|PMC_CLASS_UCP
 end_define
 
 begin_comment
