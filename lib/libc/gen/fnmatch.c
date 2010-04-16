@@ -159,6 +159,10 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|mbstate_t
@@ -209,6 +213,8 @@ name|pattern
 argument_list|,
 name|string
 argument_list|,
+name|string
+argument_list|,
 name|flags
 argument_list|,
 name|initial
@@ -229,6 +235,8 @@ name|pattern
 parameter_list|,
 name|string
 parameter_list|,
+name|stringstart
+parameter_list|,
 name|flags
 parameter_list|,
 name|patmbs
@@ -242,6 +250,9 @@ name|pattern
 decl_stmt|,
 decl|*
 name|string
+decl_stmt|,
+modifier|*
+name|stringstart
 decl_stmt|;
 end_function
 
@@ -261,11 +272,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|const
-name|char
-modifier|*
-name|stringstart
-decl_stmt|;
 name|char
 modifier|*
 name|newp
@@ -285,9 +291,6 @@ name|sclen
 decl_stmt|;
 for|for
 control|(
-name|stringstart
-operator|=
-name|string
 init|;
 condition|;
 control|)
@@ -660,10 +663,9 @@ name|pattern
 argument_list|,
 name|string
 argument_list|,
+name|stringstart
+argument_list|,
 name|flags
-operator|&
-operator|~
-name|FNM_PERIOD
 argument_list|,
 name|patmbs
 argument_list|,
