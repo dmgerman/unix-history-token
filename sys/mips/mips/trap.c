@@ -272,18 +272,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/rm7000.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/archtype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/asm.h>
 end_include
 
