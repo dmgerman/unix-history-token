@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_subr.c 8.3 (Berkeley) 1/21/94  *	from: src/sys/i386/i386/uio_machdep.c,v 1.8 2005/02/13 23:09:36 alc  */
+comment|/*-  * Copyright (c) 2004 Alan L. Cox<alc@cs.rice.edu>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_subr.c	8.3 (Berkeley) 1/21/94  */
 end_comment
 
 begin_include
@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sf_buf.h>
 end_include
 
@@ -83,8 +77,14 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
 begin_comment
-comment|/*  * Implement uiomove(9) from physical memory using sf_bufs to reduce  * the creation and destruction of ephemeral mappings.  */
+comment|/*  * Implement uiomove(9) from physical memory using a combination  * of the direct mapping and sf_bufs to reduce the creation and  * destruction of ephemeral mappings.    */
 end_comment
 
 begin_function
@@ -130,6 +130,12 @@ name|cp
 decl_stmt|;
 name|vm_offset_t
 name|page_offset
+decl_stmt|;
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+name|vm_page_t
+name|m
 decl_stmt|;
 name|size_t
 name|cnt
@@ -256,7 +262,7 @@ name|PAGE_MASK
 expr_stmt|;
 name|cnt
 operator|=
-name|min
+name|ulmin
 argument_list|(
 name|cnt
 argument_list|,
@@ -265,21 +271,54 @@ operator|-
 name|page_offset
 argument_list|)
 expr_stmt|;
-name|sched_pin
-argument_list|()
-expr_stmt|;
-name|sf
+name|m
 operator|=
-name|sf_buf_alloc
-argument_list|(
 name|ma
 index|[
 name|offset
 operator|>>
 name|PAGE_SHIFT
 index|]
+expr_stmt|;
+name|pa
+operator|=
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pa
+operator|<
+name|MIPS_KSEG0_LARGEST_PHYS
+condition|)
+block|{
+name|cp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|MIPS_PHYS_TO_KSEG0
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+name|sf
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sf
+operator|=
+name|sf_buf_alloc
+argument_list|(
+name|m
 argument_list|,
-name|SFB_CPUPRIVATE
+literal|0
 argument_list|)
 expr_stmt|;
 name|cp
@@ -295,6 +334,7 @@ argument_list|)
 operator|+
 name|page_offset
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|uio
@@ -359,13 +399,16 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|sf
+operator|!=
+name|NULL
+condition|)
 name|sf_buf_free
 argument_list|(
 name|sf
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 goto|goto
 name|out
@@ -412,13 +455,16 @@ name|UIO_NOCOPY
 case|:
 break|break;
 block|}
+if|if
+condition|(
+name|sf
+operator|!=
+name|NULL
+condition|)
 name|sf_buf_free
 argument_list|(
 name|sf
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 name|iov
 operator|->
