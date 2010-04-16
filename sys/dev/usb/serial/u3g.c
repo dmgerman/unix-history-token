@@ -3767,6 +3767,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|QUANTA
+argument_list|,
+name|Q101_STOR
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|SIERRA
 argument_list|,
 name|TRUINSTALL
