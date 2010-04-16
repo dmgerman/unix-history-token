@@ -4282,6 +4282,11 @@ operator|->
 name|ni_vp
 argument_list|)
 expr_stmt|;
+name|nfsvno_relpathbuf
+argument_list|(
+name|ndp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EEXIST
