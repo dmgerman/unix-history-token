@@ -4,11 +4,10 @@ comment|/*-  * Copyright (c) 1995  *	The Regents of the University of California
 end_comment
 
 begin_function_decl
-name|char
-modifier|*
-name|getpwd
-parameter_list|(
 name|void
+name|pwd_init
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
