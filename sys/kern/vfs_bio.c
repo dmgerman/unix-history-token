@@ -10328,6 +10328,15 @@ name|NULL
 return|;
 name|bsize
 operator|=
+name|vn_isdisk
+argument_list|(
+name|vp
+argument_list|,
+name|NULL
+argument_list|)
+condition|?
+name|DEV_BSIZE
+else|:
 name|bo
 operator|->
 name|bo_bsize
