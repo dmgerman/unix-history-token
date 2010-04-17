@@ -82,7 +82,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{					\ 	s = disable_intr();					\ 	while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1))	\
+value|{					\ 	s = intr_disable();					\ 	while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1))	\
 comment|/* nothing */
 value|;					\ }
 end_define
@@ -94,7 +94,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{					\ 	atomic_store_rel_int(&mcount_lock, 0);			\ 	enableintr(s);						\ }
+value|{					\ 	atomic_store_rel_int(&mcount_lock, 0);			\ 	intr_restore(s);						\ }
 end_define
 
 begin_else
@@ -109,7 +109,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = disable_intr(); }
+value|{ s = intr_disable(); }
 end_define
 
 begin_define
@@ -119,7 +119,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(enableintr(s))
+value|(intr_restore(s))
 end_define
 
 begin_endif

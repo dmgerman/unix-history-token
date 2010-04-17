@@ -1404,13 +1404,13 @@ argument_list|(
 name|ALL_INT_MASK
 argument_list|)
 expr_stmt|;
-name|enableintr
+name|intr_enable
 argument_list|()
 expr_stmt|;
 comment|/* Clear BEV in SR so we start handling our own exceptions */
-name|mips_cp0_status_write
+name|mips_wr_status
 argument_list|(
-name|mips_cp0_status_read
+name|mips_rd_status
 argument_list|()
 operator|&
 operator|~
@@ -1765,7 +1765,7 @@ name|td_md
 operator|.
 name|md_saved_intr
 operator|=
-name|disableintr
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|td
@@ -1817,7 +1817,7 @@ name|md_spinlock_count
 operator|==
 literal|0
 condition|)
-name|restoreintr
+name|intr_restore
 argument_list|(
 name|td
 operator|->
@@ -1826,31 +1826,6 @@ operator|.
 name|md_saved_intr
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|u_int32_t
-name|get_cyclecount
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_int32_t
-name|count
-decl_stmt|;
-name|mfc0_macro
-argument_list|(
-name|count
-argument_list|,
-literal|9
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|count
-operator|)
-return|;
 block|}
 end_function
 
@@ -1868,7 +1843,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|mips_cp0_status_read
+name|mips_rd_status
 argument_list|()
 operator|&
 name|SR_INT_ENAB

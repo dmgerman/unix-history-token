@@ -37,22 +37,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_LOCORE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#

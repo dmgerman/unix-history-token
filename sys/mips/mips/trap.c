@@ -224,12 +224,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -921,7 +915,7 @@ comment|/*  * Handle an exception.  * Called from MipsKernGenException() or Mips
 end_comment
 
 begin_function
-name|u_int
+name|register_t
 name|trap
 parameter_list|(
 name|struct
@@ -1016,11 +1010,9 @@ name|CR_EXC_CODE_SHIFT
 expr_stmt|;
 if|if
 condition|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|trapframe
-operator|->
-name|sr
 argument_list|)
 condition|)
 block|{
@@ -1062,13 +1054,13 @@ name|ALL_INT_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-name|enableintr
+name|intr_enable
 argument_list|()
 expr_stmt|;
 block|}
 else|else
 block|{
-name|disableintr
+name|intr_disable
 argument_list|()
 expr_stmt|;
 block|}
@@ -4075,14 +4067,15 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+name|register_t
+name|s
+decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|s
 operator|=
-name|disableintr
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|printf
@@ -4191,7 +4184,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-name|restoreintr
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

@@ -1040,7 +1040,7 @@ operator|/
 name|hz
 argument_list|)
 expr_stmt|;
-name|enableintr
+name|intr_enable
 argument_list|()
 expr_stmt|;
 comment|/* enter the scheduler */
