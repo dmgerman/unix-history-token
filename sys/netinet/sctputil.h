@@ -1749,6 +1749,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sctp_print_mapping_array
+parameter_list|(
+name|struct
+name|sctp_association
+modifier|*
+name|asoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sctp_clr_stat_log
 parameter_list|(
 name|void
