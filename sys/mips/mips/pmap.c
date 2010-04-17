@@ -2368,7 +2368,7 @@ operator|(
 name|va
 operator|&
 operator|~
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2983,7 +2983,7 @@ name|mips_dcache_wbinv_range_index
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|pte
@@ -5919,7 +5919,7 @@ name|mips_dcache_wbinv_range_index
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * get a local va for mappings for this pmap. 	 */
@@ -6195,7 +6195,7 @@ name|pv
 operator|->
 name|pv_va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|pv
@@ -7366,14 +7366,14 @@ name|mips_icache_sync_range
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|mips_dcache_wbinv_range
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7838,14 +7838,14 @@ name|mips_icache_sync_range
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|mips_dcache_wbinv_range
 argument_list|(
 name|va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -12016,7 +12016,7 @@ name|pv
 operator|->
 name|pv_va
 argument_list|,
-name|NBPG
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}

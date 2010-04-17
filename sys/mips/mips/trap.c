@@ -1368,7 +1368,7 @@ name|trapframe
 operator|->
 name|badvaddr
 operator|>>
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 operator|&
 operator|(
@@ -1407,7 +1407,7 @@ operator|->
 name|badvaddr
 operator|&=
 operator|~
-name|PGOFSET
+name|PAGE_MASK
 expr_stmt|;
 name|pmap_update_page
 argument_list|(
@@ -1494,7 +1494,7 @@ operator|->
 name|badvaddr
 operator|&=
 operator|~
-name|PGOFSET
+name|PAGE_MASK
 expr_stmt|;
 name|pmap_update_page
 argument_list|(
@@ -1597,7 +1597,7 @@ name|trapframe
 operator|->
 name|badvaddr
 operator|>>
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 operator|&
 operator|(
@@ -1641,7 +1641,7 @@ operator|->
 name|badvaddr
 operator|&
 operator|~
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|pmap_update_page
@@ -1732,7 +1732,7 @@ operator|->
 name|badvaddr
 operator|&
 operator|~
-name|PGOFSET
+name|PAGE_MASK
 operator|)
 expr_stmt|;
 name|pmap_update_page

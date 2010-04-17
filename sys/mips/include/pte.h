@@ -447,7 +447,7 @@ name|vad_to_pte_offset
 parameter_list|(
 name|adr
 parameter_list|)
-value|(((adr)>> PGSHIFT)& (NPTEPG -1))
+value|(((adr)>> PAGE_SHIFT)& (NPTEPG -1))
 end_define
 
 begin_define

@@ -756,7 +756,7 @@ name|td_md
 operator|.
 name|md_realstack
 operator|>>
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 operator|&
 operator|(
@@ -946,7 +946,7 @@ name|td_md
 operator|.
 name|md_realstack
 operator|>>
-name|PGSHIFT
+name|PAGE_SHIFT
 operator|)
 operator|&
 operator|(
