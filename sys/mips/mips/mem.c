@@ -400,6 +400,17 @@ name|iov_len
 argument_list|)
 expr_stmt|;
 comment|/*  			 * Make sure that all the pages are currently resident 			 * so that we don't create any zero-fill pages. 			 */
+if|if
+condition|(
+name|va
+operator|>=
+name|VM_MIN_KERNEL_ADDRESS
+operator|&&
+name|eva
+operator|<=
+name|VM_MAX_KERNEL_ADDRESS
+condition|)
+block|{
 for|for
 control|(
 init|;
@@ -471,6 +482,13 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+block|}
+name|va
+operator|=
+name|uio
+operator|->
+name|uio_offset
+expr_stmt|;
 name|error
 operator|=
 name|uiomove
