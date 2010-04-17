@@ -382,9 +382,7 @@ decl_stmt|;
 comment|/* type = 0x8008  len = x */
 name|uint8_t
 name|chunk_types
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -639,9 +637,7 @@ name|length
 decl_stmt|;
 name|uint8_t
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1363,9 +1359,7 @@ name|reserved
 decl_stmt|;
 name|uint8_t
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1398,9 +1392,7 @@ decl_stmt|;
 comment|/* last TSN I assigned outbound */
 name|uint16_t
 name|list_of_streams
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
@@ -1421,9 +1413,7 @@ name|request_seq
 decl_stmt|;
 name|uint16_t
 name|list_of_streams
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* if not all list of streams */
 block|}
@@ -1703,9 +1693,7 @@ decl_stmt|;
 comment|/* type = 0x8002 */
 name|uint8_t
 name|random_data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1723,9 +1711,7 @@ decl_stmt|;
 comment|/* type = 0x8003 */
 name|uint8_t
 name|chunk_types
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1743,9 +1729,7 @@ decl_stmt|;
 comment|/* type = 0x8004 */
 name|uint16_t
 name|hmac_ids
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
@@ -1768,9 +1752,7 @@ name|hmac_id
 decl_stmt|;
 name|uint8_t
 name|hmac
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 name|SCTP_PACKED
