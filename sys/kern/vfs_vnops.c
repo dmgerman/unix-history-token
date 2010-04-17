@@ -3672,12 +3672,19 @@ name|vap
 operator|->
 name|va_birthtime
 expr_stmt|;
-comment|/* 	 * According to www.opengroup.org, the meaning of st_blksize is  	 *   "a filesystem-specific preferred I/O block size for this  	 *    object.  In some filesystem types, this may vary from file 	 *    to file" 	 * Default to PAGE_SIZE after much discussion. 	 * XXX: min(PAGE_SIZE, vp->v_bufobj.bo_bsize) may be more correct. 	 */
+comment|/* 	 * According to www.opengroup.org, the meaning of st_blksize is  	 *   "a filesystem-specific preferred I/O block size for this  	 *    object.  In some filesystem types, this may vary from file 	 *    to file" 	 * Use miminum/default of PAGE_SIZE (e.g. for VCHR). 	 */
 name|sb
 operator|->
 name|st_blksize
 operator|=
+name|max
+argument_list|(
 name|PAGE_SIZE
+argument_list|,
+name|vap
+operator|->
+name|va_blocksize
+argument_list|)
 expr_stmt|;
 name|sb
 operator|->
