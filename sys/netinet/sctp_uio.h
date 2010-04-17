@@ -3139,6 +3139,54 @@ parameter_list|)
 value|SCTP_STAT_DECR_BY(_x,1)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SCTP_USE_PERCPU_STAT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_STAT_INCR_BY
+parameter_list|(
+name|_x
+parameter_list|,
+name|_d
+parameter_list|)
+value|(SCTP_BASE_STATS[PCPU_GET(cpuid)]._x += _d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STAT_DECR_BY
+parameter_list|(
+name|_x
+parameter_list|,
+name|_d
+parameter_list|)
+value|(SCTP_BASE_STATS[PCPU_GET(cpuid)]._x -= _d)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3162,6 +3210,11 @@ name|_d
 parameter_list|)
 value|atomic_subtract_int(&SCTP_BASE_STAT(_x), _d)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The following macros are for handling MIB values, */
