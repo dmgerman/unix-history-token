@@ -558,6 +558,9 @@ argument_list|,
 name|DPCPU_SIZE
 argument_list|)
 expr_stmt|;
+name|mips_sync
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|platform_start_ap
@@ -852,6 +855,9 @@ name|mips_dcache_wbinv_all
 argument_list|()
 expr_stmt|;
 name|mips_icache_sync_all
+argument_list|()
+expr_stmt|;
+name|mips_sync
 argument_list|()
 expr_stmt|;
 name|MachSetPID
