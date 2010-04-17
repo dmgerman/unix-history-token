@@ -16416,7 +16416,7 @@ parameter_list|,
 name|uint32_t
 name|cumack
 parameter_list|,
-name|u_long
+name|uint32_t
 name|biggest_tsn_acked
 parameter_list|)
 block|{
@@ -16729,13 +16729,13 @@ name|sctp_association
 modifier|*
 name|asoc
 parameter_list|,
-name|u_long
+name|uint32_t
 name|biggest_tsn_acked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|biggest_tsn_newly_acked
 parameter_list|,
-name|u_long
+name|uint32_t
 name|this_sack_lowest_newack
 parameter_list|,
 name|int
@@ -21718,7 +21718,7 @@ parameter_list|,
 name|uint32_t
 name|cumack
 parameter_list|,
-name|u_long
+name|uint32_t
 name|biggest_tsn_acked
 parameter_list|)
 block|{
