@@ -4937,7 +4937,7 @@ operator|==
 name|IEEE80211_M_IBSS
 condition|)
 block|{
-comment|/* 			 * XXX when joining an ibss network we are called 			 * with a SCAN -> RUN transition on scan complete. 			 * Use that to call ipw_auth_and_assoc.  On completing 			 * the join we are then called again with an 			 * AUTH -> RUN transition and we want to do nothing. 			 * This is all totally bogus and needs to be redone. 			 */
+comment|/* 			 * XXX when joining an ibss network we are called 			 * with a SCAN -> RUN transition on scan complete. 			 * Use that to call ipw_assoc.  On completing the 			 * join we are then called again with an AUTH -> RUN 			 * transition and we want to do nothing.  This is 			 * all totally bogus and needs to be redone. 			 */
 if|if
 condition|(
 name|ostate
@@ -4986,7 +4986,7 @@ break|break;
 case|case
 name|IEEE80211_S_ASSOC
 case|:
-comment|/* 		 * If we are not transitioning from AUTH the resend the 		 * association request. 		 */
+comment|/* 		 * If we are not transitioning from AUTH then resend the 		 * association request. 		 */
 if|if
 condition|(
 name|ostate
