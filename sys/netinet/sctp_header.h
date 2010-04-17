@@ -840,27 +840,6 @@ name|SCTP_PACKED
 struct|;
 end_struct
 
-begin_comment
-comment|/* EY Following 3 structs define NR Selective Ack (NR_SACK) chunk */
-end_comment
-
-begin_struct
-struct|struct
-name|sctp_nr_gap_ack_block
-block|{
-name|uint16_t
-name|start
-decl_stmt|;
-comment|/* NR Gap Ack block start */
-name|uint16_t
-name|end
-decl_stmt|;
-comment|/* NR Gap Ack block end */
-block|}
-name|SCTP_PACKED
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|sctp_nr_sack
@@ -890,7 +869,6 @@ name|reserved
 decl_stmt|;
 comment|/* not currently used */
 comment|/* struct sctp_gap_ack_block's follow */
-comment|/* struct sctp_nr_gap_ack_block's follow */
 comment|/* uint32_t duplicate_tsn's follow */
 block|}
 name|SCTP_PACKED
