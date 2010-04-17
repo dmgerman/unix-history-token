@@ -1869,8 +1869,6 @@ name|sockaddr
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|int
 modifier|*
 parameter_list|,
 name|uint32_t

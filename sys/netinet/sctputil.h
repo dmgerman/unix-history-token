@@ -303,8 +303,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 parameter_list|,
-name|int
-parameter_list|,
 name|uint32_t
 parameter_list|,
 name|uint32_t
