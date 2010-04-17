@@ -2619,7 +2619,12 @@ name|pmap_va_asid
 argument_list|(
 name|pmap
 argument_list|,
+operator|(
 name|va
+operator|&
+operator|~
+name|PAGE_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|MachTLBUpdate
@@ -2647,6 +2652,11 @@ block|{
 name|u_int32_t
 name|pid
 decl_stmt|;
+name|va
+operator|&=
+operator|~
+name|PAGE_MASK
+expr_stmt|;
 name|MachTLBGetPID
 argument_list|(
 name|pid
@@ -7291,7 +7301,7 @@ operator|)
 argument_list|,
 operator|(
 literal|"pmap_enter: modified page not writable:"
-literal|" va: %p, pte: 0x%lx"
+literal|" va: %p, pte: 0x%x"
 operator|,
 operator|(
 name|void
@@ -9106,7 +9116,7 @@ name|vm_page_array_size
 index|]
 argument_list|,
 operator|(
-literal|"pmap_remove_pages: bad tpte %lx"
+literal|"pmap_remove_pages: bad tpte %x"
 operator|,
 name|tpte
 operator|)

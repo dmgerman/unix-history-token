@@ -2655,7 +2655,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"PCB onfault = %d\n"
+literal|"PCB onfault = %p\n"
 argument_list|,
 name|pcb
 operator|->

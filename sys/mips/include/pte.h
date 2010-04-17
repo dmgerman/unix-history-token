@@ -148,7 +148,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|unsigned
-name|long
+name|int
 name|pt_entry_t
 typedef|;
 end_typedef

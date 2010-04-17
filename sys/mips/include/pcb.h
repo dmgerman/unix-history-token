@@ -45,7 +45,8 @@ literal|14
 index|]
 decl_stmt|;
 comment|/* kernel context for resume */
-name|int
+name|void
+modifier|*
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copyin/copyout faults */
