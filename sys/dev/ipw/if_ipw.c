@@ -6553,6 +6553,8 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
@@ -6574,6 +6576,8 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
