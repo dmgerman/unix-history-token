@@ -4858,7 +4858,7 @@ name|int
 name|save_in_twait
 parameter_list|)
 block|{
-name|u_long
+name|uint32_t
 name|x
 decl_stmt|,
 name|not_done
@@ -14011,14 +14011,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|sctp_asoc_change_wake
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -14323,9 +14315,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|sctp_asoc_change_wake
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
