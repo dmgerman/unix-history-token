@@ -9340,7 +9340,7 @@ argument_list|)
 condition|)
 name|events
 operator|->
-name|sctp_stream_reset_events
+name|sctp_stream_reset_event
 operator|=
 literal|1
 expr_stmt|;
@@ -17608,7 +17608,7 @@ if|if
 condition|(
 name|events
 operator|->
-name|sctp_stream_reset_events
+name|sctp_stream_reset_event
 condition|)
 block|{
 name|sctp_feature_on

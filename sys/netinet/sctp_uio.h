@@ -80,6 +80,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Compatibility to previous define's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sctp_stream_reset_events
+value|sctp_stream_reset_event
+end_define
+
+begin_comment
 comment|/* On/Off setup for subscription to events */
 end_comment
 
@@ -118,7 +129,7 @@ name|uint8_t
 name|sctp_sender_dry_event
 decl_stmt|;
 name|uint8_t
-name|sctp_stream_reset_events
+name|sctp_stream_reset_event
 decl_stmt|;
 block|}
 struct|;
@@ -1438,6 +1449,17 @@ directive|define
 name|SCTP_SENDER_DRY_EVENT
 value|0x000a
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP__NOTIFICATIONS_STOPPED_EVENT
+value|0x000b
+end_define
+
+begin_comment
+comment|/* we dont send this */
+end_comment
 
 begin_comment
 comment|/*  * socket option structs  */
