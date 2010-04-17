@@ -12010,7 +12010,7 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_appie_assocreq
+name|iv_appie_wpa
 operator|!=
 name|NULL
 condition|)
@@ -12022,7 +12022,7 @@ name|ie
 init|=
 name|vap
 operator|->
-name|iv_appie_assocreq
+name|iv_appie_wpa
 decl_stmt|;
 name|error
 operator|=
