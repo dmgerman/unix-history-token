@@ -4975,6 +4975,11 @@ break|break;
 case|case
 name|IEEE80211_S_AUTH
 case|:
+comment|/* 		 * Move to ASSOC state after the ipw_assoc() call.  Firmware 		 * takes care of authentication, after the call we'll receive 		 * only an assoc response which would otherwise be discared 		 * if we are still in AUTH state. 		 */
+name|nstate
+operator|=
+name|IEEE80211_S_ASSOC
+expr_stmt|;
 name|ipw_assoc
 argument_list|(
 name|ic
@@ -5576,16 +5581,6 @@ operator|->
 name|flags
 operator||=
 name|IPW_FLAG_ASSOCIATED
-expr_stmt|;
-name|ieee80211_new_state
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_S_RUN
-argument_list|,
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
