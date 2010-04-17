@@ -7343,10 +7343,6 @@ name|ordered
 operator|=
 operator|(
 operator|(
-name|ch
-operator|->
-name|ch
-operator|.
 name|chunk_flags
 operator|&
 name|SCTP_DATA_UNORDERED
@@ -11889,9 +11885,16 @@ comment|/* The complete array was completed by a single FR */
 comment|/* highest becomes the cum-ack */
 name|int
 name|clr
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|unsigned
+name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* clear the array */
 name|clr
 operator|=
@@ -11943,6 +11946,9 @@ argument_list|,
 name|clr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 for|for
 control|(
 name|i
@@ -11992,6 +11998,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|asoc
 operator|->
 name|mapping_array_base_tsn
@@ -14183,7 +14191,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|highest_tsn_inside_map
+name|highest_tsn_inside_nr_map
 operator|)
 operator|&&
 operator|(
@@ -14191,7 +14199,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|mapping_array
+name|nr_mapping_array
 index|[
 literal|0
 index|]
