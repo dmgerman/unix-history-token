@@ -540,6 +540,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|callout_stop
+argument_list|(
+operator|&
+name|vap
+operator|->
+name|iv_swbmiss
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|iv_bmiss_count

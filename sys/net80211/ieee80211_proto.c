@@ -7596,16 +7596,6 @@ operator|->
 name|iv_swbmiss_task
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_bmiss_count
-operator|==
-literal|0
-condition|)
-comment|/* don't re-arm timer */
-return|return;
 block|}
 else|else
 name|vap
