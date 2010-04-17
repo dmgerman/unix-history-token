@@ -236,24 +236,6 @@ name|VM_MAX_ADDRESS
 value|((vm_offset_t)0x80000000)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KERNEL_ALLOC_OFFSET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KERNEL_ALLOC_OFFSET
-value|((vm_offset_t)0x00000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -265,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|VM_KERNEL_WIRED_ADDR_END
-value|(VM_MIN_KERNEL_ADDRESS + VM_KERNEL_ALLOC_OFFSET)
+value|(VM_MIN_KERNEL_ADDRESS)
 end_define
 
 begin_define

@@ -481,16 +481,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|VM_KERNEL_ALLOC_OFFSET
-argument_list|,
-name|VM_KERNEL_ALLOC_OFFSET
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|SIGF_UC
 argument_list|,
 name|offsetof

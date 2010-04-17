@@ -541,24 +541,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|vm_paddr_t
-name|mips_wired_tlb_physmem_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|mips_wired_tlb_physmem_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|need_wired_tlb_page_pool
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
