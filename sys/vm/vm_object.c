@@ -4413,6 +4413,13 @@ operator|->
 name|busy
 condition|)
 block|{
+if|if
+condition|(
+name|advise
+operator|==
+name|MADV_WILLNEED
+condition|)
+comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
 name|vm_page_flag_set
 argument_list|(
 name|m
