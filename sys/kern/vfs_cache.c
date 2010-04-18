@@ -3198,7 +3198,7 @@ argument_list|,
 name|vp
 argument_list|,
 operator|(
-literal|"cahe_enter: Adding a doomed vnode"
+literal|"cache_enter: Adding a doomed vnode"
 operator|)
 argument_list|)
 expr_stmt|;
