@@ -5197,13 +5197,6 @@ operator|->
 name|busy
 condition|)
 block|{
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_REFERENCED
-argument_list|)
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
