@@ -95,12 +95,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ktr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_pageout.h>
 end_include
 
@@ -468,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|ARC_BUFC_NUMLISTS
-value|(ARC_BUFC_NUMMETADATALISTS+ARC_BUFC_NUMDATALISTS)
+value|(ARC_BUFC_NUMMETADATALISTS + ARC_BUFC_NUMDATALISTS)
 end_define
 
 begin_typedef
@@ -519,7 +513,7 @@ name|s
 parameter_list|,
 name|i
 parameter_list|)
-value|&((s)->arcs_locks[(i)].arcs_lock)
+value|(&((s)->arcs_locks[(i)].arcs_lock))
 end_define
 
 begin_comment
@@ -721,13 +715,13 @@ name|kstat_named_t
 name|arcstat_l2_write_trylock_fail
 decl_stmt|;
 name|kstat_named_t
-name|arcstat_l2_write_in_l2
-decl_stmt|;
-name|kstat_named_t
 name|arcstat_l2_write_passed_headroom
 decl_stmt|;
 name|kstat_named_t
 name|arcstat_l2_write_spa_mismatch
+decl_stmt|;
+name|kstat_named_t
+name|arcstat_l2_write_in_l2
 decl_stmt|;
 name|kstat_named_t
 name|arcstat_l2_write_hdr_io_in_progress
@@ -1062,12 +1056,6 @@ name|KSTAT_DATA_UINT64
 block|}
 block|,
 block|{
-literal|"l2_write_in_l2"
-block|,
-name|KSTAT_DATA_UINT64
-block|}
-block|,
-block|{
 literal|"l2_write_passed_headroom"
 block|,
 name|KSTAT_DATA_UINT64
@@ -1075,6 +1063,12 @@ block|}
 block|,
 block|{
 literal|"l2_write_spa_mismatch"
+block|,
+name|KSTAT_DATA_UINT64
+block|}
+block|,
+block|{
+literal|"l2_write_in_l2"
 block|,
 name|KSTAT_DATA_UINT64
 block|}
@@ -4922,14 +4916,6 @@ name|arc_anon
 operator|)
 condition|)
 block|{
-name|list_t
-modifier|*
-name|list
-decl_stmt|;
-name|kmutex_t
-modifier|*
-name|lock
-decl_stmt|;
 name|uint64_t
 name|delta
 init|=
@@ -4956,6 +4942,14 @@ name|ab
 operator|->
 name|b_type
 index|]
+decl_stmt|;
+name|list_t
+modifier|*
+name|list
+decl_stmt|;
+name|kmutex_t
+modifier|*
+name|lock
 decl_stmt|;
 name|get_buf_info
 argument_list|(
@@ -9847,7 +9841,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If pages are needed or we're within 2048 pages  	 * of needing to page need to reclaim 	 */
+comment|/* 	 * If pages are needed or we're within 2048 pages 	 * of needing to page need to reclaim 	 */
 if|if
 condition|(
 name|vm_pages_needed
@@ -11833,12 +11827,6 @@ operator|&=
 operator|~
 name|ARC_L2CACHE
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|else if ((hdr->b_flags& ARC_PREFETCH) == 0) 		hdr->b_flags |= ARC_L2CACHE;
-endif|#
-directive|endif
 comment|/* byteswap if necessary */
 name|callback_list
 operator|=
@@ -19120,19 +19108,6 @@ name|idx
 argument_list|)
 expr_stmt|;
 block|}
-name|CTR3
-argument_list|(
-name|KTR_SPARE2
-argument_list|,
-literal|"list=%p list_num=%d idx=%d"
-argument_list|,
-name|list
-argument_list|,
-name|list_num
-argument_list|,
-name|idx
-argument_list|)
-expr_stmt|;
 name|ASSERT
 argument_list|(
 operator|!
@@ -19792,13 +19767,11 @@ name|ab
 operator|==
 name|NULL
 condition|)
-block|{
 name|ARCSTAT_BUMP
 argument_list|(
 name|arcstat_l2_write_buffer_list_null_iter
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 init|;
