@@ -5004,11 +5004,6 @@ argument_list|,
 name|ab
 argument_list|)
 expr_stmt|;
-name|mutex_exit
-argument_list|(
-name|lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|GHOST_STATE
@@ -5071,6 +5066,11 @@ name|size
 argument_list|,
 operator|-
 name|delta
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* remove the prefetch flag if we get a reference */
@@ -5238,11 +5238,6 @@ argument_list|,
 name|ab
 argument_list|)
 expr_stmt|;
-name|mutex_exit
-argument_list|(
-name|lock
-argument_list|)
-expr_stmt|;
 name|ASSERT
 argument_list|(
 name|ab
@@ -5263,6 +5258,11 @@ operator|*
 name|ab
 operator|->
 name|b_datacnt
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
