@@ -263,18 +263,6 @@ name|c
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|vmem_t *data_alloc_arena = NULL;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-block|data_alloc_arena = zio_alloc_arena;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|zio_cache
 operator|=
 name|kmem_cache_create
@@ -502,7 +490,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|data_alloc_arena
+name|NULL
 argument_list|,
 name|KMC_NODEBUG
 argument_list|)
