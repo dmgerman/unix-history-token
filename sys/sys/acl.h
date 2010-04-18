@@ -245,11 +245,11 @@ decl_stmt|;
 name|acl_perm_t
 name|ae_perm
 decl_stmt|;
-comment|/* "allow" or "deny".  Unused in POSIX ACLs. */
+comment|/* NFSv4 entry type, "allow" or "deny".  Unused in POSIX.1e ACLs. */
 name|acl_entry_type_t
 name|ae_entry_type
 decl_stmt|;
-comment|/* Flags control inheritance.  Unused in POSIX ACLs. */
+comment|/* NFSv4 ACL inheritance.  Unused in POSIX.1e ACLs. */
 name|acl_flag_t
 name|ae_flags
 decl_stmt|;
