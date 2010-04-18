@@ -20135,6 +20135,12 @@ name|l2ad_hand
 expr_stmt|;
 name|ab
 operator|->
+name|b_flags
+operator||=
+name|ARC_L2_WRITING
+expr_stmt|;
+name|ab
+operator|->
 name|b_l2hdr
 operator|=
 name|hdrl2
