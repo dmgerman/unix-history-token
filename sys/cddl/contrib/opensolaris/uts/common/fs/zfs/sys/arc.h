@@ -121,12 +121,12 @@ typedef|typedef
 enum|enum
 name|arc_buf_contents
 block|{
-name|ARC_BUFC_METADATA
-block|,
-comment|/* buffer contains metadata */
 name|ARC_BUFC_DATA
 block|,
 comment|/* buffer contains data */
+name|ARC_BUFC_METADATA
+block|,
+comment|/* buffer contains metadata */
 name|ARC_BUFC_NUMTYPES
 block|}
 name|arc_buf_contents_t
