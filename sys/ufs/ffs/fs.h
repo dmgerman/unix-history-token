@@ -991,14 +991,14 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
-comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that ACLs are administratively enabled for the  * file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_MULTILABEL indicates that the TrustedBSD MAC Framework  * should attempt to back MAC labels into extended attributes on the  * file system rather than maintain a single mount label for all  * objects.  */
+comment|/*  * Filesystem flags.  *  * The FS_UNCLEAN flag is set by the kernel when the filesystem was  * mounted with fs_clean set to zero. The FS_DOSOFTDEP flag indicates  * that the filesystem should be managed by the soft updates code.  * Note that the FS_NEEDSFSCK flag is set and cleared only by the  * fsck utility. It is set when background fsck finds an unexpected  * inconsistency which requires a traditional foreground fsck to be  * run. Such inconsistencies should only be found after an uncorrectable  * disk error. A foreground fsck will clear the FS_NEEDSFSCK flag when  * it has successfully cleaned up the filesystem. The kernel uses this  * flag to enforce that inconsistent filesystems be mounted read-only.  * The FS_INDEXDIRS flag when set indicates that the kernel maintains  * on-disk auxiliary indexes (such as B-trees) for speeding directory  * accesses. Kernels that do not support auxiliary indicies clear the  * flag to indicate that the indicies need to be rebuilt (by fsck) before  * they can be used.  *  * FS_ACLS indicates that POSIX.1e ACLs are administratively enabled  * for the file system, so they should be loaded from extended attributes,  * observed for access control purposes, and be administered by object  * owners.  FS_NFS4ACLS indicates that NFSv4 ACLs are administratively  * enabled.  This flag is mutually exclusive with FS_ACLS.  FS_MULTILABEL  * indicates that the TrustedBSD MAC Framework should attempt to back MAC  * labels into extended attributes on the file system rather than maintain  * a single mount label for all objects.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FS_UNCLEAN
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -1009,7 +1009,7 @@ begin_define
 define|#
 directive|define
 name|FS_DOSOFTDEP
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -1020,7 +1020,7 @@ begin_define
 define|#
 directive|define
 name|FS_NEEDSFSCK
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -1031,7 +1031,7 @@ begin_define
 define|#
 directive|define
 name|FS_INDEXDIRS
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -1042,18 +1042,18 @@ begin_define
 define|#
 directive|define
 name|FS_ACLS
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
-comment|/* file system has ACLs enabled */
+comment|/* file system has POSIX.1e ACLs enabled */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FS_MULTILABEL
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -1064,7 +1064,7 @@ begin_define
 define|#
 directive|define
 name|FS_GJOURNAL
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -1075,11 +1075,22 @@ begin_define
 define|#
 directive|define
 name|FS_FLAGS_UPDATED
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
 comment|/* flags have been moved to new location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_NFS4ACLS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* file system has NFSv4 ACLs enabled */
 end_comment
 
 begin_comment

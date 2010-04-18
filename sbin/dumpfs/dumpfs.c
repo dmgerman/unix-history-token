@@ -1238,6 +1238,17 @@ argument_list|(
 literal|"fs_flags expanded "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fsflags
+operator|&
+name|FS_NFS4ACLS
+condition|)
+name|printf
+argument_list|(
+literal|"nfsv4acls "
+argument_list|)
+expr_stmt|;
 name|fsflags
 operator|&=
 operator|~
@@ -1257,6 +1268,8 @@ operator||
 name|FS_GJOURNAL
 operator||
 name|FS_FLAGS_UPDATED
+operator||
+name|FS_NFS4ACLS
 operator|)
 expr_stmt|;
 if|if
