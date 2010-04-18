@@ -9346,12 +9346,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* Upgrade our holdcnt to a usecount. */
-name|v_upgrade_usecount
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Deal with a timing window when the interlock is not held 	 * and VI_DOOMED can be set, since we only have a holdcnt, 	 * not a usecount. 	 */
 if|if
 condition|(
 name|vp
@@ -9368,9 +9363,39 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|KASSERT
 argument_list|(
-literal|"vget: vn_lock failed to return ENOENT\n"
+operator|(
+name|flags
+operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Unexpected flags %x"
+operator|,
+name|flags
+operator|)
+argument_list|)
+expr_stmt|;
+name|vdropl
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+comment|/* Upgrade our holdcnt to a usecount. */
+name|v_upgrade_usecount
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
