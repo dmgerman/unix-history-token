@@ -1365,6 +1365,32 @@ name|pages
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get a kernel virtual address for this thread's kstack. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+comment|/* 	 * We need to align the kstack's mapped address to fit within 	 * a single TLB entry. 	 */
+name|ks
+operator|=
+name|kmem_alloc_nofault_space
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|(
+name|pages
+operator|+
+name|KSTACK_GUARD_PAGES
+operator|)
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|VMFS_TLB_ALIGNED_SPACE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ks
 operator|=
 name|kmem_alloc_nofault
@@ -1380,6 +1406,8 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ks

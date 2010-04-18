@@ -35,8 +35,6 @@ name|int
 name|md_upte
 index|[
 name|KSTACK_PAGES
-operator|-
-literal|1
 index|]
 decl_stmt|;
 comment|/* ptes for mapping u pcb */
@@ -67,9 +65,6 @@ name|int
 name|md_pc_spill
 decl_stmt|;
 comment|/* performance counter spill */
-name|vm_offset_t
-name|md_realstack
-decl_stmt|;
 name|void
 modifier|*
 name|md_tls

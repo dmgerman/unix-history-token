@@ -306,14 +306,14 @@ comment|/* xxx: why is this only one? */
 end_comment
 
 begin_comment
-comment|/*  * The kernel stack needs to be aligned on a (PAGE_SIZE * 2) boundary.  *  * Although we allocate 3 pages for the kernel stack we end up using  * only the 2 pages that are aligned on a (PAGE_SIZE * 2) boundary.  */
+comment|/*  * The kernel stack needs to be aligned on a (PAGE_SIZE * 2) boundary.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|KSTACK_PAGES
-value|3
+value|2
 end_define
 
 begin_comment
@@ -324,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|KSTACK_GUARD_PAGES
-value|1
+value|2
 end_define
 
 begin_comment
