@@ -146,8 +146,7 @@ specifier|static
 name|int
 name|unit
 init|=
-operator|-
-literal|1
+name|G_GATE_UNIT_AUTO
 decl_stmt|;
 end_decl_stmt
 
