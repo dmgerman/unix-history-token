@@ -171,7 +171,7 @@ name|cpuid
 parameter_list|)
 block|{
 comment|/* 	 * Set the exception base. 	 */
-name|mips_wr_prid1
+name|mips_wr_ebase
 argument_list|(
 literal|0x80000000
 operator||

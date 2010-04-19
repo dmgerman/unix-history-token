@@ -384,45 +384,13 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
-name|__inline
 name|void
-name|mips_wr_ebase
-parameter_list|(
-name|u_int32_t
-name|a0
-parameter_list|)
-block|{
-asm|__asm __volatile("mtc0 %[a0], $15, 1 ;"
-block|: 	    :
-index|[
-name|a0
-index|]
-literal|"r"
-operator|(
-name|a0
-operator|)
-block|)
-function|;
-end_function
-
-begin_expr_stmt
-name|mips_barrier
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_macro
-unit|}  void
 name|platform_cpu_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* Nothing special yet */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Perform a board-level soft-reset.  */

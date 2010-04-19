@@ -256,7 +256,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|static __inline uint32_t					\ mips_rd_ ## n ## s(void)						\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n ## s(uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
+value|static __inline uint32_t					\ mips_rd_ ## n(void)						\ {								\ 	int v0;							\ 	__asm __volatile ("mfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n(uint32_t a0)					\ {								\ 	__asm __volatile ("mtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
 end_define
 
 begin_ifdef
@@ -316,7 +316,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|config
+name|config1
 argument_list|,
 name|MIPS_COP_0_CONFIG
 argument_list|,
@@ -328,7 +328,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|config
+name|config2
 argument_list|,
 name|MIPS_COP_0_CONFIG
 argument_list|,
@@ -340,7 +340,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|config
+name|config3
 argument_list|,
 name|MIPS_COP_0_CONFIG
 argument_list|,
@@ -475,7 +475,7 @@ end_comment
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|prid
+name|ebase
 argument_list|,
 name|MIPS_COP_0_PRID
 argument_list|,
@@ -497,7 +497,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchlo
+name|watchlo1
 argument_list|,
 name|MIPS_COP_0_WATCH_LO
 argument_list|,
@@ -509,7 +509,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchlo
+name|watchlo2
 argument_list|,
 name|MIPS_COP_0_WATCH_LO
 argument_list|,
@@ -521,7 +521,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchlo
+name|watchlo3
 argument_list|,
 name|MIPS_COP_0_WATCH_LO
 argument_list|,
@@ -543,7 +543,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchhi
+name|watchhi1
 argument_list|,
 name|MIPS_COP_0_WATCH_HI
 argument_list|,
@@ -555,7 +555,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchhi
+name|watchhi2
 argument_list|,
 name|MIPS_COP_0_WATCH_HI
 argument_list|,
@@ -567,7 +567,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|watchhi
+name|watchhi3
 argument_list|,
 name|MIPS_COP_0_WATCH_HI
 argument_list|,
@@ -579,7 +579,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|perfcnt
+name|perfcnt0
 argument_list|,
 name|MIPS_COP_0_PERFCNT
 argument_list|,
@@ -591,7 +591,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|perfcnt
+name|perfcnt1
 argument_list|,
 name|MIPS_COP_0_PERFCNT
 argument_list|,
@@ -603,7 +603,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|perfcnt
+name|perfcnt2
 argument_list|,
 name|MIPS_COP_0_PERFCNT
 argument_list|,
@@ -615,7 +615,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MIPS_RDRW32_COP0_SEL
 argument_list|(
-name|perfcnt
+name|perfcnt3
 argument_list|,
 name|MIPS_COP_0_PERFCNT
 argument_list|,
