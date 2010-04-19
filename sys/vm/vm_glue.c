@@ -2027,13 +2027,13 @@ argument_list|(
 literal|"vm_thread_swapout: kstack already missing?"
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_unwire
 argument_list|(
