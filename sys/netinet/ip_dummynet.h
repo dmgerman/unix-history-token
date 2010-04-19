@@ -197,7 +197,7 @@ name|struct
 name|dn_id
 name|oid
 decl_stmt|;
-comment|/* 	 * Userland sets bw and delay in bits/s and milliseconds. 	 * The kernel converts this back and forth to bits/tick and ticks. 	 * XXX what about burst ?      */
+comment|/* 	 * Userland sets bw and delay in bits/s and milliseconds. 	 * The kernel converts this back and forth to bits/tick and ticks. 	 * XXX what about burst ? 	 */
 name|int32_t
 name|link_nr
 decl_stmt|;
@@ -351,7 +351,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Scheduler template, mostly indicating the name, number,  * sched_mask and buckets.      */
+comment|/*  * Scheduler template, mostly indicating the name, number,  * sched_mask and buckets.  */
 end_comment
 
 begin_struct
@@ -434,7 +434,7 @@ comment|// XXX use link bandwidth?
 name|int
 name|samples_no
 decl_stmt|;
-comment|/* actual length of samples[] */
+comment|/* actual len of samples[] */
 name|int
 name|samples
 index|[

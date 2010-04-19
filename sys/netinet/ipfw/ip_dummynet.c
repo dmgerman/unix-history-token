@@ -8713,7 +8713,7 @@ operator|.
 name|id
 operator|++
 expr_stmt|;
-comment|/* 	 * If we had a profile and the new one does not fit, 	 * or it is deleted, then we need to free memory. 	 */
+comment|/* 		 * If we had a profile and the new one does not fit, 		 * or it is deleted, then we need to free memory. 		 */
 if|if
 condition|(
 name|s
@@ -8768,7 +8768,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * new profile, possibly allocate memory 	 * and copy data. 	 */
+comment|/* 		 * new profile, possibly allocate memory 		 * and copy data. 		 */
 if|if
 condition|(
 name|s
