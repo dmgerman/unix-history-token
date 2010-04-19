@@ -918,25 +918,29 @@ name|dst_port
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%4llu %8llu %2u %4u %3u\n"
-argument_list|,
-name|align_uint64
+name|pr_u64
 argument_list|(
 operator|&
 name|ni
 operator|->
 name|tot_pkts
-argument_list|)
 argument_list|,
-name|align_uint64
+literal|4
+argument_list|)
+expr_stmt|;
+name|pr_u64
 argument_list|(
 operator|&
 name|ni
 operator|->
 name|tot_bytes
+argument_list|,
+literal|8
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%2u %4u %3u\n"
 argument_list|,
 name|ni
 operator|->
