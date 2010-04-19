@@ -464,7 +464,7 @@ literal|1
 operator|)
 operator|)
 operator|-
-name|STAND_FRAME_SIZE
+name|CALLFRAME_SIZ
 argument_list|)
 expr_stmt|;
 name|pcb2
@@ -1230,7 +1230,7 @@ literal|1
 operator|)
 operator|)
 operator|-
-name|STAND_FRAME_SIZE
+name|CALLFRAME_SIZ
 argument_list|)
 expr_stmt|;
 name|pcb2
@@ -1397,7 +1397,7 @@ operator|~
 literal|0x7
 operator|)
 operator|-
-name|STAND_FRAME_SIZE
+name|CALLFRAME_SIZ
 expr_stmt|;
 comment|/* 	 * Set the trap frame to point at the beginning of the uts 	 * function. 	 */
 name|tf
