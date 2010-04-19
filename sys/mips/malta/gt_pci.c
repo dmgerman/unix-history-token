@@ -293,10 +293,11 @@ name|struct
 name|rman
 name|sc_irq_rman
 decl_stmt|;
-name|uint32_t
+name|unsigned
+name|long
 name|sc_mem
 decl_stmt|;
-name|uint32_t
+name|bus_space_handle_t
 name|sc_io
 decl_stmt|;
 name|struct
