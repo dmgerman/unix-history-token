@@ -760,6 +760,8 @@ name|blessed
 index|[]
 init|=
 block|{
+literal|"getblk"
+block|,
 literal|"so_snd_sx"
 block|,
 literal|"so_rcv_sx"
