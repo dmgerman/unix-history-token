@@ -10694,6 +10694,27 @@ name|finish_express_del
 label|:
 if|if
 condition|(
+name|tsn
+operator|==
+operator|(
+name|asoc
+operator|->
+name|cumulative_tsn
+operator|+
+literal|1
+operator|)
+condition|)
+block|{
+comment|/* Update cum-ack */
+name|asoc
+operator|->
+name|cumulative_tsn
+operator|=
+name|tsn
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|last_chunk
 condition|)
 block|{
