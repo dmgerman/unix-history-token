@@ -1221,7 +1221,7 @@ argument_list|)
 operator|==
 name|SEL_UPL
 condition|)
-name|printf
+name|uprintf
 argument_list|(
 literal|"pid %ld (%s): trap %d with interrupts disabled\n"
 argument_list|,

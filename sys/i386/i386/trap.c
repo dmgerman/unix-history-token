@@ -977,7 +977,7 @@ operator|&
 name|PSL_VM
 operator|)
 condition|)
-name|printf
+name|uprintf
 argument_list|(
 literal|"pid %ld (%s): trap %d with interrupts disabled\n"
 argument_list|,
@@ -1694,7 +1694,7 @@ name|userout
 goto|;
 endif|#
 directive|endif
-name|printf
+name|uprintf
 argument_list|(
 literal|"pid %d killed due to lack of floating point\n"
 argument_list|,
