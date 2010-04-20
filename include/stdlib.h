@@ -1205,10 +1205,11 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
-name|resolved_path
-index|[]
+modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
