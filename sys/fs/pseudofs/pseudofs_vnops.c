@@ -2453,6 +2453,15 @@ operator|->
 name|cn_flags
 operator|&
 name|MAKEENTRY
+operator|&&
+operator|!
+operator|(
+name|vn
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
 condition|)
 name|cache_enter
 argument_list|(
