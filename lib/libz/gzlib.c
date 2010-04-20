@@ -107,7 +107,7 @@ end_comment
 
 begin_function
 name|char
-name|ZEXPORT
+name|ZLIB_INTERNAL
 modifier|*
 name|gz_strwinerror
 parameter_list|(
@@ -2129,7 +2129,7 @@ end_comment
 
 begin_function
 name|void
-name|ZEXPORT
+name|ZLIB_INTERNAL
 name|gz_error
 parameter_list|(
 name|state
@@ -2308,7 +2308,7 @@ end_comment
 
 begin_function
 name|unsigned
-name|ZEXPORT
+name|ZLIB_INTERNAL
 name|gz_intmax
 parameter_list|()
 block|{

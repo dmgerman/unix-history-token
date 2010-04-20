@@ -49,11 +49,54 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|__GNUC__
+operator|-
+literal|0
+operator|)
+operator|*
+literal|10
+operator|+
+name|__GNUC_MINOR__
+operator|-
+literal|0
+operator|>=
+literal|33
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_VIZ
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ZLIB_INTERNAL
+value|__attribute__((visibility ("hidden")))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ZLIB_INTERNAL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -589,9 +632,8 @@ comment|/* shared functions */
 end_comment
 
 begin_decl_stmt
-name|ZEXTERN
 name|void
-name|ZEXPORT
+name|ZLIB_INTERNAL
 name|gz_error
 name|OF
 argument_list|(
@@ -616,9 +658,8 @@ name|UNDER_CE
 end_if
 
 begin_decl_stmt
-name|ZEXTERN
 name|char
-name|ZEXPORT
+name|ZLIB_INTERNAL
 modifier|*
 name|gz_strwinerror
 name|OF
@@ -662,9 +703,8 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|ZEXTERN
 name|unsigned
-name|ZEXPORT
+name|ZLIB_INTERNAL
 name|gz_intmax
 name|OF
 argument_list|(

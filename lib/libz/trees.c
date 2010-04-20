@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2009 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* trees.c -- output deflated data using Huffman coding  * Copyright (C) 1995-2010 Jean-loup Gailly  * detect_data_type() function provided freely by Cosmin Truta, 2006  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -1919,7 +1919,7 @@ name|fprintf
 argument_list|(
 name|header
 argument_list|,
-literal|"const uch _dist_code[DIST_CODE_LEN] = {\n"
+literal|"const uch ZLIB_INTERNAL _dist_code[DIST_CODE_LEN] = {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1964,7 +1964,7 @@ name|fprintf
 argument_list|(
 name|header
 argument_list|,
-literal|"const uch _length_code[MAX_MATCH-MIN_MATCH+1]= {\n"
+literal|"const uch ZLIB_INTERNAL _length_code[MAX_MATCH-MIN_MATCH+1]= {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2122,6 +2122,7 @@ end_comment
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|_tr_init
 parameter_list|(
 name|s
@@ -4860,6 +4861,7 @@ end_comment
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|_tr_stored_block
 parameter_list|(
 name|s
@@ -4965,6 +4967,7 @@ end_comment
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|_tr_align
 parameter_list|(
 name|s
@@ -5081,6 +5084,7 @@ end_comment
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|_tr_flush_block
 parameter_list|(
 name|s
@@ -5601,6 +5605,7 @@ expr_stmt|;
 block|}
 comment|/* ===========================================================================  * Save the match info and tally the frequency counts. Return true if  * the current block must be flushed.  */
 name|int
+name|ZLIB_INTERNAL
 name|_tr_tally
 parameter_list|(
 name|s

@@ -3214,6 +3214,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|uch
+name|ZLIB_INTERNAL
 name|_dist_code
 index|[
 name|DIST_CODE_LEN
@@ -4250,6 +4251,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|uch
+name|ZLIB_INTERNAL
 name|_length_code
 index|[
 name|MAX_MATCH
