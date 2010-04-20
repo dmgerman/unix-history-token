@@ -23,11 +23,54 @@ directive|define
 name|ZUTIL_H
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|__GNUC__
+operator|-
+literal|0
+operator|)
+operator|*
+literal|10
+operator|+
+name|__GNUC_MINOR__
+operator|-
+literal|0
+operator|>=
+literal|33
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_VIZ
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ZLIB_INTERNAL
+value|__attribute__((visibility ("hidden")))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ZLIB_INTERNAL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1413,8 +1456,8 @@ directive|else
 end_else
 
 begin_decl_stmt
-specifier|extern
 name|void
+name|ZLIB_INTERNAL
 name|zmemcpy
 name|OF
 argument_list|(
@@ -1436,8 +1479,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
+name|ZLIB_INTERNAL
 name|zmemcmp
 name|OF
 argument_list|(
@@ -1460,8 +1503,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|void
+name|ZLIB_INTERNAL
 name|zmemzero
 name|OF
 argument_list|(
@@ -1501,6 +1544,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|int
+name|ZLIB_INTERNAL
 name|z_verbose
 decl_stmt|;
 end_decl_stmt
@@ -1508,6 +1552,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|ZLIB_INTERNAL
 name|z_error
 name|OF
 argument_list|(
@@ -1658,6 +1703,7 @@ end_endif
 
 begin_decl_stmt
 name|voidpf
+name|ZLIB_INTERNAL
 name|zcalloc
 name|OF
 argument_list|(
@@ -1677,6 +1723,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|zcfree
 name|OF
 argument_list|(

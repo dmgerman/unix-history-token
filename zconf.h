@@ -1852,24 +1852,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_VISIBILITY_PRAGMA
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ZEXTERN
-value|__attribute__((visibility ("default"))) extern
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2161,6 +2143,33 @@ end_include
 begin_comment
 comment|/* for off_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and  * "#define _LARGEFILE64_SOURCE 1" as requesting 64-bit operations, (even  * though the former does not conform to the LFS document), but considering  * both "#undef _LARGEFILE64_SOURCE" and "#define _LARGEFILE64_SOURCE 0" as  * equivalently requesting no 64-bit operations  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|-
+name|_LARGEFILE64_SOURCE
+operator|-
+operator|-
+literal|1
+operator|==
+literal|1
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|_LARGEFILE64_SOURCE
+end_undef
 
 begin_endif
 endif|#

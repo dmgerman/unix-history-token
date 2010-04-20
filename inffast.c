@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2008 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* inffast.c -- fast decoding  * Copyright (C) 1995-2008, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -93,6 +93,7 @@ end_comment
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|inflate_fast
 parameter_list|(
 name|strm
