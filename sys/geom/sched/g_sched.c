@@ -2812,38 +2812,6 @@ end_define
 begin_function
 specifier|static
 specifier|inline
-name|int
-name|g_sched_issuer_pid
-parameter_list|(
-name|struct
-name|bio
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|struct
-name|thread
-modifier|*
-name|thread
-init|=
-name|g_sched_issuer
-argument_list|(
-name|bp
-argument_list|)
-decl_stmt|;
-return|return
-operator|(
-name|thread
-operator|->
-name|td_tid
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
 name|char
 name|g_sched_type
 parameter_list|(
@@ -2912,9 +2880,9 @@ name|CTR5
 argument_list|(
 name|KTR_GSCHED
 argument_list|,
-literal|"S %d %c %lu/%lu %lu"
+literal|"S %lu %c %lu/%lu %lu"
 argument_list|,
-name|g_sched_issuer_pid
+name|g_sched_classify
 argument_list|(
 name|bp
 argument_list|)
@@ -2958,9 +2926,9 @@ name|CTR5
 argument_list|(
 name|KTR_GSCHED
 argument_list|,
-literal|"D %d %c %lu/%lu %lu"
+literal|"D %lu %c %lu/%lu %lu"
 argument_list|,
-name|g_sched_issuer_pid
+name|g_sched_classify
 argument_list|(
 name|bp
 argument_list|)
@@ -2993,6 +2961,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !KTR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3008,6 +2980,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !KTR */
+end_comment
 
 begin_comment
 comment|/*  * g_sched_done() and g_sched_start() dispatch the geom requests to  * the scheduling algorithm in use.  */
