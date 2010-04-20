@@ -6992,7 +6992,7 @@ literal|"%2.2x%c"
 argument_list|,
 name|asoc
 operator|->
-name|mapping_array
+name|nr_mapping_array
 index|[
 name|i
 index|]
