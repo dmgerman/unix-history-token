@@ -3948,9 +3948,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_remove_all
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_pageout_scan: page %p is mapped"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
