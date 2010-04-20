@@ -40803,7 +40803,7 @@ argument_list|(
 name|mac
 operator|->
 name|mac_phy
-operator|->
+operator|.
 name|type
 operator|==
 name|BWN_PHYTYPE_G
