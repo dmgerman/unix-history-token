@@ -1837,13 +1837,23 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf's to complete and be read */
-comment|/* 	 * Acquiring smp_ipi_mtx here has a double effect: 	 * - it disables interrupts avoiding CPU0 preemption 	 *   by fast handlers (thus deadlocking  against other CPUs) 	 * - it avoids deadlocks against smp_rendezvous() or, more  	 *   generally, threads busy-waiting, with this spinlock held, 	 *   and waiting for responses by threads on other CPUs 	 *   (ie. smp_tlb_shootdown()). 	 */
+comment|/* 	 * Acquiring smp_ipi_mtx here has a double effect: 	 * - it disables interrupts avoiding CPU0 preemption 	 *   by fast handlers (thus deadlocking  against other CPUs) 	 * - it avoids deadlocks against smp_rendezvous() or, more  	 *   generally, threads busy-waiting, with this spinlock held, 	 *   and waiting for responses by threads on other CPUs 	 *   (ie. smp_tlb_shootdown()). 	 * 	 * For the !SMP case it just needs to handle the former problem. 	 */
+ifdef|#
+directive|ifdef
+name|SMP
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* cpu_boot(howto); */
 comment|/* doesn't do anything at the moment */
 name|cpu_reset
