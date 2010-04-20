@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/siba/sibavar.h>
+file|<dev/siba/siba_ids.h>
 end_include
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/siba/siba_ids.h>
+file|<dev/siba/sibavar.h>
 end_include
 
 begin_function_decl

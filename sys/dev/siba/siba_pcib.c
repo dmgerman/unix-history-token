@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/siba/sibavar.h>
+file|<dev/siba/siba_ids.h>
 end_include
 
 begin_include
@@ -150,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/siba/siba_ids.h>
+file|<dev/siba/sibavar.h>
 end_include
 
 begin_include
@@ -228,27 +228,6 @@ define|#
 directive|define
 name|SBPCI_CFGSIZE
 value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBPCI_SBTOPCI0
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBPCI_SBTOPCI1
-value|0x104
-end_define
-
-begin_define
-define|#
-directive|define
-name|SBPCI_SBTOPCI2
-value|0x108
 end_define
 
 begin_comment
@@ -776,23 +755,14 @@ name|sc_cfg_hand
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup configuration, io, and dma space windows. 	 * XXX we need to be able to do type 1 too. 	 * we probably don't need to be able to do i/o cycles. 	 */
-name|SBPCI_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|SBPCI_SBTOPCI0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* I/O read/write window */
 name|SBPCI_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|SBPCI_SBTOPCI1
+name|SIBA_PCICORE_SBTOPCI0
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* type 0 configuration only */
@@ -800,7 +770,16 @@ name|SBPCI_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|SBPCI_SBTOPCI2
+name|SIBA_PCICORE_SBTOPCI1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|SBPCI_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SIBA_PCICORE_SBTOPCI2
 argument_list|,
 literal|1
 operator|<<
@@ -1512,7 +1491,7 @@ name|SBPCI_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|SBPCI_SBTOPCI1
+name|SIBA_PCICORE_SBTOPCI1
 argument_list|,
 literal|2
 argument_list|)
