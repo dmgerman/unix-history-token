@@ -2003,6 +2003,12 @@ struct|struct
 name|bwn_stats
 block|{
 name|int32_t
+name|rtsfail
+decl_stmt|;
+name|int32_t
+name|rts
+decl_stmt|;
+name|int32_t
 name|link_noise
 decl_stmt|;
 block|}
