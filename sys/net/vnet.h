@@ -979,6 +979,64 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * EVENTHANDLER(9) extensions.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_function_decl
+name|void
+name|vnet_global_eventhandler_iterator_func
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		(tag) = vimage_eventhandler_register(NULL, #name, func,	\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		vimage_eventhandler_register(NULL, #name, func,		\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1406,6 +1464,46 @@ name|arg
 parameter_list|)
 define|\
 value|SYSUNINIT(ident, subsystem, order, func, arg)
+end_define
+
+begin_comment
+comment|/*  * Without VIMAGE revert to the default implementation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|(tag) = eventhandler_register(NULL, #name, func, arg, priority)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|eventhandler_register(NULL, #name, func, arg, priority)
 end_define
 
 begin_endif
