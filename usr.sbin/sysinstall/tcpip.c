@@ -3657,6 +3657,11 @@ operator|)
 return|;
 block|}
 block|}
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|freeifaddrs
 argument_list|(
 name|ifap
