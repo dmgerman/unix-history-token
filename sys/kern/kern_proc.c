@@ -6290,7 +6290,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|ki
 argument_list|,
 sizeof|sizeof
