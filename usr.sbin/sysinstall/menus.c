@@ -6850,15 +6850,11 @@ literal|"select between FreeBSD and any other operating systems on your machine\
 literal|"at boot time.  If you have more than one drive and want to boot\n"
 literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you will only have FreeBSD on the machine the boot manager is\n"
-literal|"not needed and it slows down the boot while offering you the choice\n"
-literal|"of which operating system to boot.  If you do not want a boot\n"
-literal|"manager, or wish to replace an existing one, select \"standard\".\n"
-literal|"If you would prefer your Master Boot Record remain untouched then\n"
-literal|"select \"None\".\n\n"
-literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
+literal|"If you have other operating systems installed and would like a choice when\n"
+literal|"booting, choose \"BootMgr\". If you would prefer to keep your existing\n"
+literal|"boot manager, select \"None\".\n\n"
 block|,
-literal|"Press F1 to read about drive setup"
+literal|""
 block|,
 literal|"drives"
 block|,
@@ -6866,7 +6862,7 @@ block|{
 block|{
 literal|"Standard"
 block|,
-literal|"Install a standard MBR (no boot manager)"
+literal|"Install a standard MBR (non-interactive boot manager)"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -6912,7 +6908,7 @@ block|,
 block|{
 literal|"None"
 block|,
-literal|"Leave the Master Boot Record untouched"
+literal|"Do not install a boot manager"
 block|,
 name|dmenuRadioCheck
 block|,
