@@ -3993,6 +3993,12 @@ name|dp
 operator|=
 name|domains
 init|;
+name|ifp
+operator|->
+name|if_afdata_initialized
+operator|>
+literal|0
+operator|&&
 name|dp
 condition|;
 name|dp
