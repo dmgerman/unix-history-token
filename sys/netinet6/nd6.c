@@ -4135,6 +4135,11 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
+name|LLE_REMREF
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|llentry_free
 argument_list|(
 name|ln
