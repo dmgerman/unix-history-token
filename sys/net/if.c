@@ -3982,7 +3982,25 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We cannot hold the lock over dom_ifdetach calls as they might 	 * sleep, for example trying to drain a callout, thus open up the 	 * theoretical race with re-attaching. 	 */
 name|IF_AFDATA_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|ifp
+operator|->
+name|if_afdata_initialized
+expr_stmt|;
+name|ifp
+operator|->
+name|if_afdata_initialized
+operator|=
+literal|0
+expr_stmt|;
+name|IF_AFDATA_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3993,9 +4011,7 @@ name|dp
 operator|=
 name|domains
 init|;
-name|ifp
-operator|->
-name|if_afdata_initialized
+name|i
 operator|>
 literal|0
 operator|&&
@@ -4043,17 +4059,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|ifp
-operator|->
-name|if_afdata_initialized
-operator|=
-literal|0
-expr_stmt|;
-name|IF_AFDATA_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
