@@ -61590,21 +61590,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|phystat0
-operator|&
-name|BWN_RX_PHYST0_SHORTPRMBL
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"TODO RX: RX_FLAG_SHORTPRE\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|macstat
 operator|&
 name|BWN_RX_MAC_DECERR
