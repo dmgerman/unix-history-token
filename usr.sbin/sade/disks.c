@@ -972,7 +972,7 @@ literal|16
 argument_list|,
 literal|0
 argument_list|,
-literal|"A = Use Entire Disk   G = set Drive Geometry   C = Create Slice   F = `DD' mode"
+literal|"A = Use Entire Disk   G = set Drive Geometry   C = Create Slice"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -981,7 +981,7 @@ literal|17
 argument_list|,
 literal|0
 argument_list|,
-literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Wizard m."
+literal|"D = Delete Slice      Z = Toggle Size Units    S = Set Bootable   | = Expert m."
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -990,16 +990,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"T = Change Type       U = Undo All Changes     Q = Finish"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|18
-argument_list|,
-literal|47
-argument_list|,
-literal|"W = Write Changes"
+literal|"T = Change Type       U = Undo All Changes     W = Write Changes  Q = Finish"
 argument_list|)
 expr_stmt|;
 name|mvprintw
