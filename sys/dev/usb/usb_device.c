@@ -9287,6 +9287,7 @@ literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
+literal|"mode=%s "
 literal|"port=%u "
 literal|"parent=%s\n"
 argument_list|,
@@ -9336,6 +9337,20 @@ name|ddesc
 operator|.
 name|bcdDevice
 argument_list|)
+argument_list|,
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|?
+literal|"host"
+else|:
+literal|"device"
 argument_list|,
 name|udev
 operator|->
@@ -9448,6 +9463,7 @@ literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
+literal|"mode=%s "
 literal|"interface=%d "
 literal|"endpoints=%d "
 literal|"intclass=0x%02x "
@@ -9500,6 +9516,20 @@ name|ddesc
 operator|.
 name|bcdDevice
 argument_list|)
+argument_list|,
+operator|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|?
+literal|"host"
+else|:
+literal|"device"
 argument_list|,
 name|iface
 operator|->
