@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-rsa.c,v 1.39 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh-rsa.c,v 1.40 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -171,11 +171,19 @@ name|key
 operator|==
 name|NULL
 operator|||
+operator|(
 name|key
 operator|->
 name|type
 operator|!=
 name|KEY_RSA
+operator|&&
+name|key
+operator|->
+name|type
+operator|!=
+name|KEY_RSA_CERT
+operator|)
 operator|||
 name|key
 operator|->
@@ -585,11 +593,19 @@ name|key
 operator|==
 name|NULL
 operator|||
+operator|(
 name|key
 operator|->
 name|type
 operator|!=
 name|KEY_RSA
+operator|&&
+name|key
+operator|->
+name|type
+operator|!=
+name|KEY_RSA_CERT
+operator|)
 operator|||
 name|key
 operator|->

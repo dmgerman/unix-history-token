@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhs.c,v 1.9 2006/11/06 21:25:28 markus Exp $ */
+comment|/* $OpenBSD: kexdhs.c,v 1.11 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -140,7 +140,10 @@ name|dh
 decl_stmt|;
 name|Key
 modifier|*
-name|server_host_key
+name|server_host_public
+decl_stmt|,
+modifier|*
+name|server_host_private
 decl_stmt|;
 name|u_char
 modifier|*
@@ -235,7 +238,13 @@ if|if
 condition|(
 name|kex
 operator|->
-name|load_host_key
+name|load_host_public_key
+operator|==
+name|NULL
+operator|||
+name|kex
+operator|->
+name|load_host_private_key
 operator|==
 name|NULL
 condition|)
@@ -244,11 +253,11 @@ argument_list|(
 literal|"Cannot load hostkey"
 argument_list|)
 expr_stmt|;
-name|server_host_key
+name|server_host_public
 operator|=
 name|kex
 operator|->
-name|load_host_key
+name|load_host_public_key
 argument_list|(
 name|kex
 operator|->
@@ -257,13 +266,39 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|server_host_key
+name|server_host_public
 operator|==
 name|NULL
 condition|)
 name|fatal
 argument_list|(
 literal|"Unsupported hostkey type %d"
+argument_list|,
+name|kex
+operator|->
+name|hostkey_type
+argument_list|)
+expr_stmt|;
+name|server_host_private
+operator|=
+name|kex
+operator|->
+name|load_host_private_key
+argument_list|(
+name|kex
+operator|->
+name|hostkey_type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|server_host_private
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"Missing private key for hostkey type %d"
 argument_list|,
 name|kex
 operator|->
@@ -481,7 +516,7 @@ argument_list|)
 expr_stmt|;
 name|key_to_blob
 argument_list|(
-name|server_host_key
+name|server_host_public
 argument_list|,
 operator|&
 name|server_host_key_blob
@@ -599,11 +634,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* sign H */
+if|if
+condition|(
 name|PRIVSEP
 argument_list|(
 name|key_sign
 argument_list|(
-name|server_host_key
+name|server_host_private
 argument_list|,
 operator|&
 name|signature
@@ -615,6 +652,13 @@ name|hash
 argument_list|,
 name|hashlen
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"kexdh_server: key_sign failed"
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */

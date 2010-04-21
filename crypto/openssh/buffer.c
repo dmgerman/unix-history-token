@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: buffer.c,v 1.31 2006/08/03 03:34:41 deraadt Exp $ */
+comment|/* $OpenBSD: buffer.c,v 1.32 2010/02/09 03:56:28 djm Exp $ */
 end_comment
 
 begin_comment
@@ -604,6 +604,7 @@ begin_function
 name|u_int
 name|buffer_len
 parameter_list|(
+specifier|const
 name|Buffer
 modifier|*
 name|buffer
@@ -919,6 +920,7 @@ name|void
 modifier|*
 name|buffer_ptr
 parameter_list|(
+specifier|const
 name|Buffer
 modifier|*
 name|buffer
@@ -944,6 +946,7 @@ begin_function
 name|void
 name|buffer_dump
 parameter_list|(
+specifier|const
 name|Buffer
 modifier|*
 name|buffer

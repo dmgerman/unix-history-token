@@ -16,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.153 2009/02/01 11:19:54 dtucker Exp $ */
+comment|/* $Id: defines.h,v 1.159 2010/01/13 23:44:34 tim Exp $ */
 end_comment
 
 begin_comment
@@ -1649,6 +1649,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_IN_PORT_T
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|in_port_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -3255,6 +3273,26 @@ define|\
 value|((((u_int64_t)(f).val[0]& 0xffffffffUL)<< 32) | \ 	    ((f).val[1]& 0xffffffffUL))
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|FSID_HAS___VAL
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|FSID_TO_ULONG
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|((((u_int64_t)(f).__val[0]& 0xffffffffUL)<< 32) | \ 	    ((f).__val[1]& 0xffffffffUL))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -4110,6 +4148,65 @@ directive|define
 name|INET6_ADDRSTRLEN
 value|46
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_IOBUFSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SSH_IOBUFSZ
+value|8192
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NSIG
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NSIG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_NSIG
+value|NSIG
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_NSIG
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.209 2009/02/12 03:00:56 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.218 2010/01/28 00:21:18 djm Exp $ */
 end_comment
 
 begin_comment
@@ -286,6 +286,12 @@ directive|include
 file|"msg.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"roaming.h"
+end_include
+
 begin_comment
 comment|/* import options */
 end_comment
@@ -331,6 +337,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* XXX use mux_client_cleanup() instead */
+end_comment
+
+begin_comment
 comment|/*  * Name of the host we are connecting to.  This is the name given on the  * command line, or the HostName specified for the user-supplied name in a  * configuration file.  */
 end_comment
 
@@ -339,6 +349,17 @@ specifier|extern
 name|char
 modifier|*
 name|host
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Force TTY allocation */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|force_tty_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +405,6 @@ comment|/* Common data for the client loop code. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|quit_pending
@@ -556,6 +576,14 @@ name|session_ident
 init|=
 operator|-
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|session_resumed
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1813,9 +1841,10 @@ name|gc
 argument_list|)
 expr_stmt|;
 block|}
-name|keep_alive_timeouts
-operator|=
+name|packet_set_alive_timeouts
+argument_list|(
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1830,8 +1859,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|++
-name|keep_alive_timeouts
+name|packet_inc_alive_timeouts
+argument_list|()
 operator|>
 name|options
 operator|.
@@ -2101,21 +2130,6 @@ operator|*
 name|writesetp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-condition|)
-name|FD_SET
-argument_list|(
-name|muxserver_sock
-argument_list|,
-operator|*
-name|readsetp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Wait for something to happen.  This will suspend the process until 	 * some selected descriptor can be read, written, or has some other 	 * event pending. 	 */
 if|if
 condition|(
@@ -2344,7 +2358,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Free (and clear) the buffer to reduce the amount of data that gets 	 * written to swap. 	 */
 name|buffer_free
@@ -2393,7 +2409,9 @@ name|berr
 argument_list|)
 expr_stmt|;
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2410,11 +2428,15 @@ parameter_list|)
 block|{
 name|int
 name|len
+decl_stmt|,
+name|cont
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|SSH_IOBUFSZ
 index|]
 decl_stmt|;
 comment|/* 	 * Read input from the server, and add any such data to the buffer of 	 * the packet subsystem. 	 */
@@ -2431,7 +2453,7 @@ block|{
 comment|/* Read as much as possible. */
 name|len
 operator|=
-name|read
+name|roaming_read
 argument_list|(
 name|connection_in
 argument_list|,
@@ -2441,11 +2463,18 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+operator|&
+name|cont
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|len
+operator|==
+literal|0
+operator|&&
+name|cont
 operator|==
 literal|0
 condition|)
@@ -2611,7 +2640,7 @@ name|SYSLOG_LEVEL_ERROR
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3036,7 +3065,9 @@ operator|=
 name|NULL
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 name|handler
 operator|=
@@ -3301,6 +3332,7 @@ name|s
 argument_list|)
 condition|)
 empty_stmt|;
+comment|/* XXX update list of forwards in options */
 if|if
 condition|(
 name|delete
@@ -3503,7 +3535,9 @@ name|handler
 argument_list|)
 expr_stmt|;
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3759,7 +3793,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3800,7 +3834,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3961,7 +3995,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -3972,7 +4006,9 @@ goto|;
 comment|/* 				 * Detach the program (continue to serve 				 * connections, but put in background and no 				 * more new connections). 				 */
 comment|/* Restore tty modes. */
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* Stop listening for new connections. */
 name|channel_stop_listening
@@ -4121,7 +4157,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -4261,7 +4297,7 @@ name|c
 operator|&&
 name|c
 operator|->
-name|ctl_fd
+name|ctl_chan
 operator|!=
 operator|-
 literal|1
@@ -4363,7 +4399,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|8192
+name|SSH_IOBUFSZ
 index|]
 decl_stmt|;
 comment|/* Read input from stdin. */
@@ -4943,7 +4979,9 @@ operator|=
 literal|1
 expr_stmt|;
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5064,22 +5102,6 @@ argument_list|(
 name|connection_in
 argument_list|,
 name|connection_out
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-condition|)
-name|max_fd
-operator|=
-name|MAX
-argument_list|(
-name|max_fd
-argument_list|,
-name|muxserver_sock
 argument_list|)
 expr_stmt|;
 if|if
@@ -5298,7 +5320,9 @@ condition|(
 name|have_pty
 condition|)
 name|enter_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5508,32 +5532,6 @@ argument_list|(
 name|readset
 argument_list|)
 expr_stmt|;
-comment|/* Accept control connections.  */
-if|if
-condition|(
-name|muxserver_sock
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|FD_ISSET
-argument_list|(
-name|muxserver_sock
-argument_list|,
-name|readset
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|muxserver_accept_control
-argument_list|()
-condition|)
-name|quit_pending
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|quit_pending
@@ -5556,6 +5554,44 @@ name|client_process_output
 argument_list|(
 name|writeset
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|session_resumed
+condition|)
+block|{
+name|connection_in
+operator|=
+name|packet_get_connection_in
+argument_list|()
+expr_stmt|;
+name|connection_out
+operator|=
+name|packet_get_connection_out
+argument_list|()
+expr_stmt|;
+name|max_fd
+operator|=
+name|MAX
+argument_list|(
+name|max_fd
+argument_list|,
+name|connection_out
+argument_list|)
+expr_stmt|;
+name|max_fd
+operator|=
+name|MAX
+argument_list|(
+name|max_fd
+argument_list|,
+name|connection_in
+argument_list|)
+expr_stmt|;
+name|session_resumed
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* 		 * Send as much buffered packet data as possible to the 		 * sender. 		 */
@@ -5599,6 +5635,33 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|packet_start
+argument_list|(
+name|SSH2_MSG_DISCONNECT
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|SSH2_DISCONNECT_BY_APPLICATION
+argument_list|)
+expr_stmt|;
+name|packet_put_cstring
+argument_list|(
+literal|"disconnected by user"
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|packet_write_wait
+argument_list|()
+expr_stmt|;
+block|}
 name|channel_free_all
 argument_list|()
 expr_stmt|;
@@ -5607,7 +5670,9 @@ condition|(
 name|have_pty
 condition|)
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 comment|/* restore blocking io */
 if|if
@@ -7248,11 +7313,35 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|c
+operator|->
+name|ctl_chan
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|mux_exit_message
+argument_list|(
+name|c
+argument_list|,
+name|exitval
+argument_list|)
+expr_stmt|;
+name|success
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|id
 operator|==
 name|session_ident
 condition|)
 block|{
+comment|/* Record exit value of local session */
 name|success
 operator|=
 literal|1
@@ -7262,47 +7351,17 @@ operator|=
 name|exitval
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|c
-operator|->
-name|ctl_fd
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"client_input_channel_req: unexpected channel %d"
-argument_list|,
-name|session_ident
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
-name|atomicio
+comment|/* Probably for a mux channel that has already closed */
+name|debug
 argument_list|(
-name|vwrite
+literal|"%s: no sink for exit-status on channel %d"
 argument_list|,
-name|c
-operator|->
-name|ctl_fd
+name|__func__
 argument_list|,
-operator|&
-name|exitval
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|exitval
+name|id
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|success
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|packet_check_eom
@@ -8295,7 +8354,9 @@ name|i
 parameter_list|)
 block|{
 name|leave_raw_mode
-argument_list|()
+argument_list|(
+name|force_tty_flag
+argument_list|)
 expr_stmt|;
 name|leave_non_blocking
 argument_list|()

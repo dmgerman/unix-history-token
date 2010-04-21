@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh2.h,v 1.11 2008/11/04 08:22:13 djm Exp $ */
+comment|/* $OpenBSD: ssh2.h,v 1.13 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -599,6 +599,63 @@ define|#
 directive|define
 name|SSH2_EXTENDED_DATA_STDERR
 value|1
+end_define
+
+begin_comment
+comment|/* kex messages for resume@appgate.com */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ROAMING_RESUME
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ROAMING_AUTH_REQUIRED
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ROAMING_AUTH
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ROAMING_AUTH_OK
+value|33
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ROAMING_AUTH_FAIL
+value|34
+end_define
+
+begin_comment
+comment|/* Certificate types for OpenSSH certificate keys extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH2_CERT_TYPE_USER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_CERT_TYPE_HOST
+value|2
 end_define
 
 end_unit

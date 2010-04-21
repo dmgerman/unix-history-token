@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: hostfile.h,v 1.16 2006/03/25 22:22:43 djm Exp $ */
+comment|/* $OpenBSD: hostfile.h,v 1.18 2010/03/04 10:36:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -28,6 +28,8 @@ block|,
 name|HOST_NEW
 block|,
 name|HOST_CHANGED
+block|,
+name|HOST_REVOKED
 block|,
 name|HOST_FOUND
 block|}
@@ -133,6 +135,20 @@ define|#
 directive|define
 name|HASH_DELIM
 value|'|'
+end_define
+
+begin_define
+define|#
+directive|define
+name|CA_MARKER
+value|"@cert-authority"
+end_define
+
+begin_define
+define|#
+directive|define
+name|REVOKE_MARKER
+value|"@revoked"
 end_define
 
 begin_function_decl

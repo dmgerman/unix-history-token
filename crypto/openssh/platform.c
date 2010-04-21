@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: platform.c,v 1.1 2006/08/30 17:24:41 djm Exp $ */
+comment|/* $Id: platform.c,v 1.3 2009/12/20 23:49:22 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -24,6 +24,25 @@ include|#
 directive|include
 file|"openbsd-compat/openbsd-compat.h"
 end_include
+
+begin_function
+name|void
+name|platform_pre_listen
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|LINUX_OOM_ADJUST
+comment|/* Adjust out-of-memory killer so listening process is not killed */
+name|oom_adjust_setup
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_function
 name|void
@@ -77,6 +96,44 @@ name|USE_SOLARIS_PROCESS_CONTRACTS
 name|solaris_contract_post_fork_child
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LINUX_OOM_ADJUST
+name|oom_adjust_restore
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|platform_krb5_get_principal_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|pw_name
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|USE_AIX_KRB_NAME
+return|return
+name|aix_krb5_get_principal_name
+argument_list|(
+name|pw_name
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|NULL
+return|;
 endif|#
 directive|endif
 block|}

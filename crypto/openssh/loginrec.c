@@ -4902,7 +4902,7 @@ name|username
 argument_list|,
 name|utx
 operator|->
-name|ut_name
+name|ut_user
 argument_list|,
 name|MIN_SIZEOF
 argument_list|(
@@ -4912,7 +4912,7 @@ name|username
 argument_list|,
 name|utx
 operator|->
-name|ut_name
+name|ut_user
 argument_list|)
 argument_list|)
 operator|==

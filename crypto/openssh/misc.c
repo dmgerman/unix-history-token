@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.c,v 1.71 2009/02/21 19:32:04 tobias Exp $ */
+comment|/* $OpenBSD: misc.c,v 1.75 2010/01/09 23:04:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -2528,6 +2528,13 @@ define|#
 directive|define
 name|EXPAND_MAX_KEYS
 value|16
+name|u_int
+name|num_keys
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
 struct|struct
 block|{
 specifier|const
@@ -2546,13 +2553,6 @@ index|[
 name|EXPAND_MAX_KEYS
 index|]
 struct|;
-name|u_int
-name|num_keys
-decl_stmt|,
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2639,24 +2639,38 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"percent_expand: NULL replacement"
+literal|"%s: NULL replacement"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|num_keys
-operator|>=
+operator|==
 name|EXPAND_MAX_KEYS
+operator|&&
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"percent_expand: too many keys"
+literal|"%s: too many keys"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 comment|/* Expand string */
@@ -2710,7 +2724,9 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"percent_expand: string too long"
+literal|"%s: string too long"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|buf
@@ -2725,6 +2741,7 @@ block|}
 name|string
 operator|++
 expr_stmt|;
+comment|/* %% case */
 if|if
 condition|(
 operator|*
@@ -2797,7 +2814,9 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"percent_expand: string too long"
+literal|"%s: string too long"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2811,7 +2830,9 @@ name|num_keys
 condition|)
 name|fatal
 argument_list|(
-literal|"percent_expand: unknown key %%%c"
+literal|"%s: unknown key %%%c"
+argument_list|,
+name|__func__
 argument_list|,
 operator|*
 name|string
@@ -4243,6 +4264,68 @@ operator|)
 operator|*
 literal|1000
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sock_set_v6only
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|IPV6_V6ONLY
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|debug3
+argument_list|(
+literal|"%s: set socket %d IPV6_V6ONLY"
+argument_list|,
+name|__func__
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IPV6
+argument_list|,
+name|IPV6_V6ONLY
+argument_list|,
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"setsockopt IPV6_V6ONLY: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

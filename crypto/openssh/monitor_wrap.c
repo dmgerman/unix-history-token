@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_wrap.c,v 1.64 2008/11/04 08:22:13 djm Exp $ */
+comment|/* $OpenBSD: monitor_wrap.c,v 1.69 2010/03/07 11:57:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -264,6 +264,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"schnorr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"jpake.h"
 end_include
 
@@ -285,6 +291,12 @@ directive|include
 file|"servconf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"roaming.h"
+end_include
+
 begin_comment
 comment|/* Imports */
 end_comment
@@ -293,15 +305,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|compat20
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Newkeys
-modifier|*
-name|newkeys
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -325,15 +328,6 @@ name|struct
 name|monitor
 modifier|*
 name|pmonitor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|Buffer
-name|input
-decl_stmt|,
-name|output
 decl_stmt|;
 end_decl_stmt
 
@@ -1730,62 +1724,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|mm_send_debug
-parameter_list|(
-name|Buffer
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-while|while
-condition|(
-name|buffer_len
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-name|msg
-operator|=
-name|buffer_get_string
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|debug3
-argument_list|(
-literal|"%s: Sending debug: %s"
-argument_list|,
-name|__func__
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|packet_send_debug
-argument_list|(
-literal|"%s"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
 name|int
 name|mm_key_allowed
 parameter_list|(
@@ -1966,13 +1904,6 @@ literal|"true"
 argument_list|)
 else|:
 name|NULL
-expr_stmt|;
-comment|/* Send potential debug messages */
-name|mm_send_debug
-argument_list|(
-operator|&
-name|m
-argument_list|)
 expr_stmt|;
 name|buffer_free
 argument_list|(
@@ -2600,10 +2531,14 @@ name|Newkeys
 modifier|*
 name|newkey
 init|=
-name|newkeys
-index|[
+operator|(
+name|Newkeys
+operator|*
+operator|)
+name|packet_get_newkeys
+argument_list|(
 name|mode
-index|]
+argument_list|)
 decl_stmt|;
 name|debug3
 argument_list|(
@@ -3028,6 +2963,12 @@ parameter_list|)
 block|{
 name|Buffer
 name|m
+decl_stmt|,
+modifier|*
+name|input
+decl_stmt|,
+modifier|*
+name|output
 decl_stmt|;
 name|u_char
 modifier|*
@@ -3228,15 +3169,15 @@ literal|"%s: Sending new keys: %p %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|newkeys
-index|[
+name|packet_get_newkeys
+argument_list|(
 name|MODE_OUT
-index|]
+argument_list|)
 argument_list|,
-name|newkeys
-index|[
+name|packet_get_newkeys
+argument_list|(
 name|MODE_IN
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Keys from Kex */
@@ -3537,6 +3478,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Network I/O buffers */
+name|input
+operator|=
+operator|(
+name|Buffer
+operator|*
+operator|)
+name|packet_get_input
+argument_list|()
+expr_stmt|;
+name|output
+operator|=
+operator|(
+name|Buffer
+operator|*
+operator|)
+name|packet_get_output
+argument_list|()
+expr_stmt|;
 name|buffer_put_string
 argument_list|(
 operator|&
@@ -3544,13 +3503,11 @@ name|m
 argument_list|,
 name|buffer_ptr
 argument_list|(
-operator|&
 name|input
 argument_list|)
 argument_list|,
 name|buffer_len
 argument_list|(
-operator|&
 name|input
 argument_list|)
 argument_list|)
@@ -3562,17 +3519,40 @@ name|m
 argument_list|,
 name|buffer_ptr
 argument_list|(
-operator|&
 name|output
 argument_list|)
 argument_list|,
 name|buffer_len
 argument_list|(
-operator|&
 name|output
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Roaming */
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|buffer_put_int64
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|get_sent_bytes
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|buffer_put_int64
+argument_list|(
+operator|&
+name|m
+argument_list|,
+name|get_recv_bytes
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|mm_request_send
 argument_list|(
 name|monitor
@@ -5828,12 +5808,6 @@ name|blob
 argument_list|)
 expr_stmt|;
 block|}
-name|mm_send_debug
-argument_list|(
-operator|&
-name|m
-argument_list|)
-expr_stmt|;
 name|buffer_free
 argument_list|(
 operator|&
@@ -6807,7 +6781,7 @@ name|void
 name|mm_jpake_step1
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 name|grp
 parameter_list|,
@@ -7021,7 +6995,7 @@ name|void
 name|mm_jpake_step2
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 name|grp
 parameter_list|,
@@ -7240,7 +7214,7 @@ name|void
 name|mm_jpake_key_confirm
 parameter_list|(
 name|struct
-name|jpake_group
+name|modp_group
 modifier|*
 name|grp
 parameter_list|,

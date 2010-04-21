@@ -187,6 +187,14 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
+comment|/* tcgetattr with ICANON may hang */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_TCGETATTR_ICANON */
+end_comment
+
+begin_comment
 comment|/* updwtmpx is broken (if present) */
 end_comment
 
@@ -335,6 +343,16 @@ value|1
 end_define
 
 begin_comment
+comment|/* Enable for PKCS#11 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_PKCS11
+end_define
+
+begin_comment
 comment|/* Builtin PRNG command timeout */
 end_comment
 
@@ -346,11 +364,19 @@ value|200
 end_define
 
 begin_comment
-comment|/* f_fsid has members */
+comment|/* fsid_t has member val */
 end_comment
 
 begin_comment
 comment|/* #undef FSID_HAS_VAL */
+end_comment
+
+begin_comment
+comment|/* fsid_t has member __val */
+end_comment
+
+begin_comment
+comment|/* #undef FSID_HAS___VAL */
 end_comment
 
 begin_comment
@@ -1356,6 +1382,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `group_from_gid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GROUP_FROM_GID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<gssapi_generic.h> header file. */
 end_comment
 
@@ -1554,6 +1591,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if the system has the type `in_port_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN_PORT_T
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<lastlog.h> header file. */
 end_comment
 
@@ -1622,14 +1670,6 @@ directive|define
 name|HAVE_LIBPAM
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `sectok' library (-lsectok). */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LIBSECTOK */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `socket' library (-lsocket). */
@@ -2220,14 +2260,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<sectok.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SECTOK_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have SecureWare-based protected password database */
 end_comment
 
@@ -2307,6 +2339,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `setgroupent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETGROUPENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setgroups' function. */
 end_comment
 
@@ -2335,6 +2378,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SETLUID */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setpassent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPASSENT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setpcred' function. */
@@ -3349,6 +3403,17 @@ comment|/* #undef HAVE_USERSEC_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `user_from_uid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USER_FROM_UID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<util.h> header file. */
 end_comment
 
@@ -3703,6 +3768,14 @@ comment|/* #undef LINK_OPNOTSUPP_ERRNO */
 end_comment
 
 begin_comment
+comment|/* Adjust Linux out-of-memory killer */
+end_comment
+
+begin_comment
+comment|/* #undef LINUX_OOM_ADJUST */
+end_comment
+
+begin_comment
 comment|/* max value of long long calculated by configure */
 end_comment
 
@@ -3842,6 +3915,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NO_X11_UNIX_SOCKETS */
+end_comment
+
+begin_comment
+comment|/* Define if EVP_DigestUpdate returns void */
+end_comment
+
+begin_comment
+comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
 end_comment
 
 begin_comment
@@ -4046,14 +4127,6 @@ comment|/* #undef SKEYCHALLENGE_4ARG */
 end_comment
 
 begin_comment
-comment|/* Define if you want smartcard support */
-end_comment
-
-begin_comment
-comment|/* #undef SMARTCARD */
-end_comment
-
-begin_comment
 comment|/* Define as const if snprintf() can declare const char *fmt */
 end_comment
 
@@ -4094,6 +4167,14 @@ end_comment
 
 begin_comment
 comment|/* #undef SSH_AUDIT_EVENTS */
+end_comment
+
+begin_comment
+comment|/* Windows is sensitive to read buffer size */
+end_comment
+
+begin_comment
+comment|/* #undef SSH_IOBUFSZ */
 end_comment
 
 begin_comment
@@ -4237,14 +4318,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you want smartcard support using OpenSC */
-end_comment
-
-begin_comment
-comment|/* #undef USE_OPENSC */
-end_comment
-
-begin_comment
 comment|/* Enable OpenSSL engine support */
 end_comment
 
@@ -4272,14 +4345,6 @@ end_comment
 
 begin_comment
 comment|/* #undef USE_PIPES */
-end_comment
-
-begin_comment
-comment|/* Define if you want smartcard support using sectok */
-end_comment
-
-begin_comment
-comment|/* #undef USE_SECTOK */
 end_comment
 
 begin_comment
@@ -4350,9 +4415,36 @@ begin_comment
 comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+name|__LITTLE_ENDIAN__
+end_elif
+
 begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
+comment|/* # undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if xauth is found in your path */

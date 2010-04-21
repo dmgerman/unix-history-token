@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dns.c,v 1.25 2008/06/12 00:03:49 dtucker Exp $ */
+comment|/* $OpenBSD: dns.c,v 1.26 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -209,7 +209,6 @@ name|u_int
 modifier|*
 name|digest_len
 parameter_list|,
-specifier|const
 name|Key
 modifier|*
 name|key
@@ -578,7 +577,6 @@ name|sockaddr
 modifier|*
 name|address
 parameter_list|,
-specifier|const
 name|Key
 modifier|*
 name|hostkey
@@ -951,7 +949,6 @@ name|char
 modifier|*
 name|hostname
 parameter_list|,
-specifier|const
 name|Key
 modifier|*
 name|key

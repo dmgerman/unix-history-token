@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-jpake.c,v 1.2 2008/11/07 23:34:48 dtucker Exp $ */
+comment|/* $OpenBSD: auth2-jpake.c,v 1.3 2009/03/05 07:18:19 djm Exp $ */
 end_comment
 
 begin_comment
@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buffer.h"
+file|"auth.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"auth.h"
+file|"buffer.h"
 end_include
 
 begin_include
@@ -158,6 +158,12 @@ begin_include
 include|#
 directive|include
 file|"monitor_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"schnorr.h"
 end_include
 
 begin_include
@@ -1897,7 +1903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Being authentication attempt.  * Note, sets authctxt->postponed while in subprotocol  */
+comment|/*  * Begin authentication attempt.  * Note, sets authctxt->postponed while in subprotocol  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2.c,v 1.120 2008/11/04 08:22:12 djm Exp $ */
+comment|/* $OpenBSD: auth2.c,v 1.121 2009/06/22 05:39:28 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -72,13 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|"atomicio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"atomicio.h"
+file|"xmalloc.h"
 end_include
 
 begin_include
