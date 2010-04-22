@@ -856,8 +856,6 @@ operator||=
 name|R600_PTE_VALID
 operator||
 name|R600_PTE_SYSTEM
-operator||
-name|R600_PTE_SNOOPED
 expr_stmt|;
 name|page_base
 operator||=
