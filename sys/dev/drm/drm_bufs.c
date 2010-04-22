@@ -846,7 +846,7 @@ name|dev
 operator|->
 name|sg
 operator|->
-name|handle
+name|vaddr
 operator|+
 name|offset
 operator|)
@@ -859,7 +859,7 @@ name|dev
 operator|->
 name|sg
 operator|->
-name|handle
+name|vaddr
 operator|+
 name|offset
 expr_stmt|;
@@ -3432,7 +3432,7 @@ name|dev
 operator|->
 name|sg
 operator|->
-name|handle
+name|vaddr
 operator|)
 expr_stmt|;
 name|buf

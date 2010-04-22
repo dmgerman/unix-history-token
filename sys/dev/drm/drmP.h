@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sglist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -219,6 +225,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_map.h>
 end_include
 
@@ -237,7 +249,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_phys.h>
 end_include
 
 begin_include
@@ -2114,27 +2138,19 @@ typedef|typedef
 struct|struct
 name|drm_sg_mem
 block|{
-name|unsigned
-name|long
-name|handle
+name|vm_offset_t
+name|vaddr
 decl_stmt|;
-name|void
-modifier|*
-name|virtual
-decl_stmt|;
-name|int
-name|pages
-decl_stmt|;
-name|dma_addr_t
+name|vm_paddr_t
 modifier|*
 name|busaddr
 decl_stmt|;
-name|struct
-name|drm_dma_handle
-modifier|*
-name|dmah
+name|vm_pindex_t
+name|pages
 decl_stmt|;
-comment|/* Handle to PCI memory  */
+name|vm_object_t
+name|obj
+decl_stmt|;
 block|}
 name|drm_sg_mem_t
 typedef|;
