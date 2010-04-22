@@ -400,7 +400,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usbd_default_transfer_setup
+name|usbd_ctrl_transfer_setup
 parameter_list|(
 name|struct
 name|usb_device

@@ -42,7 +42,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 value|2
 end_define
 
@@ -326,7 +326,7 @@ name|ifaces
 decl_stmt|;
 name|struct
 name|usb_endpoint
-name|default_ep
+name|ctrl_ep
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
@@ -375,9 +375,9 @@ comment|/* only if this is a hub */
 name|struct
 name|usb_xfer
 modifier|*
-name|default_xfer
+name|ctrl_xfer
 index|[
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -411,7 +411,7 @@ comment|/* our generic symlink */
 name|struct
 name|cdev
 modifier|*
-name|default_dev
+name|ctrl_dev
 decl_stmt|;
 comment|/* Control Endpoint 0 device node */
 name|LIST_HEAD
@@ -516,7 +516,7 @@ name|flags
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
-name|default_ep_desc
+name|ctrl_ep_desc
 decl_stmt|;
 comment|/* for endpoint 0 */
 name|struct

@@ -838,7 +838,7 @@ condition|(
 operator|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 operator|)
@@ -847,7 +847,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 operator|->
@@ -865,7 +865,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 expr_stmt|;
 goto|goto
 name|found
@@ -1295,7 +1295,7 @@ condition|(
 operator|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 operator|)
@@ -1304,7 +1304,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 operator|->
@@ -1320,7 +1320,7 @@ operator|(
 operator|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 operator|->
@@ -1343,7 +1343,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 expr_stmt|;
 goto|goto
 name|found
@@ -5126,7 +5126,7 @@ name|usbd_transfer_start
 argument_list|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|1
 index|]
@@ -5559,7 +5559,7 @@ expr_stmt|;
 comment|/* set up default endpoint descriptor */
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|bLength
 operator|=
@@ -5567,12 +5567,12 @@ sizeof|sizeof
 argument_list|(
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 argument_list|)
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|bDescriptorType
 operator|=
@@ -5580,7 +5580,7 @@ name|UDESC_ENDPOINT
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|bEndpointAddress
 operator|=
@@ -5588,7 +5588,7 @@ name|USB_CONTROL_ENDPOINT
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|bmAttributes
 operator|=
@@ -5596,7 +5596,7 @@ name|UE_CONTROL
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|wMaxPacketSize
 index|[
@@ -5607,7 +5607,7 @@ name|USB_MAX_IPACKET
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|wMaxPacketSize
 index|[
@@ -5618,7 +5618,7 @@ literal|0
 expr_stmt|;
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|bInterval
 operator|=
@@ -5716,12 +5716,12 @@ argument_list|,
 operator|&
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 argument_list|,
 operator|&
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 argument_list|)
 expr_stmt|;
 comment|/* set device index */
@@ -5772,7 +5772,7 @@ expr_stmt|;
 comment|/* Create the control endpoint device */
 name|udev
 operator|->
-name|default_dev
+name|ctrl_dev
 operator|=
 name|usb_make_dev
 argument_list|(
@@ -5790,7 +5790,7 @@ name|make_dev_alias
 argument_list|(
 name|udev
 operator|->
-name|default_dev
+name|ctrl_dev
 argument_list|,
 name|udev
 operator|->
@@ -7593,13 +7593,13 @@ name|destroy_dev_sched_cb
 argument_list|(
 name|udev
 operator|->
-name|default_dev
+name|ctrl_dev
 argument_list|,
 name|usb_cdev_cleanup
 argument_list|,
 name|udev
 operator|->
-name|default_dev
+name|ctrl_dev
 operator|->
 name|si_drv1
 argument_list|)
@@ -7622,9 +7622,9 @@ name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 argument_list|,
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -7641,9 +7641,9 @@ name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 argument_list|,
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 argument_list|)
 expr_stmt|;
 comment|/* template unsetup, if any */

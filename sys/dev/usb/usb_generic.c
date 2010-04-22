@@ -312,14 +312,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
-name|ugen_default_read_callback
+name|ugen_ctrl_read_callback
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
-name|ugen_default_write_callback
+name|ugen_ctrl_write_callback
 decl_stmt|;
 end_decl_stmt
 
@@ -340,7 +340,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|usb_callback_t
-name|ugen_default_fs_callback
+name|ugen_ctrl_fs_callback
 decl_stmt|;
 end_decl_stmt
 
@@ -1420,7 +1420,7 @@ operator|.
 name|callback
 operator|=
 operator|&
-name|ugen_default_write_callback
+name|ugen_ctrl_write_callback
 expr_stmt|;
 name|usb_config
 index|[
@@ -1864,7 +1864,7 @@ operator|.
 name|callback
 operator|=
 operator|&
-name|ugen_default_read_callback
+name|ugen_ctrl_read_callback
 expr_stmt|;
 name|usb_config
 index|[
@@ -2142,7 +2142,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ugen_default_read_callback
+name|ugen_ctrl_read_callback
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -2377,7 +2377,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ugen_default_write_callback
+name|ugen_ctrl_write_callback
 parameter_list|(
 name|struct
 name|usb_xfer
@@ -7100,7 +7100,7 @@ operator|.
 name|callback
 operator|=
 operator|&
-name|ugen_default_fs_callback
+name|ugen_ctrl_fs_callback
 expr_stmt|;
 name|usb_config
 index|[
@@ -10151,7 +10151,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|ugen_default_fs_callback
+name|ugen_ctrl_fs_callback
 parameter_list|(
 name|struct
 name|usb_xfer
