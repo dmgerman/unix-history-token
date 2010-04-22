@@ -1496,6 +1496,8 @@ name|iomode
 argument_list|,
 operator|&
 name|must_commit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pmap_qremove
@@ -2666,6 +2668,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2803,6 +2807,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2977,6 +2983,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3129,6 +3137,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 				     * no error + B_INVAL == directory EOF, 				     * use the block. 				     */
@@ -3694,6 +3704,8 @@ name|iomode
 argument_list|,
 operator|&
 name|must_commit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -5331,6 +5343,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6928,6 +6942,8 @@ name|iomode
 argument_list|,
 operator|&
 name|must_commit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -7108,6 +7124,9 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|called_from_strategy
 parameter_list|)
 block|{
 name|struct
@@ -7923,6 +7942,8 @@ name|iomode
 argument_list|,
 operator|&
 name|must_commit
+argument_list|,
+name|called_from_strategy
 argument_list|)
 expr_stmt|;
 comment|/* 		 * When setting B_NEEDCOMMIT also set B_CLUSTEROK to try 		 * to cluster the buffers needing commit.  This will allow 		 * the system to submit a single commit rpc for the whole 		 * cluster.  We can do this even if the buffer is not 100% 		 * dirty (relative to the NFS blocksize), so we optimize the 		 * append-to-file-case. 		 * 		 * (when clearing B_NEEDCOMMIT, B_CLUSTEROK must also be 		 * cleared because write clustering only works for commit 		 * rpc's, not for the data portion of the write). 		 */
@@ -7979,7 +8000,7 @@ name|B_CLUSTEROK
 operator|)
 expr_stmt|;
 block|}
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 * 		 * The logic below breaks up errors into recoverable and  		 * unrecoverable. For the former, we clear B_INVAL|B_NOCACHE 		 * and keep the buffer around for potential write retries. 		 * For the latter (eg ESTALE), we toss the buffer away (B_INVAL) 		 * and save the error in the nfsnode. This is less than ideal  		 * but necessary. Keeping such buffers around could potentially 		 * cause buffer exhaustion eventually (they can never be written 		 * out, so will get constantly be re-dirtied). It also causes 		 * all sorts of vfs panics. For non-recoverable write errors,  		 * also invalidate the attrcache, so we'll be forced to go over 		 * the wire for this object, returning an error to user on next 		 * call (most of the time). 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * EIO is returned by ncl_writerpc() to indicate a recoverable 		 * write error and is handled as above, except that 		 * B_EINTR isn't set. One cause of this is a stale stateid 		 * error for the RPC that indicates recovery is required, 		 * when called with called_from_strategy != 0. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 * 		 * The logic below breaks up errors into recoverable and  		 * unrecoverable. For the former, we clear B_INVAL|B_NOCACHE 		 * and keep the buffer around for potential write retries. 		 * For the latter (eg ESTALE), we toss the buffer away (B_INVAL) 		 * and save the error in the nfsnode. This is less than ideal  		 * but necessary. Keeping such buffers around could potentially 		 * cause buffer exhaustion eventually (they can never be written 		 * out, so will get constantly be re-dirtied). It also causes 		 * all sorts of vfs panics. For non-recoverable write errors,  		 * also invalidate the attrcache, so we'll be forced to go over 		 * the wire for this object, returning an error to user on next 		 * call (most of the time). 		 */
 if|if
 condition|(
 name|error
@@ -8055,7 +8076,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
+operator|==
+name|EINTR
+operator|||
+name|error
+operator|==
+name|ETIMEDOUT
+operator|)
 operator|&&
 operator|(
 name|bp
