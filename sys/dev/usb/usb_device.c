@@ -2502,11 +2502,10 @@ condition|)
 block|{
 name|sx_assert
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|,
 name|SA_LOCKED
 argument_list|)
@@ -3866,11 +3865,10 @@ argument_list|)
 expr_stmt|;
 name|sx_assert
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|,
 name|SA_LOCKED
 argument_list|)
@@ -4962,11 +4960,10 @@ argument_list|)
 expr_stmt|;
 name|sx_assert
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|,
 name|SA_LOCKED
 argument_list|)
@@ -5118,9 +5115,10 @@ argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Start clear stall callback */
@@ -5137,9 +5135,10 @@ expr_stmt|;
 comment|/* Change lock */
 name|mtx_unlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -5366,9 +5365,10 @@ block|}
 comment|/* initialise our SX-lock */
 name|sx_init_flags
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|,
 literal|"USB device SX lock"
 argument_list|,
@@ -5378,11 +5378,10 @@ expr_stmt|;
 comment|/* initialise our SX-lock */
 name|sx_init_flags
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|,
 literal|"USB config SX lock"
 argument_list|,
@@ -5391,20 +5390,20 @@ argument_list|)
 expr_stmt|;
 name|cv_init
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|,
 literal|"WCTRL"
 argument_list|)
 expr_stmt|;
 name|cv_init
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
-operator|+
-literal|1
+name|ref_cv
 argument_list|,
 literal|"UGONE"
 argument_list|)
@@ -5412,9 +5411,10 @@ expr_stmt|;
 comment|/* initialise our mutex */
 name|mtx_init
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|,
 literal|"USB device mutex"
 argument_list|,
@@ -7573,11 +7573,10 @@ condition|)
 block|{
 name|cv_wait
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
-operator|+
-literal|1
+name|ref_cv
 argument_list|,
 operator|&
 name|usb_ref_lock
@@ -7698,41 +7697,42 @@ argument_list|)
 expr_stmt|;
 name|sx_destroy
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|sx_destroy
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|)
 expr_stmt|;
 name|cv_destroy
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|)
 expr_stmt|;
 name|cv_destroy
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
-operator|+
-literal|1
+name|ref_cv
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|)
 expr_stmt|;
 if|#
@@ -9922,11 +9922,10 @@ parameter_list|)
 block|{
 name|sx_xlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|)
 expr_stmt|;
 comment|/*  	 * NEWBUS LOCK NOTE: We should check if any parent SX locks 	 * are locked before locking Giant. Else the lock can be 	 * locked multiple times. 	 */
@@ -9961,11 +9960,10 @@ argument_list|)
 expr_stmt|;
 name|sx_xunlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|)
 expr_stmt|;
 block|}
@@ -9989,11 +9987,10 @@ return|return
 operator|(
 name|sx_xlocked
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
-operator|+
-literal|1
+name|enum_sx
 argument_list|)
 operator|)
 return|;
