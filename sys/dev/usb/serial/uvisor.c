@@ -182,11 +182,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1758,8 +1758,8 @@ name|done
 goto|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(

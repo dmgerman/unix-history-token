@@ -338,11 +338,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_enum
 enum|enum
@@ -404,7 +404,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #if USB_DEBUG */
+comment|/* USB_DEBUG */
 end_comment
 
 begin_decl_stmt
@@ -4678,8 +4678,8 @@ name|n_ypspans
 operator|)
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -4783,7 +4783,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* #if USB_DEBUG */
+comment|/* USB_DEBUG */
 if|if
 condition|(
 operator|(
@@ -4831,8 +4831,8 @@ name|n_ypspans
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -5058,7 +5058,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* #if USB_DEBUG */
+comment|/* USB_DEBUG */
 return|return
 operator|(
 name|movement
