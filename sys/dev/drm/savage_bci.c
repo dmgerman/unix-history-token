@@ -1840,7 +1840,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 operator|+
 name|cur
 operator|*
@@ -1967,7 +1967,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 expr_stmt|;
 name|dev_priv
 operator|->
@@ -2258,7 +2258,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 operator|+
 name|cur
 operator|*
@@ -2733,7 +2733,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 operator|+
 name|i
 operator|*
@@ -4244,7 +4244,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -4349,7 +4349,7 @@ name|dev_priv
 operator|->
 name|fake_dma
 operator|.
-name|handle
+name|virtual
 operator|=
 name|drm_alloc
 argument_list|(
@@ -4365,7 +4365,7 @@ name|dev_priv
 operator|->
 name|fake_dma
 operator|.
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -4416,7 +4416,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
@@ -4626,7 +4626,7 @@ name|dev_priv
 operator|->
 name|mmio
 operator|->
-name|handle
+name|virtual
 operator|+
 name|SAVAGE_BCI_OFFSET
 operator|)
@@ -4679,7 +4679,7 @@ name|dev_priv
 operator|->
 name|status
 operator|->
-name|handle
+name|virtual
 expr_stmt|;
 name|dev_priv
 operator|->
@@ -4862,7 +4862,7 @@ name|dev_priv
 operator|->
 name|fake_dma
 operator|.
-name|handle
+name|virtual
 condition|)
 name|drm_free
 argument_list|(
@@ -4870,7 +4870,7 @@ name|dev_priv
 operator|->
 name|fake_dma
 operator|.
-name|handle
+name|virtual
 argument_list|,
 name|SAVAGE_FAKE_DMA_SIZE
 argument_list|,
@@ -4889,7 +4889,7 @@ name|dev_priv
 operator|->
 name|cmd_dma
 operator|->
-name|handle
+name|virtual
 operator|&&
 name|dev_priv
 operator|->
@@ -4930,7 +4930,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 condition|)
 block|{
 name|drm_core_ioremapfree

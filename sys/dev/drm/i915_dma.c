@@ -627,7 +627,7 @@ name|ring
 operator|.
 name|map
 operator|.
-name|handle
+name|virtual
 operator|=
 name|NULL
 expr_stmt|;
@@ -733,7 +733,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
@@ -874,7 +874,7 @@ name|ring
 operator|.
 name|map
 operator|.
-name|handle
+name|virtual
 operator|==
 name|NULL
 condition|)
@@ -908,7 +908,7 @@ name|ring
 operator|.
 name|map
 operator|.
-name|handle
+name|virtual
 expr_stmt|;
 name|dev_priv
 operator|->
@@ -1015,7 +1015,7 @@ name|ring
 operator|.
 name|map
 operator|.
-name|handle
+name|virtual
 operator|==
 name|NULL
 condition|)
@@ -3774,7 +3774,7 @@ name|dev_priv
 operator|->
 name|hws_map
 operator|.
-name|handle
+name|virtual
 operator|==
 name|NULL
 condition|)
@@ -3809,7 +3809,7 @@ name|dev_priv
 operator|->
 name|hws_map
 operator|.
-name|handle
+name|virtual
 expr_stmt|;
 name|memset
 argument_list|(

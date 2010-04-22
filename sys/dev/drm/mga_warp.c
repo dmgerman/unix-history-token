@@ -303,7 +303,7 @@ name|dev_priv
 operator|->
 name|warp
 operator|->
-name|handle
+name|virtual
 decl_stmt|;
 name|unsigned
 name|long
@@ -468,7 +468,7 @@ name|dev_priv
 operator|->
 name|warp
 operator|->
-name|handle
+name|virtual
 decl_stmt|;
 name|unsigned
 name|long

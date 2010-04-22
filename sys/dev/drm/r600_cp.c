@@ -9672,7 +9672,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
@@ -9726,21 +9726,21 @@ name|dev_priv
 operator|->
 name|cp_ring
 operator|->
-name|handle
+name|virtual
 operator|||
 operator|!
 name|dev_priv
 operator|->
 name|ring_rptr
 operator|->
-name|handle
+name|virtual
 operator|||
 operator|!
 name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -9767,7 +9767,7 @@ name|dev_priv
 operator|->
 name|cp_ring
 operator|->
-name|handle
+name|virtual
 operator|=
 operator|(
 name|void
@@ -9783,7 +9783,7 @@ name|dev_priv
 operator|->
 name|ring_rptr
 operator|->
-name|handle
+name|virtual
 operator|=
 operator|(
 name|void
@@ -9799,7 +9799,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|=
 operator|(
 name|void
@@ -9813,35 +9813,35 @@ name|offset
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev_priv->cp_ring->handle %p\n"
+literal|"dev_priv->cp_ring->virtual %p\n"
 argument_list|,
 name|dev_priv
 operator|->
 name|cp_ring
 operator|->
-name|handle
+name|virtual
 argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev_priv->ring_rptr->handle %p\n"
+literal|"dev_priv->ring_rptr->virtual %p\n"
 argument_list|,
 name|dev_priv
 operator|->
 name|ring_rptr
 operator|->
-name|handle
+name|virtual
 argument_list|)
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"dev->agp_buffer_map->handle %p\n"
+literal|"dev->agp_buffer_map->virtual %p\n"
 argument_list|,
 name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 argument_list|)
 expr_stmt|;
 block|}
@@ -10288,7 +10288,7 @@ name|dev_priv
 operator|->
 name|cp_ring
 operator|->
-name|handle
+name|virtual
 expr_stmt|;
 name|dev_priv
 operator|->
@@ -10305,7 +10305,7 @@ name|dev_priv
 operator|->
 name|cp_ring
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
@@ -10544,7 +10544,7 @@ name|gart_info
 operator|.
 name|mapping
 operator|.
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -10574,7 +10574,7 @@ name|gart_info
 operator|.
 name|mapping
 operator|.
-name|handle
+name|virtual
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
@@ -11194,7 +11194,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->
@@ -11805,7 +11805,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->

@@ -214,7 +214,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
