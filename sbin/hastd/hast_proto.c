@@ -47,11 +47,22 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPTO
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<openssl/sha.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -243,6 +254,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPTO
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -304,6 +321,11 @@ name|freedatap
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -321,6 +343,9 @@ block|,
 name|compression_recv
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPTO
 block|{
 literal|"checksum"
 block|,
@@ -328,6 +353,8 @@ name|checksum_send
 block|,
 name|checksum_recv
 block|}
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -713,6 +740,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPTO
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -1049,6 +1082,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_CRYPTO */
+end_comment
 
 begin_comment
 comment|/*  * Send the given nv structure via conn.  * We keep headers in nv structure and pass data in separate argument.  * There can be no data at all (data is NULL then).  */
