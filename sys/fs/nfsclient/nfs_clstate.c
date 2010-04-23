@@ -1360,11 +1360,34 @@ name|retp
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|nfhp
+operator|!=
+name|NULL
+operator|&&
+name|dp
+operator|!=
+name|NULL
+operator|&&
+name|nop
+operator|==
+name|NULL
+condition|)
+comment|/* new local open on delegation */
+operator|*
+name|retp
+operator|=
+name|NFSCLOPEN_SETCRED
+expr_stmt|;
+else|else
 operator|*
 name|retp
 operator|=
 name|NFSCLOPEN_OK
 expr_stmt|;
+block|}
 comment|/* 	 * Now, check the mode on the open and return the appropriate 	 * value. 	 */
 if|if
 condition|(

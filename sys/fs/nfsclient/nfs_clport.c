@@ -5337,6 +5337,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|cr
+operator|->
+name|cr_ngroups
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"newnfs_copyincred: negative cr_ngroups"
+operator|)
+argument_list|)
+expr_stmt|;
 name|nfscr
 operator|->
 name|nfsc_uid

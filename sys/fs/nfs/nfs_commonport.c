@@ -1015,6 +1015,19 @@ modifier|*
 name|cr
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|nfscr
+operator|->
+name|nfsc_ngroups
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"newnfs_copycred: negative nfsc_ngroups"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cr
 operator|->
 name|cr_uid
