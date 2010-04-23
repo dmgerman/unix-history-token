@@ -895,8 +895,8 @@ name|delta
 operator|=
 name|cycles_per_hz
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|KDTRACE_HOOKS
 comment|/* 	 * If the DTrace hooks are configured and a callback function 	 * has been registered, then call it to process the high speed 	 * timers. 	 */
 name|int
