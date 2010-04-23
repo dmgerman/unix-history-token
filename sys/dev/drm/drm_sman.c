@@ -325,9 +325,10 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* This could be non-atomic, but we are called from a locked path */
 name|tmp
 operator|=
-name|drm_mm_get_block
+name|drm_mm_get_block_atomic
 argument_list|(
 name|tmp
 argument_list|,
@@ -524,7 +525,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_MM
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -732,7 +733,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_MM
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -936,7 +937,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_MM
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)

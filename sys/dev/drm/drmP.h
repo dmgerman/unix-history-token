@@ -1197,8 +1197,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|vm_paddr_t
 name|dma_addr_t
 typedef|;
 end_typedef

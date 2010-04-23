@@ -77,7 +77,7 @@ name|ht
 operator|->
 name|table
 operator|=
-name|hashinit
+name|hashinit_flags
 argument_list|(
 name|ht
 operator|->
@@ -89,6 +89,8 @@ operator|&
 name|ht
 operator|->
 name|mask
+argument_list|,
+name|HASH_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
