@@ -19,6 +19,23 @@ directive|define
 name|_INST_LIB_LIB_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YES_I_KNOW_THE_API_IS_RUBBISH_AND_IS_DOOMED_TO_CHANGE
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"You obviously have no idea what you're doing."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Includes */
 end_comment
@@ -380,14 +397,14 @@ value|"PKG_PREFIX"
 end_define
 
 begin_comment
-comment|/*  * Version of the package tools - increase whenever you make a change  * in the code that is not cosmetic only.  */
+comment|/*  * Version of the package library - increase whenever you make a change  * in the code that is not cosmetic only.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PKG_INSTALL_VERSION
-value|20100403
+name|LIBPKG_VERSION
+value|20100423
 end_define
 
 begin_define
@@ -395,18 +412,6 @@ define|#
 directive|define
 name|PKG_WRAPCONF_FNAME
 value|"/var/db/pkg_install.conf"
-end_define
-
-begin_define
-define|#
-directive|define
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-value|real_main(argc, argv)
 end_define
 
 begin_comment
@@ -1389,10 +1394,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|real_main
+name|void
+name|pkg_wrap
 parameter_list|(
-name|int
+name|long
 parameter_list|,
 name|char
 modifier|*
@@ -1541,6 +1546,15 @@ end_function_decl
 begin_comment
 comment|/* Version */
 end_comment
+
+begin_function_decl
+name|int
+name|libpkg_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

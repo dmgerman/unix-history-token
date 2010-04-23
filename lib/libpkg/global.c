@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|"pkg.h"
 end_include
 
 begin_comment

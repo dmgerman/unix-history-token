@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|"pkg.h"
 end_include
 
 begin_include
@@ -28,6 +28,23 @@ include|#
 directive|include
 file|<err.h>
 end_include
+
+begin_comment
+comment|/*  * This routine could easily go somewhere else.  *  */
+end_comment
+
+begin_function
+name|int
+name|libpkg_version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|LIBPKG_VERSION
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Routines to assist with PLIST_FMT_VER numbers in the packing  * lists.  *  * Following is the PLIST_FMT_VER history:  * 1.0 - Initial revision;  * 1.1 - When recording/checking checksum of symlink use hash of readlink()  *	 value instead of the hash of an object this links points to.  *  */
