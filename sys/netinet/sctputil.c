@@ -4144,7 +4144,7 @@ name|SCTP_PRINTF
 argument_list|(
 literal|"tot_flt_book:%d\n"
 argument_list|,
-name|tot_book
+name|tot_book_cnt
 argument_list|)
 expr_stmt|;
 name|stcb
@@ -4300,11 +4300,8 @@ condition|)
 block|{
 name|SCTP_PRINTF
 argument_list|(
-literal|"net:%x flight was %d corrected to %d\n"
+literal|"net:%p flight was %d corrected to %d\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|lnet
 argument_list|,
 name|lnet
