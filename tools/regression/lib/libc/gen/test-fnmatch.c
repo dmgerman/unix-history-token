@@ -1175,6 +1175,16 @@ operator||
 name|FNM_LEADING_DIR
 block|,
 name|FNM_NOMATCH
+block|,
+literal|"a*b/*"
+block|,
+literal|"abbb/.x"
+block|,
+name|FNM_PATHNAME
+operator||
+name|FNM_PERIOD
+block|,
+name|FNM_NOMATCH
 block|, }
 struct|;
 end_struct
