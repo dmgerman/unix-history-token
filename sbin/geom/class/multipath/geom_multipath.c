@@ -207,6 +207,34 @@ block|,
 literal|"[-v] prov ..."
 block|}
 block|,
+block|{
+literal|"rotate"
+block|,
+name|G_FLAG_VERBOSE
+block|,
+name|NULL
+block|,
+name|G_NULL_OPTS
+block|,
+name|NULL
+block|,
+literal|"[-v] prov ..."
+block|}
+block|,
+block|{
+literal|"getactive"
+block|,
+name|G_FLAG_VERBOSE
+block|,
+name|NULL
+block|,
+name|G_NULL_OPTS
+block|,
+name|NULL
+block|,
+literal|"[-v] prov ..."
+block|}
+block|,
 name|G_CMD_SENTINEL
 block|}
 decl_stmt|;
