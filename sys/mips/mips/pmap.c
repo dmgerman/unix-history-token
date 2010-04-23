@@ -921,7 +921,7 @@ directive|define
 name|PMAP_LMEM_UNMAP
 parameter_list|()
 define|\
-value|pte = pmap_pte(kernel_pmap, sysm->base);			\ 	*pte = PTE_G;							\ 	pmap_invalidate_page(kernel_pmap, sysm->base);			\ 	sysm->valid1 = 0;						\ 	pte = pmap_pte(kernel_pmap, sysm->base + PAGE_SIZE);		\ 	*pte = PTE_G;							\ 	pmap_invalidate_page(kernel_pmap, sysm->base + PAGE_SIZE);	\ 	sysm->valid2 = 0;						\ 	sched_unpin();							\ 	intr_restore(intr);						\ 	PMAP_LGMEM_UNLOCK(sysm);
+value|pte = pmap_pte(kernel_pmap, sysm->base);			\ 	*pte = PTE_G;							\ 	pmap_TLB_invalidate_kernel(sysm->base);				\ 	sysm->valid1 = 0;						\ 	pte = pmap_pte(kernel_pmap, sysm->base + PAGE_SIZE);		\ 	*pte = PTE_G;							\ 	pmap_TLB_invalidate_kernel(sysm->base + PAGE_SIZE);		\ 	sysm->valid2 = 0;						\ 	sched_unpin();							\ 	intr_restore(intr);						\ 	PMAP_LGMEM_UNLOCK(sysm);
 end_define
 
 begin_function
