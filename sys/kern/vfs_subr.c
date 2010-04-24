@@ -12804,6 +12804,11 @@ argument_list|(
 name|MNT_BYFSID
 argument_list|)
 expr_stmt|;
+name|MNT_FLAG
+argument_list|(
+name|MNT_SOFTDEP
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|MNT_FLAG

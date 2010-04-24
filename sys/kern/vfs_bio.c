@@ -1411,6 +1411,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Request for the buf daemon to write more buffers than is indicated by  * lodirtybuf.  This may be necessary to push out excess dependencies or  * defragment the address space where a simple count of the number of dirty  * buffers is insufficient to characterize the demand for flushing them.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bd_speedupreq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * This lock synchronizes access to bd_request.  */
 end_comment
 
@@ -2252,17 +2263,61 @@ comment|/*  * bd_speedup - speedup the buffer cache flushing code  */
 end_comment
 
 begin_function
-specifier|static
-name|__inline
 name|void
 name|bd_speedup
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|bd_wakeup
+name|int
+name|needwake
+decl_stmt|;
+name|mtx_lock
 argument_list|(
+operator|&
+name|bdlock
+argument_list|)
+expr_stmt|;
+name|needwake
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|bd_speedupreq
+operator|==
+literal|0
+operator|||
+name|bd_request
+operator|==
+literal|0
+condition|)
+name|needwake
+operator|=
 literal|1
+expr_stmt|;
+name|bd_speedupreq
+operator|=
+literal|1
+expr_stmt|;
+name|bd_request
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|needwake
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|bd_request
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bdlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -8495,6 +8550,9 @@ name|void
 name|buf_daemon
 parameter_list|()
 block|{
+name|int
+name|lodirtysave
+decl_stmt|;
 comment|/* 	 * This process needs to be suspended prior to shutdown sync. 	 */
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -8543,6 +8601,26 @@ argument_list|(
 name|bufdaemonproc
 argument_list|)
 expr_stmt|;
+name|lodirtysave
+operator|=
+name|lodirtybuffers
+expr_stmt|;
+if|if
+condition|(
+name|bd_speedupreq
+condition|)
+block|{
+name|lodirtybuffers
+operator|=
+name|numdirtybuffers
+operator|/
+literal|2
+expr_stmt|;
+name|bd_speedupreq
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * Do the flush.  Limit the amount of in-transit I/O we 		 * allow to build up, otherwise we would completely saturate 		 * the I/O system.  Wakeup any waiting processes before we 		 * normally would so they can run in parallel with our drain. 		 */
 while|while
 condition|(
@@ -8565,6 +8643,10 @@ name|uio_yield
 argument_list|()
 expr_stmt|;
 block|}
+name|lodirtybuffers
+operator|=
+name|lodirtysave
+expr_stmt|;
 comment|/* 		 * Only clear bd_request if we have reached our low water 		 * mark.  The buf_daemon normally waits 1 second and 		 * then incrementally flushes any dirty buffers that have 		 * built up, within reason. 		 * 		 * If we were unable to hit our low water mark and couldn't 		 * find any flushable buffers, we sleep half a second. 		 * Otherwise we loop immediately. 		 */
 name|mtx_lock
 argument_list|(
