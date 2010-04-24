@@ -6519,6 +6519,7 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|_pmap_unwire_pte_hold
 argument_list|(
 name|pmap
@@ -6527,10 +6528,13 @@ name|m
 argument_list|,
 name|free
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6614,7 +6618,9 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -6652,7 +6658,9 @@ operator|>=
 name|VM_MAXUSER_ADDRESS
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ptepde
 operator|=
@@ -6674,6 +6682,7 @@ name|PG_FRAME
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pmap_unwire_pte_hold
 argument_list|(
 name|pmap
@@ -6682,6 +6691,7 @@ name|mpte
 argument_list|,
 name|free
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7393,7 +7403,9 @@ name|PG_M
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 end_function
@@ -8215,6 +8227,7 @@ operator|-
 name|KERNBASE
 decl_stmt|;
 return|return
+operator|(
 name|sysctl_handle_long
 argument_list|(
 name|oidp
@@ -8226,6 +8239,7 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8273,6 +8287,7 @@ operator|-
 name|kernel_vm_end
 decl_stmt|;
 return|return
+operator|(
 name|sysctl_handle_long
 argument_list|(
 name|oidp
@@ -8284,6 +8299,7 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8586,6 +8602,7 @@ argument_list|)
 block|{
 return|return
 operator|(
+operator|(
 expr|struct
 name|pv_chunk
 operator|*
@@ -8601,6 +8618,7 @@ operator|(
 name|uintptr_t
 operator|)
 name|PAGE_MASK
+operator|)
 operator|)
 return|;
 block|}
@@ -15713,7 +15731,9 @@ name|PG_MANAGED
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mpte
+operator|)
 return|;
 block|}
 end_function
@@ -17391,7 +17411,9 @@ operator|&
 name|PG_FICTITIOUS
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 name|mtx_assert
 argument_list|(
@@ -17421,7 +17443,9 @@ name|pmap
 condition|)
 block|{
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 name|loops
@@ -21518,7 +21542,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|val
+operator|)
 return|;
 name|m
 operator|=
@@ -21621,7 +21647,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|val
+operator|)
 return|;
 block|}
 end_function
@@ -22101,7 +22129,9 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|npte
+operator|)
 return|;
 block|}
 name|pte
@@ -22208,7 +22238,9 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|npte
+operator|)
 return|;
 block|}
 end_block
