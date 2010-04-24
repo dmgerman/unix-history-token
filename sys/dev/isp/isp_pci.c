@@ -2314,7 +2314,7 @@ argument_list|,
 name|chan
 argument_list|)
 operator|->
-name|role
+name|def_role
 operator|=
 name|tval
 expr_stmt|;
@@ -2327,7 +2327,7 @@ argument_list|,
 name|chan
 argument_list|)
 operator|->
-name|role
+name|def_role
 operator|=
 name|tval
 expr_stmt|;
@@ -4002,7 +4002,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|->
-name|role
+name|def_role
 operator|&
 name|ISP_ROLE_TARGET
 operator|)

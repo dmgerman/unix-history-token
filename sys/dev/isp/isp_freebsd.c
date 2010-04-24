@@ -23526,11 +23526,12 @@ condition|)
 block|{
 continue|continue;
 block|}
+comment|/* 		 * We can use new_portid here because it is untouched 		 * while the state is ZOMBIE 		 */
 if|if
 condition|(
 name|lp
 operator|->
-name|new_reserved
+name|new_portid
 operator|==
 literal|0
 condition|)
@@ -23539,7 +23540,7 @@ continue|continue;
 block|}
 name|lp
 operator|->
-name|new_reserved
+name|new_portid
 operator|-=
 literal|1
 expr_stmt|;
@@ -23547,7 +23548,7 @@ if|if
 condition|(
 name|lp
 operator|->
-name|new_reserved
+name|new_portid
 operator|!=
 literal|0
 condition|)
@@ -23988,7 +23989,12 @@ condition|(
 name|lb
 operator|&&
 operator|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|chan
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -29110,7 +29116,12 @@ block|{
 comment|/* 			 * We don't do any simq freezing if we are only in target mode 			 */
 if|if
 condition|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -29320,7 +29331,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
@@ -30113,7 +30129,7 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 */
+comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 * 		 * We can use new_portid for the gone timer because it's 		 * undefined while the state is ZOMBIE. 		 */
 if|if
 condition|(
 name|lp
@@ -30135,7 +30151,7 @@ literal|1
 expr_stmt|;
 name|lp
 operator|->
-name|new_reserved
+name|new_portid
 operator|=
 name|ISP_FC_PC
 argument_list|(
@@ -30507,7 +30523,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fc
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|,
+name|bus
+argument_list|)
 operator|->
 name|role
 operator|&
