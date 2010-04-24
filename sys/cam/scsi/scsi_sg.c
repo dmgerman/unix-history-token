@@ -2476,9 +2476,16 @@ name|id
 operator|.
 name|host_no
 operator|=
-literal|0
+name|cam_sim_path
+argument_list|(
+name|xpt_path_sim
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|id
 operator|.
 name|channel
