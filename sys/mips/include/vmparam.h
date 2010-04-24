@@ -409,13 +409,13 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space is sparsely populated.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_PHYSSEG_DENSE
+name|VM_PHYSSEG_SPARSE
 end_define
 
 begin_comment

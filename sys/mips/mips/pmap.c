@@ -9108,12 +9108,8 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
-operator|<
-operator|&
-name|vm_page_array
-index|[
-name|vm_page_array_size
-index|]
+operator|!=
+name|NULL
 argument_list|,
 operator|(
 literal|"pmap_remove_pages: bad tpte %x"
@@ -11642,16 +11638,6 @@ condition|(
 name|pgnum
 operator|>=
 name|first_page
-operator|&&
-operator|(
-name|pgnum
-operator|<
-operator|(
-name|first_page
-operator|+
-name|vm_page_array_size
-operator|)
-operator|)
 condition|)
 block|{
 name|vm_page_t
@@ -11664,6 +11650,15 @@ argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|(
