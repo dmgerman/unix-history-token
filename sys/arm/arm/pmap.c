@@ -16569,6 +16569,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	pmap_is_referenced:  *  *	Return whether or not the specified physical page was referenced  *	in any physical maps.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_referenced
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|m
+operator|->
+name|md
+operator|.
+name|pvh_attrs
+operator|&
+name|PVF_REF
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	pmap_clear_reference:  *  *	Clear the reference bit on the specified physical page.  */
 end_comment
 

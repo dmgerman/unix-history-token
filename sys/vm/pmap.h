@@ -314,6 +314,16 @@ end_function_decl
 
 begin_function_decl
 name|boolean_t
+name|pmap_is_referenced
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
 name|pmap_ts_referenced
 parameter_list|(
 name|vm_page_t
