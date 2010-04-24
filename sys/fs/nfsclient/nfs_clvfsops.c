@@ -3608,6 +3608,8 @@ name|nfs_catnap
 argument_list|(
 name|PSOCK
 argument_list|,
+literal|0
+argument_list|,
 literal|"newnfscon"
 argument_list|)
 expr_stmt|;
@@ -6857,6 +6859,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfsgetdirp"
 argument_list|)
 expr_stmt|;
@@ -7328,6 +7332,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PSOCK
+argument_list|,
+name|error
 argument_list|,
 literal|"newndm"
 argument_list|)

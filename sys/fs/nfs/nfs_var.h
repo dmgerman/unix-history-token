@@ -2939,6 +2939,8 @@ name|nfs_catnap
 parameter_list|(
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 specifier|const
 name|char
 modifier|*
