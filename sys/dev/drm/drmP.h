@@ -2147,9 +2147,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|pages
 decl_stmt|;
-name|vm_object_t
-name|obj
-decl_stmt|;
 block|}
 name|drm_sg_mem_t
 typedef|;
