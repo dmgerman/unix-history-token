@@ -61484,6 +61484,11 @@ name|mac_stats
 operator|.
 name|link_noise
 expr_stmt|;
+name|ifp
+operator|->
+name|if_ipackets
+operator|++
+expr_stmt|;
 name|BWN_UNLOCK
 argument_list|(
 name|sc
