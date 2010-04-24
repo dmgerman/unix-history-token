@@ -276,6 +276,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lapic_allclocks
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
