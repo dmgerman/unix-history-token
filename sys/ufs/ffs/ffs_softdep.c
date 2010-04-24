@@ -716,6 +716,8 @@ begin_function
 name|void
 name|softdep_change_directoryentry_offset
 parameter_list|(
+name|bp
+parameter_list|,
 name|dp
 parameter_list|,
 name|base
@@ -726,6 +728,11 @@ name|newloc
 parameter_list|,
 name|entrysize
 parameter_list|)
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
 name|struct
 name|inode
 modifier|*
