@@ -1673,6 +1673,9 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
+name|q
+decl_stmt|,
+modifier|*
 name|start
 decl_stmt|;
 name|arith_t
@@ -1837,6 +1840,13 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+name|q
+operator|=
+name|grabstackstr
+argument_list|(
+name|expdest
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|arith
@@ -1844,6 +1854,13 @@ argument_list|(
 name|p
 operator|+
 literal|2
+argument_list|)
+expr_stmt|;
+name|ungrabstackstr
+argument_list|(
+name|q
+argument_list|,
+name|expdest
 argument_list|)
 expr_stmt|;
 name|fmtstr
