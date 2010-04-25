@@ -635,6 +635,9 @@ name|struct
 name|timeval
 name|timev
 decl_stmt|;
+name|int
+name|scale
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -742,6 +745,19 @@ name|rq_active
 operator|=
 name|TRUE
 expr_stmt|;
+name|scale
+operator|=
+literal|1
+operator|<<
+name|flsll
+argument_list|(
+name|dqblk
+operator|.
+name|dqb_bhardlimit
+operator|>>
+literal|32
+argument_list|)
+expr_stmt|;
 name|getq_rslt
 operator|.
 name|getquota_rslt_u
@@ -751,6 +767,8 @@ operator|.
 name|rq_bsize
 operator|=
 name|DEV_BSIZE
+operator|*
+name|scale
 expr_stmt|;
 name|getq_rslt
 operator|.
@@ -763,6 +781,8 @@ operator|=
 name|dqblk
 operator|.
 name|dqb_bhardlimit
+operator|/
+name|scale
 expr_stmt|;
 name|getq_rslt
 operator|.
@@ -775,6 +795,8 @@ operator|=
 name|dqblk
 operator|.
 name|dqb_bsoftlimit
+operator|/
+name|scale
 expr_stmt|;
 name|getq_rslt
 operator|.
@@ -787,6 +809,8 @@ operator|=
 name|dqblk
 operator|.
 name|dqb_curblocks
+operator|/
+name|scale
 expr_stmt|;
 name|getq_rslt
 operator|.
