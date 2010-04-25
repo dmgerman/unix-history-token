@@ -253,6 +253,13 @@ name|NFSCLFLAGS_GOTDELEG
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSCLFLAGS_RECVRINPROG
+value|0x0200
+end_define
+
 begin_struct
 struct|struct
 name|nfsclowner
