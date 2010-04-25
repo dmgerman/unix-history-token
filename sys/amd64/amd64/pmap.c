@@ -12453,12 +12453,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|va
-operator|=
-name|pv
-operator|->
-name|pv_va
-expr_stmt|;
 name|pmap
 operator|=
 name|PV_PMAP
@@ -12470,6 +12464,12 @@ name|PMAP_LOCK
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|va
+operator|=
+name|pv
+operator|->
+name|pv_va
 expr_stmt|;
 name|pde
 operator|=
