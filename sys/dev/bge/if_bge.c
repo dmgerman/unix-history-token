@@ -2864,9 +2864,15 @@ argument_list|(
 name|subvendor
 argument_list|)
 operator|&&
+operator|(
+name|subvendor
+operator|==
+name|FJTSU_VENDORID
+operator|||
 name|subvendor
 operator|==
 name|SUN_VENDORID
+operator|)
 condition|)
 return|return
 operator|(
