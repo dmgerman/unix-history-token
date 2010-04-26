@@ -136,6 +136,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|class_list_head
@@ -4949,7 +4966,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * This function walks (topologically unsafely) the mesh and return a  * non-zero integer if it finds the argument pointer is an object.  * The return value indicates which type of object it is belived to be.  * If topology is not locked, this function is potentially dangerous,  * but since it is for debugging purposes and can be useful for instance  * from DDB, we do not assert topology lock is held.  */
+comment|/*  * This function walks the mesh and returns a non-zero integer if it  * finds the argument pointer is an object. The return value indicates  * which type of object it is believed to be. If topology is not locked,  * this function is potentially dangerous, but we don't assert that the  * topology lock is held when called from debugger.  */
 end_comment
 
 begin_function
@@ -4982,6 +4999,17 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_active
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
