@@ -811,6 +811,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"sge"
+argument_list|,
+literal|"Silicon Integrated Systems SiS190/191 Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"sis"
 argument_list|,
 literal|"SiS 900/SiS 7016 PCI Ethernet card"
