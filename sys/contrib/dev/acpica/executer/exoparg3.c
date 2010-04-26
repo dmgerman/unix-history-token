@@ -251,7 +251,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
@@ -618,7 +618,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->

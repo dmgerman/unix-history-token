@@ -274,7 +274,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AE_WAKE_ONLY_GPE
+name|AE_NO_HANDLER
 value|(ACPI_STATUS) (0x001A | AE_CODE_ENVIRONMENTAL)
 end_define
 

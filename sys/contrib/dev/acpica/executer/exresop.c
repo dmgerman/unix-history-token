@@ -303,7 +303,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|Opcode
 operator|)
@@ -464,7 +464,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Bad operand object type [%X]"
+literal|"Bad operand object type [0x%X]"
 operator|,
 name|ObjectType
 operator|)
@@ -551,7 +551,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Reference Class %2.2X in %p"
+literal|"Unknown Reference Class 0x%2.2X in %p"
 operator|,
 name|ObjDesc
 operator|->
@@ -1457,7 +1457,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Internal - Unknown ARGI (required operand) type %X"
+literal|"Internal - Unknown ARGI (required operand) type 0x%X"
 operator|,
 name|ThisArgType
 operator|)

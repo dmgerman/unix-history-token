@@ -158,7 +158,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid SystemMemory width %d"
+literal|"Invalid SystemMemory width %u"
 operator|,
 name|BitWidth
 operator|)
@@ -348,7 +348,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not map memory at %8.8X%8.8X, size %X"
+literal|"Could not map memory at 0x%8.8X%8.8X, size %u"
 operator|,
 name|ACPI_FORMAT_NATIVE_UINT
 argument_list|(
@@ -1015,7 +1015,7 @@ argument_list|(
 name|ExDataTableSpaceHandler
 argument_list|)
 expr_stmt|;
-comment|/* Perform the memory read or write */
+comment|/*      * Perform the memory read or write. The BitWidth was already      * validated.      */
 switch|switch
 condition|(
 name|Function
@@ -1048,10 +1048,31 @@ break|break;
 case|case
 name|ACPI_WRITE
 case|:
+name|ACPI_MEMCPY
+argument_list|(
+name|ACPI_PHYSADDR_TO_PTR
+argument_list|(
+name|Address
+argument_list|)
+argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
+name|Value
+argument_list|)
+argument_list|,
+name|ACPI_DIV_8
+argument_list|(
+name|BitWidth
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_SUPPORT
+name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}

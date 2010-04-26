@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/dev/acpica/include/actables.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<contrib/dev/acpica/include/amlcode.h>
 end_include
 
@@ -444,6 +450,10 @@ name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|PsExecuteMethod
 argument_list|)
+expr_stmt|;
+comment|/* Quick validation of DSDT header */
+name|AcpiTbCheckDsdtHeader
+argument_list|()
 expr_stmt|;
 comment|/* Validate the Info and method Node */
 if|if

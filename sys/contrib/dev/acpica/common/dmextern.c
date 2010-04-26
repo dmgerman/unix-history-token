@@ -374,6 +374,19 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|ParentPath
+index|[
+literal|1
+index|]
+condition|)
+block|{
+comment|/*          * If ParentPath is not just a simple '\', increment the length          * for the required dot separator (ParentPath.Path)          */
+name|Length
+operator|++
+expr_stmt|;
+block|}
 name|Fullpath
 operator|=
 name|ACPI_ALLOCATE_ZEROED
@@ -608,7 +621,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Argument count mismatch for method %s %d %d"
+literal|"Argument count mismatch for method %s %u %u"
 operator|,
 name|NextExternal
 operator|->

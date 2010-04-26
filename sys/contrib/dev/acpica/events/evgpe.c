@@ -76,84 +76,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSetGpeType  *  * PARAMETERS:  GpeEventInfo            - GPE to set  *              Type                    - New type  *  * RETURN:      Status  *  * DESCRIPTION: Sets the new type for the GPE (wake, run, or wake/run)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiEvSetGpeType
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|,
-name|UINT8
-name|Type
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|EvSetGpeType
-argument_list|)
-expr_stmt|;
-comment|/* Validate type and update register enable masks */
-switch|switch
-condition|(
-name|Type
-condition|)
-block|{
-case|case
-name|ACPI_GPE_TYPE_WAKE
-case|:
-case|case
-name|ACPI_GPE_TYPE_RUNTIME
-case|:
-case|case
-name|ACPI_GPE_TYPE_WAKE_RUN
-case|:
-break|break;
-default|default:
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_PARAMETER
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Disable the GPE if currently enabled */
-name|Status
-operator|=
-name|AcpiEvDisableGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-comment|/* Clear the type bits and insert the new Type */
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&=
-operator|~
-name|ACPI_GPE_TYPE_MASK
-expr_stmt|;
-name|GpeEventInfo
-operator|->
-name|Flags
-operator||=
-name|Type
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvUpdateGpeEnableMasks  *  * PARAMETERS:  GpeEventInfo            - GPE to update  *              Type                    - What to do: ACPI_GPE_DISABLE or  *                                        ACPI_GPE_ENABLE  *  * RETURN:      Status  *  * DESCRIPTION: Updates GPE register enable masks based on the GPE type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvUpdateGpeEnableMasks  *  * PARAMETERS:  GpeEventInfo            - GPE to update  *  * RETURN:      Status  *  * DESCRIPTION: Updates GPE register enable masks based upon whether there are  *              references (either wake or run) to this GPE  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -163,9 +86,6 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|UINT8
-name|Type
 parameter_list|)
 block|{
 name|ACPI_GPE_REGISTER_INFO
@@ -217,14 +137,7 @@ name|BaseGpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 1) Disable case. Simply clear all enable bits */
-if|if
-condition|(
-name|Type
-operator|==
-name|ACPI_GPE_DISABLE
-condition|)
-block|{
+comment|/* Clear the wake/run bits up front */
 name|ACPI_CLEAR_BIT
 argument_list|(
 name|GpeRegisterInfo
@@ -243,56 +156,14 @@ argument_list|,
 name|RegisterBit
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 2) Enable case. Set/Clear the appropriate enable bits */
-switch|switch
+comment|/* Set the mask bits only if there are references to this GPE */
+if|if
 condition|(
 name|GpeEventInfo
 operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_TYPE_MASK
+name|RuntimeCount
 condition|)
 block|{
-case|case
-name|ACPI_GPE_TYPE_WAKE
-case|:
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableForWake
-argument_list|,
-name|RegisterBit
-argument_list|)
-expr_stmt|;
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableForRun
-argument_list|,
-name|RegisterBit
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_RUNTIME
-case|:
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableForWake
-argument_list|,
-name|RegisterBit
-argument_list|)
-expr_stmt|;
 name|ACPI_SET_BIT
 argument_list|(
 name|GpeRegisterInfo
@@ -302,10 +173,14 @@ argument_list|,
 name|RegisterBit
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_WAKE_RUN
-case|:
+block|}
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|WakeupCount
+condition|)
+block|{
 name|ACPI_SET_BIT
 argument_list|(
 name|GpeRegisterInfo
@@ -313,22 +188,6 @@ operator|->
 name|EnableForWake
 argument_list|,
 name|RegisterBit
-argument_list|)
-expr_stmt|;
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableForRun
-argument_list|,
-name|RegisterBit
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
@@ -341,7 +200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvEnableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to enable  *              WriteToHardware         - Enable now, or just mark data structs  *                                        (WAKE GPEs should be deferred)  *  * RETURN:      Status  *  * DESCRIPTION: Enable a GPE based on the GPE type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvEnableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to enable  *  * RETURN:      Status  *  * DESCRIPTION: Hardware-enable a GPE. Always enables the GPE, regardless  *              of type or number of references.  *  * Note: The GPE lock should be already acquired when this function is called.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -351,9 +210,6 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|BOOLEAN
-name|WriteToHardware
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -364,14 +220,31 @@ argument_list|(
 name|EvEnableGpe
 argument_list|)
 expr_stmt|;
-comment|/* Make sure HW enable masks are updated */
+comment|/*      * We will only allow a GPE to be enabled if it has either an      * associated method (_Lxx/_Exx) or a handler. Otherwise, the      * GPE will be immediately disabled by AcpiEvGpeDispatch the      * first time it fires.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&
+name|ACPI_GPE_DISPATCH_MASK
+operator|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_HANDLER
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Ensure the HW enable masks are current */
 name|Status
 operator|=
 name|AcpiEvUpdateGpeEnableMasks
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -388,60 +261,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Mark wake-enabled or HW enable, or both */
-switch|switch
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_TYPE_MASK
-condition|)
-block|{
-case|case
-name|ACPI_GPE_TYPE_WAKE
-case|:
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_WAKE_ENABLED
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_WAKE_RUN
-case|:
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_WAKE_ENABLED
-argument_list|)
-expr_stmt|;
-comment|/*lint -fallthrough */
-case|case
-name|ACPI_GPE_TYPE_RUNTIME
-case|:
-name|ACPI_SET_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_RUN_ENABLED
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|WriteToHardware
-condition|)
-block|{
-comment|/* Clear the GPE (of stale events), then enable it */
+comment|/* Clear the GPE (of stale events) */
 name|Status
 operator|=
 name|AcpiHwClearGpe
@@ -463,7 +283,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enable the requested runtime GPE */
+comment|/* Enable the requested GPE */
 name|Status
 operator|=
 name|AcpiHwWriteGpeEnableReg
@@ -471,25 +291,16 @@ argument_list|(
 name|GpeEventInfo
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
-default|default:
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_BAD_PARAMETER
-argument_list|)
-expr_stmt|;
-block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDisableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to disable  *  * RETURN:      Status  *  * DESCRIPTION: Disable a GPE based on the GPE type  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDisableGpe  *  * PARAMETERS:  GpeEventInfo            - GPE to disable  *  * RETURN:      Status  *  * DESCRIPTION: Hardware-disable a GPE. Always disables the requested GPE,  *              regardless of the type or number of references.  *  * Note: The GPE lock should be already acquired when this function is called.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -510,14 +321,12 @@ name|EvDisableGpe
 argument_list|)
 expr_stmt|;
 comment|/*      * Note: Always disable the GPE, even if we think that that it is already      * disabled. It is possible that the AML or some other code has enabled      * the GPE behind our back.      */
-comment|/* Make sure HW enable masks are updated */
+comment|/* Ensure the HW enable masks are current */
 name|Status
 operator|=
 name|AcpiEvUpdateGpeEnableMasks
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|ACPI_GPE_DISABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,59 +343,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Clear the appropriate enabled flags for this GPE */
-switch|switch
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_TYPE_MASK
-condition|)
-block|{
-case|case
-name|ACPI_GPE_TYPE_WAKE
-case|:
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_WAKE_ENABLED
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_GPE_TYPE_WAKE_RUN
-case|:
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_WAKE_ENABLED
-argument_list|)
-expr_stmt|;
-comment|/*lint -fallthrough */
-case|case
-name|ACPI_GPE_TYPE_RUNTIME
-case|:
-comment|/* Disable the requested runtime GPE */
-name|ACPI_CLEAR_BIT
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Flags
-argument_list|,
-name|ACPI_GPE_RUN_ENABLED
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
 comment|/*      * Always H/W disable this GPE, even if we don't know the GPE type.      * Simply clear the enable bit for this particular GPE, but do not      * write out the current GPE enable mask since this may inadvertently      * enable GPEs too early. An example is a rogue GPE that has arrived      * during ACPICA initialization - possibly because AML or other code      * has enabled the GPE.      */
 name|Status
 operator|=
@@ -600,6 +356,84 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvLowGetGpeInfo  *  * PARAMETERS:  GpeNumber           - Raw GPE number  *              GpeBlock            - A GPE info block  *  * RETURN:      A GPE EventInfo struct. NULL if not a valid GPE (The GpeNumber  *              is not within the specified GPE block)  *  * DESCRIPTION: Returns the EventInfo struct associated with this GPE. This is  *              the low-level implementation of EvGetGpeEventInfo.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|AcpiEvLowGetGpeInfo
+parameter_list|(
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+parameter_list|)
+block|{
+name|UINT32
+name|GpeIndex
+decl_stmt|;
+comment|/*      * Validate that the GpeNumber is within the specified GpeBlock.      * (Two steps)      */
+if|if
+condition|(
+operator|!
+name|GpeBlock
+operator|||
+operator|(
+name|GpeNumber
+operator|<
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+name|GpeIndex
+operator|=
+name|GpeNumber
+operator|-
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+expr_stmt|;
+if|if
+condition|(
+name|GpeIndex
+operator|>=
+name|GpeBlock
+operator|->
+name|GpeCount
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+return|return
+operator|(
+operator|&
+name|GpeBlock
+operator|->
+name|EventInfo
+index|[
+name|GpeIndex
+index|]
+operator|)
+return|;
 block|}
 end_function
 
@@ -623,9 +457,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
+name|ACPI_GPE_EVENT_INFO
 modifier|*
-name|GpeBlock
+name|GpeInfo
 decl_stmt|;
 name|UINT32
 name|i
@@ -655,61 +489,28 @@ name|i
 operator|++
 control|)
 block|{
-name|GpeBlock
+name|GpeInfo
 operator|=
+name|AcpiEvLowGetGpeInfo
+argument_list|(
+name|GpeNumber
+argument_list|,
 name|AcpiGbl_GpeFadtBlocks
 index|[
 name|i
 index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|GpeBlock
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|GpeNumber
-operator|>=
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|)
-operator|&&
-operator|(
-name|GpeNumber
-operator|<
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|+
-operator|(
-name|GpeBlock
-operator|->
-name|RegisterCount
-operator|*
-literal|8
-operator|)
-operator|)
+name|GpeInfo
 condition|)
 block|{
 return|return
 operator|(
-operator|&
-name|GpeBlock
-operator|->
-name|EventInfo
-index|[
-name|GpeNumber
-operator|-
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-index|]
+name|GpeInfo
 operator|)
 return|;
-block|}
 block|}
 block|}
 comment|/* The GpeNumber was not in the range of either FADT GPE block */
@@ -750,60 +551,18 @@ name|NULL
 operator|)
 return|;
 block|}
-name|GpeBlock
-operator|=
+return|return
+operator|(
+name|AcpiEvLowGetGpeInfo
+argument_list|(
+name|GpeNumber
+argument_list|,
 name|ObjDesc
 operator|->
 name|Device
 operator|.
 name|GpeBlock
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|GpeNumber
-operator|>=
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|)
-operator|&&
-operator|(
-name|GpeNumber
-operator|<
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-operator|+
-operator|(
-name|GpeBlock
-operator|->
-name|RegisterCount
-operator|*
-literal|8
-operator|)
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-operator|&
-name|GpeBlock
-operator|->
-name|EventInfo
-index|[
-name|GpeNumber
-operator|-
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-index|]
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|NULL
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1201,15 +960,13 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/* Set the GPE flags for return to enabled state */
+comment|/* Update the GPE register masks for return to enabled state */
 operator|(
 name|void
 operator|)
-name|AcpiEvEnableGpe
+name|AcpiEvUpdateGpeEnableMasks
 argument_list|(
 name|GpeEventInfo
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/*      * Take a snapshot of the GPE info for this level - we copy the info to      * prevent a race condition with RemoveHandler/RemoveBlock.      */
@@ -1513,7 +1270,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE[%2X]"
+literal|"Unable to clear GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1596,7 +1353,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE[%2X]"
+literal|"Unable to clear GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1636,7 +1393,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE[%2X]"
+literal|"Unable to disable GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)
@@ -1675,7 +1432,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to queue handler for GPE[%2X] - event disabled"
+literal|"Unable to queue handler for GPE[0x%2X] - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1684,19 +1441,19 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/* No handler or method to run! */
+comment|/*          * No handler or method to run!          * 03/2010: This case should no longer be possible. We will not allow          * a GPE to be enabled if it has no handler or method.          */
 name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No handler or method for GPE[%2X], disabling event"
+literal|"No handler or method for GPE[0x%2X], disabling event"
 operator|,
 name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Disable the GPE. The GPE will remain disabled until the ACPICA          * Core Subsystem is restarted, or a handler is installed.          */
+comment|/*          * Disable the GPE. The GPE will remain disabled a handler          * is installed or ACPICA is restarted.          */
 name|Status
 operator|=
 name|AcpiEvDisableGpe
@@ -1719,7 +1476,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE[%2X]"
+literal|"Unable to disable GPE[0x%2X]"
 operator|,
 name|GpeNumber
 operator|)

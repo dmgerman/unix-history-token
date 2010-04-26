@@ -477,7 +477,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Sleep values out of range: A=%X B=%X"
+literal|"Sleep values out of range: A=0x%X B=0x%X"
 operator|,
 name|AcpiGbl_SleepTypeA
 operator|,
@@ -901,7 +901,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Some BIOSs don't set WAK_STS at all.  Give up waiting after          * 1000 retries if it still isn't set.          */
+if|if
+condition|(
+name|AcpiGbl_EnableInterpreterSlack
+condition|)
+block|{
+comment|/*              * Some BIOSs don't set WAK_STS at all.  Give up waiting after              * 1000 retries if it still isn't set.              */
 if|if
 condition|(
 name|Retry
@@ -911,6 +916,7 @@ literal|0
 condition|)
 block|{
 break|break;
+block|}
 block|}
 comment|/* Spin until we wake */
 block|}

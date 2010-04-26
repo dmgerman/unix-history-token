@@ -1087,15 +1087,6 @@ name|TableHeader
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|ASL_RESERVED_INFO
-name|ReservedMethods
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Event timing */
 end_comment

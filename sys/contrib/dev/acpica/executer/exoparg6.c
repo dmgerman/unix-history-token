@@ -464,7 +464,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Index (%X%8.8X) beyond package end (%X)"
+literal|"Index (0x%8.8X%8.8X) beyond package end (0x%X)"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -645,7 +645,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown AML opcode %X"
+literal|"Unknown AML opcode 0x%X"
 operator|,
 name|WalkState
 operator|->
