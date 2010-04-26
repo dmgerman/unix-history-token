@@ -186,7 +186,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"if_sgereg.h"
+file|<dev/sge/if_sgereg.h>
 end_include
 
 begin_expr_stmt
