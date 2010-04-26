@@ -8026,6 +8026,18 @@ literal|0x04000001
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX Try to mitigate interrupts. 	 */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|IntrControl
+argument_list|,
+literal|0x08880000
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|sc
@@ -8064,6 +8076,8 @@ operator|->
 name|sge_intrtimer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Clear and enable interrupts. 	 */
 name|CSR_WRITE_4
 argument_list|(
