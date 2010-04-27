@@ -1946,7 +1946,7 @@ name|bad
 goto|;
 name|error
 operator|=
-name|prison_get_ip6
+name|prison_check_ip6
 argument_list|(
 name|in6p
 operator|->
