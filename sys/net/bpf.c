@@ -5384,6 +5384,9 @@ condition|)
 break|break;
 comment|/* FALLSTHROUGH */
 default|default:
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -5427,6 +5430,9 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
@@ -5453,8 +5459,8 @@ break|break;
 case|case
 name|BIOCGETZMAX
 case|:
-return|return
-operator|(
+name|error
+operator|=
 name|bpf_ioctl_getzmax
 argument_list|(
 name|td
@@ -5467,13 +5473,13 @@ operator|*
 operator|)
 name|addr
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|BIOCSETZBUF
 case|:
-return|return
-operator|(
+name|error
+operator|=
 name|bpf_ioctl_setzbuf
 argument_list|(
 name|td
@@ -5487,13 +5493,13 @@ operator|*
 operator|)
 name|addr
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|BIOCROTZBUF
 case|:
-return|return
-operator|(
+name|error
+operator|=
 name|bpf_ioctl_rotzbuf
 argument_list|(
 name|td
@@ -5507,8 +5513,8 @@ operator|*
 operator|)
 name|addr
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 name|CURVNET_RESTORE
 argument_list|()
