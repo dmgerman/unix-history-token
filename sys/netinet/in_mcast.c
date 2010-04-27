@@ -9004,6 +9004,27 @@ goto|goto
 name|out_inp_locked
 goto|;
 block|}
+comment|/* 			 * MCAST_JOIN_GROUP on an existing exclusive 			 * membership is an error; return EADDRINUSE 			 * to preserve 4.4BSD API idempotence, and 			 * avoid tedious detour to code below. 			 * NOTE: This is bending RFC 3678 a bit. 			 */
+if|if
+condition|(
+name|imf
+operator|->
+name|imf_st
+index|[
+literal|1
+index|]
+operator|==
+name|MCAST_EXCLUDE
+condition|)
+block|{
+name|error
+operator|=
+name|EADDRINUSE
+expr_stmt|;
+goto|goto
+name|out_inp_locked
+goto|;
+block|}
 block|}
 block|}
 comment|/* 	 * Begin state merge transaction at socket layer. 	 */
@@ -9732,16 +9753,15 @@ operator|.
 name|imr_sourceaddr
 expr_stmt|;
 block|}
+comment|/* 		 * Attempt to look up hinted ifp from interface address. 		 * Fallthrough with null ifp iff lookup fails, to 		 * preserve 4.4BSD mcast API idempotence. 		 * XXX NOTE WELL: The RFC 3678 API is preferred because 		 * using an IPv4 address as a key is racy. 		 */
 if|if
 condition|(
 operator|!
 name|in_nullhost
 argument_list|(
-name|gsa
-operator|->
-name|sin
+name|mreqs
 operator|.
-name|sin_addr
+name|imr_interface
 argument_list|)
 condition|)
 name|INADDR_TO_IFP
@@ -9944,6 +9964,17 @@ operator|.
 name|gsr_interface
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
 break|break;
 default|default:
 name|CTR2
@@ -9986,17 +10017,6 @@ condition|)
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
-name|ifp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EADDRNOTAVAIL
 operator|)
 return|;
 comment|/* 	 * Find the membership in the membership array. 	 */
