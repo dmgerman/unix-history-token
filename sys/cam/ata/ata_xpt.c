@@ -3266,6 +3266,11 @@ name|int16_t
 modifier|*
 name|ptr
 decl_stmt|;
+name|int
+name|changed
+init|=
+literal|1
+decl_stmt|;
 name|ident_buf
 operator|=
 operator|&
@@ -3656,6 +3661,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|bcopy
 argument_list|(
 operator|&
@@ -3672,8 +3678,16 @@ name|ata_params
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|changed
+operator|=
+literal|0
+expr_stmt|;
 block|}
-else|else
+block|}
+if|if
+condition|(
+name|changed
+condition|)
 block|{
 name|bcopy
 argument_list|(
