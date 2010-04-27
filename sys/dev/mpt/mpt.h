@@ -194,6 +194,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -393,6 +416,13 @@ define|#
 directive|define
 name|MPT_ROLE_DEFAULT
 value|MPT_ROLE_INITIATOR
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_INI_ID_NONE
+value|-1
 end_define
 
 begin_comment
@@ -2474,10 +2504,6 @@ name|port_facts
 decl_stmt|;
 define|#
 directive|define
-name|mpt_ini_id
-value|port_facts[0].PortSCSIID
-define|#
-directive|define
 name|mpt_max_tgtcmds
 value|port_facts[0].MaxPostedCmdBuffers
 comment|/* 	 * Device Configuration Information 	 */
@@ -2506,6 +2532,9 @@ name|_dev_page1
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|int
+name|_ini_id
 decl_stmt|;
 name|uint16_t
 name|_tag_enable
@@ -2536,6 +2565,10 @@ define|#
 directive|define
 name|mpt_dev_page1
 value|cfg.spi._dev_page1
+define|#
+directive|define
+name|mpt_ini_id
+value|cfg.spi._ini_id
 define|#
 directive|define
 name|mpt_tag_enable
