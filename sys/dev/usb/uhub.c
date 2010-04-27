@@ -2045,7 +2045,7 @@ name|defined
 argument_list|(
 name|DIAGNOSTIC
 argument_list|)
-block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				deivce_printf(sc->sc_dev, 				    "connected, no device\n");
+block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				device_printf(sc->sc_dev, 				    "connected, no device\n");
 endif|#
 directive|endif
 continue|continue;
