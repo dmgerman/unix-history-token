@@ -1493,7 +1493,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++

@@ -1483,10 +1483,10 @@ name|void
 name|AcpiOsDerivePciId
 parameter_list|(
 name|ACPI_HANDLE
-name|rhandle
+name|Device
 parameter_list|,
 name|ACPI_HANDLE
-name|chandle
+name|Region
 parameter_list|,
 name|ACPI_PCI_ID
 modifier|*

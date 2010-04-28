@@ -1205,6 +1205,9 @@ name|NumOutstanding
 init|=
 literal|0
 decl_stmt|;
+name|UINT8
+name|DescriptorType
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|UtDumpAllocations
@@ -1267,7 +1270,6 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Ignore allocated objects that are in a cache */
 name|Descriptor
 operator|=
 name|ACPI_CAST_PTR
@@ -1282,6 +1284,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Element
+operator|->
+name|Size
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ACPI_COMMON_DESCRIPTOR
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%p Length 0x%04X %9.9s-%d "
+literal|"[Not a Descriptor - too small]\n"
+argument_list|,
+name|Descriptor
+argument_list|,
+name|Element
+operator|->
+name|Size
+argument_list|,
+name|Element
+operator|->
+name|Module
+argument_list|,
+name|Element
+operator|->
+name|Line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Ignore allocated objects that are in a cache */
+if|if
+condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
 name|Descriptor
@@ -1292,7 +1330,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Len %04X %9.9s-%d [%s] "
+literal|"%p Length 0x%04X %9.9s-%d [%s] "
 argument_list|,
 name|Descriptor
 argument_list|,
@@ -1314,7 +1352,12 @@ name|Descriptor
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Most of the elements will be Operand objects. */
+comment|/* Validate the descriptor type using Type field and length */
+name|DescriptorType
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Not a valid descriptor type */
 switch|switch
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -1326,9 +1369,81 @@ block|{
 case|case
 name|ACPI_DESC_TYPE_OPERAND
 case|:
+if|if
+condition|(
+name|Element
+operator|->
+name|Size
+operator|==
+sizeof|sizeof
+argument_list|(
+name|ACPI_DESC_TYPE_OPERAND
+argument_list|)
+condition|)
+block|{
+name|DescriptorType
+operator|=
+name|ACPI_DESC_TYPE_OPERAND
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ACPI_DESC_TYPE_PARSER
+case|:
+if|if
+condition|(
+name|Element
+operator|->
+name|Size
+operator|==
+sizeof|sizeof
+argument_list|(
+name|ACPI_DESC_TYPE_PARSER
+argument_list|)
+condition|)
+block|{
+name|DescriptorType
+operator|=
+name|ACPI_DESC_TYPE_PARSER
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ACPI_DESC_TYPE_NAMED
+case|:
+if|if
+condition|(
+name|Element
+operator|->
+name|Size
+operator|==
+sizeof|sizeof
+argument_list|(
+name|ACPI_DESC_TYPE_NAMED
+argument_list|)
+condition|)
+block|{
+name|DescriptorType
+operator|=
+name|ACPI_DESC_TYPE_NAMED
+expr_stmt|;
+block|}
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* Display additional info for the major descriptor types */
+switch|switch
+condition|(
+name|DescriptorType
+condition|)
+block|{
+case|case
+name|ACPI_DESC_TYPE_OPERAND
+case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%12.12s R%hd"
+literal|"%12.12s  RefCount 0x%04X\n"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -1356,7 +1471,7 @@ name|ACPI_DESC_TYPE_PARSER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"AmlOpcode %04hX"
+literal|"AmlOpcode 0x%04hX\n"
 argument_list|,
 name|Descriptor
 operator|->
@@ -1373,7 +1488,7 @@ name|ACPI_DESC_TYPE_NAMED
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%4.4s"
+literal|"%4.4s\n"
 argument_list|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1386,17 +1501,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-break|break;
-block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 name|NumOutstanding
 operator|++
 expr_stmt|;
-block|}
 block|}
 name|Element
 operator|=
