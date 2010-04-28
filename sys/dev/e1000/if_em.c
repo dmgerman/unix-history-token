@@ -2430,6 +2430,12 @@ begin_comment
 comment|/* Local controls for MSI/MSIX */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EM_MULTIQUEUE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2451,6 +2457,38 @@ end_decl_stmt
 begin_comment
 comment|/* for 82574, can be 1 or 2 */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_enable_msix
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|em_msix_queues
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* disable */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -6550,11 +6588,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|EM_RX_LOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 name|rx_done
 operator|=
 name|em_rxeof
@@ -6562,11 +6595,6 @@ argument_list|(
 name|rxr
 argument_list|,
 name|count
-argument_list|)
-expr_stmt|;
-name|EM_RX_UNLOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -6868,11 +6896,6 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|EM_RX_LOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 name|more_rx
 operator|=
 name|em_rxeof
@@ -6882,11 +6905,6 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
-argument_list|)
-expr_stmt|;
-name|EM_RX_UNLOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -7103,11 +7121,6 @@ decl_stmt|;
 name|bool
 name|more
 decl_stmt|;
-name|EM_RX_LOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 operator|++
 name|rxr
 operator|->
@@ -7122,11 +7135,6 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
-argument_list|)
-expr_stmt|;
-name|EM_RX_UNLOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 if|if
@@ -7289,11 +7297,6 @@ decl_stmt|;
 name|bool
 name|more
 decl_stmt|;
-name|EM_RX_LOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
 name|more
 operator|=
 name|em_rxeof
@@ -7303,11 +7306,6 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
-argument_list|)
-expr_stmt|;
-name|EM_RX_UNLOCK
-argument_list|(
-name|rxr
 argument_list|)
 expr_stmt|;
 if|if
@@ -19122,7 +19120,7 @@ name|e1000_rx_desc
 modifier|*
 name|cur
 decl_stmt|;
-name|EM_RX_LOCK_ASSERT
+name|EM_RX_LOCK
 argument_list|(
 name|rxr
 argument_list|)
@@ -19609,6 +19607,18 @@ name|sendmp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|rxr
+operator|->
+name|next_to_check
+operator|=
+name|i
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -19621,6 +19631,18 @@ argument_list|,
 name|sendmp
 argument_list|)
 expr_stmt|;
+name|EM_RX_LOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|rxr
+operator|->
+name|next_to_check
+expr_stmt|;
+block|}
 comment|/* Only refresh mbufs every 8 descriptors */
 if|if
 condition|(
@@ -19667,6 +19689,11 @@ operator|->
 name|next_to_check
 operator|=
 name|i
+expr_stmt|;
+name|EM_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
