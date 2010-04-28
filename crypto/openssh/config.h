@@ -350,6 +350,10 @@ name|ENABLE_PKCS11
 end_define
 
 begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Builtin PRNG command timeout */
 end_comment
 
@@ -1361,6 +1365,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `getutxuser' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETUTXUSER
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `get_default_context_with_level' function. */
 end_comment
 
@@ -1662,6 +1677,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBIAF */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `network' library (-lnetwork). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBNETWORK */
 end_comment
 
 begin_comment
@@ -2488,6 +2511,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_SETUTENT */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `setutxdb' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETUTXDB
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `setutxent' function. */
@@ -4424,7 +4458,7 @@ comment|/* #undef WITH_SELINUX */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if your processor stores words with the most significant byte    first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
 begin_if

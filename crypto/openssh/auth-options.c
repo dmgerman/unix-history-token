@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.c,v 1.48 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: auth-options.c,v 1.49 2010/03/16 15:46:52 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -2139,7 +2139,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"force-command constrain contains \\0"
+literal|"force-command constraint contains \\0"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2237,7 +2237,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"source-address constrain contains \\0"
+literal|"source-address constraint contains \\0"
 argument_list|)
 expr_stmt|;
 goto|goto
