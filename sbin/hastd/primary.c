@@ -2095,7 +2095,7 @@ condition|)
 block|{
 name|primary_exit
 argument_list|(
-name|EX_OSERR
+name|EX_TEMPFAIL
 argument_list|,
 literal|"Unable to create connection to %s"
 argument_list|,
@@ -3358,7 +3358,7 @@ argument_list|)
 expr_stmt|;
 name|primary_exit
 argument_list|(
-name|EX_OSERR
+name|EX_TEMPFAIL
 argument_list|,
 literal|"Unable to fork"
 argument_list|)
