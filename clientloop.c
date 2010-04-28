@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.218 2010/01/28 00:21:18 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.219 2010/03/13 21:10:38 djm Exp $ */
 end_comment
 
 begin_comment
@@ -5655,6 +5655,12 @@ argument_list|(
 literal|"disconnected by user"
 argument_list|)
 expr_stmt|;
+name|packet_put_cstring
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* language tag */
 name|packet_send
 argument_list|()
 expr_stmt|;

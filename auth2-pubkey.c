@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-pubkey.c,v 1.21 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: auth2-pubkey.c,v 1.22 2010/03/10 23:27:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1130,15 +1130,6 @@ name|signature_key
 argument_list|)
 condition|)
 continue|continue;
-name|debug
-argument_list|(
-literal|"matching CA found: file %s, line %lu"
-argument_list|,
-name|file
-argument_list|,
-name|linenum
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|key_fingerprint
@@ -1150,20 +1141,19 @@ argument_list|,
 name|SSH_FP_HEX
 argument_list|)
 expr_stmt|;
-name|verbose
+name|debug
 argument_list|(
-literal|"Found matching %s CA: %s"
+literal|"matching CA found: file %s, line %lu, %s %s"
+argument_list|,
+name|file
+argument_list|,
+name|linenum
 argument_list|,
 name|key_type
 argument_list|(
 name|found
 argument_list|)
 argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
@@ -1188,6 +1178,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|xfree
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"%s"
@@ -1220,7 +1215,40 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|xfree
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
+name|verbose
+argument_list|(
+literal|"Accepted certificate ID \"%s\" "
+literal|"signed by %s CA %s via %s"
+argument_list|,
+name|key
+operator|->
+name|cert
+operator|->
+name|key_id
+argument_list|,
+name|key_type
+argument_list|(
+name|found
+argument_list|)
+argument_list|,
+name|fp
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|found_key
 operator|=
 literal|1
@@ -1335,9 +1363,6 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|key_fp
-decl_stmt|,
-modifier|*
 name|ca_fp
 decl_stmt|;
 specifier|const
@@ -1367,22 +1392,15 @@ condition|)
 return|return
 literal|0
 return|;
-name|key_fp
-operator|=
-name|key_fingerprint
-argument_list|(
-name|key
-argument_list|,
-name|SSH_FP_MD5
-argument_list|,
-name|SSH_FP_HEX
-argument_list|)
-expr_stmt|;
 name|ca_fp
 operator|=
 name|key_fingerprint
 argument_list|(
 name|key
+operator|->
+name|cert
+operator|->
+name|signature_key
 argument_list|,
 name|SSH_FP_MD5
 argument_list|,
@@ -1495,14 +1513,13 @@ name|out
 goto|;
 name|verbose
 argument_list|(
-literal|"%s certificate %s allowed by trusted %s key %s"
+literal|"Accepted certificate ID \"%s\" signed by %s CA %s via %s"
 argument_list|,
-name|key_type
-argument_list|(
 name|key
-argument_list|)
-argument_list|,
-name|key_fp
+operator|->
+name|cert
+operator|->
+name|key_id
 argument_list|,
 name|key_type
 argument_list|(
@@ -1514,6 +1531,10 @@ name|signature_key
 argument_list|)
 argument_list|,
 name|ca_fp
+argument_list|,
+name|options
+operator|.
+name|trusted_user_ca_keys
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1522,17 +1543,6 @@ literal|1
 expr_stmt|;
 name|out
 label|:
-if|if
-condition|(
-name|key_fp
-operator|!=
-name|NULL
-condition|)
-name|xfree
-argument_list|(
-name|key_fp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ca_fp

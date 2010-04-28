@@ -314,7 +314,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARC4RANDOM_BUF
+name|HAVE_ARC4RANDOM_BUF
 end_ifndef
 
 begin_function
@@ -409,7 +409,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARC4RANDOM_UNIFORM
+name|HAVE_ARC4RANDOM_UNIFORM
 end_ifndef
 
 begin_comment

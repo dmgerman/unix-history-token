@@ -7163,6 +7163,18 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_SETPCRED */
+ifdef|#
+directive|ifdef
+name|WITH_SELINUX
+name|ssh_selinux_setup_exec_context
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|options
@@ -7312,18 +7324,6 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_SELINUX
-name|ssh_selinux_setup_exec_context
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
