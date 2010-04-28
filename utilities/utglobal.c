@@ -1376,7 +1376,7 @@ index|[]
 init|=
 block|{
 comment|/* 00 */
-literal|"Invalid"
+literal|"Not a Descriptor"
 block|,
 comment|/* 01 */
 literal|"Cached"
@@ -1460,12 +1460,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-name|AcpiGbl_BadType
-argument_list|)
+literal|"Not a Descriptor"
 operator|)
 return|;
 block|}

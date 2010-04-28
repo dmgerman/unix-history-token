@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:cd^e:fgh^i^I:l^o:p:r:s:t:v:w:x:"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:v:w:x:"
 end_define
 
 begin_comment
@@ -261,7 +261,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -t<a|c>        Create AML in assembler or C hex table (*.hex)\n"
+literal|"  -t<a|c|s>      Create AML in assembler, C, or ASL hex table (*.hex)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -287,6 +287,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -on            Disable named reference string optimization\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -cr            Disable Resource Descriptor error checking\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -449,7 +454,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -c             Parse only, no output generation\n"
+literal|"  -n             Parse only, no output generation\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -959,11 +964,37 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* Parse only */
-name|Gbl_ParseOnlyFlag
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|Gbl_NoResourceChecking
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -c%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'d'
@@ -1289,6 +1320,15 @@ return|;
 block|}
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* Parse only */
+name|Gbl_ParseOnlyFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* Override default AML output filename */
@@ -1390,6 +1430,14 @@ case|:
 name|Gbl_HexOutputFlag
 operator|=
 name|HEX_OUTPUT_C
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|Gbl_HexOutputFlag
+operator|=
+name|HEX_OUTPUT_ASL
 expr_stmt|;
 break|break;
 default|default:

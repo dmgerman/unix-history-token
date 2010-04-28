@@ -591,11 +591,11 @@ break|break;
 case|case
 name|ACPI_EVENT_RESERVED_NAME
 case|:
-comment|/* _Lxx, _Exx, and _Qxx methods */
+comment|/* _Lxx/_Exx/_Wxx/_Qxx methods */
 name|Gbl_ReservedMethods
 operator|++
 expr_stmt|;
-comment|/* NumArguments must be zero for all _Lxx, _Exx, and _Qxx methods */
+comment|/* NumArguments must be zero for all _Lxx/_Exx/_Wxx/_Qxx methods */
 if|if
 condition|(
 name|MethodInfo
@@ -865,11 +865,11 @@ comment|/* A _Txx that was not emitted by compiler */
 case|case
 name|ACPI_EVENT_RESERVED_NAME
 case|:
-comment|/* _Lxx, _Exx, and _Qxx methods */
+comment|/* _Lxx/_Exx/_Wxx/_Qxx methods */
 comment|/* Just return, nothing to do */
 return|return;
 default|default:
-comment|/* a real predefined ACPI name */
+comment|/* A standard predefined ACPI name */
 comment|/* Exit if no return value expected */
 if|if
 condition|(
@@ -979,16 +979,45 @@ argument_list|,
 name|Name
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|Index
-operator|>
-name|ACPI_VALID_RESERVED_NAME_MAX
 condition|)
 block|{
+case|case
+name|ACPI_NOT_RESERVED_NAME
+case|:
+comment|/* No underscore or _Txx or _xxx name not matched */
+case|case
+name|ACPI_PREDEFINED_NAME
+case|:
+comment|/* Resource Name or reserved scope name */
+case|case
+name|ACPI_COMPILER_RESERVED_NAME
+case|:
+comment|/* A _Txx that was not emitted by compiler */
+comment|/* Nothing to do */
 return|return;
-block|}
-comment|/*      * We found a matching predefind name.      * Check if this predefined name requires input arguments      */
+case|case
+name|ACPI_EVENT_RESERVED_NAME
+case|:
+comment|/* _Lxx/_Exx/_Wxx/_Qxx methods */
+comment|/*          * These names must be control methods, by definition in ACPI spec.          * Also because they are defined to return no value. None of them          * require any arguments.          */
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_RESERVED_METHOD
+argument_list|,
+name|Op
+argument_list|,
+literal|"with zero arguments"
+argument_list|)
+expr_stmt|;
+return|return;
+default|default:
+comment|/* A standard predefined ACPI name */
+comment|/*          * If this predefined name requires input arguments, then          * it must be implemented as a control method          */
 if|if
 condition|(
 name|PredefinedNames
@@ -1003,7 +1032,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*          * This predefined name must always be defined as a control          * method because it is required to have input arguments.          */
 name|AslError
 argument_list|(
 name|ASL_ERROR
@@ -1015,6 +1043,34 @@ argument_list|,
 literal|"with arguments"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+comment|/*          * If no return value is expected from this predefined name, then          * it follows that it must be implemented as a control method          * (with zero args, because the args> 0 case was handled above)          * Examples are: _DIS, _INI, _IRC, _OFF, _ON, _PSx          */
+if|if
+condition|(
+operator|!
+name|PredefinedNames
+index|[
+name|Index
+index|]
+operator|.
+name|Info
+operator|.
+name|ExpectedBtypes
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_RESERVED_METHOD
+argument_list|,
+name|Op
+argument_list|,
+literal|"with zero arguments"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/* Typecheck the actual object, it is the next argument */
 name|ApCheckObjectType
@@ -1039,6 +1095,8 @@ operator|.
 name|ExpectedBtypes
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 block|}
 end_function
 
@@ -1242,7 +1300,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Check for _Lxx, _Exx, _Qxx, _T_x. Warning if unknown predefined name */
+comment|/* Check for _Lxx/_Exx/_Wxx/_Qxx/_T_x. Warning if unknown predefined name */
 return|return
 operator|(
 name|ApCheckForSpecialName
@@ -1257,7 +1315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckForSpecialName  *  * PARAMETERS:  Op              - A parse node  *              Name            - NameSeg to check  *  * RETURN:      None  *  * DESCRIPTION: Check for the "special" predefined names -  *              _Lxx, _Exx, _Qxx, and _T_x  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckForSpecialName  *  * PARAMETERS:  Op              - A parse node  *              Name            - NameSeg to check  *  * RETURN:      None  *  * DESCRIPTION: Check for the "special" predefined names -  *              _Lxx, _Exx, _Qxx, _Wxx, and _T_x  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1274,7 +1332,7 @@ modifier|*
 name|Name
 parameter_list|)
 block|{
-comment|/*      * Check for the "special" predefined names. We know the first char is an      * underscore already.      *   GPE:  _Lxx      *   GPE:  _Exx      *   EC:   _Qxx      */
+comment|/*      * Check for the "special" predefined names. We already know that the      * first character is an underscore.      *   GPE:  _Lxx      *   GPE:  _Exx      *   GPE:  _Wxx      *   EC:   _Qxx      */
 if|if
 condition|(
 operator|(
@@ -1293,6 +1351,15 @@ literal|1
 index|]
 operator|==
 literal|'E'
+operator|)
+operator|||
+operator|(
+name|Name
+index|[
+literal|1
+index|]
+operator|==
+literal|'W'
 operator|)
 operator|||
 operator|(

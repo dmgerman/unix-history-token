@@ -711,10 +711,10 @@ name|void
 name|AcpiOsDerivePciId
 parameter_list|(
 name|ACPI_HANDLE
-name|Rhandle
+name|Device
 parameter_list|,
 name|ACPI_HANDLE
-name|Chandle
+name|Region
 parameter_list|,
 name|ACPI_PCI_ID
 modifier|*

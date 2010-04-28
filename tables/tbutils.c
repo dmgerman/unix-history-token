@@ -147,7 +147,7 @@ if|if
 condition|(
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|>=
 literal|3
 condition|)
@@ -1551,7 +1551,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|=
 literal|2
 expr_stmt|;
@@ -1574,11 +1574,11 @@ if|if
 condition|(
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|>=
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 condition|)
 block|{
 comment|/* There is no more room in the root table array, attempt resize */
@@ -1611,7 +1611,7 @@ operator|-
 operator|(
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|-
 literal|2
 operator|)
@@ -1629,7 +1629,7 @@ name|Tables
 index|[
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 index|]
 operator|.
 name|Address
@@ -1647,7 +1647,7 @@ name|TableEntrySize
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|++
 expr_stmt|;
 block|}
@@ -1670,7 +1670,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++

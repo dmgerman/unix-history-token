@@ -868,12 +868,6 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
-literal|"ACPI_INTERNAL_RSDT"
-block|,
-name|SRC_TYPE_STRUCT
-block|}
-block|,
-block|{
 literal|"ACPI_INTERPRETER_MODE"
 block|,
 name|SRC_TYPE_SIMPLE

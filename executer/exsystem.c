@@ -297,12 +297,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoSuspend  *  * PARAMETERS:  HowLong         - The amount of time to suspend,  *                                in milliseconds  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoSleep  *  * PARAMETERS:  HowLong         - The amount of time to sleep,  *                                in milliseconds  *  * RETURN:      None  *  * DESCRIPTION: Sleep the running thread for specified amount of time.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiExSystemDoSuspend
+name|AcpiExSystemDoSleep
 parameter_list|(
 name|UINT64
 name|HowLong

@@ -79,7 +79,7 @@ parameter_list|)
 block|{
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 name|InitialTableCount
 expr_stmt|;
@@ -185,7 +185,7 @@ name|InitialTableArray
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 name|InitialTableCount
 expr_stmt|;
@@ -299,7 +299,7 @@ name|ACPI_SIZE
 operator|)
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -359,11 +359,11 @@ name|Tables
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|+
 name|ACPI_ROOT_TABLE_SIZE_INCREMENT
 expr_stmt|;
@@ -451,7 +451,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++
@@ -684,7 +684,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++
@@ -831,7 +831,7 @@ name|TableIndex
 operator|>=
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|)
 block|{
 operator|(
@@ -974,7 +974,7 @@ condition|(
 operator|!
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|||
 operator|!
 name|ACPI_COMPARE_NAME
@@ -1118,7 +1118,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 operator|++
 name|i

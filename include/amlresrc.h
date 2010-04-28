@@ -591,6 +591,31 @@ name|AML_RESOURCE_LARGE_HEADER
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* General Flags for address space resource descriptors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_FLAG_DEC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_FLAG_MIF
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_FLAG_MAF
+value|8
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

@@ -630,29 +630,32 @@ comment|/* iASL only: Object was referenced */
 end_comment
 
 begin_comment
-comment|/* One internal RSDT for table management */
+comment|/* Internal ACPI table management - master table list */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_internal_rsdt
+name|acpi_table_list
 block|{
 name|ACPI_TABLE_DESC
 modifier|*
 name|Tables
 decl_stmt|;
+comment|/* Table descriptor array */
 name|UINT32
-name|Count
+name|CurrentTableCount
 decl_stmt|;
+comment|/* Tables currently in the array */
 name|UINT32
-name|Size
+name|MaxTableCount
 decl_stmt|;
+comment|/* Max tables array will hold */
 name|UINT8
 name|Flags
 decl_stmt|;
 block|}
-name|ACPI_INTERNAL_RSDT
+name|ACPI_TABLE_LIST
 typedef|;
 end_typedef
 
@@ -1534,6 +1537,18 @@ decl_stmt|;
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
+decl_stmt|;
+name|UINT16
+name|Count
+decl_stmt|;
+name|ACPI_OWNER_ID
+name|OwnerId
+decl_stmt|;
+name|BOOLEAN
+name|EnableThisGpe
+decl_stmt|;
+name|BOOLEAN
+name|ExecuteByOwnerId
 decl_stmt|;
 block|}
 name|ACPI_GPE_WALK_INFO
