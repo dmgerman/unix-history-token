@@ -9077,20 +9077,10 @@ name|if_description
 operator|==
 name|NULL
 condition|)
-block|{
-name|ifr
-operator|->
-name|ifr_buffer
-operator|.
-name|length
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|ENOMSG
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* space for terminating nul */
@@ -9115,9 +9105,13 @@ name|length
 operator|<
 name|descrlen
 condition|)
-name|error
+name|ifr
+operator|->
+name|ifr_buffer
+operator|.
+name|buffer
 operator|=
-name|ENAMETOOLONG
+name|NULL
 expr_stmt|;
 else|else
 name|error
