@@ -2015,7 +2015,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"unable to setup inital BSS node"
+literal|"unable to setup initial BSS node"
 operator|)
 argument_list|)
 expr_stmt|;
