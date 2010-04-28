@@ -1191,7 +1191,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|WEXITSTATUS
+argument_list|(
 name|status
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -1208,7 +1211,10 @@ name|res
 operator|->
 name|hr_workerpid
 argument_list|,
+name|WEXITSTATUS
+argument_list|(
 name|status
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* See above. */
