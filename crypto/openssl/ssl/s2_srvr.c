@@ -807,7 +807,7 @@ expr_stmt|;
 if|if
 condition|(
 name|num1
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{

@@ -421,13 +421,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Enable the GPE for wake/runtime. */
-name|acpi_wake_init
-argument_list|(
-name|dev
-argument_list|,
-name|ACPI_GPE_TYPE_WAKE_RUN
-argument_list|)
-expr_stmt|;
 name|acpi_wake_set_enable
 argument_list|(
 name|dev

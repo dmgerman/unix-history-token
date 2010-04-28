@@ -113,6 +113,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_ratectl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpf.h>
 end_include
 
@@ -2073,6 +2079,14 @@ name|ic_htcaps
 expr_stmt|;
 name|vap
 operator|->
+name|iv_htextcaps
+operator|=
+name|ic
+operator|->
+name|ic_htextcaps
+expr_stmt|;
+name|vap
+operator|->
 name|iv_opmode
 operator|=
 name|opmode
@@ -2366,6 +2380,13 @@ expr_stmt|;
 name|ieee80211_radiotap_vattach
 argument_list|(
 name|vap
+argument_list|)
+expr_stmt|;
+name|ieee80211_ratectl_set
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_RATECTL_AMRR
 argument_list|)
 expr_stmt|;
 return|return

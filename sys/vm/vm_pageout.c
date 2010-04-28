@@ -1321,13 +1321,6 @@ name|PQ_INACTIVE
 operator|||
 name|p
 operator|->
-name|wire_count
-operator|!=
-literal|0
-operator|||
-comment|/* may be held by buf cache */
-name|p
-operator|->
 name|hold_count
 operator|!=
 literal|0
@@ -1445,13 +1438,6 @@ name|queue
 operator|!=
 name|PQ_INACTIVE
 operator|||
-name|p
-operator|->
-name|wire_count
-operator|!=
-literal|0
-operator|||
-comment|/* may be held by buf cache */
 name|p
 operator|->
 name|hold_count
@@ -3962,9 +3948,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_remove_all
+name|KASSERT
+argument_list|(
+operator|!
+name|pmap_page_is_mapped
 argument_list|(
 name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"vm_pageout_scan: page %p is mapped"
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4198,7 +4194,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * If this is a system or protected process, skip it. 		 */
+comment|/* 		 * If this is a system, protected or killed process, skip it. 		 */
 if|if
 condition|(
 operator|(
@@ -4222,6 +4218,11 @@ name|p_pid
 operator|==
 literal|1
 operator|)
+operator|||
+name|P_KILLED
+argument_list|(
+name|p
+argument_list|)
 operator|||
 operator|(
 operator|(

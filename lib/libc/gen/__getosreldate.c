@@ -29,6 +29,15 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_function_decl
+name|int
+name|__getosreldate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * This is private to libc.  It is intended for wrapping syscall stubs in order  * to avoid having to put SIGSYS signal handlers in place to test for presence  * of new syscalls.  This caches the result in order to be as quick as possible.  *  * Use getosreldate(3) for public use as it respects the $OSVERSION environment  * variable.  */
 end_comment

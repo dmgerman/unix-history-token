@@ -42,6 +42,13 @@ block|{ }
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|KINFO_PROC_SIZE
+value|768
+end_define
+
 begin_endif
 endif|#
 directive|endif

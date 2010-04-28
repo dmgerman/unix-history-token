@@ -739,6 +739,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BEASTIE_LOGO
+end_ifdef
+
+begin_expr_stmt
+name|SAVER_MODULE
+argument_list|(
+name|beastie_saver
+argument_list|,
+name|logo_module
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|SAVER_MODULE
 argument_list|(
@@ -748,6 +769,11 @@ name|logo_module
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

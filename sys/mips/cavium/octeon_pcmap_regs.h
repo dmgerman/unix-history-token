@@ -67,50 +67,6 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/* XXXimp: From Cavium's include/pcpu.h, need to port that over */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OCTEON_SMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|OCTEON_CORE_ID
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-modifier|*
-name|cpuid_to_pcpu
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|OCTEON_CORE_ID
-value|(mips_rd_coreid())
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Utility inlines& macros  */
 end_comment
 
@@ -216,12 +172,107 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|oct_write64
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(volatile uint64_t *)(a) = (uint64_t)(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|oct_write8_x8
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(volatile uint8_t *)(a) = (uint8_t)(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OCT_READ
+parameter_list|(
+name|n
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|static inline t oct_read ## n(uintptr_t a)				\ {									\ 	volatile t *p = (volatile t *)a;				\ 	return (*p);							\ }
+end_define
+
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|8
+argument_list|,
+name|uint8_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|16
+argument_list|,
+name|uint16_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|32
+argument_list|,
+name|uint32_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|64
+argument_list|,
+name|uint64_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__mips_n32
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__mips_n64
+name|__mips_o32
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
 argument_list|)
 end_if
 
@@ -238,57 +289,28 @@ name|uint64_t
 name|val64
 parameter_list|)
 block|{
-name|uint64_t
-modifier|*
-name|ptr
-init|=
+asm|__asm __volatile (
+literal|".set push\n"
+literal|".set mips64\n"
+literal|"sd     %0, 0(%1)\n"
+literal|".set pop\n"
+operator|:
+operator|:
+literal|"r"
 operator|(
-name|uint64_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-operator|*
-name|ptr
-operator|=
 name|val64
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|oct_write64_int64
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
-name|int64_t
-name|val64i
-parameter_list|)
-block|{
-name|int64_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|int64_t
-operator|*
 operator|)
+operator|,
+literal|"r"
+operator|(
 name|csr_addr
-decl_stmt|;
-operator|*
-name|ptr
-operator|=
-name|val64i
-expr_stmt|;
-block|}
+operator|)
+block|)
+function|;
 end_function
 
 begin_function
-specifier|static
+unit|}  static
 specifier|inline
 name|void
 name|oct_write8_x8
@@ -300,249 +322,89 @@ name|uint8_t
 name|val8
 parameter_list|)
 block|{
-name|uint64_t
-modifier|*
-name|ptr
-init|=
+asm|__asm __volatile (
+literal|".set push\n"
+literal|".set mips64\n"
+literal|"sb    %0, 0(%1)\n"
+literal|".set pop\n"
+operator|:
+operator|:
+literal|"r"
 operator|(
-name|uint64_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-operator|*
-name|ptr
-operator|=
-operator|(
-name|uint64_t
-operator|)
 name|val8
-expr_stmt|;
-block|}
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|csr_addr
+operator|)
+block|)
+function|;
 end_function
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|oct_write8
+begin_define
+unit|}
+define|#
+directive|define
+name|OCT_READ
 parameter_list|(
-name|uint64_t
-name|csr_addr
+name|n
 parameter_list|,
-name|uint8_t
-name|val8
+name|t
+parameter_list|,
+name|insn
 parameter_list|)
-block|{
-name|oct_write64
-argument_list|(
-name|csr_addr
-argument_list|,
+define|\
+value|static inline t oct_read ## n(uint64_t a)				\ {									\     uint64_t tmp;							\ 									\     __asm __volatile (							\ 	".set push\n"							\         ".set mips64\n"							\         insn "\t%0, 0(%1)\n"						\         ".set pop\n"							\         : "=r"(tmp)							\         : "r"(a));							\     return ((t)tmp);							\ }
+end_define
+
+begin_expr_stmt
+unit|OCT_READ
 operator|(
-name|uint64_t
+literal|8
+operator|,
+name|uint8_t
+operator|,
+literal|"lb"
 operator|)
-name|val8
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|16
+argument_list|,
+name|uint16_t
+argument_list|,
+literal|"lh"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|oct_write16
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
-name|uint16_t
-name|val16
-parameter_list|)
-block|{
-name|oct_write64
+begin_expr_stmt
+name|OCT_READ
 argument_list|(
-name|csr_addr
+literal|32
 argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|val16
+name|uint32_t
+argument_list|,
+literal|"lw"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|oct_write32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
-name|uint32_t
-name|val32
-parameter_list|)
-block|{
-name|oct_write64
+begin_expr_stmt
+name|OCT_READ
 argument_list|(
-name|csr_addr
+literal|64
 argument_list|,
-operator|(
 name|uint64_t
-operator|)
-name|val32
+argument_list|,
+literal|"ld"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|uint8_t
-name|oct_read8
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint8_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|uint8_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-return|return
-operator|(
-operator|*
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|uint8_t
-name|oct_read16
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint16_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|uint16_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-return|return
-operator|(
-operator|*
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|uint32_t
-name|oct_read32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint32_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-return|return
-operator|(
-operator|*
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|uint64_t
-name|oct_read64
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint64_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|uint64_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-return|return
-operator|(
-operator|*
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|int32_t
-name|oct_readint32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|int32_t
-modifier|*
-name|ptr
-init|=
-operator|(
-name|int32_t
-operator|*
-operator|)
-name|csr_addr
-decl_stmt|;
-return|return
-operator|(
-operator|*
-name|ptr
-operator|)
-return|;
-block|}
-end_function
+end_expr_stmt
 
 begin_else
 else|#
@@ -550,11 +412,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  ABI o32 */
-end_comment
-
-begin_comment
-comment|/*  * Read/write functions  */
+comment|/*  * XXX  * Add o32 variants that load the address into a register and the result out  * of a register properly, and simply disable interrupts before and after and  * hope that we don't need to refill or modify the TLB to access the address.  * I'd be a lot happier if csr_addr were a physical address and we mapped it  * into XKPHYS here so that we could guarantee that interrupts were the only  * kind of exception we needed to worry about.  *  * Also, some of this inline assembly is needlessly verbose.  Oh, well.  */
 end_comment
 
 begin_function
@@ -585,9 +443,6 @@ decl_stmt|;
 name|uint32_t
 name|valh
 init|=
-operator|(
-name|uint64_t
-operator|)
 name|val64
 operator|>>
 literal|32
@@ -606,8 +461,19 @@ decl_stmt|;
 name|uint32_t
 name|tmp3
 decl_stmt|;
+name|register_t
+name|sr
+decl_stmt|;
+name|sr
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 asm|__asm __volatile (
+literal|".set push\n"
 literal|".set mips64\n"
+literal|".set noreorder\n"
+literal|".set noat\n"
 literal|"dsll   %0, %3, 32\n"
 literal|"dsll   %1, %5, 32\n"
 literal|"dsll   %2, %4, 32\n"
@@ -617,7 +483,7 @@ literal|"dsll   %2, %6, 32\n"
 literal|"dsrl   %2, %2, 32\n"
 literal|"or     %1, %1, %2\n"
 literal|"sd     %0, 0(%1)\n"
-literal|".set mips0\n"
+literal|".set pop\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -656,114 +522,17 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|intr_restore
+argument_list|(
+name|sr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 unit|}  static
-specifier|inline
-name|void
-name|oct_write64_int64
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
-name|int64_t
-name|val64i
-parameter_list|)
-block|{
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|int32_t
-name|valh
-init|=
-operator|(
-name|uint64_t
-operator|)
-name|val64i
-operator|>>
-literal|32
-decl_stmt|;
-name|int32_t
-name|vall
-init|=
-name|val64i
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|;
-name|uint32_t
-name|tmp2
-decl_stmt|;
-name|uint32_t
-name|tmp3
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsll   %1, %5, 32\n"
-literal|"dsll   %2, %4, 32\n"
-literal|"dsrl   %2, %2, 32\n"
-literal|"or     %0, %0, %2\n"
-literal|"dsll   %2, %6, 32\n"
-literal|"dsrl   %2, %2, 32\n"
-literal|"or     %1, %1, %2\n"
-literal|"sd     %0, 0(%1)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp3
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|valh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|vall
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_comment
-unit|}
-comment|/*  * oct_write8_x8  *  * 8 bit data write into IO Space. Written using an 8 bit bus io transaction  */
-end_comment
-
-begin_function
-unit|static
 specifier|inline
 name|void
 name|oct_write8_x8
@@ -793,14 +562,25 @@ decl_stmt|;
 name|uint32_t
 name|tmp2
 decl_stmt|;
+name|register_t
+name|sr
+decl_stmt|;
+name|sr
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 asm|__asm __volatile (
+literal|".set push\n"
 literal|".set mips64\n"
+literal|".set noreorder\n"
+literal|".set noat\n"
 literal|"dsll   %0, %3, 32\n"
 literal|"dsll   %1, %4, 32\n"
 literal|"dsrl   %1, %1, 32\n"
 literal|"or     %0, %0, %1\n"
 literal|"sb     %2, 0(%0)\n"
-literal|".set mips0\n"
+literal|".set pop\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -830,485 +610,68 @@ block|)
 function|;
 end_function
 
-begin_comment
+begin_expr_stmt
+name|intr_restore
+argument_list|(
+name|sr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
 unit|}
-comment|/*  * oct_write8  *  * 8 bit data write into IO Space. Written using a 64 bit bus io transaction  */
-end_comment
-
-begin_function
-unit|static
-specifier|inline
-name|void
-name|oct_write8
+define|#
+directive|define
+name|OCT_READ
 parameter_list|(
-name|uint64_t
-name|csr_addr
+name|n
 parameter_list|,
-name|uint8_t
-name|val8
+name|t
+parameter_list|,
+name|insn
 parameter_list|)
-block|{
-if|#
-directive|if
-literal|1
-name|oct_write64
-argument_list|(
-name|csr_addr
-argument_list|,
+define|\
+value|static inline t oct_read ## n(uint64_t csr_addr)			\ {									\ 	uint32_t csr_addrh = csr_addr>> 32;				\ 	uint32_t csr_addrl = csr_addr;					\ 	uint32_t tmp1, tmp2;						\ 	register_t sr;							\ 									\ 	sr = intr_disable();						\ 									\ 	__asm __volatile (						\ 	    ".set push\n"						\             ".set mips64\n"						\ 	    ".set noreorder\n"						\ 	    ".set noat\n"						\ 	    "dsll   %1, %2, 32\n"					\ 	    "dsll   %0, %3, 32\n"					\ 	    "dsrl   %0, %0, 32\n"					\ 	    "or     %1, %1, %0\n"					\ 	    "lb     %1, 0(%1)\n"					\ 	    ".set pop\n"						\ 	    : "=&r" (tmp1), "=&r" (tmp2)				\ 	    : "r" (csr_addrh), "r" (csr_addrl));			\ 									\ 	intr_restore(sr);						\ 									\ 	return ((t)tmp2);						\ }
+end_define
+
+begin_expr_stmt
+unit|OCT_READ
 operator|(
-name|uint64_t
+literal|8
+operator|,
+name|uint8_t
+operator|,
+literal|"lb"
 operator|)
-name|val8
-argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|;
-name|uint32_t
-name|tmp2
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsll   %1, %4, 32\n"
-literal|"dsrl   %1, %1, 32\n"
-literal|"or     %0, %0, %1\n"
-literal|"sb     %2, 0(%0)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|val8
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-unit|}  static
-specifier|inline
-name|void
-name|oct_write16
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
+begin_expr_stmt
+name|OCT_READ
+argument_list|(
+literal|16
+argument_list|,
 name|uint16_t
-name|val16
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|1
-name|oct_write64
-argument_list|(
-name|csr_addr
 argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|val16
+literal|"lh"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|;
-name|uint32_t
-name|tmp2
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsll   %1, %4, 32\n"
-literal|"dsrl   %1, %1, 32\n"
-literal|"or     %0, %0, %1\n"
-literal|"sh     %2, 0(%0)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|val16
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-unit|}  static
-specifier|inline
-name|void
-name|oct_write32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|,
-name|uint32_t
-name|val32
-parameter_list|)
-block|{
-if|#
-directive|if
-literal|1
-name|oct_write64
+begin_expr_stmt
+name|OCT_READ
 argument_list|(
-name|csr_addr
+literal|32
 argument_list|,
-operator|(
-name|uint64_t
-operator|)
-name|val32
+name|uint32_t
+argument_list|,
+literal|"lw"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|;
-name|uint32_t
-name|tmp2
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsll   %1, %4, 32\n"
-literal|"dsrl   %1, %1, 32\n"
-literal|"or     %0, %0, %1\n"
-literal|"sw     %2, 0(%0)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|val32
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_expr_stmt
 
 begin_function
-unit|}    static
-specifier|inline
-name|uint8_t
-name|oct_read8
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|,
-name|tmp2
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %1, %2, 32\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsrl   %0, %0, 32\n"
-literal|"or     %1, %1, %0\n"
-literal|"lb     %1, 0(%1)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|(
-name|uint8_t
-operator|)
-name|tmp2
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-specifier|inline
-name|uint8_t
-name|oct_read16
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|tmp1
-decl_stmt|,
-name|tmp2
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %1, %2, 32\n"
-literal|"dsll   %0, %3, 32\n"
-literal|"dsrl   %0, %0, 32\n"
-literal|"or     %1, %1, %0\n"
-literal|"lh     %1, 0(%1)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|tmp1
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-operator|(
-name|uint16_t
-operator|)
-name|tmp2
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}   static
-specifier|inline
-name|uint32_t
-name|oct_read32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|uint32_t
-name|val32
-decl_stmt|;
-name|uint32_t
-name|tmp
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %2, 32\n"
-literal|"dsll   %1, %3, 32\n"
-literal|"dsrl   %1, %1, 32\n"
-literal|"or     %0, %0, %1\n"
-literal|"lw    %0, 0(%0)\n"
-literal|".set mips0\n"
-operator|:
-literal|"=&r"
-operator|(
-name|val32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|val32
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}   static
+specifier|static
 specifier|inline
 name|uint64_t
 name|oct_read64
@@ -1335,8 +698,19 @@ decl_stmt|;
 name|uint32_t
 name|vall
 decl_stmt|;
+name|register_t
+name|sr
+decl_stmt|;
+name|sr
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 asm|__asm __volatile (
+literal|".set push\n"
 literal|".set mips64\n"
+literal|".set noreorder\n"
+literal|".set noat\n"
 literal|"dsll   %0, %2, 32\n"
 literal|"dsll   %1, %3, 32\n"
 literal|"dsrl   %1, %1, 32\n"
@@ -1345,7 +719,7 @@ literal|"ld     %1, 0(%0)\n"
 literal|"dsrl   %0, %1, 32\n"
 literal|"dsll   %1, %1, 32\n"
 literal|"dsrl   %1, %1, 32\n"
-literal|".set mips0\n"
+literal|".set pop\n"
 operator|:
 literal|"=&r"
 operator|(
@@ -1369,6 +743,14 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|intr_restore
+argument_list|(
+name|sr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -1385,78 +767,120 @@ name|vall
 return|;
 end_return
 
-begin_function
-unit|}   static
-specifier|inline
-name|int32_t
-name|oct_readint32
-parameter_list|(
-name|uint64_t
-name|csr_addr
-parameter_list|)
-block|{
-name|uint32_t
-name|csr_addrh
-init|=
-name|csr_addr
-operator|>>
-literal|32
-decl_stmt|;
-name|uint32_t
-name|csr_addrl
-init|=
-name|csr_addr
-decl_stmt|;
-name|int32_t
-name|val32
-decl_stmt|;
-name|uint32_t
-name|tmp
-decl_stmt|;
-asm|__asm __volatile (
-literal|".set mips64\n"
-literal|"dsll   %0, %2, 32\n"
-literal|"dsll   %1, %3, 32\n"
-literal|"dsrl   %1, %1, 32\n"
-literal|"or     %0, %0, %1\n"
-literal|"lw    %0, 0(%0)\n"
-operator|:
-literal|"=&r"
-operator|(
-name|val32
-operator|)
-operator|,
-literal|"=&r"
-operator|(
-name|tmp
-operator|)
-operator|:
-literal|"r"
-operator|(
-name|csr_addrh
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|csr_addrl
-operator|)
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|val32
-operator|)
-return|;
-end_return
-
 begin_endif
 unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|oct_write64_int64
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|(oct_write64(a, (int64_t)(v)))
+end_define
+
+begin_comment
+comment|/*  * Most write bus transactions are actually 64-bit on Octeon.  */
+end_comment
+
+begin_function
+unit|static
+specifier|inline
+name|void
+name|oct_write8
+parameter_list|(
+name|uint64_t
+name|csr_addr
+parameter_list|,
+name|uint8_t
+name|val8
+parameter_list|)
+block|{
+name|oct_write64
+argument_list|(
+name|csr_addr
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|val8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|oct_write16
+parameter_list|(
+name|uint64_t
+name|csr_addr
+parameter_list|,
+name|uint16_t
+name|val16
+parameter_list|)
+block|{
+name|oct_write64
+argument_list|(
+name|csr_addr
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|val16
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|oct_write32
+parameter_list|(
+name|uint64_t
+name|csr_addr
+parameter_list|,
+name|uint32_t
+name|val32
+parameter_list|)
+block|{
+name|oct_write64
+argument_list|(
+name|csr_addr
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|val32
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|oct_readint32
+parameter_list|(
+name|a
+parameter_list|)
+value|((int32_t)oct_read32((a)))
+end_define
 
 begin_define
 define|#
@@ -1511,148 +935,6 @@ name|OCTEON_SCRATCH_2
 value|32
 end_define
 
-begin_function
-unit|static
-specifier|inline
-name|uint64_t
-name|oct_mf_chord
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint64_t
-name|dest
-decl_stmt|;
-asm|__asm __volatile (	".set push\n"
-literal|".set noreorder\n"
-literal|".set noat\n"
-literal|".set mips64\n"
-literal|"dmfc2 $1, 0x400\n"
-literal|"move %0, $1\n"
-literal|".set pop\n"
-operator|:
-literal|"=r"
-operator|(
-name|dest
-operator|)
-operator|:
-operator|:
-literal|"$1"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-name|dest
-return|;
-end_return
-
-begin_define
-unit|}
-define|#
-directive|define
-name|MIPS64_DMFCz
-parameter_list|(
-name|cop
-parameter_list|,
-name|regnum
-parameter_list|,
-name|cp0reg
-parameter_list|,
-name|select
-parameter_list|)
-define|\
-value|.word   (0x40200000 | (cop<< 25) | (regnum<< 16) | (cp0reg<< 11) | select)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips64_getcpz_xstr
-parameter_list|(
-name|s
-parameter_list|)
-value|mips64_getcpz_str(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips64_getcpz_str
-parameter_list|(
-name|s
-parameter_list|)
-value|#s
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips64_dgetcpz
-parameter_list|(
-name|cop
-parameter_list|,
-name|cpzreg
-parameter_list|,
-name|sel
-parameter_list|,
-name|val_ptr
-parameter_list|)
-define|\
-value|({ __asm __volatile( \             ".set push\n" \             ".set mips3\n" \             ".set noreorder\n" \             ".set noat\n" \             mips64_getcpz_xstr(MIPS64_DMFCz(cop,1,cpzreg,sel)) "\n" \             "nop\n" \             "nop\n" \             "nop\n" \             "nop\n" \             "sd $1,0(%0)\n" \             ".set pop" \             :
-comment|/* no outputs */
-value|: "r" (val_ptr) : "$1"); \     })
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips64_dgetcp2
-parameter_list|(
-name|cp2reg
-parameter_list|,
-name|sel
-parameter_list|,
-name|retval_ptr
-parameter_list|)
-define|\
-value|mips64_dgetcpz(2,cp2reg,sel,retval_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCTEON_MF_CHORD
-parameter_list|(
-name|dest
-parameter_list|)
-value|mips64_dgetcp2(0x400, 0,&dest)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCTEON_RDHWR
-parameter_list|(
-name|result
-parameter_list|,
-name|regstr
-parameter_list|)
-define|\
-value|__asm __volatile (		\         		".set mips3\n"		\ 			"rdhwr %0,$" OCTEON_TMP_STR(regstr) "\n"	\         		".set mips\n"		\ 			 : "=d" (result));
-end_define
-
-begin_define
-define|#
-directive|define
-name|CVMX_MF_CHORD
-parameter_list|(
-name|dest
-parameter_list|)
-value|OCTEON_RDHWR(dest, 30)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1666,19 +948,8 @@ comment|/* no outputs */
 value|: "r" (dest_ptr) : "$2"); \     })
 end_define
 
-begin_define
-define|#
-directive|define
-name|OCTEON_MF_CHORD_BAD
-parameter_list|(
-name|dest
-parameter_list|)
-define|\
-value|__asm __volatile (		\         		".set mips3\n"		\ 			"dmfc2 %0, 0x400\n"	\         		".set mips0\n"		\  			: "=&r" (dest) : )
-end_define
-
 begin_function
-unit|static
+specifier|static
 specifier|inline
 name|uint64_t
 name|oct_scratch_read64
@@ -1738,34 +1009,6 @@ name|value
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|OCTEON_READ_CSR32
-parameter_list|(
-name|addr
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|addr_ptr = addr; \ 	oct_read_32_ptr(&addr_ptr,&val);
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCTEON_WRITE_CSR32
-parameter_list|(
-name|addr
-parameter_list|,
-name|val
-parameter_list|,
-name|val_dummy
-parameter_list|)
-define|\
-value|addr_ptr = addr; \ 	oct_write_32_ptr(&addr_ptr,&val); \ 	oct_read64(OCTEON_MIO_BOOT_BIST_STAT);
-end_define
 
 begin_comment
 comment|/*  * Octeon Address Space Definitions  */
@@ -1845,11 +1088,19 @@ begin_comment
 comment|/*  PTR_SIZE == sizeof(uint32_t)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISA_MIPS32
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2849,86 +2100,6 @@ name|void
 name|octeon_reset
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_uart_write_byte
-parameter_list|(
-name|int
-name|uart_index
-parameter_list|,
-name|uint8_t
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_uart_write_string
-parameter_list|(
-name|int
-name|uart_index
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_uart_write_hex
-parameter_list|(
-name|uint32_t
-name|wl
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_uart_write_hex2
-parameter_list|(
-name|uint32_t
-name|wl
-parameter_list|,
-name|uint32_t
-name|wh
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_wait_uart_flush
-parameter_list|(
-name|int
-name|uart_index
-parameter_list|,
-name|uint8_t
-name|ch
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|octeon_uart_write_byte0
-parameter_list|(
-name|uint8_t
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

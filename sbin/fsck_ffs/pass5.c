@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libufs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"fsck.h"
 end_include
 

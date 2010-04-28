@@ -4081,33 +4081,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|zyd_node
-block|{
-name|struct
-name|ieee80211_node
-name|ni
-decl_stmt|;
-comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|amn
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ZYD_NODE
-parameter_list|(
-name|ni
-parameter_list|)
-value|((struct zyd_node *)(ni))
-end_define
-
-begin_struct
-struct|struct
 name|zyd_rx_radiotap_header
 block|{
 name|struct
@@ -4328,10 +4301,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|struct
-name|ieee80211_amrr
-name|amrr
-decl_stmt|;
 block|}
 struct|;
 end_struct

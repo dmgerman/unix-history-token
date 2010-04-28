@@ -612,7 +612,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Thread %p could not acquire Mutex [%X]"
+literal|"Thread %p could not acquire Mutex [0x%X]"
 operator|,
 name|ACPI_CAST_PTR
 argument_list|(
@@ -711,7 +711,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Mutex [%X] is not acquired, cannot release"
+literal|"Mutex [0x%X] is not acquired, cannot release"
 operator|,
 name|MutexId
 operator|)

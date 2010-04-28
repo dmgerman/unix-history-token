@@ -158,7 +158,7 @@ name|Mutex
 operator|.
 name|Next
 expr_stmt|;
-comment|/*          * Migrate the previous sync level associated with this mutex to the          * previous mutex on the list so that it may be preserved. This handles          * the case where several mutexes have been acquired at the same level,          * but are not released in opposite order.          */
+comment|/*          * Migrate the previous sync level associated with this mutex to          * the previous mutex on the list so that it may be preserved.          * This handles the case where several mutexes have been acquired          * at the same level, but are not released in opposite order.          */
 operator|(
 name|ObjDesc
 operator|->
@@ -195,7 +195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExLinkMutex  *  * PARAMETERS:  ObjDesc         - The mutex to be linked  *              Thread          - Current executing thread object  *  * RETURN:      None  *  * DESCRIPTION: Add a mutex to the "AcquiredMutex" list for this walk  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExLinkMutex  *  * PARAMETERS:  ObjDesc             - The mutex to be linked  *              Thread              - Current executing thread object  *  * RETURN:      None  *  * DESCRIPTION: Add a mutex to the "AcquiredMutex" list for this walk  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -265,7 +265,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutexObject  *  * PARAMETERS:  TimeDesc            - Timeout in milliseconds  *              ObjDesc             - Mutex object  *              Thread              - Current thread state  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex, low-level interface. Provides a common  *              path that supports multiple acquires by the same thread.  *  * MUTEX:       Interpreter must be locked  *  * NOTE: This interface is called from three places:  * 1) From AcpiExAcquireMutex, via an AML Acquire() operator  * 2) From AcpiExAcquireGlobalLock when an AML Field access requires the  *    global lock  * 3) From the external interface, AcpiAcquireGlobalLock  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAcquireMutexObject  *  * PARAMETERS:  Timeout             - Timeout in milliseconds  *              ObjDesc             - Mutex object  *              ThreadId            - Current thread state  *  * RETURN:      Status  *  * DESCRIPTION: Acquire an AML mutex, low-level interface. Provides a common  *              path that supports multiple acquires by the same thread.  *  * MUTEX:       Interpreter must be locked  *  * NOTE: This interface is called from three places:  * 1) From AcpiExAcquireMutex, via an AML Acquire() operator  * 2) From AcpiExAcquireGlobalLock when an AML Field access requires the  *    global lock  * 3) From the external interface, AcpiAcquireGlobalLock  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -463,7 +463,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Must have a valid thread ID */
+comment|/* Must have a valid thread state struct */
 if|if
 condition|(
 operator|!
@@ -517,7 +517,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%d)"
+literal|"Cannot acquire Mutex [%4.4s], current SyncLevel is too large (%u)"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -792,6 +792,10 @@ decl_stmt|;
 name|UINT8
 name|PreviousSyncLevel
 decl_stmt|;
+name|ACPI_THREAD_STATE
+modifier|*
+name|OwnerThread
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|ExReleaseMutex
@@ -809,14 +813,18 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The mutex must have been previously acquired in order to release it */
-if|if
-condition|(
-operator|!
+name|OwnerThread
+operator|=
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
+name|OwnerThread
+expr_stmt|;
+comment|/* The mutex must have been previously acquired in order to release it */
+if|if
+condition|(
+operator|!
 name|OwnerThread
 condition|)
 block|{
@@ -881,10 +889,6 @@ comment|/*      * The Mutex is owned, but this thread must be the owner.      * 
 if|if
 condition|(
 operator|(
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
 name|OwnerThread
 operator|->
 name|ThreadId
@@ -934,10 +938,6 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|void
 argument_list|,
-name|ObjDesc
-operator|->
-name|Mutex
-operator|.
 name|OwnerThread
 operator|->
 name|ThreadId
@@ -960,9 +960,7 @@ name|Mutex
 operator|.
 name|SyncLevel
 operator|!=
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|CurrentSyncLevel
 condition|)
@@ -972,7 +970,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %d current %d"
+literal|"Cannot release Mutex [%4.4s], SyncLevel mismatch: mutex %u current %u"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1006,9 +1004,7 @@ block|}
 comment|/*      * Get the previous SyncLevel from the head of the acquired mutex list.      * This handles the case where several mutexes at the same level have been      * acquired, but are not released in reverse order.      */
 name|PreviousSyncLevel
 operator|=
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|AcquiredMutexList
 operator|->
@@ -1049,9 +1045,7 @@ literal|0
 condition|)
 block|{
 comment|/* Restore the previous SyncLevel */
-name|WalkState
-operator|->
-name|Thread
+name|OwnerThread
 operator|->
 name|CurrentSyncLevel
 operator|=
@@ -1067,7 +1061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  Thread          - Current executing thread object  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes held by this thread  *  * NOTE: This function is called as the thread is exiting the interpreter.  * Mutexes are not released when an individual control method is exited, but  * only when the parent thread actually exits the interpreter. This allows one  * method to acquire a mutex, and a different method to release it, as long as  * this is performed underneath a single parent control method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReleaseAllMutexes  *  * PARAMETERS:  Thread              - Current executing thread object  *  * RETURN:      Status  *  * DESCRIPTION: Release all mutexes held by this thread  *  * NOTE: This function is called as the thread is exiting the interpreter.  * Mutexes are not released when an individual control method is exited, but  * only when the parent thread actually exits the interpreter. This allows one  * method to acquire a mutex, and a different method to release it, as long as  * this is performed underneath a single parent control method.  *  ******************************************************************************/
 end_comment
 
 begin_function

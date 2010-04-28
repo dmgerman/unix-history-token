@@ -218,6 +218,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_MAX_ADDRESS
+value|((vm_offset_t)(intptr_t)(int32_t)0xffffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MINUSER_ADDRESS
+value|((vm_offset_t)0x00000000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x80000000)
 end_define
@@ -232,40 +246,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
-value|((vm_offset_t)0x80000000)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KERNEL_ALLOC_OFFSET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KERNEL_ALLOC_OFFSET
-value|((vm_offset_t)0x00000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
 name|VM_MIN_KERNEL_ADDRESS
 value|((vm_offset_t)0xC0000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_KERNEL_WIRED_ADDR_END
-value|(VM_MIN_KERNEL_ADDRESS + VM_KERNEL_ALLOC_OFFSET)
 end_define
 
 begin_define
@@ -274,6 +256,36 @@ directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|((vm_offset_t)0xFFFFC000)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|(VM_MIN_KERNEL_ADDRESS)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KERNBASE
+value|((vm_offset_t)(intptr_t)(int32_t)0x80000000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Disable superpage reservations. (not sure if this is right  * I copied it from ARM)  */
@@ -397,13 +409,13 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space is sparsely populated.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_PHYSSEG_DENSE
+name|VM_PHYSSEG_SPARSE
 end_define
 
 begin_comment
@@ -467,83 +479,22 @@ name|VM_NFREEORDER
 value|9
 end_define
 
-begin_comment
-comment|/*  * XXXMIPS: This values need to be changed!!!  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
-name|VM_MIN_ADDRESS
-value|((vm_offset_t)0x0000000000010000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)MIPS_KSEG0_START-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_ADDRESS
-value|((vm_offset_t)0x0000000100000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)MIPS_KSEG3_START)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)MIPS_KSEG3_END)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|(VM_MIN_KERNEL_ADDRESS)
+name|SEGSHIFT
+value|22
 end_define
 
 begin_comment
-comment|/* virtual sizes (bytes) for various kernel submaps */
+comment|/* LOG2(NBSEG) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|(16*1024*1024)
-end_define
-
-begin_comment
-comment|/* XXX ??? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|NBSEG
-value|0x400000
+value|(1<< SEGSHIFT)
 end_define
 
 begin_comment
@@ -559,17 +510,6 @@ end_define
 
 begin_comment
 comment|/* byte offset into segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGSHIFT
-value|22
-end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
 end_comment
 
 begin_endif

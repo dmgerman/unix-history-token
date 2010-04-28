@@ -19,6 +19,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|hflag
+decl_stmt|,
+name|nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +140,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|procstat_sigs
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|procstat_threads
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|procstat_threads_sigs
 parameter_list|(
 name|pid_t
 name|pid

@@ -1759,13 +1759,13 @@ name|ahp
 operator|->
 name|ah_tx_chainmask
 operator|=
-name|AR5416_DEFAULT_TXCHAINMASK
+name|AR9285_DEFAULT_TXCHAINMASK
 expr_stmt|;
 name|ahp
 operator|->
 name|ah_rx_chainmask
 operator|=
-name|AR5416_DEFAULT_RXCHAINMASK
+name|AR9285_DEFAULT_RXCHAINMASK
 expr_stmt|;
 break|break;
 block|}

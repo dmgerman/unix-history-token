@@ -4389,7 +4389,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->

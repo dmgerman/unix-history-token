@@ -313,48 +313,24 @@ block|,
 literal|"overwrite me"
 block|,
 comment|/* will be disk specific label */
-literal|"FreeBSD comes with a boot selector that allows you to easily\n"
+literal|"FreeBSD comes with a boot manager that allows you to easily\n"
 literal|"select between FreeBSD and any other operating systems on your machine\n"
 literal|"at boot time.  If you have more than one drive and want to boot\n"
-literal|"from the second one, the boot selector will also make it possible\n"
+literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you do not want a boot selector, or wish to replace an existing\n"
-literal|"one, select \"standard\".  If you would prefer your Master Boot\n"
-literal|"Record to remain untouched then select \"None\".\n\n"
-literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
+literal|"If you have other operating systems installed and would like a choice when\n"
+literal|"booting, choose \"BootMgr\". If you would prefer to keep your existing\n"
+literal|"boot manager, select \"None\".\n\n"
 block|,
-literal|"Press F1 to read about drive setup"
+literal|""
 block|,
 literal|"drives"
 block|,
 block|{
 block|{
-literal|"BootMgr"
-block|,
-literal|"Install the FreeBSD Boot Manager"
-block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
-name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"Standard"
 block|,
-literal|"Install a standard MBR (no boot manager)"
+literal|"Install a standard MBR (non-interactive boot manager)"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -375,9 +351,32 @@ literal|1
 block|}
 block|,
 block|{
+literal|"BootMgr"
+block|,
+literal|"Install the FreeBSD boot manager"
+block|,
+name|dmenuRadioCheck
+block|,
+name|dmenuSetValue
+block|,
+name|NULL
+block|,
+operator|&
+name|BootMgr
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"None"
 block|,
-literal|"Leave the Master Boot Record untouched"
+literal|"Do not install a boot manager"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -419,7 +418,7 @@ block|,
 literal|0
 block|}
 block|}
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

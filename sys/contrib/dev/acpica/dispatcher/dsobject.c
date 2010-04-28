@@ -649,7 +649,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Expecting bytelist, got AML opcode %X in op %p"
+literal|"Expecting bytelist, found AML opcode 0x%X in op %p"
 operator|,
 name|ByteList
 operator|->
@@ -1305,7 +1305,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Actual Package length (0x%X) is larger than NumElements field (0x%X), truncated\n"
+literal|"Actual Package length (%u) is larger than NumElements field (%u), truncated\n"
 operator|,
 name|i
 operator|,
@@ -1328,7 +1328,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Package List length (0x%X) smaller than NumElements count (0x%X), padded with null elements\n"
+literal|"Package List length (%u) smaller than NumElements count (%u), padded with null elements\n"
 operator|,
 name|i
 operator|,
@@ -1784,7 +1784,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown constant opcode %X"
+literal|"Unknown constant opcode 0x%X"
 operator|,
 name|Opcode
 operator|)
@@ -1831,7 +1831,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Integer type %X"
+literal|"Unknown Integer type 0x%X"
 operator|,
 name|OpInfo
 operator|->
@@ -2095,7 +2095,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unimplemented reference type for AML opcode: %4.4X"
+literal|"Unimplemented reference type for AML opcode: 0x%4.4X"
 operator|,
 name|Opcode
 operator|)
@@ -2116,7 +2116,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unimplemented data type: %X"
+literal|"Unimplemented data type: 0x%X"
 operator|,
 name|ObjDesc
 operator|->

@@ -337,7 +337,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Bad predicate (not an integer) ObjDesc=%p State=%p Type=%X"
+literal|"Bad predicate (not an integer) ObjDesc=%p State=%p Type=0x%X"
 operator|,
 name|ObjDesc
 operator|,
@@ -908,7 +908,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown opcode %X"
+literal|"Unknown opcode 0x%X"
 operator|,
 name|Op
 operator|->
@@ -1864,7 +1864,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unimplemented opcode, class=%X type=%X Opcode=%X Op=%p"
+literal|"Unimplemented opcode, class=0x%X type=0x%X Opcode=-0x%X Op=%p"
 operator|,
 name|OpClass
 operator|,

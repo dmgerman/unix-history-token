@@ -84,20 +84,8 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\     %{G*} %{mips1} %{mips2} %{mips3} %{mips4} %{mips32} %{mips32r2} %{mips64} \     %{bestGnum} %{call_shared} %{no_archive} %{exact_version} \     %(fbsd_link_spec) "
+value|"\     %{EB} %{EL} %(endian_spec) \     %{G*} %{mips1} %{mips2} %{mips3} %{mips4} \     %{mips32} %{mips32r2} %{mips64} %{mips64r2} \     %{bestGnum} %{call_shared} %{no_archive} %{exact_version} \     %{mabi=32:-melf32%{EB:b}%{EL:l}tsmip_fbsd} \     %{mabi=n32:-melf32%{EB:b}%{EL:l}tsmipn32_fbsd} \     %{mabi=64:-melf64%{EB:b}%{EL:l}tsmip_fbsd} \     %{mabi=o64:-melf64%{EB:b}%{EL:l}tsmip_fbsd} \     %(fbsd_link_spec)"
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|%(endian_spec)
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Reset our STARTFILE_SPEC which was properly set in config/freebsd.h    but trashed by config/mips/elf.h.  */
@@ -117,7 +105,7 @@ value|FBSD_STARTFILE_SPEC
 end_define
 
 begin_comment
-comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/i386.  */
+comment|/* Provide an ENDFILE_SPEC appropriate for FreeBSD/mips.  */
 end_comment
 
 begin_undef
@@ -236,15 +224,15 @@ directive|define
 name|TARGET_CPU_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do								\     {								\       builtin_assert ("machine=mips");				\       builtin_assert ("cpu=mips");				\       builtin_define ("__mips__");				\ 								\       if (TARGET_64BIT)						\ 	builtin_define ("__mips64__");				\ 								\       if (TARGET_FLOAT64)					\ 	builtin_define ("__mips_fpr=64");			\       else							\ 	builtin_define ("__mips_fpr=32");			\ 								\       if (TARGET_MIPS16)					\ 	builtin_define ("__mips16");				\ 								\       if (mips_abi == ABI_N32)                                  \         {                                                       \           builtin_define ("__mips_n32");                        \           builtin_define ("_ABIN32=2");                         \           builtin_define ("_MIPS_SIM=_ABIN32");                 \           builtin_define ("_MIPS_SZLONG=32");                   \           builtin_define ("_MIPS_SZPTR=32");                    \         }                                                       \       else if (mips_abi == ABI_64)                              \         {                                                       \           builtin_define ("__mips_n64");                        \           builtin_define ("_ABI64=3");                          \           builtin_define ("_MIPS_SIM=_ABI64");                  \           builtin_define ("_MIPS_SZLONG=64");                   \           builtin_define ("_MIPS_SZPTR=64");                    \         }                                                       \       else if (mips_abi == ABI_O64)                             \         {                                                       \           builtin_define ("__mips_o64");                        \           builtin_define ("_ABIO64=4");                         \           builtin_define ("_MIPS_SIM=_ABIO64");                 \           builtin_define ("_MIPS_SZLONG=64");                   \           builtin_define ("_MIPS_SZPTR=64");                    \         }                                                       \       else if (mips_abi == ABI_EABI)                            \         {                                                       \           builtin_define ("__mips_eabi");                       \           builtin_define ("_ABIEMB=5");                         \           builtin_define ("_MIPS_SIM=_ABIEMB");                 \           if (TARGET_LONG64)                                    \             builtin_define ("_MIPS_SZLONG=64");                 \           else                                                  \             builtin_define ("_MIPS_SZLONG=32");                 \           if (TARGET_64BIT)                                     \             builtin_define ("_MIPS_SZPTR=64");                  \           else                                                  \             builtin_define ("_MIPS_SZPTR=32");                  \         }                                                       \       else                                                      \         {                                                       \           builtin_define ("__mips_o32");                        \           builtin_define ("_ABIO32=1");                         \           builtin_define ("_MIPS_SIM=_ABIO32");                 \           builtin_define ("_MIPS_SZLONG=32");                   \           builtin_define ("_MIPS_SZPTR=32");                    \         }                                                       \       if (TARGET_FLOAT64)                                       \         builtin_define ("_MIPS_FPSET=32");                      \       else                                                      \         builtin_define ("_MIPS_FPSET=16");                      \                                                                 \       builtin_define ("_MIPS_SZINT=32");                        \ 								\       MIPS_CPP_SET_PROCESSOR ("_MIPS_ARCH", mips_arch_info);	\       MIPS_CPP_SET_PROCESSOR ("_MIPS_TUNE", mips_tune_info);	\ 								\       if (ISA_MIPS1)                                            \         builtin_define ("__mips=1");                            \       else if (ISA_MIPS2)                                       \         builtin_define ("__mips=2");                            \       else if (ISA_MIPS3)					\ 	builtin_define ("__mips=3");				\       else if (ISA_MIPS4)					\ 	builtin_define ("__mips=4");				\       else if (ISA_MIPS32)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	}							\       else if (ISA_MIPS32R2)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=2");			\ 	}							\       else if (ISA_MIPS64)					\ 	{							\ 	  builtin_define ("__mips=64");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	}							\
-comment|/*      else if (ISA_MIPS64R2)					\ 	{							\ 	  builtin_define ("__mips=64");				\ 	  builtin_define ("__mips_isa_rev=2");			\ 	}							\ */
+value|do								\     {								\       builtin_assert ("machine=mips");				\       builtin_assert ("cpu=mips");				\       builtin_define ("__mips__");				\ 								\       if (TARGET_64BIT)						\ 	builtin_define ("__mips64__");				\ 								\       if (TARGET_FLOAT64)					\ 	builtin_define ("__mips_fpr=64");			\       else							\ 	builtin_define ("__mips_fpr=32");			\ 								\       if (TARGET_MIPS16)					\ 	builtin_define ("__mips16");				\ 								\       if (mips_abi == ABI_N32)                                  \         {                                                       \           builtin_define ("__mips_n32");                        \           builtin_define ("_ABIN32=2");                         \           builtin_define ("_MIPS_SIM=_ABIN32");                 \           builtin_define ("_MIPS_SZLONG=32");                   \           builtin_define ("_MIPS_SZPTR=32");                    \         }                                                       \       else if (mips_abi == ABI_64)                              \         {                                                       \           builtin_define ("__mips_n64");                        \           builtin_define ("_ABI64=3");                          \           builtin_define ("_MIPS_SIM=_ABI64");                  \           builtin_define ("_MIPS_SZLONG=64");                   \           builtin_define ("_MIPS_SZPTR=64");                    \         }                                                       \       else if (mips_abi == ABI_O64)                             \         {                                                       \           builtin_define ("__mips_o64");                        \           builtin_define ("_ABIO64=4");                         \           builtin_define ("_MIPS_SIM=_ABIO64");                 \           builtin_define ("_MIPS_SZLONG=64");                   \           builtin_define ("_MIPS_SZPTR=64");                    \         }                                                       \       else if (mips_abi == ABI_EABI)                            \         {                                                       \           builtin_define ("__mips_eabi");                       \           builtin_define ("_ABIEMB=5");                         \           builtin_define ("_MIPS_SIM=_ABIEMB");                 \           if (TARGET_LONG64)                                    \             builtin_define ("_MIPS_SZLONG=64");                 \           else                                                  \             builtin_define ("_MIPS_SZLONG=32");                 \           if (TARGET_64BIT)                                     \             builtin_define ("_MIPS_SZPTR=64");                  \           else                                                  \             builtin_define ("_MIPS_SZPTR=32");                  \         }                                                       \       else                                                      \         {                                                       \           builtin_define ("__mips_o32");                        \           builtin_define ("_ABIO32=1");                         \           builtin_define ("_MIPS_SIM=_ABIO32");                 \           builtin_define ("_MIPS_SZLONG=32");                   \           builtin_define ("_MIPS_SZPTR=32");                    \         }                                                       \       if (TARGET_FLOAT64)                                       \         builtin_define ("_MIPS_FPSET=32");                      \       else                                                      \         builtin_define ("_MIPS_FPSET=16");                      \                                                                 \       builtin_define ("_MIPS_SZINT=32");                        \ 								\       MIPS_CPP_SET_PROCESSOR ("_MIPS_ARCH", mips_arch_info);	\       MIPS_CPP_SET_PROCESSOR ("_MIPS_TUNE", mips_tune_info);	\ 								\       if (ISA_MIPS1)                                            \         {                                                       \           builtin_define ("__mips=1");                          \           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS1");         \ 	}							\       else if (ISA_MIPS2)                                       \         {                                                       \           builtin_define ("__mips=2");                          \           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS2");         \ 	}							\       else if (ISA_MIPS3)					\         {                                                       \           builtin_define ("__mips=3");                          \           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS3");         \ 	}							\       else if (ISA_MIPS4)					\         {                                                       \           builtin_define ("__mips=4");                          \           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS4");         \ 	}							\       else if (ISA_MIPS32)					\ 	{							\ 	  builtin_define ("__mips=32");				\           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");        \ 	  builtin_define ("__mips_isa_rev=1");			\ 	}							\       else if (ISA_MIPS32R2)					\ 	{							\ 	  builtin_define ("__mips=32");				\           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");        \ 	  builtin_define ("__mips_isa_rev=2");			\ 	}							\       else if (ISA_MIPS64)					\ 	{							\ 	  builtin_define ("__mips=64");				\           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS64");        \ 	  builtin_define ("__mips_isa_rev=1");			\ 	}							\
+comment|/*      else if (ISA_MIPS64R2)					\ 	{							\ 	  builtin_define ("__mips=64");				\           builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS64");        \ 	  builtin_define ("__mips_isa_rev=2");			\ 	}							\ */
 value|\       if (TARGET_HARD_FLOAT)					\ 	builtin_define ("__mips_hard_float");			\       else if (TARGET_SOFT_FLOAT)				\ 	builtin_define ("__mips_soft_float");			\ 								\       if (TARGET_SINGLE_FLOAT)					\ 	builtin_define ("__mips_single_float");			\ 								\       if (TARGET_BIG_ENDIAN)					\ 	builtin_define ("__MIPSEB__");				\       else							\ 	builtin_define ("__MIPSEL__");				\ 								\
 comment|/* No language dialect defines.  */
 value|\       if (TARGET_ABICALLS)					\ 	builtin_define ("__ABICALLS__");			\     }								\   while (0)
 end_define
 
 begin_comment
-comment|/* Default to the mips32 ISA */
+comment|/* Default ABI and ISA */
 end_comment
 
 begin_undef
@@ -253,22 +241,72 @@ directive|undef
 name|DRIVER_SELF_SPECS
 end_undef
 
+begin_if
+if|#
+directive|if
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_N32
+end_if
+
 begin_define
 define|#
 directive|define
 name|DRIVER_SELF_SPECS
 define|\
-value|"%{!march=*: -march=mips32}"
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=n32}"
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_elif
+elif|#
+directive|elif
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_64
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=64}"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|MIPS_ABI_DEFAULT
+operator|==
+name|ABI_O64
+end_elif
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips64}",   \ 	"%{!mabi=*: -mabi=o64}"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* default to o32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRIVER_SELF_SPECS
+define|\
+value|"%{!EB:%{!EL:%(endian_spec)}}", \ 	"%{!march=*: -march=mips32}",   \ 	"%{!mabi=*: -mabi=32}"
+end_define
 
 begin_endif
-unit|"%{!EB:%{!EL:%(endian_spec)}}",
 endif|#
 directive|endif
 end_endif

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: message.c,v 1.245.50.2 2009/01/18 23:47:40 tbox Exp $ */
+comment|/* $Id: message.c,v 1.245.50.3 2009/11/24 03:25:53 marka Exp $ */
 end_comment
 
 begin_comment
@@ -8001,6 +8001,18 @@ name|result
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_NOSPACE
+condition|)
+name|msg
+operator|->
+name|flags
+operator||=
+name|DNS_MESSAGEFLAG_TC
+expr_stmt|;
 if|if
 condition|(
 name|result

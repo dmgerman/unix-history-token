@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|<pkg.h>
 end_include
 
 begin_include
@@ -345,6 +345,13 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+name|pkg_wrap
+argument_list|(
+name|PKG_INSTALL_VERSION
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(

@@ -4528,7 +4528,7 @@ define|#
 directive|define
 name|IFCAPBITS
 define|\
-value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6\13LRO\14WOL_UCAST\15WOL_MCAST\16WOL_MAGIC" \ "\21VLAN_HWFILTER\23VLAN_HWTSO"
+value|"\020\1RXCSUM\2TXCSUM\3NETCONS\4VLAN_MTU\5VLAN_HWTAGGING\6JUMBO_MTU\7POLLING" \ "\10VLAN_HWCSUM\11TSO4\12TSO6\13LRO\14WOL_UCAST\15WOL_MCAST\16WOL_MAGIC" \ "\21VLAN_HWFILTER\23VLAN_HWTSO\24LINKSTATE"
 end_define
 
 begin_comment
@@ -4793,6 +4793,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|ifr
+operator|.
+name|ifr_buffer
+operator|.
+name|buffer
+operator|==
+name|descr
+condition|)
+block|{
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|descr
@@ -4807,15 +4818,19 @@ argument_list|,
 name|descr
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 elseif|else
 if|if
 condition|(
-name|errno
-operator|==
-name|ENAMETOOLONG
+name|ifr
+operator|.
+name|ifr_buffer
+operator|.
+name|length
+operator|>
+name|descrlen
 condition|)
+block|{
 name|descrlen
 operator|=
 name|ifr
@@ -4824,11 +4839,11 @@ name|ifr_buffer
 operator|.
 name|length
 expr_stmt|;
-else|else
-break|break;
+continue|continue;
+block|}
+block|}
 block|}
 else|else
-block|{
 name|warn
 argument_list|(
 literal|"unable to allocate memory for interface"
@@ -4837,8 +4852,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-empty_stmt|;
 if|if
 condition|(
 name|ioctl

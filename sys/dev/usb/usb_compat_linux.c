@@ -1713,7 +1713,7 @@ index|]
 condition|)
 block|{
 comment|/* we are ready! */
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|uhe
@@ -3647,6 +3647,14 @@ name|iface_index
 operator|-
 literal|1
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|p_uhe
+operator|->
+name|bsd_urb_list
+argument_list|)
+expr_stmt|;
 name|p_uhe
 operator|++
 expr_stmt|;
@@ -3975,7 +3983,7 @@ name|bcopy
 argument_list|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 argument_list|,

@@ -217,6 +217,10 @@ name|u_int64_t
 name|bd_zcopy
 decl_stmt|;
 comment|/* number of zero copy operations */
+name|u_char
+name|bd_compat32
+decl_stmt|;
+comment|/* 32-bit stream on LP64 system */
 block|}
 struct|;
 end_struct

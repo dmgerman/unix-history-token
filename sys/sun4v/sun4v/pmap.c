@@ -7826,6 +7826,31 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return whether or not the specified physical page was referenced  * in any physical maps.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|pmap_is_referenced
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+return|return
+operator|(
+name|tte_get_phys_bit
+argument_list|(
+name|m
+argument_list|,
+name|VTD_REF
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Extract the physical page address associated with the given kernel virtual  * address.  */
 end_comment
 

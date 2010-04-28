@@ -3198,7 +3198,30 @@ argument_list|,
 name|vp
 argument_list|,
 operator|(
-literal|"cahe_enter: Adding a doomed vnode"
+literal|"cache_enter: Adding a doomed vnode"
+operator|)
+argument_list|)
+expr_stmt|;
+name|VNASSERT
+argument_list|(
+name|dvp
+operator|==
+name|NULL
+operator|||
+operator|(
+name|dvp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+operator|)
+operator|==
+literal|0
+argument_list|,
+name|dvp
+argument_list|,
+operator|(
+literal|"cache_enter: Doomed vnode used as src"
 operator|)
 argument_list|)
 expr_stmt|;

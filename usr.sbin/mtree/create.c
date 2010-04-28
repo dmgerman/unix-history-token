@@ -1239,7 +1239,7 @@ name|p
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 argument_list|,
@@ -1247,7 +1247,7 @@ name|p
 operator|->
 name|fts_statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 argument_list|)

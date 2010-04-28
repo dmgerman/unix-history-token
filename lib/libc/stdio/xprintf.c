@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"local.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"printf.h"
 end_include
 
@@ -2929,6 +2935,8 @@ name|ret
 decl_stmt|;
 name|FILE
 name|fake
+init|=
+name|FAKE_FILE
 decl_stmt|;
 name|unsigned
 name|char

@@ -364,7 +364,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Owner ID [%2.2X] already exists"
+literal|"Owner ID [0x%2.2X] already exists"
 operator|,
 operator|*
 name|OwnerId
@@ -644,7 +644,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid OwnerId: %2.2X"
+literal|"Invalid OwnerId: 0x%2.2X"
 operator|,
 name|OwnerId
 operator|)
@@ -719,7 +719,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Release of non-allocated OwnerId: %2.2X"
+literal|"Release of non-allocated OwnerId: 0x%2.2X"
 operator|,
 name|OwnerId
 operator|+

@@ -1519,7 +1519,7 @@ name|sched_prio
 argument_list|(
 name|curthread
 argument_list|,
-name|PRIBIO
+name|PUSER
 argument_list|)
 expr_stmt|;
 if|if
@@ -1666,8 +1666,6 @@ name|sc
 operator|->
 name|sc_queue_mtx
 argument_list|,
-name|PRIBIO
-operator||
 name|PDROP
 argument_list|,
 literal|"geli:w"

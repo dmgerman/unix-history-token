@@ -447,7 +447,7 @@ name|st_atim
 operator|=
 name|st
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -457,7 +457,7 @@ name|st_mtim
 operator|=
 name|st
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -467,7 +467,7 @@ name|st_ctim
 operator|=
 name|st
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -591,7 +591,7 @@ name|st_atim
 operator|=
 name|st
 operator|->
-name|st_atimespec
+name|st_atim
 expr_stmt|;
 name|st4
 operator|->
@@ -599,7 +599,7 @@ name|st_mtim
 operator|=
 name|st
 operator|->
-name|st_mtimespec
+name|st_mtim
 expr_stmt|;
 name|st4
 operator|->
@@ -607,7 +607,7 @@ name|st_ctim
 operator|=
 name|st
 operator|->
-name|st_ctimespec
+name|st_ctim
 expr_stmt|;
 name|st4
 operator|->
@@ -749,7 +749,7 @@ name|st_atim
 operator|=
 name|st
 operator|->
-name|st_atimespec
+name|st_atim
 expr_stmt|;
 name|st4
 operator|->
@@ -757,7 +757,7 @@ name|st_mtim
 operator|=
 name|st
 operator|->
-name|st_mtimespec
+name|st_mtim
 expr_stmt|;
 name|st4
 operator|->
@@ -765,7 +765,7 @@ name|st_ctim
 operator|=
 name|st
 operator|->
-name|st_ctimespec
+name|st_ctim
 expr_stmt|;
 name|st4
 operator|->

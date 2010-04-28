@@ -808,6 +808,17 @@ name|rev
 operator|=
 literal|"A0"
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+literal|3
+condition|)
+name|rev
+operator|=
+literal|"A1"
+expr_stmt|;
 break|break;
 case|case
 name|MV_DEV_MV78100_Z0

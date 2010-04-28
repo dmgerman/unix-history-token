@@ -208,7 +208,7 @@ end_include
 
 begin_decl_stmt
 name|cyclic_clock_func_t
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|MAXCPU
 index|]
@@ -393,10 +393,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX: should thermal be an NMI? */
-end_comment
-
-begin_comment
 comment|/* Global defaults for local APIC LVT entries. */
 end_comment
 
@@ -462,7 +458,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
@@ -624,6 +620,14 @@ name|lapic_timer_hz
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|enum
+name|lapic_clock
+name|clockcoverage
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -722,53 +726,6 @@ name|lapic_resume
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * The atrtc device is compiled in only if atpic is present.  * If it is not, force lapic to take care of all the clocks.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_ATPIC
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lapic_allclocks
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.lapic_allclocks"
-argument_list|,
-operator|&
-name|lapic_allclocks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|lapic_allclocks
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1063,7 +1020,29 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX: error/thermal interrupts */
+comment|/* Local APIC error interrupt. */
+name|setidt
+argument_list|(
+name|APIC_ERROR_INT
+argument_list|,
+name|IDTVEC
+argument_list|(
+name|errorint
+argument_list|)
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
+argument_list|,
+name|GSEL
+argument_list|(
+name|GCODE_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* XXX: Thermal interrupt */
 block|}
 end_function
 
@@ -1329,7 +1308,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pcm: 0x%08x\n"
+literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pmc: 0x%08x\n"
 argument_list|,
 name|lapic
 operator|->
@@ -1575,7 +1554,29 @@ name|lapic_timer_enable_intr
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* XXX: Error and thermal LVTs */
+comment|/* Program error LVT and clear any existing errors. */
+name|lapic
+operator|->
+name|lvt_error
+operator|=
+name|lvt_mode
+argument_list|(
+name|la
+argument_list|,
+name|LVT_ERROR
+argument_list|,
+name|lapic
+operator|->
+name|lvt_error
+argument_list|)
+expr_stmt|;
+name|lapic
+operator|->
+name|esr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: Thermal LVT */
 name|intr_restore
 argument_list|(
 name|eflags
@@ -1868,7 +1869,9 @@ name|enum
 name|lapic_clock
 name|lapic_setup_clock
 parameter_list|(
-name|void
+name|enum
+name|lapic_clock
+name|srcsdes
 parameter_list|)
 block|{
 name|u_long
@@ -1877,20 +1880,22 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* lapic_setup_clock() should not be called with LAPIC_CLOCK_NONE. */
+name|MPASS
+argument_list|(
+name|srcsdes
+operator|!=
+name|LAPIC_CLOCK_NONE
+argument_list|)
+expr_stmt|;
 comment|/* Can't drive the timer without a local APIC. */
 if|if
 condition|(
 name|lapic
 operator|==
 name|NULL
-condition|)
-return|return
+operator|||
 operator|(
-name|LAPIC_CLOCK_NONE
-operator|)
-return|;
-if|if
-condition|(
 name|resource_int_value
 argument_list|(
 literal|"apic"
@@ -1908,12 +1913,19 @@ operator|&&
 name|i
 operator|==
 literal|0
+operator|)
 condition|)
+block|{
+name|clockcoverage
+operator|=
+name|LAPIC_CLOCK_NONE
+expr_stmt|;
 return|return
 operator|(
-name|LAPIC_CLOCK_NONE
+name|clockcoverage
 operator|)
 return|;
+block|}
 comment|/* Start off with a divisor of 2 (power on reset default). */
 name|lapic_timer_divisor
 operator|=
@@ -1995,9 +2007,9 @@ expr_stmt|;
 comment|/* 	 * We want to run stathz in the neighborhood of 128hz.  We would 	 * like profhz to run as often as possible, so we let it run on 	 * each clock tick.  We try to honor the requested 'hz' value as 	 * much as possible. 	 * 	 * If 'hz' is above 1500, then we just let the lapic timer 	 * (and profhz) run at hz.  If 'hz' is below 1500 but above 	 * 750, then we let the lapic timer run at 2 * 'hz'.  If 'hz' 	 * is below 750 then we let the lapic timer run at 4 * 'hz'. 	 * 	 * Please note that stathz and profhz are set only if all the 	 * clocks are handled through the local APIC. 	 */
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|srcsdes
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 if|if
@@ -2044,9 +2056,9 @@ name|lapic_timer_hz
 expr_stmt|;
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|srcsdes
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 if|if
@@ -2084,15 +2096,13 @@ expr_stmt|;
 name|lapic_timer_enable_intr
 argument_list|()
 expr_stmt|;
+name|clockcoverage
+operator|=
+name|srcsdes
+expr_stmt|;
 return|return
 operator|(
-name|lapic_allclocks
-operator|==
-literal|0
-condition|?
-name|LAPIC_CLOCK_HARDCLOCK
-else|:
-name|LAPIC_CLOCK_ALL
+name|srcsdes
 operator|)
 return|;
 block|}
@@ -3106,33 +3116,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Read the contents of the error status register.  We have to write  * to the register first before reading from it.  */
-end_comment
-
-begin_function
-name|u_int
-name|lapic_error
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|lapic
-operator|->
-name|esr
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-name|lapic
-operator|->
-name|esr
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 name|void
 name|lapic_handle_intr
@@ -3277,7 +3260,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|cpu
 index|]
@@ -3286,7 +3269,7 @@ name|NULL
 condition|)
 call|(
 modifier|*
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|cpu
 index|]
@@ -3353,9 +3336,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lapic_allclocks
-operator|!=
-literal|0
+name|clockcoverage
+operator|==
+name|LAPIC_CLOCK_ALL
 condition|)
 block|{
 comment|/* Fire statclock at stathz. */
@@ -3613,6 +3596,47 @@ operator|->
 name|lvt_timer
 operator|=
 name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lapic_handle_error
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int32_t
+name|esr
+decl_stmt|;
+comment|/* 	 * Read the contents of the error status register.  Write to 	 * the register first before reading from it to force the APIC 	 * to update its value to indicate any errors that have 	 * occurred since the previous write to the register. 	 */
+name|lapic
+operator|->
+name|esr
+operator|=
+literal|0
+expr_stmt|;
+name|esr
+operator|=
+name|lapic
+operator|->
+name|esr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU%d: local APIC error 0x%x\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+name|esr
+argument_list|)
+expr_stmt|;
+name|lapic_eoi
+argument_list|()
 expr_stmt|;
 block|}
 end_function

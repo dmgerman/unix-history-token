@@ -41,7 +41,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sorry
 index|[]
@@ -143,7 +142,6 @@ name|dlerror
 end_pragma
 
 begin_function
-specifier|const
 name|char
 modifier|*
 name|dlerror

@@ -1823,6 +1823,29 @@ argument_list|(
 name|SPR_HID0
 argument_list|)
 expr_stmt|;
+comment|/* Programe power-management mode. */
+name|hid0
+operator|&=
+operator|~
+operator|(
+name|HID0_DOZE
+operator||
+name|HID0_NAP
+operator||
+name|HID0_SLEEP
+operator|)
+expr_stmt|;
+name|hid0
+operator||=
+name|HID0_DOZE
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_HID0
+argument_list|,
+name|hid0
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d: HID0 %b\n"

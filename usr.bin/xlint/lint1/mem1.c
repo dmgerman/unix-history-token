@@ -760,7 +760,7 @@ literal|0
 decl_stmt|;
 name|s
 operator|=
-name|ALIGN
+name|LINT_ALIGN
 argument_list|(
 name|s
 argument_list|)

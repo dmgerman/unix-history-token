@@ -472,6 +472,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|proto_close
+argument_list|(
+name|res
+operator|->
+name|hr_ctrl
+argument_list|)
+expr_stmt|;
 name|res
 operator|->
 name|hr_workerpid

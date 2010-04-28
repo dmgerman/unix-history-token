@@ -2187,7 +2187,7 @@ argument_list|)
 expr_stmt|;
 name|sb
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|dev
 operator|->
@@ -2195,7 +2195,7 @@ name|si_atime
 expr_stmt|;
 name|sb
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|dev
 operator|->
@@ -2203,7 +2203,7 @@ name|si_ctime
 expr_stmt|;
 name|sb
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|dev
 operator|->
@@ -2279,6 +2279,27 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Open of /dev/ptmx or /dev/ptyXX changes the type of file 	 * from DTYPE_VNODE to DTYPE_PTS. vn_open() increases vnode 	 * use count, we need to decrement it, and possibly do other 	 * required cleanup. 	 */
+if|if
+condition|(
+name|fp
+operator|->
+name|f_vnode
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|vnops
+operator|.
+name|fo_close
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+operator|)
+return|;
 return|return
 operator|(
 literal|0

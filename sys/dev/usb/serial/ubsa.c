@@ -184,11 +184,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2004,20 +2004,13 @@ modifier|*
 name|t
 parameter_list|)
 block|{
-name|struct
-name|ubsa_softc
-modifier|*
-name|sc
-init|=
-name|ucom
-operator|->
-name|sc_parent
-decl_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"sc = %p\n"
 argument_list|,
-name|sc
+name|ucom
+operator|->
+name|sc_parent
 argument_list|)
 expr_stmt|;
 switch|switch

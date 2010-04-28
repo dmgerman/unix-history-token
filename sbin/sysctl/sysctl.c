@@ -1868,6 +1868,11 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

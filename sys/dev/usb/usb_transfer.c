@@ -241,7 +241,7 @@ name|struct
 name|usb_config
 name|usb_control_ep_cfg
 index|[
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 index|]
 init|=
 block|{
@@ -5371,8 +5371,8 @@ else|:
 literal|"write"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -8488,6 +8488,16 @@ operator|.
 name|stall_pipe
 condition|)
 block|{
+name|struct
+name|usb_device
+modifier|*
+name|udev
+decl_stmt|;
+name|struct
+name|usb_xfer_root
+modifier|*
+name|info
+decl_stmt|;
 comment|/* clear stall command */
 name|xfer
 operator|->
@@ -8496,6 +8506,19 @@ operator|.
 name|stall_pipe
 operator|=
 literal|0
+expr_stmt|;
+comment|/* get pointer to USB device */
+name|info
+operator|=
+name|xfer
+operator|->
+name|xroot
+expr_stmt|;
+name|udev
+operator|=
+name|info
+operator|->
+name|udev
 expr_stmt|;
 comment|/* 		 * Only stall BULK and INTERRUPT endpoints. 		 */
 name|type
@@ -8525,31 +8548,9 @@ name|UE_INTERRUPT
 operator|)
 condition|)
 block|{
-name|struct
-name|usb_device
-modifier|*
-name|udev
-decl_stmt|;
-name|struct
-name|usb_xfer_root
-modifier|*
-name|info
-decl_stmt|;
 name|uint8_t
 name|did_stall
 decl_stmt|;
-name|info
-operator|=
-name|xfer
-operator|->
-name|xroot
-expr_stmt|;
-name|udev
-operator|=
-name|info
-operator|->
-name|udev
-expr_stmt|;
 name|did_stall
 operator|=
 literal|1
@@ -8591,7 +8592,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|1
 index|]
@@ -8601,7 +8602,7 @@ name|info
 operator|=
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|1
 index|]
@@ -8660,6 +8661,43 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|UE_ISOCHRONOUS
+condition|)
+block|{
+comment|/*  			 * Make sure any FIFO overflow or other FIFO 			 * error conditions go away by resetting the 			 * endpoint FIFO through the clear stall 			 * method. 			 */
+if|if
+condition|(
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_DEVICE
+condition|)
+block|{
+call|(
+name|udev
+operator|->
+name|bus
+operator|->
+name|methods
+operator|->
+name|clear_stall
+call|)
+argument_list|(
+name|udev
+argument_list|,
+name|ep
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -9716,12 +9754,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	usbd_default_transfer_setup  *  * This function is used to setup the default USB control endpoint  * transfer.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	usbd_ctrl_transfer_setup  *  * This function is used to setup the default USB control endpoint  * transfer.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 name|void
-name|usbd_default_transfer_setup
+name|usbd_ctrl_transfer_setup
 parameter_list|(
 name|struct
 name|usb_device
@@ -9756,7 +9794,7 @@ name|xfer
 operator|=
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|0
 index|]
@@ -9787,7 +9825,7 @@ operator|&&
 operator|(
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|wMaxPacketSize
 index|[
@@ -9850,7 +9888,7 @@ block|}
 comment|/* 	 * Update wMaxPacketSize for the default control endpoint: 	 */
 name|udev
 operator|->
-name|default_ep_desc
+name|ctrl_ep_desc
 operator|.
 name|wMaxPacketSize
 index|[
@@ -9868,9 +9906,9 @@ name|usbd_transfer_unsetup
 argument_list|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 argument_list|,
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try to setup a new USB transfer for the 	 * default control endpoint: 	 */
@@ -9889,17 +9927,18 @@ name|iface_index
 argument_list|,
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 argument_list|,
 name|usb_control_ep_cfg
 argument_list|,
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 argument_list|,
 name|NULL
 argument_list|,
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|)
 condition|)
 block|{
@@ -10462,7 +10501,7 @@ if|if
 condition|(
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|1
 index|]
@@ -10498,7 +10537,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|1
 index|]

@@ -186,6 +186,7 @@ literal|0
 case|:
 break|break;
 default|default:
+comment|/* 		 * A fine point:  _exit(0), not exit(0), to avoid triggering 		 * atexit(3) processing 		 */
 name|_exit
 argument_list|(
 literal|0

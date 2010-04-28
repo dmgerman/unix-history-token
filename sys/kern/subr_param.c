@@ -689,7 +689,7 @@ name|sysctl_kern_vm_guest
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"Virtual machine detected? (none|generic|xen)"
+literal|"Virtual machine guest detected? (none|generic|xen)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -4790,6 +4790,8 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|priv_key
@@ -4800,7 +4802,12 @@ name|p
 operator|->
 name|top
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 do|do
 if|if
 condition|(
@@ -4865,6 +4872,8 @@ operator|->
 name|p
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|pub_key
@@ -4875,7 +4884,12 @@ name|p
 operator|->
 name|top
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|pub_key

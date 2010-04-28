@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: getipnode.c,v 1.42 2007/06/18 23:47:51 tbox Exp $ */
+comment|/* $Id: getipnode.c,v 1.42.332.5 2009/09/01 23:47:05 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*! \file */
 end_comment
 
 begin_comment
-comment|/**  *    These functions perform thread safe, protocol independent  *    nodename-to-address and address-to-nodename translation as defined in  *    RFC2553.  This use a struct hostent which is defined in namedb.h:  *   * \code  * struct  hostent {  *         char    *h_name;        // official name of host  *         char    **h_aliases;    // alias list  *         int     h_addrtype;     // host address type  *         int     h_length;       // length of address  *         char    **h_addr_list;  // list of addresses from name server  * };  * #define h_addr  h_addr_list[0]  // address, for backward compatibility  * \endcode  *   *    The members of this structure are:  *   * \li   h_name:  *           The official (canonical) name of the host.  *   * \li   h_aliases:  *           A NULL-terminated array of alternate names (nicknames) for the  *           host.  *   * \li   h_addrtype:  *           The type of address being returned - usually PF_INET or  *           PF_INET6.  *   * \li   h_length:  *           The length of the address in bytes.  *   * \li   h_addr_list:  *           A NULL terminated array of network addresses for the host. Host  *           addresses are returned in network byte order.  *   *    lwres_getipnodebyname() looks up addresses of protocol family af for  *    the hostname name. The flags parameter contains ORed flag bits to  *    specify the types of addresses that are searched for, and the types of  *    addresses that are returned. The flag bits are:  *   * \li   #AI_V4MAPPED:  *           This is used with an af of #AF_INET6, and causes IPv4 addresses  *           to be returned as IPv4-mapped IPv6 addresses.  *   * \li   #AI_ALL:  *           This is used with an af of #AF_INET6, and causes all known  *           addresses (IPv6 and IPv4) to be returned. If #AI_V4MAPPED is  *           also set, the IPv4 addresses are return as mapped IPv6  *           addresses.  *   * \li   #AI_ADDRCONFIG:  *           Only return an IPv6 or IPv4 address if here is an active  *           network interface of that type. This is not currently  *           implemented in the BIND 9 lightweight resolver, and the flag is  *           ignored.  *   * \li   #AI_DEFAULT:  *           This default sets the #AI_V4MAPPED and #AI_ADDRCONFIG flag bits.  *   *    lwres_getipnodebyaddr() performs a reverse lookup of address src which  *    is len bytes long. af denotes the protocol family, typically PF_INET  *    or PF_INET6.  *   *    lwres_freehostent() releases all the memory associated with the struct  *    hostent pointer. Any memory allocated for the h_name, h_addr_list  *    and h_aliases is freed, as is the memory for the hostent structure  *    itself.  *   * \section getipnode_return Return Values  *   *    If an error occurs, lwres_getipnodebyname() and  *    lwres_getipnodebyaddr() set *error_num to an appropriate error code  *    and the function returns a NULL pointer. The error codes and their  *    meanings are defined in \link netdb.h<lwres/netdb.h>\endlink:  *   * \li   #HOST_NOT_FOUND:  *           No such host is known.  *   * \li   #NO_ADDRESS:  *           The server recognised the request and the name but no address  *           is available. Another type of request to the name server for  *           the domain might return an answer.  *   * \li   #TRY_AGAIN:  *           A temporary and possibly transient error occurred, such as a  *           failure of a server to respond. The request may succeed if  *           retried.  *   * \li   #NO_RECOVERY:  *           An unexpected failure occurred, and retrying the request is  *           pointless.  *   *    lwres_hstrerror() translates these error codes to suitable error  *    messages.  *   * \section getipnode_see See Also  *   * getaddrinfo.c, gethost.c, getnameinfo.c, herror.c, RFC2553    */
+comment|/**  *    These functions perform thread safe, protocol independent  *    nodename-to-address and address-to-nodename translation as defined in  *    RFC2553.  This use a struct hostent which is defined in namedb.h:  *  * \code  * struct  hostent {  *         char    *h_name;        // official name of host  *         char    **h_aliases;    // alias list  *         int     h_addrtype;     // host address type  *         int     h_length;       // length of address  *         char    **h_addr_list;  // list of addresses from name server  * };  * #define h_addr  h_addr_list[0]  // address, for backward compatibility  * \endcode  *  *    The members of this structure are:  *  * \li   h_name:  *           The official (canonical) name of the host.  *  * \li   h_aliases:  *           A NULL-terminated array of alternate names (nicknames) for the  *           host.  *  * \li   h_addrtype:  *           The type of address being returned - usually PF_INET or  *           PF_INET6.  *  * \li   h_length:  *           The length of the address in bytes.  *  * \li   h_addr_list:  *           A NULL terminated array of network addresses for the host. Host  *           addresses are returned in network byte order.  *  *    lwres_getipnodebyname() looks up addresses of protocol family af for  *    the hostname name. The flags parameter contains ORed flag bits to  *    specify the types of addresses that are searched for, and the types of  *    addresses that are returned. The flag bits are:  *  * \li   #AI_V4MAPPED:  *           This is used with an af of #AF_INET6, and causes IPv4 addresses  *           to be returned as IPv4-mapped IPv6 addresses.  *  * \li   #AI_ALL:  *           This is used with an af of #AF_INET6, and causes all known  *           addresses (IPv6 and IPv4) to be returned. If #AI_V4MAPPED is  *           also set, the IPv4 addresses are return as mapped IPv6  *           addresses.  *  * \li   #AI_ADDRCONFIG:  *           Only return an IPv6 or IPv4 address if here is an active  *           network interface of that type. This is not currently  *           implemented in the BIND 9 lightweight resolver, and the flag is  *           ignored.  *  * \li   #AI_DEFAULT:  *           This default sets the #AI_V4MAPPED and #AI_ADDRCONFIG flag bits.  *  *    lwres_getipnodebyaddr() performs a reverse lookup of address src which  *    is len bytes long. af denotes the protocol family, typically PF_INET  *    or PF_INET6.  *  *    lwres_freehostent() releases all the memory associated with the struct  *    hostent pointer. Any memory allocated for the h_name, h_addr_list  *    and h_aliases is freed, as is the memory for the hostent structure  *    itself.  *  * \section getipnode_return Return Values  *  *    If an error occurs, lwres_getipnodebyname() and  *    lwres_getipnodebyaddr() set *error_num to an appropriate error code  *    and the function returns a NULL pointer. The error codes and their  *    meanings are defined in \link netdb.h<lwres/netdb.h>\endlink:  *  * \li   #HOST_NOT_FOUND:  *           No such host is known.  *  * \li   #NO_ADDRESS:  *           The server recognised the request and the name but no address  *           is available. Another type of request to the name server for  *           the domain might return an answer.  *  * \li   #TRY_AGAIN:  *           A temporary and possibly transient error occurred, such as a  *           failure of a server to respond. The request may succeed if  *           retried.  *  * \li   #NO_RECOVERY:  *           An unexpected failure occurred, and retrying the request is  *           pointless.  *  *    lwres_hstrerror() translates these error codes to suitable error  *    messages.  *  * \section getipnode_see See Also  *  * getaddrinfo.c, gethost.c, getnameinfo.c, herror.c, RFC2553  */
 end_comment
 
 begin_include
@@ -182,7 +182,7 @@ name|IN6_IS_ADDR_V4COMPAT
 parameter_list|(
 name|x
 parameter_list|)
-value|(!memcmp((x)->s6_addr, in6addr_compat, 12)&& \                                  ((x)->s6_addr[12] != 0 || \                                   (x)->s6_addr[13] != 0 || \                                   (x)->s6_addr[14] != 0 || \                                    ((x)->s6_addr[15] != 0&& \                                     (x)->s6_addr[15] != 1)))
+value|(!memcmp((x)->s6_addr, in6addr_compat, 12)&& \ 				 ((x)->s6_addr[12] != 0 || \ 				  (x)->s6_addr[13] != 0 || \ 				  (x)->s6_addr[14] != 0 || \ 				   ((x)->s6_addr[15] != 0&& \ 				    (x)->s6_addr[15] != 1)))
 end_define
 
 begin_endif
@@ -406,6 +406,8 @@ literal|0
 decl_stmt|;
 name|int
 name|tmp_err
+init|=
+literal|0
 decl_stmt|;
 name|lwres_context_t
 modifier|*
@@ -930,10 +932,27 @@ block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|n
+operator|==
+name|LWRES_R_NOTFOUND
+condition|)
 name|tmp_err
 operator|=
 name|HOST_NOT_FOUND
 expr_stmt|;
+else|else
+block|{
+operator|*
+name|error_num
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 block|}
 block|}
 if|if
@@ -1628,10 +1647,22 @@ operator|&
 name|lwrctx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|LWRES_R_NOTFOUND
+condition|)
 operator|*
 name|error_num
 operator|=
 name|HOST_NOT_FOUND
+expr_stmt|;
+else|else
+operator|*
+name|error_num
+operator|=
+name|NO_RECOVERY
 expr_stmt|;
 return|return
 operator|(
@@ -2133,7 +2164,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 			 * Some OS's just return what will fit rather 			 * than set EINVAL if the buffer is too small 			 * to fit all the interfaces in.  If  			 * lifc.lifc_len is too near to the end of the 			 * buffer we will grow it just in case and 			 * retry. 			 */
+comment|/* 			 * Some OS's just return what will fit rather 			 * than set EINVAL if the buffer is too small 			 * to fit all the interfaces in.  If 			 * lifc.lifc_len is too near to the end of the 			 * buffer we will grow it just in case and 			 * retry. 			 */
 if|if
 condition|(
 name|lifc
@@ -2889,7 +2920,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 			 * Some OS's just return what will fit rather 			 * than set EINVAL if the buffer is too small 			 * to fit all the interfaces in.  If  			 * ifc.ifc_len is too near to the end of the 			 * buffer we will grow it just in case and 			 * retry. 			 */
+comment|/* 			 * Some OS's just return what will fit rather 			 * than set EINVAL if the buffer is too small 			 * to fit all the interfaces in.  If 			 * ifc.ifc_len is too near to the end of the 			 * buffer we will grow it just in case and 			 * retry. 			 */
 if|if
 condition|(
 name|ifc

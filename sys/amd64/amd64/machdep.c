@@ -2016,13 +2016,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): copyin failed\n"
+literal|"pid %d (%s): sigreturn copyin failed\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -2052,13 +2056,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): mc_flags %x\n"
+literal|"pid %d (%s): sigreturn mc_flags %x\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|ucp
 operator|->
@@ -2108,13 +2116,17 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): rflags = 0x%lx\n"
+literal|"pid %d (%s): sigreturn rflags = 0x%lx\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|rflags
 argument_list|)
@@ -2143,13 +2155,17 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): cs = 0x%x\n"
+literal|"pid %d (%s): sigreturn cs = 0x%x\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
@@ -2223,13 +2239,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn (pid %d): set_fpcontext\n"
+literal|"pid %d (%s): sigreturn set_fpcontext err %d\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 return|return
@@ -3702,28 +3724,19 @@ begin_function
 name|void
 name|exec_setregs
 parameter_list|(
-name|td
-parameter_list|,
-name|entry
-parameter_list|,
-name|stack
-parameter_list|,
-name|ps_strings
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-name|u_long
-name|entry
-decl_stmt|;
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
+parameter_list|,
 name|u_long
 name|stack
-decl_stmt|;
-name|u_long
-name|ps_strings
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|trapframe
@@ -3827,7 +3840,9 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 expr_stmt|;
 name|regs
 operator|->

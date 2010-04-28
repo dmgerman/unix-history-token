@@ -550,7 +550,7 @@ name|NFSMGET
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -560,7 +560,7 @@ name|NFSMGETHDR
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
 end_define
 
 begin_define
@@ -584,7 +584,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -2082,6 +2082,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NFSSTATEMUTEXPTR
+value|(&nfs_state_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFSREQSPINLOCK
 value|extern struct mtx nfs_req_mutex
 end_define
@@ -2847,6 +2854,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NEWNFSDROLLBACK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -2971,6 +2986,13 @@ define|#
 directive|define
 name|M_NFSDIRECTIO
 value|M_NEWNFSDIRECTIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_NFSDROLLBACK
+value|M_NEWNFSDROLLBACK
 end_define
 
 begin_define

@@ -44,15 +44,11 @@ directive|ifdef
 name|USB_DEBUG_VAR
 end_ifdef
 
-begin_if
-if|#
-directive|if
-operator|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-operator|!=
-literal|0
-operator|)
-end_if
+end_ifdef
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.93 2009/06/05 00:18:10 claudio Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.95 2010/02/27 00:58:56 nicm Exp $ */
 end_comment
 
 begin_comment
@@ -214,16 +214,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|Eflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Use IPsec ESP */
-end_comment
-
-begin_decl_stmt
-name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
@@ -281,16 +271,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Don't do name look up */
-end_comment
-
-begin_decl_stmt
-name|int
-name|oflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Once only: stop on EOF */
 end_comment
 
 begin_decl_stmt
@@ -839,7 +819,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46DdEe:hI:i:jklnO:oP:p:rSs:tT:UuV:vw:X:x:z"
+literal|"46DdEe:hI:i:jklnoO:P:p:rSs:tT:UuV:vw:X:x:z"
 argument_list|,
 name|longopts
 argument_list|,
@@ -1091,9 +1071,12 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|oflag
-operator|=
-literal|1
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"option -o is deprecated.\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1406,10 +1389,6 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|0
-case|:
 break|break;
 default|default:
 name|usage
@@ -2212,9 +2191,12 @@ literal|"tcp"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
-literal|"Connection to %s %s port [%s/%s] succeeded!\n"
+name|stderr
+argument_list|,
+literal|"Connection to %s %s port [%s/%s] "
+literal|"succeeded!\n"
 argument_list|,
 name|host
 argument_list|,
@@ -2785,17 +2767,14 @@ decl_stmt|,
 modifier|*
 name|ares
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SO_BINDANY
-comment|/* try SO_BINDANY, but don't insist */
+comment|/* try IP_BINDANY, but don't insist */
 name|setsockopt
 argument_list|(
 name|s
 argument_list|,
-name|SOL_SOCKET
+name|IPPROTO_IP
 argument_list|,
-name|SO_BINDANY
+name|IP_BINDANY
 argument_list|,
 operator|&
 name|on
@@ -2806,8 +2785,6 @@ name|on
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|memset
 argument_list|(
 operator|&
@@ -3643,18 +3620,8 @@ argument_list|)
 operator|)
 operator|<
 literal|0
-operator|||
-operator|(
-name|oflag
-operator|&&
-name|n
-operator|==
-literal|0
-operator|)
 condition|)
-block|{
 return|return;
-block|}
 elseif|else
 if|if
 condition|(
@@ -3750,18 +3717,20 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+literal|3
+condition|)
+return|return;
 name|end
 operator|=
 name|buf
 operator|+
 name|size
-expr_stmt|;
-name|obuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+operator|-
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -3784,7 +3753,7 @@ name|p
 operator|!=
 name|IAC
 condition|)
-break|break;
+continue|continue;
 name|obuf
 index|[
 literal|0
@@ -3818,6 +3787,7 @@ index|]
 operator|=
 name|DONT
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -3841,11 +3811,8 @@ index|]
 operator|=
 name|WONT
 expr_stmt|;
-if|if
-condition|(
-name|obuf
-condition|)
-block|{
+else|else
+continue|continue;
 name|p
 operator|++
 expr_stmt|;
@@ -3856,13 +3823,6 @@ index|]
 operator|=
 operator|*
 name|p
-expr_stmt|;
-name|obuf
-index|[
-literal|3
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3884,14 +3844,6 @@ argument_list|(
 literal|"Write Error!"
 argument_list|)
 expr_stmt|;
-name|obuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -4715,7 +4667,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-o		Terminate on EOF on input\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-V fib	Specify alternate routing table (FIB)\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
+literal|"\ 	\t-h		This help text\n\ 	\t-I length	TCP receive buffer length\n\ 	\t-i secs\t	Delay interval for lines sent, ports scanned\n\ 	\t-k		Keep inbound sockets open for multiple connects\n\ 	\t-l		Listen mode, for inbound connects\n\ 	\t-n		Suppress name/port resolutions\n\ 	\t--no-tcpopt	Disable TCP options\n\ 	\t-O length	TCP send buffer length\n\ 	\t-P proxyuser\tUsername for proxy authentication\n\ 	\t-p port\t	Specify local port for remote connects\n\ 	\t-r		Randomize remote ports\n\ 	\t-S		Enable the TCP MD5 signature option\n\ 	\t-s addr\t	Local source address\n\ 	\t-T ToS\t	Set IP Type of Service\n\ 	\t-t		Answer TELNET negotiation\n\ 	\t-U		Use UNIX domain socket\n\ 	\t-u		UDP mode\n\ 	\t-V fib	Specify alternate routing table (FIB)\n\ 	\t-v		Verbose\n\ 	\t-w secs\t	Timeout for connects and final net reads\n\ 	\t-X proto	Proxy protocol: \"4\", \"5\" (SOCKS) or \"connect\"\n\ 	\t-x addr[:port]\tSpecify proxy address and port\n\ 	\t-z		Zero-I/O mode [used for scanning]\n\ 	Port numbers can be individual or ranges: lo-hi [inclusive]\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4870,10 +4822,10 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|IPSEC
-literal|"usage: nc [-46DdEhklnorStUuvz] [-e policy] [-I length] [-i interval] [-O length]\n"
+literal|"usage: nc [-46DdEhklnrStUuvz] [-e policy] [-I length] [-i interval] [-O length]\n"
 else|#
 directive|else
-literal|"usage: nc [-46DdhklnorStUuvz] [-I length] [-i interval] [-O length]\n"
+literal|"usage: nc [-46DdhklnrStUuvz] [-I length] [-i interval] [-O length]\n"
 endif|#
 directive|endif
 literal|"\t  [-P proxy_username] [-p source_port] [-s source_ip_address] [-T ToS]\n"

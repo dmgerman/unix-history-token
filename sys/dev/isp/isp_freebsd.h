@@ -628,10 +628,11 @@ name|hysteresis
 range|:
 literal|8
 decl_stmt|,
-name|role
+name|def_role
 range|:
 literal|2
 decl_stmt|,
+comment|/* default role */
 name|gdt_running
 range|:
 literal|1
@@ -729,9 +730,9 @@ name|simqfrozen
 range|:
 literal|3
 decl_stmt|,
-name|role
+name|def_role
 range|:
-literal|3
+literal|2
 decl_stmt|,
 name|iid
 range|:
@@ -1499,6 +1500,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|XS_SNSASC
+parameter_list|(
+name|ccb
+parameter_list|)
+value|((ccb)->sense_data.add_sense_code)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_SNSASCQ
+parameter_list|(
+name|ccb
+parameter_list|)
+value|((ccb)->sense_data.add_sense_code_qual)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XS_TAG_P
 parameter_list|(
 name|ccb
@@ -1643,14 +1664,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|XS_SET_STATE_STAT
+name|XS_SENSE_VALID
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+name|xs
 parameter_list|)
+value|(((xs)->ccb_h.status& CAM_AUTOSNS_VALID) != 0)
 end_define
 
 begin_define
@@ -1683,7 +1701,7 @@ parameter_list|,
 name|chan
 parameter_list|)
 define|\
-value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->role : ISP_SPI_PC(isp, chan)->role)
+value|(IS_FC(isp)? ISP_FC_PC(isp, chan)->def_role : ISP_SPI_PC(isp, chan)->def_role)
 end_define
 
 begin_define
@@ -1698,7 +1716,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->role = val;	\ 	}
+value|if (IS_FC(isp)) { 				\ 		ISP_FC_PC(isp, chan)->def_role = val;	\ 	} else {					\ 		ISP_SPI_PC(isp, chan)->def_role = val;	\ 	}
 end_define
 
 begin_define
@@ -2542,6 +2560,37 @@ parameter_list|(
 function_decl|3
 operator|,
 function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|isp_xs_prt
+parameter_list|(
+name|ispsoftc_t
+modifier|*
+parameter_list|,
+name|XS_T
+modifier|*
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|4
+operator|,
+function_decl|5
 end_function_decl
 
 begin_empty_stmt

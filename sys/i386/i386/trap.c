@@ -977,7 +977,7 @@ operator|&
 name|PSL_VM
 operator|)
 condition|)
-name|printf
+name|uprintf
 argument_list|(
 literal|"pid %ld (%s): trap %d with interrupts disabled\n"
 argument_list|,
@@ -1694,7 +1694,7 @@ name|userout
 goto|;
 endif|#
 directive|endif
-name|printf
+name|uprintf
 argument_list|(
 literal|"pid %d killed due to lack of floating point\n"
 argument_list|,
@@ -1790,6 +1790,19 @@ ifdef|#
 directive|ifdef
 name|DEV_NPX
 comment|/* 			 * The kernel is apparently using npx for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
+name|printf
+argument_list|(
+literal|"npxdna in kernel mode!\n"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+name|kdb_backtrace
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|npxdna

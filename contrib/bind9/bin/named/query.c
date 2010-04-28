@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.7.12.4 2009/12/31 22:53:03 each Exp $ */
+comment|/* $Id: query.c,v 1.313.20.16 2009/12/30 08:34:29 jinmei Exp $ */
 end_comment
 
 begin_comment
@@ -9301,8 +9301,9 @@ name|dns_name_t
 modifier|*
 name|tname
 parameter_list|,
-name|dns_trust_t
-name|trust
+name|dns_rdataset_t
+modifier|*
+name|dname
 parameter_list|,
 name|dns_name_t
 modifier|*
@@ -9488,7 +9489,9 @@ name|rdatalist
 operator|->
 name|ttl
 operator|=
-literal|0
+name|dname
+operator|->
+name|ttl
 expr_stmt|;
 name|dns_name_toregion
 argument_list|(
@@ -9564,6 +9567,8 @@ name|rdataset
 operator|->
 name|trust
 operator|=
+name|dname
+operator|->
 name|trust
 expr_stmt|;
 name|query_addrrset
@@ -11681,7 +11686,8 @@ name|addnsec3
 label|:
 if|if
 condition|(
-name|dns_db_iscache
+operator|!
+name|dns_db_iszone
 argument_list|(
 name|db
 argument_list|)
@@ -14274,6 +14280,17 @@ define|\
 value|do { \ 	eresult = r; \ 	want_restart = ISC_FALSE; \ 	line = __LINE__; \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RECURSE_ERROR
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|do { \ 	if ((r) == DNS_R_DUPLICATE || (r) == DNS_R_DROP) \ 		QUERY_ERROR(r); \ 	else \ 		QUERY_ERROR(DNS_R_SERVFAIL); \ } while (0)
+end_define
+
 begin_comment
 comment|/*  * Extract a network address from the RDATA of an A or AAAA  * record.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOTIMPLEMENTED	The rdata is not a known address type.  */
 end_comment
@@ -15912,11 +15929,6 @@ index|]
 decl_stmt|;
 name|size_t
 name|salt_length
-init|=
-sizeof|sizeof
-argument_list|(
-name|salt
-argument_list|)
 decl_stmt|;
 name|isc_uint16_t
 name|iterations
@@ -17619,34 +17631,12 @@ name|attributes
 operator||=
 name|NS_QUERYATTR_RECURSING
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|result
-operator|==
-name|DNS_R_DUPLICATE
-operator|||
-name|result
-operator|==
-name|DNS_R_DROP
-condition|)
-block|{
-comment|/* Duplicate query. */
-name|QUERY_ERROR
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
-comment|/* Unable to recurse. */
-name|QUERY_ERROR
+name|RECURSE_ERROR
 argument_list|(
-name|DNS_R_SERVFAIL
+name|result
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|cleanup
 goto|;
@@ -18235,26 +18225,10 @@ name|attributes
 operator||=
 name|NS_QUERYATTR_RECURSING
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|result
-operator|==
-name|DNS_R_DUPLICATE
-operator|||
-name|result
-operator|==
-name|DNS_R_DROP
-condition|)
-name|QUERY_ERROR
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
 else|else
-name|QUERY_ERROR
+name|RECURSE_ERROR
 argument_list|(
-name|DNS_R_SERVFAIL
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -19819,8 +19793,6 @@ argument_list|,
 name|fname
 argument_list|,
 name|trdataset
-operator|->
-name|trust
 argument_list|,
 operator|&
 name|tname
@@ -20269,9 +20241,9 @@ operator||=
 name|NS_QUERYATTR_RECURSING
 expr_stmt|;
 else|else
-name|QUERY_ERROR
+name|RECURSE_ERROR
 argument_list|(
-name|DNS_R_SERVFAIL
+name|result
 argument_list|)
 expr_stmt|;
 block|}
@@ -21943,12 +21915,53 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * Turn on minimal response for DNSKEY queries. 	 */
+comment|/* 	 * Turn on minimal response for DNSKEY and DS queries. 	 */
 if|if
 condition|(
 name|qtype
 operator|==
 name|dns_rdatatype_dnskey
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_ds
+condition|)
+name|client
+operator|->
+name|query
+operator|.
+name|attributes
+operator||=
+operator|(
+name|NS_QUERYATTR_NOAUTHORITY
+operator||
+name|NS_QUERYATTR_NOADDITIONAL
+operator|)
+expr_stmt|;
+comment|/* 	 * Turn on minimal responses for EDNS/UDP bufsize 512 queries. 	 */
+if|if
+condition|(
+name|client
+operator|->
+name|opt
+operator|!=
+name|NULL
+operator|&&
+name|client
+operator|->
+name|udpsize
+operator|<=
+literal|512U
+operator|&&
+operator|(
+name|client
+operator|->
+name|attributes
+operator|&
+name|NS_CLIENTATTR_TCP
+operator|)
+operator|==
+literal|0
 condition|)
 name|client
 operator|->

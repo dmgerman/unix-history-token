@@ -37,22 +37,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_LOCORE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#
@@ -243,39 +232,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NBPG
-value|4096
-end_define
-
-begin_comment
-comment|/* bytes/page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PGOFSET
-value|(NBPG-1)
-end_define
-
-begin_comment
-comment|/* byte offset into page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PGSHIFT
-value|12
-end_define
-
-begin_comment
-comment|/* LOG2(NBPG) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PAGE_SHIFT
 value|12
 end_define
@@ -312,35 +268,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|NBSEG
-value|0x400000
+name|NPDEPG
+value|(PAGE_SIZE/(sizeof (pd_entry_t)))
 end_define
-
-begin_comment
-comment|/* bytes/segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGOFSET
-value|(NBSEG-1)
-end_define
-
-begin_comment
-comment|/* byte offset into segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGSHIFT
-value|22
-end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
-end_comment
 
 begin_define
 define|#
@@ -352,40 +282,6 @@ end_define
 begin_comment
 comment|/* maximum number of supported page sizes */
 end_comment
-
-begin_comment
-comment|/* XXXimp: This has moved to vmparam.h */
-end_comment
-
-begin_comment
-comment|/* Also, this differs from the mips2 definition, but likely is better */
-end_comment
-
-begin_comment
-comment|/* since this means the kernel won't chew up TLBs when it is executing */
-end_comment
-
-begin_comment
-comment|/* code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* start of kernel virtual */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BTOPKERNBASE
-value|((u_long)KERNBASE>> PGSHIFT)
-end_define
 
 begin_define
 define|#
@@ -410,14 +306,14 @@ comment|/* xxx: why is this only one? */
 end_comment
 
 begin_comment
-comment|/*  * NOTE: In FreeBSD, Uarea's don't have a fixed address.  *	 Therefore, any code imported from OpenBSD which depends on  *	 UADDR, UVPN and KERNELSTACK requires porting.  * XXX: 3 stack pages?  Not 4 which would be more efficient from a tlb  * XXX: point of view.  */
+comment|/*  * The kernel stack needs to be aligned on a (PAGE_SIZE * 2) boundary.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|KSTACK_PAGES
-value|3
+value|2
 end_define
 
 begin_comment
@@ -428,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|KSTACK_GUARD_PAGES
-value|0
+value|2
 end_define
 
 begin_comment
@@ -453,7 +349,7 @@ name|ctod
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< (PGSHIFT - DEV_BSHIFT))
+value|((x)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_define
@@ -463,7 +359,7 @@ name|dtoc
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> (PGSHIFT - DEV_BSHIFT))
+value|((x)>> (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_comment
@@ -481,61 +377,27 @@ value|((bn) / (BLKDEV_IOSIZE/DEV_BSIZE))
 end_define
 
 begin_comment
-comment|/*  * Conversion macros  */
+comment|/*  * Mach derived conversion macros  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|mips_round_page
-parameter_list|(
-name|x
-parameter_list|)
-value|((((unsigned long)(x)) + NBPG - 1)& ~(NBPG-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_trunc_page
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)& ~(NBPG-1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_btop
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)>> PGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_ptob
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)<< PGSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|round_page
-value|mips_round_page
+parameter_list|(
+name|x
+parameter_list|)
+value|(((unsigned long)(x) + PAGE_MASK)& ~PAGE_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|trunc_page
-value|mips_trunc_page
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)& ~PAGE_MASK)
 end_define
 
 begin_define
@@ -561,11 +423,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|mips_btop
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)>> PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mips_ptob
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)<< PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|pgtok
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * (PAGE_SIZE / 1024))
+value|((unsigned long)(x) * (PAGE_SIZE / 1024))
 end_define
 
 begin_ifndef

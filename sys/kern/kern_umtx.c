@@ -158,7 +158,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_include
@@ -3777,7 +3777,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_comment
@@ -15741,7 +15741,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_function

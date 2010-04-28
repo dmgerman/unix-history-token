@@ -3400,7 +3400,7 @@ name|sica
 operator|->
 name|sica_clr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 block|}

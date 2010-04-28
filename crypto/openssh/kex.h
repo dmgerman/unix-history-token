@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kex.h,v 1.47 2009/05/27 06:34:36 andreas Exp $ */
+comment|/* $OpenBSD: kex.h,v 1.49 2010/02/26 20:29:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -70,6 +70,13 @@ define|#
 directive|define
 name|KEX_DHGEX_SHA256
 value|"diffie-hellman-group-exchange-sha256"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEX_RESUME
+value|"resume@appgate.com"
 end_define
 
 begin_define
@@ -342,6 +349,9 @@ decl_stmt|;
 name|int
 name|kex_type
 decl_stmt|;
+name|int
+name|roaming
+decl_stmt|;
 name|Buffer
 name|my
 decl_stmt|;
@@ -381,7 +391,17 @@ name|Key
 modifier|*
 function_decl|(
 modifier|*
-name|load_host_key
+name|load_host_public_key
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|Key
+modifier|*
+function_decl|(
+modifier|*
+name|load_host_private_key
 function_decl|)
 parameter_list|(
 name|int

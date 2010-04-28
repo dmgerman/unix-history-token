@@ -2146,6 +2146,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DPLL_FPA01_P1_POST_DIV_MASK_IGD
+value|0x00ff8000
+end_define
+
+begin_comment
+comment|/* IGD */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|I915_FIFO_UNDERRUN_STATUS
 value|(1UL<<31)
 end_define
@@ -2600,6 +2611,13 @@ name|DPLL_FPA01_P1_POST_DIV_SHIFT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|DPLL_FPA01_P1_POST_DIV_SHIFT_IGD
+value|15
+end_define
+
 begin_comment
 comment|/* i830, required in DVO non-gang */
 end_comment
@@ -2847,6 +2865,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FP_N_IGD_DIV_MASK
+value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
 name|FP_N_DIV_SHIFT
 value|16
 end_define
@@ -2870,6 +2895,13 @@ define|#
 directive|define
 name|FP_M2_DIV_MASK
 value|0x0000003f
+end_define
+
+begin_define
+define|#
+directive|define
+name|FP_M2_IGD_DIV_MASK
+value|0x000000ff
 end_define
 
 begin_define

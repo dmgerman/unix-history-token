@@ -68,6 +68,10 @@ name|cflag
 decl_stmt|,
 name|fflag
 decl_stmt|,
+name|iflag
+decl_stmt|,
+name|jflag
+decl_stmt|,
 name|kflag
 decl_stmt|,
 name|sflag
@@ -81,6 +85,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|hflag
+decl_stmt|,
+name|nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -96,8 +102,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: procstat [-h] [-w interval] [-b | -c | -f | "
-literal|"-k | -s | -t | -v]\n"
+literal|"usage: procstat [-h] [-n] [-w interval] [-b | -c | -f | "
+literal|"-i | -j | -k | -s | -t | -v]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -158,6 +164,30 @@ condition|(
 name|fflag
 condition|)
 name|procstat_files
+argument_list|(
+name|pid
+argument_list|,
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|iflag
+condition|)
+name|procstat_sigs
+argument_list|(
+name|pid
+argument_list|,
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|jflag
+condition|)
+name|procstat_threads_sigs
 argument_list|(
 name|pid
 argument_list|,
@@ -412,7 +442,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcfkhstvw:"
+literal|"abcfijknhstvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -454,9 +484,30 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+name|iflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'j'
+case|:
+name|jflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'k'
 case|:
 name|kflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
 operator|++
 expr_stmt|;
 break|break;

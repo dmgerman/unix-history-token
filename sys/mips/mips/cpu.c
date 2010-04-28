@@ -132,7 +132,6 @@ file|<machine/hwfunc.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mips_cpuinfo
 name|cpuinfo

@@ -29,6 +29,52 @@ directive|include
 file|"spinlock.h"
 end_include
 
+begin_function_decl
+name|long
+name|_atomic_lock_stub
+parameter_list|(
+specifier|volatile
+name|long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_spinlock_stub
+parameter_list|(
+name|spinlock_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_spinunlock_stub
+parameter_list|(
+name|spinlock_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_spinlock_debug_stub
+parameter_list|(
+name|spinlock_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Declare weak definitions in case the application is not linked  * with libpthread.  */
 end_comment
@@ -85,6 +131,7 @@ specifier|volatile
 name|long
 modifier|*
 name|lck
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -106,6 +153,7 @@ parameter_list|(
 name|spinlock_t
 modifier|*
 name|lck
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -121,6 +169,7 @@ parameter_list|(
 name|spinlock_t
 modifier|*
 name|lck
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -136,13 +185,16 @@ parameter_list|(
 name|spinlock_t
 modifier|*
 name|lck
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|fname
+name|__unused
 parameter_list|,
 name|int
 name|lineno
+name|__unused
 parameter_list|)
 block|{ }
 end_function

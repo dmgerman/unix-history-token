@@ -138,6 +138,16 @@ file|<machine/cache.h>
 end_include
 
 begin_decl_stmt
+name|struct
+name|pcb
+name|stoppcbs
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 modifier|*
@@ -306,6 +316,9 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|int
+name|cpu
+decl_stmt|;
 name|cpumask_t
 name|cpumask
 decl_stmt|;
@@ -317,6 +330,20 @@ decl_stmt|;
 name|int
 name|bit
 decl_stmt|;
+name|cpu
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+name|cpumask
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+expr_stmt|;
 name|platform_ipi_clear
 argument_list|()
 expr_stmt|;
@@ -421,13 +448,19 @@ argument_list|,
 literal|"IPI_STOP or IPI_STOP_HARD"
 argument_list|)
 expr_stmt|;
-name|cpumask
-operator|=
-name|PCPU_GET
+name|savectx
 argument_list|(
-name|cpumask
+operator|&
+name|stoppcbs
+index|[
+name|cpu
+index|]
 argument_list|)
 expr_stmt|;
+name|pmap_save_tlb
+argument_list|()
+expr_stmt|;
+comment|/* Indicate we are stopped */
 name|atomic_set_int
 argument_list|(
 operator|&
@@ -436,6 +469,7 @@ argument_list|,
 name|cpumask
 argument_list|)
 expr_stmt|;
+comment|/* Wait for restart */
 while|while
 condition|(
 operator|(
@@ -523,6 +557,9 @@ name|kernel_map
 argument_list|,
 name|DPCPU_SIZE
 argument_list|)
+expr_stmt|;
+name|mips_sync
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -820,6 +857,9 @@ expr_stmt|;
 name|mips_icache_sync_all
 argument_list|()
 expr_stmt|;
+name|mips_sync
+argument_list|()
+expr_stmt|;
 name|MachSetPID
 argument_list|(
 literal|0
@@ -1006,7 +1046,7 @@ operator|/
 name|hz
 argument_list|)
 expr_stmt|;
-name|enableintr
+name|intr_enable
 argument_list|()
 expr_stmt|;
 comment|/* enter the scheduler */

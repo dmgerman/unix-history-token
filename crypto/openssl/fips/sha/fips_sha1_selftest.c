@@ -221,7 +221,7 @@ name|int
 name|FIPS_selftest_sha1
 parameter_list|()
 block|{
-name|int
+name|size_t
 name|n
 decl_stmt|;
 for|for

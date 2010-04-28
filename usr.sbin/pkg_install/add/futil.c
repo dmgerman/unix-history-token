@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|<pkg.h>
 end_include
 
 begin_include
@@ -139,12 +139,14 @@ else|else
 block|{
 if|if
 condition|(
-name|vsystem
+name|mkdir
 argument_list|(
-literal|"/bin/mkdir %s"
-argument_list|,
 name|dir
+argument_list|,
+literal|0777
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 if|if

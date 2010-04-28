@@ -959,10 +959,13 @@ name|sc
 argument_list|,
 name|MALO_DEBUG_FW
 argument_list|,
-literal|"%s: off 0x%zx val 0x%x\n"
+literal|"%s: off 0x%jx val 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|off
 argument_list|,
 name|val

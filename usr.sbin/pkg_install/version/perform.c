@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|<pkg.h>
 end_include
 
 begin_include
@@ -107,7 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This is the traditional pkg_perform, except that the argument is _not_  * a list of packages. It is the index file from the command line.  *  * We loop over the installed packages, matching them with the -s flag  * if needed and calling pkg_do(). Before hand we set up a few things,  * and after we tear them down...  */
+comment|/*  * This is the traditional pkg_perform, except that the argument is _not_ a  * list of packages. It is the index file from the command line.  *  * We loop over the installed packages, matching them with the -s flag if  * needed and calling pkg_do(). Beforehand we set up a few things, and after  * we tear them down...  *  * Returns 0 on success, non-zero on failure, corresponding to the number of  * failed attempts to access the INDEX.  */
 end_comment
 
 begin_function
@@ -146,10 +146,63 @@ decl_stmt|,
 name|err_cnt
 init|=
 literal|0
+decl_stmt|,
+name|rel_major_ver
 decl_stmt|;
 name|int
 name|MatchType
 decl_stmt|;
+name|struct
+name|utsname
+name|u
+decl_stmt|;
+if|if
+condition|(
+name|uname
+argument_list|(
+operator|&
+name|u
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s(): failed to determine uname information"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|rel_major_ver
+operator|=
+operator|(
+name|int
+operator|)
+name|strtol
+argument_list|(
+name|u
+operator|.
+name|release
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{      }
 comment|/*      * Try to find and open the INDEX. We only check IndexFile != NULL      * later, if we actually need the INDEX.      */
 if|if
 condition|(
@@ -158,6 +211,7 @@ name|indexarg
 operator|==
 name|NULL
 condition|)
+block|{
 name|snprintf
 argument_list|(
 name|IndexPath
@@ -167,13 +221,14 @@ argument_list|(
 name|IndexPath
 argument_list|)
 argument_list|,
-literal|"%s/%s"
+literal|"%s/INDEX-%d"
 argument_list|,
 name|PORTS_DIR
 argument_list|,
-name|INDEX_FNAME
+name|rel_major_ver
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|strlcpy
 argument_list|(

@@ -244,11 +244,11 @@ define|\
 value|((uhci_softc_t *)(((uint8_t *)(bus)) - \     ((uint8_t *)&(((uhci_softc_t *)0)->sc_bus))))
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1863,8 +1863,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -2691,8 +2691,8 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -2824,8 +2824,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -2862,11 +2862,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -3481,8 +3481,8 @@ name|uhci_qh
 modifier|*
 name|qh_rec
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -3559,8 +3559,8 @@ name|uhci_qh
 modifier|*
 name|qh_lst
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -4292,8 +4292,8 @@ literal|0
 index|]
 expr_stmt|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -4776,8 +4776,8 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -4962,8 +4962,8 @@ operator|->
 name|endpoint
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -5702,8 +5702,8 @@ argument_list|,
 literal|"real interrupt\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -5765,8 +5765,8 @@ operator|&
 name|UHCI_STS_RD
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|printf
 argument_list|(
@@ -5823,8 +5823,8 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -7203,8 +7203,8 @@ name|td_transfer_last
 operator|=
 name|td
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -8475,8 +8475,8 @@ name|uint32_t
 modifier|*
 name|plen
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|uint8_t
 name|once
@@ -8780,8 +8780,8 @@ operator|->
 name|max_frame_size
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -8943,8 +8943,8 @@ operator|->
 name|page_cache
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(

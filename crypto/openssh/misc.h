@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.38 2008/06/12 20:38:28 dtucker Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.41 2010/01/09 23:04:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -237,6 +237,15 @@ name|struct
 name|timeval
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sock_set_v6only
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

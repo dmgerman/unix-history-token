@@ -5434,6 +5434,11 @@ name|arg_i
 operator|=
 name|SOUND_VERSION
 expr_stmt|;
+name|PCM_GIANT_EXIT
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

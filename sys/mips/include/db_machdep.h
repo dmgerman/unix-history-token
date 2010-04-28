@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/trap.h>
 end_include
 
@@ -316,17 +310,6 @@ begin_function_decl
 name|int
 name|db_inst_type
 parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|db_dump_tlb
-parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

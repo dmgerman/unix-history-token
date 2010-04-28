@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stdint.h>
 end_include
 
@@ -901,6 +907,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
 comment|/* 		 * The following three lines of code are only here to 		 * recover from DDB: 		 */
 name|usb_proc_rewakeup
 argument_list|(
@@ -926,6 +935,8 @@ operator|->
 name|non_giant_callback_proc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
@@ -1131,6 +1142,9 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 comment|/* 	 * The following line of code is only here to recover from 	 * DDB: 	 */
 name|usb_proc_rewakeup
 argument_list|(
@@ -1141,6 +1155,8 @@ name|explore_proc
 argument_list|)
 expr_stmt|;
 comment|/* recover from DDB */
+endif|#
+directive|endif
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus

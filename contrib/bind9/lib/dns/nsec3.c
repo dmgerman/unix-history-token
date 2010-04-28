@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2006, 2008, 2009  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: nsec3.c,v 1.6.12.2 2009/06/04 02:56:14 tbox Exp $ */
+comment|/* $Id: nsec3.c,v 1.6.12.4 2009/11/03 23:47:46 tbox Exp $ */
 end_comment
 
 begin_include
@@ -375,6 +375,12 @@ decl_stmt|;
 name|isc_boolean_t
 name|found
 decl_stmt|;
+name|isc_boolean_t
+name|found_ns
+decl_stmt|;
+name|isc_boolean_t
+name|need_rrsig
+decl_stmt|;
 name|unsigned
 name|char
 modifier|*
@@ -614,6 +620,10 @@ operator|)
 return|;
 name|found
 operator|=
+name|found_ns
+operator|=
+name|need_rrsig
+operator|=
 name|ISC_FALSE
 expr_stmt|;
 for|for
@@ -691,15 +701,39 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Don't set RRSIG for insecure delegation. */
+comment|/* 			 * Work out if we need to set the RRSIG bit for 			 * this node.  We set the RRSIG bit if either of 			 * the following conditions are met: 			 * 1) We have a SOA or DS then we need to set 			 *    the RRSIG bit as both always will be signed. 			 * 2) We set the RRSIG bit if we don't have 			 *    a NS record but do have other data. 			 */
 if|if
 condition|(
 name|rdataset
 operator|.
 name|type
-operator|!=
+operator|==
+name|dns_rdatatype_soa
+operator|||
+name|rdataset
+operator|.
+name|type
+operator|==
+name|dns_rdatatype_ds
+condition|)
+name|need_rrsig
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rdataset
+operator|.
+name|type
+operator|==
 name|dns_rdatatype_ns
 condition|)
+name|found_ns
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+else|else
 name|found
 operator|=
 name|ISC_TRUE
@@ -714,7 +748,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|found
+operator|&&
+operator|!
+name|found_ns
+operator|)
+operator|||
+name|need_rrsig
 condition|)
 block|{
 if|if

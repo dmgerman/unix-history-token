@@ -39,6 +39,7 @@ name|clock
 parameter_list|)
 block|{
 return|return
+operator|(
 name|strftime
 argument_list|(
 name|s
@@ -56,6 +57,7 @@ argument_list|(
 name|clock
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

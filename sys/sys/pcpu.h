@@ -56,20 +56,8 @@ directive|include
 file|<machine/pcpu.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|pcb
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
-
 begin_comment
-comment|/*  * Define a set for pcpu data.  *   * We don't use SET_DECLARE because it defines the set as 'a' when we  * want 'aw'.  GCC considers uninitialized data in a seperate section  * writable and there is no generic zero initializer that works for  * structs and scalars.  */
+comment|/*  * Define a set for pcpu data.  *   * We don't use SET_DECLARE because it defines the set as 'a' when we  * want 'aw'.  gcc considers uninitialized data in a separate section  * writable, and there is no generic zero initializer that works for  * structs and scalars.  */
 end_comment
 
 begin_decl_stmt
@@ -90,12 +78,9 @@ end_decl_stmt
 
 begin_asm
 asm|__asm__(
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__arm__
-argument_list|)
 asm|".section set_pcpu, \"aw\", %progbits\n"
 else|#
 directive|else
@@ -125,14 +110,14 @@ begin_define
 define|#
 directive|define
 name|DPCPU_START
-value|(uintptr_t)&__start_set_pcpu
+value|((uintptr_t)&__start_set_pcpu)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPCPU_STOP
-value|(uintptr_t)&__stop_set_pcpu
+value|((uintptr_t)&__stop_set_pcpu)
 end_define
 
 begin_define
@@ -323,7 +308,7 @@ value|(*DPCPU_ID_PTR(i, n) = v)
 end_define
 
 begin_comment
-comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and  can define rm_queue in _rm_lock.h */
+comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */
 end_comment
 
 begin_struct
@@ -394,9 +379,11 @@ comment|/* Current pcb */
 name|uint64_t
 name|pc_switchtime
 decl_stmt|;
+comment|/* cpu_ticks() at last csw */
 name|int
 name|pc_switchticks
 decl_stmt|;
+comment|/* `ticks' at last csw */
 name|u_int
 name|pc_cpuid
 decl_stmt|;
@@ -429,7 +416,7 @@ index|[
 name|PCPU_NAME_LEN
 index|]
 decl_stmt|;
-comment|/* String name for KTR. */
+comment|/* String name for KTR */
 endif|#
 directive|endif
 name|struct
@@ -453,23 +440,23 @@ name|void
 modifier|*
 name|pc_netisr
 decl_stmt|;
-comment|/* netisr SWI cookie. */
-comment|/*  	 * Stuff for read mostly lock 	 *  	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
+comment|/* netisr SWI cookie */
+comment|/* 	 * Stuff for read mostly lock 	 * 	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue
 name|pc_rm_queue
 decl_stmt|;
-comment|/* 	 * Dynamic per-cpu data area. 	 */
 name|uintptr_t
 name|pc_dynamic
 decl_stmt|;
-comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu. Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g. lsof, part of gtop) define _KERNEL and include this 	 * header. While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields contants. 	 * If only to make kernel debugging easier... 	 */
+comment|/* Dynamic per-cpu data area */
+comment|/* 	 * Keep MD fields last, so that CPU-specific variations on a 	 * single architecture don't result in offset variations of 	 * the machine-independent fields of the pcpu.  Even though 	 * the pcpu structure is private to the kernel, some ports 	 * (e.g., lsof, part of gtop) define _KERNEL and include this 	 * header.  While strictly speaking this is wrong, there's no 	 * reason not to keep the offsets of the MI fields constant 	 * if only to make kernel debugging easier. 	 */
 name|PCPU_MD_FIELDS
 expr_stmt|;
 block|}
 name|__aligned
 argument_list|(
-literal|128
+name|CACHE_LINE_SIZE
 argument_list|)
 struct|;
 end_struct
@@ -495,6 +482,18 @@ specifier|extern
 name|struct
 name|cpuhead
 name|cpuhead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcpu
+modifier|*
+name|cpuid_to_pcpu
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -541,18 +540,6 @@ begin_comment
 comment|/*  * Machine dependent callouts.  cpu_pcpu_init() is responsible for  * initializing machine dependent fields of struct pcpu, and  * db_show_mdpcpu() is responsible for handling machine dependent  * fields for the DDB 'show pcpu' command.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcpu
-modifier|*
-name|cpuid_to_pcpu
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|cpu_pcpu_init
@@ -579,48 +566,6 @@ name|struct
 name|pcpu
 modifier|*
 name|pcpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcpu_destroy
-parameter_list|(
-name|struct
-name|pcpu
-modifier|*
-name|pcpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|pcpu
-modifier|*
-name|pcpu_find
-parameter_list|(
-name|u_int
-name|cpuid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcpu_init
-parameter_list|(
-name|struct
-name|pcpu
-modifier|*
-name|pcpu
-parameter_list|,
-name|int
-name|cpuid
-parameter_list|,
-name|size_t
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -674,6 +619,48 @@ name|dpcpu
 parameter_list|,
 name|int
 name|cpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcpu_destroy
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pcpu
+modifier|*
+name|pcpu_find
+parameter_list|(
+name|u_int
+name|cpuid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcpu_init
+parameter_list|(
+name|struct
+name|pcpu
+modifier|*
+name|pcpu
+parameter_list|,
+name|int
+name|cpuid
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

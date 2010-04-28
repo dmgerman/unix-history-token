@@ -600,7 +600,7 @@ name|RequestSupplementAdapterInfo
 init|=
 literal|706
 block|,
-comment|/* Supp. Info for set in UCC 						 * use only if supported  						 * (RequestAdapterInfo first) */
+comment|/* Supp. Info for set in UCC 						 * use only if supported 						 * (RequestAdapterInfo first) */
 name|LastMiscCommand
 init|=
 literal|707
@@ -969,7 +969,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*  * Adapter Init Structure: this is passed to the adapter with the   * AAC_MONKER_INITSTRUCT command to point it at our control structures.  */
+comment|/*  * Adapter Init Structure: this is passed to the adapter with the  * AAC_MONKER_INITSTRUCT command to point it at our control structures.  */
 end_comment
 
 begin_struct
@@ -1038,7 +1038,7 @@ decl_stmt|;
 comment|/* flags for supported features */
 define|#
 directive|define
-name|INITFLAGS_NEW_COMM_SUPPORTED
+name|AAC_INITFLAGS_NEW_COMM_SUPPORTED
 value|1
 name|u_int32_t
 name|MaxIoCommands
@@ -1658,7 +1658,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * options supported by this board  * there has to be a one to one mapping of these defines and the ones in   * fsaapi.h, search for FSA_SUPPORT_SNAPSHOT  */
+comment|/*  * options supported by this board  * there has to be a one to one mapping of these defines and the ones in  * fsaapi.h, search for FSA_SUPPORT_SNAPSHOT  */
 end_comment
 
 begin_define
@@ -1795,7 +1795,7 @@ value|0x80000
 end_define
 
 begin_comment
-comment|/*   * Structure used to respond to a RequestAdapterInfo fib.  */
+comment|/*  * Structure used to respond to a RequestAdapterInfo fib.  */
 end_comment
 
 begin_struct
@@ -1875,7 +1875,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Structure used to respond to a RequestSupplementAdapterInfo fib.  */
+comment|/*  * Structure used to respond to a RequestSupplementAdapterInfo fib.  */
 end_comment
 
 begin_struct
@@ -2143,7 +2143,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/*  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
+comment|/*  * Data types relating to control and monitoring of the NVRAM/WriteCache  * subsystem.  */
 end_comment
 
 begin_define
@@ -2600,7 +2600,7 @@ block|,
 comment|/* Adapter config change occurred */
 name|AifEnContainerChange
 block|,
-comment|/* Adapter specific container  					 * configuration change */
+comment|/* Adapter specific container 					 * configuration change */
 name|AifEnDeviceFailure
 block|,
 comment|/* SCSI device failed */
@@ -2895,7 +2895,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Adapter Initiated FIB command structures. Start with the adapter  * initiated FIBs that really come from the adapter, and get responded  * to by the host.   */
+comment|/*  * Adapter Initiated FIB command structures. Start with the adapter  * initiated FIBs that really come from the adapter, and get responded  * to by the host.  */
 end_comment
 
 begin_define
@@ -3205,6 +3205,10 @@ name|ST_REMOTE
 init|=
 literal|71
 block|,
+name|ST_NOT_READY
+init|=
+literal|72
+block|,
 name|ST_BADHANDLE
 init|=
 literal|10001
@@ -3248,6 +3252,10 @@ block|,
 name|ST_STALEACL
 init|=
 literal|10011
+block|,
+name|ST_BUS_RESET
+init|=
+literal|20001
 block|}
 name|AAC_FSAStatus
 typedef|;
@@ -4785,7 +4793,7 @@ comment|/* response queue not full */
 end_comment
 
 begin_comment
-comment|/*  * The adapter can request the host print a message by setting the  * DB_PRINTF flag in DOORBELL0.  The driver responds by collecting the  * message from the printf buffer, clearing the DB_PRINTF flag in   * DOORBELL0 and setting it in DOORBELL1.  * (ODBR and IDBR respectively for the i960Rx adapters)  */
+comment|/*  * The adapter can request the host print a message by setting the  * DB_PRINTF flag in DOORBELL0.  The driver responds by collecting the  * message from the printf buffer, clearing the DB_PRINTF flag in  * DOORBELL0 and setting it in DOORBELL1.  * (ODBR and IDBR respectively for the i960Rx adapters)  */
 end_comment
 
 begin_define

@@ -1277,12 +1277,18 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
-comment|/* Zero sectorsize is a probably lack of media */
+comment|/* Zero sectorsize or mediasize is probably a lack of media. */
 if|if
 condition|(
 name|pp
 operator|->
 name|sectorsize
+operator|==
+literal|0
+operator|||
+name|pp
+operator|->
+name|mediasize
 operator|==
 literal|0
 condition|)
@@ -1885,7 +1891,20 @@ name|bio_flags
 operator||=
 name|BIO_ONQUEUE
 expr_stmt|;
+if|if
+condition|(
+name|g_collectstats
+condition|)
 name|binuptime
+argument_list|(
+operator|&
+name|bp
+operator|->
+name|bio_t0
+argument_list|)
+expr_stmt|;
+else|else
+name|getbinuptime
 argument_list|(
 operator|&
 name|bp

@@ -416,7 +416,7 @@ specifier|static
 struct|struct
 name|opt
 block|{
-name|int
+name|uint64_t
 name|o_opt
 decl_stmt|;
 specifier|const
@@ -3084,7 +3084,7 @@ modifier|*
 name|sfp
 parameter_list|)
 block|{
-name|int
+name|uint64_t
 name|flags
 decl_stmt|;
 name|unsigned
@@ -3136,10 +3136,14 @@ operator|=
 name|optnames
 init|;
 name|flags
+operator|!=
+literal|0
 operator|&&
 name|o
 operator|->
 name|o_opt
+operator|!=
+literal|0
 condition|;
 name|o
 operator|++

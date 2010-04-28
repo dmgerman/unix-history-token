@@ -11,12 +11,10 @@ begin_struct
 struct|struct
 name|report_desc
 block|{
-name|unsigned
-name|int
+name|uint32_t
 name|size
 decl_stmt|;
-name|unsigned
-name|char
+name|uint8_t
 name|data
 index|[
 literal|1

@@ -624,6 +624,14 @@ name|tp
 operator|->
 name|tf_rsp
 expr_stmt|;
+name|mcp
+operator|->
+name|mc_eflags
+operator|=
+name|tp
+operator|->
+name|tf_rflags
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -642,6 +650,13 @@ operator|->
 name|mc_edx
 operator|=
 literal|0
+expr_stmt|;
+name|mcp
+operator|->
+name|mc_eflags
+operator|&=
+operator|~
+name|PSL_C
 expr_stmt|;
 block|}
 else|else
@@ -694,14 +709,6 @@ operator|=
 name|tp
 operator|->
 name|tf_cs
-expr_stmt|;
-name|mcp
-operator|->
-name|mc_eflags
-operator|=
-name|tp
-operator|->
-name|tf_rflags
 expr_stmt|;
 name|mcp
 operator|->
@@ -3242,9 +3249,19 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"freebsd4_freebsd32_sigreturn: eflags = 0x%x\n"
+literal|"pid %d (%s): freebsd4_freebsd32_sigreturn eflags = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|eflags
 argument_list|)
@@ -3273,9 +3290,19 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"freebsd4_sigreturn: cs = 0x%x\n"
+literal|"pid %d (%s): freebsd4_sigreturn cs = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
@@ -3665,9 +3692,19 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"freebsd32_sigreturn: eflags = 0x%x\n"
+literal|"pid %d (%s): freebsd32_sigreturn eflags = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|eflags
 argument_list|)
@@ -3696,9 +3733,19 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn: cs = 0x%x\n"
+literal|"pid %d (%s): sigreturn cs = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
@@ -3998,28 +4045,19 @@ begin_function
 name|void
 name|ia32_setregs
 parameter_list|(
-name|td
-parameter_list|,
-name|entry
-parameter_list|,
-name|stack
-parameter_list|,
-name|ps_strings
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-name|u_long
-name|entry
-decl_stmt|;
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
+parameter_list|,
 name|u_long
 name|stack
-decl_stmt|;
-name|u_long
-name|ps_strings
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|trapframe
@@ -4106,7 +4144,9 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 expr_stmt|;
 name|regs
 operator|->
@@ -4144,6 +4184,8 @@ name|regs
 operator|->
 name|tf_rbx
 operator|=
+name|imgp
+operator|->
 name|ps_strings
 expr_stmt|;
 name|regs

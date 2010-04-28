@@ -703,7 +703,7 @@ name|log
 argument_list|)
 condition|)
 name|len
-operator|=
+operator|+=
 name|vsnprintf
 argument_list|(
 name|log

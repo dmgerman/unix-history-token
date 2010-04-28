@@ -785,6 +785,20 @@ parameter_list|)
 value|AcpiError plist
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OBJECT
+parameter_list|(
+name|obj
+parameter_list|,
+name|l
+parameter_list|,
+name|i
+parameter_list|)
+value|AcpiExDoDebugObject(obj,l,i)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -827,6 +841,19 @@ directive|define
 name|ACPI_ERROR
 parameter_list|(
 name|plist
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEBUG_OBJECT
+parameter_list|(
+name|obj
+parameter_list|,
+name|l
+parameter_list|,
+name|i
 parameter_list|)
 end_define
 

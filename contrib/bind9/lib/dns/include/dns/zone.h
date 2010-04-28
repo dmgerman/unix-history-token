@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: zone.h,v 1.160.50.4 2009/01/29 22:40:35 jinmei Exp $ */
+comment|/* $Id: zone.h,v 1.160.50.6 2009/10/05 21:57:00 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -629,6 +629,21 @@ comment|/*%<  *	Returns the current zone class.  *  * Requires:  *\li	'zone' to 
 end_comment
 
 begin_function_decl
+name|isc_result_t
+name|dns_zone_getserial2
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|serialp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|isc_uint32_t
 name|dns_zone_getserial
 parameter_list|(
@@ -640,7 +655,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Returns the current serial number of the zone.  *  * Requires:  *\li	'zone' to be a valid zone.  */
+comment|/*%<  *	Returns the current serial number of the zone.  On success, the SOA  *	serial of the zone will be copied into '*serialp'.  *	dns_zone_getserial() cannot catch failure cases and is deprecated by  *	dns_zone_getserial2().  *  * Requires:  *\li	'zone' to be a valid zone.  *\li	'serialp' to be non NULL  *  * Returns:  *\li	#ISC_R_SUCCESS  *\li	#DNS_R_NOTLOADED	zone DB is not loaded  */
 end_comment
 
 begin_function_decl
@@ -810,8 +825,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_zone_loadandthaw
+parameter_list|(
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  *	Cause the database to be loaded from its backing store.  *	Confirm that the minimum requirements for the zone type are  *	met, otherwise DNS_R_BADZONE is returned.  *  *	dns_zone_loadnew() only loads zones that are not yet loaded.  *	dns_zone_load() also loads zones that are already loaded and  *	and whose master file has changed since the last load.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	#ISC_R_UNEXPECTED  *\li	#ISC_R_SUCCESS  *\li	DNS_R_CONTINUE	  Incremental load has been queued.  *\li	DNS_R_UPTODATE	  The zone has already been loaded based on  *			  file system timestamps.  *\li	DNS_R_BADZONE  *\li	Any result value from dns_db_load().  */
+comment|/*%<  *	Cause the database to be loaded from its backing store.  *	Confirm that the minimum requirements for the zone type are  *	met, otherwise DNS_R_BADZONE is returned.  *  *	dns_zone_loadnew() only loads zones that are not yet loaded.  *	dns_zone_load() also loads zones that are already loaded and  *	and whose master file has changed since the last load.  *	dns_zone_loadandthaw() is similar to dns_zone_load() but will  *	also re-enable DNS UPDATEs when the load completes.  *  * Require:  *\li	'zone' to be a valid zone.  *  * Returns:  *\li	#ISC_R_UNEXPECTED  *\li	#ISC_R_SUCCESS  *\li	DNS_R_CONTINUE	  Incremental load has been queued.  *\li	DNS_R_UPTODATE	  The zone has already been loaded based on  *			  file system timestamps.  *\li	DNS_R_BADZONE  *\li	Any result value from dns_db_load().  */
 end_comment
 
 begin_function_decl

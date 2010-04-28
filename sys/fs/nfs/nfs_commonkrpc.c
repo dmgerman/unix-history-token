@@ -2940,6 +2940,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+literal|0
+argument_list|,
 literal|"nfstry"
 argument_list|)
 expr_stmt|;

@@ -3106,7 +3106,7 @@ if|if
 condition|(
 name|ps
 operator|.
-name|in_decl
+name|in_or_st
 condition|)
 block|{
 operator|*

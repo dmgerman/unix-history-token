@@ -168,7 +168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX About priorities  *  *	POSIX 1003.1b requires that numerically higher priorities be of  *	higher priority.  It also permits sched_setparam to be  *	implementation defined for SCHED_OTHER.  I don't like  *	the notion of inverted priorites for normal processes when  *  you can use "setpriority" for that.  *  *	I'm rejecting sched_setparam for SCHED_OTHER with EINVAL.  */
+comment|/*  * XXX About priorities  *  *	POSIX 1003.1b requires that numerically higher priorities be of  *	higher priority.  It also permits sched_setparam to be  *	implementation defined for SCHED_OTHER.  I don't like  *	the notion of inverted priorites for normal processes when  *      you can use "setpriority" for that.  *  */
 end_comment
 
 begin_comment
@@ -193,6 +193,26 @@ parameter_list|(
 name|P
 parameter_list|)
 value|(RTP_PRIO_MAX - (P))
+end_define
+
+begin_define
+define|#
+directive|define
+name|p4prio_to_tsprio
+parameter_list|(
+name|P
+parameter_list|)
+value|((PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE) - (P))
+end_define
+
+begin_define
+define|#
+directive|define
+name|tsprio_to_p4prio
+parameter_list|(
+name|P
+parameter_list|)
+value|((PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE) - (P))
 end_define
 
 begin_comment
@@ -336,17 +356,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|policy
-operator|==
-name|SCHED_OTHER
-condition|)
-name|e
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
 name|e
 operator|=
 name|ksched_setscheduler
@@ -419,6 +428,40 @@ operator|.
 name|prio
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|PRI_MIN_TIMESHARE
+operator|<
+name|rtp
+operator|.
+name|prio
+condition|)
+comment|/* 		 	 * The interactive score has it to min realtime 			 * so we must show max (64 most likely 			 */
+name|param
+operator|->
+name|sched_priority
+operator|=
+operator|(
+name|PRI_MAX_TIMESHARE
+operator|-
+name|PRI_MIN_TIMESHARE
+operator|)
+expr_stmt|;
+else|else
+name|param
+operator|->
+name|sched_priority
+operator|=
+name|tsprio_to_p4prio
+argument_list|(
+name|rtp
+operator|.
+name|prio
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -531,6 +574,24 @@ break|break;
 case|case
 name|SCHED_OTHER
 case|:
+if|if
+condition|(
+name|param
+operator|->
+name|sched_priority
+operator|>=
+literal|0
+operator|&&
+name|param
+operator|->
+name|sched_priority
+operator|<=
+operator|(
+name|PRI_MAX_TIMESHARE
+operator|-
+name|PRI_MIN_TIMESHARE
+operator|)
+condition|)
 block|{
 name|rtp
 operator|.
@@ -558,6 +619,11 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|e
+operator|=
+name|EINVAL
+expr_stmt|;
 break|break;
 default|default:
 name|e

@@ -1485,6 +1485,17 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|zfs_prune_proplist
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|uint8_t
+modifier|*
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|ZFS_MOUNTPOINT_NONE

@@ -6257,7 +6257,7 @@ name|st_blksize
 expr_stmt|;
 name|ub
 operator|->
-name|st_atimespec
+name|st_atim
 operator|=
 name|pipe
 operator|->
@@ -6265,7 +6265,7 @@ name|pipe_atime
 expr_stmt|;
 name|ub
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|=
 name|pipe
 operator|->
@@ -6273,7 +6273,7 @@ name|pipe_mtime
 expr_stmt|;
 name|ub
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|=
 name|pipe
 operator|->

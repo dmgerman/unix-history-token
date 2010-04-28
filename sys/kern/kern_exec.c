@@ -1695,6 +1695,12 @@ literal|0
 expr_stmt|;
 name|imgp
 operator|->
+name|reloc_base
+operator|=
+literal|0
+expr_stmt|;
+name|imgp
+operator|->
 name|vmspace_destroyed
 operator|=
 literal|0
@@ -3354,8 +3360,6 @@ argument_list|(
 name|td
 argument_list|,
 name|imgp
-operator|->
-name|entry_addr
 argument_list|,
 operator|(
 name|u_long
@@ -3364,10 +3368,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|stack_base
-argument_list|,
-name|imgp
-operator|->
-name|ps_strings
 argument_list|)
 expr_stmt|;
 else|else
@@ -3376,8 +3376,6 @@ argument_list|(
 name|td
 argument_list|,
 name|imgp
-operator|->
-name|entry_addr
 argument_list|,
 operator|(
 name|u_long
@@ -3386,10 +3384,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|stack_base
-argument_list|,
-name|imgp
-operator|->
-name|ps_strings
 argument_list|)
 expr_stmt|;
 name|vfs_mark_atime
@@ -5445,7 +5439,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo
@@ -5521,7 +5515,7 @@ operator|)
 name|vectp
 argument_list|)
 expr_stmt|;
-name|suword
+name|suword32
 argument_list|(
 operator|&
 name|arginfo

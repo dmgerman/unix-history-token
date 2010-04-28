@@ -21,6 +21,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
+
 begin_comment
 comment|/*  * Interprocessor interrupts for SMP.  */
 end_comment
@@ -90,6 +96,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+name|stoppcbs
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

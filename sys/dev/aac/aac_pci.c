@@ -967,7 +967,7 @@ name|AAC_HWIF_I960RX
 block|,
 literal|0
 block|,
-literal|"Adaptec SAS RAID 4000SAS"
+literal|"Adaptec RAID 4000"
 block|}
 block|,
 block|{
@@ -2120,7 +2120,7 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-comment|/*  	 * Verify that the adapter is correctly set up in PCI space. 	 */
+comment|/* 	 * Verify that the adapter is correctly set up in PCI space. 	 */
 name|command
 operator|=
 name|pci_read_config
@@ -2397,7 +2397,7 @@ operator|->
 name|aac_bhandle0
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate the parent bus DMA tag appropriate for our PCI interface. 	 *  	 * Note that some of these controllers are 64-bit capable. 	 */
+comment|/* 	 * Allocate the parent bus DMA tag appropriate for our PCI interface. 	 * 	 * Note that some of these controllers are 64-bit capable. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -2458,7 +2458,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*  	 * Detect the hardware interface version, set up the bus interface 	 * indirection. 	 */
+comment|/* 	 * Detect the hardware interface version, set up the bus interface 	 * indirection. 	 */
 name|id
 operator|=
 name|aac_find_ident

@@ -95,6 +95,10 @@ name|int
 name|error
 decl_stmt|;
 comment|/* place to store error */
+name|ng_ID_t
+name|node_id
+decl_stmt|;
+comment|/* a hint for netstat(1) to find the node */
 block|}
 struct|;
 end_struct

@@ -1966,13 +1966,7 @@ modifier|*
 name|nr_mapping_array
 decl_stmt|;
 name|uint32_t
-name|nr_mapping_array_base_tsn
-decl_stmt|;
-name|uint32_t
 name|highest_tsn_inside_nr_map
-decl_stmt|;
-name|uint16_t
-name|nr_mapping_array_size
 decl_stmt|;
 name|uint32_t
 name|last_echo_tsn

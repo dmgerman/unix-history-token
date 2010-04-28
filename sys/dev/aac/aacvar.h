@@ -124,7 +124,7 @@ comment|/*  * Driver Parameter Definitions  */
 end_comment
 
 begin_comment
-comment|/*  * The firmware interface allows for a 16-bit s/g list length.  We limit   * ourselves to a reasonable maximum and ensure alignment.  */
+comment|/*  * The firmware interface allows for a 16-bit s/g list length.  We limit  * ourselves to a reasonable maximum and ensure alignment.  */
 end_comment
 
 begin_define
@@ -172,7 +172,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * We wait this many seconds for the adapter to come ready if it is still   * booting  */
+comment|/*  * We wait this many seconds for the adapter to come ready if it is still  * booting  */
 end_comment
 
 begin_define
@@ -1236,7 +1236,7 @@ argument|aac_command
 argument_list|)
 name|aac_free
 expr_stmt|;
-comment|/* command structures  						 * available for reuse */
+comment|/* command structures 						 * available for reuse */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2038,7 +2038,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\ 	TAILQ_INIT(&sc->aac_ ## name);					\ 	AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\ 	struct aac_command *cm;						\ 									\ 	if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 		if ((cm->cm_flags& AAC_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, "	\ 		       	       "bit = %#x\n", cm, cm->cm_flags,		\ 			       AAC_ON_ ## index);			\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);		\ 		cm->cm_flags&= ~AAC_ON_ ## index;			\ 		AACQ_REMOVE(sc, index);					\ 	}								\ 	return(cm);							\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		printf("command %p not in queue, flags = %#x, "		\ 		       "bit = %#x\n", cm, cm->cm_flags, 		\ 		       AAC_ON_ ## index);				\ 		panic("command not in queue");				\ 	}								\ 	TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(cm->cm_sc, index);					\ }									\ struct hack
+value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\ 	TAILQ_INIT(&sc->aac_ ## name);					\ 	AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\ 	struct aac_command *cm;						\ 									\ 	if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 		if ((cm->cm_flags& AAC_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, "	\ 			       "bit = %#x\n", cm, cm->cm_flags,		\ 			       AAC_ON_ ## index);			\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);		\ 		cm->cm_flags&= ~AAC_ON_ ## index;			\ 		AACQ_REMOVE(sc, index);					\ 	}								\ 	return(cm);							\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		printf("command %p not in queue, flags = %#x, "		\ 		       "bit = %#x\n", cm, cm->cm_flags, 		\ 		       AAC_ON_ ## index);				\ 		panic("command not in queue");				\ 	}								\ 	TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(cm->cm_sc, index);					\ }									\ struct hack
 end_define
 
 begin_expr_stmt

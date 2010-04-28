@@ -188,6 +188,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|Set_address
 parameter_list|(
@@ -310,12 +311,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tun_open
 parameter_list|(
 name|char
 modifier|*
-name|devname
+name|dev_name
 parameter_list|,
 name|struct
 name|sockaddr
@@ -340,7 +342,7 @@ name|tun
 operator|=
 name|open
 argument_list|(
-name|devname
+name|dev_name
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -358,7 +360,7 @@ name|LOG_ERR
 argument_list|,
 literal|"can't open %s - %m"
 argument_list|,
-name|devname
+name|dev_name
 argument_list|)
 expr_stmt|;
 return|return
@@ -404,7 +406,7 @@ name|ifrq
 operator|.
 name|ifr_name
 argument_list|,
-name|devname
+name|dev_name
 operator|+
 literal|5
 argument_list|,
@@ -417,7 +419,7 @@ name|ifra
 operator|.
 name|ifra_name
 argument_list|,
-name|devname
+name|dev_name
 operator|+
 literal|5
 argument_list|,
@@ -681,6 +683,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Finish
 parameter_list|(
@@ -912,7 +915,7 @@ name|ipoff
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|dev_name
 init|=
 name|NULL
 decl_stmt|;
@@ -1041,7 +1044,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|devname
+name|dev_name
 operator|=
 name|optarg
 expr_stmt|;
@@ -1077,7 +1080,7 @@ literal|2
 operator|)
 operator|||
 operator|(
-name|devname
+name|dev_name
 operator|==
 name|NULL
 operator|)
@@ -1183,7 +1186,7 @@ if|if
 condition|(
 name|tun_open
 argument_list|(
-name|devname
+name|dev_name
 argument_list|,
 operator|&
 name|t_laddr
@@ -1635,7 +1638,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(

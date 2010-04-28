@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sglist.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -219,6 +225,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_map.h>
 end_include
 
@@ -237,7 +249,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_phys.h>
 end_include
 
 begin_include
@@ -1173,8 +1197,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|vm_paddr_t
 name|dma_addr_t
 typedef|;
 end_typedef
@@ -1245,7 +1268,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1258,7 +1281,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1271,7 +1294,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset))
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset))
 end_define
 
 begin_define
@@ -1286,7 +1309,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int8_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
+value|*(volatile u_int8_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1301,7 +1324,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -1316,7 +1339,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((vm_offset_t)(map)->handle) +		\ 	    (vm_offset_t)(offset)) = val
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = val
 end_define
 
 begin_define
@@ -2114,31 +2137,34 @@ typedef|typedef
 struct|struct
 name|drm_sg_mem
 block|{
-name|unsigned
-name|long
-name|handle
+name|vm_offset_t
+name|vaddr
 decl_stmt|;
-name|void
-modifier|*
-name|virtual
-decl_stmt|;
-name|int
-name|pages
-decl_stmt|;
-name|dma_addr_t
+name|vm_paddr_t
 modifier|*
 name|busaddr
 decl_stmt|;
-name|struct
-name|drm_dma_handle
-modifier|*
-name|dmah
+name|vm_pindex_t
+name|pages
 decl_stmt|;
-comment|/* Handle to PCI memory  */
 block|}
 name|drm_sg_mem_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DRM_MAP_HANDLE_BITS
+value|(sizeof(void *) == 4 ? 4 : 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MAP_HANDLE_SHIFT
+value|(sizeof(void *) * 8 - DRM_MAP_HANDLE_BITS)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -2161,37 +2187,42 @@ name|unsigned
 name|long
 name|offset
 decl_stmt|;
-comment|/* Physical address (0 for SAREA)*/
+comment|/* Physical address (0 for SAREA)       */
 name|unsigned
 name|long
 name|size
 decl_stmt|;
-comment|/* Physical size (bytes)	    */
+comment|/* Physical size (bytes)                */
 name|enum
 name|drm_map_type
 name|type
 decl_stmt|;
-comment|/* Type of memory mapped		    */
+comment|/* Type of memory mapped                */
 name|enum
 name|drm_map_flags
 name|flags
 decl_stmt|;
-comment|/* Flags				    */
+comment|/* Flags                                */
 name|void
 modifier|*
 name|handle
 decl_stmt|;
-comment|/* User-space: "Handle" to pass to mmap    */
-comment|/* Kernel-space: kernel-virtual address    */
+comment|/* User-space: "Handle" to pass to mmap */
+comment|/* Kernel-space: kernel-virtual address */
 name|int
 name|mtrr
 decl_stmt|;
-comment|/* Boolean: MTRR used */
-comment|/* Private data			    */
+comment|/* Boolean: MTRR used                   */
+comment|/* Private data                         */
 name|int
 name|rid
 decl_stmt|;
-comment|/* PCI resource ID for bus_space */
+comment|/* PCI resource ID for bus_space        */
+name|void
+modifier|*
+name|virtual
+decl_stmt|;
+comment|/* Kernel-space: kernel-virtual address */
 name|struct
 name|resource
 modifier|*
@@ -2900,6 +2931,11 @@ decl_stmt|;
 comment|/* Linked list of mappable regions. Protected by dev_lock */
 name|drm_map_list_t
 name|maplist
+decl_stmt|;
+name|struct
+name|unrhdr
+modifier|*
+name|map_unrhdr
 decl_stmt|;
 name|drm_local_map_t
 modifier|*
@@ -5464,7 +5500,7 @@ parameter_list|)
 block|{
 name|map
 operator|->
-name|handle
+name|virtual
 operator|=
 name|drm_ioremap_wc
 argument_list|(
@@ -5495,7 +5531,7 @@ parameter_list|)
 block|{
 name|map
 operator|->
-name|handle
+name|virtual
 operator|=
 name|drm_ioremap
 argument_list|(
@@ -5528,7 +5564,7 @@ if|if
 condition|(
 name|map
 operator|->
-name|handle
+name|virtual
 operator|&&
 name|map
 operator|->
@@ -5578,11 +5614,15 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|map
-operator|->
 name|offset
 operator|==
-name|offset
+operator|(
+name|unsigned
+name|long
+operator|)
+name|map
+operator|->
+name|handle
 condition|)
 return|return
 name|map

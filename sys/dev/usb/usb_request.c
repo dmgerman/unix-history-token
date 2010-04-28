@@ -230,11 +230,11 @@ directive|include
 file|<sys/ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -380,13 +380,14 @@ break|break;
 default|default:
 name|cv_signal
 argument_list|(
+operator|&
 name|xfer
 operator|->
 name|xroot
 operator|->
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1046,9 +1047,10 @@ block|}
 comment|/* 	 * Grab the default sx-lock so that serialisation 	 * is achieved when multiple threads are involved: 	 */
 name|sx_xlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|hr_func
@@ -1249,7 +1251,7 @@ goto|;
 comment|/* success */
 block|}
 comment|/* 	 * Setup a new USB transfer or use the existing one, if any: 	 */
-name|usbd_default_transfer_setup
+name|usbd_ctrl_transfer_setup
 argument_list|(
 name|udev
 argument_list|)
@@ -1258,7 +1260,7 @@ name|xfer
 operator|=
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|0
 index|]
@@ -1535,8 +1537,8 @@ operator|.
 name|manual_status
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|int
 name|temp
@@ -1617,9 +1619,10 @@ condition|)
 block|{
 name|cv_wait
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|,
 name|xfer
 operator|->
@@ -1871,9 +1874,10 @@ name|done
 label|:
 name|sx_xunlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|)
 expr_stmt|;
 if|if
@@ -2097,8 +2101,8 @@ decl_stmt|;
 name|uint16_t
 name|n
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|uint16_t
 name|pr_poll_delay
@@ -2130,8 +2134,8 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* range check input parameters */
 name|pr_poll_delay
@@ -2190,8 +2194,8 @@ condition|(
 literal|1
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
 name|usb_pause_mtx
@@ -2339,8 +2343,8 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
 name|usb_pause_mtx

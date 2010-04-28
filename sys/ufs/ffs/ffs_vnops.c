@@ -865,6 +865,13 @@ name|vp
 operator|->
 name|v_bufobj
 expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator|&=
+operator|~
+name|IN_NEEDSYNC
+expr_stmt|;
 comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
 name|passes
 operator|=

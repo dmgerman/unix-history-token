@@ -266,7 +266,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if(_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
+value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -386,7 +386,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \         if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -398,7 +398,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         if(stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 1; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 0; \ 	stcb->asoc.fs_index++; \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
+value|do { \         if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 1; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 0; \ 	stcb->asoc.fs_index++; \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
 end_define
 
 begin_else

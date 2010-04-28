@@ -194,23 +194,32 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_function_decl
 name|void
-name|__gccmain
+name|__start
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
-block|{}
-end_function
-
-begin_function
-name|void
-name|__main
-parameter_list|(
-name|void
+parameter_list|,
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|ps_strings
+modifier|*
 parameter_list|)
-block|{}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The entry function. */
@@ -239,12 +248,14 @@ name|struct
 name|Struct_Obj_Entry
 modifier|*
 name|obj
+name|__unused
 parameter_list|,
 comment|/* from shared loader */
 name|struct
 name|ps_strings
 modifier|*
 name|ps_strings
+name|__unused
 parameter_list|)
 block|{
 name|int

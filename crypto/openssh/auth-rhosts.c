@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rhosts.c,v 1.43 2008/06/13 14:18:51 dtucker Exp $ */
+comment|/* $OpenBSD: auth-rhosts.c,v 1.44 2010/03/07 11:57:13 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1342,14 +1342,7 @@ modifier|*
 name|ipaddr
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|auth_debug_reset
-argument_list|()
-expr_stmt|;
-name|ret
-operator|=
+return|return
 name|auth_rhosts2_raw
 argument_list|(
 name|pw
@@ -1360,17 +1353,6 @@ name|hostname
 argument_list|,
 name|ipaddr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|use_privsep
-condition|)
-name|auth_debug_send
-argument_list|()
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_function

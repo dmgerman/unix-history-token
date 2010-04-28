@@ -385,9 +385,9 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
+name|struct
+name|image_params
+modifier|*
 parameter_list|,
 name|u_long
 parameter_list|)
@@ -619,7 +619,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct syscall_module_data name##_syscall_mod = {	\ 	evh, arg, offset, new_sysent, { 0, NULL, AUE_NULL }	\ };								\ 								\ static moduledata_t name##_mod = {				\ 	#name,							\ 	syscall_module_handler,					\&name##_syscall_mod					\ };								\ DECLARE_MODULE(name, name##_mod, SI_SUB_SYSCALLS, SI_ORDER_MIDDLE)
+value|static struct syscall_module_data name##_syscall_mod = {	\ 	evh, arg, offset, new_sysent, { 0, NULL, AUE_NULL }	\ };								\ 								\ static moduledata_t name##_mod = {				\ 	"sys/" #name,						\ 	syscall_module_handler,					\&name##_syscall_mod					\ };								\ DECLARE_MODULE(name, name##_mod, SI_SUB_SYSCALLS, SI_ORDER_MIDDLE)
 end_define
 
 begin_define
@@ -642,6 +642,49 @@ name|syscallname
 parameter_list|)
 define|\
 value|(sysent[SYS_##syscallname].sy_call != (sy_call_t *)lkmnosys&&	\ 	sysent[SYS_##syscallname].sy_call != (sy_call_t *)lkmressys)
+end_define
+
+begin_comment
+comment|/*  * Syscall registration helpers with resource allocation handling.  */
+end_comment
+
+begin_struct
+struct|struct
+name|syscall_helper_data
+block|{
+name|struct
+name|sysent
+name|new_sysent
+decl_stmt|;
+name|struct
+name|sysent
+name|old_sysent
+decl_stmt|;
+name|int
+name|syscall_no
+decl_stmt|;
+name|int
+name|registered
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_INIT_HELPER
+parameter_list|(
+name|syscallname
+parameter_list|)
+value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_INIT_LAST
+value|{					\     .syscall_no = NO_SYSCALL					\ }
 end_define
 
 begin_function_decl
@@ -696,6 +739,30 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syscall_helper_register
+parameter_list|(
+name|struct
+name|syscall_helper_data
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|syscall_helper_unregister
+parameter_list|(
+name|struct
+name|syscall_helper_data
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl

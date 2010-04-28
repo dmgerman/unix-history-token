@@ -4258,12 +4258,29 @@ name|error_depth
 operator|=
 name|n
 expr_stmt|;
+comment|/* Skip signature check for self signed certificates unless 		 * explicitly asked for. It doesn't add any security and 		 * just wastes time. 		 */
 if|if
 condition|(
 operator|!
 name|xs
 operator|->
 name|valid
+operator|&&
+operator|(
+name|xs
+operator|!=
+name|xi
+operator|||
+operator|(
+name|ctx
+operator|->
+name|param
+operator|->
+name|flags
+operator|&
+name|X509_V_FLAG_CHECK_SS_SIGNATURE
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -4325,7 +4342,6 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-comment|/* XXX  For the final trusted self-signed cert, 				 * this is a waste of time.  That check should 				 * optional so that e.g. 'openssl x509' can be 				 * used to detect invalid self-signatures, but 				 * we don't verify again and again in SSL 				 * handshakes and the like once the cert has 				 * been declared trusted. */
 block|{
 name|ctx
 operator|->

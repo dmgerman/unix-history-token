@@ -164,6 +164,7 @@ name|u_short
 name|c_flags
 decl_stmt|;
 comment|/* flags (see below) */
+name|struct
 name|CodaFid
 name|c_fid
 decl_stmt|;
@@ -687,6 +688,7 @@ name|cnode
 modifier|*
 name|make_coda_node
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid

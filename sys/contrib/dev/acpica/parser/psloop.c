@@ -314,7 +314,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Found unknown opcode %X at AML address %p offset %X, ignoring"
+literal|"Found unknown opcode 0x%X at AML address %p offset 0x%X, ignoring"
 operator|,
 name|WalkState
 operator|->

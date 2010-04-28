@@ -559,6 +559,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int
+name|tba_taken_over
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|sparc64_model
 index|[
@@ -1606,7 +1612,7 @@ name|ver
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do CPU-specific Initialization. 	 */
+comment|/* 	 * Do CPU-specific initialization. 	 */
 if|if
 condition|(
 name|cpu_impl
@@ -2025,7 +2031,7 @@ name|kernel_tlb_slots
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for Cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
+comment|/* 	 * Determine the TLB slot maxima, which are expected to be 	 * equal across all CPUs. 	 * NB: for cheetah-class CPUs, these properties only refer 	 * to the t16s. 	 */
 if|if
 condition|(
 name|OF_getprop
@@ -2080,6 +2086,7 @@ argument_list|(
 literal|"sparc64_init: cannot determine number of iTLB slots"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize and enable the caches.  Note that his may include 	 * applying workarounds. 	 */
 name|cache_init
 argument_list|(
 name|pc
@@ -2347,11 +2354,31 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */
 name|intr_init2
 argument_list|()
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pil
+argument_list|,
+literal|0
+argument_list|,
+name|PIL_TICK
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+literal|0
+argument_list|,
+name|PSTATE_KERNEL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish pmap initialization now that we're ready for mutexes. 	 */
 name|PMAP_LOCK_INIT
@@ -4398,14 +4425,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 block|{
 name|struct
@@ -4556,7 +4582,9 @@ name|tf
 operator|->
 name|tf_tnpc
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 operator|+
 literal|4
 expr_stmt|;
@@ -4564,7 +4592,9 @@ name|tf
 operator|->
 name|tf_tpc
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 expr_stmt|;
 name|tf
 operator|->

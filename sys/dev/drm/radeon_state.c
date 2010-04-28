@@ -6347,7 +6347,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 decl_stmt|;
 name|int
 name|offset
@@ -7072,7 +7072,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->
@@ -7330,7 +7330,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|elt_buf
 operator|->
@@ -8013,7 +8013,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 operator|+
 name|buf
 operator|->

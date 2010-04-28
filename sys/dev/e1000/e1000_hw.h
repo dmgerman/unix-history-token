@@ -2898,6 +2898,9 @@ name|bool
 name|adaptive_ifs
 decl_stmt|;
 name|bool
+name|has_fwsm
+decl_stmt|;
+name|bool
 name|arc_subsystem_valid
 decl_stmt|;
 name|bool

@@ -170,25 +170,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ia32/ia32_reg.h>
 end_include
 
 begin_struct
@@ -443,7 +431,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_comment
@@ -1664,7 +1652,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_function
@@ -1832,7 +1820,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_IA32 */
+comment|/* COMPAT_FREEBSD32 */
 end_comment
 
 begin_comment
@@ -1873,7 +1861,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_comment
@@ -1990,7 +1978,7 @@ name|reg
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|struct
 name|dbreg32
 name|dbreg32
@@ -2027,7 +2015,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|int
 name|wrap32
 init|=
@@ -2423,7 +2411,7 @@ end_undef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifdef
 
 begin_comment
@@ -2581,7 +2569,7 @@ name|buf
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|int
 name|wrap32
 init|=
@@ -2947,7 +2935,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 comment|/* 	 * Test if we're a 32 bit client and what the target is. 	 * Set the wrap controls accordingly. 	 */
 if|if
 condition|(
@@ -3939,7 +3927,7 @@ name|PT_IO
 case|:
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|wrap32
@@ -4069,7 +4057,7 @@ name|td
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 name|tmp
 operator|=
 name|wrap32
@@ -4155,7 +4143,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|wrap32
@@ -4558,7 +4546,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 if|if
 condition|(
 name|wrap32

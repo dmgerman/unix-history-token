@@ -22,12 +22,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IOCPARM_MASK
-value|0x1fff
+name|IOCPARM_SHIFT
+value|13
 end_define
 
 begin_comment
-comment|/* parameter length, at most 13 bits */
+comment|/* number of bits for ioctl size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_MASK
+value|((1<< IOCPARM_SHIFT) - 1)
+end_define
+
+begin_comment
+comment|/* parameter length mask */
 end_comment
 
 begin_define
@@ -64,11 +75,11 @@ begin_define
 define|#
 directive|define
 name|IOCPARM_MAX
-value|PAGE_SIZE
+value|(1<< IOCPARM_SHIFT)
 end_define
 
 begin_comment
-comment|/* max size of ioctl, mult. of PAGE_SIZE */
+comment|/* max size of ioctl */
 end_comment
 
 begin_define

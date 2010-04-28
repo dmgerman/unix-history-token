@@ -679,7 +679,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid BitRegister ID: %X"
+literal|"Invalid BitRegister ID: 0x%X"
 operator|,
 name|RegisterId
 operator|)
@@ -944,7 +944,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Register ID: %X"
+literal|"Unknown Register ID: 0x%X"
 operator|,
 name|RegisterId
 operator|)
@@ -1210,7 +1210,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Unknown Register ID: %X"
+literal|"Unknown Register ID: 0x%X"
 operator|,
 name|RegisterId
 operator|)

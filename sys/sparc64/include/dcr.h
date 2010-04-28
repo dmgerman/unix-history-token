@@ -77,14 +77,14 @@ value|(((1UL<< DCR_OBSDATA_CT_BITS) - 1)<< DCR_OBSDATA_SHIFT)
 end_define
 
 begin_comment
-comment|/* The following bits are valid for the UltraSPARC-III+/IV+ only. */
+comment|/* The following bits are valid for the UltraSPARC-III++/IV+ only. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DCR_IPE
-value|(1UL<< 5)
+value|(1UL<< 2)
 end_define
 
 begin_define
@@ -133,6 +133,34 @@ directive|define
 name|DCR_BPM_MASK
 define|\
 value|(((1UL<< DCR_BPM_BITS) - 1)<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_1HIST_GSHARE
+value|(0UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_2HIST_GSHARE
+value|(1UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_PC
+value|(2UL<< DCR_BPM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DCR_BPM_2HIST_MIXED
+value|(3UL<< DCR_BPM_SHIFT)
 end_define
 
 begin_define

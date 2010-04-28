@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.73 2008/07/02 12:03:51 dtucker Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.74 2010/03/04 10:36:03 djm Exp $ */
 end_comment
 
 begin_comment
@@ -351,6 +351,16 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|auth_key_is_revoked
+argument_list|(
+name|key
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* don't allow short keys */
 if|if
 condition|(

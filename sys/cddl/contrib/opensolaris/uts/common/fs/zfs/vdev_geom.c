@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/spa_impl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vdev_impl.h>
 end_include
 
@@ -2498,6 +2504,28 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If we're creating pool, just find GEOM provider by its name 	 * and ignore GUID mismatches. 	 */
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_spa
+operator|->
+name|spa_load_state
+operator|==
+name|SPA_LOAD_NONE
+condition|)
+name|cp
+operator|=
+name|vdev_geom_open_by_path
+argument_list|(
+name|vd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|cp
 operator|=
 name|vdev_geom_open_by_path
@@ -2514,7 +2542,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * The device at vd->vdev_path doesn't have the expected guid. 		 * The disks might have merely moved around so try all other 		 * geom providers to find one with the right guid. 		 */
+comment|/* 			 * The device at vd->vdev_path doesn't have the 			 * expected guid. The disks might have merely 			 * moved around so try all other GEOM providers 			 * to find one with the right guid. 			 */
 name|cp
 operator|=
 name|vdev_geom_open_by_guid
@@ -2523,21 +2551,7 @@ name|vd
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cp
-operator|==
-name|NULL
-condition|)
-name|cp
-operator|=
-name|vdev_geom_open_by_path
-argument_list|(
-name|vd
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|cp

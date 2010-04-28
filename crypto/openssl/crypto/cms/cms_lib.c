@@ -1469,6 +1469,17 @@ name|mtmp
 argument_list|)
 operator|==
 name|nid
+comment|/* Workaround for broken implementations that use signature 		 * algorithm  OID instead of digest. 		 */
+operator|||
+name|EVP_MD_pkey_type
+argument_list|(
+name|EVP_MD_CTX_md
+argument_list|(
+name|mtmp
+argument_list|)
+argument_list|)
+operator|==
+name|nid
 condition|)
 block|{
 name|EVP_MD_CTX_copy_ex

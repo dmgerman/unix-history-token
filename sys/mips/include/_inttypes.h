@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Klaus Klein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	From: $NetBSD: int_fmtio.h,v 1.2 2001/04/26 16:25:21 kleink Exp $  *	from: src/sys/i386/include/_inttypes.h,v 1.2 2002/06/30 05:48:02 mike  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Klaus Klein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	From: $NetBSD: int_fmtio.h,v 1.2 2001/04/26 16:25:21 kleink Exp $  *	from: src/sys/i386/include/_inttypes.h,v 1.2 2002/06/30 05:48:02 mike  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,39 @@ end_define
 begin_comment
 comment|/*  * Macros for format specifiers.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PRI64
+value|"l"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRI64
+value|"ll"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* fprintf(3) macros for signed integers. */
@@ -60,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|PRId64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -104,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|PRIdLEAST64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -148,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|PRIdFAST64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -170,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|PRIdPTR
-value|"d"
+value|"ld"
 end_define
 
 begin_comment
@@ -214,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|PRIi64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -258,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|PRIiLEAST64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -302,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|PRIiFAST64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -324,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|PRIiPTR
-value|"i"
+value|"li"
 end_define
 
 begin_comment
@@ -372,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|PRIo64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -416,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|PRIoLEAST64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -460,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|PRIoFAST64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -482,7 +515,7 @@ begin_define
 define|#
 directive|define
 name|PRIoPTR
-value|"o"
+value|"lo"
 end_define
 
 begin_comment
@@ -526,7 +559,7 @@ begin_define
 define|#
 directive|define
 name|PRIu64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -570,7 +603,7 @@ begin_define
 define|#
 directive|define
 name|PRIuLEAST64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -614,7 +647,7 @@ begin_define
 define|#
 directive|define
 name|PRIuFAST64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -636,7 +669,7 @@ begin_define
 define|#
 directive|define
 name|PRIuPTR
-value|"u"
+value|"lu"
 end_define
 
 begin_comment
@@ -680,7 +713,7 @@ begin_define
 define|#
 directive|define
 name|PRIx64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -724,7 +757,7 @@ begin_define
 define|#
 directive|define
 name|PRIxLEAST64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -768,7 +801,7 @@ begin_define
 define|#
 directive|define
 name|PRIxFAST64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -790,7 +823,7 @@ begin_define
 define|#
 directive|define
 name|PRIxPTR
-value|"x"
+value|"lx"
 end_define
 
 begin_comment
@@ -834,7 +867,7 @@ begin_define
 define|#
 directive|define
 name|PRIX64
-value|"llX"
+value|PRI64"X"
 end_define
 
 begin_comment
@@ -878,7 +911,7 @@ begin_define
 define|#
 directive|define
 name|PRIXLEAST64
-value|"llX"
+value|PRI64"X"
 end_define
 
 begin_comment
@@ -922,7 +955,7 @@ begin_define
 define|#
 directive|define
 name|PRIXFAST64
-value|"llX"
+value|PRI64"X"
 end_define
 
 begin_comment
@@ -944,7 +977,7 @@ begin_define
 define|#
 directive|define
 name|PRIXPTR
-value|"X"
+value|"lX"
 end_define
 
 begin_comment
@@ -992,7 +1025,7 @@ begin_define
 define|#
 directive|define
 name|SCNd64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -1036,7 +1069,7 @@ begin_define
 define|#
 directive|define
 name|SCNdLEAST64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -1080,7 +1113,7 @@ begin_define
 define|#
 directive|define
 name|SCNdFAST64
-value|"lld"
+value|PRI64"d"
 end_define
 
 begin_comment
@@ -1102,7 +1135,7 @@ begin_define
 define|#
 directive|define
 name|SCNdPTR
-value|"d"
+value|"ld"
 end_define
 
 begin_comment
@@ -1146,7 +1179,7 @@ begin_define
 define|#
 directive|define
 name|SCNi64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -1190,7 +1223,7 @@ begin_define
 define|#
 directive|define
 name|SCNiLEAST64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -1234,7 +1267,7 @@ begin_define
 define|#
 directive|define
 name|SCNiFAST64
-value|"lli"
+value|PRI64"i"
 end_define
 
 begin_comment
@@ -1256,7 +1289,7 @@ begin_define
 define|#
 directive|define
 name|SCNiPTR
-value|"i"
+value|"li"
 end_define
 
 begin_comment
@@ -1304,7 +1337,7 @@ begin_define
 define|#
 directive|define
 name|SCNo64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -1348,7 +1381,7 @@ begin_define
 define|#
 directive|define
 name|SCNoLEAST64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -1392,7 +1425,7 @@ begin_define
 define|#
 directive|define
 name|SCNoFAST64
-value|"llo"
+value|PRI64"o"
 end_define
 
 begin_comment
@@ -1414,7 +1447,7 @@ begin_define
 define|#
 directive|define
 name|SCNoPTR
-value|"o"
+value|"lo"
 end_define
 
 begin_comment
@@ -1458,7 +1491,7 @@ begin_define
 define|#
 directive|define
 name|SCNu64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -1502,7 +1535,7 @@ begin_define
 define|#
 directive|define
 name|SCNuLEAST64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -1546,7 +1579,7 @@ begin_define
 define|#
 directive|define
 name|SCNuFAST64
-value|"llu"
+value|PRI64"u"
 end_define
 
 begin_comment
@@ -1568,7 +1601,7 @@ begin_define
 define|#
 directive|define
 name|SCNuPTR
-value|"u"
+value|"lu"
 end_define
 
 begin_comment
@@ -1612,7 +1645,7 @@ begin_define
 define|#
 directive|define
 name|SCNx64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -1656,7 +1689,7 @@ begin_define
 define|#
 directive|define
 name|SCNxLEAST64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -1700,7 +1733,7 @@ begin_define
 define|#
 directive|define
 name|SCNxFAST64
-value|"llx"
+value|PRI64"x"
 end_define
 
 begin_comment
@@ -1722,7 +1755,7 @@ begin_define
 define|#
 directive|define
 name|SCNxPTR
-value|"x"
+value|"lx"
 end_define
 
 begin_comment

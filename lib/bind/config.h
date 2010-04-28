@@ -506,6 +506,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_sha256' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_SHA256
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_sha512' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_SHA512
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
 end_comment
 

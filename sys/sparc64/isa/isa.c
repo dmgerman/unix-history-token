@@ -415,6 +415,7 @@ block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|name
 decl_stmt|;
 name|uint32_t
@@ -470,6 +471,13 @@ block|,
 comment|/* PNP0401 */
 block|{
 literal|"serial"
+block|,
+literal|0x0105d041
+block|}
+block|,
+comment|/* PNP0501 */
+block|{
+literal|"su"
 block|,
 literal|0x0105d041
 block|}

@@ -6850,15 +6850,11 @@ literal|"select between FreeBSD and any other operating systems on your machine\
 literal|"at boot time.  If you have more than one drive and want to boot\n"
 literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
-literal|"If you will only have FreeBSD on the machine the boot manager is\n"
-literal|"not needed and it slows down the boot while offering you the choice\n"
-literal|"of which operating system to boot.  If you do not want a boot\n"
-literal|"manager, or wish to replace an existing one, select \"standard\".\n"
-literal|"If you would prefer your Master Boot Record remain untouched then\n"
-literal|"select \"None\".\n\n"
-literal|"  NOTE:  PC-DOS users will almost certainly require \"None\"!"
+literal|"If you have other operating systems installed and would like a choice when\n"
+literal|"booting, choose \"BootMgr\". If you would prefer to keep your existing\n"
+literal|"boot manager, select \"None\".\n\n"
 block|,
-literal|"Press F1 to read about drive setup"
+literal|""
 block|,
 literal|"drives"
 block|,
@@ -6866,7 +6862,7 @@ block|{
 block|{
 literal|"Standard"
 block|,
-literal|"Install a standard MBR (no boot manager)"
+literal|"Install a standard MBR (non-interactive boot manager)"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -6912,7 +6908,7 @@ block|,
 block|{
 literal|"None"
 block|,
-literal|"Leave the Master Boot Record untouched"
+literal|"Do not install a boot manager"
 block|,
 name|dmenuRadioCheck
 block|,
@@ -11276,7 +11272,21 @@ literal|"saver=blank"
 block|}
 block|,
 block|{
-literal|"2 Daemon"
+literal|"2 Beastie"
+block|,
+literal|"\"BSD Daemon\" animated screen saver (graphics)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=beastie"
+block|}
+block|,
+block|{
+literal|"3 Daemon"
 block|,
 literal|"\"BSD Daemon\" animated screen saver (text)"
 block|,
@@ -11290,7 +11300,21 @@ literal|"saver=daemon"
 block|}
 block|,
 block|{
-literal|"3 Fade"
+literal|"4 Dragon"
+block|,
+literal|"Dragon screensaver (graphics)"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=dragon"
+block|}
+block|,
+block|{
+literal|"5 Fade"
 block|,
 literal|"Fade out effect screen saver"
 block|,
@@ -11304,7 +11328,7 @@ literal|"saver=fade"
 block|}
 block|,
 block|{
-literal|"4 Fire"
+literal|"6 Fire"
 block|,
 literal|"Flames effect screen saver"
 block|,
@@ -11318,7 +11342,7 @@ literal|"saver=fire"
 block|}
 block|,
 block|{
-literal|"5 Green"
+literal|"7 Green"
 block|,
 literal|"\"Green\" power saving mode (if supported by monitor)"
 block|,
@@ -11332,9 +11356,9 @@ literal|"saver=green"
 block|}
 block|,
 block|{
-literal|"6 Logo"
+literal|"8 Logo"
 block|,
-literal|"\"BSD Daemon\" animated screen saver (graphics)"
+literal|"FreeBSD \"logo\" animated screen saver (graphics)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -11346,7 +11370,7 @@ literal|"saver=logo"
 block|}
 block|,
 block|{
-literal|"7 Rain"
+literal|"9 Rain"
 block|,
 literal|"Rain drops screen saver"
 block|,
@@ -11360,7 +11384,7 @@ literal|"saver=rain"
 block|}
 block|,
 block|{
-literal|"8 Snake"
+literal|"a Snake"
 block|,
 literal|"Draw a FreeBSD \"snake\" on your screen"
 block|,
@@ -11374,7 +11398,7 @@ literal|"saver=snake"
 block|}
 block|,
 block|{
-literal|"9 Star"
+literal|"b Star"
 block|,
 literal|"A \"twinkling stars\" effect"
 block|,
@@ -11388,7 +11412,7 @@ literal|"saver=star"
 block|}
 block|,
 block|{
-literal|"Warp"
+literal|"c Warp"
 block|,
 literal|"A \"stars warping\" effect"
 block|,
@@ -11399,20 +11423,6 @@ block|,
 name|NULL
 block|,
 literal|"saver=warp"
-block|}
-block|,
-block|{
-literal|"Dragon"
-block|,
-literal|"Dragon screensaver (graphics)"
-block|,
-name|dmenuVarCheck
-block|,
-name|configSaver
-block|,
-name|NULL
-block|,
-literal|"saver=dragon"
 block|}
 block|,
 block|{

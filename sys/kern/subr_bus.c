@@ -2587,14 +2587,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|devctl_queue_length
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 name|n1
 operator|=
 name|malloc
@@ -2616,7 +2620,9 @@ name|n1
 operator|==
 name|NULL
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 name|n1
 operator|->
 name|dei_data
@@ -2638,6 +2644,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|devsoftc
+operator|.
+name|mtx
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|n1
@@ -2784,6 +2798,18 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|out
+label|:
+comment|/* 	 * We have to free data on all error paths since the caller 	 * assumes it will be free'd when this item is dequeued. 	 */
+name|free
+argument_list|(
+name|data
+argument_list|,
+name|M_BUS
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 

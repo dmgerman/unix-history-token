@@ -145,6 +145,40 @@ file|<sys/sx.h>
 end_include
 
 begin_comment
+comment|/*  * Location of the kernel's 'set_vnet' linker set.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__start_set_vnet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+modifier|*
+name|__stop_set_vnet
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VNET_START
+value|(uintptr_t)&__start_set_vnet
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_STOP
+value|(uintptr_t)&__stop_set_vnet
+end_define
+
+begin_comment
 comment|/*  * Functions to allocate and destroy virtual network stacks.  */
 end_comment
 
@@ -979,6 +1013,64 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * EVENTHANDLER(9) extensions.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_function_decl
+name|void
+name|vnet_global_eventhandler_iterator_func
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		(tag) = vimage_eventhandler_register(NULL, #name, func,	\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|do {									\ 	if (IS_DEFAULT_VNET(curvnet)) {					\ 		vimage_eventhandler_register(NULL, #name, func,		\ 		    arg, priority,					\ 		    vnet_global_eventhandler_iterator_func);		\ 	}								\ } while(0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1406,6 +1498,46 @@ name|arg
 parameter_list|)
 define|\
 value|SYSUNINIT(ident, subsystem, order, func, arg)
+end_define
+
+begin_comment
+comment|/*  * Without VIMAGE revert to the default implementation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER_TAG
+parameter_list|(
+name|tag
+parameter_list|,
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|(tag) = eventhandler_register(NULL, #name, func, arg, priority)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VNET_GLOBAL_EVENTHANDLER_REGISTER
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|priority
+parameter_list|)
+define|\
+value|eventhandler_register(NULL, #name, func, arg, priority)
 end_define
 
 begin_endif

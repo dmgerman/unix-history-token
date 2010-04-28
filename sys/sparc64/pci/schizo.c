@@ -1951,17 +1951,10 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"%s: could not get ino-bitmap"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|ino_bitmap
 operator|=
 operator|(
@@ -1981,6 +1974,51 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+else|else
+block|{
+comment|/* 		 * If the ino-bitmap property is missing, just provide the 		 * default set of interrupts for this controller and let 		 * schizo_setup_intr() take care of child interrupts. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_half
+operator|==
+literal|0
+condition|)
+name|ino_bitmap
+operator|=
+operator|(
+literal|1ULL
+operator|<<
+name|STX_UE_INO
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+name|STX_CE_INO
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+name|STX_PCIERR_A_INO
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+name|STX_BUS_INO
+operator|)
+expr_stmt|;
+else|else
+name|ino_bitmap
+operator|=
+literal|1ULL
+operator|<<
+name|STX_PCIERR_B_INO
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -3554,6 +3592,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* 	 * At least when booting Fire V890 from disk a Schizo comes up with 	 * a PCI bus error residing which triggers as soon as we register 	 * schizo_pci_bus() even when clearing it from all involved registers 	 * beforehand (but is quiet once it has fired).  Thus we make PCI bus 	 * errors non-fatal until we actually touch the bus. 	 */
+end_comment
+
+begin_expr_stmt
+name|sc
+operator|->
+name|sc_flags
+operator||=
+name|SCHIZO_FLAGS_ARMED
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|device_add_child
 argument_list|(
@@ -4135,6 +4186,21 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SCHIZO_FLAGS_ARMED
+operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|clear_error
+goto|;
+if|if
+condition|(
+operator|(
 name|csr
 operator|&
 name|STX_PCI_CTRL_MMU_ERR
@@ -4213,7 +4279,7 @@ argument_list|(
 literal|"%s: PCI bus %c error AFAR %#llx AFSR %#llx PCI CSR %#llx "
 literal|"IOMMU %#llx STATUS %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4445,7 +4511,7 @@ name|panic
 argument_list|(
 literal|"%s: uncorrectable DMA error AFAR %#llx AFSR %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4630,7 +4696,7 @@ name|panic
 argument_list|(
 literal|"%s: %s error %#llx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5599,7 +5665,7 @@ name|sc
 operator|->
 name|sc_cdma_clr
 argument_list|,
-literal|1
+name|INTCLR_RECEIVED
 argument_list|)
 expr_stmt|;
 name|microuptime
@@ -6145,7 +6211,7 @@ name|sica
 operator|->
 name|sica_clr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 block|}

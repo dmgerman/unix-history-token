@@ -176,11 +176,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3761,6 +3761,15 @@ argument_list|(
 name|QUALCOMMINC
 argument_list|,
 name|ZTE_STOR2
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUANTA
+argument_list|,
+name|Q101_STOR
 argument_list|,
 name|U3GINIT_SCSIEJECT
 argument_list|)

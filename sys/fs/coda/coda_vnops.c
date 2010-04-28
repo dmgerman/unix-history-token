@@ -3384,6 +3384,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -3918,6 +3919,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -5178,6 +5180,7 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
 name|CodaFid
 name|VFid
 decl_stmt|;
@@ -6843,6 +6846,7 @@ name|cnode
 modifier|*
 name|make_coda_node
 parameter_list|(
+name|struct
 name|CodaFid
 modifier|*
 name|fid

@@ -1347,19 +1347,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_wake_init
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|acpi_wake_set_enable
 parameter_list|(
 name|device_t

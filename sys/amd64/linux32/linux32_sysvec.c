@@ -26,13 +26,13 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|COMPAT_IA32
+name|COMPAT_FREEBSD32
 end_ifndef
 
 begin_error
 error|#
 directive|error
-literal|"Unable to compile Linux-emulator due to missing COMPAT_IA32 option!"
+literal|"Unable to compile Linux-emulator due to missing COMPAT_FREEBSD32 option!"
 end_error
 
 begin_endif
@@ -523,14 +523,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4387,28 +4386,19 @@ specifier|static
 name|void
 name|exec_linux_setregs
 parameter_list|(
-name|td
-parameter_list|,
-name|entry
-parameter_list|,
-name|stack
-parameter_list|,
-name|ps_strings
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
-name|u_long
-name|entry
-decl_stmt|;
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
+parameter_list|,
 name|u_long
 name|stack
-decl_stmt|;
-name|u_long
-name|ps_strings
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|trapframe
@@ -4516,7 +4506,9 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|entry
+name|imgp
+operator|->
+name|entry_addr
 expr_stmt|;
 name|regs
 operator|->
@@ -4584,6 +4576,8 @@ name|regs
 operator|->
 name|tf_rbx
 operator|=
+name|imgp
+operator|->
 name|ps_strings
 expr_stmt|;
 name|td

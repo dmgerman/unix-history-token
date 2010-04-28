@@ -50,12 +50,16 @@ name|sc_flags
 decl_stmt|;
 define|#
 directive|define
-name|SCHIZO_FLAGS_BSWAR
+name|SCHIZO_FLAGS_ARMED
 value|(1<< 0)
 define|#
 directive|define
-name|SCHIZO_FLAGS_CDMA
+name|SCHIZO_FLAGS_BSWAR
 value|(1<< 1)
+define|#
+directive|define
+name|SCHIZO_FLAGS_CDMA
+value|(1<< 2)
 name|bus_addr_t
 name|sc_cdma_clr
 decl_stmt|;

@@ -7245,7 +7245,7 @@ name|intmax_t
 operator|)
 name|statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7259,7 +7259,7 @@ argument_list|(
 operator|&
 name|statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7293,7 +7293,7 @@ if|if
 condition|(
 name|statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 operator|!=
@@ -7305,7 +7305,7 @@ literal|".%09ld, "
 argument_list|,
 name|statp
 operator|->
-name|st_atimespec
+name|st_atim
 operator|.
 name|tv_nsec
 argument_list|)
@@ -7336,7 +7336,7 @@ name|intmax_t
 operator|)
 name|statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7350,7 +7350,7 @@ argument_list|(
 operator|&
 name|statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7384,7 +7384,7 @@ if|if
 condition|(
 name|statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 operator|!=
@@ -7396,7 +7396,7 @@ literal|".%09ld, "
 argument_list|,
 name|statp
 operator|->
-name|st_mtimespec
+name|st_mtim
 operator|.
 name|tv_nsec
 argument_list|)
@@ -7427,7 +7427,7 @@ name|intmax_t
 operator|)
 name|statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7441,7 +7441,7 @@ argument_list|(
 operator|&
 name|statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7475,7 +7475,7 @@ if|if
 condition|(
 name|statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 operator|!=
@@ -7487,7 +7487,7 @@ literal|".%09ld, "
 argument_list|,
 name|statp
 operator|->
-name|st_ctimespec
+name|st_ctim
 operator|.
 name|tv_nsec
 argument_list|)
@@ -7518,7 +7518,7 @@ name|intmax_t
 operator|)
 name|statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7532,7 +7532,7 @@ argument_list|(
 operator|&
 name|statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_sec
 argument_list|)
@@ -7566,7 +7566,7 @@ if|if
 condition|(
 name|statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 operator|!=
@@ -7578,7 +7578,7 @@ literal|".%09ld, "
 argument_list|,
 name|statp
 operator|->
-name|st_birthtimespec
+name|st_birthtim
 operator|.
 name|tv_nsec
 argument_list|)

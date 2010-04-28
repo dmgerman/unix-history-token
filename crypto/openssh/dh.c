@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: dh.c,v 1.47 2008/06/26 09:19:39 djm Exp $ */
+comment|/* $OpenBSD: dh.c,v 1.48 2009/10/01 11:37:33 grunk Exp $ */
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ operator|->
 name|size
 operator|=
 operator|(
-name|u_int
+name|int
 operator|)
 name|strtonum
 argument_list|(

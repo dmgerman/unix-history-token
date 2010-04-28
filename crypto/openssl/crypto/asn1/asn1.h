@@ -938,6 +938,16 @@ define|\
 value|((void**) (1 ? p : (type**)0))
 define|#
 directive|define
+name|CHECKED_PTR_OF_TO_CHAR
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((char*) (1 ? p : (type*)0))
+define|#
+directive|define
 name|TYPEDEF_D2I_OF
 parameter_list|(
 name|type
@@ -3287,7 +3297,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type*)ASN1_dup(CHECKED_I2D_OF(type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF(type, x)))
+value|((type*)ASN1_dup(CHECKED_I2D_OF(type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF_TO_CHAR(type, x)))
 define|#
 directive|define
 name|ASN1_dup_of_const
@@ -3301,7 +3311,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type*)ASN1_dup(CHECKED_I2D_OF(const type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF(const type, x)))
+value|((type*)ASN1_dup(CHECKED_I2D_OF(const type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF_TO_CHAR(const type, x)))
 name|void
 modifier|*
 name|ASN1_item_dup
@@ -5035,6 +5045,10 @@ define|#
 directive|define
 name|ASN1_R_INVALID_NUMBER
 value|187
+define|#
+directive|define
+name|ASN1_R_INVALID_OBJECT_ENCODING
+value|212
 define|#
 directive|define
 name|ASN1_R_INVALID_SEPARATOR

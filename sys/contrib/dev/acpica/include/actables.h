@@ -300,6 +300,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiTbCheckDsdtHeader
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_TABLE_HEADER
+modifier|*
+name|AcpiTbCopyDsdt
+parameter_list|(
+name|UINT32
+name|TableIndex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiTbInstallTable
 parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS

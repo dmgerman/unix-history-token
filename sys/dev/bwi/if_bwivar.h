@@ -1991,42 +1991,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|bwi_node
-block|{
-name|struct
-name|ieee80211_node
-name|ni
-decl_stmt|;
-comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|amn
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BWI_NODE
-parameter_list|(
-name|ni
-parameter_list|)
-value|((struct bwi_node *)(ni))
-end_define
-
-begin_struct
-struct|struct
 name|bwi_vap
 block|{
 name|struct
 name|ieee80211vap
 name|bv_vap
-decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|bv_amrr
 decl_stmt|;
 name|int
 function_decl|(

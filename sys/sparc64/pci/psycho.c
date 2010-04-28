@@ -2416,7 +2416,7 @@ name|sc
 argument_list|,
 name|intrclr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 name|PSYCHO_WRITE8
@@ -3871,7 +3871,7 @@ name|panic
 argument_list|(
 literal|"%s: uncorrectable DMA error AFAR %#lx AFSR %#lx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -4033,7 +4033,7 @@ name|panic
 argument_list|(
 literal|"%s: PCI bus %c error AFAR %#lx AFSR %#lx"
 argument_list|,
-name|device_get_name
+name|device_get_nameunit
 argument_list|(
 name|sc
 operator|->
@@ -5427,7 +5427,7 @@ name|pica
 operator|->
 name|pica_clr
 argument_list|,
-literal|0
+name|INTCLR_IDLE
 argument_list|)
 expr_stmt|;
 block|}

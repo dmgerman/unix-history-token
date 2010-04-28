@@ -15,6 +15,23 @@ directive|define
 name|_SYS_TIMEB_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_warning
+warning|#
+directive|warning
+literal|"this file includes<sys/timeb.h> which is deprecated"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

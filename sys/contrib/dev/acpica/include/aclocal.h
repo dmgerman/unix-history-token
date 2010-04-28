@@ -1382,6 +1382,14 @@ name|UINT8
 name|GpeNumber
 decl_stmt|;
 comment|/* This GPE */
+name|UINT8
+name|RuntimeCount
+decl_stmt|;
+comment|/* References to a run GPE */
+name|UINT8
+name|WakeupCount
+decl_stmt|;
+comment|/* References to a wake GPE */
 block|}
 name|ACPI_GPE_EVENT_INFO
 typedef|;
@@ -1468,6 +1476,10 @@ name|UINT32
 name|RegisterCount
 decl_stmt|;
 comment|/* Number of register pairs in block */
+name|UINT16
+name|GpeCount
+decl_stmt|;
+comment|/* Number of individual GPEs in block */
 name|UINT8
 name|BlockBaseNumber
 decl_stmt|;

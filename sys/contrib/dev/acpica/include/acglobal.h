@@ -166,6 +166,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Optionally enable output from the AML Debug Object.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_EnableAmlDebugObject
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Optionally copy the entire DSDT to local memory (instead of simply  * mapping it.) There are some BIOSs that corrupt or replace the original  * DSDT, creating the need for this option. Default is FALSE, do not copy  * the DSDT.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_CopyDsdtLocally
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
@@ -250,6 +280,25 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_GENERIC_ADDRESS
 name|AcpiGbl_XPm1bEnable
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DSDT information. Used to check for DSDT corruption */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_TABLE_HEADER
+modifier|*
+name|AcpiGbl_DSDT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_TABLE_HEADER
+name|AcpiGbl_OriginalDsdtHeader
 decl_stmt|;
 end_decl_stmt
 

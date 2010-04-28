@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-aix.h,v 1.31 2009/08/20 06:20:50 dtucker Exp $ */
+comment|/* $Id: port-aix.h,v 1.32 2009/12/20 23:49:22 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -502,6 +502,42 @@ directive|define
 name|CUSTOM_FAILED_LOGIN
 value|1
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|S_AUTHDOMAIN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|S_AUTHNAME
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_AIX_KRB_NAME
+end_define
+
+begin_function_decl
+name|char
+modifier|*
+name|aix_krb5_get_principal_name
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

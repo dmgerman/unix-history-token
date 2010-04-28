@@ -269,7 +269,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Time parameter is too large (%d)"
+literal|"Time parameter is too large (%u)"
 operator|,
 name|HowLong
 operator|)

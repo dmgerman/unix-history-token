@@ -182,6 +182,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NSSRC_DB
+value|"db"
+end_define
+
+begin_comment
+comment|/* database */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NSSRC_DNS
 value|"dns"
 end_define

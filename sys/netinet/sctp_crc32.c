@@ -391,6 +391,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|uint32_t
+name|offset
 parameter_list|)
 block|{
 name|struct
@@ -400,9 +403,6 @@ name|ip
 decl_stmt|;
 name|uint32_t
 name|checksum
-decl_stmt|;
-name|uint32_t
-name|offset
 decl_stmt|;
 name|ip
 operator|=
@@ -414,14 +414,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|offset
-operator|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
 expr_stmt|;
 name|checksum
 operator|=

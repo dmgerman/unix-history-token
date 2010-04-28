@@ -152,6 +152,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBACL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<acl/libacl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Include "dirent.h" (or it's equivalent on several different platforms).  *  * This is slightly modified from the GNU autoconf recipe.  * In particular, FreeBSD includes d_namlen in it's dirent structure,  * so my configure script includes an explicit test for the d_namlen  * field.  */
 end_comment

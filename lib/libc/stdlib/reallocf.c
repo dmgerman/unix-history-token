@@ -49,12 +49,17 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When the System V compatibility option (malloc "V" flag) is 	 * in effect, realloc(ptr, 0) frees the memory and returns NULL. 	 * So, to avoid double free, call free() only when size != 0. 	 * realloc(ptr, 0) can't fail when ptr != NULL. 	 */
 if|if
 condition|(
 operator|!
 name|nptr
 operator|&&
 name|ptr
+operator|&&
+name|size
+operator|!=
+literal|0
 condition|)
 name|free
 argument_list|(

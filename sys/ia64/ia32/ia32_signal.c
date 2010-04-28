@@ -488,14 +488,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|u_long
-name|entry
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|,
 name|u_long
 name|stack
-parameter_list|,
-name|u_long
-name|ps_strings
 parameter_list|)
 block|{
 name|struct
@@ -547,11 +546,9 @@ name|exec_setregs
 argument_list|(
 name|td
 argument_list|,
-name|entry
+name|imgp
 argument_list|,
 name|stack
-argument_list|,
-name|ps_strings
 argument_list|)
 expr_stmt|;
 comment|/* Non-syscall frames are cleared by exec_setregs() */

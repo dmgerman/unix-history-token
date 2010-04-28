@@ -1105,8 +1105,21 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NB: Multiple stations are using the same key in 	 * IBSS mode, there is currently no way to sync keyrsc 	 * counters without discarding too many frames. 	 */
 if|if
 condition|(
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_IBSS
+operator|&&
+name|vap
+operator|->
+name|iv_opmode
+operator|!=
+name|IEEE80211_M_AHDEMO
+operator|&&
 name|pn
 operator|<=
 name|k

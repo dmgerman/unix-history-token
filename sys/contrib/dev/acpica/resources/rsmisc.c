@@ -182,7 +182,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Misaligned resource pointer (get): %p Type %2.2X Len %X"
+literal|"Misaligned resource pointer (get): %p Type 0x%2.2X Length %u"
 operator|,
 name|Resource
 operator|,
@@ -1490,7 +1490,7 @@ comment|/*          * Only [ActiveHigh, EdgeSensitive] or [ActiveLow, LevelSensi
 end_comment
 
 begin_comment
-unit|ACPI_ERROR ((AE_INFO,             "Invalid interrupt polarity/trigger in resource list, %X",             Aml->Irq.Flags));         return_ACPI_STATUS (AE_BAD_DATA);     }      Resource->Data.ExtendedIrq.InterruptCount = Temp8;     if (Temp8< 1)     {
+unit|ACPI_ERROR ((AE_INFO,             "Invalid interrupt polarity/trigger in resource list, 0x%X",             Aml->Irq.Flags));         return_ACPI_STATUS (AE_BAD_DATA);     }      Resource->Data.ExtendedIrq.InterruptCount = Temp8;     if (Temp8< 1)     {
 comment|/* Must have at least one IRQ */
 end_comment
 

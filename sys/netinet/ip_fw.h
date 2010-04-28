@@ -1134,58 +1134,73 @@ parameter_list|)
 value|(sizeof(struct ip_fw) + \ 	((struct ip_fw *)(rule))->cmd_len * 4 - 4)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_comment
-comment|/*  * This structure is used as a flow mask and a flow id for various  * parts of the code.  */
+comment|// should be moved to in.h
+end_comment
+
+begin_comment
+comment|/*  * This structure is used as a flow mask and a flow id for various  * parts of the code.  * addr_type is used in userland and kernel to mark the address type.  * fib is used in the kernel to record the fib in use.  * _flags is used in the kernel to store tcp flags for dynamic rules.  */
 end_comment
 
 begin_struct
 struct|struct
 name|ipfw_flow_id
 block|{
-name|u_int32_t
+name|uint32_t
 name|dst_ip
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|src_ip
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|dst_port
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|src_port
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|fib
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|proto
 decl_stmt|;
-name|u_int8_t
-name|flags
+name|uint8_t
+name|_flags
 decl_stmt|;
 comment|/* protocol-specific flags */
 name|uint8_t
 name|addr_type
 decl_stmt|;
-comment|/* 4 = ipv4, 6 = ipv6, 1=ether ? */
+comment|/* 4=ip4, 6=ip6, 1=ether ? */
 name|struct
 name|in6_addr
 name|dst_ip6
 decl_stmt|;
-comment|/* could also store MAC addr! */
 name|struct
 name|in6_addr
 name|src_ip6
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flow_id6
 decl_stmt|;
-name|u_int32_t
-name|frag_id6
+name|uint32_t
+name|extra
 decl_stmt|;
+comment|/* queue/pipe or frag_id */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

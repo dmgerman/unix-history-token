@@ -14,7 +14,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -278,11 +278,11 @@ directive|include
 file|<dev/kbd/kbdtables.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -388,13 +388,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|UPROTO_BOOT_KEYBOARD
-value|1
-end_define
 
 begin_define
 define|#
@@ -3188,8 +3181,8 @@ name|apple_fn
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|DPRINTF
 argument_list|(
@@ -3503,8 +3496,8 @@ argument_list|(
 name|xfer
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -3982,7 +3975,7 @@ name|info
 operator|.
 name|bInterfaceProtocol
 operator|==
-name|UPROTO_BOOT_KEYBOARD
+name|UIPROTO_BOOT_KEYBOARD
 operator|)
 condition|)
 block|{
@@ -4482,6 +4475,11 @@ literal|0
 condition|)
 block|{
 name|uint8_t
+name|apple_keys
+init|=
+literal|0
+decl_stmt|;
+name|uint8_t
 name|temp_id
 decl_stmt|;
 comment|/* investigate if this is an Apple Keyboard */
@@ -4513,9 +4511,7 @@ operator|&
 name|flags
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|sc_kbd_id
+name|temp_id
 argument_list|)
 condition|)
 block|{
@@ -4533,6 +4529,24 @@ name|UKBD_FLAG_APPLE_EJECT
 operator||
 name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple eject-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_kbd_id
+operator|=
+name|temp_id
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hid_locate
@@ -4576,27 +4590,31 @@ operator|->
 name|sc_flags
 operator||=
 name|UKBD_FLAG_APPLE_FN
-operator||
-name|UKBD_FLAG_APPLE_SWAP
 expr_stmt|;
-if|if
-condition|(
-name|temp_id
-operator|!=
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+literal|"Found Apple FN-key\n"
+argument_list|)
+expr_stmt|;
+name|apple_keys
+operator|=
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|sc_kbd_id
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"HID IDs mismatch\n"
-argument_list|)
+operator|=
+name|temp_id
 expr_stmt|;
 block|}
-block|}
-block|}
-else|else
+if|if
+condition|(
+name|apple_keys
+operator|==
+literal|0
+condition|)
 block|{
 comment|/*  			 * Assume the first HID ID contains the 			 * keyboard data 			 */
 name|hid_report_size

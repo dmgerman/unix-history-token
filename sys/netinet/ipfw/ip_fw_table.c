@@ -188,6 +188,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* LIST_HEAD */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<netinet/ipfw/ip_fw_private.h>
 end_include
 
@@ -806,7 +816,7 @@ end_function
 
 begin_function
 name|void
-name|ipfw_flush_tables
+name|ipfw_destroy_tables
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -816,6 +826,11 @@ parameter_list|)
 block|{
 name|uint16_t
 name|tbl
+decl_stmt|;
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh
 decl_stmt|;
 name|IPFW_WLOCK_ASSERT
 argument_list|(
@@ -835,6 +850,7 @@ condition|;
 name|tbl
 operator|++
 control|)
+block|{
 name|ipfw_flush_table
 argument_list|(
 name|ch
@@ -842,6 +858,27 @@ argument_list|,
 name|tbl
 argument_list|)
 expr_stmt|;
+name|rnh
+operator|=
+name|ch
+operator|->
+name|tables
+index|[
+name|tbl
+index|]
+expr_stmt|;
+name|rn_detachhead
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|rnh
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

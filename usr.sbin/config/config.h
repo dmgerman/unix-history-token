@@ -365,6 +365,13 @@ name|char
 modifier|*
 name|o_file
 decl_stmt|;
+name|int
+name|o_flags
+decl_stmt|;
+define|#
+directive|define
+name|OL_ALIAS
+value|1
 name|SLIST_ENTRY
 argument_list|(
 argument|opt_list

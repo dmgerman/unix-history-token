@@ -41,6 +41,7 @@ name|tmptr
 parameter_list|)
 block|{
 return|return
+operator|(
 name|strftime
 argument_list|(
 name|s
@@ -55,6 +56,7 @@ literal|"%C"
 argument_list|,
 name|tmptr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

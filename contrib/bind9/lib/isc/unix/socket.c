@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.308.12.8 2009/04/18 01:29:26 jinmei Exp $ */
+comment|/* $Id: socket.c,v 1.308.12.12 2010/01/31 23:47:31 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -6772,28 +6772,46 @@ name|DOIO_HARD
 operator|)
 return|;
 block|}
-comment|/* 	 * On TCP, zero length reads indicate EOF, while on 	 * UDP, zero length reads are perfectly valid, although 	 * strange. 	 */
-if|if
+comment|/* 	 * On TCP and UNIX sockets, zero length reads indicate EOF, 	 * while on UDP sockets, zero length reads are perfectly valid, 	 * although strange. 	 */
+switch|switch
 condition|(
-operator|(
 name|sock
 operator|->
 name|type
-operator|==
+condition|)
+block|{
+case|case
 name|isc_sockettype_tcp
-operator|)
-operator|&&
-operator|(
+case|:
+case|case
+name|isc_sockettype_unix
+case|:
+if|if
+condition|(
 name|cc
 operator|==
 literal|0
-operator|)
 condition|)
 return|return
 operator|(
 name|DOIO_EOF
 operator|)
 return|;
+break|break;
+case|case
+name|isc_sockettype_udp
+case|:
+break|break;
+case|case
+name|isc_sockettype_fdwatch
+case|:
+default|default:
+name|INSIST
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sock
@@ -16399,12 +16417,13 @@ name|events
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pollinfo_t
+expr|struct
+name|pollfd
 argument_list|)
 operator|*
 name|manager
 operator|->
-name|maxsocks
+name|nevents
 argument_list|)
 expr_stmt|;
 return|return
@@ -22310,6 +22329,12 @@ index|[
 name|ISC_STRERRORSIZE
 index|]
 decl_stmt|;
+name|char
+name|addrbuf
+index|[
+name|ISC_SOCKADDR_FORMATSIZE
+index|]
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_SOCKET
@@ -22632,13 +22657,27 @@ name|strbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isc_sockaddr_format
+argument_list|(
+name|addr
+argument_list|,
+name|addrbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addrbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|UNEXPECTED_ERROR
 argument_list|(
 name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"%d/%s"
+literal|"connect(%s) %d/%s"
+argument_list|,
+name|addrbuf
 argument_list|,
 name|errno
 argument_list|,

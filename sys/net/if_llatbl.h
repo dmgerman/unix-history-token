@@ -798,7 +798,7 @@ name|lltable
 modifier|*
 parameter_list|,
 name|struct
-name|sockaddr
+name|sockaddr_storage
 modifier|*
 parameter_list|,
 name|struct

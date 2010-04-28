@@ -10638,8 +10638,11 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"ubsec_dma_malloc: "
-literal|"bus_dmammem_alloc failed; size %zu, error %u\n"
+literal|"bus_dmammem_alloc failed; size %ju, error %u\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|,
 name|r
