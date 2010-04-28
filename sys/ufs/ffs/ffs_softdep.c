@@ -17116,6 +17116,14 @@ argument_list|(
 name|jsegdep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jaddref
+operator|->
+name|ja_state
+operator|&
+name|DEPCOMPLETE
+condition|)
 name|remove_from_journal
 argument_list|(
 operator|&
