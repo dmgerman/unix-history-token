@@ -12657,7 +12657,7 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Enable All WOL methods by default */
+comment|/* Enable only WOL MAGIC by default */
 if|if
 condition|(
 name|adapter
@@ -12675,7 +12675,7 @@ name|ifp
 operator|->
 name|if_capenable
 operator||=
-name|IFCAP_WOL
+name|IFCAP_WOL_MAGIC
 expr_stmt|;
 block|}
 comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
