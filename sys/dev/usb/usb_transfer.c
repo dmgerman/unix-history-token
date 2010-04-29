@@ -9935,9 +9935,10 @@ name|USB_DEFAULT_XFER_MAX
 argument_list|,
 name|NULL
 argument_list|,
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 argument_list|)
 condition|)
 block|{

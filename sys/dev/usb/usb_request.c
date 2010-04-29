@@ -380,13 +380,14 @@ break|break;
 default|default:
 name|cv_signal
 argument_list|(
+operator|&
 name|xfer
 operator|->
 name|xroot
 operator|->
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1046,9 +1047,10 @@ block|}
 comment|/* 	 * Grab the default sx-lock so that serialisation 	 * is achieved when multiple threads are involved: 	 */
 name|sx_xlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|)
 expr_stmt|;
 name|hr_func
@@ -1617,9 +1619,10 @@ condition|)
 block|{
 name|cv_wait
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_cv
+name|ctrlreq_cv
 argument_list|,
 name|xfer
 operator|->
@@ -1871,9 +1874,10 @@ name|done
 label|:
 name|sx_xunlock
 argument_list|(
+operator|&
 name|udev
 operator|->
-name|default_sx
+name|ctrl_sx
 argument_list|)
 expr_stmt|;
 if|if
