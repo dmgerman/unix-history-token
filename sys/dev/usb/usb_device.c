@@ -5364,19 +5364,19 @@ operator|)
 return|;
 block|}
 comment|/* initialise our SX-lock */
-name|sx_init
+name|sx_init_flags
 argument_list|(
 name|udev
 operator|->
 name|default_sx
 argument_list|,
-literal|"0123456789ABCDEF - USB device SX lock"
-operator|+
-name|depth
+literal|"USB device SX lock"
+argument_list|,
+name|SX_DUPOK
 argument_list|)
 expr_stmt|;
 comment|/* initialise our SX-lock */
-name|sx_init
+name|sx_init_flags
 argument_list|(
 name|udev
 operator|->
@@ -5384,9 +5384,9 @@ name|default_sx
 operator|+
 literal|1
 argument_list|,
-literal|"0123456789ABCDEF - USB config SX lock"
-operator|+
-name|depth
+literal|"USB config SX lock"
+argument_list|,
+name|SX_DUPOK
 argument_list|)
 expr_stmt|;
 name|cv_init
