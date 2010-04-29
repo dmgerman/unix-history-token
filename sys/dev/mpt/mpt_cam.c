@@ -5790,6 +5790,11 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_bus_deregister
 argument_list|(
 name|cam_sim_path
@@ -5798,6 +5803,11 @@ name|mpt
 operator|->
 name|sim
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
@@ -5832,6 +5842,11 @@ operator|->
 name|phydisk_path
 argument_list|)
 expr_stmt|;
+name|MPT_LOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 name|xpt_bus_deregister
 argument_list|(
 name|cam_sim_path
@@ -5840,6 +5855,11 @@ name|mpt
 operator|->
 name|phydisk_sim
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
