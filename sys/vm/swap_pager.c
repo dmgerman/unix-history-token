@@ -1676,6 +1676,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+name|void
+name|swp_pager_free_nrpage
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|0
+condition|)
+name|vm_page_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * SWP_SIZECHECK() -	update swap_pager_full indication  *	  *	update the swap_pager_almost_full indication and warn when we are  *	about to run out of swap space, using lowat/hiwat hysteresis.  *  *	Clear swap_pager_full ( task killing ) indication when lowat is met.  *  *	No restrictions on call  *	This routine may not block.  *	This routine must be called at splvm()  */
 end_comment
@@ -3843,7 +3868,7 @@ condition|;
 operator|++
 name|k
 control|)
-name|vm_page_free
+name|swp_pager_free_nrpage
 argument_list|(
 name|m
 index|[
@@ -3864,7 +3889,7 @@ condition|;
 operator|++
 name|k
 control|)
-name|vm_page_free
+name|swp_pager_free_nrpage
 argument_list|(
 name|m
 index|[
@@ -5014,7 +5039,7 @@ name|b_pager
 operator|.
 name|pg_reqpage
 condition|)
-name|vm_page_free
+name|swp_pager_free_nrpage
 argument_list|(
 name|m
 argument_list|)
