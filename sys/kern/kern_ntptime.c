@@ -1895,7 +1895,6 @@ condition|)
 goto|goto
 name|done2
 goto|;
-comment|/* 	 * Status word error decode. See comments in 	 * ntp_gettime() routine. 	 */
 if|if
 condition|(
 name|ntp_is_time_error
