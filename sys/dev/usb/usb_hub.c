@@ -1000,7 +1000,7 @@ operator|==
 name|USB_MODE_DEVICE
 condition|)
 block|{
-name|usbd_default_transfer_setup
+name|usbd_ctrl_transfer_setup
 argument_list|(
 name|child
 argument_list|)

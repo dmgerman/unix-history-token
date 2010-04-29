@@ -3983,7 +3983,7 @@ name|bcopy
 argument_list|(
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 operator|.
 name|edesc
 argument_list|,

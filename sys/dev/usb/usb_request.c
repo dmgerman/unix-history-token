@@ -1251,7 +1251,7 @@ goto|;
 comment|/* success */
 block|}
 comment|/* 	 * Setup a new USB transfer or use the existing one, if any: 	 */
-name|usbd_default_transfer_setup
+name|usbd_ctrl_transfer_setup
 argument_list|(
 name|udev
 argument_list|)
@@ -1260,7 +1260,7 @@ name|xfer
 operator|=
 name|udev
 operator|->
-name|default_xfer
+name|ctrl_xfer
 index|[
 literal|0
 index|]

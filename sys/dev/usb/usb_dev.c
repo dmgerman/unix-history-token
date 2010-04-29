@@ -2813,7 +2813,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 expr_stmt|;
 block|}
 else|else
