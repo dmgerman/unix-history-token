@@ -212,9 +212,17 @@ argument|in6_maxmtu
 argument_list|)
 end_macro
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IP6_AUTO_LINKLOCAL
+end_ifdef
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -223,8 +231,36 @@ name|int
 argument_list|,
 name|ip6_auto_linklocal
 argument_list|)
+operator|=
+name|IP6_AUTO_LINKLOCAL
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip6_auto_linklocal
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* enabled by default */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|VNET_DEFINE

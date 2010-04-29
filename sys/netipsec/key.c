@@ -381,13 +381,6 @@ literal|1000
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_key_spi_trycnt
-value|VNET(key_spi_trycnt)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -400,13 +393,6 @@ operator|=
 literal|0x100
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_key_spi_minval
-value|VNET(key_spi_minval)
-end_define
 
 begin_expr_stmt
 specifier|static
@@ -425,13 +411,6 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|V_key_spi_maxval
-value|VNET(key_spi_maxval)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -444,13 +423,6 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_policy_id
-value|VNET(policy_id)
-end_define
 
 begin_comment
 comment|/*interval to initialize randseed,1(m)*/
@@ -469,13 +441,6 @@ literal|60
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_key_int_random
-value|VNET(key_int_random)
-end_define
-
 begin_comment
 comment|/* interval to expire acquiring, 30(s)*/
 end_comment
@@ -492,13 +457,6 @@ operator|=
 literal|30
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_key_larval_lifetime
-value|VNET(key_larval_lifetime)
-end_define
 
 begin_comment
 comment|/* counter for blocking SADB_ACQUIRE.*/
@@ -517,13 +475,6 @@ literal|10
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_key_blockacq_count
-value|VNET(key_blockacq_count)
-end_define
-
 begin_comment
 comment|/* lifetime for blocking SADB_ACQUIRE.*/
 end_comment
@@ -541,13 +492,6 @@ literal|20
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_key_blockacq_lifetime
-value|VNET(key_blockacq_lifetime)
-end_define
-
 begin_comment
 comment|/* preferred old sa rather than new sa.*/
 end_comment
@@ -564,6 +508,62 @@ operator|=
 literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_key_spi_trycnt
+value|VNET(key_spi_trycnt)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_spi_minval
+value|VNET(key_spi_minval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_spi_maxval
+value|VNET(key_spi_maxval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_policy_id
+value|VNET(policy_id)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_int_random
+value|VNET(key_int_random)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_larval_lifetime
+value|VNET(key_larval_lifetime)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_blockacq_count
+value|VNET(key_blockacq_count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_key_blockacq_lifetime
+value|VNET(key_blockacq_lifetime)
+end_define
 
 begin_define
 define|#
@@ -1388,13 +1388,6 @@ literal|256
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ipsec_esp_keymin
-value|VNET(ipsec_esp_keymin)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -1408,13 +1401,6 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ipsec_esp_auth
-value|VNET(ipsec_esp_auth)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -1427,6 +1413,20 @@ operator|=
 literal|128
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipsec_esp_keymin
+value|VNET(ipsec_esp_keymin)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ipsec_esp_auth
+value|VNET(ipsec_esp_auth)
+end_define
 
 begin_define
 define|#

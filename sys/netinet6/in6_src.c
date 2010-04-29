@@ -367,6 +367,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_defaultaddrpolicy
+value|VNET(defaultaddrpolicy)
+end_define
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -374,15 +381,10 @@ name|int
 argument_list|,
 name|ip6_prefer_tempaddr
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_defaultaddrpolicy
-value|VNET(defaultaddrpolicy)
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -3765,10 +3767,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_ip6_prefer_tempaddr
-operator|=
-literal|0
-expr_stmt|;
 name|init_policy_queue
 argument_list|()
 expr_stmt|;

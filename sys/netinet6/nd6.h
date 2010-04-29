@@ -1278,17 +1278,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
-name|callout
-argument_list|,
-name|nd6_timer_ch
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -1365,6 +1354,29 @@ directive|define
 name|V_nd6_onlink_ns_rfc4861
 value|VNET(nd6_onlink_ns_rfc4861)
 end_define
+
+begin_define
+define|#
+directive|define
+name|nd6log
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (V_nd6_debug) log x; } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|callout
+argument_list|,
+name|nd6_timer_ch
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1476,18 +1488,6 @@ define|#
 directive|define
 name|V_ip6_temp_regen_advance
 value|VNET(ip6_temp_regen_advance)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nd6log
-parameter_list|(
-name|x
-parameter_list|)
-value|do { if (V_nd6_debug) log x; } while (
-comment|/*CONSTCOND*/
-value|0)
 end_define
 
 begin_union

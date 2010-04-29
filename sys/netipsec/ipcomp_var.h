@@ -139,13 +139,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ipcomp_enable
-value|VNET(ipcomp_enable)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -156,6 +149,13 @@ name|ipcompstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipcomp_enable
+value|VNET(ipcomp_enable)
+end_define
 
 begin_define
 define|#

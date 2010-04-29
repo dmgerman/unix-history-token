@@ -553,23 +553,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|ip_gif_ttl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip_gif_ttl
-value|VNET(ip_gif_ttl)
-end_define
-
 begin_endif
 endif|#
 directive|endif
