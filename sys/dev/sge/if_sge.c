@@ -8232,13 +8232,6 @@ operator|->
 name|sge_miibus
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sge_flags
-operator|&=
-operator|~
-name|SGE_FLAG_LINK
-expr_stmt|;
 if|if
 condition|(
 name|mii
