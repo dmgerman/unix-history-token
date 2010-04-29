@@ -3065,6 +3065,8 @@ operator|->
 name|sge_flags
 operator||=
 name|SGE_FLAG_FASTETHER
+operator||
+name|SGE_FLAG_SIS190
 expr_stmt|;
 comment|/* Reset the adapter. */
 name|sge_reset
