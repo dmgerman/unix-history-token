@@ -4722,9 +4722,19 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"freebsd4_sigreturn: eflags = 0x%x\n"
+literal|"pid %d (%s): freebsd4_sigreturn eflags = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|eflags
 argument_list|)
@@ -4753,9 +4763,19 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"freebsd4_sigreturn: cs = 0x%x\n"
+literal|"pid %d (%s): freebsd4_sigreturn cs = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
@@ -5268,9 +5288,19 @@ name|PSL_RF
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn: eflags = 0x%x\n"
+literal|"pid %d (%s): sigreturn eflags = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|eflags
 argument_list|)
@@ -5299,9 +5329,19 @@ name|cs
 argument_list|)
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
-literal|"sigreturn: cs = 0x%x\n"
+literal|"pid %d (%s): sigreturn cs = 0x%x\n"
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_name
 argument_list|,
 name|cs
 argument_list|)
