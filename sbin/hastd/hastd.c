@@ -712,6 +712,25 @@ argument_list|,
 name|raddr
 argument_list|)
 expr_stmt|;
+comment|/* Error in setting timeout is not critical, but why should it fail? */
+if|if
+condition|(
+name|proto_timeout
+argument_list|(
+name|conn
+argument_list|,
+name|HAST_TIMEOUT
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection timeout"
+argument_list|)
+expr_stmt|;
 name|nvin
 operator|=
 name|nvout

@@ -2131,6 +2131,27 @@ goto|goto
 name|close
 goto|;
 block|}
+comment|/* Error in setting timeout is not critical, but why should it fail? */
+if|if
+condition|(
+name|proto_timeout
+argument_list|(
+name|out
+argument_list|,
+name|res
+operator|->
+name|hr_timeout
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection timeout"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * First handshake step. 	 * Setup outgoing connection with remote node. 	 */
 name|nvout
 operator|=
@@ -2439,6 +2460,27 @@ goto|goto
 name|close
 goto|;
 block|}
+comment|/* Error in setting timeout is not critical, but why should it fail? */
+if|if
+condition|(
+name|proto_timeout
+argument_list|(
+name|in
+argument_list|,
+name|res
+operator|->
+name|hr_timeout
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|pjdlog_errno
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Unable to set connection timeout"
+argument_list|)
+expr_stmt|;
 name|nvout
 operator|=
 name|nv_alloc
