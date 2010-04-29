@@ -3202,6 +3202,8 @@ operator|->
 name|a_td
 argument_list|,
 name|cm
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* np->n_flag&= ~NMODIFIED; */
@@ -3247,6 +3249,8 @@ operator|->
 name|a_td
 argument_list|,
 name|cm
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 				 * as above w.r.t races when clearing 				 * NMODIFIED. 				 * np->n_flag&= ~NMODIFIED; 				 */
@@ -6600,6 +6604,9 @@ parameter_list|,
 name|int
 modifier|*
 name|must_commit
+parameter_list|,
+name|int
+name|called_from_strategy
 parameter_list|)
 block|{
 name|struct
@@ -6663,6 +6670,8 @@ operator|&
 name|attrflag
 argument_list|,
 name|NULL
+argument_list|,
+name|called_from_strategy
 argument_list|)
 expr_stmt|;
 name|NFSLOCKMNT
@@ -13373,6 +13382,8 @@ argument_list|,
 name|cr
 argument_list|,
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -13421,6 +13432,8 @@ operator|->
 name|a_td
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -13428,7 +13441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush all the blocks associated with a vnode.  * 	Walk through the buffer pool and push any dirty pages  *	associated with the vnode.  */
+comment|/*  * Flush all the blocks associated with a vnode.  * 	Walk through the buffer pool and push any dirty pages  *	associated with the vnode.  * If the called_from_renewthread argument is TRUE, it has been called  * from the NFSv4 renew thread and, as such, cannot block indefinitely  * waiting for a buffer write to complete.  */
 end_comment
 
 begin_function
@@ -13455,6 +13468,9 @@ name|td
 parameter_list|,
 name|int
 name|commit
+parameter_list|,
+name|int
+name|called_from_renewthread
 parameter_list|)
 block|{
 name|struct
@@ -13569,6 +13585,16 @@ literal|0
 decl_stmt|,
 name|bveccount
 decl_stmt|;
+if|if
+condition|(
+name|called_from_renewthread
+operator|!=
+literal|0
+condition|)
+name|slptimeo
+operator|=
+name|hz
+expr_stmt|;
 if|if
 condition|(
 name|nmp
@@ -14316,6 +14342,22 @@ goto|;
 block|}
 if|if
 condition|(
+name|called_from_renewthread
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 				 * Return EIO so the flush will be retried 				 * later. 				 */
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
 name|newnfs_sigintr
 argument_list|(
 name|nmp
@@ -14506,6 +14548,22 @@ argument_list|(
 name|bo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|called_from_renewthread
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 				 * Return EIO so that the flush will be 				 * retried later. 				 */
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|error
 operator|=
 name|newnfs_sigintr
@@ -15008,6 +15066,8 @@ argument_list|,
 name|td
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Loop around doing the lock op, while a blocking lock 		 * must wait for the lock op to succeed. 		 */

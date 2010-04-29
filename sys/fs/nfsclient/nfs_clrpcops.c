@@ -8489,7 +8489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nfs write operation  */
+comment|/*  * nfs write operation  * When called_from_strategy != 0, it should return EIO for an error that  * indicates recovery is in progress, so that the buffer will be left  * dirty and be written back to the server later. If it loops around,  * the recovery thread could get stuck waiting for the buffer and recovery  * will then deadlock.  */
 end_comment
 
 begin_function
@@ -8534,6 +8534,9 @@ parameter_list|,
 name|void
 modifier|*
 name|stuff
+parameter_list|,
+name|int
+name|called_from_strategy
 parameter_list|)
 block|{
 name|int
@@ -8918,15 +8921,23 @@ name|NFSERR_GRACE
 operator|||
 name|error
 operator|==
+name|NFSERR_DELAY
+operator|||
+operator|(
+operator|(
+name|error
+operator|==
 name|NFSERR_STALESTATEID
 operator|||
 name|error
 operator|==
 name|NFSERR_STALEDONTRECOVER
-operator|||
-name|error
+operator|)
+operator|&&
+name|called_from_strategy
 operator|==
-name|NFSERR_DELAY
+literal|0
+operator|)
 operator|||
 operator|(
 name|error
@@ -8966,10 +8977,30 @@ do|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 operator|&&
+operator|(
 name|retrycnt
 operator|>=
 literal|4
+operator|||
+operator|(
+operator|(
+name|error
+operator|==
+name|NFSERR_STALESTATEID
+operator|||
+name|error
+operator|==
+name|NFSERR_STALEDONTRECOVER
+operator|)
+operator|&&
+name|called_from_strategy
+operator|!=
+literal|0
+operator|)
+operator|)
 condition|)
 name|error
 operator|=

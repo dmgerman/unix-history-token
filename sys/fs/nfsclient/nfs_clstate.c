@@ -744,6 +744,8 @@ modifier|*
 parameter_list|,
 name|NFSPROC_T
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11823,6 +11825,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -16017,6 +16021,9 @@ parameter_list|,
 name|NFSPROC_T
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|called_from_renewthread
 parameter_list|)
 block|{
 name|struct
@@ -16141,6 +16148,10 @@ name|np
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ok, if it's a write delegation, flush data to the server, so 	 * that close/open consistency is retained. 	 */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|NFSLOCKNODE
 argument_list|(
 name|np
@@ -16200,9 +16211,8 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|ret
+operator|=
 name|ncl_flush
 argument_list|(
 name|vp
@@ -16214,6 +16224,8 @@ argument_list|,
 name|p
 argument_list|,
 literal|1
+argument_list|,
+name|called_from_renewthread
 argument_list|)
 expr_stmt|;
 name|NFSLOCKNODE
@@ -16267,6 +16279,35 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|EIO
+operator|&&
+name|called_from_renewthread
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * If the flush failed with EIO for the renew thread, 		 * return now, so that the dirty buffer will be flushed 		 * later. 		 */
+if|if
+condition|(
+name|gotvp
+operator|!=
+literal|0
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
 comment|/* 	 * Now, for each openowner with opens issued locally, move them 	 * over to state against the server. 	 */
 name|LIST_FOREACH
 argument_list|(
@@ -18952,6 +18993,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|NFSFREECRED
@@ -19421,6 +19464,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|NFSFREECRED
