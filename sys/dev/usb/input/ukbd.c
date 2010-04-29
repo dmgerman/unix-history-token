@@ -278,11 +278,11 @@ directive|include
 file|<dev/kbd/kbdtables.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3188,8 +3188,8 @@ name|apple_fn
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|DPRINTF
 argument_list|(
@@ -3503,8 +3503,8 @@ argument_list|(
 name|xfer
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(

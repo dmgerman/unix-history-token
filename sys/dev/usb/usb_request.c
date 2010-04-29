@@ -230,11 +230,11 @@ directive|include
 file|<sys/ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1535,8 +1535,8 @@ operator|.
 name|manual_status
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|int
 name|temp
@@ -2097,8 +2097,8 @@ decl_stmt|;
 name|uint16_t
 name|n
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|uint16_t
 name|pr_poll_delay
@@ -2130,8 +2130,8 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* range check input parameters */
 name|pr_poll_delay
@@ -2190,8 +2190,8 @@ condition|(
 literal|1
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
 name|usb_pause_mtx
@@ -2339,8 +2339,8 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 comment|/* wait for the device to recover from reset */
 name|usb_pause_mtx

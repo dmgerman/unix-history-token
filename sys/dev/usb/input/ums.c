@@ -226,11 +226,11 @@ directive|include
 file|<sys/mouse.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2460,9 +2460,14 @@ decl_stmt|;
 name|uint8_t
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
 name|uint8_t
 name|j
 decl_stmt|;
+endif|#
+directive|endif
 name|DPRINTFN
 argument_list|(
 literal|11
@@ -2917,8 +2922,8 @@ name|d_ptr
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 for|for
 control|(

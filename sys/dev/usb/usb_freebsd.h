@@ -209,24 +209,6 @@ begin_comment
 comment|/* bytes */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USB_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|USB_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|uint32_t

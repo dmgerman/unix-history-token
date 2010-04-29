@@ -5371,8 +5371,8 @@ else|:
 literal|"write"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(

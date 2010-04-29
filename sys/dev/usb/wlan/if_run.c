@@ -298,11 +298,11 @@ parameter_list|)
 value|(sizeof((_a)) / sizeof((_a)[0]))
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_define
 define|#
