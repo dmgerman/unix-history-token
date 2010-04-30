@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnvar.h,v 1.16 2009/11/04 17:46:52 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnvar.h,v 1.17 2010/02/17 18:23:00 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -934,6 +934,9 @@ index|]
 decl_stmt|;
 name|uint16_t
 name|rfcfg
+decl_stmt|;
+name|uint8_t
+name|calib_ver
 decl_stmt|;
 name|char
 name|eeprom_domain

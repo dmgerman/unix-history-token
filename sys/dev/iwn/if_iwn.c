@@ -276,6 +276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|struct
 name|iwn_hal
@@ -290,6 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_radiotap_attach
 parameter_list|(
@@ -377,6 +379,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_nic_lock
 parameter_list|(
@@ -388,6 +391,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_eeprom_lock
 parameter_list|(
@@ -399,6 +403,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_init_otprom
 parameter_list|(
@@ -410,6 +415,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_read_prom_data
 parameter_list|(
@@ -421,6 +427,24 @@ name|uint32_t
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|iwn_dma_map_addr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -466,6 +490,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_sched
 parameter_list|(
@@ -477,6 +502,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_sched
 parameter_list|(
@@ -488,6 +514,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_kw
 parameter_list|(
@@ -499,6 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_kw
 parameter_list|(
@@ -510,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_ict
 parameter_list|(
@@ -521,6 +550,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_ict
 parameter_list|(
@@ -532,6 +562,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_fwmem
 parameter_list|(
@@ -543,6 +574,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_fwmem
 parameter_list|(
@@ -554,6 +586,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_rx_ring
 parameter_list|(
@@ -569,6 +602,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_reset_rx_ring
 parameter_list|(
@@ -584,6 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_rx_ring
 parameter_list|(
@@ -599,6 +634,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_alloc_tx_ring
 parameter_list|(
@@ -616,6 +652,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_reset_tx_ring
 parameter_list|(
@@ -631,6 +668,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_free_tx_ring
 parameter_list|(
@@ -646,6 +684,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_ict_reset
 parameter_list|(
@@ -657,6 +696,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_read_eeprom
 parameter_list|(
@@ -674,6 +714,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn4965_read_eeprom
 parameter_list|(
@@ -685,6 +726,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn4965_print_power_group
 parameter_list|(
@@ -698,6 +740,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_read_eeprom
 parameter_list|(
@@ -707,6 +750,48 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|uint32_t
+name|iwn_eeprom_channel_flags
+parameter_list|(
+name|struct
+name|iwn_eeprom_chan
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|iwn_read_eeprom_band
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* HT */
+end_comment
+
+begin_endif
+unit|static void	iwn_read_eeprom_ht40(struct iwn_softc *, int);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -725,6 +810,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_read_eeprom_enhinfo
 parameter_list|(
@@ -736,6 +822,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
@@ -756,6 +843,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_newassoc
 parameter_list|(
@@ -769,6 +857,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_media_change
 parameter_list|(
@@ -780,6 +869,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_newstate
 parameter_list|(
@@ -796,6 +886,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_rx_phy
 parameter_list|(
@@ -838,6 +929,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_rx_done
 parameter_list|(
@@ -867,12 +959,13 @@ comment|/* HT */
 end_comment
 
 begin_endif
-unit|void		iwn_rx_compressed_ba(struct iwn_softc *, struct iwn_rx_desc *, 		    struct iwn_rx_data *);
+unit|static void	iwn_rx_compressed_ba(struct iwn_softc *, struct iwn_rx_desc *, 		    struct iwn_rx_data *);
 endif|#
 directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_rx_calib_results
 parameter_list|(
@@ -892,6 +985,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_rx_statistics
 parameter_list|(
@@ -911,6 +1005,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn4965_tx_done
 parameter_list|(
@@ -930,6 +1025,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_tx_done
 parameter_list|(
@@ -949,6 +1045,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_tx_done
 parameter_list|(
@@ -968,6 +1065,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_cmd_done
 parameter_list|(
@@ -983,6 +1081,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_notif_intr
 parameter_list|(
@@ -994,6 +1093,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_wakeup_intr
 parameter_list|(
@@ -1005,6 +1105,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_rftoggle_intr
 parameter_list|(
@@ -1016,6 +1117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_fatal_intr
 parameter_list|(
@@ -1027,6 +1129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_intr
 parameter_list|(
@@ -1037,6 +1140,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn4965_update_sched
 parameter_list|(
@@ -1056,6 +1160,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_update_sched
 parameter_list|(
@@ -1074,7 +1179,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|iwn5000_reset_sched
 parameter_list|(
@@ -1089,7 +1201,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
+name|uint8_t
+name|iwn_plcp_signal
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|iwn_tx_data
 parameter_list|(
@@ -1134,6 +1262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_start
 parameter_list|(
@@ -1145,6 +1274,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_start_locked
 parameter_list|(
@@ -1169,6 +1299,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_ioctl
 parameter_list|(
@@ -1184,6 +1315,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_cmd
 parameter_list|(
@@ -1205,6 +1337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_add_node
 parameter_list|(
@@ -1222,6 +1355,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_add_node
 parameter_list|(
@@ -1239,6 +1373,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_set_link_quality
 parameter_list|(
@@ -1254,6 +1389,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_add_broadcast_node
 parameter_list|(
@@ -1267,6 +1403,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_wme_update
 parameter_list|(
@@ -1290,6 +1427,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_set_led
 parameter_list|(
@@ -1307,6 +1445,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_set_critical_temp
 parameter_list|(
@@ -1318,6 +1457,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_set_timing
 parameter_list|(
@@ -1333,6 +1473,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn4965_power_calibration
 parameter_list|(
@@ -1346,6 +1487,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_set_txpower
 parameter_list|(
@@ -1363,6 +1505,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_set_txpower
 parameter_list|(
@@ -1380,6 +1523,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_get_rssi
 parameter_list|(
@@ -1395,6 +1539,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_get_rssi
 parameter_list|(
@@ -1410,6 +1555,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_get_noise
 parameter_list|(
@@ -1422,6 +1568,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_get_temperature
 parameter_list|(
@@ -1433,6 +1580,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_get_temperature
 parameter_list|(
@@ -1444,6 +1592,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_init_sensitivity
 parameter_list|(
@@ -1455,6 +1604,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_collect_noise
 parameter_list|(
@@ -1471,6 +1621,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_init_gains
 parameter_list|(
@@ -1482,6 +1633,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_init_gains
 parameter_list|(
@@ -1493,6 +1645,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_set_gains
 parameter_list|(
@@ -1504,6 +1657,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_set_gains
 parameter_list|(
@@ -1515,6 +1669,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_tune_sensitivity
 parameter_list|(
@@ -1531,6 +1686,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_send_sensitivity
 parameter_list|(
@@ -1542,6 +1698,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_set_pslevel
 parameter_list|(
@@ -1559,6 +1716,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_config
 parameter_list|(
@@ -1570,6 +1728,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_scan
 parameter_list|(
@@ -1581,6 +1740,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_auth
 parameter_list|(
@@ -1597,6 +1757,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_run
 parameter_list|(
@@ -1612,7 +1773,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* HT */
+end_comment
+
+begin_endif
+unit|static int	iwn_ampdu_rx_start(struct ieee80211com *, 		    struct ieee80211_node *, uint8_t); static void	iwn_ampdu_rx_stop(struct ieee80211com *, 		    struct ieee80211_node *, uint8_t); static int	iwn_ampdu_tx_start(struct ieee80211com *, 		    struct ieee80211_node *, uint8_t); static void	iwn_ampdu_tx_stop(struct ieee80211com *, 		    struct ieee80211_node *, uint8_t); static void	iwn4965_ampdu_tx_start(struct iwn_softc *, 		    struct ieee80211_node *, uint8_t, uint16_t); static void	iwn4965_ampdu_tx_stop(struct iwn_softc *, uint8_t, uint16_t); static void	iwn5000_ampdu_tx_start(struct iwn_softc *, 		    struct ieee80211_node *, uint8_t, uint16_t); static void	iwn5000_ampdu_tx_stop(struct iwn_softc *, uint8_t, uint16_t);
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_query_calibration
 parameter_list|(
@@ -1624,6 +1802,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_send_calibration
 parameter_list|(
@@ -1635,6 +1814,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_send_wimax_coex
 parameter_list|(
@@ -1646,6 +1826,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_post_alive
 parameter_list|(
@@ -1657,6 +1838,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_post_alive
 parameter_list|(
@@ -1668,6 +1850,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_load_bootcode
 parameter_list|(
@@ -1685,6 +1868,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_load_firmware
 parameter_list|(
@@ -1696,6 +1880,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_load_firmware_section
 parameter_list|(
@@ -1715,6 +1900,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_load_firmware
 parameter_list|(
@@ -1726,6 +1912,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_read_firmware
 parameter_list|(
@@ -1737,6 +1924,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_clock_wait
 parameter_list|(
@@ -1748,6 +1936,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_apm_init
 parameter_list|(
@@ -1759,6 +1948,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_apm_stop_master
 parameter_list|(
@@ -1770,6 +1960,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_apm_stop
 parameter_list|(
@@ -1781,6 +1972,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn4965_nic_config
 parameter_list|(
@@ -1792,6 +1984,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn5000_nic_config
 parameter_list|(
@@ -1803,6 +1996,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_hw_prepare
 parameter_list|(
@@ -1814,6 +2008,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|iwn_hw_init
 parameter_list|(
@@ -1825,6 +2020,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_hw_stop
 parameter_list|(
@@ -1836,6 +2032,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_init_locked
 parameter_list|(
@@ -1847,6 +2044,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_init
 parameter_list|(
@@ -1857,6 +2055,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_stop_locked
 parameter_list|(
@@ -1868,6 +2067,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iwn_stop
 parameter_list|(
@@ -1936,6 +2136,24 @@ name|iwn_scan_mindwell
 parameter_list|(
 name|struct
 name|ieee80211_scan_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|iwn_eeprom_chan
+modifier|*
+name|iwn_find_eeprom_channel
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3456,7 +3674,7 @@ literal|8192
 block|IEEE80211_HTCAP_AMSDU7935 |
 endif|#
 directive|endif
-block|IEEE80211_HTCAP_SMPS_DIS | 	    IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF;
+block|IEEE80211_HTCAP_CBW20_40 | 	    IEEE80211_HTCAP_SGI20 | 	    IEEE80211_HTCAP_SGI40; 	if (sc->hw_type != IWN_HW_REV_TYPE_4965) 		ic->ic_htcaps |= IEEE80211_HTCAP_GF; 	if (sc->hw_type == IWN_HW_REV_TYPE_6050) 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DYN; 	else 		ic->ic_htcaps |= IEEE80211_HTCAP_SMPS_DIS;
 endif|#
 directive|endif
 comment|/* Read MAC address, channels, etc from EEPROM. */
@@ -3770,6 +3988,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|struct
 name|iwn_hal
@@ -3968,7 +4187,7 @@ operator|->
 name|limits
 operator|=
 operator|&
-name|iwn5000_sensitivity_limits
+name|iwn1000_sensitivity_limits
 expr_stmt|;
 name|sc
 operator|->
@@ -4130,6 +4349,7 @@ comment|/*  * Attach the interface to 802.11 radiotap.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_radiotap_attach
 parameter_list|(
@@ -4366,7 +4586,7 @@ name|ieee80211_vap_attach
 argument_list|(
 name|vap
 argument_list|,
-name|ieee80211_media_change
+name|iwn_media_change
 argument_list|,
 name|ieee80211_media_status
 argument_list|)
@@ -4428,6 +4648,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_cleanup
 parameter_list|(
@@ -4718,6 +4939,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_nic_lock
 parameter_list|(
@@ -5288,6 +5510,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_eeprom_lock
 parameter_list|(
@@ -5397,6 +5620,7 @@ comment|/*  * Initialize access by host to One Time Programmable ROM.  * NB: Thi
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_init_otprom
 parameter_list|(
@@ -5633,6 +5857,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_read_prom_data
 parameter_list|(
@@ -6146,6 +6371,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_dma_contig_free
 parameter_list|(
@@ -6238,6 +6464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_sched
 parameter_list|(
@@ -6283,6 +6510,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_sched
 parameter_list|(
@@ -6304,6 +6532,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_kw
 parameter_list|(
@@ -6337,6 +6566,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_kw
 parameter_list|(
@@ -6358,6 +6588,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_ict
 parameter_list|(
@@ -6399,6 +6630,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_ict
 parameter_list|(
@@ -6420,6 +6652,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_fwmem
 parameter_list|(
@@ -6457,6 +6690,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_fwmem
 parameter_list|(
@@ -6478,6 +6712,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_rx_ring
 parameter_list|(
@@ -6941,6 +7176,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_reset_rx_ring
 parameter_list|(
@@ -7053,6 +7289,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_rx_ring
 parameter_list|(
@@ -7178,6 +7415,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_alloc_tx_ring
 parameter_list|(
@@ -7556,6 +7794,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_reset_tx_ring
 parameter_list|(
@@ -7697,6 +7936,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_free_tx_ring
 parameter_list|(
@@ -7822,6 +8062,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn5000_ict_reset
 parameter_list|(
@@ -7929,6 +8170,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_read_eeprom
 parameter_list|(
@@ -8214,6 +8456,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn4965_read_eeprom
 parameter_list|(
@@ -8466,6 +8709,7 @@ name|IWN_DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|iwn4965_print_power_group
 parameter_list|(
@@ -8758,6 +9002,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|iwn5000_read_eeprom
 parameter_list|(
@@ -8767,6 +9012,10 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|struct
+name|iwn5000_eeprom_calib_hdr
+name|hdr
+decl_stmt|;
 name|int32_t
 name|temp
 decl_stmt|,
@@ -8884,6 +9133,53 @@ name|le16toh
 argument_list|(
 name|val
 argument_list|)
+expr_stmt|;
+name|iwn_read_prom_data
+argument_list|(
+name|sc
+argument_list|,
+name|base
+argument_list|,
+operator|&
+name|hdr
+argument_list|,
+sizeof|sizeof
+name|hdr
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_CALIBRATE
+argument_list|,
+literal|"%s: calib version=%u pa type=%u voltage=%u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|hdr
+operator|.
+name|version
+argument_list|,
+name|hdr
+operator|.
+name|pa_type
+argument_list|,
+name|le16toh
+argument_list|(
+name|hdr
+operator|.
+name|volt
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|calib_ver
+operator|=
+name|hdr
+operator|.
+name|version
 expr_stmt|;
 if|if
 condition|(
@@ -9305,6 +9601,21 @@ name|c
 operator|->
 name|ic_maxregpower
 expr_stmt|;
+comment|/* Save maximum allowed TX power for this channel. */
+name|sc
+operator|->
+name|maxpwr
+index|[
+name|chan
+index|]
+operator|=
+name|channels
+index|[
+name|i
+index|]
+operator|.
+name|maxpwr
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -9543,6 +9854,7 @@ value|(sizeof((_a)) / sizeof((_a)[0]))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|iwn_read_eeprom_enhinfo
 parameter_list|(
@@ -9812,6 +10124,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|ieee80211_node
 modifier|*
@@ -9850,6 +10163,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_newassoc
 parameter_list|(
@@ -9904,6 +10218,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_media_change
 parameter_list|(
@@ -9937,6 +10252,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_newstate
 parameter_list|(
@@ -10145,6 +10461,7 @@ comment|/*  * Process an RX_PHY firmware notification.  This is usually immediat
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_rx_phy
 parameter_list|(
@@ -10373,6 +10690,7 @@ comment|/*  * Process an RX_DONE (4965AGN only) or MPDU_RX_DONE firmware notific
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_rx_done
 parameter_list|(
@@ -11269,7 +11587,7 @@ comment|/* Process an incoming Compressed BlockAck. */
 end_comment
 
 begin_comment
-unit|void iwn_rx_compressed_ba(struct iwn_softc *sc, struct iwn_rx_desc *desc,     struct iwn_rx_data *data) { 	struct iwn_compressed_ba *ba = (struct iwn_compressed_ba *)(desc + 1); 	struct iwn_tx_ring *txq;  	txq =&sc->txq[letoh16(ba->qid)];
+unit|static void iwn_rx_compressed_ba(struct iwn_softc *sc, struct iwn_rx_desc *desc,     struct iwn_rx_data *data) { 	struct iwn_compressed_ba *ba = (struct iwn_compressed_ba *)(desc + 1); 	struct iwn_tx_ring *txq;  	txq =&sc->txq[letoh16(ba->qid)];
 comment|/* XXX TBD */
 end_comment
 
@@ -11284,6 +11602,7 @@ comment|/*  * Process a CALIBRATION_RESULT notification sent by the initializati
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn5000_rx_calib_results
 parameter_list|(
@@ -11384,6 +11703,12 @@ operator|->
 name|hw_type
 operator|==
 name|IWN_HW_REV_TYPE_5150
+operator|||
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_6050
 condition|)
 name|idx
 operator|=
@@ -11571,6 +11896,7 @@ comment|/*  * Process an RX_STATISTICS or BEACON_STATISTICS firmware notificatio
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_rx_statistics
 parameter_list|(
@@ -11894,6 +12220,7 @@ comment|/*  * Process a TX_DONE firmware notification.  Unfortunately, the 4965A
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn4965_tx_done
 parameter_list|(
@@ -11928,6 +12255,23 @@ name|desc
 operator|+
 literal|1
 operator|)
+decl_stmt|;
+name|struct
+name|iwn_tx_ring
+modifier|*
+name|ring
+init|=
+operator|&
+name|sc
+operator|->
+name|txq
+index|[
+name|desc
+operator|->
+name|qid
+operator|&
+literal|0xf
+index|]
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -11977,10 +12321,8 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
-name|sc
+name|ring
 operator|->
-name|rxq
-operator|.
 name|data_dmat
 argument_list|,
 name|data
@@ -12014,6 +12356,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn5000_tx_done
 parameter_list|(
@@ -12048,6 +12391,23 @@ name|desc
 operator|+
 literal|1
 operator|)
+decl_stmt|;
+name|struct
+name|iwn_tx_ring
+modifier|*
+name|ring
+init|=
+operator|&
+name|sc
+operator|->
+name|txq
+index|[
+name|desc
+operator|->
+name|qid
+operator|&
+literal|0xf
+index|]
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -12118,10 +12478,8 @@ endif|#
 directive|endif
 name|bus_dmamap_sync
 argument_list|(
-name|sc
+name|ring
 operator|->
-name|rxq
-operator|.
 name|data_dmat
 argument_list|,
 name|data
@@ -12159,6 +12517,7 @@ comment|/*  * Adapter-independent backend for TX_DONE firmware notifications.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_tx_done
 parameter_list|(
@@ -12474,6 +12833,7 @@ comment|/*  * Process a "command done" firmware notification.  This is where we 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_cmd_done
 parameter_list|(
@@ -12588,6 +12948,7 @@ comment|/*  * Process an INT_FH_RX or INT_SW_RX interrupt.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_notif_intr
 parameter_list|(
@@ -13393,6 +13754,7 @@ comment|/*  * Process an INT_WAKEUP interrupt raised when the microcontroller wa
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_wakeup_intr
 parameter_list|(
@@ -13484,6 +13846,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_rftoggle_intr
 parameter_list|(
@@ -13580,6 +13943,7 @@ comment|/*  * Dump the error log of the firmware when a firmware panic occurs.  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_fatal_intr
 parameter_list|(
@@ -13917,6 +14281,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_intr
 parameter_list|(
@@ -14042,11 +14407,23 @@ name|tmp
 operator|==
 literal|0xffffffff
 condition|)
+comment|/* Shouldn't happen. */
 name|tmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Shouldn't happen. */
+elseif|else
+if|if
+condition|(
+name|tmp
+operator|&
+literal|0xc0000
+condition|)
+comment|/* Workaround a HW bug. */
+name|tmp
+operator||=
+literal|0x8000
+expr_stmt|;
 name|r1
 operator|=
 operator|(
@@ -14419,6 +14796,7 @@ comment|/*  * Update TX scheduler ring when transmitting an 802.11 frame (4965AG
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn4965_update_sched
 parameter_list|(
@@ -14522,6 +14900,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn5000_update_sched
 parameter_list|(
@@ -14630,7 +15009,14 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
+specifier|static
 name|void
 name|iwn5000_reset_sched
 parameter_list|(
@@ -14735,6 +15121,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|uint8_t
@@ -14785,6 +15176,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_tx_data
 parameter_list|(
@@ -17523,6 +17915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_start
 parameter_list|(
@@ -17560,6 +17953,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_start_locked
 parameter_list|(
@@ -17776,6 +18170,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_ioctl
 parameter_list|(
@@ -18006,6 +18401,7 @@ comment|/*  * Send a command to the firmware.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_cmd
 parameter_list|(
@@ -18486,6 +18882,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_add_node
 parameter_list|(
@@ -18571,6 +18968,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_add_node
 parameter_list|(
@@ -18701,6 +19099,7 @@ comment|/*  * Configure hardware link parameters for the specified  * node opera
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_set_link_quality
 parameter_list|(
@@ -19036,6 +19435,7 @@ comment|/*  * Broadcast node is used to send group-addressed and management fram
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_add_broadcast_node
 parameter_list|(
@@ -19158,6 +19558,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_wme_update
 parameter_list|(
@@ -19390,6 +19791,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_set_led
 parameter_list|(
@@ -19476,6 +19878,7 @@ comment|/*  * Set the critical temperature at which the firmware will stop the r
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_set_critical_temp
 parameter_list|(
@@ -19597,6 +20000,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_set_timing
 parameter_list|(
@@ -19759,6 +20163,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn4965_power_calibration
 parameter_list|(
@@ -19851,6 +20256,7 @@ comment|/*  * Set TX power for current channel (each rate has its own power sett
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_set_txpower
 parameter_list|(
@@ -20848,6 +21254,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_set_txpower
 parameter_list|(
@@ -20937,6 +21344,7 @@ comment|/*  * Retrieve the maximum RSSI (in dBm) among receivers.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_get_rssi
 parameter_list|(
@@ -21116,6 +21524,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_get_rssi
 parameter_list|(
@@ -21268,6 +21677,7 @@ comment|/*  * Retrieve the average noise (in dBm) among receivers.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_get_noise
 parameter_list|(
@@ -21363,6 +21773,7 @@ comment|/*  * Compute temperature (in degC) from last received statistics.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_get_temperature
 parameter_list|(
@@ -21522,6 +21933,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_get_temperature
 parameter_list|(
@@ -21585,6 +21997,7 @@ comment|/*  * Initialize sensitivity calibration state machine.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_init_sensitivity
 parameter_list|(
@@ -21671,7 +22084,11 @@ name|calib
 operator|->
 name|ofdm_x4
 operator|=
-literal|90
+name|sc
+operator|->
+name|limits
+operator|->
+name|min_ofdm_x4
 expr_stmt|;
 name|calib
 operator|->
@@ -21785,6 +22202,7 @@ comment|/*  * Collect noise and RSSI statistics for the first 20 beacons receive
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_collect_noise
 parameter_list|(
@@ -22065,6 +22483,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_init_gains
 parameter_list|(
@@ -22127,6 +22546,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_init_gains
 parameter_list|(
@@ -22140,17 +22560,6 @@ name|struct
 name|iwn_phy_calib
 name|cmd
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|hw_type
-operator|==
-name|IWN_HW_REV_TYPE_6050
-condition|)
-return|return
-literal|0
-return|;
 name|memset
 argument_list|(
 operator|&
@@ -22211,6 +22620,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_set_gains
 parameter_list|(
@@ -22443,6 +22853,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_set_gains
 parameter_list|(
@@ -22472,18 +22883,24 @@ decl_stmt|,
 name|ant
 decl_stmt|,
 name|delta
+decl_stmt|,
+name|div
 decl_stmt|;
-if|if
-condition|(
+comment|/* We collected 20 beacons and !=6050 need a 1.5 factor. */
+name|div
+operator|=
+operator|(
 name|sc
 operator|->
 name|hw_type
 operator|==
 name|IWN_HW_REV_TYPE_6050
-condition|)
-return|return
-literal|0
-return|;
+operator|)
+condition|?
+literal|20
+else|:
+literal|30
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -22578,7 +22995,7 @@ name|i
 index|]
 operator|)
 operator|/
-literal|30
+name|div
 expr_stmt|;
 comment|/* Limit to [-4.5dB,+4.5dB]. */
 name|cmd
@@ -22673,6 +23090,7 @@ comment|/*  * Tune RF RX sensitivity based on the number of false alarms detecte
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|iwn_tune_sensitivity
 parameter_list|(
@@ -23622,6 +24040,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_send_sensitivity
 parameter_list|(
@@ -23845,6 +24264,7 @@ comment|/*  * Set STA mode power saving level (between 0 and 5).  * Level 0 is C
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_set_pslevel
 parameter_list|(
@@ -24194,6 +24614,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_config
 parameter_list|(
@@ -24335,7 +24756,9 @@ name|bluetooth
 operator|.
 name|flags
 operator|=
-name|IWN_BT_COEX_MODE_4WIRE
+name|IWN_BT_COEX_CHAN_ANN
+operator||
+name|IWN_BT_COEX_BT_PRIO
 expr_stmt|;
 name|bluetooth
 operator|.
@@ -24823,6 +25246,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_scan
 parameter_list|(
@@ -25928,6 +26352,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_auth
 parameter_list|(
@@ -26411,6 +26836,7 @@ comment|/*  * Configure the adapter for associated state.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_run
 parameter_list|(
@@ -27227,22 +27653,22 @@ comment|/*  * This function is called by upper layer when an ADDBA request is re
 end_comment
 
 begin_comment
-unit|int iwn_ampdu_rx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_rx_ba *ba =&ni->ni_rx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_ADDBA; 	node.addba_tid = tid; 	node.addba_ssn = htole16(ba->ba_winstart); 	DPRINTF(sc, IWN_DEBUG_RECV, "ADDBA RA=%d TID=%d SSN=%d\n", 	    wn->id, tid, ba->ba_winstart)); 	return sc->sc_hal->add_node(sc,&node, 1); }
+unit|static int iwn_ampdu_rx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_rx_ba *ba =&ni->ni_rx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_ADDBA; 	node.addba_tid = tid; 	node.addba_ssn = htole16(ba->ba_winstart); 	DPRINTF(sc, IWN_DEBUG_RECV, "ADDBA RA=%d TID=%d SSN=%d\n", 	    wn->id, tid, ba->ba_winstart)); 	return sc->sc_hal->add_node(sc,&node, 1); }
 comment|/*  * This function is called by upper layer on teardown of an HT-immediate  * Block Ack agreement (eg. uppon receipt of a DELBA frame.)  */
 end_comment
 
 begin_comment
-unit|void iwn_ampdu_rx_stop(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_DELBA; 	node.delba_tid = tid; 	DPRINTF(sc, IWN_DEBUG_RECV, "DELBA RA=%d TID=%d\n", wn->id, tid); 	(void)sc->sc_hal->add_node(sc,&node, 1); }
+unit|static void iwn_ampdu_rx_stop(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct iwn_softc *sc = ic->ic_softc; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node;  	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_DELBA; 	node.delba_tid = tid; 	DPRINTF(sc, IWN_DEBUG_RECV, "DELBA RA=%d TID=%d\n", wn->id, tid); 	(void)sc->sc_hal->add_node(sc,&node, 1); }
 comment|/*  * This function is called by upper layer when an ADDBA response is received  * from another STA.  */
 end_comment
 
 begin_comment
-unit|int iwn_ampdu_tx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_tx_ba *ba =&ni->ni_tx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	const struct iwn_hal *hal = sc->sc_hal; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node; 	int error;
+unit|static int iwn_ampdu_tx_start(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_tx_ba *ba =&ni->ni_tx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	const struct iwn_hal *hal = sc->sc_hal; 	struct iwn_node *wn = (void *)ni; 	struct iwn_node_info node; 	int error;
 comment|/* Enable TX for the specified RA/TID. */
 end_comment
 
 begin_comment
-unit|wn->disable_tid&= ~(1<< tid); 	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_DISABLE_TID; 	node.disable_tid = htole16(wn->disable_tid); 	error = hal->add_node(sc,&node, 1); 	if (error != 0) 		return error;  	if ((error = iwn_nic_lock(sc)) != 0) 		return error; 	hal->ampdu_tx_start(sc, ni, tid, ba->ba_winstart); 	iwn_nic_unlock(sc); 	return 0; }  void iwn_ampdu_tx_stop(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_tx_ba *ba =&ni->ni_tx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	int error;  	error = iwn_nic_lock(sc); 	if (error != 0) 		return; 	sc->sc_hal->ampdu_tx_stop(sc, tid, ba->ba_winstart); 	iwn_nic_unlock(sc); }  void iwn4965_ampdu_tx_start(struct iwn_softc *sc, struct ieee80211_node *ni,     uint8_t tid, uint16_t ssn) { 	struct iwn_node *wn = (void *)ni; 	int qid = 7 + tid;
+unit|wn->disable_tid&= ~(1<< tid); 	memset(&node, 0, sizeof node); 	node.id = wn->id; 	node.control = IWN_NODE_UPDATE; 	node.flags = IWN_FLAG_SET_DISABLE_TID; 	node.disable_tid = htole16(wn->disable_tid); 	error = hal->add_node(sc,&node, 1); 	if (error != 0) 		return error;  	if ((error = iwn_nic_lock(sc)) != 0) 		return error; 	hal->ampdu_tx_start(sc, ni, tid, ba->ba_winstart); 	iwn_nic_unlock(sc); 	return 0; }  static void iwn_ampdu_tx_stop(struct ieee80211com *ic, struct ieee80211_node *ni,     uint8_t tid) { 	struct ieee80211_tx_ba *ba =&ni->ni_tx_ba[tid]; 	struct iwn_softc *sc = ic->ic_softc; 	int error;  	error = iwn_nic_lock(sc); 	if (error != 0) 		return; 	sc->sc_hal->ampdu_tx_stop(sc, tid, ba->ba_winstart); 	iwn_nic_unlock(sc); }  static void iwn4965_ampdu_tx_start(struct iwn_softc *sc, struct ieee80211_node *ni,     uint8_t tid, uint16_t ssn) { 	struct iwn_node *wn = (void *)ni; 	int qid = 7 + tid;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 end_comment
 
@@ -27282,7 +27708,7 @@ comment|/* Mark the queue as active. */
 end_comment
 
 begin_comment
-unit|iwn_prph_write(sc, IWN4965_SCHED_QUEUE_STATUS(qid), 	    IWN4965_TXQ_STATUS_ACTIVE | IWN4965_TXQ_STATUS_AGGR_ENA | 	    iwn_tid2fifo[tid]<< 1); }  void iwn4965_ampdu_tx_stop(struct iwn_softc *sc, uint8_t tid, uint16_t ssn) { 	int qid = 7 + tid;
+unit|iwn_prph_write(sc, IWN4965_SCHED_QUEUE_STATUS(qid), 	    IWN4965_TXQ_STATUS_ACTIVE | IWN4965_TXQ_STATUS_AGGR_ENA | 	    iwn_tid2fifo[tid]<< 1); }  static void iwn4965_ampdu_tx_stop(struct iwn_softc *sc, uint8_t tid, uint16_t ssn) { 	int qid = 7 + tid;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 end_comment
 
@@ -27302,7 +27728,7 @@ comment|/* Mark the queue as inactive. */
 end_comment
 
 begin_comment
-unit|iwn_prph_write(sc, IWN4965_SCHED_QUEUE_STATUS(qid), 	    IWN4965_TXQ_STATUS_INACTIVE | iwn_tid2fifo[tid]<< 1); }  void iwn5000_ampdu_tx_start(struct iwn_softc *sc, struct ieee80211_node *ni,     uint8_t tid, uint16_t ssn) { 	struct iwn_node *wn = (void *)ni; 	int qid = 10 + tid;
+unit|iwn_prph_write(sc, IWN4965_SCHED_QUEUE_STATUS(qid), 	    IWN4965_TXQ_STATUS_INACTIVE | iwn_tid2fifo[tid]<< 1); }  static void iwn5000_ampdu_tx_start(struct iwn_softc *sc, struct ieee80211_node *ni,     uint8_t tid, uint16_t ssn) { 	struct iwn_node *wn = (void *)ni; 	int qid = 10 + tid;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 end_comment
 
@@ -27342,7 +27768,7 @@ comment|/* Mark the queue as active. */
 end_comment
 
 begin_comment
-unit|iwn_prph_write(sc, IWN5000_SCHED_QUEUE_STATUS(qid), 	    IWN5000_TXQ_STATUS_ACTIVE | iwn_tid2fifo[tid]); }  void iwn5000_ampdu_tx_stop(struct iwn_softc *sc, uint8_t tid, uint16_t ssn) { 	int qid = 10 + tid;
+unit|iwn_prph_write(sc, IWN5000_SCHED_QUEUE_STATUS(qid), 	    IWN5000_TXQ_STATUS_ACTIVE | iwn_tid2fifo[tid]); }  static void iwn5000_ampdu_tx_stop(struct iwn_softc *sc, uint8_t tid, uint16_t ssn) { 	int qid = 10 + tid;
 comment|/* Stop TX scheduler while we're changing its configuration. */
 end_comment
 
@@ -27377,6 +27803,7 @@ comment|/*  * Query calibration tables from the initialization firmware.  We do 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_query_calibration
 parameter_list|(
@@ -27522,6 +27949,7 @@ comment|/*  * Send calibration results to the runtime firmware.  These results w
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_send_calibration
 parameter_list|(
@@ -27646,6 +28074,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_send_wimax_coex
 parameter_list|(
@@ -27758,6 +28187,7 @@ comment|/*  * This function is called after the runtime firmware notifies us of 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_post_alive
 parameter_list|(
@@ -28025,6 +28455,7 @@ comment|/*  * This function is called after the initialization or runtime firmwa
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_post_alive
 parameter_list|(
@@ -28551,6 +28982,7 @@ comment|/*  * The firmware boot code is small and is intended to be copied direc
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_load_bootcode
 parameter_list|(
@@ -28735,6 +29167,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_load_firmware
 parameter_list|(
@@ -29192,6 +29625,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_load_firmware_section
 parameter_list|(
@@ -29394,6 +29828,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_load_firmware
 parameter_list|(
@@ -29539,6 +29974,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_read_firmware
 parameter_list|(
@@ -30028,6 +30464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_clock_wait
 parameter_list|(
@@ -30103,6 +30540,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_apm_init
 parameter_list|(
@@ -30327,6 +30765,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_apm_stop_master
 parameter_list|(
@@ -30396,6 +30835,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_apm_stop
 parameter_list|(
@@ -30439,6 +30879,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn4965_nic_config
 parameter_list|(
@@ -30508,6 +30949,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn5000_nic_config
 parameter_list|(
@@ -30663,6 +31105,32 @@ name|IWN_GP_DRIVER_RADIO_2X2_IPA
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_6050
+operator|&&
+name|sc
+operator|->
+name|calib_ver
+operator|>=
+literal|6
+condition|)
+block|{
+comment|/* Indicate that ROM calibration version is>=6. */
+name|IWN_SETBITS
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_GP_DRIVER
+argument_list|,
+name|IWN_GP_DRIVER_CALIB_VER6
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -30674,6 +31142,7 @@ comment|/*  * Take NIC ownership over Intel Active Management Technology (AMT). 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|iwn_hw_prepare
 parameter_list|(
@@ -30835,6 +31304,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|iwn_hw_init
 parameter_list|(
@@ -31363,6 +31833,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_hw_stop
 parameter_list|(
@@ -31626,6 +32097,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_init_locked
 parameter_list|(
@@ -31881,6 +32353,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_init
 parameter_list|(
@@ -31946,6 +32419,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_stop_locked
 parameter_list|(
@@ -32004,6 +32478,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iwn_stop
 parameter_list|(

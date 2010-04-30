@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnreg.h,v 1.34 2009/11/08 11:54:48 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnreg.h,v 1.37 2010/02/17 18:23:00 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -1163,6 +1163,13 @@ define|#
 directive|define
 name|IWN_GP_DRIVER_RADIO_2X2_IPA
 value|(2<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_GP_DRIVER_CALIB_VER6
+value|(1<< 2)
 end_define
 
 begin_comment
@@ -3537,20 +3544,16 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|IWN_BT_COEX_DISABLE
-value|0
+name|IWN_BT_COEX_CHAN_ANN
+value|(1<< 0)
 define|#
 directive|define
-name|IWN_BT_COEX_MODE_2WIRE
-value|1
+name|IWN_BT_COEX_BT_PRIO
+value|(1<< 1)
 define|#
 directive|define
-name|IWN_BT_COEX_MODE_3WIRE
-value|2
-define|#
-directive|define
-name|IWN_BT_COEX_MODE_4WIRE
-value|3
+name|IWN_BT_COEX_2_WIRE
+value|(1<< 2)
 name|uint8_t
 name|lead_time
 decl_stmt|;
@@ -5348,6 +5351,24 @@ name|int8_t
 name|mimo3
 decl_stmt|;
 comment|/* max power in half-dBm */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|iwn5000_eeprom_calib_hdr
+block|{
+name|uint8_t
+name|version
+decl_stmt|;
+name|uint8_t
+name|pa_type
+decl_stmt|;
+name|uint16_t
+name|volt
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -7395,12 +7416,14 @@ init|=
 block|{
 literal|120
 block|,
-literal|155
+literal|120
+block|,
+comment|/* min = max for performance bug in DSP. */
+literal|240
 block|,
 literal|240
 block|,
-literal|290
-block|,
+comment|/* min = max for performance bug in DSP. */
 literal|90
 block|,
 literal|120
@@ -7474,12 +7497,53 @@ specifier|static
 specifier|const
 name|struct
 name|iwn_sensitivity_limits
+name|iwn1000_sensitivity_limits
+init|=
+block|{
+literal|120
+block|,
+literal|155
+block|,
+literal|240
+block|,
+literal|290
+block|,
+literal|90
+block|,
+literal|120
+block|,
+literal|170
+block|,
+literal|210
+block|,
+literal|125
+block|,
+literal|200
+block|,
+literal|170
+block|,
+literal|400
+block|,
+literal|95
+block|,
+literal|95
+block|,
+literal|95
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|iwn_sensitivity_limits
 name|iwn6000_sensitivity_limits
 init|=
 block|{
 literal|105
 block|,
-literal|145
+literal|110
 block|,
 literal|192
 block|,
@@ -7804,7 +7868,7 @@ literal|"DEBUG_2"
 block|,
 literal|"DEBUG_3"
 block|,
-literal|"UNKNOWN"
+literal|"ADVANCED_SYSASSERT"
 block|}
 decl_stmt|;
 end_decl_stmt
