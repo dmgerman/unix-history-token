@@ -912,7 +912,7 @@ parameter_list|,
 name|phys2
 parameter_list|)
 define|\
-value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	PMAP_LGMEM_LOCK(sysm);						\ 	intr = intr_disable();						\ 	sched_pin();							\ 	va1 = sysm->base;						\ 	va2 = sysm->base + PAGE_SIZE;					\ 	npte = mips_paddr_to_tlbpfn(phys2) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va1);				\ 	*pte = npte;							\ 	npte = mips_paddr_to_tlbpfn(phys2) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va2);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;						\ 	sysm->valid2 = 1;
+value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	PMAP_LGMEM_LOCK(sysm);						\ 	intr = intr_disable();						\ 	sched_pin();							\ 	va1 = sysm->base;						\ 	va2 = sysm->base + PAGE_SIZE;					\ 	npte = mips_paddr_to_tlbpfn(phys1) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va1);				\ 	*pte = npte;							\ 	npte = mips_paddr_to_tlbpfn(phys2) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va2);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;						\ 	sysm->valid2 = 1;
 end_define
 
 begin_define
