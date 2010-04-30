@@ -2019,11 +2019,19 @@ argument_list|,
 name|PQ_HOLD
 argument_list|)
 condition|)
+block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_free_toq
 argument_list|(
 name|mem
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
