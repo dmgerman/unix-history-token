@@ -1616,6 +1616,14 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
 for|for
 control|(
