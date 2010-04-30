@@ -20371,6 +20371,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_EX
+condition|)
+block|{
+comment|/* Disable flushing of non-ASF packets. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|MR_ADDR
+argument_list|(
+name|sc_if
+operator|->
+name|msk_port
+argument_list|,
+name|RX_GMF_CTRL_T
+argument_list|)
+argument_list|,
+name|GMF_RX_MACSEC_FLUSH_OFF
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Configure interrupt handling. */
 if|if
 condition|(
