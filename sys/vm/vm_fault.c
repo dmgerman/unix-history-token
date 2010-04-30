@@ -4520,7 +4520,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_lock
+name|vm_page_unlock
 argument_list|(
 name|src_m
 argument_list|)
@@ -4541,7 +4541,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_lock
+name|vm_page_unlock
 argument_list|(
 name|dst_m
 argument_list|)
@@ -4565,7 +4565,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_lock
+name|vm_page_unlock
 argument_list|(
 name|dst_m
 argument_list|)
