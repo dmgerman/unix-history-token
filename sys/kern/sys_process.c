@@ -973,16 +973,20 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Hold the page in memory. 		 */
-name|vm_page_lock_queues
-argument_list|()
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|vm_page_hold
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* 		 * We're done with tmap now. 		 */
 name|vm_map_lookup_done
@@ -1031,16 +1035,20 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Release the page. 		 */
-name|vm_page_lock_queues
-argument_list|()
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|vm_page_unhold
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 do|while

@@ -153,6 +153,13 @@ name|struct
 name|hv_tsb_info
 name|pm_tsb
 decl_stmt|;
+name|uint32_t
+name|pm_gen_count
+decl_stmt|;
+comment|/* generation count (pmap lock dropped) */
+name|u_int
+name|pm_retries
+decl_stmt|;
 name|pmap_cpumask_t
 name|pm_active
 decl_stmt|;
