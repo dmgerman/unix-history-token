@@ -4207,7 +4207,7 @@ value|0x0c58
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Upper Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Upper Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define
@@ -4218,7 +4218,7 @@ value|0x0c5a
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Lower Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Lower Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define

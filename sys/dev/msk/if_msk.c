@@ -19818,7 +19818,7 @@ literal|0
 condition|)
 block|{
 comment|/* Set Rx Pause threshould. */
-name|CSR_WRITE_1
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -19834,7 +19834,7 @@ argument_list|,
 name|MSK_ECU_LLPP
 argument_list|)
 expr_stmt|;
-name|CSR_WRITE_1
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
