@@ -8506,25 +8506,15 @@ name|PTE_ISMODIFIED
 argument_list|(
 name|pte
 argument_list|)
-condition|)
-name|vm_page_dirty
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* Referenced pages. */
-if|if
-condition|(
-name|PTE_ISREFERENCED
+operator|&&
+name|PTE_ISMANAGED
 argument_list|(
 name|pte
 argument_list|)
 condition|)
-name|vm_page_flag_set
+name|vm_page_dirty
 argument_list|(
 name|m
-argument_list|,
-name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
 name|tlb0_flush_entry
@@ -8543,8 +8533,6 @@ operator||
 name|PTE_SW
 operator||
 name|PTE_MODIFIED
-operator||
-name|PTE_REFERENCED
 operator|)
 expr_stmt|;
 name|tlb_miss_unlock
@@ -8706,21 +8694,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Referenced pages. */
-if|if
-condition|(
-name|PTE_ISREFERENCED
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_REFERENCED
-argument_list|)
-expr_stmt|;
 comment|/* Flush mapping from TLB0. */
 name|pte
 operator|->
@@ -8733,8 +8706,6 @@ operator||
 name|PTE_SW
 operator||
 name|PTE_MODIFIED
-operator||
-name|PTE_REFERENCED
 operator|)
 expr_stmt|;
 name|tlb_miss_unlock
