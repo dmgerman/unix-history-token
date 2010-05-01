@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O), its corresponding page lock (P),  *	or by the lock on the page queues (Q).  *	  */
 end_comment
 
 begin_expr_stmt
@@ -49,7 +49,7 @@ argument|vm_page
 argument_list|)
 name|pageq
 expr_stmt|;
-comment|/* queue info for FIFO queue or free list (P) */
+comment|/* queue info for FIFO queue or free list (Q) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
@@ -72,11 +72,11 @@ comment|/* splay tree link (O)		*/
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,P)*/
+comment|/* which object am I in (O,Q)*/
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
-comment|/* offset into object (O,P) */
+comment|/* offset into object (O,Q) */
 name|vm_paddr_t
 name|phys_addr
 decl_stmt|;
@@ -107,15 +107,15 @@ decl_stmt|;
 name|u_short
 name|cow
 decl_stmt|;
-comment|/* page cow mapping count */
+comment|/* page cow mapping count (Q) */
 name|u_int
 name|wire_count
 decl_stmt|;
-comment|/* wired down maps refs (P) */
+comment|/* wired down maps refs (Q) */
 name|short
 name|hold_count
 decl_stmt|;
-comment|/* page hold count */
+comment|/* page hold count (P) */
 name|u_short
 name|oflags
 decl_stmt|;
@@ -123,7 +123,7 @@ comment|/* page flags (O) */
 name|u_char
 name|act_count
 decl_stmt|;
-comment|/* page usage count */
+comment|/* page usage count (Q) */
 name|u_char
 name|busy
 decl_stmt|;
