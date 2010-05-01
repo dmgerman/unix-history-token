@@ -3923,6 +3923,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfs_setcl"
 argument_list|)
 expr_stmt|;
@@ -10004,6 +10006,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfsexcls"
 argument_list|)
 expr_stmt|;
@@ -10097,6 +10101,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfsexdlg"
 argument_list|)
@@ -17659,6 +17665,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfstryop"
 argument_list|)
 expr_stmt|;
@@ -17740,6 +17748,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfstryop"
 argument_list|)
@@ -17881,6 +17891,13 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+operator|(
+name|int
+operator|)
+name|nd
+operator|->
+name|nd_repstat
+argument_list|,
 literal|"nfstrylck"
 argument_list|)
 expr_stmt|;
@@ -17977,6 +17994,13 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+operator|(
+name|int
+operator|)
+name|nd
+operator|->
+name|nd_repstat
 argument_list|,
 literal|"nfstrylck"
 argument_list|)
@@ -18076,6 +18100,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfstrydp"
 argument_list|)
 expr_stmt|;
@@ -18133,6 +18159,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfstrydp"
 argument_list|)
@@ -18228,6 +18256,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfstrycl"
 argument_list|)
 expr_stmt|;
@@ -18287,6 +18317,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfstrycl"
 argument_list|)

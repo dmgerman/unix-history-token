@@ -1571,6 +1571,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfs_open"
 argument_list|)
 expr_stmt|;
@@ -2793,6 +2795,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|ret
+argument_list|,
 literal|"nfs_open"
 argument_list|)
 expr_stmt|;
@@ -2925,6 +2929,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|ret
 argument_list|,
 literal|"nfs_open2"
 argument_list|)
@@ -3688,6 +3694,13 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+operator|(
+name|int
+operator|)
+name|nd
+operator|->
+name|nd_repstat
+argument_list|,
 literal|"nfs_close"
 argument_list|)
 expr_stmt|;
@@ -3784,6 +3797,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfs_close"
 argument_list|)
@@ -6165,6 +6180,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfs_setattr"
 argument_list|)
 expr_stmt|;
@@ -7820,6 +7837,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfs_read"
 argument_list|)
 expr_stmt|;
@@ -8872,6 +8891,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfs_write"
 argument_list|)
@@ -10908,6 +10929,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|error
+argument_list|,
 literal|"nfs_open"
 argument_list|)
 expr_stmt|;
@@ -12537,6 +12560,8 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+name|ret
+argument_list|,
 literal|"nfs_create"
 argument_list|)
 expr_stmt|;
@@ -12663,6 +12688,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|ret
 argument_list|,
 literal|"nfs_crt2"
 argument_list|)
@@ -22200,6 +22227,13 @@ name|nfs_catnap
 argument_list|(
 name|PZERO
 argument_list|,
+operator|(
+name|int
+operator|)
+name|nd
+operator|->
+name|nd_repstat
+argument_list|,
 literal|"nfs_advlock"
 argument_list|)
 expr_stmt|;
@@ -22475,6 +22509,8 @@ operator|)
 name|nfs_catnap
 argument_list|(
 name|PZERO
+argument_list|,
+name|error
 argument_list|,
 literal|"nfs_advlock"
 argument_list|)
