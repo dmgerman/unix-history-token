@@ -421,6 +421,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|str
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|str
