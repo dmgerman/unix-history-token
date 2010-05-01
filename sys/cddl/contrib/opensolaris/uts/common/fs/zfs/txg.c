@@ -84,6 +84,13 @@ name|zfs_txg_synctime
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|zfs_write_limit_override
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -170,6 +177,39 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Target seconds to sync a txg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.txg.write_limit_override"
+argument_list|,
+operator|&
+name|zfs_write_limit_override
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs_txg
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|write_limit_override
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|zfs_write_limit_override
+argument_list|,
+literal|0
+argument_list|,
+literal|"Override maximum size of a txg to this size in bytes, "
+literal|"value of 0 means don't override"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
