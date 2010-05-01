@@ -733,8 +733,6 @@ operator|<
 name|fs
 operator|->
 name|fs_ipg
-operator|/
-name|NBBY
 condition|;
 name|ino
 operator|++
