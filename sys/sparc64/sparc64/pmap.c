@@ -2388,6 +2388,10 @@ operator|)
 operator||
 operator|(
 name|cpu_impl
+operator|>=
+name|CPU_IMPL_ULTRASPARCI
+operator|&&
+name|cpu_impl
 operator|<
 name|CPU_IMPL_ULTRASPARCIII
 condition|?
@@ -3160,7 +3164,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|tp
 operator|=
 name|tsb_tte_lookup
@@ -3170,7 +3173,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tp
