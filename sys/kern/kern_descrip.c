@@ -13441,7 +13441,7 @@ operator|&
 name|sa
 argument_list|)
 operator|==
-literal|00
+literal|0
 operator|&&
 name|sa
 operator|->
@@ -14729,7 +14729,7 @@ operator|&
 name|sa
 argument_list|)
 operator|==
-literal|00
+literal|0
 operator|&&
 name|sa
 operator|->
