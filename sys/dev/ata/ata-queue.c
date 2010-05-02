@@ -2733,9 +2733,6 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_CAM
 name|ch
 operator|->
 name|running
@@ -2748,6 +2745,9 @@ name|state
 operator|=
 name|ATA_IDLE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATA_CAM
 name|ata_cam_end_transaction
 argument_list|(
 name|ch
