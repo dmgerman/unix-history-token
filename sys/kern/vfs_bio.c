@@ -11675,16 +11675,37 @@ block|}
 comment|/* 				 * We found a page.  If we have to sleep on it, 				 * retry because it might have gotten freed out 				 * from under us. 				 * 				 * We can only test VPO_BUSY here.  Blocking on 				 * m->busy might lead to a deadlock: 				 * 				 *  vm_fault->getpages->cluster_read->allocbuf 				 * 				 */
 if|if
 condition|(
-name|vm_page_sleep_if_busy
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_BUSY
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 					 * Reference the page before unlocking 					 * and sleeping so that the page daemon 					 * is less likely to reclaim it.   					 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|vm_page_flag_set
 argument_list|(
 name|m
 argument_list|,
-name|FALSE
+name|PG_REFERENCED
+argument_list|)
+expr_stmt|;
+name|vm_page_sleep
+argument_list|(
+name|m
 argument_list|,
 literal|"pgtblk"
 argument_list|)
-condition|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 				 * We have a good page. 				 */
 name|vm_page_lock_queues
 argument_list|()
