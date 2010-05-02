@@ -4924,12 +4924,6 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
-name|object
-operator|=
-name|m
-operator|->
-name|object
-expr_stmt|;
 if|if
 condition|(
 operator|(
