@@ -5382,9 +5382,6 @@ operator|->
 name|busy
 condition|)
 block|{
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|new_object
