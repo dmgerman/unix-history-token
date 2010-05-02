@@ -710,6 +710,10 @@ define|#
 directive|define
 name|AHCI_Q_NOBSYRES
 value|256
+define|#
+directive|define
+name|AHCI_Q_NOAA
+value|512
 block|}
 name|ahci_ids
 index|[]
@@ -1292,7 +1296,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1302,7 +1306,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1312,7 +1316,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1322,7 +1326,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1332,7 +1336,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1342,7 +1346,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1352,7 +1356,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1362,7 +1366,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP65"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1372,7 +1376,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1382,7 +1386,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1392,7 +1396,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1402,7 +1406,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1412,7 +1416,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1422,7 +1426,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1432,7 +1436,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1442,7 +1446,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1452,7 +1456,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1462,7 +1466,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1472,7 +1476,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1482,7 +1486,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1492,7 +1496,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP67"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1502,7 +1506,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1512,7 +1516,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1522,7 +1526,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1532,7 +1536,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1542,7 +1546,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1552,7 +1556,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1562,7 +1566,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1572,7 +1576,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1582,7 +1586,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1592,7 +1596,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1602,7 +1606,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1612,7 +1616,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP73"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1622,7 +1626,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1632,7 +1636,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1642,7 +1646,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1652,7 +1656,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1662,7 +1666,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1672,7 +1676,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1682,7 +1686,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1692,7 +1696,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1702,7 +1706,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1712,7 +1716,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1722,7 +1726,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1732,7 +1736,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP77"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1742,7 +1746,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1752,7 +1756,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1762,7 +1766,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1772,7 +1776,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1782,7 +1786,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1792,7 +1796,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1802,7 +1806,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1812,7 +1816,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1822,7 +1826,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1832,7 +1836,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1842,7 +1846,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1852,7 +1856,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP79"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1862,7 +1866,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1872,7 +1876,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1882,7 +1886,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1892,7 +1896,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1902,7 +1906,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1912,7 +1916,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1922,7 +1926,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1932,7 +1936,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1942,7 +1946,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1952,7 +1956,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1962,7 +1966,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -1972,7 +1976,7 @@ literal|0x00
 block|,
 literal|"NVIDIA MCP89"
 block|,
-literal|0
+name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
@@ -6187,6 +6191,17 @@ name|numslots
 expr_stmt|;
 name|ch
 operator|->
+name|user
+index|[
+name|i
+index|]
+operator|.
+name|caps
+operator|=
+literal|0
+expr_stmt|;
+name|ch
+operator|->
 name|curr
 index|[
 name|i
@@ -6198,6 +6213,42 @@ name|user
 index|[
 name|i
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|pm_level
+condition|)
+block|{
+name|ch
+operator|->
+name|user
+index|[
+name|i
+index|]
+operator|.
+name|caps
+operator|=
+name|CTS_SATA_CAPS_H_PMREQ
+operator||
+name|CTS_SATA_CAPS_H_APST
+operator||
+name|CTS_SATA_CAPS_D_PMREQ
+operator||
+name|CTS_SATA_CAPS_D_APST
+expr_stmt|;
+block|}
+name|ch
+operator|->
+name|user
+index|[
+name|i
+index|]
+operator|.
+name|caps
+operator||=
+name|CTS_SATA_CAPS_H_DMAAA
 expr_stmt|;
 block|}
 name|rid
@@ -13202,6 +13253,25 @@ operator|->
 name|pm_level
 operator|>
 literal|3
+operator|&&
+operator|(
+name|ch
+operator|->
+name|curr
+index|[
+name|ch
+operator|->
+name|pm_present
+condition|?
+literal|15
+else|:
+literal|0
+index|]
+operator|.
+name|caps
+operator|&
+name|CTS_SATA_CAPS_D_PMREQ
+operator|)
 condition|)
 block|{
 name|callout_schedule
@@ -16343,6 +16413,30 @@ name|sata
 operator|.
 name|atapi
 expr_stmt|;
+if|if
+condition|(
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|valid
+operator|&
+name|CTS_SATA_VALID_CAPS
+condition|)
+name|d
+operator|->
+name|caps
+operator|=
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -16546,6 +16640,129 @@ operator||=
 name|CTS_SATA_VALID_REVISION
 expr_stmt|;
 block|}
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator|=
+name|d
+operator|->
+name|caps
+operator|&
+name|CTS_SATA_CAPS_D
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|pm_level
+condition|)
+block|{
+if|if
+condition|(
+name|ch
+operator|->
+name|caps
+operator|&
+operator|(
+name|AHCI_CAP_PSC
+operator||
+name|AHCI_CAP_SSC
+operator|)
+condition|)
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator||=
+name|CTS_SATA_CAPS_H_PMREQ
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|caps2
+operator|&
+name|AHCI_CAP2_APST
+condition|)
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator||=
+name|CTS_SATA_CAPS_H_APST
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|ch
+operator|->
+name|caps
+operator|&
+name|AHCI_CAP_SNCQ
+operator|)
+operator|&&
+operator|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_NOAA
+operator|)
+operator|==
+literal|0
+condition|)
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator||=
+name|CTS_SATA_CAPS_H_DMAAA
+expr_stmt|;
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator|&=
+name|ch
+operator|->
+name|user
+index|[
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|target_id
+index|]
+operator|.
+name|caps
+expr_stmt|;
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|valid
+operator||=
+name|CTS_SATA_VALID_CAPS
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -16570,6 +16787,28 @@ operator|.
 name|valid
 operator||=
 name|CTS_SATA_VALID_REVISION
+expr_stmt|;
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|caps
+operator|=
+name|d
+operator|->
+name|caps
+expr_stmt|;
+name|cts
+operator|->
+name|xport_specific
+operator|.
+name|sata
+operator|.
+name|valid
+operator||=
+name|CTS_SATA_VALID_CAPS
 expr_stmt|;
 block|}
 name|cts
