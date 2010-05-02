@@ -12000,6 +12000,25 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+name|MPI_EVENT_IR_RESYNC_UPDATE
+case|:
+name|mpt_prt
+argument_list|(
+name|mpt
+argument_list|,
+literal|"IR resync update %d completed\n"
+argument_list|,
+operator|(
+name|data0
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MPI_EVENT_EVENT_CHANGE
 case|:
 case|case
