@@ -894,7 +894,9 @@ name|cell_t
 operator|)
 literal|"SUNW,set-trap-table"
 block|,
-literal|2
+literal|1
+block|,
+literal|0
 block|, 	}
 struct|;
 name|args
