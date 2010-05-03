@@ -78,13 +78,19 @@ name|Heads
 decl_stmt|;
 comment|/* number of heads */
 name|u_int32_t
-name|Sectors
-decl_stmt|;
-comment|/* total number of sectors */
-name|u_int32_t
 name|HiddenSecs
 decl_stmt|;
 comment|/* # of hidden sectors */
+name|u_int32_t
+name|Sectors
+decl_stmt|;
+comment|/* total number of sectors */
+define|#
+directive|define
+name|FAT32
+value|1
+comment|/* this is a FAT32 file system */
+comment|/* 					 * Maybe, we should separate out 					 * various parts of FAT32?	XXX 					 */
 name|u_int32_t
 name|HugeSectors
 decl_stmt|;
@@ -114,12 +120,6 @@ name|u_int
 name|flags
 decl_stmt|;
 comment|/* some flags: */
-define|#
-directive|define
-name|FAT32
-value|1
-comment|/* this is a FAT32 file system */
-comment|/* 					 * Maybe, we should separate out 					 * various parts of FAT32?	XXX 					 */
 name|int
 name|ValidFat
 decl_stmt|;

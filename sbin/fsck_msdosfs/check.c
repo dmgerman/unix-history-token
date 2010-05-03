@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -116,11 +110,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|finish_dosdirsection
 init|=
 literal|0
+decl_stmt|;
+name|u_int
+name|i
 decl_stmt|;
 name|int
 name|mod
