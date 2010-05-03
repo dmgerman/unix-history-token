@@ -5134,7 +5134,12 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
+name|max
+argument_list|(
 name|cxgb_snd_queue_len
+argument_list|,
+name|ifqmaxlen
+argument_list|)
 expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(

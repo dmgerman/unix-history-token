@@ -426,6 +426,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.ifqmaxlen"
+argument_list|,
+operator|&
+name|ifqmaxlen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_link
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ifqmaxlen
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ifqmaxlen
+argument_list|,
+literal|0
+argument_list|,
+literal|"max send queue size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Log link state change events */
 end_comment

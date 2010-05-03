@@ -1798,7 +1798,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
