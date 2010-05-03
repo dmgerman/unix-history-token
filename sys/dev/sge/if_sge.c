@@ -7314,7 +7314,7 @@ name|sc
 operator|->
 name|sge_cdata
 operator|.
-name|sge_tx_tag
+name|sge_txmbuf_tag
 argument_list|,
 name|map
 argument_list|,
@@ -7373,7 +7373,7 @@ name|sc
 operator|->
 name|sge_cdata
 operator|.
-name|sge_tx_tag
+name|sge_txmbuf_tag
 argument_list|,
 name|map
 argument_list|)
@@ -7390,7 +7390,7 @@ name|sc
 operator|->
 name|sge_cdata
 operator|.
-name|sge_tx_tag
+name|sge_txmbuf_tag
 argument_list|,
 name|map
 argument_list|,
