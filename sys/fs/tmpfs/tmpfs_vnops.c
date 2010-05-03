@@ -2069,6 +2069,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2081,6 +2086,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
@@ -3209,6 +3219,11 @@ argument_list|(
 name|vobj
 argument_list|)
 expr_stmt|;
+name|vm_page_lock
+argument_list|(
+name|tpg
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3247,6 +3262,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|tpg
+argument_list|)
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(

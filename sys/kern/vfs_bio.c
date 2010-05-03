@@ -11396,9 +11396,6 @@ operator|->
 name|bo_object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -11447,9 +11444,7 @@ argument_list|,
 literal|"biodep"
 argument_list|)
 condition|)
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
+continue|continue;
 name|bp
 operator|->
 name|b_pages
@@ -11459,6 +11454,14 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
@@ -11466,10 +11469,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|bp
@@ -11714,6 +11722,11 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 				 * We have a good page. 				 */
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -11724,6 +11737,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
