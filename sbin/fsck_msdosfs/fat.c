@@ -213,13 +213,13 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 expr_stmt|;
 name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 name|buffer
 operator|=
@@ -227,7 +227,7 @@ name|malloc
 argument_list|(
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -279,12 +279,12 @@ name|buffer
 argument_list|,
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 operator|!=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 condition|)
 block|{
 name|perror
@@ -306,7 +306,7 @@ index|]
 operator|!=
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|||
 name|buffer
 index|[
@@ -674,7 +674,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,7 +698,7 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 operator|+
 name|no
 operator|*
@@ -710,7 +710,7 @@ name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 if|if
 condition|(
@@ -753,7 +753,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 operator|!=
 name|boot
@@ -762,7 +762,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 condition|)
 block|{
 name|perror
@@ -927,7 +927,7 @@ index|]
 operator|!=
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|||
 name|buffer
 index|[
@@ -1022,7 +1022,7 @@ index|]
 operator|==
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 operator|&&
 name|buffer
 index|[
@@ -2798,7 +2798,7 @@ name|FATsecs
 operator|*
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 argument_list|)
 expr_stmt|;
 if|if
@@ -2850,7 +2850,7 @@ name|u_char
 operator|)
 name|boot
 operator|->
-name|Media
+name|bpbMedia
 expr_stmt|;
 operator|*
 name|p
@@ -3305,7 +3305,7 @@ name|i
 operator|<
 name|boot
 operator|->
-name|FATs
+name|bpbFATs
 condition|;
 name|i
 operator|++
@@ -3315,7 +3315,7 @@ name|off
 operator|=
 name|boot
 operator|->
-name|ResSectors
+name|bpbResSectors
 operator|+
 name|i
 operator|*
@@ -3327,7 +3327,7 @@ name|off
 operator|*=
 name|boot
 operator|->
-name|BytesPerSec
+name|bpbBytesPerSec
 expr_stmt|;
 if|if
 condition|(
@@ -3554,7 +3554,7 @@ if|if
 condition|(
 name|boot
 operator|->
-name|FSInfo
+name|bpbFSInfo
 condition|)
 block|{
 name|ret
