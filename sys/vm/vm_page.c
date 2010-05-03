@@ -5551,6 +5551,13 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_assert
+argument_list|(
+name|m
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -6892,6 +6899,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -6902,6 +6914,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 if|if
