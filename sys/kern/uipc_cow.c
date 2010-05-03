@@ -209,6 +209,11 @@ name|sf
 argument_list|)
 expr_stmt|;
 comment|/* remove COW mapping  */
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -246,6 +251,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 name|socow_stats
 operator|.
@@ -458,6 +468,11 @@ operator|!
 name|sf
 condition|)
 block|{
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -495,6 +510,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 name|socow_stats
 operator|.

@@ -221,6 +221,11 @@ name|vm_page_t
 name|pp
 parameter_list|)
 block|{
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -252,6 +257,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
