@@ -18492,6 +18492,11 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|MSK_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sc_if0
