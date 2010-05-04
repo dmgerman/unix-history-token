@@ -311,6 +311,14 @@ return|return
 name|I
 return|;
 block|}
+name|bool
+name|EliminateRegSequences
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+block|;
 typedef|typedef
 name|std
 operator|::
