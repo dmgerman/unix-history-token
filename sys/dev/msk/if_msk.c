@@ -5896,7 +5896,11 @@ operator|->
 name|if_capenable
 operator|&=
 operator|~
+operator|(
 name|IFCAP_VLAN_HWTSO
+operator||
+name|IFCAP_VLAN_HWCSUM
+operator|)
 expr_stmt|;
 name|msk_setvlan
 argument_list|(
