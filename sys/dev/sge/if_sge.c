@@ -8165,15 +8165,6 @@ name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-literal|0x6c
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
 name|RxWakeOnLan
 argument_list|,
 literal|0
