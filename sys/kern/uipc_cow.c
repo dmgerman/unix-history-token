@@ -401,9 +401,6 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|vm_page_cowsetup
@@ -418,9 +415,6 @@ name|vm_page_unhold
 argument_list|(
 name|pp
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
@@ -443,9 +437,6 @@ name|vm_page_unhold
 argument_list|(
 name|pp
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
