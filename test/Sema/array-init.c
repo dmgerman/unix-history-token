@@ -108,7 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning{{incompatible pointer to integer conversion initializing 'char [4]', expected 'long'}}
+comment|// expected-warning{{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [4]'}}
 end_comment
 
 begin_function
@@ -300,7 +300,7 @@ name|p
 init|=
 literal|7
 decl_stmt|;
-comment|// expected-warning{{incompatible integer to pointer conversion initializing 'int', expected 'struct threeElements *'}}
+comment|// expected-warning{{incompatible integer to pointer conversion initializing 'struct threeElements *' with an expression of type 'int'}}
 specifier|extern
 name|int
 name|blockScopeExtern
@@ -332,7 +332,7 @@ block|,
 literal|5.8
 block|}
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion initializing 'char [4]', expected 'long'}}
+comment|// expected-warning{{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [4]'}}
 block|}
 end_function
 
@@ -1031,7 +1031,7 @@ block|{
 literal|"Hello "
 block|}
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion initializing 'char [7]', expected 'int'}}
+comment|// expected-warning{{incompatible pointer to integer conversion initializing 'int' with an expression of type 'char [7]'}}
 name|char
 name|c2
 index|[]
@@ -1053,7 +1053,7 @@ block|{
 literal|"Hello"
 block|}
 decl_stmt|;
-comment|//expected-warning{{incompatible pointer to integer conversion initializing 'char [6]', expected 'int'}}
+comment|//expected-warning{{incompatible pointer to integer conversion initializing 'int' with an expression of type 'char [6]'}}
 name|char
 name|c3
 index|[
@@ -1397,7 +1397,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|//expected-warning{{incompatible pointer to integer conversion initializing 'char [4]', expected 'char'}}
+comment|//expected-warning{{incompatible pointer to integer conversion initializing 'char' with an expression of type 'char [4]'}}
 name|int
 name|t4
 index|[
@@ -1442,7 +1442,7 @@ block|{
 name|w
 block|}
 decl_stmt|;
-comment|//expected-error{{incompatible type initializing 'struct foo', expected 'int'}}
+comment|//expected-error{{initializing 'int' with an expression of incompatible type 'struct foo'}}
 return|return
 name|z
 operator|.

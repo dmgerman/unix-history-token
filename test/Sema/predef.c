@@ -63,12 +63,15 @@ name|warning
 block|{
 block|{
 name|initializing
+literal|'char *'
+name|with
+name|an
+name|expression
+name|of
+name|type
 literal|'char const [1]'
 name|discards
 name|qualifiers
-block|,
-name|expected
-literal|'char *'
 block|}
 block|}
 name|void

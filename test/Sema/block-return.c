@@ -48,7 +48,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)(void)', expected 'short (^)(void)'}}
+comment|// expected-error {{incompatible block pointer types initializing 'short (^)(void)' with an expression of type 'int (^)(void)'}}
 end_comment
 
 begin_decl_stmt
@@ -150,7 +150,7 @@ block|{
 end_function_decl
 
 begin_comment
-comment|// expected-error {{incompatible block pointer types initializing 'float (^)(void)', expected 'double (^)(void)'}}
+comment|// expected-error {{incompatible block pointer types initializing 'double (^)(void)' with an expression of type 'float (^)(void)'}}
 end_comment
 
 begin_if
@@ -214,7 +214,7 @@ return|;
 end_if
 
 begin_comment
-comment|// expected-warning {{incompatible integer to pointer conversion returning 'int', expected 'char *'}}
+comment|// expected-warning {{incompatible integer to pointer conversion returning 'int' from a function with result type 'char *'}}
 end_comment
 
 begin_return
@@ -230,7 +230,7 @@ return|;
 end_return
 
 begin_comment
-comment|// expected-error {{incompatible block pointer types returning 'int (^)(void)', expected 'CL'}}
+comment|// expected-error {{incompatible block pointer types returning 'int (^)(void)' from a function with result type 'CL' (aka 'void (^)(void)')}}
 end_comment
 
 begin_function_decl
@@ -472,7 +472,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)(char *)', expected 'int (^)(char const *)'}}
+comment|// expected-error {{incompatible block pointer types initializing 'int (^)(char const *)' with an expression of type 'int (^)(char *)'}}
 end_comment
 
 begin_function_decl
@@ -493,7 +493,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning {{incompatible pointer types initializing 'int (char *)', expected 'int (*)(char const *)'}}
+comment|// expected-warning {{incompatible pointer types initializing 'int (*)(char const *)' with an expression of type 'int (char *)'}}
 end_comment
 
 begin_function_decl
@@ -826,7 +826,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error{{incompatible block pointer types initializing 'int (^)(void)', expected 'int const (^)(void)'}}
+comment|// expected-error{{incompatible block pointer types initializing 'int const (^)(void)' with an expression of type 'int (^)(void)'}}
 end_comment
 
 begin_function_decl

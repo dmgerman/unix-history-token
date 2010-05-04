@@ -135,7 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// -expected-warning {{incompatible pointer to integer conversion initializing 'char [2]', expected 'long'}}
+comment|// -expected-warning {{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [2]'}}
 end_comment
 
 begin_typedef

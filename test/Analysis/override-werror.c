@@ -32,7 +32,7 @@ block|{
 return|return
 name|p
 return|;
-comment|// expected-warning{{incompatible pointer types returning 'int *', expected 'char *'}}
+comment|// expected-warning{{incompatible pointer types}}
 block|}
 end_function
 

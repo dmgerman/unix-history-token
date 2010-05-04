@@ -145,6 +145,62 @@ expr_stmt|;
 end_typedef
 
 begin_comment
+comment|// OffsetOfExpr
+end_comment
+
+begin_struct
+struct|struct
+name|X
+block|{
+name|int
+name|member
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|Y
+block|{
+name|struct
+name|X
+name|array
+index|[
+literal|5
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|Z
+block|{
+name|struct
+name|Y
+name|y
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|typeof
+argument_list|(
+argument|__builtin_offsetof(struct Z, y.array[
+literal|1
+argument|+
+literal|2
+argument|].member)
+argument_list|)
+name|offsetof_type
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|// SizeOfAlignOfExpr
 end_comment
 

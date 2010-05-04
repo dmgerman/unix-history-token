@@ -146,6 +146,11 @@ argument_list|(
 specifier|const
 name|Token
 operator|&
+name|PrevPrevTok
+argument_list|,
+specifier|const
+name|Token
+operator|&
 name|PrevTok
 argument_list|,
 specifier|const

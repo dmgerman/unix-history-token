@@ -4,7 +4,15 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -fixit -o - %s | %clang_cc1 -fsyntax-only -pedantic -Werror -x c -
+comment|// RUN: cp %s %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -fixit -x c %t || true
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -pedantic -Werror -x c %t
 end_comment
 
 begin_struct

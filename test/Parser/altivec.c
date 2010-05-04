@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -faltivec -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -triple=powerpc-apple-darwin8 -faltivec -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt
@@ -314,6 +314,22 @@ name|a
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|vector
+name|int
+name|v
+init|=
+call|(
+name|vector
+name|int
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// These should have warnings.
@@ -703,12 +719,12 @@ name|gv8
 operator|=
 name|gccv
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning '__attribute__((__vector_size__(4 * sizeof(unsigned int)))) unsigned int', expected '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int'}}
+comment|// expected-error {{assigning to '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int' from incompatible type '__attribute__((__vector_size__(4 * sizeof(unsigned int)))) unsigned int'}}
 name|av
 operator|=
 name|gv8
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int', expected '__vector unsigned int'}}
+comment|// expected-error {{assigning to '__vector unsigned int' from incompatible type '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int'}}
 name|v
 operator|=
 name|gccv

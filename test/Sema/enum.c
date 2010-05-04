@@ -433,10 +433,6 @@ name|an_enum
 typedef|;
 end_typedef
 
-begin_comment
-comment|// FIXME: why is this only a warning?
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -450,7 +446,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{incompatible integer to pointer conversion initializing 'an_enum', expected 'char *'}}
+comment|// expected-warning {{incompatible integer to pointer conversion initializing 'char *' with an expression of type 'an_enum'}}
 end_comment
 
 begin_comment

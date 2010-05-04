@@ -225,7 +225,7 @@ argument|SourceRange *Ranges
 argument_list|,
 argument|unsigned NumRanges
 argument_list|,
-argument|SourceManager&SM
+argument|const SourceManager&SM
 argument_list|,
 argument|const FixItHint *Hints
 argument_list|,

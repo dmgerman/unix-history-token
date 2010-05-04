@@ -40,6 +40,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_function
 name|float
 modifier|*
@@ -98,7 +102,7 @@ argument_list|(
 name|y
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{incompatible pointer types passing 'float *', expected 'int *'}}
+comment|// expected-warning{{incompatible pointer types passing 'float *' to parameter of type 'int *'}}
 name|g0
 argument_list|(
 name|x

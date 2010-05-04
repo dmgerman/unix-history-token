@@ -166,6 +166,9 @@ name|class
 name|FunctionType
 decl_stmt|;
 name|class
+name|PointerType
+decl_stmt|;
+name|class
 name|Value
 decl_stmt|;
 name|class
@@ -617,7 +620,7 @@ operator|:
 specifier|const
 name|llvm
 operator|::
-name|Type
+name|PointerType
 operator|*
 name|PtrToInt8Ty
 block|;   struct

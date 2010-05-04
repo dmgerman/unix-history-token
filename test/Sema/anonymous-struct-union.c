@@ -178,7 +178,7 @@ end_struct
 begin_union
 union|union
 block|{
-comment|// expected-error{{declaration does not declare anything}}
+comment|// expected-warning{{declaration does not declare anything}}
 name|int
 name|int_val
 decl_stmt|;
@@ -193,7 +193,7 @@ begin_union
 specifier|static
 union|union
 block|{
-comment|// expected-error{{declaration does not declare anything}}
+comment|// expected-warning{{declaration does not declare anything}}
 name|int
 name|int_val2
 decl_stmt|;
@@ -229,7 +229,7 @@ parameter_list|()
 block|{
 union|union
 block|{
-comment|// expected-error{{declaration does not declare anything}}
+comment|// expected-warning{{declaration does not declare anything}}
 name|int
 name|i
 decl_stmt|;
@@ -282,7 +282,7 @@ empty_stmt|;
 end_typedef
 
 begin_comment
-comment|// expected-error{{declaration does not declare anything}}
+comment|// expected-warning{{declaration does not declare anything}}
 end_comment
 
 begin_comment
@@ -320,7 +320,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-error{{declaration does not declare anything}}
+comment|// expected-warning{{declaration does not declare anything}}
 end_comment
 
 begin_struct
@@ -374,7 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{incompatible type initializing 'a_struct', expected 'int'}}
+comment|// expected-error {{initializing 'int' with an expression of incompatible type 'a_struct'}}
 end_comment
 
 end_unit

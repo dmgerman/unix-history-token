@@ -90,7 +90,7 @@ parameter_list|()
 init|=
 name|IFP
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)()', expected 'int const (^)()'}}
+comment|// expected-error {{incompatible block pointer types initializing 'int const (^)()' with an expression of type 'int (^)()'}}
 specifier|const
 name|int
 function_decl|(
@@ -133,7 +133,7 @@ parameter_list|()
 init|=
 name|IPCC
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int *const (^)()', expected 'int *(^)()'}}
+comment|// expected-error {{incompatible block pointer types initializing 'int *(^)()' with an expression of type 'int *const (^)()'}}
 name|int
 function_decl|(
 modifier|^
@@ -204,7 +204,7 @@ parameter_list|)
 init|=
 name|IPCC4
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)(int, char (^)(double))', expected 'int (^)(int, char (^)(float))'}}
+comment|// expected-error {{incompatible block pointer types initializing 'int (^)(int, char (^)(float))' with an expression of type 'int (^)(int, char (^)(double))'}}
 name|IPCC2
 operator|=
 literal|0
@@ -213,7 +213,7 @@ name|IPCC2
 operator|=
 literal|1
 expr_stmt|;
-comment|// expected-error {{invalid conversion assigning integer 'int', expected block pointer 'int *(^)()'}}
+comment|// expected-error {{invalid block pointer conversion assigning to 'int *(^)()' from 'int'}}
 name|int
 function_decl|(
 modifier|^
@@ -232,7 +232,7 @@ parameter_list|()
 init|=
 literal|3
 function_decl|;
-comment|// expected-error {{invalid conversion initializing integer 'int', expected block pointer 'int (^)()'}}
+comment|// expected-error {{invalid block pointer conversion initializing 'int (^)()' with an expression of type 'int'}}
 name|int
 name|a
 init|=
@@ -249,7 +249,7 @@ name|a
 operator|+
 literal|4
 function_decl|;
-comment|// expected-error {{invalid conversion initializing integer 'int', expected block pointer 'int (^)()'}}
+comment|// expected-error {{invalid block pointer conversion initializing 'int (^)()' with an expression of type 'int'}}
 block|}
 end_function
 

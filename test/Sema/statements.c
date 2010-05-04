@@ -79,7 +79,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-error {{incompatible type returning 'void', expected 'int'}}\
+comment|// expected-error {{returning 'void' from a function with incompatible result type 'int'}}\
 end_comment
 
 begin_comment
@@ -244,6 +244,51 @@ name|fpscr
 condition|)
 comment|// expected-error {{use of undeclared identifier 'env'}}
 block|{   }
+block|}
+end_function
+
+begin_comment
+comment|// rdar://3271964
+end_comment
+
+begin_enum
+enum|enum
+name|Numbers
+block|{
+name|kOne
+block|,
+name|kTwo
+block|,
+name|kThree
+block|,
+name|kFour
+block|}
+enum|;
+end_enum
+
+begin_function
+name|int
+name|test12
+parameter_list|(
+name|enum
+name|Numbers
+name|num
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|num
+operator|==
+name|kOne
+condition|)
+block|{
+comment|// expected-warning {{switch condition has boolean value}}
+default|default:
+case|case
+name|kThree
+case|:
+break|break;
+block|}
 block|}
 end_function
 

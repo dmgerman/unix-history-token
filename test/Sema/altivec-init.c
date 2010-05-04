@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -faltivec -verify -pedantic -fsyntax-only
+comment|// RUN: %clang_cc1 %s -triple=powerpc-apple-darwin8 -faltivec -verify -pedantic -fsyntax-only
 end_comment
 
 begin_typedef
@@ -47,7 +47,6 @@ block|,
 literal|2
 block|}
 expr_stmt|;
-comment|// expected-error {{too few elements in vector initialization (expected 8 elements, have 2)}}
 name|b
 operator|=
 call|(

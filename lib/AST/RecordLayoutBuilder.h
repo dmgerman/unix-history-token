@@ -103,7 +103,7 @@ name|ASTRecordLayoutBuilder
 block|{
 name|ASTContext
 modifier|&
-name|Ctx
+name|Context
 decl_stmt|;
 comment|/// Size - The current size of the record layout.
 name|uint64_t
@@ -281,6 +281,16 @@ name|D
 parameter_list|)
 function_decl|;
 name|void
+name|LayoutWideBitField
+parameter_list|(
+name|uint64_t
+name|FieldSize
+parameter_list|,
+name|uint64_t
+name|TypeSize
+parameter_list|)
+function_decl|;
+name|void
 name|LayoutBitField
 parameter_list|(
 specifier|const
@@ -351,9 +361,8 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-comment|/// LayoutVirtualBases - Lays out all the virtual bases.
 name|void
-name|LayoutVirtualBases
+name|AddPrimaryVirtualBaseOffsets
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
@@ -362,6 +371,21 @@ name|RD
 parameter_list|,
 name|uint64_t
 name|Offset
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|MostDerivedClass
+parameter_list|)
+function_decl|;
+comment|/// LayoutVirtualBases - Lays out all the virtual bases.
+name|void
+name|LayoutVirtualBases
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
 parameter_list|,
 specifier|const
 name|CXXRecordDecl

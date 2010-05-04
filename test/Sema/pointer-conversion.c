@@ -23,7 +23,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{initializing, 'char const **' and 'char **' have different qualifiers in nested pointer types}}
+comment|// expected-warning {{discards qualifiers in nested pointer types}}
 end_comment
 
 begin_typedef
@@ -46,7 +46,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{initializing, 'dchar ***' and 'char const ***' have different qualifiers in nested pointer types}}
+comment|// expected-warning {{discards qualifiers in nested pointer types}}
 end_comment
 
 begin_decl_stmt
@@ -69,7 +69,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{initializing, 'char **' and 'char volatile **' have different qualifiers in nested pointer types}}
+comment|// expected-warning {{discards qualifiers in nested pointer types}}
 end_comment
 
 end_unit

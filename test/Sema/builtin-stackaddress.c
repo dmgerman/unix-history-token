@@ -35,7 +35,7 @@ argument_list|(
 name|x
 argument_list|)
 return|;
-comment|// expected-error{{the level argument for a stack address builtin must be constant}}
+comment|// expected-error{{argument to '__builtin_return_address' must be a constant integer}}
 block|}
 end_function
 
@@ -71,7 +71,7 @@ argument_list|(
 name|x
 argument_list|)
 return|;
-comment|// expected-error{{the level argument for a stack address builtin must be constant}}
+comment|// expected-error{{argument to '__builtin_frame_address' must be a constant integer}}
 block|}
 end_function
 

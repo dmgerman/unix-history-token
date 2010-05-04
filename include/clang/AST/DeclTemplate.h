@@ -1357,6 +1357,213 @@ name|POI
 block|;   }
 expr|}
 block|;
+comment|/// \brief Provides information about a dependent function-template
+comment|/// specialization declaration.  Since explicit function template
+comment|/// specialization and instantiation declarations can only appear in
+comment|/// namespace scope, and you can only specialize a member of a
+comment|/// fully-specialized class, the only way to get one of these is in
+comment|/// a friend declaration like the following:
+comment|///
+comment|///   template<class T> void foo(T);
+comment|///   template<class T> class A {
+comment|///     friend void foo<>(T);
+comment|///   };
+name|class
+name|DependentFunctionTemplateSpecializationInfo
+block|{
+expr|union
+block|{
+comment|// Force sizeof to be a multiple of sizeof(void*) so that the
+comment|// trailing data is aligned.
+name|void
+operator|*
+name|Aligner
+block|;       struct
+block|{
+comment|/// The number of potential template candidates.
+name|unsigned
+name|NumTemplates
+block|;
+comment|/// The number of template arguments.
+name|unsigned
+name|NumArgs
+block|;           }
+name|d
+block|;   }
+block|;
+comment|/// The locations of the left and right angle brackets.
+name|SourceRange
+name|AngleLocs
+block|;
+name|FunctionTemplateDecl
+operator|*
+specifier|const
+operator|*
+name|getTemplates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|FunctionTemplateDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+specifier|const
+name|TemplateArgumentLoc
+operator|*
+name|getTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|TemplateArgumentLoc
+operator|*
+operator|>
+operator|(
+operator|&
+name|getTemplates
+argument_list|()
+index|[
+name|getNumTemplates
+argument_list|()
+index|]
+operator|)
+return|;
+block|}
+name|public
+operator|:
+name|DependentFunctionTemplateSpecializationInfo
+argument_list|(
+specifier|const
+name|UnresolvedSetImpl
+operator|&
+name|Templates
+argument_list|,
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|TemplateArgs
+argument_list|)
+block|;
+comment|/// \brief Returns the number of function templates that this might
+comment|/// be a specialization of.
+name|unsigned
+name|getNumTemplates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|d
+operator|.
+name|NumTemplates
+return|;
+block|}
+comment|/// \brief Returns the i'th template candidate.
+name|FunctionTemplateDecl
+operator|*
+name|getTemplate
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumTemplates
+argument_list|()
+operator|&&
+literal|"template index out of range"
+argument_list|)
+block|;
+return|return
+name|getTemplates
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+block|}
+comment|/// \brief Returns the number of explicit template arguments that were given.
+name|unsigned
+name|getNumTemplateArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|d
+operator|.
+name|NumArgs
+return|;
+block|}
+comment|/// \brief Returns the nth template argument.
+specifier|const
+name|TemplateArgumentLoc
+operator|&
+name|getTemplateArg
+argument_list|(
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumTemplateArgs
+argument_list|()
+operator|&&
+literal|"template arg index out of range"
+argument_list|)
+block|;
+return|return
+name|getTemplateArgs
+argument_list|()
+index|[
+name|I
+index|]
+return|;
+block|}
+name|SourceLocation
+name|getLAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AngleLocs
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getRAngleLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AngleLocs
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// Declaration of a template function.
 name|class
 name|FunctionTemplateDecl
@@ -2176,6 +2383,10 @@ argument_list|,
 name|T
 argument_list|,
 name|TInfo
+argument_list|,
+name|VarDecl
+operator|::
+name|None
 argument_list|,
 name|VarDecl
 operator|::
@@ -3049,6 +3260,12 @@ block|;
 name|unsigned
 name|NumArgsAsWritten
 block|;
+comment|/// \brief Sequence number indicating when this class template partial
+comment|/// specialization was added to the set of partial specializations for
+comment|/// its owning class template.
+name|unsigned
+name|SequenceNumber
+block|;
 comment|/// \brief The class template partial specialization from which this
 comment|/// class template partial specialization was instantiated.
 comment|///
@@ -3086,6 +3303,8 @@ argument_list|,
 argument|unsigned NumArgInfos
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
+argument_list|,
+argument|unsigned SequenceNumber
 argument_list|)
 operator|:
 name|ClassTemplateSpecializationDecl
@@ -3120,6 +3339,11 @@ argument_list|(
 name|NumArgInfos
 argument_list|)
 block|,
+name|SequenceNumber
+argument_list|(
+name|SequenceNumber
+argument_list|)
+block|,
 name|InstantiatedFromMember
 argument_list|(
 literal|0
@@ -3151,6 +3375,8 @@ argument_list|,
 argument|QualType CanonInjectedType
 argument_list|,
 argument|ClassTemplatePartialSpecializationDecl *PrevDecl
+argument_list|,
+argument|unsigned SequenceNumber
 argument_list|)
 block|;
 comment|/// Get the list of template parameters
@@ -3183,6 +3409,17 @@ specifier|const
 block|{
 return|return
 name|NumArgsAsWritten
+return|;
+block|}
+comment|/// \brief Get the sequence number for this class template partial
+comment|/// specialization.
+name|unsigned
+name|getSequenceNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SequenceNumber
 return|;
 block|}
 comment|/// \brief Retrieve the member class template partial specialization from
@@ -3341,6 +3578,36 @@ name|setInt
 argument_list|(
 name|true
 argument_list|)
+return|;
+block|}
+comment|/// Retrieves the injected specialization type for this partial
+comment|/// specialization.  This is not the same as the type-decl-type for
+comment|/// this partial specialization, which is an InjectedClassNameType.
+name|QualType
+name|getInjectedSpecializationType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getTypeForDecl
+argument_list|()
+operator|&&
+literal|"partial specialization has no type set!"
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|InjectedClassNameType
+operator|>
+operator|(
+name|getTypeForDecl
+argument_list|()
+operator|)
+operator|->
+name|getInjectedSpecializationType
+argument_list|()
 return|;
 block|}
 comment|// FIXME: Add Profile support!
@@ -3609,6 +3876,21 @@ operator|->
 name|PartialSpecializations
 return|;
 block|}
+comment|/// \brief Retrieve the partial specializations as an ordered list.
+name|void
+name|getPartialSpecializations
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|ClassTemplatePartialSpecializationDecl
+operator|*
+operator|>
+operator|&
+name|PS
+argument_list|)
+block|;
 comment|/// \brief Find a class template partial specialization with the given
 comment|/// type T.
 comment|///

@@ -72,19 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Rewrite/DeltaTree.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Rewrite/RewriteRope.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -96,33 +96,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Rewrite/DeltaTree.h"
+file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|SourceManager
-decl_stmt|;
-name|class
 name|LangOptions
 decl_stmt|;
 name|class
 name|Rewriter
+decl_stmt|;
+name|class
+name|SourceManager
 decl_stmt|;
 name|class
 name|Stmt
@@ -199,6 +209,16 @@ name|size
 argument_list|()
 return|;
 block|}
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|write
+argument_list|(
+argument|llvm::raw_ostream&
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// RemoveText - Remove the specified text.
 name|void
 name|RemoveText
@@ -449,6 +469,19 @@ name|RewriteBuffers
 expr_stmt|;
 name|public
 label|:
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|FileID
+operator|,
+name|RewriteBuffer
+operator|>
+operator|::
+name|iterator
+name|buffer_iterator
+expr_stmt|;
 name|explicit
 name|Rewriter
 argument_list|(
@@ -694,6 +727,18 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
+comment|/// getEditBuffer - This is like getRewriteBufferFor, but always returns a
+comment|/// buffer, and allows you to write on it directly.  This is useful if you
+comment|/// want efficient low-level access to apis for scribbling on one specific
+comment|/// FileID's buffer.
+name|RewriteBuffer
+modifier|&
+name|getEditBuffer
+parameter_list|(
+name|FileID
+name|FID
+parameter_list|)
+function_decl|;
 comment|/// getRewriteBufferFor - Return the rewrite buffer for the specified FileID.
 comment|/// If no modification has been made to it, return null.
 specifier|const
@@ -741,18 +786,29 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// getEditBuffer - This is like getRewriteBufferFor, but always returns a
-comment|/// buffer, and allows you to write on it directly.  This is useful if you
-comment|/// want efficient low-level access to apis for scribbling on one specific
-comment|/// FileID's buffer.
-name|RewriteBuffer
-modifier|&
-name|getEditBuffer
-parameter_list|(
-name|FileID
-name|FID
-parameter_list|)
-function_decl|;
+comment|// Iterators over rewrite buffers.
+name|buffer_iterator
+name|buffer_begin
+parameter_list|()
+block|{
+return|return
+name|RewriteBuffers
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|buffer_iterator
+name|buffer_end
+parameter_list|()
+block|{
+return|return
+name|RewriteBuffers
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|private
 label|:
 name|unsigned

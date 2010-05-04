@@ -213,6 +213,9 @@ comment|///
 comment|/// \param Diag Object through which diagnostics will be emitted it the
 comment|/// buffer cannot be retrieved.
 comment|///
+comment|/// \param Loc If specified, is the location that invalid file diagnostics
+comment|///     will be emitted at.
+comment|///
 comment|/// \param Invalid If non-NULL, will be set \c true if an error occurred.
 specifier|const
 name|llvm
@@ -222,6 +225,10 @@ operator|*
 name|getBuffer
 argument_list|(
 argument|Diagnostic&Diag
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|SourceLocation Loc = SourceLocation()
 argument_list|,
 argument|bool *Invalid =
 literal|0
@@ -1436,6 +1443,8 @@ name|getBuffer
 argument_list|(
 argument|FileID FID
 argument_list|,
+argument|SourceLocation Loc
+argument_list|,
 argument|bool *Invalid =
 literal|0
 argument_list|)
@@ -1456,6 +1465,51 @@ operator|->
 name|getBuffer
 argument_list|(
 name|Diag
+argument_list|,
+operator|*
+name|this
+argument_list|,
+name|Loc
+argument_list|,
+name|Invalid
+argument_list|)
+return|;
+block|}
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getBuffer
+argument_list|(
+argument|FileID FID
+argument_list|,
+argument|bool *Invalid =
+literal|0
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getSLocEntry
+argument_list|(
+name|FID
+argument_list|)
+operator|.
+name|getFile
+argument_list|()
+operator|.
+name|getContentCache
+argument_list|()
+operator|->
+name|getBuffer
+argument_list|(
+name|Diag
+argument_list|,
+operator|*
+name|this
+argument_list|,
+name|SourceLocation
+argument_list|()
 argument_list|,
 name|Invalid
 argument_list|)

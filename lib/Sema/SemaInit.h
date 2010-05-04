@@ -226,12 +226,12 @@ name|unsigned
 name|Location
 decl_stmt|;
 comment|/// \brief When Kind == EK_Base, the base specifier that provides the
-comment|/// base class.
-name|CXXBaseSpecifier
-modifier|*
+comment|/// base class. The lower bit specifies whether the base is an inherited
+comment|/// virtual base.
+name|uintptr_t
 name|Base
 decl_stmt|;
-comment|/// \brief When Kind = EK_ArrayElement or EK_VectorElement, the
+comment|/// \brief When Kind == EK_ArrayElement or EK_VectorElement, the
 comment|/// index of the array or vector element being initialized.
 name|unsigned
 name|Index
@@ -430,16 +430,35 @@ name|QualType
 name|Type
 parameter_list|)
 block|{
-return|return
 name|InitializedEntity
-argument_list|(
+name|Entity
+decl_stmt|;
+name|Entity
+operator|.
+name|Kind
+operator|=
 name|EK_Parameter
-argument_list|,
-name|SourceLocation
-argument_list|()
-argument_list|,
+expr_stmt|;
+name|Entity
+operator|.
 name|Type
-argument_list|)
+operator|=
+name|Type
+expr_stmt|;
+name|Entity
+operator|.
+name|Parent
+operator|=
+literal|0
+expr_stmt|;
+name|Entity
+operator|.
+name|VariableOrMember
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|Entity
 return|;
 block|}
 comment|/// \brief Create the initialization entity for the result of a function.
@@ -544,6 +563,9 @@ parameter_list|,
 name|CXXBaseSpecifier
 modifier|*
 name|Base
+parameter_list|,
+name|bool
+name|IsInheritedVirtualBase
 parameter_list|)
 function_decl|;
 comment|/// \brief Create the initialization entity for a member subobject.
@@ -667,7 +689,39 @@ literal|"Not a base specifier"
 argument_list|)
 block|;
 return|return
+name|reinterpret_cast
+operator|<
+name|CXXBaseSpecifier
+operator|*
+operator|>
+operator|(
 name|Base
+operator|&
+operator|~
+literal|0x1
+operator|)
+return|;
+block|}
+comment|/// \brief Return whether the base is an inherited virtual base.
+name|bool
+name|isInheritedVirtualBase
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_Base
+operator|&&
+literal|"Not a base specifier"
+argument_list|)
+block|;
+return|return
+name|Base
+operator|&
+literal|0x1
 return|;
 block|}
 comment|/// \brief Determine the location of the 'return' keyword when initializing
@@ -1271,6 +1325,11 @@ block|,
 comment|/// \brief Reference binding to a temporary.
 name|SK_BindReferenceToTemporary
 block|,
+comment|/// \brief An optional copy of a temporary object to another
+comment|/// temporary object, which is permitted (but not required) by
+comment|/// C++98/03 but not C++0x.
+name|SK_ExtraneousCopyToTemporary
+block|,
 comment|/// \brief Perform a user-defined conversion, either via a conversion
 comment|/// function or via a constructor.
 name|SK_UserConversion
@@ -1442,6 +1501,21 @@ comment|/// \brief The candidate set created when initialization failed.
 name|OverloadCandidateSet
 name|FailedCandidateSet
 decl_stmt|;
+comment|/// \brief Prints a follow-up note that highlights the location of
+comment|/// the initialized entity, if it's remote.
+name|void
+name|PrintInitLocationNote
+parameter_list|(
+name|Sema
+modifier|&
+name|S
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|&
+name|Entity
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// \brief Try to perform initialization of the given entity, creating a
@@ -1631,6 +1705,13 @@ name|isAmbiguous
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this initialization is direct call to a
+comment|/// constructor.
+name|bool
+name|isConstructorInitialization
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Add a new step in the initialization that resolves the address
 comment|/// of an overloaded function to a specific function declaration.
 comment|///
@@ -1666,9 +1747,12 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step binding a reference to an object.
 comment|///
-comment|/// \param BindingTemporary true if we are binding a reference to a temporary
+comment|/// \param BindingTemporary True if we are binding a reference to a temporary
 comment|/// object (thereby extending its lifetime); false if we are binding to an
 comment|/// lvalue or an lvalue treated as an rvalue.
+comment|///
+comment|/// \param UnnecessaryCopy True if we should check for a copy
+comment|/// constructor for a completely unnecessary but
 name|void
 name|AddReferenceBindingStep
 parameter_list|(
@@ -1677,6 +1761,23 @@ name|T
 parameter_list|,
 name|bool
 name|BindingTemporary
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a new step that makes an extraneous copy of the input
+comment|/// to a temporary of the same class type.
+comment|///
+comment|/// This extraneous copy only occurs during reference binding in
+comment|/// C++98/03, where we are permitted (but not required) to introduce
+comment|/// an extra copy. At a bare minimum, we must check that we could
+comment|/// call the copy constructor, and produce a diagnostic if the copy
+comment|/// constructor is inaccessible or no copy constructor matches.
+comment|//
+comment|/// \param T The type of the temporary being created.
+name|void
+name|AddExtraneousCopyToTemporary
+parameter_list|(
+name|QualType
+name|T
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step invoking a conversion function, which is either

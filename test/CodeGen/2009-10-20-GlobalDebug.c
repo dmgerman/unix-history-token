@@ -10,7 +10,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: asciz "global" ## External Name
+comment|// CHECK: asciz   "global" ## External Name
+end_comment
+
+begin_comment
+comment|// CHECK: asciz   "localstatic"          ## External Name
 end_comment
 
 begin_function
@@ -18,6 +22,10 @@ name|int
 name|main
 parameter_list|()
 block|{
+specifier|static
+name|int
+name|localstatic
+decl_stmt|;
 return|return
 literal|0
 return|;

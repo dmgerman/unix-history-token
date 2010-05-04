@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fblocks -fsyntax-only -Wunused-parameter %s -Xclang -verify
+comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Wunused-parameter %s 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Wunused %s 2>&1 | FileCheck -check-prefix=CHECK-unused %s
 end_comment
 
 begin_decl_stmt
@@ -13,7 +17,6 @@ argument_list|,
 name|int
 name|y
 argument_list|,
-comment|// expected-warning{{unused}}
 name|int
 name|z
 name|__attribute__
@@ -46,7 +49,6 @@ parameter_list|,
 name|int
 name|y
 parameter_list|,
-comment|// expected-warning{{unused}}
 name|int
 name|z
 name|__attribute__
@@ -70,6 +72,38 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
 unit|}
+comment|// Used when testing '-Wunused' to see that we only emit one diagnostic, and no
+end_comment
+
+begin_comment
+comment|// warnings for the above cases.
+end_comment
+
+begin_function
+unit|static
+name|void
+name|achor
+parameter_list|()
+block|{}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// CHECK: 5:12: warning: unused parameter 'y'
+end_comment
+
+begin_comment
+comment|// CHECK: 12:15: warning: unused parameter 'y'
+end_comment
+
+begin_comment
+comment|// CHECK-unused: 1 warning generated
+end_comment
+
 end_unit
 

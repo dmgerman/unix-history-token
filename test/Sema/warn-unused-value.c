@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused-value %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wall %s
+end_comment
+
 begin_decl_stmt
 name|int
 name|i
@@ -234,6 +242,71 @@ comment|// expected-warning {{expression result unused}}
 operator|*
 name|pj
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Don't warn about unused '||', '&&' expressions that contain assignments.
+end_comment
+
+begin_function_decl
+name|int
+name|test_logical_foo1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_logical_foo2
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_logical_foo3
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
+name|test_logical_bar
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+operator|(
+name|x
+operator|=
+name|test_logical_foo1
+argument_list|()
+operator|)
+operator|||
+comment|// no-warning
+operator|(
+name|x
+operator|=
+name|test_logical_foo2
+argument_list|()
+operator|)
+operator|||
+comment|// no-warning
+operator|(
+name|x
+operator|=
+name|test_logical_foo3
+argument_list|()
+operator|)
+expr_stmt|;
+comment|// no-warning
+return|return
+name|x
+return|;
 block|}
 end_function
 

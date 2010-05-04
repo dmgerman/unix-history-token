@@ -155,7 +155,7 @@ comment|// APCS-GNU: define arm_apcscc void @f5(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s5* noalias sret
+comment|// APCS-GNU: struct.s5* sret
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ comment|// APCS-GNU: define arm_apcscc void @f6(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s6* noalias sret
+comment|// APCS-GNU: struct.s6* sret
 end_comment
 
 begin_comment
@@ -263,7 +263,7 @@ comment|// APCS-GNU: define arm_apcscc void @f8(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s8* noalias sret
+comment|// APCS-GNU: struct.s8* sret
 end_comment
 
 begin_comment
@@ -375,7 +375,7 @@ comment|// APCS-GNU: define arm_apcscc void @f11(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s10* noalias sret
+comment|// APCS-GNU: struct.s10* sret
 end_comment
 
 begin_comment
@@ -447,7 +447,7 @@ comment|// APCS-GNU: define arm_apcscc void @f13(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s13* noalias sret
+comment|// APCS-GNU: struct.s13* sret
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ comment|// APCS-GNU: define arm_apcscc void @f14(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s13* noalias sret
+comment|// APCS-GNU: struct.s13* sret
 end_comment
 
 begin_comment
@@ -625,7 +625,7 @@ comment|// APCS-GNU: define arm_apcscc void @f19(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s19* noalias sret
+comment|// APCS-GNU: struct.s19* sret
 end_comment
 
 begin_comment
@@ -662,7 +662,7 @@ comment|// APCS-GNU: define arm_apcscc void @f20(
 end_comment
 
 begin_comment
-comment|// APCS-GNU: struct.s20* noalias sret
+comment|// APCS-GNU: struct.s20* sret
 end_comment
 
 begin_comment
@@ -695,7 +695,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f21()
+comment|// APCS-GNU: define arm_apcscc i8 @f21()
 end_comment
 
 begin_comment
@@ -762,19 +762,19 @@ comment|// AAPCS: define arm_aapcscc i32 @f23()
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f24({{.*}} noalias sret
+comment|// AAPCS: define arm_aapcscc void @f24({{.*}} sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f25({{.*}} noalias sret
+comment|// AAPCS: define arm_aapcscc void @f25({{.*}} sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f26({{.*}} noalias sret
+comment|// AAPCS: define arm_aapcscc void @f26({{.*}} sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f27({{.*}} noalias sret
+comment|// AAPCS: define arm_aapcscc void @f27({{.*}} sret
 end_comment
 
 begin_function
@@ -895,11 +895,11 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f30({{.*}} noalias sret
+comment|// APCS-GNU: define arm_apcscc void @f30({{.*}} sret
 end_comment
 
 begin_comment
-comment|// AAPCS: define arm_aapcscc void @f30({{.*}} noalias sret
+comment|// AAPCS: define arm_aapcscc void @f30({{.*}} sret
 end_comment
 
 begin_struct

@@ -565,5 +565,35 @@ begin_comment
 comment|// expected-warning {{attribute 'warn_unused_result' cannot be applied to functions without return value}}
 end_comment
 
+begin_comment
+comment|// rdar://7410924
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|some_function
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|t10
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|*
+operator|)
+name|some_function
+argument_list|()
+expr_stmt|;
+comment|//expected-warning {{expression result unused; should this cast be to 'void'?}}
+block|}
+end_function
+
 end_unit
 

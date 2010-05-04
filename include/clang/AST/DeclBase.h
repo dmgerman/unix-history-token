@@ -290,57 +290,92 @@ directive|include
 file|"clang/AST/DeclNodes.def"
 block|}
 enum|;
-comment|/// IdentifierNamespace - According to C99 6.2.3, there are four
-comment|/// namespaces, labels, tags, members and ordinary
-comment|/// identifiers. These are meant as bitmasks, so that searches in
-comment|/// C++ can look into the "tag" namespace during ordinary lookup. We
-comment|/// use additional namespaces for Objective-C entities.  We also put
-comment|/// C++ friend declarations (of previously-undeclared entities) in
-comment|/// shadow namespaces, and 'using' declarations (as opposed to their
-comment|/// implicit shadow declarations) can be found in their own
-comment|/// namespace.
+comment|/// IdentifierNamespace - The different namespaces in which
+comment|/// declarations may appear.  According to C99 6.2.3, there are
+comment|/// four namespaces, labels, tags, members and ordinary
+comment|/// identifiers.  C++ describes lookup completely differently:
+comment|/// certain lookups merely "ignore" certain kinds of declarations,
+comment|/// usually based on whether the declaration is of a type, etc.
+comment|///
+comment|/// These are meant as bitmasks, so that searches in
+comment|/// C++ can look into the "tag" namespace during ordinary lookup.
+comment|///
+comment|/// Decl currently provides 16 bits of IDNS bits.
 enum|enum
 name|IdentifierNamespace
 block|{
+comment|/// Labels, declared with 'x:' and referenced with 'goto x'.
 name|IDNS_Label
 init|=
-literal|0x1
+literal|0x0001
 block|,
+comment|/// Tags, declared with 'struct foo;' and referenced with
+comment|/// 'struct foo'.  All tags are also types.  This is what
+comment|/// elaborated-type-specifiers look for in C.
 name|IDNS_Tag
 init|=
-literal|0x2
+literal|0x0002
 block|,
+comment|/// Types, declared with 'struct foo', typedefs, etc.
+comment|/// This is what elaborated-type-specifiers look for in C++,
+comment|/// but note that it's ill-formed to find a non-tag.
+name|IDNS_Type
+init|=
+literal|0x0004
+block|,
+comment|/// Members, declared with object declarations within tag
+comment|/// definitions.  In C, these can only be found by "qualified"
+comment|/// lookup in member expressions.  In C++, they're found by
+comment|/// normal lookup.
 name|IDNS_Member
 init|=
-literal|0x4
+literal|0x0008
 block|,
+comment|/// Namespaces, declared with 'namespace foo {}'.
+comment|/// Lookup for nested-name-specifiers find these.
+name|IDNS_Namespace
+init|=
+literal|0x0010
+block|,
+comment|/// Ordinary names.  In C, everything that's not a label, tag,
+comment|/// or member ends up here.
 name|IDNS_Ordinary
 init|=
-literal|0x8
+literal|0x0020
 block|,
+comment|/// Objective C @protocol.
 name|IDNS_ObjCProtocol
 init|=
-literal|0x10
+literal|0x0040
 block|,
-name|IDNS_ObjCImplementation
-init|=
-literal|0x20
-block|,
-name|IDNS_ObjCCategoryName
-init|=
-literal|0x40
-block|,
+comment|/// This declaration is a friend function.  A friend function
+comment|/// declaration is always in this namespace but may also be in
+comment|/// IDNS_Ordinary if it was previously declared.
 name|IDNS_OrdinaryFriend
 init|=
-literal|0x80
+literal|0x0080
 block|,
+comment|/// This declaration is a friend class.  A friend class
+comment|/// declaration is always in this namespace but may also be in
+comment|/// IDNS_Tag|IDNS_Type if it was previously declared.
 name|IDNS_TagFriend
 init|=
-literal|0x100
+literal|0x0100
 block|,
+comment|/// This declaration is a using declaration.  A using declaration
+comment|/// *introduces* a number of other declarations into the current
+comment|/// scope, and those declarations use the IDNS of their targets,
+comment|/// but the actual using declarations go in this namespace.
 name|IDNS_Using
 init|=
-literal|0x200
+literal|0x0200
+block|,
+comment|/// This declaration is a C++ operator declared in a non-class
+comment|/// context.  All such operators are also in IDNS_Ordinary.
+comment|/// C++ lexical operator lookup looks for these.
+name|IDNS_NonMemberOperator
+init|=
+literal|0x0400
 block|}
 enum|;
 comment|/// ObjCDeclQualifier - Qualifier used on types in method declarations
@@ -1252,6 +1287,49 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|bool
+name|hasTagIdentifierNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTagIdentifierNamespace
+argument_list|(
+name|getIdentifierNamespace
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+name|bool
+name|isTagIdentifierNamespace
+parameter_list|(
+name|unsigned
+name|NS
+parameter_list|)
+block|{
+comment|// TagDecls have Tag and Type set and may also have TagFriend.
+return|return
+operator|(
+name|NS
+operator|&
+operator|~
+name|IDNS_TagFriend
+operator|)
+operator|==
+operator|(
+name|IDNS_Tag
+operator||
+name|IDNS_Type
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/// getLexicalDeclContext - The declaration context where this Decl was
 end_comment
@@ -1985,6 +2063,8 @@ name|IDNS_Tag
 operator||
 name|IDNS_Ordinary
 operator||
+name|IDNS_Type
+operator||
 name|IDNS_TagFriend
 operator||
 name|IDNS_OrdinaryFriend
@@ -2020,6 +2100,8 @@ condition|)
 name|IdentifierNamespace
 operator||=
 name|IDNS_Tag
+operator||
+name|IDNS_Type
 expr_stmt|;
 block|}
 if|if
@@ -2130,11 +2212,54 @@ end_return
 
 begin_comment
 unit|}
+comment|/// Specifies that this declaration is a C++ overloaded non-member.
+end_comment
+
+begin_macro
+unit|void
+name|setNonMemberOperator
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|Function
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|FunctionTemplate
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|IdentifierNamespace
+operator|&
+name|IDNS_Ordinary
+operator|)
+operator|&&
+literal|"visible non-member operators should be in ordinary namespace"
+argument_list|)
+expr_stmt|;
+name|IdentifierNamespace
+operator||=
+name|IDNS_NonMemberOperator
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|bool
 name|classof
 parameter_list|(

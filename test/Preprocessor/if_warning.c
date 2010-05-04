@@ -90,5 +90,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// PR6852
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|'somesillylongthing'
+end_if
+
+begin_comment
+comment|// expected-warning {{character constant too long for its type}} \
+end_comment
+
+begin_comment
+comment|// expected-warning {{multi-character character constant}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

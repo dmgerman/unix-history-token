@@ -97,7 +97,7 @@ name|s
 init|=
 name|r
 struct|;
-comment|// expected-error {{incompatible type initializing}}
+comment|// expected-error {{initializing 'struct x' with an expression of incompatible type 'struct x'}}
 block|}
 end_function
 

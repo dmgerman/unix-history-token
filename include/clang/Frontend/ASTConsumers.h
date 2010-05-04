@@ -165,13 +165,6 @@ modifier|*
 name|CreateDeclContextPrinter
 parameter_list|()
 function_decl|;
-comment|// RecordLayout dumper: prints out the record layout information for all records
-comment|// in the translation unit; this is intended for debugging.
-name|ASTConsumer
-modifier|*
-name|CreateRecordLayoutDumper
-parameter_list|()
-function_decl|;
 comment|// ObjC rewriter: attempts tp rewrite ObjC constructs into pure C code.
 comment|// This is considered experimental, and only works with Apple's ObjC runtime.
 name|ASTConsumer

@@ -92,7 +92,7 @@ comment|// CHECK: enum1.c:34:3: note: declared here with type 'enum E5'
 end_comment
 
 begin_comment
-comment|// CHECK: 20 diagnostics generated
+comment|// CHECK: 4 warnings and 4 errors generated
 end_comment
 
 end_unit

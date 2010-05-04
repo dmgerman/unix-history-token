@@ -379,6 +379,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
@@ -393,6 +395,8 @@ argument_list|,
 name|kind
 argument_list|,
 name|op
+argument_list|,
+name|BasePath
 argument_list|,
 name|writtenTy
 argument_list|)
@@ -485,9 +489,6 @@ argument_list|()
 condition|)
 block|{
 case|case
-name|CXXNamedCastExprClass
-case|:
-case|case
 name|CXXStaticCastExprClass
 case|:
 case|case
@@ -541,6 +542,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
@@ -555,6 +558,8 @@ argument_list|,
 argument|kind
 argument_list|,
 argument|op
+argument_list|,
+argument|BasePath
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -625,6 +630,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
@@ -639,6 +646,8 @@ argument_list|,
 argument|kind
 argument_list|,
 argument|op
+argument_list|,
+argument|BasePath
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -709,6 +718,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
@@ -723,6 +734,8 @@ argument_list|,
 argument|kind
 argument_list|,
 argument|op
+argument_list|,
+argument|BasePath
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -804,6 +817,8 @@ argument_list|,
 argument|CK_NoOp
 argument_list|,
 argument|op
+argument_list|,
+argument|CXXBaseSpecifierArray()
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -1132,21 +1147,16 @@ name|Expr
 block|{
 name|private
 operator|:
-name|bool
-name|isTypeOp
-operator|:
-literal|1
-block|;
-expr|union
-block|{
-name|void
-operator|*
-name|Ty
-block|;
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
 name|Stmt
 operator|*
-name|Ex
-block|;   }
+block|,
+name|TypeSourceInfo
+operator|*
+operator|>
 name|Operand
 block|;
 name|SourceRange
@@ -1156,13 +1166,11 @@ name|public
 operator|:
 name|CXXTypeidExpr
 argument_list|(
-argument|bool isTypeOp
-argument_list|,
-argument|void *op
-argument_list|,
 argument|QualType Ty
 argument_list|,
-argument|const SourceRange r
+argument|TypeSourceInfo *Operand
+argument_list|,
+argument|SourceRange R
 argument_list|)
 operator|:
 name|Expr
@@ -1175,80 +1183,93 @@ comment|// typeid is never type-dependent (C++ [temp.dep.expr]p4)
 name|false
 argument_list|,
 comment|// typeid is value-dependent if the type or expression are dependent
-operator|(
-name|isTypeOp
-condition|?
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
-name|op
-argument_list|)
+name|Operand
+operator|->
+name|getType
+argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
-else|:
-name|static_cast
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|op
-operator|)
-operator|->
-name|isValueDependent
-argument_list|()
-operator|)
 argument_list|)
 block|,
-name|isTypeOp
+name|Operand
 argument_list|(
-name|isTypeOp
+name|Operand
 argument_list|)
 block|,
 name|Range
 argument_list|(
-argument|r
+argument|R
 argument_list|)
-block|{
-if|if
-condition|(
-name|isTypeOp
-condition|)
-name|Operand
-operator|.
-name|Ty
-operator|=
-name|op
-expr_stmt|;
-else|else
-comment|// op was an Expr*, so cast it back to that to be safe
-name|Operand
-operator|.
-name|Ex
-operator|=
-name|static_cast
-operator|<
+block|{ }
+name|CXXTypeidExpr
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|Expr *Operand
+argument_list|,
+argument|SourceRange R
+argument_list|)
+operator|:
 name|Expr
-operator|*
-operator|>
-operator|(
-name|op
-operator|)
-expr_stmt|;
-block|}
+argument_list|(
+name|CXXTypeidExprClass
+argument_list|,
+name|Ty
+argument_list|,
+comment|// typeid is never type-dependent (C++ [temp.dep.expr]p4)
+name|false
+argument_list|,
+comment|// typeid is value-dependent if the type or expression are dependent
+name|Operand
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|||
+name|Operand
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|)
+block|,
+name|Operand
+argument_list|(
+name|Operand
+argument_list|)
+block|,
+name|Range
+argument_list|(
+argument|R
+argument_list|)
+block|{ }
 name|bool
 name|isTypeOperand
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isTypeOp
+name|Operand
+operator|.
+name|is
+operator|<
+name|TypeSourceInfo
+operator|*
+operator|>
+operator|(
+operator|)
 return|;
 block|}
+comment|/// \brief Retrieves the type operand of this typeid() expression after
+comment|/// various required adjustments (removing reference types, cv-qualifiers).
 name|QualType
 name|getTypeOperand
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Retrieve source information for the type operand.
+name|TypeSourceInfo
+operator|*
+name|getTypeOperandSourceInfo
 argument_list|()
 specifier|const
 block|{
@@ -1261,14 +1282,15 @@ literal|"Cannot call getTypeOperand for typeid(expr)"
 argument_list|)
 block|;
 return|return
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
 name|Operand
 operator|.
-name|Ty
-argument_list|)
+name|get
+operator|<
+name|TypeSourceInfo
+operator|*
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 name|Expr
@@ -1295,7 +1317,13 @@ operator|>
 operator|(
 name|Operand
 operator|.
-name|Ex
+name|get
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+operator|)
 operator|)
 return|;
 block|}
@@ -2518,6 +2546,20 @@ operator|:
 name|public
 name|Expr
 block|{
+name|public
+operator|:
+expr|enum
+name|ConstructionKind
+block|{
+name|CK_Complete
+block|,
+name|CK_NonVirtualBase
+block|,
+name|CK_VirtualBase
+block|}
+block|;
+name|private
+operator|:
 name|CXXConstructorDecl
 operator|*
 name|Constructor
@@ -2535,10 +2577,10 @@ name|ZeroInitialization
 operator|:
 literal|1
 block|;
-name|bool
-name|BaseInitialization
+name|unsigned
+name|ConstructKind
 operator|:
-literal|1
+literal|2
 block|;
 name|Stmt
 operator|*
@@ -2570,7 +2612,7 @@ argument|unsigned numargs
 argument_list|,
 argument|bool ZeroInitialization = false
 argument_list|,
-argument|bool BaseInitialization = false
+argument|ConstructionKind ConstructKind = CK_Complete
 argument_list|)
 block|;
 operator|~
@@ -2620,7 +2662,7 @@ argument|unsigned NumArgs
 argument_list|,
 argument|bool ZeroInitialization = false
 argument_list|,
-argument|bool BaseInitialization = false
+argument|ConstructionKind ConstructKind = CK_Complete
 argument_list|)
 block|;
 name|CXXConstructorDecl
@@ -2707,25 +2749,28 @@ name|ZeroInit
 block|;   }
 comment|/// \brief Determines whether this constructor is actually constructing
 comment|/// a base class (rather than a complete object).
-name|bool
-name|isBaseInitialization
+name|ConstructionKind
+name|getConstructionKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|BaseInitialization
+operator|(
+name|ConstructionKind
+operator|)
+name|ConstructKind
 return|;
 block|}
 name|void
-name|setBaseInitialization
+name|setConstructionKind
 argument_list|(
-argument|bool BI
+argument|ConstructionKind CK
 argument_list|)
 block|{
-name|BaseInitialization
+name|ConstructKind
 operator|=
-name|BI
-block|; }
+name|CK
+block|;   }
 typedef|typedef
 name|ExprIterator
 name|arg_iterator
@@ -2967,6 +3012,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *castExpr
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|SourceLocation rParenLoc
 argument_list|)
 operator|:
@@ -2979,6 +3026,8 @@ argument_list|,
 name|kind
 argument_list|,
 name|castExpr
+argument_list|,
+name|BasePath
 argument_list|,
 name|writtenTy
 argument_list|)
@@ -3136,6 +3185,8 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|SourceLocation rParenLoc
+argument_list|,
+argument|bool ZeroInitialization = false
 argument_list|)
 block|;
 operator|~
@@ -5072,6 +5123,13 @@ argument_list|,
 name|End
 argument_list|)
 block|;   }
+comment|/// Gets the naming class of this lookup, if any.
+name|CXXRecordDecl
+operator|*
+name|getNamingClass
+argument_list|()
+specifier|const
+block|;
 typedef|typedef
 name|UnresolvedSetImpl
 operator|::

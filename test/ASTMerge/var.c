@@ -40,7 +40,7 @@ comment|// CHECK: var1.c:7:5: note: declared here with type 'int [18]'
 end_comment
 
 begin_comment
-comment|// CHECK: 6 diagnostics
+comment|// CHECK: 3 errors
 end_comment
 
 end_unit

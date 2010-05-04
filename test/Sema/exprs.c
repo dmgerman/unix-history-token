@@ -409,7 +409,7 @@ name|X
 operator|==
 literal|"foo"
 return|;
-comment|// expected-warning {{comparison against a string literal is unspecified}}
+comment|// expected-warning {{comparison against a string literal is unspecified (use strncmp instead)}}
 block|}
 end_function
 
@@ -620,6 +620,43 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// no warning.
+block|}
+end_function
+
+begin_comment
+comment|// PR6501
+end_comment
+
+begin_function_decl
+name|void
+name|test18_a
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test18
+parameter_list|(
+name|int
+name|b
+parameter_list|)
+block|{
+name|test18_a
+argument_list|(
+name|b
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{too many arguments to function call, expected 1, have 2}}
+name|test18_a
+argument_list|()
+expr_stmt|;
+comment|// expected-error {{too few arguments to function call, expected 1, have 0}}
 block|}
 end_function
 

@@ -838,6 +838,11 @@ comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
 init|=
 literal|14
+block|,
+comment|/// \brief NSConstantString type
+name|SPECIAL_TYPE_NS_CONSTANT_STRING
+init|=
+literal|15
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
@@ -1048,6 +1053,9 @@ name|EXPR_PAREN
 block|,
 comment|/// \brief A UnaryOperator record.
 name|EXPR_UNARY_OPERATOR
+block|,
+comment|/// \brief An OffsetOfExpr record.
+name|EXPR_OFFSETOF
 block|,
 comment|/// \brief A SizefAlignOfExpr record.
 name|EXPR_SIZEOF_ALIGN_OF

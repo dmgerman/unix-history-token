@@ -30,22 +30,30 @@ comment|// This should print as ".. ." to avoid turning into ...
 end_comment
 
 begin_comment
-comment|// CHECK: A: . . .
+comment|// CHECK: A: .. .
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DOT
-value|.
+name|X
+value|0 .. 1
 end_define
 
 begin_label
-name|C
+name|B
 label|:
 end_label
 
-begin_expr_stmt
+begin_decl_stmt
+name|X
+comment|// CHECK: B: 0 .. 1
+define|#
+directive|define
+name|DOT
+value|.
+name|C
+range|:
 operator|..
 name|DOT
 comment|// CHECK: C: .. .
@@ -101,7 +109,7 @@ name|F
 operator|:
 operator|>>
 name|equal
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|// CHECK: F:>> =

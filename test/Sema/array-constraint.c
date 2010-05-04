@@ -231,6 +231,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -251,7 +255,7 @@ argument_list|(
 name|staticAry
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{passing 'char const [5]' discards qualifiers, expected 'char *'}}
+comment|// expected-warning{{passing 'char const [5]' to parameter of type 'char *' discards qualifiers}}
 block|}
 end_function
 

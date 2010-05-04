@@ -14,7 +14,7 @@ union_decl|<anonymous> __mbstate_t;
 end_typedef
 
 begin_comment
-comment|// expected-error {{declaration of anonymous union must be a definition}} expected-error {{declaration does not declare anything}}
+comment|// expected-error {{declaration of anonymous union must be a definition}} expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{declaration does not declare anything}}
+comment|// expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_typedef
@@ -76,7 +76,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|// expected-error {{declaration does not declare anything}}
+comment|// expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_expr_stmt
@@ -86,12 +86,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{declaration does not declare anything}}
+comment|// expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_struct_decl
 struct_decl|struct;
-comment|// expected-error {{declaration of anonymous struct must be a definition}} // expected-error {{declaration does not declare anything}}
+comment|// expected-error {{declaration of anonymous struct must be a definition}} // expected-warning {{declaration does not declare anything}}
 struct_decl|typedef int I;
 end_struct_decl
 
@@ -101,7 +101,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{declaration does not declare anything}}
+comment|// expected-warning {{declaration does not declare anything}}
 end_comment
 
 begin_comment

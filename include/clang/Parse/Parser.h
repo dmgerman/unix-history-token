@@ -168,6 +168,93 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
+comment|/// PrecedenceLevels - These are precedences for the binary/ternary
+comment|/// operators in the C99 grammar.  These have been named to relate
+comment|/// with the C99 grammar productions.  Low precedences numbers bind
+comment|/// more weakly than high numbers.
+name|namespace
+name|prec
+block|{
+enum|enum
+name|Level
+block|{
+name|Unknown
+init|=
+literal|0
+block|,
+comment|// Not binary operator.
+name|Comma
+init|=
+literal|1
+block|,
+comment|// ,
+name|Assignment
+init|=
+literal|2
+block|,
+comment|// =, *=, /=, %=, +=, -=,<<=,>>=,&=, ^=, |=
+name|Conditional
+init|=
+literal|3
+block|,
+comment|// ?
+name|LogicalOr
+init|=
+literal|4
+block|,
+comment|// ||
+name|LogicalAnd
+init|=
+literal|5
+block|,
+comment|//&&
+name|InclusiveOr
+init|=
+literal|6
+block|,
+comment|// |
+name|ExclusiveOr
+init|=
+literal|7
+block|,
+comment|// ^
+name|And
+init|=
+literal|8
+block|,
+comment|//&
+name|Equality
+init|=
+literal|9
+block|,
+comment|// ==, !=
+name|Relational
+init|=
+literal|10
+block|,
+comment|//>=,<=,>,<
+name|Shift
+init|=
+literal|11
+block|,
+comment|//<<,>>
+name|Additive
+init|=
+literal|12
+block|,
+comment|// -, +
+name|Multiplicative
+init|=
+literal|13
+block|,
+comment|// *, /, %
+name|PointerToMember
+init|=
+literal|14
+comment|// .*, ->*
+block|}
+enum|;
+block|}
 comment|/// Parser - This implements a parser for the C family of languages.  After
 comment|/// parsing units of the grammar, productions are invoked to handle whatever has
 comment|/// been read.
@@ -1563,6 +1650,8 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Diagnostic Emission and Error recovery.
+name|public
+label|:
 name|DiagnosticBuilder
 name|Diag
 parameter_list|(
@@ -1585,6 +1674,8 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+name|private
+label|:
 name|void
 name|SuggestParentheses
 parameter_list|(
@@ -2523,11 +2614,38 @@ name|ConsumeAndStoreUntil
 argument_list|(
 argument|tok::TokenKind T1
 argument_list|,
+argument|CachedTokens&Toks
+argument_list|,
+argument|bool StopAtSemi = true
+argument_list|,
+argument|bool ConsumeFinalToken = true
+argument_list|)
+block|{
+return|return
+name|ConsumeAndStoreUntil
+argument_list|(
+name|T1
+argument_list|,
+name|T1
+argument_list|,
+name|Toks
+argument_list|,
+name|StopAtSemi
+argument_list|,
+name|ConsumeFinalToken
+argument_list|)
+return|;
+block|}
+name|bool
+name|ConsumeAndStoreUntil
+argument_list|(
+argument|tok::TokenKind T1
+argument_list|,
 argument|tok::TokenKind T2
 argument_list|,
 argument|CachedTokens&Toks
 argument_list|,
-argument|tok::TokenKind EarlyAbortIf = tok::unknown
+argument|bool StopAtSemi = true
 argument_list|,
 argument|bool ConsumeFinalToken = true
 argument_list|)
@@ -2833,7 +2951,7 @@ name|ParseRHSOfBinaryExpression
 argument_list|(
 argument|OwningExprResult LHS
 argument_list|,
-argument|unsigned MinPrec
+argument|prec::Level MinPrec
 argument_list|)
 block|;
 name|OwningExprResult
@@ -3183,6 +3301,11 @@ modifier|&
 name|DS
 parameter_list|)
 function_decl|;
+name|bool
+name|isCXXSimpleTypeSpecifier
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// ParseCXXSimpleTypeSpecifier - [C++ 7.1.5.2] Simple type specifiers.
 comment|/// This should only be called when the current token is known to be part of
 comment|/// simple-type-specifier.
@@ -3307,61 +3430,6 @@ function_decl|;
 comment|// ^{...}
 comment|//===--------------------------------------------------------------------===//
 comment|// Objective-C Expressions
-name|bool
-name|isTokObjCMessageIdentifierReceiver
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|Tok
-operator|.
-name|is
-argument_list|(
-name|tok
-operator|::
-name|identifier
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-name|IdentifierInfo
-operator|*
-name|II
-operator|=
-name|Tok
-operator|.
-name|getIdentifierInfo
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|Actions
-operator|.
-name|getTypeName
-argument_list|(
-operator|*
-name|II
-argument_list|,
-name|Tok
-operator|.
-name|getLocation
-argument_list|()
-argument_list|,
-name|CurScope
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|II
-operator|==
-name|Ident_super
-return|;
-block|}
 name|OwningExprResult
 name|ParseObjCAtExpression
 parameter_list|(
@@ -3408,11 +3476,11 @@ name|SourceLocation
 name|LBracloc
 parameter_list|,
 name|SourceLocation
-name|NameLoc
+name|SuperLoc
 parameter_list|,
-name|IdentifierInfo
+name|TypeTy
 modifier|*
-name|ReceiverName
+name|ReceiverType
 parameter_list|,
 name|ExprArg
 name|ReceiverExpr
@@ -3425,14 +3493,27 @@ name|SourceLocation
 name|LBracloc
 parameter_list|,
 name|SourceLocation
-name|NameLoc
+name|SuperLoc
 parameter_list|,
-name|IdentifierInfo
+name|TypeTy
 modifier|*
-name|ReceiverName
+name|ReceiverType
 parameter_list|,
 name|ExprArg
 name|ReceiverExpr
+parameter_list|)
+function_decl|;
+name|bool
+name|ParseObjCXXMessageReceiver
+parameter_list|(
+name|bool
+modifier|&
+name|IsExpr
+parameter_list|,
+name|void
+modifier|*
+modifier|&
+name|TypeOrExpr
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -4822,7 +4903,6 @@ name|SourceLocation
 modifier|&
 name|EndLocation
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|*
 name|SS
@@ -5272,14 +5352,11 @@ name|ParseUnaryTypeTrait
 parameter_list|()
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

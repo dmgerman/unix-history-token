@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_function
@@ -281,11 +281,11 @@ comment|// Constants
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g3 = constant i32 10' %t
+comment|// CHECK: @g3 = constant i32 10
 end_comment
 
 begin_comment
-comment|// RUN: grep '@f4.g4 = internal constant i32 12' %t
+comment|// CHECK: @f4.g4 = internal constant i32 12
 end_comment
 
 begin_decl_stmt

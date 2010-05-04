@@ -14,6 +14,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{passing argument to parameter 'x' here}}
+end_comment
+
 begin_function
 name|int
 name|b
@@ -33,7 +37,7 @@ block|}
 end_function
 
 begin_comment
-comment|// expected-warning {{pointer types point to integer types with different sign}}
+comment|// expected-warning {{passing 'unsigned int *' to parameter of type 'int *' converts between pointers to integer types with different sign}}
 end_comment
 
 end_unit

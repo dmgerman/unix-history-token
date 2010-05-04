@@ -159,12 +159,12 @@ name|ip
 operator|=
 name|dp
 expr_stmt|;
-comment|// expected-warning {{incompatible pointer types assigning 'double *', expected 'int *'}}
+comment|// expected-warning {{incompatible pointer types assigning to 'int *' from 'double *'}}
 name|dp
 operator|=
 name|ip
 expr_stmt|;
-comment|// expected-warning {{incompatible pointer types assigning 'int *', expected 'double *'}}
+comment|// expected-warning {{incompatible pointer types assigning to 'double *' from 'int *'}}
 name|dp
 operator|=
 literal|0
@@ -213,7 +213,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|// expected-warning {{incompatible pointer types assigning 'double *', expected 'int *'}}
+comment|// expected-warning {{incompatible pointer types assigning to 'int *' from 'double *'}}
 specifier|const
 name|int
 modifier|*
@@ -618,7 +618,7 @@ argument_list|()
 else|:
 name|nil
 return|;
-comment|// expected-warning {{pointer/integer type mismatch in conditional expression ('int' and 'void *')}} expected-warning {{incompatible pointer to integer conversion returning 'void *', expected 'int'}}
+comment|// expected-warning {{pointer/integer type mismatch in conditional expression ('int' and 'void *')}} expected-warning {{incompatible pointer to integer conversion returning 'void *' from a function with result type 'int'}}
 block|}
 end_function
 

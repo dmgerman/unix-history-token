@@ -702,7 +702,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// getName - Retrieve the human-readable string for this name.
+comment|/// getNameAsString - Retrieve the human-readable string for this name.
 end_comment
 
 begin_expr_stmt
@@ -714,6 +714,24 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// printName - Print the human-readable name to a stream.
+end_comment
+
+begin_decl_stmt
+name|void
+name|printName
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getAsIdentifierInfo - Retrieve the IdentifierInfo * stored in
@@ -1359,6 +1377,9 @@ operator|::
 name|CXXConstructorName
 argument_list|,
 name|Ty
+operator|.
+name|getUnqualifiedType
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -1379,6 +1400,9 @@ operator|::
 name|CXXDestructorName
 argument_list|,
 name|Ty
+operator|.
+name|getUnqualifiedType
+argument_list|()
 argument_list|)
 return|;
 block|}

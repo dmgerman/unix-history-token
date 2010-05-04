@@ -194,20 +194,6 @@ operator|::
 name|iterator
 name|iterator
 expr_stmt|;
-typedef|typedef
-name|bool
-function_decl|(
-modifier|*
-name|ResultFilter
-function_decl|)
-parameter_list|(
-name|NamedDecl
-modifier|*
-parameter_list|,
-name|unsigned
-name|IDNS
-parameter_list|)
-function_decl|;
 name|LookupResult
 argument_list|(
 argument|Sema&SemaRef
@@ -254,11 +240,6 @@ operator|,
 name|LookupKind
 argument_list|(
 name|LookupKind
-argument_list|)
-operator|,
-name|IsAcceptableFn
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|IDNS
@@ -339,13 +320,6 @@ argument_list|(
 name|Other
 operator|.
 name|LookupKind
-argument_list|)
-operator|,
-name|IsAcceptableFn
-argument_list|(
-name|Other
-operator|.
-name|IsAcceptableFn
 argument_list|)
 operator|,
 name|IDNS
@@ -611,16 +585,11 @@ name|D
 argument_list|)
 decl|const
 block|{
-name|assert
-argument_list|(
-name|IsAcceptableFn
-argument_list|)
-expr_stmt|;
 return|return
-name|IsAcceptableFn
-argument_list|(
 name|D
-argument_list|,
+operator|->
+name|isInIdentifierNamespace
+argument_list|(
 name|IDNS
 argument_list|)
 return|;
@@ -686,6 +655,31 @@ block|{
 name|NamingClass
 operator|=
 name|Record
+expr_stmt|;
+block|}
+comment|/// \brief Returns the base object type associated with this lookup;
+comment|/// important for [class.protected].  Most lookups do not have an
+comment|/// associated base object.
+name|QualType
+name|getBaseObjectType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseObjectType
+return|;
+block|}
+comment|/// \brief Sets the base object type for this lookup.
+name|void
+name|setBaseObjectType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+name|BaseObjectType
+operator|=
+name|T
 expr_stmt|;
 block|}
 comment|/// \brief Add a declaration to these results with its natural access.
@@ -850,6 +844,27 @@ expr_stmt|;
 name|resolveKind
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|Paths
+operator|&&
+operator|(
+name|ResultKind
+operator|!=
+name|Ambiguous
+operator|)
+condition|)
+block|{
+name|deletePaths
+argument_list|(
+name|Paths
+argument_list|)
+expr_stmt|;
+name|Paths
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 block|}
 name|template
@@ -1869,6 +1884,12 @@ name|NamingClass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|QualType
+name|BaseObjectType
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// Parameters.
 end_comment
@@ -1905,16 +1926,6 @@ name|LookupNameKind
 name|LookupKind
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|ResultFilter
-name|IsAcceptableFn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// set by configure()
-end_comment
 
 begin_decl_stmt
 name|unsigned

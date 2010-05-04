@@ -1224,7 +1224,7 @@ parameter_list|()
 function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
 comment|/// which implicitly adds the builtin defines etc.
-name|bool
+name|void
 name|EnterMainSourceFile
 parameter_list|()
 function_decl|;
@@ -1235,26 +1235,23 @@ name|EndSourceFile
 parameter_list|()
 function_decl|;
 comment|/// EnterSourceFile - Add a source file to the top of the include stack and
-comment|/// start lexing tokens from it instead of the current buffer.  Return true
-comment|/// and fill in ErrorStr with the error information on failure.
-name|bool
+comment|/// start lexing tokens from it instead of the current buffer.  Emit an error
+comment|/// and don't enter the file on error.
+name|void
 name|EnterSourceFile
-argument_list|(
+parameter_list|(
 name|FileID
 name|CurFileID
-argument_list|,
+parameter_list|,
 specifier|const
 name|DirectoryLookup
-operator|*
+modifier|*
 name|Dir
-argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|ErrorStr
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 comment|/// EnterMacro - Add a Macro to the top of the include stack and start lexing
 comment|/// tokens from it instead of the current buffer.  Args specifies the
 comment|/// tokens input to a function-like macro.

@@ -58,6 +58,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_function_decl
 name|int
 name|snprintf
@@ -196,6 +200,10 @@ name|va_list
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
 
 begin_decl_stmt
 name|char

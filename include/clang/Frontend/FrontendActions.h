@@ -68,6 +68,9 @@ block|{
 name|class
 name|FixItRewriter
 decl_stmt|;
+name|class
+name|FixItPathRewriter
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Custom Consumer Actions
 comment|//===----------------------------------------------------------------------===//
@@ -226,25 +229,6 @@ argument_list|)
 block|; }
 block|;
 name|class
-name|DumpRecordAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
-block|;
-name|class
 name|FixItAction
 operator|:
 name|public
@@ -259,6 +243,14 @@ operator|<
 name|FixItRewriter
 operator|>
 name|Rewriter
+block|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|FixItPathRewriter
+operator|>
+name|PathRewriter
 block|;
 name|protected
 operator|:

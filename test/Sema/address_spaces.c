@@ -234,11 +234,15 @@ block|{
 block|{
 name|returning
 literal|'void __attribute__((address_space(256))) *'
+name|from
+name|a
+name|function
+name|with
+name|result
+name|type
+literal|'void *'
 name|discards
 name|qualifiers
-block|,
-name|expected
-literal|'void *'
 block|}
 block|}
 block|}

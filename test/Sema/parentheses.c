@@ -29,7 +29,8 @@ literal|4
 condition|)
 block|{}
 comment|// expected-warning {{assignment as a condition}} \
-comment|// expected-note{{use '==' to turn this assignment into an equality comparison}}
+comment|// expected-note{{use '==' to turn this assignment into an equality comparison}} \
+comment|// expected-note{{place parentheses around the assignment to silence this warning}}
 if|if
 condition|(
 operator|(
@@ -62,7 +63,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than ==}} \
-comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
+comment|// expected-note{{place parentheses around the == expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -75,7 +77,8 @@ literal|0x2
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than ==}} \
-comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
+comment|// expected-note{{place parentheses around the == expression to silence this warning}}
 call|(
 name|void
 call|)
@@ -88,7 +91,8 @@ literal|30
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{& has lower precedence than<}} \
-comment|// expected-note{{place parentheses around the& expression to evaluate it first}}
+comment|// expected-note{{place parentheses around the& expression to evaluate it first}} \
+comment|// expected-note{{place parentheses around the< expression to silence this warning}}
 call|(
 name|void
 call|)

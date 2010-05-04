@@ -95,6 +95,9 @@ name|class
 name|DependentTemplateName
 decl_stmt|;
 name|class
+name|DiagnosticBuilder
+decl_stmt|;
+name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
@@ -535,6 +538,23 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// Insertion operator for diagnostics.  This allows sending TemplateName's
+comment|/// into a diagnostic with<<.
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+name|TemplateName
+name|N
+operator|)
+expr_stmt|;
 comment|/// \brief Represents a template name that was expressed as a
 comment|/// qualified name.
 comment|///

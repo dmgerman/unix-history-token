@@ -100,7 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{incompatible type initializing 'int', expected 'union u'}}
+comment|// expected-error{{initializing 'union u' with an expression of incompatible type 'int'}}
 end_comment
 
 begin_decl_stmt

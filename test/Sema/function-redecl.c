@@ -649,7 +649,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{incompatible integer to pointer conversion passing 'int', expected 'int *'}}
+comment|// expected-warning{{incompatible integer to pointer conversion passing 'int' to parameter of type 'int *'}}
 block|}
 end_function
 

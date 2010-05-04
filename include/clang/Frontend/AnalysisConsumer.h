@@ -214,6 +214,9 @@ name|string
 name|AnalyzeSpecificFunction
 expr_stmt|;
 name|unsigned
+name|MaxNodes
+decl_stmt|;
+name|unsigned
 name|AnalyzeAll
 range|:
 literal|1

@@ -72,7 +72,10 @@ comment|///
 comment|/// USING THE DIAGNOSTIC CHECKER:
 comment|///
 comment|/// Indicating that a line expects an error or a warning is simple. Put a
-comment|/// comment on the line that has the diagnostic, use "expected-{error,warning}"
+comment|/// comment on the line that has the diagnostic, use:
+comment|///
+comment|///     expected-{error,warning,note}
+comment|///
 comment|/// to tag if it's an expected error or warning, and place the expected text
 comment|/// between {{ and }} markers. The full text doesn't have to be included, only
 comment|/// enough to ensure that the correct diagnostic was emitted.
@@ -91,6 +94,20 @@ comment|/// "error", "warning" or "note", and<n> is a positive integer. This all
 comment|/// diagnostic to appear as many times as specified. Example:
 comment|///
 comment|///   void f(); // expected-note 2 {{previous declaration is here}}
+comment|///
+comment|/// Regex matching mode may be selected by appending '-re' to type. Example:
+comment|///
+comment|///   expected-error-re
+comment|///
+comment|/// Examples matching error: "variable has incomplete type 'struct s'"
+comment|///
+comment|///   // expected-error {{variable has incomplete type 'struct s'}}
+comment|///   // expected-error {{variable has incomplete type}}
+comment|///
+comment|///   // expected-error-re {{variable has has type 'struct .'}}
+comment|///   // expected-error-re {{variable has has type 'struct .*'}}
+comment|///   // expected-error-re {{variable has has type 'struct (.*)'}}
+comment|///   // expected-error-re {{variable has has type 'struct[[:space:]](.*)'}}
 comment|///
 name|class
 name|VerifyDiagnosticsClient

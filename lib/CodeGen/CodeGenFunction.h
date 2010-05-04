@@ -154,6 +154,9 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 name|class
@@ -530,19 +533,13 @@ name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|Cont
+name|PreviousInsertionBlock
 expr_stmt|;
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
 name|CleanupHandler
-expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupEntryBB
 expr_stmt|;
 name|llvm
 operator|::
@@ -564,14 +561,14 @@ argument_list|(
 name|cgf
 argument_list|)
 operator|,
-name|Cont
+name|PreviousInsertionBlock
 argument_list|(
 name|CGF
 operator|.
-name|createBasicBlock
-argument_list|(
-literal|"cont"
-argument_list|)
+name|Builder
+operator|.
+name|GetInsertBlock
+argument_list|()
 argument_list|)
 operator|,
 name|CleanupHandler
@@ -581,16 +578,10 @@ operator|.
 name|createBasicBlock
 argument_list|(
 literal|"ehcleanup"
-argument_list|)
-argument_list|)
-operator|,
-name|CleanupEntryBB
-argument_list|(
+argument_list|,
 name|CGF
 operator|.
-name|createBasicBlock
-argument_list|(
-literal|"ehcleanup.rest"
+name|CurFn
 argument_list|)
 argument_list|)
 operator|,
@@ -599,13 +590,6 @@ argument_list|(
 argument|CGF.getInvokeDest()
 argument_list|)
 block|{
-name|CGF
-operator|.
-name|EmitBranch
-argument_list|(
-name|Cont
-argument_list|)
-block|;
 name|llvm
 operator|::
 name|BasicBlock
@@ -623,7 +607,7 @@ name|Builder
 operator|.
 name|SetInsertPoint
 argument_list|(
-name|CleanupEntryBB
+name|CleanupHandler
 argument_list|)
 block|;
 name|CGF
@@ -1651,6 +1635,21 @@ modifier|*
 name|PID
 parameter_list|)
 function_decl|;
+name|void
+name|GenerateObjCCtorDtorMethod
+parameter_list|(
+name|ObjCImplementationDecl
+modifier|*
+name|IMP
+parameter_list|,
+name|ObjCMethodDecl
+modifier|*
+name|MD
+parameter_list|,
+name|bool
+name|ctor
+parameter_list|)
+function_decl|;
 comment|/// GenerateObjCSetter - Synthesize an Objective-C property setter function
 comment|/// for the given property.
 name|void
@@ -1664,6 +1663,22 @@ specifier|const
 name|ObjCPropertyImplDecl
 modifier|*
 name|PID
+parameter_list|)
+function_decl|;
+name|bool
+name|IndirectObjCSetterArg
+parameter_list|(
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|FI
+parameter_list|)
+function_decl|;
+name|bool
+name|IvarTypeWithAggrGCObjects
+parameter_list|(
+name|QualType
+name|Ty
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -1917,16 +1932,19 @@ function_decl|;
 comment|/// InitializeVTablePointer - Initialize the vtable pointer of the given
 comment|/// subobject.
 comment|///
-comment|/// \param BaseIsMorallyVirtual - Whether the base subobject is a virtual base
-comment|/// or a direct or indirect base of a virtual base.
 name|void
 name|InitializeVTablePointer
 argument_list|(
 name|BaseSubobject
 name|Base
 argument_list|,
-name|bool
-name|BaseIsMorallyVirtual
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|NearestVBase
+argument_list|,
+name|uint64_t
+name|OffsetFromNearestVBase
 argument_list|,
 name|llvm
 operator|::
@@ -1959,8 +1977,13 @@ argument_list|(
 name|BaseSubobject
 name|Base
 argument_list|,
-name|bool
-name|BaseIsMorallyVirtual
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|NearestVBase
+argument_list|,
+name|uint64_t
+name|OffsetFromNearestVBase
 argument_list|,
 name|bool
 name|BaseIsNonVirtualPrimaryBase
@@ -1992,15 +2015,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|SynthesizeCXXCopyConstructor
-parameter_list|(
-specifier|const
-name|FunctionArgList
-modifier|&
-name|Args
-parameter_list|)
-function_decl|;
-name|void
-name|SynthesizeCXXCopyAssignment
 parameter_list|(
 specifier|const
 name|FunctionArgList
@@ -2543,6 +2557,29 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// InitTempAlloca - Provide an initial value for the given alloca.
+end_comment
+
+begin_decl_stmt
+name|void
+name|InitTempAlloca
+argument_list|(
+name|llvm
+operator|::
+name|AllocaInst
+operator|*
+name|Alloca
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Value
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// CreateIRTemp - Create a temporary IR object of the given type, with
 end_comment
 
@@ -2734,6 +2771,42 @@ name|false
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// EmitsAnyExprToMem - Emits the code necessary to evaluate an
+end_comment
+
+begin_comment
+comment|/// arbitrary expression into the given memory location.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitAnyExprToMem
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Location
+argument_list|,
+name|bool
+name|IsLocationVolatile
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsInitializer
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// EmitAggregateCopy - Emit an aggrate copy.
@@ -3070,7 +3143,7 @@ comment|/// GetAddressOfBaseOfCompleteClass - Convert the given pointer to a
 end_comment
 
 begin_comment
-comment|/// complete class down to one of its virtual bases.
+comment|/// complete class to the given direct base.
 end_comment
 
 begin_expr_stmt
@@ -3078,15 +3151,15 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|GetAddressOfBaseOfCompleteClass
+name|GetAddressOfDirectBaseInCompleteClass
 argument_list|(
 argument|llvm::Value *Value
-argument_list|,
-argument|bool IsVirtual
 argument_list|,
 argument|const CXXRecordDecl *Derived
 argument_list|,
 argument|const CXXRecordDecl *Base
+argument_list|,
+argument|bool BaseIsVirtual
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3108,9 +3181,9 @@ name|GetAddressOfBaseClass
 argument_list|(
 argument|llvm::Value *Value
 argument_list|,
-argument|const CXXRecordDecl *ClassDecl
+argument|const CXXRecordDecl *Derived
 argument_list|,
-argument|const CXXRecordDecl *BaseClassDecl
+argument|const CXXBaseSpecifierArray&BasePath
 argument_list|,
 argument|bool NullCheckValue
 argument_list|)
@@ -3126,9 +3199,9 @@ name|GetAddressOfDerivedClass
 argument_list|(
 argument|llvm::Value *Value
 argument_list|,
-argument|const CXXRecordDecl *ClassDecl
+argument|const CXXRecordDecl *Derived
 argument_list|,
-argument|const CXXRecordDecl *DerivedClassDecl
+argument|const CXXBaseSpecifierArray&BasePath
 argument_list|,
 argument|bool NullCheckValue
 argument_list|)
@@ -3178,49 +3251,14 @@ operator|*
 name|SrcValue
 argument_list|,
 specifier|const
-name|ArrayType
+name|ConstantArrayType
 operator|*
 name|Array
 argument_list|,
 specifier|const
 name|CXXRecordDecl
 operator|*
-name|BaseClassDecl
-argument_list|,
-name|QualType
-name|Ty
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|EmitClassAggrCopyAssignment
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestValue
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcValue
-argument_list|,
-specifier|const
-name|ArrayType
-operator|*
-name|Array
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|BaseClassDecl
-argument_list|,
-name|QualType
-name|Ty
+name|ClassDecl
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3245,46 +3283,6 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 name|ClassDecl
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|BaseClassDecl
-argument_list|,
-name|QualType
-name|Ty
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|EmitClassCopyAssignment
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestValue
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcValue
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|BaseClassDecl
-argument_list|,
-name|QualType
-name|Ty
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3320,6 +3318,9 @@ name|D
 argument_list|,
 name|CXXCtorType
 name|Type
+argument_list|,
+name|bool
+name|ForVirtualBase
 argument_list|,
 name|llvm
 operator|::
@@ -3491,6 +3492,9 @@ name|D
 argument_list|,
 name|CXXDtorType
 name|Type
+argument_list|,
+name|bool
+name|ForVirtualBase
 argument_list|,
 name|llvm
 operator|::
@@ -4715,6 +4719,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|LValue
+name|EmitCompoundAssignOperatorLValue
+parameter_list|(
+specifier|const
+name|CompoundAssignOperator
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Note: only available for agg return types
 end_comment
@@ -5239,6 +5255,15 @@ specifier|const
 name|Decl
 operator|*
 name|TargetDecl
+operator|=
+literal|0
+argument_list|,
+name|llvm
+operator|::
+name|Instruction
+operator|*
+operator|*
+name|callOrInvoke
 operator|=
 literal|0
 argument_list|)

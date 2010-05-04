@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -Wunused-function -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wall %s
+end_comment
+
 begin_function
 name|void
 name|foo
@@ -217,6 +225,58 @@ end_function_decl
 begin_function
 name|void
 name|bar
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(constructor)
+argument_list|)
+end_macro
+
+begin_function_decl
+specifier|static
+name|void
+name|bar2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|bar2
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(destructor)
+argument_list|)
+end_macro
+
+begin_function_decl
+specifier|static
+name|void
+name|bar3
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|bar3
 parameter_list|(
 name|void
 parameter_list|)

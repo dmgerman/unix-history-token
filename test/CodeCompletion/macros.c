@@ -59,11 +59,7 @@ comment|// Run the same tests, this time with macros loaded from the PCH file.
 comment|// RUN: %clang_cc1 -emit-pch -o %t %S/Inputs/macros.h
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -code-completion-macros -code-completion-at=%s:12:14 %s -o - | FileCheck -check-prefix=CC1 %s
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -code-completion-macros -code-completion-at=%s:14:9 %s -o - | FileCheck -check-prefix=CC2 %s
-comment|// CC1: BAR(<#X#>,<#Y#>)
 comment|// CC1: color
-comment|// CC1: FOO
-comment|// CC1: IDENTITY(<#X#>)
-comment|// CC1: WIBBLE
 comment|// CC1: x
 comment|// CC1: y
 comment|// CC1: z

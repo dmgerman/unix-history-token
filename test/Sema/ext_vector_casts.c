@@ -153,7 +153,7 @@ name|i
 operator|=
 name|ivec4
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'int4', expected 'int'}}
+comment|// expected-error {{assigning to 'int' from incompatible type 'int4'}}
 name|ivec4
 operator|=
 operator|(

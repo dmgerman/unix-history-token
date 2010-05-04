@@ -566,6 +566,15 @@ name|bool
 name|SuppressAllDiagnostics
 decl_stmt|;
 comment|// Suppress all diagnostics.
+name|unsigned
+name|ErrorLimit
+decl_stmt|;
+comment|// Cap of # errors emitted, 0 -> no limit.
+name|unsigned
+name|TemplateBacktraceLimit
+decl_stmt|;
+comment|// Cap on depth of template backtrace stack,
+comment|// 0 -> no limit.
 name|ExtensionHandling
 name|ExtBehavior
 decl_stmt|;
@@ -616,13 +625,17 @@ name|Level
 name|LastDiagLevel
 expr_stmt|;
 name|unsigned
-name|NumDiagnostics
+name|NumWarnings
 decl_stmt|;
-comment|// Number of diagnostics reported
+comment|// Number of warnings reported
 name|unsigned
 name|NumErrors
 decl_stmt|;
-comment|// Number of diagnostics that are errors
+comment|// Number of errors reported
+name|unsigned
+name|NumErrorsSuppressed
+decl_stmt|;
+comment|// Number of errors suppressed
 comment|/// CustomDiagInfo - Information for uniquing and looking up custom diags.
 name|diag
 operator|::
@@ -779,6 +792,45 @@ name|Client
 operator|=
 name|client
 expr_stmt|;
+block|}
+comment|/// setErrorLimit - Specify a limit for the number of errors we should
+comment|/// emit before giving up.  Zero disables the limit.
+name|void
+name|setErrorLimit
+parameter_list|(
+name|unsigned
+name|Limit
+parameter_list|)
+block|{
+name|ErrorLimit
+operator|=
+name|Limit
+expr_stmt|;
+block|}
+comment|/// \brief Specify the maximum number of template instantiation
+comment|/// notes to emit along with a given diagnostic.
+name|void
+name|setTemplateBacktraceLimit
+parameter_list|(
+name|unsigned
+name|Limit
+parameter_list|)
+block|{
+name|TemplateBacktraceLimit
+operator|=
+name|Limit
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the maximum number of template instantiation
+comment|/// nodes to emit along with a given diagnostic.
+name|unsigned
+name|getTemplateBacktraceLimit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateBacktraceLimit
+return|;
 block|}
 comment|/// setIgnoreAllWarnings - When set to true, any unmapped warnings are
 comment|/// ignored.  If this and WarningsAsErrors are both set, then this one wins.
@@ -989,14 +1041,22 @@ argument_list|(
 name|Diag
 argument_list|)
 operator|||
+operator|(
 name|Map
 operator|==
 name|diag
 operator|::
 name|MAP_FATAL
+operator|||
+name|Map
+operator|==
+name|diag
+operator|::
+name|MAP_ERROR
+operator|)
 operator|)
 operator|&&
-literal|"Cannot map errors!"
+literal|"Cannot map errors into warnings!"
 argument_list|)
 expr_stmt|;
 name|setDiagnosticMappingInternal
@@ -1054,12 +1114,21 @@ name|NumErrors
 return|;
 block|}
 name|unsigned
-name|getNumDiagnostics
+name|getNumErrorsSuppressed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumDiagnostics
+name|NumErrorsSuppressed
+return|;
+block|}
+name|unsigned
+name|getNumWarnings
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumWarnings
 return|;
 block|}
 comment|/// getCustomDiagID - Return an ID for a diagnostic with the specified message
@@ -1213,6 +1282,35 @@ name|isBuiltinExtensionDiag
 parameter_list|(
 name|unsigned
 name|DiagID
+parameter_list|)
+block|{
+name|bool
+name|ignored
+decl_stmt|;
+return|return
+name|isBuiltinExtensionDiag
+argument_list|(
+name|DiagID
+argument_list|,
+name|ignored
+argument_list|)
+return|;
+block|}
+comment|/// isBuiltinExtensionDiag - Determine whether the given built-in diagnostic
+comment|/// ID is for an extension of some sort.  This also returns EnabledByDefault,
+comment|/// which is set to indicate whether the diagnostic is ignored by default (in
+comment|/// which case -pedantic enables it) or treated as a warning/error by default.
+comment|///
+specifier|static
+name|bool
+name|isBuiltinExtensionDiag
+parameter_list|(
+name|unsigned
+name|DiagID
+parameter_list|,
+name|bool
+modifier|&
+name|EnabledByDefault
 parameter_list|)
 function_decl|;
 comment|/// getWarningOptionForDiag - Return the lowest-level warning option that
@@ -1379,26 +1477,25 @@ function_decl|;
 comment|/// getDiagnosticMappingInfo - Return the mapping info currently set for the
 comment|/// specified builtin diagnostic.  This returns the high bit encoding, or zero
 comment|/// if the field is completely uninitialized.
-name|unsigned
-name|getDiagnosticMappingInfo
-argument_list|(
 name|diag
 operator|::
-name|kind
-name|Diag
+name|Mapping
+name|getDiagnosticMappingInfo
+argument_list|(
+argument|diag::kind Diag
 argument_list|)
-decl|const
+specifier|const
 block|{
 specifier|const
 name|DiagMappings
-modifier|&
+operator|&
 name|currentMappings
-init|=
+operator|=
 name|DiagMappingsStack
 operator|.
 name|back
 argument_list|()
-decl_stmt|;
+block|;
 return|return
 operator|(
 name|diag

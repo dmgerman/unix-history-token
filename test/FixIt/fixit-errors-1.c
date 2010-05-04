@@ -1,6 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -fixit %s -o - | %clang_cc1 -pedantic -Werror -x c -
+comment|// RUN: cp %s %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -pedantic -fixit %t
+end_comment
+
+begin_comment
+comment|// RUN: echo %clang_cc1 -pedantic -Werror -x c %t
+end_comment
+
+begin_comment
+comment|/* XPASS: * */
 end_comment
 
 begin_comment

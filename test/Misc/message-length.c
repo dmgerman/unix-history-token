@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fmessage-length 72 %s 2>&1 | FileCheck -strict-whitespace %s
+comment|// RUN: not %clang_cc1 -fmessage-length 72 %s 2>&1 | FileCheck -strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmessage-length 1 %s
+comment|// RUN: not %clang_cc1 -fmessage-length 1 %s
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -fmessage-length 8 %s 2>&1 | FileCheck -check-prefix=CHECK-DOT %s
 end_comment
 
 begin_comment
@@ -222,6 +226,40 @@ end_comment
 begin_comment
 comment|// CHECK: {{^  ...// some long comment text and a brace, eh {} }}
 end_comment
+
+begin_struct
+struct|struct
+name|A
+block|{
+name|int
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|h
+parameter_list|(
+name|struct
+name|A
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-DOT: member
+comment|// CHECK-DOT: reference
+comment|// CHECK-DOT: type
+operator|(
+name|void
+operator|)
+name|a
+operator|.
+name|x
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

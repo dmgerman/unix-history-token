@@ -112,7 +112,16 @@ struct_decl|struct
 name|TemplateIdAnnotation
 struct_decl|;
 comment|/// CXXScopeSpec - Represents a C++ nested-name-specifier or a global scope
-comment|/// specifier.
+comment|/// specifier.  These can be in 3 states:
+comment|///   1) Not present, identified by isEmpty()
+comment|///   2) Present, identified by isNotEmpty()
+comment|///      2.a) Valid, idenified by isValid()
+comment|///      2.b) Invalid, identified by isInvalid().
+comment|///
+comment|/// isSet() is deprecated because it mostly corresponded to "valid" but was
+comment|/// often used as if it meant "present".
+comment|///
+comment|/// The actual scope is described by getScopeRep().
 name|class
 name|CXXScopeSpec
 block|{
@@ -240,6 +249,7 @@ operator|=
 name|S
 expr_stmt|;
 block|}
+comment|/// No scope specifier.
 name|bool
 name|isEmpty
 argument_list|()
@@ -253,6 +263,7 @@ name|isValid
 argument_list|()
 return|;
 block|}
+comment|/// A scope specifier is present, but may be valid or invalid.
 name|bool
 name|isNotEmpty
 argument_list|()
@@ -264,7 +275,7 @@ name|isEmpty
 argument_list|()
 return|;
 block|}
-comment|/// isInvalid - An error occured during parsing of the scope specifier.
+comment|/// An error occured during parsing of the scope specifier.
 name|bool
 name|isInvalid
 argument_list|()
@@ -279,7 +290,23 @@ operator|==
 literal|0
 return|;
 block|}
-comment|/// isSet - A scope specifier was resolved to a valid C++ scope.
+comment|/// A scope specifier is present, and it refers to a real scope.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isNotEmpty
+argument_list|()
+operator|&&
+name|ScopeRep
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// Deprecated.  Some call sites intend isNotEmpty() while others intend
+comment|/// isValid().
 name|bool
 name|isSet
 argument_list|()
@@ -316,10 +343,13 @@ block|{
 name|public
 label|:
 comment|// storage-class-specifier
+comment|// Note: The order of these enumerators is important for diagnostics.
 enum|enum
 name|SCS
 block|{
 name|SCS_unspecified
+init|=
+literal|0
 block|,
 name|SCS_typedef
 block|,
@@ -768,6 +798,12 @@ name|Constexpr_specified
 range|:
 literal|1
 decl_stmt|;
+comment|/*SCS*/
+name|unsigned
+name|StorageClassSpecAsWritten
+range|:
+literal|3
+decl_stmt|;
 comment|/// TypeRep - This contains action-specific information about a specific TST.
 comment|/// For example, for a typedef or struct, it might contain the declaration for
 comment|/// these.
@@ -854,6 +890,15 @@ name|void
 name|SaveWrittenBuiltinSpecs
 parameter_list|()
 function_decl|;
+name|void
+name|SaveStorageSpecifierAsWritten
+parameter_list|()
+block|{
+name|StorageClassSpecAsWritten
+operator|=
+name|StorageClassSpec
+expr_stmt|;
+block|}
 name|DeclSpec
 argument_list|(
 specifier|const
@@ -950,6 +995,11 @@ operator|,
 name|Constexpr_specified
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|StorageClassSpecAsWritten
+argument_list|(
+name|SCS_unspecified
 argument_list|)
 operator|,
 name|TypeRep
@@ -1486,6 +1536,18 @@ name|getParsedSpecifiers
 argument_list|()
 specifier|const
 expr_stmt|;
+name|SCS
+name|getStorageClassSpecAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SCS
+operator|)
+name|StorageClassSpecAsWritten
+return|;
+block|}
 comment|/// isEmpty - Return true if this declaration specifier is completely empty:
 comment|/// no tokens were parsed in the production of it.
 name|bool

@@ -402,9 +402,10 @@ argument|Selector Sel
 argument_list|,
 argument|llvm::Value *Receiver
 argument_list|,
-argument|bool IsClassMessage
-argument_list|,
 argument|const CallArgList&CallArgs
+argument_list|,
+argument|const ObjCInterfaceDecl *Class =
+literal|0
 argument_list|,
 argument|const ObjCMethodDecl *Method =
 literal|0
@@ -524,6 +525,17 @@ operator|::
 name|Constant
 operator|*
 name|GetPropertySetFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|// API for atomic copying of qualified aggregates in setter/getter.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetCopyStructFunction
 argument_list|()
 operator|=
 literal|0

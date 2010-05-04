@@ -20,6 +20,12 @@ comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt
+name|__SIZE_TYPE__
+name|size_type_value
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|integer
 decl_stmt|;
@@ -162,6 +168,20 @@ name|int_ptr4
 init|=
 operator|&
 name|integer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// OffsetOfExpr
+end_comment
+
+begin_decl_stmt
+name|offsetof_type
+modifier|*
+name|offsetof_ptr
+init|=
+operator|&
+name|size_type_value
 decl_stmt|;
 end_decl_stmt
 

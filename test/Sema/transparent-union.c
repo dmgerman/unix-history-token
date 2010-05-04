@@ -32,6 +32,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_function
 name|void
 name|g

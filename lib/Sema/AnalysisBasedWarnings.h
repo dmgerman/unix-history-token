@@ -190,12 +190,6 @@ name|BlockTy
 init|=
 name|QualType
 argument_list|()
-parameter_list|,
-specifier|const
-name|bool
-name|analyzeStaticInline
-init|=
-name|false
 parameter_list|)
 function_decl|;
 block|}

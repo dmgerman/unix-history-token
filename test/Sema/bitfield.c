@@ -30,7 +30,7 @@ name|b
 range|:
 literal|33
 decl_stmt|;
-comment|// expected-error{{size of bit-field 'b' exceeds size of its type (32 bits)}}
+comment|// expected-error{{size of bit-field 'b' (33 bits) exceeds size of its type (32 bits)}}
 name|int
 name|c
 range|:
@@ -87,7 +87,7 @@ name|char
 label|:
 literal|10
 expr_stmt|;
-comment|// expected-error {{size of anonymous bit-field exceeds size of its type (8 bits)}}
+comment|// expected-error {{size of anonymous bit-field (10 bits) exceeds size of its type (8 bits)}}
 name|unsigned
 label|:
 operator|-

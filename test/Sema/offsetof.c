@@ -416,7 +416,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|test1
+name|test2
 index|[
 name|__builtin_offsetof
 argument_list|(
@@ -439,6 +439,76 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{array has incomplete element type 'struct incomplete'}}
 end_comment
+
+begin_comment
+comment|// Bitfields
+end_comment
+
+begin_struct
+struct|struct
+name|has_bitfields
+block|{
+name|int
+name|i
+range|:
+literal|7
+decl_stmt|;
+name|int
+name|j
+range|:
+literal|12
+decl_stmt|;
+comment|// expected-note{{bit-field is declared here}}
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+name|test3
+init|=
+name|__builtin_offsetof
+argument_list|(
+expr|struct
+name|has_bitfields
+argument_list|,
+name|j
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{cannot compute offset of bit-field 'j'}}
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Array
+block|{
+name|int
+name|array
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|Array
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|int
+name|test4
+init|=
+name|__builtin_offsetof
+argument_list|(
+name|Array
+argument_list|,
+name|array
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

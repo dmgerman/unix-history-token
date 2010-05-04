@@ -271,14 +271,14 @@ name|x
 init|=
 name|array
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion initializing}}
+comment|// expected-warning{{incompatible pointer to integer conversion}}
 name|short
 modifier|*
 name|p
 init|=
 name|x
 decl_stmt|;
-comment|// expected-warning{{incompatible integer to pointer conversion initializing}}
+comment|// expected-warning{{incompatible integer to pointer conversion}}
 comment|// The following branch should be infeasible.
 if|if
 condition|(

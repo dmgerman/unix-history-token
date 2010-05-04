@@ -127,7 +127,13 @@ name|class
 name|FunctionTemplateSpecializationInfo
 decl_stmt|;
 name|class
+name|DependentFunctionTemplateSpecializationInfo
+decl_stmt|;
+name|class
 name|TypeLoc
+decl_stmt|;
+name|class
+name|UnresolvedSetImpl
 decl_stmt|;
 comment|/// \brief A container of type source information.
 comment|///
@@ -684,6 +690,13 @@ name|isRecord
 argument_list|()
 return|;
 block|}
+comment|/// \brief Given that this declaration is a C++ class member,
+comment|/// determine whether it's an instance member of its class.
+name|bool
+name|isCXXInstanceMember
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determine what kind of linkage this entity has.
 name|Linkage
 name|getLinkage
@@ -776,6 +789,43 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+specifier|inline
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|NamedDecl
+operator|*
+name|ND
+operator|)
+block|{
+name|ND
+operator|->
+name|getDeclName
+argument_list|()
+operator|.
+name|printName
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// NamespaceDecl - Represent a C++ namespace.
@@ -1940,6 +1990,11 @@ name|SClass
 operator|:
 literal|3
 block|;
+name|unsigned
+name|SClassAsWritten
+operator|:
+literal|3
+block|;
 name|bool
 name|ThreadSpecified
 operator|:
@@ -1954,6 +2009,13 @@ comment|/// DeclaredInCondition - Whether this variable was declared in a
 comment|/// condition, e.g., if (int x = foo()) { ... }.
 name|bool
 name|DeclaredInCondition
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this variable is the exception variable in a C++ catch
+comment|/// or an Objective-C @catch statement.
+name|bool
+name|ExceptionVar
 operator|:
 literal|1
 block|;
@@ -1978,6 +2040,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass SC
+argument_list|,
+argument|StorageClass SCAsWritten
 argument_list|)
 operator|:
 name|DeclaratorDecl
@@ -2010,12 +2074,21 @@ argument_list|)
 block|,
 name|DeclaredInCondition
 argument_list|(
+name|false
+argument_list|)
+block|,
+name|ExceptionVar
+argument_list|(
 argument|false
 argument_list|)
 block|{
 name|SClass
 operator|=
 name|SC
+block|;
+name|SClassAsWritten
+operator|=
+name|SCAsWritten
 block|;   }
 typedef|typedef
 name|Redeclarable
@@ -2087,6 +2160,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
+argument_list|,
+argument|StorageClass SCAsWritten
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2135,6 +2210,21 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|StorageClass
+name|getStorageClassAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|StorageClass
+operator|)
+name|SClassAsWritten
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|void
 name|setStorageClass
@@ -2144,6 +2234,21 @@ name|SC
 parameter_list|)
 block|{
 name|SClass
+operator|=
+name|SC
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setStorageClassAsWritten
+parameter_list|(
+name|StorageClass
+name|SC
+parameter_list|)
+block|{
+name|SClassAsWritten
 operator|=
 name|SC
 expr_stmt|;
@@ -2224,6 +2329,36 @@ end_return
 
 begin_comment
 unit|}
+comment|/// isStaticLocal - Returns true if a variable with function scope is a
+end_comment
+
+begin_comment
+comment|/// static local variable.
+end_comment
+
+begin_macro
+unit|bool
+name|isStaticLocal
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|getStorageClass
+argument_list|()
+operator|==
+name|Static
+operator|&&
+operator|!
+name|isFileVarDecl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasExternStorage - Returns true if a variable has extern or
 end_comment
 
@@ -2231,13 +2366,10 @@ begin_comment
 comment|/// __private_extern__ storage.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|hasExternalStorage
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -3573,6 +3705,41 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Determine whether this variable is the exception variable in a
+end_comment
+
+begin_comment
+comment|/// C++ catch statememt or an Objective-C @catch statement.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isExceptionVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExceptionVar
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setExceptionVariable
+parameter_list|(
+name|bool
+name|EV
+parameter_list|)
+block|{
+name|ExceptionVar
+operator|=
+name|EV
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief If this variable is an instantiated static data member of a
 end_comment
 
@@ -3758,6 +3925,8 @@ comment|/*TInfo=*/
 literal|0
 argument_list|,
 argument|VarDecl::None
+argument_list|,
+argument|VarDecl::None
 argument_list|)
 block|{}
 name|public
@@ -3860,6 +4029,8 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
 argument_list|,
+argument|StorageClass SCAsWritten
+argument_list|,
 argument|Expr *DefArg
 argument_list|)
 operator|:
@@ -3878,6 +4049,8 @@ argument_list|,
 name|TInfo
 argument_list|,
 name|S
+argument_list|,
+name|SCAsWritten
 argument_list|)
 block|,
 name|objcDeclQualifier
@@ -3915,6 +4088,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
+argument_list|,
+argument|StorageClass SCAsWritten
 argument_list|,
 argument|Expr *DefArg
 argument_list|)
@@ -4329,6 +4504,11 @@ name|SClass
 operator|:
 literal|2
 block|;
+name|unsigned
+name|SClassAsWritten
+operator|:
+literal|2
+block|;
 name|bool
 name|IsInline
 operator|:
@@ -4400,7 +4580,7 @@ comment|/// the template being specialized and the template arguments involved i
 comment|/// that specialization.
 name|llvm
 operator|::
-name|PointerUnion3
+name|PointerUnion4
 operator|<
 name|FunctionTemplateDecl
 operator|*
@@ -4409,6 +4589,9 @@ name|MemberSpecializationInfo
 operator|*
 block|,
 name|FunctionTemplateSpecializationInfo
+operator|*
+block|,
+name|DependentFunctionTemplateSpecializationInfo
 operator|*
 operator|>
 name|TemplateOrSpecialization
@@ -4430,6 +4613,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S
+argument_list|,
+argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInline
 argument_list|)
@@ -4465,6 +4650,11 @@ block|,
 name|SClass
 argument_list|(
 name|S
+argument_list|)
+block|,
+name|SClassAsWritten
+argument_list|(
+name|SCAsWritten
 argument_list|)
 block|,
 name|IsInline
@@ -4604,6 +4794,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|StorageClass S = None
+argument_list|,
+argument|StorageClass SCAsWritten = None
 argument_list|,
 argument|bool isInline = false
 argument_list|,
@@ -4787,6 +4979,18 @@ name|Offset
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Whether this function is variadic.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isVariadic
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Whether this function is marked as virtual explicitly.
@@ -5501,6 +5705,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|StorageClass
+name|getStorageClassAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StorageClass
+argument_list|(
+name|SClassAsWritten
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setStorageClassAsWritten
+parameter_list|(
+name|StorageClass
+name|SC
+parameter_list|)
+block|{
+name|SClassAsWritten
+operator|=
+name|SC
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/// \brief Determine whether the "inline" keyword was specified for this
 end_comment
@@ -6074,6 +6308,56 @@ name|TSK_ImplicitInstantiation
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Specifies that this function declaration is actually a
+end_comment
+
+begin_comment
+comment|/// dependent function template specialization.
+end_comment
+
+begin_function_decl
+name|void
+name|setDependentTemplateSpecialization
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+specifier|const
+name|UnresolvedSetImpl
+modifier|&
+name|Templates
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|TemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|DependentFunctionTemplateSpecializationInfo
+operator|*
+name|getDependentSpecializationInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TemplateOrSpecialization
+operator|.
+name|dyn_cast
+operator|<
+name|DependentFunctionTemplateSpecializationInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Determine what kind of template instantiation this function
@@ -8562,7 +8846,7 @@ name|DeclContext
 block|{
 comment|// FIXME: This can be packed into the bitfields in Decl.
 name|bool
-name|isVariadic
+name|IsVariadic
 operator|:
 literal|1
 block|;
@@ -8604,7 +8888,7 @@ argument_list|(
 name|Block
 argument_list|)
 block|,
-name|isVariadic
+name|IsVariadic
 argument_list|(
 name|false
 argument_list|)
@@ -8663,12 +8947,12 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|IsVariadic
+name|isVariadic
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isVariadic
+name|IsVariadic
 return|;
 block|}
 name|void
@@ -8677,7 +8961,7 @@ argument_list|(
 argument|bool value
 argument_list|)
 block|{
-name|isVariadic
+name|IsVariadic
 operator|=
 name|value
 block|; }

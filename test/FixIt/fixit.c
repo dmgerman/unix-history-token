@@ -1,14 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -fixit %s -o - | grep -v 'CHECK'> %t
+comment|// RUN: cp %s %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -Werror -x c -
+comment|// RUN: %clang_cc1 -pedantic -fixit -x c %t || true
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -input-file=%t %s
+comment|// RUN: grep -v CHECK %t> %t2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -pedantic -Werror -x c %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -input-file=%t2 %t
 end_comment
 
 begin_comment
@@ -133,20 +141,28 @@ end_decl_stmt
 
 begin_function
 name|int
-name|f2
+name|test_cond
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|my_string
+name|int
+name|y
+parameter_list|,
+name|int
+name|fooBar
 parameter_list|)
 block|{
-comment|// FIXME: terminal output isn't so good when "my_string" is shorter
-comment|// CHECK: return strcmp(my_string , "foo") == 0;
+comment|// CHECK: int x = y ? 1 : 4+fooBar;
+name|int
+name|x
+init|=
+name|y
+condition|?
+literal|1
+literal|4
+operator|+
+name|foobar
+decl_stmt|;
 return|return
-name|my_string
-operator|==
-literal|"foo"
+name|x
 return|;
 block|}
 end_function

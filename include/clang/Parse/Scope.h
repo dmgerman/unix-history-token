@@ -125,8 +125,8 @@ literal|0x20
 block|,
 comment|/// BlockScope - This is a scope that corresponds to a block object.
 comment|/// Blocks serve as top-level scopes for some objects like labels, they
-comment|/// also prevent things like break and continue.  BlockScopes have the
-comment|/// other flags set as well.
+comment|/// also prevent things like break and continue.  BlockScopes always have
+comment|/// the FnScope, BreakScope, ContinueScope, and DeclScope flags set as well.
 name|BlockScope
 init|=
 literal|0x40
@@ -150,6 +150,18 @@ comment|/// @catch statement.
 name|AtCatchScope
 init|=
 literal|0x200
+block|,
+comment|/// ObjCMethodScope - This scope corresponds to an Objective-C method body.
+comment|/// It always has FnScope and DeclScope set as well.
+name|ObjCMethodScope
+init|=
+literal|0x400
+block|,
+comment|/// ElseScope - This scoep corresponds to an 'else' scope of an if/then/else
+comment|/// statement.
+name|ElseScope
+init|=
+literal|0x800
 block|}
 enum|;
 name|private
@@ -163,23 +175,14 @@ decl_stmt|;
 comment|/// Depth - This is the depth of this scope.  The translation-unit scope has
 comment|/// depth 0.
 name|unsigned
+name|short
 name|Depth
-range|:
-literal|16
 decl_stmt|;
 comment|/// Flags - This contains a set of ScopeFlags, which indicates how the scope
 comment|/// interrelates with other control flow statements.
 name|unsigned
+name|short
 name|Flags
-range|:
-literal|10
-decl_stmt|;
-comment|/// WithinElse - Whether this scope is part of the "else" branch in
-comment|/// its parent ControlScope.
-name|bool
-name|WithinElse
-range|:
-literal|1
 decl_stmt|;
 comment|/// FnParent - If this scope has a parent scope that is a function body, this
 comment|/// pointer is non-null and points to it.  This is used for label processing.
@@ -295,6 +298,18 @@ block|{
 return|return
 name|Flags
 return|;
+block|}
+name|void
+name|setFlags
+parameter_list|(
+name|unsigned
+name|F
+parameter_list|)
+block|{
+name|Flags
+operator|=
+name|F
+expr_stmt|;
 block|}
 comment|/// isBlockScope - Return true if this scope does not correspond to a
 comment|/// closure.
@@ -708,6 +723,50 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isInObjcMethodScope - Return true if this scope is, or is contained in, an
+comment|/// Objective-C method body.  Note that this method is not constant time.
+name|bool
+name|isInObjcMethodScope
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+specifier|const
+name|Scope
+modifier|*
+name|S
+init|=
+name|this
+init|;
+name|S
+condition|;
+name|S
+operator|=
+name|S
+operator|->
+name|getParent
+argument_list|()
+control|)
+block|{
+comment|// If this scope is an objc method scope, then we succeed.
+if|if
+condition|(
+name|S
+operator|->
+name|getFlags
+argument_list|()
+operator|&
+name|ObjCMethodScope
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
 comment|/// isTemplateParamScope - Return true if this scope is a C++
 comment|/// template parameter scope.
 name|bool
@@ -754,29 +813,6 @@ name|Scope
 operator|::
 name|AtCatchScope
 return|;
-block|}
-comment|/// isWithinElse - Whether we are within the "else" of the
-comment|/// ControlParent (if any).
-name|bool
-name|isWithinElse
-argument_list|()
-specifier|const
-block|{
-return|return
-name|WithinElse
-return|;
-block|}
-name|void
-name|setWithinElse
-parameter_list|(
-name|bool
-name|WE
-parameter_list|)
-block|{
-name|WithinElse
-operator|=
-name|WE
-expr_stmt|;
 block|}
 typedef|typedef
 name|UsingDirectivesTy
@@ -885,10 +921,6 @@ expr_stmt|;
 name|Flags
 operator|=
 name|ScopeFlags
-expr_stmt|;
-name|WithinElse
-operator|=
-name|false
 expr_stmt|;
 if|if
 condition|(

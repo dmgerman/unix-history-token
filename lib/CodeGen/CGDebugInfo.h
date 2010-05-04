@@ -577,7 +577,7 @@ name|E
 argument_list|)
 decl_stmt|;
 name|void
-name|CollectVtableInfo
+name|CollectVTableInfo
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -916,6 +916,21 @@ argument_list|,
 argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
+comment|/// CreateMemberType - Create new member and increase Offset by FType's size.
+name|llvm
+operator|::
+name|DIType
+name|CreateMemberType
+argument_list|(
+argument|llvm::DIFile Unit
+argument_list|,
+argument|QualType FType
+argument_list|,
+argument|llvm::StringRef Name
+argument_list|,
+argument|uint64_t *Offset
+argument_list|)
+expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
 comment|/// name is constructred on demand (e.g. C++ destructor) then the name
 comment|/// is stored on the side.
@@ -930,11 +945,11 @@ operator|*
 name|FD
 argument_list|)
 expr_stmt|;
-comment|/// getVtableName - Get vtable name for the given Class.
+comment|/// getVTableName - Get vtable name for the given Class.
 name|llvm
 operator|::
 name|StringRef
-name|getVtableName
+name|getVTableName
 argument_list|(
 specifier|const
 name|CXXRecordDecl

@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGVtable.h"
+file|"CGVTables.h"
 end_include
 
 begin_include
@@ -369,6 +369,10 @@ comment|/// VTables - Holds information about C++ vtables.
 name|CodeGenVTables
 name|VTables
 decl_stmt|;
+name|friend
+name|class
+name|CodeGenVTables
+decl_stmt|;
 name|CGObjCRuntime
 modifier|*
 name|Runtime
@@ -473,6 +477,21 @@ operator|*
 operator|>
 name|ConstantStringMap
 expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|StaticLocalDeclMap
+expr_stmt|;
 comment|/// CXXGlobalInits - Global variables with initializers that need to run
 comment|/// before main.
 name|std
@@ -516,6 +535,14 @@ operator|::
 name|Constant
 operator|*
 name|CFConstantStringClassRef
+expr_stmt|;
+comment|/// NSConstantStringClassRef - Cached reference to the class for constant
+comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|NSConstantStringClassRef
 expr_stmt|;
 comment|/// Lazily create the Objective-C runtime
 name|void
@@ -599,6 +626,45 @@ operator|!
 operator|!
 name|Runtime
 return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getStaticLocalDeclAddress
+argument_list|(
+argument|const VarDecl *VD
+argument_list|)
+block|{
+return|return
+name|StaticLocalDeclMap
+index|[
+name|VD
+index|]
+return|;
+block|}
+name|void
+name|setStaticLocalDeclAddress
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|)
+block|{
+name|StaticLocalDeclMap
+index|[
+name|D
+index|]
+operator|=
+name|GV
+expr_stmt|;
 block|}
 name|CGDebugInfo
 modifier|*
@@ -916,6 +982,8 @@ operator|*
 name|GetAddrOfRTTIDescriptor
 argument_list|(
 argument|QualType Ty
+argument_list|,
+argument|bool ForEH = false
 argument_list|)
 expr_stmt|;
 comment|/// GetAddrOfThunk - Get the address of the thunk for the given global decl.
@@ -944,7 +1012,7 @@ name|VD
 argument_list|)
 expr_stmt|;
 comment|/// GetNonVirtualBaseClassOffset - Returns the offset from a derived class to
-comment|/// its base class. Returns null if the offset is 0.
+comment|/// a class. Returns null if the offset is 0.
 name|llvm
 operator|::
 name|Constant
@@ -957,9 +1025,9 @@ operator|*
 name|ClassDecl
 argument_list|,
 specifier|const
-name|CXXRecordDecl
-operator|*
-name|BaseClassDecl
+name|CXXBaseSpecifierArray
+operator|&
+name|BasePath
 argument_list|)
 expr_stmt|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
@@ -983,6 +1051,20 @@ operator|::
 name|Constant
 operator|*
 name|GetAddrOfConstantCFString
+argument_list|(
+specifier|const
+name|StringLiteral
+operator|*
+name|Literal
+argument_list|)
+expr_stmt|;
+comment|/// GetAddrOfConstantNSString - Return a pointer to a constant NSString object
+comment|/// for the given string.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfConstantNSString
 argument_list|(
 specifier|const
 name|StringLiteral
@@ -1607,7 +1689,7 @@ operator|*
 name|FD
 argument_list|)
 expr_stmt|;
-comment|/// getVtableLinkage - Return the appropriate linkage for the vtable, VTT,
+comment|/// getVTableLinkage - Return the appropriate linkage for the vtable, VTT,
 comment|/// and type information of the given class.
 specifier|static
 name|llvm
@@ -1615,7 +1697,7 @@ operator|::
 name|GlobalVariable
 operator|::
 name|LinkageTypes
-name|getVtableLinkage
+name|getVTableLinkage
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -1645,7 +1727,7 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 operator|>
-name|DeferredVtables
+name|DeferredVTables
 expr_stmt|;
 name|private
 label|:
@@ -1781,6 +1863,14 @@ name|void
 name|EmitObjCPropertyImplementations
 parameter_list|(
 specifier|const
+name|ObjCImplementationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|void
+name|EmitObjCIvarInitializations
+parameter_list|(
 name|ObjCImplementationDecl
 modifier|*
 name|D

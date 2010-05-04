@@ -158,6 +158,10 @@ comment|// values are specified by the TargetInfo constructor.
 name|bool
 name|TLSSupported
 decl_stmt|;
+name|bool
+name|NoAsmVariants
+decl_stmt|;
+comment|// True if {|} are normal characters.
 name|unsigned
 name|char
 name|PointerWidth
@@ -315,6 +319,16 @@ decl_stmt|,
 name|Int64Type
 decl_stmt|,
 name|SigAtomicType
+decl_stmt|;
+comment|/// Control whether the alignment of bit-field types is respected when laying
+comment|/// out structures. If true, then the alignment of the bit-field type will be
+comment|/// used to (a) impact the alignment of the containing structure, and (b)
+comment|/// ensure that the individual bit-field will not straddle an alignment
+comment|/// boundary.
+name|unsigned
+name|UseBitFieldTypeAlignment
+range|:
+literal|1
 decl_stmt|;
 name|public
 label|:
@@ -844,6 +858,15 @@ return|return
 name|UserLabelPrefix
 return|;
 block|}
+name|bool
+name|useBitFieldTypeAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseBitFieldTypeAlignment
+return|;
+block|}
 comment|/// getTypeName - Return the user string for the specified integer type enum.
 comment|/// For example, SignedShort -> "short".
 specifier|static
@@ -1369,6 +1392,34 @@ return|return
 literal|"__DATA,__cfstring"
 return|;
 block|}
+comment|/// getNSStringSection - Return the section to use for NSString
+comment|/// literals, or 0 if no special section is used.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getNSStringSection
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"__OBJC,__cstring_object,regular,no_dead_strip"
+return|;
+block|}
+comment|/// getNSStringNonFragileABISection - Return the section to use for
+comment|/// NSString literals, or 0 if no special section is used (NonFragile ABI).
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getNSStringNonFragileABISection
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"__DATA, __objc_stringobj, regular, no_dead_strip"
+return|;
+block|}
 comment|/// isValidSectionSpecifier - This is an optional hook that targets can
 comment|/// implement to perform semantic checking on attribute((section("foo")))
 comment|/// specifiers.  In this case, "foo" is passed in to be checked.  If the
@@ -1556,6 +1607,20 @@ specifier|const
 block|{
 return|return
 name|TLSSupported
+return|;
+block|}
+comment|/// hasNoAsmVariants - Return true if {|} are normal characters in the
+comment|/// asm string.  If this returns false (the default), then {abc|xyz} is syntax
+comment|/// that says that when compiling for asm variant #0, "abc" should be
+comment|/// generated, but when compiling for asm variant #1, "xyz" should be
+comment|/// generated.
+name|bool
+name|hasNoAsmVariants
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoAsmVariants
 return|;
 block|}
 comment|/// getEHDataRegisterNumber - Return the register number that

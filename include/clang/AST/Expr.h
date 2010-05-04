@@ -80,6 +80,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclAccessPair.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/ASTVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/UsuallyTinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APSInt.h"
 end_include
 
@@ -136,6 +154,9 @@ name|class
 name|BlockDecl
 decl_stmt|;
 name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
 name|CXXOperatorCallExpr
 decl_stmt|;
 name|class
@@ -147,6 +168,15 @@ decl_stmt|;
 name|class
 name|TemplateArgumentListInfo
 decl_stmt|;
+comment|/// \brief A simple array of base specifiers.
+typedef|typedef
+name|UsuallyTinyPtrVector
+operator|<
+specifier|const
+name|CXXBaseSpecifier
+operator|>
+name|CXXBaseSpecifierArray
+expr_stmt|;
 comment|/// Expr - This represents one expression.  Note that Expr's are subclasses of
 comment|/// Stmt.  This allows an expression to be transparently used any place a Stmt
 comment|/// is required.
@@ -516,6 +546,15 @@ block|}
 comment|/// \brief Returns whether this expression refers to a vector element.
 name|bool
 name|refersToVectorElement
+argument_list|()
+specifier|const
+block|;
+comment|/// isKnownToHaveBooleanValue - Return true if this is an integer expression
+comment|/// that is known to return 0 or 1.  This happens for _Bool/bool expressions
+comment|/// but also int expressions which are produced by things like comparisons in
+comment|/// C.
+name|bool
+name|isKnownToHaveBooleanValue
 argument_list|()
 specifier|const
 block|;
@@ -3548,7 +3587,7 @@ comment|///   subexpression is a compound literal with the various MemberExpr an
 end_comment
 
 begin_comment
-comment|///   ArraySubscriptExpr's applied to it.
+comment|///   ArraySubscriptExpr's applied to it. (This is only used in C)
 end_comment
 
 begin_comment
@@ -3998,17 +4037,755 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// SizeOfAlignOfExpr - [C99 6.5.3.4] - This is for sizeof/alignof, both of
+comment|/// OffsetOfExpr - [C99 7.17] - This represents an expression of the form
 end_comment
 
 begin_comment
-comment|/// types and expressions.
+comment|/// offsetof(record-type, member-designator). For example, given:
+end_comment
+
+begin_comment
+comment|/// @code
+end_comment
+
+begin_comment
+comment|/// struct S {
+end_comment
+
+begin_comment
+comment|///   float f;
+end_comment
+
+begin_comment
+comment|///   double d;
+end_comment
+
+begin_comment
+comment|/// };
+end_comment
+
+begin_comment
+comment|/// struct T {
+end_comment
+
+begin_comment
+comment|///   int i;
+end_comment
+
+begin_comment
+comment|///   struct S s[10];
+end_comment
+
+begin_comment
+comment|/// };
+end_comment
+
+begin_comment
+comment|/// @endcode
+end_comment
+
+begin_comment
+comment|/// we can represent and evaluate the expression @c offsetof(struct T, s[2].d).
 end_comment
 
 begin_decl_stmt
 name|class
-name|SizeOfAlignOfExpr
+name|OffsetOfExpr
 range|:
+name|public
+name|Expr
+block|{
+name|public
+operator|:
+comment|// __builtin_offsetof(type, identifier(.identifier|[expr])*)
+name|class
+name|OffsetOfNode
+block|{
+name|public
+operator|:
+comment|/// \brief The kind of offsetof node we have.
+expr|enum
+name|Kind
+block|{
+comment|/// \brief An index into an array.
+name|Array
+operator|=
+literal|0x00
+block|,
+comment|/// \brief A field.
+name|Field
+operator|=
+literal|0x01
+block|,
+comment|/// \brief A field in a dependent type, known only by its name.
+name|Identifier
+operator|=
+literal|0x02
+block|,
+comment|/// \brief An implicit indirection through a C++ base class, when the
+comment|/// field found is in a base class.
+name|Base
+operator|=
+literal|0x03
+block|}
+block|;
+name|private
+operator|:
+expr|enum
+block|{
+name|MaskBits
+operator|=
+literal|2
+block|,
+name|Mask
+operator|=
+literal|0x03
+block|}
+block|;
+comment|/// \brief The source range that covers this part of the designator.
+name|SourceRange
+name|Range
+block|;
+comment|/// \brief The data describing the designator, which comes in three
+comment|/// different forms, depending on the lower two bits.
+comment|///   - An unsigned index into the array of Expr*'s stored after this node
+comment|///     in memory, for [constant-expression] designators.
+comment|///   - A FieldDecl*, for references to a known field.
+comment|///   - An IdentifierInfo*, for references to a field with a given name
+comment|///     when the class type is dependent.
+comment|///   - A CXXBaseSpecifier*, for references that look at a field in a
+comment|///     base class.
+name|uintptr_t
+name|Data
+block|;
+name|public
+operator|:
+comment|/// \brief Create an offsetof node that refers to an array element.
+name|OffsetOfNode
+argument_list|(
+argument|SourceLocation LBracketLoc
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|SourceLocation RBracketLoc
+argument_list|)
+operator|:
+name|Range
+argument_list|(
+name|LBracketLoc
+argument_list|,
+name|RBracketLoc
+argument_list|)
+block|,
+name|Data
+argument_list|(
+argument|(Index<<
+literal|2
+argument|) | Array
+argument_list|)
+block|{ }
+comment|/// \brief Create an offsetof node that refers to a field.
+name|OffsetOfNode
+argument_list|(
+argument|SourceLocation DotLoc
+argument_list|,
+argument|FieldDecl *Field
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|)
+operator|:
+name|Range
+argument_list|(
+name|DotLoc
+operator|.
+name|isValid
+argument_list|()
+operator|?
+name|DotLoc
+operator|:
+name|NameLoc
+argument_list|,
+name|NameLoc
+argument_list|)
+block|,
+name|Data
+argument_list|(
+argument|reinterpret_cast<uintptr_t>(Field) | OffsetOfNode::Field
+argument_list|)
+block|{ }
+comment|/// \brief Create an offsetof node that refers to an identifier.
+name|OffsetOfNode
+argument_list|(
+argument|SourceLocation DotLoc
+argument_list|,
+argument|IdentifierInfo *Name
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|)
+operator|:
+name|Range
+argument_list|(
+name|DotLoc
+operator|.
+name|isValid
+argument_list|()
+operator|?
+name|DotLoc
+operator|:
+name|NameLoc
+argument_list|,
+name|NameLoc
+argument_list|)
+block|,
+name|Data
+argument_list|(
+argument|reinterpret_cast<uintptr_t>(Name) | Identifier
+argument_list|)
+block|{ }
+comment|/// \brief Create an offsetof node that refers into a C++ base class.
+name|explicit
+name|OffsetOfNode
+argument_list|(
+specifier|const
+name|CXXBaseSpecifier
+operator|*
+name|Base
+argument_list|)
+operator|:
+name|Range
+argument_list|()
+block|,
+name|Data
+argument_list|(
+argument|reinterpret_cast<uintptr_t>(Base) | OffsetOfNode::Base
+argument_list|)
+block|{}
+comment|/// \brief Determine what kind of offsetof node this is.
+name|Kind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|Kind
+operator|>
+operator|(
+name|Data
+operator|&
+name|Mask
+operator|)
+return|;
+block|}
+comment|/// \brief For an array element node, returns the index into the array
+comment|/// of expressions.
+name|unsigned
+name|getArrayExprIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|Array
+argument_list|)
+block|;
+return|return
+name|Data
+operator|>>
+literal|2
+return|;
+block|}
+comment|/// \brief For a field offsetof node, returns the field.
+name|FieldDecl
+operator|*
+name|getField
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|Field
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|FieldDecl
+operator|*
+operator|>
+operator|(
+name|Data
+operator|&
+operator|~
+operator|(
+name|uintptr_t
+operator|)
+name|Mask
+operator|)
+return|;
+block|}
+comment|/// \brief For a field or identifier offsetof node, returns the name of
+comment|/// the field.
+name|IdentifierInfo
+operator|*
+name|getFieldName
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief For a base class node, returns the base specifier.
+name|CXXBaseSpecifier
+operator|*
+name|getBase
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|Base
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|CXXBaseSpecifier
+operator|*
+operator|>
+operator|(
+name|Data
+operator|&
+operator|~
+operator|(
+name|uintptr_t
+operator|)
+name|Mask
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the source range that covers this offsetof node.
+comment|///
+comment|/// For an array element node, the source range contains the locations of
+comment|/// the square brackets. For a field or identifier node, the source range
+comment|/// contains the location of the period (if there is one) and the
+comment|/// identifier.
+name|SourceRange
+name|getRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Range
+return|;
+block|}
+expr|}
+block|;
+name|private
+operator|:
+name|SourceLocation
+name|OperatorLoc
+block|,
+name|RParenLoc
+block|;
+comment|// Base type;
+name|TypeSourceInfo
+operator|*
+name|TSInfo
+block|;
+comment|// Number of sub-components (i.e. instances of OffsetOfNode).
+name|unsigned
+name|NumComps
+block|;
+comment|// Number of sub-expressions (i.e. array subscript expressions).
+name|unsigned
+name|NumExprs
+block|;
+name|OffsetOfExpr
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType type
+argument_list|,
+argument|SourceLocation OperatorLoc
+argument_list|,
+argument|TypeSourceInfo *tsi
+argument_list|,
+argument|OffsetOfNode* compsPtr
+argument_list|,
+argument|unsigned numComps
+argument_list|,
+argument|Expr** exprsPtr
+argument_list|,
+argument|unsigned numExprs
+argument_list|,
+argument|SourceLocation RParenLoc
+argument_list|)
+block|;
+name|explicit
+name|OffsetOfExpr
+argument_list|(
+argument|unsigned numComps
+argument_list|,
+argument|unsigned numExprs
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|OffsetOfExprClass
+argument_list|,
+name|EmptyShell
+argument_list|()
+argument_list|)
+block|,
+name|TSInfo
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumComps
+argument_list|(
+name|numComps
+argument_list|)
+block|,
+name|NumExprs
+argument_list|(
+argument|numExprs
+argument_list|)
+block|{}
+name|public
+operator|:
+specifier|static
+name|OffsetOfExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|QualType type
+argument_list|,
+argument|SourceLocation OperatorLoc
+argument_list|,
+argument|TypeSourceInfo *tsi
+argument_list|,
+argument|OffsetOfNode* compsPtr
+argument_list|,
+argument|unsigned numComps
+argument_list|,
+argument|Expr** exprsPtr
+argument_list|,
+argument|unsigned numExprs
+argument_list|,
+argument|SourceLocation RParenLoc
+argument_list|)
+block|;
+specifier|static
+name|OffsetOfExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned NumComps
+argument_list|,
+argument|unsigned NumExprs
+argument_list|)
+block|;
+comment|/// getOperatorLoc - Return the location of the operator.
+name|SourceLocation
+name|getOperatorLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OperatorLoc
+return|;
+block|}
+name|void
+name|setOperatorLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|OperatorLoc
+operator|=
+name|L
+block|; }
+comment|/// \brief Return the location of the right parentheses.
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation R
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|R
+block|; }
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TSInfo
+return|;
+block|}
+name|void
+name|setTypeSourceInfo
+argument_list|(
+argument|TypeSourceInfo *tsi
+argument_list|)
+block|{
+name|TSInfo
+operator|=
+name|tsi
+block|;   }
+specifier|const
+name|OffsetOfNode
+operator|&
+name|getComponent
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|NumComps
+operator|&&
+literal|"Subscript out of range"
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|OffsetOfNode
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|Idx
+index|]
+return|;
+block|}
+name|void
+name|setComponent
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|OffsetOfNode ON
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|NumComps
+operator|&&
+literal|"Subscript out of range"
+argument_list|)
+block|;
+name|reinterpret_cast
+operator|<
+name|OffsetOfNode
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|Idx
+index|]
+operator|=
+name|ON
+block|;   }
+name|unsigned
+name|getNumComponents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumComps
+return|;
+block|}
+name|Expr
+operator|*
+name|getIndexExpr
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|NumExprs
+operator|&&
+literal|"Subscript out of range"
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|OffsetOfNode
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|+
+name|NumComps
+operator|)
+index|[
+name|Idx
+index|]
+return|;
+block|}
+name|void
+name|setIndexExpr
+argument_list|(
+argument|unsigned Idx
+argument_list|,
+argument|Expr* E
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Idx
+operator|<
+name|NumComps
+operator|&&
+literal|"Subscript out of range"
+argument_list|)
+block|;
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|OffsetOfNode
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|+
+name|NumComps
+operator|)
+index|[
+name|Idx
+index|]
+operator|=
+name|E
+block|;   }
+name|unsigned
+name|getNumExpressions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumExprs
+return|;
+block|}
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|OperatorLoc
+argument_list|,
+name|RParenLoc
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OffsetOfExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OffsetOfExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|virtual
+name|child_iterator
+name|child_begin
+argument_list|()
+block|;
+name|virtual
+name|child_iterator
+name|child_end
+argument_list|()
+block|; }
+block|;
+comment|/// SizeOfAlignOfExpr - [C99 6.5.3.4] - This is for sizeof/alignof, both of
+comment|/// types and expressions.
+name|class
+name|SizeOfAlignOfExpr
+operator|:
 name|public
 name|Expr
 block|{
@@ -4332,10 +5109,10 @@ block|{
 return|return
 name|isArgumentType
 argument_list|()
-operator|?
+condition|?
 name|getArgumentType
 argument_list|()
-operator|:
+else|:
 name|getArgumentExpr
 argument_list|()
 operator|->
@@ -4434,29 +5211,14 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Postfix Operators.
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ArraySubscriptExpr - [C99 6.5.2.1] Array Subscripting.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ArraySubscriptExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{   enum
@@ -4683,10 +5445,10 @@ argument_list|()
 operator|->
 name|isIntegerType
 argument_list|()
-operator|?
+condition|?
 name|getLHS
 argument_list|()
-operator|:
+else|:
 name|getRHS
 argument_list|()
 operator|)
@@ -4870,37 +5632,16 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// CallExpr - Represents a function call (C99 6.5.2.2, C++ [expr.call]).
-end_comment
-
-begin_comment
 comment|/// CallExpr itself represents a normal function call, e.g., "f(x, 2)",
-end_comment
-
-begin_comment
 comment|/// while its subclasses may represent alternative syntax that (semantically)
-end_comment
-
-begin_comment
 comment|/// results in a function call. For example, CXXOperatorCallExpr is
-end_comment
-
-begin_comment
 comment|/// a subclass for overloaded operator calls that use operator syntax, e.g.,
-end_comment
-
-begin_comment
 comment|/// "str1 + str2" to resolve to a function call.
-end_comment
-
-begin_decl_stmt
 name|class
 name|CallExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{   enum
@@ -5207,19 +5948,13 @@ typedef|typedef
 name|ExprIterator
 name|arg_iterator
 typedef|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|ConstExprIterator
 name|const_arg_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|arg_iterator
 name|arg_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|SubExprs
@@ -5227,12 +5962,9 @@ operator|+
 name|ARGS_START
 return|;
 block|}
-end_function
-
-begin_function
 name|arg_iterator
 name|arg_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|SubExprs
@@ -5243,9 +5975,6 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_begin
 argument_list|()
@@ -5257,9 +5986,6 @@ operator|+
 name|ARGS_START
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_arg_iterator
 name|arg_end
 argument_list|()
@@ -5274,17 +6000,8 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getNumCommas - Return the number of commas that must have been present in
-end_comment
-
-begin_comment
 comment|/// this function call.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getNumCommas
 argument_list|()
@@ -5300,25 +6017,14 @@ operator|:
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// isBuiltinCall - If this is a call to a builtin, return the builtin ID.  If
-end_comment
-
-begin_comment
 comment|/// not, return 0.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|isBuiltinCall
 argument_list|(
-name|ASTContext
-operator|&
-name|Context
+argument|ASTContext&Context
 argument_list|)
-decl|const
+specifier|const
 decl_stmt|;
 end_decl_stmt
 
@@ -5518,8 +6224,7 @@ operator|:
 name|public
 name|NameQualifier
 block|{
-name|NamedDecl
-operator|*
+name|DeclAccessPair
 name|FoundDecl
 block|;   }
 block|;
@@ -5803,7 +6508,7 @@ argument|SourceRange qualrange
 argument_list|,
 argument|ValueDecl *memberdecl
 argument_list|,
-argument|NamedDecl *founddecl
+argument|DeclAccessPair founddecl
 argument_list|,
 argument|SourceLocation l
 argument_list|,
@@ -5899,8 +6604,7 @@ comment|/// \brief Retrieves the declaration found by lookup.
 end_comment
 
 begin_expr_stmt
-name|NamedDecl
-operator|*
+name|DeclAccessPair
 name|getFoundDecl
 argument_list|()
 specifier|const
@@ -5911,8 +6615,19 @@ operator|!
 name|HasQualifierOrFoundDecl
 condition|)
 return|return
+name|DeclAccessPair
+operator|::
+name|make
+argument_list|(
 name|getMemberDecl
 argument_list|()
+argument_list|,
+name|getMemberDecl
+argument_list|()
+operator|->
+name|getAccess
+argument_list|()
+argument_list|)
 return|;
 end_expr_stmt
 
@@ -6870,6 +7585,131 @@ name|Stmt
 operator|*
 name|Op
 block|;
+comment|/// BasePath - For derived-to-base and base-to-derived casts, the base array
+comment|/// contains the inheritance path.
+name|CXXBaseSpecifierArray
+name|BasePath
+block|;
+name|void
+name|CheckBasePath
+argument_list|()
+specifier|const
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+switch|switch
+condition|(
+name|getCastKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|CK_DerivedToBase
+case|:
+case|case
+name|CK_UncheckedDerivedToBase
+case|:
+case|case
+name|CK_DerivedToBaseMemberPointer
+case|:
+case|case
+name|CK_BaseToDerived
+case|:
+case|case
+name|CK_BaseToDerivedMemberPointer
+case|:
+name|assert
+argument_list|(
+operator|!
+name|BasePath
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Cast kind should have a base path!"
+argument_list|)
+expr_stmt|;
+break|break;
+comment|// These should not have an inheritance path.
+case|case
+name|CK_Unknown
+case|:
+case|case
+name|CK_BitCast
+case|:
+case|case
+name|CK_NoOp
+case|:
+case|case
+name|CK_Dynamic
+case|:
+case|case
+name|CK_ToUnion
+case|:
+case|case
+name|CK_ArrayToPointerDecay
+case|:
+case|case
+name|CK_FunctionToPointerDecay
+case|:
+case|case
+name|CK_NullToMemberPointer
+case|:
+case|case
+name|CK_UserDefinedConversion
+case|:
+case|case
+name|CK_ConstructorConversion
+case|:
+case|case
+name|CK_IntegralToPointer
+case|:
+case|case
+name|CK_PointerToIntegral
+case|:
+case|case
+name|CK_ToVoid
+case|:
+case|case
+name|CK_VectorSplat
+case|:
+case|case
+name|CK_IntegralCast
+case|:
+case|case
+name|CK_IntegralToFloating
+case|:
+case|case
+name|CK_FloatingToIntegral
+case|:
+case|case
+name|CK_FloatingCast
+case|:
+case|case
+name|CK_MemberPointerToBoolean
+case|:
+case|case
+name|CK_AnyPointerToObjCPointerCast
+case|:
+case|case
+name|CK_AnyPointerToBlockPointerCast
+case|:
+name|assert
+argument_list|(
+name|BasePath
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Cast kind should not have a base path!"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+block|}
 name|protected
 operator|:
 name|CastExpr
@@ -6881,6 +7721,8 @@ argument_list|,
 argument|const CastKind kind
 argument_list|,
 argument|Expr *op
+argument_list|,
+argument|CXXBaseSpecifierArray BasePath
 argument_list|)
 operator|:
 name|Expr
@@ -6920,9 +7762,17 @@ argument_list|)
 block|,
 name|Op
 argument_list|(
-argument|op
+name|op
 argument_list|)
-block|{}
+block|,
+name|BasePath
+argument_list|(
+argument|BasePath
+argument_list|)
+block|{
+name|CheckBasePath
+argument_list|()
+block|;     }
 comment|/// \brief Construct an empty cast.
 name|CastExpr
 argument_list|(
@@ -6938,6 +7788,15 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
+name|virtual
+name|void
+name|DoDestroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
 name|public
 operator|:
 name|CastKind
@@ -7037,6 +7896,17 @@ name|getSubExprAsWritten
 argument_list|()
 return|;
 block|}
+specifier|const
+name|CXXBaseSpecifierArray
+operator|&
+name|getBasePath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BasePath
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -7056,7 +7926,7 @@ if|if
 condition|(
 name|SC
 operator|>=
-name|CXXNamedCastExprClass
+name|CXXStaticCastExprClass
 operator|&&
 name|SC
 operator|<=
@@ -7208,6 +8078,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|bool Lvalue
 argument_list|)
 operator|:
@@ -7220,6 +8092,8 @@ argument_list|,
 name|kind
 argument_list|,
 name|op
+argument_list|,
+name|BasePath
 argument_list|)
 block|,
 name|LvalueCast
@@ -7345,6 +8219,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|)
 operator|:
@@ -7357,6 +8233,8 @@ argument_list|,
 name|kind
 argument_list|,
 name|op
+argument_list|,
+name|BasePath
 argument_list|)
 block|,
 name|TInfo
@@ -7449,7 +8327,7 @@ if|if
 condition|(
 name|SC
 operator|>=
-name|CXXNamedCastExprClass
+name|CXXStaticCastExprClass
 operator|&&
 name|SC
 operator|<=
@@ -7518,6 +8396,8 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
+argument|CXXBaseSpecifierArray BasePath
+argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
 argument|SourceLocation l
@@ -7534,6 +8414,8 @@ argument_list|,
 name|kind
 argument_list|,
 name|op
+argument_list|,
+name|BasePath
 argument_list|,
 name|writtenTy
 argument_list|)
@@ -10401,7 +11283,7 @@ name|child_end
 argument_list|()
 block|; }
 block|;
-comment|/// VAArgExpr, used for the builtin function __builtin_va_start.
+comment|/// VAArgExpr, used for the builtin function __builtin_va_arg.
 name|class
 name|VAArgExpr
 operator|:
@@ -10459,7 +11341,7 @@ argument_list|(
 argument|RPLoc
 argument_list|)
 block|{ }
-comment|/// \brief Create an empty __builtin_va_start expression.
+comment|/// \brief Create an empty __builtin_va_arg expression.
 name|explicit
 name|VAArgExpr
 argument_list|(
@@ -10651,13 +11533,15 @@ name|public
 name|Expr
 block|{
 comment|// FIXME: Eliminate this vector in favor of ASTContext allocation
-name|std
-operator|::
-name|vector
+typedef|typedef
+name|ASTVector
 operator|<
 name|Stmt
 operator|*
 operator|>
+name|InitExprsTy
+expr_stmt|;
+name|InitExprsTy
 name|InitExprs
 block|;
 name|SourceLocation
@@ -10686,6 +11570,8 @@ name|public
 operator|:
 name|InitListExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|SourceLocation lbraceloc
 argument_list|,
 argument|Expr **initexprs
@@ -10699,14 +11585,21 @@ comment|/// \brief Build an empty initializer list.
 name|explicit
 name|InitListExpr
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|EmptyShell Empty
 argument_list|)
 operator|:
 name|Expr
 argument_list|(
-argument|InitListExprClass
+name|InitListExprClass
 argument_list|,
-argument|Empty
+name|Empty
+argument_list|)
+block|,
+name|InitExprs
+argument_list|(
+argument|C
 argument_list|)
 block|{ }
 name|unsigned
@@ -10812,6 +11705,8 @@ comment|/// \brief Reserve space for some number of initializers.
 name|void
 name|reserveInits
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|unsigned NumInits
 argument_list|)
 block|;
@@ -10840,6 +11735,8 @@ name|Expr
 operator|*
 name|updateInit
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|unsigned Init
 argument_list|,
 argument|Expr *expr
@@ -11023,25 +11920,13 @@ name|child_end
 argument_list|()
 block|;
 typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|Stmt
-operator|*
-operator|>
+name|InitExprsTy
 operator|::
 name|iterator
 name|iterator
 expr_stmt|;
 typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-name|Stmt
-operator|*
-operator|>
+name|InitExprsTy
 operator|::
 name|reverse_iterator
 name|reverse_iterator
@@ -11090,31 +11975,97 @@ name|rend
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// @brief Represents a C99 designated initializer expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// A designated initializer expression (C99 6.7.8) contains one or
+end_comment
+
+begin_comment
 comment|/// more designators (which can be field designators, array
+end_comment
+
+begin_comment
 comment|/// designators, or GNU array-range designators) followed by an
+end_comment
+
+begin_comment
 comment|/// expression that initializes the field or element(s) that the
+end_comment
+
+begin_comment
 comment|/// designators refer to. For example, given:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// struct point {
+end_comment
+
+begin_comment
 comment|///   double x;
+end_comment
+
+begin_comment
 comment|///   double y;
+end_comment
+
+begin_comment
 comment|/// };
+end_comment
+
+begin_comment
 comment|/// struct point ptarray[10] = { [2].y = 1.0, [2].x = 2.0, [0].x = 1.0 };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The InitListExpr contains three DesignatedInitExprs, the first of
+end_comment
+
+begin_comment
 comment|/// which covers @c [2].y=1.0. This DesignatedInitExpr will have two
+end_comment
+
+begin_comment
 comment|/// designators, one array designator for @c [2] followed by one field
+end_comment
+
+begin_comment
 comment|/// designator for @c .y. The initalization expression will be 1.0.
+end_comment
+
+begin_decl_stmt
 name|class
 name|DesignatedInitExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12169,18 +13120,45 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Represents an implicitly-generated value initialization of
+end_comment
+
+begin_comment
 comment|/// an object of a given type.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Implicit value initializations occur within semantic initializer
+end_comment
+
+begin_comment
 comment|/// list expressions (InitListExpr) as placeholders for subobject
+end_comment
+
+begin_comment
 comment|/// initializations not explicitly specified by the user.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \see InitListExpr
+end_comment
+
+begin_decl_stmt
 name|class
 name|ImplicitValueInitExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12266,10 +13244,13 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|ParenListExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12478,20 +13459,53 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Clang Extensions
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|/// ExtVectorElementExpr - This represents access to specific elements of a
+end_comment
+
+begin_comment
 comment|/// vector, and may occur on the left hand side or right hand side.  For example
+end_comment
+
+begin_comment
 comment|/// the following is legal:  "V.xy = V.zw" if V is a 4 element extended vector.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Note that the base may have either vector or pointer to vector type, just
+end_comment
+
+begin_comment
 comment|/// like a struct field reference.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|ExtVectorElementExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12734,12 +13748,21 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// BlockExpr - Adaptor class for mixing a BlockDecl with expressions.
+end_comment
+
+begin_comment
 comment|/// ^{ statement-body }   or   ^(int arg1, float arg2){ statement-body }
+end_comment
+
+begin_decl_stmt
 name|class
 name|BlockExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -12936,12 +13959,21 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// BlockDeclRefExpr - A reference to a declared variable, function,
+end_comment
+
+begin_comment
 comment|/// enum, etc.
+end_comment
+
+begin_decl_stmt
 name|class
 name|BlockDeclRefExpr
-operator|:
+range|:
 name|public
 name|Expr
 block|{
@@ -13162,10 +14194,11 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-block|;  }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

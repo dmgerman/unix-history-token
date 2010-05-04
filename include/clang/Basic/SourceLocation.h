@@ -868,6 +868,7 @@ range|:
 name|public
 name|SourceLocation
 block|{
+specifier|const
 name|SourceManager
 operator|*
 name|SrcMgr
@@ -881,7 +882,6 @@ argument_list|()
 operator|:
 name|SrcMgr
 argument_list|(
-argument|(SourceManager*)
 literal|0
 argument_list|)
 block|{}
@@ -890,7 +890,7 @@ name|FullSourceLoc
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|SourceManager&SM
+argument|const SourceManager&SM
 argument_list|)
 operator|:
 name|SourceLocation
@@ -903,23 +903,6 @@ argument_list|(
 argument|&SM
 argument_list|)
 block|{}
-name|SourceManager
-operator|&
-name|getManager
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|SrcMgr
-operator|&&
-literal|"SourceManager is NULL."
-argument_list|)
-block|;
-return|return
-operator|*
-name|SrcMgr
-return|;
-block|}
 specifier|const
 name|SourceManager
 operator|&

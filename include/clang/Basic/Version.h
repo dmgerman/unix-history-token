@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|CLANG_VERSION_MAJOR
-value|1
+value|2
 end_define
 
 begin_comment
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|CLANG_VERSION_MINOR
-value|5
+value|0
 end_define
 
 begin_comment

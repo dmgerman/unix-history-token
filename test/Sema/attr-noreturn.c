@@ -235,5 +235,27 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|Fun
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(noreturn
+parameter_list|(
+function_decl|2
+typedef|)));
+end_typedef
+
+begin_comment
+comment|// expected-error {{attribute requires 0 argument(s)}}
+end_comment
+
 end_unit
 

@@ -386,7 +386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{incompatible type initializing}}
+comment|// expected-error{{initializing 'typeof_17' (aka 'int') with an expression of incompatible type 'struct S'}}
 end_comment
 
 begin_comment

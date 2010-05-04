@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -E  2>&1 | grep warning | wc -l | grep 2
+comment|// RUN: %clang_cc1 %s -E -verify
 end_comment
 
 begin_define
@@ -19,10 +19,16 @@ literal|42
 operator|+
 literal|0U
 operator|)
+comment|/* expected-warning {{left side of operator converted from negative value to unsigned: -42 to 18446744073709551574}} */
+expr|\
 operator|/
 operator|-
 literal|2
 end_if
+
+begin_comment
+comment|/* expected-warning {{right side of operator converted from negative value to unsigned: -2 to 18446744073709551614}} */
+end_comment
 
 begin_macro
 name|foo

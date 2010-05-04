@@ -334,7 +334,7 @@ name|b
 operator|.
 name|y
 return|;
-comment|// expected-warning {{incompatible pointer types returning 'int *', expected 'float *'}}
+comment|// expected-warning {{incompatible pointer types returning 'int *' from a function with result type 'float *'}}
 block|}
 end_function
 

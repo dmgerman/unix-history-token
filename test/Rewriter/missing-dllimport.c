@@ -69,7 +69,7 @@ comment|// CHECK-NEG: warning: void function 'bar' should not return a value
 end_comment
 
 begin_comment
-comment|// CHECK-NEG: 1 diagnostic generated
+comment|// CHECK-NEG: 1 warning generated
 end_comment
 
 begin_comment
@@ -81,7 +81,7 @@ comment|// CHECK-POS: warning: void function 'bar' should not return a value
 end_comment
 
 begin_comment
-comment|// CHECK-POS: 2 diagnostics generated
+comment|// CHECK-POS: 2 warnings generated
 end_comment
 
 end_unit

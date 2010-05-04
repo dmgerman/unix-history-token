@@ -155,7 +155,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{incompatible type assigning 'struct xx', expected 'int'}}
+comment|// expected-error{{assigning to 'int' from incompatible type 'struct xx'}}
 name|c
 operator|=
 name|__builtin_choose_expr

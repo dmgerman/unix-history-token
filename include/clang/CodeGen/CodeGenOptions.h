@@ -89,6 +89,22 @@ name|OnlyAlwaysInlining
 comment|// Only run the always inlining pass.
 block|}
 enum|;
+enum|enum
+name|ObjCDispatchMethodKind
+block|{
+name|Legacy
+init|=
+literal|0
+block|,
+name|NonLegacy
+init|=
+literal|1
+block|,
+name|Mixed
+init|=
+literal|2
+block|}
+enum|;
 name|unsigned
 name|AsmVerbose
 range|:
@@ -108,6 +124,12 @@ literal|1
 decl_stmt|;
 comment|/// Emit complete ctors/dtors as linker
 comment|/// aliases to base ctors when possible.
+name|unsigned
+name|DataSections
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fdata-sections is enabled
 name|unsigned
 name|DebugInfo
 range|:
@@ -136,6 +158,12 @@ literal|1
 decl_stmt|;
 comment|/// Set when -mno-red-zone is enabled.
 name|unsigned
+name|FunctionSections
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -ffunction-sections is enabled
+name|unsigned
 name|MergeAllConstants
 range|:
 literal|1
@@ -160,12 +188,11 @@ literal|1
 decl_stmt|;
 comment|/// -fno-zero-initialized-in-bss
 name|unsigned
-name|ObjCLegacyDispatch
+name|ObjCDispatchMethod
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/// Use legacy Objective-C dispatch, even with
-comment|/// 2.0 runtime.
+comment|/// Method of Objective-C dispatch to use.
 name|unsigned
 name|OptimizationLevel
 range|:
@@ -282,6 +309,10 @@ name|CXXCtorDtorAliases
 operator|=
 literal|0
 expr_stmt|;
+name|DataSections
+operator|=
+literal|0
+expr_stmt|;
 name|DebugInfo
 operator|=
 literal|0
@@ -295,6 +326,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|DisableRedZone
+operator|=
+literal|0
+expr_stmt|;
+name|FunctionSections
 operator|=
 literal|0
 expr_stmt|;
@@ -314,9 +349,9 @@ name|NoZeroInitializedInBSS
 operator|=
 literal|0
 expr_stmt|;
-name|ObjCLegacyDispatch
+name|ObjCDispatchMethod
 operator|=
-literal|0
+name|Legacy
 expr_stmt|;
 name|OptimizationLevel
 operator|=
@@ -358,6 +393,18 @@ name|RelocationModel
 operator|=
 literal|"pic"
 expr_stmt|;
+block|}
+name|ObjCDispatchMethodKind
+name|getObjCDispatchMethod
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCDispatchMethodKind
+argument_list|(
+name|ObjCDispatchMethod
+argument_list|)
+return|;
 block|}
 block|}
 empty_stmt|;

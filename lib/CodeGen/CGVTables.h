@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- CGVtable.h - Emit LLVM Code for C++ vtables ----------------------===//
+comment|//===--- CGVTables.h - Emit LLVM Code for C++ vtables ---------------------===//
 end_comment
 
 begin_comment
@@ -790,7 +790,7 @@ name|CodeGenModule
 operator|&
 name|CGM
 block|;
-comment|/// MethodVtableIndices - Contains the index (relative to the vtable address
+comment|/// MethodVTableIndices - Contains the index (relative to the vtable address
 comment|/// point) where the function pointer for a virtual function is stored.
 typedef|typedef
 name|llvm
@@ -801,10 +801,10 @@ name|GlobalDecl
 operator|,
 name|int64_t
 operator|>
-name|MethodVtableIndicesTy
+name|MethodVTableIndicesTy
 expr_stmt|;
-name|MethodVtableIndicesTy
-name|MethodVtableIndices
+name|MethodVTableIndicesTy
+name|MethodVTableIndices
 block|;
 typedef|typedef
 name|std
@@ -838,7 +838,7 @@ expr_stmt|;
 name|VirtualBaseClassOffsetOffsetsMapTy
 name|VirtualBaseClassOffsetOffsets
 expr_stmt|;
-comment|/// Vtables - All the vtables which have been defined.
+comment|/// VTables - All the vtables which have been defined.
 name|llvm
 operator|::
 name|DenseMap
@@ -852,7 +852,7 @@ operator|::
 name|GlobalVariable
 operator|*
 operator|>
-name|Vtables
+name|VTables
 expr_stmt|;
 comment|/// NumVirtualFunctionPointers - Contains the number of virtual function
 comment|/// pointers in the vtable for a given record decl.
@@ -918,10 +918,6 @@ name|VTableLayoutMapTy
 name|VTableLayoutMap
 decl_stmt|;
 typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
 name|std
 operator|::
 name|pair
@@ -932,6 +928,14 @@ operator|*
 operator|,
 name|BaseSubobject
 operator|>
+name|BaseSubobjectPairTy
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|BaseSubobjectPairTy
 operator|,
 name|uint64_t
 operator|>
@@ -1070,7 +1074,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|ClassPairTy
+name|BaseSubobjectPairTy
 operator|,
 name|uint64_t
 operator|>
@@ -1085,16 +1089,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|BaseSubobject
-operator|>
+name|BaseSubobjectPairTy
 operator|,
 name|uint64_t
 operator|>
@@ -1117,7 +1112,7 @@ name|RD
 parameter_list|)
 function_decl|;
 name|void
-name|ComputeMethodVtableIndices
+name|ComputeMethodVTableIndices
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
@@ -1204,16 +1199,60 @@ argument_list|(
 argument|CGM
 argument_list|)
 block|{ }
+comment|// isKeyFunctionInAnotherTU - True if this record has a key function and it is
+comment|// in another translation unit.
+specifier|static
+name|bool
+name|isKeyFunctionInAnotherTU
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|const CXXRecordDecl *RD
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|RD
+operator|->
+name|isDynamicClass
+argument_list|()
+operator|&&
+literal|"Non dynamic classes have no key."
+argument_list|)
+block|;
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|KeyFunction
+operator|=
+name|Context
+operator|.
+name|getKeyFunction
+argument_list|(
+name|RD
+argument_list|)
+block|;
+return|return
+name|KeyFunction
+operator|&&
+operator|!
+name|KeyFunction
+operator|->
+name|getBody
+argument_list|()
+return|;
+block|}
 comment|/// needsVTTParameter - Return whether the given global decl needs a VTT
 comment|/// parameter, which it does if it's a base constructor or destructor with
 comment|/// virtual bases.
 specifier|static
 name|bool
 name|needsVTTParameter
-argument_list|(
-argument|GlobalDecl GD
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
 comment|/// getSubVTTIndex - Return the index of the sub-VTT for the base class of the
 comment|/// given record decl.
 name|uint64_t
@@ -1224,9 +1263,7 @@ name|CXXRecordDecl
 modifier|*
 name|RD
 parameter_list|,
-specifier|const
-name|CXXRecordDecl
-modifier|*
+name|BaseSubobject
 name|Base
 parameter_list|)
 function_decl|;
@@ -1244,11 +1281,11 @@ name|BaseSubobject
 name|Base
 parameter_list|)
 function_decl|;
-comment|/// getMethodVtableIndex - Return the index (relative to the vtable address
+comment|/// getMethodVTableIndex - Return the index (relative to the vtable address
 comment|/// point) where the function pointer for the given virtual function is
 comment|/// stored.
 name|uint64_t
-name|getMethodVtableIndex
+name|getMethodVTableIndex
 parameter_list|(
 name|GlobalDecl
 name|GD

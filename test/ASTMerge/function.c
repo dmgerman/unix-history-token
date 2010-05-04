@@ -28,7 +28,7 @@ comment|// CHECK: function1.c:4:6: note: declared here with type 'void (void)'
 end_comment
 
 begin_comment
-comment|// CHECK: 4 diagnostics generated
+comment|// CHECK: 2 errors generated
 end_comment
 
 end_unit

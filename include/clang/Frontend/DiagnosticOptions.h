@@ -149,6 +149,14 @@ decl_stmt|;
 comment|/// Emit diagnostics via the diagnostic
 comment|/// binary serialization mechanism, to be
 comment|/// deserialized by, e.g., the CIndex library.
+name|unsigned
+name|ErrorLimit
+decl_stmt|;
+comment|/// Limit # errors emitted.
+name|unsigned
+name|TemplateBacktraceLimit
+decl_stmt|;
+comment|/// Limit depth of instantiation backtrace.
 comment|/// The distance between tab stops.
 name|unsigned
 name|TabStop
@@ -249,6 +257,14 @@ operator|=
 literal|0
 expr_stmt|;
 name|BinaryOutput
+operator|=
+literal|0
+expr_stmt|;
+name|ErrorLimit
+operator|=
+literal|0
+expr_stmt|;
+name|TemplateBacktraceLimit
 operator|=
 literal|0
 expr_stmt|;

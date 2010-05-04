@@ -133,6 +133,9 @@ name|ScopeDecl
 block|}
 name|AScope
 block|;
+name|unsigned
+name|MaxNodes
+block|;
 name|bool
 name|VisualizeEGDot
 block|;
@@ -170,6 +173,8 @@ argument_list|,
 argument|StoreManagerCreator storemgr
 argument_list|,
 argument|ConstraintManagerCreator constraintmgr
+argument_list|,
+argument|unsigned maxnodes
 argument_list|,
 argument|bool vizdot
 argument_list|,
@@ -215,6 +220,11 @@ block|,
 name|AScope
 argument_list|(
 name|ScopeDecl
+argument_list|)
+block|,
+name|MaxNodes
+argument_list|(
+name|maxnodes
 argument_list|)
 block|,
 name|VisualizeEGDot
@@ -353,6 +363,15 @@ operator|->
 name|FlushDiagnostics
 argument_list|()
 expr_stmt|;
+block|}
+name|unsigned
+name|getMaxNodes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxNodes
+return|;
 block|}
 name|bool
 name|shouldVisualizeGraphviz

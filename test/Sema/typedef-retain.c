@@ -53,7 +53,7 @@ index|]
 operator|=
 name|a
 expr_stmt|;
-comment|// expected-error {{assigning 'float4', expected 'int4'}}
+comment|// expected-error {{assigning to 'int4' from incompatible type 'float4'}}
 block|}
 end_function
 
@@ -78,7 +78,7 @@ index|]
 operator|=
 name|a
 expr_stmt|;
-comment|// expected-error {{assigning 'float4', expected 'int4'}}
+comment|// expected-error {{assigning to 'int4' from incompatible type 'float4'}}
 block|}
 end_function
 

@@ -130,7 +130,7 @@ name|OR_Ambiguous
 block|,
 comment|///< Ambiguous candidates found.
 name|OR_Deleted
-comment|///< Overload resoltuion refers to a deleted function.
+comment|///< Succeeded, but refers to a deleted function.
 block|}
 enum|;
 comment|/// ImplicitConversionKind - The kind of implicit conversion used to
@@ -1204,6 +1204,56 @@ name|ConversionKind
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return a ranking of the implicit conversion sequence
+comment|/// kind, where smaller ranks represent better conversion
+comment|/// sequences.
+comment|///
+comment|/// In particular, this routine gives user-defined conversion
+comment|/// sequences and ambiguous conversion sequences the same rank,
+comment|/// per C++ [over.best.ics]p10.
+name|unsigned
+name|getKindRank
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|StandardConversion
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|UserDefinedConversion
+case|:
+case|case
+name|AmbiguousConversion
+case|:
+return|return
+literal|1
+return|;
+case|case
+name|EllipsisConversion
+case|:
+return|return
+literal|2
+return|;
+case|case
+name|BadConversion
+case|:
+return|return
+literal|3
+return|;
+block|}
+return|return
+literal|3
+return|;
+block|}
 name|bool
 name|isBad
 argument_list|()
@@ -1442,6 +1492,10 @@ block|,
 comment|/// This conversion candidate is not viable because its result
 comment|/// type is not implicitly convertible to the desired type.
 name|ovl_fail_bad_final_conversion
+block|,
+comment|/// This conversion function template specialization candidate is not
+comment|/// viable because the final conversion was not an exact match.
+name|ovl_fail_final_conversion_not_exact
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).

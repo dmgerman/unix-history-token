@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/UsuallyTinyPtrVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -168,6 +174,9 @@ block|{
 struct_decl|struct
 name|fltSemantics
 struct_decl|;
+name|class
+name|raw_ostream
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -270,72 +279,6 @@ name|class
 name|Context
 decl_stmt|;
 block|}
-comment|/// \brief A vector of C++ member functions that is optimized for
-comment|/// storing a single method.
-name|class
-name|CXXMethodVector
-block|{
-comment|/// \brief Storage for the vector.
-comment|///
-comment|/// When the low bit is zero, this is a const CXXMethodDecl *. When the
-comment|/// low bit is one, this is a std::vector<const CXXMethodDecl *> *.
-name|mutable
-name|uintptr_t
-name|Storage
-decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|CXXMethodDecl
-operator|*
-operator|>
-name|vector_type
-expr_stmt|;
-name|public
-label|:
-name|CXXMethodVector
-argument_list|()
-operator|:
-name|Storage
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
-typedef|typedef
-specifier|const
-name|CXXMethodDecl
-modifier|*
-modifier|*
-name|iterator
-typedef|;
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-expr_stmt|;
-name|iterator
-name|end
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|push_back
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|Method
-parameter_list|)
-function_decl|;
-name|void
-name|Destroy
-parameter_list|()
-function_decl|;
-block|}
-empty_stmt|;
 comment|/// ASTContext - This class holds long-lived AST nodes (such as types and
 comment|/// decls) that can be referred to throughout the semantic analysis of a file.
 name|class
@@ -680,6 +623,10 @@ name|CFConstantStringTypeDecl
 decl_stmt|;
 name|RecordDecl
 modifier|*
+name|NSConstantStringTypeDecl
+decl_stmt|;
+name|RecordDecl
+modifier|*
 name|ObjCFastEnumerationStateTypeDecl
 decl_stmt|;
 comment|/// \brief The type for the C FILE type.
@@ -826,6 +773,14 @@ comment|///
 comment|/// Since most C++ member functions aren't virtual and therefore
 comment|/// don't override anything, we store the overridden functions in
 comment|/// this map on the side rather than within the CXXMethodDecl structure.
+typedef|typedef
+name|UsuallyTinyPtrVector
+operator|<
+specifier|const
+name|CXXMethodDecl
+operator|>
+name|CXXMethodVector
+expr_stmt|;
 name|llvm
 operator|::
 name|DenseMap
@@ -2129,6 +2084,11 @@ name|Canon
 init|=
 name|QualType
 argument_list|()
+parameter_list|,
+name|bool
+name|IsCurrentInstantiation
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|QualType
@@ -2147,6 +2107,11 @@ name|Canon
 init|=
 name|QualType
 argument_list|()
+parameter_list|,
+name|bool
+name|IsCurrentInstantiation
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|TypeSourceInfo
@@ -2366,6 +2331,40 @@ comment|// constant CFStrings.
 name|QualType
 name|getCFConstantStringType
 parameter_list|()
+function_decl|;
+comment|// getNSConstantStringType - Return the C structure type used to represent
+comment|// constant NSStrings.
+name|QualType
+name|getNSConstantStringType
+parameter_list|()
+function_decl|;
+comment|/// Get the structure type used to representation NSStrings, or NULL
+comment|/// if it hasn't yet been built.
+name|QualType
+name|getRawNSConstantStringType
+parameter_list|()
+block|{
+if|if
+condition|(
+name|NSConstantStringTypeDecl
+condition|)
+return|return
+name|getTagDeclType
+argument_list|(
+name|NSConstantStringTypeDecl
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|()
+return|;
+block|}
+name|void
+name|setNSConstantStringType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
 function_decl|;
 comment|/// Get the structure type used to representation CFStrings, or NULL
 comment|/// if it hasn't yet been built.
@@ -3245,6 +3244,21 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|void
+name|DumpRecordLayout
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl_stmt|;
 comment|/// getASTObjCImplementationLayout - Get or compute information about
 comment|/// the layout of the specified Objective-C implementation. This may
 comment|/// differ from the interface if synthesized ivars are present.

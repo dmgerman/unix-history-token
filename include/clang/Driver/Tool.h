@@ -191,6 +191,18 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// \brief Does this tool have "good" standardized diagnostics, or should the
+comment|/// driver add an additional "command failed" diagnostic on failures.
+name|virtual
+name|bool
+name|hasGoodDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// ConstructJob - Construct jobs to perform the action \arg JA,
 comment|/// writing to \arg Output and with \arg Inputs.
 comment|///

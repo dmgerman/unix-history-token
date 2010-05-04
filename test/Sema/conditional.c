@@ -65,7 +65,7 @@ literal|0
 argument_list|)
 operator|)
 return|;
-comment|// expected-error {{incompatible type returning 'void', expected 'int'}}
+comment|// expected-error {{returning 'void' from a function with incompatible result type 'int'}}
 block|}
 end_function
 
@@ -89,7 +89,7 @@ literal|0
 argument_list|)
 operator|)
 return|;
-comment|// expected-error {{incompatible type returning 'void', expected 'int'}}
+comment|// expected-error {{returning 'void' from a function with incompatible result type 'int'}}
 block|}
 end_function
 

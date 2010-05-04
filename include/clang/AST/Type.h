@@ -3683,6 +3683,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isStructureOrClassType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isUnionType
 argument_list|()
 specifier|const
@@ -3865,6 +3870,15 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 name|getCXXRecordDeclForPointerType
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieves the CXXRecordDecl that this type refers to, either
+comment|/// because the type is a RecordType or because it is the injected-class-name
+comment|/// type of a class template or class template partial specialization.
+name|CXXRecordDecl
+operator|*
+name|getAsCXXRecordDecl
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -10343,10 +10357,22 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|// FIXME: Currently needed for profiling expressions; can we avoid this?
+comment|// The ASTContext is currently needed in order to profile expressions.
+comment|// FIXME: avoid this.
+comment|//
+comment|// The bool is whether this is a current instantiation.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|ASTContext
-operator|&
-name|Context
+operator|*
+block|,
+literal|1
+block|,
+name|bool
+operator|>
+name|ContextAndCurrentInstantiation
 block|;
 comment|/// \brief The name of the template being specialized.
 name|TemplateName
@@ -10362,6 +10388,8 @@ argument_list|(
 argument|ASTContext&Context
 argument_list|,
 argument|TemplateName T
+argument_list|,
+argument|bool IsCurrentInstantiation
 argument_list|,
 argument|const TemplateArgument *Args
 argument_list|,
@@ -10459,6 +10487,20 @@ operator|&
 name|Policy
 argument_list|)
 block|;
+comment|/// True if this template specialization type matches a current
+comment|/// instantiation in the context in which it is found.
+name|bool
+name|isCurrentInstantiation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContextAndCurrentInstantiation
+operator|.
+name|getInt
+argument_list|()
+return|;
+block|}
 typedef|typedef
 specifier|const
 name|TemplateArgument
@@ -10542,6 +10584,9 @@ return|return
 operator|!
 name|isDependentType
 argument_list|()
+operator|||
+name|isCurrentInstantiation
+argument_list|()
 return|;
 block|}
 name|QualType
@@ -10566,12 +10611,19 @@ name|ID
 argument_list|,
 name|Template
 argument_list|,
+name|isCurrentInstantiation
+argument_list|()
+argument_list|,
 name|getArgs
 argument_list|()
 argument_list|,
 name|NumArgs
 argument_list|,
-name|Context
+operator|*
+name|ContextAndCurrentInstantiation
+operator|.
+name|getPointer
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -10581,6 +10633,8 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|TemplateName T
+argument_list|,
+argument|bool IsCurrentInstantiation
 argument_list|,
 argument|const TemplateArgument *Args
 argument_list|,
@@ -10618,16 +10672,23 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief The injected class name of a C++ class template.  Used to
-comment|/// record that a type was spelled with a bare identifier rather than
-comment|/// as a template-id; the equivalent for non-templated classes is just
-comment|/// RecordType.
+comment|/// \brief The injected class name of a C++ class template or class
+comment|/// template partial specialization.  Used to record that a type was
+comment|/// spelled with a bare identifier rather than as a template-id; the
+comment|/// equivalent for non-templated classes is just RecordType.
 comment|///
-comment|/// For consistency, template instantiation turns these into RecordTypes.
+comment|/// Injected class name types are always dependent.  Template
+comment|/// instantiation turns these into RecordTypes.
 comment|///
-comment|/// The desugared form is always a unqualified TemplateSpecializationType.
-comment|/// The canonical form is always either a TemplateSpecializationType
-comment|/// (when dependent) or a RecordType (otherwise).
+comment|/// Injected class name types are always canonical.  This works
+comment|/// because it is impossible to compare an injected class name type
+comment|/// with the corresponding non-injected template type, for the same
+comment|/// reason that it is impossible to directly compare template
+comment|/// parameters from different dependent contexts: injected class name
+comment|/// types can only occur within the scope of a particular templated
+comment|/// declaration, and within that scope every template specialization
+comment|/// will canonicalize to the injected class name (when appropriate
+comment|/// according to the rules of the language).
 name|class
 name|InjectedClassNameType
 operator|:
@@ -10638,33 +10699,43 @@ name|CXXRecordDecl
 operator|*
 name|Decl
 block|;
+comment|/// The template specialization which this type represents.
+comment|/// For example, in
+comment|///   template<class T> class A { ... };
+comment|/// this is A<T>, whereas in
+comment|///   template<class X, class Y> class A<B<X,Y>> { ... };
+comment|/// this is A<B<X,Y>>.
+comment|///
+comment|/// It is always unqualified, always a template specialization type,
+comment|/// and always dependent.
 name|QualType
-name|UnderlyingType
+name|InjectedType
 block|;
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|friend
+name|class
+name|TagDecl
+block|;
+comment|// TagDecl mutilates the Decl
 name|InjectedClassNameType
 argument_list|(
 argument|CXXRecordDecl *D
 argument_list|,
 argument|QualType TST
-argument_list|,
-argument|QualType Canon
 argument_list|)
 operator|:
 name|Type
 argument_list|(
 name|InjectedClassName
 argument_list|,
-name|Canon
-argument_list|,
-name|Canon
-operator|->
-name|isDependentType
+name|QualType
 argument_list|()
+argument_list|,
+name|true
 argument_list|)
 block|,
 name|Decl
@@ -10672,7 +10743,7 @@ argument_list|(
 name|D
 argument_list|)
 block|,
-name|UnderlyingType
+name|InjectedType
 argument_list|(
 argument|TST
 argument_list|)
@@ -10701,27 +10772,25 @@ name|assert
 argument_list|(
 name|TST
 operator|->
-name|getCanonicalTypeInternal
+name|isDependentType
 argument_list|()
-operator|==
-name|Canon
 argument_list|)
 block|;   }
 name|public
 operator|:
 name|QualType
-name|getUnderlyingType
+name|getInjectedSpecializationType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|UnderlyingType
+name|InjectedType
 return|;
 block|}
 specifier|const
 name|TemplateSpecializationType
 operator|*
-name|getUnderlyingTST
+name|getInjectedTST
 argument_list|()
 specifier|const
 block|{
@@ -10731,7 +10800,7 @@ operator|<
 name|TemplateSpecializationType
 operator|>
 operator|(
-name|UnderlyingType
+name|InjectedType
 operator|.
 name|getTypePtr
 argument_list|()
@@ -10754,7 +10823,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 name|QualType
@@ -10763,7 +10832,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|UnderlyingType
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
 return|;
 block|}
 specifier|static

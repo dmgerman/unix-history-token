@@ -74,7 +74,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: grep 'internal void @__f2_block_invoke_(.struct.s0\* noalias sret .*, .*, .* byval .*)' %t
+comment|// RUN: grep 'internal void @__f2_block_invoke_(.struct.s0\* sret .*, .*, .* byval .*)' %t
 end_comment
 
 begin_function

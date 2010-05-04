@@ -395,6 +395,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// UseObjCMixedDispatchDefault - When using non-legacy dispatch, should the
+comment|/// mixed dispatch method be used?
+name|virtual
+name|bool
+name|UseObjCMixedDispatch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// GetDefaultStackProtectorLevel - Get the default stack protector level for
 comment|/// this tool chain (0=off, 1=on, 2=all).
 name|virtual
@@ -442,6 +454,17 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+comment|/// Does this tool chain support Objective-C garbage collection.
+name|virtual
+name|bool
+name|SupportsObjCGC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// UseDwarfDebugFlags - Embed the compile options to clang into the Dwarf
 comment|/// compile unit information.
 name|virtual

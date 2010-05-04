@@ -1066,6 +1066,15 @@ name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
 argument|bool
 argument_list|,
+argument|isStructureOrClassType
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
 argument|isUnionType
 argument_list|)
 end_macro

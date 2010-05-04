@@ -143,10 +143,6 @@ comment|// CHECK-3: {{^   }}        (       )
 end_comment
 
 begin_comment
-comment|// CHECK-3: {{^   }}    (    )
-end_comment
-
-begin_comment
 comment|// CHECK-4: {{^    }}if (0& 1 == 1)
 end_comment
 
@@ -155,19 +151,11 @@ comment|// CHECK-4: {{^    }}          (     )
 end_comment
 
 begin_comment
-comment|// CHECK-4: {{^    }}    (      )
-end_comment
-
-begin_comment
 comment|// CHECK-5: {{^     }}if (0& 1  == 1)
 end_comment
 
 begin_comment
 comment|// CHECK-5: {{^     }}            (      )
-end_comment
-
-begin_comment
-comment|// CHECK-5: {{^     }}    (        )
 end_comment
 
 end_unit

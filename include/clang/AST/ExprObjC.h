@@ -274,8 +274,9 @@ range|:
 name|public
 name|Expr
 block|{
-name|QualType
-name|EncType
+name|TypeSourceInfo
+operator|*
+name|EncodedType
 block|;
 name|SourceLocation
 name|AtLoc
@@ -288,7 +289,7 @@ name|ObjCEncodeExpr
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|QualType ET
+argument|TypeSourceInfo *EncodedType
 argument_list|,
 argument|SourceLocation at
 argument_list|,
@@ -301,20 +302,26 @@ name|ObjCEncodeExprClass
 argument_list|,
 name|T
 argument_list|,
-name|ET
+name|EncodedType
+operator|->
+name|getType
+argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
-name|ET
+name|EncodedType
+operator|->
+name|getType
+argument_list|()
 operator|->
 name|isDependentType
 argument_list|()
 argument_list|)
 block|,
-name|EncType
+name|EncodedType
 argument_list|(
-name|ET
+name|EncodedType
 argument_list|)
 block|,
 name|AtLoc
@@ -384,19 +391,32 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|EncType
+name|EncodedType
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+name|TypeSourceInfo
+operator|*
+name|getEncodedTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EncodedType
 return|;
 block|}
 name|void
-name|setEncodedType
+name|setEncodedTypeSourceInfo
 argument_list|(
-argument|QualType T
+argument|TypeSourceInfo *EncType
 argument_list|)
 block|{
-name|EncType
+name|EncodedType
 operator|=
-name|T
-block|; }
+name|EncType
+block|;    }
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -866,8 +886,7 @@ argument|QualType t
 argument_list|,
 argument|SourceLocation l
 argument_list|,
-argument|Expr *base=
-literal|0
+argument|Expr *base
 argument_list|,
 argument|bool arrow = false
 argument_list|,
@@ -880,9 +899,13 @@ name|ObjCIvarRefExprClass
 argument_list|,
 name|t
 argument_list|,
+comment|/*TypeDependent=*/
 name|false
 argument_list|,
-name|false
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|D
@@ -1159,9 +1182,13 @@ name|ObjCPropertyRefExprClass
 argument_list|,
 name|t
 argument_list|,
+comment|/*TypeDependent=*/
 name|false
 argument_list|,
-name|false
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|AsProperty
@@ -1401,9 +1428,13 @@ name|ObjCImplicitSetterGetterRefExprClass
 argument_list|,
 name|t
 argument_list|,
+comment|/*TypeDependent=*/
 name|false
 argument_list|,
-name|false
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|Setter
@@ -1733,6 +1764,98 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// \brief An expression that sends a message to the given Objective-C
+end_comment
+
+begin_comment
+comment|/// object or class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The following contains two message send expressions:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \code
+end_comment
+
+begin_comment
+comment|///   [[NSString alloc] initWithString:@"Hello"]
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The innermost message send invokes the "alloc" class method on the
+end_comment
+
+begin_comment
+comment|/// NSString class, while the outermost message send invokes the
+end_comment
+
+begin_comment
+comment|/// "initWithString" instance method on the object returned from
+end_comment
+
+begin_comment
+comment|/// NSString's "alloc". In all, an Objective-C message send can take
+end_comment
+
+begin_comment
+comment|/// on four different (although related) forms:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   1. Send to an object instance.
+end_comment
+
+begin_comment
+comment|///   2. Send to a class.
+end_comment
+
+begin_comment
+comment|///   3. Send to the superclass instance of the current class.
+end_comment
+
+begin_comment
+comment|///   4. Send to the superclass of the current class.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// All four kinds of message sends are modeled by the ObjCMessageExpr
+end_comment
+
+begin_comment
+comment|/// class, and can be distinguished via \c getReceiverKind(). Example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
 begin_decl_stmt
 name|class
 name|ObjCMessageExpr
@@ -1740,161 +1863,55 @@ range|:
 name|public
 name|Expr
 block|{
-comment|// SubExprs - The receiver and arguments of the message expression.
-name|Stmt
-operator|*
-operator|*
-name|SubExprs
-block|;
-comment|// NumArgs - The number of arguments (not including the receiver) to the
-comment|//  message expression.
+comment|/// \brief The number of arguments in the message send, not
+comment|/// including the receiver.
 name|unsigned
 name|NumArgs
-block|;
-comment|/// \brief The location of the class name in a class message.
-name|SourceLocation
-name|ClassNameLoc
-block|;
-comment|// A unigue name for this message.
-name|Selector
-name|SelName
-block|;
-comment|// A method prototype for this message (optional).
-comment|// FIXME: Since method decls contain the selector, and most messages have a
-comment|// prototype, consider devising a scheme for unifying SelName/MethodProto.
-name|ObjCMethodDecl
-operator|*
-name|MethodProto
-block|;
-name|SourceLocation
-name|LBracloc
-block|,
-name|RBracloc
-block|;
-comment|// Constants for indexing into SubExprs.
-block|enum
-block|{
-name|RECEIVER
-operator|=
-literal|0
-block|,
-name|ARGS_START
-operator|=
-literal|1
-block|}
-block|;
-comment|// Bit-swizzling flags.
-block|enum
-block|{
-name|IsInstMeth
-operator|=
-literal|0
-block|,
-name|IsClsMethDeclUnknown
-block|,
-name|IsClsMethDeclKnown
-block|,
-name|Flags
-operator|=
-literal|0x3
-block|}
-block|;
-name|unsigned
-name|getFlag
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|uintptr_t
-operator|)
-name|SubExprs
-index|[
-name|RECEIVER
-index|]
-operator|&
-name|Flags
-return|;
-block|}
-name|public
 operator|:
-comment|/// This constructor is used to represent class messages where the
-comment|/// ObjCInterfaceDecl* of the receiver is not known.
-name|ObjCMessageExpr
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|IdentifierInfo *clsName
-argument_list|,
-argument|SourceLocation clsNameLoc
-argument_list|,
-argument|Selector selInfo
-argument_list|,
-argument|QualType retType
-argument_list|,
-argument|ObjCMethodDecl *methDecl
-argument_list|,
-argument|SourceLocation LBrac
-argument_list|,
-argument|SourceLocation RBrac
-argument_list|,
-argument|Expr **ArgExprs
-argument_list|,
-argument|unsigned NumArgs
-argument_list|)
+literal|16
 block|;
-comment|/// This constructor is used to represent class messages where the
-comment|/// ObjCInterfaceDecl* of the receiver is known.
-comment|// FIXME: clsName should be typed to ObjCInterfaceType
-name|ObjCMessageExpr
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|ObjCInterfaceDecl *cls
-argument_list|,
-argument|SourceLocation clsNameLoc
-argument_list|,
-argument|Selector selInfo
-argument_list|,
-argument|QualType retType
-argument_list|,
-argument|ObjCMethodDecl *methDecl
-argument_list|,
-argument|SourceLocation LBrac
-argument_list|,
-argument|SourceLocation RBrac
-argument_list|,
-argument|Expr **ArgExprs
-argument_list|,
-argument|unsigned NumArgs
-argument_list|)
+comment|/// \brief The kind of message send this is, which is one of the
+comment|/// ReceiverKind values.
+comment|///
+comment|/// We pad this out to a byte to avoid excessive masking and shifting.
+name|unsigned
+name|Kind
+operator|:
+literal|8
 block|;
-comment|// constructor for instance messages.
-name|ObjCMessageExpr
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|Expr *receiver
-argument_list|,
-argument|Selector selInfo
-argument_list|,
-argument|QualType retType
-argument_list|,
-argument|ObjCMethodDecl *methDecl
-argument_list|,
-argument|SourceLocation LBrac
-argument_list|,
-argument|SourceLocation RBrac
-argument_list|,
-argument|Expr **ArgExprs
-argument_list|,
-argument|unsigned NumArgs
-argument_list|)
+comment|/// \brief Whether we have an actual method prototype in \c
+comment|/// SelectorOrMethod.
+comment|///
+comment|/// When non-zero, we have a method declaration; otherwise, we just
+comment|/// have a selector.
+name|unsigned
+name|HasMethod
+operator|:
+literal|8
 block|;
-name|explicit
+comment|/// \brief When the message expression is a send to 'super', this is
+comment|/// the location of the 'super' keyword.
+name|SourceLocation
+name|SuperLoc
+block|;
+comment|/// \brief Stores either the selector that this message is sending
+comment|/// to (when \c HasMethod is zero) or an \c ObjCMethodDecl pointer
+comment|/// referring to the method that we type-checked against.
+name|uintptr_t
+name|SelectorOrMethod
+block|;
+comment|/// \brief The source locations of the open and close square
+comment|/// brackets ('[' and ']', respectively).
+name|SourceLocation
+name|LBracLoc
+block|,
+name|RBracLoc
+block|;
 name|ObjCMessageExpr
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumArgs
 argument_list|)
 operator|:
 name|Expr
@@ -1904,67 +1921,410 @@ argument_list|,
 name|Empty
 argument_list|)
 block|,
-name|SubExprs
+name|NumArgs
+argument_list|(
+name|NumArgs
+argument_list|)
+block|,
+name|Kind
 argument_list|(
 literal|0
 argument_list|)
 block|,
-name|NumArgs
+name|HasMethod
 argument_list|(
 literal|0
 argument_list|)
-block|{}
-name|virtual
-name|void
-name|DoDestroy
+block|,
+name|SelectorOrMethod
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+literal|0
+argument_list|)
+block|{ }
+name|ObjCMessageExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|SourceLocation SuperLoc
+argument_list|,
+argument|bool IsInstanceSuper
+argument_list|,
+argument|QualType SuperType
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
 argument_list|)
 block|;
-comment|/// getReceiver - Returns the receiver of the message expression.
-comment|///  This can be NULL if the message is for class methods.  For
-comment|///  class methods, use getClassName.
-comment|/// FIXME: need to handle/detect 'super' usage within a class method.
-name|Expr
-operator|*
-name|getReceiver
-argument_list|()
-block|{
-name|uintptr_t
-name|x
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|SubExprs
-index|[
-name|RECEIVER
-index|]
+name|ObjCMessageExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|TypeSourceInfo *Receiver
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
+argument_list|)
 block|;
+name|ObjCMessageExpr
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|Expr *Receiver
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
+argument_list|)
+block|;
+comment|/// \brief Retrieve the pointer value of the message receiver.
+name|void
+operator|*
+name|getReceiverPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+specifier|const
+name|void
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|)
+return|;
+block|}
+comment|/// \brief Set the pointer value of the message receiver.
+name|void
+name|setReceiverPointer
+argument_list|(
+argument|void *Value
+argument_list|)
+block|{
+operator|*
+name|reinterpret_cast
+operator|<
+name|void
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|=
+name|Value
+block|;   }
+name|public
+operator|:
+comment|/// \brief The kind of receiver this message is sending to.
+expr|enum
+name|ReceiverKind
+block|{
+comment|/// \brief The receiver is a class.
+name|Class
+operator|=
+literal|0
+block|,
+comment|/// \brief The receiver is an object instance.
+name|Instance
+block|,
+comment|/// \brief The receiver is a superclass.
+name|SuperClass
+block|,
+comment|/// \brief The receiver is the instance of the superclass object.
+name|SuperInstance
+block|}
+block|;
+comment|/// \brief Create a message send to super.
+comment|///
+comment|/// \param Context The ASTContext in which this expression will be created.
+comment|///
+comment|/// \param T The result type of this message.
+comment|///
+comment|/// \param LBrac The location of the open square bracket '['.
+comment|///
+comment|/// \param SuperLoc The location of the "super" keyword.
+comment|///
+comment|/// \param IsInstanceSuper Whether this is an instance "super"
+comment|/// message (otherwise, it's a class "super" message).
+comment|///
+comment|/// \param Sel The selector used to determine which method gets called.
+comment|///
+comment|/// \param Method The Objective-C method against which this message
+comment|/// send was type-checked. May be NULL.
+comment|///
+comment|/// \param Args The message send arguments.
+comment|///
+comment|/// \param NumArgs The number of arguments.
+comment|///
+comment|/// \param RBracLoc The location of the closing square bracket ']'.
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|SourceLocation SuperLoc
+argument_list|,
+argument|bool IsInstanceSuper
+argument_list|,
+argument|QualType SuperType
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
+argument_list|)
+block|;
+comment|/// \brief Create a class message send.
+comment|///
+comment|/// \param Context The ASTContext in which this expression will be created.
+comment|///
+comment|/// \param T The result type of this message.
+comment|///
+comment|/// \param LBrac The location of the open square bracket '['.
+comment|///
+comment|/// \param Receiver The type of the receiver, including
+comment|/// source-location information.
+comment|///
+comment|/// \param Sel The selector used to determine which method gets called.
+comment|///
+comment|/// \param Method The Objective-C method against which this message
+comment|/// send was type-checked. May be NULL.
+comment|///
+comment|/// \param Args The message send arguments.
+comment|///
+comment|/// \param NumArgs The number of arguments.
+comment|///
+comment|/// \param RBracLoc The location of the closing square bracket ']'.
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|TypeSourceInfo *Receiver
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
+argument_list|)
+block|;
+comment|/// \brief Create an instance message send.
+comment|///
+comment|/// \param Context The ASTContext in which this expression will be created.
+comment|///
+comment|/// \param T The result type of this message.
+comment|///
+comment|/// \param LBrac The location of the open square bracket '['.
+comment|///
+comment|/// \param Receiver The expression used to produce the object that
+comment|/// will receive this message.
+comment|///
+comment|/// \param Sel The selector used to determine which method gets called.
+comment|///
+comment|/// \param Method The Objective-C method against which this message
+comment|/// send was type-checked. May be NULL.
+comment|///
+comment|/// \param Args The message send arguments.
+comment|///
+comment|/// \param NumArgs The number of arguments.
+comment|///
+comment|/// \param RBracLoc The location of the closing square bracket ']'.
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|SourceLocation LBracLoc
+argument_list|,
+argument|Expr *Receiver
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|ObjCMethodDecl *Method
+argument_list|,
+argument|Expr **Args
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|SourceLocation RBracLoc
+argument_list|)
+block|;
+comment|/// \brief Create an empty Objective-C message expression, to be
+comment|/// filled in by subsequent calls.
+comment|///
+comment|/// \param Context The context in which the message send will be created.
+comment|///
+comment|/// \param NumArgs The number of message arguments, not including
+comment|/// the receiver.
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned NumArgs
+argument_list|)
+block|;
+comment|/// \brief Determine the kind of receiver that this message is being
+comment|/// sent to.
+name|ReceiverKind
+name|getReceiverKind
+argument_list|()
+specifier|const
+block|{
 return|return
 operator|(
-name|x
-operator|&
-name|Flags
+name|ReceiverKind
 operator|)
+name|Kind
+return|;
+block|}
+comment|/// \brief Determine whether this is an instance message to either a
+comment|/// computed object or to super.
+name|bool
+name|isInstanceMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getReceiverKind
+argument_list|()
 operator|==
-name|IsInstMeth
-condition|?
-operator|(
+name|Instance
+operator|||
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperInstance
+return|;
+block|}
+comment|/// \brief Determine whether this is an class message to either a
+comment|/// specified class or to super.
+name|bool
+name|isClassMessage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getReceiverKind
+argument_list|()
+operator|==
+name|Class
+operator|||
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperClass
+return|;
+block|}
+comment|/// \brief Returns the receiver of an instance message.
+comment|///
+comment|/// \brief Returns the object expression for an instance message, or
+comment|/// NULL for a message that is not an instance message.
 name|Expr
 operator|*
+name|getInstanceReceiver
+argument_list|()
+block|{
+if|if
+condition|(
+name|getReceiverKind
+argument_list|()
+operator|==
+name|Instance
+condition|)
+return|return
+name|static_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getReceiverPointer
+argument_list|()
 operator|)
-name|x
-else|:
+return|;
+return|return
 literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|Expr
 operator|*
-name|getReceiver
+name|getInstanceReceiver
 argument_list|()
 specifier|const
 block|{
@@ -1978,43 +2338,361 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getReceiver
+name|getInstanceReceiver
 argument_list|()
 return|;
 block|}
-comment|// FIXME: need setters for different receiver types.
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Turn this message send into an instance message that
+end_comment
+
+begin_comment
+comment|/// computes the receiver object with the given expression.
+end_comment
+
+begin_function
 name|void
-name|setReceiver
-argument_list|(
-argument|Expr *rec
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|RECEIVER
-index|]
-operator|=
+name|setInstanceReceiver
+parameter_list|(
+name|Expr
+modifier|*
 name|rec
-block|; }
+parameter_list|)
+block|{
+name|Kind
+operator|=
+name|Instance
+expr_stmt|;
+name|setReceiverPointer
+argument_list|(
+name|rec
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the type of a class message send, or NULL if the
+end_comment
+
+begin_comment
+comment|/// message is not a class message.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getClassReceiver
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|TSInfo
+init|=
+name|getClassReceiverTypeInfo
+argument_list|()
+condition|)
+return|return
+name|TSInfo
+operator|->
+name|getType
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|QualType
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Returns a type-source information of a class message
+end_comment
+
+begin_comment
+comment|/// send, or NULL if the message is not a class message.
+end_comment
+
+begin_expr_stmt
+unit|TypeSourceInfo
+operator|*
+name|getClassReceiverTypeInfo
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getReceiverKind
+argument_list|()
+operator|==
+name|Class
+condition|)
+return|return
+name|reinterpret_cast
+operator|<
+name|TypeSourceInfo
+operator|*
+operator|>
+operator|(
+name|getReceiverPointer
+argument_list|()
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_macro
+unit|}    void
+name|setClassReceiver
+argument_list|(
+argument|TypeSourceInfo *TSInfo
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|Kind
+operator|=
+name|Class
+expr_stmt|;
+name|setReceiverPointer
+argument_list|(
+name|TSInfo
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// \brief Retrieve the location of the 'super' keyword for a class
+end_comment
+
+begin_comment
+comment|/// or instance message to 'super', otherwise an invalid source location.
+end_comment
+
+begin_expr_stmt
+name|SourceLocation
+name|getSuperLoc
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperInstance
+operator|||
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperClass
+condition|)
+return|return
+name|SuperLoc
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|SourceLocation
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Retrieve the Objective-C interface to which this message
+end_comment
+
+begin_comment
+comment|/// is being directed, if known.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine cross-cuts all of the different kinds of message
+end_comment
+
+begin_comment
+comment|/// sends to determine what the underlying (statically known) type
+end_comment
+
+begin_comment
+comment|/// of the receiver will be; use \c getReceiverKind() to determine
+end_comment
+
+begin_comment
+comment|/// whether the message is a class or an instance method, whether it
+end_comment
+
+begin_comment
+comment|/// is a send to super or not, etc.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The Objective-C interface if known, otherwise NULL.
+end_comment
+
+begin_expr_stmt
+unit|ObjCInterfaceDecl
+operator|*
+name|getReceiverInterface
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the type referred to by 'super'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The returned type will either be an ObjCInterfaceType (for an
+end_comment
+
+begin_comment
+comment|/// class message to super) or an ObjCObjectPointerType that refers
+end_comment
+
+begin_comment
+comment|/// to a class (for an instance message to super);
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getSuperType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperInstance
+operator|||
+name|getReceiverKind
+argument_list|()
+operator|==
+name|SuperClass
+condition|)
+return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
+name|getReceiverPointer
+argument_list|()
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|QualType
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}    void
+name|setSuper
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|bool IsInstanceSuper
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|Kind
+operator|=
+name|IsInstanceSuper
+condition|?
+name|SuperInstance
+else|:
+name|SuperClass
+expr_stmt|;
+name|SuperLoc
+operator|=
+name|Loc
+expr_stmt|;
+name|setReceiverPointer
+argument_list|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
 name|Selector
 name|getSelector
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SelName
-return|;
-block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|void
 name|setSelector
-argument_list|(
-argument|Selector S
-argument_list|)
-block|{
-name|SelName
-operator|=
+parameter_list|(
+name|Selector
 name|S
-block|; }
+parameter_list|)
+block|{
+name|HasMethod
+operator|=
+name|false
+expr_stmt|;
+name|SelectorOrMethod
+operator|=
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|S
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|ObjCMethodDecl
 operator|*
@@ -2022,125 +2700,93 @@ name|getMethodDecl
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|HasMethod
+condition|)
 return|return
-name|MethodProto
-return|;
-block|}
+name|reinterpret_cast
+operator|<
+specifier|const
 name|ObjCMethodDecl
+operator|*
+operator|>
+operator|(
+name|SelectorOrMethod
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    ObjCMethodDecl
 operator|*
 name|getMethodDecl
 argument_list|()
 block|{
+if|if
+condition|(
+name|HasMethod
+condition|)
 return|return
-name|MethodProto
+name|reinterpret_cast
+operator|<
+name|ObjCMethodDecl
+operator|*
+operator|>
+operator|(
+name|SelectorOrMethod
+operator|)
 return|;
-block|}
-name|void
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_macro
+unit|}    void
 name|setMethodDecl
 argument_list|(
 argument|ObjCMethodDecl *MD
 argument_list|)
+end_macro
+
+begin_block
 block|{
-name|MethodProto
+name|HasMethod
 operator|=
+name|true
+expr_stmt|;
+name|SelectorOrMethod
+operator|=
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
 name|MD
-block|; }
-comment|/// \brief Describes the class receiver of a message send.
-expr|struct
-name|ClassInfo
-block|{
-comment|/// \brief The interface declaration for the class that is
-comment|/// receiving the message. May be NULL.
-name|ObjCInterfaceDecl
-operator|*
-name|Decl
-block|;
-comment|/// \brief The name of the class that is receiving the
-comment|/// message. This will never be NULL.
-name|IdentifierInfo
-operator|*
-name|Name
-block|;
-comment|/// \brief The source location of the class name.
-name|SourceLocation
-name|Loc
-block|;
-name|ClassInfo
-argument_list|()
-operator|:
-name|Decl
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Name
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Loc
-argument_list|()
-block|{ }
-name|ClassInfo
-argument_list|(
-argument|ObjCInterfaceDecl *Decl
-argument_list|,
-argument|IdentifierInfo *Name
-argument_list|,
-argument|SourceLocation Loc
-argument_list|)
-operator|:
-name|Decl
-argument_list|(
-name|Decl
-argument_list|)
-block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-argument|Loc
-argument_list|)
-block|{ }
+operator|)
+expr_stmt|;
 block|}
-block|;
-comment|/// getClassInfo - For class methods, this returns both the ObjCInterfaceDecl*
-comment|///  and IdentifierInfo* of the invoked class.  Both can be NULL if this
-comment|///  is an instance message, and the ObjCInterfaceDecl* can be NULL if none
-comment|///  was available when this ObjCMessageExpr object was constructed.
-name|ClassInfo
-name|getClassInfo
-argument_list|()
-specifier|const
-block|;
-name|void
-name|setClassInfo
-argument_list|(
-specifier|const
-name|ClassInfo
-operator|&
-name|C
-argument_list|)
-block|;
-comment|/// getClassName - For class methods, this returns the invoked class,
-comment|///  and returns NULL otherwise.  For instance methods, use getReceiver.
-name|IdentifierInfo
-operator|*
-name|getClassName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getClassInfo
-argument_list|()
-operator|.
-name|Name
-return|;
-block|}
-comment|/// getNumArgs - Return the number of actual arguments to this call.
+end_block
+
+begin_comment
+comment|/// \brief Return the number of actual arguments in this message,
+end_comment
+
+begin_comment
+comment|/// not counting the receiver.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumArgs
 argument_list|()
@@ -2150,42 +2796,83 @@ return|return
 name|NumArgs
 return|;
 block|}
-name|void
-name|setNumArgs
-argument_list|(
-argument|unsigned nArgs
-argument_list|)
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the arguments to this message, not including the
+end_comment
+
+begin_comment
+comment|/// receiver.
+end_comment
+
+begin_function
+name|Stmt
+modifier|*
+modifier|*
+name|getArgs
+parameter_list|()
 block|{
-name|NumArgs
-operator|=
-name|nArgs
-block|;
-comment|// FIXME: should always allocate SubExprs via the ASTContext's
-comment|// allocator.
-if|if
-condition|(
-operator|!
-name|SubExprs
-condition|)
-name|SubExprs
-operator|=
-name|new
+return|return
+name|reinterpret_cast
+operator|<
 name|Stmt
 operator|*
-index|[
-name|NumArgs
+operator|*
+operator|>
+operator|(
+name|this
 operator|+
 literal|1
-index|]
-expr_stmt|;
+operator|)
+operator|+
+literal|1
+return|;
 block|}
+end_function
+
+begin_expr_stmt
+specifier|const
+name|Stmt
+operator|*
+specifier|const
+operator|*
+name|getArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Stmt
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|+
+literal|1
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getArg - Return the specified argument.
+end_comment
+
+begin_function
 name|Expr
-operator|*
+modifier|*
 name|getArg
-argument_list|(
-argument|unsigned Arg
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Arg
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2195,30 +2882,33 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|cast
 operator|<
 name|Expr
 operator|>
 operator|(
-name|SubExprs
+name|getArgs
+argument_list|()
 index|[
 name|Arg
-operator|+
-name|ARGS_START
 index|]
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|const
 name|Expr
-operator|*
+modifier|*
 name|getArg
 argument_list|(
-argument|unsigned Arg
+name|unsigned
+name|Arg
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -2228,30 +2918,38 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|cast
 operator|<
 name|Expr
 operator|>
 operator|(
-name|SubExprs
+name|getArgs
+argument_list|()
 index|[
 name|Arg
-operator|+
-name|ARGS_START
 index|]
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// setArg - Set the specified argument.
+end_comment
+
+begin_function
 name|void
 name|setArg
-argument_list|(
-argument|unsigned Arg
-argument_list|,
-argument|Expr *ArgExpr
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Arg
+parameter_list|,
+name|Expr
+modifier|*
+name|ArgExpr
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2261,74 +2959,98 @@ name|NumArgs
 operator|&&
 literal|"Arg access out of range!"
 argument_list|)
-block|;
-name|SubExprs
+expr_stmt|;
+name|getArgs
+argument_list|()
 index|[
 name|Arg
-operator|+
-name|ARGS_START
 index|]
 operator|=
 name|ArgExpr
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|SourceLocation
 name|getLeftLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LBracloc
+name|LBracLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getRightLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RBracloc
+name|RBracLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setLeftLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
-name|LBracloc
+name|LBracLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setRightLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
-name|RBracloc
+name|RBracLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|setSourceRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
+parameter_list|(
+name|SourceRange
+name|R
+parameter_list|)
 block|{
-name|LBracloc
+name|LBracLoc
 operator|=
 name|R
 operator|.
 name|getBegin
 argument_list|()
-block|;
-name|RBracloc
+expr_stmt|;
+name|RBracLoc
 operator|=
 name|R
 operator|.
 name|getEnd
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -2338,18 +3060,24 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|LBracloc
+name|LBracLoc
 argument_list|,
-name|RBracloc
+name|RBracLoc
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -2360,33 +3088,50 @@ operator|==
 name|ObjCMessageExprClass
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const ObjCMessageExpr *
-argument_list|)
+parameter_list|(
+specifier|const
+name|ObjCMessageExpr
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterators
+end_comment
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|child_iterator
 name|child_end
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_typedef
 typedef|typedef
 name|ExprIterator
 name|arg_iterator
 typedef|;
-end_decl_stmt
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -2401,11 +3146,8 @@ name|arg_begin
 parameter_list|()
 block|{
 return|return
-operator|&
-name|SubExprs
-index|[
-name|ARGS_START
-index|]
+name|getArgs
+argument_list|()
 return|;
 block|}
 end_function
@@ -2416,11 +3158,8 @@ name|arg_end
 parameter_list|()
 block|{
 return|return
-operator|&
-name|SubExprs
-index|[
-name|ARGS_START
-index|]
+name|getArgs
+argument_list|()
 operator|+
 name|NumArgs
 return|;
@@ -2434,11 +3173,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
-name|SubExprs
-index|[
-name|ARGS_START
-index|]
+name|getArgs
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2450,11 +3186,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
-name|SubExprs
-index|[
-name|ARGS_START
-index|]
+name|getArgs
+argument_list|()
 operator|+
 name|NumArgs
 return|;
@@ -2468,6 +3201,18 @@ end_comment
 
 begin_comment
 comment|/// which refers to the object on which the current method is executing.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// FIXME: This class is intended for removal, once its remaining
+end_comment
+
+begin_comment
+comment|/// clients have been altered to represent "super" internally.
 end_comment
 
 begin_decl_stmt
@@ -2638,9 +3383,13 @@ name|ObjCIsaExprClass
 argument_list|,
 name|ty
 argument_list|,
+comment|/*TypeDependent=*/
 name|false
 argument_list|,
-name|false
+name|base
+operator|->
+name|isValueDependent
+argument_list|()
 argument_list|)
 block|,
 name|Base

@@ -607,7 +607,9 @@ name|comp
 function_decl|)
 parameter_list|()
 parameter_list|)
-block|{ }
+block|{
+comment|// expected-note{{passing argument to parameter 'comp' here}}
+block|}
 end_function
 
 begin_function_decl
@@ -637,7 +639,7 @@ return|;
 block|}
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{incompatible block pointer types passing 'int (^)(void)', expected 'long (^)()'}}
+comment|// expected-error {{incompatible block pointer types passing 'int (^)(void)' to parameter of type 'long (^)()'}}
 block|}
 end_function
 
@@ -989,7 +991,7 @@ index|[
 name|n
 index|]
 decl_stmt|;
-comment|// expected-note {{declared at}}
+comment|// expected-note {{declared here}}
 name|int
 argument_list|(
 operator|*
@@ -1001,7 +1003,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|// expected-note {{declared at}}
+comment|// expected-note {{declared here}}
 name|vla
 index|[
 literal|1
@@ -1051,7 +1053,7 @@ index|[
 literal|7
 index|]
 decl_stmt|;
-comment|// expected-note {{declared at}}
+comment|// expected-note {{declared here}}
 specifier|__block
 name|int
 name|b
@@ -1059,7 +1061,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|// expected-note {{declared at}}
+comment|// expected-note {{declared here}}
 name|a
 index|[
 literal|1

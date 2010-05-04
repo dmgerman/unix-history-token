@@ -196,6 +196,26 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Resolve a selector ID into a selector.
+name|virtual
+name|Selector
+name|GetSelector
+parameter_list|(
+name|uint32_t
+name|ID
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Returns the number of selectors known to the external AST
+comment|/// source.
+name|virtual
+name|uint32_t
+name|GetNumKnownSelectors
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|/// \brief Resolve the offset of a statement in the decl stream into a
 comment|/// statement.
 comment|///

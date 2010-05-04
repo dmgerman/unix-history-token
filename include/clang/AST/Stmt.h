@@ -385,6 +385,7 @@ begin_decl_stmt
 name|class
 name|ConstExprIterator
 block|{
+specifier|const
 name|Stmt
 modifier|*
 specifier|const
@@ -395,6 +396,7 @@ name|public
 label|:
 name|ConstExprIterator
 argument_list|(
+specifier|const
 name|Stmt
 operator|*
 specifier|const
@@ -437,6 +439,7 @@ operator|(
 name|size_t
 name|i
 operator|)
+specifier|const
 block|{
 return|return
 name|I
@@ -451,6 +454,7 @@ operator|(
 name|size_t
 name|i
 operator|)
+specifier|const
 block|{
 return|return
 name|I

@@ -1113,12 +1113,8 @@ if|if
 condition|(
 name|D
 operator|->
-name|getIdentifierNamespace
+name|hasTagIdentifierNamespace
 argument_list|()
-operator|==
-name|Decl
-operator|::
-name|IDNS_Tag
 condition|)
 name|Vec
 operator|.
@@ -1236,12 +1232,8 @@ name|back
 argument_list|()
 operator|)
 operator|->
-name|getIdentifierNamespace
+name|hasTagIdentifierNamespace
 argument_list|()
-operator|==
-name|Decl
-operator|::
-name|IDNS_Tag
 condition|)
 block|{
 name|uintptr_t

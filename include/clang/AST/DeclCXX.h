@@ -1544,6 +1544,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Determines whether this record has any friends.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasFriends
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|FirstFriend
+operator|!=
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasConstCopyConstructor - Determines whether this class has a
 end_comment
 
@@ -3753,6 +3774,8 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|bool isStatic
 argument_list|,
+argument|StorageClass SCAsWritten
+argument_list|,
 argument|bool isInline
 argument_list|)
 operator|:
@@ -3771,6 +3794,8 @@ argument_list|,
 argument|TInfo
 argument_list|,
 argument|(isStatic ? Static : None)
+argument_list|,
+argument|SCAsWritten
 argument_list|,
 argument|isInline
 argument_list|)
@@ -3795,6 +3820,8 @@ argument_list|,
 argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|bool isStatic = false
+argument_list|,
+argument|StorageClass SCAsWritten = FunctionDecl::None
 argument_list|,
 argument|bool isInline = false
 argument_list|)
@@ -3890,6 +3917,22 @@ end_comment
 begin_expr_stmt
 name|bool
 name|isUsualDeallocationFunction
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this is a copy-assignment operator, regardless
+end_comment
+
+begin_comment
+comment|/// of whether it was declared implicitly or explicitly.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCopyAssignmentOperator
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -4271,6 +4314,11 @@ name|FieldDecl
 modifier|*
 name|AnonUnionMember
 decl_stmt|;
+comment|/// IsVirtual - If the initializer is a base initializer, this keeps track
+comment|/// of whether the base is virtual or not.
+name|bool
+name|IsVirtual
+decl_stmt|;
 comment|/// LParenLoc - Location of the left paren of the ctor-initializer.
 name|SourceLocation
 name|LParenLoc
@@ -4292,6 +4340,9 @@ parameter_list|,
 name|TypeSourceInfo
 modifier|*
 name|TInfo
+parameter_list|,
+name|bool
+name|IsVirtual
 parameter_list|,
 name|SourceLocation
 name|L
@@ -4399,6 +4450,24 @@ modifier|*
 name|getBaseClass
 parameter_list|()
 function_decl|;
+comment|/// Returns whether the base is virtual or not.
+name|bool
+name|isBaseVirtual
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isBaseInitializer
+argument_list|()
+operator|&&
+literal|"Must call this on base initializer!"
+argument_list|)
+block|;
+return|return
+name|IsVirtual
+return|;
+block|}
 comment|/// \brief Returns the declarator information for a base class initializer.
 name|TypeSourceInfo
 operator|*
@@ -4658,6 +4727,10 @@ name|TInfo
 argument_list|,
 name|false
 argument_list|,
+name|FunctionDecl
+operator|::
+name|None
+argument_list|,
 name|isInline
 argument_list|)
 block|,
@@ -4758,9 +4831,7 @@ comment|/// user. This operation can only be invoked if the constructor has
 comment|/// already been defined.
 name|bool
 name|isImplicitlyDefined
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 name|assert
@@ -5245,6 +5316,10 @@ literal|0
 argument_list|,
 name|false
 argument_list|,
+name|FunctionDecl
+operator|::
+name|None
+argument_list|,
 name|isInline
 argument_list|)
 block|,
@@ -5446,6 +5521,10 @@ argument_list|,
 name|TInfo
 argument_list|,
 name|false
+argument_list|,
+name|FunctionDecl
+operator|::
+name|None
 argument_list|,
 name|isInline
 argument_list|)

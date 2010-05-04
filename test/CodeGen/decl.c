@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -w -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -17,6 +17,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: @test5y = global %union.test5u { double 7.300000e+0{{[0]*}}1 }
+end_comment
+
+begin_comment
+comment|// CHECK: @test6.x = internal constant %struct.SelectDest { i8 1, i8 2, i32 3, i32 0 }
+end_comment
+
+begin_comment
+comment|// CHECK: @test7 = global [2 x %struct.test7s] [%struct.test7s { i32 1, i32 2 }, %struct.test7s { i32 4, i32 0 }]
 end_comment
 
 begin_function
@@ -247,6 +255,122 @@ operator|)
 literal|73.0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// PR6660 - sqlite miscompile
+end_comment
+
+begin_struct
+struct|struct
+name|SelectDest
+block|{
+name|unsigned
+name|char
+name|eDest
+decl_stmt|;
+name|unsigned
+name|char
+name|affinity
+decl_stmt|;
+name|int
+name|iParm
+decl_stmt|;
+name|int
+name|iMem
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+name|struct
+name|SelectDest
+name|x
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|}
+decl_stmt|;
+name|test6f
+argument_list|(
+operator|&
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://7657600
+end_comment
+
+begin_struct
+struct|struct
+name|test7s
+block|{
+name|int
+name|a
+decl_stmt|;
+name|int
+name|b
+decl_stmt|;
+block|}
+name|test7
+index|[]
+init|=
+block|{
+block|{
+literal|1
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|4
+block|}
+block|, }
+struct|;
+end_struct
+
+begin_comment
+comment|// rdar://7872531
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|2
+name|)
+end_pragma
+
+begin_struct
+struct|struct
+name|test8s
+block|{
+name|int
+name|f0
+decl_stmt|;
+name|char
+name|f1
+decl_stmt|;
+block|}
+name|test8g
+init|=
+block|{}
+struct|;
+end_struct
 
 end_unit
 

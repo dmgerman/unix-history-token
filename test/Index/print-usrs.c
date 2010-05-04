@@ -63,11 +63,11 @@ comment|// CHECK: c:objc(cs)NSObject
 end_comment
 
 begin_comment
-comment|// CHECK: c:objc(cy)NSObject^foo
+comment|// CHECK: c:objc(cy)NSObject@foo
 end_comment
 
 begin_comment
-comment|// CHECK: c:objc(cs)NSObject@^x
+comment|// CHECK: c:objc(cs)NSObject@x
 end_comment
 
 begin_comment

@@ -109,6 +109,9 @@ name|class
 name|ObjCPropertyImplDecl
 decl_stmt|;
 name|class
+name|CXXBaseOrMemberInitializer
+decl_stmt|;
+name|class
 name|ObjCListBase
 block|{
 name|void
@@ -560,6 +563,10 @@ name|objcDeclQualifier
 range|:
 literal|6
 decl_stmt|;
+comment|// Number of args separated by ':' in a method declaration.
+name|unsigned
+name|NumSelectorArgs
+decl_stmt|;
 comment|// Result type of this method.
 name|QualType
 name|MethodDeclType
@@ -621,6 +628,9 @@ argument_list|,
 argument|bool isSynthesized = false
 argument_list|,
 argument|ImplementationControl impControl = None
+argument_list|,
+argument|unsigned numSelectorArgs =
+literal|0
 argument_list|)
 block|:
 name|NamedDecl
@@ -662,6 +672,11 @@ operator|,
 name|objcDeclQualifier
 argument_list|(
 name|OBJC_TQ_None
+argument_list|)
+operator|,
+name|NumSelectorArgs
+argument_list|(
+name|numSelectorArgs
 argument_list|)
 operator|,
 name|MethodDeclType
@@ -768,6 +783,11 @@ name|ImplementationControl
 name|impControl
 init|=
 name|None
+parameter_list|,
+name|unsigned
+name|numSelectorArgs
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|virtual
@@ -819,6 +839,27 @@ block|{
 name|objcDeclQualifier
 operator|=
 name|QV
+expr_stmt|;
+block|}
+name|unsigned
+name|getNumSelectorArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSelectorArgs
+return|;
+block|}
+name|void
+name|setNumSelectorArgs
+parameter_list|(
+name|unsigned
+name|numSelectorArgs
+parameter_list|)
+block|{
+name|NumSelectorArgs
+operator|=
+name|numSelectorArgs
 expr_stmt|;
 block|}
 comment|// Location information, modeled after the Stmt API.
@@ -998,6 +1039,22 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|// This method returns and of the parameters which are part of the selector
+comment|// name mangling requirements.
+name|param_iterator
+name|sel_param_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParamInfo
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|NumSelectorArgs
+return|;
+block|}
 name|void
 name|setMethodParams
 parameter_list|(
@@ -1013,6 +1070,9 @@ name|List
 parameter_list|,
 name|unsigned
 name|Num
+parameter_list|,
+name|unsigned
+name|numSelectorArgs
 parameter_list|)
 block|{
 name|ParamInfo
@@ -1025,6 +1085,10 @@ name|Num
 argument_list|,
 name|C
 argument_list|)
+expr_stmt|;
+name|NumSelectorArgs
+operator|=
+name|numSelectorArgs
 expr_stmt|;
 block|}
 comment|// Iterator access to parameter types.
@@ -5344,6 +5408,25 @@ return|;
 block|}
 expr|}
 block|;
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+expr|,
+specifier|const
+name|ObjCCategoryImplDecl
+operator|*
+name|CID
+operator|)
+block|;
 comment|/// ObjCImplementationDecl - Represents a class definition - this is where
 comment|/// method definitions are specified. For example:
 comment|///
@@ -5369,6 +5452,16 @@ name|ObjCInterfaceDecl
 operator|*
 name|SuperClass
 block|;
+comment|/// Support for ivar initialization.
+comment|/// IvarInitializers - The arguments used to initialize the ivars
+name|CXXBaseOrMemberInitializer
+operator|*
+operator|*
+name|IvarInitializers
+block|;
+name|unsigned
+name|NumIvarInitializers
+block|;
 name|ObjCImplementationDecl
 argument_list|(
 argument|DeclContext *DC
@@ -5393,7 +5486,17 @@ argument_list|)
 block|,
 name|SuperClass
 argument_list|(
-argument|superDecl
+name|superDecl
+argument_list|)
+block|,
+name|IvarInitializers
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|NumIvarInitializers
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|public
@@ -5414,8 +5517,104 @@ argument_list|,
 argument|ObjCInterfaceDecl *superDecl
 argument_list|)
 block|;
+comment|/// init_iterator - Iterates through the ivar initializer list.
+typedef|typedef
+name|CXXBaseOrMemberInitializer
+modifier|*
+modifier|*
+name|init_iterator
+typedef|;
+comment|/// init_const_iterator - Iterates through the ivar initializer list.
+typedef|typedef
+name|CXXBaseOrMemberInitializer
+modifier|*
+specifier|const
+modifier|*
+name|init_const_iterator
+typedef|;
+comment|/// init_begin() - Retrieve an iterator to the first initializer.
+name|init_iterator
+name|init_begin
+argument_list|()
+block|{
+return|return
+name|IvarInitializers
+return|;
+block|}
+comment|/// begin() - Retrieve an iterator to the first initializer.
+name|init_const_iterator
+name|init_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IvarInitializers
+return|;
+block|}
+comment|/// init_end() - Retrieve an iterator past the last initializer.
+name|init_iterator
+name|init_end
+argument_list|()
+block|{
+return|return
+name|IvarInitializers
+operator|+
+name|NumIvarInitializers
+return|;
+block|}
+comment|/// end() - Retrieve an iterator past the last initializer.
+name|init_const_iterator
+name|init_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IvarInitializers
+operator|+
+name|NumIvarInitializers
+return|;
+block|}
+comment|/// getNumArgs - Number of ivars which must be initialized.
+name|unsigned
+name|getNumIvarInitializers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumIvarInitializers
+return|;
+block|}
+name|void
+name|setNumIvarInitializers
+argument_list|(
+argument|unsigned numNumIvarInitializers
+argument_list|)
+block|{
+name|NumIvarInitializers
+operator|=
+name|numNumIvarInitializers
+block|;   }
+name|void
+name|setIvarInitializers
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|CXXBaseOrMemberInitializer ** initializers
+argument_list|,
+argument|unsigned numInitializers
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getIdentifier - Get the identifier that names the class
+end_comment
+
+begin_comment
 comment|/// interface associated with this implementation.
+end_comment
+
+begin_expr_stmt
 name|IdentifierInfo
 operator|*
 name|getIdentifier
@@ -5430,11 +5629,29 @@ name|getIdentifier
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getName - Get the name of identifier for the class interface associated
+end_comment
+
+begin_comment
 comment|/// with this implementation as a StringRef.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
+end_comment
+
+begin_comment
 comment|// something different.
+end_comment
+
+begin_expr_stmt
 name|llvm
 operator|::
 name|StringRef
@@ -5458,11 +5675,29 @@ name|getName
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getNameAsCString - Get the name of identifier for the class
+end_comment
+
+begin_comment
 comment|/// interface associated with this implementation as a C string
+end_comment
+
+begin_comment
 comment|/// (const char*).
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: Move to StringRef API.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -5478,9 +5713,21 @@ name|data
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Get the name of the class associated with this interface.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: Move to StringRef API.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -5493,6 +5740,9 @@ name|getName
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|ObjCInterfaceDecl
 operator|*
@@ -5504,25 +5754,37 @@ return|return
 name|SuperClass
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|ObjCInterfaceDecl
-operator|*
+modifier|*
 name|getSuperClass
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|SuperClass
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setSuperClass
-argument_list|(
-argument|ObjCInterfaceDecl * superCls
-argument_list|)
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|superCls
+parameter_list|)
 block|{
 name|SuperClass
 operator|=
 name|superCls
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_typedef
 typedef|typedef
 name|specific_decl_iterator
 operator|<
@@ -5530,6 +5792,9 @@ name|ObjCIvarDecl
 operator|>
 name|ivar_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|ivar_iterator
 name|ivar_begin
 argument_list|()
@@ -5543,6 +5808,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ivar_iterator
 name|ivar_end
 argument_list|()
@@ -5556,6 +5824,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|ivar_size
 argument_list|()
@@ -5574,6 +5845,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|ivar_empty
 argument_list|()
@@ -5587,12 +5861,18 @@ name|ivar_end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -5604,23 +5884,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const ObjCImplementationDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|ObjCImplementationDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -5628,13 +5918,43 @@ operator|==
 name|ObjCImplementation
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_expr_stmt
+unit|};
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|ObjCImplementationDecl
+operator|*
+name|ID
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// ObjCCompatibleAliasDecl - Represents alias of a class. This alias is
+end_comment
+
+begin_comment
 comment|/// declared as @compatibility_alias alias class.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ObjCCompatibleAliasDecl
-operator|:
+range|:
 name|public
 name|NamedDecl
 block|{
@@ -6087,6 +6407,9 @@ return|return
 name|Assign
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|Selector
 name|getGetterName
 argument_list|()
@@ -6096,16 +6419,24 @@ return|return
 name|GetterName
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setGetterName
-argument_list|(
-argument|Selector Sel
-argument_list|)
+parameter_list|(
+name|Selector
+name|Sel
+parameter_list|)
 block|{
 name|GetterName
 operator|=
 name|Sel
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|Selector
 name|getSetterName
 argument_list|()
@@ -6115,16 +6446,24 @@ return|return
 name|SetterName
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSetterName
-argument_list|(
-argument|Selector Sel
-argument_list|)
+parameter_list|(
+name|Selector
+name|Sel
+parameter_list|)
 block|{
 name|SetterName
 operator|=
 name|Sel
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|ObjCMethodDecl
 operator|*
 name|getGetterMethodDecl
@@ -6135,16 +6474,25 @@ return|return
 name|GetterMethodDecl
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setGetterMethodDecl
-argument_list|(
-argument|ObjCMethodDecl *gDecl
-argument_list|)
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|gDecl
+parameter_list|)
 block|{
 name|GetterMethodDecl
 operator|=
 name|gDecl
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|ObjCMethodDecl
 operator|*
 name|getSetterMethodDecl
@@ -6155,27 +6503,44 @@ return|return
 name|SetterMethodDecl
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSetterMethodDecl
-argument_list|(
-argument|ObjCMethodDecl *gDecl
-argument_list|)
+parameter_list|(
+name|ObjCMethodDecl
+modifier|*
+name|gDecl
+parameter_list|)
 block|{
 name|SetterMethodDecl
 operator|=
 name|gDecl
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|// Related to @optional/@required declared in @protocol
+end_comment
+
+begin_function
 name|void
 name|setPropertyImplementation
-argument_list|(
-argument|PropertyControl pc
-argument_list|)
+parameter_list|(
+name|PropertyControl
+name|pc
+parameter_list|)
 block|{
 name|PropertyImplementation
 operator|=
 name|pc
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|PropertyControl
 name|getPropertyImplementation
 argument_list|()
@@ -6188,16 +6553,25 @@ name|PropertyImplementation
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setPropertyIvarDecl
-argument_list|(
-argument|ObjCIvarDecl *Ivar
-argument_list|)
+parameter_list|(
+name|ObjCIvarDecl
+modifier|*
+name|Ivar
+parameter_list|)
 block|{
 name|PropertyIvarDecl
 operator|=
 name|Ivar
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|ObjCIvarDecl
 operator|*
 name|getPropertyIvarDecl
@@ -6208,28 +6582,40 @@ return|return
 name|PropertyIvarDecl
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Lookup a property by name in the specified DeclContext.
+end_comment
+
+begin_function_decl
 specifier|static
 name|ObjCPropertyDecl
-operator|*
+modifier|*
 name|findPropertyDecl
-argument_list|(
+parameter_list|(
 specifier|const
 name|DeclContext
-operator|*
+modifier|*
 name|DC
-argument_list|,
+parameter_list|,
 name|IdentifierInfo
-operator|*
+modifier|*
 name|propertyID
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -6241,23 +6627,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const ObjCPropertyDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -6265,15 +6661,29 @@ operator|==
 name|ObjCProperty
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// ObjCPropertyImplDecl - Represents implementation declaration of a property
+end_comment
+
+begin_comment
 comment|/// in a class or category implementation block. For example:
+end_comment
+
+begin_comment
 comment|/// @synthesize prop1 = ivar1;
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|ObjCPropertyImplDecl
-operator|:
+range|:
 name|public
 name|Decl
 block|{

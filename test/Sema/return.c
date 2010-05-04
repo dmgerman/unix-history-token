@@ -991,7 +991,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// no-warning
+comment|// expected-warning{{control reaches end of non-void function}}
 end_comment
 
 begin_function

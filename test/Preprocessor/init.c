@@ -52,10 +52,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CXX0X:#define _GNU_SOURCE 1
-end_comment
-
-begin_comment
 comment|// CXX0X:#define __DEPRECATED 1
 end_comment
 
@@ -93,10 +89,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|// CXX98:#define _GNU_SOURCE 1
 end_comment
 
 begin_comment
@@ -208,6 +200,22 @@ comment|// COMMON:#define __clang__ 1
 end_comment
 
 begin_comment
+comment|// COMMON:#define __clang_major__ 2
+end_comment
+
+begin_comment
+comment|// COMMON:#define __clang_minor__ 0
+end_comment
+
+begin_comment
+comment|// COMMON:#define __clang_patchlevel__ 0
+end_comment
+
+begin_comment
+comment|// COMMON:#define __clang_version__
+end_comment
+
+begin_comment
 comment|// COMMON:#define __llvm__ 1
 end_comment
 
@@ -237,10 +245,6 @@ end_comment
 
 begin_comment
 comment|//
-end_comment
-
-begin_comment
-comment|// GXX98:#define _GNU_SOURCE 1
 end_comment
 
 begin_comment
@@ -4113,6 +4117,18 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __x86_64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -triple i686-pc-linux-gnu -E -dM< /dev/null | FileCheck -check-prefix GNUSOURCE %s
+end_comment
+
+begin_comment
+comment|// GNUSOURCE:#define _GNU_SOURCE 1
 end_comment
 
 begin_comment

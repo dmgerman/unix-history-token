@@ -238,6 +238,10 @@ name|ASTContext
 modifier|&
 name|Context
 decl_stmt|;
+name|Diagnostic
+modifier|&
+name|Diags
+decl_stmt|;
 name|llvm
 operator|::
 name|DenseMap
@@ -273,11 +277,20 @@ argument_list|(
 name|ASTContext
 operator|&
 name|Context
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
 argument_list|)
 operator|:
 name|Context
 argument_list|(
-argument|Context
+name|Context
+argument_list|)
+operator|,
+name|Diags
+argument_list|(
+argument|Diags
 argument_list|)
 block|{ }
 name|ASTContext
@@ -288,6 +301,16 @@ specifier|const
 block|{
 return|return
 name|Context
+return|;
+block|}
+name|Diagnostic
+operator|&
+name|getDiags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diags
 return|;
 block|}
 name|uint64_t
@@ -438,7 +461,7 @@ operator|&
 argument_list|)
 decl_stmt|;
 name|void
-name|mangleCXXVtable
+name|mangleCXXVTable
 argument_list|(
 specifier|const
 name|CXXRecordDecl
@@ -472,7 +495,7 @@ operator|&
 argument_list|)
 decl_stmt|;
 name|void
-name|mangleCXXCtorVtable
+name|mangleCXXCtorVTable
 argument_list|(
 specifier|const
 name|CXXRecordDecl

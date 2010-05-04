@@ -186,9 +186,6 @@ block|{
 name|class
 name|CGRecordLayout
 decl_stmt|;
-name|class
-name|CodeGenTypes
-decl_stmt|;
 comment|/// CodeGenTypes - This class organizes the cross-module state that is used
 comment|/// while lowering AST types to LLVM types.
 name|class
@@ -504,7 +501,7 @@ argument_list|(
 argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
-comment|/// GetFunctionTypeForVtable - Get the LLVM function type for use in a vtable,
+comment|/// GetFunctionTypeForVTable - Get the LLVM function type for use in a vtable,
 comment|/// given a CXXMethodDecl. If the method to has an incomplete return type,
 comment|/// and/or incomplete argument types, this will return the opaque type.
 specifier|const
@@ -512,7 +509,7 @@ name|llvm
 operator|::
 name|Type
 operator|*
-name|GetFunctionTypeForVtable
+name|GetFunctionTypeForVTable
 argument_list|(
 specifier|const
 name|CXXMethodDecl

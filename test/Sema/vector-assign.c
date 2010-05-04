@@ -81,102 +81,102 @@ name|v1
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2u', expected 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v2u'}}
 name|v1
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v1s', expected 'v2s'}}
+comment|// expected-error {{assigning to 'v2s' from incompatible type 'v1s'}}
 name|v1
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2f', expected 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v2f'}}
 name|v1
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v4ss', expected 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v4ss'}}
 name|v2
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2s', expected 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v2s'}}
 name|v2
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v1s', expected 'v2u'}}
+comment|// expected-error {{assigning to 'v2u' from incompatible type 'v1s'}}
 name|v2
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2f', expected 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v2f'}}
 name|v2
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v4ss', expected 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v4ss'}}
 name|v3
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v2s', expected 'v1s'}}
+comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2s'}}
 name|v3
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v2u', expected 'v1s'}}
+comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2u'}}
 name|v3
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v2f', expected 'v1s'}}
+comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2f'}}
 name|v3
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v4ss', expected 'v1s'}}
+comment|// expected-error {{assigning to 'v1s' from incompatible type 'v4ss'}}
 name|v4
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2s', expected 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v2s'}}
 name|v4
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2u', expected 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v2u'}}
 name|v4
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v1s', expected 'v2f'}}
+comment|// expected-error {{assigning to 'v2f' from incompatible type 'v1s'}}
 name|v4
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v4ss', expected 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v4ss'}}
 name|v5
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2s', expected 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2s'}}
 name|v5
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2u', expected 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2u'}}
 name|v5
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{incompatible type assigning 'v1s', expected 'v4ss'}}
+comment|// expected-error {{assigning to 'v4ss' from incompatible type 'v1s'}}
 name|v5
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning 'v2f', expected 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2f'}}
 block|}
 end_function
 
@@ -241,6 +241,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_function
 name|void
 name|test3
@@ -256,7 +260,7 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{incompatible pointer types passing 'unsigned int const *', expected 'longlongvec *'}}
+comment|// expected-warning {{incompatible pointer types passing 'unsigned int const *' to parameter of type 'longlongvec *'}}
 block|}
 end_function
 

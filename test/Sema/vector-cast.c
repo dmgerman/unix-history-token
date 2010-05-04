@@ -250,6 +250,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-note{{passing argument to parameter 'X' here}}
+end_comment
+
 begin_function
 name|void
 name|f3
@@ -263,7 +267,7 @@ argument_list|(
 name|Y
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types passing 't3', expected 't2'}}
+comment|// expected-warning {{incompatible vector types passing 't3' to parameter of type 't2'}}
 block|}
 end_function
 

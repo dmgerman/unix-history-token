@@ -216,7 +216,56 @@ expr_stmt|;
 comment|// CHECK: define void @f7(float{{.*}}, float{{.*}})
 comment|// CHECK: call void @f6(float{{.*}}, float{{.*}})
 block|}
+comment|// PR6911 - incomplete function types
+decl|struct
+name|Incomplete
+struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|f8_callback
+parameter_list|(
+name|struct
+name|Incomplete
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|f8_user
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|struct
+name|Incomplete
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f8_test
+parameter_list|()
+block|{
+name|f8_user
+argument_list|(
+operator|&
+name|f8_callback
+argument_list|)
+expr_stmt|;
+comment|// CHECK: define void @f8_test()
+comment|// CHECK: call void @f8_user({{.*}}* bitcast (void ()* @f8_callback to {{.*}}*))
+comment|// CHECK: declare void @f8_user({{.*}}*)
+comment|// CHECK: declare void @f8_callback()
+block|}
+end_function
 
 end_unit
 

@@ -113,6 +113,12 @@ literal|1
 decl_stmt|;
 comment|// True in gnu99 mode false in c99 mode (etc)
 name|unsigned
+name|GNUKeywords
+range|:
+literal|1
+decl_stmt|;
+comment|// True if GNU-only keywords are allowed
+name|unsigned
 name|ImplicitInt
 range|:
 literal|1
@@ -390,12 +396,29 @@ literal|1
 decl_stmt|;
 comment|// Generate code to check for undefined ops.
 name|unsigned
-name|DumpVtableLayouts
+name|DumpRecordLayouts
 range|:
 literal|1
 decl_stmt|;
-comment|// Dump the layouts of all the emitted
-comment|// vtables.
+comment|/// Dump the layout of IRgen'd records.
+name|unsigned
+name|DumpVTableLayouts
+range|:
+literal|1
+decl_stmt|;
+comment|/// Dump the layouts of emitted vtables.
+name|unsigned
+name|NoConstantCFStrings
+range|:
+literal|1
+decl_stmt|;
+comment|// Do not do CF strings
+comment|// FIXME: This is just a temporary option, for testing purposes.
+name|unsigned
+name|NoBitFieldTypeAlign
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
 name|unsigned
@@ -480,6 +503,8 @@ literal|0
 expr_stmt|;
 name|GNUMode
 operator|=
+name|GNUKeywords
+operator|=
 name|ImplicitInt
 operator|=
 name|Digraphs
@@ -499,6 +524,10 @@ operator|=
 name|ObjCNonFragileABI
 operator|=
 name|ObjCNonFragileABI2
+operator|=
+literal|0
+expr_stmt|;
+name|NoConstantCFStrings
 operator|=
 literal|0
 expr_stmt|;
@@ -606,7 +635,7 @@ literal|0
 expr_stmt|;
 name|InstantiationDepth
 operator|=
-literal|500
+literal|1024
 expr_stmt|;
 name|Optimize
 operator|=
@@ -644,7 +673,15 @@ name|CatchUndefined
 operator|=
 literal|0
 expr_stmt|;
-name|DumpVtableLayouts
+name|DumpRecordLayouts
+operator|=
+literal|0
+expr_stmt|;
+name|DumpVTableLayouts
+operator|=
+literal|0
+expr_stmt|;
+name|NoBitFieldTypeAlign
 operator|=
 literal|0
 expr_stmt|;

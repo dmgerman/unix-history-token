@@ -515,6 +515,20 @@ argument_list|)
 block|{}
 block|}
 empty_stmt|;
+specifier|const
+name|ElementRegion
+modifier|*
+name|GetElementZeroRegion
+parameter_list|(
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+parameter_list|,
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
 comment|/// CastRegion - Used by GRExprEngine::VisitCast to handle casts from
 comment|///  a MemRegion* to a specific location type.  'R' is the region being
 comment|///  casted and 'CastToTy' the result type of the cast.

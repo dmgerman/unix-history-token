@@ -20,7 +20,7 @@ comment|// CHECK: typedef1.c:4:10: note: declared here with type 'Typedef2' (aka
 end_comment
 
 begin_comment
-comment|// CHECK: 2 diagnostics
+comment|// CHECK: 1 error
 end_comment
 
 end_unit

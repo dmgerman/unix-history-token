@@ -92,9 +92,6 @@ comment|///< Parse ASTs and view them in Graphviz.
 name|DumpRawTokens
 block|,
 comment|///< Dump out raw tokens.
-name|DumpRecordLayouts
-block|,
-comment|///< Dump record layout information.
 name|DumpTokens
 block|,
 comment|///< Dump out preprocessed tokens.
@@ -284,14 +281,11 @@ operator|::
 name|string
 name|ViewClassInheritance
 expr_stmt|;
-comment|/// A list of locations to apply fix-its at.
+comment|/// If given, the new suffix for fix-it rewritten files.
 name|std
 operator|::
-name|vector
-operator|<
-name|ParsedSourceLocation
-operator|>
-name|FixItLocations
+name|string
+name|FixItSuffix
 expr_stmt|;
 comment|/// If given, enable code completion at the provided location.
 name|ParsedSourceLocation
@@ -330,6 +324,18 @@ operator|::
 name|string
 operator|>
 name|ASTMergeFiles
+expr_stmt|;
+comment|/// \brief A list of arguments to forward to LLVM's option processing; this
+comment|/// should only be used for debugging and experimental features.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|LLVMArgs
 expr_stmt|;
 name|public
 label|:

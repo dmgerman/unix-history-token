@@ -78,7 +78,7 @@ index|]
 operator|=
 name|test3
 expr_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion assigning 'int ()', expected 'int'}}
+comment|// expected-warning{{incompatible pointer to integer conversion assigning to 'int' from 'int ()'}}
 return|return
 literal|0
 return|;

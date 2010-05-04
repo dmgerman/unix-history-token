@@ -49,7 +49,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note {{previous declaration is here}}
+comment|// expected-note {{previous declaration is here}} \
+end_comment
+
+begin_comment
+comment|// expected-note{{passing argument to parameter 'b' here}}
 end_comment
 
 begin_function
@@ -93,7 +97,7 @@ argument_list|(
 name|b
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{incompatible type passing}}
+comment|// expected-error{{passing 'int (int)' to parameter of incompatible type 'float'}}
 return|return
 literal|0
 return|;

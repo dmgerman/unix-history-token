@@ -413,5 +413,56 @@ comment|// CHECK: = call {{.*}}asm "x$(abc$|def$|ghi$)z"
 block|}
 end_function
 
+begin_comment
+comment|// PR6845 - Mismatching source/dest fp types.
+end_comment
+
+begin_function
+name|double
+name|t20
+parameter_list|(
+name|double
+name|x
+parameter_list|)
+block|{
+specifier|register
+name|long
+name|double
+name|result
+decl_stmt|;
+asm|__asm __volatile ("frndint"  : "=t" (result) : "0" (x));
+return|return
+name|result
+return|;
+comment|// CHECK: @t20
+comment|// CHECK: fpext double {{.*}} to x86_fp80
+comment|// CHECK-NEXT: call x86_fp80 asm sideeffect "frndint"
+comment|// CHECK: fptrunc x86_fp80 {{.*}} to double
+block|}
+end_function
+
+begin_function
+name|float
+name|t21
+parameter_list|(
+name|long
+name|double
+name|x
+parameter_list|)
+block|{
+specifier|register
+name|float
+name|result
+decl_stmt|;
+asm|__asm __volatile ("frndint"  : "=t" (result) : "0" (x));
+return|return
+name|result
+return|;
+comment|// CHECK: @t21
+comment|// CHECK: call x86_fp80 asm sideeffect "frndint"
+comment|// CHECK-NEXT: fptrunc x86_fp80 {{.*}} to float
+block|}
+end_function
+
 end_unit
 

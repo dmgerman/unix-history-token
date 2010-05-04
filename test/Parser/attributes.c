@@ -453,5 +453,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR6287
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|returns_twice
+operator|)
+argument_list|)
+name|returns_twice_test
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

@@ -35,16 +35,16 @@ name|func
 operator|=
 name|p
 expr_stmt|;
-comment|// expected-warning {{converts between void* and function pointer}}
+comment|// expected-warning {{converts between void pointer and function pointer}}
 name|p
 operator|=
 name|func
 expr_stmt|;
-comment|// expected-warning {{converts between void* and function pointer}}
+comment|// expected-warning {{converts between void pointer and function pointer}}
 return|return
 name|p
 return|;
-comment|// expected-warning {{converts between void* and function pointer}}
+comment|// expected-warning {{converts between void pointer and function pointer}}
 block|}
 end_function
 

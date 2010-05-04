@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Rewrite/Rewriter.h"
 end_include
 
@@ -87,6 +93,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -95,27 +111,36 @@ decl_stmt|;
 name|class
 name|FileEntry
 decl_stmt|;
-comment|/// \brief Stores a source location in the form that it shows up on
-comment|/// the Clang command line, e.g., file:line:column.
-comment|///
-comment|/// FIXME: Would prefer to use real SourceLocations, but I don't see a
-comment|/// good way to resolve them during parsing.
-struct|struct
-name|RequestedSourceLocation
+name|class
+name|FixItPathRewriter
 block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|FixItPathRewriter
+argument_list|()
+expr_stmt|;
+comment|/// \brief This file is about to be rewritten. Return the name of the file
+comment|/// that is okay to write to.
+name|virtual
+name|std
+operator|::
+name|string
+name|RewriteFilename
+argument_list|(
 specifier|const
-name|FileEntry
-modifier|*
-name|File
-decl_stmt|;
-name|unsigned
-name|Line
-decl_stmt|;
-name|unsigned
-name|Column
-decl_stmt|;
+name|std
+operator|::
+name|string
+operator|&
+name|Filename
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 block|}
-struct|;
+empty_stmt|;
 name|class
 name|FixItRewriter
 range|:
@@ -138,25 +163,24 @@ name|DiagnosticClient
 operator|*
 name|Client
 block|;
+comment|/// \brief Turn an input path into an output path. NULL implies overwriting
+comment|/// the original.
+name|FixItPathRewriter
+operator|*
+name|PathRewriter
+block|;
 comment|/// \brief The number of rewriter failures.
 name|unsigned
 name|NumFailures
 block|;
-comment|/// \brief Locations at which we should perform fix-its.
-comment|///
-comment|/// When empty, perform fix-it modifications everywhere.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|RequestedSourceLocation
-block|,
-literal|4
-operator|>
-name|FixItLocations
-block|;
 name|public
 operator|:
+typedef|typedef
+name|Rewriter
+operator|::
+name|buffer_iterator
+name|iterator
+expr_stmt|;
 comment|/// \brief Initialize a new fix-it rewriter.
 name|FixItRewriter
 argument_list|(
@@ -172,89 +196,130 @@ specifier|const
 name|LangOptions
 operator|&
 name|LangOpts
+argument_list|,
+name|FixItPathRewriter
+operator|*
+name|PathRewriter
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Destroy the fix-it rewriter.
 operator|~
 name|FixItRewriter
 argument_list|()
-block|;
-comment|/// \brief Add a location where fix-it modifications should be
-comment|/// performed.
-name|void
-name|addFixItLocation
+expr_stmt|;
+comment|/// \brief Check whether there are modifications for a given file.
+name|bool
+name|IsModified
 argument_list|(
-argument|RequestedSourceLocation Loc
+name|FileID
+name|ID
 argument_list|)
+decl|const
 block|{
-name|FixItLocations
+return|return
+name|Rewrite
 operator|.
-name|push_back
+name|getRewriteBufferFor
 argument_list|(
-name|Loc
+name|ID
 argument_list|)
-block|;   }
-comment|/// \brief Write the modified source file.
+operator|!=
+name|NULL
+return|;
+block|}
+comment|// Iteration over files with changes.
+name|iterator
+name|buffer_begin
+parameter_list|()
+block|{
+return|return
+name|Rewrite
+operator|.
+name|buffer_begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|buffer_end
+parameter_list|()
+block|{
+return|return
+name|Rewrite
+operator|.
+name|buffer_end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Write a single modified source file.
 comment|///
 comment|/// \returns true if there was an error, false otherwise.
 name|bool
 name|WriteFixedFile
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InFileName
+name|FileID
+name|ID
 argument_list|,
-specifier|const
-name|std
+name|llvm
 operator|::
-name|string
+name|raw_ostream
 operator|&
-name|OutFileName
-operator|=
-name|std
-operator|::
-name|string
-argument_list|()
+name|OS
 argument_list|)
-block|;
+decl_stmt|;
+comment|/// \brief Write the modified source files.
+comment|///
+comment|/// \returns true if there was an error, false otherwise.
+name|bool
+name|WriteFixedFiles
+parameter_list|()
+function_decl|;
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
-comment|///  returns true) indicates whether the diagnostics handled by this
-comment|///  DiagnosticClient should be included in the number of diagnostics
-comment|///  reported by Diagnostic.
+comment|/// returns true) indicates whether the diagnostics handled by this
+comment|/// DiagnosticClient should be included in the number of diagnostics
+comment|/// reported by Diagnostic.
 name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
 comment|/// HandleDiagnostic - Handle this diagnostic, reporting it to the user or
 comment|/// capturing it to a log as needed.
 name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-argument|Diagnostic::Level DiagLevel
+name|Diagnostic
+operator|::
+name|Level
+name|DiagLevel
 argument_list|,
-argument|const DiagnosticInfo&Info
+specifier|const
+name|DiagnosticInfo
+operator|&
+name|Info
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// \brief Emit a diagnostic via the adapted diagnostic client.
 name|void
 name|Diag
-argument_list|(
-argument|FullSourceLoc Loc
-argument_list|,
-argument|unsigned DiagID
-argument_list|)
-block|; }
-decl_stmt|;
+parameter_list|(
+name|FullSourceLoc
+name|Loc
+parameter_list|,
+name|unsigned
+name|DiagID
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

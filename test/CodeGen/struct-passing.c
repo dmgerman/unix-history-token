@@ -12,11 +12,11 @@ comment|// RUN: grep 'declare i32 @f1() readonly$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f2(.* noalias sret)$' %t
+comment|// RUN: grep 'declare void @f2(.* sret)$' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f3(.* noalias sret)$' %t
+comment|// RUN: grep 'declare void @f3(.* sret)$' %t
 end_comment
 
 begin_comment

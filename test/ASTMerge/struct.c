@@ -160,7 +160,7 @@ comment|// CHECK: struct1.c:57:3: note: declared here with type 'struct DeepErro
 end_comment
 
 begin_comment
-comment|// CHECK: 37 diagnostics
+comment|// CHECK: 8 warnings and 7 errors generated
 end_comment
 
 end_unit

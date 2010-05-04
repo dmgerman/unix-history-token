@@ -375,25 +375,13 @@ name|Stmt
 block|{
 name|private
 operator|:
-expr|enum
-block|{
-name|BODY
-block|,
-name|NEXT_CATCH
-block|,
-name|END_EXPR
-block|}
-block|;
-name|ParmVarDecl
+name|VarDecl
 operator|*
 name|ExceptionDecl
 block|;
 name|Stmt
 operator|*
-name|SubExprs
-index|[
-name|END_EXPR
-index|]
+name|Body
 block|;
 name|SourceLocation
 name|AtCatchLoc
@@ -408,13 +396,36 @@ argument|SourceLocation atCatchLoc
 argument_list|,
 argument|SourceLocation rparenloc
 argument_list|,
-argument|ParmVarDecl *catchVarDecl
+argument|VarDecl *catchVarDecl
 argument_list|,
 argument|Stmt *atCatchStmt
-argument_list|,
-argument|Stmt *atCatchList
 argument_list|)
-block|;
+operator|:
+name|Stmt
+argument_list|(
+name|ObjCAtCatchStmtClass
+argument_list|)
+block|,
+name|ExceptionDecl
+argument_list|(
+name|catchVarDecl
+argument_list|)
+block|,
+name|Body
+argument_list|(
+name|atCatchStmt
+argument_list|)
+block|,
+name|AtCatchLoc
+argument_list|(
+name|atCatchLoc
+argument_list|)
+block|,
+name|RParenLoc
+argument_list|(
+argument|rparenloc
+argument_list|)
+block|{ }
 name|explicit
 name|ObjCAtCatchStmt
 argument_list|(
@@ -436,10 +447,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubExprs
-index|[
-name|BODY
-index|]
+name|Body
 return|;
 block|}
 name|Stmt
@@ -448,10 +456,7 @@ name|getCatchBody
 argument_list|()
 block|{
 return|return
-name|SubExprs
-index|[
-name|BODY
-index|]
+name|Body
 return|;
 block|}
 name|void
@@ -460,69 +465,12 @@ argument_list|(
 argument|Stmt *S
 argument_list|)
 block|{
-name|SubExprs
-index|[
-name|BODY
-index|]
+name|Body
 operator|=
 name|S
 block|; }
 specifier|const
-name|ObjCAtCatchStmt
-operator|*
-name|getNextCatchStmt
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|ObjCAtCatchStmt
-operator|*
-operator|>
-operator|(
-name|SubExprs
-index|[
-name|NEXT_CATCH
-index|]
-operator|)
-return|;
-block|}
-name|ObjCAtCatchStmt
-operator|*
-name|getNextCatchStmt
-argument_list|()
-block|{
-return|return
-name|static_cast
-operator|<
-name|ObjCAtCatchStmt
-operator|*
-operator|>
-operator|(
-name|SubExprs
-index|[
-name|NEXT_CATCH
-index|]
-operator|)
-return|;
-block|}
-name|void
-name|setNextCatchStmt
-argument_list|(
-argument|Stmt *S
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|NEXT_CATCH
-index|]
-operator|=
-name|S
-block|; }
-specifier|const
-name|ParmVarDecl
+name|VarDecl
 operator|*
 name|getCatchParamDecl
 argument_list|()
@@ -532,7 +480,7 @@ return|return
 name|ExceptionDecl
 return|;
 block|}
-name|ParmVarDecl
+name|VarDecl
 operator|*
 name|getCatchParamDecl
 argument_list|()
@@ -544,7 +492,7 @@ block|}
 name|void
 name|setCatchParamDecl
 argument_list|(
-argument|ParmVarDecl *D
+argument|VarDecl *D
 argument_list|)
 block|{
 name|ExceptionDecl
@@ -600,10 +548,7 @@ name|SourceRange
 argument_list|(
 name|AtCatchLoc
 argument_list|,
-name|SubExprs
-index|[
-name|BODY
-index|]
+name|Body
 operator|->
 name|getLocEnd
 argument_list|()
@@ -826,83 +771,145 @@ name|Stmt
 block|{
 name|private
 operator|:
-expr|enum
-block|{
-name|TRY
-block|,
-name|CATCH
-block|,
-name|FINALLY
-block|,
-name|END_EXPR
-block|}
-block|;
-name|Stmt
-operator|*
-name|SubStmts
-index|[
-name|END_EXPR
-index|]
-block|;
+comment|// The location of the
 name|SourceLocation
 name|AtTryLoc
 block|;
-name|public
+comment|// The number of catch blocks in this statement.
+name|unsigned
+name|NumCatchStmts
 operator|:
+literal|16
+block|;
+comment|// Whether this statement has a @finally statement.
+name|bool
+name|HasFinally
+operator|:
+literal|1
+block|;
+comment|/// \brief Retrieve the statements that are stored after this @try statement.
+comment|///
+comment|/// The order of the statements in memory follows the order in the source,
+comment|/// with the @try body first, followed by the @catch statements (if any) and,
+comment|/// finally, the @finally (if it exists).
+name|Stmt
+operator|*
+operator|*
+name|getStmts
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+specifier|const
+operator|*
+name|getStmts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Stmt
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
 name|ObjCAtTryStmt
 argument_list|(
 argument|SourceLocation atTryLoc
 argument_list|,
 argument|Stmt *atTryStmt
 argument_list|,
-argument|Stmt *atCatchStmt
+argument|Stmt **CatchStmts
+argument_list|,
+argument|unsigned NumCatchStmts
 argument_list|,
 argument|Stmt *atFinallyStmt
 argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-argument|ObjCAtTryStmtClass
-argument_list|)
-block|{
-name|SubStmts
-index|[
-name|TRY
-index|]
-operator|=
-name|atTryStmt
 block|;
-name|SubStmts
-index|[
-name|CATCH
-index|]
-operator|=
-name|atCatchStmt
-block|;
-name|SubStmts
-index|[
-name|FINALLY
-index|]
-operator|=
-name|atFinallyStmt
-block|;
-name|AtTryLoc
-operator|=
-name|atTryLoc
-block|;     }
 name|explicit
 name|ObjCAtTryStmt
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned NumCatchStmts
+argument_list|,
+argument|bool HasFinally
 argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|ObjCAtTryStmtClass
+name|ObjCAtTryStmtClass
 argument_list|,
-argument|Empty
+name|Empty
+argument_list|)
+block|,
+name|NumCatchStmts
+argument_list|(
+name|NumCatchStmts
+argument_list|)
+block|,
+name|HasFinally
+argument_list|(
+argument|HasFinally
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|ObjCAtTryStmt
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation atTryLoc
+argument_list|,
+argument|Stmt *atTryStmt
+argument_list|,
+argument|Stmt **CatchStmts
+argument_list|,
+argument|unsigned NumCatchStmts
+argument_list|,
+argument|Stmt *atFinallyStmt
+argument_list|)
+block|;
+specifier|static
+name|ObjCAtTryStmt
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned NumCatchStmts
+argument_list|,
+argument|bool HasFinally
+argument_list|)
+block|;
+comment|/// \brief Retrieve the location of the @ in the @try.
 name|SourceLocation
 name|getAtTryLoc
 argument_list|()
@@ -922,6 +929,7 @@ name|AtTryLoc
 operator|=
 name|Loc
 block|; }
+comment|/// \brief Retrieve the @try body.
 specifier|const
 name|Stmt
 operator|*
@@ -930,9 +938,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SubStmts
+name|getStmts
+argument_list|()
 index|[
-name|TRY
+literal|0
 index|]
 return|;
 block|}
@@ -942,9 +951,10 @@ name|getTryBody
 argument_list|()
 block|{
 return|return
-name|SubStmts
+name|getStmts
+argument_list|()
 index|[
-name|TRY
+literal|0
 index|]
 return|;
 block|}
@@ -954,64 +964,122 @@ argument_list|(
 argument|Stmt *S
 argument_list|)
 block|{
-name|SubStmts
+name|getStmts
+argument_list|()
 index|[
-name|TRY
+literal|0
 index|]
 operator|=
 name|S
 block|; }
-specifier|const
-name|ObjCAtCatchStmt
-operator|*
-name|getCatchStmts
+comment|/// \brief Retrieve the number of @catch statements in this try-catch-finally
+comment|/// block.
+name|unsigned
+name|getNumCatchStmts
 argument_list|()
 specifier|const
 block|{
 return|return
-name|dyn_cast_or_null
-operator|<
-name|ObjCAtCatchStmt
-operator|>
-operator|(
-name|SubStmts
-index|[
-name|CATCH
-index|]
-operator|)
+name|NumCatchStmts
 return|;
 block|}
+comment|/// \brief Retrieve a @catch statement.
+specifier|const
 name|ObjCAtCatchStmt
 operator|*
-name|getCatchStmts
-argument_list|()
-block|{
-return|return
-name|dyn_cast_or_null
-operator|<
-name|ObjCAtCatchStmt
-operator|>
-operator|(
-name|SubStmts
-index|[
-name|CATCH
-index|]
-operator|)
-return|;
-block|}
-name|void
-name|setCatchStmts
+name|getCatchStmt
 argument_list|(
-argument|Stmt *S
+argument|unsigned I
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|NumCatchStmts
+operator|&&
+literal|"Out-of-bounds @catch index"
+argument_list|)
+block|;
+return|return
+name|cast_or_null
+operator|<
+name|ObjCAtCatchStmt
+operator|>
+operator|(
+name|getStmts
+argument_list|()
+index|[
+name|I
+operator|+
+literal|1
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve a @catch statement.
+name|ObjCAtCatchStmt
+operator|*
+name|getCatchStmt
+argument_list|(
+argument|unsigned I
 argument_list|)
 block|{
-name|SubStmts
+name|assert
+argument_list|(
+name|I
+operator|<
+name|NumCatchStmts
+operator|&&
+literal|"Out-of-bounds @catch index"
+argument_list|)
+block|;
+return|return
+name|cast_or_null
+operator|<
+name|ObjCAtCatchStmt
+operator|>
+operator|(
+name|getStmts
+argument_list|()
 index|[
-name|CATCH
+name|I
+operator|+
+literal|1
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief Set a particular catch statement.
+name|void
+name|setCatchStmt
+argument_list|(
+argument|unsigned I
+argument_list|,
+argument|ObjCAtCatchStmt *S
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|NumCatchStmts
+operator|&&
+literal|"Out-of-bounds @catch index"
+argument_list|)
+block|;
+name|getStmts
+argument_list|()
+index|[
+name|I
+operator|+
+literal|1
 index|]
 operator|=
 name|S
-block|; }
+block|;   }
+comment|/// Retrieve the @finally statement, if any.
 specifier|const
 name|ObjCAtFinallyStmt
 operator|*
@@ -1019,77 +1087,100 @@ name|getFinallyStmt
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|HasFinally
+condition|)
 return|return
-name|dyn_cast_or_null
+literal|0
+return|;
+return|return
+name|cast_or_null
 operator|<
 name|ObjCAtFinallyStmt
 operator|>
 operator|(
-name|SubStmts
+name|getStmts
+argument_list|()
 index|[
-name|FINALLY
+literal|1
+operator|+
+name|NumCatchStmts
 index|]
 operator|)
 return|;
 block|}
 name|ObjCAtFinallyStmt
-operator|*
+modifier|*
 name|getFinallyStmt
-argument_list|()
+parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|HasFinally
+condition|)
 return|return
-name|dyn_cast_or_null
+literal|0
+return|;
+return|return
+name|cast_or_null
 operator|<
 name|ObjCAtFinallyStmt
 operator|>
 operator|(
-name|SubStmts
+name|getStmts
+argument_list|()
 index|[
-name|FINALLY
+literal|1
+operator|+
+name|NumCatchStmts
 index|]
 operator|)
 return|;
 block|}
 name|void
 name|setFinallyStmt
-argument_list|(
-argument|Stmt *S
-argument_list|)
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
 block|{
-name|SubStmts
+name|assert
+argument_list|(
+name|HasFinally
+operator|&&
+literal|"@try does not have a @finally slot!"
+argument_list|)
+expr_stmt|;
+name|getStmts
+argument_list|()
 index|[
-name|FINALLY
+literal|1
+operator|+
+name|NumCatchStmts
 index|]
 operator|=
 name|S
-block|; }
+expr_stmt|;
+block|}
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|AtTryLoc
-argument_list|,
-name|SubStmts
-index|[
-name|TRY
-index|]
-operator|->
-name|getLocEnd
-argument_list|()
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
+parameter_list|(
+specifier|const
+name|Stmt
+modifier|*
+name|T
+parameter_list|)
 block|{
 return|return
 name|T
@@ -1103,9 +1194,11 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const ObjCAtTryStmt *
-argument_list|)
+parameter_list|(
+specifier|const
+name|ObjCAtTryStmt
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -1114,19 +1207,41 @@ block|}
 name|virtual
 name|child_iterator
 name|child_begin
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|virtual
 name|child_iterator
 name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// ObjCAtSynchronizedStmt - This is for objective-c's @synchronized statement.
+end_comment
+
+begin_comment
 comment|/// Example: @synchronized (sem) {
+end_comment
+
+begin_comment
 comment|///             do-something;
+end_comment
+
+begin_comment
 comment|///          }
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|ObjCAtSynchronizedStmt
 range|:
@@ -1383,7 +1498,13 @@ name|child_end
 argument_list|()
 block|; }
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// ObjCAtThrowStmt - This represents objective-c's @throw statement.
+end_comment
+
+begin_decl_stmt
 name|class
 name|ObjCAtThrowStmt
 range|:
@@ -1562,10 +1683,10 @@ name|child_end
 argument_list|()
 block|; }
 decl_stmt|;
-block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

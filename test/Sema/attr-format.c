@@ -746,6 +746,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+comment|// expected-note{{passing argument to parameter 'a' here}}
 if|if
 condition|(
 name|a

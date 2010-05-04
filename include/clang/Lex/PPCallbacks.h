@@ -139,6 +139,30 @@ name|CharacteristicKind
 name|FileType
 argument_list|)
 block|{   }
+comment|/// FileSkipped - This callback is invoked whenever a source file is
+comment|/// skipped as the result of header guard optimization.  ParentFile
+comment|/// is the file that #includes the skipped file.  FilenameTok is the
+comment|/// token in ParentFile that indicates the skipped file.
+name|virtual
+name|void
+name|FileSkipped
+argument_list|(
+specifier|const
+name|FileEntry
+operator|&
+name|ParentFile
+argument_list|,
+specifier|const
+name|Token
+operator|&
+name|FilenameTok
+argument_list|,
+name|SrcMgr
+operator|::
+name|CharacteristicKind
+name|FileType
+argument_list|)
+block|{   }
 comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
 comment|/// reach, no subsequent callbacks will be made.
 name|virtual
@@ -315,6 +339,39 @@ argument_list|(
 name|Loc
 argument_list|,
 name|Reason
+argument_list|,
+name|FileType
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|FileSkipped
+argument_list|(
+argument|const FileEntry&ParentFile
+argument_list|,
+argument|const Token&FilenameTok
+argument_list|,
+argument|SrcMgr::CharacteristicKind FileType
+argument_list|)
+block|{
+name|First
+operator|->
+name|FileSkipped
+argument_list|(
+name|ParentFile
+argument_list|,
+name|FilenameTok
+argument_list|,
+name|FileType
+argument_list|)
+block|;
+name|Second
+operator|->
+name|FileSkipped
+argument_list|(
+name|ParentFile
+argument_list|,
+name|FilenameTok
 argument_list|,
 name|FileType
 argument_list|)

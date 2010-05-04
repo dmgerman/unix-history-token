@@ -2248,17 +2248,6 @@ function_decl|;
 specifier|const
 name|Stmt
 modifier|*
-name|GetReceiverExpr
-parameter_list|(
-specifier|const
-name|ExplodedNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-specifier|const
-name|Stmt
-modifier|*
 name|GetDenomExpr
 parameter_list|(
 specifier|const

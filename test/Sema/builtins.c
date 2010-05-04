@@ -311,7 +311,7 @@ argument_list|(
 name|X
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{not an integer constant expression}}
+comment|// expected-error {{argument to '__builtin_eh_return_data_regno' must be a constant integer}}
 block|}
 end_function
 

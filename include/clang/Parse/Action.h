@@ -887,7 +887,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|*
 name|SS
@@ -1055,7 +1054,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|*
 name|SS
@@ -1223,7 +1221,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -1426,7 +1423,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -1595,7 +1591,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -1657,7 +1652,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -1830,7 +1824,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -2011,15 +2004,33 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed an exception object declaration within an Objective-C
+end_comment
+
+begin_comment
+comment|/// @catch statement.
+end_comment
+
 begin_function
 name|virtual
-name|void
-name|ActOnObjCCatchParam
-parameter_list|(
 name|DeclPtrTy
+name|ActOnObjCExceptionDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|Declarator
+modifier|&
 name|D
 parameter_list|)
-block|{   }
+block|{
+return|return
+name|DeclPtrTy
+argument_list|()
+return|;
+block|}
 end_function
 
 begin_comment
@@ -2458,39 +2469,36 @@ begin_comment
 comment|/// have any braces.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|virtual
 name|DeclPtrTy
 name|ActOnStartLinkageSpecification
-parameter_list|(
+argument_list|(
 name|Scope
-modifier|*
+operator|*
 name|S
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|ExternLoc
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|LangLoc
-parameter_list|,
-specifier|const
-name|char
-modifier|*
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|Lang
-parameter_list|,
-name|unsigned
-name|StrSize
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|LBraceLoc
-parameter_list|)
+argument_list|)
 block|{
 return|return
 name|DeclPtrTy
 argument_list|()
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// ActOnFinishLinkageSpecification - Completely the definition of
@@ -2788,7 +2796,6 @@ parameter_list|,
 name|SourceLocation
 name|KWLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -4062,6 +4069,50 @@ begin_comment
 comment|// Objective-c statements
 end_comment
 
+begin_comment
+comment|/// \brief Parsed an Objective-C @catch statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AtLoc The location of the '@' starting the '@catch'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param RParen The location of the right parentheses ')' after the
+end_comment
+
+begin_comment
+comment|/// exception variable.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Parm The variable that will catch the exception. Will be NULL if
+end_comment
+
+begin_comment
+comment|/// this is a @catch(...) block.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Body The body of the @catch block.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -4078,9 +4129,6 @@ name|Parm
 parameter_list|,
 name|StmtArg
 name|Body
-parameter_list|,
-name|StmtArg
-name|CatchList
 parameter_list|)
 block|{
 return|return
@@ -4089,6 +4137,26 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Parsed an Objective-C @finally statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AtLoc The location of the '@' starting the '@finally'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Body The body of the @finally block.
+end_comment
 
 begin_function
 name|virtual
@@ -4109,6 +4177,42 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Parsed an Objective-C @try-@catch-@finally statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AtLoc The location of the '@' starting '@try'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Try The body of the '@try' statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CatchStmts The @catch statements.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Finally The @finally statement.
+end_comment
+
 begin_function
 name|virtual
 name|OwningStmtResult
@@ -4120,8 +4224,8 @@ parameter_list|,
 name|StmtArg
 name|Try
 parameter_list|,
-name|StmtArg
-name|Catch
+name|MultiStmtArg
+name|CatchStmts
 parameter_list|,
 name|StmtArg
 name|Finally
@@ -4440,7 +4544,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -4781,7 +4884,6 @@ operator|::
 name|TokenKind
 name|OpKind
 argument_list|,
-specifier|const
 name|CXXScopeSpec
 operator|&
 name|SS
@@ -5585,7 +5687,6 @@ parameter_list|,
 name|SourceLocation
 name|NamespcLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -5631,7 +5732,6 @@ name|IdentifierInfo
 modifier|*
 name|Alias
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -5813,7 +5913,6 @@ parameter_list|,
 name|SourceLocation
 name|UsingLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -6334,7 +6433,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -7077,7 +7175,6 @@ operator|::
 name|TokenKind
 name|OpKind
 argument_list|,
-specifier|const
 name|CXXScopeSpec
 operator|&
 name|SS
@@ -7267,7 +7364,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -8097,7 +8193,6 @@ parameter_list|(
 name|SourceLocation
 name|TemplateKWLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -8323,7 +8418,6 @@ parameter_list|,
 name|SourceLocation
 name|KWLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -8852,7 +8946,6 @@ parameter_list|,
 name|SourceLocation
 name|KWLoc
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -9524,14 +9617,14 @@ operator|*
 name|ArgInfo
 argument_list|,
 comment|// ArgInfo: Has 'Sel.getNumArgs()' entries.
-name|llvm
+name|DeclaratorChunk
 operator|::
-name|SmallVectorImpl
-operator|<
-name|Declarator
-operator|>
-operator|&
-name|Cdecls
+name|ParamInfo
+operator|*
+name|CParamInfo
+argument_list|,
+name|unsigned
+name|CNumArgs
 argument_list|,
 comment|// c-style args
 name|AttributeList
@@ -9685,11 +9778,9 @@ modifier|&
 name|propertyName
 parameter_list|,
 name|SourceLocation
-modifier|&
 name|receiverNameLoc
 parameter_list|,
 name|SourceLocation
-modifier|&
 name|propertyNameLoc
 parameter_list|)
 block|{
@@ -9701,21 +9792,150 @@ block|}
 end_function
 
 begin_comment
-comment|// ActOnClassMessage - used for both unary and keyword messages.
+comment|/// \brief Describes the kind of message expression indicated by a message
 end_comment
 
 begin_comment
-comment|// ArgExprs is optional - if it is present, the number of expressions
+comment|/// send that starts with an identifier.
+end_comment
+
+begin_enum
+enum|enum
+name|ObjCMessageKind
+block|{
+comment|/// \brief The message is sent to 'super'.
+name|ObjCSuperMessage
+block|,
+comment|/// \brief The message is an instance message.
+name|ObjCInstanceMessage
+block|,
+comment|/// \brief The message is a class message, and the identifier is a type
+comment|/// name.
+name|ObjCClassMessage
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// \brief Determine the kind of Objective-C message send that we will be
 end_comment
 
 begin_comment
-comment|// is obtained from NumArgs.
+comment|/// performing based on the identifier given.
 end_comment
 
-begin_function
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This action determines how a message send that starts with [
+end_comment
+
+begin_comment
+comment|/// identifier (followed by another identifier) will be parsed,
+end_comment
+
+begin_comment
+comment|/// e.g., as a class message, instance message, super message. The
+end_comment
+
+begin_comment
+comment|/// result depends on the meaning of the given identifier. If the
+end_comment
+
+begin_comment
+comment|/// identifier is unknown, the action should indicate that the
+end_comment
+
+begin_comment
+comment|/// message is an instance message.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// By default, this routine applies syntactic disambiguation and uses
+end_comment
+
+begin_comment
+comment|/// \c getTypeName() to determine whether the identifier refers to a type.
+end_comment
+
+begin_comment
+comment|/// However, \c Action subclasses may override this routine to improve
+end_comment
+
+begin_comment
+comment|/// error recovery.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the message send occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Name The identifier following the '['.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NameLoc The location of the identifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsSuper Whether the name is the pseudo-keyword "super".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param HasTrailingDot Whether the name is followed by a period.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ReceiverType If this routine returns \c ObjCClassMessage,
+end_comment
+
+begin_comment
+comment|/// this argument will be set to the receiver type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The kind of message send.
+end_comment
+
+begin_function_decl
 name|virtual
-name|ExprResult
-name|ActOnClassMessage
+name|ObjCMessageKind
+name|getObjCMessageKind
 parameter_list|(
 name|Scope
 modifier|*
@@ -9723,84 +9943,244 @@ name|S
 parameter_list|,
 name|IdentifierInfo
 modifier|*
-name|receivingClassName
+name|Name
+parameter_list|,
+name|SourceLocation
+name|NameLoc
+parameter_list|,
+name|bool
+name|IsSuper
+parameter_list|,
+name|bool
+name|HasTrailingDot
+parameter_list|,
+name|TypeTy
+modifier|*
+modifier|&
+name|ReceiverType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Parsed a message send to 'super'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the message send occurs.
+end_comment
+
+begin_comment
+comment|/// \param SuperLoc The location of the 'super' keyword.
+end_comment
+
+begin_comment
+comment|/// \param Sel The selector to which the message is being sent.
+end_comment
+
+begin_comment
+comment|/// \param LBracLoc The location of the opening square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param SelectorLoc The location of the first identifier in the selector.
+end_comment
+
+begin_comment
+comment|/// \param RBrac The location of the closing square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param Args The message arguments.
+end_comment
+
+begin_function
+name|virtual
+name|OwningExprResult
+name|ActOnSuperMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|SuperLoc
 parameter_list|,
 name|Selector
 name|Sel
 parameter_list|,
 name|SourceLocation
-name|lbrac
+name|LBracLoc
 parameter_list|,
 name|SourceLocation
-name|receiverLoc
+name|SelectorLoc
 parameter_list|,
 name|SourceLocation
-name|selectorLoc
+name|RBracLoc
 parameter_list|,
-name|SourceLocation
-name|rbrac
-parameter_list|,
-name|ExprTy
-modifier|*
-modifier|*
-name|ArgExprs
-parameter_list|,
-name|unsigned
-name|NumArgs
+name|MultiExprArg
+name|Args
 parameter_list|)
 block|{
 return|return
-name|ExprResult
-argument_list|()
+name|OwningExprResult
+argument_list|(
+operator|*
+name|this
+argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|// ActOnInstanceMessage - used for both unary and keyword messages.
+comment|/// \brief Parsed a message send to a class.
 end_comment
 
 begin_comment
-comment|// ArgExprs is optional - if it is present, the number of expressions
+comment|///
 end_comment
 
 begin_comment
-comment|// is obtained from NumArgs.
+comment|/// \param S The scope in which the message send occurs.
+end_comment
+
+begin_comment
+comment|/// \param Receiver The type of the class receiving the message.
+end_comment
+
+begin_comment
+comment|/// \param Sel The selector to which the message is being sent.
+end_comment
+
+begin_comment
+comment|/// \param LBracLoc The location of the opening square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param SelectorLoc The location of the first identifier in the selector.
+end_comment
+
+begin_comment
+comment|/// \param RBrac The location of the closing square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param Args The message arguments.
 end_comment
 
 begin_function
 name|virtual
-name|ExprResult
-name|ActOnInstanceMessage
+name|OwningExprResult
+name|ActOnClassMessage
 parameter_list|(
-name|ExprTy
+name|Scope
 modifier|*
-name|receiver
+name|S
+parameter_list|,
+name|TypeTy
+modifier|*
+name|Receiver
 parameter_list|,
 name|Selector
 name|Sel
 parameter_list|,
 name|SourceLocation
-name|lbrac
+name|LBracLoc
 parameter_list|,
 name|SourceLocation
-name|selectorLoc
+name|SelectorLoc
 parameter_list|,
 name|SourceLocation
-name|rbrac
+name|RBracLoc
 parameter_list|,
-name|ExprTy
-modifier|*
-modifier|*
-name|ArgExprs
-parameter_list|,
-name|unsigned
-name|NumArgs
+name|MultiExprArg
+name|Args
 parameter_list|)
 block|{
 return|return
-name|ExprResult
-argument_list|()
+name|OwningExprResult
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Parsed a message send to an object instance.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the message send occurs.
+end_comment
+
+begin_comment
+comment|/// \param Receiver The expression that computes the receiver object.
+end_comment
+
+begin_comment
+comment|/// \param Sel The selector to which the message is being sent.
+end_comment
+
+begin_comment
+comment|/// \param LBracLoc The location of the opening square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param SelectorLoc The location of the first identifier in the selector.
+end_comment
+
+begin_comment
+comment|/// \param RBrac The location of the closing square bracket ']'.
+end_comment
+
+begin_comment
+comment|/// \param Args The message arguments.
+end_comment
+
+begin_function
+name|virtual
+name|OwningExprResult
+name|ActOnInstanceMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprArg
+name|Receiver
+parameter_list|,
+name|Selector
+name|Sel
+parameter_list|,
+name|SourceLocation
+name|LBracLoc
+parameter_list|,
+name|SourceLocation
+name|SelectorLoc
+parameter_list|,
+name|SourceLocation
+name|RBracLoc
+parameter_list|,
+name|MultiExprArg
+name|Args
+parameter_list|)
+block|{
+return|return
+name|OwningExprResult
+argument_list|(
+operator|*
+name|this
+argument_list|)
 return|;
 block|}
 end_function
@@ -10576,7 +10956,6 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
 modifier|&
 name|SS
@@ -11070,6 +11449,69 @@ block|{   }
 end_function
 
 begin_comment
+comment|/// \brief Code completion for an ObjC message expression that sends
+end_comment
+
+begin_comment
+comment|/// a message to the superclass.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when the code-completion token is
+end_comment
+
+begin_comment
+comment|/// found after the class name and after each argument.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the message expression occurs.
+end_comment
+
+begin_comment
+comment|/// \param SuperLoc The location of the 'super' keyword.
+end_comment
+
+begin_comment
+comment|/// \param SelIdents The identifiers that describe the selector (thus far).
+end_comment
+
+begin_comment
+comment|/// \param NumSelIdents The number of identifiers in \p SelIdents.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCSuperMessage
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|SuperLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+modifier|*
+name|SelIdents
+parameter_list|,
+name|unsigned
+name|NumSelIdents
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/// \brief Code completion for an ObjC message expression that refers to
 end_comment
 
@@ -11094,23 +11536,19 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \param S the scope in which the message expression occurs.
+comment|/// \param S The scope in which the message expression occurs.
 end_comment
 
 begin_comment
-comment|/// \param FName the factory name.
+comment|/// \param Receiver The type of the class that is receiving a message.
 end_comment
 
 begin_comment
-comment|/// \param FNameLoc the source location of the factory name.
+comment|/// \param SelIdents The identifiers that describe the selector (thus far).
 end_comment
 
 begin_comment
-comment|/// \param SelIdents the identifiers that describe the selector (thus far).
-end_comment
-
-begin_comment
-comment|/// \param NumSelIdents the number of identifiers in \p SelIdents.
+comment|/// \param NumSelIdents The number of identifiers in \p SelIdents.
 end_comment
 
 begin_function
@@ -11122,12 +11560,9 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|IdentifierInfo
+name|TypeTy
 modifier|*
-name|FName
-parameter_list|,
-name|SourceLocation
-name|FNameLoc
+name|Receiver
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -11343,6 +11778,9 @@ parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|ClassName
+parameter_list|,
+name|SourceLocation
+name|ClassNameLoc
 parameter_list|)
 block|{   }
 end_function
@@ -11399,6 +11837,9 @@ parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|ClassName
+parameter_list|,
+name|SourceLocation
+name|ClassNameLoc
 parameter_list|)
 block|{   }
 end_function
@@ -11435,6 +11876,9 @@ parameter_list|,
 name|IdentifierInfo
 modifier|*
 name|ClassName
+parameter_list|,
+name|SourceLocation
+name|ClassNameLoc
 parameter_list|)
 block|{   }
 end_function
@@ -11509,6 +11953,108 @@ name|PropertyName
 parameter_list|,
 name|DeclPtrTy
 name|ObjCImpDecl
+parameter_list|)
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for an Objective-C method declaration or
+end_comment
+
+begin_comment
+comment|/// definition, which may occur within an interface, category,
+end_comment
+
+begin_comment
+comment|/// extension, protocol, or implementation thereof (where applicable).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked after the "-" or "+" that
+end_comment
+
+begin_comment
+comment|/// starts a method declaration or definition, and after the return
+end_comment
+
+begin_comment
+comment|/// type such a declaration (e.g., "- (id)").
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the completion occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsInstanceMethod Whether this is an instance method
+end_comment
+
+begin_comment
+comment|/// (introduced with '-'); otherwise, it's a class method
+end_comment
+
+begin_comment
+comment|/// (introduced with '+').
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ReturnType If non-NULL, the specified return type of the method
+end_comment
+
+begin_comment
+comment|/// being declared or defined.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IDecl The interface, category, protocol, or
+end_comment
+
+begin_comment
+comment|/// implementation, or category implementation in which this method
+end_comment
+
+begin_comment
+comment|/// declaration or definition occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCMethodDecl
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|bool
+name|IsInstanceMethod
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ReturnType
+parameter_list|,
+name|DeclPtrTy
+name|IDecl
 parameter_list|)
 block|{   }
 end_function
@@ -11612,7 +12158,7 @@ argument|SourceLocation NameLoc
 argument_list|,
 argument|Scope *S
 argument_list|,
-argument|const CXXScopeSpec *SS
+argument|CXXScopeSpec *SS
 argument_list|,
 argument|bool isClassName = false
 argument_list|,
@@ -11647,7 +12193,7 @@ name|isTemplateName
 argument_list|(
 argument|Scope *S
 argument_list|,
-argument|const CXXScopeSpec&SS
+argument|CXXScopeSpec&SS
 argument_list|,
 argument|UnqualifiedId&Name
 argument_list|,

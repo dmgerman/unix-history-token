@@ -124,11 +124,6 @@ comment|// Location of the 'friend' specifier.
 name|SourceLocation
 name|FriendLoc
 decl_stmt|;
-comment|// FIXME: Hack to keep track of whether this was a friend function
-comment|// template specialization.
-name|bool
-name|WasSpecialization
-decl_stmt|;
 name|friend
 name|class
 name|CXXRecordDecl
@@ -173,12 +168,7 @@ argument_list|)
 operator|,
 name|FriendLoc
 argument_list|(
-name|FriendL
-argument_list|)
-operator|,
-name|WasSpecialization
-argument_list|(
-argument|false
+argument|FriendL
 argument_list|)
 block|{   }
 name|public
@@ -250,27 +240,6 @@ block|{
 return|return
 name|FriendLoc
 return|;
-block|}
-name|bool
-name|wasSpecialization
-argument_list|()
-specifier|const
-block|{
-return|return
-name|WasSpecialization
-return|;
-block|}
-name|void
-name|setSpecialization
-parameter_list|(
-name|bool
-name|WS
-parameter_list|)
-block|{
-name|WasSpecialization
-operator|=
-name|WS
-expr_stmt|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static

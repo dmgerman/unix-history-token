@@ -1046,6 +1046,12 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_INTPTR_T
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__intptr_t_defined
 end_ifndef
 
@@ -1065,10 +1071,27 @@ directive|define
 name|__intptr_t_defined
 end_define
 
+begin_define
+define|#
+directive|define
+name|_INTPTR_T
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UINTPTR_T
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -1079,6 +1102,17 @@ argument_list|)
 name|uintptr_t
 expr_stmt|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINTPTR_T
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* C99 7.18.1.5 Greatest-width integer types.  */
