@@ -2481,6 +2481,27 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Relock for the "." case may left us with 			 * reclaimed vnode. 			 */
+if|if
+condition|(
+name|vdp
+operator|->
+name|v_iflag
+operator|&
+name|VI_DOOMED
+condition|)
+block|{
+name|vrele
+argument_list|(
+name|vdp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
 block|}
 operator|*
 name|vpp
