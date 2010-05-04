@@ -5273,7 +5273,7 @@ operator|->
 name|tx_dmamap
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|txd
 operator|->
@@ -5501,7 +5501,7 @@ operator|->
 name|rx_dmamap
 argument_list|)
 expr_stmt|;
-name|m_free
+name|m_freem
 argument_list|(
 name|rxd
 operator|->
