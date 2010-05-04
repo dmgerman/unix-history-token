@@ -1613,7 +1613,7 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* Save our tick information with both the thread and proc locked */
-name|ruxagg
+name|ruxagg_locked
 argument_list|(
 operator|&
 name|p

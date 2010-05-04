@@ -670,7 +670,12 @@ name|struct
 name|rusage
 name|td_ru
 decl_stmt|;
-comment|/* (t) rusage information */
+comment|/* (t) rusage information. */
+name|struct
+name|rusage_ext
+name|td_rux
+decl_stmt|;
+comment|/* (t) Internal rusage information. */
 name|uint64_t
 name|td_incruntime
 decl_stmt|;
