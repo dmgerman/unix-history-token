@@ -4970,12 +4970,11 @@ name|kp
 operator|->
 name|ki_runtime
 operator|=
-name|cputick2usec
-argument_list|(
 name|td
 operator|->
-name|td_runtime
-argument_list|)
+name|td_rux
+operator|.
+name|rux_runtime
 expr_stmt|;
 name|kp
 operator|->
