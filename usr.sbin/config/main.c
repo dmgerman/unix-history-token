@@ -3144,6 +3144,12 @@ decl_stmt|,
 name|off
 decl_stmt|,
 name|size
+decl_stmt|,
+name|t1
+decl_stmt|,
+name|t2
+decl_stmt|,
+name|align
 decl_stmt|;
 name|char
 modifier|*
@@ -3273,8 +3279,8 @@ argument_list|(
 operator|&
 name|cmd
 argument_list|,
-literal|"/usr/bin/elfdump -c %s | grep -A 5 kern_conf"
-literal|"| tail -2 | cut -d ' ' -f 2 | paste - - -"
+literal|"/usr/bin/elfdump -c %s | grep -A 8 kern_conf"
+literal|"| tail -5 | cut -d ' ' -f 2 | paste - - - - -"
 argument_list|,
 name|file
 argument_list|)
@@ -3343,13 +3349,22 @@ name|sscanf
 argument_list|(
 name|o
 argument_list|,
-literal|"%d\t%d"
+literal|"%d%d%d%d%d"
 argument_list|,
 operator|&
 name|off
 argument_list|,
 operator|&
 name|size
+argument_list|,
+operator|&
+name|t1
+argument_list|,
+operator|&
+name|t2
+argument_list|,
+operator|&
+name|align
 argument_list|)
 expr_stmt|;
 name|free
@@ -3361,7 +3376,7 @@ if|if
 condition|(
 name|r
 operator|!=
-literal|2
+literal|5
 condition|)
 name|errx
 argument_list|(
@@ -3407,8 +3422,6 @@ init|;
 name|i
 operator|<
 name|size
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
@@ -3428,7 +3441,22 @@ operator|==
 name|EOF
 condition|)
 break|break;
-comment|/*  		 * If '\0' is present in the middle of the configuration 		 * string, this means something very weird is happening. 		 * Make such case very visible. 		 */
+comment|/*  		 * If '\0' is present in the middle of the configuration 		 * string, this means something very weird is happening. 		 * Make such case very visible.  However, some architectures 		 * pad the length of the section with NULs to a multiple of 		 * sh_addralign, allow a NUL in that part of the section. 		 */
+if|if
+condition|(
+name|r
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+name|size
+operator|-
+name|i
+operator|)
+operator|<
+name|align
+condition|)
+break|break;
 name|assert
 argument_list|(
 name|r
