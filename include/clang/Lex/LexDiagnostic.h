@@ -73,6 +73,8 @@ parameter_list|,
 name|GROUP
 parameter_list|,
 name|SFINAE
+parameter_list|,
+name|CATEGORY
 parameter_list|)
 value|ENUM,
 define|#

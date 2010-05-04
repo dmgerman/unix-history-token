@@ -154,6 +154,11 @@ name|ErrorLimit
 decl_stmt|;
 comment|/// Limit # errors emitted.
 name|unsigned
+name|MacroBacktraceLimit
+decl_stmt|;
+comment|/// Limit depth of macro instantiation
+comment|/// backtrace.
+name|unsigned
 name|TemplateBacktraceLimit
 decl_stmt|;
 comment|/// Limit depth of instantiation backtrace.
@@ -170,6 +175,14 @@ block|,
 name|MaxTabStop
 init|=
 literal|100
+block|,
+name|DefaultMacroBacktraceLimit
+init|=
+literal|6
+block|,
+name|DefaultTemplateBacktraceLimit
+init|=
+literal|10
 block|}
 enum|;
 comment|/// Column limit for formatting message diagnostics, or 0 if unused.
@@ -265,6 +278,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|TemplateBacktraceLimit
+operator|=
+literal|0
+expr_stmt|;
+name|MacroBacktraceLimit
 operator|=
 literal|0
 expr_stmt|;

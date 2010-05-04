@@ -182,5 +182,43 @@ decl_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR7044
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|f2
+parameter_list|(
+name|char
+name|key
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|key
+condition|)
+block|{
+specifier|static
+name|char
+name|_msg
+index|[
+literal|40
+index|]
+decl_stmt|;
+case|case
+literal|'\014'
+case|:
+return|return
+name|_msg
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

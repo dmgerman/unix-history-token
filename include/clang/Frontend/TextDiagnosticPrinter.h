@@ -232,6 +232,12 @@ argument_list|,
 argument|unsigned NumHints
 argument_list|,
 argument|unsigned Columns
+argument_list|,
+argument|unsigned OnMacroInst
+argument_list|,
+argument|unsigned MacroSkipStart
+argument_list|,
+argument|unsigned MacroSkipEnd
 argument_list|)
 block|;
 name|virtual
@@ -248,7 +254,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namspace clang
+comment|// end namespace clang
 end_comment
 
 begin_endif

@@ -634,6 +634,10 @@ name|x2
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note{{passing argument to parameter here}}
+end_comment
+
 begin_function
 name|void
 name|test_x
