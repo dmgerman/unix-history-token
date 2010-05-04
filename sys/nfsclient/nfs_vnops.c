@@ -1138,6 +1138,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|negnametimeo
+init|=
+name|NFS_DEFAULT_NEGNAMETIMEO
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|negative_name_timeout
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|negnametimeo
+argument_list|,
+literal|0
+argument_list|,
+literal|"Negative name cache entry timeout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This sysctl allows other processes to mmap a file that has been opened  * O_DIRECT by a process.  In general, having processes mmap the file while  * Direct IO is in progress can lead to Data Inconsistencies.  But, we allow  * this by default to prevent DoS attacks - to prevent a malicious user from  * opening up files O_DIRECT preventing other users from mmap'ing these  * files.  "Protected" environments where stricter consistency guarantees are  * required can disable this knob.  The process that opened the file O_DIRECT  * cannot mmap() the file, because mmap'ed IO on an O_DIRECT open() is not  * meaningful.  */
 end_comment
@@ -4608,9 +4638,26 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-comment|/* 		 * We only accept a negative hit in the cache if the 		 * modification time of the parent directory matches 		 * our cached copy.  Otherwise, we discard all of the 		 * negative cache entries for this directory. 		 */
+comment|/* 		 * We only accept a negative hit in the cache if the 		 * modification time of the parent directory matches 		 * our cached copy.  Otherwise, we discard all of the 		 * negative cache entries for this directory. We also 		 * only trust -ve cache entries for less than 		 * negnametimeo seconds. 		 */
 if|if
 condition|(
+call|(
+name|u_int
+call|)
+argument_list|(
+name|ticks
+operator|-
+name|np
+operator|->
+name|n_dmtime_ticks
+argument_list|)
+operator|<
+operator|(
+name|negnametimeo
+operator|*
+name|hz
+operator|)
+operator|&&
 name|VOP_GETATTR
 argument_list|(
 name|dvp
@@ -5316,12 +5363,20 @@ name|n_dmtime
 operator|==
 literal|0
 condition|)
+block|{
 name|np
 operator|->
 name|n_dmtime
 operator|=
 name|dmtime
 expr_stmt|;
+name|np
+operator|->
+name|n_dmtime_ticks
+operator|=
+name|ticks
+expr_stmt|;
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
