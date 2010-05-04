@@ -410,6 +410,23 @@ argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|emitFrameIndexDebugValue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FrameIx
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|const MDNode *MDPtr
+argument_list|,
+argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
 comment|/// foldMemoryOperand - PowerPC (like most RISC's) can only fold spills into
 comment|/// copy instructions, turning them into load/store instructions.
 name|virtual

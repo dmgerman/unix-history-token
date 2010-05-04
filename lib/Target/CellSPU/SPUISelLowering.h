@@ -387,27 +387,20 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|//! Custom lowering hook for nodes with illegal result types.
 name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -544,6 +537,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -569,6 +563,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -586,6 +581,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

@@ -327,8 +327,14 @@ comment|/// indicates whether the driver is to run in parent mode or child mode.
 comment|///
 name|bool
 name|run
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|ErrMsg
+argument_list|)
+decl_stmt|;
 comment|/// debugOptimizerCrash - This method is called when some optimizer pass
 comment|/// crashes on input.  It attempts to prune down the testcase to something
 comment|/// reasonable, and figure out exactly which pass is crashing.
@@ -351,15 +357,27 @@ comment|/// crashes on an input.  It attempts to reduce the input as much as pos
 comment|/// while still causing the code generator to crash.
 name|bool
 name|debugCodeGeneratorCrash
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Error
+argument_list|)
+decl_stmt|;
 comment|/// debugMiscompilation - This method is used when the passes selected are not
 comment|/// crashing, but the generated output is semantically different from the
 comment|/// input.
-name|bool
+name|void
 name|debugMiscompilation
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Error
+argument_list|)
+decl_stmt|;
 comment|/// debugPassMiscompilation - This method is called when the specified pass
 comment|/// miscompiles Program as input.  It tries to reduce the testcase to
 comment|/// something that smaller that still miscompiles the program.
@@ -396,6 +414,12 @@ operator|::
 name|string
 operator|&
 name|BitcodeFile
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
 expr_stmt|;
 comment|/// debugCodeGenerator - This method narrows down a module to a function or
@@ -403,8 +427,14 @@ comment|/// set of functions, using the CBE as a ``safe'' code generator for oth
 comment|/// functions that are not under consideration.
 name|bool
 name|debugCodeGenerator
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Error
+argument_list|)
+decl_stmt|;
 comment|/// isExecutingJIT - Returns true if bugpoint is currently testing the JIT
 comment|///
 name|bool
@@ -545,55 +575,56 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
-comment|/// compileProgram - Try to compile the specified module, throwing an
-comment|/// exception if an error occurs, or returning normally if not.  This is used
-comment|/// for code generation crash testing.
+comment|/// compileProgram - Try to compile the specified module, returning false and
+comment|/// setting Error if an error occurs.  This is used for code generation
+comment|/// crash testing.
 comment|///
 name|void
 name|compileProgram
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Error
+argument_list|)
+decl_stmt|;
 comment|/// executeProgram - This method runs "Program", capturing the output of the
-comment|/// program to a file, returning the filename of the file.  A recommended
-comment|/// filename may be optionally specified.  If there is a problem with the code
-comment|/// generator (e.g., llc crashes), this will throw an exception.
+comment|/// program to a file.  A recommended filename may be optionally specified.
 comment|///
 name|std
 operator|::
 name|string
 name|executeProgram
 argument_list|(
-argument|std::string RequestedOutputFilename =
-literal|""
+argument|std::string OutputFilename
 argument_list|,
-argument|std::string Bitcode =
-literal|""
+argument|std::string Bitcode
 argument_list|,
-argument|const std::string&SharedObjects =
-literal|""
+argument|const std::string&SharedObjects
 argument_list|,
-argument|AbstractInterpreter *AI =
-literal|0
+argument|AbstractInterpreter *AI
 argument_list|,
-argument|bool *ProgramExitedNonzero =
-literal|0
+argument|std::string *Error
 argument_list|)
 expr_stmt|;
 comment|/// executeProgramSafely - Used to create reference output with the "safe"
 comment|/// backend, if reference output is not provided.  If there is a problem with
-comment|/// the code generator (e.g., llc crashes), this will throw an exception.
+comment|/// the code generator (e.g., llc crashes), this will return false and set
+comment|/// Error.
 comment|///
 name|std
 operator|::
 name|string
 name|executeProgramSafely
 argument_list|(
-argument|std::string OutputFile =
-literal|""
+argument|std::string OutputFile
+argument_list|,
+argument|std::string *Error
 argument_list|)
 expr_stmt|;
 comment|/// createReferenceFile - calls compileProgram and then records the output
@@ -620,8 +651,8 @@ argument_list|)
 decl_stmt|;
 comment|/// diffProgram - This method executes the specified module and diffs the
 comment|/// output against the file specified by ReferenceOutputFile.  If the output
-comment|/// is different, true is returned.  If there is a problem with the code
-comment|/// generator (e.g., llc crashes), this will throw an exception.
+comment|/// is different, 1 is returned.  If there is a problem with the code
+comment|/// generator (e.g., llc crashes), this will return -1 and set Error.
 comment|///
 name|bool
 name|diffProgram
@@ -648,6 +679,14 @@ name|bool
 name|RemoveBitcode
 operator|=
 name|false
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Error
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 comment|/// EmitProgressBitcode - This function is used to output the current Program
@@ -866,6 +905,12 @@ operator|*
 operator|>
 operator|&
 name|AllPasses
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|ErrMsg
 argument_list|)
 decl_stmt|;
 comment|/// writeProgramToFile - This writes the current "Program" to the named

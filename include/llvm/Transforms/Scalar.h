@@ -436,6 +436,19 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createLowerInvokePass
+parameter_list|(
+specifier|const
+name|TargetLowering
+modifier|*
+name|TLI
+parameter_list|,
+name|bool
+name|useExpensiveEHSupport
+parameter_list|)
+function_decl|;
 specifier|extern
 specifier|const
 name|PassInfo
@@ -582,15 +595,6 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createGEPSplitterPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// SCCVN - Aggressively eliminate redundant scalar values
-comment|//
-name|FunctionPass
-modifier|*
-name|createSCCVNPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

@@ -66,7 +66,7 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|void LLVMInitialize##TargetName##TargetInfo();
+value|void LLVMInitialize##TargetName##TargetInfo(void);
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
@@ -80,7 +80,7 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
-value|void LLVMInitialize##TargetName##Target();
+value|void LLVMInitialize##TargetName##Target(void);
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
@@ -93,7 +93,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllTargetInfos
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -115,7 +117,9 @@ specifier|static
 specifier|inline
 name|void
 name|LLVMInitializeAllTargets
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -137,7 +141,9 @@ specifier|static
 specifier|inline
 name|LLVMBool
 name|LLVMInitializeNativeTarget
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* If we have a native target, initialize it to ensure it is linked in. */
 ifdef|#

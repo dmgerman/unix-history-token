@@ -2132,11 +2132,6 @@ modifier|&
 name|MRI
 decl_stmt|;
 comment|// Virtual/real register map
-name|MachineConstantPool
-modifier|*
-name|ConstPool
-decl_stmt|;
-comment|// Target constant pool
 name|std
 operator|::
 name|vector
@@ -2192,20 +2187,10 @@ name|virtual
 name|MachineBasicBlock
 modifier|*
 name|EmitSchedule
-argument_list|(
-name|DenseMap
-operator|<
-name|MachineBasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|*
-argument_list|)
+parameter_list|()
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 name|void
 name|dumpSchedule
 argument_list|()

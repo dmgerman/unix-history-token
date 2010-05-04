@@ -849,6 +849,10 @@ name|DW_AT_APPLE_runtime_class
 init|=
 literal|0x3fe6
 block|,
+name|DW_AT_APPLE_omit_frame_ptr
+init|=
+literal|0x3fe7
+block|,
 comment|// Attribute form encodings
 name|DW_FORM_addr
 init|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- llvm/Analysis/Verifier.h - Module Verifier --------------*- C++ -*-===//
+comment|//===-- llvm/Analysis/Verifier.h - LLVM IR Verifier -------------*- C++ -*-===//
 end_comment
 
 begin_comment

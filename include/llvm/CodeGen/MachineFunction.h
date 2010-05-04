@@ -276,6 +276,7 @@ struct|;
 name|class
 name|MachineFunction
 block|{
+specifier|const
 name|Function
 modifier|*
 name|Fn
@@ -360,11 +361,6 @@ expr_stmt|;
 name|BasicBlockListType
 name|BasicBlocks
 decl_stmt|;
-comment|/// Default debug location. Used to print out the debug label at the beginning
-comment|/// of a function.
-name|DebugLoc
-name|DefaultDebugLoc
-decl_stmt|;
 comment|/// FunctionNumber - This provides a unique ID for each function emitted in
 comment|/// this translation unit.
 comment|///
@@ -397,7 +393,7 @@ name|public
 label|:
 name|MachineFunction
 argument_list|(
-argument|Function *Fn
+argument|const Function *Fn
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -432,6 +428,7 @@ return|;
 block|}
 comment|/// getFunction - Return the LLVM function that this machine code represents
 comment|///
+specifier|const
 name|Function
 operator|*
 name|getFunction
@@ -1458,34 +1455,6 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
-comment|//===--------------------------------------------------------------------===//
-comment|// Debug location.
-comment|//
-comment|/// getDefaultDebugLoc - Get the default debug location for the machine
-comment|/// function.
-name|DebugLoc
-name|getDefaultDebugLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DefaultDebugLoc
-return|;
-block|}
-comment|/// setDefaultDebugLoc - Get the default debug location for the machine
-comment|/// function.
-name|void
-name|setDefaultDebugLoc
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-block|{
-name|DefaultDebugLoc
-operator|=
-name|DL
-expr_stmt|;
-block|}
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//

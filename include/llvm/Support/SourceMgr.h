@@ -547,6 +547,11 @@ comment|/// allowing printing to a raw_ostream as a caret diagnostic.
 name|class
 name|SMDiagnostic
 block|{
+specifier|const
+name|SourceMgr
+modifier|*
+name|SM
+decl_stmt|;
 name|SMLoc
 name|Loc
 decl_stmt|;
@@ -574,9 +579,15 @@ literal|1
 decl_stmt|;
 name|public
 label|:
+comment|// Null diagnostic.
 name|SMDiagnostic
 argument_list|()
 operator|:
+name|SM
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|LineNo
 argument_list|(
 literal|0
@@ -592,8 +603,61 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
+argument|const std::string&filename
+argument_list|,
+argument|const std::string&Msg
+argument_list|,
+argument|bool showline = true
+argument_list|)
+operator|:
+name|SM
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Loc
+argument_list|()
+operator|,
+name|Filename
+argument_list|(
+name|filename
+argument_list|)
+operator|,
+name|LineNo
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+operator|,
+name|ColumnNo
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+operator|,
+name|Message
+argument_list|(
+name|Msg
+argument_list|)
+operator|,
+name|LineContents
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|ShowLine
+argument_list|(
+argument|showline
+argument_list|)
+block|{}
+comment|// Diagnostic with a location.
+name|SMDiagnostic
+argument_list|(
+argument|const SourceMgr&sm
+argument_list|,
 argument|SMLoc L
 argument_list|,
 argument|const std::string&FN
@@ -609,6 +673,12 @@ argument_list|,
 argument|bool showline = true
 argument_list|)
 operator|:
+name|SM
+argument_list|(
+operator|&
+name|sm
+argument_list|)
+operator|,
 name|Loc
 argument_list|(
 name|L
@@ -644,6 +714,17 @@ argument_list|(
 argument|showline
 argument_list|)
 block|{}
+specifier|const
+name|SourceMgr
+operator|*
+name|getSourceMgr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SM
+return|;
+block|}
 name|SMLoc
 name|getLoc
 argument_list|()
@@ -657,6 +738,7 @@ specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getFilename
 argument_list|()
 block|{

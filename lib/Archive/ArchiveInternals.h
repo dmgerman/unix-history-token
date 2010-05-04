@@ -375,7 +375,6 @@ modifier|*
 name|GetBitcodeSymbols
 argument_list|(
 specifier|const
-name|unsigned
 name|char
 operator|*
 name|Buffer

@@ -104,9 +104,28 @@ comment|///      the next stage starts in this same cycle. This can be used to
 comment|///      indicate that the instruction requires multiple stages at the
 comment|///      same time.
 comment|///
+comment|/// FU reservation can be of two different kinds:
+comment|///  - FUs which instruction actually requires
+comment|///  - FUs which instruction just reserves. Reserved unit is not available for
+comment|///    execution of other instruction. However, several instructions can reserve
+comment|///    the same unit several times.
+comment|/// Such two types of units reservation is used to model instruction domain
+comment|/// change stalls, FUs using the same resource (e.g. same register file), etc.
 struct|struct
 name|InstrStage
 block|{
+enum|enum
+name|ReservationKinds
+block|{
+name|Required
+init|=
+literal|0
+block|,
+name|Reserved
+init|=
+literal|1
+block|}
+enum|;
 name|unsigned
 name|Cycles_
 decl_stmt|;
@@ -119,6 +138,10 @@ name|int
 name|NextCycles_
 decl_stmt|;
 comment|///< Number of machine cycles to next stage
+name|ReservationKinds
+name|Kind_
+decl_stmt|;
+comment|///< Kind of the FU reservation
 comment|/// getCycles - returns the number of cycles the stage is occupied
 name|unsigned
 name|getCycles
@@ -137,6 +160,15 @@ specifier|const
 block|{
 return|return
 name|Units_
+return|;
+block|}
+name|ReservationKinds
+name|getReservationKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind_
 return|;
 block|}
 comment|/// getNextCycles - returns the number of cycles from the start of

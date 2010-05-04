@@ -227,6 +227,7 @@ argument_list|()
 return|;
 block|}
 name|virtual
+specifier|const
 name|MBlazeTargetLowering
 operator|*
 name|getTargetLowering
@@ -234,15 +235,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|MBlazeTargetLowering
-operator|*
-operator|>
-operator|(
 operator|&
 name|TLInfo
-operator|)
 return|;
 block|}
 specifier|const

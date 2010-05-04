@@ -396,6 +396,7 @@ comment|/// character is included in the result string.
 name|bool
 name|GetConstantStringInfo
 argument_list|(
+specifier|const
 name|Value
 operator|*
 name|V

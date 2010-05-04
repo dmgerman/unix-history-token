@@ -239,6 +239,7 @@ name|int
 name|StackOffset
 decl_stmt|;
 comment|//< Offset from the stack pointer.
+specifier|const
 name|Constant
 modifier|*
 name|Metadata
@@ -248,7 +249,7 @@ name|GCRoot
 argument_list|(
 argument|int N
 argument_list|,
-argument|Constant *MD
+argument|const Constant *MD
 argument_list|)
 block|:
 name|Num
@@ -399,6 +400,7 @@ parameter_list|(
 name|int
 name|Num
 parameter_list|,
+specifier|const
 name|Constant
 modifier|*
 name|Metadata

@@ -187,6 +187,9 @@ decl_stmt|;
 name|class
 name|TargetRegisterInfo
 decl_stmt|;
+struct_decl|struct
+name|EDInstInfo
+struct_decl|;
 block|}
 end_decl_stmt
 
@@ -434,7 +437,7 @@ comment|////////////////////////
 end_comment
 
 begin_comment
-comment|/// True only if the object has been fully and successfully initialized
+comment|/// True only if the object has been successfully initialized
 end_comment
 
 begin_decl_stmt
@@ -444,25 +447,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// The string that stores disassembler errors from the backend
+comment|/// True if the disassembler can provide semantic information
 end_comment
 
-begin_expr_stmt
-name|std
-operator|::
-name|string
-name|ErrorString
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+name|bool
+name|HasSemantics
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/// The stream that wraps the ErrorString
+comment|/// The stream to write errors to
 end_comment
 
 begin_expr_stmt
 name|llvm
 operator|::
-name|raw_string_ostream
+name|raw_ostream
+operator|&
 name|ErrorStream
 expr_stmt|;
 end_expr_stmt
@@ -616,13 +618,15 @@ begin_comment
 comment|///   the target architecture
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
-name|InstInfo
-modifier|*
+name|llvm
+operator|::
+name|EDInstInfo
+operator|*
 name|InstInfos
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// The target-specific lexer for use in tokenizing strings, in
@@ -811,6 +815,25 @@ parameter_list|()
 block|{
 return|return
 name|Valid
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// hasSemantics - reports whether the disassembler can provide operands and
+end_comment
+
+begin_comment
+comment|///   tokens.
+end_comment
+
+begin_function
+name|bool
+name|hasSemantics
+parameter_list|()
+block|{
+return|return
+name|HasSemantics
 return|;
 block|}
 end_function

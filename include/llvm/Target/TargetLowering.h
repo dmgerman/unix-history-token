@@ -343,10 +343,12 @@ comment|/// NOTE: The constructor takes ownership of TLOF.
 name|explicit
 name|TargetLowering
 parameter_list|(
+specifier|const
 name|TargetMachine
 modifier|&
 name|TM
 parameter_list|,
+specifier|const
 name|TargetLoweringObjectFile
 modifier|*
 name|TLOF
@@ -357,6 +359,7 @@ operator|~
 name|TargetLowering
 argument_list|()
 expr_stmt|;
+specifier|const
 name|TargetMachine
 operator|&
 name|getTargetMachine
@@ -378,6 +381,7 @@ return|return
 name|TD
 return|;
 block|}
+specifier|const
 name|TargetLoweringObjectFile
 operator|&
 name|getObjFileLowering
@@ -608,6 +612,34 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// isTypeSynthesizable - Return true if it's OK for the compiler to create
+comment|/// new operations of this type.  All Legal types are synthesizable except
+comment|/// MMX vector types on X86.  Non-Legal types are not synthesizable.
+name|bool
+name|isTypeSynthesizable
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+operator|&&
+name|Synthesizable
+index|[
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+index|]
+return|;
+block|}
 name|class
 name|ValueTypeActionImpl
 block|{
@@ -634,83 +666,19 @@ label|:
 name|ValueTypeActionImpl
 argument_list|()
 block|{
-name|ValueTypeActions
-index|[
-literal|0
-index|]
-operator|=
-name|ValueTypeActions
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|ValueTypeActions
-index|[
-literal|2
-index|]
-operator|=
-name|ValueTypeActions
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|ValueTypeActionImpl
+name|std
+operator|::
+name|fill
 argument_list|(
-argument|const ValueTypeActionImpl&RHS
+name|ValueTypeActions
+argument_list|,
+name|array_endof
+argument_list|(
+name|ValueTypeActions
 argument_list|)
-block|{
-name|ValueTypeActions
-index|[
+argument_list|,
 literal|0
-index|]
-operator|=
-name|RHS
-operator|.
-name|ValueTypeActions
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|ValueTypeActions
-index|[
-literal|1
-index|]
-operator|=
-name|RHS
-operator|.
-name|ValueTypeActions
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|ValueTypeActions
-index|[
-literal|2
-index|]
-operator|=
-name|RHS
-operator|.
-name|ValueTypeActions
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|ValueTypeActions
-index|[
-literal|3
-index|]
-operator|=
-name|RHS
-operator|.
-name|ValueTypeActions
-index|[
-literal|3
-index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|LegalizeAction
@@ -1339,18 +1307,20 @@ struct|;
 name|virtual
 name|bool
 name|getTgtMemIntrinsic
-parameter_list|(
+argument_list|(
 name|IntrinsicInfo
-modifier|&
+operator|&
 name|Info
-parameter_list|,
+argument_list|,
+specifier|const
 name|CallInst
-modifier|&
+operator|&
 name|I
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Intrinsic
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|false
@@ -2915,8 +2885,10 @@ comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
 comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-comment|/// from memory. It returns EVT::Other if SelectionDAG should be responsible
-comment|/// for determining it.
+comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
+comment|/// constant so it does not need to be loaded.
+comment|/// It returns EVT::Other if the type should be determined using generic
+comment|/// target-independent logic.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -2933,9 +2905,12 @@ argument_list|,
 name|bool
 name|NonScalarIntSafe
 argument_list|,
-name|SelectionDAG
+name|bool
+name|MemcpyStrSrc
+argument_list|,
+name|MachineFunction
 operator|&
-name|DAG
+name|MF
 argument_list|)
 decl|const
 block|{
@@ -3257,6 +3232,12 @@ modifier|&
 name|DAG
 decl_stmt|;
 name|bool
+name|LegalTys
+decl_stmt|;
+name|bool
+name|LegalOps
+decl_stmt|;
+name|bool
 name|ShrinkOps
 decl_stmt|;
 name|SDValue
@@ -3270,6 +3251,10 @@ name|TargetLoweringOpt
 argument_list|(
 argument|SelectionDAG&InDAG
 argument_list|,
+argument|bool LT
+argument_list|,
+argument|bool LO
+argument_list|,
 argument|bool Shrink = false
 argument_list|)
 block|:
@@ -3278,27 +3263,57 @@ argument_list|(
 name|InDAG
 argument_list|)
 operator|,
+name|LegalTys
+argument_list|(
+name|LT
+argument_list|)
+operator|,
+name|LegalOps
+argument_list|(
+name|LO
+argument_list|)
+operator|,
 name|ShrinkOps
 argument_list|(
 argument|Shrink
 argument_list|)
 block|{}
 name|bool
+name|LegalTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LegalTys
+return|;
+block|}
+name|bool
+name|LegalOperations
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LegalOps
+return|;
+block|}
+name|bool
 name|CombineTo
-argument_list|(
-argument|SDValue O
-argument_list|,
-argument|SDValue N
-argument_list|)
+parameter_list|(
+name|SDValue
+name|O
+parameter_list|,
+name|SDValue
+name|N
+parameter_list|)
 block|{
 name|Old
 operator|=
 name|O
-block|;
+expr_stmt|;
 name|New
 operator|=
 name|N
-block|;
+expr_stmt|;
 return|return
 name|true
 return|;
@@ -3640,6 +3655,7 @@ name|SDNode
 operator|*
 name|N
 argument_list|,
+specifier|const
 name|GlobalValue
 operator|*
 operator|&
@@ -3678,6 +3694,50 @@ name|DCI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// isTypeDesirableForOp - Return true if the target has native support for
+comment|/// the specified value type and it is 'desirable' to use the type for the
+comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
+comment|/// instruction encodings are longer and some i16 instructions are slow.
+name|virtual
+name|bool
+name|isTypeDesirableForOp
+argument_list|(
+name|unsigned
+name|Opc
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+comment|// By default, assume all legal types are desirable.
+return|return
+name|isTypeLegal
+argument_list|(
+name|VT
+argument_list|)
+return|;
+block|}
+comment|/// IsDesirableToPromoteOp - This method query the target whether it is
+comment|/// beneficial for dag combiner to promote the specified node. If true, it
+comment|/// should return the desired promotion type by reference.
+name|virtual
+name|bool
+name|IsDesirableToPromoteOp
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|EVT
+operator|&
+name|PVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Configuration Methods - These methods should be invoked by
 comment|// the derived class constructor to configure this object for the target.
@@ -3857,6 +3917,11 @@ parameter_list|,
 name|TargetRegisterClass
 modifier|*
 name|RC
+parameter_list|,
+name|bool
+name|isSynthesizable
+init|=
+name|true
 parameter_list|)
 block|{
 name|assert
@@ -3902,6 +3967,18 @@ name|SimpleTy
 index|]
 operator|=
 name|RC
+expr_stmt|;
+name|Synthesizable
+index|[
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+index|]
+operator|=
+name|isSynthesizable
 expr_stmt|;
 block|}
 comment|/// computeRegisterProperties - Once all of the register classes are added,
@@ -4523,9 +4600,10 @@ label|:
 name|virtual
 specifier|const
 name|TargetSubtarget
-modifier|*
+operator|*
 name|getSubtarget
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -4533,7 +4611,7 @@ literal|0
 operator|&&
 literal|"Not Implemented"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|NULL
 return|;
@@ -4588,6 +4666,7 @@ operator|>
 operator|&
 name|InVals
 argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -4738,6 +4817,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// LowerCall - This hook must be implemented to lower calls into the
 comment|/// the specified DAG. The outgoing arguments to the call are described
@@ -4801,6 +4881,7 @@ operator|>
 operator|&
 name|InVals
 argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -4853,6 +4934,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|)
+decl|const
 block|{
 comment|// Return true by default to get preexisting behavior.
 return|return
@@ -4896,6 +4978,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -4926,51 +5009,52 @@ comment|/// request here, legalize will resort to using simple loads and stores.
 name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
-parameter_list|(
+argument_list|(
 name|SelectionDAG
-modifier|&
+operator|&
 name|DAG
-parameter_list|,
+argument_list|,
 name|DebugLoc
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op1
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op2
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op3
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Align
-parameter_list|,
+argument_list|,
 name|bool
 name|isVolatile
-parameter_list|,
+argument_list|,
 name|bool
 name|AlwaysInline
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|DstSV
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|DstOff
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|SrcSV
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SrcOff
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|SDValue
@@ -4986,48 +5070,49 @@ comment|/// lowering strategy should be used.
 name|virtual
 name|SDValue
 name|EmitTargetCodeForMemmove
-parameter_list|(
+argument_list|(
 name|SelectionDAG
-modifier|&
+operator|&
 name|DAG
-parameter_list|,
+argument_list|,
 name|DebugLoc
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op1
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op2
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op3
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Align
-parameter_list|,
+argument_list|,
 name|bool
 name|isVolatile
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|DstSV
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|DstOff
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|SrcSV
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|SrcOff
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|SDValue
@@ -5043,40 +5128,41 @@ comment|/// lowering strategy should be used.
 name|virtual
 name|SDValue
 name|EmitTargetCodeForMemset
-parameter_list|(
+argument_list|(
 name|SelectionDAG
-modifier|&
+operator|&
 name|DAG
-parameter_list|,
+argument_list|,
 name|DebugLoc
 name|dl
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Chain
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op1
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op2
-parameter_list|,
+argument_list|,
 name|SDValue
 name|Op3
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Align
-parameter_list|,
+argument_list|,
 name|bool
 name|isVolatile
-parameter_list|,
+argument_list|,
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|DstSV
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|DstOff
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|SDValue
@@ -5113,6 +5199,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|)
+decl|const
 decl_stmt|;
 comment|/// LowerOperation - This callback is invoked for operations that are
 comment|/// unsupported by the target, which are registered to use 'custom' lowering,
@@ -5122,15 +5209,16 @@ comment|/// implement this.  The default implementation of this aborts.
 name|virtual
 name|SDValue
 name|LowerOperation
-parameter_list|(
+argument_list|(
 name|SDValue
 name|Op
-parameter_list|,
+argument_list|,
 name|SelectionDAG
-modifier|&
+operator|&
 name|DAG
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// ReplaceNodeResults - This callback is invoked when a node result type is
 comment|/// illegal for the target, and the operation was registered to use 'custom'
 comment|/// lowering for that result type.  The target places new result values for
@@ -5159,6 +5247,7 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|)
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -5221,12 +5310,29 @@ argument_list|,
 name|int
 operator|>
 operator|&
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+argument_list|,
+name|unsigned
+operator|>
+expr|>
+operator|&
 ifndef|#
 directive|ifndef
 name|NDEBUG
 argument_list|,
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 argument_list|,
@@ -5237,6 +5343,7 @@ name|CatchInfoLost
 endif|#
 directive|endif
 argument_list|)
+decl|const
 block|{
 return|return
 literal|0
@@ -5514,9 +5621,6 @@ comment|// instructions are special in various ways, which require special suppo
 comment|// insert.  The specified MachineInstr is created but not inserted into any
 comment|// basic blocks, and this method is called to expand it into a sequence of
 comment|// instructions, potentially also creating new basic blocks and control flow.
-comment|// When new basic blocks are inserted and the edges from MBB to its successors
-comment|// are modified, the method should insert pairs of<OldSucc, NewSucc> into the
-comment|// DenseMap.
 name|virtual
 name|MachineBasicBlock
 modifier|*
@@ -5529,17 +5633,6 @@ argument_list|,
 name|MachineBasicBlock
 operator|*
 name|MBB
-argument_list|,
-name|DenseMap
-operator|<
-name|MachineBasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|*
-name|EM
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5918,6 +6011,7 @@ return|;
 block|}
 name|private
 label|:
+specifier|const
 name|TargetMachine
 modifier|&
 name|TM
@@ -5927,6 +6021,7 @@ name|TargetData
 modifier|*
 name|TD
 decl_stmt|;
+specifier|const
 name|TargetLoweringObjectFile
 modifier|&
 name|TLOF
@@ -6048,6 +6143,17 @@ index|]
 decl_stmt|;
 name|EVT
 name|RegisterTypeForVT
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
+decl_stmt|;
+comment|/// Synthesizable indicates whether it is OK for the compiler to create new
+comment|/// operations using this type.  All Legal types are Synthesizable except
+comment|/// MMX types on X86.  Non-Legal types are not Synthesizable.
+name|bool
+name|Synthesizable
 index|[
 name|MVT
 operator|::

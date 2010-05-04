@@ -574,7 +574,7 @@ comment|/// symbol.
 name|bool
 name|GVIsIndirectSymbol
 argument_list|(
-argument|GlobalValue *GV
+argument|const GlobalValue *GV
 argument_list|,
 argument|Reloc::Model RelocM
 argument_list|)

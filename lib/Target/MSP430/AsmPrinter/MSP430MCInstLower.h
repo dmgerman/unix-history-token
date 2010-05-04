@@ -200,6 +200,17 @@ name|MO
 argument_list|)
 decl|const
 decl_stmt|;
+name|MCSymbol
+modifier|*
+name|GetBlockAddressSymbol
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

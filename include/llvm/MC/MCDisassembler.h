@@ -62,6 +62,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+struct_decl|struct
+name|EDInstInfo
+struct_decl|;
 comment|/// MCDisassembler - Superclass for all disassemblers.  Consumes a memory region
 comment|///   and provides an array of assembly instructions.
 name|class
@@ -118,6 +121,27 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// getEDInfo - Returns the enhanced insturction information corresponding to
+comment|///   the disassembler.
+comment|///
+comment|/// @return         - An array of instruction information, with one entry for
+comment|///                   each MCInst opcode this disassembler returns.
+comment|///                   NULL if there is no info for this target.
+name|virtual
+name|EDInstInfo
+operator|*
+name|getEDInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|EDInstInfo
+operator|*
+operator|)
+literal|0
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

@@ -247,7 +247,7 @@ return|;
 block|}
 comment|/// clear_error - Set the flag read by has_error() to false. If the error
 comment|/// flag is set at the time when this raw_ostream's destructor is called,
-comment|/// llvm_report_error is called to report the error. Use clear_error()
+comment|/// report_fatal_error is called to report the error. Use clear_error()
 comment|/// after handling the error to avoid this behavior.
 name|void
 name|clear_error

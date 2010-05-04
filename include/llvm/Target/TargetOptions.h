@@ -67,6 +67,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MachineFunction
+decl_stmt|;
 comment|// Possible float ABI settings. Used with FloatABIType in TargetOptions.h.
 name|namespace
 name|FloatABI
@@ -99,6 +102,26 @@ specifier|extern
 name|bool
 name|NoFramePointerElim
 decl_stmt|;
+comment|/// NoFramePointerElimNonLeaf - This flag is enabled when the
+comment|/// -disable-non-leaf-fp-elim is specified on the command line. If the target
+comment|/// supports the frame pointer elimination optimization, this option should
+comment|/// disable it for non-leaf functions.
+specifier|extern
+name|bool
+name|NoFramePointerElimNonLeaf
+decl_stmt|;
+comment|/// DisableFramePointerElim - This returns true if frame pointer elimination
+comment|/// optimization should be disabled for the given machine function.
+specifier|extern
+name|bool
+name|DisableFramePointerElim
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|)
+function_decl|;
 comment|/// LessPreciseFPMAD - This flag is enabled when the
 comment|/// -enable-fp-mad is specified on the command line.  When this flag is off
 comment|/// (the default), the code generator is not allowed to generate mad
@@ -184,17 +207,11 @@ specifier|extern
 name|bool
 name|NoZerosInBSS
 decl_stmt|;
-comment|/// DwarfExceptionHandling - This flag indicates that Dwarf exception
-comment|/// information should be emitted.
+comment|/// JITExceptionHandling - This flag indicates that the JIT should emit
+comment|/// exception handling information.
 specifier|extern
 name|bool
-name|DwarfExceptionHandling
-decl_stmt|;
-comment|/// SjLjExceptionHandling - This flag indicates that SJLJ exception
-comment|/// information should be emitted.
-specifier|extern
-name|bool
-name|SjLjExceptionHandling
+name|JITExceptionHandling
 decl_stmt|;
 comment|/// JITEmitDebugInfo - This flag indicates that the JIT should try to emit
 comment|/// debug information and notify a debugger about it.

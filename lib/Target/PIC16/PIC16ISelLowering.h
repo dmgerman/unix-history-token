@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGISel.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetLowering.h"
 end_include
 
@@ -277,6 +271,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMUL
@@ -285,6 +280,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerADD
@@ -293,6 +289,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSUB
@@ -301,6 +298,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBinOp
@@ -309,6 +307,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|// Call returns
 name|SDValue
@@ -328,6 +327,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerIndirectCallReturn
@@ -348,6 +348,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 comment|// Call arguments
 name|SDValue
@@ -365,6 +366,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerIndirectCallArguments
@@ -385,6 +387,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBR_CC
@@ -393,6 +396,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSELECT_CC
@@ -401,6 +405,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|getPIC16Cmp
@@ -417,6 +422,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|MachineBasicBlock
@@ -426,10 +432,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -441,46 +443,31 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|void
 name|LowerOperationWrapper
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -500,6 +487,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -525,6 +513,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -542,66 +531,52 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandStore
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandLoad
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandGlobalAddress
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandExternalSymbol
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandFrameIndex
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|PerformDAGCombine
@@ -639,50 +614,27 @@ argument_list|(
 argument|unsigned FI
 argument_list|,
 argument|unsigned slot_size
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
+specifier|const
 block|;
 name|void
 name|ResetTmpOffsetMap
-argument_list|()
-block|{
-name|FiTmpOffsetMap
-operator|.
-name|clear
-argument_list|()
-block|;
-name|SetTmpSize
 argument_list|(
-literal|0
+argument|SelectionDAG&DAG
 argument_list|)
-block|; }
+specifier|const
+block|;
 name|void
 name|InitReservedFrameCount
 argument_list|(
+argument|const Function *F
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
 specifier|const
-name|Function
-operator|*
-name|F
-argument_list|)
 block|;
-comment|// Return the size of Tmp variable
-name|unsigned
-name|GetTmpSize
-argument_list|()
-block|{
-return|return
-name|TmpSize
-return|;
-block|}
-name|void
-name|SetTmpSize
-argument_list|(
-argument|unsigned Size
-argument_list|)
-block|{
-name|TmpSize
-operator|=
-name|Size
-block|; }
 comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
 name|virtual
 name|unsigned
@@ -704,22 +656,18 @@ comment|// then this function will return true.
 name|bool
 name|isDirectAddress
 argument_list|(
-specifier|const
-name|SDValue
-operator|&
-name|Op
+argument|const SDValue&Op
 argument_list|)
+specifier|const
 block|;
 comment|// If the Node is a DirectAddress in ROM_SPACE then this
 comment|// function will return true
 name|bool
 name|isRomAddress
 argument_list|(
-specifier|const
-name|SDValue
-operator|&
-name|Op
+argument|const SDValue&Op
 argument_list|)
+specifier|const
 block|;
 comment|// Extract the Lo and Hi component of Op.
 name|void
@@ -733,6 +681,7 @@ argument|SDValue&Lo
 argument_list|,
 argument|SDValue&Hi
 argument_list|)
+specifier|const
 block|;
 comment|// Load pointer can be a direct or indirect address. In PIC16 direct
 comment|// addresses need Banksel and Indirect addresses need to be loaded to
@@ -752,6 +701,7 @@ argument|unsigned&Offset
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 comment|// FrameIndex should be broken down into ExternalSymbol and FrameOffset.
 name|void
@@ -765,6 +715,7 @@ argument|SDValue&ES
 argument_list|,
 argument|int&Offset
 argument_list|)
+specifier|const
 block|;
 comment|// For indirect calls data address of the callee frame need to be
 comment|// extracted. This function fills the arguments DataAddr_Lo and
@@ -784,6 +735,7 @@ argument|SDValue&DataAddr_Hi
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|// We can not have both operands of a binary operation in W.
 comment|// This function is used to put one operand on stack and generate a load.
@@ -796,6 +748,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 comment|// This function checks if we need to put an operand of an operation on
 comment|// stack and generate a load or not.
@@ -810,6 +763,7 @@ argument|unsigned&MemOp
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// Subtarget - Keep a pointer to the PIC16Subtarget around so that we can
 comment|/// make the right decision when generating code for different targets.
@@ -846,6 +800,7 @@ name|getPIC16LibcallName
 argument_list|(
 argument|PIC16ISD::PIC16Libcall Call
 argument_list|)
+specifier|const
 block|;
 comment|// Make PIC16 Libcall.
 name|SDValue
@@ -865,6 +820,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 comment|// Check if operation has a direct load operand.
 specifier|inline
@@ -873,38 +829,8 @@ name|isDirectLoad
 argument_list|(
 argument|const SDValue Op
 argument_list|)
-block|;
-name|public
-operator|:
-comment|// Keep a pointer to SelectionDAGISel to access its public
-comment|// interface (It is required during legalization)
-name|SelectionDAGISel
-operator|*
-name|ISel
-block|;
-name|private
-operator|:
-comment|// The frameindexes generated for spill/reload are stack based.
-comment|// This maps maintain zero based indexes for these FIs.
-name|std
-operator|::
-name|map
-operator|<
-name|unsigned
-block|,
-name|unsigned
-operator|>
-name|FiTmpOffsetMap
-block|;
-name|unsigned
-name|TmpSize
-block|;
-comment|// These are the frames for return value and argument passing
-comment|// These FrameIndices will be expanded to foo.frame external symbol
-comment|// and all others will be expanded to foo.tmp external symbol.
-name|unsigned
-name|ReservedFrameCount
-block|;    }
+specifier|const
+block|;   }
 decl_stmt|;
 block|}
 end_decl_stmt

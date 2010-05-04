@@ -1056,6 +1056,15 @@ argument|unsigned Form
 argument_list|)
 specifier|const
 block|;
+name|uint64_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Integer
+return|;
+block|}
 comment|/// SizeOf - Determine size of integer value in bytes.
 comment|///
 name|virtual

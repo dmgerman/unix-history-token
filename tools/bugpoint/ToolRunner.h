@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SystemUtils.h"
 end_include
 
@@ -122,66 +128,6 @@ decl_stmt|;
 name|class
 name|LLC
 decl_stmt|;
-comment|/// ToolExecutionError - An instance of this class is thrown by the
-comment|/// AbstractInterpreter instances if there is an error running a tool (e.g., LLC
-comment|/// crashes) which prevents execution of the program.
-comment|///
-name|class
-name|ToolExecutionError
-range|:
-name|std
-operator|::
-name|exception
-block|{
-name|std
-operator|::
-name|string
-name|Message
-block|;
-name|public
-operator|:
-name|explicit
-name|ToolExecutionError
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|M
-argument_list|)
-operator|:
-name|Message
-argument_list|(
-argument|M
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|ToolExecutionError
-argument_list|()
-name|throw
-argument_list|()
-block|;
-name|virtual
-specifier|const
-name|char
-operator|*
-name|what
-argument_list|()
-specifier|const
-name|throw
-argument_list|()
-block|{
-return|return
-name|Message
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
 comment|//===---------------------------------------------------------------------===//
 comment|// GCC abstraction
 comment|//
@@ -192,13 +138,13 @@ name|sys
 operator|::
 name|Path
 name|GCCPath
-block|;
+expr_stmt|;
 comment|// The path to the gcc executable.
 name|sys
 operator|::
 name|Path
 name|RemoteClientPath
-block|;
+expr_stmt|;
 comment|// The path to the rsh / ssh executable.
 name|std
 operator|::
@@ -209,7 +155,7 @@ operator|::
 name|string
 operator|>
 name|gccArgs
-block|;
+expr_stmt|;
 comment|// GCC-specific arguments.
 name|GCC
 argument_list|(
@@ -244,7 +190,7 @@ name|GCCPath
 argument_list|(
 name|gccPath
 argument_list|)
-block|,
+operator|,
 name|RemoteClientPath
 argument_list|(
 argument|RemotePath
@@ -261,8 +207,8 @@ name|GCCArgs
 expr_stmt|;
 block|}
 name|public
-operator|:
-expr|enum
+label|:
+enum|enum
 name|FileType
 block|{
 name|AsmFile
@@ -271,10 +217,10 @@ name|ObjectFile
 block|,
 name|CFile
 block|}
-block|;
+enum|;
 specifier|static
 name|GCC
-operator|*
+modifier|*
 name|create
 argument_list|(
 name|std
@@ -295,7 +241,7 @@ operator|>
 operator|*
 name|Args
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// ExecuteProgram - Execute the program specified by "ProgramFile" (which is
 comment|/// either a .s file, or a .c file, specified by FileType), with the specified
 comment|/// arguments.  Standard input is specified with InputFile, and standard
@@ -306,41 +252,127 @@ comment|///
 name|int
 name|ExecuteProgram
 argument_list|(
-argument|const std::string&ProgramFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ProgramFile
 argument_list|,
-argument|const std::vector<std::string>&Args
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Args
 argument_list|,
-argument|FileType fileType
+name|FileType
+name|fileType
 argument_list|,
-argument|const std::string&InputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InputFile
 argument_list|,
-argument|const std::string&OutputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
 argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                          std::vector<std::string>()
-argument_list|,
-argument|unsigned Timeout =
+name|std
+operator|::
+name|string
+operator|*
+name|Error
+operator|=
 literal|0
 argument_list|,
-argument|unsigned MemoryLimit =
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|GCCArgs
+operator|=
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|unsigned
+name|Timeout
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|MemoryLimit
+operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// MakeSharedObject - This compiles the specified file (which is either a .c
 comment|/// file or a .s file) into a shared object.
 comment|///
 name|int
 name|MakeSharedObject
 argument_list|(
-argument|const std::string&InputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InputFile
 argument_list|,
-argument|FileType fileType
+name|FileType
+name|fileType
 argument_list|,
-argument|std::string&OutputFile
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
 argument_list|,
-argument|const std::vector<std::string>&ArgsForGCC
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|ArgsForGCC
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
-block|; }
-block|;
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|//===---------------------------------------------------------------------===//
 comment|/// AbstractInterpreter Class - Subclasses of this class are used to execute
 comment|/// LLVM bitcode in a variety of ways.  This abstract interface hides this
@@ -350,10 +382,10 @@ name|class
 name|AbstractInterpreter
 block|{
 name|public
-operator|:
+label|:
 specifier|static
 name|CBE
-operator|*
+modifier|*
 name|createCBE
 argument_list|(
 specifier|const
@@ -395,28 +427,60 @@ name|GCCArgs
 operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|LLC
-operator|*
+modifier|*
 name|createLLC
 argument_list|(
-argument|const char *Argv0
+specifier|const
+name|char
+operator|*
+name|Argv0
 argument_list|,
-argument|std::string&Message
+name|std
+operator|::
+name|string
+operator|&
+name|Message
 argument_list|,
-argument|const std::vector<std::string> *Args =
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|*
+name|Args
+operator|=
 literal|0
 argument_list|,
-argument|const std::vector<std::string> *GCCArgs =
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|*
+name|GCCArgs
+operator|=
 literal|0
 argument_list|,
-argument|bool UseIntegratedAssembler = false
+name|bool
+name|UseIntegratedAssembler
+operator|=
+name|false
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|AbstractInterpreter
-operator|*
+modifier|*
 name|createLLI
 argument_list|(
 specifier|const
@@ -444,10 +508,10 @@ name|Args
 operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|AbstractInterpreter
-operator|*
+modifier|*
 name|createJIT
 argument_list|(
 specifier|const
@@ -475,10 +539,10 @@ name|Args
 operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|AbstractInterpreter
-operator|*
+modifier|*
 name|createCustom
 argument_list|(
 name|std
@@ -494,7 +558,7 @@ name|string
 operator|&
 name|ExecCommandLine
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 operator|~
 name|AbstractInterpreter
@@ -502,19 +566,20 @@ argument_list|()
 block|{}
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
-comment|/// the code generator.  If the code generator fails, an exception should be
-comment|/// thrown, otherwise, this function will just return.
+comment|/// the code generator.  It returns false if the code generator fails.
 name|virtual
 name|void
 name|compileProgram
 argument_list|(
 argument|const std::string&Bitcode
+argument_list|,
+argument|std::string *Error
 argument_list|)
 block|{}
 comment|/// OutputCode - Compile the specified program from bitcode to code
 comment|/// understood by the GCC driver (either C or asm).  If the code generator
-comment|/// fails, an exception should be thrown, otherwise, this function returns the
-comment|/// type of code emitted.
+comment|/// fails, it sets Error, otherwise, this function returns the type of code
+comment|/// emitted.
 name|virtual
 name|GCC
 operator|::
@@ -524,51 +589,135 @@ argument_list|(
 argument|const std::string&Bitcode
 argument_list|,
 argument|sys::Path&OutFile
+argument_list|,
+argument|std::string&Error
 argument_list|)
 block|{
-name|throw
-name|std
-operator|::
-name|string
-argument_list|(
+name|Error
+operator|=
 literal|"OutputCode not supported by this AbstractInterpreter!"
-argument_list|)
-block|;   }
+block|;
+return|return
+name|GCC
+operator|::
+name|AsmFile
+return|;
+block|}
 comment|/// ExecuteProgram - Run the specified bitcode file, emitting output to the
-comment|/// specified filename.  This returns the exit code of the program.
+comment|/// specified filename.  This sets RetVal to the exit code of the program or
+comment|/// returns false if a problem was encountered that prevented execution of
+comment|/// the program.
 comment|///
 name|virtual
 name|int
 name|ExecuteProgram
 argument_list|(
-argument|const std::string&Bitcode
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Bitcode
 argument_list|,
-argument|const std::vector<std::string>&Args
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Args
 argument_list|,
-argument|const std::string&InputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InputFile
 argument_list|,
-argument|const std::string&OutputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
 argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
+name|std
+operator|::
+name|string
+operator|*
+name|Error
 argument_list|,
-argument|const std::vector<std::string>&SharedLibs =                                std::vector<std::string>()
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|GCCArgs
+operator|=
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|(
+operator|)
 argument_list|,
-argument|unsigned Timeout =
-literal|0
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|SharedLibs
+operator|=
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|(
+operator|)
 argument_list|,
-argument|unsigned MemoryLimit =
-literal|0
-argument_list|)
+name|unsigned
+name|Timeout
 operator|=
 literal|0
-block|; }
-block|;
+argument_list|,
+name|unsigned
+name|MemoryLimit
+operator|=
+literal|0
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|//===---------------------------------------------------------------------===//
 comment|// CBE Implementation of AbstractIntepreter interface
 comment|//
 name|class
 name|CBE
-operator|:
+range|:
 name|public
 name|AbstractInterpreter
 block|{
@@ -655,8 +804,7 @@ name|gcc
 block|; }
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
-comment|/// the code generator.  If the code generator fails, an exception should be
-comment|/// thrown, otherwise, this function will just return.
+comment|/// the code generator.  Returns false if the code generator fails.
 name|virtual
 name|void
 name|compileProgram
@@ -667,6 +815,12 @@ operator|::
 name|string
 operator|&
 name|Bitcode
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Error
 argument_list|)
 block|;
 name|virtual
@@ -681,6 +835,8 @@ argument|const std::string&InputFile
 argument_list|,
 argument|const std::string&OutputFile
 argument_list|,
+argument|std::string *Error
+argument_list|,
 argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
 argument_list|,
 argument|const std::vector<std::string>&SharedLibs =                                std::vector<std::string>()
@@ -694,8 +850,8 @@ argument_list|)
 block|;
 comment|/// OutputCode - Compile the specified program from bitcode to code
 comment|/// understood by the GCC driver (either C or asm).  If the code generator
-comment|/// fails, an exception should be thrown, otherwise, this function returns the
-comment|/// type of code emitted.
+comment|/// fails, it sets Error, otherwise, this function returns the type of code
+comment|/// emitted.
 name|virtual
 name|GCC
 operator|::
@@ -714,15 +870,21 @@ operator|::
 name|Path
 operator|&
 name|OutFile
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 comment|//===---------------------------------------------------------------------===//
 comment|// LLC Implementation of AbstractIntepreter interface
 comment|//
 name|class
 name|LLC
-operator|:
+range|:
 name|public
 name|AbstractInterpreter
 block|{
@@ -824,8 +986,7 @@ name|gcc
 block|; }
 comment|/// compileProgram - Compile the specified program from bitcode to executable
 comment|/// code.  This does not produce any output, it is only used when debugging
-comment|/// the code generator.  If the code generator fails, an exception should be
-comment|/// thrown, otherwise, this function will just return.
+comment|/// the code generator.  Returns false if the code generator fails.
 name|virtual
 name|void
 name|compileProgram
@@ -836,31 +997,118 @@ operator|::
 name|string
 operator|&
 name|Bitcode
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Error
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|int
 name|ExecuteProgram
 argument_list|(
-argument|const std::string&Bitcode
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Bitcode
 argument_list|,
-argument|const std::vector<std::string>&Args
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|Args
 argument_list|,
-argument|const std::string&InputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InputFile
 argument_list|,
-argument|const std::string&OutputFile
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
 argument_list|,
-argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
+name|std
+operator|::
+name|string
+operator|*
+name|Error
 argument_list|,
-argument|const std::vector<std::string>&SharedLibs =                                 std::vector<std::string>()
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|GCCArgs
+operator|=
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|(
+operator|)
 argument_list|,
-argument|unsigned Timeout =
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|SharedLibs
+operator|=
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|unsigned
+name|Timeout
+operator|=
 literal|0
 argument_list|,
-argument|unsigned MemoryLimit =
+name|unsigned
+name|MemoryLimit
+operator|=
 literal|0
 argument_list|)
-block|;
+decl_stmt|;
+comment|/// OutputCode - Compile the specified program from bitcode to code
+comment|/// understood by the GCC driver (either C or asm).  If the code generator
+comment|/// fails, it sets Error, otherwise, this function returns the type of code
+comment|/// emitted.
 name|virtual
 name|GCC
 operator|::
@@ -879,13 +1127,23 @@ operator|::
 name|Path
 operator|&
 name|OutFile
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
-block|;    }
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

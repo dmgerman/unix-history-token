@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCParser/AsmLexer.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -183,13 +183,6 @@ operator|<
 name|AsmCond
 operator|>
 name|TheCondStack
-block|;
-comment|// FIXME: Figure out where this should leave, the code is a copy of that which
-comment|// is also used by TargetLoweringObjectFile.
-name|mutable
-name|void
-operator|*
-name|SectionUniquingMap
 block|;
 comment|/// DirectiveMap - This is a table handlers for directives.  Each handler is
 comment|/// invoked after the directive identifier is read and is responsible for
@@ -399,24 +392,6 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|;
-comment|// FIXME: See comment on SectionUniquingMap.
-specifier|const
-name|MCSection
-operator|*
-name|getMachOSection
-argument_list|(
-argument|const StringRef&Segment
-argument_list|,
-argument|const StringRef&Section
-argument_list|,
-argument|unsigned TypeAndAttributes
-argument_list|,
-argument|unsigned Reserved2
-argument_list|,
-argument|SectionKind Kind
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|ParseStatement
 argument_list|()
@@ -451,14 +426,6 @@ operator|::
 name|string
 operator|&
 name|Filename
-argument_list|)
-block|;
-name|bool
-name|ParseConditionalAssemblyDirectives
-argument_list|(
-argument|StringRef Directive
-argument_list|,
-argument|SMLoc DirectiveLoc
 argument_list|)
 block|;
 name|void

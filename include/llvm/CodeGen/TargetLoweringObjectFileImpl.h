@@ -121,11 +121,6 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
-name|mutable
-name|void
-operator|*
-name|UniquingMap
-block|;
 name|protected
 operator|:
 comment|/// TLSDataSection - Section directive for Thread Local data.
@@ -180,39 +175,15 @@ name|MCSection
 operator|*
 name|MergeableConst16Section
 block|;
-name|protected
-operator|:
-specifier|const
-name|MCSection
-operator|*
-name|getELFSection
-argument_list|(
-argument|StringRef Section
-argument_list|,
-argument|unsigned Type
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|SectionKind Kind
-argument_list|,
-argument|bool IsExplicit = false
-argument_list|)
-specifier|const
-block|;
 name|public
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
-operator|:
-name|UniquingMap
-argument_list|(
-literal|0
-argument_list|)
 block|{}
 operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
-block|;
+block|{}
 name|virtual
 name|void
 name|Initialize
@@ -310,11 +281,6 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
-name|mutable
-name|void
-operator|*
-name|UniquingMap
-block|;
 specifier|const
 name|MCSection
 operator|*
@@ -389,16 +355,11 @@ name|public
 operator|:
 name|TargetLoweringObjectFileMachO
 argument_list|()
-operator|:
-name|UniquingMap
-argument_list|(
-literal|0
-argument_list|)
 block|{}
 operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
-block|;
+block|{}
 name|virtual
 name|void
 name|Initialize
@@ -465,55 +426,6 @@ argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
 argument|Mangler *
-argument_list|)
-specifier|const
-block|;
-comment|/// getMachOSection - Return the MCSection for the specified mach-o section.
-comment|/// This requires the operands to be valid.
-specifier|const
-name|MCSectionMachO
-operator|*
-name|getMachOSection
-argument_list|(
-argument|StringRef Segment
-argument_list|,
-argument|StringRef Section
-argument_list|,
-argument|unsigned TypeAndAttributes
-argument_list|,
-argument|SectionKind K
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getMachOSection
-argument_list|(
-name|Segment
-argument_list|,
-name|Section
-argument_list|,
-name|TypeAndAttributes
-argument_list|,
-literal|0
-argument_list|,
-name|K
-argument_list|)
-return|;
-block|}
-specifier|const
-name|MCSectionMachO
-operator|*
-name|getMachOSection
-argument_list|(
-argument|StringRef Segment
-argument_list|,
-argument|StringRef Section
-argument_list|,
-argument|unsigned TypeAndAttributes
-argument_list|,
-argument|unsigned Reserved2
-argument_list|,
-argument|SectionKind K
 argument_list|)
 specifier|const
 block|;

@@ -199,8 +199,7 @@ name|bool
 name|IsUAMemFast
 block|;
 comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
-comment|///                  operands. This may require setting a feature bit in the
-comment|///                  processor.
+comment|/// operands. This may require setting a feature bit in the processor.
 name|bool
 name|HasVectorUAMem
 block|;

@@ -1068,8 +1068,16 @@ comment|/// getPredecessorWithUniqueSuccessorForBB - Return a predecessor of BB
 comment|/// (which may not be an immediate predecessor) which has exactly one
 comment|/// successor from which BB is reachable, or null if no such block is
 comment|/// found.
+name|std
+operator|::
+name|pair
+operator|<
 name|BasicBlock
 operator|*
+block|,
+name|BasicBlock
+operator|*
+operator|>
 name|getPredecessorWithUniqueSuccessorForBB
 argument_list|(
 name|BasicBlock
@@ -1148,6 +1156,20 @@ specifier|const
 name|Loop
 operator|*
 name|L
+argument_list|)
+block|;
+comment|/// isKnownPredicateWithRanges - Test if the given expression is known to
+comment|/// satisfy the condition described by Pred and the known constant ranges
+comment|/// of LHS and RHS.
+comment|///
+name|bool
+name|isKnownPredicateWithRanges
+argument_list|(
+argument|ICmpInst::Predicate Pred
+argument_list|,
+argument|const SCEV *LHS
+argument_list|,
+argument|const SCEV *RHS
 argument_list|)
 block|;
 name|public
@@ -2006,11 +2028,11 @@ operator|*
 name|L
 argument_list|)
 block|;
-comment|/// isLoopGuardedByCond - Test whether entry to the loop is protected by
-comment|/// a conditional between LHS and RHS.  This is used to help avoid max
+comment|/// isLoopEntryGuardedByCond - Test whether entry to the loop is protected
+comment|/// by a conditional between LHS and RHS.  This is used to help avoid max
 comment|/// expressions in loop trip counts, and to eliminate casts.
 name|bool
-name|isLoopGuardedByCond
+name|isLoopEntryGuardedByCond
 argument_list|(
 argument|const Loop *L
 argument_list|,
@@ -2200,7 +2222,7 @@ operator|*
 name|S
 argument_list|)
 block|;
-comment|/// isKnownNonZero - Test if the given expression is known to satisfy
+comment|/// isKnownPredicate - Test if the given expression is known to satisfy
 comment|/// the condition described by Pred, LHS, and RHS.
 comment|///
 name|bool
@@ -2211,6 +2233,33 @@ argument_list|,
 argument|const SCEV *LHS
 argument_list|,
 argument|const SCEV *RHS
+argument_list|)
+block|;
+comment|/// SimplifyICmpOperands - Simplify LHS and RHS in a comparison with
+comment|/// predicate Pred. Return true iff any changes were made. If the
+comment|/// operands are provably equal or inequal, LHS and RHS are set to
+comment|/// the same value and Pred is set to either ICMP_EQ or ICMP_NE.
+comment|///
+name|bool
+name|SimplifyICmpOperands
+argument_list|(
+name|ICmpInst
+operator|::
+name|Predicate
+operator|&
+name|Pred
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+operator|&
+name|RHS
 argument_list|)
 block|;
 name|virtual

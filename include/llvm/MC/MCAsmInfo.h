@@ -223,6 +223,11 @@ comment|/// names to start with a digit (e.g., "0x0021").  This defaults to fals
 name|bool
 name|AllowNameToStartWithDigit
 decl_stmt|;
+comment|/// AllowPeriodsInName - This is true if the assembler allows periods in
+comment|/// symbol names.  This defaults to true.
+name|bool
+name|AllowPeriodsInName
+decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
 comment|/// ZeroDirective - this should be set to the directive used to get some
 comment|/// number of zero bytes emitted to the current section.  Common cases are
@@ -664,6 +669,7 @@ comment|/// getNonexecutableStackSection - Targets can implement this method to
 comment|/// specify a section to switch to if the translation unit doesn't have any
 comment|/// trampolines that require an executable stack.
 name|virtual
+specifier|const
 name|MCSection
 modifier|*
 name|getNonexecutableStackSection
@@ -854,6 +860,15 @@ specifier|const
 block|{
 return|return
 name|AllowNameToStartWithDigit
+return|;
+block|}
+name|bool
+name|doesAllowPeriodsInName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowPeriodsInName
 return|;
 block|}
 specifier|const

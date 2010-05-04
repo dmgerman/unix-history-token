@@ -65,16 +65,27 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGNodes.h"
+file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_decl_stmt
@@ -98,6 +109,9 @@ name|MachineConstantPool
 decl_stmt|;
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineFrameInfo
@@ -176,11 +190,29 @@ operator|>
 operator|&
 name|StaticAllocaMap
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+name|unsigned
+operator|>
+expr|>
+operator|&
+name|PHINodesToUpdate
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 operator|,
@@ -270,21 +302,6 @@ operator|=
 name|mbb
 expr_stmt|;
 block|}
-comment|/// setCurDebugLoc - Set the current debug location information, which is used
-comment|/// when creating a machine instruction.
-comment|///
-name|void
-name|setCurDebugLoc
-parameter_list|(
-name|DebugLoc
-name|dl
-parameter_list|)
-block|{
-name|DL
-operator|=
-name|dl
-expr_stmt|;
-block|}
 comment|/// getCurDebugLoc() - Return current debug location information.
 name|DebugLoc
 name|getCurDebugLoc
@@ -302,6 +319,7 @@ comment|///
 name|bool
 name|SelectInstruction
 parameter_list|(
+specifier|const
 name|Instruction
 modifier|*
 name|I
@@ -315,6 +333,7 @@ comment|///
 name|bool
 name|SelectOperator
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -328,6 +347,7 @@ comment|/// be assigned the value for the given LLVM value.
 name|unsigned
 name|getRegForValue
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -339,6 +359,7 @@ comment|/// defined locally.
 name|unsigned
 name|lookUpRegForValue
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -350,6 +371,7 @@ comment|/// index value.
 name|unsigned
 name|getRegForGEPIndex
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -401,12 +423,30 @@ name|int
 operator|>
 operator|&
 name|am
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+argument_list|,
+name|unsigned
+operator|>
+expr|>
+operator|&
+name|PHINodesToUpdate
 ifndef|#
 directive|ifndef
 name|NDEBUG
 argument_list|,
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 argument_list|,
@@ -427,6 +467,7 @@ name|virtual
 name|bool
 name|TargetSelectInstruction
 parameter_list|(
+specifier|const
 name|Instruction
 modifier|*
 name|I
@@ -540,6 +581,7 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
@@ -611,6 +653,7 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
@@ -655,6 +698,7 @@ parameter_list|,
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
@@ -752,6 +796,7 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
@@ -839,6 +884,7 @@ function_decl|;
 name|unsigned
 name|UpdateValueMap
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|I
@@ -862,6 +908,7 @@ name|virtual
 name|unsigned
 name|TargetMaterializeConstant
 parameter_list|(
+specifier|const
 name|Constant
 modifier|*
 name|C
@@ -877,6 +924,7 @@ name|virtual
 name|unsigned
 name|TargetMaterializeAlloca
 parameter_list|(
+specifier|const
 name|AllocaInst
 modifier|*
 name|C
@@ -891,6 +939,7 @@ label|:
 name|bool
 name|SelectBinaryOp
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -902,6 +951,7 @@ function_decl|;
 name|bool
 name|SelectFNeg
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -910,6 +960,7 @@ function_decl|;
 name|bool
 name|SelectGetElementPtr
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -918,6 +969,7 @@ function_decl|;
 name|bool
 name|SelectCall
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -926,6 +978,7 @@ function_decl|;
 name|bool
 name|SelectBitCast
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
@@ -934,12 +987,43 @@ function_decl|;
 name|bool
 name|SelectCast
 parameter_list|(
+specifier|const
 name|User
 modifier|*
 name|I
 parameter_list|,
 name|unsigned
 name|Opcode
+parameter_list|)
+function_decl|;
+comment|/// HandlePHINodesInSuccessorBlocks - Handle PHI nodes in successor blocks.
+comment|/// Emit code to ensure constants are copied into registers when needed.
+comment|/// Remember the virtual registers that need to be added to the Machine PHI
+comment|/// nodes as input.  We cannot just directly add them, because expansion
+comment|/// might result in multiple MBB's for one BB.  As such, the start of the
+comment|/// BB might correspond to a different MBB than the end.
+name|bool
+name|HandlePHINodesInSuccessorBlocks
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|LLVMBB
+parameter_list|)
+function_decl|;
+comment|/// materializeRegForValue - Helper for getRegForVale. This function is
+comment|/// called when the value isn't already available in a register and must
+comment|/// be materialized with new instructions.
+name|unsigned
+name|materializeRegForValue
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|MVT
+name|VT
 parameter_list|)
 function_decl|;
 block|}

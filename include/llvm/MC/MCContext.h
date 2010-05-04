@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/SectionKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -82,6 +88,9 @@ name|StringRef
 decl_stmt|;
 name|class
 name|Twine
+decl_stmt|;
+name|class
+name|MCSectionMachO
 decl_stmt|;
 comment|/// MCContext - Context object for machine code objects.  This class owns all
 comment|/// of the sections that it creates.
@@ -141,6 +150,13 @@ comment|/// We use a bump pointer allocator to avoid the need to track all alloc
 comment|/// objects.
 name|BumpPtrAllocator
 name|Allocator
+decl_stmt|;
+name|void
+modifier|*
+name|MachOUniquingMap
+decl_stmt|,
+modifier|*
+name|ELFUniquingMap
 decl_stmt|;
 name|public
 label|:
@@ -210,6 +226,88 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// @}
+comment|/// @name Section Managment
+comment|/// @{
+comment|/// getMachOSection - Return the MCSection for the specified mach-o section.
+comment|/// This requires the operands to be valid.
+specifier|const
+name|MCSectionMachO
+modifier|*
+name|getMachOSection
+parameter_list|(
+name|StringRef
+name|Segment
+parameter_list|,
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|TypeAndAttributes
+parameter_list|,
+name|unsigned
+name|Reserved2
+parameter_list|,
+name|SectionKind
+name|K
+parameter_list|)
+function_decl|;
+specifier|const
+name|MCSectionMachO
+modifier|*
+name|getMachOSection
+parameter_list|(
+name|StringRef
+name|Segment
+parameter_list|,
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|TypeAndAttributes
+parameter_list|,
+name|SectionKind
+name|K
+parameter_list|)
+block|{
+return|return
+name|getMachOSection
+argument_list|(
+name|Segment
+argument_list|,
+name|Section
+argument_list|,
+name|TypeAndAttributes
+argument_list|,
+literal|0
+argument_list|,
+name|K
+argument_list|)
+return|;
+block|}
+specifier|const
+name|MCSection
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|SectionKind
+name|Kind
+parameter_list|,
+name|bool
+name|IsExplicit
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// @}
 name|void
 modifier|*

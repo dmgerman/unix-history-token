@@ -691,26 +691,6 @@ range|:
 name|public
 name|TargetLowering
 block|{
-name|int
-name|VarArgsFrameIndex
-block|;
-comment|// FrameIndex for start of varargs area.
-name|int
-name|RegSaveFrameIndex
-block|;
-comment|// X86-64 vararg func register save area.
-name|unsigned
-name|VarArgsGPOffset
-block|;
-comment|// X86-64 vararg func int reg offset.
-name|unsigned
-name|VarArgsFPOffset
-block|;
-comment|// X86-64 vararg func fp reg offset.
-name|int
-name|BytesToPopOnReturn
-block|;
-comment|// Number of arg bytes ret should pop.
 name|public
 operator|:
 name|explicit
@@ -780,18 +760,6 @@ argument|MCContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|// Return the number of bytes that a function should pop when it returns (in
-comment|// addition to the space used by the return address).
-comment|//
-name|unsigned
-name|getBytesToPopOnReturn
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BytesToPopOnReturn
-return|;
-block|}
 comment|/// getStackPtrReg - Return the stack pointer register we are using: either
 comment|/// ESP or RSP.
 name|unsigned
@@ -823,8 +791,10 @@ comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
 comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-comment|/// from memory. It returns EVT::Other if SelectionDAG should be responsible
-comment|/// for determining it.
+comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
+comment|/// constant so it does not need to be loaded.
+comment|/// It returns EVT::Other if the type should be determined using generic
+comment|/// target-independent logic.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -837,7 +807,9 @@ argument|unsigned SrcAlign
 argument_list|,
 argument|bool NonScalarIntSafe
 argument_list|,
-argument|SelectionDAG&DAG
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -865,6 +837,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
@@ -873,21 +846,13 @@ name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -899,6 +864,34 @@ argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
+comment|/// isTypeDesirableForOp - Return true if the target has native support for
+comment|/// the specified value type and it is 'desirable' to use the type for the
+comment|/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
+comment|/// instruction encodings are longer and some i16 instructions are slow.
+name|virtual
+name|bool
+name|isTypeDesirableForOp
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+comment|/// isTypeDesirable - Return true if the target has native support for the
+comment|/// specified value type and it is 'desirable' to use the type. e.g. On x86
+comment|/// i16 is legal, but undesirable since i16 instruction encodings are longer
+comment|/// and some i16 instructions are slow.
+name|virtual
+name|bool
+name|IsDesirableToPromoteOp
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|EVT&PVT
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|MachineBasicBlock
 operator|*
@@ -907,10 +900,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -965,7 +954,7 @@ name|isGAPlusOffset
 argument_list|(
 argument|SDNode *N
 argument_list|,
-argument|GlobalValue*&GA
+argument|const GlobalValue*&GA
 argument_list|,
 argument|int64_t&Offset
 argument_list|)
@@ -974,10 +963,9 @@ block|;
 name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool
@@ -1208,6 +1196,7 @@ name|X86Subtarget
 operator|*
 name|getSubtarget
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Subtarget
@@ -1253,55 +1242,35 @@ name|FastISel
 operator|*
 name|createFastISel
 argument_list|(
-name|MachineFunction
-operator|&
-name|mf
+argument|MachineFunction&mf
 argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|Value
-operator|*
+argument|DenseMap<const Value *
 argument_list|,
-name|unsigned
-operator|>
-operator|&
+argument|unsigned>&
 argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
+argument|DenseMap<const BasicBlock *
 argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|&
+argument|MachineBasicBlock *>&
 argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|AllocaInst
-operator|*
+argument|DenseMap<const AllocaInst *
 argument_list|,
-name|int
-operator|>
-operator|&
+argument|int>&
+argument_list|,
+argument|std::vector<std::pair<MachineInstr*
+argument_list|,
+argument|unsigned>>&
 ifndef|#
 directive|ifndef
 name|NDEBUG
 argument_list|,
-name|SmallSet
-operator|<
-name|Instruction
-operator|*
+argument|SmallSet<const Instruction *
 argument_list|,
 literal|8
-operator|>
-operator|&
+argument|>&
 endif|#
 directive|endif
 argument_list|)
+specifier|const
 block|;
 comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
 name|virtual
@@ -1388,6 +1357,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMemArgument
@@ -1408,6 +1378,7 @@ argument|MachineFrameInfo *MFI
 argument_list|,
 argument|unsigned i
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMemOpCallTo
@@ -1426,6 +1397,7 @@ argument|const CCValAssign&VA
 argument_list|,
 argument|ISD::ArgFlagsTy Flags
 argument_list|)
+specifier|const
 block|;
 comment|// Call lowering helpers.
 comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
@@ -1459,6 +1431,7 @@ argument|bool isVarArg
 argument_list|,
 argument|CallingConv::ID CallConv
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|EmitTailCallLoadRetAddr
@@ -1477,6 +1450,7 @@ argument|int FPDiff
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 name|CCAssignFn
 operator|*
@@ -1493,6 +1467,7 @@ argument|unsigned StackSize
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|std
 operator|::
@@ -1510,6 +1485,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|bool isSigned
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerAsSplatVectorLoad
@@ -1522,6 +1498,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBUILD_VECTOR
@@ -1530,6 +1507,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCONCAT_VECTORS
@@ -1538,6 +1516,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVECTOR_SHUFFLE
@@ -1546,6 +1525,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerEXTRACT_VECTOR_ELT
@@ -1554,6 +1534,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerEXTRACT_VECTOR_ELT_SSE4
@@ -1562,6 +1543,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerINSERT_VECTOR_ELT
@@ -1570,6 +1552,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerINSERT_VECTOR_ELT_SSE4
@@ -1578,6 +1561,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSCALAR_TO_VECTOR
@@ -1586,6 +1570,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerConstantPool
@@ -1594,6 +1579,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
@@ -1602,6 +1588,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress
@@ -1623,6 +1610,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalTLSAddress
@@ -1631,6 +1619,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerExternalSymbol
@@ -1639,6 +1628,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerShift
@@ -1647,6 +1637,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|BuildFILD
@@ -1661,6 +1652,7 @@ argument|SDValue StackSlot
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSINT_TO_FP
@@ -1669,6 +1661,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerUINT_TO_FP
@@ -1677,6 +1670,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerUINT_TO_FP_i64
@@ -1685,6 +1679,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerUINT_TO_FP_i32
@@ -1693,6 +1688,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFP_TO_SINT
@@ -1701,6 +1697,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFP_TO_UINT
@@ -1709,6 +1706,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFABS
@@ -1717,6 +1715,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFNEG
@@ -1725,6 +1724,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFCOPYSIGN
@@ -1733,6 +1733,20 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerToBT
+argument_list|(
+argument|SDValue And
+argument_list|,
+argument|ISD::CondCode CC
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSETCC
@@ -1741,6 +1755,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVSETCC
@@ -1749,6 +1764,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSELECT
@@ -1757,6 +1773,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBRCOND
@@ -1765,6 +1782,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMEMSET
@@ -1773,6 +1791,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerJumpTable
@@ -1781,6 +1800,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerDYNAMIC_STACKALLOC
@@ -1789,6 +1809,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVASTART
@@ -1797,6 +1818,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVAARG
@@ -1805,6 +1827,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVACOPY
@@ -1813,6 +1836,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
@@ -1821,6 +1845,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerRETURNADDR
@@ -1829,6 +1854,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFRAMEADDR
@@ -1837,6 +1863,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFRAME_TO_ARGS_OFFSET
@@ -1845,6 +1872,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerEH_RETURN
@@ -1853,6 +1881,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerTRAMPOLINE
@@ -1861,6 +1890,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFLT_ROUNDS_
@@ -1869,6 +1899,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCTLZ
@@ -1877,6 +1908,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCTTZ
@@ -1885,6 +1917,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMUL_V2I64
@@ -1893,6 +1926,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerXALUO
@@ -1901,6 +1935,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCMP_SWAP
@@ -1909,6 +1944,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerLOAD_SUB
@@ -1917,6 +1953,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerREADCYCLECOUNTER
@@ -1925,6 +1962,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1944,6 +1982,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1969,6 +2008,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1986,6 +2026,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool
@@ -2001,6 +2042,7 @@ argument|const SmallVectorImpl<ISD::ArgFlagsTy>&ArgsFlags
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|void
 name|ReplaceATOMIC_BINARY_64
@@ -2013,6 +2055,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|unsigned NewOp
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|EmitTargetCodeForMemset
@@ -2037,6 +2080,7 @@ argument|const Value *DstSV
 argument_list|,
 argument|uint64_t DstSVOff
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|EmitTargetCodeForMemcpy
@@ -2067,6 +2111,7 @@ argument|const Value *SrcSV
 argument_list|,
 argument|uint64_t SrcSVOff
 argument_list|)
+specifier|const
 block|;
 comment|/// Utility function to emit string processing sse4.2 instructions
 comment|/// that return in xmm0.
@@ -2171,10 +2216,6 @@ argument_list|(
 argument|MachineInstr *I
 argument_list|,
 argument|MachineBasicBlock *BB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -2185,10 +2226,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -2203,6 +2240,7 @@ argument|unsigned X86CC
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// Emit nodes that will be selected as "cmp Op0,Op1", or something
 comment|/// equivalent, for use with the given x86 condition code.
@@ -2217,6 +2255,7 @@ argument|unsigned X86CC
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 name|namespace
@@ -2260,12 +2299,29 @@ argument_list|,
 name|int
 operator|>
 operator|&
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+argument_list|,
+name|unsigned
+operator|>
+expr|>
+operator|&
 ifndef|#
 directive|ifndef
 name|NDEBUG
 argument_list|,
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 argument_list|,

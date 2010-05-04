@@ -84,6 +84,10 @@ comment|///
 name|bool
 name|UsesLR
 block|;
+comment|// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
 name|public
 operator|:
 name|SPUFunctionInfo
@@ -95,7 +99,12 @@ argument_list|)
 operator|:
 name|UsesLR
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|VarArgsFrameIndex
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|void
@@ -116,6 +125,25 @@ return|return
 name|UsesLR
 return|;
 block|}
+name|int
+name|getVarArgsFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameIndex
+return|;
+block|}
+name|void
+name|setVarArgsFrameIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsFrameIndex
+operator|=
+name|Index
+block|; }
 expr|}
 block|;  }
 end_decl_stmt

@@ -334,6 +334,7 @@ modifier|*
 name|LandingPadLabel
 decl_stmt|;
 comment|// Label at beginning of landing pad.
+specifier|const
 name|Function
 modifier|*
 name|Personality
@@ -392,6 +393,7 @@ name|MCContext
 name|Context
 block|;
 comment|/// TheModule - This is the LLVM Module being worked on.
+specifier|const
 name|Module
 operator|*
 name|TheModule
@@ -444,6 +446,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -476,6 +479,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|Function
 operator|*
 operator|>
@@ -605,6 +609,7 @@ block|}
 name|void
 name|setModule
 parameter_list|(
+specifier|const
 name|Module
 modifier|*
 name|M
@@ -615,6 +620,7 @@ operator|=
 name|M
 expr_stmt|;
 block|}
+specifier|const
 name|Module
 operator|*
 name|getModule
@@ -712,6 +718,7 @@ begin_function_decl
 name|void
 name|AnalyzeModule
 parameter_list|(
+specifier|const
 name|Module
 modifier|&
 name|M
@@ -1017,6 +1024,7 @@ name|MachineBasicBlock
 modifier|*
 name|LandingPad
 parameter_list|,
+specifier|const
 name|Function
 modifier|*
 name|Personality
@@ -1050,6 +1058,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|Function
 operator|*
 operator|>
@@ -1117,6 +1126,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -1146,6 +1156,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -1186,6 +1197,7 @@ begin_function_decl
 name|unsigned
 name|getTypeIDFor
 parameter_list|(
+specifier|const
 name|GlobalVariable
 modifier|*
 name|TI
@@ -1225,12 +1237,24 @@ begin_comment
 comment|/// pads.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|TidyLandingPads
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+argument_list|,
+name|uintptr_t
+operator|>
+operator|*
+name|LPMap
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getLandingPads - Return a reference to the landing pad info for the
@@ -1373,6 +1397,7 @@ name|std
 operator|::
 name|vector
 operator|<
+specifier|const
 name|GlobalVariable
 operator|*
 operator|>
@@ -1423,6 +1448,7 @@ comment|/// of one is required to emit exception handling info.
 end_comment
 
 begin_expr_stmt
+specifier|const
 name|Function
 operator|*
 name|getPersonality

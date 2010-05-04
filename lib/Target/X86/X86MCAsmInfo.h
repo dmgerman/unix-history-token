@@ -116,6 +116,7 @@ name|Triple
 argument_list|)
 block|;
 name|virtual
+specifier|const
 name|MCSection
 operator|*
 name|getNonexecutableStackSection

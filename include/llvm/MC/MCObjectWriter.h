@@ -155,7 +155,8 @@ argument_list|()
 expr_stmt|;
 name|bool
 name|isLittleEndian
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|IsLittleEndian

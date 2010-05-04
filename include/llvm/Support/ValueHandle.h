@@ -1518,7 +1518,7 @@ name|ValueHandleBase
 argument_list|(
 argument|Tracking
 argument_list|,
-argument|P
+argument|GetAsValue(P)
 argument_list|)
 block|{}
 name|TrackingVH

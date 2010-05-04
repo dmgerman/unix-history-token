@@ -175,6 +175,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|/// DAG node.
@@ -204,6 +205,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress
@@ -212,6 +214,16 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBlockAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerExternalSymbol
@@ -220,6 +232,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBR_CC
@@ -228,6 +241,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSETCC
@@ -236,6 +250,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSELECT_CC
@@ -244,6 +259,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSIGN_EXTEND
@@ -252,6 +268,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerRETURNADDR
@@ -260,6 +277,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFRAMEADDR
@@ -268,14 +286,14 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|TargetLowering
 operator|::
@@ -362,10 +380,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -376,10 +390,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -408,6 +418,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCCCArguments
@@ -426,6 +437,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCallResult
@@ -446,6 +458,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -465,6 +478,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -490,6 +504,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -507,6 +522,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool

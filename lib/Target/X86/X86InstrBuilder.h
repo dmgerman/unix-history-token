@@ -162,6 +162,7 @@ decl_stmt|;
 name|int
 name|Disp
 decl_stmt|;
+specifier|const
 name|GlobalValue
 modifier|*
 name|GV

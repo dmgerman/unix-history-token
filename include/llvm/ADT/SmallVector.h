@@ -207,6 +207,9 @@ name|__attribute__
 argument_list|(
 operator|(
 name|aligned
+argument_list|(
+literal|8
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;

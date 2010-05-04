@@ -86,6 +86,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+struct_decl|struct
+name|EDInstInfo
+struct_decl|;
 comment|/// ARMDisassembler - ARM disassembler for all ARM platforms.
 name|class
 name|ARMDisassembler
@@ -121,6 +124,13 @@ argument|uint64_t address
 argument_list|,
 argument|raw_ostream&vStream
 argument_list|)
+specifier|const
+block|;
+comment|/// getEDInfo - See MCDisassembler.
+name|EDInstInfo
+operator|*
+name|getEDInfo
+argument_list|()
 specifier|const
 block|;
 name|private
@@ -159,7 +169,7 @@ name|Session
 argument_list|()
 block|{}
 comment|/// InitIT - Initializes ITCounter/ITState.
-name|void
+name|bool
 name|InitIT
 argument_list|(
 argument|unsigned short bits7_0
@@ -220,6 +230,13 @@ argument|uint64_t address
 argument_list|,
 argument|raw_ostream&vStream
 argument_list|)
+specifier|const
+block|;
+comment|/// getEDInfo - See MCDisassembler.
+name|EDInstInfo
+operator|*
+name|getEDInfo
+argument_list|()
 specifier|const
 block|;
 name|private

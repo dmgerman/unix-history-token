@@ -91,10 +91,10 @@ comment|//===-------------------------------------------------------------------
 name|template
 operator|<
 name|class
-name|_Ptr
+name|Ptr
 operator|,
 name|class
-name|_USE_iterator
+name|USE_iterator
 operator|>
 comment|// Predecessor Iterator
 name|class
@@ -109,7 +109,7 @@ name|std
 operator|::
 name|forward_iterator_tag
 operator|,
-name|_Ptr
+name|Ptr
 operator|,
 name|ptrdiff_t
 operator|>
@@ -123,39 +123,30 @@ name|std
 operator|::
 name|forward_iterator_tag
 operator|,
-name|_Ptr
+name|Ptr
 operator|,
 name|ptrdiff_t
 operator|>
 name|super
 expr_stmt|;
-name|_USE_iterator
-name|It
-expr_stmt|;
-name|public
-label|:
 typedef|typedef
 name|PredIterator
 operator|<
-name|_Ptr
+name|Ptr
 operator|,
-name|_USE_iterator
+name|USE_iterator
 operator|>
-name|_Self
+name|Self
 expr_stmt|;
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|pointer
-name|pointer
-expr_stmt|;
+name|USE_iterator
+name|It
+decl_stmt|;
 specifier|inline
 name|void
 name|advancePastNonTerminators
 parameter_list|()
 block|{
-comment|// Loop to ignore non terminator uses (for example PHI nodes)...
+comment|// Loop to ignore non terminator uses (for example PHI nodes).
 while|while
 condition|(
 operator|!
@@ -178,10 +169,20 @@ operator|++
 name|It
 expr_stmt|;
 block|}
+name|public
+label|:
+typedef|typedef
+name|typename
+name|super
+operator|::
+name|pointer
+name|pointer
+expr_stmt|;
+name|explicit
 specifier|inline
 name|PredIterator
 argument_list|(
-name|_Ptr
+name|Ptr
 operator|*
 name|bb
 argument_list|)
@@ -197,7 +198,7 @@ block|;   }
 specifier|inline
 name|PredIterator
 argument_list|(
-name|_Ptr
+name|Ptr
 operator|*
 name|bb
 argument_list|,
@@ -215,7 +216,7 @@ name|operator
 operator|==
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -235,7 +236,7 @@ name|operator
 operator|!=
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -306,7 +307,7 @@ end_decl_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|++
@@ -340,7 +341,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 name|operator
 operator|++
 operator|(
@@ -348,7 +349,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|_Self
+name|Self
 name|tmp
 operator|=
 operator|*
@@ -537,8 +538,6 @@ name|ptrdiff_t
 operator|>
 name|super
 expr_stmt|;
-name|public
-operator|:
 end_expr_stmt
 
 begin_typedef
@@ -549,9 +548,41 @@ name|Term_
 operator|,
 name|BB_
 operator|>
-name|_Self
+name|Self
 expr_stmt|;
 end_typedef
+
+begin_function
+specifier|inline
+name|bool
+name|index_is_valid
+parameter_list|(
+name|int
+name|idx
+parameter_list|)
+block|{
+return|return
+name|idx
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|idx
+operator|<
+name|Term
+operator|->
+name|getNumSuccessors
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_typedef
 typedef|typedef
@@ -566,6 +597,10 @@ end_typedef
 begin_comment
 comment|// TODO: This can be random access iterator, only operator[] missing.
 end_comment
+
+begin_macro
+name|explicit
+end_macro
 
 begin_expr_stmt
 specifier|inline
@@ -620,13 +655,13 @@ argument_list|)
 block|;   }
 specifier|inline
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|=
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|I
 operator|)
@@ -655,33 +690,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
-specifier|inline
-name|bool
-name|index_is_valid
-parameter_list|(
-name|int
-name|idx
-parameter_list|)
-block|{
-return|return
-name|idx
-operator|>=
-literal|0
-operator|&&
-operator|(
-name|unsigned
-operator|)
-name|idx
-operator|<
-name|Term
-operator|->
-name|getNumSuccessors
-argument_list|()
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/// getSuccessorIndex - This is used to interface between code that wants to
 end_comment
@@ -709,7 +717,7 @@ name|operator
 operator|==
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -732,7 +740,7 @@ name|operator
 operator|!=
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -792,7 +800,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|++
@@ -815,7 +823,7 @@ end_comment
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 name|operator
 operator|++
 operator|(
@@ -823,7 +831,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|_Self
+name|Self
 name|tmp
 operator|=
 operator|*
@@ -841,7 +849,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|--
@@ -864,7 +872,7 @@ end_comment
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 name|operator
 operator|--
 operator|(
@@ -872,7 +880,7 @@ name|int
 operator|)
 block|{
 comment|// Postdecrement
-name|_Self
+name|Self
 name|tmp
 operator|=
 operator|*
@@ -895,7 +903,7 @@ name|operator
 operator|<
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -929,7 +937,7 @@ name|operator
 operator|<=
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -963,7 +971,7 @@ name|operator
 operator|>=
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -997,7 +1005,7 @@ name|operator
 operator|>
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -1026,7 +1034,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|+=
@@ -1065,7 +1073,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 name|operator
 operator|+
 operator|(
@@ -1073,7 +1081,7 @@ name|int
 name|Right
 operator|)
 block|{
-name|_Self
+name|Self
 name|tmp
 operator|=
 operator|*
@@ -1091,7 +1099,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 operator|&
 name|operator
 operator|-=
@@ -1113,7 +1121,7 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|_Self
+name|Self
 name|operator
 operator|-
 operator|(
@@ -1139,7 +1147,7 @@ name|operator
 operator|-
 operator|(
 specifier|const
-name|_Self
+name|Self
 operator|&
 name|x
 operator|)
@@ -1191,7 +1199,7 @@ comment|// inline pointer operator[](int offset) {
 end_comment
 
 begin_comment
-comment|//  _Self tmp = *this;
+comment|//  Self tmp = *this;
 end_comment
 
 begin_comment

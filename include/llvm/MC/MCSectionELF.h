@@ -96,8 +96,12 @@ comment|/// explicit section specified.
 name|bool
 name|IsExplicit
 block|;
-name|protected
+name|private
 operator|:
+name|friend
+name|class
+name|MCContext
+block|;
 name|MCSectionELF
 argument_list|(
 argument|StringRef Section
@@ -136,26 +140,12 @@ argument_list|(
 argument|isExplicit
 argument_list|)
 block|{}
+operator|~
+name|MCSectionELF
+argument_list|()
+block|;
 name|public
 operator|:
-specifier|static
-name|MCSectionELF
-operator|*
-name|Create
-argument_list|(
-argument|StringRef Section
-argument_list|,
-argument|unsigned Type
-argument_list|,
-argument|unsigned Flags
-argument_list|,
-argument|SectionKind K
-argument_list|,
-argument|bool isExplicit
-argument_list|,
-argument|MCContext&Ctx
-argument_list|)
-block|;
 comment|/// ShouldOmitSectionDirective - Decides whether a '.section' directive
 comment|/// should be printed before the section name
 name|bool
@@ -336,21 +326,20 @@ name|SHF_TLS
 operator|=
 literal|0x400U
 block|,
-comment|/// FIRST_TARGET_DEP_FLAG - This is the first flag that subclasses are
-comment|/// allowed to specify.
-name|FIRST_TARGET_DEP_FLAG
+comment|// Start of target-specific flags.
+comment|/// XCORE_SHF_CP_SECTION - All sections with the "c" flag are grouped
+comment|/// together by the linker to form the constant pool and the cp register is
+comment|/// set to the start of the constant pool by the boot code.
+name|XCORE_SHF_CP_SECTION
 operator|=
 literal|0x800U
 block|,
-comment|/// TARGET_INDEP_SHF - This is the bitmask for all the target independent
-comment|/// section flags.  Targets can define their own target flags above these.
-comment|/// If they do that, they should implement their own MCSectionELF subclasses
-comment|/// and implement the virtual method hooks below to handle printing needs.
-name|TARGET_INDEP_SHF
+comment|/// XCORE_SHF_DP_SECTION - All sections with the "d" flag are grouped
+comment|/// together by the linker to form the data section and the dp register is
+comment|/// set to the start of the section by the boot code.
+name|XCORE_SHF_DP_SECTION
 operator|=
-name|FIRST_TARGET_DEP_FLAG
-operator|-
-literal|1U
+literal|0x1000U
 block|}
 block|;
 name|StringRef
@@ -380,7 +369,6 @@ return|return
 name|Flags
 return|;
 block|}
-name|virtual
 name|void
 name|PrintSwitchToSection
 argument_list|(
@@ -409,20 +397,6 @@ operator|==
 literal|0
 return|;
 block|}
-comment|/// PrintTargetSpecificSectionFlags - Targets that define their own
-comment|/// MCSectionELF subclasses with target specific section flags should
-comment|/// implement this method if they end up adding letters to the attributes
-comment|/// list.
-name|virtual
-name|void
-name|PrintTargetSpecificSectionFlags
-argument_list|(
-argument|const MCAsmInfo&MAI
-argument_list|,
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|{   }
 expr|}
 block|;  }
 end_decl_stmt

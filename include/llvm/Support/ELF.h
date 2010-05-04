@@ -388,6 +388,18 @@ literal|0xffff
 comment|// Processor-specific
 block|}
 enum|;
+comment|// Versioning
+enum|enum
+block|{
+name|EV_NONE
+init|=
+literal|0
+block|,
+name|EV_CURRENT
+init|=
+literal|1
+block|}
+enum|;
 comment|// Machine architectures
 enum|enum
 block|{
@@ -488,6 +500,14 @@ name|ELFDATA2MSB
 init|=
 literal|2
 comment|// Big-endian object file
+block|}
+enum|;
+comment|// OS ABI identification -- unused.
+enum|enum
+block|{
+name|ELFOSABI_NONE
+init|=
+literal|0
 block|}
 enum|;
 comment|// Section header.

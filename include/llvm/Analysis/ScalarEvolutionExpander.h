@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/ScalarEvolutionNormalization.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/IRBuilder.h"
 end_include
 
@@ -141,15 +147,13 @@ operator|*
 operator|>
 name|InsertedValues
 expr_stmt|;
-comment|/// PostIncLoop - When non-null, expanded addrecs referring to the given
-comment|/// loop expanded in post-inc mode. For example, expanding {1,+,1}<L> in
-comment|/// post-inc mode returns the add instruction that adds one to the phi
-comment|/// for {0,+,1}<L>, as opposed to a new phi starting at 1. This is only
-comment|/// supported in non-canonical mode.
-specifier|const
-name|Loop
-modifier|*
-name|PostIncLoop
+comment|/// PostIncLoops - Addrecs referring to any of the given loops are expanded
+comment|/// in post-inc mode. For example, expanding {1,+,1}<L> in post-inc mode
+comment|/// returns the add instruction that adds one to the phi for {0,+,1}<L>,
+comment|/// as opposed to a new phi starting at 1. This is only supported in
+comment|/// non-canonical mode.
+name|PostIncLoopSet
+name|PostIncLoops
 decl_stmt|;
 comment|/// IVIncInsertPos - When this is non-null, addrecs expanded in the
 comment|/// loop it indicates should be inserted with increments at
@@ -208,11 +212,6 @@ operator|:
 name|SE
 argument_list|(
 name|se
-argument_list|)
-operator|,
-name|PostIncLoop
-argument_list|(
-literal|0
 argument_list|)
 operator|,
 name|IVIncInsertLoop
@@ -316,16 +315,15 @@ operator|=
 name|Pos
 expr_stmt|;
 block|}
-comment|/// setPostInc - If L is non-null, enable post-inc expansion for addrecs
-comment|/// referring to the given loop. If L is null, disable post-inc expansion
-comment|/// completely. Post-inc expansion is only supported in non-canonical
+comment|/// setPostInc - Enable post-inc expansion for addrecs referring to the
+comment|/// given loops. Post-inc expansion is only supported in non-canonical
 comment|/// mode.
 name|void
 name|setPostInc
 parameter_list|(
 specifier|const
-name|Loop
-modifier|*
+name|PostIncLoopSet
+modifier|&
 name|L
 parameter_list|)
 block|{
@@ -337,9 +335,20 @@ operator|&&
 literal|"Post-inc expansion is not supported in CanonicalMode"
 argument_list|)
 expr_stmt|;
-name|PostIncLoop
+name|PostIncLoops
 operator|=
 name|L
+expr_stmt|;
+block|}
+comment|/// clearPostInc - Disable all post-inc expansion.
+name|void
+name|clearPostInc
+parameter_list|()
+block|{
+name|PostIncLoops
+operator|.
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
 comment|/// disableCanonicalMode - Disable the behavior of expanding expressions in

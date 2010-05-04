@@ -367,13 +367,9 @@ name|PIC16Section
 operator|*
 name|findPIC16Section
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
+specifier|const
 block|;
 comment|/// Override section allocations for user specified sections.
 name|virtual

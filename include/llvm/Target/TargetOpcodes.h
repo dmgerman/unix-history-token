@@ -143,6 +143,16 @@ comment|/// DBG_VALUE - a mapping of the llvm.dbg.value intrinsic
 name|DBG_VALUE
 init|=
 literal|11
+block|,
+comment|/// REG_SEQUENCE - This variadic instruction is used to form a register that
+comment|/// represent a consecutive sequence of sub-registers. It's used as register
+comment|/// coalescing / allocation aid and must be eliminated before code emission.
+comment|/// e.g. v1027 = REG_SEQUENCE v1024, 3, v1025, 4, v1026, 5
+comment|/// After register coalescing references of v1024 should be replace with
+comment|/// v1027:3, v1025 with v1027:4, etc.
+name|REG_SEQUENCE
+init|=
+literal|12
 block|}
 enum|;
 block|}

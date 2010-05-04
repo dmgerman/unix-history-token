@@ -161,6 +161,13 @@ block|;
 name|void
 name|FormItineraryStageString
 argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Names
+argument_list|,
 name|Record
 operator|*
 name|ItinData

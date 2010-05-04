@@ -904,6 +904,19 @@ name|LLVMModuleRef
 name|M
 parameter_list|)
 function_decl|;
+comment|/** See Module::setModuleInlineAsm. */
+name|void
+name|LLVMSetModuleInlineAsm
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Asm
+parameter_list|)
+function_decl|;
 comment|/*===-- Types -------------------------------------------------------------===*/
 comment|/* LLVM types conform to the following hierarchy:  *   *   types:  *     integer type  *     real type  *     function type  *     sequence types:  *       array type  *       pointer type  *       vector type  *     void type  *     label type  *     opaque type  */
 comment|/** See llvm::LLVMTypeKind::getTypeID. */

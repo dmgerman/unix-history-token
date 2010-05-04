@@ -8,10 +8,6 @@ comment|// RUN: %llvmgcc %s -c -Os -m64 -emit-llvm -o - | llc -march=x86-64 -mtr
 end_comment
 
 begin_comment
-comment|// XFAIL: *
-end_comment
-
-begin_comment
 comment|// XTARGET: darwin
 end_comment
 
@@ -47,7 +43,7 @@ block|}
 end_function
 
 begin_comment
-comment|// DARWIN64: .align 3
+comment|// DARWIN64: .align 4
 end_comment
 
 begin_comment
@@ -59,7 +55,7 @@ comment|// DARWIN64: .asciz "long_function_name"
 end_comment
 
 begin_comment
-comment|// DARWIN32: .align 2
+comment|// DARWIN32: .align 4
 end_comment
 
 begin_comment

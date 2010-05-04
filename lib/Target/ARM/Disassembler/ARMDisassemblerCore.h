@@ -504,11 +504,40 @@ name|BO
 name|Builder
 parameter_list|)
 function_decl|;
+comment|/// CreateMCBuilder - Return an ARMBasicMCBuilder that can build up the MC
+comment|/// infrastructure of an MCInst given the Opcode and Format of the instr.
+comment|/// Return NULL if it fails to create/return a proper builder.  API clients
+comment|/// are responsible for freeing up of the allocated memory.  Cacheing can be
+comment|/// performed by the API clients to improve performance.
+specifier|extern
+name|ARMBasicMCBuilder
+modifier|*
+name|CreateMCBuilder
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|ARMFormat
+name|Format
+parameter_list|)
+function_decl|;
 comment|/// ARMBasicMCBuilder - ARMBasicMCBuilder represents an ARM MCInst builder that
 comment|/// knows how to build up the MCOperand list.
 name|class
 name|ARMBasicMCBuilder
 block|{
+name|friend
+name|ARMBasicMCBuilder
+modifier|*
+name|CreateMCBuilder
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|,
+name|ARMFormat
+name|Format
+parameter_list|)
+function_decl|;
 name|unsigned
 name|Opcode
 decl_stmt|;
@@ -526,6 +555,22 @@ name|Session
 modifier|*
 name|SP
 decl_stmt|;
+name|int
+name|Err
+decl_stmt|;
+comment|// !=0 if the builder encounters some error condition during build.
+name|private
+label|:
+comment|/// Opcode, Format, and NumOperands make up an ARM Basic MCBuilder.
+name|ARMBasicMCBuilder
+argument_list|(
+argument|unsigned opc
+argument_list|,
+argument|ARMFormat format
+argument_list|,
+argument|unsigned short num
+argument_list|)
+empty_stmt|;
 name|public
 label|:
 name|ARMBasicMCBuilder
@@ -567,24 +612,18 @@ name|SP
 argument_list|(
 argument|B.SP
 argument_list|)
-block|{}
-comment|/// Opcode, Format, and NumOperands make up an ARM Basic MCBuilder.
-name|ARMBasicMCBuilder
-argument_list|(
-argument|unsigned opc
-argument_list|,
-argument|ARMFormat format
-argument_list|,
-argument|unsigned short num
-argument_list|)
-expr_stmt|;
+block|{
+name|Err
+operator|=
+literal|0
+block|;   }
 name|virtual
 operator|~
 name|ARMBasicMCBuilder
 argument_list|()
 block|{}
 name|void
-name|setSession
+name|SetSession
 argument_list|(
 argument|Session *sp
 argument_list|)
@@ -593,11 +632,21 @@ name|SP
 operator|=
 name|sp
 block|;   }
-comment|/// TryPredicateAndSBitModifier - TryPredicateAndSBitModifier tries to process
-comment|/// the possible Predicate and SBitModifier, to build the remaining MCOperand
-comment|/// constituents.
+name|void
+name|SetErr
+argument_list|(
+argument|int ErrCode
+argument_list|)
+block|{
+name|Err
+operator|=
+name|ErrCode
+block|;   }
+comment|/// DoPredicateOperands - DoPredicateOperands process the predicate operands
+comment|/// of some Thumb instructions which come before the reglist operands.  It
+comment|/// returns true if the two predicate operands have been processed.
 name|bool
-name|TryPredicateAndSBitModifier
+name|DoPredicateOperands
 argument_list|(
 argument|MCInst& MI
 argument_list|,
@@ -608,6 +657,27 @@ argument_list|,
 argument|unsigned short NumOpsRemaning
 argument_list|)
 expr_stmt|;
+comment|/// TryPredicateAndSBitModifier - TryPredicateAndSBitModifier tries to process
+comment|/// the possible Predicate and SBitModifier, to build the remaining MCOperand
+comment|/// constituents.
+name|bool
+name|TryPredicateAndSBitModifier
+parameter_list|(
+name|MCInst
+modifier|&
+name|MI
+parameter_list|,
+name|unsigned
+name|Opcode
+parameter_list|,
+name|uint32_t
+name|insn
+parameter_list|,
+name|unsigned
+name|short
+name|NumOpsRemaning
+parameter_list|)
+function_decl|;
 comment|/// InITBlock - InITBlock returns true if we are inside an IT block.
 name|bool
 name|InITBlock
@@ -725,23 +795,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// CreateMCBuilder - Return an ARMBasicMCBuilder that can build up the MC
-comment|/// infrastructure of an MCInst given the Opcode and Format of the instr.
-comment|/// Return NULL if it fails to create/return a proper builder.  API clients
-comment|/// are responsible for freeing up of the allocated memory.  Cacheing can be
-comment|/// performed by the API clients to improve performance.
-specifier|extern
-name|ARMBasicMCBuilder
-modifier|*
-name|CreateMCBuilder
-parameter_list|(
-name|unsigned
-name|Opcode
-parameter_list|,
-name|ARMFormat
-name|Format
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 

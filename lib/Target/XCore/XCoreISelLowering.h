@@ -180,6 +180,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
@@ -188,21 +189,13 @@ name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|//  DAG node.
@@ -224,10 +217,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -280,6 +269,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCCCCallTo
@@ -304,6 +294,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCallResult
@@ -324,24 +315,25 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|getGlobalAddressWrapper
 argument_list|(
 argument|SDValue GA
 argument_list|,
-argument|GlobalValue *GV
+argument|const GlobalValue *GV
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|// Lower Operand specifics
 name|SDValue
@@ -351,6 +343,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSTORE
@@ -359,6 +352,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress
@@ -367,6 +361,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalTLSAddress
@@ -375,6 +370,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
@@ -383,6 +379,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerConstantPool
@@ -391,6 +388,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBR_JT
@@ -399,6 +397,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSELECT_CC
@@ -407,6 +406,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVAARG
@@ -415,6 +415,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVASTART
@@ -423,6 +424,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerUMUL_LOHI
@@ -431,6 +433,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSMUL_LOHI
@@ -439,6 +442,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFRAMEADDR
@@ -447,6 +451,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|// Inline asm support
 name|std
@@ -467,26 +472,20 @@ comment|// Expand specifics
 name|SDValue
 name|TryExpandADDWithMul
 argument_list|(
-name|SDNode
-operator|*
-name|Op
+argument|SDNode *Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|ExpandADDSUB
 argument_list|(
-name|SDNode
-operator|*
-name|Op
+argument|SDNode *Op
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -535,6 +534,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -560,6 +560,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -577,6 +578,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool
@@ -592,6 +594,7 @@ argument|const SmallVectorImpl<ISD::ArgFlagsTy>&ArgsFlags
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

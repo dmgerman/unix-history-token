@@ -907,6 +907,10 @@ name|i
 operator|<<
 literal|">"
 operator|<<
+name|DOT
+operator|::
+name|EscapeString
+argument_list|(
 name|DTraits
 operator|.
 name|getEdgeDestLabel
@@ -914,6 +918,7 @@ argument_list|(
 name|Node
 argument_list|,
 name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1291,6 +1296,10 @@ name|EdgeSourceLabels
 condition|)
 name|O
 operator|<<
+name|DOT
+operator|::
+name|EscapeString
+argument_list|(
 operator|(
 operator|*
 name|EdgeSourceLabels
@@ -1298,6 +1307,7 @@ operator|)
 index|[
 name|i
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|O

@@ -64,13 +64,9 @@ file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_decl_stmt
-name|using
 name|namespace
 name|llvm
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+block|{
 name|template
 operator|<
 name|class
@@ -93,9 +89,6 @@ name|P
 block|; }
 block|}
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -120,9 +113,6 @@ name|P
 block|; }
 block|}
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -226,7 +216,8 @@ block|}
 name|Cache
 operator|=
 name|o
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|removeGarbage
 argument_list|(
@@ -253,25 +244,17 @@ name|o
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|bool
 name|hasGarbage
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Message
+argument|const std::string& Message
 argument_list|)
 block|{
 name|addGarbage
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 comment|// Flush the Cache
 name|assert
 argument_list|(
@@ -281,7 +264,7 @@ literal|0
 operator|&&
 literal|"No value should be cached anymore!"
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -374,42 +357,31 @@ return|return
 name|false
 return|;
 block|}
-end_decl_stmt
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|SmallPtrSet
 operator|<
 specifier|const
 name|T
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|Ts
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 specifier|const
 name|T
-modifier|*
+operator|*
 name|Cache
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Name
-decl_stmt|;
+block|; }
+expr_stmt|;
+block|}
 end_decl_stmt
 
-unit|};
 end_unit
 

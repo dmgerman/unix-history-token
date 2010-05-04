@@ -114,7 +114,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallSet.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include

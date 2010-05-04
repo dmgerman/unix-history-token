@@ -136,16 +136,16 @@ decl_stmt|;
 comment|// Workaround PR5482: nearly all gcc 4.x miscompile StringRef and std::min()
 comment|// Changing the arg of min to be an integer, instead of a reference to an
 comment|// integer works around this bug.
+specifier|static
 name|size_t
 name|min
-argument_list|(
+parameter_list|(
 name|size_t
 name|a
-argument_list|,
+parameter_list|,
 name|size_t
 name|b
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 return|return
 name|a
@@ -157,16 +157,16 @@ else|:
 name|b
 return|;
 block|}
+specifier|static
 name|size_t
 name|max
-argument_list|(
+parameter_list|(
 name|size_t
 name|a
-argument_list|,
+parameter_list|,
 name|size_t
 name|b
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 return|return
 name|a

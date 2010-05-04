@@ -91,6 +91,16 @@ directive|include
 file|<vector>
 end_include
 
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+struct_decl|struct
+name|EDInstInfo
+struct_decl|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|/// CachedResult - Encapsulates the result of a function along with the validity
 end_comment
@@ -193,10 +203,12 @@ name|Inst
 expr_stmt|;
 comment|/// The instruction information provided by TableGen for this instruction
 specifier|const
-name|InstInfo
-modifier|*
+name|llvm
+operator|::
+name|EDInstInfo
+operator|*
 name|ThisInstInfo
-decl_stmt|;
+expr_stmt|;
 comment|/// The number of bytes for the machine code representation of the instruction
 name|uint64_t
 name|ByteSize
@@ -284,7 +296,7 @@ argument|uint64_t byteSize
 argument_list|,
 argument|EDDisassembler&disassembler
 argument_list|,
-argument|const InstInfo *instInfo
+argument|const llvm::EDInstInfo *instInfo
 argument_list|)
 empty_stmt|;
 operator|~

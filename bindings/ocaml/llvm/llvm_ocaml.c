@@ -692,6 +692,38 @@ block|}
 end_function
 
 begin_comment
+comment|/* llmodule -> string -> unit */
+end_comment
+
+begin_function
+name|CAMLprim
+name|value
+name|llvm_set_module_inline_asm
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|value
+name|Asm
+parameter_list|)
+block|{
+name|LLVMSetModuleInlineAsm
+argument_list|(
+name|M
+argument_list|,
+name|String_val
+argument_list|(
+name|Asm
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|Val_unit
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*===-- Types -------------------------------------------------------------===*/
 end_comment
 
@@ -4701,8 +4733,6 @@ name|LLVMAddFunctionAttr
 argument_list|(
 name|Arg
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA
@@ -4735,8 +4765,6 @@ name|LLVMRemoveFunctionAttr
 argument_list|(
 name|Arg
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA
@@ -4867,8 +4895,6 @@ name|LLVMAddAttribute
 argument_list|(
 name|Arg
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA
@@ -4901,8 +4927,6 @@ name|LLVMRemoveAttribute
 argument_list|(
 name|Arg
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA
@@ -5239,8 +5263,6 @@ argument_list|(
 name|index
 argument_list|)
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA
@@ -5281,8 +5303,6 @@ argument_list|(
 name|index
 argument_list|)
 argument_list|,
-literal|1
-operator|<<
 name|Int_val
 argument_list|(
 name|PA

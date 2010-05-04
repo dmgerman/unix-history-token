@@ -92,6 +92,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 comment|/// MachineSSAUpdater - This class updates SSA form for a set of virtual
 comment|/// registers defined in multiple blocks.  This is used when code duplication
 comment|/// or another unstructured transformation wants to rewrite a set of uses of one
@@ -99,6 +102,21 @@ comment|/// vreg with uses of a set of vregs.
 name|class
 name|MachineSSAUpdater
 block|{
+name|public
+label|:
+name|class
+name|BBInfo
+decl_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|BBInfo
+operator|*
+operator|>
+name|BlockListTy
+expr_stmt|;
+name|private
+label|:
 comment|/// AvailableVals - This keeps track of which value to use on a per-block
 comment|/// basis.  When we insert PHI nodes, we keep track of them here.
 comment|//typedef DenseMap<MachineBasicBlock*, unsigned> AvailableValsTy;
@@ -106,13 +124,12 @@ name|void
 modifier|*
 name|AV
 decl_stmt|;
-comment|/// IncomingPredInfo - We use this as scratch space when doing our recursive
-comment|/// walk.  This should only be used in GetValueInBlockInternal, normally it
-comment|/// should be empty.
-comment|//std::vector<std::pair<MachineBasicBlock*, unsigned>> IncomingPredInfo;
+comment|/// BBMap - The GetValueAtEndOfBlock method maintains this mapping from
+comment|/// basic blocks to BBInfo structures.
+comment|/// typedef DenseMap<MachineBasicBlock*, BBInfo*> BBMapTy;
 name|void
 modifier|*
-name|IPI
+name|BM
 decl_stmt|;
 comment|/// VR - Current virtual register whose uses are being updated.
 name|unsigned
@@ -270,6 +287,74 @@ parameter_list|(
 name|MachineBasicBlock
 modifier|*
 name|BB
+parameter_list|)
+function_decl|;
+name|void
+name|BuildBlockList
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|,
+name|BumpPtrAllocator
+modifier|*
+name|Allocator
+parameter_list|)
+function_decl|;
+name|void
+name|FindDominators
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindPHIPlacement
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindAvailableVals
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindExistingPHI
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckIfPHIMatches
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|PHI
+parameter_list|)
+function_decl|;
+name|void
+name|RecordMatchingPHI
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|PHI
 parameter_list|)
 function_decl|;
 name|void

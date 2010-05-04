@@ -388,15 +388,14 @@ name|childN
 argument_list|)
 condition|)
 block|{
-comment|// this node has never been seen
+comment|// this node has never been seen.
 name|DFSVisitOne
 argument_list|(
 name|childN
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
-else|else
-block|{
 name|unsigned
 name|childNum
 init|=
@@ -421,7 +420,6 @@ argument_list|()
 operator|=
 name|childNum
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|// Compute the next SCC using the DFS traversal.
@@ -539,13 +537,13 @@ comment|//      nodeVisitNumbers[visitingN]<< "\n";
 if|if
 condition|(
 name|minVisitNum
-operator|==
+operator|!=
 name|nodeVisitNumbers
 index|[
 name|visitingN
 index|]
 condition|)
-block|{
+continue|continue;
 comment|// A full SCC is on the SCCNodeStack!  It includes all nodes below
 comment|// visitingN on the stack.  Copy those nodes to CurrentSCC,
 comment|// reset their minVisit values, and return (this suspends
@@ -590,7 +588,6 @@ name|visitingN
 condition|)
 do|;
 return|return;
-block|}
 block|}
 block|}
 specifier|inline
@@ -671,10 +668,10 @@ name|_Self
 argument_list|()
 return|;
 block|}
-comment|// Direct loop termination test (I.fini() is more efficient than I == end())
+comment|// Direct loop termination test: I.isAtEnd() is more efficient than I == end()
 specifier|inline
 name|bool
-name|fini
+name|isAtEnd
 argument_list|()
 specifier|const
 block|{
@@ -920,6 +917,59 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// ReplaceNode - This informs the scc_iterator that the specified Old node
+end_comment
+
+begin_comment
+comment|/// has been deleted, and New is to be used in its place.
+end_comment
+
+begin_function
+name|void
+name|ReplaceNode
+parameter_list|(
+name|NodeType
+modifier|*
+name|Old
+parameter_list|,
+name|NodeType
+modifier|*
+name|New
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|nodeVisitNumbers
+operator|.
+name|count
+argument_list|(
+name|Old
+argument_list|)
+operator|&&
+literal|"Old not in scc_iterator?"
+argument_list|)
+expr_stmt|;
+name|nodeVisitNumbers
+index|[
+name|New
+index|]
+operator|=
+name|nodeVisitNumbers
+index|[
+name|Old
+index|]
+expr_stmt|;
+name|nodeVisitNumbers
+operator|.
+name|erase
+argument_list|(
+name|Old
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 unit|};
 comment|// Global constructor for the SCC iterator.
 end_comment
@@ -936,7 +986,7 @@ name|T
 operator|>
 name|scc_begin
 argument_list|(
-argument|const T& G
+argument|const T&G
 argument_list|)
 block|{
 return|return
@@ -965,7 +1015,7 @@ name|T
 operator|>
 name|scc_end
 argument_list|(
-argument|const T& G
+argument|const T&G
 argument_list|)
 block|{
 return|return
@@ -997,7 +1047,7 @@ operator|>
 expr|>
 name|scc_begin
 argument_list|(
-argument|const Inverse<T>& G
+argument|const Inverse<T>&G
 argument_list|)
 block|{
 return|return
@@ -1032,7 +1082,7 @@ operator|>
 expr|>
 name|scc_end
 argument_list|(
-argument|const Inverse<T>& G
+argument|const Inverse<T>&G
 argument_list|)
 block|{
 return|return

@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Instruction.h"
+file|"llvm/Instructions.h"
 end_include
 
 begin_decl_stmt
@@ -744,9 +744,353 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// getType - Return the type of the instruction that generated this call site
+comment|///
+specifier|const
+name|Type
+operator|*
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+comment|/// getCaller - Return the caller function for this call site
+comment|///
+name|FunTy
+operator|*
+name|getCaller
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+operator|*
+name|this
+operator|)
+operator|->
+name|getParent
+argument_list|()
+operator|->
+name|getParent
+argument_list|()
+return|;
+block|}
+define|#
+directive|define
+name|CALLSITE_DELEGATE_GETTER
+parameter_list|(
+name|METHOD
+parameter_list|)
+define|\
+value|InstrTy *II = getInstruction();    \   return isCall()                        \     ? cast<CallInst>(II)->METHOD         \     : cast<InvokeInst>(II)->METHOD
+define|#
+directive|define
+name|CALLSITE_DELEGATE_SETTER
+parameter_list|(
+name|METHOD
+parameter_list|)
+define|\
+value|InstrTy *II = getInstruction();    \   if (isCall())                          \     cast<CallInst>(II)->METHOD;          \   else                                   \     cast<InvokeInst>(II)->METHOD
+comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
+comment|/// call.
+name|CallingConv
+operator|::
+name|ID
+name|getCallingConv
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getCallingConv
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setCallingConv
+argument_list|(
+argument|CallingConv::ID CC
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setCallingConv
+argument_list|(
+name|CC
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// getAttributes/setAttributes - get or set the parameter attributes of
+comment|/// the call.
+specifier|const
+name|AttrListPtr
+operator|&
+name|getAttributes
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getAttributes
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setAttributes
+argument_list|(
+argument|const AttrListPtr&PAL
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setAttributes
+argument_list|(
+name|PAL
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// paramHasAttr - whether the call or the callee has the given attribute.
+name|bool
+name|paramHasAttr
+argument_list|(
+argument|uint16_t i
+argument_list|,
+argument|Attributes attr
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|paramHasAttr
+argument_list|(
+name|i
+argument_list|,
+name|attr
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
+name|uint16_t
+name|getParamAlignment
+argument_list|(
+argument|uint16_t i
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getParamAlignment
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Return true if the call should not be inlined.
+name|bool
+name|isNoInline
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|isNoInline
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setIsNoInline
+argument_list|(
+argument|bool Value = true
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|setIsNoInline
+argument_list|(
+name|Value
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call does not access memory.
+name|bool
+name|doesNotAccessMemory
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|doesNotAccessMemory
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setDoesNotAccessMemory
+argument_list|(
+argument|bool doesNotAccessMemory = true
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setDoesNotAccessMemory
+argument_list|(
+name|doesNotAccessMemory
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call does not access or only reads memory.
+name|bool
+name|onlyReadsMemory
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|onlyReadsMemory
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setOnlyReadsMemory
+argument_list|(
+argument|bool onlyReadsMemory = true
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setOnlyReadsMemory
+argument_list|(
+name|onlyReadsMemory
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call cannot return.
+name|bool
+name|doesNotReturn
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|doesNotReturn
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setDoesNotReturn
+argument_list|(
+argument|bool doesNotReturn = true
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setDoesNotReturn
+argument_list|(
+name|doesNotReturn
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Determine if the call cannot unwind.
+name|bool
+name|doesNotThrow
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|doesNotThrow
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|setDoesNotThrow
+argument_list|(
+argument|bool doesNotThrow = true
+argument_list|)
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|setDoesNotThrow
+argument_list|(
+name|doesNotThrow
+argument_list|)
+argument_list|)
+block|;   }
+undef|#
+directive|undef
+name|CALLSITE_DELEGATE_GETTER
+undef|#
+directive|undef
+name|CALLSITE_DELEGATE_SETTER
+comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
+comment|/// argument to the called function.
+name|bool
+name|hasArgument
+argument_list|(
+argument|const Value *Arg
+argument_list|)
+specifier|const
+block|{
+for|for
+control|(
+name|arg_iterator
+name|AI
+init|=
+name|this
+operator|->
+name|arg_begin
+argument_list|()
+init|,
+name|E
+init|=
+name|this
+operator|->
+name|arg_end
+argument_list|()
+init|;
+name|AI
+operator|!=
+name|E
+condition|;
+operator|++
+name|AI
+control|)
+if|if
+condition|(
+name|AI
+operator|->
+name|get
+argument_list|()
+operator|==
+name|Arg
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|/// Returns the operand number of the first argument
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getArgumentOffset
 argument_list|()
@@ -767,6 +1111,9 @@ literal|0
 return|;
 comment|// Args are at the front
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getArgumentEndOffset
 argument_list|()
@@ -787,6 +1134,9 @@ literal|3
 return|;
 comment|// Skip BB, BB, Function
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|IterTy
 name|getCallee
 argument_list|()
@@ -820,14 +1170,10 @@ literal|3
 return|;
 comment|// Skip BB, BB, Function
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// ImmutableCallSite - establish a view to a call site for examination
 end_comment
 
@@ -844,7 +1190,7 @@ typedef|typedef
 name|CallSiteBase
 operator|<
 operator|>
-name|_Base
+name|Base
 expr_stmt|;
 name|public
 operator|:
@@ -856,7 +1202,7 @@ operator|*
 name|V
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|V
 argument_list|)
@@ -869,7 +1215,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|CI
 argument_list|)
@@ -882,7 +1228,7 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|II
 argument_list|)
@@ -895,7 +1241,7 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|II
 argument_list|)
@@ -946,7 +1292,7 @@ name|User
 operator|::
 name|op_iterator
 operator|>
-name|_Base
+name|Base
 expr_stmt|;
 name|public
 label|:
@@ -955,10 +1301,10 @@ argument_list|()
 block|{}
 name|CallSite
 argument_list|(
-argument|_Base B
+argument|Base B
 argument_list|)
 block|:
-name|_Base
+name|Base
 argument_list|(
 argument|B
 argument_list|)
@@ -970,7 +1316,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|CI
 argument_list|)
@@ -982,7 +1328,7 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|II
 argument_list|)
@@ -994,7 +1340,7 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|_Base
+name|Base
 argument_list|(
 argument|II
 argument_list|)
@@ -1052,7 +1398,7 @@ name|V
 parameter_list|)
 block|{
 return|return
-name|_Base
+name|Base
 operator|::
 name|get
 argument_list|(
@@ -1060,190 +1406,6 @@ name|V
 argument_list|)
 return|;
 block|}
-comment|/// getCallingConv/setCallingConv - get or set the calling convention of the
-comment|/// call.
-name|CallingConv
-operator|::
-name|ID
-name|getCallingConv
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setCallingConv
-argument_list|(
-name|CallingConv
-operator|::
-name|ID
-name|CC
-argument_list|)
-decl_stmt|;
-comment|/// getAttributes/setAttributes - get or set the parameter attributes of
-comment|/// the call.
-specifier|const
-name|AttrListPtr
-operator|&
-name|getAttributes
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setAttributes
-parameter_list|(
-specifier|const
-name|AttrListPtr
-modifier|&
-name|PAL
-parameter_list|)
-function_decl|;
-comment|/// paramHasAttr - whether the call or the callee has the given attribute.
-name|bool
-name|paramHasAttr
-argument_list|(
-name|uint16_t
-name|i
-argument_list|,
-name|Attributes
-name|attr
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Extract the alignment for a call or parameter (0=unknown).
-name|uint16_t
-name|getParamAlignment
-argument_list|(
-name|uint16_t
-name|i
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Return true if the call should not be inlined.
-name|bool
-name|isNoInline
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setIsNoInline
-parameter_list|(
-name|bool
-name|Value
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call does not access memory.
-name|bool
-name|doesNotAccessMemory
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotAccessMemory
-parameter_list|(
-name|bool
-name|doesNotAccessMemory
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call does not access or only reads memory.
-name|bool
-name|onlyReadsMemory
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setOnlyReadsMemory
-parameter_list|(
-name|bool
-name|onlyReadsMemory
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call cannot return.
-name|bool
-name|doesNotReturn
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotReturn
-parameter_list|(
-name|bool
-name|doesNotReturn
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// @brief Determine if the call cannot unwind.
-name|bool
-name|doesNotThrow
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|setDoesNotThrow
-parameter_list|(
-name|bool
-name|doesNotThrow
-init|=
-name|true
-parameter_list|)
-function_decl|;
-comment|/// getType - Return the type of the instruction that generated this call site
-comment|///
-specifier|const
-name|Type
-operator|*
-name|getType
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-comment|/// getCaller - Return the caller function for this call site
-comment|///
-name|Function
-operator|*
-name|getCaller
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-operator|*
-name|this
-operator|)
-operator|->
-name|getParent
-argument_list|()
-operator|->
-name|getParent
-argument_list|()
-return|;
-block|}
-comment|/// hasArgument - Returns true if this CallSite passes the given Value* as an
-comment|/// argument to the called function.
-name|bool
-name|hasArgument
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|Arg
-argument_list|)
-decl|const
-decl_stmt|;
 name|bool
 name|operator
 operator|<

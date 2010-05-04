@@ -89,7 +89,8 @@ comment|/// stack frame in bytes.
 name|unsigned
 name|CalleeSavedFrameSize
 block|;
-comment|/// BytesToPopOnReturn - Number of bytes function pops on return.
+comment|/// BytesToPopOnReturn - Number of bytes function pops on return (in addition
+comment|/// to the space used by the return address).
 comment|/// Used on windows platform for stdcall& fastcall name decoration
 name|unsigned
 name|BytesToPopOnReturn
@@ -114,6 +115,27 @@ comment|/// use as the global base register. This is used for PIC in some PIC
 comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
+block|;
+comment|/// ReserveFP - whether the function should reserve the frame pointer
+comment|/// when allocating, even if there may not actually be a frame pointer used.
+name|bool
+name|ReserveFP
+block|;
+comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|/// RegSaveFrameIndex - X86-64 vararg func register save area.
+name|int
+name|RegSaveFrameIndex
+block|;
+comment|/// VarArgsGPOffset - X86-64 vararg func int reg offset.
+name|unsigned
+name|VarArgsGPOffset
+block|;
+comment|/// VarArgsFPOffset - X86-64 vararg func fp reg offset.
+name|unsigned
+name|VarArgsFPOffset
 block|;
 name|public
 operator|:
@@ -151,6 +173,26 @@ literal|0
 argument_list|)
 block|,
 name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|RegSaveFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsGPOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsFPOffset
 argument_list|(
 literal|0
 argument_list|)
@@ -194,6 +236,31 @@ literal|0
 argument_list|)
 block|,
 name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ReserveFP
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|VarArgsFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|RegSaveFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsGPOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsFPOffset
 argument_list|(
 literal|0
 argument_list|)
@@ -330,6 +397,101 @@ block|{
 name|GlobalBaseReg
 operator|=
 name|Reg
+block|; }
+name|bool
+name|getReserveFP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReserveFP
+return|;
+block|}
+name|void
+name|setReserveFP
+argument_list|(
+argument|bool reserveFP
+argument_list|)
+block|{
+name|ReserveFP
+operator|=
+name|reserveFP
+block|; }
+name|int
+name|getVarArgsFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameIndex
+return|;
+block|}
+name|void
+name|setVarArgsFrameIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|VarArgsFrameIndex
+operator|=
+name|Idx
+block|; }
+name|int
+name|getRegSaveFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegSaveFrameIndex
+return|;
+block|}
+name|void
+name|setRegSaveFrameIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|RegSaveFrameIndex
+operator|=
+name|Idx
+block|; }
+name|unsigned
+name|getVarArgsGPOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsGPOffset
+return|;
+block|}
+name|void
+name|setVarArgsGPOffset
+argument_list|(
+argument|unsigned Offset
+argument_list|)
+block|{
+name|VarArgsGPOffset
+operator|=
+name|Offset
+block|; }
+name|unsigned
+name|getVarArgsFPOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFPOffset
+return|;
+block|}
+name|void
+name|setVarArgsFPOffset
+argument_list|(
+argument|unsigned Offset
+argument_list|)
+block|{
+name|VarArgsFPOffset
+operator|=
+name|Offset
 block|; }
 expr|}
 block|;  }

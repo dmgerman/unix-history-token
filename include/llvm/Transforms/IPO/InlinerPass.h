@@ -143,13 +143,7 @@ name|virtual
 name|bool
 name|runOnSCC
 argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|CallGraphNode
-operator|*
-operator|>
+name|CallGraphSCC
 operator|&
 name|SCC
 argument_list|)

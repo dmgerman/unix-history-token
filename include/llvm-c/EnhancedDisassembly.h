@@ -86,6 +86,10 @@ comment|/*! @constant kEDAssemblySyntaxX86ATT AT&T syntax for i386 and x86_64. *
 name|kEDAssemblySyntaxX86ATT
 init|=
 literal|1
+block|,
+name|kEDAssemblySyntaxARMUAL
+init|=
+literal|2
 block|}
 name|EDAssemblySyntax_t
 typedef|;

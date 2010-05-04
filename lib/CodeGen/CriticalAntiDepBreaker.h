@@ -243,11 +243,11 @@ comment|///
 name|unsigned
 name|BreakAntiDependencies
 argument_list|(
-argument|std::vector<SUnit>& SUnits
+argument|const std::vector<SUnit>& SUnits
 argument_list|,
-argument|MachineBasicBlock::iterator& Begin
+argument|MachineBasicBlock::iterator Begin
 argument_list|,
-argument|MachineBasicBlock::iterator& End
+argument|MachineBasicBlock::iterator End
 argument_list|,
 argument|unsigned InsertPosIndex
 argument_list|)

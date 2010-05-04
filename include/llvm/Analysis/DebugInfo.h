@@ -1912,6 +1912,11 @@ literal|14
 argument_list|)
 return|;
 block|}
+name|unsigned
+name|isOptimized
+argument_list|()
+specifier|const
+block|;
 name|StringRef
 name|getFilename
 argument_list|()
@@ -2310,6 +2315,26 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// isInlinedFnArgument - Return trule if this variable provides debugging
+end_comment
+
+begin_comment
+comment|/// information for an inlined function arguments.
+end_comment
+
+begin_function_decl
+name|bool
+name|isInlinedFnArgument
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|CurFn
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// dump - print variable.
@@ -2986,6 +3011,8 @@ argument|DIType = DIType()
 argument_list|,
 argument|bool isArtificial =
 literal|0
+argument_list|,
+argument|bool isOptimized = false
 argument_list|)
 block|;
 comment|/// CreateSubprogramDefinition - Create new subprogram descriptor for the

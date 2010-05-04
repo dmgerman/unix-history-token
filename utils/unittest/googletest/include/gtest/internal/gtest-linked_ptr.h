@@ -660,6 +660,11 @@ operator|.
 name|depart
 argument_list|()
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|last
+expr_stmt|;
 name|assert
 argument_list|(
 name|last

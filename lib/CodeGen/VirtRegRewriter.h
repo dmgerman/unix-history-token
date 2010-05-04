@@ -43,28 +43,19 @@ directive|define
 name|LLVM_CODEGEN_VIRTREGREWRITER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/LiveIntervalAnalysis.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/MachineFunction.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"VirtRegMap.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|VirtRegMap
+decl_stmt|;
 comment|/// VirtRegRewriter interface: Implementations of this interface assign
 comment|/// spilled virtual registers to stack slots, rewriting the code.
 struct|struct

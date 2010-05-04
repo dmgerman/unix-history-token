@@ -211,6 +211,7 @@ name|NULL
 return|;
 block|}
 name|virtual
+specifier|const
 name|SPUTargetLowering
 operator|*
 name|getTargetLowering
@@ -218,15 +219,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|SPUTargetLowering
-operator|*
-operator|>
-operator|(
 operator|&
 name|TLInfo
-operator|)
 return|;
 block|}
 name|virtual

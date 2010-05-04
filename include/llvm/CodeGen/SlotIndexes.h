@@ -127,12 +127,6 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ErrorHandling.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -144,8 +138,6 @@ comment|/// information.
 name|class
 name|IndexListEntry
 block|{
-name|private
-label|:
 specifier|static
 specifier|const
 name|unsigned
@@ -261,25 +253,20 @@ argument_list|(
 argument|index
 argument_list|)
 block|{
-if|if
-condition|(
-name|index
-operator|==
-name|EMPTY_KEY_INDEX
-operator|||
-name|index
-operator|==
-name|TOMBSTONE_KEY_INDEX
-condition|)
-block|{
-name|llvm_report_error
+name|assert
 argument_list|(
+name|index
+operator|!=
+name|EMPTY_KEY_INDEX
+operator|&&
+name|index
+operator|!=
+name|TOMBSTONE_KEY_INDEX
+operator|&&
 literal|"Attempt to create invalid index. "
 literal|"Available indexes may have been exhausted?."
 argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|;     }
 name|bool
 name|isValid
 argument_list|()

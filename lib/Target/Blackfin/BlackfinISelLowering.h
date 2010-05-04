@@ -107,10 +107,6 @@ range|:
 name|public
 name|TargetLowering
 block|{
-name|int
-name|VarArgsFrameOffset
-block|;
-comment|// Frame offset to start of varargs area.
 name|public
 operator|:
 name|BlackfinTargetLowering
@@ -138,36 +134,20 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
-block|;
-name|int
-name|getVarArgsFrameOffset
-argument_list|()
 specifier|const
-block|{
-return|return
-name|VarArgsFrameOffset
-return|;
-block|}
+block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
@@ -240,6 +220,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerJumpTable
@@ -248,6 +229,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerADDE
@@ -256,6 +238,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -275,6 +258,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -300,6 +284,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -317,6 +302,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/Lint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Assembly/PrintModulePass.h"
 end_include
 
@@ -951,7 +957,7 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createSCCVNPass
+name|createABCDPass
 argument_list|()
 expr_stmt|;
 operator|(
@@ -959,7 +965,7 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createABCDPass
+name|createLintPass
 argument_list|()
 expr_stmt|;
 operator|(

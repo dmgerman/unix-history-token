@@ -3601,6 +3601,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the less-than relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this< RHS when considered unsigned.
+end_comment
+
+begin_comment
+comment|/// @brief Unsigned less than comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|ult
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|ult
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -3627,6 +3667,46 @@ name|RHS
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Regards both *this as a signed quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the less-than relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this< RHS when considered signed.
+end_comment
+
+begin_comment
+comment|/// @brief Signed less than comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|slt
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|slt
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
@@ -3671,6 +3751,46 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the less-or-equal relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this<= RHS when considered unsigned.
+end_comment
+
+begin_comment
+comment|/// @brief Unsigned less or equal comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|ule
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|ule
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -3706,6 +3826,46 @@ operator|||
 name|eq
 argument_list|(
 name|RHS
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Regards both *this as a signed quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the less-or-equal relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this<= RHS when considered signed.
+end_comment
+
+begin_comment
+comment|/// @brief Signed less or equal comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|sle
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|sle
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3755,6 +3915,46 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the greater-than relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this> RHS when considered unsigned.
+end_comment
+
+begin_comment
+comment|/// @brief Unsigned greater than comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|ugt
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|ugt
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -3798,6 +3998,46 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Regards both *this as a signed quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the greater-than relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this> RHS when considered signed.
+end_comment
+
+begin_comment
+comment|/// @brief Signed greater than comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|sgt
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|sgt
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Regards both *this and RHS as unsigned quantities and compares them for
 end_comment
 
@@ -3835,6 +4075,46 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// Regards both *this as an unsigned quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the greater-or-equal relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this>= RHS when considered unsigned.
+end_comment
+
+begin_comment
+comment|/// @brief Unsigned greater or equal comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|uge
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|uge
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// Regards both *this and RHS as signed quantities and compares them for
 end_comment
 
@@ -3866,6 +4146,46 @@ operator|!
 name|slt
 argument_list|(
 name|RHS
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Regards both *this as a signed quantity and compares it with RHS for
+end_comment
+
+begin_comment
+comment|/// the validity of the greater-or-equal relationship.
+end_comment
+
+begin_comment
+comment|/// @returns true if *this>= RHS when considered signed.
+end_comment
+
+begin_comment
+comment|/// @brief Signed greater or equal comparison
+end_comment
+
+begin_decl_stmt
+name|bool
+name|sge
+argument_list|(
+name|uint64_t
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|sge
+argument_list|(
+name|APInt
+argument_list|(
+name|getBitWidth
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
 argument_list|)
 return|;
 block|}

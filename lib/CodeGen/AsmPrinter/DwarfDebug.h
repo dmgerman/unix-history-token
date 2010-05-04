@@ -133,10 +133,10 @@ name|class
 name|MachineModuleInfo
 decl_stmt|;
 name|class
-name|MCAsmInfo
+name|MachineOperand
 decl_stmt|;
 name|class
-name|Timer
+name|MCAsmInfo
 decl_stmt|;
 name|class
 name|DIEAbbrev
@@ -561,6 +561,9 @@ literal|4
 operator|>
 name|InlinedSubprogramDIEs
 expr_stmt|;
+comment|/// ContainingTypeMap - This map is used to keep track of subprogram DIEs that
+comment|/// need DW_AT_containing_type attribute. This attribute points to a DIE that
+comment|/// corresponds to the MDNode mapped with the subprogram DIE.
 name|DenseMap
 operator|<
 name|DIE
@@ -570,35 +573,6 @@ name|MDNode
 operator|*
 operator|>
 name|ContainingTypeMap
-expr_stmt|;
-comment|/// AbstractSubprogramDIEs - Collection of abstruct subprogram DIEs.
-name|SmallPtrSet
-operator|<
-name|DIE
-operator|*
-operator|,
-literal|4
-operator|>
-name|AbstractSubprogramDIEs
-expr_stmt|;
-comment|/// TopLevelDIEs - Collection of top level DIEs.
-name|SmallPtrSet
-operator|<
-name|DIE
-operator|*
-operator|,
-literal|4
-operator|>
-name|TopLevelDIEs
-expr_stmt|;
-name|SmallVector
-operator|<
-name|DIE
-operator|*
-operator|,
-literal|4
-operator|>
-name|TopLevelDIEsVector
 expr_stmt|;
 typedef|typedef
 name|SmallVector
@@ -610,25 +584,26 @@ literal|2
 operator|>
 name|ScopeVector
 expr_stmt|;
-typedef|typedef
-name|DenseMap
+name|SmallPtrSet
 operator|<
 specifier|const
 name|MachineInstr
 operator|*
 operator|,
-name|ScopeVector
+literal|8
 operator|>
-name|InsnToDbgScopeMapTy
+name|InsnsBeginScopeSet
 expr_stmt|;
-comment|/// DbgScopeBeginMap - Maps instruction with a list of DbgScopes it starts.
-name|InsnToDbgScopeMapTy
-name|DbgScopeBeginMap
-decl_stmt|;
-comment|/// DbgScopeEndMap - Maps instruction with a list DbgScopes it ends.
-name|InsnToDbgScopeMapTy
-name|DbgScopeEndMap
-decl_stmt|;
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+literal|8
+operator|>
+name|InsnsEndScopeSet
+expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
 comment|/// information is used to populate debug_inlined section.
 typedef|typedef
@@ -667,27 +642,50 @@ literal|4
 operator|>
 name|InlinedSPNodes
 expr_stmt|;
-comment|/// CompileUnitOffsets - A vector of the offsets of the compile units. This is
-comment|/// used when calculating the "origin" of a concrete instance of an inlined
-comment|/// function.
+comment|/// LabelsBeforeInsn - Maps instruction with label emitted before
+comment|/// instruction.
 name|DenseMap
 operator|<
-name|CompileUnit
+specifier|const
+name|MachineInstr
 operator|*
 operator|,
-name|unsigned
+name|MCSymbol
+operator|*
 operator|>
-name|CompileUnitOffsets
+name|LabelsBeforeInsn
+expr_stmt|;
+comment|/// LabelsAfterInsn - Maps instruction with label emitted after
+comment|/// instruction.
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+name|LabelsAfterInsn
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+literal|8
+operator|>
+name|DebugRangeSymbols
 expr_stmt|;
 comment|/// Previous instruction's location information. This is used to determine
 comment|/// label location to indicate scope boundries in dwarf debug info.
 name|DebugLoc
 name|PrevInstLoc
 decl_stmt|;
-comment|/// DebugTimer - Timer for the Dwarf debug writer.
-name|Timer
+name|MCSymbol
 modifier|*
-name|DebugTimer
+name|PrevLabel
 decl_stmt|;
 struct|struct
 name|FunctionDebugFrameInfo
@@ -749,6 +747,13 @@ name|DwarfStrSectionSym
 decl_stmt|,
 modifier|*
 name|TextSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfDebugRangeSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|FunctionBeginSym
 decl_stmt|;
 name|private
 label|:
@@ -1099,6 +1104,60 @@ modifier|&
 name|Location
 parameter_list|)
 function_decl|;
+comment|/// addRegisterAddress - Add register location entry in variable DIE.
+name|bool
+name|addRegisterAddress
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
+comment|/// addConstantValue - Add constant value entry in variable DIE.
+name|bool
+name|addConstantValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
+comment|/// addConstantFPValue - Add constant value entry in variable DIE.
+name|bool
+name|addConstantFPValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
 comment|/// addComplexAddress - Start with the address based on the location provided,
 comment|/// and generate the DWARF information necessary to find the actual variable
 comment|/// (navigating the extra location information encoded in the type) based on
@@ -1315,29 +1374,10 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// getUpdatedDbgScope - Find or create DbgScope assicated with
-comment|/// the instruction. Initialize scope and update scope hierarchy.
+comment|/// getOrCreateDbgScope - Create DbgScope for the scope.
 name|DbgScope
 modifier|*
-name|getUpdatedDbgScope
-parameter_list|(
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-specifier|const
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
-name|MDNode
-modifier|*
-name|InlinedAt
-parameter_list|)
-function_decl|;
-comment|/// createDbgScope - Create DbgScope for the scope.
-name|void
-name|createDbgScope
+name|getOrCreateDbgScope
 parameter_list|(
 name|MDNode
 modifier|*
@@ -1684,29 +1724,12 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// getOrCreateSourceID - Public version of GetOrCreateSourceID. This can be
-comment|/// timed. Look up the source id with the given directory and source file
-comment|/// names. If none currently exists, create a new id and insert it in the
-comment|/// SourceIds map. This can update DirectoryNames and SourceFileNames maps as
-comment|/// well.
-name|unsigned
-name|getOrCreateSourceID
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|DirName
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FileName
-argument_list|)
-decl_stmt|;
+comment|/// identifyScopeMarkers() - Indentify instructions that are marking
+comment|/// beginning of or end of a scope.
+name|void
+name|identifyScopeMarkers
+parameter_list|()
+function_decl|;
 comment|/// extractScopeInformation - Scan machine instructions in this function
 comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
 name|bool

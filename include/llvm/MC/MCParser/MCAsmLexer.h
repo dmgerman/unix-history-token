@@ -127,6 +127,8 @@ name|RCurly
 block|,
 name|Star
 block|,
+name|Dot
+block|,
 name|Comma
 block|,
 name|Dollar

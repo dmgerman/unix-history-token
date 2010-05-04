@@ -378,6 +378,13 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
+block|;
+name|MachineLocation
+name|getDebugValueLocation
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

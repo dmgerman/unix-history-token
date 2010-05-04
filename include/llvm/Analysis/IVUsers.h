@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/ScalarEvolutionNormalization.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -97,6 +103,9 @@ decl_stmt|;
 name|class
 name|SCEV
 decl_stmt|;
+name|class
+name|IVUsers
+decl_stmt|;
 comment|/// IVStrideUse - Keep track of one use of a strided induction variable.
 comment|/// The Expr member keeps track of the expression, User is the actual user
 comment|/// instruction of the operand, and 'OperandValToReplace' is the operand of
@@ -113,6 +122,10 @@ decl|<
 name|IVStrideUse
 decl|>
 block|{
+name|friend
+name|class
+name|IVUsers
+decl_stmt|;
 name|public
 label|:
 name|IVStrideUse
@@ -120,16 +133,6 @@ argument_list|(
 name|IVUsers
 operator|*
 name|P
-argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|S
-argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|Off
 argument_list|,
 name|Instruction
 operator|*
@@ -150,24 +153,9 @@ argument_list|(
 name|P
 argument_list|)
 operator|,
-name|Stride
-argument_list|(
-name|S
-argument_list|)
-operator|,
-name|Offset
-argument_list|(
-name|Off
-argument_list|)
-operator|,
 name|OperandValToReplace
 argument_list|(
-name|O
-argument_list|)
-operator|,
-name|IsUseOfPostIncrementedValue
-argument_list|(
-argument|false
+argument|O
 argument_list|)
 block|{   }
 comment|/// getUser - Return the user instruction for this use.
@@ -203,74 +191,6 @@ name|NewUser
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// getParent - Return a pointer to the IVUsers that owns
-comment|/// this IVStrideUse.
-name|IVUsers
-operator|*
-name|getParent
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Parent
-return|;
-block|}
-comment|/// getStride - Return the expression for the stride for the use.
-specifier|const
-name|SCEV
-operator|*
-name|getStride
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Stride
-return|;
-block|}
-comment|/// setStride - Assign a new stride to this use.
-name|void
-name|setStride
-parameter_list|(
-specifier|const
-name|SCEV
-modifier|*
-name|Val
-parameter_list|)
-block|{
-name|Stride
-operator|=
-name|Val
-expr_stmt|;
-block|}
-comment|/// getOffset - Return the offset to add to a theoretical induction
-comment|/// variable that starts at zero and counts up by the stride to compute
-comment|/// the value for the use. This always has the same type as the stride.
-specifier|const
-name|SCEV
-operator|*
-name|getOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Offset
-return|;
-block|}
-comment|/// setOffset - Assign a new offset to this use.
-name|void
-name|setOffset
-parameter_list|(
-specifier|const
-name|SCEV
-modifier|*
-name|Val
-parameter_list|)
-block|{
-name|Offset
-operator|=
-name|Val
-expr_stmt|;
-block|}
 comment|/// getOperandValToReplace - Return the Value of the operand in the user
 comment|/// instruction that this IVStrideUse is representing.
 name|Value
@@ -298,33 +218,30 @@ operator|=
 name|Op
 expr_stmt|;
 block|}
-comment|/// isUseOfPostIncrementedValue - True if this should use the
-comment|/// post-incremented version of this IV, not the preincremented version.
-comment|/// This can only be set in special cases, such as the terminating setcc
-comment|/// instruction for a loop or uses dominated by the loop.
-name|bool
-name|isUseOfPostIncrementedValue
+comment|/// getPostIncLoops - Return the set of loops for which the expression has
+comment|/// been adjusted to use post-inc mode.
+specifier|const
+name|PostIncLoopSet
+operator|&
+name|getPostIncLoops
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsUseOfPostIncrementedValue
+name|PostIncLoops
 return|;
 block|}
-comment|/// setIsUseOfPostIncrmentedValue - set the flag that indicates whether
-comment|/// this is a post-increment use.
+comment|/// transformToPostInc - Transform the expression to post-inc form for the
+comment|/// given loop.
 name|void
-name|setIsUseOfPostIncrementedValue
+name|transformToPostInc
 parameter_list|(
-name|bool
-name|Val
+specifier|const
+name|Loop
+modifier|*
+name|L
 parameter_list|)
-block|{
-name|IsUseOfPostIncrementedValue
-operator|=
-name|Val
-expr_stmt|;
-block|}
+function_decl|;
 name|private
 label|:
 comment|/// Parent - a pointer to the IVUsers that owns this IVStrideUse.
@@ -332,27 +249,15 @@ name|IVUsers
 modifier|*
 name|Parent
 decl_stmt|;
-comment|/// Stride - The stride for this use.
-specifier|const
-name|SCEV
-modifier|*
-name|Stride
-decl_stmt|;
-comment|/// Offset - The offset to add to the base induction expression.
-specifier|const
-name|SCEV
-modifier|*
-name|Offset
-decl_stmt|;
 comment|/// OperandValToReplace - The Value of the operand in the user instruction
 comment|/// that this IVStrideUse is representing.
 name|WeakVH
 name|OperandValToReplace
 decl_stmt|;
-comment|/// IsUseOfPostIncrementedValue - True if this should use the
-comment|/// post-incremented version of this IV, not the preincremented version.
-name|bool
-name|IsUseOfPostIncrementedValue
+comment|/// PostIncLoops - The set of loops for which Expr has been adjusted to
+comment|/// use post-inc mode. This corresponds with SCEVExpander's post-inc concept.
+name|PostIncLoopSet
+name|PostIncLoops
 decl_stmt|;
 comment|/// Deleted - Implementation of CallbackVH virtual function to
 comment|/// receive notification when the User is deleted.
@@ -552,16 +457,6 @@ name|IVStrideUse
 operator|&
 name|AddUser
 argument_list|(
-specifier|const
-name|SCEV
-operator|*
-name|Stride
-argument_list|,
-specifier|const
-name|SCEV
-operator|*
-name|Offset
-argument_list|,
 name|Instruction
 operator|*
 name|User
@@ -578,19 +473,28 @@ name|SCEV
 operator|*
 name|getReplacementExpr
 argument_list|(
-argument|const IVStrideUse&U
+argument|const IVStrideUse&IU
 argument_list|)
 specifier|const
 block|;
-comment|/// getCanonicalExpr - Return a SCEV expression which computes the
-comment|/// value of the SCEV of the given IVStrideUse, ignoring the
-comment|/// isUseOfPostIncrementedValue flag.
+comment|/// getExpr - Return the expression for the use.
 specifier|const
 name|SCEV
 operator|*
-name|getCanonicalExpr
+name|getExpr
 argument_list|(
-argument|const IVStrideUse&U
+argument|const IVStrideUse&IU
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|SCEV
+operator|*
+name|getStride
+argument_list|(
+argument|const IVStrideUse&IU
+argument_list|,
+argument|const Loop *L
 argument_list|)
 specifier|const
 block|;

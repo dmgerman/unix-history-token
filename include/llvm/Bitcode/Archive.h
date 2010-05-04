@@ -318,7 +318,7 @@ comment|/// into memory, the return value will be null.
 comment|/// @returns a pointer to the member's data.
 comment|/// @brief Get the data content of the archive member
 specifier|const
-name|void
+name|char
 operator|*
 name|getData
 argument_list|()
@@ -508,7 +508,7 @@ name|flags
 block|;
 comment|///< Flags about the archive member
 specifier|const
-name|void
+name|char
 operator|*
 name|data
 block|;

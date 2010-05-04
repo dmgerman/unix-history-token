@@ -231,6 +231,14 @@ modifier|*
 name|createLocalRegisterAllocator
 parameter_list|()
 function_decl|;
+comment|/// FastRegisterAllocation Pass - This pass register allocates as fast as
+comment|/// possible. It is best suited for debug code where live ranges are short.
+comment|///
+name|FunctionPass
+modifier|*
+name|createFastRegisterAllocator
+parameter_list|()
+function_decl|;
 comment|/// LinearScanRegisterAllocation Pass - This pass implements the linear scan
 comment|/// register allocation algorithm, a global register allocator.
 comment|///
@@ -378,7 +386,12 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createMachineLICMPass
-parameter_list|()
+parameter_list|(
+name|bool
+name|PreRegAlloc
+init|=
+name|true
+parameter_list|)
 function_decl|;
 comment|/// createMachineSinkingPass - This pass performs sinking on machine
 comment|/// instructions.
@@ -440,9 +453,9 @@ modifier|*
 name|createDwarfEHPass
 parameter_list|(
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|*
-name|tli
+name|tm
 parameter_list|,
 name|bool
 name|fast

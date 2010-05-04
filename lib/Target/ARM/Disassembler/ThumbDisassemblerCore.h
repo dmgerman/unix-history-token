@@ -980,11 +980,15 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
+name|bool
 name|getBitfieldInvMask
 parameter_list|(
 name|uint32_t
 name|insn
+parameter_list|,
+name|uint32_t
+modifier|&
+name|mask
 parameter_list|)
 block|{
 name|uint32_t
@@ -1015,15 +1019,25 @@ name|Val
 init|=
 literal|0
 decl_stmt|;
-name|assert
-argument_list|(
-name|lsb
-operator|<=
+if|if
+condition|(
 name|msb
-operator|&&
-literal|"Encoding error: lsb> msb"
+operator|<
+name|lsb
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Encoding error: msb< lsb\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 for|for
 control|(
 name|uint32_t
@@ -1046,9 +1060,13 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-return|return
+name|mask
+operator|=
 operator|~
 name|Val
+expr_stmt|;
+return|return
+name|true
 return|;
 block|}
 end_function
@@ -1983,7 +2001,7 @@ modifier|&
 name|NumOpsAdded
 parameter_list|,
 name|BO
-name|Builder
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -2086,6 +2104,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -2144,7 +2164,7 @@ name|MCOperand
 operator|::
 name|CreateReg
 argument_list|(
-name|Builder
+name|B
 operator|->
 name|InITBlock
 argument_list|()
@@ -2196,6 +2216,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -2255,6 +2277,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -2387,7 +2411,7 @@ modifier|&
 name|NumOpsAdded
 parameter_list|,
 name|BO
-name|Builder
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -2474,6 +2498,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -2525,7 +2551,7 @@ name|MCOperand
 operator|::
 name|CreateReg
 argument_list|(
-name|Builder
+name|B
 operator|->
 name|InITBlock
 argument_list|()
@@ -2635,6 +2661,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -2711,6 +2739,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 comment|// tBX_RET has 0 operand.
@@ -2741,6 +2772,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -2811,6 +2844,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|RegClass
 argument_list|,
 name|IsGPR
@@ -2915,6 +2950,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|RegClass
 argument_list|,
 name|IsGPR
@@ -2978,6 +3015,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -2992,6 +3032,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -3052,6 +3100,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3193,6 +3243,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -3274,6 +3327,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3296,6 +3351,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3412,6 +3469,8 @@ literal|0
 else|:
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3467,6 +3526,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -3485,7 +3547,7 @@ operator|::
 name|tSTRspi
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -3500,6 +3562,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -3570,6 +3640,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3659,6 +3731,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -3669,7 +3744,7 @@ name|ARM
 operator|::
 name|tADDrPCi
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -3684,6 +3759,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -3743,6 +3826,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -3818,6 +3903,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -3828,7 +3916,7 @@ name|ARM
 operator|::
 name|tADDrSPi
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -3843,6 +3931,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -3913,6 +4009,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -4014,6 +4112,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -4032,7 +4133,7 @@ operator|::
 name|tPOP
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 name|unsigned
@@ -4042,39 +4143,39 @@ init|=
 name|NumOpsAdded
 decl_stmt|;
 comment|// Handling the two predicate operands before the reglist.
+if|if
+condition|(
+name|B
+operator|->
+name|DoPredicateOperands
+argument_list|(
 name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|ARMCC
-operator|::
-name|AL
+argument_list|,
+name|Opcode
+argument_list|,
+name|insn
+argument_list|,
+name|NumOps
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateReg
-argument_list|(
-name|ARM
-operator|::
-name|CPSR
-argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|OpIdx
-operator|=
+operator|+=
 literal|2
 expr_stmt|;
-comment|// Fill the variadic part of reglist.
+else|else
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Expected predicate operands not found.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|unsigned
 name|RegListBits
 init|=
@@ -4108,6 +4209,7 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+comment|// Fill the variadic part of reglist.
 for|for
 control|(
 name|unsigned
@@ -4144,6 +4246,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -4234,6 +4338,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 if|if
@@ -4271,6 +4378,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 specifier|const
@@ -4610,6 +4719,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -4647,6 +4758,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -4679,7 +4792,7 @@ operator|::
 name|tCBZ
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 name|MI
@@ -4755,6 +4868,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -4779,7 +4895,7 @@ operator|::
 name|tSTM_UPD
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 name|unsigned
@@ -4794,18 +4910,6 @@ init|=
 name|getT1tRt
 argument_list|(
 name|insn
-argument_list|)
-decl_stmt|;
-name|unsigned
-name|RegListBits
-init|=
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|7
-argument_list|,
-literal|0
 argument_list|)
 decl_stmt|;
 name|OpIdx
@@ -4838,6 +4942,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -4861,6 +4967,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -4874,6 +4982,7 @@ operator|++
 name|OpIdx
 expr_stmt|;
 comment|// A8.6.53 LDM / LDMIA / LDMFD - Encoding T1
+comment|// A8.6.53 STM / STMIA / STMEA - Encoding T1
 name|MI
 operator|.
 name|addOperand
@@ -4897,38 +5006,51 @@ operator|++
 name|OpIdx
 expr_stmt|;
 comment|// Handling the two predicate operands before the reglist.
+if|if
+condition|(
+name|B
+operator|->
+name|DoPredicateOperands
+argument_list|(
 name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|ARMCC
-operator|::
-name|AL
+argument_list|,
+name|Opcode
+argument_list|,
+name|insn
+argument_list|,
+name|NumOps
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateReg
-argument_list|(
-name|ARM
-operator|::
-name|CPSR
-argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|OpIdx
 operator|+=
 literal|2
 expr_stmt|;
+else|else
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Expected predicate operands not found.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+name|unsigned
+name|RegListBits
+init|=
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|7
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 comment|// Fill the variadic part of reglist.
 for|for
 control|(
@@ -4966,6 +5088,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|tGPRRegClassID
@@ -5008,6 +5132,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 return|return
@@ -5024,6 +5151,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5051,6 +5180,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 return|return
@@ -5067,6 +5199,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5122,6 +5256,8 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
 parameter_list|)
 block|{
 if|if
@@ -5147,6 +5283,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -5278,6 +5422,8 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
 parameter_list|)
 block|{
 specifier|const
@@ -5292,6 +5438,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -5465,7 +5619,7 @@ modifier|&
 name|NumOpsAdded
 parameter_list|,
 name|BO
-name|Builder
+name|B
 parameter_list|)
 block|{
 name|unsigned
@@ -5538,7 +5692,7 @@ name|NumOps
 argument_list|,
 name|NumOpsAdded
 argument_list|,
-name|Builder
+name|B
 argument_list|)
 return|;
 case|case
@@ -5574,7 +5728,7 @@ name|NumOps
 argument_list|,
 name|NumOpsAdded
 argument_list|,
-name|Builder
+name|B
 argument_list|)
 return|;
 case|case
@@ -5593,6 +5747,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 default|default:
@@ -5609,6 +5765,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5629,6 +5787,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 break|break;
@@ -5660,6 +5820,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 case|case
@@ -5678,6 +5840,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 case|case
@@ -5703,6 +5867,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5721,6 +5887,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5738,6 +5906,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5773,6 +5943,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5791,6 +5963,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -5810,6 +5984,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 case|case
@@ -5828,6 +6004,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 default|default:
@@ -6072,6 +6250,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|MI
@@ -6084,6 +6265,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6128,6 +6311,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 if|if
@@ -6170,6 +6356,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 name|assert
@@ -6200,7 +6388,7 @@ operator|::
 name|t2STM_UPD
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -6227,6 +6415,8 @@ name|Base
 init|=
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6318,39 +6508,39 @@ operator|++
 name|OpIdx
 expr_stmt|;
 comment|// Handling the two predicate operands before the reglist.
+if|if
+condition|(
+name|B
+operator|->
+name|DoPredicateOperands
+argument_list|(
 name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|ARMCC
-operator|::
-name|AL
+argument_list|,
+name|Opcode
+argument_list|,
+name|insn
+argument_list|,
+name|NumOps
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateReg
-argument_list|(
-name|ARM
-operator|::
-name|CPSR
-argument_list|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|OpIdx
 operator|+=
 literal|2
 expr_stmt|;
-comment|// Fill the variadic part of reglist.
+else|else
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Expected predicate operands not found.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|unsigned
 name|RegListBits
 init|=
@@ -6366,6 +6556,7 @@ operator|-
 literal|1
 operator|)
 decl_stmt|;
+comment|// Fill the variadic part of reglist.
 for|for
 control|(
 name|unsigned
@@ -6402,6 +6593,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6468,6 +6661,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -6482,6 +6678,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|unsigned
 modifier|&
 name|OpIdx
@@ -6590,6 +6794,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6624,6 +6830,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6655,6 +6863,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6682,6 +6892,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6761,6 +6973,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -6775,6 +6990,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -6837,6 +7060,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6859,6 +7084,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6881,6 +7108,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -6990,6 +7219,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|assert
@@ -7012,6 +7244,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7035,6 +7269,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7205,6 +7441,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -7302,6 +7541,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7436,6 +7677,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7500,17 +7743,17 @@ name|Idx
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|++
+name|OpIdx
+expr_stmt|;
 block|}
-else|else
-block|{
-name|assert
-argument_list|(
+elseif|else
+if|if
+condition|(
 operator|!
 name|NoDstReg
-operator|&&
-literal|"Internal error"
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|MI
 operator|.
 name|addOperand
@@ -7521,6 +7764,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7533,10 +7778,24 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 operator|++
 name|OpIdx
 expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Thumb2 encoding error: d==15 for three-reg operands.\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 block|}
 name|MI
 operator|.
@@ -7548,6 +7807,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7774,6 +8035,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -7857,6 +8121,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -7884,14 +8150,23 @@ condition|(
 name|TwoReg
 condition|)
 block|{
-name|assert
-argument_list|(
-operator|!
+if|if
+condition|(
 name|NoDstReg
-operator|&&
-literal|"Internal error"
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Thumb2 encoding error: d==15 for DPModImm 2-reg instr.\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|MI
 operator|.
 name|addOperand
@@ -7902,6 +8177,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -8142,7 +8419,7 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Invalid opcode passed in"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8238,6 +8515,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -8316,6 +8596,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -8367,6 +8649,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -8513,6 +8797,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -8640,6 +8926,21 @@ name|ARM
 operator|::
 name|t2BFC
 condition|)
+block|{
+name|uint32_t
+name|mask
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|getBitfieldInvMask
+argument_list|(
+name|insn
+argument_list|,
+name|mask
+argument_list|)
+condition|)
 name|MI
 operator|.
 name|addOperand
@@ -8648,13 +8949,15 @@ name|MCOperand
 operator|::
 name|CreateImm
 argument_list|(
-name|getBitfieldInvMask
-argument_list|(
-name|insn
-argument_list|)
+name|mask
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+return|return
+name|false
+return|;
+block|}
 else|else
 block|{
 comment|// Handle the case of: lsb width
@@ -8680,7 +8983,7 @@ operator|::
 name|t2BFI
 operator|)
 operator|&&
-literal|"Invalid opcode"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 name|MI
@@ -8707,21 +9010,31 @@ operator|::
 name|t2BFI
 condition|)
 block|{
-name|assert
-argument_list|(
+if|if
+condition|(
 name|getMsb
 argument_list|(
 name|insn
 argument_list|)
-operator|>=
+operator|<
 name|getLsb
 argument_list|(
 name|insn
 argument_list|)
-operator|&&
-literal|"Encoding error"
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"Encoding error: msb< lsb\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|MI
 operator|.
 name|addOperand
@@ -8965,6 +9278,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 if|if
@@ -9169,6 +9485,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -9209,6 +9527,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -9261,6 +9581,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -9353,7 +9675,7 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Unreachable code"
+literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9563,6 +9885,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 comment|// Preload Data/Instruction requires either 2 or 3 operands.
@@ -9629,6 +9954,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -9668,6 +9995,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -9959,6 +10288,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -9973,6 +10305,14 @@ index|]
 operator|.
 name|OpInfo
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|NumOps
@@ -10013,6 +10353,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10175,6 +10517,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 name|unsigned
@@ -10204,6 +10549,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 comment|// See, for example, A6.3.7 Load word: Table A6-18 Load word.
@@ -10227,6 +10574,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 specifier|const
@@ -10474,6 +10823,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10496,6 +10847,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10523,6 +10876,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10647,6 +11002,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -10738,6 +11096,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10768,6 +11128,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10794,6 +11156,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -10939,6 +11303,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -11024,6 +11391,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11046,6 +11415,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11068,6 +11439,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11094,6 +11467,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11190,6 +11565,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 specifier|const
@@ -11279,6 +11657,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11301,6 +11681,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11323,6 +11705,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11345,6 +11729,8 @@ name|CreateReg
 argument_list|(
 name|getRegisterEnum
 argument_list|(
+name|B
+argument_list|,
 name|ARM
 operator|::
 name|GPRRegClassID
@@ -11503,6 +11889,9 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
 parameter_list|)
 block|{
 switch|switch
@@ -11554,6 +11943,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11571,7 +11962,7 @@ argument_list|)
 operator|==
 literal|1
 operator|&&
-literal|"Encoding error"
+literal|"Thumb2 encoding error!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11618,6 +12009,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11673,6 +12066,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11704,6 +12099,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11736,6 +12133,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11779,6 +12178,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11797,6 +12198,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11816,6 +12219,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11882,6 +12287,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11909,6 +12316,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11943,6 +12352,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11974,6 +12385,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -11992,6 +12405,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|B
 argument_list|)
 return|;
 block|}
@@ -12008,7 +12423,7 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Encoding error for Thumb2 instruction!"
+literal|"Thumb2 encoding error!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12111,8 +12526,9 @@ literal|11
 argument_list|)
 decl_stmt|;
 comment|// A6.1 Thumb instruction set encoding
-name|assert
-argument_list|(
+if|if
+condition|(
+operator|!
 operator|(
 name|bits15_11
 operator|==
@@ -12126,10 +12542,17 @@ name|bits15_11
 operator|==
 literal|0x1F
 operator|)
-operator|&&
-literal|"Bits [15:11] of first halfword of a Thumb2 instruction out of range"
+condition|)
+block|{
+name|assert
+argument_list|(
+literal|"Bits[15:11] first halfword of Thumb2 instruction is out of range"
 argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 comment|// A6.3 32-bit Thumb instruction encoding
 name|uint16_t
 name|op1
@@ -12185,6 +12608,8 @@ argument_list|,
 name|NumOps
 argument_list|,
 name|NumOpsAdded
+argument_list|,
+name|Builder
 argument_list|)
 return|;
 block|}

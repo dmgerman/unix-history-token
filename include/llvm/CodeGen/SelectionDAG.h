@@ -266,6 +266,12 @@ comment|/// not build SDNodes for these so as not to perturb the generated code;
 comment|/// instead the info is kept off to the side in this structure. Each SDNode may
 comment|/// have one or more associated dbg_value entries. This information is kept in
 comment|/// DbgValMap.
+comment|/// Byval parameters are handled separately because they don't use alloca's,
+comment|/// which busts the normal mechanism.  There is good reason for handling all
+comment|/// parameters separately:  they may not have code generated for them, they
+comment|/// should always go at the beginning of the function regardless of other code
+comment|/// motion, and debug info for them is potentially useful even if the parameter
+comment|/// is unused.  Right now only byval parameters are handled separately.
 name|class
 name|SDDbgInfo
 block|{
@@ -277,6 +283,15 @@ operator|,
 literal|32
 operator|>
 name|DbgValues
+expr_stmt|;
+name|SmallVector
+operator|<
+name|SDDbgValue
+operator|*
+operator|,
+literal|32
+operator|>
+name|ByvalParmDbgValues
 expr_stmt|;
 name|DenseMap
 operator|<
@@ -328,10 +343,32 @@ specifier|const
 name|SDNode
 modifier|*
 name|Node
-init|=
-literal|0
+parameter_list|,
+name|bool
+name|isParameter
 parameter_list|)
 block|{
+if|if
+condition|(
+name|isParameter
+condition|)
+block|{
+name|ByvalParmDbgValues
+operator|.
+name|push_back
+argument_list|(
+name|V
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|DbgValues
+operator|.
+name|push_back
+argument_list|(
+name|V
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Node
@@ -340,13 +377,6 @@ name|DbgValMap
 index|[
 name|Node
 index|]
-operator|.
-name|push_back
-argument_list|(
-name|V
-argument_list|)
-expr_stmt|;
-name|DbgValues
 operator|.
 name|push_back
 argument_list|(
@@ -368,6 +398,11 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+name|ByvalParmDbgValues
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 name|bool
 name|empty
@@ -376,6 +411,11 @@ specifier|const
 block|{
 return|return
 name|DbgValues
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|ByvalParmDbgValues
 operator|.
 name|empty
 argument_list|()
@@ -435,6 +475,28 @@ name|end
 argument_list|()
 return|;
 block|}
+name|DbgIterator
+name|ByvalParmDbgBegin
+parameter_list|()
+block|{
+return|return
+name|ByvalParmDbgValues
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|DbgIterator
+name|ByvalParmDbgEnd
+parameter_list|()
+block|{
+return|return
+name|ByvalParmDbgValues
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 enum|enum
@@ -485,6 +547,12 @@ comment|///
 name|class
 name|SelectionDAG
 block|{
+specifier|const
+name|TargetMachine
+modifier|&
+name|TM
+decl_stmt|;
+specifier|const
 name|TargetLowering
 modifier|&
 name|TLI
@@ -633,9 +701,10 @@ name|public
 label|:
 name|SelectionDAG
 argument_list|(
-name|TargetLowering
+specifier|const
+name|TargetMachine
 operator|&
-name|tli
+name|TM
 argument_list|,
 name|FunctionLoweringInfo
 operator|&
@@ -681,7 +750,12 @@ operator|&
 name|getTarget
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|TM
+return|;
+block|}
+specifier|const
 name|TargetLowering
 operator|&
 name|getTargetLoweringInfo
@@ -1537,6 +1611,7 @@ block|}
 name|SDValue
 name|getConstantPool
 parameter_list|(
+specifier|const
 name|Constant
 modifier|*
 name|C
@@ -1569,6 +1644,7 @@ function_decl|;
 name|SDValue
 name|getTargetConstantPool
 parameter_list|(
+specifier|const
 name|Constant
 modifier|*
 name|C
@@ -1785,6 +1861,7 @@ function_decl|;
 name|SDValue
 name|getBlockAddress
 parameter_list|(
+specifier|const
 name|BlockAddress
 modifier|*
 name|BA
@@ -3751,6 +3828,16 @@ modifier|*
 name|v
 parameter_list|)
 function_decl|;
+comment|/// getMDNode - Return an MDNodeSDNode which holds an MDNode.
+name|SDValue
+name|getMDNode
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|MD
+parameter_list|)
+function_decl|;
 comment|/// getShiftAmountOperand - Return the specified value casted to
 comment|/// the target's desired shift amount type.
 name|SDValue
@@ -4694,6 +4781,7 @@ name|MDNode
 modifier|*
 name|MDPtr
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|C
@@ -5095,8 +5183,9 @@ parameter_list|,
 name|SDNode
 modifier|*
 name|SD
-init|=
-literal|0
+parameter_list|,
+name|bool
+name|isParameter
 parameter_list|)
 function_decl|;
 comment|/// GetDbgValues - Get the debug values which reference the given SDNode.
@@ -5160,6 +5249,32 @@ return|return
 name|DbgInfo
 operator|->
 name|DbgEnd
+argument_list|()
+return|;
+block|}
+name|SDDbgInfo
+operator|::
+name|DbgIterator
+name|ByvalParmDbgBegin
+argument_list|()
+block|{
+return|return
+name|DbgInfo
+operator|->
+name|ByvalParmDbgBegin
+argument_list|()
+return|;
+block|}
+name|SDDbgInfo
+operator|::
+name|DbgIterator
+name|ByvalParmDbgEnd
+argument_list|()
+block|{
+return|return
+name|DbgInfo
+operator|->
+name|ByvalParmDbgEnd
 argument_list|()
 return|;
 block|}

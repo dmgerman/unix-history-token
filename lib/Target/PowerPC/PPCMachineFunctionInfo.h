@@ -123,6 +123,25 @@ comment|/// how the caller's stack pointer should be calculated (epilog/dynamica
 name|bool
 name|HasFastCall
 block|;
+comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|/// VarArgsStackOffset - StackOffset for start of stack
+comment|/// arguments.
+name|int
+name|VarArgsStackOffset
+block|;
+comment|/// VarArgsNumGPR - Index of the first unused integer
+comment|/// register for parameter passing.
+name|unsigned
+name|VarArgsNumGPR
+block|;
+comment|/// VarArgsNumFPR - Index of the first unused double
+comment|/// register for parameter passing.
+name|unsigned
+name|VarArgsNumFPR
+block|;
 name|public
 operator|:
 name|explicit
@@ -165,7 +184,27 @@ argument_list|)
 block|,
 name|HasFastCall
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|VarArgsFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsStackOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsNumGPR
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsNumFPR
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 name|int
@@ -319,6 +358,82 @@ return|return
 name|HasFastCall
 return|;
 block|}
+name|int
+name|getVarArgsFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameIndex
+return|;
+block|}
+name|void
+name|setVarArgsFrameIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsFrameIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getVarArgsStackOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsStackOffset
+return|;
+block|}
+name|void
+name|setVarArgsStackOffset
+argument_list|(
+argument|int Offset
+argument_list|)
+block|{
+name|VarArgsStackOffset
+operator|=
+name|Offset
+block|; }
+name|unsigned
+name|getVarArgsNumGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsNumGPR
+return|;
+block|}
+name|void
+name|setVarArgsNumGPR
+argument_list|(
+argument|unsigned Num
+argument_list|)
+block|{
+name|VarArgsNumGPR
+operator|=
+name|Num
+block|; }
+name|unsigned
+name|getVarArgsNumFPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsNumFPR
+return|;
+block|}
+name|void
+name|setVarArgsNumFPR
+argument_list|(
+argument|unsigned Num
+argument_list|)
+block|{
+name|VarArgsNumFPR
+operator|=
+name|Num
+block|; }
 expr|}
 block|;  }
 end_decl_stmt

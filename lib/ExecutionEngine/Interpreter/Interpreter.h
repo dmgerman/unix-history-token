@@ -913,9 +913,9 @@ index|]
 operator|)
 return|;
 block|}
-comment|//FIXME: private:
-name|public
+name|private
 label|:
+comment|// Helper functions
 name|GenericValue
 name|executeGEPOperation
 parameter_list|(
@@ -934,9 +934,6 @@ modifier|&
 name|SF
 parameter_list|)
 function_decl|;
-name|private
-label|:
-comment|// Helper functions
 comment|// SwitchToNewBasicBlock - Start execution in a new basic block and run any
 comment|// PHI nodes in the top of the block.  This is used for intraprocedural
 comment|// control flow.

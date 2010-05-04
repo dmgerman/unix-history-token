@@ -126,6 +126,9 @@ name|class
 name|MachineInstr
 decl_stmt|;
 name|class
+name|MachineLocation
+decl_stmt|;
+name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
@@ -324,6 +327,7 @@ argument_list|()
 specifier|const
 block|;
 comment|/// getObjFileLowering - Return information about object file lowering.
+specifier|const
 name|TargetLoweringObjectFile
 operator|&
 name|getObjFileLowering
@@ -471,18 +475,8 @@ block|;
 comment|/// EmitAlignment - Emit an alignment directive to the specified power of
 comment|/// two boundary.  For example, if you pass in 3 here, you will get an 8
 comment|/// byte alignment.  If a global value is specified, and if that global has
-comment|/// an explicit alignment requested, it will unconditionally override the
-comment|/// alignment request.  However, if ForcedAlignBits is specified, this value
-comment|/// has final say: the ultimate alignment will be the max of ForcedAlignBits
-comment|/// and the alignment computed with NumBits and the global.  If UseFillExpr
-comment|/// is true, it also emits an optional second value FillValue which the
-comment|/// assembler uses to fill gaps to match alignment for text sections if the
-comment|/// has specified a non-zero fill value.
-comment|///
-comment|/// The algorithm is:
-comment|///     Align = NumBits;
-comment|///     if (GV&& GV->hasalignment) Align = GV->getalignment();
-comment|///     Align = std::max(Align, ForcedAlignBits);
+comment|/// an explicit alignment requested, it will override the alignment request
+comment|/// if required for correctness.
 comment|///
 name|void
 name|EmitAlignment
@@ -491,11 +485,6 @@ argument|unsigned NumBits
 argument_list|,
 argument|const GlobalValue *GV =
 literal|0
-argument_list|,
-argument|unsigned ForcedAlignBits =
-literal|0
-argument_list|,
-argument|bool UseFillExpr = true
 argument_list|)
 specifier|const
 block|;
@@ -754,6 +743,22 @@ argument|unsigned Size
 argument_list|)
 specifier|const
 block|;
+comment|/// EmitLabelOffsetDifference - Emit something like ".long Hi+Offset-Lo"
+comment|/// where the size in bytes of the directive is specified by Size and Hi/Lo
+comment|/// specify the labels.  This implicitly uses .set if it is available.
+name|void
+name|EmitLabelOffsetDifference
+argument_list|(
+argument|const MCSymbol *Hi
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|const MCSymbol *Lo
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Emission Helper Routines
 comment|//===------------------------------------------------------------------===//
@@ -845,6 +850,16 @@ argument_list|(
 argument|const MCSymbol *Label
 argument_list|,
 argument|const MCSymbol *SectionLabel
+argument_list|)
+specifier|const
+block|;
+comment|/// getDebugValueLocation - Get location information encoded by DBG_VALUE
+comment|/// operands.
+name|virtual
+name|MachineLocation
+name|getDebugValueLocation
+argument_list|(
+argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;

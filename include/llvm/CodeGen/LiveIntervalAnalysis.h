@@ -500,6 +500,19 @@ name|getIndexesLength
 argument_list|()
 return|;
 block|}
+comment|/// getFuncInstructionCount - Return the number of instructions in the
+comment|/// current function.
+name|unsigned
+name|getFuncInstructionCount
+parameter_list|()
+block|{
+return|return
+name|indexes_
+operator|->
+name|getFunctionSize
+argument_list|()
+return|;
+block|}
 comment|/// getApproximateInstructionCount - computes an estimate of the number
 comment|/// of instructions in a given LiveInterval.
 name|unsigned

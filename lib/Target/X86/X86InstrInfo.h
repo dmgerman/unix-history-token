@@ -1829,6 +1829,23 @@ argument|const std::vector<CalleeSavedInfo>&CSI
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|MachineInstr
+operator|*
+name|emitFrameIndexDebugValue
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|int FrameIx
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|const MDNode *MDPtr
+argument_list|,
+argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
 comment|/// foldMemoryOperand - If this target supports it, fold a load or store of
 comment|/// the specified stack slot into the specified machine instruction for the
 comment|/// specified operand(s).  If this is possible, the target should perform the
@@ -1974,6 +1991,14 @@ argument_list|,
 argument|int64_t Offset2
 argument_list|,
 argument|unsigned NumLoads
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|getNoopForMachoTarget
+argument_list|(
+argument|MCInst&NopInst
 argument_list|)
 specifier|const
 block|;

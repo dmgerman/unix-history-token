@@ -142,6 +142,7 @@ name|virtual
 name|unsigned
 name|BreakAntiDependencies
 argument_list|(
+specifier|const
 name|std
 operator|::
 name|vector
@@ -154,13 +155,11 @@ argument_list|,
 name|MachineBasicBlock
 operator|::
 name|iterator
-operator|&
 name|Begin
 argument_list|,
 name|MachineBasicBlock
 operator|::
 name|iterator
-operator|&
 name|End
 argument_list|,
 name|unsigned

@@ -671,6 +671,7 @@ name|ELFSection
 modifier|&
 name|getTextSection
 parameter_list|(
+specifier|const
 name|Function
 modifier|*
 name|F

@@ -159,6 +159,9 @@ name|class
 name|CallInst
 decl_stmt|;
 name|class
+name|DbgValueInst
+decl_stmt|;
+name|class
 name|ExtractElementInst
 decl_stmt|;
 name|class
@@ -225,6 +228,9 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|PHINode
 decl_stmt|;
 name|class
@@ -281,15 +287,10 @@ decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// SelectionDAGBuilder - This is the common target-independent lowering
 comment|/// implementation that is parameterized by a TargetLowering object.
-comment|/// Also, targets can overload any lowering method.
 comment|///
 name|class
 name|SelectionDAGBuilder
 block|{
-name|MachineBasicBlock
-modifier|*
-name|CurMBB
-decl_stmt|;
 comment|/// CurDebugLoc - current file + line number.  Changes as we build the DAG.
 name|DebugLoc
 name|CurDebugLoc
@@ -535,9 +536,9 @@ name|CaseRec
 argument_list|(
 argument|MachineBasicBlock *bb
 argument_list|,
-argument|Constant *lt
+argument|const Constant *lt
 argument_list|,
-argument|Constant *ge
+argument|const Constant *ge
 argument_list|,
 argument|CaseRange r
 argument_list|)
@@ -569,10 +570,12 @@ name|CaseBB
 expr_stmt|;
 comment|/// LT, GE - If nonzero, we know the current case value must be less-than or
 comment|/// greater-than-or-equal-to these Constants.
+specifier|const
 name|Constant
 modifier|*
 name|LT
 decl_stmt|;
+specifier|const
 name|Constant
 modifier|*
 name|GE
@@ -738,11 +741,11 @@ name|CaseBlock
 argument_list|(
 argument|ISD::CondCode cc
 argument_list|,
-argument|Value *cmplhs
+argument|const Value *cmplhs
 argument_list|,
-argument|Value *cmprhs
+argument|const Value *cmprhs
 argument_list|,
-argument|Value *cmpmiddle
+argument|const Value *cmpmiddle
 argument_list|,
 argument|MachineBasicBlock *truebb
 argument_list|,
@@ -795,6 +798,7 @@ expr_stmt|;
 comment|// CmpLHS/CmpRHS/CmpMHS - The LHS/MHS/RHS of the comparison to emit.
 comment|// Emit by default LHS op RHS. MHS is used for range comparisons:
 comment|// If MHS is not null: (LHS<= MHS) and (MHS<= RHS).
+specifier|const
 name|Value
 modifier|*
 name|CmpLHS
@@ -885,7 +889,7 @@ argument|APInt F
 argument_list|,
 argument|APInt L
 argument_list|,
-argument|Value *SV
+argument|const Value *SV
 argument_list|,
 argument|MachineBasicBlock *H
 argument_list|,
@@ -923,6 +927,7 @@ expr_stmt|;
 name|APInt
 name|Last
 decl_stmt|;
+specifier|const
 name|Value
 modifier|*
 name|SValue
@@ -1005,7 +1010,7 @@ argument|APInt F
 argument_list|,
 argument|APInt R
 argument_list|,
-argument|Value* SV
+argument|const Value* SV
 argument_list|,
 argument|unsigned Rg
 argument_list|,
@@ -1064,6 +1069,7 @@ expr_stmt|;
 name|APInt
 name|Range
 decl_stmt|;
+specifier|const
 name|Value
 modifier|*
 name|SValue
@@ -1092,6 +1098,12 @@ label|:
 comment|// TLI - This is information that describes the available target features we
 comment|// need for lowering.  This indicates when operations are unavailable,
 comment|// implemented with a libcall, etc.
+specifier|const
+name|TargetMachine
+modifier|&
+name|TM
+decl_stmt|;
+specifier|const
 name|TargetLowering
 modifier|&
 name|TLI
@@ -1139,40 +1151,11 @@ name|BitTestBlock
 operator|>
 name|BitTestCases
 expr_stmt|;
-comment|/// PHINodesToUpdate - A list of phi instructions whose operand list will
-comment|/// be updated after processing the current basic block.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|MachineInstr
-operator|*
-operator|,
-name|unsigned
-operator|>
-expr|>
-name|PHINodesToUpdate
-expr_stmt|;
-comment|/// EdgeMapping - If an edge from CurMBB to any MBB is changed (e.g. due to
-comment|/// scheduler custom lowering), track the change here.
-name|DenseMap
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|,
-name|MachineBasicBlock
-operator|*
-operator|>
-name|EdgeMapping
-expr_stmt|;
 comment|// Emit PHI-node-operand constants only once even if used by multiple
 comment|// PHI nodes.
 name|DenseMap
 operator|<
+specifier|const
 name|Constant
 operator|*
 operator|,
@@ -1213,8 +1196,6 @@ name|SelectionDAGBuilder
 argument_list|(
 argument|SelectionDAG&dag
 argument_list|,
-argument|TargetLowering&tli
-argument_list|,
 argument|FunctionLoweringInfo&funcinfo
 argument_list|,
 argument|CodeGenOpt::Level ol
@@ -1225,9 +1206,20 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|TM
+argument_list|(
+name|dag
+operator|.
+name|getTarget
+argument_list|()
+argument_list|)
+operator|,
 name|TLI
 argument_list|(
-name|tli
+name|dag
+operator|.
+name|getTargetLoweringInfo
+argument_list|()
 argument_list|)
 operator|,
 name|DAG
@@ -1267,7 +1259,7 @@ operator|&
 name|aa
 argument_list|)
 expr_stmt|;
-comment|/// clear - Clear out the curret SelectionDAG and the associated
+comment|/// clear - Clear out the current SelectionDAG and the associated
 comment|/// state and prepare this SelectionDAGBuilder object to be used
 comment|/// for a new block. This doesn't clear out information about
 comment|/// additional blocks that are needed to complete switch lowering
@@ -1303,18 +1295,6 @@ return|return
 name|CurDebugLoc
 return|;
 block|}
-name|void
-name|setCurDebugLoc
-parameter_list|(
-name|DebugLoc
-name|dl
-parameter_list|)
-block|{
-name|CurDebugLoc
-operator|=
-name|dl
-expr_stmt|;
-block|}
 name|unsigned
 name|getSDNodeOrder
 argument_list|()
@@ -1327,6 +1307,7 @@ block|}
 name|void
 name|CopyValueToVirtualRegister
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -1350,6 +1331,7 @@ function_decl|;
 name|void
 name|visit
 parameter_list|(
+specifier|const
 name|Instruction
 modifier|&
 name|I
@@ -1361,24 +1343,12 @@ parameter_list|(
 name|unsigned
 name|Opcode
 parameter_list|,
+specifier|const
 name|User
 modifier|&
 name|I
 parameter_list|)
 function_decl|;
-name|void
-name|setCurrentBasicBlock
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-block|{
-name|CurMBB
-operator|=
-name|MBB
-expr_stmt|;
-block|}
 name|SDValue
 name|getValue
 parameter_list|(
@@ -1455,6 +1425,7 @@ decl_stmt|;
 name|void
 name|FindMergedConditions
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|Cond
@@ -1470,6 +1441,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|CurBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|,
 name|unsigned
 name|Opc
@@ -1478,6 +1453,7 @@ function_decl|;
 name|void
 name|EmitBranchForMergedCondition
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|Cond
@@ -1493,6 +1469,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|CurBB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|bool
@@ -1512,6 +1492,7 @@ decl_stmt|;
 name|bool
 name|isExportableFromCurrentBlock
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -1525,6 +1506,7 @@ function_decl|;
 name|void
 name|CopyToExportRegsIfNeeded
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -1533,6 +1515,7 @@ function_decl|;
 name|void
 name|ExportFromCurrentBlock
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V
@@ -1541,7 +1524,7 @@ function_decl|;
 name|void
 name|LowerCallTo
 parameter_list|(
-name|CallSite
+name|ImmutableCallSite
 name|CS
 parameter_list|,
 name|SDValue
@@ -1563,6 +1546,7 @@ comment|// Terminator instructions.
 name|void
 name|visitRet
 parameter_list|(
+specifier|const
 name|ReturnInst
 modifier|&
 name|I
@@ -1571,6 +1555,7 @@ function_decl|;
 name|void
 name|visitBr
 parameter_list|(
+specifier|const
 name|BranchInst
 modifier|&
 name|I
@@ -1579,6 +1564,7 @@ function_decl|;
 name|void
 name|visitSwitch
 parameter_list|(
+specifier|const
 name|SwitchInst
 modifier|&
 name|I
@@ -1587,6 +1573,7 @@ function_decl|;
 name|void
 name|visitIndirectBr
 parameter_list|(
+specifier|const
 name|IndirectBrInst
 modifier|&
 name|I
@@ -1595,6 +1582,7 @@ function_decl|;
 name|void
 name|visitUnreachable
 parameter_list|(
+specifier|const
 name|UnreachableInst
 modifier|&
 name|I
@@ -1614,6 +1602,7 @@ name|CaseRecVector
 modifier|&
 name|WorkList
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|SV
@@ -1621,6 +1610,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Default
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|bool
@@ -1634,6 +1627,7 @@ name|CaseRecVector
 modifier|&
 name|WorkList
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|SV
@@ -1641,6 +1635,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Default
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|bool
@@ -1654,6 +1652,7 @@ name|CaseRecVector
 modifier|&
 name|WorkList
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|SV
@@ -1661,6 +1660,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Default
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|bool
@@ -1674,6 +1677,7 @@ name|CaseRecVector
 modifier|&
 name|WorkList
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|SV
@@ -1681,6 +1685,10 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Default
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|public
@@ -1691,6 +1699,10 @@ parameter_list|(
 name|CaseBlock
 modifier|&
 name|CB
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|void
@@ -1699,6 +1711,10 @@ parameter_list|(
 name|BitTestBlock
 modifier|&
 name|B
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|void
@@ -1714,6 +1730,10 @@ parameter_list|,
 name|BitTestCase
 modifier|&
 name|B
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|void
@@ -1734,6 +1754,10 @@ parameter_list|,
 name|JumpTableHeader
 modifier|&
 name|JTH
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|SwitchBB
 parameter_list|)
 function_decl|;
 name|private
@@ -1742,6 +1766,7 @@ comment|// These all get lowered before this pass.
 name|void
 name|visitInvoke
 parameter_list|(
+specifier|const
 name|InvokeInst
 modifier|&
 name|I
@@ -1750,6 +1775,7 @@ function_decl|;
 name|void
 name|visitUnwind
 parameter_list|(
+specifier|const
 name|UnwindInst
 modifier|&
 name|I
@@ -1758,6 +1784,7 @@ function_decl|;
 name|void
 name|visitBinary
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1769,6 +1796,7 @@ function_decl|;
 name|void
 name|visitShift
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1780,6 +1808,7 @@ function_decl|;
 name|void
 name|visitAdd
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1798,6 +1827,7 @@ block|}
 name|void
 name|visitFAdd
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1816,6 +1846,7 @@ block|}
 name|void
 name|visitSub
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1834,6 +1865,7 @@ block|}
 name|void
 name|visitFSub
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1842,6 +1874,7 @@ function_decl|;
 name|void
 name|visitMul
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1860,6 +1893,7 @@ block|}
 name|void
 name|visitFMul
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1878,6 +1912,7 @@ block|}
 name|void
 name|visitURem
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1896,6 +1931,7 @@ block|}
 name|void
 name|visitSRem
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1914,6 +1950,7 @@ block|}
 name|void
 name|visitFRem
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1932,6 +1969,7 @@ block|}
 name|void
 name|visitUDiv
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1950,6 +1988,7 @@ block|}
 name|void
 name|visitSDiv
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1968,6 +2007,7 @@ block|}
 name|void
 name|visitFDiv
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -1986,6 +2026,7 @@ block|}
 name|void
 name|visitAnd
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2004,6 +2045,7 @@ block|}
 name|void
 name|visitOr
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2022,6 +2064,7 @@ block|}
 name|void
 name|visitXor
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2040,6 +2083,7 @@ block|}
 name|void
 name|visitShl
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2058,6 +2102,7 @@ block|}
 name|void
 name|visitLShr
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2076,6 +2121,7 @@ block|}
 name|void
 name|visitAShr
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2094,6 +2140,7 @@ block|}
 name|void
 name|visitICmp
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2102,6 +2149,7 @@ function_decl|;
 name|void
 name|visitFCmp
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2111,6 +2159,7 @@ comment|// Visit the conversion instructions
 name|void
 name|visitTrunc
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2119,6 +2168,7 @@ function_decl|;
 name|void
 name|visitZExt
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2127,6 +2177,7 @@ function_decl|;
 name|void
 name|visitSExt
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2135,6 +2186,7 @@ function_decl|;
 name|void
 name|visitFPTrunc
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2143,6 +2195,7 @@ function_decl|;
 name|void
 name|visitFPExt
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2151,6 +2204,7 @@ function_decl|;
 name|void
 name|visitFPToUI
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2159,6 +2213,7 @@ function_decl|;
 name|void
 name|visitFPToSI
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2167,6 +2222,7 @@ function_decl|;
 name|void
 name|visitUIToFP
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2175,6 +2231,7 @@ function_decl|;
 name|void
 name|visitSIToFP
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2183,6 +2240,7 @@ function_decl|;
 name|void
 name|visitPtrToInt
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2191,6 +2249,7 @@ function_decl|;
 name|void
 name|visitIntToPtr
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2199,6 +2258,7 @@ function_decl|;
 name|void
 name|visitBitCast
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2207,6 +2267,7 @@ function_decl|;
 name|void
 name|visitExtractElement
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2215,6 +2276,7 @@ function_decl|;
 name|void
 name|visitInsertElement
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2223,6 +2285,7 @@ function_decl|;
 name|void
 name|visitShuffleVector
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2231,6 +2294,7 @@ function_decl|;
 name|void
 name|visitExtractValue
 parameter_list|(
+specifier|const
 name|ExtractValueInst
 modifier|&
 name|I
@@ -2239,6 +2303,7 @@ function_decl|;
 name|void
 name|visitInsertValue
 parameter_list|(
+specifier|const
 name|InsertValueInst
 modifier|&
 name|I
@@ -2247,6 +2312,7 @@ function_decl|;
 name|void
 name|visitGetElementPtr
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2255,6 +2321,7 @@ function_decl|;
 name|void
 name|visitSelect
 parameter_list|(
+specifier|const
 name|User
 modifier|&
 name|I
@@ -2263,6 +2330,7 @@ function_decl|;
 name|void
 name|visitAlloca
 parameter_list|(
+specifier|const
 name|AllocaInst
 modifier|&
 name|I
@@ -2271,6 +2339,7 @@ function_decl|;
 name|void
 name|visitLoad
 parameter_list|(
+specifier|const
 name|LoadInst
 modifier|&
 name|I
@@ -2279,6 +2348,7 @@ function_decl|;
 name|void
 name|visitStore
 parameter_list|(
+specifier|const
 name|StoreInst
 modifier|&
 name|I
@@ -2287,15 +2357,16 @@ function_decl|;
 name|void
 name|visitPHI
 parameter_list|(
+specifier|const
 name|PHINode
 modifier|&
 name|I
 parameter_list|)
-block|{ }
-comment|// PHI nodes are handled specially.
+function_decl|;
 name|void
 name|visitCall
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2304,6 +2375,7 @@ function_decl|;
 name|bool
 name|visitMemCmpCall
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2312,7 +2384,7 @@ function_decl|;
 name|void
 name|visitInlineAsm
 parameter_list|(
-name|CallSite
+name|ImmutableCallSite
 name|CS
 parameter_list|)
 function_decl|;
@@ -2321,6 +2393,7 @@ name|char
 modifier|*
 name|visitIntrinsicCall
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2332,6 +2405,7 @@ function_decl|;
 name|void
 name|visitTargetIntrinsic
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2343,6 +2417,7 @@ function_decl|;
 name|void
 name|visitPow
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2351,6 +2426,7 @@ function_decl|;
 name|void
 name|visitExp2
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2359,6 +2435,7 @@ function_decl|;
 name|void
 name|visitExp
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2367,6 +2444,7 @@ function_decl|;
 name|void
 name|visitLog
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2375,6 +2453,7 @@ function_decl|;
 name|void
 name|visitLog2
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2383,6 +2462,7 @@ function_decl|;
 name|void
 name|visitLog10
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2391,6 +2471,7 @@ function_decl|;
 name|void
 name|visitVAStart
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2399,6 +2480,7 @@ function_decl|;
 name|void
 name|visitVAArg
 parameter_list|(
+specifier|const
 name|VAArgInst
 modifier|&
 name|I
@@ -2407,6 +2489,7 @@ function_decl|;
 name|void
 name|visitVAEnd
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2415,6 +2498,7 @@ function_decl|;
 name|void
 name|visitVACopy
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -2423,6 +2507,7 @@ function_decl|;
 name|void
 name|visitUserOp1
 parameter_list|(
+specifier|const
 name|Instruction
 modifier|&
 name|I
@@ -2437,6 +2522,7 @@ block|}
 name|void
 name|visitUserOp2
 parameter_list|(
+specifier|const
 name|Instruction
 modifier|&
 name|I
@@ -2453,6 +2539,7 @@ name|char
 modifier|*
 name|implVisitBinaryAtomic
 argument_list|(
+specifier|const
 name|CallInst
 operator|&
 name|I
@@ -2468,6 +2555,7 @@ name|char
 modifier|*
 name|implVisitAluOverflow
 argument_list|(
+specifier|const
 name|CallInst
 operator|&
 name|I
@@ -2478,6 +2566,45 @@ name|NodeType
 name|Op
 argument_list|)
 decl_stmt|;
+name|void
+name|HandlePHINodesInSuccessorBlocks
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|LLVMBB
+parameter_list|)
+function_decl|;
+comment|/// EmitFuncArgumentDbgValue - If the DbgValueInst is a dbg_value of a
+comment|/// function argument, create the corresponding DBG_VALUE machine instruction
+comment|/// for it now. At the end of instruction selection, they will be inserted to
+comment|/// the entry BB.
+name|bool
+name|EmitFuncArgumentDbgValue
+parameter_list|(
+specifier|const
+name|DbgValueInst
+modifier|&
+name|DI
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|MDNode
+modifier|*
+name|Variable
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|,
+specifier|const
+name|SDValue
+modifier|&
+name|N
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

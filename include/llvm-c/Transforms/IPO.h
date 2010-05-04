@@ -121,6 +121,24 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createIPSCCPPass function. */
+name|void
+name|LLVMAddIPSCCPPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createInternalizePass function. */
+name|void
+name|LLVMAddInternalizePass
+parameter_list|(
+name|LLVMPassManagerRef
+parameter_list|,
+name|unsigned
+name|AllButMain
+parameter_list|)
+function_decl|;
 comment|// FIXME: Remove in LLVM 3.0.
 name|void
 name|LLVMAddRaiseAllocationsPass

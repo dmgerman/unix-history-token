@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallSet.h"
 end_include
 
@@ -840,17 +834,7 @@ name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitSchedule
-argument_list|(
-name|DenseMap
-operator|<
-name|MachineBasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|*
-argument_list|)
+argument_list|()
 block|;
 comment|/// StartBlock - Prepare to perform scheduling in the given block.
 comment|///

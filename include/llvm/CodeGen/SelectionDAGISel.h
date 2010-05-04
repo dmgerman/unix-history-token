@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Constant.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -151,6 +145,7 @@ name|TargetMachine
 operator|&
 name|TM
 block|;
+specifier|const
 name|TargetLowering
 operator|&
 name|TLI
@@ -175,10 +170,6 @@ name|SelectionDAGBuilder
 operator|*
 name|SDB
 block|;
-name|MachineBasicBlock
-operator|*
-name|BB
-block|;
 name|AliasAnalysis
 operator|*
 name|AA
@@ -199,7 +190,7 @@ block|;
 name|explicit
 name|SelectionDAGISel
 argument_list|(
-argument|TargetMachine&tm
+argument|const TargetMachine&tm
 argument_list|,
 argument|CodeGenOpt::Level OL = CodeGenOpt::Default
 argument_list|)
@@ -209,6 +200,7 @@ operator|~
 name|SelectionDAGISel
 argument_list|()
 block|;
+specifier|const
 name|TargetLowering
 operator|&
 name|getTargetLowering
@@ -235,20 +227,10 @@ operator|&
 name|MF
 argument_list|)
 block|;
-name|unsigned
-name|MakeReg
-argument_list|(
-argument|EVT VT
-argument_list|)
-block|;
 name|virtual
 name|void
 name|EmitFunctionEntryCode
-argument_list|(
-argument|Function&Fn
-argument_list|,
-argument|MachineFunction&MF
-argument_list|)
+argument_list|()
 block|{}
 comment|/// PreprocessISelDAG - This hook allows targets to hack on the graph before
 comment|/// instruction selection starts.
@@ -313,6 +295,9 @@ specifier|const
 block|;
 comment|/// IsLegalToFold - Returns true if the specific operand node N of
 comment|/// U can be folded during instruction selection that starts at Root.
+comment|/// FIXME: This is a static member function because the PIC16 target,
+comment|/// which uses it during lowering.
+specifier|static
 name|bool
 name|IsLegalToFold
 argument_list|(
@@ -322,9 +307,10 @@ argument|SDNode *U
 argument_list|,
 argument|SDNode *Root
 argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
 argument|bool IgnoreChains = false
 argument_list|)
-specifier|const
 block|;
 comment|/// CreateTargetHazardRecognizer - Return a newly allocated hazard recognizer
 comment|/// to use for this target when scheduling the DAG.
@@ -911,45 +897,58 @@ argument|unsigned EmitNodeInfo
 argument_list|)
 block|;
 name|void
+name|PrepareEHLandingPad
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|)
+block|;
+name|void
 name|SelectAllBasicBlocks
 argument_list|(
+specifier|const
 name|Function
 operator|&
 name|Fn
-argument_list|,
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
 argument_list|)
 block|;
 name|void
 name|FinishBasicBlock
-argument_list|()
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|)
 block|;
-name|void
+name|MachineBasicBlock
+operator|*
 name|SelectBasicBlock
 argument_list|(
-argument|BasicBlock *LLVMBB
+argument|MachineBasicBlock *BB
 argument_list|,
-argument|BasicBlock::iterator Begin
+argument|const BasicBlock *LLVMBB
 argument_list|,
-argument|BasicBlock::iterator End
+argument|BasicBlock::const_iterator Begin
+argument_list|,
+argument|BasicBlock::const_iterator End
 argument_list|,
 argument|bool&HadTailCall
 argument_list|)
 block|;
-name|void
+name|MachineBasicBlock
+operator|*
 name|CodeGenAndEmitDAG
-argument_list|()
+argument_list|(
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|)
 block|;
 name|void
 name|LowerArguments
 argument_list|(
+specifier|const
 name|BasicBlock
 operator|*
 name|BB
@@ -962,26 +961,6 @@ block|;
 name|void
 name|ComputeLiveOutVRegInfo
 argument_list|()
-block|;
-name|void
-name|HandlePHINodesInSuccessorBlocks
-argument_list|(
-name|BasicBlock
-operator|*
-name|LLVMBB
-argument_list|)
-block|;
-name|bool
-name|HandlePHINodesInSuccessorBlocksFast
-argument_list|(
-name|BasicBlock
-operator|*
-name|LLVMBB
-argument_list|,
-name|FastISel
-operator|*
-name|F
-argument_list|)
 block|;
 comment|/// Create the scheduler. If a specific scheduler was specified
 comment|/// via the SchedulerRegistry, use it, otherwise select the

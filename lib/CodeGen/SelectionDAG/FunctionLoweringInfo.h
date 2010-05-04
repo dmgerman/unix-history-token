@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/InlineAsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APInt.h"
 end_include
 
@@ -73,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_ifndef
@@ -96,6 +114,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/ValueTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/ISDOpcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CallSite.h"
 end_include
 
 begin_include
@@ -127,6 +157,9 @@ name|class
 name|Instruction
 decl_stmt|;
 name|class
+name|MachineInstr
+decl_stmt|;
+name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
@@ -153,10 +186,12 @@ name|FunctionLoweringInfo
 block|{
 name|public
 label|:
+specifier|const
 name|TargetLowering
 modifier|&
 name|TLI
 decl_stmt|;
+specifier|const
 name|Function
 modifier|*
 name|Fn
@@ -179,32 +214,6 @@ comment|/// allocated to hold a pointer to the hidden sret parameter.
 name|unsigned
 name|DemoteRegister
 decl_stmt|;
-name|explicit
-name|FunctionLoweringInfo
-parameter_list|(
-name|TargetLowering
-modifier|&
-name|TLI
-parameter_list|)
-function_decl|;
-comment|/// set - Initialize this FunctionLoweringInfo with the given Function
-comment|/// and its associated MachineFunction.
-comment|///
-name|void
-name|set
-parameter_list|(
-name|Function
-modifier|&
-name|Fn
-parameter_list|,
-name|MachineFunction
-modifier|&
-name|MF
-parameter_list|,
-name|bool
-name|EnableFastISel
-parameter_list|)
-function_decl|;
 comment|/// MBBMap - A mapping from LLVM basic blocks to their machine code entry.
 name|DenseMap
 operator|<
@@ -243,11 +252,23 @@ name|int
 operator|>
 name|StaticAllocaMap
 expr_stmt|;
+comment|/// ArgDbgValues - A list of DBG_VALUE instructions created during isel for
+comment|/// function arguments that are inserted after scheduling is completed.
+name|SmallVector
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+literal|8
+operator|>
+name|ArgDbgValues
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 operator|,
@@ -257,6 +278,7 @@ name|CatchInfoLost
 expr_stmt|;
 name|SmallSet
 operator|<
+specifier|const
 name|Instruction
 operator|*
 operator|,
@@ -266,6 +288,106 @@ name|CatchInfoFound
 expr_stmt|;
 endif|#
 directive|endif
+struct|struct
+name|LiveOutInfo
+block|{
+name|unsigned
+name|NumSignBits
+decl_stmt|;
+name|APInt
+name|KnownOne
+decl_stmt|,
+name|KnownZero
+decl_stmt|;
+name|LiveOutInfo
+argument_list|()
+operator|:
+name|NumSignBits
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|KnownOne
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+operator|,
+name|KnownZero
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// LiveOutRegInfo - Information about live out vregs, indexed by their
+comment|/// register number offset by 'FirstVirtualRegister'.
+name|std
+operator|::
+name|vector
+operator|<
+name|LiveOutInfo
+operator|>
+name|LiveOutRegInfo
+expr_stmt|;
+comment|/// PHINodesToUpdate - A list of phi instructions whose operand list will
+comment|/// be updated after processing the current basic block.
+comment|/// TODO: This isn't per-function state, it's per-basic-block state. But
+comment|/// there's no other convenient place for it to live right now.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|PHINodesToUpdate
+expr_stmt|;
+name|explicit
+name|FunctionLoweringInfo
+parameter_list|(
+specifier|const
+name|TargetLowering
+modifier|&
+name|TLI
+parameter_list|)
+function_decl|;
+comment|/// set - Initialize this FunctionLoweringInfo with the given Function
+comment|/// and its associated MachineFunction.
+comment|///
+name|void
+name|set
+parameter_list|(
+specifier|const
+name|Function
+modifier|&
+name|Fn
+parameter_list|,
+name|MachineFunction
+modifier|&
+name|MF
+parameter_list|,
+name|bool
+name|EnableFastISel
+parameter_list|)
+function_decl|;
+comment|/// clear - Clear out all the function-specific state. This returns this
+comment|/// FunctionLoweringInfo to an empty state, ready to be used for a
+comment|/// different function.
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 name|unsigned
 name|MakeReg
 parameter_list|(
@@ -338,150 +460,14 @@ name|V
 argument_list|)
 return|;
 block|}
-struct|struct
-name|LiveOutInfo
-block|{
-name|unsigned
-name|NumSignBits
-decl_stmt|;
-name|APInt
-name|KnownOne
-decl_stmt|,
-name|KnownZero
-decl_stmt|;
-name|LiveOutInfo
-argument_list|()
-operator|:
-name|NumSignBits
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|KnownOne
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|KnownZero
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-block|{}
-block|}
-struct|;
-comment|/// LiveOutRegInfo - Information about live out vregs, indexed by their
-comment|/// register number offset by 'FirstVirtualRegister'.
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveOutInfo
-operator|>
-name|LiveOutRegInfo
-expr_stmt|;
-comment|/// clear - Clear out all the function-specific state. This returns this
-comment|/// FunctionLoweringInfo to an empty state, ready to be used for a
-comment|/// different function.
-name|void
-name|clear
-parameter_list|()
-function_decl|;
 block|}
 empty_stmt|;
-comment|/// ComputeLinearIndex - Given an LLVM IR aggregate type and a sequence
-comment|/// of insertvalue or extractvalue indices that identify a member, return
-comment|/// the linearized index of the start of the member.
-comment|///
-name|unsigned
-name|ComputeLinearIndex
-parameter_list|(
-specifier|const
-name|TargetLowering
-modifier|&
-name|TLI
-parameter_list|,
-specifier|const
-name|Type
-modifier|*
-name|Ty
-parameter_list|,
-specifier|const
-name|unsigned
-modifier|*
-name|Indices
-parameter_list|,
-specifier|const
-name|unsigned
-modifier|*
-name|IndicesEnd
-parameter_list|,
-name|unsigned
-name|CurIndex
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-comment|/// ComputeValueVTs - Given an LLVM IR type, compute a sequence of
-comment|/// EVTs that represent all the individual underlying
-comment|/// non-aggregate types that comprise it.
-comment|///
-comment|/// If Offsets is non-null, it points to a vector to be filled in
-comment|/// with the in-memory offsets of each of the individual values.
-comment|///
-name|void
-name|ComputeValueVTs
-argument_list|(
-specifier|const
-name|TargetLowering
-operator|&
-name|TLI
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|EVT
-operator|>
-operator|&
-name|ValueVTs
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|uint64_t
-operator|>
-operator|*
-name|Offsets
-operator|=
-literal|0
-argument_list|,
-name|uint64_t
-name|StartingOffset
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-comment|/// ExtractTypeInfo - Returns the type info, possibly bitcast, encoded in V.
-name|GlobalVariable
-modifier|*
-name|ExtractTypeInfo
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
 comment|/// AddCatchInfo - Extract the personality and type infos from an eh.selector
 comment|/// call, and add them to the specified machine basic block.
 name|void
 name|AddCatchInfo
 parameter_list|(
+specifier|const
 name|CallInst
 modifier|&
 name|I
@@ -499,10 +485,12 @@ comment|/// CopyCatchInfo - Copy catch information from DestBB to SrcBB.
 name|void
 name|CopyCatchInfo
 parameter_list|(
+specifier|const
 name|BasicBlock
 modifier|*
 name|SrcBB
 parameter_list|,
+specifier|const
 name|BasicBlock
 modifier|*
 name|DestBB

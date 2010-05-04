@@ -136,10 +136,6 @@ range|:
 name|public
 name|TargetLowering
 block|{
-name|int
-name|VarArgsFrameOffset
-block|;
-comment|// Frame offset to start of varargs area.
 name|public
 operator|:
 name|SparcTargetLowering
@@ -157,16 +153,8 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
-block|;
-name|int
-name|getVarArgsFrameOffset
-argument_list|()
 specifier|const
-block|{
-return|return
-name|VarArgsFrameOffset
-return|;
-block|}
+block|;
 comment|/// computeMaskedBitsForTargetNode - Determine which of the bits specified
 comment|/// in Mask are known to be either zero or one and return them in the
 comment|/// KnownZero/KnownOne bitsets.
@@ -197,10 +185,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -288,6 +272,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -313,6 +298,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -330,6 +316,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress
@@ -338,6 +325,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerConstantPool
@@ -346,6 +334,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

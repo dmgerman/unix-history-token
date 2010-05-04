@@ -124,6 +124,7 @@ name|class
 name|VISIBILITY_HIDDEN
 name|DAGTypeLegalizer
 block|{
+specifier|const
 name|TargetLowering
 modifier|&
 name|TLI

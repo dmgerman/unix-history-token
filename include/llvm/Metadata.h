@@ -337,7 +337,7 @@ operator|<<
 literal|0
 block|,
 comment|/// NotUniquedBit - This is set on MDNodes that are not uniqued because they
-comment|/// have a null perand.
+comment|/// have a null operand.
 name|NotUniquedBit
 init|=
 literal|1

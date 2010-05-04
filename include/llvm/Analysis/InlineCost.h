@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- InlineCost.cpp - Cost analysis for inliner ---------------*- C++ -*-===//
+comment|//===- InlineCost.h - Cost analysis for inliner -----------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_decl_stmt
@@ -579,9 +579,9 @@ parameter_list|)
 function_decl|;
 block|}
 struct|;
-name|std
-operator|::
-name|map
+comment|// The Function* for a function can be changed (by ArgumentPromotion);
+comment|// the ValueMap will update itself when this happens.
+name|ValueMap
 operator|<
 specifier|const
 name|Function
@@ -601,6 +601,33 @@ name|getInlineCost
 argument_list|(
 name|CallSite
 name|CS
+argument_list|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|Function
+operator|*
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|NeverInline
+argument_list|)
+decl_stmt|;
+comment|/// getCalledFunction - The heuristic used to determine if we should inline
+comment|/// the function call or not.  The callee is explicitly specified, to allow
+comment|/// you to calculate the cost of inlining a function via a pointer.  The
+comment|/// result assumes that the inlined version will always be used.  You should
+comment|/// weight it yourself in cases where this callee will not always be called.
+name|InlineCost
+name|getInlineCost
+argument_list|(
+name|CallSite
+name|CS
+argument_list|,
+name|Function
+operator|*
+name|Callee
 argument_list|,
 name|SmallPtrSet
 operator|<
@@ -658,6 +685,17 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// callIsSmall - If a call is likely to lower to a single target instruction,
+comment|/// or is otherwise deemed small return true.
+name|bool
+name|callIsSmall
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|Callee
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

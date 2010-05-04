@@ -216,6 +216,7 @@ operator|)
 return|;
 block|}
 name|virtual
+specifier|const
 name|PIC16TargetLowering
 operator|*
 name|getTargetLowering
@@ -223,15 +224,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|PIC16TargetLowering
-operator|*
-operator|>
-operator|(
 operator|&
 name|TLInfo
-operator|)
 return|;
 block|}
 name|virtual

@@ -229,6 +229,15 @@ modifier|*
 name|createEmitX86CodeToMemory
 parameter_list|()
 function_decl|;
+comment|/// createX86MaxStackAlignmentHeuristicPass - This function returns a pass
+comment|/// which determines whether the frame pointer register should be
+comment|/// reserved in case dynamic stack alignment is later required.
+comment|///
+name|FunctionPass
+modifier|*
+name|createX86MaxStackAlignmentHeuristicPass
+parameter_list|()
+function_decl|;
 specifier|extern
 name|Target
 name|TheX86_32Target

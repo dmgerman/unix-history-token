@@ -88,6 +88,12 @@ name|class
 name|MachineMemOperand
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
+name|MCInst
+decl_stmt|;
+name|class
 name|SDNode
 decl_stmt|;
 name|class
@@ -622,7 +628,7 @@ comment|/// hasStoreToStackSlot - If the specified machine instruction has a
 comment|/// store to a stack slot, return true along with the FrameIndex of
 comment|/// the loaded stack slot and the machine mem operand containing the
 comment|/// reference.  If not, return false.  Unlike isStoreToStackSlot,
-comment|/// this returns true for any instructions that loads from the
+comment|/// this returns true for any instructions that stores to the
 comment|/// stack.  This is just a hint, as some cases may be missed.
 name|virtual
 name|bool
@@ -1140,6 +1146,43 @@ return|return
 name|false
 return|;
 block|}
+comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
+comment|/// DBG_VALUE encoding the address of a frame index.  Addresses would
+comment|/// normally be lowered the same way as other addresses on the target,
+comment|/// e.g. in load instructions.  For targets that do not support this
+comment|/// the debug info is simply lost.
+comment|/// If you add this for a target you should handle this DBG_VALUE in the
+comment|/// target-specific AsmPrinter code as well; you will probably get invalid
+comment|/// assembly output if you don't.
+name|virtual
+name|MachineInstr
+modifier|*
+name|emitFrameIndexDebugValue
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|int
+name|FrameIx
+argument_list|,
+name|uint64_t
+name|Offset
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|MDPtr
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// foldMemoryOperand - Attempt to fold a load or store of the specified stack
 comment|/// slot into the specified machine instruction for the specified operand(s).
 comment|/// If this is possible, a new instruction is returned with the specified
@@ -1494,6 +1537,19 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
+name|virtual
+name|void
+name|getNoopForMachoTarget
+argument_list|(
+name|MCInst
+operator|&
+name|NopInst
+argument_list|)
+decl|const
+block|{
+comment|// Default to just using 'nop' string.
+block|}
 comment|/// isPredicated - Returns true if the instruction is already predicated.
 comment|///
 name|virtual

@@ -88,6 +88,14 @@ comment|/// the return address value.
 name|unsigned
 name|GlobalRetAddr
 block|;
+comment|/// VarArgsOffset - What is the offset to the first vaarg
+name|int
+name|VarArgsOffset
+block|;
+comment|/// VarArgsBase - What is the base FrameIndex
+name|int
+name|VarArgsBase
+block|;
 name|public
 operator|:
 name|AlphaMachineFunctionInfo
@@ -99,6 +107,16 @@ literal|0
 argument_list|)
 block|,
 name|GlobalRetAddr
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsBase
 argument_list|(
 literal|0
 argument_list|)
@@ -117,6 +135,16 @@ literal|0
 argument_list|)
 block|,
 name|GlobalRetAddr
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsBase
 argument_list|(
 literal|0
 argument_list|)
@@ -158,6 +186,44 @@ block|{
 name|GlobalRetAddr
 operator|=
 name|Reg
+block|; }
+name|int
+name|getVarArgsOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsOffset
+return|;
+block|}
+name|void
+name|setVarArgsOffset
+argument_list|(
+argument|int Offset
+argument_list|)
+block|{
+name|VarArgsOffset
+operator|=
+name|Offset
+block|; }
+name|int
+name|getVarArgsBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsBase
+return|;
+block|}
+name|void
+name|setVarArgsBase
+argument_list|(
+argument|int Base
+argument_list|)
+block|{
+name|VarArgsBase
+operator|=
+name|Base
 block|; }
 expr|}
 block|;  }

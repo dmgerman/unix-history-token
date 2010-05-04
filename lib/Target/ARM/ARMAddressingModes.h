@@ -619,34 +619,15 @@ operator|&
 literal|31
 return|;
 comment|// HW rotates right, not left.
-comment|// For values like 0xF000000F, we should skip the first run of ones, then
+comment|// For values like 0xF000000F, we should ignore the low 6 bits, then
 comment|// retry the hunt.
 if|if
 condition|(
 name|Imm
 operator|&
-literal|1
+literal|63U
 condition|)
 block|{
-name|unsigned
-name|TrailingOnes
-init|=
-name|CountTrailingZeros_32
-argument_list|(
-operator|~
-name|Imm
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|TrailingOnes
-operator|!=
-literal|32
-condition|)
-block|{
-comment|// Avoid overflow on 0xFFFFFFFF
-comment|// Restart the search for a high-order bit after the initial seconds of
-comment|// ones.
 name|unsigned
 name|TZ2
 init|=
@@ -655,18 +636,9 @@ argument_list|(
 name|Imm
 operator|&
 operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-name|TrailingOnes
-operator|)
-operator|-
-literal|1
-operator|)
+literal|63U
 argument_list|)
 decl_stmt|;
-comment|// Rotate amount must be even.
 name|unsigned
 name|RotAmt2
 init|=
@@ -675,13 +647,8 @@ operator|&
 operator|~
 literal|1
 decl_stmt|;
-comment|// If this fits, use it.
 if|if
 condition|(
-name|RotAmt2
-operator|!=
-literal|32
-operator|&&
 operator|(
 name|rotr32
 argument_list|(
@@ -706,7 +673,6 @@ operator|&
 literal|31
 return|;
 comment|// HW rotates right, not left.
-block|}
 block|}
 comment|// Otherwise, we have no way to cover this span of bits with a single
 comment|// shifter_op immediate.  Return a chunk of bits that will be useful to

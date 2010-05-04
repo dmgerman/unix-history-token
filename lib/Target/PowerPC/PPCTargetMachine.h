@@ -193,6 +193,7 @@ name|JITInfo
 return|;
 block|}
 name|virtual
+specifier|const
 name|PPCTargetLowering
 operator|*
 name|getTargetLowering
@@ -200,15 +201,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|PPCTargetLowering
-operator|*
-operator|>
-operator|(
 operator|&
 name|TLInfo
-operator|)
 return|;
 block|}
 name|virtual

@@ -734,6 +734,19 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+operator|~
+name|CallGraphNode
+argument_list|()
+block|{
+name|assert
+argument_list|(
+name|NumReferences
+operator|==
+literal|0
+operator|&&
+literal|"Node deleted while references remain"
+argument_list|)
+block|;   }
 comment|//===---------------------------------------------------------------------
 comment|// Accessor methods.
 comment|//
@@ -1089,6 +1102,17 @@ modifier|*
 name|NewNode
 parameter_list|)
 function_decl|;
+comment|/// allReferencesDropped - This is a special function that should only be
+comment|/// used by the CallGraph class.
+name|void
+name|allReferencesDropped
+parameter_list|()
+block|{
+name|NumReferences
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//

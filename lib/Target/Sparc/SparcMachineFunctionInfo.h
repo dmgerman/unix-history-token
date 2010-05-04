@@ -80,12 +80,21 @@ operator|:
 name|unsigned
 name|GlobalBaseReg
 block|;
+comment|/// VarArgsFrameOffset - Frame offset to start of varargs area.
+name|int
+name|VarArgsFrameOffset
+block|;
 name|public
 operator|:
 name|SparcMachineFunctionInfo
 argument_list|()
 operator|:
 name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsFrameOffset
 argument_list|(
 literal|0
 argument_list|)
@@ -99,6 +108,11 @@ name|MF
 argument_list|)
 operator|:
 name|GlobalBaseReg
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsFrameOffset
 argument_list|(
 literal|0
 argument_list|)
@@ -121,6 +135,25 @@ block|{
 name|GlobalBaseReg
 operator|=
 name|Reg
+block|; }
+name|int
+name|getVarArgsFrameOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameOffset
+return|;
+block|}
+name|void
+name|setVarArgsFrameOffset
+argument_list|(
+argument|int Offset
+argument_list|)
+block|{
+name|VarArgsFrameOffset
+operator|=
+name|Offset
 block|; }
 expr|}
 block|; }

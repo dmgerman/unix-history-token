@@ -882,6 +882,16 @@ argument_list|()
 else|:
 literal|0
 block|;
+operator|(
+name|void
+operator|)
+name|HL
+block|;
+operator|(
+name|void
+operator|)
+name|HR
+block|;
 name|assert
 argument_list|(
 name|getHeight

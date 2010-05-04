@@ -83,6 +83,9 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|BumpPtrAllocator
+decl_stmt|;
 comment|/// SSAUpdater - This class updates SSA form for a set of values defined in
 comment|/// multiple blocks.  This is used when code duplication or another unstructured
 comment|/// transformation wants to rewrite a set of uses of one value with uses of a
@@ -90,11 +93,24 @@ comment|/// set of values.
 name|class
 name|SSAUpdater
 block|{
+name|public
+label|:
+name|class
+name|BBInfo
+decl_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|BBInfo
+operator|*
+operator|>
+name|BlockListTy
+expr_stmt|;
+name|private
+label|:
 comment|/// AvailableVals - This keeps track of which value to use on a per-block
-comment|/// basis.  When we insert PHI nodes, we keep track of them here.  We use
-comment|/// TrackingVH's for the value of the map because we RAUW PHI nodes when we
-comment|/// eliminate them, and want the TrackingVH's to track this.
-comment|//typedef DenseMap<BasicBlock*, TrackingVH<Value>> AvailableValsTy;
+comment|/// basis.  When we insert PHI nodes, we keep track of them here.
+comment|//typedef DenseMap<BasicBlock*, Value*> AvailableValsTy;
 name|void
 modifier|*
 name|AV
@@ -105,13 +121,12 @@ name|Value
 modifier|*
 name|PrototypeValue
 decl_stmt|;
-comment|/// IncomingPredInfo - We use this as scratch space when doing our recursive
-comment|/// walk.  This should only be used in GetValueInBlockInternal, normally it
-comment|/// should be empty.
-comment|//std::vector<std::pair<BasicBlock*, TrackingVH<Value>>> IncomingPredInfo;
+comment|/// BBMap - The GetValueAtEndOfBlock method maintains this mapping from
+comment|/// basic blocks to BBInfo structures.
+comment|/// typedef DenseMap<BasicBlock*, BBInfo*> BBMapTy;
 name|void
 modifier|*
-name|IPI
+name|BM
 decl_stmt|;
 comment|/// InsertedPHIs - If this is non-null, the SSAUpdater adds all PHI nodes that
 comment|/// it creates to the vector.
@@ -241,6 +256,74 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|)
+function_decl|;
+name|void
+name|BuildBlockList
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|,
+name|BumpPtrAllocator
+modifier|*
+name|Allocator
+parameter_list|)
+function_decl|;
+name|void
+name|FindDominators
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindPHIPlacement
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindAvailableVals
+parameter_list|(
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|void
+name|FindExistingPHI
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BlockListTy
+modifier|*
+name|BlockList
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckIfPHIMatches
+parameter_list|(
+name|PHINode
+modifier|*
+name|PHI
+parameter_list|)
+function_decl|;
+name|void
+name|RecordMatchingPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|PHI
 parameter_list|)
 function_decl|;
 name|void

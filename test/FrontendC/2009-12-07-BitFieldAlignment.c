@@ -44,8 +44,8 @@ modifier|*
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: %3 = load i32* %2, align 4
-comment|// CHECK: store i32 %4, i32* %2, align 4
+comment|// CHECK: load {{.*}}, align 4
+comment|// CHECK: store {{.*}}, align 4
 name|a
 operator|->
 name|e

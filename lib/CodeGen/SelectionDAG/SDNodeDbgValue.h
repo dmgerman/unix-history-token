@@ -138,6 +138,7 @@ comment|// valid for expressions
 block|}
 name|s
 struct|;
+specifier|const
 name|Value
 modifier|*
 name|Const
@@ -234,7 +235,7 @@ name|SDDbgValue
 argument_list|(
 argument|MDNode *mdP
 argument_list|,
-argument|Value *C
+argument|const Value *C
 argument_list|,
 argument|uint64_t off
 argument_list|,
@@ -388,6 +389,7 @@ name|ResNo
 return|;
 block|}
 comment|// Returns the Value* for a constant
+specifier|const
 name|Value
 modifier|*
 name|getConst

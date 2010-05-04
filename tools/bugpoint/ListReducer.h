@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -112,7 +118,10 @@ name|KeepSuffix
 block|,
 comment|// The suffix alone satisfies the predicate
 name|KeepPrefix
+block|,
 comment|// The prefix alone satisfies the predicate
+name|InternalError
+comment|// Encountered an error trying to run the predicate
 block|}
 block|;
 name|virtual
@@ -146,6 +155,12 @@ name|ElTy
 operator|>
 operator|&
 name|Kept
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Error
 argument_list|)
 operator|=
 literal|0
@@ -158,6 +173,8 @@ name|bool
 name|reduceList
 argument_list|(
 argument|std::vector<ElTy>&TheList
+argument_list|,
+argument|std::string&Error
 argument_list|)
 block|{
 name|std
@@ -183,6 +200,8 @@ argument_list|(
 name|TheList
 argument_list|,
 name|empty
+argument_list|,
+name|Error
 argument_list|)
 condition|)
 block|{
@@ -209,13 +228,11 @@ case|case
 name|KeepSuffix
 case|:
 comment|// cannot be reached!
-name|errs
-argument_list|()
-operator|<<
-literal|"bugpoint ListReducer internal error: selected empty set.\n"
-expr_stmt|;
-name|abort
-argument_list|()
+name|llvm_unreachable
+argument_list|(
+literal|"bugpoint ListReducer internal error: "
+literal|"selected empty set."
+argument_list|)
 expr_stmt|;
 case|case
 name|NoFailure
@@ -224,6 +241,21 @@ return|return
 name|false
 return|;
 comment|// there is no failure with the full set of passes/funcs!
+case|case
+name|InternalError
+case|:
+name|assert
+argument_list|(
+operator|!
+name|Error
+operator|.
+name|empty
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
 block|}
 comment|// Maximal number of allowed splitting iterations,
 comment|// before the elements are randomly shuffled.
@@ -332,6 +364,8 @@ argument_list|(
 name|ShuffledList
 argument_list|,
 name|empty
+argument_list|,
+name|Error
 argument_list|)
 operator|==
 name|KeepPrefix
@@ -438,6 +472,8 @@ argument_list|(
 name|Prefix
 argument_list|,
 name|Suffix
+argument_list|,
+name|Error
 argument_list|)
 condition|)
 block|{
@@ -511,7 +547,24 @@ name|NumOfIterationsWithoutProgress
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|InternalError
+case|:
+return|return
+name|true
+return|;
+comment|// Error was set by doTest.
 block|}
+name|assert
+argument_list|(
+name|Error
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"doTest did not return InternalError for error"
+argument_list|)
+expr_stmt|;
 block|}
 comment|// Probability of backjumping from the trimming loop back to the binary
 comment|// split reduction loop.
@@ -642,6 +695,8 @@ argument_list|(
 name|EmptyList
 argument_list|,
 name|TestList
+argument_list|,
+name|Error
 argument_list|)
 operator|==
 name|KeepSuffix
@@ -664,6 +719,17 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|Error
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
 block|}
 comment|// This can take a long time if left uncontrolled.  For now, don't
 comment|// iterate.

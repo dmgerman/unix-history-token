@@ -487,6 +487,7 @@ name|MachineInstrBuilder
 modifier|&
 name|addGlobalAddress
 argument_list|(
+specifier|const
 name|GlobalValue
 operator|*
 name|GV

@@ -294,11 +294,13 @@ modifier|*
 name|SymbolName
 decl_stmt|;
 comment|// For MO_ExternalSymbol.
+specifier|const
 name|GlobalValue
 modifier|*
 name|GV
 decl_stmt|;
 comment|// For MO_GlobalAddress.
+specifier|const
 name|BlockAddress
 modifier|*
 name|BA
@@ -1136,6 +1138,7 @@ operator|.
 name|Index
 return|;
 block|}
+specifier|const
 name|GlobalValue
 operator|*
 name|getGlobal
@@ -1160,6 +1163,7 @@ operator|.
 name|GV
 return|;
 block|}
+specifier|const
 name|BlockAddress
 operator|*
 name|getBlockAddress
@@ -1822,6 +1826,7 @@ specifier|static
 name|MachineOperand
 name|CreateGA
 parameter_list|(
+specifier|const
 name|GlobalValue
 modifier|*
 name|GV
@@ -1933,6 +1938,7 @@ specifier|static
 name|MachineOperand
 name|CreateBA
 parameter_list|(
+specifier|const
 name|BlockAddress
 modifier|*
 name|BA

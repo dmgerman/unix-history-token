@@ -295,9 +295,9 @@ expr_stmt|;
 comment|// The next two constructors have DebugLoc and non-DebugLoc versions;
 comment|// over time, the non-DebugLoc versions should be phased out and eventually
 comment|// removed.
-comment|/// MachineInstr ctor - This constructor create a MachineInstr and add the
-comment|/// implicit operands.  It reserves space for number of operands specified by
-comment|/// TargetInstrDesc.  The version with a DebugLoc should be preferred.
+comment|/// MachineInstr ctor - This constructor creates a MachineInstr and adds the
+comment|/// implicit operands.  It reserves space for the number of operands specified
+comment|/// by the TargetInstrDesc.  The version with a DebugLoc should be preferred.
 name|explicit
 name|MachineInstr
 parameter_list|(
@@ -315,7 +315,6 @@ function_decl|;
 comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
 comment|/// the MachineInstr is created and added to the end of the specified basic
 comment|/// block.  The version with a DebugLoc should be preferred.
-comment|///
 name|MachineInstr
 argument_list|(
 name|MachineBasicBlock
@@ -352,7 +351,6 @@ function_decl|;
 comment|/// MachineInstr ctor - Work exactly the same as the ctor above, except that
 comment|/// the MachineInstr is created and added to the end of the specified basic
 comment|/// block.
-comment|///
 name|MachineInstr
 argument_list|(
 argument|MachineBasicBlock *MBB
@@ -1290,6 +1288,13 @@ comment|/// merges together the same virtual register, return the register, othe
 comment|/// return 0.
 name|unsigned
 name|isConstantValuePHI
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// allDefsAreDead - Return true if all the defs of this instruction are dead.
+comment|///
+name|bool
+name|allDefsAreDead
 argument_list|()
 specifier|const
 expr_stmt|;

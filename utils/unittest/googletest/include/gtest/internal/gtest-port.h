@@ -1003,6 +1003,11 @@ name|defined
 argument_list|(
 name|GTEST_OS_HAIKU
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MINIX
+argument_list|)
 end_if
 
 begin_comment
@@ -1011,6 +1016,10 @@ end_comment
 
 begin_comment
 comment|// Solaris' libc++ doesn't support it either.
+end_comment
+
+begin_comment
+comment|// Minix currently doesn't support it either.
 end_comment
 
 begin_define

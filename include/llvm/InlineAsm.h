@@ -471,6 +471,189 @@ operator|::
 name|InlineAsmVal
 return|;
 block|}
+comment|// These are helper methods for dealing with flags in the INLINEASM SDNode
+comment|// in the backend.
+expr|enum
+block|{
+name|Op_InputChain
+operator|=
+literal|0
+block|,
+name|Op_AsmString
+operator|=
+literal|1
+block|,
+name|Op_MDNode
+operator|=
+literal|2
+block|,
+name|Op_FirstOperand
+operator|=
+literal|3
+block|,
+name|Kind_RegUse
+operator|=
+literal|1
+block|,
+name|Kind_RegDef
+operator|=
+literal|2
+block|,
+name|Kind_Imm
+operator|=
+literal|3
+block|,
+name|Kind_Mem
+operator|=
+literal|4
+block|,
+name|Kind_RegDefEarlyClobber
+operator|=
+literal|6
+block|,
+name|Flag_MatchingOperand
+operator|=
+literal|0x80000000
+block|}
+block|;
+specifier|static
+name|unsigned
+name|getFlagWord
+argument_list|(
+argument|unsigned Kind
+argument_list|,
+argument|unsigned NumOps
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+operator|(
+name|NumOps
+operator|<<
+literal|3
+operator|)
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Too many inline asm operands!"
+argument_list|)
+block|;
+return|return
+name|Kind
+operator||
+operator|(
+name|NumOps
+operator|<<
+literal|3
+operator|)
+return|;
+block|}
+comment|/// getFlagWordForMatchingOp - Augment an existing flag word returned by
+comment|/// getFlagWord with information indicating that this input operand is tied
+comment|/// to a previous output operand.
+specifier|static
+name|unsigned
+name|getFlagWordForMatchingOp
+argument_list|(
+argument|unsigned InputFlag
+argument_list|,
+argument|unsigned MatchedOperandNo
+argument_list|)
+block|{
+return|return
+name|InputFlag
+operator||
+name|Flag_MatchingOperand
+operator||
+operator|(
+name|MatchedOperandNo
+operator|<<
+literal|16
+operator|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getKind
+argument_list|(
+argument|unsigned Flags
+argument_list|)
+block|{
+return|return
+name|Flags
+operator|&
+literal|7
+return|;
+block|}
+specifier|static
+name|bool
+name|isRegDefKind
+argument_list|(
+argument|unsigned Flag
+argument_list|)
+block|{
+return|return
+name|getKind
+argument_list|(
+name|Flag
+argument_list|)
+operator|==
+name|Kind_RegDef
+return|;
+block|}
+specifier|static
+name|bool
+name|isImmKind
+argument_list|(
+argument|unsigned Flag
+argument_list|)
+block|{
+return|return
+name|getKind
+argument_list|(
+name|Flag
+argument_list|)
+operator|==
+name|Kind_Imm
+return|;
+block|}
+specifier|static
+name|bool
+name|isMemKind
+argument_list|(
+argument|unsigned Flag
+argument_list|)
+block|{
+return|return
+name|getKind
+argument_list|(
+name|Flag
+argument_list|)
+operator|==
+name|Kind_Mem
+return|;
+block|}
+specifier|static
+name|bool
+name|isRegDefEarlyClobberKind
+argument_list|(
+argument|unsigned Flag
+argument_list|)
+block|{
+return|return
+name|getKind
+argument_list|(
+name|Flag
+argument_list|)
+operator|==
+name|Kind_RegDefEarlyClobber
+return|;
+block|}
 comment|/// getNumOperandRegisters - Extract the number of registers field from the
 comment|/// inline asm operand flag.
 specifier|static
@@ -506,7 +689,7 @@ condition|(
 operator|(
 name|Flag
 operator|&
-literal|0x80000000
+name|Flag_MatchingOperand
 operator|)
 operator|==
 literal|0
@@ -520,7 +703,7 @@ operator|(
 name|Flag
 operator|&
 operator|~
-literal|0x80000000
+name|Flag_MatchingOperand
 operator|)
 operator|>>
 literal|16

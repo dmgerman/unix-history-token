@@ -899,6 +899,20 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+specifier|inline
+name|void
+name|operator
+name|delete
+argument_list|(
+name|void
+operator|*
+argument_list|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|&
+argument_list|)
+block|{}
 end_decl_stmt
 
 begin_endif

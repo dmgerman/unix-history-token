@@ -73,6 +73,9 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -190,6 +193,40 @@ name|getInlineAsmDiagnosticContext
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// emitError - Emit an error message to the currently installed error handler
+comment|/// with optional location information.  This function returns, so code should
+comment|/// be prepared to drop the erroneous construct on the floor and "not crash".
+comment|/// The generated code need not be correct.  The error message will be
+comment|/// implicitly prefixed with "error: " and should not end with a ".".
+name|void
+name|emitError
+parameter_list|(
+name|unsigned
+name|LocCookie
+parameter_list|,
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
+name|void
+name|emitError
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
+name|void
+name|emitError
+parameter_list|(
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that

@@ -106,6 +106,9 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
+name|TargetSelectionDAGInfo
+decl_stmt|;
+name|class
 name|TargetFrameInfo
 decl_stmt|;
 name|class
@@ -303,9 +306,22 @@ literal|0
 return|;
 block|}
 name|virtual
+specifier|const
 name|TargetLowering
 operator|*
 name|getTargetLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+specifier|const
+name|TargetSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
 argument_list|()
 specifier|const
 block|{
@@ -495,6 +511,37 @@ comment|/// is false.
 specifier|static
 name|void
 name|setAsmVerbosityDefault
+parameter_list|(
+name|bool
+parameter_list|)
+function_decl|;
+comment|/// getDataSections - Return true if data objects should be emitted into their
+comment|/// own section, corresponds to -fdata-sections.
+specifier|static
+name|bool
+name|getDataSections
+parameter_list|()
+function_decl|;
+comment|/// getFunctionSections - Return true if functions should be emitted into
+comment|/// their own section, corresponding to -ffunction-sections.
+specifier|static
+name|bool
+name|getFunctionSections
+parameter_list|()
+function_decl|;
+comment|/// setDataSections - Set if the data are emit into separate sections.
+specifier|static
+name|void
+name|setDataSections
+parameter_list|(
+name|bool
+parameter_list|)
+function_decl|;
+comment|/// setFunctionSections - Set if the functions are emit into separate
+comment|/// sections.
+specifier|static
+name|void
+name|setFunctionSections
 parameter_list|(
 name|bool
 parameter_list|)

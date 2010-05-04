@@ -63,12 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PIC16ISelLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"PIC16RegisterInfo.h"
 end_include
 
@@ -76,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|"PIC16TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PIC16MachineFunctionInfo.h"
 end_include
 
 begin_include
@@ -129,12 +129,14 @@ name|public
 name|SelectionDAGISel
 block|{
 comment|/// TM - Keep a reference to PIC16TargetMachine.
+specifier|const
 name|PIC16TargetMachine
 operator|&
 name|TM
 block|;
 comment|/// PIC16Lowering - This object fully describes how to lower LLVM code to an
 comment|/// PIC16-specific SelectionDAG.
+specifier|const
 name|PIC16TargetLowering
 operator|&
 name|PIC16Lowering
@@ -163,14 +165,7 @@ name|PIC16Lowering
 argument_list|(
 argument|*TM.getTargetLowering()
 argument_list|)
-block|{
-comment|// Keep PIC16 specific DAGISel to use during the lowering
-name|PIC16Lowering
-operator|.
-name|ISel
-operator|=
-name|this
-block|;   }
+block|{}
 comment|// Pass Name
 name|virtual
 specifier|const

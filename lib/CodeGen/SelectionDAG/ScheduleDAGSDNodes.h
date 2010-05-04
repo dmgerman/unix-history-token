@@ -280,6 +280,14 @@ operator|==
 name|ISD
 operator|::
 name|EntryToken
+operator|||
+name|isa
+operator|<
+name|MDNodeSDNode
+operator|>
+operator|(
+name|Node
+operator|)
 condition|)
 return|return
 name|true
@@ -468,25 +476,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|virtual
 name|MachineBasicBlock
 modifier|*
 name|EmitSchedule
-argument_list|(
-name|DenseMap
-operator|<
-name|MachineBasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|*
-name|EM
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Schedule - Order nodes according to selected style, filling

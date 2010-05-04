@@ -95,6 +95,12 @@ directive|include
 file|"llvm/CodeGen/MachineCodeEmitter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|using
 name|namespace
@@ -782,6 +788,11 @@ name|emitULEB128Bytes
 parameter_list|(
 name|uint64_t
 name|Value
+parameter_list|,
+name|unsigned
+name|PadTo
+init|=
+literal|0
 parameter_list|)
 block|{
 do|do
@@ -800,6 +811,10 @@ expr_stmt|;
 if|if
 condition|(
 name|Value
+operator|||
+name|PadTo
+operator|!=
+literal|0
 condition|)
 name|Byte
 operator||=
@@ -816,6 +831,39 @@ condition|(
 name|Value
 condition|)
 do|;
+if|if
+condition|(
+name|PadTo
+condition|)
+block|{
+do|do
+block|{
+name|uint8_t
+name|Byte
+init|=
+operator|(
+name|PadTo
+operator|>
+literal|1
+operator|)
+condition|?
+literal|0x80
+else|:
+literal|0x0
+decl_stmt|;
+name|emitByte
+argument_list|(
+name|Byte
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|PadTo
+condition|)
+do|;
+block|}
 block|}
 end_function
 
@@ -1562,6 +1610,33 @@ init|=
 literal|0
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// getLabelLocations - Return the label locations map of the label IDs to
+end_comment
+
+begin_comment
+comment|/// their address.
+end_comment
+
+begin_expr_stmt
+name|virtual
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|uintptr_t
+operator|>
+operator|*
+name|getLabelLocations
+argument_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};  }

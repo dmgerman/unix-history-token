@@ -245,6 +245,7 @@ label|:
 comment|/// The constant itself.
 union|union
 block|{
+specifier|const
 name|Constant
 modifier|*
 name|ConstVal
@@ -263,7 +264,7 @@ name|Alignment
 decl_stmt|;
 name|MachineConstantPoolEntry
 argument_list|(
-argument|Constant *V
+argument|const Constant *V
 argument_list|,
 argument|unsigned A
 argument_list|)
@@ -453,6 +454,7 @@ comment|/// the object.
 name|unsigned
 name|getConstantPoolIndex
 parameter_list|(
+specifier|const
 name|Constant
 modifier|*
 name|C

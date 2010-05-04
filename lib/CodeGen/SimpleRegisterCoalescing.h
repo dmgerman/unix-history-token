@@ -608,13 +608,25 @@ name|bool
 name|isWinToJoinCrossClass
 parameter_list|(
 name|unsigned
-name|LargeReg
+name|SrcReg
 parameter_list|,
 name|unsigned
-name|SmallReg
+name|DstReg
 parameter_list|,
-name|unsigned
-name|Threshold
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|SrcRC
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|DstRC
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|NewRC
 parameter_list|)
 function_decl|;
 comment|/// HasIncompatibleSubRegDefUse - If we are trying to coalesce a virtual
@@ -732,19 +744,6 @@ name|unsigned
 name|SubIdx
 parameter_list|)
 function_decl|;
-comment|/// RemoveUnnecessaryKills - Remove kill markers that are no longer accurate
-comment|/// due to live range lengthening as the result of coalescing.
-name|void
-name|RemoveUnnecessaryKills
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|LI
-parameter_list|)
-function_decl|;
 comment|/// ShortenDeadCopyLiveRange - Shorten a live range defined by a dead copy.
 comment|/// Return true if live interval is removed.
 name|bool
@@ -808,14 +807,6 @@ argument_list|,
 name|SlotIndex
 operator|&
 name|LastUseIdx
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|printRegName
-argument_list|(
-name|unsigned
-name|reg
 argument_list|)
 decl|const
 decl_stmt|;

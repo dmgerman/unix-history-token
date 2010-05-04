@@ -202,6 +202,32 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// SimplifySelectInst - Given operands for a SelectInst, see if we can fold
+comment|/// the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifySelectInst
+parameter_list|(
+name|Value
+modifier|*
+name|Cond
+parameter_list|,
+name|Value
+modifier|*
+name|TrueVal
+parameter_list|,
+name|Value
+modifier|*
+name|FalseVal
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// SimplifyGEPInst - Given operands for an GetElementPtrInst, see if we can
 comment|/// fold the result.  If not, this returns null.
 name|Value

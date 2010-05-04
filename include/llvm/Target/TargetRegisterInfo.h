@@ -449,7 +449,7 @@ index|]
 return|;
 block|}
 comment|/// contains - Return true if the specified register is included in this
-comment|/// register class.
+comment|/// register class.  This does not include virtual registers.
 name|bool
 name|contains
 argument_list|(

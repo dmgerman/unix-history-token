@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- llvm/Support/ErrorHandling.h - Callbacks for errors ------*- C++ -*-===//
+comment|//===- llvm/Support/ErrorHandling.h - Fatal error handling ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,11 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file defines an API used to indicate error conditions.
+comment|// This file defines an API used to indicate fatal error conditions.  Non-fatal
 end_comment
 
 begin_comment
-comment|// Callbacks can be registered for these errors through this API.
+comment|// errors (most of them) should be handled through LLVMContext.
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ typedef|typedef
 name|void
 argument_list|(
 operator|*
-name|llvm_error_handler_t
+name|fatal_error_handler_t
 argument_list|)
 argument_list|(
 name|void
@@ -102,7 +102,7 @@ operator|&
 name|reason
 argument_list|)
 expr_stmt|;
-comment|/// llvm_instal_error_handler - Installs a new error handler to be used
+comment|/// install_fatal_error_handler - Installs a new error handler to be used
 comment|/// whenever a serious (non-recoverable) error is encountered by LLVM.
 comment|///
 comment|/// If you are using llvm_start_multithreaded, you should register the handler
@@ -122,9 +122,9 @@ comment|///
 comment|/// \param user_data - An argument which will be passed to the install error
 comment|/// handler.
 name|void
-name|llvm_install_error_handler
+name|install_fatal_error_handler
 parameter_list|(
-name|llvm_error_handler_t
+name|fatal_error_handler_t
 name|handler
 parameter_list|,
 name|void
@@ -138,7 +138,7 @@ comment|/// Restores default error handling behaviour.
 comment|/// This must not be called between llvm_start_multithreaded() and
 comment|/// llvm_stop_multithreaded().
 name|void
-name|llvm_remove_error_handler
+name|remove_fatal_error_handler
 parameter_list|()
 function_decl|;
 comment|/// Reports a serious error, calling any installed error handler. These
@@ -151,7 +151,7 @@ comment|/// After the error handler is called this function will call exit(1), i
 comment|/// does not return.
 name|NORETURN
 name|void
-name|llvm_report_error
+name|report_fatal_error
 parameter_list|(
 specifier|const
 name|char
@@ -161,7 +161,7 @@ parameter_list|)
 function_decl|;
 name|NORETURN
 name|void
-name|llvm_report_error
+name|report_fatal_error
 argument_list|(
 specifier|const
 name|std
@@ -173,7 +173,7 @@ argument_list|)
 decl_stmt|;
 name|NORETURN
 name|void
-name|llvm_report_error
+name|report_fatal_error
 parameter_list|(
 specifier|const
 name|Twine

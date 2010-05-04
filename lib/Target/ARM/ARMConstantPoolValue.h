@@ -106,6 +106,7 @@ range|:
 name|public
 name|MachineConstantPoolValue
 block|{
+specifier|const
 name|Constant
 operator|*
 name|CVal
@@ -146,7 +147,7 @@ name|public
 operator|:
 name|ARMConstantPoolValue
 argument_list|(
-argument|Constant *cval
+argument|const Constant *cval
 argument_list|,
 argument|unsigned id
 argument_list|,
@@ -178,6 +179,7 @@ argument_list|)
 block|;
 name|ARMConstantPoolValue
 argument_list|(
+specifier|const
 name|GlobalValue
 operator|*
 name|GV
@@ -195,6 +197,7 @@ operator|~
 name|ARMConstantPoolValue
 argument_list|()
 block|;
+specifier|const
 name|GlobalValue
 operator|*
 name|getGV
@@ -212,6 +215,7 @@ return|return
 name|S
 return|;
 block|}
+specifier|const
 name|BlockAddress
 operator|*
 name|getBlockAddress

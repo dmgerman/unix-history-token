@@ -108,9 +108,6 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|Timer
-decl_stmt|;
-name|class
 name|Function
 decl_stmt|;
 name|class
@@ -257,11 +254,6 @@ comment|/// shouldEmitFrameModule - Per-module flag to indicate if frame moves
 comment|/// should be emitted.
 name|bool
 name|shouldEmitMovesModule
-decl_stmt|;
-comment|/// ExceptionTimer - Timer for the Dwarf exception writer.
-name|Timer
-modifier|*
-name|ExceptionTimer
 decl_stmt|;
 comment|/// EmitCIE - Emit a Common Information Entry (CIE). This holds information
 comment|/// that is shared among many Frame Description Entries.  There is at least

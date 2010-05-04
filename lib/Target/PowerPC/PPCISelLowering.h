@@ -420,25 +420,6 @@ range|:
 name|public
 name|TargetLowering
 block|{
-name|int
-name|VarArgsFrameIndex
-block|;
-comment|// FrameIndex for start of varargs area.
-name|int
-name|VarArgsStackOffset
-block|;
-comment|// StackOffset for start of stack
-comment|// arguments.
-name|unsigned
-name|VarArgsNumGPR
-block|;
-comment|// Index of the first unused integer
-comment|// register for parameter passing.
-name|unsigned
-name|VarArgsNumFPR
-block|;
-comment|// Index of the first unused double
-comment|// register for parameter passing.
 specifier|const
 name|PPCSubtarget
 operator|&
@@ -569,6 +550,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
@@ -577,21 +559,13 @@ name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|SDValue
-operator|>
-operator|&
-name|Results
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
+argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -630,10 +604,6 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
-argument_list|,
-argument|DenseMap<MachineBasicBlock*
-argument_list|,
-argument|MachineBasicBlock*> *EM
 argument_list|)
 specifier|const
 block|;
@@ -771,8 +741,10 @@ comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
 comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-comment|/// from memory. It returns EVT::Other if SelectionDAG should be responsible
-comment|/// for determining it.
+comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
+comment|/// constant so it does not need to be loaded.
+comment|/// It returns EVT::Other if the type should be determined using generic
+comment|/// target-independent logic.
 name|virtual
 name|EVT
 name|getOptimalMemOpType
@@ -785,7 +757,9 @@ argument|unsigned SrcAlign
 argument_list|,
 argument|bool NonScalarIntSafe
 argument_list|,
-argument|SelectionDAG&DAG
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -846,6 +820,7 @@ argument|bool isDarwinABI
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerRETURNADDR
@@ -854,6 +829,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFRAMEADDR
@@ -862,6 +838,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerConstantPool
@@ -870,6 +847,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBlockAddress
@@ -878,6 +856,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalAddress
@@ -886,6 +865,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerGlobalTLSAddress
@@ -894,6 +874,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerJumpTable
@@ -902,6 +883,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSETCC
@@ -910,6 +892,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerTRAMPOLINE
@@ -918,6 +901,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVASTART
@@ -926,16 +910,9 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|int VarArgsFrameIndex
-argument_list|,
-argument|int VarArgsStackOffset
-argument_list|,
-argument|unsigned VarArgsNumGPR
-argument_list|,
-argument|unsigned VarArgsNumFPR
-argument_list|,
 argument|const PPCSubtarget&Subtarget
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVAARG
@@ -944,16 +921,9 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|int VarArgsFrameIndex
-argument_list|,
-argument|int VarArgsStackOffset
-argument_list|,
-argument|unsigned VarArgsNumGPR
-argument_list|,
-argument|unsigned VarArgsNumFPR
-argument_list|,
 argument|const PPCSubtarget&Subtarget
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSTACKRESTORE
@@ -964,6 +934,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|const PPCSubtarget&Subtarget
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerDYNAMIC_STACKALLOC
@@ -974,6 +945,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|const PPCSubtarget&Subtarget
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSELECT_CC
@@ -982,6 +954,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFP_TO_INT
@@ -992,6 +965,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|DebugLoc dl
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSINT_TO_FP
@@ -1000,6 +974,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFLT_ROUNDS_
@@ -1008,6 +983,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSHL_PARTS
@@ -1016,6 +992,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSRL_PARTS
@@ -1024,6 +1001,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSRA_PARTS
@@ -1032,6 +1010,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerBUILD_VECTOR
@@ -1040,6 +1019,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerVECTOR_SHUFFLE
@@ -1048,6 +1028,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
@@ -1056,6 +1037,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerSCALAR_TO_VECTOR
@@ -1064,6 +1046,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerMUL
@@ -1072,6 +1055,7 @@ argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCallResult
@@ -1092,6 +1076,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|FinishCall
@@ -1127,6 +1112,7 @@ argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1146,6 +1132,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1171,6 +1158,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -1188,6 +1176,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFormalArguments_Darwin
@@ -1206,6 +1195,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFormalArguments_SVR4
@@ -1224,6 +1214,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCall_Darwin
@@ -1248,6 +1239,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerCall_SVR4
@@ -1272,6 +1264,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

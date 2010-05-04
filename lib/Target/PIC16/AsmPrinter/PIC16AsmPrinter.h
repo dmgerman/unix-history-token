@@ -174,6 +174,7 @@ return|return
 literal|"PIC16 Assembly Printer"
 return|;
 block|}
+specifier|const
 name|PIC16TargetObjectFile
 operator|&
 name|getObjFileLowering
@@ -182,6 +183,7 @@ specifier|const
 block|{
 return|return
 operator|(
+specifier|const
 name|PIC16TargetObjectFile
 operator|&
 operator|)
@@ -420,13 +422,10 @@ comment|// PIC16 doesn't use normal hooks for this.
 block|}
 name|private
 operator|:
+specifier|const
 name|PIC16TargetObjectFile
 operator|*
 name|PTOF
-block|;
-name|PIC16TargetLowering
-operator|*
-name|PTLI
 block|;
 name|PIC16DbgInfo
 name|DbgInfo

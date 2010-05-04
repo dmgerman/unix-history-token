@@ -203,6 +203,11 @@ specifier|const
 name|TargetData
 operator|*
 name|TD
+argument_list|,
+name|StringRef
+name|Name
+operator|=
+literal|"strncpy"
 argument_list|)
 decl_stmt|;
 comment|/// EmitMemCpy - Emit a call to the memcpy function to the builder.  This
