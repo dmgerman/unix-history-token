@@ -713,7 +713,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"900 Mhz"
+literal|"900 MHz"
 block|,
 literal|"Canada, U.S.A., Mexico"
 block|,
@@ -786,7 +786,7 @@ block|,
 block|{
 literal|6
 block|,
-literal|"900 Mhz"
+literal|"900 MHz"
 block|,
 literal|"Australia"
 block|,
@@ -831,7 +831,7 @@ block|,
 block|{
 literal|9
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"North America"
 block|,
@@ -848,7 +848,7 @@ block|,
 block|{
 literal|10
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"E.T.S.I"
 block|,
@@ -865,7 +865,7 @@ block|,
 block|{
 literal|11
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"Japan"
 block|,
@@ -882,7 +882,7 @@ block|,
 block|{
 literal|12
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"France"
 block|,
@@ -899,7 +899,7 @@ block|,
 block|{
 literal|13
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"Australia"
 block|,
@@ -916,7 +916,7 @@ block|,
 block|{
 literal|14
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"Germany"
 block|,
@@ -933,7 +933,7 @@ block|,
 block|{
 literal|15
 block|,
-literal|"2400 Mhz"
+literal|"2400 MHz"
 block|,
 literal|"U.K.(MPT1349),Spain"
 block|,
@@ -1218,7 +1218,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tfrequency %s Mhz, bitrate %s kb/s, priority %s, receive mode %d\n"
+literal|"\tfrequency %s MHz, bitrate %s kb/s, priority %s, receive mode %d\n"
 argument_list|,
 operator|(
 name|CHSET
