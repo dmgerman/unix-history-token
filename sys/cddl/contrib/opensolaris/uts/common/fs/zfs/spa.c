@@ -11402,7 +11402,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pool export/destroy  *  * The act of destroying or exporting a pool is very simple.  We make sure there  * is no more pending I/O and any references to the pool are gone.  Then, we  * update the pool state and sync all the labels to disk, removing the  * configuration from the cache afterwards.  */
+comment|/*  * Pool export/destroy  *  * The act of destroying or exporting a pool is very simple.  We make sure there  * is no more pending I/O and any references to the pool are gone.  Then, we  * update the pool state and sync all the labels to disk, removing the  * configuration from the cache afterwards. If the 'hardforce' flag is set, then  * we don't sync the labels or remove the configuration cache.  */
 end_comment
 
 begin_function
@@ -11424,6 +11424,9 @@ name|oldconfig
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|boolean_t
+name|hardforce
 parameter_list|)
 block|{
 name|spa_t
@@ -11619,6 +11622,9 @@ condition|(
 name|new_state
 operator|!=
 name|POOL_STATE_UNINITIALIZED
+operator|&&
+operator|!
+name|hardforce
 condition|)
 block|{
 name|spa_config_enter
@@ -11727,6 +11733,11 @@ operator|!=
 name|POOL_STATE_UNINITIALIZED
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|hardforce
+condition|)
 name|spa_config_sync
 argument_list|(
 name|spa
@@ -11780,6 +11791,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|B_FALSE
+argument_list|,
+name|B_FALSE
 argument_list|)
 operator|)
 return|;
@@ -11805,6 +11818,9 @@ name|oldconfig
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|boolean_t
+name|hardforce
 parameter_list|)
 block|{
 return|return
@@ -11818,6 +11834,8 @@ argument_list|,
 name|oldconfig
 argument_list|,
 name|force
+argument_list|,
+name|hardforce
 argument_list|)
 operator|)
 return|;
@@ -11846,6 +11864,8 @@ argument_list|,
 name|POOL_STATE_UNINITIALIZED
 argument_list|,
 name|NULL
+argument_list|,
+name|B_FALSE
 argument_list|,
 name|B_FALSE
 argument_list|)

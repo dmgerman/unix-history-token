@@ -3813,6 +3813,16 @@ name|zc
 operator|->
 name|zc_cookie
 decl_stmt|;
+name|boolean_t
+name|hardforce
+init|=
+operator|(
+name|boolean_t
+operator|)
+name|zc
+operator|->
+name|zc_guid
+decl_stmt|;
 name|zfs_log_history
 argument_list|(
 name|zc
@@ -3829,6 +3839,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|force
+argument_list|,
+name|hardforce
 argument_list|)
 expr_stmt|;
 return|return
