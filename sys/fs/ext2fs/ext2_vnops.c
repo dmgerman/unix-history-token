@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -71,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -155,12 +143,6 @@ begin_include
 include|#
 directive|include
 file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
 end_include
 
 begin_include
