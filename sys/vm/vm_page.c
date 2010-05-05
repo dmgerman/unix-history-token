@@ -5538,7 +5538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	The page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5635,7 +5635,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	BUT, if we are in a low-memory situation we have no choice but to  *	put clean pages on the cache queue.  *  *	A number of routines use vm_page_unwire() to guarantee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	BUT, if we are in a low-memory situation we have no choice but to  *	put clean pages on the cache queue.  *  *	A number of routines use vm_page_unwire() to guarantee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5661,15 +5661,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_assert
 argument_list|(
 name|m
@@ -5677,7 +5668,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|m
@@ -5722,16 +5712,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_UNMANAGED
+operator|)
+operator|!=
+literal|0
 condition|)
-block|{
-empty_stmt|;
-block|}
-elseif|else
+return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|activate
@@ -5760,6 +5754,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 else|else
