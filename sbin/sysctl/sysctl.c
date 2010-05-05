@@ -171,7 +171,11 @@ decl_stmt|,
 name|hflag
 decl_stmt|,
 name|iflag
-decl_stmt|, static
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|Nflag
 decl_stmt|,
