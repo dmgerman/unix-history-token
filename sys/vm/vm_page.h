@@ -72,7 +72,7 @@ comment|/* splay tree link (O)		*/
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,Q)*/
+comment|/* which object am I in (O,P)*/
 name|vm_pindex_t
 name|pindex
 decl_stmt|;

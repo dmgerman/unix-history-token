@@ -2676,9 +2676,6 @@ operator|.
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_rename
 argument_list|(
 name|fs
@@ -2693,9 +2690,6 @@ name|fs
 operator|.
 name|first_pindex
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
