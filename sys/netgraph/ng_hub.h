@@ -33,6 +33,22 @@ name|NGM_HUB_COOKIE
 value|1082189597
 end_define
 
+begin_comment
+comment|/* Netgraph control messages */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_HUB_SET_PERSISTENT
+init|=
+literal|1
+block|,
+comment|/* set persistent mode */
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif
