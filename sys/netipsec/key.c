@@ -25274,6 +25274,31 @@ name|error
 argument_list|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
+comment|/* 	 * Handle more NAT-T info if present, 	 * now that we have a sav to fill. 	 */
+if|if
+condition|(
+name|type
+condition|)
+name|newsav
+operator|->
+name|natt_type
+operator|=
+name|type
+operator|->
+name|sadb_x_nat_t_type_type
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * In case SADB_X_EXT_NAT_T_FRAG was not given, leave it at 0. 	 * We should actually check for a minimum MTU here, if we 	 * want to support it in ip_output. 	 */
+block|if (frag) 		newsav->natt_esp_frag_len = frag->sadb_x_nat_t_frag_fraglen;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* check SA values to be mature. */
 if|if
 condition|(
@@ -25306,31 +25331,6 @@ name|error
 argument_list|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPSEC_NAT_T
-comment|/* 	 * Handle more NAT-T info if present, 	 * now that we have a sav to fill. 	 */
-if|if
-condition|(
-name|type
-condition|)
-name|newsav
-operator|->
-name|natt_type
-operator|=
-name|type
-operator|->
-name|sadb_x_nat_t_type_type
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * In case SADB_X_EXT_NAT_T_FRAG was not given, leave it at 0. 	 * We should actually check for a minimum MTU here, if we 	 * want to support it in ip_output. 	 */
-block|if (frag) 		newsav->natt_esp_frag_len = frag->sadb_x_nat_t_frag_fraglen;
-endif|#
-directive|endif
-endif|#
-directive|endif
 comment|/* 	 * don't call key_freesav() here, as we would like to keep the SA 	 * in the database on success. 	 */
 block|{
 name|struct
