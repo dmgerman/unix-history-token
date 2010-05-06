@@ -11550,7 +11550,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Channel %3u : %u%c Mhz%-14.14s"
+literal|"Channel %3u : %u%c MHz%-14.14s"
 argument_list|,
 name|ieee80211_mhz2ieee
 argument_list|(
@@ -12045,7 +12045,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Channel %3u : %u Mhz %3.1f reg %2d  "
+literal|"Channel %3u : %u MHz %3.1f reg %2d  "
 argument_list|,
 name|c
 operator|->
@@ -14592,7 +14592,7 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" channel %d (%u Mhz%s)"
+literal|" channel %d (%u MHz%s)"
 argument_list|,
 name|c
 operator|->

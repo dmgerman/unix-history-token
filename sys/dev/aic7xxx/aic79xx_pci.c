@@ -746,13 +746,13 @@ literal|"PCI bus mode unknown"
 block|,
 literal|"PCI bus mode unknown"
 block|,
-literal|"PCI-X 101-133Mhz"
+literal|"PCI-X 101-133MHz"
 block|,
-literal|"PCI-X 67-100Mhz"
+literal|"PCI-X 67-100MHz"
 block|,
-literal|"PCI-X 50-66Mhz"
+literal|"PCI-X 50-66MHz"
 block|,
-literal|"PCI 33 or 66Mhz"
+literal|"PCI 33 or 66MHz"
 block|}
 decl_stmt|;
 end_decl_stmt

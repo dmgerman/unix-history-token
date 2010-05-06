@@ -22840,7 +22840,7 @@ operator|->
 name|ic_ifp
 argument_list|,
 literal|"%s: unable to reset "
-literal|"channel %u (%u Mhz, flags 0x%x hal flags 0x%x), "
+literal|"channel %u (%u MHz, flags 0x%x hal flags 0x%x), "
 literal|"hal status %u\n"
 argument_list|,
 name|__func__
