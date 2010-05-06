@@ -56,13 +56,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ipsec6stat
-value|VNET(ipsec6stat)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -72,13 +65,6 @@ name|ip6_esp_trans_deflev
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip6_esp_trans_deflev
-value|VNET(ip6_esp_trans_deflev)
-end_define
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -90,13 +76,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ip6_esp_net_deflev
-value|VNET(ip6_esp_net_deflev)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -106,13 +85,6 @@ name|ip6_ah_trans_deflev
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip6_ah_trans_deflev
-value|VNET(ip6_ah_trans_deflev)
-end_define
 
 begin_expr_stmt
 name|VNET_DECLARE
@@ -124,13 +96,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ip6_ah_net_deflev
-value|VNET(ip6_ah_net_deflev)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -140,6 +105,41 @@ name|ip6_ipsec_ecn
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipsec6stat
+value|VNET(ipsec6stat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_esp_trans_deflev
+value|VNET(ip6_esp_trans_deflev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_esp_net_deflev
+value|VNET(ip6_esp_net_deflev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_ah_trans_deflev
+value|VNET(ip6_ah_trans_deflev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_ip6_ah_net_deflev
+value|VNET(ip6_ah_net_deflev)
+end_define
 
 begin_define
 define|#

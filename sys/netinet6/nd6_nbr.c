@@ -380,8 +380,14 @@ name|int
 argument_list|,
 name|dad_ignore_ns
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* ignore NS in DAD - specwise incorrect*/
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -390,8 +396,14 @@ name|int
 argument_list|,
 name|dad_maxtry
 argument_list|)
+operator|=
+literal|15
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max # of *tries* to transmit DAD packet */
+end_comment
 
 begin_define
 define|#
@@ -4912,13 +4924,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_dadq
-value|VNET(dadq)
-end_define
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -4926,8 +4931,17 @@ name|int
 argument_list|,
 name|dad_init
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_dadq
+value|VNET(dadq)
+end_define
 
 begin_define
 define|#

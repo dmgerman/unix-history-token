@@ -443,50 +443,22 @@ name|int
 argument_list|,
 name|rtq_reallyold
 argument_list|)
+operator|=
+literal|60
+operator|*
+literal|60
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_minreallyold
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_toomany
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* one hour is "really old" */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|V_rtq_reallyold
 value|VNET(rtq_reallyold)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_minreallyold
-value|VNET(rtq_minreallyold)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_toomany
-value|VNET(rtq_toomany)
 end_define
 
 begin_expr_stmt
@@ -513,6 +485,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* never automatically crank down to less */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_minreallyold
+argument_list|)
+operator|=
+literal|10
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rtq_minreallyold
+value|VNET(rtq_minreallyold)
+end_define
+
 begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
@@ -536,6 +532,30 @@ literal|"Minimum time to attempt to hold onto dynamically learned routes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 128 cached routes is "too many" */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_toomany
+argument_list|)
+operator|=
+literal|128
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rtq_toomany
+value|VNET(rtq_toomany)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_VNET_INT
@@ -924,6 +944,8 @@ name|int
 argument_list|,
 name|rtq_timeout
 argument_list|)
+operator|=
+name|RTQ_TIMEOUT
 expr_stmt|;
 end_expr_stmt
 
@@ -1437,27 +1459,6 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for a real routing table */
-name|V_rtq_reallyold
-operator|=
-literal|60
-operator|*
-literal|60
-expr_stmt|;
-comment|/* one hour is "really old" */
-name|V_rtq_minreallyold
-operator|=
-literal|10
-expr_stmt|;
-comment|/* never automatically crank down to less */
-name|V_rtq_toomany
-operator|=
-literal|128
-expr_stmt|;
-comment|/* 128 cached routes is "too many" */
-name|V_rtq_timeout
-operator|=
-name|RTQ_TIMEOUT
-expr_stmt|;
 name|rnh
 operator|=
 operator|*

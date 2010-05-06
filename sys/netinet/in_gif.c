@@ -297,6 +297,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip_gif_ttl
+argument_list|)
+operator|=
+name|GIF_TTL
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ip_gif_ttl
+value|VNET(ip_gif_ttl)
+end_define
+
+begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_ip

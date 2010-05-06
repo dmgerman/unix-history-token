@@ -281,6 +281,10 @@ parameter_list|)
 value|((struct sockaddr_in6 *)s)
 end_define
 
+begin_comment
+comment|/* timer values */
+end_comment
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -288,8 +292,14 @@ name|int
 argument_list|,
 name|nd6_prune
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* walk list every 1 seconds */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -298,8 +308,14 @@ name|int
 argument_list|,
 name|nd6_delay
 argument_list|)
+operator|=
+literal|5
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* delay first probe time 5 second */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -308,8 +324,14 @@ name|int
 argument_list|,
 name|nd6_umaxtries
 argument_list|)
+operator|=
+literal|3
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* maximum unicast query */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -318,8 +340,14 @@ name|int
 argument_list|,
 name|nd6_mmaxtries
 argument_list|)
+operator|=
+literal|3
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* maximum multicast query */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -328,8 +356,14 @@ name|int
 argument_list|,
 name|nd6_useloopback
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* use loopback interface for 					 * local traffic */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -338,8 +372,20 @@ name|int
 argument_list|,
 name|nd6_gctimer
 argument_list|)
+operator|=
+operator|(
+literal|60
+operator|*
+literal|60
+operator|*
+literal|24
+operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 1 day: garbage 					 * collection timer */
+end_comment
 
 begin_comment
 comment|/* preventing too many loops in ND option parsing */
@@ -353,8 +399,14 @@ name|int
 argument_list|,
 name|nd6_maxndopt
 argument_list|)
+operator|=
+literal|10
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max # of ND options allowed */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -363,8 +415,14 @@ name|int
 argument_list|,
 name|nd6_maxnudhint
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max # of subsequent upper 					 * layer hints */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -374,8 +432,14 @@ name|int
 argument_list|,
 name|nd6_maxqueuelen
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max pkts cached in unresolved 					 * ND entries */
+end_comment
 
 begin_define
 define|#
@@ -391,6 +455,12 @@ name|V_nd6_maxqueuelen
 value|VNET(nd6_maxqueuelen)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ND6_DEBUG
+end_ifdef
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -398,8 +468,32 @@ name|int
 argument_list|,
 name|nd6_debug
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|nd6_debug
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* for debugging? */
@@ -446,6 +540,8 @@ name|int
 argument_list|,
 name|nd6_recalc_reachtm_interval
 argument_list|)
+operator|=
+name|ND6_RECALC_REACHTM_INTERVAL
 expr_stmt|;
 end_expr_stmt
 
@@ -591,40 +687,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|dad_ignore_ns
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|dad_maxtry
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_dad_ignore_ns
-value|VNET(dad_ignore_ns)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_dad_maxtry
-value|VNET(dad_maxtry)
-end_define
-
 begin_function
 name|void
 name|nd6_init
@@ -635,132 +697,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|V_nd6_prune
-operator|=
-literal|1
-expr_stmt|;
-comment|/* walk list every 1 seconds */
-name|V_nd6_delay
-operator|=
-literal|5
-expr_stmt|;
-comment|/* delay first probe time 5 second */
-name|V_nd6_umaxtries
-operator|=
-literal|3
-expr_stmt|;
-comment|/* maximum unicast query */
-name|V_nd6_mmaxtries
-operator|=
-literal|3
-expr_stmt|;
-comment|/* maximum multicast query */
-name|V_nd6_useloopback
-operator|=
-literal|1
-expr_stmt|;
-comment|/* use loopback interface for local traffic */
-name|V_nd6_gctimer
-operator|=
-operator|(
-literal|60
-operator|*
-literal|60
-operator|*
-literal|24
-operator|)
-expr_stmt|;
-comment|/* 1 day: garbage collection timer */
-comment|/* preventing too many loops in ND option parsing */
-name|V_nd6_maxndopt
-operator|=
-literal|10
-expr_stmt|;
-comment|/* max # of ND options allowed */
-name|V_nd6_maxnudhint
-operator|=
-literal|0
-expr_stmt|;
-comment|/* max # of subsequent upper layer hints */
-name|V_nd6_maxqueuelen
-operator|=
-literal|1
-expr_stmt|;
-comment|/* max pkts cached in unresolved ND entries */
-ifdef|#
-directive|ifdef
-name|ND6_DEBUG
-name|V_nd6_debug
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
-name|V_nd6_debug
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-name|V_nd6_recalc_reachtm_interval
-operator|=
-name|ND6_RECALC_REACHTM_INTERVAL
-expr_stmt|;
-name|V_dad_ignore_ns
-operator|=
-literal|0
-expr_stmt|;
-comment|/* ignore NS in DAD - specwise incorrect*/
-name|V_dad_maxtry
-operator|=
-literal|15
-expr_stmt|;
-comment|/* max # of *tries* to transmit DAD packet */
-comment|/* 	 * XXX just to get this to compile KMM 	 */
-ifdef|#
-directive|ifdef
-name|notyet
-name|V_llinfo_nd6
-operator|.
-name|ln_next
-operator|=
-operator|&
-name|V_llinfo_nd6
-expr_stmt|;
-name|V_llinfo_nd6
-operator|.
-name|ln_prev
-operator|=
-operator|&
-name|V_llinfo_nd6
-expr_stmt|;
-endif|#
-directive|endif
 name|LIST_INIT
 argument_list|(
 operator|&
 name|V_nd_prefix
 argument_list|)
-expr_stmt|;
-name|V_ip6_use_tempaddr
-operator|=
-literal|0
-expr_stmt|;
-name|V_ip6_temp_preferred_lifetime
-operator|=
-name|DEF_TEMP_PREFERRED_LIFETIME
-expr_stmt|;
-name|V_ip6_temp_valid_lifetime
-operator|=
-name|DEF_TEMP_VALID_LIFETIME
-expr_stmt|;
-name|V_ip6_temp_regen_advance
-operator|=
-name|TEMPADDR_REGEN_ADVANCE
-expr_stmt|;
-name|V_ip6_desync_factor
-operator|=
-literal|0
 expr_stmt|;
 name|all1_sa
 operator|.

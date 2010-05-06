@@ -88,13 +88,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_ipip_allow
-value|VNET(ipip_allow)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -105,6 +98,13 @@ name|ipipstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipip_allow
+value|VNET(ipip_allow)
+end_define
 
 begin_define
 define|#

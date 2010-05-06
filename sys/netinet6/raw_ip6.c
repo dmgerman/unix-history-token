@@ -312,17 +312,6 @@ name|V_ripcbinfo
 value|VNET(ripcbinfo)
 end_define
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
-name|rip6stat
-argument_list|,
-name|rip6stat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
 name|u_long
@@ -336,6 +325,17 @@ name|u_long
 name|rip_recvspace
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|rip6stat
+argument_list|,
+name|rip6stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Hooks for multicast routing. They all default to NULL, so leave them not  * initialized and rely on BSS being set to 0.  */
