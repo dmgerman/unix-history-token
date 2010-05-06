@@ -2950,15 +2950,6 @@ operator|->
 name|a_uio
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|uio
-operator|->
-name|uio_td
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -3121,7 +3112,9 @@ name|vp
 argument_list|,
 name|uio
 argument_list|,
-name|td
+name|uio
+operator|->
+name|uio_td
 argument_list|)
 condition|)
 return|return

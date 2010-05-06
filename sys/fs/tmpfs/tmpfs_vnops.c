@@ -3339,15 +3339,6 @@ name|v
 operator|->
 name|a_ioflag
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|uio
-operator|->
-name|uio_td
-decl_stmt|;
 name|boolean_t
 name|extended
 decl_stmt|;
@@ -3472,7 +3463,9 @@ name|vp
 argument_list|,
 name|uio
 argument_list|,
-name|td
+name|uio
+operator|->
+name|uio_td
 argument_list|)
 condition|)
 return|return
