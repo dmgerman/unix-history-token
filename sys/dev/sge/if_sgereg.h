@@ -1488,6 +1488,10 @@ name|SGE_FLAG_FASTETHER
 value|0x0001
 define|#
 directive|define
+name|SGE_FLAG_SIS190
+value|0x0002
+define|#
+directive|define
 name|SGE_FLAG_RGMII
 value|0x0010
 define|#
