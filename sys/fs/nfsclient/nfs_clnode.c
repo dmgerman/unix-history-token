@@ -773,13 +773,6 @@ name|VREG
 condition|)
 block|{
 comment|/* 		 * Since mmap()'d files do I/O after VOP_CLOSE(), the NFSv4 		 * Close operations are delayed until now. Any dirty buffers 		 * must be flushed before the close, so that the stateid is 		 * available for the writes. 		 */
-if|if
-condition|(
-name|nfscl_mustflush
-argument_list|(
-name|vp
-argument_list|)
-condition|)
 operator|(
 name|void
 operator|)
