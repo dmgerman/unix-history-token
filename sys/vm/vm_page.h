@@ -111,7 +111,7 @@ comment|/* page cow mapping count (Q) */
 name|u_int
 name|wire_count
 decl_stmt|;
-comment|/* wired down maps refs (Q) */
+comment|/* wired down maps refs (P) */
 name|short
 name|hold_count
 decl_stmt|;
