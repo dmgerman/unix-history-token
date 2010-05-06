@@ -6206,6 +6206,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uoff_t
+operator|)
 name|uio
 operator|->
 name|uio_offset
