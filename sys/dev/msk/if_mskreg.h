@@ -4207,7 +4207,7 @@ value|0x0c58
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Upper Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Upper Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define
@@ -4218,7 +4218,7 @@ value|0x0c5a
 end_define
 
 begin_comment
-comment|/*  8 bit Rx Lower Pause Thr (Yukon-EC_U) */
+comment|/* 16 bit Rx Lower Pause Thr (Yukon-EC_U) */
 end_comment
 
 begin_define
@@ -14079,6 +14079,20 @@ end_define
 begin_comment
 comment|/* disable VLAN stripping */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GMF_RX_MACSEC_FLUSH_ON
+value|BIT_23
+end_define
+
+begin_define
+define|#
+directive|define
+name|GMF_RX_MACSEC_FLUSH_OFF
+value|BIT_22
+end_define
 
 begin_define
 define|#
