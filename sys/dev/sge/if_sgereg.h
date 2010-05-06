@@ -508,6 +508,27 @@ name|AcceptRunt
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|RXMAC_STRIP_FCS
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXMAC_PAD_ENB
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_RX_PAD_BYTES
+value|10
+end_define
+
 begin_comment
 comment|/* Station control register. */
 end_comment
