@@ -10104,9 +10104,6 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -10114,28 +10111,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX: Not same check as above!? 				 */
-if|if
-condition|(
-name|pg
-operator|->
-name|wire_count
-operator|==
-literal|0
-operator|&&
+name|KASSERT
+argument_list|(
 name|pg
 operator|->
 name|object
-operator|==
+operator|!=
 name|NULL
-condition|)
-name|vm_page_free
-argument_list|(
-name|pg
+argument_list|,
+operator|(
+literal|"kern_sendfile: object disappeared"
+operator|)
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
