@@ -162,7 +162,7 @@ name|cdev
 modifier|*
 name|devfs_alloc
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
