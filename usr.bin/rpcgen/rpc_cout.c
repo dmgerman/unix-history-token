@@ -2348,6 +2348,11 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+name|free
+argument_list|(
+name|sizestr
+argument_list|)
+expr_stmt|;
 name|sizestr
 operator|=
 name|NULL
