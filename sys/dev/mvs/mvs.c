@@ -14026,8 +14026,7 @@ expr_stmt|;
 comment|/* XXX */
 name|mvs_ch_intr
 argument_list|(
-name|arg
-operator|.
+operator|&
 name|arg
 argument_list|)
 expr_stmt|;
