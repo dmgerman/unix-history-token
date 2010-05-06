@@ -720,6 +720,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 literal|0
@@ -738,8 +742,6 @@ name|strlen
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* No tab in the line, then not a valid line */
