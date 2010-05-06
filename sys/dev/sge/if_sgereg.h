@@ -511,6 +511,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RXMAC_STRIP_VLAN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
 name|RXMAC_STRIP_FCS
 value|0x0010
 end_define
@@ -810,6 +817,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TDC_VLAN_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|SGE_TX_INTR_FRAMES
 value|32
 end_define
@@ -817,6 +831,13 @@ end_define
 begin_comment
 comment|/*  * TX descriptor status bits.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TDS_INS_VLAN
+value|0x80000000
+end_define
 
 begin_define
 define|#
@@ -986,6 +1007,13 @@ name|RDC_PREADD
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|RDC_VLAN_MASK
+value|0x0000FFFF
+end_define
+
 begin_comment
 comment|/*  * RX descriptor status bits  */
 end_comment
@@ -993,7 +1021,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RDS_TAGON
+name|RDS_VLAN
 value|0x80000000
 end_define
 
@@ -1085,7 +1113,7 @@ begin_define
 define|#
 directive|define
 name|RX_ERR_BITS
-value|"\20"					\ 				"\21CRCOK\22COLON\23NIBON\24OVRUN"	\ 				"\25MIIER\26LIMIT\27SHORT\30ABORT"	\ 				"\40TAGON"
+value|"\20"					\ 				"\21CRCOK\22COLON\23NIBON\24OVRUN"	\ 				"\25MIIER\26LIMIT\27SHORT\30ABORT"	\ 				"\40VLAN"
 end_define
 
 begin_define
