@@ -616,6 +616,14 @@ literal|"Marvell Yukon 88E8057 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_MRVL_4381
+block|,
+literal|"Marvell Yukon 88E8059 Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|VENDORID_DLINK
 block|,
 name|DEVICEID_DLINK_DGE550SX
@@ -666,7 +674,11 @@ block|,
 literal|"Yukon Supreme"
 block|,
 literal|"Yukon Ultra 2"
-block|}
+block|,
+literal|"Yukon Unknown"
+block|,
+literal|"Yukon Optima"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5996,6 +6008,9 @@ case|:
 case|case
 name|CHIP_ID_YUKON_UL_2
 case|:
+case|case
+name|CHIP_ID_YUKON_OPT
+case|:
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -6714,6 +6729,38 @@ operator||
 name|GMC_BYP_MACSECTX_ON
 operator||
 name|GMC_BYP_RETR_ON
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_OPT
+operator|&&
+name|sc
+operator|->
+name|msk_hw_rev
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Disable PCIe PHY powerdown(reg 0x80, bit7). */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|Y2_PEX_PHY_DATA
+argument_list|,
+operator|(
+literal|0x0080
+operator|<<
+literal|16
+operator|)
+operator||
+literal|0x0080
 argument_list|)
 expr_stmt|;
 block|}
@@ -8343,13 +8390,19 @@ name|sc
 operator|->
 name|msk_hw_id
 operator|>
-name|CHIP_ID_YUKON_UL_2
+name|CHIP_ID_YUKON_OPT
 operator|||
 name|sc
 operator|->
 name|msk_hw_id
 operator|==
 name|CHIP_ID_YUKON_SUPR
+operator|||
+name|sc
+operator|->
+name|msk_hw_id
+operator|==
+name|CHIP_ID_YUKON_UNKNOWN
 condition|)
 block|{
 name|device_printf
@@ -8871,6 +8924,25 @@ operator|->
 name|msk_pflags
 operator||=
 name|MSK_FLAG_JUMBO
+expr_stmt|;
+break|break;
+case|case
+name|CHIP_ID_YUKON_OPT
+case|:
+name|sc
+operator|->
+name|msk_clock
+operator|=
+literal|125
+expr_stmt|;
+comment|/* 125 MHz */
+name|sc
+operator|->
+name|msk_pflags
+operator||=
+name|MSK_FLAG_JUMBO
+operator||
+name|MSK_FLAG_DESCV2
 expr_stmt|;
 break|break;
 default|default:
