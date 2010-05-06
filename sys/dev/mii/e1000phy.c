@@ -404,6 +404,13 @@ argument_list|)
 block|,
 name|MII_PHY_DESC
 argument_list|(
+name|MARVELL
+argument_list|,
+name|PHYG65G
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
 name|xxMARVELL
 argument_list|,
 name|E1000
@@ -982,6 +989,9 @@ name|MII_MODEL_MARVELL_E1118
 case|:
 case|case
 name|MII_MODEL_MARVELL_E1149
+case|:
+case|case
+name|MII_MODEL_MARVELL_PHYG65G
 case|:
 comment|/* Disable energy detect mode. */
 name|reg
