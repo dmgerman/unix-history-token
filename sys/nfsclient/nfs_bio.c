@@ -548,9 +548,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|pages
@@ -558,9 +555,6 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
@@ -786,9 +780,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|pages
@@ -796,9 +787,6 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
