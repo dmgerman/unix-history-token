@@ -188,6 +188,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|boolean_t
+name|vm_pageout_page_lock
+parameter_list|(
+name|vm_page_t
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
