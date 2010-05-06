@@ -4884,10 +4884,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|m
-operator|=
-name|mp
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -4896,7 +4892,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
-name|m
+name|mp
 operator|->
 name|m_pkthdr
 operator|.
