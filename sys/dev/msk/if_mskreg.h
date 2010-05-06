@@ -256,6 +256,13 @@ name|DEVICEID_MRVL_4380
 value|0x4380
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_MRVL_4381
+value|0x4381
+end_define
+
 begin_comment
 comment|/*  * D-Link gigabit ethernet device ID  */
 end_comment
@@ -5824,6 +5831,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|Y2_IS_PSM_ACK
+value|BIT_7
+end_define
+
+begin_comment
+comment|/* PSM Ack (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_IS_PTP_TIST
+value|BIT_6
+end_define
+
+begin_comment
+comment|/* PTP TIme Stamp (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Y2_IS_PHY_QLNK
+value|BIT_5
+end_define
+
+begin_comment
+comment|/* PHY Quick Link (Yukon Optima) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|Y2_IS_IRQ_PHY1
 value|BIT_4
 end_define
@@ -6329,6 +6369,24 @@ end_define
 
 begin_comment
 comment|/* Chip ID for YUKON-2 Ultra 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_UNKNOWN
+value|0xbb
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHIP_ID_YUKON_OPT
+value|0xbc
+end_define
+
+begin_comment
+comment|/* Chip ID for YUKON-2 Optima */
 end_comment
 
 begin_define
