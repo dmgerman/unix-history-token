@@ -89,7 +89,7 @@ comment|/* machine dependant stuff */
 name|uint8_t
 name|queue
 decl_stmt|;
-comment|/* page queue index */
+comment|/* page queue index (P,Q) */
 name|int8_t
 name|segind
 decl_stmt|;
