@@ -317,7 +317,7 @@ case|:
 comment|/*  Sleep (MsecTime) */
 name|Status
 operator|=
-name|AcpiExSystemDoSuspend
+name|AcpiExSystemDoSleep
 argument_list|(
 name|Operand
 index|[

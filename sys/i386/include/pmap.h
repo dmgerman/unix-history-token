@@ -1734,6 +1734,13 @@ argument_list|)
 name|pm_list
 expr_stmt|;
 comment|/* List of all pmaps */
+name|uint32_t
+name|pm_gen_count
+decl_stmt|;
+comment|/* generation count (pmap lock dropped) */
+name|u_int
+name|pm_retries
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PAE

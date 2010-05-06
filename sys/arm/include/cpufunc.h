@@ -1346,11 +1346,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_FA526
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -2681,6 +2689,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_FA526
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
 argument_list|)
 operator|||
 expr|\

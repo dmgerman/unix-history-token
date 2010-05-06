@@ -311,6 +311,9 @@ comment|/* atomically get& clear link stats */
 name|NGM_BRIDGE_GET_TABLE
 block|,
 comment|/* get link table */
+name|NGM_BRIDGE_SET_PERSISTENT
+block|,
+comment|/* set persistent mode */
 block|}
 enum|;
 end_enum

@@ -426,6 +426,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.ifqmaxlen"
+argument_list|,
+operator|&
+name|ifqmaxlen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_net_link
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ifqmaxlen
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|ifqmaxlen
+argument_list|,
+literal|0
+argument_list|,
+literal|"max send queue size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Log link state change events */
 end_comment
@@ -935,6 +967,24 @@ end_endif
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
+name|int
+argument_list|,
+name|if_index
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|ifqmaxlen
+init|=
+name|IFQ_MAXLEN
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 expr|struct
 name|ifnethead
 argument_list|,
@@ -954,16 +1004,6 @@ expr|struct
 name|ifgrouphead
 argument_list|,
 name|ifg_head
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|if_index
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1011,14 +1051,6 @@ directive|define
 name|V_ifindex_table
 value|VNET(ifindex_table)
 end_define
-
-begin_decl_stmt
-name|int
-name|ifqmaxlen
-init|=
-name|IFQ_MAXLEN
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * The global network interface list (V_ifnet) and related state (such as  * if_index, if_indexlim, and ifindex_table) are protected by an sxlock and  * an rwlock.  Either may be acquired shared to stablize the list, but both  * must be acquired writable to modify the list.  This model allows us to  * both stablize the interface list during interrupt thread processing, but  * also to stablize it over long-running ioctls, without introducing priority  * inversions and deadlocks.  */

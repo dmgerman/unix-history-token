@@ -1354,6 +1354,38 @@ directive|else
 comment|/* !USE_LASTLOG */
 if|#
 directive|if
+name|defined
+argument_list|(
+name|USE_UTMPX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETUTXDB
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_GETUTXUSER
+argument_list|)
+return|return
+operator|(
+name|utmpx_get_entry
+argument_list|(
+name|li
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
+if|#
+directive|if
 literal|1
 return|return
 operator|(
@@ -6445,7 +6477,26 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
+name|defined
+argument_list|(
+name|USE_UTMPX
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SETUTXDB
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|UTXDB_LASTLOGIN
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_GETUTXUSER
+argument_list|)
 end_if
 
 begin_function
@@ -6583,6 +6634,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USE_UTMPX&& HAVE_SETUTXDB&& UTXDB_LASTLOGIN&& HAVE_GETUTXUSER */
+end_comment
 
 begin_ifdef
 ifdef|#

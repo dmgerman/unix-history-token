@@ -1802,6 +1802,10 @@ name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
 decl_stmt|;
+name|char
+modifier|*
+name|GpeType
+decl_stmt|;
 name|UINT32
 name|GpeIndex
 decl_stmt|;
@@ -1896,9 +1900,30 @@ literal|"Could not convert name to pathname\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|GpeBlock
+operator|->
+name|Node
+operator|==
+name|AcpiGbl_FadtGpeDevice
+condition|)
+block|{
+name|GpeType
+operator|=
+literal|"FADT-defined GPE block"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|GpeType
+operator|=
+literal|"GPE Block Device"
+expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nBlock %d - Info %p  DeviceNode %p [%s]\n"
+literal|"\nBlock %d - Info %p  DeviceNode %p [%s] - %s\n"
 argument_list|,
 name|Block
 argument_list|,
@@ -1909,6 +1934,8 @@ operator|->
 name|Node
 argument_list|,
 name|Buffer
+argument_list|,
+name|GpeType
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf

@@ -159,7 +159,7 @@ name|M_NETGRAPH_BRIDGE
 argument_list|,
 literal|"netgraph_bridge"
 argument_list|,
-literal|"netgraph bridge node "
+literal|"netgraph bridge node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -253,6 +253,10 @@ name|int
 name|numLinks
 decl_stmt|;
 comment|/* num connected links */
+name|int
+name|persistent
+decl_stmt|;
+comment|/* can exist w/o hooks */
 name|struct
 name|callout
 name|timer
@@ -938,6 +942,18 @@ name|NULL
 block|,
 operator|&
 name|ng_bridge_host_ary_type
+block|}
+block|,
+block|{
+name|NGM_BRIDGE_COOKIE
+block|,
+name|NGM_BRIDGE_SET_PERSISTENT
+block|,
+literal|"setpersistent"
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -2040,6 +2056,18 @@ operator|->
 name|host
 expr_stmt|;
 block|}
+break|break;
+block|}
+case|case
+name|NGM_BRIDGE_SET_PERSISTENT
+case|:
+block|{
+name|priv
+operator|->
+name|persistent
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 block|}
 default|default:
@@ -3319,6 +3347,11 @@ name|hook
 argument_list|)
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|priv
+operator|->
+name|persistent
 condition|)
 block|{
 name|ng_rmnode_self

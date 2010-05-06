@@ -2698,6 +2698,41 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * VM 	 *  	 */
+block|{
+literal|"vm object"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"page lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"vm page queue mutex"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"pmap"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * kqueue/VFS interaction 	 */
 block|{
 literal|"kqueue"

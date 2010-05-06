@@ -1196,12 +1196,6 @@ operator|!=
 name|special
 condition|)
 block|{
-name|special
-operator|=
-name|disk
-operator|.
-name|d_name
-expr_stmt|;
 if|if
 condition|(
 name|statfs
@@ -1211,9 +1205,18 @@ argument_list|,
 operator|&
 name|stfs
 argument_list|)
-operator|==
+operator|!=
 literal|0
-operator|&&
+condition|)
+name|warn
+argument_list|(
+literal|"Can't stat %s"
+argument_list|,
+name|special
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|special
@@ -2667,9 +2670,11 @@ name|cg_cs
 operator|.
 name|cs_nbfree
 operator|>
-name|blocks
-operator|/
-literal|8
+literal|128
+operator|*
+literal|1024
+operator|*
+literal|1024
 condition|)
 break|break;
 if|if
@@ -5085,13 +5090,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: tunefs [-A] [-a enable | disable] [-e maxbpg] [-f avgfilesize]"
 argument_list|,
-literal|"              [-J enable | disable ] [-L volname] [-l enable | disable]"
+literal|"              [-J enable | disable] [-j enable | disable]"
 argument_list|,
-literal|"              [-m minfree] [-N enable | disable] [-n enable | disable]"
+literal|"              [-L volname] [-l enable | disable] [-m minfree]"
+argument_list|,
+literal|"              [-N enable | disable] [-n enable | disable]"
 argument_list|,
 literal|"              [-o space | time] [-p] [-s avgfpdir] special | filesystem"
 argument_list|)

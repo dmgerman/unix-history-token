@@ -300,16 +300,6 @@ begin_comment
 comment|/*  * UDP protocol implementation.  * Per RFC 768, August, 1980.  */
 end_comment
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|udp_blackhole
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * BSD 4.2 defaulted the udp checksum to be off.  Turning off udp checksums  * removes the only data integrity mechanism for packets and malformed  * packets that would otherwise be discarded due to bad checksums, and may  * cause problems (especially for NFS data blocks).  */
 end_comment
@@ -370,6 +360,18 @@ literal|0
 argument_list|,
 literal|"Log all incoming UDP packets"
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|udp_blackhole
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -522,21 +524,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
-name|udpstat
-argument_list|,
-name|udpstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* from udp_var.h */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -561,6 +548,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|udpstat
+argument_list|,
+name|udpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* from udp_var.h */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_VNET_STRUCT
@@ -773,10 +775,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|V_udp_blackhole
-operator|=
-literal|0
-expr_stmt|;
 name|in_pcbinfo_init
 argument_list|(
 operator|&

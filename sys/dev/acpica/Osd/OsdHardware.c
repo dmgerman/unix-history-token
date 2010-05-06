@@ -810,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the bus number for a device  *  * rhandle: handle for the root bus  * chandle: handle for the device  * PciId: pointer to device slot and function, we fill out bus  */
+comment|/*  * Find the bus number for a device  *  * Device: handle for the PCI root bridge device  * Region: handle for the PCI configuration space operation region  * PciId: pointer to device slot and function, we fill out bus  */
 end_comment
 
 begin_function
@@ -818,10 +818,10 @@ name|void
 name|AcpiOsDerivePciId
 parameter_list|(
 name|ACPI_HANDLE
-name|rhandle
+name|Device
 parameter_list|,
 name|ACPI_HANDLE
-name|chandle
+name|Region
 parameter_list|,
 name|ACPI_PCI_ID
 modifier|*
@@ -850,23 +850,23 @@ argument_list|(
 literal|"AcpiOsDerivePciId unable to initialize pci bus"
 argument_list|)
 expr_stmt|;
-comment|/* Try to read _BBN for bus number if we're at the root */
+comment|/* Try to read _BBN for bus number if we're at the root. */
 name|bus
 operator|=
 literal|0
 expr_stmt|;
 if|if
 condition|(
-name|rhandle
+name|Device
 operator|==
-name|chandle
+name|Region
 condition|)
 block|{
 name|status
 operator|=
 name|acpi_GetInteger
 argument_list|(
-name|rhandle
+name|Device
 argument_list|,
 literal|"_BBN"
 argument_list|,
@@ -889,14 +889,14 @@ literal|"AcpiOsDerivePciId: root bus has no _BBN, assuming 0\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the parent handle and call the recursive case.  It is not      * clear why we seem to be getting a chandle that points to a child      * of the desired slot/function but passing in the parent handle      * here works.      */
+comment|/* Get the parent handle and call the recursive case. */
 if|if
 condition|(
 name|ACPI_SUCCESS
 argument_list|(
 name|AcpiGetParent
 argument_list|(
-name|chandle
+name|Region
 argument_list|,
 operator|&
 name|parent
@@ -907,7 +907,7 @@ name|bus
 operator|=
 name|acpi_bus_number
 argument_list|(
-name|rhandle
+name|Device
 argument_list|,
 name|parent
 argument_list|,
@@ -935,7 +935,7 @@ literal|"AcpiOsDerivePciId: %s -> bus %d dev %d func %d\n"
 argument_list|,
 name|acpi_name
 argument_list|(
-name|chandle
+name|Region
 argument_list|)
 argument_list|,
 operator|(

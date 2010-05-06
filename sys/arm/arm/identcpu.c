@@ -1024,6 +1024,16 @@ name|generic_steppings
 block|}
 block|,
 block|{
+name|CPU_ID_FA626TE
+block|,
+name|CPU_CLASS_ARM9ES
+block|,
+literal|"FA626TE"
+block|,
+name|generic_steppings
+block|}
+block|,
+block|{
 name|CPU_ID_TI925T
 block|,
 name|CPU_CLASS_ARM9TDMI

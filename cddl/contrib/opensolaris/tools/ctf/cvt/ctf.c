@@ -1720,6 +1720,32 @@ name|i
 operator|++
 expr_stmt|;
 comment|/* count up enum members */
+if|if
+condition|(
+name|i
+operator|>
+name|CTF_MAX_VLEN
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"enum %s has too many values: %d> %d\n"
+argument_list|,
+name|tdesc_name
+argument_list|(
+name|tp
+argument_list|)
+argument_list|,
+name|i
+argument_list|,
+name|CTF_MAX_VLEN
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|CTF_MAX_VLEN
+expr_stmt|;
+block|}
 name|ctt
 operator|.
 name|ctt_info
@@ -1756,6 +1782,10 @@ init|;
 name|ep
 operator|!=
 name|NULL
+operator|&&
+name|i
+operator|>
+literal|0
 condition|;
 name|ep
 operator|=
@@ -1809,6 +1839,9 @@ argument_list|(
 name|cte
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|i
+operator|--
 expr_stmt|;
 block|}
 break|break;

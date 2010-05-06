@@ -491,6 +491,18 @@ name|ASL_EXTERN
 name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
+name|Gbl_NoResourceChecking
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
 name|Gbl_DisasmFlag
 parameter_list|,
 name|FALSE
@@ -589,6 +601,13 @@ define|#
 directive|define
 name|HEX_OUTPUT_ASM
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEX_OUTPUT_ASL
+value|3
 end_define
 
 begin_function_decl

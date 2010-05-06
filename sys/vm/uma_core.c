@@ -4203,9 +4203,6 @@ argument_list|,
 name|pglist
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|p
@@ -4217,9 +4214,6 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|retkva
@@ -11639,17 +11633,15 @@ name|obj
 operator|==
 name|NULL
 condition|)
-block|{
 name|obj
 operator|=
 name|vm_object_allocate
 argument_list|(
-name|OBJT_DEFAULT
+name|OBJT_PHYS
 argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|VM_OBJECT_LOCK_INIT
@@ -11661,7 +11653,7 @@ argument_list|)
 expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
-name|OBJT_DEFAULT
+name|OBJT_PHYS
 argument_list|,
 name|pages
 argument_list|,

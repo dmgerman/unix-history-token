@@ -25936,7 +25936,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: cannot parse addres"
+literal|"%s: cannot parse address"
 argument_list|,
 name|arg
 argument_list|)

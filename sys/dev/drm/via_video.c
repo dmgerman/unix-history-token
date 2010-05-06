@@ -285,7 +285,7 @@ condition|(
 name|fx
 operator|->
 name|lock
-operator|>
+operator|>=
 name|VIA_NR_XVMC_LOCKS
 condition|)
 return|return

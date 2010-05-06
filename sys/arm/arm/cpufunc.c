@@ -2023,6 +2023,11 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -2032,192 +2037,124 @@ name|fa526_cpufuncs
 init|=
 block|{
 comment|/* CPU functions */
-operator|.
-name|cf_id
-operator|=
 name|cpufunc_id
 block|,
-operator|.
-name|cf_cpwait
-operator|=
+comment|/* id			*/
 name|cpufunc_nullop
 block|,
+comment|/* cpwait		*/
 comment|/* MMU functions */
-operator|.
-name|cf_control
-operator|=
 name|cpufunc_control
 block|,
-operator|.
-name|cf_domains
-operator|=
+comment|/* control		*/
 name|cpufunc_domains
 block|,
-operator|.
-name|cf_setttb
-operator|=
+comment|/* domain		*/
 name|fa526_setttb
 block|,
-operator|.
-name|cf_faultstatus
-operator|=
+comment|/* setttb		*/
 name|cpufunc_faultstatus
 block|,
-operator|.
-name|cf_faultaddress
-operator|=
+comment|/* faultstatus		*/
 name|cpufunc_faultaddress
 block|,
+comment|/* faultaddress		*/
 comment|/* TLB functions */
-operator|.
-name|cf_tlb_flushID
-operator|=
 name|armv4_tlb_flushID
 block|,
-operator|.
-name|cf_tlb_flushID_SE
-operator|=
+comment|/* tlb_flushID		*/
 name|fa526_tlb_flushID_SE
 block|,
-operator|.
-name|cf_tlb_flushI
-operator|=
+comment|/* tlb_flushID_SE	*/
 name|armv4_tlb_flushI
 block|,
-operator|.
-name|cf_tlb_flushI_SE
-operator|=
+comment|/* tlb_flushI		*/
 name|fa526_tlb_flushI_SE
 block|,
-operator|.
-name|cf_tlb_flushD
-operator|=
+comment|/* tlb_flushI_SE	*/
 name|armv4_tlb_flushD
 block|,
-operator|.
-name|cf_tlb_flushD_SE
-operator|=
+comment|/* tlb_flushD		*/
 name|armv4_tlb_flushD_SE
 block|,
+comment|/* tlb_flushD_SE	*/
 comment|/* Cache operations */
-operator|.
-name|cf_icache_sync_all
-operator|=
 name|fa526_icache_sync_all
 block|,
-operator|.
-name|cf_icache_sync_range
-operator|=
+comment|/* icache_sync_all	*/
 name|fa526_icache_sync_range
 block|,
-operator|.
-name|cf_dcache_wbinv_all
-operator|=
+comment|/* icache_sync_range	*/
 name|fa526_dcache_wbinv_all
 block|,
-operator|.
-name|cf_dcache_wbinv_range
-operator|=
+comment|/* dcache_wbinv_all	*/
 name|fa526_dcache_wbinv_range
 block|,
-operator|.
-name|cf_dcache_inv_range
-operator|=
+comment|/* dcache_wbinv_range	*/
 name|fa526_dcache_inv_range
 block|,
-operator|.
-name|cf_dcache_wb_range
-operator|=
+comment|/* dcache_inv_range	*/
 name|fa526_dcache_wb_range
 block|,
-operator|.
-name|cf_idcache_wbinv_all
-operator|=
+comment|/* dcache_wb_range	*/
 name|fa526_idcache_wbinv_all
 block|,
-operator|.
-name|cf_idcache_wbinv_range
-operator|=
+comment|/* idcache_wbinv_all	*/
 name|fa526_idcache_wbinv_range
 block|,
-operator|.
-name|cf_l2cache_wbinv_all
-operator|=
+comment|/* idcache_wbinv_range	*/
 name|cpufunc_nullop
 block|,
-operator|.
-name|cf_l2cache_wbinv_range
-operator|=
+comment|/* l2cache_wbinv_all	*/
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-operator|.
-name|cf_l2cache_inv_range
-operator|=
+comment|/* l2cache_wbinv_range	*/
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
-operator|.
-name|cf_l2cache_wb_range
-operator|=
+comment|/* l2cache_inv_range	*/
 operator|(
 name|void
 operator|*
 operator|)
 name|cpufunc_nullop
 block|,
+comment|/* l2cache_wb_range	*/
 comment|/* Other functions */
-operator|.
-name|cf_flush_prefetchbuf
-operator|=
 name|fa526_flush_prefetchbuf
 block|,
-operator|.
-name|cf_drain_writebuf
-operator|=
+comment|/* flush_prefetchbuf	*/
 name|armv4_drain_writebuf
 block|,
-operator|.
-name|cf_flush_brnchtgt_C
-operator|=
+comment|/* drain_writebuf	*/
 name|cpufunc_nullop
 block|,
-operator|.
-name|cf_flush_brnchtgt_E
-operator|=
+comment|/* flush_brnchtgt_C	*/
 name|fa526_flush_brnchtgt_E
 block|,
-operator|.
-name|cf_sleep
-operator|=
+comment|/* flush_brnchtgt_E	*/
 name|fa526_cpu_sleep
 block|,
+comment|/* sleep		*/
 comment|/* Soft functions */
-operator|.
-name|cf_dataabt_fixup
-operator|=
 name|cpufunc_null_fixup
 block|,
-operator|.
-name|cf_prefetchabt_fixup
-operator|=
+comment|/* dataabt_fixup	*/
 name|cpufunc_null_fixup
 block|,
-operator|.
-name|cf_context_switch
-operator|=
+comment|/* prefetchabt_fixup	*/
 name|fa526_context_switch
 block|,
-operator|.
-name|cf_setup
-operator|=
+comment|/* context_switch	*/
 name|fa526_setup
+comment|/* cpu setup 		*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2228,7 +2165,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_FA526 */
+comment|/* CPU_FA526 || CPU_FA626TE */
 end_comment
 
 begin_comment
@@ -2313,6 +2250,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_FA526
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
 argument_list|)
 operator|||
 expr|\
@@ -3561,14 +3503,26 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_SA1110 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_FA526
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
+argument_list|)
 if|if
 condition|(
 name|cputype
 operator|==
 name|CPU_ID_FA526
+operator|||
+name|cputype
+operator|==
+name|CPU_ID_FA626TE
 condition|)
 block|{
 name|cpufuncs
@@ -3597,7 +3551,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* CPU_FA526 */
+comment|/* CPU_FA526 || CPU_FA626TE */
 ifdef|#
 directive|ifdef
 name|CPU_IXP12X0
@@ -5340,6 +5294,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_FA526
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
 argument_list|)
 end_if
 
@@ -7531,6 +7490,11 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_FA626TE
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -7759,7 +7723,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_FA526 */
+comment|/* CPU_FA526 || CPU_FA626TE */
 end_comment
 
 begin_if

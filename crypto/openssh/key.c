@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.85 2010/03/04 01:44:57 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.86 2010/03/15 19:40:02 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -4038,6 +4038,47 @@ block|}
 return|return
 literal|"unknown"
 return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|key_cert_type
+parameter_list|(
+specifier|const
+name|Key
+modifier|*
+name|k
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|k
+operator|->
+name|cert
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|SSH2_CERT_TYPE_USER
+case|:
+return|return
+literal|"user"
+return|;
+case|case
+name|SSH2_CERT_TYPE_HOST
+case|:
+return|return
+literal|"host"
+return|;
+default|default:
+return|return
+literal|"unknown"
+return|;
+block|}
 block|}
 end_function
 

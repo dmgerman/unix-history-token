@@ -209,6 +209,11 @@ name|sf
 argument_list|)
 expr_stmt|;
 comment|/* remove COW mapping  */
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -246,6 +251,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 name|socow_stats
 operator|.
@@ -386,8 +396,10 @@ operator|)
 return|;
 block|}
 comment|/*  	 * set up COW 	 */
-name|vm_page_lock_queues
-argument_list|()
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -404,8 +416,10 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -424,8 +438,10 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate an sf buf 	 */
 name|sf
@@ -443,6 +459,11 @@ operator|!
 name|sf
 condition|)
 block|{
+name|vm_page_lock
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -480,6 +501,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|pp
+argument_list|)
 expr_stmt|;
 name|socow_stats
 operator|.

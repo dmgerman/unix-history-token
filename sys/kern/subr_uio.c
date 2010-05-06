@@ -331,6 +331,11 @@ condition|)
 goto|goto
 name|retry
 goto|;
+name|vm_page_lock
+argument_list|(
+name|user_pg
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -340,6 +345,11 @@ name|user_pg
 argument_list|)
 expr_stmt|;
 name|vm_page_free
+argument_list|(
+name|user_pg
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
 argument_list|(
 name|user_pg
 argument_list|)

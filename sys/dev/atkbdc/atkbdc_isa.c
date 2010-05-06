@@ -365,6 +365,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|bus_space_tag_t
 name|tag
 decl_stmt|;
@@ -577,6 +582,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* 	 * Check if we really have AT keyboard controller. Poll status 	 * register until we get "all clear" indication. If no such 	 * indication comes, it probably means that there is no AT 	 * keyboard controller present. Give up in such case. Check relies 	 * on the fact that reading from non-existing in/out port returns 	 * 0xff on i386. May or may not be true on other platforms. 	 */
 name|tag
 operator|=
@@ -662,6 +672,17 @@ argument_list|,
 literal|1
 argument_list|,
 name|port1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"AT keyboard controller not found\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -798,6 +819,12 @@ block|}
 name|rid
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|retry
+operator|=
+literal|5000
 expr_stmt|;
 name|sc
 operator|->

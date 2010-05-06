@@ -5639,7 +5639,7 @@ argument_list|(
 name|remove_file
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|2
 argument_list|)

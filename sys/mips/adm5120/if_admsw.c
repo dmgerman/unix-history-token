@@ -2784,7 +2784,7 @@ name|max
 argument_list|(
 name|ADMSW_NTXLDESC
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2798,7 +2798,7 @@ name|max
 argument_list|(
 name|ADMSW_NTXLDESC
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|IFQ_SET_READY

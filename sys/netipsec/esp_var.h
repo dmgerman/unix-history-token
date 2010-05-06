@@ -144,13 +144,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|V_esp_enable
-value|VNET(esp_enable)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -161,6 +154,13 @@ name|espstat
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_esp_enable
+value|VNET(esp_enable)
+end_define
 
 begin_define
 define|#

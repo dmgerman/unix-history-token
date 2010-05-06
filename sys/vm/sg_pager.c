@@ -799,9 +799,6 @@ name|pageq
 argument_list|)
 expr_stmt|;
 comment|/* Free the original pages and insert this fake page into the object. */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -815,6 +812,18 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|vm_page_lock
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -826,6 +835,15 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|vm_page_insert
 argument_list|(
 name|page

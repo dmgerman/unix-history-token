@@ -789,13 +789,6 @@ operator|(
 name|uintptr_t
 operator|)
 literal|0x80000000
-operator|||
-name|pc
-operator|>=
-operator|(
-name|uintptr_t
-operator|)
-name|edata
 condition|)
 block|{
 call|(

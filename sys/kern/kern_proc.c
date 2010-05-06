@@ -4974,7 +4974,9 @@ name|cputick2usec
 argument_list|(
 name|td
 operator|->
-name|td_runtime
+name|td_rux
+operator|.
+name|rux_runtime
 argument_list|)
 expr_stmt|;
 name|kp
@@ -6244,9 +6246,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|ki32
 argument_list|,
@@ -6265,9 +6264,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ki
 argument_list|,
 sizeof|sizeof
@@ -6312,9 +6308,6 @@ name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|ki
 argument_list|,
 sizeof|sizeof

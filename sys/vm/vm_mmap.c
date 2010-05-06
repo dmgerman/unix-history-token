@@ -3482,6 +3482,11 @@ name|mincoreinfo
 operator|=
 name|MINCORE_INCORE
 expr_stmt|;
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3521,6 +3526,11 @@ name|MINCORE_REFERENCED_OTHER
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK

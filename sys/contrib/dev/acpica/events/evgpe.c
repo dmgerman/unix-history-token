@@ -467,7 +467,7 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* A NULL GpeBlock means use the FADT-defined GPE block(s) */
+comment|/* A NULL GpeDevice means use the FADT-defined GPE block(s) */
 if|if
 condition|(
 operator|!

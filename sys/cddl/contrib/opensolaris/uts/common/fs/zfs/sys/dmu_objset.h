@@ -19,13 +19,6 @@ directive|define
 name|_SYS_DMU_OBJSET_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -480,6 +473,18 @@ name|arg
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_objset_prefetch
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 name|void

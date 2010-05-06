@@ -593,7 +593,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ruxagg
+name|ruxagg_locked
 parameter_list|(
 name|struct
 name|rusage_ext

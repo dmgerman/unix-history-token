@@ -287,10 +287,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -299,10 +295,12 @@ name|int
 argument_list|,
 name|esp_max_ivlen
 argument_list|)
-operator|=
-literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* max iv length over all algorithms */
+end_comment
 
 begin_define
 define|#

@@ -805,11 +805,6 @@ operator|=
 name|rip_ctloutput
 block|,
 operator|.
-name|pr_init
-operator|=
-name|icmp_init
-block|,
-operator|.
 name|pr_usrreqs
 operator|=
 operator|&
