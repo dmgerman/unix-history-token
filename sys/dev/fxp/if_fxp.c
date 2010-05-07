@@ -11148,7 +11148,7 @@ name|IFF_ALLMULTI
 condition|?
 literal|1
 else|:
-literal|0
+name|prm
 expr_stmt|;
 name|cbp
 operator|->
