@@ -3243,9 +3243,6 @@ operator|.
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 	 * If the page is not wired down, then put it where the pageout daemon 	 * can find it. 	 */
 if|if
 condition|(
@@ -3277,17 +3274,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|vm_page_activate
 argument_list|(
 name|fs
 operator|.
 name|m
 argument_list|)
-expr_stmt|;
-block|}
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
@@ -4451,16 +4443,10 @@ argument_list|(
 name|dst_m
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_activate
 argument_list|(
 name|dst_m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(

@@ -5028,7 +5028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *	Ensure that act_count is at least ACT_INIT but do not otherwise  *	mess with it.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *	Ensure that act_count is at least ACT_INIT but do not otherwise  *	mess with it.  *  *	The page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5039,14 +5039,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_assert
 argument_list|(
 name|m
@@ -5064,11 +5056,6 @@ operator|!=
 name|PQ_ACTIVE
 condition|)
 block|{
-name|vm_pageq_remove
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -5102,6 +5089,14 @@ name|act_count
 operator|=
 name|ACT_INIT
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|vm_pageq_remove
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_enqueue
 argument_list|(
 name|PQ_ACTIVE
@@ -5109,7 +5104,26 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
+else|else
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|queue
+operator|==
+name|PQ_NONE
+argument_list|,
+operator|(
+literal|"vm_page_activate: wired page %p is queued"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
