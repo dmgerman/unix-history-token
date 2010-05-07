@@ -5786,7 +5786,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  If the page has  * any associated swap, the swap is deallocated.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * This routine may not block.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * This routine may not block.  */
 end_comment
 
 begin_function
@@ -5802,14 +5802,6 @@ name|int
 name|athead
 parameter_list|)
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_assert
 argument_list|(
 name|m
@@ -5847,6 +5839,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|m
@@ -5906,9 +5901,16 @@ operator|.
 name|v_inactive_count
 operator|++
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Move the specified page to the inactive queue.  *  * The page must be locked.  */
+end_comment
 
 begin_function
 name|void
