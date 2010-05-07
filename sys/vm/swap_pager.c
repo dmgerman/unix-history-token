@@ -3874,9 +3874,6 @@ name|k
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|swp_pager_free_nrpage
 argument_list|(
 name|m
@@ -3884,9 +3881,6 @@ index|[
 name|k
 index|]
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
@@ -3919,9 +3913,6 @@ name|k
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|swp_pager_free_nrpage
 argument_list|(
 name|m
@@ -3929,9 +3920,6 @@ index|[
 name|k
 index|]
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unlock
 argument_list|(
