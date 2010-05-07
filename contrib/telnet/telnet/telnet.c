@@ -547,12 +547,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|jmp_buf
-name|peerdied
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flushline
 decl_stmt|;

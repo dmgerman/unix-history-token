@@ -13274,15 +13274,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|peerdied
-argument_list|)
-operator|==
-literal|0
-condition|)
 name|telnet
 argument_list|(
 name|user
