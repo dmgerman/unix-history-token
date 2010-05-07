@@ -2957,7 +2957,7 @@ argument_list|()
 operator|+
 name|addl_page_shortage_init
 expr_stmt|;
-name|vm_pageout_marker_init
+name|vm_pageout_init_marker
 argument_list|(
 operator|&
 name|marker
