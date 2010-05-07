@@ -5214,6 +5214,13 @@ name|rl_flags
 operator||=
 name|RL_FLAG_PCIE
 expr_stmt|;
+if|if
+condition|(
+name|devid
+operator|!=
+name|RT_DEVICEID_8101E
+condition|)
+block|{
 comment|/* Set PCIe maximum read request size to 2048. */
 if|if
 condition|(
@@ -5231,6 +5238,7 @@ argument_list|,
 literal|2048
 argument_list|)
 expr_stmt|;
+block|}
 name|msic
 operator|=
 name|pci_msi_count
