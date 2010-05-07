@@ -12446,6 +12446,18 @@ name|ENOSPC
 operator|)
 return|;
 comment|/* 	 * Attempt to sync this vnode once to flush any journal 	 * work attached to it. 	 */
+if|if
+condition|(
+operator|(
+name|curthread
+operator|->
+name|td_pflags
+operator|&
+name|TDP_COWINPROGRESS
+operator|)
+operator|==
+literal|0
+condition|)
 name|ffs_syncvnode
 argument_list|(
 name|vp
