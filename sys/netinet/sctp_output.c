@@ -43655,13 +43655,7 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_SENT
 expr_stmt|;
-name|sctp_ucount_decr
-argument_list|(
-name|asoc
-operator|->
-name|sent_queue_retran_cnt
-argument_list|)
-expr_stmt|;
+comment|/* sctp_ucount_decr(asoc->sent_queue_retran_cnt); */
 if|if
 condition|(
 name|fwd_tsn
