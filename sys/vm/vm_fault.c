@@ -921,9 +921,6 @@ operator|.
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -989,6 +986,9 @@ name|busy
 condition|)
 block|{
 comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|fs
@@ -1150,6 +1150,9 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_pageq_remove
 argument_list|(
 name|fs
