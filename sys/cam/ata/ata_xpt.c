@@ -5402,16 +5402,6 @@ name|ccb_h
 operator|.
 name|ppriv_ptr0
 expr_stmt|;
-comment|/* Free the current request path- we're done with it. */
-name|xpt_free_path
-argument_list|(
-name|work_ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
 comment|/* If there is PMP... */
 if|if
 condition|(
@@ -5449,7 +5439,17 @@ operator|==
 name|CAM_REQ_CMP
 condition|)
 block|{
-comment|/* everything else willbe probed by it */
+comment|/* everything else will be probed by it */
+comment|/* Free the current request path- we're done with it. */
+name|xpt_free_path
+argument_list|(
+name|work_ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -5479,15 +5479,13 @@ name|cts
 operator|.
 name|ccb_h
 argument_list|,
-name|scan_info
-operator|->
-name|request_ccb
+name|work_ccb
 operator|->
 name|ccb_h
 operator|.
 name|path
 argument_list|,
-literal|1
+name|CAM_PRIORITY_NONE
 argument_list|)
 expr_stmt|;
 name|cts
@@ -5537,6 +5535,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Free the current request path- we're done with it. */
+name|xpt_free_path
+argument_list|(
+name|work_ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|scan_info
