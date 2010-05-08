@@ -336,9 +336,6 @@ argument_list|(
 name|user_pg
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pmap_remove_all
 argument_list|(
 name|user_pg
@@ -379,9 +376,6 @@ operator|+
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 block|}
 name|vm_page_insert
 argument_list|(
@@ -396,9 +390,6 @@ name|vm_page_dirty
 argument_list|(
 name|kern_pg
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(

@@ -6522,9 +6522,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 			 * Might as well free the page if we can and it has 			 * no valid data.  We also free the page if the 			 * buffer was used for direct I/O 			 */
 if|if
 condition|(
@@ -6585,9 +6582,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 block|}
 name|vm_page_unlock
 argument_list|(
