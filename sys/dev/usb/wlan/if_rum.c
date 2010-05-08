@@ -1311,6 +1311,18 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|rum_update_mcast
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|rum_update_promisc
 parameter_list|(
 name|struct
@@ -3644,6 +3656,12 @@ operator|->
 name|ic_vap_delete
 operator|=
 name|rum_vap_delete
+expr_stmt|;
+name|ic
+operator|->
+name|ic_update_mcast
+operator|=
+name|rum_update_mcast
 expr_stmt|;
 name|ieee80211_radiotap_attach
 argument_list|(
@@ -10467,6 +10485,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rum_update_mcast
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+comment|/* XXX do nothing? */
 block|}
 end_function
 
