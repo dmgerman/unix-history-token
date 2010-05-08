@@ -27,12 +27,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_BYTES_PER_BLOCK
-value|(20*512)
-end_define
+begin_include
+include|#
+directive|include
+file|"matching.h"
+end_include
 
 begin_comment
 comment|/*  * The internal state for the "cpio" program.  *  * Keeping all of the state in a structure like this simplifies memory  * leak testing (at exit, anything left on the heap is suspect).  A  * pointer to this structure is passed to most cpio internal  * functions.  */
@@ -77,10 +76,6 @@ name|verbose
 decl_stmt|;
 comment|/* -v */
 name|int
-name|dot
-decl_stmt|;
-comment|/* -V */
-name|int
 name|quiet
 decl_stmt|;
 comment|/* --quiet */
@@ -97,10 +92,6 @@ name|char
 modifier|*
 name|compress_program
 decl_stmt|;
-name|char
-name|line_separator
-decl_stmt|;
-comment|/* --null ? '\0' : '\n' */
 name|int
 name|option_append
 decl_stmt|;
@@ -121,6 +112,10 @@ name|int
 name|option_list
 decl_stmt|;
 comment|/* -t */
+name|char
+name|option_null
+decl_stmt|;
+comment|/* --null */
 name|int
 name|option_numeric_uid_gid
 decl_stmt|;
@@ -159,6 +154,11 @@ name|struct
 name|archive
 modifier|*
 name|archive
+decl_stmt|;
+name|struct
+name|archive
+modifier|*
+name|archive_read_disk
 decl_stmt|;
 name|int
 name|argc
@@ -204,58 +204,10 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Name of this program; used in error reporting, initialized in main(). */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
-name|cpio_progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|cpio_errc
-argument_list|(
-name|int
-name|_eval
-argument_list|,
-name|int
-name|_code
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|fmt
-argument_list|,
-operator|...
-argument_list|)
-name|__LA_DEAD
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|cpio_warnc
-parameter_list|(
-name|int
-name|_code
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|owner_parse
 parameter_list|(
 specifier|const
@@ -282,7 +234,11 @@ name|OPTION_INSECURE
 init|=
 literal|1
 block|,
+name|OPTION_LZMA
+block|,
 name|OPTION_NO_PRESERVE_OWNER
+block|,
+name|OPTION_PRESERVE_OWNER
 block|,
 name|OPTION_QUIET
 block|,
@@ -290,52 +246,6 @@ name|OPTION_VERSION
 block|}
 enum|;
 end_enum
-
-begin_struct_decl
-struct_decl|struct
-name|line_reader
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|struct
-name|line_reader
-modifier|*
-name|process_lines_init
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-name|separator
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|process_lines_next
-parameter_list|(
-name|struct
-name|line_reader
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|process_lines_free
-parameter_list|(
-name|struct
-name|line_reader
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -345,21 +255,6 @@ name|struct
 name|cpio
 modifier|*
 name|cpio
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|include_from_file
-parameter_list|(
-name|struct
-name|cpio
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

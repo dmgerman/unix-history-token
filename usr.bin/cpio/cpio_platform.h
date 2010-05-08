@@ -38,17 +38,13 @@ directive|include
 include|PLATFORM_CONFIG_H
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_CONFIG_H
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
-comment|/* Most POSIX platforms use the 'configure' script to build config.h */
+comment|/* Read config.h or die trying. */
 end_comment
 
 begin_include
@@ -57,39 +53,20 @@ directive|include
 file|"config.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Warn if cpio hasn't been (automatically or manually) configured. */
-end_comment
-
-begin_error
-error|#
-directive|error
-error|Oops: No config.h and no built-in configuration in cpio_platform.h.
-end_error
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_CONFIG_H */
+comment|/* Get a real definition for __FBSDID if we can */
 end_comment
 
-begin_comment
-comment|/* No non-FreeBSD platform will have __FBSDID, so just define it here. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_CDEFS_H
+end_if
 
 begin_include
 include|#
@@ -97,23 +74,20 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* For __FBSDID */
+comment|/* If not, define it so as to avoid dangling semicolons. */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FBSDID
-argument_list|)
-end_elif
-
-begin_comment
-comment|/* Just leaving this macro replacement empty leads to a dangling semicolon. */
-end_comment
+end_ifndef
 
 begin_define
 define|#
@@ -179,84 +153,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * We need to be able to display a filesize using printf().  The type  * and format string here must be compatible with one another and  * large enough for any file.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|HAVE_UINTMAX_T
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_TYPE
-value|uintmax_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_PRINTF
-value|"%ju"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|HAVE_UNSIGNED_LONG_LONG
-end_if
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_TYPE
-value|unsigned long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_PRINTF
-value|"%llu"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_TYPE
-value|unsigned long
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPIO_FILESIZE_PRINTF
-value|"%lu"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* How to mark functions that don't return. */
 end_comment
 
@@ -314,28 +210,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|__CYGWIN__
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"cpio_cygwin.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_elif
-
-begin_comment
-comment|/*&& !__CYGWIN__ */
-end_comment
 
 begin_include
 include|#

@@ -114,6 +114,12 @@ directive|include
 file|"cpio.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
+
 begin_comment
 comment|/*  * Short options for cpio.  Please keep this sorted.  */
 end_comment
@@ -125,7 +131,7 @@ name|char
 modifier|*
 name|short_options
 init|=
-literal|"0AaBC:F:O:cdE:f:H:hijLlmnopR:rtuvVW:yZz"
+literal|"0AaBC:cdE:F:f:H:hI:iJjLlmnO:opR:rtuvW:yZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,14 +169,6 @@ block|,
 literal|0
 block|,
 literal|'o'
-block|}
-block|,
-block|{
-literal|"dot"
-block|,
-literal|0
-block|,
-literal|'V'
 block|}
 block|,
 block|{
@@ -230,6 +228,14 @@ literal|'t'
 block|}
 block|,
 block|{
+literal|"lzma"
+block|,
+literal|0
+block|,
+name|OPTION_LZMA
+block|}
+block|,
+block|{
 literal|"make-directories"
 block|,
 literal|0
@@ -286,6 +292,14 @@ literal|'m'
 block|}
 block|,
 block|{
+literal|"preserve-owner"
+block|,
+literal|0
+block|,
+name|OPTION_PRESERVE_OWNER
+block|}
+block|,
+block|{
 literal|"quiet"
 block|,
 literal|0
@@ -315,6 +329,14 @@ block|,
 literal|0
 block|,
 name|OPTION_VERSION
+block|}
+block|,
+block|{
+literal|"xz"
+block|,
+literal|0
+block|,
+literal|'J'
 block|}
 block|,
 block|{
@@ -665,7 +687,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|cpio_warnc
+name|warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -881,7 +903,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|cpio_warnc
+name|warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -905,7 +927,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|cpio_warnc
+name|warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -966,7 +988,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|cpio_warnc
+name|warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1009,7 +1031,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|cpio_warnc
+name|warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1046,11 +1068,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse the argument to the -R or --owner flag.  *  * The format is one of the following:  *<username|uid>    - Override user but not group  *<username>:   - Override both, group is user's default group  *<uid>:    - Override user but not group  *<username|uid>:<groupname|gid> - Override both  *   :<groupname|gid>  - Override group but not user  *  * Where uid/gid are decimal representations and groupname/username  * are names to be looked up in system database.  Note that we try  * to look up an argument as a name first, then try numeric parsing.  *  * A period can be used instead of the colon.  *  * Sets uid/gid return as appropriate, -1 indicates uid/gid not specified.  *  */
+comment|/*  * Parse the argument to the -R or --owner flag.  *  * The format is one of the following:  *<username|uid>    - Override user but not group  *<username>:   - Override both, group is user's default group  *<uid>:    - Override user but not group  *<username|uid>:<groupname|gid> - Override both  *   :<groupname|gid>  - Override group but not user  *  * Where uid/gid are decimal representations and groupname/username  * are names to be looked up in system database.  Note that we try  * to look up an argument as a name first, then try numeric parsing.  *  * A period can be used instead of the colon.  *  * Sets uid/gid return as appropriate, -1 indicates uid/gid not specified.  *  * Returns NULL if no error, otherwise returns error string for display.  *  */
 end_comment
 
 begin_function
-name|int
+specifier|const
+name|char
+modifier|*
 name|owner_parse
 parameter_list|(
 specifier|const
@@ -1067,6 +1091,13 @@ modifier|*
 name|gid
 parameter_list|)
 block|{
+specifier|static
+name|char
+name|errbuff
+index|[
+literal|128
+index|]
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1101,7 +1132,7 @@ literal|'\0'
 condition|)
 return|return
 operator|(
-literal|1
+literal|"Invalid empty user/group spec"
 operator|)
 return|;
 comment|/* 	 * Split spec into [user][:.][group] 	 *  u -> first char of username, NULL if no username 	 *  ue -> first char after username (colon, period, or \0) 	 *  g -> first char of group name 	 */
@@ -1215,20 +1246,11 @@ name|user
 operator|==
 name|NULL
 condition|)
-block|{
-name|cpio_warnc
-argument_list|(
-name|errno
-argument_list|,
-literal|"Couldn't allocate memory"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|"Couldn't allocate memory"
 operator|)
 return|;
-block|}
 name|memcpy
 argument_list|(
 name|user
@@ -1318,18 +1340,35 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|cpio_warnc
+name|snprintf
 argument_list|(
-name|errno
+name|errbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuff
+argument_list|)
 argument_list|,
 literal|"Couldn't lookup user ``%s''"
 argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+name|errbuff
+index|[
+sizeof|sizeof
+argument_list|(
+name|errbuff
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
-literal|1
+name|errbuff
 operator|)
 return|;
 block|}
@@ -1408,18 +1447,35 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|cpio_warnc
+name|snprintf
 argument_list|(
-name|errno
+name|errbuff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuff
+argument_list|)
 argument_list|,
 literal|"Couldn't lookup group ``%s''"
 argument_list|,
 name|g
 argument_list|)
 expr_stmt|;
+name|errbuff
+index|[
+sizeof|sizeof
+argument_list|(
+name|errbuff
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
-literal|1
+name|errbuff
 operator|)
 return|;
 block|}
@@ -1427,7 +1483,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
