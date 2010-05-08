@@ -1346,21 +1346,6 @@ value|0x02
 comment|/* Plex is syncing from another plex. */
 define|#
 directive|define
-name|GV_PLEX_THREAD_ACTIVE
-value|0x04
-comment|/* Plex has an active RAID5 thread. */
-define|#
-directive|define
-name|GV_PLEX_THREAD_DIE
-value|0x08
-comment|/* Signal the RAID5 thread to die. */
-define|#
-directive|define
-name|GV_PLEX_THREAD_DEAD
-value|0x10
-comment|/* The RAID5 thread has died. */
-define|#
-directive|define
 name|GV_PLEX_NEWBORN
 value|0x20
 comment|/* The plex was just created. */
@@ -1492,21 +1477,6 @@ value|1
 name|int
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|GV_VOL_THREAD_ACTIVE
-value|0x01
-comment|/* Volume has an active thread. */
-define|#
-directive|define
-name|GV_VOL_THREAD_DIE
-value|0x02
-comment|/* Signal the thread to die. */
-define|#
-directive|define
-name|GV_VOL_THREAD_DEAD
-value|0x04
-comment|/* The thread has died. */
 define|#
 directive|define
 name|GV_VOL_NEWBORN
