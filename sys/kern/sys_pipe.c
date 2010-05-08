@@ -3394,7 +3394,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * vm_fault_quick() can sleep.  Consequently, 		 * vm_page_lock_queue() and vm_page_unlock_queue() 		 * should not be performed outside of this loop. 		 */
+comment|/* 		 * vm_fault_quick() can sleep. 		 */
 name|race
 label|:
 if|if
