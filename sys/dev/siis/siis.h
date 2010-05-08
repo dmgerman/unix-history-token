@@ -2058,6 +2058,9 @@ decl_stmt|;
 name|u_int
 name|tags
 decl_stmt|;
+name|u_int
+name|caps
+decl_stmt|;
 block|}
 struct|;
 end_struct
