@@ -5128,13 +5128,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|static
-name|char
-name|stdpath
-index|[]
-init|=
-name|_PATH_STDPATH
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
@@ -5196,7 +5190,7 @@ literal|'p'
 case|:
 name|path
 operator|=
-name|stdpath
+name|_PATH_STDPATH
 expr_stmt|;
 break|break;
 case|case
