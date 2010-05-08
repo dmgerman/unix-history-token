@@ -422,7 +422,7 @@ name|char
 name|scsicmd_opts
 index|[]
 init|=
-literal|"a:c:i:o:r"
+literal|"a:c:dfi:o:r"
 decl_stmt|;
 end_decl_stmt
 
@@ -11139,6 +11139,16 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|dmacmd
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|fpdmacmd
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|need_res
 init|=
 literal|0
@@ -11395,6 +11405,22 @@ operator|+=
 name|hook
 operator|.
 name|got
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|dmacmd
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|fpdmacmd
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -12058,6 +12084,34 @@ operator|.
 name|flags
 operator||=
 name|CAM_ATAIO_NEEDRESULT
+expr_stmt|;
+if|if
+condition|(
+name|dmacmd
+condition|)
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|cmd
+operator|.
+name|flags
+operator||=
+name|CAM_ATAIO_DMA
+expr_stmt|;
+if|if
+condition|(
+name|fpdmacmd
+condition|)
+name|ccb
+operator|->
+name|ataio
+operator|.
+name|cmd
+operator|.
+name|flags
+operator||=
+name|CAM_ATAIO_FPDMA
 expr_stmt|;
 name|cam_fill_ataio
 argument_list|(
@@ -21007,7 +21061,7 @@ literal|"        camcontrol modepage   [dev_id][generic args]<-m page | -l>\n"
 literal|"                              [-P pagectl][-e | -b][-d]\n"
 literal|"        camcontrol cmd        [dev_id][generic args]\n"
 literal|"<-a cmd [args] | -c cmd [args]>\n"
-literal|"                              [-i len fmt|-o len fmt [args]] [-r fmt]\n"
+literal|"                              [-d] [-f] [-i len fmt|-o len fmt [args]] [-r fmt]\n"
 literal|"        camcontrol debug      [-I][-P][-T][-S][-X][-c]\n"
 literal|"<all|bus[:target[:lun]]|off>\n"
 literal|"        camcontrol tags       [dev_id][generic args] [-N tags] [-q] [-v]\n"
