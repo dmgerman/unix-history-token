@@ -70,6 +70,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int
+name|OF_getscsinitid
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cpu_shutdown
 parameter_list|(
