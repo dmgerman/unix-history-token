@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -143,9 +136,6 @@ name|boolean_t
 name|zfs_layout
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|TODO
 name|caddr_t
 name|end
 decl_stmt|;
@@ -194,6 +184,21 @@ condition|(
 name|zfs_layout
 condition|)
 block|{
+comment|/* 			 * Avoid overrun.  Embedded aces can have one 			 * of several sizes.  We don't know exactly 			 * how many our present, only the size of the 			 * buffer containing them.  That size may be 			 * larger than needed to hold the aces 			 * present.  As long as we do not do any 			 * swapping beyond the end of our block we are 			 * okay.  It it safe to swap any non-ace data 			 * within the block since it is just zeros. 			 */
+if|if
+condition|(
+name|ptr
+operator|+
+sizeof|sizeof
+argument_list|(
+name|zfs_ace_hdr_t
+argument_list|)
+operator|>
+name|end
+condition|)
+block|{
+break|break;
+block|}
 name|zacep
 operator|=
 operator|(
@@ -262,6 +267,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Overrun avoidance */
+if|if
+condition|(
+name|ptr
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ace_t
+argument_list|)
+operator|>
+name|end
+condition|)
+block|{
+break|break;
+block|}
 name|acep
 operator|=
 operator|(
@@ -362,9 +382,22 @@ case|case
 name|ACE_IDENTIFIER_GROUP
 case|:
 default|default:
+comment|/* Overrun avoidance */
 if|if
 condition|(
 name|zfs_layout
+condition|)
+block|{
+if|if
+condition|(
+name|ptr
+operator|+
+sizeof|sizeof
+argument_list|(
+name|zfs_ace_t
+argument_list|)
+operator|<=
+name|end
 condition|)
 block|{
 name|zacep
@@ -378,6 +411,18 @@ operator|->
 name|z_fuid
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|entry_size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|zfs_ace_t
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 switch|switch
 condition|(
@@ -436,21 +481,6 @@ operator|+
 name|entry_size
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* TODO */
-name|panic
-argument_list|(
-literal|"%s:%u: TODO"
-argument_list|,
-name|__func__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TODO */
 block|}
 end_function
 
@@ -953,6 +983,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|zfs_oldace_byteswap
 argument_list|(
 operator|(
@@ -972,6 +1003,7 @@ argument_list|,
 name|ACE_SLOT_CNT
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
