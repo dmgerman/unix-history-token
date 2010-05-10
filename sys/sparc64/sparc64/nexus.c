@@ -626,6 +626,8 @@ name|nexus_excl_name
 index|[]
 init|=
 block|{
+literal|"FJSV,system"
+block|,
 literal|"aliases"
 block|,
 literal|"associations"
@@ -646,6 +648,8 @@ block|,
 literal|"options"
 block|,
 literal|"packages"
+block|,
+literal|"physical-memory"
 block|,
 literal|"rsc"
 block|,
