@@ -2835,14 +2835,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|sc
-operator|->
-name|sc_leaving
-operator|)
-condition|?
-literal|0
-else|:
 name|ipend
 operator|)
 return|;
