@@ -729,6 +729,10 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
+name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
@@ -1416,6 +1420,10 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
+name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
@@ -1918,6 +1926,12 @@ expr_stmt|;
 comment|/* Do CPU-specific initialization. */
 if|if
 condition|(
+name|pc
+operator|->
+name|pc_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
 name|pc
 operator|->
 name|pc_impl
