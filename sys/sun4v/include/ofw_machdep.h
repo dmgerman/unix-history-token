@@ -21,6 +21,18 @@ directive|include
 file|<sys/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
 begin_function_decl
 name|int
 name|OF_decode_addr

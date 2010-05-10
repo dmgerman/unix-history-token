@@ -75,6 +75,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ofw_machdep.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
