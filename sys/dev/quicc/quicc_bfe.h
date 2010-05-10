@@ -72,11 +72,6 @@ range|:
 literal|1
 decl_stmt|;
 name|int
-name|sc_leaving
-range|:
-literal|1
-decl_stmt|;
-name|int
 name|sc_polled
 range|:
 literal|1
