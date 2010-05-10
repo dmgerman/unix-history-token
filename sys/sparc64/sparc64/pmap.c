@@ -2369,6 +2369,10 @@ operator|)
 operator||
 operator|(
 name|cpu_impl
+operator|>=
+name|CPU_IMPL_ULTRASPARCI
+operator|&&
+name|cpu_impl
 operator|<
 name|CPU_IMPL_ULTRASPARCIII
 condition|?

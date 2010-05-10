@@ -336,6 +336,24 @@ name|icache_page_inval
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|cache_flush_t
+name|zeus_cache_flush
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dcache_page_inval_t
+name|zeus_dcache_page_inval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|icache_page_inval_t
+name|zeus_icache_page_inval
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

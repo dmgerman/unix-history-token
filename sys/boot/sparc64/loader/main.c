@@ -2178,6 +2178,10 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
+name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
@@ -2308,6 +2312,10 @@ name|TD_PA_SHIFT
 expr_stmt|;
 if|if
 condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
 name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
@@ -3457,6 +3465,9 @@ case|case
 name|CPU_IMPL_SPARC64
 case|:
 case|case
+name|CPU_IMPL_SPARC64V
+case|:
+case|case
 name|CPU_IMPL_ULTRASPARCI
 case|:
 case|case
@@ -3525,6 +3536,9 @@ condition|)
 block|{
 case|case
 name|CPU_IMPL_SPARC64
+case|:
+case|case
+name|CPU_IMPL_SPARC64V
 case|:
 case|case
 name|CPU_IMPL_ULTRASPARCI

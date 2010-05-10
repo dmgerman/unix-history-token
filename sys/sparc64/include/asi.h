@@ -328,6 +328,28 @@ name|ASI_LSU_CTL_REG
 value|0x45
 end_define
 
+begin_comment
+comment|/* US only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASI_MCNTL
+value|0x45
+end_define
+
+begin_comment
+comment|/* SPARC64 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AA_MCNTL
+value|0x08
+end_define
+
 begin_define
 define|#
 directive|define
@@ -865,6 +887,17 @@ end_define
 
 begin_comment
 comment|/* US-I, II */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASI_FLUSH_L1I
+value|0x67
+end_define
+
+begin_comment
+comment|/* SPARC64 only */
 end_comment
 
 begin_define
