@@ -424,7 +424,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EBUSY
+literal|0
 operator|)
 return|;
 block|}
