@@ -141,15 +141,6 @@ block|{
 name|u_long
 name|val
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
-comment|/* 	 * Disable interrupts for safety, this shouldn't be actually 	 * necessary though. 	 */
-name|s
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
 comment|/* Ensure the TSB Extension Registers hold 0 as TSB_Base. */
 name|stxa
 argument_list|(
@@ -354,11 +345,6 @@ argument_list|,
 name|val
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

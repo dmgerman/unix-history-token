@@ -1881,6 +1881,7 @@ operator|=
 operator|&
 name|cpu_start_args
 expr_stmt|;
+comment|/* Do CPU-specific initialization. */
 if|if
 condition|(
 name|pc
@@ -1896,6 +1897,7 @@ operator|->
 name|pc_impl
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Enable the caches.  Note that his may include applying workarounds. 	 */
 name|cache_enable
 argument_list|(
 name|pc
@@ -1903,6 +1905,7 @@ operator|->
 name|pc_impl
 argument_list|)
 expr_stmt|;
+comment|/* Lock the kernel TSB in the TLB. */
 name|pmap_map_tsb
 argument_list|()
 expr_stmt|;
@@ -1910,11 +1913,32 @@ comment|/* 	 * Flush all non-locked TLB entries possibly left over by the 	 * fi
 name|tlb_flush_nonlocked
 argument_list|()
 expr_stmt|;
+comment|/* Initialize global registers. */
 name|cpu_setregs
 argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
+comment|/* Enable interrupts. */
+name|wrpr
+argument_list|(
+name|pil
+argument_list|,
+literal|0
+argument_list|,
+name|PIL_TICK
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+literal|0
+argument_list|,
+name|PSTATE_KERNEL
+argument_list|)
+expr_stmt|;
+comment|/* Start the (S)TICK interrupts. */
 name|tick_start
 argument_list|()
 expr_stmt|;
