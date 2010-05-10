@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.94 2009/04/12 10:31:14 lukem Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.97 2009/10/11 09:17:21 mrg Exp $	*/
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * gzip.c -- GPL free gzip using zlib.  *  * RFC 1950 covers the zlib format  * RFC 1951 covers the deflate format  * RFC 1952 covers the gzip format  *  * TODO:  *	- use mmap where possible  *	- handle some signals better (remove outfile?)  *	- make bzip2/compress -v/-t/-l support work as well as possible  */
+comment|/*  * gzip.c -- GPL free gzip using zlib.  *  * RFC 1950 covers the zlib format  * RFC 1951 covers the deflate format  * RFC 1952 covers the gzip format  *  * TODO:  *	- use mmap where possible  *	- make bzip2/compress -v/-t/-l support work as well as possible  */
 end_comment
 
 begin_include
@@ -530,6 +530,13 @@ name|NUM_SUFFIXES
 value|(sizeof suffixes / sizeof suffixes[0])
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUFFIX_MAXLEN
+value|30
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -537,7 +544,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20090621"
+literal|"FreeBSD gzip 20100407"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,6 +732,21 @@ begin_comment
 comment|/* verbose mode */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|remove_file
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to be removed upon SIGINT */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -803,11 +825,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1119,6 +1151,16 @@ name|void
 name|display_license
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|sigint_handler
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1716,7 +1758,6 @@ directive|endif
 name|int
 name|ch
 decl_stmt|;
-comment|/* XXX set up signals */
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -1742,6 +1783,13 @@ name|argc
 argument_list|,
 operator|&
 name|argv
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|sigint_handler
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1997,6 +2045,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|>
+name|SUFFIX_MAXLEN
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"incorrect suffix: '%s': too long"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
 name|suffixes
 index|[
 literal|0
@@ -2334,11 +2397,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|NO_BZIP2_SUPPORT
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PACK_SUPPORT
+argument_list|)
+end_if
 
 begin_comment
 comment|/* ... without an errno. */
@@ -5545,6 +5618,35 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|sigint_handler
+parameter_list|(
+name|int
+name|signo
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|remove_file
+operator|!=
+name|NULL
+condition|)
+name|unlink
+argument_list|(
+name|remove_file
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -5882,6 +5984,8 @@ condition|)
 name|memcpy
 argument_list|(
 name|outfile
+operator|+
+name|outsize
 operator|-
 name|suffixes
 index|[
@@ -5982,6 +6086,15 @@ operator|-
 literal|1
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
+name|remove_file
+operator|=
+name|outfile
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|out
@@ -6104,6 +6217,10 @@ name|isb
 argument_list|,
 name|outfile
 argument_list|)
+expr_stmt|;
+name|remove_file
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -6231,6 +6348,9 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
+name|ssize_t
+name|rv
+decl_stmt|;
 name|time_t
 name|timestamp
 init|=
@@ -6423,9 +6543,6 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* timestamp */
-name|ssize_t
-name|rv
-decl_stmt|;
 name|rv
 operator|=
 name|pread
@@ -6786,6 +6903,15 @@ goto|goto
 name|lose
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|SMALL
+name|remove_file
+operator|=
+name|outfile
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|zfd
@@ -7324,14 +7450,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|unlink_input
-argument_list|(
-name|file
-argument_list|,
-operator|&
-name|isb
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SMALL
@@ -7345,11 +7463,23 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+name|remove_file
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 name|close
 argument_list|(
 name|ofd
+argument_list|)
+expr_stmt|;
+name|unlink_input
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|isb
 argument_list|)
 expr_stmt|;
 return|return
@@ -9518,7 +9648,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (based on NetBSD gzip 20060927)\n"
+literal|"%s (based on NetBSD gzip 20091011)\n"
 argument_list|,
 name|gzip_version
 argument_list|)
