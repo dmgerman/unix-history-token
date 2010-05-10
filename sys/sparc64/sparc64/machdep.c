@@ -1612,7 +1612,7 @@ name|ver
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do CPU-specific Initialization. 	 */
+comment|/* 	 * Do CPU-specific initialization. 	 */
 if|if
 condition|(
 name|cpu_impl
@@ -2086,6 +2086,7 @@ argument_list|(
 literal|"sparc64_init: cannot determine number of iTLB slots"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize and enable the caches.  Note that his may include 	 * applying workarounds. 	 */
 name|cache_init
 argument_list|(
 name|pc
@@ -2353,11 +2354,31 @@ argument_list|,
 name|MSGBUF_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */
 name|intr_init2
 argument_list|()
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pil
+argument_list|,
+literal|0
+argument_list|,
+name|PIL_TICK
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
+name|pstate
+argument_list|,
+literal|0
+argument_list|,
+name|PSTATE_KERNEL
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish pmap initialization now that we're ready for mutexes. 	 */
 name|PMAP_LOCK_INIT
