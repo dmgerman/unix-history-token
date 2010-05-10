@@ -1325,7 +1325,21 @@ begin_define
 define|#
 directive|define
 name|SGE_MAXTXSEGS
-value|16
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_TSO_MAXSIZE
+value|(65535 + sizeof(struct ether_vlan_header))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_TSO_MAXSEGSIZE
+value|4096
 end_define
 
 begin_define
