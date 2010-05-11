@@ -1249,7 +1249,7 @@ specifier|static
 name|void
 name|witness_ddb_display
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)
@@ -1270,7 +1270,7 @@ specifier|static
 name|void
 name|witness_ddb_display_descendants
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 function_decl|)
@@ -1298,7 +1298,7 @@ specifier|static
 name|void
 name|witness_ddb_display_list
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -4183,7 +4183,7 @@ specifier|static
 name|void
 name|witness_ddb_display_descendants
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -4363,7 +4363,7 @@ specifier|static
 name|void
 name|witness_ddb_display_list
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
@@ -4431,7 +4431,7 @@ specifier|static
 name|void
 name|witness_ddb_display
 parameter_list|(
-name|void
+name|int
 function_decl|(
 modifier|*
 name|prnt
