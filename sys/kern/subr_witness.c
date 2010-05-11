@@ -1533,6 +1533,20 @@ name|struct
 name|lock_instance
 modifier|*
 name|instance
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7569,6 +7583,8 @@ name|ll_children
 index|[
 name|i
 index|]
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -7807,6 +7823,8 @@ expr_stmt|;
 name|witness_list_lock
 argument_list|(
 name|lock1
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -7927,6 +7945,8 @@ name|witness_list_locks
 argument_list|(
 operator|&
 name|lock_list
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 block|}
@@ -9743,6 +9763,20 @@ name|struct
 name|lock_instance
 modifier|*
 name|instance
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -9756,7 +9790,7 @@ name|instance
 operator|->
 name|li_lock
 expr_stmt|;
-name|printf
+name|prnt
 argument_list|(
 literal|"%s %s %s"
 argument_list|,
@@ -9798,7 +9832,7 @@ name|lock
 operator|->
 name|lo_name
 condition|)
-name|printf
+name|prnt
 argument_list|(
 literal|" (%s)"
 argument_list|,
@@ -9809,7 +9843,7 @@ operator|->
 name|w_name
 argument_list|)
 expr_stmt|;
-name|printf
+name|prnt
 argument_list|(
 literal|" r = %d (%p) locked @ %s:%d\n"
 argument_list|,
@@ -9935,6 +9969,20 @@ name|lock_list_entry
 modifier|*
 modifier|*
 name|lock_list
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -9995,6 +10043,8 @@ name|ll_children
 index|[
 name|i
 index|]
+argument_list|,
+name|prnt
 argument_list|)
 expr_stmt|;
 name|nheld
@@ -10026,6 +10076,20 @@ name|struct
 name|thread
 modifier|*
 name|owner
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|prnt
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 parameter_list|)
 block|{
 name|struct
@@ -10082,6 +10146,8 @@ condition|)
 name|witness_list_lock
 argument_list|(
 name|instance
+argument_list|,
+name|prnt
 argument_list|)
 expr_stmt|;
 block|}
@@ -11024,6 +11090,8 @@ operator|&
 name|td
 operator|->
 name|td_sleeplocks
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if td is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use 	 * td->td_oncpu to get the list of spinlocks for this thread 	 * and "fix" this. 	 * 	 * That still wouldn't really fix this unless we locked the scheduler 	 * lock or stopped the other CPU to make sure it wasn't changing the 	 * list out from under us.  It is probably best to just not try to 	 * handle threads on other CPU's for now. 	 */
@@ -11046,6 +11114,8 @@ name|PCPU_PTR
 argument_list|(
 name|spinlocks
 argument_list|)
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 block|}

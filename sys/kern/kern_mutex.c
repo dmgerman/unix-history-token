@@ -2245,6 +2245,8 @@ operator|->
 name|lock_object
 argument_list|,
 name|td
+argument_list|,
+name|printf
 argument_list|)
 expr_stmt|;
 endif|#
