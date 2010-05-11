@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -11724,6 +11724,27 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* 	 * If there are more than 2 references there may be holds 	 * hanging around that haven't been cleared out yet. 	 */
+if|if
+condition|(
+name|dmu_buf_refcount
+argument_list|(
+name|dd
+operator|->
+name|dd_dbuf
+argument_list|)
+operator|>
+literal|2
+condition|)
+name|txg_wait_synced
+argument_list|(
+name|dd
+operator|->
+name|dd_pool
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tail
