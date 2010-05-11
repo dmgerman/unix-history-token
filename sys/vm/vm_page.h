@@ -107,7 +107,7 @@ decl_stmt|;
 name|u_short
 name|cow
 decl_stmt|;
-comment|/* page cow mapping count (Q) */
+comment|/* page cow mapping count (P) */
 name|u_int
 name|wire_count
 decl_stmt|;
@@ -142,7 +142,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_char
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -155,7 +155,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_short
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -168,7 +168,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_int
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -181,7 +181,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_long
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 endif|#
 directive|endif
 block|}
@@ -595,7 +595,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
+comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  *  * PG_WRITEABLE is set exclusively by pmap_enter().  When it does so, either  * the page must be VPO_BUSY or the containing object must be locked.  */
 end_comment
 
 begin_define
