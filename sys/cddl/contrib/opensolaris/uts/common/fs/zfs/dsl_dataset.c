@@ -3024,6 +3024,11 @@ argument_list|,
 name|owner
 argument_list|)
 expr_stmt|;
+operator|*
+name|dsp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
@@ -13716,6 +13721,9 @@ name|snap
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|l
+operator|||
 operator|!
 name|list_link_active
 argument_list|(
