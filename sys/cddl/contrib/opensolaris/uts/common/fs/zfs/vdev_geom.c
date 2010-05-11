@@ -1971,7 +1971,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Unable to attach to %s."
+literal|"ZFS WARNING: Unable to attach to %s.\n"
 argument_list|,
 name|pp
 operator|->
@@ -2618,7 +2618,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ZFS WARNING: Unable to open %s for writing (error=%d)."
+literal|"ZFS WARNING: Unable to open %s for writing (error=%d).\n"
 argument_list|,
 name|vd
 operator|->
