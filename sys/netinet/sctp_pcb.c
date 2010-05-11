@@ -21223,14 +21223,34 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|refcnt
+operator|)
+operator|||
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|state
+operator|&
+name|SCTP_STATE_IN_ACCEPT_QUEUE
+operator|)
+condition|)
+block|{
+comment|/* 		 * Someone holds a reference OR the socket is unaccepted 		 * yet. 		 */
+if|if
+condition|(
 name|stcb
 operator|->
 name|asoc
 operator|.
 name|refcnt
 condition|)
-block|{
-comment|/* 		 * reader or writer in the way, we have hopefully given him 		 * something to chew on above. 		 */
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_ASOCKILL
