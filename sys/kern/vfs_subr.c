@@ -3520,15 +3520,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|EVENTHANDLER_INVOKE
-argument_list|(
-name|vfs_lowvnodes
-argument_list|,
-name|desiredvnodes
-operator|/
-literal|10
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
