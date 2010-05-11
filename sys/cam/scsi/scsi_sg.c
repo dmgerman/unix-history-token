@@ -1269,9 +1269,13 @@ operator|)
 operator|+
 literal|'a'
 argument_list|,
+operator|(
 name|periph
 operator|->
 name|unit_number
+operator|%
+literal|26
+operator|)
 operator|+
 literal|'a'
 argument_list|)
