@@ -253,10 +253,6 @@ name|ieee80211_node
 name|ni
 decl_stmt|;
 comment|/* must be the first */
-name|struct
-name|ieee80211_amrr_node
-name|amn
-decl_stmt|;
 name|uint16_t
 name|disable_tid
 decl_stmt|;
@@ -659,14 +655,6 @@ block|{
 name|struct
 name|ieee80211vap
 name|iv_vap
-decl_stmt|;
-name|struct
-name|ieee80211_amrr
-name|iv_amrr
-decl_stmt|;
-name|struct
-name|callout
-name|iv_amrr_to
 decl_stmt|;
 name|uint8_t
 name|iv_ridx

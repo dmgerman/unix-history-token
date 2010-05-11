@@ -1903,6 +1903,17 @@ modifier|*
 name|iv_as
 decl_stmt|;
 comment|/* private aclator state */
+specifier|const
+name|struct
+name|ieee80211_ratectl
+modifier|*
+name|iv_rate
+decl_stmt|;
+name|void
+modifier|*
+name|iv_rs
+decl_stmt|;
+comment|/* private ratectl state */
 name|struct
 name|ieee80211_tdma_state
 modifier|*
@@ -2128,7 +2139,7 @@ function_decl|;
 name|uint64_t
 name|iv_spare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
 block|}

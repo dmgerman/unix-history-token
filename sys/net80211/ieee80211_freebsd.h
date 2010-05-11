@@ -1401,16 +1401,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_RATE_MODULE
+name|IEEE80211_RATECTL_MODULE
 parameter_list|(
 name|alg
 parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|_IEEE80211_POLICY_MODULE(rate, alg, version);				\ static void								\ alg##_modevent(int type)						\ {									\
-comment|/* XXX nothing to do until the rate control framework arrives */
-value|\ }									\ TEXT_SET(rate##_set, alg##_modevent)
+value|_IEEE80211_POLICY_MODULE(ratectl, alg, version);		\  #define	IEEE80211_RATECTL_ALG(name, alg, v)				\ static void								\ alg##_modevent(int type)						\ {									\ 	if (type == MOD_LOAD)						\ 		ieee80211_ratectl_register(alg,&v);			\ 	else								\ 		ieee80211_ratectl_unregister(alg);			\ }									\ TEXT_SET(ratectl##_set, alg##_modevent)
 end_define
 
 begin_struct_decl
