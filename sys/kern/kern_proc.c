@@ -4968,7 +4968,9 @@ name|cputick2usec
 argument_list|(
 name|td
 operator|->
-name|td_runtime
+name|td_rux
+operator|.
+name|rux_runtime
 argument_list|)
 expr_stmt|;
 name|kp
