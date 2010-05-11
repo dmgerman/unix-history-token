@@ -664,7 +664,7 @@ name|struct
 name|rusage
 name|td_ru
 decl_stmt|;
-comment|/* (t) rusage information */
+comment|/* (t) rusage information. */
 name|uint64_t
 name|td_incruntime
 decl_stmt|;
@@ -909,6 +909,11 @@ modifier|*
 name|td_vnet_lpush
 decl_stmt|;
 comment|/* (k) Debugging vnet push / pop. */
+name|struct
+name|rusage_ext
+name|td_rux
+decl_stmt|;
+comment|/* (t) Internal rusage information. */
 block|}
 struct|;
 end_struct

@@ -90,6 +90,13 @@ name|RUSAGE_CHILDREN
 value|-1
 end_define
 
+begin_define
+define|#
+directive|define
+name|RUSAGE_THREAD
+value|1
+end_define
+
 begin_struct
 struct|struct
 name|rusage

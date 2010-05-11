@@ -988,6 +988,21 @@ name|td_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|newtd
+operator|->
+name|td_rux
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newtd
+operator|->
+name|td_rux
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX check if we should zero. */
 name|bcopy
 argument_list|(
