@@ -26095,10 +26095,7 @@ name|hdr
 operator|->
 name|crc_threshold
 operator|=
-name|htole16
-argument_list|(
-literal|1
-argument_list|)
+literal|0xffff
 expr_stmt|;
 block|}
 elseif|else
@@ -26196,10 +26193,7 @@ name|hdr
 operator|->
 name|crc_threshold
 operator|=
-name|htole16
-argument_list|(
-literal|1
-argument_list|)
+literal|0xffff
 expr_stmt|;
 block|}
 name|DPRINTF
