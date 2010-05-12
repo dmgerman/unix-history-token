@@ -855,7 +855,8 @@ argument_list|,
 literal|"\020"
 literal|"\001SSE3"
 comment|/* SSE3 */
-literal|"\002<b1>"
+literal|"\002PCLMULQDQ"
+comment|/* Carry-Less Mul Quadword */
 literal|"\003DTES64"
 comment|/* 64-bit Debug Trace */
 literal|"\004MON"
@@ -893,7 +894,8 @@ comment|/* xAPIC Extensions */
 literal|"\027MOVBE"
 literal|"\030POPCNT"
 literal|"\031<b24>"
-literal|"\032<b25>"
+literal|"\032AESNI"
+comment|/* AES Crypto*/
 literal|"\033XSAVE"
 literal|"\034OSXSAVE"
 literal|"\035<b28>"

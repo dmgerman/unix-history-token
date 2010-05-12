@@ -551,6 +551,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_PCLMULQDQ
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_DTES64
 value|0x00000004
 end_define
@@ -672,6 +679,13 @@ define|#
 directive|define
 name|CPUID2_POPCNT
 value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID2_AESNI
+value|0x02000000
 end_define
 
 begin_comment
