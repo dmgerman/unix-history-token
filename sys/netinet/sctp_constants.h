@@ -1525,24 +1525,6 @@ name|SCTP_DATAGRAM_ACKED
 value|10010
 end_define
 
-begin_comment
-comment|/* EY  * If a tsn is nr-gapped, its first tagged as NR_MARKED and then NR_ACKED  * When yet another nr-sack is received, if a particular TSN's sent tag  * is observed to be NR_ACKED after gap-ack info is processed, this implies  * that particular TSN is reneged */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_ACKED
-value|10020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_MARKED
-value|20005
-end_define
-
 begin_define
 define|#
 directive|define
