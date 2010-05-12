@@ -817,6 +817,17 @@ name|HUD_TABLET_PICK
 value|0x0046
 end_define
 
+begin_comment
+comment|/* Usages, Consumer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HUC_AC_PAN
+value|0x0238
+end_define
+
 begin_define
 define|#
 directive|define
