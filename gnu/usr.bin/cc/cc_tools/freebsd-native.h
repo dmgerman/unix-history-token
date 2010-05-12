@@ -74,21 +74,21 @@ begin_define
 define|#
 directive|define
 name|GPLUSPLUS_INCLUDE_DIR
-value|PREFIX"/include/c++/4.2"
+value|PREFIX"/include/c++/"GCCVER
 end_define
 
 begin_define
 define|#
 directive|define
 name|GPLUSPLUS_BACKWARD_INCLUDE_DIR
-value|PREFIX"/include/c++/4.2/backward"
+value|PREFIX"/include/c++/"GCCVER"/backward"
 end_define
 
 begin_define
 define|#
 directive|define
 name|GCC_INCLUDE_DIR
-value|PREFIX"/include"
+value|PREFIX"/include/gcc/"GCCVER
 end_define
 
 begin_ifdef
