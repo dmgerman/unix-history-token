@@ -856,6 +856,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|usb_error_t
 name|usb_ref_device
 parameter_list|(
@@ -1428,6 +1429,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usb_unref_device
 parameter_list|(
