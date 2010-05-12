@@ -139,8 +139,6 @@ name|CPU_CLASS_ARM7TDMI
 block|,
 name|CPU_CLASS_ARM8
 block|,
-name|CPU_CLASS_ARM9
-block|,
 name|CPU_CLASS_ARM9TDMI
 block|,
 name|CPU_CLASS_ARM9ES
