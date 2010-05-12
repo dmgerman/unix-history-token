@@ -3875,6 +3875,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vop_stdadvlockpurge
+parameter_list|(
+name|struct
+name|vop_advlockpurge_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdpathconf
 parameter_list|(
 name|struct

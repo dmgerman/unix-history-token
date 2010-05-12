@@ -11543,16 +11543,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear the advisory locks and wake up waiting threads. 	 */
-name|lf_purgelocks
+operator|(
+name|void
+operator|)
+name|VOP_ADVLOCKPURGE
 argument_list|(
 name|vp
-argument_list|,
-operator|&
-operator|(
-name|vp
-operator|->
-name|v_lockf
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete from old mount point vnode list. 	 */
