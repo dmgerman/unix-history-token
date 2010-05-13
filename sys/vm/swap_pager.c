@@ -3709,7 +3709,7 @@ name|object
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made at splvm().  vm_page_free() does 	 * not need to be, but it will go a little faster if it is. 	 */
+comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made with the object locked. 	 */
 name|blk
 operator|=
 name|swp_pager_meta_ctl
@@ -4156,19 +4156,6 @@ operator|->
 name|oflags
 operator||=
 name|VPO_WANTED
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|mreq
-argument_list|,
-name|PG_REFERENCED
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|PCPU_INC
 argument_list|(
