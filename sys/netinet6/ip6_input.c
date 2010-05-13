@@ -309,16 +309,19 @@ directive|include
 file|<net/flowtable.h>
 end_include
 
-begin_extern
-extern|extern VNET_DEFINE(int
-operator|,
-extern|ip6_output_flowtable_size
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|int
+name|VNET_NAME
+parameter_list|(
+name|ip6_output_flowtable_size
+parameter_list|)
+function_decl|__section
+parameter_list|(
+name|VNET_SETNAME
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
