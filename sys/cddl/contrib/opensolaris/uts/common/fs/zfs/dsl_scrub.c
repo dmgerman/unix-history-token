@@ -1776,6 +1776,7 @@ operator|->
 name|dp_scrub_min_txg
 condition|)
 return|return;
+comment|/* 	 * One block ("stumpy") can be allocated a long time ago; we 	 * want to visit that one because it has been allocated 	 * (on-disk) even if it hasn't been claimed (even though for 	 * plain scrub there's nothing to do to it). 	 */
 if|if
 condition|(
 name|claim_txg
@@ -1933,6 +1934,7 @@ operator|->
 name|dp_scrub_min_txg
 condition|)
 return|return;
+comment|/* 		 * birth can be< claim_txg if this record's txg is 		 * already txg sync'ed (but this log block contains 		 * other records that are not synced) 		 */
 if|if
 condition|(
 name|claim_txg
