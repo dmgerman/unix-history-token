@@ -1321,13 +1321,6 @@ name|PQ_INACTIVE
 operator|||
 name|p
 operator|->
-name|wire_count
-operator|!=
-literal|0
-operator|||
-comment|/* may be held by buf cache */
-name|p
-operator|->
 name|hold_count
 operator|!=
 literal|0
@@ -1445,13 +1438,6 @@ name|queue
 operator|!=
 name|PQ_INACTIVE
 operator|||
-name|p
-operator|->
-name|wire_count
-operator|!=
-literal|0
-operator|||
-comment|/* may be held by buf cache */
 name|p
 operator|->
 name|hold_count
