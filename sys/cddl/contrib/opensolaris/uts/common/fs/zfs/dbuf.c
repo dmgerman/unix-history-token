@@ -1702,6 +1702,7 @@ name|db_size
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We can't assert that db_size matches dn_datablksz because it 	 * can be momentarily different when another thread is doing 	 * dnode_set_blksz(). 	 */
 if|if
 condition|(
 name|db
@@ -1709,38 +1710,7 @@ operator|->
 name|db_level
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* we can be momentarily larger in dnode_set_blksz() */
-if|if
-condition|(
-name|db
-operator|->
-name|db_blkid
-operator|!=
-name|DB_BONUS_BLKID
 operator|&&
-name|dn
-condition|)
-block|{
-name|ASSERT3U
-argument_list|(
-name|db
-operator|->
-name|db
-operator|.
-name|db_size
-argument_list|,
-operator|>=
-argument_list|,
-name|dn
-operator|->
-name|dn_datablksz
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|db
 operator|->
 name|db
@@ -1758,7 +1728,7 @@ name|db
 operator|->
 name|db_data_pending
 decl_stmt|;
-comment|/* 			 * it should only be modified in syncing 			 * context, so make sure we only have 			 * one copy of the data. 			 */
+comment|/* 		 * It should only be modified in syncing context, so 		 * make sure we only have one copy of the data. 		 */
 name|ASSERT
 argument_list|(
 name|dr
@@ -1778,7 +1748,6 @@ operator|->
 name|db_buf
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* verify db->db_blkptr */
 if|if

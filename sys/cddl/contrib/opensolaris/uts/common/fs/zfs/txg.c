@@ -1472,7 +1472,7 @@ decl_stmt|;
 name|uint64_t
 name|txg
 decl_stmt|;
-comment|/* 		 * We sync when there's someone waiting on us, or the 		 * quiesce thread has handed off a txg to us, or we have 		 * reached our timeout. 		 */
+comment|/* 		 * We sync when we're scrubbing, there's someone waiting 		 * on us, or the quiesce thread has handed off a txg to 		 * us, or we have reached our timeout. 		 */
 name|timer
 operator|=
 operator|(
@@ -1489,6 +1489,21 @@ operator|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|dp
+operator|->
+name|dp_scrub_func
+operator|==
+name|SCRUB_FUNC_NONE
+operator|||
+name|spa_shutting_down
+argument_list|(
+name|dp
+operator|->
+name|dp_spa
+argument_list|)
+operator|)
+operator|&&
 operator|!
 name|tx
 operator|->

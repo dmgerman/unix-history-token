@@ -90,11 +90,6 @@ name|zilog_t
 typedef|;
 typedef|typedef
 name|struct
-name|traverse_handle
-name|traverse_handle_t
-typedef|;
-typedef|typedef
-name|struct
 name|spa_aux_vdev
 name|spa_aux_vdev_t
 typedef|;
@@ -1591,18 +1586,8 @@ parameter_list|)
 function_decl|;
 comment|/* Accessor functions */
 specifier|extern
-name|krwlock_t
-modifier|*
-name|spa_traverse_rwlock
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|)
-function_decl|;
-specifier|extern
 name|boolean_t
-name|spa_traverse_wanted
+name|spa_shutting_down
 parameter_list|(
 name|spa_t
 modifier|*
@@ -1713,7 +1698,7 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|pool_state_t
 name|spa_state
 parameter_list|(
 name|spa_t

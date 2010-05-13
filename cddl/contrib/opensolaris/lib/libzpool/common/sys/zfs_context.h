@@ -1268,6 +1268,11 @@ comment|/* Do not enqueue if can't dispatch */
 specifier|extern
 name|taskq_t
 modifier|*
+name|system_taskq
+decl_stmt|;
+specifier|extern
+name|taskq_t
+modifier|*
 name|taskq_create
 parameter_list|(
 specifier|const
@@ -1325,6 +1330,13 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|system_taskq_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 define|#

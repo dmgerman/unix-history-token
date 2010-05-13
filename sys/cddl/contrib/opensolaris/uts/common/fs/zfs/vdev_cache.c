@@ -1099,7 +1099,7 @@ return|;
 comment|/* 	 * If the I/O straddles two or more cache blocks, don't cache it. 	 */
 if|if
 condition|(
-name|P2CROSS
+name|P2BOUNDARY
 argument_list|(
 name|zio
 operator|->
@@ -1107,13 +1107,7 @@ name|io_offset
 argument_list|,
 name|zio
 operator|->
-name|io_offset
-operator|+
-name|zio
-operator|->
 name|io_size
-operator|-
-literal|1
 argument_list|,
 name|VCBS
 argument_list|)
