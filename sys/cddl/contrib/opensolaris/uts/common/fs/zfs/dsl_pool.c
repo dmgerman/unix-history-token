@@ -1495,6 +1495,11 @@ name|dp_read_overhead
 operator|=
 literal|0
 expr_stmt|;
+name|start
+operator|=
+name|gethrtime
+argument_list|()
+expr_stmt|;
 name|zio
 operator|=
 name|zio_root
@@ -1570,11 +1575,6 @@ name|DTRACE_PROBE
 argument_list|(
 name|pool_sync__1setup
 argument_list|)
-expr_stmt|;
-name|start
-operator|=
-name|gethrtime
-argument_list|()
 expr_stmt|;
 name|err
 operator|=
