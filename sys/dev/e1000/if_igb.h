@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2008, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -31,14 +31,14 @@ begin_define
 define|#
 directive|define
 name|IGB_MIN_TXD
-value|80
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_TXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -56,14 +56,14 @@ begin_define
 define|#
 directive|define
 name|IGB_MIN_RXD
-value|80
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_RXD
-value|256
+value|1024
 end_define
 
 begin_define
@@ -124,13 +124,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IGB_TX_TIMEOUT
-value|5
+name|IGB_WATCHDOG
+value|(10 * hz)
 end_define
-
-begin_comment
-comment|/* set to 5 seconds */
-end_comment
 
 begin_comment
 comment|/*  * This parameter controls when the driver calls the routine to reclaim  * transmit descriptors.  */
@@ -243,7 +239,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_MAX_INTR
+name|IGB_MAX_LOOP
 value|10
 end_define
 
@@ -251,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|IGB_RX_PTHRESH
-value|16
+value|(hw->mac.type<= e1000_82576 ? 16 : 8)
 end_define
 
 begin_define
@@ -266,6 +262,27 @@ define|#
 directive|define
 name|IGB_RX_WTHRESH
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_PTHRESH
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_HTHRESH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_WTHRESH
+value|((hw->mac.type == e1000_82576&& \                                           adapter->msix_mem) ? 1 : 16)
 end_define
 
 begin_define
@@ -309,42 +326,6 @@ directive|define
 name|IGB_EEPROM_APME
 value|0x400;
 end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_INTS_PER_SEC
-value|8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_ITR
-value|1000000000/(MAX_INTS_PER_SEC * 256)
-end_define
-
-begin_comment
-comment|/* Code compatilbility between 6 and 7 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETHER_BPF_MTAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_MTAP
-value|BPF_MTAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
@@ -537,6 +518,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_VFTA_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_BR_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* ring buf size */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IGB_TSO_SIZE
 value|(65535 + sizeof(struct ether_vlan_header))
 end_define
@@ -555,6 +554,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IGB_HDR_BUF
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_PKTTYPE_MASK
+value|0x0000FFF0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ETH_ZLEN
 value|60
 end_define
@@ -566,40 +579,83 @@ name|ETH_ADDR_LEN
 value|6
 end_define
 
-begin_define
-define|#
-directive|define
-name|CSUM_OFFLOAD
-value|7
-end_define
-
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+end_if
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CSUM_OFFLOAD
+value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Interrupt Moderation parameters  */
+comment|/* Define the starting Interrupt rate per Queue */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IGB_LOW_LATENCY
-value|128
+name|IGB_INTS_PER_SEC
+value|8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_AVE_LATENCY
-value|450
+name|IGB_DEFAULT_ITR
+value|1000000000/(IGB_INTS_PER_SEC * 256)
+end_define
+
+begin_comment
+comment|/* Header split codes for get_buf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_HEADER
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_BULK_LATENCY
-value|1200
+name|IGB_CLEAN_PAYLOAD
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_CLEAN_BOTH
+value|(IGB_CLEAN_HEADER | IGB_CLEAN_PAYLOAD)
 end_define
 
 begin_define
@@ -608,12 +664,6 @@ directive|define
 name|IGB_LINK_ITR
 value|2000
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IGB_TIMESYNC
-end_ifdef
 
 begin_comment
 comment|/* Precision Time Sync (IEEE 1588) defines */
@@ -643,113 +693,6 @@ end_define
 begin_comment
 comment|/* UDP port for the protocol */
 end_comment
-
-begin_comment
-comment|/* TIMESYNC IOCTL defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESYNC_READTS
-value|_IOWR('i', 127, struct igb_tsync_read)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TIMESTAMP
-value|5
-end_define
-
-begin_comment
-comment|/* A unique return value */
-end_comment
-
-begin_comment
-comment|/* Used in the READTS IOCTL */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_tsync_read
-block|{
-name|int
-name|read_current_time
-decl_stmt|;
-name|struct
-name|timespec
-name|system_time
-decl_stmt|;
-name|u64
-name|network_time
-decl_stmt|;
-name|u64
-name|rx_stamp
-decl_stmt|;
-name|u64
-name|tx_stamp
-decl_stmt|;
-name|u16
-name|seqid
-decl_stmt|;
-name|unsigned
-name|char
-name|srcid
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|int
-name|rx_valid
-decl_stmt|;
-name|int
-name|tx_valid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IGB_TIMESYNC */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|adapter
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* forward reference */
-end_comment
-
-begin_struct
-struct|struct
-name|igb_int_delay_info
-block|{
-name|struct
-name|adapter
-modifier|*
-name|adapter
-decl_stmt|;
-comment|/* Back-pointer to the adapter struct */
-name|int
-name|offset
-decl_stmt|;
-comment|/* Register offset to read/write */
-name|int
-name|value
-decl_stmt|;
-comment|/* Current value in usecs */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Bus dma allocation structure used by  * e1000_dma_malloc and e1000_dma_free.  */
@@ -782,7 +725,66 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Transmit ring: one per tx queue  */
+comment|/* ** Driver queue struct: this is the interrupt container **  for the associated tx and rx ring. */
+end_comment
+
+begin_struct
+struct|struct
+name|igb_queue
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+name|u32
+name|msix
+decl_stmt|;
+comment|/* This queue's MSIX vector */
+name|u32
+name|eims
+decl_stmt|;
+comment|/* This queue's EIMS bit */
+name|u32
+name|eitr_setting
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|void
+modifier|*
+name|tag
+decl_stmt|;
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+decl_stmt|;
+name|struct
+name|rx_ring
+modifier|*
+name|rxr
+decl_stmt|;
+name|struct
+name|task
+name|que_task
+decl_stmt|;
+name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|u64
+name|irqs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Transmit ring: one per queue  */
 end_comment
 
 begin_struct
@@ -797,14 +799,6 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
-comment|/* This ring's MSIX vector */
-name|u32
-name|eims
-decl_stmt|;
-comment|/* This ring's EIMS bit */
 name|struct
 name|mtx
 name|tx_mtx
@@ -819,17 +813,11 @@ name|struct
 name|igb_dma_alloc
 name|txdma
 decl_stmt|;
-comment|/* bus_dma glue for tx desc */
 name|struct
 name|e1000_tx_desc
 modifier|*
 name|tx_base
 decl_stmt|;
-name|struct
-name|task
-name|tx_task
-decl_stmt|;
-comment|/* cleanup tasklet */
 name|u32
 name|next_avail_desc
 decl_stmt|;
@@ -841,22 +829,39 @@ name|u16
 name|tx_avail
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_tx_buffer
 modifier|*
 name|tx_buffers
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+endif|#
+directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
-comment|/* dma tag for tx */
 name|u32
-name|watchdog_timer
+name|bytes
+decl_stmt|;
+name|u32
+name|packets
+decl_stmt|;
+name|bool
+name|watchdog_check
+decl_stmt|;
+name|int
+name|watchdog_time
 decl_stmt|;
 name|u64
 name|no_desc_avail
-decl_stmt|;
-name|u64
-name|tx_irq
 decl_stmt|;
 name|u64
 name|tx_packets
@@ -866,7 +871,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Receive ring: one per rx queue  */
+comment|/*  * Receive ring: one per queue  */
 end_comment
 
 begin_struct
@@ -881,19 +886,10 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|u32
-name|msix
-decl_stmt|;
-comment|/* This ring's MSIX vector */
-name|u32
-name|eims
-decl_stmt|;
-comment|/* This ring's EIMS bit */
 name|struct
 name|igb_dma_alloc
 name|rxdma
 decl_stmt|;
-comment|/* bus_dma glue for tx desc */
 name|union
 name|e1000_adv_rx_desc
 modifier|*
@@ -903,11 +899,15 @@ name|struct
 name|lro_ctrl
 name|lro
 decl_stmt|;
-name|struct
-name|task
-name|rx_task
+name|bool
+name|lro_enabled
 decl_stmt|;
-comment|/* cleanup tasklet */
+name|bool
+name|hdr_split
+decl_stmt|;
+name|bool
+name|discard
+decl_stmt|;
 name|struct
 name|mtx
 name|rx_mtx
@@ -919,23 +919,24 @@ literal|16
 index|]
 decl_stmt|;
 name|u32
-name|last_cleaned
+name|next_to_refresh
 decl_stmt|;
 name|u32
 name|next_to_check
 decl_stmt|;
 name|struct
-name|igb_buffer
+name|igb_rx_buf
 modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|rxtag
+name|htag
 decl_stmt|;
-comment|/* dma tag for tx */
-name|bus_dmamap_t
-name|rx_spare_map
+comment|/* dma tag for rx head */
+name|bus_dma_tag_t
+name|ptag
 decl_stmt|;
+comment|/* dma tag for rx packet */
 comment|/* 	 * First/last mbuf pointers, for 	 * collecting multisegment RX packets. 	 */
 name|struct
 name|mbuf
@@ -951,11 +952,14 @@ name|u32
 name|bytes
 decl_stmt|;
 name|u32
-name|eitr_setting
+name|packets
 decl_stmt|;
 comment|/* Soft stats */
 name|u64
-name|rx_irq
+name|rx_split_packets
+decl_stmt|;
+name|u64
+name|rx_discarded
 decl_stmt|;
 name|u64
 name|rx_packets
@@ -980,7 +984,6 @@ name|struct
 name|e1000_hw
 name|hw
 decl_stmt|;
-comment|/* FreeBSD operating-system-specific structures. */
 name|struct
 name|e1000_osdep
 name|osdep
@@ -989,6 +992,11 @@ name|struct
 name|device
 modifier|*
 name|dev
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|led_dev
 decl_stmt|;
 name|struct
 name|resource
@@ -1004,22 +1012,10 @@ name|struct
 name|resource
 modifier|*
 name|res
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|void
 modifier|*
 name|tag
-index|[
-name|IGB_MSIX_VEC
-index|]
-decl_stmt|;
-name|int
-name|rid
-index|[
-name|IGB_MSIX_VEC
-index|]
 decl_stmt|;
 name|u32
 name|eims_mask
@@ -1029,6 +1025,10 @@ name|linkvec
 decl_stmt|;
 name|int
 name|link_mask
+decl_stmt|;
+name|struct
+name|task
+name|link_task
 decl_stmt|;
 name|int
 name|link_irq
@@ -1063,10 +1063,6 @@ name|igb_insert_vlan_header
 decl_stmt|;
 name|struct
 name|task
-name|link_task
-decl_stmt|;
-name|struct
-name|task
 name|rxtx_task
 decl_stmt|;
 name|struct
@@ -1074,18 +1070,19 @@ name|taskqueue
 modifier|*
 name|tq
 decl_stmt|;
-comment|/* private task queue */
-ifdef|#
-directive|ifdef
-name|IGB_HW_VLAN_SUPPORT
+comment|/* adapter task queue */
+name|u16
+name|num_queues
+decl_stmt|;
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_detach
 decl_stmt|;
-endif|#
-directive|endif
+name|u32
+name|num_vlans
+decl_stmt|;
 comment|/* Management and WOL features */
 name|int
 name|wol
@@ -1106,6 +1103,12 @@ decl_stmt|;
 name|u32
 name|smartspeed
 decl_stmt|;
+comment|/* Interface queues */
+name|struct
+name|igb_queue
+modifier|*
+name|queues
+decl_stmt|;
 comment|/* 	 * Transmit rings 	 */
 name|struct
 name|tx_ring
@@ -1115,29 +1118,26 @@ decl_stmt|;
 name|u16
 name|num_tx_desc
 decl_stmt|;
-name|u16
-name|num_tx_queues
-decl_stmt|;
-name|u32
-name|txd_cmd
-decl_stmt|;
 comment|/*  	 * Receive rings 	 */
 name|struct
 name|rx_ring
 modifier|*
 name|rx_rings
 decl_stmt|;
-name|u16
-name|num_rx_desc
+name|bool
+name|rx_hdr_split
 decl_stmt|;
 name|u16
-name|num_rx_queues
+name|num_rx_desc
 decl_stmt|;
 name|int
 name|rx_process_limit
 decl_stmt|;
 name|u32
-name|rx_buffer_len
+name|rx_mbuf_sz
+decl_stmt|;
+name|u32
+name|rx_mask
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
@@ -1146,11 +1146,15 @@ name|dropped_pkts
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_alloc_failed
+name|mbuf_defrag_failed
 decl_stmt|;
 name|unsigned
 name|long
-name|mbuf_cluster_failed
+name|mbuf_header_failed
+decl_stmt|;
+name|unsigned
+name|long
+name|mbuf_packet_failed
 decl_stmt|;
 name|unsigned
 name|long
@@ -1173,15 +1177,23 @@ name|in_detach
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IGB_TIMESYNC
-name|u64
-name|last_stamp
+name|IGB_IEEE1588
+comment|/* IEEE 1588 precision time support */
+name|struct
+name|cyclecounter
+name|cycles
 decl_stmt|;
-name|u64
-name|last_sec
+name|struct
+name|nettimer
+name|clock
 decl_stmt|;
-name|u32
-name|last_ns
+name|struct
+name|nettime_compare
+name|compare
+decl_stmt|;
+name|struct
+name|hwtstamp_ctrl
+name|hwtstamp
 decl_stmt|;
 endif|#
 directive|endif
@@ -1229,7 +1241,7 @@ end_typedef
 
 begin_struct
 struct|struct
-name|igb_buffer
+name|igb_tx_buffer
 block|{
 name|int
 name|next_eop
@@ -1242,6 +1254,32 @@ name|m_head
 decl_stmt|;
 name|bus_dmamap_t
 name|map
+decl_stmt|;
+comment|/* bus_dma map for packet */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|igb_rx_buf
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m_head
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m_pack
+decl_stmt|;
+name|bus_dmamap_t
+name|hmap
+decl_stmt|;
+comment|/* bus_dma map for header */
+name|bus_dmamap_t
+name|pmap
 decl_stmt|;
 comment|/* bus_dma map for packet */
 block|}
@@ -1274,51 +1312,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_TX_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->tx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_RX_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->rx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IGB_CORE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_lock(&(_sc)->core_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_TX_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->tx_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_RX_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->rx_mtx)
 end_define
 
 begin_define
@@ -1334,6 +1332,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|IGB_CORE_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->core_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_TX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->tx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IGB_TX_UNLOCK
 parameter_list|(
 name|_sc
@@ -1344,21 +1372,51 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_RX_UNLOCK
+name|IGB_TX_TRYLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_unlock(&(_sc)->rx_mtx)
+value|mtx_trylock(&(_sc)->tx_mtx)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_CORE_LOCK_ASSERT
+name|IGB_TX_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&(_sc)->core_mtx, MA_OWNED)
+value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->rx_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_RX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->rx_mtx)
 end_define
 
 begin_define
