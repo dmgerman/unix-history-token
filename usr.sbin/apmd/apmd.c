@@ -137,16 +137,6 @@ directive|include
 file|"apmd.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|yyparse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|debug_level
@@ -450,9 +440,6 @@ case|case
 operator|-
 literal|1
 case|:
-operator|(
-name|void
-operator|)
 name|warn
 argument_list|(
 literal|"cannot fork"
@@ -498,10 +485,6 @@ name|p
 operator|->
 name|line
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -749,6 +732,7 @@ parameter_list|(
 name|void
 modifier|*
 name|this
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -877,9 +861,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1034,9 +1015,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1216,9 +1194,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1412,9 +1387,6 @@ argument_list|,
 literal|"canceled"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|event_cmd_reject_act
 argument_list|(
 name|NULL
@@ -1472,9 +1444,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1499,9 +1468,6 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1563,9 +1529,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1584,7 +1547,9 @@ end_function
 begin_function
 name|void
 name|dump_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1826,7 +1791,9 @@ end_function
 begin_function
 name|void
 name|destroy_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1885,9 +1852,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1988,7 +1952,9 @@ end_function
 begin_function
 name|void
 name|restart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|destroy_config
 argument_list|()
@@ -2014,7 +1980,9 @@ begin_function
 specifier|static
 name|void
 name|write_pid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -2092,9 +2060,6 @@ operator|!=
 sizeof|sizeof
 name|sig
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2108,7 +2073,9 @@ end_function
 begin_function
 name|void
 name|wait_child
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
@@ -2222,9 +2189,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|warn
 argument_list|(
 literal|"unexpected signal(%d) received."
@@ -2349,7 +2313,9 @@ end_define
 begin_function
 name|void
 name|check_battery
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -2398,9 +2364,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2435,9 +2398,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2550,6 +2510,9 @@ name|p
 operator|->
 name|level
 operator|==
+operator|(
+name|int
+operator|)
 name|pw_info
 operator|.
 name|ai_batt_life
@@ -2906,9 +2869,6 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3084,9 +3044,6 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3112,9 +3069,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NICE_INCR
-operator|(
-name|void
-operator|)
 name|nice
 argument_list|(
 name|NICE_INCR
@@ -3177,9 +3131,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3203,9 +3154,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3230,9 +3178,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3258,9 +3203,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3288,9 +3230,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3316,9 +3255,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
