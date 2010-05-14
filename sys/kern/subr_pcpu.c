@@ -439,7 +439,7 @@ name|df
 operator|->
 name|df_len
 operator|=
-name|DPCPU_MODSIZE
+name|DPCPU_MODMIN
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(

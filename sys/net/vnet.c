@@ -1085,7 +1085,7 @@ name|df
 operator|->
 name|vnd_len
 operator|=
-name|VNET_MODSIZE
+name|VNET_MODMIN
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
