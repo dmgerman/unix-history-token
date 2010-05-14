@@ -50,16 +50,12 @@ name|sc_flags
 decl_stmt|;
 define|#
 directive|define
-name|SCHIZO_FLAGS_ARMED
+name|SCHIZO_FLAGS_BSWAR
 value|(1<< 0)
 define|#
 directive|define
-name|SCHIZO_FLAGS_BSWAR
-value|(1<< 1)
-define|#
-directive|define
 name|SCHIZO_FLAGS_CDMA
-value|(1<< 2)
+value|(1<< 1)
 name|bus_addr_t
 name|sc_cdma_clr
 decl_stmt|;
@@ -135,6 +131,12 @@ name|sc_pci_memt
 decl_stmt|;
 name|bus_dma_tag_t
 name|sc_pci_dmat
+decl_stmt|;
+name|uint32_t
+name|sc_stats_dma_ce
+decl_stmt|;
+name|uint32_t
+name|sc_stats_pci_non_fatal
 decl_stmt|;
 name|uint8_t
 name|sc_pci_secbus
