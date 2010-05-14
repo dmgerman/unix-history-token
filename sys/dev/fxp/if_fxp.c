@@ -12495,7 +12495,7 @@ name|rxp
 operator|->
 name|rx_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
