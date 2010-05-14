@@ -105,7 +105,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"ZFS TXG"
+literal|"ZFS transaction groups (TXG)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
