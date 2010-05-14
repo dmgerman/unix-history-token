@@ -51,7 +51,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.1.7"
+literal|"2.1.8"
 decl_stmt|;
 end_decl_stmt
 
@@ -2117,9 +2117,6 @@ case|case
 name|IXGBE_DEV_ID_82598AF_DUAL_PORT
 case|:
 case|case
-name|IXGBE_DEV_ID_82598_DA_DUAL_PORT
-case|:
-case|case
 name|IXGBE_DEV_ID_82598AF_SINGLE_PORT
 case|:
 case|case
@@ -2156,6 +2153,16 @@ operator|->
 name|optics
 operator|=
 name|IFM_10G_LR
+expr_stmt|;
+break|break;
+case|case
+name|IXGBE_DEV_ID_82598_DA_DUAL_PORT
+case|:
+name|adapter
+operator|->
+name|optics
+operator|=
+name|IFM_10G_TWINAX
 expr_stmt|;
 break|break;
 case|case
@@ -5405,6 +5412,21 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* Set moderation on the Link interrupt */
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_EITR
+argument_list|(
+name|adapter
+operator|->
+name|linkvec
+argument_list|)
+argument_list|,
+name|IXGBE_LINK_ITR
+argument_list|)
+expr_stmt|;
 comment|/* Config/Enable Link */
 name|ixgbe_config_link
 argument_list|(
@@ -16822,7 +16844,7 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	** Now set up the LRO interface: 	** 82598 uses software LRO, the 	** 82599 additionally uses a 	** hardware assist. 	** 	** Disable RSC when RXCSUM is off 	*/
+comment|/* 	** Now set up the LRO interface: 	** 82598 uses software LRO, the 	** 82599 uses a hardware assist. 	*/
 if|if
 condition|(
 operator|(
@@ -16843,6 +16865,14 @@ operator|->
 name|if_capenable
 operator|&
 name|IFCAP_RXCSUM
+operator|)
+operator|&&
+operator|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_LRO
 operator|)
 condition|)
 name|ixgbe_setup_hw_rsc
@@ -21476,7 +21506,7 @@ name|adapter
 operator|->
 name|stats
 operator|.
-name|gorc
+name|gotc
 operator|+=
 name|IXGBE_READ_REG
 argument_list|(
