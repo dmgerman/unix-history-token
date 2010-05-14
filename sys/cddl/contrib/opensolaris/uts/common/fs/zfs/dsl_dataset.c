@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -3023,6 +3023,11 @@ name|dsp
 argument_list|,
 name|owner
 argument_list|)
+expr_stmt|;
+operator|*
+name|dsp
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -6563,15 +6568,10 @@ block|}
 name|ASSERT
 argument_list|(
 operator|!
-operator|(
+name|DS_UNIQUE_IS_ACCURATE
+argument_list|(
 name|ds
-operator|->
-name|ds_phys
-operator|->
-name|ds_flags
-operator|&
-name|DS_FLAG_UNIQUE_ACCURATE
-operator|)
+argument_list|)
 operator|||
 name|ds
 operator|->
@@ -8608,14 +8608,11 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
-name|spa_version
+operator|!
+name|DS_UNIQUE_IS_ACCURATE
 argument_list|(
-name|dp
-operator|->
-name|dp_spa
+name|ds
 argument_list|)
-operator|<
-name|SPA_VERSION_UNIQUE_ACCURATE
 operator|||
 name|ds
 operator|->
@@ -11724,6 +11721,27 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* 	 * If there are more than 2 references there may be holds 	 * hanging around that haven't been cleared out yet. 	 */
+if|if
+condition|(
+name|dmu_buf_refcount
+argument_list|(
+name|dd
+operator|->
+name|dd_dbuf
+argument_list|)
+operator|>
+literal|2
+condition|)
+name|txg_wait_synced
+argument_list|(
+name|dd
+operator|->
+name|dd_pool
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tail
@@ -13695,6 +13713,9 @@ name|snap
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|l
+operator|||
 operator|!
 name|list_link_active
 argument_list|(
