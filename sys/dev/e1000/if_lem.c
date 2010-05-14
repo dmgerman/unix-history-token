@@ -10476,8 +10476,8 @@ name|DEVICE_POLLING
 argument|ifp->if_capabilities |= IFCAP_POLLING;
 endif|#
 directive|endif
-comment|/* Enable All WOL methods by default */
-argument|if (adapter->wol) { 		ifp->if_capabilities |= IFCAP_WOL; 		ifp->if_capenable |= IFCAP_WOL; 	}
+comment|/* Enable only WOL MAGIC by default */
+argument|if (adapter->wol) { 		ifp->if_capabilities |= IFCAP_WOL; 		ifp->if_capenable |= IFCAP_WOL_MAGIC; 	}
 comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 argument|ifmedia_init(&adapter->media, IFM_IMASK, 	    lem_media_change, lem_media_status); 	if ((adapter->hw.phy.media_type == e1000_media_type_fiber) || 	    (adapter->hw.phy.media_type == e1000_media_type_internal_serdes)) { 		u_char fiber_type = IFM_1000_SX;
 comment|/* default type */
