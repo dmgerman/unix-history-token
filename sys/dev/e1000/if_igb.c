@@ -13794,6 +13794,11 @@ argument_list|)
 expr_stmt|;
 name|rx_fail
 label|:
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800000
 name|buf_ring_free
 argument_list|(
 name|txr
@@ -13803,6 +13808,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|adapter
