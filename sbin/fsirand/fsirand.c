@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -384,7 +390,7 @@ decl_stmt|;
 name|caddr_t
 name|inodebuf
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|ibufsize
 decl_stmt|;
 name|struct
@@ -500,6 +506,14 @@ operator|.
 name|d_secsize
 expr_stmt|;
 block|}
+name|dp1
+operator|=
+name|NULL
+expr_stmt|;
+name|dp2
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Read in master superblock */
 operator|(
 name|void
@@ -569,8 +583,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to superblock (%qd) on %s"
+literal|"can't seek to superblock (%jd) on %s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sblockloc
 argument_list|,
 name|device
@@ -667,6 +684,9 @@ name|sblock
 operator|->
 name|fs_bsize
 operator|>=
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -782,6 +802,9 @@ literal|0
 init|;
 name|cg
 operator|<
+operator|(
+name|int
+operator|)
 name|sblock
 operator|->
 name|fs_ncg
@@ -825,10 +848,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to %qd"
+literal|"can't seek to %jd"
 argument_list|,
 operator|(
-name|off_t
+name|intmax_t
 operator|)
 name|dblk
 operator|*
@@ -1059,8 +1082,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|(
-specifier|const
-name|time_t
+name|void
 operator|*
 operator|)
 operator|&
@@ -1148,8 +1170,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to superblock (%qd) on %s"
+literal|"can't seek to superblock (%jd) on %s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sblockloc
 argument_list|,
 name|device
@@ -1223,6 +1248,9 @@ literal|0
 init|;
 name|cg
 operator|<
+operator|(
+name|int
+operator|)
 name|sblock
 operator|->
 name|fs_ncg
@@ -1273,10 +1301,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to %qd"
+literal|"can't seek to %jd"
 argument_list|,
 operator|(
-name|off_t
+name|intmax_t
 operator|)
 name|dblk
 operator|*
@@ -1379,10 +1407,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to %qd"
+literal|"can't seek to %jd"
 argument_list|,
 operator|(
-name|off_t
+name|intmax_t
 operator|)
 name|dblk
 operator|*
@@ -1446,6 +1474,9 @@ literal|0
 init|;
 name|n
 operator|<
+operator|(
+name|int
+operator|)
 name|sblock
 operator|->
 name|fs_ipg
@@ -1512,7 +1543,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"ino %d gen %qx\n"
+literal|"ino %d gen %08x\n"
 argument_list|,
 name|inumber
 argument_list|,
@@ -1522,9 +1553,6 @@ name|fs_magic
 operator|==
 name|FS_UFS1_MAGIC
 condition|?
-operator|(
-name|quad_t
-operator|)
 name|dp1
 operator|->
 name|di_gen
@@ -1588,10 +1616,10 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"can't seek to %qd"
+literal|"can't seek to %jd"
 argument_list|,
 operator|(
-name|off_t
+name|intmax_t
 operator|)
 name|dblk
 operator|*
