@@ -22,6 +22,17 @@ name|INTR_VECTORS
 value|256
 end_define
 
+begin_comment
+comment|/*  * Default base address for MSI messages on PowerPC  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSI_INTEL_ADDR_BASE
+value|0xfee00000
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|device_t
