@@ -2548,6 +2548,11 @@ operator|=
 name|null_accessx
 block|,
 operator|.
+name|vop_advlockpurge
+operator|=
+name|vop_stdadvlockpurge
+block|,
+operator|.
 name|vop_bmap
 operator|=
 name|VOP_EOPNOTSUPP
