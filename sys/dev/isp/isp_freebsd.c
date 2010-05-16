@@ -23491,6 +23491,10 @@ literal|"Chan %d GDT timer expired @ %lu"
 argument_list|,
 name|chan
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|time_uptime
 argument_list|)
 expr_stmt|;
@@ -30223,6 +30227,10 @@ name|lp
 operator|->
 name|gone_timer
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|time_uptime
 argument_list|)
 expr_stmt|;
