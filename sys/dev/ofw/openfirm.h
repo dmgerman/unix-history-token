@@ -551,15 +551,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|OF_quiesce
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|OF_enter
 parameter_list|(
 name|void
