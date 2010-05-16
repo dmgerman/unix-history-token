@@ -524,6 +524,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ofw_std_quiesce
+parameter_list|(
+name|ofw_t
+name|ofw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ofw_std_enter
 parameter_list|(
 name|ofw_t
@@ -709,6 +720,13 @@ argument_list|(
 name|ofw_release
 argument_list|,
 name|ofw_std_release
+argument_list|)
+block|,
+name|OFWMETHOD
+argument_list|(
+name|ofw_quiesce
+argument_list|,
+name|ofw_std_quiesce
 argument_list|)
 block|,
 name|OFWMETHOD
@@ -3148,6 +3166,53 @@ end_function
 begin_comment
 comment|/*  * Control transfer functions  */
 end_comment
+
+begin_comment
+comment|/* Turn off OF background tasks */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ofw_std_quiesce
+parameter_list|(
+name|ofw_t
+name|ofw
+parameter_list|)
+block|{
+struct|struct
+block|{
+name|cell_t
+name|name
+decl_stmt|;
+name|cell_t
+name|nargs
+decl_stmt|;
+name|cell_t
+name|nreturns
+decl_stmt|;
+block|}
+name|args
+init|=
+block|{
+operator|(
+name|cell_t
+operator|)
+literal|"quiesce"
+block|,
+literal|0
+block|,
+literal|0
+block|, 	}
+struct|;
+name|openfirmware
+argument_list|(
+operator|&
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Suspend and drop back to the Open Firmware interface. */

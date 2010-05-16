@@ -1478,6 +1478,23 @@ comment|/*  * Control transfer functions  */
 end_comment
 
 begin_comment
+comment|/* Turn off OF background tasks */
+end_comment
+
+begin_function
+name|void
+name|OF_quiesce
+parameter_list|()
+block|{
+name|OFW_QUIESCE
+argument_list|(
+name|ofw_obj
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Suspend and drop back to the Open Firmware interface. */
 end_comment
 
