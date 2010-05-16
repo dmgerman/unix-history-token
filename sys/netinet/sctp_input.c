@@ -13635,6 +13635,25 @@ name|local_auth_chunks
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Now we must move it from one hash table to 			 * another and get the tcb in the right place. 			 */
+comment|/* 			 * This is where the one-2-one socket is put into 			 * the accept state waiting for the accept! 			 */
+if|if
+condition|(
+operator|*
+name|stcb
+condition|)
+block|{
+operator|(
+operator|*
+name|stcb
+operator|)
+operator|->
+name|asoc
+operator|.
+name|state
+operator||=
+name|SCTP_STATE_IN_ACCEPT_QUEUE
+expr_stmt|;
+block|}
 name|sctp_move_pcb_and_assoc
 argument_list|(
 operator|*
@@ -24462,7 +24481,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 			 * First are we accepting? We do this again here 			 * sincen it is possible that a previous endpoint 			 * WAS listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 */
+comment|/* 			 * First are we accepting? We do this again here 			 * since it is possible that a previous endpoint WAS 			 * listening responded to a INIT-ACK and then 			 * closed. We opened and bound.. and are now no 			 * longer listening. 			 */
 if|if
 condition|(
 operator|(

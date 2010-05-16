@@ -2198,6 +2198,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_STATE_IN_ACCEPT_QUEUE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STATE_MASK
 value|0x007f
 end_define
