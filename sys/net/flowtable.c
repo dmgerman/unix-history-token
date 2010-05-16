@@ -1957,13 +1957,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FL_IPV6
-value|(1<<9)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FL_OVERWRITE
 value|(1<<10)
 end_define

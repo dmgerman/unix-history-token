@@ -684,6 +684,8 @@ literal|"ipv6"
 argument_list|,
 name|V_ip6_output_flowtable_size
 argument_list|,
+name|FL_IPV6
+operator||
 name|FL_PCPU
 argument_list|)
 expr_stmt|;
