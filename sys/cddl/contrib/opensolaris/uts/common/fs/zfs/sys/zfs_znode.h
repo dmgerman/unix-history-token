@@ -380,6 +380,10 @@ name|uint32_t
 name|dl_sharecnt
 decl_stmt|;
 comment|/* 0 if exclusive,> 0 if shared */
+name|uint8_t
+name|dl_namelock
+decl_stmt|;
+comment|/* 1 if z_name_lock is NOT held */
 name|uint16_t
 name|dl_namesize
 decl_stmt|;
