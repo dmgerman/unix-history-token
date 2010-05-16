@@ -6131,6 +6131,9 @@ expr_stmt|;
 name|dnode_init
 argument_list|()
 expr_stmt|;
+name|zfetch_init
+argument_list|()
+expr_stmt|;
 name|arc_init
 argument_list|()
 expr_stmt|;
@@ -6148,6 +6151,9 @@ name|void
 parameter_list|)
 block|{
 name|arc_fini
+argument_list|()
+expr_stmt|;
+name|zfetch_fini
 argument_list|()
 expr_stmt|;
 name|dnode_fini
