@@ -17801,11 +17801,21 @@ block|}
 comment|/* 		 * Ok now if this chunk is marked to drop it we can clean up 		 * the chunk, advance our peer ack point and we can check 		 * the next chunk. 		 */
 if|if
 condition|(
+operator|(
 name|tp1
 operator|->
 name|sent
 operator|==
 name|SCTP_FORWARD_TSN_SKIP
+operator|)
+operator|||
+operator|(
+name|tp1
+operator|->
+name|sent
+operator|==
+name|SCTP_DATAGRAM_ACKED
+operator|)
 condition|)
 block|{
 comment|/* advance PeerAckPoint goes forward */
@@ -25148,7 +25158,7 @@ name|sctp_association
 modifier|*
 name|asoc
 decl_stmt|;
-name|int
+name|uint16_t
 name|tt
 decl_stmt|;
 name|asoc
