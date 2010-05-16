@@ -754,6 +754,11 @@ comment|/* FMA state */
 name|uint64_t
 name|io_ena
 decl_stmt|;
+comment|/* FreeBSD only. */
+name|struct
+name|ostask
+name|io_task
+decl_stmt|;
 block|}
 struct|;
 specifier|extern

@@ -4475,7 +4475,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|taskq_dispatch
+name|taskq_dispatch_safe
 argument_list|(
 name|zio
 operator|->
@@ -4497,7 +4497,10 @@ name|zio_execute
 argument_list|,
 name|zio
 argument_list|,
-name|TQ_SLEEP
+operator|&
+name|zio
+operator|->
+name|io_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -10346,7 +10349,7 @@ comment|/* 			 * Reexecution is potentially a huge amount of work. 			 * Hand it
 operator|(
 name|void
 operator|)
-name|taskq_dispatch
+name|taskq_dispatch_safe
 argument_list|(
 name|spa
 operator|->
@@ -10366,7 +10369,10 @@ name|zio_reexecute
 argument_list|,
 name|zio
 argument_list|,
-name|TQ_SLEEP
+operator|&
+name|zio
+operator|->
+name|io_task
 argument_list|)
 expr_stmt|;
 block|}
