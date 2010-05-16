@@ -306,6 +306,17 @@ comment|/* depth of function calls */
 end_comment
 
 begin_decl_stmt
+name|STATIC
+name|int
+name|builtin_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* evalcommand flags for builtins */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|commandname
@@ -603,6 +614,10 @@ begin_expr_stmt
 unit|}                 evalstring
 operator|(
 name|p
+operator|,
+name|builtin_flags
+operator|&
+name|EV_TESTED
 operator|)
 expr_stmt|;
 end_expr_stmt
@@ -623,6 +638,8 @@ unit|void
 name|evalstring
 argument_list|(
 argument|char *s
+argument_list|,
+argument|int flags
 argument_list|)
 end_macro
 
@@ -674,7 +691,7 @@ name|evaltree
 argument_list|(
 name|n
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 name|popstackmark
@@ -4081,6 +4098,10 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* initialize nextopt */
+name|builtin_flags
+operator|=
+name|flags
+expr_stmt|;
 name|exitstatus
 operator|=
 call|(

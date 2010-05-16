@@ -649,6 +649,8 @@ block|{
 name|evalstring
 argument_list|(
 name|minusc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

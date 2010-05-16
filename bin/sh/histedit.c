@@ -1441,6 +1441,8 @@ block|}
 name|evalstring
 argument_list|(
 name|s
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1551,6 +1553,8 @@ expr_stmt|;
 name|evalstring
 argument_list|(
 name|editcmd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX - should use no JC command */
