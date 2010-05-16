@@ -1341,6 +1341,20 @@ parameter_list|)
 function_decl|;
 define|#
 directive|define
+name|taskq_dispatch_safe
+parameter_list|(
+name|tq
+parameter_list|,
+name|func
+parameter_list|,
+name|arg
+parameter_list|,
+name|task
+parameter_list|)
+define|\
+value|taskq_dispatch((tq), (func), (arg), TQ_SLEEP)
+define|#
+directive|define
 name|XVA_MAPSIZE
 value|3
 define|#
