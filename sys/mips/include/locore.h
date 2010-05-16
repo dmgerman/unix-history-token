@@ -257,6 +257,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIPS_PRID_CID_RMI
+value|0x0c
+end_define
+
+begin_comment
+comment|/* RMI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIPS_PRID_CID_CAVIUM
 value|0x0d
 end_define

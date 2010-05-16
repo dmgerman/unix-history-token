@@ -507,6 +507,24 @@ literal|"IPI_STOP (restart)"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IPI_PREEMPT
+case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_PREEMPT"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|sched_preempt
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(
@@ -829,11 +847,16 @@ name|u_int32_t
 name|cpuid
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|TARGET_XLR_XLS
 name|int
 name|ipi_int_mask
 decl_stmt|,
 name|clock_int_mask
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* TLB */
 name|Mips_SetWIRED
 argument_list|(
@@ -1007,6 +1030,9 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
+ifndef|#
+directive|ifndef
+name|TARGET_XLR_XLS
 comment|/* 	 * Unmask the clock and ipi interrupts. 	 */
 name|clock_int_mask
 operator|=
@@ -1035,6 +1061,15 @@ name|clock_int_mask
 operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|platform_init_ap
+argument_list|(
+name|cpuid
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Bootstrap the compare register. 	 */
 name|mips_wr_compare
 argument_list|(

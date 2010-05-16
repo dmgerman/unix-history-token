@@ -59,6 +59,13 @@ name|IPI_STOP_HARD
 value|0x0008
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_PREEMPT
+value|0x0010
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

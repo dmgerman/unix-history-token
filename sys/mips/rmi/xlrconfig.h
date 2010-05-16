@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003-2009 RMI Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of RMI Corporation, nor the names of its contributors,  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * RMI_BSD */
+comment|/*-  * Copyright (c) 2003-2009 RMI Corporation  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of RMI Corporation, nor the names of its contributors,  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.   __FBSDID("$FreeBSD$");  *  * RMI_BSD */
 end_comment
 
 begin_ifndef
@@ -145,33 +145,22 @@ define|\
 value|do{                                                            \        unsigned int __high = value>>32;                         \        unsigned int __low = value& 0xffffffff;                 \         __asm__ __volatile__(                                   \         ".set mips64\n\t"                                       \         "dsll32\t$8, %1, 0\n\t"                                 \         "dsll32\t$9, %0, 0\n\t"                                 \         "dsrl32\t$8, $8, 0\n\t"                                 \         "or\t    $8, $8, $9\n\t"                                \         "dmtc2\t $8, $%2, %3\n\t"                               \         ".set\tmips0"                                           \         :: "r"(__high), "r"(__low),                             \            "i"(reg), "i"(sel)                                   \         :"$8", "$9");                                           \    } while(0)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|xlr_processor_id
-parameter_list|()
-define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            ".word 0x40088007\n"                                 \            "srl  $8, $8, 10\n"                                  \            "andi %0, $8, 0x3f\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|xlr_cpu_id
 parameter_list|()
 define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            ".word 0x40088007\n"                                 \            "srl  $8, $8, 4\n"                                   \            "andi %0, $8, 0x7\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
+value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x1f\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
+end_define
+
+begin_define
+define|#
+directive|define
+name|xlr_core_id
+parameter_list|()
+define|\
+value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x1f\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id/4;})
 end_define
 
 begin_define
@@ -180,7 +169,7 @@ directive|define
 name|xlr_thr_id
 parameter_list|()
 define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            ".word 0x40088007\n"                                 \            "andi %0, $8, 0x03\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
+value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x3\n"                                 \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
 end_define
 
 begin_comment
@@ -421,6 +410,52 @@ block|{
 asm|__asm__
 specifier|__volatile__
 asm|( 	            "move   $8, %1\n" 	            "move   $9, %0\n" 	            ".word  0x71090019\n" 	    ::      "r"(val), "r"(reg) 	    :       "$8", "$9");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline__
+name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint64_t
+name|paddr
+parameter_list|)
+block|{
+name|uint32_t
+name|high
+decl_stmt|,
+name|low
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|high
+operator|=
+literal|0x98000000
+operator||
+operator|(
+name|paddr
+operator|>>
+literal|32
+operator|)
+expr_stmt|;
+name|low
+operator|=
+name|paddr
+operator|&
+literal|0xffffffff
+expr_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|(                     ".set push         \n\t"                     ".set mips64       \n\t"                     "dsll32 %1, %1, 0  \n\t"                     "dsll32 %2, %2, 0  \n\t"
+comment|/* get rid of the */
+asm|"dsrl32 %2, %2, 0  \n\t"
+comment|/* sign extend */
+asm|"or     %1, %1, %2 \n\t"                     "lw     %0, 0(%1)  \n\t"                     ".set pop           \n"             :       "=r"(tmp)             :       "r"(high), "r"(low));
+return|return
+name|tmp
+return|;
 block|}
 end_function
 

@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|MAXSMPCPU
-value|16
+value|32
 end_define
 
 begin_define

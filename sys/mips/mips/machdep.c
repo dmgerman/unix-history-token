@@ -1317,9 +1317,17 @@ operator|-
 name|MipsTLBMiss
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|TARGET_OCTEON
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TARGET_XLR_XLS
+argument_list|)
 comment|/* Fake, but sufficient, for the 32-bit with 64-bit hardware addresses  */
 name|bcopy
 argument_list|(
