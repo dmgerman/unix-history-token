@@ -49,14 +49,13 @@ name|__Userspace__
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_USE_THREAD_BASED_ITERATOR
-argument_list|)
-end_if
+begin_decl_stmt
+specifier|extern
+name|struct
+name|iterator_control
+name|sctp_it_ctl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -75,11 +74,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

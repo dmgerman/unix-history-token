@@ -547,13 +547,6 @@ name|struct
 name|sctpladdr
 name|addr_wq
 decl_stmt|;
-name|struct
-name|sctpiterators
-name|iteratorhead
-decl_stmt|;
-name|int
-name|threads_must_exit
-decl_stmt|;
 comment|/* ep zone info */
 name|sctp_zone_t
 name|ipi_zone_ep
@@ -588,10 +581,6 @@ name|ipi_ep_mtx
 decl_stmt|;
 name|struct
 name|mtx
-name|it_mtx
-decl_stmt|;
-name|struct
-name|mtx
 name|ipi_iterator_wq_mtx
 decl_stmt|;
 name|struct
@@ -601,6 +590,10 @@ decl_stmt|;
 name|struct
 name|mtx
 name|ipi_pktlog_mtx
+decl_stmt|;
+name|struct
+name|mtx
+name|wq_addr_mtx
 decl_stmt|;
 name|uint32_t
 name|ipi_count_ep
@@ -656,20 +649,6 @@ name|SCTP_STACK_VTAG_HASH_SIZE
 index|]
 decl_stmt|;
 comment|/* address work queue handling */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SCTP_USE_THREAD_BASED_ITERATOR
-argument_list|)
-name|uint32_t
-name|iterator_running
-decl_stmt|;
-name|SCTP_PROCESS_STRUCT
-name|thread_proc
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sctp_timer
 name|addr_wq_timer

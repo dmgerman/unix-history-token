@@ -135,28 +135,6 @@ name|SCTP_AUDIT_SIZE
 value|256
 end_define
 
-begin_comment
-comment|/* temporary disabled since it does not work with VNET. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|SCTP_USE_THREAD_BASED_ITERATOR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2598,13 +2576,6 @@ define|#
 directive|define
 name|SCTP_TIMER_TYPE_INPKILL
 value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIMER_TYPE_ITERATOR
-value|16
 end_define
 
 begin_define
