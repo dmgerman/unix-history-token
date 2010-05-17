@@ -977,6 +977,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|GAMMASCOUT
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|SERIAL_8U100AX
 argument_list|,
 name|SIO
