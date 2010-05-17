@@ -3493,6 +3493,9 @@ modifier|*
 name|ddesc
 decl_stmt|;
 name|int
+name|devnum
+decl_stmt|;
+name|int
 name|err
 decl_stmt|;
 comment|/* cleanup after last device search */
@@ -3579,6 +3582,10 @@ operator|)
 return|;
 block|}
 comment|/* iterate all devices */
+name|devnum
+operator|=
+literal|1
+expr_stmt|;
 name|pdev
 operator|=
 name|NULL
@@ -3832,6 +3839,13 @@ operator|=
 name|USB_MAXCONFIG
 expr_stmt|;
 block|}
+name|udev
+operator|->
+name|devnum
+operator|=
+name|devnum
+operator|++
+expr_stmt|;
 comment|/* link together the two structures */
 name|udev
 operator|->
