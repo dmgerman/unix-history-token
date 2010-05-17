@@ -942,12 +942,17 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_POWERD
 comment|/* 		 * First update the USB power state! 		 */
 name|usb_bus_powerd
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Explore the Root USB HUB. */
 call|(
 name|udev
@@ -1157,6 +1162,9 @@ expr_stmt|;
 comment|/* recover from DDB */
 endif|#
 directive|endif
+if|#
+directive|if
+name|USB_HAVE_POWERD
 name|USB_BUS_UNLOCK
 argument_list|(
 name|bus
@@ -1172,6 +1180,8 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
