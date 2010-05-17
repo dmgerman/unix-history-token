@@ -448,6 +448,11 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|temp
+decl_stmt|;
 comment|/* 	 * Attach - attaches the target process for debugging 	 * by the calling process. 	 */
 if|if
 condition|(
@@ -737,7 +742,11 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
+operator|(
 name|P_TRACED
+operator||
+name|P_STOPPED_TRACE
+operator|)
 expr_stmt|;
 comment|/* remove pending SIGTRAP, else the process will die */
 name|sigqueue_delete_proc
@@ -746,6 +755,19 @@ name|p
 argument_list|,
 name|SIGTRAP
 argument_list|)
+expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|temp
+argument_list|)
+name|temp
+operator|->
+name|td_dbgflags
+operator|&=
+operator|~
+name|TDB_SUSPEND
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
