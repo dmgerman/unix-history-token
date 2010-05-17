@@ -337,7 +337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The configuration byte map has several undefined fields which  * must be one or must be zero.  Set up a template for these bits  * only, (assuming a 82557 chip) leaving the actual configuration  * to fxp_init.  *  * See struct fxp_cb_config for the bit definitions.  */
+comment|/*  * The configuration byte map has several undefined fields which  * must be one or must be zero.  Set up a template for these bits.  * The actual configuration is performed in fxp_init.  *  * See struct fxp_cb_config for the bit definitions.  */
 end_comment
 
 begin_decl_stmt
@@ -430,7 +430,37 @@ literal|0x3f
 block|,
 comment|/* 20 */
 literal|0x5
+block|,
 comment|/* 21 */
+literal|0x0
+block|,
+comment|/* 22 */
+literal|0x0
+block|,
+comment|/* 23 */
+literal|0x0
+block|,
+comment|/* 24 */
+literal|0x0
+block|,
+comment|/* 25 */
+literal|0x0
+block|,
+comment|/* 26 */
+literal|0x0
+block|,
+comment|/* 27 */
+literal|0x0
+block|,
+comment|/* 28 */
+literal|0x0
+block|,
+comment|/* 29 */
+literal|0x0
+block|,
+comment|/* 30 */
+literal|0x0
+comment|/* 31 */
 block|}
 decl_stmt|;
 end_decl_stmt
