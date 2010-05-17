@@ -392,13 +392,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UPROTO_BOOT_KEYBOARD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|UKBD_EMULATE_ATSCANCODE
 value|1
 end_define
@@ -3982,7 +3975,7 @@ name|info
 operator|.
 name|bInterfaceProtocol
 operator|==
-name|UPROTO_BOOT_KEYBOARD
+name|UIPROTO_BOOT_KEYBOARD
 operator|)
 condition|)
 block|{
