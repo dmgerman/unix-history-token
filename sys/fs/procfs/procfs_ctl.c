@@ -738,7 +738,11 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
+operator|(
 name|P_TRACED
+operator||
+name|P_STOPPED_TRACE
+operator|)
 expr_stmt|;
 comment|/* remove pending SIGTRAP, else the process will die */
 name|sigqueue_delete_proc
