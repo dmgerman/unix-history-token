@@ -177,7 +177,13 @@ decl_stmt|,
 name|domulti
 decl_stmt|,
 name|dolongline
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|sig_atomic_t
 name|siginfo
 decl_stmt|;
 end_decl_stmt
