@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_NFSPORT_NFS_H_
+name|_NFS_NFSPORT_H_
 end_define
 
 begin_comment
@@ -3960,7 +3960,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NFSPORT_NFS_H */
+comment|/* _NFS_NFSPORT_H */
 end_comment
 
 end_unit
