@@ -3464,7 +3464,7 @@ name|usb_global_bus
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -3889,7 +3889,9 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|devnum
+operator|-
+literal|1
 operator|)
 return|;
 comment|/* success */
