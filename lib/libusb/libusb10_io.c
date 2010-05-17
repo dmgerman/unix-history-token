@@ -61,6 +61,13 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|libusb_device_handle
+value|libusb20_device
+end_define
+
 begin_include
 include|#
 directive|include

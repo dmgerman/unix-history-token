@@ -521,7 +521,7 @@ struct_decl|struct
 name|libusb_transfer
 struct_decl|;
 struct_decl|struct
-name|libusb20_device
+name|libusb_device_handle
 struct_decl|;
 struct|struct
 name|libusb_pollfd
@@ -546,7 +546,7 @@ name|libusb_device
 typedef|;
 typedef|typedef
 name|struct
-name|libusb20_device
+name|libusb_device_handle
 name|libusb_device_handle
 typedef|;
 typedef|typedef
