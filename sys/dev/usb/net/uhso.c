@@ -6670,6 +6670,7 @@ name|sc
 operator|->
 name|sc_line
 operator|&=
+operator|~
 name|UCDC_LINE_DTR
 expr_stmt|;
 name|uhso_bs_cfg
@@ -6733,7 +6734,8 @@ name|sc
 operator|->
 name|sc_line
 operator|&=
-name|UCDC_LINE_DTR
+operator|~
+name|UCDC_LINE_RTS
 expr_stmt|;
 name|uhso_bs_cfg
 argument_list|(
