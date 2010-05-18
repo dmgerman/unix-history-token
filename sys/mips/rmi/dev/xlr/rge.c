@@ -8980,6 +8980,13 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"RMI Gigabit Ethernet"
+argument_list|)
+expr_stmt|;
 comment|/* Always return 0 */
 return|return
 literal|0
