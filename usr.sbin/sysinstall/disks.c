@@ -975,7 +975,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"T = Change Type       U = Undo All Changes     Q = Finish"
+literal|"T = Change Type       U = Undo All Changes"
 argument_list|)
 expr_stmt|;
 if|if
@@ -989,7 +989,17 @@ literal|18
 argument_list|,
 literal|47
 argument_list|,
-literal|"W = Write Changes"
+literal|"W = Write Changes  Q = Finish"
+argument_list|)
+expr_stmt|;
+else|else
+name|mvprintw
+argument_list|(
+literal|18
+argument_list|,
+literal|47
+argument_list|,
+literal|"Q = Finish"
 argument_list|)
 expr_stmt|;
 name|mvprintw
