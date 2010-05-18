@@ -132,6 +132,12 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sc_pci_dmat
 decl_stmt|;
+name|uint32_t
+name|sc_stats_dma_ce
+decl_stmt|;
+name|uint32_t
+name|sc_stats_pci_non_fatal
+decl_stmt|;
 name|uint8_t
 name|sc_pci_secbus
 decl_stmt|;
