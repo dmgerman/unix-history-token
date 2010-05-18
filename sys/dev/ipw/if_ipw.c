@@ -13226,10 +13226,10 @@ name|data
 operator|=
 name|htole32
 argument_list|(
-literal|0x3
+literal|0xf
 argument_list|)
 expr_stmt|;
-comment|/* 1, 2 */
+comment|/* 1, 2, 5.5, 11 */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -13266,7 +13266,7 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* NB: use the same rate set */
+comment|/* Use the same rate set */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -13303,14 +13303,7 @@ condition|)
 return|return
 name|error
 return|;
-name|data
-operator|=
-name|htole32
-argument_list|(
-literal|0xf
-argument_list|)
-expr_stmt|;
-comment|/* 1, 2, 5.5, 11 */
+comment|/* Use the same rate set */
 name|DPRINTF
 argument_list|(
 operator|(
