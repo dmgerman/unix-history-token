@@ -40,7 +40,7 @@ file|"usbhid.h"
 end_include
 
 begin_function
-name|int
+name|int32_t
 name|hid_get_data
 parameter_list|(
 specifier|const
@@ -243,7 +243,7 @@ name|hid_item_t
 modifier|*
 name|h
 parameter_list|,
-name|int
+name|int32_t
 name|data
 parameter_list|)
 block|{
@@ -260,14 +260,17 @@ name|unsigned
 name|int
 name|hsize
 decl_stmt|;
+name|uint32_t
+name|mask
+decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|end
-decl_stmt|,
+decl_stmt|;
+name|int
 name|offs
-decl_stmt|,
-name|mask
 decl_stmt|;
 name|buf
 operator|=
