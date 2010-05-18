@@ -16370,6 +16370,24 @@ operator|->
 name|tlssize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"Cannot allocate TLS block for index %d"
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
+name|die
+argument_list|()
+expr_stmt|;
+block|}
 name|memcpy
 argument_list|(
 name|p
