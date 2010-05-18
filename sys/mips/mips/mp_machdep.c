@@ -696,7 +696,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|smp_topo_none
+name|platform_smp_topo
 argument_list|()
 operator|)
 return|;
@@ -847,16 +847,6 @@ name|u_int32_t
 name|cpuid
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|TARGET_XLR_XLS
-name|int
-name|ipi_int_mask
-decl_stmt|,
-name|clock_int_mask
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* TLB */
 name|Mips_SetWIRED
 argument_list|(
@@ -1030,46 +1020,6 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
-ifndef|#
-directive|ifndef
-name|TARGET_XLR_XLS
-comment|/* 	 * Unmask the clock and ipi interrupts. 	 */
-name|clock_int_mask
-operator|=
-name|hard_int_mask
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-name|ipi_int_mask
-operator|=
-name|hard_int_mask
-argument_list|(
-name|platform_ipi_intrnum
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|set_intr_mask
-argument_list|(
-name|ALL_INT_MASK
-operator|&
-operator|~
-operator|(
-name|ipi_int_mask
-operator||
-name|clock_int_mask
-operator|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|platform_init_ap
-argument_list|(
-name|cpuid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Bootstrap the compare register. 	 */
 name|mips_wr_compare
 argument_list|(
