@@ -5467,9 +5467,6 @@ literal|"brelse: extra page"
 operator|)
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_set_invalid
 argument_list|(
 name|m
@@ -5478,9 +5475,6 @@ name|poffset
 argument_list|,
 name|presid
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
