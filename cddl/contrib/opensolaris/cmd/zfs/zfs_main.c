@@ -7831,9 +7831,7 @@ decl_stmt|;
 name|int
 name|types
 init|=
-name|ZFS_TYPE_FILESYSTEM
-operator||
-name|ZFS_TYPE_VOLUME
+name|ZFS_TYPE_DATASET
 decl_stmt|;
 name|boolean_t
 name|types_specified
