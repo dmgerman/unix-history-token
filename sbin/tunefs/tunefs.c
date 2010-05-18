@@ -1650,11 +1650,7 @@ operator|.
 name|fs_flags
 operator|&=
 operator|~
-operator|(
-name|FS_DOSOFTDEP
-operator||
 name|FS_SUJ
-operator|)
 expr_stmt|;
 name|sblock
 operator|.
@@ -1664,10 +1660,14 @@ literal|0
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"%s cleared, "
-literal|"remove .sujournal to reclaim space"
+literal|"%s cleared but soft updates still set."
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"remove .sujournal to reclaim space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2670,9 +2670,7 @@ name|cg_cs
 operator|.
 name|cs_nbfree
 operator|>
-literal|128
-operator|*
-literal|1024
+literal|256
 operator|*
 literal|1024
 condition|)
@@ -4545,6 +4543,18 @@ argument_list|(
 name|SUJ_MIN
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+comment|/* fsck does not support fragments in journal files. */
+name|size
+operator|=
+name|roundup
+argument_list|(
+name|size
+argument_list|,
+name|sblock
+operator|.
+name|fs_bsize
 argument_list|)
 expr_stmt|;
 block|}
