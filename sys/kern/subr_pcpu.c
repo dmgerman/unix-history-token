@@ -1581,6 +1581,8 @@ operator|&
 name|pc
 operator|->
 name|pc_spinlocks
+argument_list|,
+name|db_printf
 argument_list|)
 expr_stmt|;
 endif|#
