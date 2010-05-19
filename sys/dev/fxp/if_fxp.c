@@ -9209,6 +9209,8 @@ operator|->
 name|rx_map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -12493,7 +12495,7 @@ name|rxp
 operator|->
 name|rx_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12679,6 +12681,8 @@ name|p_rx
 operator|->
 name|rx_map
 argument_list|,
+name|BUS_DMASYNC_PREREAD
+operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
