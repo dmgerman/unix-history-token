@@ -4559,7 +4559,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * If this is a system or protected process, skip it. 		 */
+comment|/* 		 * If this is a system, protected or killed process, skip it. 		 */
 if|if
 condition|(
 operator|(
@@ -4583,6 +4583,11 @@ name|p_pid
 operator|==
 literal|1
 operator|)
+operator|||
+name|P_KILLED
+argument_list|(
+name|p
+argument_list|)
 operator|||
 operator|(
 operator|(

@@ -2637,6 +2637,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_WKILLED
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Killed, go to kernel/user boundary ASAP. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_INEXEC
 value|0x4000000
 end_define
@@ -2671,6 +2682,16 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((p)->p_flag& P_STOPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_KILLED
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_flag& P_WKILLED)
 end_define
 
 begin_comment

@@ -11196,6 +11196,12 @@ argument_list|,
 name|why
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_WKILLED
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
