@@ -2890,7 +2890,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|openpic_softc
+name|openpic_cpcht_softc
 argument_list|)
 block|, }
 decl_stmt|;
