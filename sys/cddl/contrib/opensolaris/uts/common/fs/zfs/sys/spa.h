@@ -920,6 +920,9 @@ name|oldconfig
 parameter_list|,
 name|boolean_t
 name|force
+parameter_list|,
+name|boolean_t
+name|hardforce
 parameter_list|)
 function_decl|;
 specifier|extern

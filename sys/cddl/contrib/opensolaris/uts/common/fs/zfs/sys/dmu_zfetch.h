@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_DFETCH_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -141,6 +134,18 @@ comment|/* # of failed attempts to alloc strm */
 block|}
 name|zfetch_t
 typedef|;
+name|void
+name|zfetch_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+name|zfetch_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 name|void
 name|dmu_zfetch_init
 parameter_list|(

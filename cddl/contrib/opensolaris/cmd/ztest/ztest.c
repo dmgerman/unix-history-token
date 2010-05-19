@@ -15709,6 +15709,8 @@ operator|&
 name|config
 argument_list|,
 name|B_FALSE
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if

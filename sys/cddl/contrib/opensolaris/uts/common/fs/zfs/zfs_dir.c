@@ -400,7 +400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lock a directory entry.  A dirlock on<dzp, name> protects that name  * in dzp's directory zap object.  As long as you hold a dirlock, you can  * assume two things: (1) dzp cannot be reaped, and (2) no other thread  * can change the zap entry for (i.e. link or unlink) this name.  *  * Input arguments:  *	dzp	- znode for directory  *	name	- name of entry to lock  *	flag	- ZNEW: if the entry already exists, fail with EEXIST.  *		  ZEXISTS: if the entry does not exist, fail with ENOENT.  *		  ZSHARED: allow concurrent access with other ZSHARED callers.  *		  ZXATTR: we want dzp's xattr directory  *		  ZCILOOK: On a mixed sensitivity file system,  *			   this lookup should be case-insensitive.  *		  ZCIEXACT: On a purely case-insensitive file system,  *			    this lookup should be case-sensitive.  *		  ZRENAMING: we are locking for renaming, force narrow locks  *  * Output arguments:  *	zpp	- pointer to the znode for the entry (NULL if there isn't one)  *	dlpp	- pointer to the dirlock for this entry (NULL on error)  *      direntflags - (case-insensitive lookup only)  *		flags if multiple case-sensitive matches exist in directory  *      realpnp     - (case-insensitive lookup only)  *		actual name matched within the directory  *  * Return value: 0 on success or errno on failure.  *  * NOTE: Always checks for, and rejects, '.' and '..'.  * NOTE: For case-insensitive file systems we take wide locks (see below),  *	 but return znode pointers to a single match.  */
+comment|/*  * Lock a directory entry.  A dirlock on<dzp, name> protects that name  * in dzp's directory zap object.  As long as you hold a dirlock, you can  * assume two things: (1) dzp cannot be reaped, and (2) no other thread  * can change the zap entry for (i.e. link or unlink) this name.  *  * Input arguments:  *	dzp	- znode for directory  *	name	- name of entry to lock  *	flag	- ZNEW: if the entry already exists, fail with EEXIST.  *		  ZEXISTS: if the entry does not exist, fail with ENOENT.  *		  ZSHARED: allow concurrent access with other ZSHARED callers.  *		  ZXATTR: we want dzp's xattr directory  *		  ZCILOOK: On a mixed sensitivity file system,  *			   this lookup should be case-insensitive.  *		  ZCIEXACT: On a purely case-insensitive file system,  *			    this lookup should be case-sensitive.  *		  ZRENAMING: we are locking for renaming, force narrow locks  *		  ZHAVELOCK: Don't grab the z_name_lock for this call. The  *			     current thread already holds it.  *  * Output arguments:  *	zpp	- pointer to the znode for the entry (NULL if there isn't one)  *	dlpp	- pointer to the dirlock for this entry (NULL on error)  *      direntflags - (case-insensitive lookup only)  *		flags if multiple case-sensitive matches exist in directory  *      realpnp     - (case-insensitive lookup only)  *		actual name matched within the directory  *  * Return value: 0 on success or errno on failure.  *  * NOTE: Always checks for, and rejects, '.' and '..'.  * NOTE: For case-insensitive file systems we take wide locks (see below),  *	 but return znode pointers to a single match.  */
 end_comment
 
 begin_function
@@ -626,7 +626,33 @@ name|zfsvfs
 operator|->
 name|z_norm
 expr_stmt|;
-comment|/* 	 * Wait until there are no locks on this name. 	 */
+comment|/* 	 * Wait until there are no locks on this name. 	 * 	 * Don't grab the the lock if it is already held. However, cannot 	 * have both ZSHARED and ZHAVELOCK together. 	 */
+name|ASSERT
+argument_list|(
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZSHARED
+operator|)
+operator|||
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZHAVELOCK
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZHAVELOCK
+operator|)
+condition|)
 name|rw_enter
 argument_list|(
 operator|&
@@ -666,6 +692,15 @@ operator|->
 name|z_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZHAVELOCK
+operator|)
+condition|)
 name|rw_exit
 argument_list|(
 operator|&
@@ -744,6 +779,15 @@ operator|->
 name|z_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flag
+operator|&
+name|ZHAVELOCK
+operator|)
+condition|)
 name|rw_exit
 argument_list|(
 operator|&
@@ -806,6 +850,12 @@ literal|0
 expr_stmt|;
 name|dl
 operator|->
+name|dl_namelock
+operator|=
+literal|0
+expr_stmt|;
+name|dl
+operator|->
 name|dl_namesize
 operator|=
 literal|0
@@ -861,6 +911,19 @@ name|z_lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the z_name_lock was NOT held for this dirlock record it. 	 */
+if|if
+condition|(
+name|flag
+operator|&
+name|ZHAVELOCK
+condition|)
+name|dl
+operator|->
+name|dl_namelock
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1229,6 +1292,13 @@ operator|->
 name|z_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dl
+operator|->
+name|dl_namelock
+condition|)
 name|rw_exit
 argument_list|(
 operator|&
