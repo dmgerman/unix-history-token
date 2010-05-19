@@ -298,7 +298,7 @@ name|IA64_RR_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|(((u_int64_t) (n))<< 61)
+value|(((uint64_t) (n))<< 61)
 end_define
 
 begin_define

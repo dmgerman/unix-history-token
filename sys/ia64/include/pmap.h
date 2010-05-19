@@ -143,7 +143,7 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|u_int32_t
+name|uint32_t
 name|pm_rid
 index|[
 literal|5

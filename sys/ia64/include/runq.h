@@ -84,7 +84,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int64_t
+name|uint64_t
 name|rqb_word_t
 typedef|;
 end_typedef
@@ -92,14 +92,14 @@ end_typedef
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|__popcnt
 parameter_list|(
-name|u_int64_t
+name|uint64_t
 name|bits
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|result
 decl_stmt|;
 asm|__asm __volatile("popcnt %0=%1" : "=r" (result) : "r" (bits));
