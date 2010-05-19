@@ -892,7 +892,10 @@ modifier|*
 name|fmp
 decl_stmt|;
 name|bus_dmamap_t
-name|map
+name|hmap
+decl_stmt|;
+name|bus_dmamap_t
+name|pmap
 decl_stmt|;
 block|}
 struct|;
@@ -1156,10 +1159,10 @@ modifier|*
 name|rx_buffers
 decl_stmt|;
 name|bus_dma_tag_t
-name|rxtag
+name|htag
 decl_stmt|;
-name|bus_dmamap_t
-name|spare_map
+name|bus_dma_tag_t
+name|ptag
 decl_stmt|;
 name|u32
 name|bytes
