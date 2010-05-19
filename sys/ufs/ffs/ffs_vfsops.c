@@ -520,6 +520,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Note that userquota and groupquota options are not currently used  * by UFS/FFS code and generally mount(8) does not pass those options  * from userland, but they can be passed by loader(8) via  * vfs.root.mountfrom.options.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -547,6 +551,8 @@ literal|"force"
 block|,
 literal|"from"
 block|,
+literal|"groupquota"
+block|,
 literal|"multilabel"
 block|,
 literal|"nfsv4acls"
@@ -562,6 +568,8 @@ block|,
 literal|"sync"
 block|,
 literal|"union"
+block|,
+literal|"userquota"
 block|,
 name|NULL
 block|}
@@ -723,6 +731,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|vfs_deleteopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"groupquota"
+argument_list|)
+expr_stmt|;
+name|vfs_deleteopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"userquota"
+argument_list|)
+expr_stmt|;
 name|fspec
 operator|=
 name|vfs_getopts
