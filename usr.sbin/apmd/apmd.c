@@ -445,9 +445,7 @@ argument_list|(
 literal|"cannot fork"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+break|break;
 case|case
 literal|0
 case|:
@@ -485,6 +483,10 @@ name|p
 operator|->
 name|line
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -524,8 +526,6 @@ condition|)
 do|;
 break|break;
 block|}
-name|out
-label|:
 return|return
 name|status
 return|;
@@ -722,7 +722,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reject commad  */
+comment|/*  * reject command  */
 end_comment
 
 begin_function
@@ -738,8 +738,7 @@ block|{
 name|int
 name|rc
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -760,16 +759,12 @@ argument_list|,
 literal|"fail to reject\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|rc
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
-name|out
-label|:
+block|}
 return|return
 name|rc
 return|;
@@ -2110,8 +2105,7 @@ block|{
 name|int
 name|rc
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 name|int
 name|sig
@@ -2178,9 +2172,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|rc
+return|;
 case|case
 name|SIGCHLD
 case|:
@@ -2199,12 +2193,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|rc
-operator|=
-literal|0
-expr_stmt|;
-name|out
-label|:
 return|return
 name|rc
 return|;
@@ -2926,9 +2914,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2946,9 +2932,6 @@ name|apmctl_fd
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
-return|return;
 block|}
 end_function
 
