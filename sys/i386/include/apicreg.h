@@ -503,6 +503,13 @@ name|MAXLVTSHIFT
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|APIC_VER_EOI_SUPPRESSION
+value|0x01000000
+end_define
+
 begin_comment
 comment|/* fields in LDR */
 end_comment
@@ -611,6 +618,13 @@ define|#
 directive|define
 name|APIC_SVR_FDIS
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_SVR_EOI_SUPPRESSION
+value|0x00001000
 end_define
 
 begin_comment
@@ -1183,6 +1197,13 @@ define|#
 directive|define
 name|IOAPIC_WINDOW
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOAPIC_EOIR
+value|0x40
 end_define
 
 begin_comment
