@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -3849,7 +3855,7 @@ name|resettodr_period
 operator|>
 literal|0
 condition|)
-name|callout_schedule
+name|callout_reset
 argument_list|(
 operator|&
 name|resettodr_callout
@@ -3857,6 +3863,10 @@ argument_list|,
 name|resettodr_period
 operator|*
 name|hz
+argument_list|,
+name|periodic_resettodr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
