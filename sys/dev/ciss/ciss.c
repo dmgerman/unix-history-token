@@ -2396,6 +2396,21 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ciss_periodic
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|ciss_mtx
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/*      * Do PCI-specific init.      */
 if|if
 condition|(
@@ -2422,21 +2437,6 @@ expr_stmt|;
 name|ciss_initq_notify
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|callout_init_mtx
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|ciss_periodic
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|ciss_mtx
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/*      * Initalize device sysctls.      */
