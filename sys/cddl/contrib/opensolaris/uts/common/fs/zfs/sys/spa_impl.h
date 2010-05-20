@@ -276,7 +276,7 @@ name|int
 name|spa_sync_pass
 decl_stmt|;
 comment|/* iterate-to-convergence */
-name|int
+name|pool_state_t
 name|spa_state
 decl_stmt|;
 comment|/* pool state */
@@ -284,10 +284,6 @@ name|int
 name|spa_inject_ref
 decl_stmt|;
 comment|/* injection references */
-name|uint8_t
-name|spa_traverse_wanted
-decl_stmt|;
-comment|/* traverse lock wanted */
 name|uint8_t
 name|spa_sync_on
 decl_stmt|;
@@ -382,10 +378,6 @@ name|bplist_t
 name|spa_sync_bplist
 decl_stmt|;
 comment|/* deferred-free bplist */
-name|krwlock_t
-name|spa_traverse_lock
-decl_stmt|;
-comment|/* traverse vs. spa_sync() */
 name|uberblock_t
 name|spa_ubsync
 decl_stmt|;

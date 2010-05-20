@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -3739,6 +3732,9 @@ operator|!=
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|system_taskq_init
+argument_list|()
 expr_stmt|;
 name|spa_init
 argument_list|(
