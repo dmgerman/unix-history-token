@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989-1994,1996-1999,2001,2003,2004    Free Software Foundation, Inc.    This file is part of the GNU C Library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989-1994,1996-1999,2001,2003,2004,2005,2006,2007    Free Software Foundation, Inc.    This file is part of the GNU C Library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -54,22 +54,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_UNISTD_H
-end_if
-
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -208,7 +197,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Standalone applications get correct prototypes for getopt_long and    getopt_long_only; they declare "char **argv".  libc uses prototypes    with "char *const *argv" that are incorrect because getopt_long and    getopt_long_only can permute argv; this is required for backward    compatibility (e.g., for LSB 2.0.1).     This used to be `#if defined __GETOPT_PREFIX&& !defined __need_getopt',    but it caused redefinition warnings if both unistd.h and getopt.h were    included, since unistd.h includes getopt.h having previously defined    __need_getopt.        The only place where __getopt_argv_const is used is in definitions    of getopt_long and getopt_long_only below, but these are visible    only if __need_getopt is not defined, so it is quite safe to rewrite    the conditional as follows: */
+comment|/* Standalone applications get correct prototypes for getopt_long and    getopt_long_only; they declare "char **argv".  libc uses prototypes    with "char *const *argv" that are incorrect because getopt_long and    getopt_long_only can permute argv; this is required for backward    compatibility (e.g., for LSB 2.0.1).     This used to be `#if defined __GETOPT_PREFIX&& !defined __need_getopt',    but it caused redefinition warnings if both unistd.h and getopt.h were    included, since unistd.h includes getopt.h having previously defined    __need_getopt.     The only place where __getopt_argv_const is used is in definitions    of getopt_long and getopt_long_only below, but these are visible    only if __need_getopt is not defined, so it is quite safe to rewrite    the conditional as follows: */
 end_comment
 
 begin_if
@@ -426,7 +415,7 @@ value|2
 endif|#
 directive|endif
 comment|/* need getopt */
-comment|/* Get definitions and prototypes for functions to process the    arguments in ARGV (ARGC of them, minus the program name) for    options given in OPTS.     Return the option character from OPTS just read.  Return -1 when    there are no more options.  For unrecognized options, or options    missing arguments, `optopt' is set to the option letter, and '?' is    returned.     The OPTS string is a list of characters which are recognized option    letters, optionally followed by colons, specifying that that letter    takes an argument, to be placed in `optarg'.     If a letter in OPTS is followed by two colons, its argument is    optional.  This behavior is specific to the GNU `getopt'.     The argument `--' causes premature termination of argument    scanning, explicitly telling `getopt' that there are no more    options.     If OPTS begins with `--', then non-option arguments are treated as    arguments to the option '\0'.  This behavior is specific to the GNU    `getopt'.  */
+comment|/* Get definitions and prototypes for functions to process the    arguments in ARGV (ARGC of them, minus the program name) for    options given in OPTS.     Return the option character from OPTS just read.  Return -1 when    there are no more options.  For unrecognized options, or options    missing arguments, `optopt' is set to the option letter, and '?' is    returned.     The OPTS string is a list of characters which are recognized option    letters, optionally followed by colons, specifying that that letter    takes an argument, to be placed in `optarg'.     If a letter in OPTS is followed by two colons, its argument is    optional.  This behavior is specific to the GNU `getopt'.     The argument `--' causes premature termination of argument    scanning, explicitly telling `getopt' that there are no more    options.     If OPTS begins with `-', then non-option arguments are treated as    arguments to the option '\1'.  This behavior is specific to the GNU    `getopt'.  If OPTS begins with `+', or POSIXLY_CORRECT is set in    the environment, then do not permute arguments.  */
 specifier|extern
 name|int
 name|getopt

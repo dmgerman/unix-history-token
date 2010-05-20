@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Name frobnication for compiling argp outside of glibc    Copyright (C) 1997, 2003 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Written by Miles Bader<miles@gnu.ai.mit.edu>.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Name frobnication for compiling argp outside of glibc    Copyright (C) 1997, 2003, 2007 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Written by Miles Bader<miles@gnu.ai.mit.edu>.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_if
@@ -337,30 +337,6 @@ directive|define
 name|__argp_fmtstream_wmargin
 value|argp_fmtstream_wmargin
 end_define
-
-begin_include
-include|#
-directive|include
-file|"mempcpy.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"strcase.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"strchrnul.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"strndup.h"
-end_include
 
 begin_comment
 comment|/* normal libc functions we call */
@@ -854,19 +830,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|__argp_basename
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -890,6 +853,67 @@ parameter_list|(
 name|e
 parameter_list|)
 value|(errno = (e))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+name|GNULIB_ARGP_DISABLE_DIRNAME
+end_if
+
+begin_define
+define|#
+directive|define
+name|__argp_base_name
+parameter_list|(
+name|arg
+parameter_list|)
+value|arg
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|GNULIB_ARGP_EXTERN_BASENAME
+end_elif
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|__argp_base_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"dirname.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|__argp_base_name
+value|base_name
 end_define
 
 begin_endif

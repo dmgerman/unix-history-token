@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* Hierarchial argument parsing, layered over getopt.    Copyright (C) 1995-1999,2003,2004 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Written by Miles Bader<miles@gnu.ai.mit.edu>.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Hierarchial argument parsing, layered over getopt.    Copyright (C) 1995-1999,2003-2007 Free Software Foundation, Inc.    This file is part of the GNU C Library.    Written by Miles Bader<miles@gnu.ai.mit.edu>.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -37,6 +37,12 @@ directive|include
 file|<getopt.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -48,24 +54,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__const
-value|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -202,7 +190,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GCC 2.95 and later have "__restrict"; C99 compilers have    "restrict", and "configure" may have defined "restrict".  */
+comment|/* GCC 2.95 and later have "__restrict"; C99 compilers have    "restrict", and "configure" may have defined "restrict".    Other compilers use __restrict, __restrict__, and _Restrict, and    'configure' might #define 'restrict' to those words.  */
 end_comment
 
 begin_ifndef
@@ -235,9 +223,6 @@ end_if
 begin_if
 if|#
 directive|if
-name|defined
-specifier|restrict
-operator|||
 literal|199901L
 operator|<=
 name|__STDC_VERSION__
@@ -320,7 +305,7 @@ struct|struct
 name|argp_option
 block|{
 comment|/* The long option name.  For more than one name for the same option, you      can use following options with the OPTION_ALIAS flag set.  */
-name|__const
+specifier|const
 name|char
 modifier|*
 name|name
@@ -330,7 +315,7 @@ name|int
 name|key
 decl_stmt|;
 comment|/* If non-NULL, this is the name of the argument associated with this      option, which is required unless the OPTION_ARG_OPTIONAL flag is set. */
-name|__const
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -339,8 +324,8 @@ comment|/* OPTION_ flags.  */
 name|int
 name|flags
 decl_stmt|;
-comment|/* The doc string for this option.  If both NAME and KEY are 0, This string      will be printed outdented from the normal option column, making it      useful as a group header (it will be the first thing printed in its      group); in this usage, it's conventional to end the string with a `:'.  */
-name|__const
+comment|/* The doc string for this option.  If both NAME and KEY are 0, This string      will be printed outdented from the normal option column, making it      useful as a group header (it will be the first thing printed in its      group); in this usage, it's conventional to end the string with a `:'.       Write the initial value as N_("TEXT") if you want xgettext to collect      it into a POT file.  */
+specifier|const
 name|char
 modifier|*
 name|doc
@@ -466,7 +451,7 @@ struct|struct
 name|argp
 block|{
 comment|/* An array of argp_option structures, terminated by an entry with both      NAME and KEY having a value of 0.  */
-name|__const
+specifier|const
 name|struct
 name|argp_option
 modifier|*
@@ -477,19 +462,19 @@ name|argp_parser_t
 name|parser
 decl_stmt|;
 comment|/* A string describing what other arguments are wanted by this program.  It      is only used by argp_usage to print the `Usage:' message.  If it      contains newlines, the strings separated by them are considered      alternative usage patterns, and printed on separate lines (lines after      the first are prefix by `  or: ' instead of `Usage:').  */
-name|__const
+specifier|const
 name|char
 modifier|*
 name|args_doc
 decl_stmt|;
-comment|/* If non-NULL, a string containing extra text to be printed before and      after the options in a long help message (separated by a vertical tab      `\v' character).  */
-name|__const
+comment|/* If non-NULL, a string containing extra text to be printed before and      after the options in a long help message (separated by a vertical tab      `\v' character).      Write the initial value as N_("BEFORE-TEXT") "\v" N_("AFTER-TEXT") if      you want xgettext to collect the two pieces of text into a POT file.  */
+specifier|const
 name|char
 modifier|*
 name|doc
 decl_stmt|;
 comment|/* A vector of argp_children structures, terminated by a member with a 0      argp field, pointing to child argps should be parsed with this one.  Any      conflicts are resolved in favor of this argp, or early argps in the      CHILDREN list.  This field is useful if you use libraries that supply      their own argp structure, which you want to use in conjunction with your      own.  */
-name|__const
+specifier|const
 name|struct
 name|argp_child
 modifier|*
@@ -506,7 +491,7 @@ parameter_list|(
 name|int
 name|__key
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 name|__text
@@ -560,7 +545,7 @@ struct|struct
 name|argp_child
 block|{
 comment|/* The child parser.  */
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -571,7 +556,7 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* If non-zero, an optional header to be printed in help output before the      child options.  As a side-effect, a non-zero value forces the child      options to be grouped together; to achieve this effect without actually      printing a header string, use a value of "".  */
-name|__const
+specifier|const
 name|char
 modifier|*
 name|header
@@ -587,7 +572,7 @@ struct|struct
 name|argp_state
 block|{
 comment|/* The top level ARGP being parsed.  */
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -703,7 +688,7 @@ specifier|extern
 name|error_t
 name|argp_parse
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -711,13 +696,13 @@ name|__restrict
 name|__argp
 parameter_list|,
 name|int
-name|__argc
+comment|/*argc*/
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|__restrict
-name|__argv
+comment|/*argv*/
 parameter_list|,
 name|unsigned
 name|__flags
@@ -737,7 +722,7 @@ specifier|extern
 name|error_t
 name|__argp_parse
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -745,13 +730,13 @@ name|__restrict
 name|__argp
 parameter_list|,
 name|int
-name|__argc
+comment|/*argc*/
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|__restrict
-name|__argv
+comment|/*argv*/
 parameter_list|,
 name|unsigned
 name|__flags
@@ -768,9 +753,44 @@ name|__input
 parameter_list|)
 function_decl|;
 comment|/* Global variables.  */
+comment|/* GNULIB makes sure both program_invocation_name and    program_invocation_short_name are available */
+ifdef|#
+directive|ifdef
+name|GNULIB_PROGRAM_INVOCATION_NAME
+specifier|extern
+name|char
+modifier|*
+name|program_invocation_name
+decl_stmt|;
+undef|#
+directive|undef
+name|HAVE_DECL_PROGRAM_INVOCATION_NAME
+define|#
+directive|define
+name|HAVE_DECL_PROGRAM_INVOCATION_NAME
+value|1
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|GNULIB_PROGRAM_INVOCATION_SHORT_NAME
+specifier|extern
+name|char
+modifier|*
+name|program_invocation_short_name
+decl_stmt|;
+undef|#
+directive|undef
+name|HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+define|#
+directive|define
+name|HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+value|1
+endif|#
+directive|endif
 comment|/* If defined or set by the user program to a non-zero value, then a default    option --version is added (unless the ARGP_NO_HELP flag is used), which    will print this string followed by a newline and exit (unless the    ARGP_NO_EXIT flag is used).  Overridden by ARGP_PROGRAM_VERSION_HOOK.  */
 specifier|extern
-name|__const
+specifier|const
 name|char
 modifier|*
 name|argp_program_version
@@ -797,7 +817,7 @@ parameter_list|)
 function_decl|;
 comment|/* If defined or set by the user program, it should point to string that is    the bug-reporting address for the program.  It will be printed by    argp_help if the ARGP_HELP_BUG_ADDR flag is set (as it is by various    standard help messages), embedded in a sentence that says something like    `Report bugs to ADDR.'.  */
 specifier|extern
-name|__const
+specifier|const
 name|char
 modifier|*
 name|argp_program_bug_address
@@ -886,7 +906,7 @@ specifier|extern
 name|void
 name|argp_help
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -911,7 +931,7 @@ specifier|extern
 name|void
 name|__argp_help
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp
 modifier|*
@@ -937,7 +957,7 @@ specifier|extern
 name|void
 name|argp_state_help
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -958,7 +978,7 @@ specifier|extern
 name|void
 name|__argp_state_help
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -980,7 +1000,7 @@ specifier|extern
 name|void
 name|argp_usage
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -991,7 +1011,7 @@ specifier|extern
 name|void
 name|__argp_usage
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -1003,14 +1023,14 @@ specifier|extern
 name|void
 name|argp_error
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
 name|__restrict
 name|__state
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -1040,14 +1060,14 @@ specifier|extern
 name|void
 name|__argp_error
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
 name|__restrict
 name|__state
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -1080,7 +1100,7 @@ specifier|extern
 name|void
 name|argp_failure
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -1093,7 +1113,7 @@ parameter_list|,
 name|int
 name|__errnum
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -1122,7 +1142,7 @@ specifier|extern
 name|void
 name|__argp_failure
 parameter_list|(
-name|__const
+specifier|const
 name|struct
 name|argp_state
 modifier|*
@@ -1135,7 +1155,7 @@ parameter_list|,
 name|int
 name|__errnum
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -1168,7 +1188,7 @@ specifier|extern
 name|int
 name|_option_is_short
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
@@ -1183,7 +1203,7 @@ specifier|extern
 name|int
 name|__option_is_short
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
@@ -1202,7 +1222,7 @@ specifier|extern
 name|int
 name|_option_is_end
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
@@ -1217,7 +1237,7 @@ specifier|extern
 name|int
 name|__option_is_end
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
@@ -1237,14 +1257,14 @@ name|void
 modifier|*
 name|_argp_input
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp
 operator|*
 name|__restrict
 name|__argp
 argument_list|,
-name|__const
+specifier|const
 expr|struct
 name|argp_state
 operator|*
@@ -1261,14 +1281,14 @@ name|void
 modifier|*
 name|__argp_input
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp
 operator|*
 name|__restrict
 name|__argp
 argument_list|,
-name|__const
+specifier|const
 expr|struct
 name|argp_state
 operator|*
@@ -1346,20 +1366,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function
 name|ARGP_EI
 name|void
-name|__NTH
-argument_list|(
 name|__argp_usage
-argument_list|(
-name|__const
-expr|struct
+parameter_list|(
+specifier|const
+name|struct
 name|argp_state
-operator|*
+modifier|*
 name|__state
-argument_list|)
-argument_list|)
+parameter_list|)
 block|{
 name|__argp_state_help
 argument_list|(
@@ -1371,7 +1388,7 @@ name|ARGP_HELP_STD_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|ARGP_EI
@@ -1380,7 +1397,7 @@ name|__NTH
 argument_list|(
 name|__option_is_short
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
@@ -1414,8 +1431,8 @@ operator|>
 literal|0
 operator|&&
 name|__key
-operator|<
-literal|256
+operator|<=
+name|UCHAR_MAX
 operator|&&
 name|isprint
 argument_list|(
@@ -1433,7 +1450,7 @@ name|__NTH
 argument_list|(
 name|__option_is_end
 argument_list|(
-name|__const
+specifier|const
 expr|struct
 name|argp_option
 operator|*
