@@ -37,11 +37,8 @@ end_include
 
 begin_function
 name|void
-name|sparc64_ad_firmware_geom_adjust
+name|sparc64_ata_disk_firmware_geom_adjust
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|struct
 name|disk
 modifier|*

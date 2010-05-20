@@ -179,6 +179,16 @@ directive|include
 file|<cam/ata/ata_all.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_comment
+comment|/* geometry translation */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -707,6 +717,30 @@ define|#
 directive|define
 name|ADA_DEFAULT_SEND_ORDERED
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Most platforms map firmware geometry to actual, but some don't.  If  * not overridden, default to nothing.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ata_disk_firmware_geom_adjust
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ata_disk_firmware_geom_adjust
+parameter_list|(
+name|disk
+parameter_list|)
 end_define
 
 begin_endif
@@ -3457,7 +3491,6 @@ operator|->
 name|d_stripesize
 expr_stmt|;
 block|}
-comment|/* XXX: these are not actually "firmware" values, so they may be wrong */
 name|softc
 operator|->
 name|disk
@@ -3481,6 +3514,13 @@ operator|->
 name|params
 operator|.
 name|heads
+expr_stmt|;
+name|ata_disk_firmware_geom_adjust
+argument_list|(
+name|softc
+operator|->
+name|disk
+argument_list|)
 expr_stmt|;
 name|disk_create
 argument_list|(
