@@ -108,7 +108,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_int
-name|exp
+name|expect
 parameter_list|,
 name|u_int
 name|src
@@ -126,7 +126,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_long
-name|exp
+name|expect
 parameter_list|,
 name|u_long
 name|src
@@ -254,7 +254,7 @@ value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_
 end_define
 
 begin_comment
-comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == exp) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
+comment|/*  * Atomic compare and set, used by the mutex functions  *  * if (*dst == expect) *dst = src (all 32 bit words)  *  * Returns 0 on failure, non-zero on success  */
 end_comment
 
 begin_function
@@ -269,7 +269,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_int
-name|exp
+name|expect
 parameter_list|,
 name|u_int
 name|src
@@ -308,7 +308,7 @@ operator|,
 comment|/* 2 */
 literal|"a"
 operator|(
-name|exp
+name|expect
 operator|)
 operator|,
 comment|/* 3 */
@@ -344,7 +344,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|u_long
-name|exp
+name|expect
 parameter_list|,
 name|u_long
 name|src
@@ -383,7 +383,7 @@ operator|,
 comment|/* 2 */
 literal|"a"
 operator|(
-name|exp
+name|expect
 operator|)
 operator|,
 comment|/* 3 */
