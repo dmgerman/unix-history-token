@@ -322,6 +322,14 @@ literal|0
 operator|)
 return|;
 break|break;
+case|case
+name|ACL_BRAND_UNKNOWN
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 return|return
 operator|(
