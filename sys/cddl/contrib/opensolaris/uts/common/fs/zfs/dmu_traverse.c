@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -1143,7 +1143,6 @@ name|buf
 operator|->
 name|b_data
 expr_stmt|;
-comment|/* 		 * traverse_zil is just here for zdb's leak checking. 		 * For other consumers, there will be no ZIL blocks. 		 */
 name|traverse_zil
 argument_list|(
 name|td

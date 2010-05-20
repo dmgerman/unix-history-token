@@ -10517,9 +10517,6 @@ name|tx
 operator|->
 name|tx_txg
 decl_stmt|;
-name|int
-name|blksz
-decl_stmt|;
 name|ASSERT
 argument_list|(
 name|dmu_tx_is_syncing
@@ -11094,14 +11091,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|blksz
-operator|=
-name|arc_buf_size
-argument_list|(
-operator|*
-name|datap
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dn
@@ -11109,11 +11098,7 @@ operator|->
 name|dn_object
 operator|!=
 name|DMU_META_DNODE_OBJECT
-condition|)
-block|{
-comment|/* 		 * If this buffer is currently "in use" (i.e., there are 		 * active holds and db_data still references it), then make 		 * a copy before we start the write so that any modifications 		 * from the open txg will not leak into this write. 		 * 		 * NOTE: this copy does not need to be made for objects only 		 * modified in the syncing context (e.g. DNONE_DNODE blocks). 		 */
-if|if
-condition|(
+operator|&&
 name|refcount_count
 argument_list|(
 operator|&
@@ -11132,6 +11117,16 @@ operator|->
 name|db_buf
 condition|)
 block|{
+comment|/* 		 * If this buffer is currently "in use" (i.e., there 		 * are active holds and db_data still references it), 		 * then make a copy before we start the write so that 		 * any modifications from the open txg will not leak 		 * into this write. 		 * 		 * NOTE: this copy does not need to be made for 		 * objects only modified in the syncing context (e.g. 		 * DNONE_DNODE blocks). 		 */
+name|int
+name|blksz
+init|=
+name|arc_buf_size
+argument_list|(
+operator|*
+name|datap
+argument_list|)
+decl_stmt|;
 name|arc_buf_contents_t
 name|type
 init|=
@@ -11174,7 +11169,6 @@ argument_list|,
 name|blksz
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|ASSERT
 argument_list|(
