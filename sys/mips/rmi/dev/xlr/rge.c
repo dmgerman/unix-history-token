@@ -487,7 +487,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {\             if (mac_debug) {\                 printf("[%s@%d|%s]: cpu_%d: " fmt, \                 __FILE__, __LINE__, __FUNCTION__,  PCPU_GET(cpuid), ##args);\             }\         } while(0);
+value|do {\             if (mac_debug) {\                 printf("[%s@%d|%s]: cpu_%d: " fmt, \                 __FILE__, __LINE__, __FUNCTION__,  xlr_cpu_id(), ##args);\             }\         } while(0);
 end_define
 
 begin_define
@@ -2232,15 +2232,7 @@ name|cpu
 decl_stmt|;
 name|cpumask
 operator|=
-name|PCPU_GET
-argument_list|(
-name|cpumask
-argument_list|)
-operator||
-name|PCPU_GET
-argument_list|(
-name|other_cpus
-argument_list|)
+name|xlr_hw_thread_mask
 expr_stmt|;
 for|for
 control|(
@@ -5027,10 +5019,7 @@ name|cpumask
 decl_stmt|;
 name|cpumask
 operator|=
-name|PCPU_GET
-argument_list|(
-name|cpumask
-argument_list|)
+literal|0x1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5041,11 +5030,8 @@ condition|(
 name|smp_started
 condition|)
 name|cpumask
-operator||=
-name|PCPU_GET
-argument_list|(
-name|other_cpus
-argument_list|)
+operator|=
+name|xlr_hw_thread_mask
 expr_stmt|;
 endif|#
 directive|endif
@@ -7752,10 +7738,8 @@ decl_stmt|;
 name|int
 name|vcpu
 init|=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|xlr_cpu_id
+argument_list|()
 decl_stmt|;
 name|int
 name|rv

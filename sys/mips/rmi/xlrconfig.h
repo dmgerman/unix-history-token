@@ -459,6 +459,33 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* for cpuid to hardware thread id mapping */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|xlr_hw_thread_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xlr_cpuid_to_hwtid
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xlr_hwtid_to_cpuid
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
