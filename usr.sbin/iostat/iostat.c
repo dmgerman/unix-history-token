@@ -507,6 +507,9 @@ decl_stmt|;
 name|devstat_select_mode
 name|select_mode
 decl_stmt|;
+name|float
+name|f
+decl_stmt|;
 name|int
 name|havelast
 init|=
@@ -704,12 +707,18 @@ case|:
 name|wflag
 operator|++
 expr_stmt|;
-name|waittime
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|waittime
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 if|if
 condition|(
@@ -721,7 +730,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"wait time is< 1"
+literal|"wait time is< 1ms"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1305,13 +1314,19 @@ operator|*
 name|argv
 condition|)
 block|{
-name|waittime
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|waittime
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 comment|/* Let the user know he goofed, but keep going anyway */
 if|if
@@ -1323,9 +1338,11 @@ condition|)
 name|warnx
 argument_list|(
 literal|"discarding previous wait interval, using"
-literal|" %d instead"
+literal|" %g instead"
 argument_list|,
 name|waittime
+operator|/
+literal|1000.0
 argument_list|)
 expr_stmt|;
 name|wflag
@@ -1389,6 +1406,8 @@ condition|)
 name|waittime
 operator|=
 literal|1
+operator|*
+literal|1000
 expr_stmt|;
 comment|/* 	 * If the user specified a wait time, but not a count, we want to 	 * go on ad infinitum.  This can be redundant if the user uses the 	 * traditional method of specifying the wait, since in that case we 	 * already set count = -1 above.  Oh well. 	 */
 if|if
@@ -2148,9 +2167,11 @@ operator|<=
 literal|0
 condition|)
 break|break;
-name|sleep
+name|usleep
 argument_list|(
 name|waittime
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 name|havelast

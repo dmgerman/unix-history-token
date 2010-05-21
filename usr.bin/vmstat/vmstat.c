@@ -139,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vmmeter.h>
 end_include
 
@@ -884,6 +890,9 @@ name|unsigned
 name|int
 name|interval
 decl_stmt|;
+name|float
+name|f
+decl_stmt|;
 name|int
 name|reps
 decl_stmt|;
@@ -1121,12 +1130,19 @@ break|break;
 case|case
 literal|'w'
 case|:
-name|interval
+comment|/* Convert to milliseconds. */
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+name|interval
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 break|break;
 case|case
@@ -1378,13 +1394,19 @@ operator|*
 name|argv
 condition|)
 block|{
-name|interval
+name|f
 operator|=
-name|atoi
+name|atof
 argument_list|(
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|interval
+operator|=
+name|f
+operator|*
+literal|1000
 expr_stmt|;
 if|if
 condition|(
@@ -1427,6 +1449,8 @@ condition|)
 name|interval
 operator|=
 literal|1
+operator|*
+literal|1000
 expr_stmt|;
 if|if
 condition|(
@@ -3314,6 +3338,9 @@ decl_stmt|;
 name|u_long
 name|cpumask
 decl_stmt|;
+name|int
+name|rate_adj
+decl_stmt|;
 name|uptime
 operator|=
 name|getuptime
@@ -3324,6 +3351,10 @@ operator|=
 name|uptime
 operator|/
 literal|2
+expr_stmt|;
+name|rate_adj
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 	 * If the user stops the program (control-Z) and then resumes it, 	 * print out the header again. 	 */
 operator|(
@@ -3881,7 +3912,7 @@ name|rate
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) + halfuptime) / uptime)
+value|(((x) * rate_adj + halfuptime) / uptime)
 comment|/* round */
 if|if
 condition|(
@@ -4230,7 +4261,11 @@ name|uptime
 operator|=
 name|interval
 expr_stmt|;
-comment|/* 		 * We round upward to avoid losing low-frequency events 		 * (i.e.,>= 1 per interval but< 1 per second). 		 */
+name|rate_adj
+operator|=
+literal|1000
+expr_stmt|;
+comment|/* 		 * We round upward to avoid losing low-frequency events 		 * (i.e.,>= 1 per interval but< 1 per millisecond). 		 */
 if|if
 condition|(
 name|interval
@@ -4255,9 +4290,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sleep
+name|usleep
 argument_list|(
 name|interval
+operator|*
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
