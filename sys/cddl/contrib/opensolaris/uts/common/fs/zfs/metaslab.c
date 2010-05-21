@@ -3497,7 +3497,7 @@ comment|/* 		 * Don't allocate from faulted devices. 		 */
 if|if
 condition|(
 operator|!
-name|vdev_writeable
+name|vdev_allocatable
 argument_list|(
 name|vd
 argument_list|)
