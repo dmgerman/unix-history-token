@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -157,11 +157,31 @@ directive|define
 name|ARC_L2CACHE
 value|(1<< 5)
 comment|/* cache in L2ARC */
+comment|/*  * The following breakdows of arc_size exist for kstat only.  */
+typedef|typedef
+enum|enum
+name|arc_space_type
+block|{
+name|ARC_SPACE_DATA
+block|,
+name|ARC_SPACE_HDRS
+block|,
+name|ARC_SPACE_L2HDRS
+block|,
+name|ARC_SPACE_OTHER
+block|,
+name|ARC_SPACE_NUMTYPES
+block|}
+name|arc_space_type_t
+typedef|;
 name|void
 name|arc_space_consume
 parameter_list|(
 name|uint64_t
 name|space
+parameter_list|,
+name|arc_space_type_t
+name|type
 parameter_list|)
 function_decl|;
 name|void
@@ -169,6 +189,9 @@ name|arc_space_return
 parameter_list|(
 name|uint64_t
 name|space
+parameter_list|,
+name|arc_space_type_t
+name|type
 parameter_list|)
 function_decl|;
 name|void

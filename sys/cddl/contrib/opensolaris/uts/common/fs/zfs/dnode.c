@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -1720,6 +1720,8 @@ sizeof|sizeof
 argument_list|(
 name|dnode_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 return|return
@@ -1932,6 +1934,8 @@ sizeof|sizeof
 argument_list|(
 name|dnode_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
