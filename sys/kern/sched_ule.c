@@ -10203,6 +10203,17 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_bind: can only bind curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|td
@@ -10282,6 +10293,17 @@ argument_list|(
 name|td
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_unbind: can only bind curthread"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ts
