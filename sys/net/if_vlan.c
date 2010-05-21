@@ -893,7 +893,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|vlan_unconfig
 parameter_list|(
 name|struct
@@ -906,7 +906,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|vlan_unconfig_locked
 parameter_list|(
 name|struct
@@ -4815,7 +4815,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vlan_unconfig
 parameter_list|(
 name|struct
@@ -4824,14 +4824,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|VLAN_LOCK
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
 name|vlan_unconfig_locked
 argument_list|(
 name|ifp
@@ -4840,17 +4835,12 @@ expr_stmt|;
 name|VLAN_UNLOCK
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vlan_unconfig_locked
 parameter_list|(
 name|struct
@@ -4878,9 +4868,6 @@ name|struct
 name|ifnet
 modifier|*
 name|parent
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|VLAN_LOCK_ASSERT
 argument_list|()
@@ -5011,8 +4998,10 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+comment|/* 			 * This may fail if the parent interface is 			 * being detached.  Regardless, we should do a 			 * best effort to free this interface as much 			 * as possible as all callers expect vlan 			 * destruction to succeed. 			 */
+operator|(
+name|void
+operator|)
 name|if_delmulti
 argument_list|(
 name|parent
@@ -5026,15 +5015,6 @@ operator|&
 name|sdl
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -5187,11 +5167,6 @@ operator|->
 name|ifv_tag
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
