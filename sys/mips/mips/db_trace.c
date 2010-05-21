@@ -1983,7 +1983,7 @@ begin_block
 block|{
 name|db_printf
 argument_list|(
-literal|"ipis	    = 0x%x\n"
+literal|"ipis         = 0x%x\n"
 argument_list|,
 name|pc
 operator|->
@@ -2001,7 +2001,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"GENID	    = %d\n"
+literal|"GENID        = %d\n"
 argument_list|,
 name|pc
 operator|->
