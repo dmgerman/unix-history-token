@@ -4853,8 +4853,6 @@ name|POLLERR
 block|,
 name|POLLRDBAND
 operator||
-name|POLLHUP
-operator||
 name|POLLERR
 block|}
 decl_stmt|;
