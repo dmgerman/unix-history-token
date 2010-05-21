@@ -544,6 +544,9 @@ modifier|*
 name|zb
 parameter_list|)
 block|{
+name|zbookmark_t
+name|czb
+decl_stmt|;
 name|int
 name|err
 init|=
@@ -848,9 +851,6 @@ name|cbp
 operator|++
 control|)
 block|{
-name|zbookmark_t
-name|czb
-decl_stmt|;
 name|SET_BOOKMARK
 argument_list|(
 operator|&
@@ -1015,9 +1015,6 @@ name|j
 operator|++
 control|)
 block|{
-name|zbookmark_t
-name|czb
-decl_stmt|;
 name|SET_BOOKMARK
 argument_list|(
 operator|&
@@ -1171,9 +1168,6 @@ name|j
 operator|++
 control|)
 block|{
-name|zbookmark_t
-name|czb
-decl_stmt|;
 name|SET_BOOKMARK
 argument_list|(
 operator|&
