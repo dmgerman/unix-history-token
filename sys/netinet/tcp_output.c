@@ -4137,7 +4137,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_flags
-operator|=
+operator||=
 name|CSUM_TSO
 expr_stmt|;
 name|m
