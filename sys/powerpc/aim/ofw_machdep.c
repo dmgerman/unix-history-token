@@ -183,14 +183,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ofw_mutex
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|mem_region64
@@ -1194,18 +1186,6 @@ name|status
 init|=
 name|FALSE
 decl_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|ofw_mutex
-argument_list|,
-literal|"open firmware"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ofwcall
@@ -1428,7 +1408,6 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-comment|/* 	 * NOTE: This MUST be called with the OF mutex held. Because the CPU 	 * holding the lock is not necessarily the CPU running this function, 	 * we can't put an assert here. 	 */
 asm|__asm __volatile(	"\t"
 literal|"sync\n\t"
 literal|"mfmsr  %0\n\t"
@@ -1767,12 +1746,6 @@ operator|)
 name|args
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ofw_mutex
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -1817,12 +1790,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ofw_mutex
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|result
