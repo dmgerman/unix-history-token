@@ -2013,6 +2013,11 @@ operator|*
 name|p
 operator|==
 literal|'['
+operator|&&
+operator|*
+name|p
+operator|!=
+name|c
 condition|)
 block|{
 if|if
