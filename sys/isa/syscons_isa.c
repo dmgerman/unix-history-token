@@ -465,9 +465,7 @@ name|sc
 operator|->
 name|switch_in_progress
 condition|)
-block|{
 break|break;
-block|}
 name|pause
 argument_list|(
 literal|"scsuspend"
@@ -857,9 +855,9 @@ modifier|*
 name|at
 decl_stmt|;
 name|int
-name|u
-decl_stmt|,
 name|f
+decl_stmt|,
+name|u
 decl_stmt|;
 ifdef|#
 directive|ifdef
