@@ -5502,6 +5502,12 @@ condition|(
 name|args
 operator|.
 name|fhsize
+operator|<
+literal|0
+operator|||
+name|args
+operator|.
+name|fhsize
 operator|>
 name|NFSX_FHMAX
 condition|)
