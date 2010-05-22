@@ -294,6 +294,8 @@ name|int
 name|outform
 decl_stmt|,
 name|outlen
+init|=
+literal|0
 decl_stmt|;
 name|ASN1_STRING
 modifier|*

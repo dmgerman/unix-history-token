@@ -89,6 +89,14 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|int
+name|fips_check_rsa
+parameter_list|(
+name|RSA
+modifier|*
+name|rsa
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|FIPS_MAX_CIPHER_TEST_SIZE

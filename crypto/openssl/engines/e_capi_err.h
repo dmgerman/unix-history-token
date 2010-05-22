@@ -417,6 +417,13 @@ name|CAPI_R_UNSUPPORTED_PUBLIC_KEY_ALGORITHM
 value|121
 end_define
 
+begin_define
+define|#
+directive|define
+name|CAPI_R_WIN32_ERROR
+value|127
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

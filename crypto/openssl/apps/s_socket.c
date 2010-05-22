@@ -37,6 +37,34 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLAT_INC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"e_os2.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"../e_os2.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* With IPv6, it looks like Digital has mixed up the proper order of    recursive header file inclusion, resulting in the compiler complaining    that u_int isn't defined, but only if _POSIX_C_SOURCE is defined, which    is needed to have fileno() declared correctly...  So let's define u_int */
 end_comment

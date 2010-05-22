@@ -1781,6 +1781,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|X509_NAME_ENTRY_free
+argument_list|(
+name|ne
+argument_list|)
+expr_stmt|;
 name|i
 operator|--
 expr_stmt|;
@@ -2823,6 +2828,13 @@ operator|.
 name|dirn
 operator|=
 name|nm
+expr_stmt|;
+name|X509V3_section_free
+argument_list|(
+name|ctx
+argument_list|,
+name|sk
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

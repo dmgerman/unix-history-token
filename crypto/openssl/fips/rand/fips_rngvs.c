@@ -111,6 +111,7 @@ file|"fips_utl.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|vst
 parameter_list|()
@@ -477,6 +478,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mct
 parameter_list|()

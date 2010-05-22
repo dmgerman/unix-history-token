@@ -137,6 +137,7 @@ value|0
 end_define
 
 begin_function
+specifier|static
 name|int
 name|DESTest
 parameter_list|(
@@ -275,12 +276,6 @@ operator|=
 name|EVP_des_ede3_ofb
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-if|else if(!strcasecmp(amode,"CFB1")) 	{ 	ctx->cbits = 1; 	ctx->cmode = EVP_CIPH_CFB_MODE; 	}
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
@@ -295,6 +290,22 @@ condition|)
 name|cipher
 operator|=
 name|EVP_des_ede3_cfb8
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|amode
+argument_list|,
+literal|"CFB1"
+argument_list|)
+condition|)
+name|cipher
+operator|=
+name|EVP_des_ede3_cfb1
 argument_list|()
 expr_stmt|;
 else|else
@@ -334,6 +345,23 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|amode
+argument_list|,
+literal|"CFB1"
+argument_list|)
+condition|)
+name|M_EVP_CIPHER_CTX_set_flags
+argument_list|(
+name|ctx
+argument_list|,
+name|EVP_CIPH_FLAG_LENGTH_BITS
+argument_list|)
+expr_stmt|;
 name|EVP_Cipher
 argument_list|(
 name|ctx
@@ -351,58 +379,20 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|DebugValue
-parameter_list|(
-name|char
-modifier|*
-name|tag
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-name|val
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-name|char
-name|obuf
-index|[
-literal|2048
-index|]
-decl_stmt|;
-name|int
-name|olen
-decl_stmt|;
-name|olen
-operator|=
-name|bin2hex
-argument_list|(
-name|val
-argument_list|,
-name|len
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s = %.*s\n"
-argument_list|,
-name|tag
-argument_list|,
-name|olen
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void DebugValue(char *tag, unsigned char *val, int len)     {     char obuf[2048];     int olen;     olen = bin2hex(val, len, obuf);     printf("%s = %.*s\n", tag, olen, obuf);     }
+endif|#
+directive|endif
+end_endif
 
 begin_function
+specifier|static
 name|void
 name|shiftin
 parameter_list|(
@@ -614,6 +604,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|do_mct
 parameter_list|(
@@ -876,20 +867,13 @@ operator|==
 name|CFB1
 argument_list|)
 expr_stmt|;
-comment|/* compensate for endianness */
-if|if
-condition|(
-name|imode
-operator|==
-name|CFB1
-condition|)
-name|text
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|<<=
-literal|7
-expr_stmt|;
+comment|/* compensate for endianness */
+block|if(imode == CFB1) 	    text[0]<<=7;
+endif|#
+directive|endif
 name|memcpy
 argument_list|(
 name|text0
@@ -1322,6 +1306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|proc_file
 parameter_list|(
@@ -2692,6 +2677,9 @@ if|if
 condition|(
 name|len
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|plaintext

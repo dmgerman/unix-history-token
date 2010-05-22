@@ -1060,7 +1060,7 @@ end_if
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|read_till_nl
 parameter_list|(
 name|FILE
@@ -1565,7 +1565,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|read_till_nl
 parameter_list|(
 name|FILE
@@ -1587,6 +1587,9 @@ index|]
 decl_stmt|;
 do|do
 block|{
+if|if
+condition|(
+operator|!
 name|fgets
 argument_list|(
 name|buf
@@ -1595,7 +1598,10 @@ name|SIZE
 argument_list|,
 name|in
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 block|}
 do|while
 condition|(
@@ -1609,6 +1615,9 @@ operator|==
 name|NULL
 condition|)
 do|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1835,12 +1844,18 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
 name|read_till_nl
 argument_list|(
 name|tty_in
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|error
+goto|;
 if|if
 condition|(
 name|UI_set_result

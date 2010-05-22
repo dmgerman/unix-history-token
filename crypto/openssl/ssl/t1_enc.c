@@ -4107,6 +4107,13 @@ name|ssl
 operator|->
 name|version
 operator|==
+name|DTLS1_BAD_VER
+operator|||
+operator|(
+name|ssl
+operator|->
+name|version
+operator|==
 name|DTLS1_VERSION
 operator|&&
 name|ssl
@@ -4114,6 +4121,7 @@ operator|->
 name|client_version
 operator|!=
 name|DTLS1_BAD_VER
+operator|)
 condition|)
 block|{
 name|unsigned
@@ -4392,6 +4400,13 @@ name|ssl
 argument_list|)
 operator|!=
 name|DTLS1_VERSION
+operator|&&
+name|SSL_version
+argument_list|(
+name|ssl
+argument_list|)
+operator|!=
+name|DTLS1_BAD_VER
 condition|)
 block|{
 for|for

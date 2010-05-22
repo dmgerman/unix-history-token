@@ -141,17 +141,6 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|OPENSSL_NO_MD2
-name|EVP_add_digest
-argument_list|(
-name|EVP_md2
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
 name|OPENSSL_NO_MD5
 name|EVP_add_digest
 argument_list|(
