@@ -11083,6 +11083,9 @@ decl_stmt|;
 name|uint64_t
 name|state
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|nvlist_lookup_string
@@ -11139,9 +11142,8 @@ name|spa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pass off the heavy lifting to spa_load(). 	 * Pass TRUE for mosconfig because the user-supplied config 	 * is actually the one to trust when doing an import. 	 */
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|spa_load
 argument_list|(
 name|spa
@@ -11226,6 +11228,15 @@ expr_stmt|;
 comment|/* 		 * If the bootfs property exists on this pool then we 		 * copy it out so that external consumers can tell which 		 * pools are bootable. 		 */
 if|if
 condition|(
+operator|(
+operator|!
+name|error
+operator|||
+name|error
+operator|==
+name|EEXIST
+operator|)
+operator|&&
 name|spa
 operator|->
 name|spa_bootfs
