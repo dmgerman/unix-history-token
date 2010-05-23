@@ -368,14 +368,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|zio_use_uma
-condition|)
-goto|goto
-name|end
-goto|;
 comment|/* 	 * For small buffers, we want a cache for each multiple of 	 * SPA_MINBLOCKSIZE.  For medium-size buffers, we want a cache 	 * for each quarter-power of 2.  For large buffers, we want 	 * a cache for each multiple of PAGESIZE. 	 */
 for|for
 control|(
@@ -656,8 +648,6 @@ name|c
 index|]
 expr_stmt|;
 block|}
-name|end
-label|:
 name|zio_inject_init
 argument_list|()
 expr_stmt|;
