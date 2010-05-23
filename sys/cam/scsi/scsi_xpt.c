@@ -107,27 +107,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_machdep.h>
-end_include
-
-begin_comment
-comment|/* geometry translation */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
