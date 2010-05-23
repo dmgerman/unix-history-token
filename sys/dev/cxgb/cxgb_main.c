@@ -9968,11 +9968,6 @@ name|sge_qset
 modifier|*
 name|q
 decl_stmt|;
-name|PORT_LOCK_ASSERT_OWNED
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
