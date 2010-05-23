@@ -9364,12 +9364,6 @@ argument_list|,
 name|LOG_CMD_POOL_CREATE
 argument_list|)
 expr_stmt|;
-name|mutex_exit
-argument_list|(
-operator|&
-name|spa_namespace_lock
-argument_list|)
-expr_stmt|;
 name|spa
 operator|->
 name|spa_minref
@@ -9380,6 +9374,12 @@ operator|&
 name|spa
 operator|->
 name|spa_refcount
+argument_list|)
+expr_stmt|;
+name|mutex_exit
+argument_list|(
+operator|&
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return
