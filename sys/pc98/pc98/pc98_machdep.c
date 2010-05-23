@@ -749,7 +749,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pc98_ad_geom_adjust_idebios
+name|pc98_ata_disk_geom_adjust_idebios
 parameter_list|(
 name|struct
 name|disk
@@ -883,7 +883,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pc98_ad_geom_adjust_scsibios
+name|pc98_ata_disk_geom_adjust_scsibios
 parameter_list|(
 name|struct
 name|disk
@@ -1009,7 +1009,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pc98_ad_geom_adjust_cyl16bit
+name|pc98_ata_disk_geom_adjust_cyl16bit
 parameter_list|(
 name|struct
 name|disk
@@ -1041,7 +1041,7 @@ name|disk
 operator|->
 name|d_fwheads
 decl_stmt|;
-comment|/* 	 * It is impossible to have more than 65535 cylendars, so if 	 * we have more then try to adjust.  This is lame, but it is 	 * only POC. 	 */
+comment|/* 	 * It is impossible to have more than 65535 cylinders, so if 	 * we have more then try to adjust.  This is lame, but it is 	 * only POC. 	 */
 if|if
 condition|(
 name|cyl
@@ -1144,11 +1144,8 @@ end_function
 
 begin_function
 name|void
-name|pc98_ad_firmware_geom_adjust
+name|pc98_ata_disk_firmware_geom_adjust
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|struct
 name|disk
 modifier|*
@@ -1180,7 +1177,7 @@ block|{
 case|case
 name|AD_GEOM_ADJUST_COMPATIDE
 case|:
-name|pc98_ad_geom_adjust_idebios
+name|pc98_ata_disk_geom_adjust_idebios
 argument_list|(
 name|disk
 argument_list|)
@@ -1189,7 +1186,7 @@ break|break;
 case|case
 name|AD_GEOM_ADJUST_COMPATSCSI
 case|:
-name|pc98_ad_geom_adjust_scsibios
+name|pc98_ata_disk_geom_adjust_scsibios
 argument_list|(
 name|disk
 argument_list|)
@@ -1198,7 +1195,7 @@ break|break;
 case|case
 name|AD_GEOM_ADJUST_COMPATCYL16
 case|:
-name|pc98_ad_geom_adjust_cyl16bit
+name|pc98_ata_disk_geom_adjust_cyl16bit
 argument_list|(
 name|disk
 argument_list|)
@@ -1226,11 +1223,17 @@ operator|->
 name|d_fwheads
 operator|)
 condition|)
-name|device_printf
+name|printf
 argument_list|(
-name|dev
+literal|"%s%d: geometry adjusted from [%dH/%dS] to [%dH/%dS]\n"
 argument_list|,
-literal|"geometry adjusted from [%dH/%dS] to [%dH/%dS]\n"
+name|disk
+operator|->
+name|d_name
+argument_list|,
+name|disk
+operator|->
+name|d_unit
 argument_list|,
 name|oldheads
 argument_list|,
@@ -1243,6 +1246,28 @@ argument_list|,
 name|disk
 operator|->
 name|d_fwsectors
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pc98_ad_firmware_geom_adjust
+parameter_list|(
+name|device_t
+name|dev
+name|__unused
+parameter_list|,
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|)
+block|{
+name|pc98_ata_disk_firmware_geom_adjust
+argument_list|(
+name|disk
 argument_list|)
 expr_stmt|;
 block|}
