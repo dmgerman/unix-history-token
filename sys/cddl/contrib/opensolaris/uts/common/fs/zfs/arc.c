@@ -781,9 +781,6 @@ name|kstat_named_t
 name|arcstat_l2_write_pios
 decl_stmt|;
 name|kstat_named_t
-name|arcstat_l2_write_bytes_written
-decl_stmt|;
-name|kstat_named_t
 name|arcstat_l2_write_buffer_bytes_scanned
 decl_stmt|;
 name|kstat_named_t
@@ -1183,12 +1180,6 @@ block|}
 block|,
 block|{
 literal|"l2_write_pios"
-block|,
-name|KSTAT_DATA_UINT64
-block|}
-block|,
-block|{
-literal|"l2_write_bytes_written"
 block|,
 name|KSTAT_DATA_UINT64
 block|}
@@ -20720,15 +20711,6 @@ name|arcstat_l2_write_pios
 argument_list|)
 expr_stmt|;
 block|}
-name|ARCSTAT_INCR
-argument_list|(
-name|arcstat_l2_write_bytes_written
-argument_list|,
-name|ab
-operator|->
-name|b_size
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Create and add a new L2ARC header. 			 */
 name|hdrl2
 operator|=
