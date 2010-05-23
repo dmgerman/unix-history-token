@@ -395,7 +395,7 @@ operator|)
 name|context
 decl_stmt|;
 name|uint32_t
-name|adr
+name|uid
 init|=
 literal|0
 decl_stmt|;
@@ -446,14 +446,14 @@ name|acpi_GetInteger
 argument_list|(
 name|handle
 argument_list|,
-literal|"_ADR"
+literal|"_UID"
 argument_list|,
 operator|&
-name|adr
+name|uid
 argument_list|)
 argument_list|)
 condition|)
-name|adr
+name|uid
 operator|=
 literal|0
 expr_stmt|;
@@ -461,7 +461,7 @@ if|if
 condition|(
 name|id
 operator|==
-name|adr
+name|uid
 condition|)
 operator|*
 operator|(
