@@ -3673,6 +3673,22 @@ operator|==
 literal|0
 condition|)
 block|{
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_dbgflags
+operator||=
+name|TDB_EXEC
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Stop the process here if its stop event mask has 		 * the S_EXEC bit set. 		 */
 name|STOPEVENT
 argument_list|(

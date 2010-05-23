@@ -7794,7 +7794,13 @@ operator||=
 name|TDP_OLDMASK
 expr_stmt|;
 comment|/* 	 * Process signals now. Otherwise, we can get spurious wakeup 	 * due to signal entered process queue, but delivered to other 	 * thread. But sigsuspend should return only on signal 	 * delivery. 	 */
-name|cpu_set_syscall_retval
+call|(
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_set_syscall_retval
+call|)
 argument_list|(
 name|td
 argument_list|,

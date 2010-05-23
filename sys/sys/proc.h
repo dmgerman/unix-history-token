@@ -1392,6 +1392,39 @@ begin_comment
 comment|/* Debugger modified memory or registers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_SCE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Thread performs syscall enter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_SCX
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Thread performs syscall exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_EXEC
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* TDB_SCX from exec(2) family */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -4580,6 +4613,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|syscallenter
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syscallret
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|cpu_exit
@@ -4604,6 +4675,29 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|cpu_fetch_syscall_args
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

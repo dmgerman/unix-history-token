@@ -270,16 +270,6 @@ directive|include
 file|<kern/systrace_args.c>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|syscallnames
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
