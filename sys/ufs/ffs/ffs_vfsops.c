@@ -565,6 +565,8 @@ literal|"from"
 block|,
 literal|"multilabel"
 block|,
+literal|"nfsv4acls"
+block|,
 literal|"snapshot"
 block|,
 literal|"nosuid"
@@ -576,8 +578,6 @@ block|,
 literal|"sync"
 block|,
 literal|"union"
-block|,
-literal|"nfsv4acls"
 block|,
 name|NULL
 block|}
