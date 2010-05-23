@@ -393,6 +393,10 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|props
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|newprops
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7166,6 +7170,8 @@ operator|->
 name|zc_name
 argument_list|,
 name|origprops
+argument_list|,
+name|nvl
 argument_list|)
 expr_stmt|;
 name|nvlist_free
@@ -10406,6 +10412,10 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|props
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|newprops
 parameter_list|)
 block|{
 name|zfs_cmd_t
@@ -10470,6 +10480,23 @@ name|prop
 argument_list|)
 control|)
 block|{
+if|if
+condition|(
+name|newprops
+operator|!=
+name|NULL
+operator|&&
+name|nvlist_exists
+argument_list|(
+name|newprops
+argument_list|,
+name|nvpair_name
+argument_list|(
+name|prop
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -10940,6 +10967,8 @@ argument_list|(
 name|tofs
 argument_list|,
 name|origprops
+argument_list|,
+name|props
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX - Note, this is all-or-nothing; should be best-effort. 		 */
@@ -11122,6 +11151,8 @@ argument_list|(
 name|tofs
 argument_list|,
 name|props
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
