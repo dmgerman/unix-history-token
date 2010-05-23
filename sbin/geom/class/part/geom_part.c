@@ -3452,7 +3452,7 @@ argument_list|)
 expr_stmt|;
 name|bootsize
 operator|=
-literal|64
+literal|800
 operator|*
 literal|1024
 expr_stmt|;
