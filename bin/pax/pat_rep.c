@@ -331,6 +331,9 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3139,6 +3142,8 @@ operator|)
 argument_list|,
 name|pm
 argument_list|,
+name|inpt
+argument_list|,
 name|pt
 operator|->
 name|nstr
@@ -3681,6 +3686,10 @@ name|pm
 parameter_list|,
 name|char
 modifier|*
+name|orig
+parameter_list|,
+name|char
+modifier|*
 name|src
 parameter_list|,
 name|char
@@ -3913,7 +3922,7 @@ name|l_strncpy
 argument_list|(
 name|dpt
 argument_list|,
-name|src
+name|orig
 operator|+
 name|pmpt
 operator|->
