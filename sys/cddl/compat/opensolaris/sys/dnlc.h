@@ -79,7 +79,7 @@ name|dnlc_reduce_cache
 parameter_list|(
 name|percent
 parameter_list|)
-value|EVENTHANDLER_INVOKE(vfs_lowvnodes, (int)(intptr_t)(percent))
+value|do { } while (0)
 end_define
 
 begin_endif
