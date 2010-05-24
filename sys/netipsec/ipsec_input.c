@@ -2357,6 +2357,8 @@ operator|(
 name|uintptr_t
 operator|)
 name|sav
+operator|->
+name|spi
 argument_list|,
 name|m
 argument_list|)
