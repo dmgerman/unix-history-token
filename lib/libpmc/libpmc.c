@@ -3941,10 +3941,6 @@ case|case
 name|PMC_EV_IAP_EVENT_42H
 case|:
 comment|/* Core, Core2, Atom */
-case|case
-name|PMC_EV_IAP_EVENT_77H
-case|:
-comment|/* Core */
 if|if
 condition|(
 name|cachestate
@@ -3959,6 +3955,33 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+break|break;
+case|case
+name|PMC_EV_IAP_EVENT_77H
+case|:
+comment|/* Atom */
+comment|/* IAP_EVENT_77H only accepts a cachestate qualifier on the 		 * Atom processor 		 */
+if|if
+condition|(
+name|cpu_info
+operator|.
+name|pm_cputype
+operator|==
+name|PMC_CPU_INTEL_ATOM
+operator|&&
+name|cachestate
+operator|==
+literal|0
+condition|)
+name|cachestate
+operator|=
+operator|(
+literal|0xF
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
