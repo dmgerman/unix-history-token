@@ -135,6 +135,8 @@ value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	st
 comment|/* ACPI CPU id */
 value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
 comment|/* Flag indicating private tss*/
+value|\ 	u_int	pc_cmci_mask;
+comment|/* MCx banks for CMCI */
 value|\         u_int     pc_cr3;
 comment|/* track cr3 for R1/R3*/
 value|\         u_int     pc_pdir;                                              \         u_int     pc_lazypmap;                                          \         u_int     pc_rendezvous;                                        \         u_int     pc_cpuast;						\ 	uint64_t  pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	int	pc_resched_irq;						\ 	int	pc_callfunc_irq;					\         int	pc_virq_to_irq[NR_VIRQS];				\ 	int	pc_ipi_to_irq[NR_IPIS]
@@ -156,17 +158,12 @@ value|\ 	struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
 value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	struct	segment_descriptor *pc_fsgs_gdt;			\ 	int	pc_currentldt;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss
+value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
+comment|/* Flag indicating private tss*/
+value|\ 	u_int	pc_cmci_mask
+comment|/* MCx banks for CMCI */
+value|\  #endif
 end_define
-
-begin_comment
-comment|/* Flag indicating private tss */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
