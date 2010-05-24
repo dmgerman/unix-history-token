@@ -1483,6 +1483,10 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|addr
+parameter_list|,
+name|vm_paddr_t
+modifier|*
+name|locked_pa
 parameter_list|)
 block|{
 name|CTR3
@@ -1507,6 +1511,8 @@ argument_list|,
 name|pmap
 argument_list|,
 name|addr
+argument_list|,
+name|locked_pa
 argument_list|)
 operator|)
 return|;

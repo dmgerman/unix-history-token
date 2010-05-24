@@ -9730,9 +9730,6 @@ decl_stmt|;
 name|vm_offset_t
 name|eoffset
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 		 * test the pages to see if they have been modified directly 		 * by users through the VM system. 		 */
 for|for
 control|(
@@ -9857,9 +9854,6 @@ name|b_offset
 operator|&
 name|PAGE_MASK
 operator|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 comment|/* 		 * Fit it to the buffer. 		 */
 if|if

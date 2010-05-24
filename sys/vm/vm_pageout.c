@@ -1494,9 +1494,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_test_dirty
 argument_list|(
 name|p
@@ -1529,18 +1526,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|ib
 operator|=
 literal|0
 expr_stmt|;
 break|break;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|p
@@ -1637,9 +1628,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_test_dirty
 argument_list|(
 name|p
@@ -1667,9 +1655,6 @@ literal|0
 condition|)
 block|{
 comment|/* may be undergoing I/O */
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|p
@@ -1677,9 +1662,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|p

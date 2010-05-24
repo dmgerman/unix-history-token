@@ -520,7 +520,7 @@ parameter_list|(
 name|pa
 parameter_list|)
 define|\
-value|do {		   			\ 		if (pa) 			\ 			PA_UNLOCK(pa);		\ 	} while (0)
+value|do {		   			\ 		if ((pa) != 0) {		\ 			PA_UNLOCK((pa));	\ 			(pa) = 0;		\ 		}				\ 	} while (0)
 end_define
 
 begin_define
