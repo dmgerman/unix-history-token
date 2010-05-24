@@ -5162,7 +5162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe the APIC enumerators, enumerate CPUs, and initialize the  * local APIC.  */
+comment|/*  * We have to look for CPU's very, very early because certain subsystems  * want to know how many CPU's we have extremely early on in the boot  * process.  */
 end_comment
 
 begin_function
@@ -5369,6 +5369,57 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|apic_init
+argument_list|,
+name|SI_SUB_TUNABLES
+operator|-
+literal|1
+argument_list|,
+name|SI_ORDER_SECOND
+argument_list|,
+name|apic_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Setup the local APIC.  We have to do this prior to starting up the APs  * in the SMP case.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|apic_setup_local
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+if|if
+condition|(
+name|best_enum
+operator|==
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* Third, initialize the local APIC. */
 name|retval
 operator|=
@@ -5397,6 +5448,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|apic_setup_local
+argument_list|,
+name|SI_SUB_CPU
+argument_list|,
+name|SI_ORDER_SECOND
+argument_list|,
+name|apic_setup_local
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -5412,6 +5490,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Setup the I/O APICs.  */
