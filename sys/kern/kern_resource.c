@@ -294,12 +294,12 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ruxagg
+name|ruxagg_locked
 parameter_list|(
 name|struct
-name|proc
+name|rusage_ext
 modifier|*
-name|p
+name|rux
 parameter_list|,
 name|struct
 name|thread
@@ -4612,6 +4612,7 @@ comment|/*  * Aggregate tick counts into the proc's rusage_ext.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ruxagg_locked
 parameter_list|(
@@ -4678,7 +4679,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ruxagg
 parameter_list|(
