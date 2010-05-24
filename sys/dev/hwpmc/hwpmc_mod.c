@@ -10316,8 +10316,7 @@ operator|->
 name|po_sscount
 operator|++
 expr_stmt|;
-block|}
-comment|/* 	 * Log mapping information for all existing processes in the 	 * system.  Subsequent mappings are logged as they happen; 	 * see pmc_process_mmap(). 	 */
+comment|/* 		 * Log mapping information for all existing processes in the 		 * system.  Subsequent mappings are logged as they happen; 		 * see pmc_process_mmap(). 		 */
 if|if
 condition|(
 name|po
@@ -10338,6 +10337,7 @@ name|po_logprocmaps
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Move to the CPU associated with this 	 * PMC, and start the hardware. 	 */
 name|pmc_save_cpu_binding
