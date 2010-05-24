@@ -8391,6 +8391,12 @@ name|m_head
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|m_head
+operator|!=
+name|NULL
+condition|)
 name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
