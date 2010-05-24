@@ -2261,6 +2261,31 @@ block|,
 literal|0
 block|, 	}
 block|,
+comment|/* 	 * Perle boards use Oxford Semiconductor chips, but they store the 	 * Oxford Semiconductor device ID as a subvendor device ID and use 	 * their own device IDs. 	 */
+block|{
+literal|0x155f
+block|,
+literal|0x0331
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Perle Speed4 LE"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
 block|{
 literal|0x14d2
 block|,
