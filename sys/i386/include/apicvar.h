@@ -216,15 +216,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_PROFCLOCK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_PROFCLOCK
+value|IPI_STATCLOCK
 end_define
 
 begin_define
@@ -404,15 +397,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_PROFCLOCK
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_PROFCLOCK
+value|IPI_STATCLOCK
 end_define
 
 begin_define
