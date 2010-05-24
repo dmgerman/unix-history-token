@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -2632,6 +2632,8 @@ expr_stmt|;
 name|arc_space_consume
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 if|if
@@ -3719,6 +3721,8 @@ expr_stmt|;
 name|arc_space_consume
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -7225,6 +7229,8 @@ expr_stmt|;
 name|arc_space_return
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
@@ -7932,6 +7938,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 return|return
@@ -8061,6 +8069,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8409,6 +8419,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
@@ -10708,6 +10720,8 @@ expr_stmt|;
 name|arc_space_return
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
