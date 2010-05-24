@@ -76,7 +76,11 @@ modifier|*
 name|callp
 decl_stmt|;
 name|register_t
+modifier|*
 name|args
+decl_stmt|;
+name|register_t
+name|args32
 index|[
 literal|8
 index|]

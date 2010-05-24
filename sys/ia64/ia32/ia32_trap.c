@@ -549,6 +549,18 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|sa
+operator|->
+name|args
+operator|=
+operator|&
+name|sa
+operator|->
+name|args32
+index|[
+literal|0
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -573,7 +585,7 @@ operator|++
 control|)
 name|sa
 operator|->
-name|args
+name|args32
 index|[
 name|i
 index|]
