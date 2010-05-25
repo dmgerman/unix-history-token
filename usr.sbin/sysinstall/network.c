@@ -447,13 +447,19 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No gateway has been set. You may be unable to access hosts\n"
+literal|"No gateway has been set. You will be unable to access hosts\n"
 literal|"not on your local network"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
+comment|/*  		 * Explicitly flush all routes to get back to a known sane 		 * state. We don't need to check this exit code because if 		 * anything fails it will show up in the route add below. 		 */
+name|system
+argument_list|(
+literal|"route -n flush"
+argument_list|)
+expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"Adding default route to %s.\n"
@@ -461,13 +467,28 @@ argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|vsystem
 argument_list|(
 literal|"route -n add default %s"
 argument_list|,
 name|rp
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Failed to add a default route; please check "
+literal|"your network configuration"
+argument_list|)
 expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 block|}
 block|}
 else|else
