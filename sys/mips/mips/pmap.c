@@ -10759,6 +10759,9 @@ decl_stmt|;
 name|vm_offset_t
 name|pa
 decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
 name|int
 name|val
 decl_stmt|;
