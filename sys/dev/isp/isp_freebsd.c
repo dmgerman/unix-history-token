@@ -15702,7 +15702,6 @@ name|portid
 argument_list|)
 expr_stmt|;
 break|break;
-break|break;
 case|case
 name|PDISC
 case|:
