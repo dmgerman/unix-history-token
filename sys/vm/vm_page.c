@@ -7490,14 +7490,6 @@ decl_stmt|;
 name|int
 name|endoff
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|m

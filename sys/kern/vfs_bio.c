@@ -13695,14 +13695,6 @@ name|soff
 decl_stmt|,
 name|eoff
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundry or cross the end of the buffer.  The end of the 	 * buffer, in this case, is our file EOF, not the allocation size 	 * of the buffer. 	 */
 name|soff
 operator|=
@@ -13913,13 +13905,6 @@ name|bogus
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|clear_modify
-condition|)
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -14040,13 +14025,6 @@ operator|)
 name|PAGE_MASK
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|clear_modify
-condition|)
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|obj
