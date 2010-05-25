@@ -564,25 +564,6 @@ define|\
 value|.ent	_C_LABEL(x),0;	\ 	EXPORT(x);		\  #define	VECTOR_END(x)		\ 	EXPORT(x ## End);	\ 	END(x)
 end_define
 
-begin_define
-define|#
-directive|define
-name|KSEG0TEXT_START
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSEG0TEXT_END
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSEG0TEXT
-value|.text
-end_define
-
 begin_comment
 comment|/*  * Macros to panic and printf from assembly language.  */
 end_comment
