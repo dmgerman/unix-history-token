@@ -1651,6 +1651,13 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|iflladdr_event
+argument_list|,
+name|bifp
+argument_list|)
+expr_stmt|;
 comment|/* Save original input vector */
 name|new
 operator|->
