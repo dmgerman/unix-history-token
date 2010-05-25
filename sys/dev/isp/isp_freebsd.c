@@ -26191,11 +26191,7 @@ name|CAM_REQ_INVALID
 expr_stmt|;
 break|break;
 block|}
-name|xpt_done
-argument_list|(
-name|ccb
-argument_list|)
-expr_stmt|;
+comment|/* 		 * This is not a queued CCB, so the caller expects it to be 		 * complete when control is returned. 		 */
 break|break;
 block|}
 define|#
