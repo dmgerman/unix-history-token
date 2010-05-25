@@ -43,6 +43,13 @@ name|MODINFOMD_BOOTINFO
 value|0x1004
 end_define
 
+begin_define
+define|#
+directive|define
+name|MODINFOMD_DTBP
+value|0x1005
+end_define
+
 begin_endif
 endif|#
 directive|endif
