@@ -83,6 +83,12 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cache.h>
+end_include
+
 begin_comment
 comment|/*  * Implement uiomove(9) from physical memory using a combination  * of the direct mapping and sf_bufs to reduce the creation and  * destruction of ephemeral mappings.    */
 end_comment
@@ -294,6 +300,10 @@ operator|<
 name|MIPS_KSEG0_LARGEST_PHYS
 condition|)
 block|{
+name|sf
+operator|=
+name|NULL
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -304,10 +314,24 @@ name|MIPS_PHYS_TO_KSEG0
 argument_list|(
 name|pa
 argument_list|)
+operator|+
+name|page_offset
 expr_stmt|;
-name|sf
-operator|=
-name|NULL
+comment|/* 			 * flush all mappings to this page, KSEG0 address first 			 * in order to get it overwritten by correct data 			 */
+name|mips_dcache_wbinv_range
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|cp
+argument_list|,
+name|cnt
+argument_list|)
+expr_stmt|;
+name|pmap_flush_pvcache
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -464,6 +488,17 @@ condition|)
 name|sf_buf_free
 argument_list|(
 name|sf
+argument_list|)
+expr_stmt|;
+else|else
+name|mips_dcache_wbinv_range
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|cp
+argument_list|,
+name|cnt
 argument_list|)
 expr_stmt|;
 name|iov
