@@ -817,6 +817,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|syscallname
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|code
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Special purpose system call functions. */
 end_comment

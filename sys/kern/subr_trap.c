@@ -969,27 +969,7 @@ directive|ifdef
 name|HAVE_SYSCALL_ARGS_DEF
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|syscallname
-argument_list|(
-expr|struct
-name|proc
-operator|*
-name|p
-argument_list|,
-name|u_int
-name|code
-argument_list|)
-name|__unused
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*
