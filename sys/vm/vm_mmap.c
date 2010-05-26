@@ -3691,9 +3691,7 @@ name|mincoreinfo
 operator||=
 name|MINCORE_MODIFIED_OTHER
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
+comment|/* 				 * The first test for PG_REFERENCED is an 				 * optimization.  The second test is 				 * required because a concurrent pmap 				 * operation could clear the last reference 				 * and set PG_REFERENCED before the call to 				 * pmap_is_referenced().  				 */
 if|if
 condition|(
 operator|(
@@ -3710,13 +3708,20 @@ name|pmap_is_referenced
 argument_list|(
 name|m
 argument_list|)
+operator|||
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_REFERENCED
+operator|)
+operator|!=
+literal|0
 condition|)
 name|mincoreinfo
 operator||=
 name|MINCORE_REFERENCED_OTHER
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 if|if

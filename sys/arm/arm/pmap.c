@@ -13572,6 +13572,9 @@ name|m
 operator|=
 name|m_start
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -13634,6 +13637,9 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -16728,8 +16734,8 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-return|return
-operator|(
+name|KASSERT
+argument_list|(
 operator|(
 name|m
 operator|->
@@ -16743,7 +16749,16 @@ operator|)
 operator|)
 operator|==
 literal|0
-operator|&&
+argument_list|,
+operator|(
+literal|"pmap_is_referenced: page %p is not managed"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 operator|(
 name|m
 operator|->

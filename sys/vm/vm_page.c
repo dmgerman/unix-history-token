@@ -6838,7 +6838,7 @@ argument_list|(
 name|dnweight
 argument_list|)
 expr_stmt|;
-comment|/* 	 * occassionally leave the page alone 	 */
+comment|/* 	 * Occasionally leave the page alone. 	 */
 if|if
 condition|(
 operator|(
@@ -6872,7 +6872,12 @@ name|act_count
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 */
+comment|/* 	 * Clear any references to the page.  Otherwise, the page daemon will 	 * immediately reactivate the page. 	 * 	 * Perform the pmap_clear_reference() first.  Otherwise, a concurrent 	 * pmap operation, such as pmap_remove(), could clear a reference in 	 * the pmap and set PG_REFERENCED on the page before the 	 * pmap_clear_reference() had completed.  Consequently, the page would 	 * appear referenced based upon an old reference that occurred before 	 * this function ran. 	 */
+name|pmap_clear_reference
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -6885,11 +6890,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|pmap_clear_reference
-argument_list|(
-name|m
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7683,6 +7683,27 @@ name|int
 name|size
 parameter_list|)
 block|{
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+operator|!=
+literal|0
+condition|)
 name|mtx_assert
 argument_list|(
 operator|&

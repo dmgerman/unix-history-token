@@ -5877,6 +5877,9 @@ name|m
 operator|=
 name|m_start
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -5937,6 +5940,9 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -6579,8 +6585,8 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 operator|(
 name|m
 operator|->
@@ -6592,14 +6598,16 @@ operator||
 name|PG_UNMANAGED
 operator|)
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-return|return
+argument_list|,
 operator|(
-name|FALSE
+literal|"moea64_is_referenced: page %p is not managed"
+operator|,
+name|m
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|moea64_query_bit
@@ -6624,9 +6632,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|boolean_t
-name|rv
-decl_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -6687,24 +6692,14 @@ operator|(
 name|FALSE
 operator|)
 return|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|rv
-operator|=
+return|return
+operator|(
 name|moea64_query_bit
 argument_list|(
 name|m
 argument_list|,
 name|LPTE_CHG
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|rv
 operator|)
 return|;
 block|}
@@ -10387,13 +10382,8 @@ operator|(
 name|TRUE
 operator|)
 return|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -10437,6 +10427,9 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -10525,6 +10518,9 @@ name|pvo
 argument_list|)
 expr_stmt|;
 comment|/* sanity check */
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|TRUE
@@ -10536,6 +10532,9 @@ name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|FALSE
