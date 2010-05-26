@@ -593,12 +593,12 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ruxagg_locked
+name|ruxagg
 parameter_list|(
 name|struct
-name|rusage_ext
+name|proc
 modifier|*
-name|rux
+name|p
 parameter_list|,
 name|struct
 name|thread
