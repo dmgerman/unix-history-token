@@ -151,7 +151,7 @@ begin_decl_stmt
 name|int
 name|isp_fabric_hysteresis
 init|=
-literal|3
+literal|5
 decl_stmt|;
 end_decl_stmt
 
@@ -819,6 +819,24 @@ operator|->
 name|ready
 operator|=
 literal|1
+expr_stmt|;
+name|fc
+operator|->
+name|gone_device_time
+operator|=
+name|isp_gone_device_time
+expr_stmt|;
+name|fc
+operator|->
+name|loop_down_limit
+operator|=
+name|isp_loop_down_limit
+expr_stmt|;
+name|fc
+operator|->
+name|hysteresis
+operator|=
+name|isp_fabric_hysteresis
 expr_stmt|;
 name|callout_init_mtx
 argument_list|(
@@ -23464,11 +23482,19 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
+name|ISP_LOGSANCFG
+operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d GDT timer expired"
+literal|"Chan %d GDT timer expired @ %lu"
 argument_list|,
 name|chan
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|time_uptime
 argument_list|)
 expr_stmt|;
 for|for
@@ -23526,33 +23552,21 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/* 		 * We can use new_portid here because it is untouched 		 * while the state is ZOMBIE 		 */
 if|if
 condition|(
 name|lp
 operator|->
-name|new_portid
-operator|==
-literal|0
-condition|)
-block|{
-continue|continue;
-block|}
-name|lp
-operator|->
-name|new_portid
-operator|-=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|->
-name|new_portid
+name|gone_timer
 operator|!=
 literal|0
 condition|)
 block|{
+name|lp
+operator|->
+name|gone_timer
+operator|-=
+literal|1
+expr_stmt|;
 name|more_to_do
 operator|++
 expr_stmt|;
@@ -23658,7 +23672,7 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d stopping Gone Device Timer"
+literal|"Chan %d Stopping Gone Device Timer"
 argument_list|,
 name|chan
 argument_list|)
@@ -29183,7 +29197,7 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"starting Loop Down Timer @ %lu"
+literal|"Starting Loop Down Timer @ %lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -29325,6 +29339,12 @@ expr_stmt|;
 name|lp
 operator|->
 name|reserved
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -29641,6 +29661,12 @@ expr_stmt|;
 name|lp
 operator|->
 name|reserved
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
 operator|=
 literal|0
 expr_stmt|;
@@ -30129,7 +30155,7 @@ argument_list|,
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 * 		 * We can use new_portid for the gone timer because it's 		 * undefined while the state is ZOMBIE. 		 */
+comment|/* 		 * If this has a virtual target and we haven't marked it 		 * that we're going to have isp_gdt tell the OS it's gone, 		 * set the isp_gdt timer running on it. 		 * 		 * If it isn't marked that isp_gdt is going to get rid of it, 		 * announce that it's gone. 		 * 		 */
 if|if
 condition|(
 name|lp
@@ -30151,7 +30177,13 @@ literal|1
 expr_stmt|;
 name|lp
 operator|->
-name|new_portid
+name|state
+operator|=
+name|FC_PORTDB_STATE_ZOMBIE
+expr_stmt|;
+name|lp
+operator|->
+name|gone_timer
 operator|=
 name|ISP_FC_PC
 argument_list|(
@@ -30161,12 +30193,6 @@ name|bus
 argument_list|)
 operator|->
 name|gone_device_time
-expr_stmt|;
-name|lp
-operator|->
-name|state
-operator|=
-name|FC_PORTDB_STATE_ZOMBIE
 expr_stmt|;
 if|if
 condition|(
@@ -30192,9 +30218,19 @@ name|ISP_LOGSANCFG
 operator||
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"Chan %d starting Gone Device Timer"
+literal|"Chan %d Starting Gone Device Timer with %u seconds time now %lu"
 argument_list|,
 name|bus
+argument_list|,
+name|lp
+operator|->
+name|gone_timer
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|time_uptime
 argument_list|)
 expr_stmt|;
 name|callout_reset
