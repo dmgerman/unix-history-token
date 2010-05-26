@@ -547,6 +547,17 @@ init|=
 literal|0x19
 block|,
 comment|/* 				 * Set SIM specific knob values. 				 */
+name|XPT_SCAN_TGT
+init|=
+literal|0x1E
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+operator||
+name|XPT_FC_XPT_ONLY
+block|,
+comment|/* Scan Target */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=

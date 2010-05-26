@@ -23270,7 +23270,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 * Allocate a CCB, create a wildcard path for this bus/target and schedule a rescan. 	 */
+comment|/* 	 * Allocate a CCB, create a wildcard path for this target and schedule a rescan. 	 */
 name|ccb
 operator|=
 name|xpt_alloc_ccb_nowait
@@ -23296,7 +23296,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * xpt_rescan only honors wildcard in the target field.  	 * Scan the whole bus instead of target, which will then 	 * force a scan of all luns. 	 */
 if|if
 condition|(
 name|xpt_create_path
@@ -23317,7 +23316,7 @@ operator|->
 name|sim
 argument_list|)
 argument_list|,
-name|CAM_TARGET_WILDCARD
+name|tgt
 argument_list|,
 name|CAM_LUN_WILDCARD
 argument_list|)
