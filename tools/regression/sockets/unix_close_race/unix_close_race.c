@@ -216,7 +216,7 @@ argument_list|(
 literal|"SMP not present, test may be unable to trigger race"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create a UNIX domain socket that the parent will repeatedly 	 * accept() from, and that the child will repeatedly connect() to. 	 */
+comment|/* 	 * Create a UNIX domain socket that the child will repeatedly 	 * accept() from, and that the parent will repeatedly connect() to. 	 */
 if|if
 condition|(
 operator|(
@@ -416,13 +416,25 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"child: socket error"
+literal|"parent: socket error"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|connect
@@ -445,13 +457,25 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"child: connect error"
+literal|"parent: connect error"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|close
@@ -461,13 +485,25 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"child: close error"
+literal|"parent: close error"
 argument_list|)
 expr_stmt|;
+block|}
 name|usleep
 argument_list|(
 name|USLEEP
@@ -520,7 +556,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"parent: accept error"
+literal|"child: accept error"
 argument_list|)
 expr_stmt|;
 if|if
@@ -536,7 +572,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"parent: close error"
+literal|"child: close error"
 argument_list|)
 expr_stmt|;
 block|}
