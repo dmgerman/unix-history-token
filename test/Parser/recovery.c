@@ -317,5 +317,34 @@ comment|// expected-error{{expected ';' after expression}}
 block|}
 end_function
 
+begin_comment
+comment|// rdar://7980651
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|intptr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{'intptr_t' declared here}}
+end_comment
+
+begin_function_decl
+name|void
+name|bar
+parameter_list|(
+name|intptr
+name|y
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{unknown type name 'intptr'; did you mean 'intptr_t'?}}
+end_comment
+
 end_unit
 

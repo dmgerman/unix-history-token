@@ -1146,14 +1146,6 @@ modifier|&
 name|Thunk
 parameter_list|)
 function_decl|;
-comment|/// EmitThunks - Emit the associated thunks for the given global decl.
-name|void
-name|EmitThunks
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|)
-function_decl|;
 comment|/// ComputeVTableRelatedInformation - Compute and store all vtable related
 comment|/// information (vtable layout, vbase offset offsets, thunks etc) for the
 comment|/// given record decl.
@@ -1389,10 +1381,9 @@ operator|*
 name|RD
 argument_list|)
 expr_stmt|;
-comment|// EmitVTableRelatedData - Will emit any thunks that the global decl might
-comment|// have, as well as the vtable itself if the global decl is the key function.
+comment|/// EmitThunks - Emit the associated thunks for the given global decl.
 name|void
-name|EmitVTableRelatedData
+name|EmitThunks
 parameter_list|(
 name|GlobalDecl
 name|GD

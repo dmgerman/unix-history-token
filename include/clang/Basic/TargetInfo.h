@@ -233,6 +233,11 @@ name|RegParmMax
 decl_stmt|,
 name|SSERegParmMax
 decl_stmt|;
+name|unsigned
+name|HasAlignMac68kSupport
+range|:
+literal|1
+decl_stmt|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
 argument_list|(
@@ -865,6 +870,17 @@ specifier|const
 block|{
 return|return
 name|UseBitFieldTypeAlignment
+return|;
+block|}
+comment|/// hasAlignMac68kSupport - Check whether this target support '#pragma options
+comment|/// align=mac68k'.
+name|bool
+name|hasAlignMac68kSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAlignMac68kSupport
 return|;
 block|}
 comment|/// getTypeName - Return the user string for the specified integer type enum.

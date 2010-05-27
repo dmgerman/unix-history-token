@@ -371,5 +371,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/7958272>
+end_comment
+
+begin_function
+name|double
+name|t7
+parameter_list|(
+name|double
+specifier|_Complex
+name|c
+parameter_list|)
+block|{
+return|return
+name|__builtin_fabs
+argument_list|(
+name|__real__
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

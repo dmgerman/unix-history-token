@@ -761,11 +761,9 @@ argument_list|)
 expr_stmt|;
 define|#
 directive|define
-name|ABSTRACT_EXPR
+name|ABSTRACT_STMT
 parameter_list|(
-name|CLASS
-parameter_list|,
-name|PARENT
+name|STMT
 parameter_list|)
 define|#
 directive|define
@@ -779,7 +777,7 @@ define|\
 value|case Stmt::CLASS ## Class: DISPATCH(CLASS, CLASS);
 include|#
 directive|include
-file|"clang/AST/StmtNodes.def"
+file|"clang/AST/StmtNodes.inc"
 block|}
 block|}
 comment|// If the implementation chooses not to implement a certain visit method, fall
@@ -796,7 +794,7 @@ define|\
 value|RetTy Visit ## CLASS(CLASS *S) { DISPATCH(PARENT, PARENT); }
 include|#
 directive|include
-file|"clang/AST/StmtNodes.def"
+file|"clang/AST/StmtNodes.inc"
 comment|// If the implementation doesn't implement binary operator methods, fall back
 comment|// on VisitBinaryOperator.
 define|#

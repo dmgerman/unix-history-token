@@ -4314,11 +4314,6 @@ name|FieldDecl
 modifier|*
 name|AnonUnionMember
 decl_stmt|;
-comment|/// IsVirtual - If the initializer is a base initializer, this keeps track
-comment|/// of whether the base is virtual or not.
-name|bool
-name|IsVirtual
-decl_stmt|;
 comment|/// LParenLoc - Location of the left paren of the ctor-initializer.
 name|SourceLocation
 name|LParenLoc
@@ -4327,6 +4322,49 @@ comment|/// RParenLoc - Location of the right paren of the ctor-initializer.
 name|SourceLocation
 name|RParenLoc
 decl_stmt|;
+comment|/// IsVirtual - If the initializer is a base initializer, this keeps track
+comment|/// of whether the base is virtual or not.
+name|bool
+name|IsVirtual
+range|:
+literal|1
+decl_stmt|;
+comment|/// IsWritten - Whether or not the initializer is explicitly written
+comment|/// in the sources.
+name|bool
+name|IsWritten
+range|:
+literal|1
+decl_stmt|;
+comment|/// SourceOrderOrNumArrayIndices - If IsWritten is true, then this
+comment|/// number keeps track of the textual order of this initializer in the
+comment|/// original sources, counting from 0; otherwise, if IsWritten is false,
+comment|/// it stores the number of array index variables stored after this
+comment|/// object in memory.
+name|unsigned
+name|SourceOrderOrNumArrayIndices
+range|:
+literal|14
+decl_stmt|;
+name|CXXBaseOrMemberInitializer
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|FieldDecl *Member
+argument_list|,
+argument|SourceLocation MemberLoc
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|Expr *Init
+argument_list|,
+argument|SourceLocation R
+argument_list|,
+argument|VarDecl **Indices
+argument_list|,
+argument|unsigned NumIndices
+argument_list|)
+empty_stmt|;
 name|public
 label|:
 comment|/// CXXBaseOrMemberInitializer - Creates a new base-class initializer.
@@ -4379,6 +4417,43 @@ name|Init
 parameter_list|,
 name|SourceLocation
 name|R
+parameter_list|)
+function_decl|;
+comment|/// \brief Creates a new member initializer that optionally contains
+comment|/// array indices used to describe an elementwise initialization.
+specifier|static
+name|CXXBaseOrMemberInitializer
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|FieldDecl
+modifier|*
+name|Member
+parameter_list|,
+name|SourceLocation
+name|MemberLoc
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|Expr
+modifier|*
+name|Init
+parameter_list|,
+name|SourceLocation
+name|R
+parameter_list|,
+name|VarDecl
+modifier|*
+modifier|*
+name|Indices
+parameter_list|,
+name|unsigned
+name|NumIndices
 parameter_list|)
 function_decl|;
 comment|/// \brief Destroy the base or member initializer.
@@ -4556,6 +4631,90 @@ name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// isWritten - Returns true if this initializer is explicitly written
+comment|/// in the source code.
+name|bool
+name|isWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsWritten
+return|;
+block|}
+comment|/// \brief Return the source position of the initializer, counting from 0.
+comment|/// If the initializer was implicit, -1 is returned.
+name|int
+name|getSourceOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsWritten
+operator|?
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|SourceOrderOrNumArrayIndices
+operator|)
+operator|:
+operator|-
+literal|1
+return|;
+block|}
+comment|/// \brief Set the source order of this initializer. This method can only
+comment|/// be called once for each initializer; it cannot be called on an
+comment|/// initializer having a positive number of (implicit) array indices.
+name|void
+name|setSourceOrder
+parameter_list|(
+name|int
+name|pos
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|IsWritten
+operator|&&
+literal|"calling twice setSourceOrder() on the same initializer"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|SourceOrderOrNumArrayIndices
+operator|==
+literal|0
+operator|&&
+literal|"setSourceOrder() used when there are implicit array indices"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|pos
+operator|>=
+literal|0
+operator|&&
+literal|"setSourceOrder() used to make an initializer implicit"
+argument_list|)
+expr_stmt|;
+name|IsWritten
+operator|=
+name|true
+expr_stmt|;
+name|SourceOrderOrNumArrayIndices
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|pos
+operator|)
+expr_stmt|;
+block|}
 name|FieldDecl
 operator|*
 name|getAnonUnionMember
@@ -4596,6 +4755,136 @@ block|{
 return|return
 name|RParenLoc
 return|;
+block|}
+comment|/// \brief Determine the number of implicit array indices used while
+comment|/// described an array member initialization.
+name|unsigned
+name|getNumArrayIndices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsWritten
+operator|?
+literal|0
+operator|:
+name|SourceOrderOrNumArrayIndices
+return|;
+block|}
+comment|/// \brief Retrieve a particular array index variable used to
+comment|/// describe an array member initialization.
+name|VarDecl
+modifier|*
+name|getArrayIndex
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumArrayIndices
+argument_list|()
+operator|&&
+literal|"Out of bounds member array index"
+argument_list|)
+expr_stmt|;
+return|return
+name|reinterpret_cast
+operator|<
+name|VarDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|I
+index|]
+return|;
+block|}
+specifier|const
+name|VarDecl
+modifier|*
+name|getArrayIndex
+argument_list|(
+name|unsigned
+name|I
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumArrayIndices
+argument_list|()
+operator|&&
+literal|"Out of bounds member array index"
+argument_list|)
+expr_stmt|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|I
+index|]
+return|;
+block|}
+name|void
+name|setArrayIndex
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|,
+name|VarDecl
+modifier|*
+name|Index
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumArrayIndices
+argument_list|()
+operator|&&
+literal|"Out of bounds member array index"
+argument_list|)
+expr_stmt|;
+name|reinterpret_cast
+operator|<
+name|VarDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+index|[
+name|I
+index|]
+operator|=
+name|Index
+expr_stmt|;
 block|}
 name|Expr
 modifier|*
@@ -4770,6 +5059,16 @@ argument_list|)
 block|;
 name|public
 operator|:
+specifier|static
+name|CXXConstructorDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|;
 specifier|static
 name|CXXConstructorDecl
 operator|*
@@ -5345,6 +5644,16 @@ name|CXXDestructorDecl
 operator|*
 name|Create
 argument_list|(
+argument|ASTContext& C
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|;
+specifier|static
+name|CXXDestructorDecl
+operator|*
+name|Create
+argument_list|(
 argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
@@ -5536,6 +5845,16 @@ argument_list|)
 block|{ }
 name|public
 operator|:
+specifier|static
+name|CXXConversionDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|;
 specifier|static
 name|CXXConversionDecl
 operator|*
@@ -5756,6 +6075,7 @@ argument_list|,
 argument|bool Braces
 argument_list|)
 block|;
+comment|/// \brief Return the language specified by this linkage specification.
 name|LanguageIDs
 name|getLanguage
 argument_list|()
@@ -5765,8 +6085,19 @@ return|return
 name|Language
 return|;
 block|}
-comment|/// hasBraces - Determines whether this linkage specification had
-comment|/// braces in its syntactic form.
+comment|/// \brief Set the language specified by this linkage specification.
+name|void
+name|setLanguage
+argument_list|(
+argument|LanguageIDs L
+argument_list|)
+block|{
+name|Language
+operator|=
+name|L
+block|; }
+comment|/// \brief Determines whether this linkage specification had braces in
+comment|/// its syntactic form.
 name|bool
 name|hasBraces
 argument_list|()
@@ -5776,6 +6107,18 @@ return|return
 name|HadBraces
 return|;
 block|}
+comment|/// \brief Set whether this linkage specification has braces in its
+comment|/// syntactic form.
+name|void
+name|setHasBraces
+argument_list|(
+argument|bool B
+argument_list|)
+block|{
+name|HadBraces
+operator|=
+name|B
+block|; }
 specifier|static
 name|bool
 name|classof
@@ -5996,7 +6339,7 @@ block|{   }
 name|public
 operator|:
 comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifiers the namespace name.
+comment|/// that qualifies the namespace name.
 name|SourceRange
 name|getQualifierRange
 argument_list|()
@@ -6006,6 +6349,18 @@ return|return
 name|QualifierRange
 return|;
 block|}
+comment|/// \brief Set the source range of the nested-name-specifier that
+comment|/// qualifies the namespace name.
+name|void
+name|setQualifierRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
+block|{
+name|QualifierRange
+operator|=
+name|R
+block|; }
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
 comment|/// name of the namespace.
 name|NestedNameSpecifier
@@ -6018,6 +6373,18 @@ return|return
 name|Qualifier
 return|;
 block|}
+comment|/// \brief Set the nested-name-specifier that qualifes the name of the
+comment|/// namespace.
+name|void
+name|setQualifier
+argument_list|(
+argument|NestedNameSpecifier *NNS
+argument_list|)
+block|{
+name|Qualifier
+operator|=
+name|NNS
+block|; }
 name|NamedDecl
 operator|*
 name|getNominatedNamespaceAsWritten
@@ -6065,8 +6432,18 @@ name|getNominatedNamespace
 argument_list|()
 return|;
 block|}
-comment|/// getCommonAncestor - returns common ancestor context of using-directive,
-comment|/// and nominated by it namespace.
+comment|/// setNominatedNamespace - Set the namespace nominataed by the
+comment|/// using-directive.
+name|void
+name|setNominatedNamespace
+argument_list|(
+name|NamedDecl
+operator|*
+name|NS
+argument_list|)
+block|;
+comment|/// \brief Returns the common ancestor context of this using-directive and
+comment|/// its nominated namespace.
 name|DeclContext
 operator|*
 name|getCommonAncestor
@@ -6087,6 +6464,19 @@ return|return
 name|CommonAncestor
 return|;
 block|}
+comment|/// \brief Set the common ancestor context of this using-directive and its
+comment|/// nominated namespace.
+name|void
+name|setCommonAncestor
+argument_list|(
+argument|DeclContext* Cxt
+argument_list|)
+block|{
+name|CommonAncestor
+operator|=
+name|Cxt
+block|; }
+comment|// FIXME: Could omit 'Key' in name.
 comment|/// getNamespaceKeyLocation - Returns location of namespace keyword.
 name|SourceLocation
 name|getNamespaceKeyLocation
@@ -6097,6 +6487,17 @@ return|return
 name|NamespaceLoc
 return|;
 block|}
+comment|/// setNamespaceKeyLocation - Set the the location of the namespacekeyword.
+name|void
+name|setNamespaceKeyLocation
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|NamespaceLoc
+operator|=
+name|L
+block|; }
 comment|/// getIdentLocation - Returns location of identifier.
 name|SourceLocation
 name|getIdentLocation
@@ -6107,6 +6508,17 @@ return|return
 name|IdentLoc
 return|;
 block|}
+comment|/// setIdentLocation - set the location of the identifier.
+name|void
+name|setIdentLocation
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|IdentLoc
+operator|=
+name|L
+block|; }
 specifier|static
 name|UsingDirectiveDecl
 operator|*
@@ -6205,7 +6617,7 @@ name|NestedNameSpecifier
 operator|*
 name|Qualifier
 block|;
-comment|/// IdentLoc - Location of namespace identifier.
+comment|/// IdentLoc - Location of namespace identifier. Accessed by TargetNameLoc.
 name|SourceLocation
 name|IdentLoc
 block|;
@@ -6285,6 +6697,18 @@ return|return
 name|QualifierRange
 return|;
 block|}
+comment|/// \brief Set the source range of the nested-name-specifier that qualifies
+comment|/// the namespace name.
+name|void
+name|setQualifierRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
+block|{
+name|QualifierRange
+operator|=
+name|R
+block|; }
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
 comment|/// name of the namespace.
 name|NestedNameSpecifier
@@ -6297,6 +6721,19 @@ return|return
 name|Qualifier
 return|;
 block|}
+comment|/// \brief Set the nested-name-specifier that qualifies the name of the
+comment|/// namespace.
+name|void
+name|setQualifier
+argument_list|(
+argument|NestedNameSpecifier *NNS
+argument_list|)
+block|{
+name|Qualifier
+operator|=
+name|NNS
+block|; }
+comment|/// \brief Retrieve the namespace declaration aliased by this directive.
 name|NamespaceDecl
 operator|*
 name|getNamespace
@@ -6364,6 +6801,18 @@ return|return
 name|AliasLoc
 return|;
 block|}
+comment|/// Set the location o;f the alias name, e.e., 'foo' in
+comment|/// "namespace foo = ns::bar;".
+name|void
+name|setAliasLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|AliasLoc
+operator|=
+name|L
+block|; }
 comment|/// Returns the location of the 'namespace' keyword.
 name|SourceLocation
 name|getNamespaceLoc
@@ -6385,6 +6834,17 @@ return|return
 name|IdentLoc
 return|;
 block|}
+comment|/// Set the location of the identifier in the named namespace.
+name|void
+name|setTargetNameLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|IdentLoc
+operator|=
+name|L
+block|; }
 comment|/// \brief Retrieve the namespace that this alias refers to, which
 comment|/// may either be a NamespaceDecl or a NamespaceAliasDecl.
 name|NamedDecl
@@ -6397,6 +6857,41 @@ return|return
 name|Namespace
 return|;
 block|}
+comment|/// \brief Set the namespace or namespace alias pointed to by this
+comment|/// alias decl.
+name|void
+name|setAliasedNamespace
+argument_list|(
+argument|NamedDecl *ND
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isa
+operator|<
+name|NamespaceAliasDecl
+operator|>
+operator|(
+name|ND
+operator|)
+operator|||
+name|isa
+operator|<
+name|NamespaceDecl
+operator|>
+operator|(
+name|ND
+operator|)
+operator|)
+operator|&&
+literal|"expecting namespace or namespace alias decl"
+argument_list|)
+block|;
+name|Namespace
+operator|=
+name|ND
+block|;   }
 specifier|static
 name|NamespaceAliasDecl
 operator|*
@@ -6573,7 +7068,7 @@ name|Target
 argument_list|)
 return|;
 block|}
-comment|/// Gets the underlying declaration which has been brought into the
+comment|/// \brief Gets the underlying declaration which has been brought into the
 comment|/// local scope.
 name|NamedDecl
 operator|*
@@ -6585,7 +7080,19 @@ return|return
 name|Underlying
 return|;
 block|}
-comment|/// Gets the using declaration to which this declaration is tied.
+comment|/// \brief Sets the underlying declaration which has been brought into the
+comment|/// local scope.
+name|void
+name|setTargetDecl
+argument_list|(
+argument|NamedDecl* ND
+argument_list|)
+block|{
+name|Underlying
+operator|=
+name|ND
+block|; }
+comment|/// \brief Gets the using declaration to which this declaration is tied.
 name|UsingDecl
 operator|*
 name|getUsingDecl
@@ -6596,6 +7103,18 @@ return|return
 name|Using
 return|;
 block|}
+comment|/// \brief Sets the using declaration that introduces this target
+comment|/// declaration.
+name|void
+name|setUsingDecl
+argument_list|(
+argument|UsingDecl* UD
+argument_list|)
+block|{
+name|Using
+operator|=
+name|UD
+block|; }
 specifier|static
 name|bool
 name|classof
@@ -6733,6 +7252,7 @@ argument_list|)
 block|{   }
 name|public
 operator|:
+comment|// FIXME: Should be const?
 comment|/// \brief Returns the source range that covers the nested-name-specifier
 comment|/// preceding the namespace name.
 name|SourceRange
@@ -6743,7 +7263,20 @@ return|return
 name|NestedNameRange
 return|;
 block|}
-comment|/// \brief Returns the source location of the "using" location itself.
+comment|/// \brief Set the source range of the nested-name-specifier.
+name|void
+name|setNestedNameRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
+block|{
+name|NestedNameRange
+operator|=
+name|R
+block|; }
+comment|// FIXME; Should be const?
+comment|// FIXME: Naming is inconsistent with other get*Loc functions.
+comment|/// \brief Returns the source location of the "using" keyword.
 name|SourceLocation
 name|getUsingLocation
 argument_list|()
@@ -6752,7 +7285,18 @@ return|return
 name|UsingLocation
 return|;
 block|}
-comment|/// \brief Get target nested name declaration.
+comment|/// \brief Set the source location of the 'using' keyword.
+name|void
+name|setUsingLocation
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|UsingLocation
+operator|=
+name|L
+block|; }
+comment|/// \brief Get the target nested name declaration.
 name|NestedNameSpecifier
 operator|*
 name|getTargetNestedNameDecl
@@ -6762,7 +7306,18 @@ return|return
 name|TargetNestedName
 return|;
 block|}
-comment|/// isTypeName - Return true if using decl has 'typename'.
+comment|/// \brief Set the target nested name declaration.
+name|void
+name|setTargetNestedNameDecl
+argument_list|(
+argument|NestedNameSpecifier *NNS
+argument_list|)
+block|{
+name|TargetNestedName
+operator|=
+name|NNS
+block|;   }
+comment|/// \brief Return true if the using declaration has 'typename'.
 name|bool
 name|isTypeName
 argument_list|()
@@ -6772,6 +7327,17 @@ return|return
 name|IsTypeName
 return|;
 block|}
+comment|/// \brief Sets whether the using declaration has 'typename'.
+name|void
+name|setTypeName
+argument_list|(
+argument|bool TN
+argument_list|)
+block|{
+name|IsTypeName
+operator|=
+name|TN
+block|; }
 typedef|typedef
 name|llvm
 operator|::
@@ -6881,6 +7447,20 @@ literal|"declaration not in set"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/// \brief Return the number of shadowed declarations associated with this
+comment|/// using declaration.
+name|unsigned
+name|getNumShadowDecls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Shadows
+operator|.
+name|size
+argument_list|()
+return|;
 block|}
 specifier|static
 name|UsingDecl
@@ -7036,6 +7616,18 @@ return|return
 name|TargetNestedNameRange
 return|;
 block|}
+comment|/// \brief Set the source range coverting the nested-name-specifier preceding
+comment|/// the namespace name.
+name|void
+name|setTargetNestedNameRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
+block|{
+name|TargetNestedNameRange
+operator|=
+name|R
+block|; }
 comment|/// \brief Get target nested name declaration.
 name|NestedNameSpecifier
 operator|*
@@ -7046,6 +7638,17 @@ return|return
 name|TargetNestedNameSpecifier
 return|;
 block|}
+comment|/// \brief Set the nested name declaration.
+name|void
+name|setTargetNestedNameSpecifier
+argument_list|(
+argument|NestedNameSpecifier* NNS
+argument_list|)
+block|{
+name|TargetNestedNameSpecifier
+operator|=
+name|NNS
+block|;   }
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -7056,6 +7659,17 @@ return|return
 name|UsingLocation
 return|;
 block|}
+comment|/// \brief Set the source location of the 'using' keyword.
+name|void
+name|setUsingLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|UsingLocation
+operator|=
+name|L
+block|; }
 specifier|static
 name|UnresolvedUsingValueDecl
 operator|*
@@ -7216,6 +7830,18 @@ return|return
 name|TargetNestedNameRange
 return|;
 block|}
+comment|/// \brief Set the source range coverting the nested-name-specifier preceding
+comment|/// the namespace name.
+name|void
+name|setTargetNestedNameRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
+block|{
+name|TargetNestedNameRange
+operator|=
+name|R
+block|; }
 comment|/// \brief Get target nested name declaration.
 name|NestedNameSpecifier
 operator|*
@@ -7226,6 +7852,17 @@ return|return
 name|TargetNestedNameSpecifier
 return|;
 block|}
+comment|/// \brief Set the nested name declaration.
+name|void
+name|setTargetNestedNameSpecifier
+argument_list|(
+argument|NestedNameSpecifier* NNS
+argument_list|)
+block|{
+name|TargetNestedNameSpecifier
+operator|=
+name|NNS
+block|;   }
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -7236,6 +7873,17 @@ return|return
 name|UsingLocation
 return|;
 block|}
+comment|/// \brief Set the source location of the 'using' keyword.
+name|void
+name|setUsingLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|UsingLocation
+operator|=
+name|L
+block|; }
 comment|/// \brief Returns the source location of the 'typename' keyword.
 name|SourceLocation
 name|getTypenameLoc
@@ -7246,6 +7894,17 @@ return|return
 name|TypenameLocation
 return|;
 block|}
+comment|/// \brief Set the source location of the 'typename' keyword.
+name|void
+name|setTypenameLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|TypenameLocation
+operator|=
+name|L
+block|; }
 specifier|static
 name|UnresolvedUsingTypenameDecl
 operator|*

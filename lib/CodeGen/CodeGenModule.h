@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CGCXXABI.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenTypes.h"
 end_include
 
@@ -362,9 +368,6 @@ decl_stmt|;
 name|CodeGenTypes
 name|Types
 decl_stmt|;
-name|MangleContext
-name|MangleCtx
-decl_stmt|;
 comment|/// VTables - Holds information about C++ vtables.
 name|CodeGenVTables
 name|VTables
@@ -376,6 +379,10 @@ decl_stmt|;
 name|CGObjCRuntime
 modifier|*
 name|Runtime
+decl_stmt|;
+name|CXXABI
+modifier|*
+name|ABI
 decl_stmt|;
 name|CGDebugInfo
 modifier|*
@@ -549,6 +556,11 @@ name|void
 name|createObjCRuntime
 parameter_list|()
 function_decl|;
+comment|/// Lazily create the C++ ABI
+name|void
+name|createCXXABI
+parameter_list|()
+function_decl|;
 name|llvm
 operator|::
 name|LLVMContext
@@ -625,6 +637,37 @@ return|return
 operator|!
 operator|!
 name|Runtime
+return|;
+block|}
+comment|/// getCXXABI() - Return a reference to the configured
+comment|/// C++ ABI.
+name|CXXABI
+modifier|&
+name|getCXXABI
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|ABI
+condition|)
+name|createCXXABI
+argument_list|()
+expr_stmt|;
+return|return
+operator|*
+name|ABI
+return|;
+block|}
+comment|/// hasCXXABI() - Return true iff a C++ ABI has been configured.
+name|bool
+name|hasCXXABI
+parameter_list|()
+block|{
+return|return
+operator|!
+operator|!
+name|ABI
 return|;
 block|}
 name|llvm
@@ -733,8 +776,19 @@ modifier|&
 name|getMangleContext
 parameter_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|ABI
+condition|)
+name|createCXXABI
+argument_list|()
+expr_stmt|;
 return|return
-name|MangleCtx
+name|ABI
+operator|->
+name|getMangleContext
+argument_list|()
 return|;
 block|}
 name|CodeGenVTables
@@ -1620,6 +1674,19 @@ name|ND
 parameter_list|)
 function_decl|;
 name|void
+name|getMangledName
+parameter_list|(
+name|MangleBuffer
+modifier|&
+name|Buffer
+parameter_list|,
+specifier|const
+name|BlockDecl
+modifier|*
+name|BD
+parameter_list|)
+function_decl|;
+name|void
 name|getMangledCXXCtorName
 parameter_list|(
 name|MangleBuffer
@@ -1660,6 +1727,17 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|void
+name|EmitVTable
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|Class
+parameter_list|,
+name|bool
+name|DefinitionRequired
+parameter_list|)
+function_decl|;
 enum|enum
 name|GVALinkage
 block|{
@@ -1689,6 +1767,32 @@ operator|*
 name|FD
 argument_list|)
 expr_stmt|;
+name|void
+name|setFunctionLinkage
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|V
+argument_list|)
+block|{
+name|V
+operator|->
+name|setLinkage
+argument_list|(
+name|getFunctionLinkage
+argument_list|(
+name|FD
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// getVTableLinkage - Return the appropriate linkage for the vtable, VTT,
 comment|/// and type information of the given class.
 specifier|static

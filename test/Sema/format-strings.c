@@ -1828,5 +1828,25 @@ comment|// expected-warning{{conversion specifies type 'char *' but the argument
 block|}
 end_function
 
+begin_function
+name|void
+name|rdar8026030
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\%"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{incomplete format specifier}}
+block|}
+end_function
+
 end_unit
 

@@ -165,6 +165,18 @@ argument_list|()
 block|; }
 decl_stmt|;
 name|class
+name|EmitCodeGenOnlyAction
+range|:
+name|public
+name|CodeGenAction
+block|{
+name|public
+operator|:
+name|EmitCodeGenOnlyAction
+argument_list|()
+block|; }
+decl_stmt|;
+name|class
 name|EmitObjAction
 range|:
 name|public

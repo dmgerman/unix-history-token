@@ -27,11 +27,25 @@ begin_struct
 struct|struct
 name|Base
 block|{
+name|Base
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
 name|virtual
 name|void
 name|f
-parameter_list|()
+parameter_list|(
+name|int
+name|x
+init|=
+literal|492
+parameter_list|)
 function_decl|;
+operator|~
+name|Base
+argument_list|()
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -41,7 +55,14 @@ name|struct
 name|Derived
 range|:
 name|Base
-block|{ }
+block|{
+name|Derived
+argument_list|()
+block|;
+name|void
+name|g
+argument_list|()
+block|; }
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +186,190 @@ argument_list|)
 name|cxx_null_ptr_result
 expr_stmt|;
 end_typedef
+
+begin_function
+name|void
+name|foo
+parameter_list|(
+name|Derived
+modifier|*
+name|P
+parameter_list|)
+block|{
+comment|// CXXMemberCallExpr
+name|P
+operator|->
+name|f
+argument_list|(
+literal|12
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// FIXME: This is a hack until<typeinfo> works completely.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|std
+block|{
+name|class
+name|type_info
+block|{}
+empty_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// CXXTypeidExpr - Both expr and type forms.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+name|typeid
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|*
+name|typeid_result1
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__typeof__
+argument_list|(
+name|typeid
+argument_list|(
+literal|2
+argument_list|)
+argument_list|)
+operator|*
+name|typeid_result2
+expr_stmt|;
+end_typedef
+
+begin_function_decl
+name|Derived
+name|foo
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|Derived
+operator|::
+name|Derived
+argument_list|()
+operator|:
+name|Base
+argument_list|(
+literal|4
+argument_list|)
+block|{ }
+name|void
+name|Derived
+operator|::
+name|g
+argument_list|()
+block|{
+comment|// CXXThisExpr
+name|f
+argument_list|(
+literal|2
+argument_list|)
+block|;
+comment|// Implicit
+name|this
+operator|->
+name|f
+argument_list|(
+literal|1
+argument_list|)
+block|;
+comment|// Explicit
+comment|// CXXThrowExpr
+name|throw
+block|;
+name|throw
+literal|42
+block|;
+comment|// CXXDefaultArgExpr
+name|f
+argument_list|()
+block|;
+specifier|const
+name|Derived
+operator|&
+name|X
+operator|=
+name|foo
+argument_list|()
+block|;
+comment|// FIXME: How do I make a CXXBindReferenceExpr, CXXConstructExpr?
+name|int
+name|A
+operator|=
+name|int
+argument_list|(
+literal|0.5
+argument_list|)
+block|;
+comment|// CXXFunctionalCastExpr
+name|A
+operator|=
+name|int
+argument_list|()
+block|;
+comment|// CXXZeroInitValueExpr
+name|new
+name|Base
+argument_list|(
+literal|4
+argument_list|)
+block|;
+comment|// CXXNewExpr
+block|}
+comment|// FIXME: The comment on CXXTemporaryObjectExpr is broken, this doesn't make
+comment|// one.
+expr|struct
+name|CtorStruct
+block|{
+name|CtorStruct
+argument_list|(
+name|int
+argument_list|,
+name|float
+argument_list|)
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|CtorStruct
+name|create_CtorStruct
+parameter_list|()
+block|{
+return|return
+name|CtorStruct
+argument_list|(
+literal|1
+argument_list|,
+literal|3.14f
+argument_list|)
+return|;
+comment|// CXXTemporaryObjectExpr
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -DGNU_KEYWORDS -std=gnu89 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -DGNU_KEYWORDS -std=gnu89 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -DGNU_KEYWORDS -std=c99 -fgnu-keywords -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -DGNU_KEYWORDS -std=c99 -fgnu-keywords -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -std=c99 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -std=c99 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -std=gnu89 -fno-gnu-keywords -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -std=gnu89 -fno-gnu-keywords -fsyntax-only -verify %s
 end_comment
 
 begin_function

@@ -114,6 +114,10 @@ name|friend
 name|class
 name|UnresolvedSetImpl
 decl_stmt|;
+name|friend
+name|class
+name|OverloadExpr
+decl_stmt|;
 name|explicit
 name|UnresolvedSetIterator
 argument_list|(
@@ -139,8 +143,17 @@ argument_list|(
 argument|const_cast<DeclsTy::iterator>(ir)
 argument_list|)
 block|{}
+name|IteratorTy
+name|getIterator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ir
+return|;
+block|}
 name|public
-operator|:
+label|:
 name|UnresolvedSetIterator
 argument_list|()
 block|{}
@@ -531,9 +544,7 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// UnresolvedSet - A set of unresolved declarations.  This is needed
-comment|/// in a lot of places, but isn't really worth breaking into its own
-comment|/// header right now.
+comment|/// UnresolvedSet - A set of unresolved declarations.
 name|class
 name|UnresolvedSetImpl
 block|{

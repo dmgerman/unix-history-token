@@ -100,7 +100,7 @@ argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-note {{jump bypasses initialization of declaration with __attribute__((cleanup))}}
+comment|// expected-note {{jump bypasses initialization of variable with __attribute__((cleanup))}}
 name|L
 label|:
 return|return
@@ -603,7 +603,7 @@ decl_stmt|;
 goto|goto *
 name|P
 goto|;
-comment|// ok.
+comment|// expected-warning {{indirect goto might cross protected scopes}}
 name|L2
 label|:
 empty_stmt|;
@@ -613,15 +613,15 @@ index|[
 name|n
 index|]
 decl_stmt|;
-comment|// expected-note 2 {{jump bypasses initialization of variable length array}}
+comment|// expected-note {{jump bypasses initialization of variable length array}}
 name|L3
 label|:
+comment|// expected-note {{possible target of indirect goto}}
 name|L4
 label|:
 goto|goto *
 name|P
 goto|;
-comment|// expected-warning {{illegal indirect goto in protected scope, unknown effect on scopes}}
 goto|goto
 name|L3
 goto|;
@@ -639,10 +639,8 @@ block|{
 operator|&&
 name|L2
 block|,
-comment|// Ok.
 operator|&&
 name|L3
-comment|// expected-warning {{address taken of label in protected scope, jump to it would have unknown effect on scope}}
 block|}
 decl_stmt|;
 block|}
@@ -801,6 +799,44 @@ goto|;
 name|L4
 label|:
 return|return;
+block|}
+decl_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test13
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|int
+name|vla
+index|[
+name|n
+index|]
+decl_stmt|;
+goto|goto *
+name|p
+goto|;
+name|a0
+label|:
+empty_stmt|;
+specifier|static
+name|void
+modifier|*
+name|ps
+index|[]
+init|=
+block|{
+operator|&&
+name|a0
 block|}
 decl_stmt|;
 block|}

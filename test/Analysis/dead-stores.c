@@ -2156,5 +2156,78 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// The FOREACH macro in QT uses 'break' statements within statement expressions
+end_comment
+
+begin_comment
+comment|// placed within the increment code of for loops.
+end_comment
+
+begin_function
+name|void
+name|rdar8014335
+parameter_list|()
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+literal|10
+condition|;
+operator|(
+block|{
+break|break;
+block|}
+control|)
+block|)
+block|{
+for|for
+control|(
+init|;
+condition|;
+operator|(
+block|{
+operator|++
+name|i
+block|;
+break|break;
+block|}
+control|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|// Note that the next value stored to 'i' is never executed
+end_comment
+
+begin_comment
+comment|// because the next statement to be executed is the 'break'
+end_comment
+
+begin_comment
+comment|// in the increment code of the first loop.
+end_comment
+
+begin_expr_stmt
+name|i
+operator|=
+name|i
+operator|*
+literal|3
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-warning{{Value stored to 'i' is never read}}
+end_comment
+
+unit|} }
 end_unit
 

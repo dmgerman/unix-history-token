@@ -456,6 +456,20 @@ literal|8
 operator|>
 name|SwitchStack
 expr_stmt|;
+comment|/// \brief The list of return statements that occur within the function or
+comment|/// block, if there is any chance of applying the named return value
+comment|/// optimization.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|ReturnStmt
+operator|*
+operator|,
+literal|4
+operator|>
+name|Returns
+expr_stmt|;
 name|FunctionScopeInfo
 argument_list|(
 argument|unsigned NumErrors
@@ -3256,8 +3270,11 @@ end_function_decl
 
 begin_function_decl
 name|QualType
-name|getQualifiedNameType
+name|getElaboratedType
 parameter_list|(
+name|ElaboratedTypeKeyword
+name|Keyword
+parameter_list|,
 specifier|const
 name|CXXScopeSpec
 modifier|&
@@ -4256,28 +4273,12 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
+name|AccessSpecifier
+name|AS
+parameter_list|,
 name|DeclSpec
 modifier|&
 name|DS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|InjectAnonymousStructOrUnionMembers
-parameter_list|(
-name|Scope
-modifier|*
-name|S
-parameter_list|,
-name|DeclContext
-modifier|*
-name|Owner
-parameter_list|,
-name|RecordDecl
-modifier|*
-name|AnonRecord
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4294,6 +4295,9 @@ parameter_list|,
 name|DeclSpec
 modifier|&
 name|DS
+parameter_list|,
+name|AccessSpecifier
+name|AS
 parameter_list|,
 name|RecordDecl
 modifier|*
@@ -5767,6 +5771,29 @@ end_function_decl
 begin_function_decl
 name|bool
 name|PerformContextuallyConvertToBool
+parameter_list|(
+name|Expr
+modifier|*
+modifier|&
+name|From
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ImplicitConversionSequence
+name|TryContextuallyConvertToObjCId
+parameter_list|(
+name|Expr
+modifier|*
+name|From
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|PerformContextuallyConvertToObjCId
 parameter_list|(
 name|Expr
 modifier|*
@@ -7610,6 +7637,10 @@ begin_function_decl
 name|void
 name|ImplMethodsVsClassMethods
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|ObjCImplDecl
 modifier|*
 name|IMPDecl
@@ -7638,6 +7669,10 @@ begin_decl_stmt
 name|void
 name|DiagnoseUnimplementedProperties
 argument_list|(
+name|Scope
+operator|*
+name|S
+argument_list|,
 name|ObjCImplDecl
 operator|*
 name|IMPDecl
@@ -7658,6 +7693,33 @@ name|InsMap
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// DefaultSynthesizeProperties - This routine default synthesizes all
+end_comment
+
+begin_comment
+comment|/// properties which must be synthesized in class's @implementation.
+end_comment
+
+begin_function_decl
+name|void
+name|DefaultSynthesizeProperties
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ObjCImplDecl
+modifier|*
+name|IMPDecl
+parameter_list|,
+name|ObjCInterfaceDecl
+modifier|*
+name|IDecl
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// CollectImmediateProperties - This routine collects all properties in
@@ -7879,6 +7941,12 @@ name|tok
 operator|::
 name|ObjCKeywordKind
 name|MethodImplKind
+argument_list|,
+name|DeclContext
+operator|*
+name|lexicalDC
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -8338,28 +8406,14 @@ name|virtual
 name|OwningStmtResult
 name|ActOnStartOfSwitchStmt
 parameter_list|(
-name|FullExprArg
+name|SourceLocation
+name|SwitchLoc
+parameter_list|,
+name|ExprArg
 name|Cond
 parameter_list|,
 name|DeclPtrTy
 name|CondVar
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|ActOnSwitchBodyError
-parameter_list|(
-name|SourceLocation
-name|SwitchLoc
-parameter_list|,
-name|StmtArg
-name|Switch
-parameter_list|,
-name|StmtArg
-name|Body
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8883,6 +8937,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|DiagnoseUnusedDecl
+parameter_list|(
+specifier|const
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ParsingDeclStackState
 name|PushParsingDeclaration
 parameter_list|()
@@ -9027,6 +9093,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|MarkDeclarationsReferencedInType
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|DiagRuntimeBehavior
 parameter_list|(
@@ -9099,6 +9178,11 @@ parameter_list|,
 name|LookupResult
 modifier|&
 name|R
+parameter_list|,
+name|CorrectTypoContext
+name|CTC
+init|=
+name|CTC_Unknown
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -11836,6 +11920,12 @@ parameter_list|(
 name|VarDecl
 modifier|*
 name|ConditionVar
+parameter_list|,
+name|SourceLocation
+name|StmtLoc
+parameter_list|,
+name|bool
+name|ConvertToBoolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12967,19 +13057,15 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ClassesWithUnmarkedVirtualMembers - Contains record decls whose virtual
+comment|/// \brief The list of classes whose vtables have been used within
 end_comment
 
 begin_comment
-comment|/// members need to be marked as referenced at the end of the translation
+comment|/// this translation unit, and the source locations at which the
 end_comment
 
 begin_comment
-comment|/// unit. It will contain polymorphic classes that do not have a key
-end_comment
-
-begin_comment
-comment|/// function or have a key function that has been defined.
+comment|/// first use occurred.
 end_comment
 
 begin_expr_stmt
@@ -12997,34 +13083,87 @@ operator|,
 name|SourceLocation
 operator|>
 operator|,
-literal|4
+literal|16
 operator|>
-name|ClassesWithUnmarkedVirtualMembers
+name|VTableUses
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// MaybeMarkVirtualMembersReferenced - If the passed in method is the
+comment|/// \brief The set of classes whose vtables have been used within
 end_comment
 
 begin_comment
-comment|/// key function of the record decl, will mark virtual member functions as
+comment|/// this translation unit, and a bit that will be true if the vtable is
 end_comment
 
 begin_comment
-comment|/// referenced.
+comment|/// required to be emitted (otherwise, it should be emitted only if needed
+end_comment
+
+begin_comment
+comment|/// by code generation).
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|CXXRecordDecl
+operator|*
+operator|,
+name|bool
+operator|>
+name|VTablesUsed
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief A list of all of the dynamic classes in this translation
+end_comment
+
+begin_comment
+comment|/// unit.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|16
+operator|>
+name|DynamicClasses
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note that the vtable for the given class was used at the
+end_comment
+
+begin_comment
+comment|/// given location.
 end_comment
 
 begin_function_decl
 name|void
-name|MaybeMarkVirtualMembersReferenced
+name|MarkVTableUsed
 parameter_list|(
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|CXXMethodDecl
+name|CXXRecordDecl
 modifier|*
-name|MD
+name|Class
+parameter_list|,
+name|bool
+name|DefinitionRequired
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13053,20 +13192,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ProcessPendingClassesWithUnmarkedVirtualMembers - Will process classes
+comment|/// \brief Define all of the vtables that have been used in this
 end_comment
 
 begin_comment
-comment|/// that might need to have their virtual members marked as referenced.
+comment|/// translation unit and reference any virtual members used by those
 end_comment
 
 begin_comment
-comment|/// Returns false if no work was done.
+comment|/// vtables.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if any work was done, false otherwise.
 end_comment
 
 begin_function_decl
 name|bool
-name|ProcessPendingClassesWithUnmarkedVirtualMembers
+name|DefineUsedVTables
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -13589,6 +13736,18 @@ name|CXXBasePaths
 modifier|&
 name|Paths
 parameter_list|,
+name|CXXBaseSpecifierArray
+modifier|&
+name|BasePath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|BasePathInvolvesVirtualBase
+parameter_list|(
+specifier|const
 name|CXXBaseSpecifierArray
 modifier|&
 name|BasePath
@@ -14183,6 +14342,10 @@ name|ObjectType
 parameter_list|,
 name|bool
 name|EnteringContext
+parameter_list|,
+name|bool
+modifier|&
+name|MemberOfUnknownSpecialization
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14214,6 +14377,10 @@ parameter_list|,
 name|TemplateTy
 modifier|&
 name|Template
+parameter_list|,
+name|bool
+modifier|&
+name|MemberOfUnknownSpecialization
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15480,8 +15647,14 @@ name|IdentifierInfo
 modifier|&
 name|II
 parameter_list|,
+name|SourceLocation
+name|KeywordLoc
+parameter_list|,
 name|SourceRange
-name|Range
+name|NNSRange
+parameter_list|,
+name|SourceLocation
+name|IILoc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -16877,6 +17050,75 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// \brief RAII class that determines when any errors have occurred
+end_comment
+
+begin_comment
+comment|/// between the time the instance was created and the time it was
+end_comment
+
+begin_comment
+comment|/// queried.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ErrorTrap
+block|{
+name|Sema
+modifier|&
+name|SemaRef
+decl_stmt|;
+name|unsigned
+name|PrevErrors
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|ErrorTrap
+argument_list|(
+name|Sema
+operator|&
+name|SemaRef
+argument_list|)
+operator|:
+name|SemaRef
+argument_list|(
+name|SemaRef
+argument_list|)
+operator|,
+name|PrevErrors
+argument_list|(
+argument|SemaRef.getDiagnostics().getNumErrors()
+argument_list|)
+block|{}
+comment|/// \brief Determine whether any errors have occurred since this
+comment|/// object instance was created.
+name|bool
+name|hasErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SemaRef
+operator|.
+name|getDiagnostics
+argument_list|()
+operator|.
+name|getNumErrors
+argument_list|()
+operator|>
+name|PrevErrors
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief A stack-allocated class that identifies which local
 end_comment
 
@@ -18180,6 +18422,10 @@ name|virtual
 name|void
 name|ActOnAtEnd
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceRange
 name|AtEnd
 parameter_list|,
@@ -18268,6 +18514,10 @@ name|virtual
 name|DeclPtrTy
 name|ActOnPropertyImplDecl
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|AtLoc
 parameter_list|,
@@ -18633,6 +18883,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// ActOnPragmaOptionsAlign - Called on well formed #pragma options align.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|ActOnPragmaOptionsAlign
+parameter_list|(
+name|PragmaOptionsAlignKind
+name|Kind
+parameter_list|,
+name|SourceLocation
+name|PragmaLoc
+parameter_list|,
+name|SourceLocation
+name|KindLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ActOnPragmaPack - Called on well formed #pragma pack(...).
 end_comment
 
@@ -18784,20 +19055,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getPragmaPackAlignment() - Return the current alignment as specified by
+comment|/// AddAlignmentAttributesForRecord - Adds any needed alignment attributes to
 end_comment
 
 begin_comment
-comment|/// the current #pragma pack directive, or 0 if none is currently active.
+comment|/// a the record decl, to handle '#pragma pack' and '#pragma options align'.
 end_comment
 
-begin_expr_stmt
-name|unsigned
-name|getPragmaPackAlignment
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+begin_function_decl
+name|void
+name|AddAlignmentAttributesForRecord
+parameter_list|(
+name|RecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// FreePackedContext - Deallocate and null out PackContext.
@@ -19037,6 +19311,10 @@ name|Expr
 parameter_list|,
 name|VariadicCallType
 name|CT
+parameter_list|,
+name|FunctionDecl
+modifier|*
+name|FDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -19887,7 +20165,6 @@ comment|/// type checking for vector binary operators.
 end_comment
 
 begin_function_decl
-specifier|inline
 name|QualType
 name|CheckVectorOperands
 parameter_list|(
@@ -19908,7 +20185,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|inline
 name|QualType
 name|CheckVectorCompareOperands
 parameter_list|(
@@ -20389,6 +20665,24 @@ name|CondExpr
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|OwningExprResult
+name|ActOnBooleanCondition
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|ExprArg
+name|SubExpr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -21460,43 +21754,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|void
-name|CheckSignCompare
-argument_list|(
-name|Expr
-operator|*
-name|LHS
-argument_list|,
-name|Expr
-operator|*
-name|RHS
-argument_list|,
-name|SourceLocation
-name|Loc
-argument_list|,
-specifier|const
-name|BinaryOperator
-operator|::
-name|Opcode
-operator|*
-name|BinOpc
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
-name|CheckImplicitConversion
+name|CheckImplicitConversions
 parameter_list|(
 name|Expr
 modifier|*
 name|E
-parameter_list|,
-name|QualType
-name|Target
 parameter_list|)
 function_decl|;
 end_function_decl

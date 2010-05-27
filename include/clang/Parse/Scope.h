@@ -157,7 +157,7 @@ name|ObjCMethodScope
 init|=
 literal|0x400
 block|,
-comment|/// ElseScope - This scoep corresponds to an 'else' scope of an if/then/else
+comment|/// ElseScope - This scope corresponds to an 'else' scope of an if/then/else
 comment|/// statement.
 name|ElseScope
 init|=

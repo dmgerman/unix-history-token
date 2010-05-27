@@ -667,81 +667,6 @@ operator|=
 literal|256
 block|}
 block|;
-comment|/// BlockInfo - Information to generate a block literal.
-block|struct
-name|BlockInfo
-block|{
-comment|/// BlockLiteralTy - The type of the block literal.
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|BlockLiteralTy
-block|;
-comment|/// Name - the name of the function this block was created for, if any.
-specifier|const
-name|char
-operator|*
-name|Name
-block|;
-comment|/// ByCopyDeclRefs - Variables from parent scopes that have been imported
-comment|/// into this block.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-specifier|const
-name|BlockDeclRefExpr
-operator|*
-block|,
-literal|8
-operator|>
-name|DeclRefs
-block|;
-name|BlockInfo
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|blt
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|n
-argument_list|)
-operator|:
-name|BlockLiteralTy
-argument_list|(
-name|blt
-argument_list|)
-block|,
-name|Name
-argument_list|(
-argument|n
-argument_list|)
-block|{
-comment|// Skip asm prefix, if any.
-if|if
-condition|(
-name|Name
-operator|&&
-name|Name
-index|[
-literal|0
-index|]
-operator|==
-literal|'\01'
-condition|)
-operator|++
-name|Name
-expr_stmt|;
-block|}
-expr|}
-block|;
 name|CGBuilderTy
 operator|&
 name|Builder
@@ -771,23 +696,30 @@ comment|/// characters.
 name|CharUnits
 name|BlockAlign
 block|;
-comment|/// getBlockOffset - Allocate an offset for the ValueDecl from a
-comment|/// BlockDeclRefExpr in a block literal (BlockExpr).
+comment|/// getBlockOffset - Allocate a location within the block's storage
+comment|/// for a value with the given size and alignment requirements.
 name|CharUnits
 name|getBlockOffset
 argument_list|(
-specifier|const
-name|BlockDeclRefExpr
-operator|*
-name|E
+argument|CharUnits Size
+argument_list|,
+argument|CharUnits Align
 argument_list|)
 block|;
 comment|/// BlockHasCopyDispose - True iff the block uses copy/dispose.
 name|bool
 name|BlockHasCopyDispose
 block|;
-comment|/// BlockDeclRefDecls - Decls from BlockDeclRefExprs in apperance order
-comment|/// in a block literal.  Decls without names are used for padding.
+comment|/// BlockLayout - The layout of the block's storage, represented as
+comment|/// a sequence of expressions which require such storage.  The
+comment|/// expressions can be:
+comment|/// - a BlockDeclRefExpr, indicating that the given declaration
+comment|///   from an enclosing scope is needed by the block;
+comment|/// - a DeclRefExpr, which always wraps an anonymous VarDecl with
+comment|///   array type, used to insert padding into the block; or
+comment|/// - a CXXThisExpr, indicating that the C++ 'this' value should
+comment|///   propagate from the parent to the block.
+comment|/// This is a really silly representation.
 name|llvm
 operator|::
 name|SmallVector
@@ -798,12 +730,12 @@ operator|*
 block|,
 literal|8
 operator|>
-name|BlockDeclRefDecls
+name|BlockLayout
 block|;
 comment|/// BlockDecls - Offsets for all Decls in BlockDeclRefExprs.
-name|std
+name|llvm
 operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|Decl
@@ -812,6 +744,11 @@ block|,
 name|CharUnits
 operator|>
 name|BlockDecls
+block|;
+comment|/// BlockCXXThisOffset - The offset of the C++ 'this' value within
+comment|/// the block structure.
+name|CharUnits
+name|BlockCXXThisOffset
 block|;
 name|ImplicitParamDecl
 operator|*

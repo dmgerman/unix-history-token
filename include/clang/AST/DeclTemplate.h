@@ -405,10 +405,16 @@ decl_stmt|;
 name|unsigned
 name|NumStructuredArgs
 decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|TemplateArgument
-modifier|*
+operator|,
+literal|4
+operator|>
 name|FlatArgs
-decl_stmt|;
+expr_stmt|;
 name|unsigned
 name|MaxFlatArgs
 decl_stmt|;
@@ -497,17 +503,16 @@ name|void
 name|EndPack
 parameter_list|()
 function_decl|;
-name|void
-name|ReleaseArgs
-parameter_list|()
-function_decl|;
 name|unsigned
 name|flatSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumFlatArgs
+name|FlatArgs
+operator|.
+name|size
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -519,6 +524,9 @@ specifier|const
 block|{
 return|return
 name|FlatArgs
+operator|.
+name|data
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -591,7 +599,7 @@ block|{
 comment|/// \brief The template argument list.
 comment|///
 comment|/// The integer value will be non-zero to indicate that this
-comment|/// template argument list does not own the pointer.
+comment|/// template argument list does own the pointer.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -624,8 +632,32 @@ expr_stmt|;
 name|unsigned
 name|NumStructuredArguments
 decl_stmt|;
+name|TemplateArgumentList
+argument_list|(
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPL
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|Other
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPL
 name|public
 label|:
+comment|/// TemplateArgumentList - If this constructor is passed "true" for 'TakeArgs'
+comment|/// it copies them into a locally new[]'d array.  If passed "false", then it
+comment|/// just references the array passed in.  This is only safe if the builder
+comment|/// outlives it, but saves a copy.
 name|TemplateArgumentList
 argument_list|(
 argument|ASTContext&Context
@@ -635,15 +667,30 @@ argument_list|,
 argument|bool TakeArgs
 argument_list|)
 empty_stmt|;
-comment|/// \brief Produces a shallow copy of the given template argument list
+comment|/// Produces a shallow copy of the given template argument list.  This
+comment|/// assumes that the input argument list outlives it.  This takes the list as
+comment|/// a pointer to avoid looking like a copy constructor, since this really
+comment|/// really isn't safe to use that way.
+name|explicit
 name|TemplateArgumentList
-argument_list|(
+parameter_list|(
 specifier|const
 name|TemplateArgumentList
-operator|&
+modifier|*
 name|Other
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
+comment|/// Used to release the memory associated with a TemplateArgumentList
+comment|///  object.  FIXME: This is currently not called anywhere, but the
+comment|///  memory will still be freed when using a BumpPtrAllocator.
+name|void
+name|Destroy
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
 operator|~
 name|TemplateArgumentList
 argument_list|()
@@ -1052,6 +1099,12 @@ specifier|const
 name|TemplateArgumentList
 operator|*
 name|TemplateArguments
+block|;
+comment|/// \brief The template arguments as written in the sources, if provided.
+specifier|const
+name|TemplateArgumentListInfo
+operator|*
+name|TemplateArgumentsAsWritten
 block|;
 comment|/// \brief The point at which this function template specialization was
 comment|/// first instantiated.
@@ -1571,6 +1624,15 @@ operator|:
 name|public
 name|TemplateDecl
 block|{
+specifier|static
+name|void
+name|DeallocateCommon
+argument_list|(
+name|void
+operator|*
+name|Ptr
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|/// \brief Data that is common to all of the declarations of a given
@@ -2792,6 +2854,8 @@ argument|ASTContext&Context
 argument_list|,
 argument|Kind DK
 argument_list|,
+argument|TagKind TK
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -2811,6 +2875,8 @@ operator|*
 name|Create
 argument_list|(
 argument|ASTContext&Context
+argument_list|,
+argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
@@ -3288,6 +3354,8 @@ name|ClassTemplatePartialSpecializationDecl
 argument_list|(
 argument|ASTContext&Context
 argument_list|,
+argument|TagKind TK
+argument_list|,
 argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
@@ -3312,6 +3380,8 @@ argument_list|(
 name|Context
 argument_list|,
 name|ClassTemplatePartialSpecialization
+argument_list|,
+name|TK
 argument_list|,
 name|DC
 argument_list|,
@@ -3359,6 +3429,8 @@ operator|*
 name|Create
 argument_list|(
 argument|ASTContext&Context
+argument_list|,
+argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
@@ -3661,6 +3733,15 @@ operator|:
 name|public
 name|TemplateDecl
 block|{
+specifier|static
+name|void
+name|DeallocateCommon
+argument_list|(
+name|void
+operator|*
+name|Ptr
+argument_list|)
+block|;
 name|protected
 operator|:
 comment|/// \brief Data that is common to all of the declarations of a given

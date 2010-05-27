@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===--- TypeVisitor.h - Visitor for Stmt subclasses ------------*- C++ -*-===//
+comment|//===--- TypeVisitor.h - Visitor for Type subclasses ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ argument_list|(
 argument|Type *T
 argument_list|)
 block|{
-comment|// Top switch stmt: dispatch to VisitFooStmt for each FooStmt.
+comment|// Top switch stmt: dispatch to VisitFooType for each FooType.
 switch|switch
 condition|(
 name|T

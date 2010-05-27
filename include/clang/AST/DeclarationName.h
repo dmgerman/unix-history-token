@@ -1299,6 +1299,10 @@ begin_decl_stmt
 name|class
 name|DeclarationNameTable
 block|{
+name|ASTContext
+modifier|&
+name|Ctx
+decl_stmt|;
 name|void
 modifier|*
 name|CXXSpecialNamesImpl
@@ -1313,7 +1317,7 @@ name|void
 modifier|*
 name|CXXLiteralOperatorNames
 decl_stmt|;
-comment|// Actually a FoldingSet<...> *
+comment|// Actually a CXXOperatorIdName*
 name|DeclarationNameTable
 argument_list|(
 specifier|const
@@ -1336,7 +1340,11 @@ comment|// NONCOPYABLE
 name|public
 label|:
 name|DeclarationNameTable
-argument_list|()
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
 expr_stmt|;
 operator|~
 name|DeclarationNameTable

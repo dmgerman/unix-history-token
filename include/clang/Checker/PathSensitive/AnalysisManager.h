@@ -133,8 +133,13 @@ name|ScopeDecl
 block|}
 name|AScope
 block|;
+comment|// The maximum number of exploded nodes the analyzer will generate.
 name|unsigned
 name|MaxNodes
+block|;
+comment|// The maximum number of times the analyzer will go through a loop.
+name|unsigned
+name|MaxLoop
 block|;
 name|bool
 name|VisualizeEGDot
@@ -158,6 +163,9 @@ block|;
 name|bool
 name|TrimGraph
 block|;
+name|bool
+name|InlineCall
+block|;
 name|public
 operator|:
 name|AnalysisManager
@@ -176,6 +184,8 @@ argument|ConstraintManagerCreator constraintmgr
 argument_list|,
 argument|unsigned maxnodes
 argument_list|,
+argument|unsigned maxloop
+argument_list|,
 argument|bool vizdot
 argument_list|,
 argument|bool vizubi
@@ -185,6 +195,8 @@ argument_list|,
 argument|bool eager
 argument_list|,
 argument|bool trim
+argument_list|,
+argument|bool inlinecall
 argument_list|)
 operator|:
 name|Ctx
@@ -227,6 +239,11 @@ argument_list|(
 name|maxnodes
 argument_list|)
 block|,
+name|MaxLoop
+argument_list|(
+name|maxloop
+argument_list|)
+block|,
 name|VisualizeEGDot
 argument_list|(
 name|vizdot
@@ -249,7 +266,12 @@ argument_list|)
 block|,
 name|TrimGraph
 argument_list|(
-argument|trim
+name|trim
+argument_list|)
+block|,
+name|InlineCall
+argument_list|(
+argument|inlinecall
 argument_list|)
 block|{}
 operator|~
@@ -373,6 +395,15 @@ return|return
 name|MaxNodes
 return|;
 block|}
+name|unsigned
+name|getMaxLoop
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxLoop
+return|;
+block|}
 name|bool
 name|shouldVisualizeGraphviz
 argument_list|()
@@ -427,6 +458,15 @@ specifier|const
 block|{
 return|return
 name|EagerlyAssume
+return|;
+block|}
+name|bool
+name|shouldInlineCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InlineCall
 return|;
 block|}
 name|CFG

@@ -111,6 +111,9 @@ name|class
 name|Decl
 decl_stmt|;
 name|class
+name|DiagnosticBuilder
+decl_stmt|;
+name|class
 name|Expr
 decl_stmt|;
 name|class
@@ -1983,8 +1986,32 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
+begin_expr_stmt
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+specifier|const
+name|TemplateArgument
+operator|&
+name|Arg
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 unit|}
+comment|// end namespace clang
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

@@ -217,6 +217,9 @@ name|unsigned
 name|MaxNodes
 decl_stmt|;
 name|unsigned
+name|MaxLoop
+decl_stmt|;
+name|unsigned
 name|AnalyzeAll
 range|:
 literal|1
@@ -263,6 +266,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|EnableExperimentalInternalChecks
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|InlineCall
 range|:
 literal|1
 decl_stmt|;

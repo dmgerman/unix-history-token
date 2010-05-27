@@ -31,7 +31,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{function has been explicitly marked sentinel here}}
+comment|// expected-note 2 {{function has been explicitly marked sentinel here}}
 end_comment
 
 begin_function_decl
@@ -260,6 +260,55 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{not enough variable arguments in 'foo12' declaration to fit a sentinel}}
+comment|// PR 5685
+struct|struct
+name|A
+block|{}
+struct|;
+name|struct
+name|A
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|c
+decl_stmt|;
+name|foo1
+argument_list|(
+literal|3
+argument_list|,
+operator|&
+name|a
+argument_list|,
+operator|&
+name|b
+argument_list|,
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{missing sentinel in function call}}
+name|foo1
+argument_list|(
+literal|3
+argument_list|,
+operator|&
+name|a
+argument_list|,
+operator|&
+name|b
+argument_list|,
+operator|&
+name|c
+argument_list|,
+operator|(
+expr|struct
+name|A
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

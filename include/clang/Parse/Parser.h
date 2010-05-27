@@ -353,6 +353,14 @@ name|OwningPtr
 operator|<
 name|PragmaHandler
 operator|>
+name|OptionsHandler
+expr_stmt|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|PragmaHandler
+operator|>
 name|PackHandler
 expr_stmt|;
 name|llvm
@@ -864,6 +872,26 @@ operator|&&
 literal|"Should consume special tokens with Consume*Token"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Tok
+operator|.
+name|is
+argument_list|(
+name|tok
+operator|::
+name|code_completion
+argument_list|)
+condition|)
+block|{
+name|CodeCompletionRecovery
+argument_list|()
+expr_stmt|;
+return|return
+name|ConsumeCodeCompletionToken
+argument_list|()
+return|;
+block|}
 name|PrevTokLocation
 operator|=
 name|Tok
@@ -1133,6 +1161,51 @@ return|return
 name|PrevTokLocation
 return|;
 block|}
+comment|/// \brief Consume the current code-completion token.
+comment|///
+comment|/// This routine should be called to consume the code-completion token once
+comment|/// a code-completion action has already been invoked.
+name|SourceLocation
+name|ConsumeCodeCompletionToken
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|Tok
+operator|.
+name|is
+argument_list|(
+name|tok
+operator|::
+name|code_completion
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PrevTokLocation
+operator|=
+name|Tok
+operator|.
+name|getLocation
+argument_list|()
+expr_stmt|;
+name|PP
+operator|.
+name|Lex
+argument_list|(
+name|Tok
+argument_list|)
+expr_stmt|;
+return|return
+name|PrevTokLocation
+return|;
+block|}
+comment|///\ brief When we are consuming a code-completion token within having
+comment|/// matched specific position in the grammar, provide code-completion results
+comment|/// based on context.
+name|void
+name|CodeCompletionRecovery
+parameter_list|()
+function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
 comment|/// without consuming any tokens.  LookAhead(0) returns 'Tok', LookAhead(1)
 comment|/// returns the token after Tok, etc.
@@ -3379,6 +3452,12 @@ parameter_list|,
 name|DeclPtrTy
 modifier|&
 name|DeclResult
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|ConvertToBoolean
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -3594,6 +3673,12 @@ parameter_list|,
 name|DeclPtrTy
 modifier|&
 name|DeclResult
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|bool
+name|ConvertToBoolean
 parameter_list|)
 function_decl|;
 name|OwningStmtResult
@@ -4763,6 +4848,13 @@ parameter_list|(
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|FirstIdent
+parameter_list|,
+name|SourceLocation
+name|FirstIdentLoc
+parameter_list|,
 name|Declarator
 modifier|&
 name|D
@@ -5045,8 +5137,9 @@ name|Id
 parameter_list|,
 name|bool
 name|AssumeTemplateId
-init|=
-name|false
+parameter_list|,
+name|SourceLocation
+name|TemplateKWLoc
 parameter_list|)
 function_decl|;
 name|bool
@@ -5311,6 +5404,15 @@ specifier|const
 name|CXXScopeSpec
 modifier|*
 name|SS
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+name|bool
+name|IsTemplateArgumentList
+parameter_list|(
+name|unsigned
+name|Skip
 init|=
 literal|0
 parameter_list|)

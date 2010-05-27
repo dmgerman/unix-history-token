@@ -474,6 +474,20 @@ name|CGBitFieldInfo
 operator|>
 name|BitFields
 expr_stmt|;
+comment|// FIXME: Maybe we could use a CXXBaseSpecifier as the key and use a single
+comment|// map for both virtual and non virtual bases.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|NonVirtualBaseFields
+expr_stmt|;
 comment|/// Whether one of the fields in this record layout is a pointer to data
 comment|/// member, or a struct that contains pointer to data member.
 name|bool
@@ -565,6 +579,37 @@ operator|.
 name|lookup
 argument_list|(
 name|FD
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getNonVirtualBaseLLVMFieldNo
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|NonVirtualBaseFields
+operator|.
+name|count
+argument_list|(
+name|RD
+argument_list|)
+operator|&&
+literal|"Invalid non-virtual base!"
+argument_list|)
+expr_stmt|;
+return|return
+name|NonVirtualBaseFields
+operator|.
+name|lookup
+argument_list|(
+name|RD
 argument_list|)
 return|;
 block|}

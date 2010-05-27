@@ -133,6 +133,15 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|NestedNameSpecifier
+decl_stmt|;
+name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
+name|CXXBaseOrMemberInitializer
+decl_stmt|;
+name|class
 name|LabelStmt
 decl_stmt|;
 name|class
@@ -880,6 +889,18 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit a source range.
+name|void
+name|AddSourceRange
+parameter_list|(
+name|SourceRange
+name|Range
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emit an integral value.
 name|void
 name|AddAPInt
@@ -928,7 +949,7 @@ operator|&
 name|Record
 argument_list|)
 decl_stmt|;
-comment|/// \brief Emit a reference to an identifier
+comment|/// \brief Emit a reference to an identifier.
 name|void
 name|AddIdentifierRef
 parameter_list|(
@@ -942,12 +963,25 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a Selector (which is a smart pointer reference)
+comment|/// \brief Emit a Selector (which is a smart pointer reference).
 name|void
 name|AddSelectorRef
 parameter_list|(
-specifier|const
 name|Selector
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a CXXTemporary.
+name|void
+name|AddCXXTemporary
+parameter_list|(
+specifier|const
+name|CXXTemporary
+modifier|*
+name|Temp
 parameter_list|,
 name|RecordData
 modifier|&
@@ -1088,6 +1122,19 @@ name|AddDeclarationName
 parameter_list|(
 name|DeclarationName
 name|Name
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a nested name specifier.
+name|void
+name|AddNestedNameSpecifier
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|NNS
 parameter_list|,
 name|RecordData
 modifier|&

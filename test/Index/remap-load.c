@@ -24,11 +24,11 @@ comment|// CHECK: remap-load.c:1:26: ParmDecl=parm2:1:26 (Definition) Extent=[1:
 end_comment
 
 begin_comment
-comment|// CHECK: remap-load.c:1:5: UnexposedStmt= Extent=[1:33 - 3:2]
+comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[1:33 - 3:2]
 end_comment
 
 begin_comment
-comment|// CHECK: remap-load.c:1:5: UnexposedStmt= Extent=[2:3 - 2:23]
+comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[2:3 - 2:23]
 end_comment
 
 begin_comment

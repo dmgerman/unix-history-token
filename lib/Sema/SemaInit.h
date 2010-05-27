@@ -218,6 +218,8 @@ name|DeclaratorDecl
 modifier|*
 name|VariableOrMember
 decl_stmt|;
+struct|struct
+block|{
 comment|/// \brief When Kind == EK_Result, EK_Exception, or EK_New, the
 comment|/// location of the 'return', 'throw', or 'new' keyword,
 comment|/// respectively. When Kind == EK_Temporary, the location where
@@ -225,6 +227,13 @@ comment|/// the temporary is being created.
 name|unsigned
 name|Location
 decl_stmt|;
+comment|/// \brief Whether the
+name|bool
+name|NRVO
+decl_stmt|;
+block|}
+name|LocAndNRVO
+struct|;
 comment|/// \brief When Kind == EK_Base, the base specifier that provides the
 comment|/// base class. The lower bit specifies whether the base is an inherited
 comment|/// virtual base.
@@ -316,6 +325,8 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|QualType Type
+argument_list|,
+argument|bool NRVO = false
 argument_list|)
 operator|:
 name|Kind
@@ -330,14 +341,24 @@ argument_list|)
 operator|,
 name|Type
 argument_list|(
-name|Type
+argument|Type
 argument_list|)
-operator|,
+block|{
+name|LocAndNRVO
+operator|.
 name|Location
-argument_list|(
-argument|Loc.getRawEncoding()
-argument_list|)
-block|{ }
+operator|=
+name|Loc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|LocAndNRVO
+operator|.
+name|NRVO
+operator|=
+name|NRVO
+block|;   }
 comment|/// \brief Create the initialization entity for a member subobject.
 name|InitializedEntity
 argument_list|(
@@ -471,6 +492,9 @@ name|ReturnLoc
 parameter_list|,
 name|QualType
 name|Type
+parameter_list|,
+name|bool
+name|NRVO
 parameter_list|)
 block|{
 return|return
@@ -481,6 +505,8 @@ argument_list|,
 name|ReturnLoc
 argument_list|,
 name|Type
+argument_list|,
+name|NRVO
 argument_list|)
 return|;
 block|}
@@ -494,6 +520,9 @@ name|ThrowLoc
 parameter_list|,
 name|QualType
 name|Type
+parameter_list|,
+name|bool
+name|NRVO
 parameter_list|)
 block|{
 return|return
@@ -504,6 +533,8 @@ argument_list|,
 name|ThrowLoc
 argument_list|,
 name|Type
+argument_list|,
+name|NRVO
 argument_list|)
 return|;
 block|}
@@ -671,6 +702,13 @@ name|getDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this initialization allows the named return
+comment|/// value optimization, which also applies to thrown objects.
+name|bool
+name|allowsNRVO
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the base specifier.
 name|CXXBaseSpecifier
 operator|*
@@ -746,6 +784,8 @@ name|SourceLocation
 operator|::
 name|getFromRawEncoding
 argument_list|(
+name|LocAndNRVO
+operator|.
 name|Location
 argument_list|)
 return|;
@@ -772,6 +812,8 @@ name|SourceLocation
 operator|::
 name|getFromRawEncoding
 argument_list|(
+name|LocAndNRVO
+operator|.
 name|Location
 argument_list|)
 return|;
@@ -1485,6 +1527,9 @@ name|FK_ConstructorOverloadFailed
 block|,
 comment|/// \brief Default-initialization of a 'const' object.
 name|FK_DefaultInitOfConst
+block|,
+comment|/// \brief Initialization of an incomplete type.
+name|FK_Incomplete
 block|}
 enum|;
 name|private

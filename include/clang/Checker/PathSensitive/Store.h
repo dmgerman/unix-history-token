@@ -83,6 +83,12 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -572,11 +578,14 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|Store
+specifier|const
+name|GRState
+modifier|*
 name|RemoveDeadBindings
 argument_list|(
-name|Store
-name|store
+name|GRState
+operator|&
+name|state
 argument_list|,
 name|Stmt
 operator|*
@@ -731,6 +740,31 @@ parameter_list|)
 block|{
 return|return
 name|state
+return|;
+block|}
+name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|SVal
+operator|>
+name|getExtent
+argument_list|(
+argument|const GRState *state
+argument_list|,
+argument|const MemRegion *R
+argument_list|)
+block|{
+return|return
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|SVal
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 comment|/// EnterStackFrame - Let the StoreManager to do something when execution

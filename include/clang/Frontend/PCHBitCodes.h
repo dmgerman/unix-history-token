@@ -754,6 +754,11 @@ comment|/// \brief An InjectedClassNameType record.
 name|TYPE_INJECTED_CLASS_NAME
 init|=
 literal|27
+block|,
+comment|/// \brief An ObjCObjectType record.
+name|TYPE_OBJC_OBJECT
+init|=
+literal|28
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -953,8 +958,68 @@ comment|/// IDs. This data is used when performing qualified name lookup
 comment|/// into a DeclContext via DeclContext::lookup.
 name|DECL_CONTEXT_VISIBLE
 block|,
-comment|/// \brief A NamespaceDecl record.
+comment|/// \brief A NamespaceDecl rcord.
 name|DECL_NAMESPACE
+block|,
+comment|/// \brief A NamespaceAliasDecl record.
+name|DECL_NAMESPACE_ALIAS
+block|,
+comment|/// \brief A UsingDecl record.
+name|DECL_USING
+block|,
+comment|/// \brief A UsingShadowDecl record.
+name|DECL_USING_SHADOW
+block|,
+comment|/// \brief A UsingDirecitveDecl record.
+name|DECL_USING_DIRECTIVE
+block|,
+comment|/// \brief An UnresolvedUsingValueDecl record.
+name|DECL_UNRESOLVED_USING_VALUE
+block|,
+comment|/// \brief An UnresolvedUsingTypenameDecl record.
+name|DECL_UNRESOLVED_USING_TYPENAME
+block|,
+comment|/// \brief A LinkageSpecDecl record.
+name|DECL_LINKAGE_SPEC
+block|,
+comment|/// \brief A CXXRecordDecl record.
+name|DECL_CXX_RECORD
+block|,
+comment|/// \brief A CXXMethodDecl record.
+name|DECL_CXX_METHOD
+block|,
+comment|/// \brief A CXXConstructorDecl record.
+name|DECL_CXX_CONSTRUCTOR
+block|,
+comment|/// \brief A CXXDestructorDecl record.
+name|DECL_CXX_DESTRUCTOR
+block|,
+comment|/// \brief A CXXConversionDecl record.
+name|DECL_CXX_CONVERSION
+block|,
+comment|// FIXME: Implement serialization for these decl types. This just
+comment|// allocates the order in which
+name|DECL_FRIEND
+block|,
+name|DECL_FRIEND_TEMPLATE
+block|,
+name|DECL_TEMPLATE
+block|,
+name|DECL_CLASS_TEMPLATE
+block|,
+name|DECL_CLASS_TEMPLATE_SPECIALIZATION
+block|,
+name|DECL_CLASS_TEMPLATE_PARTIAL_SPECIALIZATION
+block|,
+name|DECL_FUNCTION_TEMPLATE
+block|,
+name|DECL_TEMPLATE_TYPE_PARM
+block|,
+name|DECL_NON_TYPE_TEMPLATE_PARM
+block|,
+name|DECL_TEMPLATE_TEMPLATE_PARM
+block|,
+name|DECL_STATIC_ASSERT
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -1179,6 +1244,9 @@ comment|// C++
 comment|/// \brief A CXXOperatorCallExpr record.
 name|EXPR_CXX_OPERATOR_CALL
 block|,
+comment|/// \brief A CXXMemberCallExpr record.
+name|EXPR_CXX_MEMBER_CALL
+block|,
 comment|/// \brief A CXXConstructExpr record.
 name|EXPR_CXX_CONSTRUCT
 block|,
@@ -1200,8 +1268,36 @@ block|,
 comment|// \brief A CXXBoolLiteralExpr record.
 name|EXPR_CXX_BOOL_LITERAL
 block|,
-comment|// \brief A CXXNullPtrLiteralExpr record.
 name|EXPR_CXX_NULL_PTR_LITERAL
+block|,
+comment|// CXXNullPtrLiteralExpr
+name|EXPR_CXX_TYPEID_EXPR
+block|,
+comment|// CXXTypeidExpr (of expr).
+name|EXPR_CXX_TYPEID_TYPE
+block|,
+comment|// CXXTypeidExpr (of type).
+name|EXPR_CXX_THIS
+block|,
+comment|// CXXThisExpr
+name|EXPR_CXX_THROW
+block|,
+comment|// CXXThrowExpr
+name|EXPR_CXX_DEFAULT_ARG
+block|,
+comment|// CXXDefaultArgExpr
+name|EXPR_CXX_BIND_TEMPORARY
+block|,
+comment|// CXXBindTemporaryExpr
+comment|//
+name|EXPR_CXX_ZERO_INIT_VALUE
+block|,
+comment|// CXXZeroInitValueExpr
+name|EXPR_CXX_NEW
+block|,
+comment|// CXXNewExpr
+name|EXPR_CXX_EXPR_WITH_TEMPORARIES
+comment|// CXXExprWithTemporaries
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

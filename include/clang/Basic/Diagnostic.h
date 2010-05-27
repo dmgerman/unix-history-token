@@ -1328,6 +1328,28 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+comment|/// getWarningOptionForDiag - Return the category number that a specified
+comment|/// DiagID belongs to, or 0 if no category.
+specifier|static
+name|unsigned
+name|getCategoryNumberForDiag
+parameter_list|(
+name|unsigned
+name|DiagID
+parameter_list|)
+function_decl|;
+comment|/// getCategoryNameFromID - Given a category ID, return the name of the
+comment|/// category.
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getCategoryNameFromID
+parameter_list|(
+name|unsigned
+name|CategoryID
+parameter_list|)
+function_decl|;
 comment|/// \brief Enumeration describing how the the emission of a diagnostic should
 comment|/// be treated when it occurs during C++ template argument deduction.
 enum|enum

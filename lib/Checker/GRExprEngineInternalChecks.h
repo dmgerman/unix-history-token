@@ -120,6 +120,14 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
+name|RegisterCastSizeChecker
+parameter_list|(
+name|GRExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+function_decl|;
+name|void
 name|RegisterDereferenceChecker
 parameter_list|(
 name|GRExprEngine

@@ -53,7 +53,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// RUN: %clang_cc1 -std=c89 -fsyntax-only -code-completion-at=%s:6:6 %s -o - | FileCheck -check-prefix=CC1 %s
+comment|// RUN: %clang_cc1 -std=c89 -fsyntax-only  -code-completion-at=%s:6:6 %s -o - | FileCheck -check-prefix=CC1 %s
 comment|// CHECK-CC1: f0(<#float x#>, float y)
 comment|// RUN: %clang_cc1 -std=c89 -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CC2 %s
 comment|// CHECK-CC2: f0(float x,<#float y#>)

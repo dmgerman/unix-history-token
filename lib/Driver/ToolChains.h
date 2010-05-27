@@ -87,7 +87,7 @@ comment|/// Generic_GCC - A tool chain using the 'gcc' command to perform
 comment|/// all subcommands; this relies on gcc translating the majority of
 comment|/// command line options.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Generic_GCC
 range|:
 name|public
@@ -175,7 +175,7 @@ block|; }
 decl_stmt|;
 comment|/// Darwin - The base Darwin tool chain.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Darwin
 range|:
 name|public
@@ -709,6 +709,41 @@ return|;
 block|}
 name|virtual
 name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+comment|// Default integrated assembler to on for x86.
+return|return
+operator|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|x86_64
+operator|)
+return|;
+block|}
+name|virtual
+name|bool
 name|IsObjCNonFragileABIDefault
 argument_list|()
 specifier|const
@@ -840,7 +875,7 @@ block|}
 empty_stmt|;
 comment|/// DarwinClang - The Darwin toolchain used by Clang.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|DarwinClang
 range|:
 name|public
@@ -900,7 +935,7 @@ block|}
 decl_stmt|;
 comment|/// DarwinGCC - The Darwin toolchain used by GCC.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|DarwinGCC
 range|:
 name|public
@@ -983,7 +1018,7 @@ block|}
 decl_stmt|;
 comment|/// Darwin_Generic_GCC - Generic Darwin tool chain using gcc.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Darwin_Generic_GCC
 range|:
 name|public
@@ -1028,7 +1063,7 @@ block|}
 expr|}
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|AuroraUX
 operator|:
 name|public
@@ -1064,7 +1099,7 @@ specifier|const
 block|; }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|OpenBSD
 operator|:
 name|public
@@ -1100,7 +1135,7 @@ specifier|const
 block|; }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|FreeBSD
 operator|:
 name|public
@@ -1130,7 +1165,7 @@ specifier|const
 block|; }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|DragonFly
 operator|:
 name|public
@@ -1166,7 +1201,7 @@ specifier|const
 block|; }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Linux
 operator|:
 name|public
@@ -1193,7 +1228,7 @@ block|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
 comment|/// all subcommands. See http://tce.cs.tut.fi for our peculiar target.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|TCEToolChain
 operator|:
 name|public

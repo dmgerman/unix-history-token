@@ -206,6 +206,12 @@ literal|1
 decl_stmt|;
 comment|/// If -Os is specified.
 name|unsigned
+name|RelaxAll
+range|:
+literal|1
+decl_stmt|;
+comment|/// Relax all machine code instructions.
+name|unsigned
 name|SoftFloat
 range|:
 literal|1
@@ -358,6 +364,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|OptimizeSize
+operator|=
+literal|0
+expr_stmt|;
+name|RelaxAll
 operator|=
 literal|0
 expr_stmt|;

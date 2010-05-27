@@ -168,7 +168,7 @@ comment|// Darwin bindings
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -ccc-print-bindings %s 2> %t
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -no-integrated-as -ccc-print-bindings %s 2> %t
 end_comment
 
 begin_comment

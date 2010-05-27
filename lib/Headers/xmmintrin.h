@@ -3967,7 +3967,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|(__builtin_shufflevector(a, b, (mask)& 0x3, ((mask)& 0xc)>> 2, \                                  (((mask)& 0x30)>> 4) + 4, \                                  (((mask)& 0xc0)>> 6) + 4))
+value|(__builtin_shufflevector((__v4sf)a, (__v4sf)b, \                                  (mask)& 0x3, ((mask)& 0xc)>> 2, \                                  (((mask)& 0x30)>> 4) + 4, \                                  (((mask)& 0xc0)>> 6) + 4))
 end_define
 
 begin_decl_stmt

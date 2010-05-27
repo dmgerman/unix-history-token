@@ -10,6 +10,10 @@ struct_decl|struct
 end_struct_decl
 
 begin_comment
+comment|/* foo */
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s.h:4:8 -o - %s | FileCheck -check-prefix=CC1 %s
 end_comment
 
@@ -35,6 +39,22 @@ end_comment
 
 begin_comment
 comment|// CHECK-CC2: Y
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:5:3 -o - %s | FileCheck -check-prefix=CC3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC3: X
+end_comment
+
+begin_comment
+comment|// CHECK-CC3: Xa
+end_comment
+
+begin_comment
+comment|// CHECK-CC3: Y
 end_comment
 
 end_unit

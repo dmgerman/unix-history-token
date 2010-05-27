@@ -253,6 +253,9 @@ decl_stmt|;
 name|class
 name|CGRecordLayout
 decl_stmt|;
+name|class
+name|CGBlockInfo
+decl_stmt|;
 comment|/// CodeGenFunction - This class organizes the per-function state that is used
 comment|/// while generating LLVM code.
 name|class
@@ -385,6 +388,23 @@ decl_stmt|;
 name|bool
 name|CatchUndefined
 decl_stmt|;
+comment|/// \brief A mapping from NRVO variables to the flags used to indicate
+comment|/// when the NRVO has been applied to this variable.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|Value
+operator|*
+operator|>
+name|NRVOFlags
+expr_stmt|;
 name|public
 label|:
 comment|/// ObjCEHValueStack - Stack of Objective-C exception values, used for
@@ -1723,8 +1743,7 @@ name|BlockExpr
 operator|*
 name|BExpr
 argument_list|,
-specifier|const
-name|BlockInfo
+name|CGBlockInfo
 operator|&
 name|Info
 argument_list|,
@@ -1747,37 +1766,8 @@ name|Value
 operator|*
 operator|>
 name|ldm
-argument_list|,
-name|CharUnits
-operator|&
-name|Size
-argument_list|,
-name|CharUnits
-operator|&
-name|Align
-argument_list|,
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-specifier|const
-name|Expr
-operator|*
-argument_list|,
-literal|8
-operator|>
-operator|&
-name|subBlockDeclRefDecls
-argument_list|,
-name|bool
-operator|&
-name|subBlockHasCopyDispose
 argument_list|)
 expr_stmt|;
-name|void
-name|BlockForwardSelf
-parameter_list|()
-function_decl|;
 name|llvm
 operator|::
 name|Value
@@ -1785,7 +1775,16 @@ operator|*
 name|LoadBlockStruct
 argument_list|()
 expr_stmt|;
-name|CharUnits
+name|void
+name|AllocateBlockCXXThisPointer
+parameter_list|(
+specifier|const
+name|CXXThisExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+name|void
 name|AllocateBlockDecl
 parameter_list|(
 specifier|const
@@ -1800,10 +1799,33 @@ name|Value
 operator|*
 name|GetAddrOfBlockDecl
 argument_list|(
-specifier|const
-name|BlockDeclRefExpr
-operator|*
+argument|const BlockDeclRefExpr *E
+argument_list|)
+block|{
+return|return
+name|GetAddrOfBlockDecl
+argument_list|(
 name|E
+operator|->
+name|getDecl
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|isByRef
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|llvm
+operator|::
+name|Value
+operator|*
+name|GetAddrOfBlockDecl
+argument_list|(
+argument|const ValueDecl *D
+argument_list|,
+argument|bool ByRef
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1927,6 +1949,10 @@ name|CD
 parameter_list|,
 name|CXXCtorType
 name|Type
+parameter_list|,
+name|FunctionArgList
+modifier|&
+name|Args
 parameter_list|)
 function_decl|;
 comment|/// InitializeVTablePointer - Initialize the vtable pointer of the given
@@ -2011,15 +2037,6 @@ specifier|const
 name|CXXRecordDecl
 modifier|*
 name|ClassDecl
-parameter_list|)
-function_decl|;
-name|void
-name|SynthesizeCXXCopyConstructor
-parameter_list|(
-specifier|const
-name|FunctionArgList
-modifier|&
-name|Args
 parameter_list|)
 function_decl|;
 comment|/// EmitDtorEpilogue - Emit all code that comes at the end of class's
@@ -2851,22 +2868,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|EmitAggregateClear
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestPtr
-argument_list|,
-name|QualType
-name|Ty
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/// StartBlock - Start new block named N. If insert block is a dummy block
 end_comment
@@ -2977,12 +2978,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitMemSetToZero - Generate code to memset a value of the given type to 0.
+comment|/// EmitNullInitialization - Generate code to set a value of the given type to
+end_comment
+
+begin_comment
+comment|/// null, If the type contains data member pointers, they will be initialized
+end_comment
+
+begin_comment
+comment|/// to -1 in accordance with the Itanium C++ ABI.
 end_comment
 
 begin_decl_stmt
 name|void
-name|EmitMemSetToZero
+name|EmitNullInitialization
 argument_list|(
 name|llvm
 operator|::
@@ -3233,59 +3242,6 @@ name|BaseClassDecl
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|EmitClassAggrMemberwiseCopy
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestValue
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcValue
-argument_list|,
-specifier|const
-name|ConstantArrayType
-operator|*
-name|Array
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|EmitClassMemberwiseCopy
-argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|DestValue
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|SrcValue
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void
@@ -4187,6 +4143,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getUnwindResumeOrRethrowFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|CXXTryStmtInfo
@@ -4951,6 +4917,27 @@ end_expr_stmt
 
 begin_decl_stmt
 name|LValue
+name|EmitLValueForAnonRecordField
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Base
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|Field
+argument_list|,
+name|unsigned
+name|CVRQualifiers
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LValue
 name|EmitLValueForField
 argument_list|(
 name|llvm
@@ -5615,6 +5602,12 @@ specifier|const
 name|ObjCMessageExpr
 modifier|*
 name|E
+parameter_list|,
+name|ReturnValueSlot
+name|Return
+init|=
+name|ReturnValueSlot
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5627,6 +5620,12 @@ specifier|const
 name|Expr
 modifier|*
 name|E
+parameter_list|,
+name|ReturnValueSlot
+name|Return
+init|=
+name|ReturnValueSlot
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5644,6 +5643,12 @@ specifier|const
 name|Selector
 modifier|&
 name|S
+parameter_list|,
+name|ReturnValueSlot
+name|Return
+init|=
+name|ReturnValueSlot
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6440,6 +6445,30 @@ name|E
 parameter_list|,
 name|QualType
 name|ArgType
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitDelegateCallArg - We are performing a delegate call; that
+end_comment
+
+begin_comment
+comment|/// is, the current function is delegating to another one.  Produce
+end_comment
+
+begin_comment
+comment|/// a r-value suitable for passing the given parameter.
+end_comment
+
+begin_function_decl
+name|RValue
+name|EmitDelegateCallArg
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|Param
 parameter_list|)
 function_decl|;
 end_function_decl

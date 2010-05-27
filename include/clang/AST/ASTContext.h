@@ -458,9 +458,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|QualifiedNameType
+name|ElaboratedType
 operator|>
-name|QualifiedNameTypes
+name|ElaboratedTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -474,9 +474,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|ObjCInterfaceType
+name|ObjCObjectTypeImpl
 operator|>
-name|ObjCInterfaceTypes
+name|ObjCObjectTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -485,14 +485,6 @@ operator|<
 name|ObjCObjectPointerType
 operator|>
 name|ObjCObjectPointerTypes
-expr_stmt|;
-name|llvm
-operator|::
-name|FoldingSet
-operator|<
-name|ElaboratedType
-operator|>
-name|ElaboratedTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -1641,16 +1633,14 @@ name|BlockHasCopyDispose
 argument_list|,
 name|llvm
 operator|::
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 specifier|const
 name|Expr
 operator|*
-argument_list|,
-literal|8
 operator|>
 operator|&
-name|BDRDs
+name|Layout
 argument_list|)
 decl_stmt|;
 comment|/// This builds the struct used for __block variables.
@@ -2137,8 +2127,11 @@ argument_list|()
 parameter_list|)
 function_decl|;
 name|QualType
-name|getQualifiedNameType
+name|getElaboratedType
 parameter_list|(
+name|ElaboratedTypeKeyword
+name|Keyword
+parameter_list|,
 name|NestedNameSpecifier
 modifier|*
 name|NNS
@@ -2192,62 +2185,37 @@ argument_list|()
 parameter_list|)
 function_decl|;
 name|QualType
-name|getElaboratedType
-argument_list|(
-name|QualType
-name|UnderlyingType
-argument_list|,
-name|ElaboratedType
-operator|::
-name|TagKind
-name|Tag
-argument_list|)
-decl_stmt|;
-name|QualType
 name|getObjCInterfaceType
 parameter_list|(
 specifier|const
 name|ObjCInterfaceDecl
 modifier|*
 name|Decl
+parameter_list|)
+function_decl|;
+name|QualType
+name|getObjCObjectType
+parameter_list|(
+name|QualType
+name|Base
 parameter_list|,
 name|ObjCProtocolDecl
 modifier|*
+specifier|const
 modifier|*
 name|Protocols
-init|=
-literal|0
 parameter_list|,
 name|unsigned
 name|NumProtocols
-init|=
-literal|0
 parameter_list|)
 function_decl|;
-comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type for the
-comment|/// given interface decl and the conforming protocol list.
+comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type
+comment|/// for the given ObjCObjectType.
 name|QualType
 name|getObjCObjectPointerType
 parameter_list|(
 name|QualType
 name|OIT
-parameter_list|,
-name|ObjCProtocolDecl
-modifier|*
-modifier|*
-name|ProtocolList
-init|=
-literal|0
-parameter_list|,
-name|unsigned
-name|NumProtocols
-init|=
-literal|0
-parameter_list|,
-name|unsigned
-name|Quals
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 comment|/// getTypeOfType - GCC extension.
@@ -3185,6 +3153,35 @@ modifier|*
 name|T
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|pair
+operator|<
+name|CharUnits
+operator|,
+name|CharUnits
+operator|>
+name|getTypeInfoInChars
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|T
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|CharUnits
+operator|,
+name|CharUnits
+operator|>
+name|getTypeInfoInChars
+argument_list|(
+argument|QualType T
+argument_list|)
+expr_stmt|;
 comment|/// getPreferredTypeAlign - Return the "preferred" alignment of the specified
 comment|/// type for the current target in bits.  This can be different than the ABI
 comment|/// alignment in cases where it is beneficial for performance to overalign
@@ -3987,12 +3984,12 @@ name|bool
 name|canAssignObjCInterfaces
 parameter_list|(
 specifier|const
-name|ObjCInterfaceType
+name|ObjCObjectType
 modifier|*
 name|LHS
 parameter_list|,
 specifier|const
-name|ObjCInterfaceType
+name|ObjCObjectType
 modifier|*
 name|RHS
 parameter_list|)
@@ -4060,6 +4057,14 @@ name|bool
 name|OfBlockPointer
 init|=
 name|false
+parameter_list|)
+function_decl|;
+name|QualType
+name|mergeObjCGCQualifiers
+parameter_list|(
+name|QualType
+parameter_list|,
+name|QualType
 parameter_list|)
 function_decl|;
 comment|/// UsualArithmeticConversionsType - handles the various conversions
@@ -4297,6 +4302,31 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// \brief Add a deallocation callback that will be invoked when the
+comment|/// ASTContext is destroyed.
+comment|///
+comment|/// \brief Callback A callback function that will be invoked on destruction.
+comment|///
+comment|/// \brief Data Pointer data that will be provided to the callback function
+comment|/// when it is called.
+name|void
+name|AddDeallocation
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|Callback
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|Data
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|ASTContext
@@ -4387,6 +4417,33 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+comment|/// \brief A set of deallocations that should be performed when the
+comment|/// ASTContext is destroyed.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|,
+name|void
+operator|*
+operator|>
+operator|,
+literal|16
+operator|>
+name|Deallocations
+expr_stmt|;
 comment|// FIXME: This currently contains the set of StoredDeclMaps used
 comment|// by DeclContext objects.  This probably should not be in ASTContext,
 comment|// but we include it here so that ASTContext can quickly deallocate them.
@@ -4404,6 +4461,10 @@ expr_stmt|;
 name|friend
 name|class
 name|DeclContext
+decl_stmt|;
+name|friend
+name|class
+name|DeclarationNameTable
 decl_stmt|;
 name|void
 name|ReleaseDeclContextMaps

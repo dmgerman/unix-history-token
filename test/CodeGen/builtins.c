@@ -1102,5 +1102,82 @@ begin_comment
 comment|// CHECK: }
 end_comment
 
+begin_comment
+comment|// CHECK: define void @test_float_builtins
+end_comment
+
+begin_function
+name|void
+name|test_float_builtins
+parameter_list|(
+name|float
+name|F
+parameter_list|,
+name|double
+name|D
+parameter_list|,
+name|long
+name|double
+name|LD
+parameter_list|)
+block|{
+specifier|volatile
+name|int
+name|res
+decl_stmt|;
+name|res
+operator|=
+name|__builtin_isinf
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  call float @fabsf(float
+comment|// CHECK:  fcmp oeq float {{.*}}, 0x7FF0000000000000
+name|res
+operator|=
+name|__builtin_isinf
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  call double @fabs(double
+comment|// CHECK:  fcmp oeq double {{.*}}, 0x7FF0000000000000
+name|res
+operator|=
+name|__builtin_isinf
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  call x86_fp80 @fabsl(x86_fp80
+comment|// CHECK:  fcmp oeq x86_fp80 {{.*}}, 0xK7FFF8000000000000000
+name|res
+operator|=
+name|__builtin_isfinite
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fcmp oeq float
+comment|// CHECK: call float @fabsf
+comment|// CHECK: fcmp une float {{.*}}, 0x7FF0000000000000
+comment|// CHECK: and i1
+name|res
+operator|=
+name|__builtin_isnormal
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK: fcmp oeq float
+comment|// CHECK: call float @fabsf
+comment|// CHECK: fcmp ult float {{.*}}, 0x7FF0000000000000
+comment|// CHECK: fcmp uge float {{.*}}, 0x3810000000000000
+comment|// CHECK: and i1
+comment|// CHECK: and i1
+block|}
+end_function
+
 end_unit
 

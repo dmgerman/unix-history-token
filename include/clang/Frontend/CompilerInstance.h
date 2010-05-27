@@ -1501,6 +1501,9 @@ argument_list|,
 name|bool
 name|ShowMacros
 argument_list|,
+name|bool
+name|ShowCodePatterns
+argument_list|,
 name|llvm
 operator|::
 name|raw_ostream

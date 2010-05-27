@@ -73,7 +73,7 @@ name|p
 init|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 decl_stmt|;
 return|return;
@@ -92,7 +92,7 @@ name|p
 init|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 decl_stmt|;
 comment|// expected-warning{{Allocated memory never released. Potential memory leak.}}
@@ -110,7 +110,7 @@ name|p
 init|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 decl_stmt|;
 name|free
@@ -156,7 +156,7 @@ name|p
 operator|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 expr_stmt|;
 return|return
@@ -198,7 +198,7 @@ name|p_f4
 operator|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 expr_stmt|;
 return|return
@@ -220,7 +220,7 @@ name|q
 init|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 decl_stmt|;
 name|q
@@ -250,7 +250,7 @@ name|p
 init|=
 name|malloc
 argument_list|(
-literal|10
+literal|12
 argument_list|)
 decl_stmt|;
 if|if
@@ -341,6 +341,50 @@ operator|=
 literal|'a'
 expr_stmt|;
 comment|// expected-warning{{Use dynamically allocated memory after it is freed.}}
+block|}
+end_function
+
+begin_function
+name|void
+name|PR6123
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|x
+init|=
+name|malloc
+argument_list|(
+literal|11
+argument_list|)
+decl_stmt|;
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+block|}
+end_function
+
+begin_function
+name|void
+name|PR7217
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|buf
+init|=
+name|malloc
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+comment|// expected-warning{{Cast a region whose size is not a multiple of the destination type size.}}
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'c'
+expr_stmt|;
+comment|// not crash
 block|}
 end_function
 

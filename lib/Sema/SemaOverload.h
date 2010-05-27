@@ -72,7 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclTemplate.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/TemplateBase.h"
 end_include
 
 begin_include
@@ -196,6 +208,12 @@ comment|///< Conversions between compatible types in C99
 name|ICK_Derived_To_Base
 block|,
 comment|///< Derived-to-base (C++ [over.best.ics])
+name|ICK_Vector_Conversion
+block|,
+comment|///< Vector conversions
+name|ICK_Vector_Splat
+block|,
+comment|///< A vector splat from an arithmetic type
 name|ICK_Complex_Real
 block|,
 comment|///< Complex-real conversions (C99 6.3.1.7)
@@ -490,6 +508,25 @@ name|void
 name|setAsIdentityConversion
 parameter_list|()
 function_decl|;
+name|bool
+name|isIdentityConversion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|First
+operator|==
+name|ICK_Identity
+operator|&&
+name|Second
+operator|==
+name|ICK_Identity
+operator|&&
+name|Third
+operator|==
+name|ICK_Identity
+return|;
+block|}
 name|ImplicitConversionRank
 name|getRank
 argument_list|()
@@ -1585,11 +1622,46 @@ comment|// A Sema::TemplateDeductionResult.
 name|unsigned
 name|Result
 decl_stmt|;
-comment|// A TemplateParameter.
+comment|/// \brief Opaque pointer containing additional data about
+comment|/// this deduction failure.
 name|void
 modifier|*
-name|TemplateParameter
+name|Data
 decl_stmt|;
+comment|/// \brief Retrieve the template parameter this deduction failure
+comment|/// refers to, if any.
+name|TemplateParameter
+name|getTemplateParameter
+parameter_list|()
+function_decl|;
+comment|/// \brief Retrieve the template argument list associated with this
+comment|/// deduction failure, if any.
+name|TemplateArgumentList
+modifier|*
+name|getTemplateArgumentList
+parameter_list|()
+function_decl|;
+comment|/// \brief Return the first template argument this deduction failure
+comment|/// refers to, if any.
+specifier|const
+name|TemplateArgument
+modifier|*
+name|getFirstArg
+parameter_list|()
+function_decl|;
+comment|/// \brief Return the second template argument this deduction failure
+comment|/// refers to, if any.
+specifier|const
+name|TemplateArgument
+modifier|*
+name|getSecondArg
+parameter_list|()
+function_decl|;
+comment|/// \brief Free any memory associated with this deduction failure.
+name|void
+name|Destroy
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 union|union
@@ -1711,6 +1783,23 @@ expr_stmt|;
 name|SourceLocation
 name|Loc
 decl_stmt|;
+name|OverloadCandidateSet
+argument_list|(
+specifier|const
+name|OverloadCandidateSet
+operator|&
+argument_list|)
+expr_stmt|;
+name|OverloadCandidateSet
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|OverloadCandidateSet
+operator|&
+operator|)
+decl_stmt|;
 name|public
 label|:
 name|OverloadCandidateSet
@@ -1758,18 +1847,14 @@ comment|/// \brief Clear out all of the candidates.
 name|void
 name|clear
 parameter_list|()
+function_decl|;
+operator|~
+name|OverloadCandidateSet
+argument_list|()
 block|{
-name|inherited
-operator|::
 name|clear
 argument_list|()
-expr_stmt|;
-name|Functions
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
+block|; }
 block|}
 empty_stmt|;
 block|}

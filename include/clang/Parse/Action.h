@@ -445,6 +445,18 @@ name|FullExprArg
 block|{
 name|public
 label|:
+name|FullExprArg
+argument_list|(
+name|ActionBase
+operator|&
+name|actions
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|actions
+argument_list|)
+block|{ }
 comment|// FIXME: The const_cast here is ugly. RValue references would make this
 comment|// much nicer (or we could duplicate a bunch of the move semantics
 comment|// emulation code from Ownership.h).
@@ -461,9 +473,45 @@ argument_list|(
 argument|move(const_cast<FullExprArg&>(Other).Expr)
 argument_list|)
 block|{}
+name|FullExprArg
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|FullExprArg
+operator|&
+name|Other
+operator|)
+block|{
+name|Expr
+operator|.
+name|operator
+operator|=
+operator|(
+name|move
+argument_list|(
+name|const_cast
+operator|<
+name|FullExprArg
+operator|&
+operator|>
+operator|(
+name|Other
+operator|)
+operator|.
+name|Expr
+argument_list|)
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|OwningExprResult
 name|release
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|move
@@ -1209,6 +1257,22 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param MemberOfUnknownSpecialization Will be set true if the resulting
+end_comment
+
+begin_comment
+comment|/// member would be a member of an unknown specialization, in which case this
+end_comment
+
+begin_comment
+comment|/// lookup cannot possibly pass at this time.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \returns the kind of template that this name refers to.
 end_comment
 
@@ -1239,6 +1303,10 @@ parameter_list|,
 name|TemplateTy
 modifier|&
 name|Template
+parameter_list|,
+name|bool
+modifier|&
+name|MemberOfUnknownSpecialization
 parameter_list|)
 init|=
 literal|0
@@ -2429,6 +2497,9 @@ name|Scope
 modifier|*
 name|S
 parameter_list|,
+name|AccessSpecifier
+name|Access
+parameter_list|,
 name|DeclSpec
 modifier|&
 name|DS
@@ -3583,6 +3654,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param SwitchLoc The location of the "switch" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param Cond if the "switch" condition was parsed as an expression,
 end_comment
 
@@ -3607,7 +3686,10 @@ name|virtual
 name|OwningStmtResult
 name|ActOnStartOfSwitchStmt
 parameter_list|(
-name|FullExprArg
+name|SourceLocation
+name|SwitchLoc
+parameter_list|,
+name|ExprArg
 name|Cond
 parameter_list|,
 name|DeclPtrTy
@@ -3619,31 +3701,6 @@ name|StmtEmpty
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/// ActOnSwitchBodyError - This is called if there is an error parsing the
-end_comment
-
-begin_comment
-comment|/// body of the switch stmt instead of ActOnFinishSwitchStmt.
-end_comment
-
-begin_function
-name|virtual
-name|void
-name|ActOnSwitchBodyError
-parameter_list|(
-name|SourceLocation
-name|SwitchLoc
-parameter_list|,
-name|StmtArg
-name|Switch
-parameter_list|,
-name|StmtArg
-name|Body
-parameter_list|)
-block|{}
 end_function
 
 begin_function
@@ -6757,6 +6814,75 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Parsed an expression that will be handled as the condition in
+end_comment
+
+begin_comment
+comment|/// an if/while/for statement.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine handles the conversion of the expression to 'bool'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the expression occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Loc The location of the construct that requires the conversion to
+end_comment
+
+begin_comment
+comment|/// a boolean value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SubExpr The expression that is being converted to bool.
+end_comment
+
+begin_function
+name|virtual
+name|OwningExprResult
+name|ActOnBooleanCondition
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|ExprArg
+name|SubExpr
+parameter_list|)
+block|{
+return|return
+name|move
+argument_list|(
+name|SubExpr
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXNew - Parsed a C++ 'new' expression. UseGlobal is true if the
 end_comment
 
@@ -9507,6 +9633,10 @@ name|virtual
 name|DeclPtrTy
 name|ActOnPropertyImplDecl
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|AtLoc
 parameter_list|,
@@ -9672,6 +9802,10 @@ name|virtual
 name|void
 name|ActOnAtEnd
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceRange
 name|AtEnd
 parameter_list|,
@@ -10402,6 +10536,52 @@ end_comment
 
 begin_enum
 enum|enum
+name|PragmaOptionsAlignKind
+block|{
+name|POAK_Natural
+block|,
+comment|// #pragma options align=natural
+name|POAK_Power
+block|,
+comment|// #pragma options align=power
+name|POAK_Mac68k
+block|,
+comment|// #pragma options align=mac68k
+name|POAK_Reset
+comment|// #pragma options align=reset
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// ActOnPragmaOptionsAlign - Called on well formed #pragma options
+end_comment
+
+begin_comment
+comment|/// align={...}.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnPragmaOptionsAlign
+parameter_list|(
+name|PragmaOptionsAlignKind
+name|Kind
+parameter_list|,
+name|SourceLocation
+name|PragmaLoc
+parameter_list|,
+name|SourceLocation
+name|KindLoc
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_enum
+enum|enum
 name|PragmaPackKind
 block|{
 name|PPK_Default
@@ -10640,9 +10820,14 @@ comment|/// \brief Code completion occurs at the beginning of the
 comment|/// initialization statement (or expression) in a for loop.
 name|CCC_ForInit
 block|,
-comment|/// \brief Code completion ocurs within the condition of an if,
+comment|/// \brief Code completion occurs within the condition of an if,
 comment|/// while, switch, or for statement.
 name|CCC_Condition
+block|,
+comment|/// \brief Code completion occurs within the body of a function on a
+comment|/// recovery path, where we do not have a specific handle on our position
+comment|/// in the grammar.
+name|CCC_RecoveryInFunction
 block|}
 enum|;
 end_enum
@@ -12202,6 +12387,8 @@ argument_list|,
 argument|bool EnteringContext
 argument_list|,
 argument|TemplateTy&Template
+argument_list|,
+argument|bool&MemberOfUnknownSpecialization
 argument_list|)
 block|;
 comment|/// ActOnDeclarator - If this is a typedef declarator, we modify the

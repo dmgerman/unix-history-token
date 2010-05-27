@@ -933,6 +933,147 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// IsBeforeInTranslationUnitCache - This class holds the cache used by
+comment|/// isBeforeInTranslationUnit.  The cache structure is complex enough to be
+comment|/// worth breaking out of SourceManager.
+name|class
+name|IsBeforeInTranslationUnitCache
+block|{
+comment|/// L/R QueryFID - These are the FID's of the cached query.  If these match up
+comment|/// with a subsequent query, the result can be reused.
+name|FileID
+name|LQueryFID
+decl_stmt|,
+name|RQueryFID
+decl_stmt|;
+comment|/// CommonFID - This is the file found in common between the two #include
+comment|/// traces.  It is the nearest common ancestor of the #include tree.
+name|FileID
+name|CommonFID
+decl_stmt|;
+comment|/// L/R CommonOffset - This is the offset of the previous query in CommonFID.
+comment|/// Usually, this represents the location of the #include for QueryFID, but if
+comment|/// LQueryFID is a parent of RQueryFID (or vise versa) then these can be a
+comment|/// random token in the parent.
+name|unsigned
+name|LCommonOffset
+decl_stmt|,
+name|RCommonOffset
+decl_stmt|;
+name|public
+label|:
+comment|/// isCacheValid - Return true if the currently cached values match up with
+comment|/// the specified LHS/RHS query.  If not, we can't use the cache.
+name|bool
+name|isCacheValid
+argument_list|(
+name|FileID
+name|LHS
+argument_list|,
+name|FileID
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|LQueryFID
+operator|==
+name|LHS
+operator|&&
+name|RQueryFID
+operator|==
+name|RHS
+return|;
+block|}
+comment|/// getCachedResult - If the cache is valid, compute the result given the
+comment|/// specified offsets in the LHS/RHS FID's.
+name|bool
+name|getCachedResult
+argument_list|(
+name|unsigned
+name|LOffset
+argument_list|,
+name|unsigned
+name|ROffset
+argument_list|)
+decl|const
+block|{
+comment|// If one of the query files is the common file, use the offset.  Otherwise,
+comment|// use the #include loc in the common file.
+if|if
+condition|(
+name|LQueryFID
+operator|!=
+name|CommonFID
+condition|)
+name|LOffset
+operator|=
+name|LCommonOffset
+expr_stmt|;
+if|if
+condition|(
+name|RQueryFID
+operator|!=
+name|CommonFID
+condition|)
+name|ROffset
+operator|=
+name|RCommonOffset
+expr_stmt|;
+return|return
+name|LOffset
+operator|<
+name|ROffset
+return|;
+block|}
+comment|// Set up a new query.
+name|void
+name|setQueryFIDs
+parameter_list|(
+name|FileID
+name|LHS
+parameter_list|,
+name|FileID
+name|RHS
+parameter_list|)
+block|{
+name|LQueryFID
+operator|=
+name|LHS
+expr_stmt|;
+name|RQueryFID
+operator|=
+name|RHS
+expr_stmt|;
+block|}
+name|void
+name|setCommonLoc
+parameter_list|(
+name|FileID
+name|commonFID
+parameter_list|,
+name|unsigned
+name|lCommonOffset
+parameter_list|,
+name|unsigned
+name|rCommonOffset
+parameter_list|)
+block|{
+name|CommonFID
+operator|=
+name|commonFID
+expr_stmt|;
+name|LCommonOffset
+operator|=
+name|lCommonOffset
+expr_stmt|;
+name|RCommonOffset
+operator|=
+name|rCommonOffset
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// SourceManager - This file handles loading and caching of source files into
 comment|/// memory.  This object owns the MemoryBuffer objects for all of the loaded
 comment|/// files and assigns unique FileID's for each unique #include chain.
@@ -1071,16 +1212,8 @@ name|NumBinaryProbes
 decl_stmt|;
 comment|// Cache results for the isBeforeInTranslationUnit method.
 name|mutable
-name|FileID
-name|LastLFIDForBeforeTUCheck
-decl_stmt|;
-name|mutable
-name|FileID
-name|LastRFIDForBeforeTUCheck
-decl_stmt|;
-name|mutable
-name|bool
-name|LastResForBeforeTUCheck
+name|IsBeforeInTranslationUnitCache
+name|IsBeforeInTUCache
 decl_stmt|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit

@@ -531,6 +531,8 @@ argument_list|,
 argument|unsigned NumStringToks
 argument_list|,
 argument|Preprocessor&PP
+argument_list|,
+argument|bool Complain = true
 argument_list|)
 empty_stmt|;
 name|bool
@@ -609,6 +611,11 @@ parameter_list|,
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+name|bool
+name|Complain
+init|=
+name|true
 parameter_list|)
 function_decl|;
 block|}

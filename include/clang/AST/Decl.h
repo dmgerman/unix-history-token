@@ -184,6 +184,7 @@ name|getTypeLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// implemented in TypeLoc.h
 block|}
 empty_stmt|;
 comment|/// TranslationUnitDecl - The top declaration context.
@@ -543,6 +544,22 @@ name|Name
 operator|.
 name|getAsString
 argument_list|()
+return|;
+block|}
+name|void
+name|printName
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Name
+operator|.
+name|printName
+argument_list|(
+name|os
+argument_list|)
 return|;
 block|}
 comment|/// getDeclName - Get the actual, stored name of the declaration,
@@ -949,9 +966,11 @@ function_decl|;
 comment|// \brief Returns true if this is an anonymous namespace declaration.
 comment|//
 comment|// For example:
+comment|/// \code
 comment|//   namespace {
 comment|//     ...
 comment|//   };
+comment|// \endcode
 comment|// q.v. C++ [namespace.unnamed]
 name|bool
 name|isAnonymousNamespace
@@ -964,6 +983,8 @@ name|getIdentifier
 argument_list|()
 return|;
 block|}
+comment|/// \brief Return the next extended namespace declaration or null if this
+comment|/// is none.
 name|NamespaceDecl
 modifier|*
 name|getNextNamespace
@@ -984,6 +1005,7 @@ return|return
 name|NextNamespace
 return|;
 block|}
+comment|/// \brief Set the next extended namespace declaration.
 name|void
 name|setNextNamespace
 parameter_list|(
@@ -997,6 +1019,7 @@ operator|=
 name|ND
 expr_stmt|;
 block|}
+comment|/// \brief Get the original (first) namespace declaration.
 name|NamespaceDecl
 operator|*
 name|getOriginalNamespace
@@ -1028,6 +1051,37 @@ argument_list|()
 return|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Return true if this declaration is an original (first) declaration
+end_comment
+
+begin_comment
+comment|/// of the namespace. This is false for non-original (subsequent) namespace
+end_comment
+
+begin_comment
+comment|/// declarations and anonymous namespaces.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isOriginalNamespace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOriginalNamespace
+argument_list|()
+operator|==
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set the original (first) namespace declaration.
+end_comment
 
 begin_function
 name|void
@@ -2019,6 +2073,13 @@ name|ExceptionVar
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether this local variable could be allocated in the return
+comment|/// slot of its function, enabling the named return value optimization (NRVO).
+name|bool
+name|NRVOVariable
+operator|:
+literal|1
+block|;
 name|friend
 name|class
 name|StmtIteratorBase
@@ -2078,6 +2139,11 @@ name|false
 argument_list|)
 block|,
 name|ExceptionVar
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|NRVOVariable
 argument_list|(
 argument|false
 argument_list|)
@@ -3735,6 +3801,73 @@ block|{
 name|ExceptionVar
 operator|=
 name|EV
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this local variable can be used with the named
+end_comment
+
+begin_comment
+comment|/// return value optimization (NRVO).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The named return value optimization (NRVO) works by marking certain
+end_comment
+
+begin_comment
+comment|/// non-volatile local variables of class type as NRVO objects. These
+end_comment
+
+begin_comment
+comment|/// locals can be allocated within the return slot of their containing
+end_comment
+
+begin_comment
+comment|/// function, in which case there is no need to copy the object to the
+end_comment
+
+begin_comment
+comment|/// return slot when returning from the function. Within the function body,
+end_comment
+
+begin_comment
+comment|/// each return that returns the NRVO object will have this variable as its
+end_comment
+
+begin_comment
+comment|/// NRVO candidate.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isNRVOVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NRVOVariable
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setNRVOVariable
+parameter_list|(
+name|bool
+name|NRVO
+parameter_list|)
+block|{
+name|NRVOVariable
+operator|=
+name|NRVO
 expr_stmt|;
 block|}
 end_function
@@ -6221,6 +6354,44 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Retrieve the template argument list as written in the sources,
+end_comment
+
+begin_comment
+comment|/// if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// If this function declaration is not a function template specialization
+end_comment
+
+begin_comment
+comment|/// or if it had no explicit template argument list, returns NULL.
+end_comment
+
+begin_comment
+comment|/// Note that it an explicit template argument list may be written empty,
+end_comment
+
+begin_comment
+comment|/// e.g., template<> void foo<>(char* s);
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|TemplateArgumentListInfo
+operator|*
+name|getTemplateSpecializationArgsAsWritten
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Specify that this function declaration is actually a function
 end_comment
 
@@ -6305,6 +6476,13 @@ name|TemplateSpecializationKind
 name|TSK
 init|=
 name|TSK_ImplicitInstantiation
+parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|*
+name|TemplateArgsAsWritten
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7235,8 +7413,60 @@ operator|~
 name|TypedefDecl
 argument_list|()
 block|;
+name|protected
+operator|:
+typedef|typedef
+name|Redeclarable
+operator|<
+name|TypedefDecl
+operator|>
+name|redeclarable_base
+expr_stmt|;
+name|virtual
+name|TypedefDecl
+operator|*
+name|getNextRedeclaration
+argument_list|()
+block|{
+return|return
+name|RedeclLink
+operator|.
+name|getNext
+argument_list|()
+return|;
+block|}
 name|public
 operator|:
+typedef|typedef
+name|redeclarable_base
+operator|::
+name|redecl_iterator
+name|redecl_iterator
+expr_stmt|;
+name|redecl_iterator
+name|redecls_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|redecls_begin
+argument_list|()
+return|;
+block|}
+name|redecl_iterator
+name|redecls_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|redecls_end
+argument_list|()
+return|;
+block|}
 specifier|static
 name|TypedefDecl
 operator|*
@@ -7375,47 +7605,9 @@ name|public
 operator|:
 comment|// This is really ugly.
 typedef|typedef
-name|ElaboratedType
-operator|::
+name|TagTypeKind
 name|TagKind
-name|TagKind
-expr_stmt|;
-specifier|static
-specifier|const
-name|TagKind
-name|TK_struct
-operator|=
-name|ElaboratedType
-operator|::
-name|TK_struct
-block|;
-specifier|static
-specifier|const
-name|TagKind
-name|TK_union
-operator|=
-name|ElaboratedType
-operator|::
-name|TK_union
-block|;
-specifier|static
-specifier|const
-name|TagKind
-name|TK_class
-operator|=
-name|ElaboratedType
-operator|::
-name|TK_class
-block|;
-specifier|static
-specifier|const
-name|TagKind
-name|TK_enum
-operator|=
-name|ElaboratedType
-operator|::
-name|TK_enum
-block|;
+typedef|;
 name|private
 operator|:
 comment|// FIXME: This can be packed into the bitfields in Decl.
@@ -7440,6 +7632,21 @@ name|IsEmbeddedInDeclarator
 operator|:
 literal|1
 block|;
+name|protected
+operator|:
+comment|// These are used by (and only defined for) EnumDecl.
+name|unsigned
+name|NumPositiveBits
+operator|:
+literal|8
+block|;
+name|unsigned
+name|NumNegativeBits
+operator|:
+literal|8
+block|;
+name|private
+operator|:
 name|SourceLocation
 name|TagKeywordLoc
 block|;
@@ -7584,10 +7791,10 @@ name|Enum
 operator|||
 name|TK
 operator|==
-name|TK_enum
+name|TTK_Enum
 operator|)
 operator|&&
-literal|"EnumDecl not matched with TK_enum"
+literal|"EnumDecl not matched with TTK_Enum"
 argument_list|)
 block|;
 name|TagDeclKind
@@ -7636,13 +7843,19 @@ name|ASTContext
 operator|&
 name|C
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|redeclarable_base
 operator|::
 name|redecl_iterator
 name|redecl_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -7655,6 +7868,9 @@ name|redecls_begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -7667,6 +7883,9 @@ name|redecls_end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getRBraceLoc
 argument_list|()
@@ -7676,16 +7895,24 @@ return|return
 name|RBraceLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setRBraceLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|RBraceLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|SourceLocation
 name|getTagKeywordLoc
 argument_list|()
@@ -7695,28 +7922,42 @@ return|return
 name|TagKeywordLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setTagKeywordLoc
-argument_list|(
-argument|SourceLocation TKL
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|TKL
+parameter_list|)
 block|{
 name|TagKeywordLoc
 operator|=
 name|TKL
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|virtual
 name|TagDecl
-operator|*
+modifier|*
 name|getCanonicalDecl
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|TagDecl
 operator|*
@@ -7738,7 +7979,13 @@ name|getCanonicalDecl
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isDefinition - Return true if this decl has its body specified.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDefinition
 argument_list|()
@@ -7748,6 +7995,9 @@ return|return
 name|IsDefinition
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isEmbeddedInDeclarator
 argument_list|()
@@ -7757,19 +8007,36 @@ return|return
 name|IsEmbeddedInDeclarator
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setEmbeddedInDeclarator
-argument_list|(
-argument|bool isInDeclarator
-argument_list|)
+parameter_list|(
+name|bool
+name|isInDeclarator
+parameter_list|)
 block|{
 name|IsEmbeddedInDeclarator
 operator|=
 name|isInDeclarator
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Whether this declaration declares a type that is
+end_comment
+
+begin_comment
 comment|/// dependent, i.e., a type that somehow depends on template
+end_comment
+
+begin_comment
 comment|/// parameters.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDependentType
 argument_list|()
@@ -7780,43 +8047,99 @@ name|isDependentContext
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @brief Starts the definition of this tag declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method should be invoked at the beginning of the definition
+end_comment
+
+begin_comment
 comment|/// of this tag declaration. It will set the tag type into a state
+end_comment
+
+begin_comment
 comment|/// where it is in the process of being defined.
+end_comment
+
+begin_function_decl
 name|void
 name|startDefinition
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @brief Completes the definition of this tag declaration.
+end_comment
+
+begin_function_decl
 name|void
 name|completeDefinition
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getDefinition - Returns the TagDecl that actually defines this
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum.  When determining whether or not a
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum is completely defined, one should use this method
+end_comment
+
+begin_comment
 comment|///  as opposed to 'isDefinition'.  'isDefinition' indicates whether or not a
+end_comment
+
+begin_comment
 comment|///  specific TagDecl is defining declaration, not whether or not the
+end_comment
+
+begin_comment
 comment|///  struct/union/class/enum type is defined.  This method returns NULL if
+end_comment
+
+begin_comment
 comment|///  there is no TagDecl that defines the struct/union/class/enum.
+end_comment
+
+begin_expr_stmt
 name|TagDecl
 operator|*
 name|getDefinition
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|void
 name|setDefinition
-argument_list|(
-argument|bool V
-argument_list|)
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
 block|{
 name|IsDefinition
 operator|=
 name|V
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -7825,25 +8148,18 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ElaboratedType
+name|TypeWithKeyword
 operator|::
-name|getNameForTagKind
+name|getTagTypeKindName
 argument_list|(
 name|getTagKind
 argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getTagKindForTypeSpec - Converts a type specifier (DeclSpec::TST)
-comment|/// into a tag kind.  It is an error to provide a type specifier
-comment|/// which *isn't* a tag kind here.
-specifier|static
-name|TagKind
-name|getTagKindForTypeSpec
-argument_list|(
-argument|unsigned TypeSpec
-argument_list|)
-block|;
+end_expr_stmt
+
+begin_expr_stmt
 name|TagKind
 name|getTagKind
 argument_list|()
@@ -7856,16 +8172,24 @@ name|TagDeclKind
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setTagKind
-argument_list|(
-argument|TagKind TK
-argument_list|)
+parameter_list|(
+name|TagKind
+name|TK
+parameter_list|)
 block|{
 name|TagDeclKind
 operator|=
 name|TK
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isStruct
 argument_list|()
@@ -7875,9 +8199,12 @@ return|return
 name|getTagKind
 argument_list|()
 operator|==
-name|TK_struct
+name|TTK_Struct
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isClass
 argument_list|()
@@ -7887,9 +8214,12 @@ return|return
 name|getTagKind
 argument_list|()
 operator|==
-name|TK_class
+name|TTK_Class
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isUnion
 argument_list|()
@@ -7899,9 +8229,12 @@ return|return
 name|getTagKind
 argument_list|()
 operator|==
-name|TK_union
+name|TTK_Union
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isEnum
 argument_list|()
@@ -7911,9 +8244,12 @@ return|return
 name|getTagKind
 argument_list|()
 operator|==
-name|TK_enum
+name|TTK_Enum
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TypedefDecl
 operator|*
 name|getTypedefForAnonDecl
@@ -7937,16 +8273,20 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|setTypedefForAnonDecl
-argument_list|(
-argument|TypedefDecl *TDD
-argument_list|)
-block|{
-name|TypedefDeclOrQualifier
-operator|=
+parameter_list|(
+name|TypedefDecl
+modifier|*
 name|TDD
-block|; }
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -7956,7 +8296,7 @@ block|{
 return|return
 name|hasExtInfo
 argument_list|()
-condition|?
+operator|?
 name|TypedefDeclOrQualifier
 operator|.
 name|get
@@ -7968,10 +8308,13 @@ operator|(
 operator|)
 operator|->
 name|NNS
-else|:
+operator|:
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceRange
 name|getQualifierRange
 argument_list|()
@@ -7980,7 +8323,7 @@ block|{
 return|return
 name|hasExtInfo
 argument_list|()
-condition|?
+operator|?
 name|TypedefDeclOrQualifier
 operator|.
 name|get
@@ -7992,26 +8335,41 @@ operator|(
 operator|)
 operator|->
 name|NNSRange
-else|:
+operator|:
 name|SourceRange
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|setQualifierInfo
-argument_list|(
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceRange QualifierRange
-argument_list|)
-block|;
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|SourceRange
+name|QualifierRange
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -8023,23 +8381,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const TagDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -8051,13 +8419,19 @@ operator|<=
 name|TagLast
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
-operator|*
+modifier|*
 name|castToDeclContext
-argument_list|(
-argument|const TagDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -8077,13 +8451,19 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|TagDecl
-operator|*
+modifier|*
 name|castFromDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -8103,13 +8483,21 @@ operator|)
 operator|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// EnumDecl - Represents an enum.  As an extension, we allow forward-declared
+end_comment
+
+begin_comment
 comment|/// enums.
+end_comment
+
+begin_decl_stmt
 name|class
 name|EnumDecl
-operator|:
+range|:
 name|public
 name|TagDecl
 block|{
@@ -8133,6 +8521,25 @@ name|EnumDecl
 operator|*
 name|InstantiatedFrom
 block|;
+comment|// The number of positive and negative bits required by the
+comment|// enumerators are stored in the SubclassBits field.
+block|enum
+block|{
+name|NumBitsWidth
+operator|=
+literal|8
+block|,
+name|NumBitsMask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|NumBitsWidth
+operator|)
+operator|-
+literal|1
+block|}
+block|;
 name|EnumDecl
 argument_list|(
 argument|DeclContext *DC
@@ -8150,7 +8557,7 @@ name|TagDecl
 argument_list|(
 name|Enum
 argument_list|,
-name|TK_enum
+name|TTK_Enum
 argument_list|,
 name|DC
 argument_list|,
@@ -8251,6 +8658,10 @@ argument_list|(
 argument|QualType NewType
 argument_list|,
 argument|QualType PromotionType
+argument_list|,
+argument|unsigned NumPositiveBits
+argument_list|,
+argument|unsigned NumNegativeBits
 argument_list|)
 block|;
 comment|// enumerator_iterator - Iterates through the enumerators of this
@@ -8325,20 +8736,147 @@ return|return
 name|IntegerType
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Set the underlying integer type.
+end_comment
+
+begin_function
 name|void
 name|setIntegerType
-argument_list|(
-argument|QualType T
-argument_list|)
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
 block|{
 name|IntegerType
 operator|=
 name|T
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the width in bits requred to store all the
+end_comment
+
+begin_comment
+comment|/// non-negative enumerators of this enum.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getNumPositiveBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumPositiveBits
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setNumPositiveBits
+parameter_list|(
+name|unsigned
+name|Num
+parameter_list|)
+block|{
+name|NumPositiveBits
+operator|=
+name|Num
+expr_stmt|;
+name|assert
+argument_list|(
+name|NumPositiveBits
+operator|==
+name|Num
+operator|&&
+literal|"can't store this bitcount"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the width in bits requred to store all the
+end_comment
+
+begin_comment
+comment|/// negative enumerators of this enum.  These widths include
+end_comment
+
+begin_comment
+comment|/// the rightmost leading 1;  that is:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// MOST NEGATIVE ENUMERATOR     PATTERN     NUM NEGATIVE BITS
+end_comment
+
+begin_comment
+comment|/// ------------------------     -------     -----------------
+end_comment
+
+begin_comment
+comment|///                       -1     1111111                     1
+end_comment
+
+begin_comment
+comment|///                      -10     1110110                     5
+end_comment
+
+begin_comment
+comment|///                     -101     1001011                     8
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getNumNegativeBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumNegativeBits
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setNumNegativeBits
+parameter_list|(
+name|unsigned
+name|Num
+parameter_list|)
+block|{
+name|NumNegativeBits
+operator|=
+name|Num
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Returns the enumeration (declared within the template)
+end_comment
+
+begin_comment
 comment|/// from which this enumeration type was instantiated, or NULL if
+end_comment
+
+begin_comment
 comment|/// this enumeration was not instantiated from any template.
+end_comment
+
+begin_expr_stmt
 name|EnumDecl
 operator|*
 name|getInstantiatedFromMemberEnum
@@ -8349,22 +8887,34 @@ return|return
 name|InstantiatedFrom
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setInstantiationOfMemberEnum
-argument_list|(
-argument|EnumDecl *IF
-argument_list|)
+parameter_list|(
+name|EnumDecl
+modifier|*
+name|IF
+parameter_list|)
 block|{
 name|InstantiatedFrom
 operator|=
 name|IF
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -8376,23 +8926,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const EnumDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|EnumDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -8400,16 +8960,33 @@ operator|==
 name|Enum
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// RecordDecl - Represents a struct/union/class.  For example:
+end_comment
+
+begin_comment
 comment|///   struct X;                  // Forward declaration, no "body".
+end_comment
+
+begin_comment
 comment|///   union Y { int A, B; };     // Has body with members A and B (FieldDecls).
+end_comment
+
+begin_comment
 comment|/// This decl will be marked invalid if *any* members are invalid.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|RecordDecl
-operator|:
+range|:
 name|public
 name|TagDecl
 block|{
@@ -8542,6 +9119,32 @@ name|AnonymousStructOrUnion
 operator|=
 name|Anon
 block|;   }
+name|ValueDecl
+operator|*
+name|getAnonymousStructOrUnionObject
+argument_list|()
+block|;
+specifier|const
+name|ValueDecl
+operator|*
+name|getAnonymousStructOrUnionObject
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|RecordDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getAnonymousStructOrUnionObject
+argument_list|()
+return|;
+block|}
 name|bool
 name|hasObjectMember
 argument_list|()
@@ -8661,13 +9264,19 @@ comment|/// now complete.
 name|void
 name|completeDefinition
 argument_list|()
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -8679,23 +9288,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const RecordDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -8707,11 +9326,13 @@ operator|<=
 name|RecordLast
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_decl_stmt
+unit|};
 name|class
 name|FileScopeAsmDecl
-operator|:
+range|:
 name|public
 name|Decl
 block|{
@@ -9086,15 +9707,19 @@ name|unsigned
 name|getNumParams
 argument_list|()
 specifier|const
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|ParmVarDecl
-operator|*
+modifier|*
 name|getParamDecl
 argument_list|(
-argument|unsigned i
+name|unsigned
+name|i
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|assert
 argument_list|(
@@ -9105,7 +9730,7 @@ argument_list|()
 operator|&&
 literal|"Illegal param #"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|ParamInfo
 index|[
@@ -9113,12 +9738,16 @@ name|i
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|ParmVarDecl
-operator|*
+modifier|*
 name|getParamDecl
-argument_list|(
-argument|unsigned i
-argument_list|)
+parameter_list|(
+name|unsigned
+name|i
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -9129,7 +9758,7 @@ argument_list|()
 operator|&&
 literal|"Illegal param #"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|ParamInfo
 index|[
@@ -9137,21 +9766,37 @@ name|i
 index|]
 return|;
 block|}
+end_function
+
+begin_function_decl
 name|void
 name|setParams
-argument_list|(
-argument|ParmVarDecl **NewParamInfo
-argument_list|,
-argument|unsigned NumParams
-argument_list|)
-block|;
+parameter_list|(
+name|ParmVarDecl
+modifier|*
+modifier|*
+name|NewParamInfo
+parameter_list|,
+name|unsigned
+name|NumParams
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -9163,23 +9808,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const BlockDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|BlockDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -9187,13 +9842,19 @@ operator|==
 name|Block
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
-operator|*
+modifier|*
 name|castToDeclContext
-argument_list|(
-argument|const BlockDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|BlockDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -9213,13 +9874,19 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|BlockDecl
-operator|*
+modifier|*
 name|castFromDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -9239,10 +9906,18 @@ operator|)
 operator|)
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// Insertion operator for diagnostics.  This allows sending NamedDecl's
+end_comment
+
+begin_comment
 comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -9254,7 +9929,7 @@ specifier|const
 name|DiagnosticBuilder
 operator|&
 name|DB
-expr|,
+operator|,
 name|NamedDecl
 operator|*
 name|ND
@@ -9281,10 +9956,10 @@ return|return
 name|DB
 return|;
 block|}
-expr|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

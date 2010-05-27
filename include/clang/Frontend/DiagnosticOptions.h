@@ -128,6 +128,13 @@ decl_stmt|;
 comment|/// Show the diagnostic name for mappable
 comment|/// diagnostics.
 name|unsigned
+name|ShowCategories
+range|:
+literal|2
+decl_stmt|;
+comment|/// Show categories: 0 -> none, 1 -> Number,
+comment|/// 2 -> Full Name.
+name|unsigned
 name|ShowColors
 range|:
 literal|1
@@ -261,6 +268,10 @@ name|ShowOptionNames
 operator|=
 literal|0
 expr_stmt|;
+name|ShowCategories
+operator|=
+literal|0
+expr_stmt|;
 name|ShowSourceRanges
 operator|=
 literal|0
@@ -279,11 +290,11 @@ literal|0
 expr_stmt|;
 name|TemplateBacktraceLimit
 operator|=
-literal|0
+name|DefaultTemplateBacktraceLimit
 expr_stmt|;
 name|MacroBacktraceLimit
 operator|=
-literal|0
+name|DefaultMacroBacktraceLimit
 expr_stmt|;
 block|}
 block|}

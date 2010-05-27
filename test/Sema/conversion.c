@@ -1599,5 +1599,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|//<rdar://problem/7904686>
+end_comment
+
+begin_function
+name|void
+name|test_7904686
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|int
+name|i
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|unsigned
+name|u1
+init|=
+name|i
+decl_stmt|;
+comment|// expected-warning {{implicit cast changes signedness}}
+name|u1
+operator|=
+name|i
+expr_stmt|;
+comment|// expected-warning {{implicit cast changes signedness}}
+name|unsigned
+name|u2
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|// expected-warning {{implicit cast changes signedness}}
+name|u2
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|// expected-warning {{implicit cast changes signedness}}
+block|}
+end_function
+
 end_unit
 

@@ -401,7 +401,7 @@ comment|// This conversion sequence is too complex to be allowed. Thus the speci
 comment|// move_* functions, which help the compiler out with some explicit
 comment|// conversions.
 comment|// Flip this switch to measure performance impact of the smart pointers.
-comment|//#define DISABLE_SMART_POINTERS
+comment|// #define DISABLE_SMART_POINTERS
 name|namespace
 name|llvm
 block|{
@@ -1395,6 +1395,19 @@ operator|<
 name|Destroyer
 operator|>
 block|;
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1600
+operator|)
 name|ASTOwningResult
 argument_list|(
 name|ASTOwningResult
@@ -1412,6 +1425,8 @@ operator|&
 operator|)
 block|;
 comment|// DO NOT IMPLEMENT
+endif|#
+directive|endif
 name|void
 name|destroy
 argument_list|()
@@ -1616,6 +1631,72 @@ operator|*
 name|this
 return|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|>=
+literal|1600
+comment|// Emulated move semantics don't work with msvc.
+name|ASTOwningResult
+argument_list|(
+name|ASTOwningResult
+operator|&&
+name|mover
+argument_list|)
+operator|:
+name|ActionInv
+argument_list|(
+name|mover
+operator|.
+name|ActionInv
+argument_list|)
+block|,
+name|Ptr
+argument_list|(
+argument|mover.Ptr
+argument_list|)
+block|{
+name|mover
+operator|.
+name|Ptr
+operator|=
+literal|0
+block|;     }
+name|ASTOwningResult
+operator|&
+name|operator
+operator|=
+operator|(
+name|ASTOwningResult
+operator|&&
+name|mover
+operator|)
+block|{
+operator|*
+name|this
+operator|=
+name|moving
+operator|::
+name|ASTResultMover
+operator|<
+name|Destroyer
+operator|>
+operator|(
+name|mover
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+endif|#
+directive|endif
 comment|/// Assignment from a raw pointer. Takes ownership - beware!
 name|ASTOwningResult
 operator|&

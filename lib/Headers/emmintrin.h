@@ -7964,7 +7964,8 @@ name|b
 parameter_list|,
 name|i
 parameter_list|)
-value|(__builtin_shufflevector((a), (b), (i)& 1, \                                                          (((i)& 2)>> 1) + 2))
+define|\
+value|(__builtin_shufflevector((__m128d)(a), (__m128d)(b), (i)& 1, \                                                        (((i)& 2)>> 1) + 2))
 end_define
 
 begin_decl_stmt

@@ -564,7 +564,7 @@ comment|/// the nested name specifier is "std::" and the template name is the
 comment|/// declaration for "vector". The QualifiedTemplateName class is only
 comment|/// used to provide "sugar" for template names that were expressed
 comment|/// with a qualified name, and has no semantic meaning. In this
-comment|/// manner, it is to TemplateName what QualifiedNameType is to Type,
+comment|/// manner, it is to TemplateName what ElaboratedType is to Type,
 comment|/// providing extra syntactic sugar for downstream clients.
 name|class
 name|QualifiedTemplateName

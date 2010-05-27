@@ -950,8 +950,8 @@ return|return
 name|CurPPLexer
 return|;
 block|}
-comment|/// getCurrentFileLexer - Return the current file lexer being lexed from.  Note
-comment|/// that this ignores any potentially active macro expansions and _Pragma
+comment|/// getCurrentFileLexer - Return the current file lexer being lexed from.
+comment|/// Note that this ignores any potentially active macro expansions and _Pragma
 comment|/// expansions going on at the time.
 name|PreprocessorLexer
 operator|*
@@ -2335,9 +2335,9 @@ comment|///    #define FOO<a/b.h>
 comment|///    #include FOO
 comment|/// because in this case, "<a/b.h>" is returned as 7 tokens, not one.
 comment|///
-comment|/// This code concatenates and consumes tokens up to the '>' token.  It returns
-comment|/// false if the> was found, otherwise it returns true if it finds and consumes
-comment|/// the EOM marker.
+comment|/// This code concatenates and consumes tokens up to the '>' token.  It
+comment|/// returns false if the> was found, otherwise it returns true if it finds
+comment|/// and consumes the EOM marker.
 name|bool
 name|ConcatenateIncludeName
 argument_list|(
@@ -2867,8 +2867,6 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
-comment|// HandleAssertDirective(Token&Tok);
-comment|// HandleUnassertDirective(Token&Tok);
 comment|// Conditional Inclusion.
 name|void
 name|HandleIfdefDirective

@@ -46,27 +46,39 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:9 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Placeholder int}{RightParen )}
+comment|// CHECK-CC1: macro definition:{TypedText __VERSION__} (70)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )}
+comment|// CHECK-CC1: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Placeholder int}{RightParen )} (50)
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:14 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// CHECK-CC1: NotImplemented:{TypedText float} (40)
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:18 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// CHECK-CC1: ParmDecl:{ResultType int}{TypedText j} (8)
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:22 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (30)
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:7:14 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:7:18 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:7:22 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 end_unit

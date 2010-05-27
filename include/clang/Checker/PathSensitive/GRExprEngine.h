@@ -2168,6 +2168,23 @@ name|bool
 name|isLoad
 parameter_list|)
 function_decl|;
+name|bool
+name|InlineCall
+parameter_list|(
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|,
+specifier|const
+name|CallExpr
+modifier|*
+name|CE
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -79,6 +79,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -93,6 +99,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Diagnostic
+decl_stmt|;
 name|namespace
 name|driver
 block|{
@@ -761,6 +770,56 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// @}
+comment|/// @name Argument Lookup Utilities
+comment|/// @{
+comment|/// getLastArgValue - Return the value of the last argument, or a default.
+name|llvm
+operator|::
+name|StringRef
+name|getLastArgValue
+argument_list|(
+argument|OptSpecifier Id
+argument_list|,
+argument|llvm::StringRef Default =
+literal|""
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// getLastArgValue - Return the value of the last argument as an integer,
+comment|/// or a default. Emits an error if the argument is given, but non-integral.
+name|int
+name|getLastArgIntValue
+argument_list|(
+name|OptSpecifier
+name|Id
+argument_list|,
+name|int
+name|Default
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diags
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getAllArgValues - Get the values of all instances of the given argument
+comment|/// as strings.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getAllArgValues
+argument_list|(
+argument|OptSpecifier Id
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// @}
 comment|/// @name Translation Utilities
 comment|/// @{
 comment|/// hasFlag - Given an option \arg Pos and its negative form \arg

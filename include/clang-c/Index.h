@@ -360,6 +360,15 @@ name|CXSourceRange
 name|range
 parameter_list|)
 function_decl|;
+comment|/**   * \brief Determine if the source location occurs within the main file   * of the translation unit (as opposed to an included header).   */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isFromMainFile
+parameter_list|(
+name|CXSourceLocation
+name|loc
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_DIAG Diagnostic reporting  *  * @{  */
 comment|/**  * \brief Describes the severity of a particular diagnostic.  */
@@ -608,10 +617,6 @@ enum|enum
 name|CXCursorKind
 block|{
 comment|/* Declarations */
-name|CXCursor_FirstDecl
-init|=
-literal|1
-block|,
 comment|/**    * \brief A declaration whose specific kind is not exposed via this    * interface.    *    * Unexposed declarations have the same operations as any other kind    * of declaration; one can extract their location information,    * spelling, find their definitions, etc. However, the specific kind    * of the declaration is not reported.    */
 name|CXCursor_UnexposedDecl
 init|=
@@ -717,9 +722,23 @@ name|CXCursor_CXXMethod
 init|=
 literal|21
 block|,
+comment|/** \brief A C++ namespace. */
+name|CXCursor_Namespace
+init|=
+literal|22
+block|,
+comment|/** \brief A linkage specification, e.g. 'extern "C"'. */
+name|CXCursor_LinkageSpec
+init|=
+literal|23
+block|,
+name|CXCursor_FirstDecl
+init|=
+name|CXCursor_UnexposedDecl
+block|,
 name|CXCursor_LastDecl
 init|=
-literal|21
+name|CXCursor_LinkageSpec
 block|,
 comment|/* References */
 name|CXCursor_FirstRef
@@ -849,9 +868,13 @@ name|CXCursor_IBOutletAttr
 init|=
 literal|402
 block|,
+name|CXCursor_IBOutletCollectionAttr
+init|=
+literal|403
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_IBOutletAttr
+name|CXCursor_IBOutletCollectionAttr
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -1086,6 +1109,260 @@ name|CXCursor
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
+comment|/**  * \defgroup CINDEX_TYPES Type information for CXCursors  *  * @{  */
+comment|/**  * \brief Describes the kind of type  */
+enum|enum
+name|CXTypeKind
+block|{
+comment|/**    * \brief Reprents an invalid type (e.g., where no type is available).    */
+name|CXType_Invalid
+init|=
+literal|0
+block|,
+comment|/**    * \brief A type whose specific kind is not exposed via this    * interface.    */
+name|CXType_Unexposed
+init|=
+literal|1
+block|,
+comment|/* Builtin types */
+name|CXType_Void
+init|=
+literal|2
+block|,
+name|CXType_Bool
+init|=
+literal|3
+block|,
+name|CXType_Char_U
+init|=
+literal|4
+block|,
+name|CXType_UChar
+init|=
+literal|5
+block|,
+name|CXType_Char16
+init|=
+literal|6
+block|,
+name|CXType_Char32
+init|=
+literal|7
+block|,
+name|CXType_UShort
+init|=
+literal|8
+block|,
+name|CXType_UInt
+init|=
+literal|9
+block|,
+name|CXType_ULong
+init|=
+literal|10
+block|,
+name|CXType_ULongLong
+init|=
+literal|11
+block|,
+name|CXType_UInt128
+init|=
+literal|12
+block|,
+name|CXType_Char_S
+init|=
+literal|13
+block|,
+name|CXType_SChar
+init|=
+literal|14
+block|,
+name|CXType_WChar
+init|=
+literal|15
+block|,
+name|CXType_Short
+init|=
+literal|16
+block|,
+name|CXType_Int
+init|=
+literal|17
+block|,
+name|CXType_Long
+init|=
+literal|18
+block|,
+name|CXType_LongLong
+init|=
+literal|19
+block|,
+name|CXType_Int128
+init|=
+literal|20
+block|,
+name|CXType_Float
+init|=
+literal|21
+block|,
+name|CXType_Double
+init|=
+literal|22
+block|,
+name|CXType_LongDouble
+init|=
+literal|23
+block|,
+name|CXType_NullPtr
+init|=
+literal|24
+block|,
+name|CXType_Overload
+init|=
+literal|25
+block|,
+name|CXType_Dependent
+init|=
+literal|26
+block|,
+name|CXType_ObjCId
+init|=
+literal|27
+block|,
+name|CXType_ObjCClass
+init|=
+literal|28
+block|,
+name|CXType_ObjCSel
+init|=
+literal|29
+block|,
+name|CXType_FirstBuiltin
+init|=
+name|CXType_Void
+block|,
+name|CXType_LastBuiltin
+init|=
+name|CXType_ObjCSel
+block|,
+name|CXType_Complex
+init|=
+literal|100
+block|,
+name|CXType_Pointer
+init|=
+literal|101
+block|,
+name|CXType_BlockPointer
+init|=
+literal|102
+block|,
+name|CXType_LValueReference
+init|=
+literal|103
+block|,
+name|CXType_RValueReference
+init|=
+literal|104
+block|,
+name|CXType_Record
+init|=
+literal|105
+block|,
+name|CXType_Enum
+init|=
+literal|106
+block|,
+name|CXType_Typedef
+init|=
+literal|107
+block|,
+name|CXType_ObjCInterface
+init|=
+literal|108
+block|,
+name|CXType_ObjCObjectPointer
+init|=
+literal|109
+block|}
+enum|;
+comment|/**  * \brief The type of an element in the abstract syntax tree.  *  */
+typedef|typedef
+struct|struct
+block|{
+name|enum
+name|CXTypeKind
+name|kind
+decl_stmt|;
+name|void
+modifier|*
+name|data
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|CXType
+typedef|;
+comment|/**  * \brief Retrieve the type of a CXCursor (if any).  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getCursorType
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \determine Determine whether two CXTypes represent the same type.  *  * \returns non-zero if the CXTypes represent the same type and              zero otherwise.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_equalTypes
+parameter_list|(
+name|CXType
+name|A
+parameter_list|,
+name|CXType
+name|B
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Return the canonical type for a CXType.  *  * Clang's type system explicitly models typedefs and all the ways  * a specific type can be represented.  The canonical type is the underlying  * type with all the "sugar" removed.  For example, if 'T' is a typedef  * for 'int', the canonical type for 'T' would be 'int'.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getCanonicalType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief For pointer types, returns the type of the pointee.  *  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getPointeeType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Return the cursor for the declaration of the given type.  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getTypeDeclaration
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the spelling of a given CXTypeKind.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getTypeKindSpelling
+parameter_list|(
+name|enum
+name|CXTypeKind
+name|K
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CURSOR_TRAVERSAL Traversing the AST with cursors  *  * These routines provide the ability to traverse the abstract syntax tree  * using cursors.  *  * @{  */
 comment|/**  * \brief Describes how the traversal of the children of a particular  * cursor should proceed after visiting a particular child cursor.  *  * A value of this enumeration type should be returned by each  * \c CXCursorVisitor to indicate how clang_visitChildren() proceed.  */
 enum|enum
@@ -1258,6 +1535,17 @@ name|unsigned
 name|clang_isCursorDefinition
 parameter_list|(
 name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
+comment|/**  * \brief Determine if a C++ member function is declared 'static'.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXXMethod_isStatic
+parameter_list|(
+name|CXCursor
+name|C
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -1583,6 +1871,15 @@ comment|/**  * \brief Retrieve the number of chunks in the given code-completion
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_getNumCompletionChunks
+parameter_list|(
+name|CXCompletionString
+name|completion_string
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the priority of this code completion.  *  * The priority of a code completion indicates how likely it is that this   * particular completion is the completion that the user will select. The  * priority is selected by various internal heuristics.  *  * \param completion_string The completion string to query.  *  * \returns The priority of this completion string. Smaller values indicate  * higher-priority (more likely) completions.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getCompletionPriority
 parameter_list|(
 name|CXCompletionString
 name|completion_string

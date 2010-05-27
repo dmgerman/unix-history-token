@@ -204,7 +204,6 @@ operator|)
 name|b
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 operator|(
 name|signed
@@ -219,7 +218,6 @@ operator|)
 name|b
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 name|a
 operator|<
@@ -343,7 +341,6 @@ operator|)
 name|b
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 operator|(
 name|signed
@@ -358,7 +355,6 @@ operator|)
 name|b
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 comment|// (A,b)
 operator|(
 name|A
@@ -870,7 +866,6 @@ operator|)
 name|B
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 operator|(
 name|signed
@@ -885,7 +880,6 @@ operator|)
 name|B
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 comment|// (C,b)
 operator|(
 name|C
@@ -1397,7 +1391,6 @@ operator|)
 name|C
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 operator|(
 name|signed
@@ -1412,7 +1405,6 @@ operator|)
 name|C
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 comment|// (0x80000,b)
 operator|(
 literal|0x80000
@@ -1924,7 +1916,6 @@ operator|)
 literal|0x80000
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 operator|(
 operator|(
 name|signed
@@ -1939,7 +1930,6 @@ operator|)
 literal|0x80000
 operator|)
 operator|+
-comment|// expected-warning {{comparison of integers of different signs}}
 comment|// We should be able to avoid warning about this.
 operator|(
 name|b

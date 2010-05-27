@@ -209,7 +209,15 @@ name|Data
 argument_list|(
 name|P
 argument_list|,
+name|static_cast
+operator|<
+specifier|const
+name|void
+operator|*
+operator|>
+operator|(
 name|NULL
+operator|)
 argument_list|)
 operator|,
 name|K

@@ -6713,6 +6713,17 @@ name|ObjCIvarDecl
 operator|*
 name|PropertyIvarDecl
 block|;
+comment|/// Null for @dynamic. Non-null if property must be copy-constructed in getter
+name|Expr
+operator|*
+name|GetterCXXConstructor
+block|;
+comment|/// Null for @dynamic. Non-null if property has assignment operator to call
+comment|/// in Setter synthesis.
+name|Expr
+operator|*
+name|SetterCXXAssignment
+block|;
 name|ObjCPropertyImplDecl
 argument_list|(
 argument|DeclContext *DC
@@ -6749,7 +6760,17 @@ argument_list|)
 block|,
 name|PropertyIvarDecl
 argument_list|(
-argument|ivarDecl
+name|ivarDecl
+argument_list|)
+block|,
+name|GetterCXXConstructor
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SetterCXXAssignment
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|assert
@@ -6871,6 +6892,46 @@ name|PropertyIvarDecl
 operator|=
 name|Ivar
 block|; }
+name|Expr
+operator|*
+name|getGetterCXXConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetterCXXConstructor
+return|;
+block|}
+name|void
+name|setGetterCXXConstructor
+argument_list|(
+argument|Expr *getterCXXConstructor
+argument_list|)
+block|{
+name|GetterCXXConstructor
+operator|=
+name|getterCXXConstructor
+block|;   }
+name|Expr
+operator|*
+name|getSetterCXXAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SetterCXXAssignment
+return|;
+block|}
+name|void
+name|setSetterCXXAssignment
+argument_list|(
+argument|Expr *setterCXXAssignment
+argument_list|)
+block|{
+name|SetterCXXAssignment
+operator|=
+name|setterCXXAssignment
+block|;   }
 specifier|static
 name|bool
 name|classof

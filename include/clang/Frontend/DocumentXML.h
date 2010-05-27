@@ -611,6 +611,20 @@ modifier|*
 name|pName
 parameter_list|,
 specifier|const
+name|NestedNameSpecifier
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|void
+name|addPtrAttribute
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|pName
+parameter_list|,
+specifier|const
 name|LabelStmt
 modifier|*
 name|L
@@ -780,6 +794,29 @@ argument_list|,
 argument|const T& value
 argument_list|)
 block|{
+name|std
+operator|::
+name|string
+name|repr
+block|;
+block|{
+name|llvm
+operator|::
+name|raw_string_ostream
+name|buf
+argument_list|(
+name|repr
+argument_list|)
+block|;
+name|buf
+operator|<<
+name|value
+block|;
+name|buf
+operator|.
+name|flush
+argument_list|()
+block|;   }
 name|Out
 operator|<<
 literal|' '
@@ -788,7 +825,20 @@ name|pName
 operator|<<
 literal|"=\""
 operator|<<
-name|value
+name|DocumentXML
+operator|::
+name|escapeString
+argument_list|(
+name|repr
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+name|repr
+operator|.
+name|size
+argument_list|()
+argument_list|)
 operator|<<
 literal|"\""
 block|; }
@@ -812,7 +862,17 @@ name|pName
 operator|<<
 literal|"=\""
 operator|<<
+name|DocumentXML
+operator|::
+name|escapeString
+argument_list|(
 name|text
+argument_list|,
+name|strlen
+argument_list|(
+name|text
+argument_list|)
+argument_list|)
 operator|<<
 literal|"\""
 block|; }

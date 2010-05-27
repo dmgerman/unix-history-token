@@ -645,43 +645,37 @@ parameter_list|)
 value|CLASS##Class,
 define|#
 directive|define
-name|FIRST_STMT
+name|STMT_RANGE
 parameter_list|(
-name|CLASS
-parameter_list|)
-value|firstStmtConstant = CLASS##Class,
-define|#
-directive|define
-name|LAST_STMT
-parameter_list|(
-name|CLASS
-parameter_list|)
-value|lastStmtConstant = CLASS##Class,
-define|#
-directive|define
-name|FIRST_EXPR
-parameter_list|(
-name|CLASS
-parameter_list|)
-value|firstExprConstant = CLASS##Class,
-define|#
-directive|define
-name|LAST_EXPR
-parameter_list|(
-name|CLASS
-parameter_list|)
-value|lastExprConstant = CLASS##Class
-define|#
-directive|define
-name|ABSTRACT_EXPR
-parameter_list|(
-name|CLASS
+name|BASE
 parameter_list|,
-name|PARENT
+name|FIRST
+parameter_list|,
+name|LAST
+parameter_list|)
+define|\
+value|first##BASE##Constant = FIRST##Class, \         last##BASE##Constant = LAST##Class,
+define|#
+directive|define
+name|LAST_STMT_RANGE
+parameter_list|(
+name|BASE
+parameter_list|,
+name|FIRST
+parameter_list|,
+name|LAST
+parameter_list|)
+define|\
+value|first##BASE##Constant = FIRST##Class, \         last##BASE##Constant = LAST##Class
+define|#
+directive|define
+name|ABSTRACT_STMT
+parameter_list|(
+name|STMT
 parameter_list|)
 include|#
 directive|include
-file|"clang/AST/StmtNodes.def"
+file|"clang/AST/StmtNodes.inc"
 block|}
 enum|;
 name|private
@@ -6007,14 +6001,45 @@ block|;
 name|SourceLocation
 name|RetLoc
 block|;
+specifier|const
+name|VarDecl
+operator|*
+name|NRVOCandidate
+block|;
 name|public
 operator|:
 name|ReturnStmt
 argument_list|(
 argument|SourceLocation RL
-argument_list|,
-argument|Expr *E =
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+name|ReturnStmtClass
+argument_list|)
+block|,
+name|RetExpr
+argument_list|(
 literal|0
+argument_list|)
+block|,
+name|RetLoc
+argument_list|(
+name|RL
+argument_list|)
+block|,
+name|NRVOCandidate
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|ReturnStmt
+argument_list|(
+argument|SourceLocation RL
+argument_list|,
+argument|Expr *E
+argument_list|,
+argument|const VarDecl *NRVOCandidate
 argument_list|)
 operator|:
 name|Stmt
@@ -6033,7 +6058,12 @@ argument_list|)
 block|,
 name|RetLoc
 argument_list|(
-argument|RL
+name|RL
+argument_list|)
+block|,
+name|NRVOCandidate
+argument_list|(
+argument|NRVOCandidate
 argument_list|)
 block|{}
 comment|/// \brief Build an empty return expression.
@@ -6097,6 +6127,32 @@ block|{
 name|RetLoc
 operator|=
 name|L
+block|; }
+comment|/// \brief Retrieve the variable that might be used for the named return
+comment|/// value optimization.
+comment|///
+comment|/// The optimization itself can only be performed if the variable is
+comment|/// also marked as an NRVO object.
+specifier|const
+name|VarDecl
+operator|*
+name|getNRVOCandidate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NRVOCandidate
+return|;
+block|}
+name|void
+name|setNRVOCandidate
+argument_list|(
+argument|const VarDecl *Var
+argument_list|)
+block|{
+name|NRVOCandidate
+operator|=
+name|Var
 block|; }
 name|virtual
 name|SourceRange

@@ -362,6 +362,12 @@ comment|/// which is the alignment of the object without virtual bases.
 name|uint64_t
 name|NonVirtualAlign
 decl_stmt|;
+comment|/// SizeOfLargestEmptySubobject - The size of the largest empty subobject
+comment|/// (either a base or a member). Will be zero if the class doesn't contain
+comment|/// any empty subobjects.
+name|uint64_t
+name|SizeOfLargestEmptySubobject
+decl_stmt|;
 comment|/// PrimaryBase - The primary base info for this record.
 name|PrimaryBaseInfo
 name|PrimaryBase
@@ -399,10 +405,6 @@ decl_stmt|;
 name|friend
 name|class
 name|ASTContext
-decl_stmt|;
-name|friend
-name|class
-name|ASTRecordLayoutBuilder
 decl_stmt|;
 name|ASTRecordLayout
 argument_list|(
@@ -444,7 +446,11 @@ argument|uint64_t nonvirtualsize
 argument_list|,
 argument|unsigned nonvirtualalign
 argument_list|,
-argument|const PrimaryBaseInfo&PrimaryBase
+argument|uint64_t SizeOfLargestEmptySubobject
+argument_list|,
+argument|const CXXRecordDecl *PrimaryBase
+argument_list|,
+argument|bool PrimaryBaseIsVirtual
 argument_list|,
 argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
@@ -721,6 +727,24 @@ name|VBaseOffsets
 index|[
 name|VBase
 index|]
+return|;
+block|}
+name|uint64_t
+name|getSizeOfLargestEmptySubobject
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
+return|return
+name|CXXInfo
+operator|->
+name|SizeOfLargestEmptySubobject
 return|;
 block|}
 name|primary_base_info_iterator

@@ -104,6 +104,12 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
+name|class
+name|IdentifierInfo
+decl_stmt|;
+name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -187,6 +193,8 @@ name|Alias
 block|,
 name|Aligned
 block|,
+name|AlignMac68k
+block|,
 name|AlwaysInline
 block|,
 name|AnalyzerNoReturn
@@ -228,10 +236,15 @@ block|,
 name|IBOutletKind
 block|,
 comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
+name|IBOutletCollectionKind
+block|,
+comment|// Clang-specific.
 name|IBActionKind
 block|,
 comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
 name|Malloc
+block|,
+name|MaxFieldAlignment
 block|,
 name|NoDebug
 block|,
@@ -266,8 +279,6 @@ block|,
 comment|// Clang-specific
 name|Packed
 block|,
-name|PragmaPack
-block|,
 name|Pure
 block|,
 name|Regparm
@@ -280,6 +291,8 @@ block|,
 name|Sentinel
 block|,
 name|StdCall
+block|,
+name|ThisCall
 block|,
 name|TransparentUnion
 block|,
@@ -695,9 +708,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Attribute for specifying a maximum field alignment; this is only
+end_comment
+
+begin_comment
+comment|/// valid on record decls.
+end_comment
+
 begin_decl_stmt
 name|class
-name|PragmaPackAttr
+name|MaxFieldAlignmentAttr
 range|:
 name|public
 name|Attr
@@ -707,14 +728,14 @@ name|Alignment
 block|;
 name|public
 operator|:
-name|PragmaPackAttr
+name|MaxFieldAlignmentAttr
 argument_list|(
 argument|unsigned alignment
 argument_list|)
 operator|:
 name|Attr
 argument_list|(
-name|PragmaPack
+name|MaxFieldAlignment
 argument_list|)
 block|,
 name|Alignment
@@ -755,14 +776,14 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|PragmaPack
+name|MaxFieldAlignment
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const PragmaPackAttr *A
+argument|const MaxFieldAlignmentAttr *A
 argument_list|)
 block|{
 return|return
@@ -770,6 +791,11 @@ name|true
 return|;
 block|}
 expr|}
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|AlignMac68k
+argument_list|)
 block|;
 name|class
 name|AlignedAttr
@@ -1311,6 +1337,89 @@ name|bool
 name|classof
 argument_list|(
 argument|const IBOutletAttr *A
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|IBOutletCollectionAttr
+operator|:
+name|public
+name|Attr
+block|{
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|D
+block|;
+name|public
+operator|:
+name|IBOutletCollectionAttr
+argument_list|(
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|d
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|Attr
+argument_list|(
+name|IBOutletCollectionKind
+argument_list|)
+block|,
+name|D
+argument_list|(
+argument|d
+argument_list|)
+block|{}
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|getClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|D
+return|;
+block|}
+name|virtual
+name|Attr
+operator|*
+name|clone
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Attr *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|IBOutletCollectionKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const IBOutletCollectionAttr *A
 argument_list|)
 block|{
 return|return
@@ -2043,6 +2152,11 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|StdCall
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|ThisCall
 argument_list|)
 block|;
 name|DEF_SIMPLE_ATTR

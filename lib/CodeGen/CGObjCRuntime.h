@@ -396,6 +396,8 @@ name|GenerateMessageSend
 argument_list|(
 argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
+argument|ReturnValueSlot ReturnSlot
+argument_list|,
 argument|QualType ResultType
 argument_list|,
 argument|Selector Sel
@@ -426,6 +428,8 @@ name|RValue
 name|GenerateMessageSendSuper
 argument_list|(
 argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|ReturnValueSlot ReturnSlot
 argument_list|,
 argument|QualType ResultType
 argument_list|,

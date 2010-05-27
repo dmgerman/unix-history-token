@@ -500,6 +500,7 @@ name|test0
 operator|=
 name|test0
 condition|?
+comment|// expected-warning {{operands of ? are integers of different signs}}
 operator|(
 name|unsigned
 operator|)
@@ -510,7 +511,6 @@ name|int
 operator|)
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
 block|}
 end_function
 
@@ -619,6 +619,29 @@ else|:
 name|nil
 return|;
 comment|// expected-warning {{pointer/integer type mismatch in conditional expression ('int' and 'void *')}} expected-warning {{incompatible pointer to integer conversion returning 'void *' from a function with result type 'int'}}
+block|}
+end_function
+
+begin_function
+name|int
+name|f2
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// We can suppress this because the immediate context wants an int.
+return|return
+operator|(
+name|x
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|0U
+else|:
+name|x
+return|;
 block|}
 end_function
 

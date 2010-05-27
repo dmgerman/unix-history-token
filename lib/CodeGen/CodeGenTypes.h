@@ -810,6 +810,26 @@ operator|&
 name|ArgTys
 argument_list|)
 decl_stmt|;
+comment|/// ContainsPointerToDataMember - Return whether the given type contains a
+comment|/// pointer to a data member.
+name|bool
+name|ContainsPointerToDataMember
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// ContainsPointerToDataMember - Return whether the record decl contains a
+comment|/// pointer to a data member.
+name|bool
+name|ContainsPointerToDataMember
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

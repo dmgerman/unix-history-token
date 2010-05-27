@@ -282,7 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* expected-warning {{use of C99-specific array features}} */
+comment|/* expected-warning {{variable length arrays are a C99 feature, accepted as an extension}} */
 end_comment
 
 begin_function_decl

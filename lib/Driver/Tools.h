@@ -87,8 +87,9 @@ block|}
 name|namespace
 name|tools
 block|{
+comment|/// \brief Clang compiler tool.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Clang
 range|:
 name|public
@@ -149,6 +150,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"clang"
+argument_list|,
+literal|"clang frontend"
 argument_list|,
 argument|TC
 argument_list|)
@@ -224,12 +227,110 @@ argument_list|)
 specifier|const
 block|;   }
 decl_stmt|;
+comment|/// \brief Clang integrated assembler tool.
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|ClangAs
+range|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|ClangAs
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"clang::as"
+argument_list|,
+literal|"clang integrated assembler"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasGoodDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedAssembler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+decl_stmt|;
 comment|/// gcc - Generic GCC tool implementations.
 name|namespace
 name|gcc
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Common
 range|:
 name|public
@@ -245,6 +346,11 @@ operator|*
 name|Name
 argument_list|,
 specifier|const
+name|char
+operator|*
+name|ShortName
+argument_list|,
+specifier|const
 name|ToolChain
 operator|&
 name|TC
@@ -253,6 +359,8 @@ operator|:
 name|Tool
 argument_list|(
 argument|Name
+argument_list|,
+argument|ShortName
 argument_list|,
 argument|TC
 argument_list|)
@@ -293,7 +401,7 @@ literal|0
 block|;   }
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Preprocess
 range|:
 name|public
@@ -313,6 +421,8 @@ name|Common
 argument_list|(
 literal|"gcc::Preprocess"
 argument_list|,
+literal|"gcc preprocessor"
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
@@ -368,7 +478,7 @@ specifier|const
 block|;   }
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Precompile
 range|:
 name|public
@@ -388,6 +498,8 @@ name|Common
 argument_list|(
 literal|"gcc::Precompile"
 argument_list|,
+literal|"gcc precompile"
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
@@ -443,7 +555,7 @@ specifier|const
 block|;   }
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Compile
 range|:
 name|public
@@ -463,6 +575,8 @@ name|Common
 argument_list|(
 literal|"gcc::Compile"
 argument_list|,
+literal|"gcc frontend"
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
@@ -518,7 +632,7 @@ specifier|const
 block|;   }
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 range|:
 name|public
@@ -537,6 +651,8 @@ operator|:
 name|Common
 argument_list|(
 literal|"gcc::Assemble"
+argument_list|,
+literal|"assembler (via gcc)"
 argument_list|,
 argument|TC
 argument_list|)
@@ -583,7 +699,7 @@ specifier|const
 block|;   }
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 range|:
 name|public
@@ -602,6 +718,8 @@ operator|:
 name|Common
 argument_list|(
 literal|"gcc::Link"
+argument_list|,
+literal|"linker (via gcc)"
 argument_list|,
 argument|TC
 argument_list|)
@@ -653,7 +771,7 @@ name|namespace
 name|darwin
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|DarwinTool
 range|:
 name|public
@@ -704,6 +822,11 @@ operator|*
 name|Name
 argument_list|,
 specifier|const
+name|char
+operator|*
+name|ShortName
+argument_list|,
+specifier|const
 name|ToolChain
 operator|&
 name|TC
@@ -713,13 +836,15 @@ name|Tool
 argument_list|(
 argument|Name
 argument_list|,
+argument|ShortName
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
 expr|}
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|CC1
 operator|:
 name|public
@@ -854,6 +979,11 @@ operator|*
 name|Name
 argument_list|,
 specifier|const
+name|char
+operator|*
+name|ShortName
+argument_list|,
+specifier|const
 name|ToolChain
 operator|&
 name|TC
@@ -862,6 +992,8 @@ operator|:
 name|DarwinTool
 argument_list|(
 argument|Name
+argument_list|,
+argument|ShortName
 argument_list|,
 argument|TC
 argument_list|)
@@ -909,7 +1041,7 @@ block|}
 expr|}
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Preprocess
 operator|:
 name|public
@@ -929,6 +1061,8 @@ name|CC1
 argument_list|(
 literal|"darwin::Preprocess"
 argument_list|,
+literal|"gcc preprocessor"
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
@@ -954,7 +1088,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Compile
 operator|:
 name|public
@@ -974,6 +1108,8 @@ name|CC1
 argument_list|(
 literal|"darwin::Compile"
 argument_list|,
+literal|"gcc frontend"
+argument_list|,
 argument|TC
 argument_list|)
 block|{}
@@ -999,7 +1135,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1018,6 +1154,8 @@ operator|:
 name|DarwinTool
 argument_list|(
 literal|"darwin::Assemble"
+argument_list|,
+literal|"assembler"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1074,7 +1212,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
@@ -1102,6 +1240,8 @@ operator|:
 name|DarwinTool
 argument_list|(
 literal|"darwin::Link"
+argument_list|,
+literal|"linker"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1158,7 +1298,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Lipo
 operator|:
 name|public
@@ -1177,6 +1317,8 @@ operator|:
 name|DarwinTool
 argument_list|(
 literal|"darwin::Lipo"
+argument_list|,
+literal|"lipo"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1237,7 +1379,7 @@ name|namespace
 name|openbsd
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1256,6 +1398,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"openbsd::Assemble"
+argument_list|,
+literal|"assembler"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1312,7 +1456,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
@@ -1331,6 +1475,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"openbsd::Link"
+argument_list|,
+literal|"linker"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1392,7 +1538,7 @@ name|namespace
 name|freebsd
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1411,6 +1557,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"freebsd::Assemble"
+argument_list|,
+literal|"assembler"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1467,7 +1615,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
@@ -1486,6 +1634,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"freebsd::Link"
+argument_list|,
+literal|"linker"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1547,7 +1697,7 @@ name|namespace
 name|auroraux
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1566,6 +1716,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"auroraux::Assemble"
+argument_list|,
+literal|"assembler"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1622,7 +1774,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
@@ -1641,6 +1793,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"auroraux::Link"
+argument_list|,
+literal|"linker"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1702,7 +1856,7 @@ name|namespace
 name|dragonfly
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Assemble
 operator|:
 name|public
@@ -1721,6 +1875,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"dragonfly::Assemble"
+argument_list|,
+literal|"assembler"
 argument_list|,
 argument|TC
 argument_list|)
@@ -1777,7 +1933,7 @@ specifier|const
 block|;   }
 block|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|Link
 operator|:
 name|public
@@ -1796,6 +1952,8 @@ operator|:
 name|Tool
 argument_list|(
 literal|"dragonfly::Link"
+argument_list|,
+literal|"linker"
 argument_list|,
 argument|TC
 argument_list|)

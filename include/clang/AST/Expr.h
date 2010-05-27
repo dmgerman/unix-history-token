@@ -190,6 +190,12 @@ block|{
 name|QualType
 name|TR
 block|;
+name|virtual
+name|void
+name|ANCHOR
+argument_list|()
+block|;
+comment|// key function.
 name|protected
 operator|:
 comment|/// TypeDependent - Whether this expression is type-dependent
@@ -661,7 +667,25 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|// isGlobalLValue - Return true if the evaluated lvalue expression
+comment|// is global.
+name|bool
+name|isGlobalLValue
+argument_list|()
+specifier|const
+block|;
+comment|// hasSideEffects - Return true if the evaluated expression has
+comment|// side effects.
+name|bool
+name|hasSideEffects
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSideEffects
+return|;
 block|}
+expr|}
 block|;
 comment|/// Evaluate - Return true if this is a constant which we can fold using
 comment|/// any crazy technique (that has nothing to do with language standards) that
@@ -669,17 +693,6 @@ comment|/// we want to.  If this function returns true, it returns the folded co
 comment|/// in Result.
 name|bool
 name|Evaluate
-argument_list|(
-argument|EvalResult&Result
-argument_list|,
-argument|ASTContext&Ctx
-argument_list|)
-specifier|const
-block|;
-comment|/// EvaluateAsAny - The same as Evaluate, except that it also succeeds on
-comment|/// stack based objects.
-name|bool
-name|EvaluateAsAny
 argument_list|(
 argument|EvalResult&Result
 argument_list|,
@@ -741,8 +754,7 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// EvaluateAsAnyLValue - The same as EvaluateAsLValue, except that it
-comment|/// also succeeds on stack based, immutable address lvalues.
+comment|/// EvaluateAsLValue - Evaluate an expression to see if it's a lvalue.
 name|bool
 name|EvaluateAsAnyLValue
 argument_list|(
@@ -806,6 +818,13 @@ comment|/// or CastExprs, returning their operand.
 name|Expr
 operator|*
 name|IgnoreParenCasts
+argument_list|()
+block|;
+comment|/// IgnoreParenImpCasts - Ignore parentheses and implicit casts.  Strip off any
+comment|/// ParenExpr or ImplicitCastExprs, returning their operand.
+name|Expr
+operator|*
+name|IgnoreParenImpCasts
 argument_list|()
 block|;
 comment|/// IgnoreParenNoopCasts - Ignore parentheses and casts that do not change the
@@ -1244,17 +1263,8 @@ literal|1
 operator|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the explicit template argument list that followed the
-end_comment
-
-begin_comment
 comment|/// member template name, if any.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|*
@@ -1276,9 +1286,6 @@ name|getExplicitTemplateArgumentList
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|NestedNameSpecifier *Qualifier
@@ -1293,33 +1300,15 @@ argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
 argument|QualType T
 argument_list|)
-end_macro
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Computes the type- and value-dependence flags for this
-end_comment
-
-begin_comment
 comment|/// declaration reference expression.
-end_comment
-
-begin_function_decl
 name|void
 name|computeDependence
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_macro
 name|DeclRefExpr
 argument_list|(
 argument|StmtClass SC
@@ -1330,10 +1319,7 @@ argument|QualType t
 argument_list|,
 argument|SourceLocation l
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+block|:
 name|Expr
 argument_list|(
 name|SC
@@ -1432,9 +1418,6 @@ argument|const TemplateArgumentListInfo *TemplateArgs =
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function
 name|ValueDecl
 modifier|*
 name|getDecl
@@ -1447,9 +1430,6 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|ValueDecl
 operator|*
@@ -1464,9 +1444,6 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setDecl
 parameter_list|(
@@ -1483,9 +1460,6 @@ name|NewD
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1495,9 +1469,6 @@ return|return
 name|Loc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setLocation
 parameter_list|(
@@ -1510,26 +1481,14 @@ operator|=
 name|L
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine whether this declaration reference was preceded by a
-end_comment
-
-begin_comment
 comment|/// C++ nested-name-specifier, e.g., \c N::foo.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasQualifier
 argument_list|()
@@ -1544,21 +1503,9 @@ operator|&
 name|HasQualifierFlag
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If the name was qualified, retrieves the source range of
-end_comment
-
-begin_comment
 comment|/// the nested-name-specifier that precedes the name. Otherwise,
-end_comment
-
-begin_comment
 comment|/// returns an empty source range.
-end_comment
-
-begin_expr_stmt
 name|SourceRange
 name|getQualifierRange
 argument_list|()
@@ -1574,19 +1521,16 @@ return|return
 name|SourceRange
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getNameQualifier
 argument_list|()
 operator|->
 name|Range
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
 end_comment
 
@@ -1595,7 +1539,7 @@ comment|/// that precedes the name. Otherwise, returns NULL.
 end_comment
 
 begin_expr_stmt
-unit|NestedNameSpecifier
+name|NestedNameSpecifier
 operator|*
 name|getQualifier
 argument_list|()
@@ -6113,22 +6057,15 @@ name|T
 operator|->
 name|getStmtClass
 argument_list|()
-operator|==
-name|CallExprClass
-operator|||
+operator|>=
+name|firstCallExprConstant
+operator|&&
 name|T
 operator|->
 name|getStmtClass
 argument_list|()
-operator|==
-name|CXXOperatorCallExprClass
-operator|||
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|CXXMemberCallExprClass
+operator|<=
+name|lastCallExprConstant
 return|;
 block|}
 end_function
@@ -6140,38 +6077,6 @@ name|classof
 parameter_list|(
 specifier|const
 name|CallExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXOperatorCallExpr
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|CXXMemberCallExpr
 modifier|*
 parameter_list|)
 block|{
@@ -7914,86 +7819,48 @@ argument_list|(
 argument|const Stmt *T
 argument_list|)
 block|{
-name|StmtClass
-name|SC
-operator|=
+return|return
 name|T
 operator|->
 name|getStmtClass
 argument_list|()
-block|;
-if|if
-condition|(
-name|SC
 operator|>=
-name|CXXStaticCastExprClass
+name|firstCastExprConstant
 operator|&&
-name|SC
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
 operator|<=
-name|CXXFunctionalCastExprClass
-condition|)
-return|return
-name|true
+name|lastCastExprConstant
 return|;
-if|if
-condition|(
-name|SC
-operator|>=
-name|ImplicitCastExprClass
-operator|&&
-name|SC
-operator|<=
-name|CStyleCastExprClass
-condition|)
-return|return
-name|true
-return|;
-end_decl_stmt
-
-begin_return
-return|return
-name|false
-return|;
-end_return
-
-begin_function
-unit|}   static
+block|}
+specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|CastExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const CastExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
 name|virtual
 name|child_iterator
 name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+argument_list|()
+block|;
 name|virtual
 name|child_iterator
 name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+block|; }
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|};
 comment|/// ImplicitCastExpr - Allows us to explicitly represent implicit type
 end_comment
 
@@ -8302,79 +8169,41 @@ argument_list|(
 argument|const Stmt *T
 argument_list|)
 block|{
-name|StmtClass
-name|SC
-operator|=
+return|return
 name|T
 operator|->
 name|getStmtClass
 argument_list|()
-block|;
-if|if
-condition|(
-name|SC
 operator|>=
-name|CStyleCastExprClass
+name|firstExplicitCastExprConstant
 operator|&&
-name|SC
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
 operator|<=
-name|CStyleCastExprClass
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-name|SC
-operator|>=
-name|CXXStaticCastExprClass
-operator|&&
-name|SC
-operator|<=
-name|CXXFunctionalCastExprClass
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
+name|lastExplicitCastExprConstant
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ExplicitCastExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const ExplicitCastExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// CStyleCastExpr - An explicit cast in C (C99 6.5.4) or a C-style
-end_comment
-
-begin_comment
 comment|/// cast in C++ (C++ [expr.cast]), which uses the syntax
-end_comment
-
-begin_comment
 comment|/// (Type)expr. For example: @c (int)f.
-end_comment
-
-begin_decl_stmt
 name|class
 name|CStyleCastExpr
-range|:
+operator|:
 name|public
 name|ExplicitCastExpr
 block|{
@@ -9176,15 +9005,15 @@ name|S
 operator|->
 name|getStmtClass
 argument_list|()
-operator|==
-name|BinaryOperatorClass
-operator|||
+operator|>=
+name|firstBinaryOperatorConstant
+operator|&&
 name|S
 operator|->
 name|getStmtClass
 argument_list|()
-operator|==
-name|CompoundAssignOperatorClass
+operator|<=
+name|lastBinaryOperatorConstant
 return|;
 block|}
 specifier|static
@@ -11975,97 +11804,31 @@ name|rend
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// @brief Represents a C99 designated initializer expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A designated initializer expression (C99 6.7.8) contains one or
-end_comment
-
-begin_comment
 comment|/// more designators (which can be field designators, array
-end_comment
-
-begin_comment
 comment|/// designators, or GNU array-range designators) followed by an
-end_comment
-
-begin_comment
 comment|/// expression that initializes the field or element(s) that the
-end_comment
-
-begin_comment
 comment|/// designators refer to. For example, given:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @code
-end_comment
-
-begin_comment
 comment|/// struct point {
-end_comment
-
-begin_comment
 comment|///   double x;
-end_comment
-
-begin_comment
 comment|///   double y;
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// struct point ptarray[10] = { [2].y = 1.0, [2].x = 2.0, [0].x = 1.0 };
-end_comment
-
-begin_comment
 comment|/// @endcode
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The InitListExpr contains three DesignatedInitExprs, the first of
-end_comment
-
-begin_comment
 comment|/// which covers @c [2].y=1.0. This DesignatedInitExpr will have two
-end_comment
-
-begin_comment
 comment|/// designators, one array designator for @c [2] followed by one field
-end_comment
-
-begin_comment
 comment|/// designator for @c .y. The initalization expression will be 1.0.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DesignatedInitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13120,45 +12883,18 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// \brief Represents an implicitly-generated value initialization of
-end_comment
-
-begin_comment
 comment|/// an object of a given type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Implicit value initializations occur within semantic initializer
-end_comment
-
-begin_comment
 comment|/// list expressions (InitListExpr) as placeholders for subobject
-end_comment
-
-begin_comment
 comment|/// initializations not explicitly specified by the user.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \see InitListExpr
-end_comment
-
-begin_decl_stmt
 name|class
 name|ImplicitValueInitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13244,13 +12980,10 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|class
 name|ParenListExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13459,53 +13192,20 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Clang Extensions
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ExtVectorElementExpr - This represents access to specific elements of a
-end_comment
-
-begin_comment
 comment|/// vector, and may occur on the left hand side or right hand side.  For example
-end_comment
-
-begin_comment
 comment|/// the following is legal:  "V.xy = V.zw" if V is a 4 element extended vector.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that the base may have either vector or pointer to vector type, just
-end_comment
-
-begin_comment
 comment|/// like a struct field reference.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ExtVectorElementExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13748,21 +13448,12 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// BlockExpr - Adaptor class for mixing a BlockDecl with expressions.
-end_comment
-
-begin_comment
 comment|/// ^{ statement-body }   or   ^(int arg1, float arg2){ statement-body }
-end_comment
-
-begin_decl_stmt
 name|class
 name|BlockExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13959,21 +13650,12 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// BlockDeclRefExpr - A reference to a declared variable, function,
-end_comment
-
-begin_comment
 comment|/// enum, etc.
-end_comment
-
-begin_decl_stmt
 name|class
 name|BlockDeclRefExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -14194,11 +13876,10 @@ name|child_iterator
 name|child_end
 argument_list|()
 block|; }
-decl_stmt|;
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

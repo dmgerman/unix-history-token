@@ -542,7 +542,7 @@ comment|/// the same base type).
 name|bool
 name|isAmbiguous
 parameter_list|(
-name|QualType
+name|CanQualType
 name|BaseType
 parameter_list|)
 function_decl|;

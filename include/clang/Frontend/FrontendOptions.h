@@ -89,6 +89,9 @@ comment|///< Parse ASTs and print them in XML.
 name|ASTView
 block|,
 comment|///< Parse ASTs and view them in Graphviz.
+name|BoostCon
+block|,
+comment|///< BoostCon mode.
 name|DumpRawTokens
 block|,
 comment|///< Dump out raw tokens.
@@ -109,7 +112,10 @@ block|,
 comment|///< Emit a .ll file.
 name|EmitLLVMOnly
 block|,
-comment|///< Generate LLVM IR, but do not
+comment|///< Generate LLVM IR, but do not emit anything.
+name|EmitCodeGenOnly
+block|,
+comment|///< Generate machine code, but don't emit anything.
 name|EmitObj
 block|,
 comment|///< Emit a .o file.
@@ -231,6 +237,13 @@ literal|1
 decl_stmt|;
 comment|///< Show macros in code completion
 comment|/// results.
+name|unsigned
+name|ShowCodePatternsInCodeCompletion
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show code patterns in code
+comment|/// completion results.
 name|unsigned
 name|ShowStats
 range|:
@@ -369,6 +382,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ShowMacrosInCodeCompletion
+operator|=
+literal|0
+expr_stmt|;
+name|ShowCodePatternsInCodeCompletion
 operator|=
 literal|0
 expr_stmt|;

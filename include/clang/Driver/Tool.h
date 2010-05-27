@@ -107,6 +107,12 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+comment|/// The human readable name for the tool, for use in diagnostics.
+specifier|const
+name|char
+modifier|*
+name|ShortName
+decl_stmt|;
 comment|/// The tool chain this tool is a part of.
 specifier|const
 name|ToolChain
@@ -121,6 +127,11 @@ specifier|const
 name|char
 operator|*
 name|Name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|ShortName
 argument_list|,
 specifier|const
 name|ToolChain
@@ -144,6 +155,17 @@ specifier|const
 block|{
 return|return
 name|Name
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getShortName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShortName
 return|;
 block|}
 specifier|const

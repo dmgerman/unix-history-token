@@ -390,6 +390,16 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
+argument|const ObjCObjectType *Ty
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
 argument|const EnumType *Ty
 argument_list|,
 argument|llvm::DIFile F
@@ -957,6 +967,24 @@ operator|*
 name|Decl
 argument_list|)
 expr_stmt|;
+comment|/// getLineNumber - Get line number for the location. If location is invalid
+comment|/// then use current location.
+name|unsigned
+name|getLineNumber
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// getColumnNumber - Get column number for the location. If location is
+comment|/// invalid then use current location.
+name|unsigned
+name|getColumnNumber
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

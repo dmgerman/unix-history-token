@@ -97,6 +97,74 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+comment|/// \brief Default priority values for code-completion results based
+comment|/// on their kind.
+enum|enum
+block|{
+comment|/// \brief Priority for a declaration that is in the local scope.
+name|CCP_LocalDeclaration
+init|=
+literal|8
+block|,
+comment|/// \brief Priority for a member declaration found from the current
+comment|/// method or member function.
+name|CCP_MemberDeclaration
+init|=
+literal|20
+block|,
+comment|/// \brief Priority for a language keyword (that isn't any of the other
+comment|/// categories).
+name|CCP_Keyword
+init|=
+literal|30
+block|,
+comment|/// \brief Priority for a code pattern.
+name|CCP_CodePattern
+init|=
+literal|30
+block|,
+comment|/// \brief Priority for a type.
+name|CCP_Type
+init|=
+literal|40
+block|,
+comment|/// \brief Priority for a non-type declaration.
+name|CCP_Declaration
+init|=
+literal|50
+block|,
+comment|/// \brief Priority for a constant value (e.g., enumerator).
+name|CCP_Constant
+init|=
+literal|60
+block|,
+comment|/// \brief Priority for a preprocessor macro.
+name|CCP_Macro
+init|=
+literal|70
+block|,
+comment|/// \brief Priority for a nested-name-specifier.
+name|CCP_NestedNameSpecifier
+init|=
+literal|75
+block|,
+comment|/// \brief Priority for a result that isn't likely to be what the user wants,
+comment|/// but is included for completeness.
+name|CCP_Unlikely
+init|=
+literal|80
+block|}
+enum|;
+comment|/// \brief Priority value deltas that are applied to code-completion results
+comment|/// based on the context of the result.
+enum|enum
+block|{
+comment|/// \brief The result is in a base class.
+name|CCD_InBaseClass
+init|=
+literal|2
+block|}
+enum|;
 name|class
 name|FunctionDecl
 decl_stmt|;
@@ -382,7 +450,10 @@ block|{ }
 operator|~
 name|CodeCompletionString
 argument_list|()
-expr_stmt|;
+block|{
+name|clear
+argument_list|()
+block|; }
 typedef|typedef
 name|llvm
 operator|::
@@ -444,6 +515,10 @@ name|size
 argument_list|()
 return|;
 block|}
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 name|Chunk
 modifier|&
 name|operator
@@ -721,9 +796,9 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Deserialize a code-completion string from the given string.
-specifier|static
-name|CodeCompletionString
-modifier|*
+comment|///
+comment|/// \returns true if successful, false otherwise.
+name|bool
 name|Deserialize
 parameter_list|(
 specifier|const
@@ -769,6 +844,11 @@ label|:
 comment|/// \brief Whether to include macros in the code-completion results.
 name|bool
 name|IncludeMacros
+decl_stmt|;
+comment|/// \brief Whether to include code patterns (such as for loops) within
+comment|/// the completion results.
+name|bool
+name|IncludeCodePatterns
 decl_stmt|;
 comment|/// \brief Whether the output format for the code-completion consumer is
 comment|/// binary.
@@ -832,7 +912,11 @@ name|Macro
 decl_stmt|;
 block|}
 union|;
-comment|/// \brief Specifiers which parameter (of a function, Objective-C method,
+comment|/// \brief The priority of this particular code-completion result.
+name|unsigned
+name|Priority
+decl_stmt|;
+comment|/// \brief Specifies which parameter (of a function, Objective-C method,
 comment|/// macro, etc.) we should start with when formatting the result.
 name|unsigned
 name|StartParameter
@@ -891,6 +975,14 @@ argument_list|(
 name|Declaration
 argument_list|)
 operator|,
+name|Priority
+argument_list|(
+name|getPriorityFromDecl
+argument_list|(
+name|Declaration
+argument_list|)
+argument_list|)
+operator|,
 name|StartParameter
 argument_list|(
 literal|0
@@ -920,14 +1012,13 @@ name|Qualifier
 argument_list|(
 argument|Qualifier
 argument_list|)
-block|{ }
+block|{      }
 comment|/// \brief Build a result that refers to a keyword or symbol.
 name|Result
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Keyword
+argument|const char *Keyword
+argument_list|,
+argument|unsigned Priority = CCP_Keyword
 argument_list|)
 operator|:
 name|Kind
@@ -938,6 +1029,11 @@ operator|,
 name|Keyword
 argument_list|(
 name|Keyword
+argument_list|)
+operator|,
+name|Priority
+argument_list|(
+name|Priority
 argument_list|)
 operator|,
 name|StartParameter
@@ -973,9 +1069,9 @@ block|{ }
 comment|/// \brief Build a result that refers to a macro.
 name|Result
 argument_list|(
-name|IdentifierInfo
-operator|*
-name|Macro
+argument|IdentifierInfo *Macro
+argument_list|,
+argument|unsigned Priority = CCP_Macro
 argument_list|)
 operator|:
 name|Kind
@@ -986,6 +1082,11 @@ operator|,
 name|Macro
 argument_list|(
 name|Macro
+argument_list|)
+operator|,
+name|Priority
+argument_list|(
+name|Priority
 argument_list|)
 operator|,
 name|StartParameter
@@ -1021,9 +1122,9 @@ block|{ }
 comment|/// \brief Build a result that refers to a pattern.
 name|Result
 argument_list|(
-name|CodeCompletionString
-operator|*
-name|Pattern
+argument|CodeCompletionString *Pattern
+argument_list|,
+argument|unsigned Priority = CCP_CodePattern
 argument_list|)
 operator|:
 name|Kind
@@ -1034,6 +1135,11 @@ operator|,
 name|Pattern
 argument_list|(
 name|Pattern
+argument_list|)
+operator|,
+name|Priority
+argument_list|(
+name|Priority
 argument_list|)
 operator|,
 name|StartParameter
@@ -1121,6 +1227,16 @@ function_decl|;
 name|void
 name|Destroy
 parameter_list|()
+function_decl|;
+comment|/// brief Determine a base priority for the given declaration.
+specifier|static
+name|unsigned
+name|getPriorityFromDecl
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
 function_decl|;
 block|}
 struct|;
@@ -1309,12 +1425,19 @@ name|CodeCompleteConsumer
 argument_list|(
 argument|bool IncludeMacros
 argument_list|,
+argument|bool IncludeCodePatterns
+argument_list|,
 argument|bool OutputIsBinary
 argument_list|)
 operator|:
 name|IncludeMacros
 argument_list|(
 name|IncludeMacros
+argument_list|)
+operator|,
+name|IncludeCodePatterns
+argument_list|(
+name|IncludeCodePatterns
 argument_list|)
 operator|,
 name|OutputIsBinary
@@ -1330,6 +1453,16 @@ specifier|const
 block|{
 return|return
 name|IncludeMacros
+return|;
+block|}
+comment|/// \brief Whether the code-completion consumer wants to see code patterns.
+name|bool
+name|includeCodePatterns
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IncludeCodePatterns
 return|;
 block|}
 comment|/// \brief Determine whether the output of this consumer is binary.
@@ -1420,12 +1553,16 @@ name|PrintingCodeCompleteConsumer
 argument_list|(
 argument|bool IncludeMacros
 argument_list|,
+argument|bool IncludeCodePatterns
+argument_list|,
 argument|llvm::raw_ostream&OS
 argument_list|)
 operator|:
 name|CodeCompleteConsumer
 argument_list|(
 name|IncludeMacros
+argument_list|,
+name|IncludeCodePatterns
 argument_list|,
 name|false
 argument_list|)
@@ -1434,7 +1571,7 @@ name|OS
 argument_list|(
 argument|OS
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Prints the finalized code-completion results.
 name|virtual
 name|void
@@ -1485,12 +1622,16 @@ name|CIndexCodeCompleteConsumer
 argument_list|(
 argument|bool IncludeMacros
 argument_list|,
+argument|bool IncludeCodePatterns
+argument_list|,
 argument|llvm::raw_ostream&OS
 argument_list|)
 operator|:
 name|CodeCompleteConsumer
 argument_list|(
 name|IncludeMacros
+argument_list|,
+name|IncludeCodePatterns
 argument_list|,
 name|true
 argument_list|)
@@ -1499,7 +1640,7 @@ name|OS
 argument_list|(
 argument|OS
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Prints the finalized code-completion results.
 name|virtual
 name|void

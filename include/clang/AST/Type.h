@@ -436,7 +436,7 @@ name|class
 name|Type
 decl_stmt|;
 name|class
-name|QualifiedNameType
+name|ElaboratedType
 decl_stmt|;
 struct_decl|struct
 name|PrintingPolicy
@@ -1767,7 +1767,10 @@ name|CC_X86StdCall
 block|,
 comment|// __attribute__((stdcall))
 name|CC_X86FastCall
+block|,
 comment|// __attribute__((fastcall))
+name|CC_X86ThisCall
+comment|// __attribute__((thiscall))
 block|}
 block|;
 comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
@@ -3257,23 +3260,6 @@ block|}
 enum|;
 name|private
 label|:
-name|QualType
-name|CanonicalType
-decl_stmt|;
-comment|/// TypeClass bitfield - Enum that specifies what subclass this belongs to.
-name|unsigned
-name|TC
-range|:
-literal|8
-decl_stmt|;
-comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
-comment|/// Note that this should stay at the end of the ivars for Type so that
-comment|/// subclasses can pack their bitfields into the same word.
-name|bool
-name|Dependent
-range|:
-literal|1
-decl_stmt|;
 name|Type
 argument_list|(
 specifier|const
@@ -3292,8 +3278,53 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT.
+name|QualType
+name|CanonicalType
+decl_stmt|;
+comment|/// TypeClass bitfield - Enum that specifies what subclass this belongs to.
+name|unsigned
+name|TC
+range|:
+literal|8
+decl_stmt|;
+comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
+comment|/// Note that this should stay at the end of the ivars for Type so that
+comment|/// subclasses can pack their bitfields into the same word.
+name|bool
+name|Dependent
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the linkage of this type is already known.
+name|mutable
+name|bool
+name|LinkageKnown
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Linkage of this type.
+name|mutable
+name|unsigned
+name|CachedLinkage
+range|:
+literal|2
+decl_stmt|;
 name|protected
 label|:
+comment|/// \brief Compute the linkage of this type.
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+expr_stmt|;
+enum|enum
+block|{
+name|BitsRemainingInType
+init|=
+literal|20
+block|}
+enum|;
 comment|// silence VC++ warning C4355: 'this' : used in base member initializer list
 name|Type
 modifier|*
@@ -3338,7 +3369,17 @@ argument_list|)
 operator|,
 name|Dependent
 argument_list|(
-argument|dependent
+name|dependent
+argument_list|)
+operator|,
+name|LinkageKnown
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|CachedLinkage
+argument_list|(
+argument|NoLinkage
 argument_list|)
 block|{}
 name|virtual
@@ -3719,11 +3760,11 @@ comment|// Pointer to *any* ObjC object.
 comment|// FIXME: change this to 'raw' interface type, so we can used 'interface' type
 comment|// for the common case.
 name|bool
-name|isObjCInterfaceType
+name|isObjCObjectType
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// NSString or NSString<foo>
+comment|// NSString or typeof(*(id)0)
 name|bool
 name|isObjCQualifiedInterfaceType
 argument_list|()
@@ -3860,7 +3901,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 specifier|const
-name|ObjCInterfaceType
+name|ObjCObjectType
 operator|*
 name|getAsObjCQualifiedInterfaceType
 argument_list|()
@@ -3896,15 +3937,6 @@ specifier|const
 name|T
 operator|*
 name|getAs
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getAsPointerToObjCInterfaceType - If this is a pointer to an ObjC
-comment|/// interface, return the interface type, otherwise return null.
-specifier|const
-name|ObjCInterfaceType
-operator|*
-name|getAsPointerToObjCInterfaceType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3975,17 +4007,21 @@ name|isSpecifierType
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine the linkage of this type.
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Note that the linkage is no longer known.
+name|void
+name|ClearLinkageCache
+parameter_list|()
+function_decl|;
 specifier|const
 name|char
 operator|*
 name|getTypeClassName
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Determine the linkage of this type.
-name|virtual
-name|Linkage
-name|getLinkage
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -4148,12 +4184,16 @@ name|UndeducedAuto
 block|,
 comment|// In C++0x, this represents the type of an auto variable
 comment|// that has not been deduced yet.
+comment|/// The primitive Objective C 'id' type.  The type pointed to by the
+comment|/// user-visible 'id' type.  Only ever shows up in an AST as the base
+comment|/// type of an ObjCObjectType.
 name|ObjCId
 block|,
-comment|// This represents the ObjC 'id' type.
+comment|/// The primitive Objective C 'Class' type.  The type pointed to by the
+comment|/// user-visible 'Class' type.  Only ever shows up in an AST as the
+comment|/// base type of an ObjCObjectType.
 name|ObjCClass
 block|,
-comment|// This represents the ObjC 'Class' type.
 name|ObjCSel
 comment|// This represents the ObjC 'SEL' type.
 block|}
@@ -4162,6 +4202,14 @@ name|private
 operator|:
 name|Kind
 name|TypeKind
+block|;
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
 block|;
 name|public
 operator|:
@@ -4291,12 +4339,6 @@ operator|<=
 name|LongDouble
 return|;
 block|}
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -4372,6 +4414,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|QualType
@@ -4439,12 +4489,6 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -4519,6 +4563,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|QualType
@@ -4586,12 +4638,6 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -4669,6 +4715,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// Get the pointee type. Pointee is required to always be a function type.
@@ -4737,12 +4791,6 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -4847,6 +4895,12 @@ argument_list|(
 argument|Referencee->isReferenceType()
 argument_list|)
 block|{   }
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|bool
@@ -4957,12 +5011,6 @@ argument_list|(
 name|SpelledAsLValue
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -5235,6 +5283,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|QualType
@@ -5325,12 +5381,6 @@ argument_list|(
 name|Class
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -5465,6 +5515,12 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|QualType
@@ -5511,12 +5567,6 @@ return|return
 name|IndexTypeQuals
 return|;
 block|}
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -6733,6 +6783,12 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|QualType
@@ -6873,12 +6929,6 @@ argument_list|(
 name|isPixel
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -7258,6 +7308,12 @@ operator|:
 name|public
 name|Type
 block|{
+name|virtual
+name|void
+name|ANCHOR
+argument_list|()
+block|;
+comment|// Key function for FunctionType.
 comment|/// SubClassData - This field is owned by the subclass, put here to pack
 comment|/// tightly with the ivars in Type.
 name|bool
@@ -7293,7 +7349,7 @@ comment|/// CallConv - The calling convention used by the function.
 name|unsigned
 name|CallConv
 operator|:
-literal|2
+literal|3
 block|;
 comment|// The type returned by the function.
 name|QualType
@@ -7526,7 +7582,7 @@ name|unsigned
 name|RegParm
 block|;
 comment|// The calling convention as specified via
-comment|// __attribute__((cdecl|stdcall||fastcall))
+comment|// __attribute__((cdecl|stdcall|fastcall|thiscall))
 name|CallingConv
 name|CC
 block|;   }
@@ -7766,6 +7822,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 comment|// No additional state past what FunctionType provides.
@@ -7860,12 +7924,6 @@ name|getAsOpaquePtr
 argument_list|()
 argument_list|)
 block|;   }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8134,6 +8192,14 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|unsigned
@@ -8350,12 +8416,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -9221,6 +9281,12 @@ argument_list|,
 argument|QualType can
 argument_list|)
 block|;
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|TagDecl
@@ -9268,12 +9334,6 @@ operator|:
 literal|0
 argument_list|)
 block|; }
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -9624,250 +9684,6 @@ argument_list|)
 block|{
 return|return
 name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// ElaboratedType - A non-canonical type used to represents uses of
-comment|/// elaborated type specifiers in C++.  For example:
-comment|///
-comment|///   void foo(union MyUnion);
-comment|///            ^^^^^^^^^^^^^
-comment|///
-comment|/// At the moment, for efficiency we do not create elaborated types in
-comment|/// C, since outside of typedefs all references to structs would
-comment|/// necessarily be elaborated.
-name|class
-name|ElaboratedType
-operator|:
-name|public
-name|Type
-block|,
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
-block|{
-name|public
-operator|:
-expr|enum
-name|TagKind
-block|{
-name|TK_struct
-block|,
-name|TK_union
-block|,
-name|TK_class
-block|,
-name|TK_enum
-block|}
-block|;
-name|private
-operator|:
-comment|/// The tag that was used in this elaborated type specifier.
-name|TagKind
-name|Tag
-block|;
-comment|/// The underlying type.
-name|QualType
-name|UnderlyingType
-block|;
-name|explicit
-name|ElaboratedType
-argument_list|(
-argument|QualType Ty
-argument_list|,
-argument|TagKind Tag
-argument_list|,
-argument|QualType Canon
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|Elaborated
-argument_list|,
-name|Canon
-argument_list|,
-name|Canon
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|)
-block|,
-name|Tag
-argument_list|(
-name|Tag
-argument_list|)
-block|,
-name|UnderlyingType
-argument_list|(
-argument|Ty
-argument_list|)
-block|{ }
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|public
-operator|:
-name|TagKind
-name|getTagKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Tag
-return|;
-block|}
-name|QualType
-name|getUnderlyingType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UnderlyingType
-return|;
-block|}
-comment|/// \brief Remove a single level of sugar.
-name|QualType
-name|desugar
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getUnderlyingType
-argument_list|()
-return|;
-block|}
-comment|/// \brief Returns whether this type directly provides sugar.
-name|bool
-name|isSugared
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|const
-name|char
-operator|*
-name|getNameForTagKind
-argument_list|(
-argument|TagKind Kind
-argument_list|)
-block|{
-switch|switch
-condition|(
-name|Kind
-condition|)
-block|{
-default|default:
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unknown TagKind!"
-argument_list|)
-expr_stmt|;
-case|case
-name|TK_struct
-case|:
-return|return
-literal|"struct"
-return|;
-case|case
-name|TK_union
-case|:
-return|return
-literal|"union"
-return|;
-case|case
-name|TK_class
-case|:
-return|return
-literal|"class"
-return|;
-case|case
-name|TK_enum
-case|:
-return|return
-literal|"enum"
-return|;
-block|}
-block|}
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|)
-block|{
-name|Profile
-argument_list|(
-name|ID
-argument_list|,
-name|getUnderlyingType
-argument_list|()
-argument_list|,
-name|getTagKind
-argument_list|()
-argument_list|)
-block|;   }
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|,
-argument|QualType T
-argument_list|,
-argument|TagKind Tag
-argument_list|)
-block|{
-name|ID
-operator|.
-name|AddPointer
-argument_list|(
-name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
-argument_list|)
-block|;
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|Tag
-argument_list|)
-block|;   }
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ElaboratedType*
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeClass
-argument_list|()
-operator|==
-name|Elaborated
 return|;
 block|}
 expr|}
@@ -10869,43 +10685,214 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief The kind of a tag type.
+block|enum
+name|TagTypeKind
+block|{
+comment|/// \brief The "struct" keyword.
+name|TTK_Struct
+block|,
+comment|/// \brief The "union" keyword.
+name|TTK_Union
+block|,
+comment|/// \brief The "class" keyword.
+name|TTK_Class
+block|,
+comment|/// \brief The "enum" keyword.
+name|TTK_Enum
+block|}
+block|;
 comment|/// \brief The elaboration keyword that precedes a qualified type name or
 comment|/// introduces an elaborated-type-specifier.
 block|enum
 name|ElaboratedTypeKeyword
 block|{
-comment|/// \brief No keyword precedes the qualified type name.
-name|ETK_None
-block|,
-comment|/// \brief The "typename" keyword precedes the qualified type name, e.g.,
-comment|/// \c typename T::type.
-name|ETK_Typename
-block|,
-comment|/// \brief The "class" keyword introduces the elaborated-type-specifier.
-name|ETK_Class
-block|,
 comment|/// \brief The "struct" keyword introduces the elaborated-type-specifier.
 name|ETK_Struct
 block|,
 comment|/// \brief The "union" keyword introduces the elaborated-type-specifier.
 name|ETK_Union
 block|,
+comment|/// \brief The "class" keyword introduces the elaborated-type-specifier.
+name|ETK_Class
+block|,
 comment|/// \brief The "enum" keyword introduces the elaborated-type-specifier.
 name|ETK_Enum
+block|,
+comment|/// \brief The "typename" keyword precedes the qualified type name, e.g.,
+comment|/// \c typename T::type.
+name|ETK_Typename
+block|,
+comment|/// \brief No keyword precedes the qualified type name.
+name|ETK_None
 block|}
 block|;
-comment|/// \brief Represents a type that was referred to via a qualified
-comment|/// name, e.g., N::M::type.
-comment|///
-comment|/// This type is used to keep track of a type name as written in the
-comment|/// source code, including any nested-name-specifiers. The type itself
-comment|/// is always "sugar", used to express what was written in the source
-comment|/// code but containing no additional semantic information.
+comment|/// A helper class for Type nodes having an ElaboratedTypeKeyword.
+comment|/// The keyword in stored in the free bits of the base class.
+comment|/// Also provides a few static helpers for converting and printing
+comment|/// elaborated type keyword and tag type kind enumerations.
 name|class
-name|QualifiedNameType
+name|TypeWithKeyword
 operator|:
 name|public
 name|Type
+block|{
+comment|/// Keyword - Encodes an ElaboratedTypeKeyword enumeration constant.
+name|unsigned
+name|Keyword
+operator|:
+literal|3
+block|;
+name|protected
+operator|:
+name|TypeWithKeyword
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
+argument|TypeClass tc
+argument_list|,
+argument|QualType Canonical
+argument_list|,
+argument|bool dependent
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|tc
+argument_list|,
+name|Canonical
+argument_list|,
+name|dependent
+argument_list|)
+block|,
+name|Keyword
+argument_list|(
+argument|Keyword
+argument_list|)
+block|{}
+name|public
+operator|:
+name|virtual
+operator|~
+name|TypeWithKeyword
+argument_list|()
+block|;
+comment|// pin vtable to Type.cpp
+name|ElaboratedTypeKeyword
+name|getKeyword
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ElaboratedTypeKeyword
+operator|>
+operator|(
+name|Keyword
+operator|)
+return|;
+block|}
+comment|/// getKeywordForTypeSpec - Converts a type specifier (DeclSpec::TST)
+comment|/// into an elaborated type keyword.
+specifier|static
+name|ElaboratedTypeKeyword
+name|getKeywordForTypeSpec
+argument_list|(
+argument|unsigned TypeSpec
+argument_list|)
+block|;
+comment|/// getTagTypeKindForTypeSpec - Converts a type specifier (DeclSpec::TST)
+comment|/// into a tag type kind.  It is an error to provide a type specifier
+comment|/// which *isn't* a tag kind here.
+specifier|static
+name|TagTypeKind
+name|getTagTypeKindForTypeSpec
+argument_list|(
+argument|unsigned TypeSpec
+argument_list|)
+block|;
+comment|/// getKeywordForTagDeclKind - Converts a TagTypeKind into an
+comment|/// elaborated type keyword.
+specifier|static
+name|ElaboratedTypeKeyword
+name|getKeywordForTagTypeKind
+argument_list|(
+argument|TagTypeKind Tag
+argument_list|)
+block|;
+comment|/// getTagTypeKindForKeyword - Converts an elaborated type keyword into
+comment|// a TagTypeKind. It is an error to provide an elaborated type keyword
+comment|/// which *isn't* a tag kind here.
+specifier|static
+name|TagTypeKind
+name|getTagTypeKindForKeyword
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|KeywordIsTagTypeKind
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getKeywordName
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getTagTypeKindName
+argument_list|(
+argument|TagTypeKind Kind
+argument_list|)
+block|{
+return|return
+name|getKeywordName
+argument_list|(
+name|getKeywordForTagTypeKind
+argument_list|(
+name|Kind
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|class
+name|CannotCastToThisType
+block|{}
+block|;
+specifier|static
+name|CannotCastToThisType
+name|classof
+argument_list|(
+specifier|const
+name|Type
+operator|*
+argument_list|)
+block|; }
+block|;
+comment|/// \brief Represents a type that was referred to using an elaborated type
+comment|/// keyword, e.g., struct S, or via a qualified name, e.g., N::M::type,
+comment|/// or both.
+comment|///
+comment|/// This type is used to keep track of a type name as written in the
+comment|/// source code, including tag keywords and any nested-name-specifiers.
+comment|/// The type itself is always "sugar", used to express what was written
+comment|/// in the source code but containing no additional semantic information.
+name|class
+name|ElaboratedType
+operator|:
+name|public
+name|TypeWithKeyword
 block|,
 name|public
 name|llvm
@@ -10921,8 +10908,10 @@ comment|/// \brief The type that this qualified name refers to.
 name|QualType
 name|NamedType
 block|;
-name|QualifiedNameType
+name|ElaboratedType
 argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|QualType NamedType
@@ -10930,9 +10919,11 @@ argument_list|,
 argument|QualType CanonType
 argument_list|)
 operator|:
-name|Type
+name|TypeWithKeyword
 argument_list|(
-name|QualifiedName
+name|Keyword
+argument_list|,
+name|Elaborated
 argument_list|,
 name|CanonType
 argument_list|,
@@ -10951,7 +10942,24 @@ name|NamedType
 argument_list|(
 argument|NamedType
 argument_list|)
-block|{ }
+block|{
+name|assert
+argument_list|(
+operator|!
+operator|(
+name|Keyword
+operator|==
+name|ETK_None
+operator|&&
+name|NNS
+operator|==
+literal|0
+operator|)
+operator|&&
+literal|"ElaboratedType cannot have elaborated type keyword "
+literal|"and name qualifier both null."
+argument_list|)
+block|;   }
 name|friend
 name|class
 name|ASTContext
@@ -11011,6 +11019,9 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|,
+name|getKeyword
+argument_list|()
+argument_list|,
 name|NNS
 argument_list|,
 name|NamedType
@@ -11022,11 +11033,20 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
 argument|QualType NamedType
 argument_list|)
 block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Keyword
+argument_list|)
+block|;
 name|ID
 operator|.
 name|AddPointer
@@ -11054,14 +11074,14 @@ operator|->
 name|getTypeClass
 argument_list|()
 operator|==
-name|QualifiedName
+name|Elaborated
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const QualifiedNameType *T
+argument|const ElaboratedType *T
 argument_list|)
 block|{
 return|return
@@ -11083,17 +11103,13 @@ name|class
 name|DependentNameType
 operator|:
 name|public
-name|Type
+name|TypeWithKeyword
 block|,
 name|public
 name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// \brief The keyword used to elaborate this type.
-name|ElaboratedTypeKeyword
-name|Keyword
-block|;
 comment|/// \brief The nested name specifier containing the qualifier.
 name|NestedNameSpecifier
 operator|*
@@ -11129,18 +11145,15 @@ argument_list|,
 argument|QualType CanonType
 argument_list|)
 operator|:
-name|Type
+name|TypeWithKeyword
 argument_list|(
+name|Keyword
+argument_list|,
 name|DependentName
 argument_list|,
 name|CanonType
 argument_list|,
 name|true
-argument_list|)
-block|,
-name|Keyword
-argument_list|(
-name|Keyword
 argument_list|)
 block|,
 name|NNS
@@ -11174,18 +11187,15 @@ argument_list|,
 argument|QualType CanonType
 argument_list|)
 operator|:
-name|Type
+name|TypeWithKeyword
 argument_list|(
+name|Keyword
+argument_list|,
 name|DependentName
 argument_list|,
 name|CanonType
 argument_list|,
 name|true
-argument_list|)
-block|,
-name|Keyword
-argument_list|(
-name|Keyword
 argument_list|)
 block|,
 name|NNS
@@ -11215,16 +11225,6 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-comment|/// \brief Retrieve the keyword used to elaborate this type.
-name|ElaboratedTypeKeyword
-name|getKeyword
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Keyword
-return|;
-block|}
 comment|/// \brief Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
@@ -11317,7 +11317,8 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|,
-name|Keyword
+name|getKeyword
+argument_list|()
 argument_list|,
 name|NNS
 argument_list|,
@@ -11390,66 +11391,346 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ObjCInterfaceType - Interfaces are the core concept in Objective-C for
-comment|/// object oriented design.  They basically correspond to C++ classes.  There
-comment|/// are two kinds of interface types, normal interfaces like "NSString" and
-comment|/// qualified interfaces, which are qualified with a protocol list like
-comment|/// "NSString<NSCopyable, NSAmazing>".
+comment|/// ObjCObjectType - Represents a class type in Objective C.
+comment|/// Every Objective C type is a combination of a base type and a
+comment|/// list of protocols.
+comment|///
+comment|/// Given the following declarations:
+comment|///   @class C;
+comment|///   @protocol P;
+comment|///
+comment|/// 'C' is an ObjCInterfaceType C.  It is sugar for an ObjCObjectType
+comment|/// with base C and no protocols.
+comment|///
+comment|/// 'C<P>' is an ObjCObjectType with base C and protocol list [P].
+comment|///
+comment|/// 'id' is a TypedefType which is sugar for an ObjCPointerType whose
+comment|/// pointee is an ObjCObjectType with base BuiltinType::ObjCIdType
+comment|/// and no protocols.
+comment|///
+comment|/// 'id<P>' is an ObjCPointerType whose pointee is an ObjCObjecType
+comment|/// with base BuiltinType::ObjCIdType and protocol list [P].  Eventually
+comment|/// this should get its own sugar class to better represent the source.
 name|class
-name|ObjCInterfaceType
+name|ObjCObjectType
 operator|:
 name|public
 name|Type
-block|,
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
 block|{
-name|ObjCInterfaceDecl
-operator|*
-name|Decl
+comment|// Pad the bit count up so that NumProtocols is 2-byte aligned
+name|unsigned
+operator|:
+name|BitsRemainingInType
+operator|-
+literal|16
 block|;
-comment|/// \brief The number of protocols stored after the ObjCInterfaceType node.
-comment|/// The list of protocols is sorted on protocol name. No protocol is enterred
-comment|/// more than once.
+comment|/// \brief The number of protocols stored after the
+comment|/// ObjCObjectPointerType node.
+comment|///
+comment|/// These protocols are those written directly on the type.  If
+comment|/// protocol qualifiers ever become additive, the iterators will
+comment|/// get kindof complicated.
+comment|///
+comment|/// In the canonical object type, these are sorted alphabetically
+comment|/// and uniqued.
 name|unsigned
 name|NumProtocols
-block|;
-name|ObjCInterfaceType
-argument_list|(
-argument|QualType Canonical
-argument_list|,
-argument|ObjCInterfaceDecl *D
-argument_list|,
-argument|ObjCProtocolDecl **Protos
-argument_list|,
-argument|unsigned NumP
-argument_list|)
-block|;
-name|friend
-name|class
-name|ASTContext
-block|;
-comment|// ASTContext creates these.
-name|public
 operator|:
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
+literal|16
 block|;
-name|ObjCInterfaceDecl
+comment|/// Either a BuiltinType or an InterfaceType or sugar for either.
+name|QualType
+name|BaseType
+block|;
+name|ObjCProtocolDecl
 operator|*
-name|getDecl
+specifier|const
+operator|*
+name|getProtocolStorage
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Decl
+name|const_cast
+operator|<
+name|ObjCObjectType
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getProtocolStorage
+argument_list|()
+return|;
+block|}
+name|ObjCProtocolDecl
+operator|*
+operator|*
+name|getProtocolStorage
+argument_list|()
+block|;
+name|protected
+operator|:
+name|ObjCObjectType
+argument_list|(
+argument|QualType Canonical
+argument_list|,
+argument|QualType Base
+argument_list|,
+argument|ObjCProtocolDecl * const *Protocols
+argument_list|,
+argument|unsigned NumProtocols
+argument_list|)
+block|;    enum
+name|Nonce_ObjCInterface
+block|{
+name|Nonce_ObjCInterface
+block|}
+block|;
+name|ObjCObjectType
+argument_list|(
+expr|enum
+name|Nonce_ObjCInterface
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|ObjCInterface
+argument_list|,
+name|QualType
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|NumProtocols
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|BaseType
+argument_list|(
+argument|QualType(this_(),
+literal|0
+argument|)
+argument_list|)
+block|{}
+name|protected
+operator|:
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
+comment|// key function
+name|public
+operator|:
+comment|/// getBaseType - Gets the base type of this object type.  This is
+comment|/// always (possibly sugar for) one of:
+comment|///  - the 'id' builtin type (as opposed to the 'id' type visible to the
+comment|///    user, which is a typedef for an ObjCPointerType)
+comment|///  - the 'Class' builtin type (same caveat)
+comment|///  - an ObjCObjectType (currently always an ObjCInterfaceType)
+name|QualType
+name|getBaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseType
+return|;
+block|}
+name|bool
+name|isObjCId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getBaseType
+argument_list|()
+operator|->
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|ObjCId
+argument_list|)
+return|;
+block|}
+name|bool
+name|isObjCClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getBaseType
+argument_list|()
+operator|->
+name|isSpecificBuiltinType
+argument_list|(
+name|BuiltinType
+operator|::
+name|ObjCClass
+argument_list|)
+return|;
+block|}
+name|bool
+name|isObjCUnqualifiedId
+argument_list|()
+specifier|const
+block|{
+return|return
+name|qual_empty
+argument_list|()
+operator|&&
+name|isObjCId
+argument_list|()
+return|;
+block|}
+name|bool
+name|isObjCUnqualifiedClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|qual_empty
+argument_list|()
+operator|&&
+name|isObjCClass
+argument_list|()
+return|;
+block|}
+name|bool
+name|isObjCUnqualifiedIdOrClass
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|qual_empty
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+specifier|const
+name|BuiltinType
+modifier|*
+name|T
+init|=
+name|getBaseType
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|BuiltinType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|T
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|BuiltinType
+operator|::
+name|ObjCId
+operator|||
+name|T
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|BuiltinType
+operator|::
+name|ObjCClass
+return|;
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isObjCQualifiedId
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|qual_empty
+argument_list|()
+operator|&&
+name|isObjCId
+argument_list|()
+return|;
+block|}
+name|bool
+name|isObjCQualifiedClass
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|qual_empty
+argument_list|()
+operator|&&
+name|isObjCClass
+argument_list|()
+return|;
+block|}
+comment|/// Gets the interface declaration for this object type, if the base type
+comment|/// really is an interface.
+name|ObjCInterfaceDecl
+operator|*
+name|getInterface
+argument_list|()
+specifier|const
+block|;
+typedef|typedef
+name|ObjCProtocolDecl
+modifier|*
+specifier|const
+modifier|*
+name|qual_iterator
+typedef|;
+name|qual_iterator
+name|qual_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getProtocolStorage
+argument_list|()
+return|;
+block|}
+name|qual_iterator
+name|qual_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|qual_begin
+argument_list|()
+operator|+
+name|getNumProtocols
+argument_list|()
+return|;
+block|}
+name|bool
+name|qual_empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumProtocols
+argument_list|()
+operator|==
+literal|0
 return|;
 block|}
 comment|/// getNumProtocols - Return the number of qualifying protocols in this
@@ -11463,7 +11744,7 @@ return|return
 name|NumProtocols
 return|;
 block|}
-comment|/// \brief Retrieve the Ith protocol.
+comment|/// \brief Fetch a protocol by index.
 name|ObjCProtocolDecl
 operator|*
 name|getProtocol
@@ -11490,53 +11771,239 @@ name|I
 index|]
 return|;
 block|}
-comment|/// qual_iterator and friends: this provides access to the (potentially empty)
-comment|/// list of protocols qualifying this interface.
-typedef|typedef
-name|ObjCProtocolDecl
-modifier|*
-specifier|const
-modifier|*
-name|qual_iterator
-typedef|;
-name|qual_iterator
-name|qual_begin
+name|bool
+name|isSugared
 argument_list|()
 specifier|const
 block|{
 return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|ObjCObject
+operator|||
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|ObjCInterface
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCObjectType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// ObjCObjectTypeImpl - A class providing a concrete implementation
+comment|/// of ObjCObjectType, so as to not increase the footprint of
+comment|/// ObjCInterfaceType.  Code outside of ASTContext and the core type
+comment|/// system should not reference this type.
+name|class
+name|ObjCObjectTypeImpl
+operator|:
+name|public
+name|ObjCObjectType
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// If anyone adds fields here, ObjCObjectType::getProtocolStorage()
+comment|// will need to be modified.
+name|ObjCObjectTypeImpl
+argument_list|(
+argument|QualType Canonical
+argument_list|,
+argument|QualType Base
+argument_list|,
+argument|ObjCProtocolDecl * const *Protocols
+argument_list|,
+argument|unsigned NumProtocols
+argument_list|)
+operator|:
+name|ObjCObjectType
+argument_list|(
+argument|Canonical
+argument_list|,
+argument|Base
+argument_list|,
+argument|Protocols
+argument_list|,
+argument|NumProtocols
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+comment|// key function
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType Base
+argument_list|,
+argument|ObjCProtocolDecl *const *protocols
+argument_list|,
+argument|unsigned NumProtocols
+argument_list|)
+block|;   }
+block|;
+specifier|inline
+name|ObjCProtocolDecl
+operator|*
+operator|*
+name|ObjCObjectType
+operator|::
+name|getProtocolStorage
+argument_list|()
+block|{
+return|return
 name|reinterpret_cast
 operator|<
-name|qual_iterator
+name|ObjCProtocolDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|ObjCObjectTypeImpl
+operator|*
 operator|>
 operator|(
 name|this
+operator|)
 operator|+
 literal|1
 operator|)
 return|;
 block|}
-name|qual_iterator
-name|qual_end
+comment|/// ObjCInterfaceType - Interfaces are the core concept in Objective-C for
+comment|/// object oriented design.  They basically correspond to C++ classes.  There
+comment|/// are two kinds of interface types, normal interfaces like "NSString" and
+comment|/// qualified interfaces, which are qualified with a protocol list like
+comment|/// "NSString<NSCopyable, NSAmazing>".
+comment|///
+comment|/// ObjCInterfaceType guarantees the following properties when considered
+comment|/// as a subtype of its superclass, ObjCObjectType:
+comment|///   - There are no protocol qualifiers.  To reinforce this, code which
+comment|///     tries to invoke the protocol methods via an ObjCInterfaceType will
+comment|///     fail to compile.
+comment|///   - It is its own base type.  That is, if T is an ObjCInterfaceType*,
+comment|///     T->getBaseType() == QualType(T, 0).
+name|class
+name|ObjCInterfaceType
+operator|:
+name|public
+name|ObjCObjectType
+block|{
+name|ObjCInterfaceDecl
+operator|*
+name|Decl
+block|;
+name|ObjCInterfaceType
+argument_list|(
+specifier|const
+name|ObjCInterfaceDecl
+operator|*
+name|D
+argument_list|)
+operator|:
+name|ObjCObjectType
+argument_list|(
+name|Nonce_ObjCInterface
+argument_list|)
+block|,
+name|Decl
+argument_list|(
+argument|const_cast<ObjCInterfaceDecl*>(D)
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+comment|// key function
+comment|/// getDecl - Get the declaration of this interface.
+name|ObjCInterfaceDecl
+operator|*
+name|getDecl
 argument_list|()
 specifier|const
 block|{
 return|return
-name|qual_begin
-argument_list|()
-operator|+
-name|NumProtocols
-return|;
-block|}
-name|bool
-name|qual_empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumProtocols
-operator|==
-literal|0
+name|Decl
 return|;
 block|}
 name|bool
@@ -11562,35 +12029,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|void
-name|Profile
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|;
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|,
-argument|const ObjCInterfaceDecl *Decl
-argument_list|,
-argument|ObjCProtocolDecl * const *protocols
-argument_list|,
-argument|unsigned NumProtocols
-argument_list|)
-block|;
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -11618,13 +12056,69 @@ return|return
 name|true
 return|;
 block|}
-expr|}
+comment|// Nonsense to "hide" certain members of ObjCObjectType within this
+comment|// class.  People asking for protocols on an ObjCInterfaceType are
+comment|// not going to get what they want: ObjCInterfaceTypes are
+comment|// guaranteed to have no protocols.
+expr|enum
+block|{
+name|qual_iterator
+block|,
+name|qual_begin
+block|,
+name|qual_end
+block|,
+name|getNumProtocols
+block|,
+name|getProtocol
+block|}
+block|; }
 block|;
-comment|/// ObjCObjectPointerType - Used to represent 'id', 'Interface *', 'id<p>',
-comment|/// and 'Interface<p> *'.
+specifier|inline
+name|ObjCInterfaceDecl
+operator|*
+name|ObjCObjectType
+operator|::
+name|getInterface
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|ObjCInterfaceType
+modifier|*
+name|T
+init|=
+name|getBaseType
+argument_list|()
+operator|->
+name|getAs
+operator|<
+name|ObjCInterfaceType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|T
+operator|->
+name|getDecl
+argument_list|()
+return|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// ObjCObjectPointerType - Used to represent a pointer to an
+comment|/// Objective C object.  These are constructed from pointer
+comment|/// declarators when the pointee type is an ObjCObjectType (or sugar
+comment|/// for one).  In addition, the 'id' and 'Class' types are typedefs
+comment|/// for these, and the protocol-qualified types 'id<P>' and 'Class<P>'
+comment|/// are translated into these.
 comment|///
-comment|/// Duplicate protocols are removed and protocol list is canonicalized to be in
-comment|/// alphabetical order.
+comment|/// Pointers to pointers to Objective C objects are still PointerTypes;
+comment|/// only the first level of pointer gets it own type implementation.
 name|class
 name|ObjCObjectPointerType
 operator|:
@@ -11639,31 +12133,40 @@ block|{
 name|QualType
 name|PointeeType
 block|;
-comment|// A builtin or interface type.
-comment|/// \brief The number of protocols stored after the ObjCObjectPointerType
-comment|/// node.
-comment|///
-comment|/// The list of protocols is sorted on protocol name. No protocol is enterred
-comment|/// more than once.
-name|unsigned
-name|NumProtocols
-block|;
 name|ObjCObjectPointerType
 argument_list|(
 argument|QualType Canonical
 argument_list|,
-argument|QualType T
-argument_list|,
-argument|ObjCProtocolDecl **Protos
-argument_list|,
-argument|unsigned NumP
+argument|QualType Pointee
 argument_list|)
-block|;
+operator|:
+name|Type
+argument_list|(
+name|ObjCObjectPointer
+argument_list|,
+name|Canonical
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|PointeeType
+argument_list|(
+argument|Pointee
+argument_list|)
+block|{}
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
+name|protected
+operator|:
+name|virtual
+name|Linkage
+name|getLinkageImpl
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|void
@@ -11674,11 +12177,8 @@ operator|&
 name|C
 argument_list|)
 block|;
-comment|// Get the pointee type. Pointee will either be:
-comment|// - a built-in type (for 'id' and 'Class').
-comment|// - an interface type (for user-defined types).
-comment|// - a TypedefType whose canonical type is an interface (as in 'T' below).
-comment|//   For example: typedef NSObject T; T *var;
+comment|/// getPointeeType - Gets the type pointed to by this ObjC pointer.
+comment|/// The result will always be an ObjCObjectType or sugar thereof.
 name|QualType
 name|getPointeeType
 argument_list|()
@@ -11688,6 +12188,51 @@ return|return
 name|PointeeType
 return|;
 block|}
+comment|/// getObjCObjectType - Gets the type pointed to by this ObjC
+comment|/// pointer.  This method always returns non-null.
+comment|///
+comment|/// This method is equivalent to getPointeeType() except that
+comment|/// it discards any typedefs (or other sugar) between this
+comment|/// type and the "outermost" object type.  So for:
+comment|///   @class A; @protocol P; @protocol Q;
+comment|///   typedef A<P> AP;
+comment|///   typedef A A1;
+comment|///   typedef A1<P> A1P;
+comment|///   typedef A1P<Q> A1PQ;
+comment|/// For 'A*', getObjectType() will return 'A'.
+comment|/// For 'A<P>*', getObjectType() will return 'A<P>'.
+comment|/// For 'AP*', getObjectType() will return 'A<P>'.
+comment|/// For 'A1*', getObjectType() will return 'A'.
+comment|/// For 'A1<P>*', getObjectType() will return 'A1<P>'.
+comment|/// For 'A1P*', getObjectType() will return 'A1<P>'.
+comment|/// For 'A1PQ*', getObjectType() will return 'A1<Q>', because
+comment|///   adding protocols to a protocol-qualified base discards the
+comment|///   old qualifiers (for now).  But if it didn't, getObjectType()
+comment|///   would return 'A1P<Q>' (and we'd have to make iterating over
+comment|///   qualifiers more complicated).
+specifier|const
+name|ObjCObjectType
+operator|*
+name|getObjectType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointeeType
+operator|->
+name|getAs
+operator|<
+name|ObjCObjectType
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// getInterfaceType - If this pointer points to an Objective C
+comment|/// @interface type, gets the type for that interface.  Any protocol
+comment|/// qualifiers on the interface are ignored.
+comment|///
+comment|/// \return null if the base type for this pointer is 'id' or 'Class'
 specifier|const
 name|ObjCInterfaceType
 operator|*
@@ -11696,7 +12241,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|PointeeType
+name|getObjectType
+argument_list|()
+operator|->
+name|getBaseType
+argument_list|()
 operator|->
 name|getAs
 operator|<
@@ -11706,7 +12255,10 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// getInterfaceDecl - returns an interface decl for user-defined types.
+comment|/// getInterfaceDecl - If this pointer points to an Objective @interface
+comment|/// type, gets the declaration for that interface.
+comment|///
+comment|/// \return null if the base type for this pointer is 'id' or 'Class'
 name|ObjCInterfaceDecl
 operator|*
 name|getInterfaceDecl
@@ -11714,124 +12266,93 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getInterfaceType
-argument_list|()
-operator|?
-name|getInterfaceType
+name|getObjectType
 argument_list|()
 operator|->
-name|getDecl
+name|getInterface
 argument_list|()
-operator|:
-literal|0
 return|;
 block|}
-comment|/// isObjCIdType - true for "id".
+comment|/// isObjCIdType - True if this is equivalent to the 'id' type, i.e. if
+comment|/// its object type is the primitive 'id' type with no protocols.
 name|bool
 name|isObjCIdType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getPointeeType
+name|getObjectType
 argument_list|()
 operator|->
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|ObjCId
-argument_list|)
-operator|&&
-operator|!
-name|NumProtocols
+name|isObjCUnqualifiedId
+argument_list|()
 return|;
 block|}
-comment|/// isObjCClassType - true for "Class".
+comment|/// isObjCClassType - True if this is equivalent to the 'Class' type,
+comment|/// i.e. if its object tive is the primitive 'Class' type with no protocols.
 name|bool
 name|isObjCClassType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getPointeeType
+name|getObjectType
 argument_list|()
 operator|->
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|ObjCClass
-argument_list|)
-operator|&&
-operator|!
-name|NumProtocols
+name|isObjCUnqualifiedClass
+argument_list|()
 return|;
 block|}
-comment|/// isObjCQualifiedIdType - true for "id<p>".
+comment|/// isObjCQualifiedIdType - True if this is equivalent to 'id<P>' for some
+comment|/// non-empty set of protocols.
 name|bool
 name|isObjCQualifiedIdType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getPointeeType
+name|getObjectType
 argument_list|()
 operator|->
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|ObjCId
-argument_list|)
-operator|&&
-name|NumProtocols
+name|isObjCQualifiedId
+argument_list|()
 return|;
 block|}
-comment|/// isObjCQualifiedClassType - true for "Class<p>".
+comment|/// isObjCQualifiedClassType - True if this is equivalent to 'Class<P>' for
+comment|/// some non-empty set of protocols.
 name|bool
 name|isObjCQualifiedClassType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getPointeeType
+name|getObjectType
 argument_list|()
 operator|->
-name|isSpecificBuiltinType
-argument_list|(
-name|BuiltinType
-operator|::
-name|ObjCClass
-argument_list|)
-operator|&&
-name|NumProtocols
+name|isObjCQualifiedClass
+argument_list|()
 return|;
 block|}
-comment|/// qual_iterator and friends: this provides access to the (potentially empty)
-comment|/// list of protocols qualifying this interface.
+comment|/// An iterator over the qualifiers on the object type.  Provided
+comment|/// for convenience.  This will always iterate over the full set of
+comment|/// protocols on a type, not just those provided directly.
 typedef|typedef
-name|ObjCProtocolDecl
-modifier|*
-specifier|const
-modifier|*
+name|ObjCObjectType
+operator|::
 name|qual_iterator
-typedef|;
+name|qual_iterator
+expr_stmt|;
 name|qual_iterator
 name|qual_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|qual_iterator
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
+name|getObjectType
+argument_list|()
+operator|->
+name|qual_begin
+argument_list|()
 return|;
 block|}
 name|qual_iterator
@@ -11840,10 +12361,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|qual_begin
+name|getObjectType
 argument_list|()
-operator|+
-name|NumProtocols
+operator|->
+name|qual_end
+argument_list|()
 return|;
 block|}
 name|bool
@@ -11852,23 +12374,30 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumProtocols
-operator|==
-literal|0
+name|getObjectType
+argument_list|()
+operator|->
+name|qual_empty
+argument_list|()
 return|;
 block|}
-comment|/// getNumProtocols - Return the number of qualifying protocols in this
-comment|/// interface type, or 0 if there are none.
+comment|/// getNumProtocols - Return the number of qualifying protocols on
+comment|/// the object type.
 name|unsigned
 name|getNumProtocols
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumProtocols
+name|getObjectType
+argument_list|()
+operator|->
+name|getNumProtocols
+argument_list|()
 return|;
 block|}
-comment|/// \brief Retrieve the Ith protocol.
+comment|/// \brief Retrieve a qualifying protocol by index on the object
+comment|/// type.
 name|ObjCProtocolDecl
 operator|*
 name|getProtocol
@@ -11877,22 +12406,14 @@ argument|unsigned I
 argument_list|)
 specifier|const
 block|{
-name|assert
+return|return
+name|getObjectType
+argument_list|()
+operator|->
+name|getProtocol
 argument_list|(
 name|I
-operator|<
-name|getNumProtocols
-argument_list|()
-operator|&&
-literal|"Out-of-range protocol access"
 argument_list|)
-block|;
-return|return
-name|qual_begin
-argument_list|()
-index|[
-name|I
-index|]
 return|;
 block|}
 name|bool
@@ -11918,22 +12439,20 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|virtual
-name|Linkage
-name|getLinkage
-argument_list|()
-specifier|const
-block|;
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|)
-block|;
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getPointeeType
+argument_list|()
+argument_list|)
+block|;   }
 specifier|static
 name|void
 name|Profile
@@ -11941,12 +12460,18 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType T
-argument_list|,
-argument|ObjCProtocolDecl *const *protocols
-argument_list|,
-argument|unsigned NumProtocols
 argument_list|)
-block|;
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
 specifier|static
 name|bool
 name|classof
@@ -13113,47 +13638,6 @@ name|this
 return|;
 block|}
 specifier|inline
-specifier|const
-name|ObjCInterfaceType
-operator|*
-name|Type
-operator|::
-name|getAsPointerToObjCInterfaceType
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-specifier|const
-name|PointerType
-modifier|*
-name|PT
-init|=
-name|getAs
-operator|<
-name|PointerType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|PT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|->
-name|getAs
-operator|<
-name|ObjCInterfaceType
-operator|>
-operator|(
-operator|)
-return|;
-return|return
-literal|0
-return|;
-block|}
-specifier|inline
 name|bool
 name|Type
 operator|::
@@ -13551,14 +14035,14 @@ specifier|inline
 name|bool
 name|Type
 operator|::
-name|isObjCInterfaceType
+name|isObjCObjectType
 argument_list|()
 specifier|const
 block|{
 return|return
 name|isa
 operator|<
-name|ObjCInterfaceType
+name|ObjCObjectType
 operator|>
 operator|(
 name|CanonicalType
@@ -13629,6 +14113,9 @@ return|return
 name|false
 return|;
 block|}
+end_block
+
+begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -13657,11 +14144,16 @@ operator|->
 name|isObjCIdType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|} inline
 name|bool
 name|Type
 operator|::
@@ -13689,11 +14181,16 @@ operator|->
 name|isObjCClassType
 argument_list|()
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-specifier|inline
+end_return
+
+begin_expr_stmt
+unit|} inline
 name|bool
 name|Type
 operator|::
@@ -13728,14 +14225,16 @@ operator|::
 name|ObjCSel
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_block
+end_return
 
 begin_expr_stmt
-specifier|inline
+unit|} inline
 name|bool
 name|Type
 operator|::
@@ -13878,13 +14377,7 @@ operator|||
 name|isBlockPointerType
 argument_list|()
 operator|||
-name|isObjCInterfaceType
-argument_list|()
-operator|||
 name|isObjCObjectPointerType
-argument_list|()
-operator|||
-name|isObjCQualifiedInterfaceType
 argument_list|()
 operator|||
 name|isNullPtrType
@@ -13904,16 +14397,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|isObjCInterfaceType
-argument_list|()
-operator|||
 name|isObjCObjectPointerType
 argument_list|()
-operator|||
-name|isObjCQualifiedInterfaceType
-argument_list|()
-operator|)
 return|;
 block|}
 end_expr_stmt

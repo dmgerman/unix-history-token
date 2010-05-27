@@ -202,6 +202,9 @@ comment|// Clang-specific.
 name|AT_IBOutlet
 block|,
 comment|// Clang-specific.
+name|AT_IBOutletCollection
+block|,
+comment|// Clang-specific.
 name|AT_address_space
 block|,
 name|AT_alias
@@ -300,6 +303,8 @@ block|,
 name|AT_sentinel
 block|,
 name|AT_stdcall
+block|,
+name|AT_thiscall
 block|,
 name|AT_transparent_union
 block|,
