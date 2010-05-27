@@ -4895,7 +4895,7 @@ literal|0
 expr_stmt|;
 name|KDTRACE_NFS_ATTRCACHE_FLUSH_DONE
 argument_list|(
-name|vp
+name|newvp
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
