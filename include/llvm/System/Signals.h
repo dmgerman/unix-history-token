@@ -76,6 +76,12 @@ block|{
 name|namespace
 name|sys
 block|{
+comment|/// This function runs all the registered interrupt handlers, including the
+comment|/// removal of files registered by RemoveFileOnSignal.
+name|void
+name|RunInterruptHandlers
+parameter_list|()
+function_decl|;
 comment|/// This function registers signal handlers to ensure that if a signal gets
 comment|/// delivered that the named file is removed.
 comment|/// @brief Remove a file if a fatal signal occurs.

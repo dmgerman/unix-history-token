@@ -2729,8 +2729,6 @@ comment|// Static methods to construct a ConstantExpr of different kinds.  Note 
 comment|// these methods may return a object that is not an instance of the
 comment|// ConstantExpr class, because they will attempt to fold the constant
 comment|// expression into something simpler if possible.
-comment|/// Cast constant expr
-comment|///
 comment|/// getAlignOf constant expr - computes the alignment of a type in a target
 comment|/// independent way (Note: the return type is an i64).
 specifier|static
@@ -3946,7 +3944,11 @@ comment|//===-------------------------------------------------------------------
 comment|/// UndefValue - 'undef' values are things that do not have specified contents.
 comment|/// These are used for a variety of purposes, including global variable
 comment|/// initializers and operands to instructions.  'undef' values can occur with
-comment|/// any type.
+comment|/// any first-class type.
+comment|///
+comment|/// Undef values aren't exactly constants; if they have multiple uses, they
+comment|/// can appear to have different bit patterns at each use. See
+comment|/// LangRef.html#undefvalues for details.
 comment|///
 name|class
 name|UndefValue
@@ -4092,7 +4094,7 @@ name|UndefValueVal
 return|;
 block|}
 expr|}
-block|; }
+block|;  }
 end_decl_stmt
 
 begin_comment

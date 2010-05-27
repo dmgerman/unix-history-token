@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MSP430TargetMachine
+decl_stmt|;
+name|class
 name|MSP430SelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|MSP430SelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|MSP430TargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|MSP430SelectionDAGInfo

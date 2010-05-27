@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PPCSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -138,6 +144,9 @@ name|JITInfo
 block|;
 name|PPCTargetLowering
 name|TLInfo
+block|;
+name|PPCSelectionDAGInfo
+name|TSInfo
 block|;
 name|InstrItineraryData
 name|InstrItins
@@ -203,6 +212,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|PPCSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

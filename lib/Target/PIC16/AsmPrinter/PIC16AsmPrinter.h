@@ -140,7 +140,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|PIC16AsmPrinter
 range|:
 name|public

@@ -75,14 +75,59 @@ range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
+comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can
+comment|/// make the right decision when generating code for different targets.
+specifier|const
+name|ARMSubtarget
+operator|*
+name|Subtarget
+block|;
 name|public
 operator|:
+name|explicit
 name|ARMSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|ARMSelectionDAGInfo
 argument_list|()
+block|;
+name|virtual
+name|SDValue
+name|EmitTargetCodeForMemcpy
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|bool AlwaysInline
+argument_list|,
+argument|const Value *DstSV
+argument_list|,
+argument|uint64_t DstSVOff
+argument_list|,
+argument|const Value *SrcSV
+argument_list|,
+argument|uint64_t SrcSVOff
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

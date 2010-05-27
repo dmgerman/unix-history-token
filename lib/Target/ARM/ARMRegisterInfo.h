@@ -90,41 +90,6 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-name|namespace
-name|ARM
-block|{
-comment|/// SubregIndex - The index of various subregister classes. Note that
-comment|/// these indices must be kept in sync with the class indices in the
-comment|/// ARMRegisterInfo.td file.
-enum|enum
-name|SubregIndex
-block|{
-name|SSUBREG_0
-init|=
-literal|1
-block|,
-name|SSUBREG_1
-init|=
-literal|2
-block|,
-name|SSUBREG_2
-init|=
-literal|3
-block|,
-name|SSUBREG_3
-init|=
-literal|4
-block|,
-name|DSUBREG_0
-init|=
-literal|5
-block|,
-name|DSUBREG_1
-init|=
-literal|6
-block|}
-enum|;
-block|}
 name|struct
 name|ARMRegisterInfo
 range|:

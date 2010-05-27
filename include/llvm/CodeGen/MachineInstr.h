@@ -125,6 +125,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|AliasAnalysis
 decl_stmt|;
@@ -823,9 +831,25 @@ operator|::
 name|SUBREG_TO_REG
 return|;
 block|}
+name|bool
+name|isRegSequence
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|REG_SEQUENCE
+return|;
+block|}
 comment|/// readsRegister - Return true if the MachineInstr reads the specified
 comment|/// register. If TargetRegisterInfo is passed, then it also checks if there
 comment|/// is a read of a super-register.
+comment|/// This does not count partial redefines of virtual registers as reads:
+comment|///   %reg1024:6 = OP.
 name|bool
 name|readsRegister
 argument_list|(
@@ -855,6 +879,47 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/// readsVirtualRegister - Return true if the MachineInstr reads the specified
+comment|/// virtual register. Take into account that a partial define is a
+comment|/// read-modify-write operation.
+name|bool
+name|readsVirtualRegister
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|readsWritesVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+operator|.
+name|first
+return|;
+block|}
+comment|/// readsWritesVirtualRegister - Return a pair of bools (reads, writes)
+comment|/// indicating if this instruction reads or writes Reg. This also considers
+comment|/// partial defines.
+comment|/// If Ops is not null, all operand indices for Reg are added.
+name|std
+operator|::
+name|pair
+operator|<
+name|bool
+operator|,
+name|bool
+operator|>
+name|readsWritesVirtualRegister
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|SmallVectorImpl<unsigned> *Ops =
+literal|0
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// killsRegister - Return true if the MachineInstr kills the specified
 comment|/// register. If TargetRegisterInfo is passed, then it also checks if there is
 comment|/// a kill of a super-register.
@@ -887,11 +952,12 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/// modifiesRegister - Return true if the MachineInstr modifies the
+comment|/// definesRegister - Return true if the MachineInstr fully defines the
 comment|/// specified register. If TargetRegisterInfo is passed, then it also checks
 comment|/// if there is a def of a super-register.
+comment|/// NOTE: It's ignoring subreg indices on virtual registers.
 name|bool
-name|modifiesRegister
+name|definesRegister
 argument_list|(
 name|unsigned
 name|Reg
@@ -911,6 +977,40 @@ argument_list|(
 name|Reg
 argument_list|,
 name|false
+argument_list|,
+name|false
+argument_list|,
+name|TRI
+argument_list|)
+operator|!=
+operator|-
+literal|1
+return|;
+block|}
+comment|/// modifiesRegister - Return true if the MachineInstr modifies (fully define
+comment|/// or partially define) the specified register.
+comment|/// NOTE: It's ignoring subreg indices on virtual registers.
+name|bool
+name|modifiesRegister
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+block|{
+return|return
+name|findRegisterDefOperandIdx
+argument_list|(
+name|Reg
+argument_list|,
+name|false
+argument_list|,
+name|true
 argument_list|,
 name|TRI
 argument_list|)
@@ -943,6 +1043,8 @@ argument_list|(
 name|Reg
 argument_list|,
 name|true
+argument_list|,
+name|false
 argument_list|,
 name|TRI
 argument_list|)
@@ -1027,8 +1129,9 @@ return|;
 block|}
 comment|/// findRegisterDefOperandIdx() - Returns the operand index that is a def of
 comment|/// the specified register or -1 if it is not found. If isDead is true, defs
-comment|/// that are not dead are skipped. If TargetRegisterInfo is non-null, then it
-comment|/// also checks if there is a def of a super-register.
+comment|/// that are not dead are skipped. If Overlap is true, then it also looks for
+comment|/// defs that merely overlap the specified register. If TargetRegisterInfo is
+comment|/// non-null, then it also checks if there is a def of a super-register.
 name|int
 name|findRegisterDefOperandIdx
 argument_list|(
@@ -1037,6 +1140,11 @@ name|Reg
 argument_list|,
 name|bool
 name|isDead
+operator|=
+name|false
+argument_list|,
+name|bool
+name|Overlap
 operator|=
 name|false
 argument_list|,
@@ -1079,6 +1187,8 @@ argument_list|(
 name|Reg
 argument_list|,
 name|isDead
+argument_list|,
+name|false
 argument_list|,
 name|TRI
 argument_list|)
@@ -1143,6 +1253,12 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// clearKillInfo - Clears kill flags on all operands.
+comment|///
+name|void
+name|clearKillInfo
+parameter_list|()
+function_decl|;
 comment|/// copyKillDeadInfo - Copies kill / dead operand properties from MI.
 comment|///
 name|void
@@ -1218,6 +1334,8 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|RegInfo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// isSafeToMove - Return true if it is safe to move this instruction. If

@@ -564,6 +564,11 @@ argument|MCSymbolAttr Attr
 argument_list|)
 block|;
 name|bool
+name|ParseDirectiveELFType
+argument_list|()
+block|;
+comment|// ELF specific ".type"
+name|bool
 name|ParseDirectiveDarwinSymbolDesc
 argument_list|()
 block|;
@@ -585,6 +590,11 @@ name|ParseDirectiveDarwinZerofill
 argument_list|()
 block|;
 comment|// Darwin specific ".zerofill"
+name|bool
+name|ParseDirectiveDarwinTBSS
+argument_list|()
+block|;
+comment|// Darwin specific ".tbss"
 comment|// Darwin specific ".subsections_via_symbols"
 name|bool
 name|ParseDirectiveDarwinSubsectionsViaSymbols

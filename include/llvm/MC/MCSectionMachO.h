@@ -226,9 +226,36 @@ name|S_LAZY_DYLIB_SYMBOL_POINTERS
 operator|=
 literal|0x10U
 block|,
+comment|/// S_THREAD_LOCAL_REGULAR - Section with ....
+name|S_THREAD_LOCAL_REGULAR
+operator|=
+literal|0x11U
+block|,
+comment|/// S_THREAD_LOCAL_ZEROFILL - Thread local zerofill section.
+name|S_THREAD_LOCAL_ZEROFILL
+operator|=
+literal|0x12U
+block|,
+comment|/// S_THREAD_LOCAL_VARIABLES - Section with thread local variable structure
+comment|/// data.
+name|S_THREAD_LOCAL_VARIABLES
+operator|=
+literal|0x13U
+block|,
+comment|/// S_THREAD_LOCAL_VARIABLE_POINTERS - Section with ....
+name|S_THREAD_LOCAL_VARIABLE_POINTERS
+operator|=
+literal|0x14U
+block|,
+comment|/// S_THREAD_LOCAL_INIT_FUNCTION_POINTERS - Section with thread local
+comment|/// variable initialization pointers to functions.
+name|S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
+operator|=
+literal|0x15U
+block|,
 name|LAST_KNOWN_SECTION_TYPE
 operator|=
-name|S_LAZY_DYLIB_SYMBOL_POINTERS
+name|S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
 block|,
 comment|// Valid section attributes.
 comment|/// S_ATTR_PURE_INSTRUCTIONS - Section contains only true machine
@@ -402,6 +429,27 @@ return|;
 block|}
 end_expr_stmt
 
+begin_decl_stmt
+name|bool
+name|hasAttribute
+argument_list|(
+name|unsigned
+name|Value
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+name|TypeAndAttributes
+operator|&
+name|Value
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+end_decl_stmt
+
 begin_comment
 comment|/// ParseSectionSpecifier - Parse the section specifier indicated by "Spec".
 end_comment
@@ -467,6 +515,44 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|S
+parameter_list|)
+block|{
+return|return
+name|S
+operator|->
+name|getVariant
+argument_list|()
+operator|==
+name|SV_MachO
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|MCSectionMachO
+modifier|*
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};  }

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -135,9 +141,6 @@ name|TargetInstrInfo
 decl_stmt|;
 name|class
 name|TargetInstrDesc
-decl_stmt|;
-name|class
-name|TargetLowering
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -809,11 +812,6 @@ modifier|*
 name|Instr
 decl_stmt|;
 comment|// Alternatively, a MachineInstr.
-name|MachineInstr
-modifier|*
-name|DbgInstr
-decl_stmt|;
-comment|// A dbg_value referencing this.
 name|public
 label|:
 name|SUnit
@@ -969,6 +967,22 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if this node has been cloned.
+name|Sched
+operator|::
+name|Preference
+name|SchedulingPref
+expr_stmt|;
+comment|// Scheduling preference.
+name|SmallVector
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+literal|4
+operator|>
+name|DbgInstrList
+expr_stmt|;
+comment|// dbg_values referencing this.
 name|private
 label|:
 name|bool
@@ -1023,11 +1037,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|DbgInstr
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|OrigNode
 argument_list|(
 literal|0
@@ -1111,6 +1120,13 @@ operator|,
 name|isCloned
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|SchedulingPref
+argument_list|(
+name|Sched
+operator|::
+name|None
 argument_list|)
 operator|,
 name|isDepthCurrent
@@ -1162,11 +1178,6 @@ argument_list|(
 name|instr
 argument_list|)
 operator|,
-name|DbgInstr
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|OrigNode
 argument_list|(
 literal|0
@@ -1252,6 +1263,13 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SchedulingPref
+argument_list|(
+name|Sched
+operator|::
+name|None
+argument_list|)
+operator|,
 name|isDepthCurrent
 argument_list|(
 name|false
@@ -1292,11 +1310,6 @@ literal|0
 argument_list|)
 operator|,
 name|Instr
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|DbgInstr
 argument_list|(
 literal|0
 argument_list|)
@@ -1385,6 +1398,13 @@ operator|,
 name|isCloned
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|SchedulingPref
+argument_list|(
+name|Sched
+operator|::
+name|None
 argument_list|)
 operator|,
 name|isDepthCurrent
@@ -1498,49 +1518,6 @@ argument_list|)
 block|;
 return|return
 name|Instr
-return|;
-block|}
-comment|/// setDbgInstr - Assign the debug instruction for the SUnit.
-comment|/// This may be used during post-regalloc scheduling.
-name|void
-name|setDbgInstr
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|Node
-operator|&&
-literal|"Setting debug MachineInstr of SUnit with SDNode!"
-argument_list|)
-expr_stmt|;
-name|DbgInstr
-operator|=
-name|MI
-expr_stmt|;
-block|}
-comment|/// getDbgInstr - Return the debug MachineInstr for this SUnit.
-comment|/// This may be used during post-regalloc scheduling.
-name|MachineInstr
-operator|*
-name|getDbgInstr
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|Node
-operator|&&
-literal|"Reading debug MachineInstr of SUnit with SDNode!"
-argument_list|)
-block|;
-return|return
-name|DbgInstr
 return|;
 block|}
 comment|/// addPred - This adds the specified edge as a pred of the current node if
@@ -1936,8 +1913,19 @@ begin_decl_stmt
 name|class
 name|SchedulingPriorityQueue
 block|{
+name|unsigned
+name|CurCycle
+decl_stmt|;
 name|public
 label|:
+name|SchedulingPriorityQueue
+argument_list|()
+operator|:
+name|CurCycle
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|SchedulingPriorityQueue
@@ -1991,14 +1979,6 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|unsigned
-name|size
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
 name|bool
 name|empty
 argument_list|()
@@ -2017,7 +1997,6 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
 name|void
 name|push_all
 argument_list|(
@@ -2032,9 +2011,46 @@ operator|>
 operator|&
 name|Nodes
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{
+for|for
+control|(
+name|std
+operator|::
+name|vector
+operator|<
+name|SUnit
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|I
+operator|=
+name|Nodes
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|E
+operator|=
+name|Nodes
+operator|.
+name|end
+argument_list|()
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|push
+argument_list|(
+operator|*
+name|I
+argument_list|)
+expr_stmt|;
+block|}
 name|virtual
 name|SUnit
 modifier|*
@@ -2074,6 +2090,27 @@ name|SUnit
 modifier|*
 parameter_list|)
 block|{}
+name|void
+name|setCurCycle
+parameter_list|(
+name|unsigned
+name|Cycle
+parameter_list|)
+block|{
+name|CurCycle
+operator|=
+name|Cycle
+expr_stmt|;
+block|}
+name|unsigned
+name|getCurCycle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurCycle
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -2116,12 +2153,6 @@ modifier|*
 name|TRI
 decl_stmt|;
 comment|// Target processor register info
-specifier|const
-name|TargetLowering
-modifier|*
-name|TLI
-decl_stmt|;
-comment|// Target lowering info
 name|MachineFunction
 modifier|&
 name|MF

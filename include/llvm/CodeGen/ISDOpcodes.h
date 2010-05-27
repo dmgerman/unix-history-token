@@ -170,6 +170,18 @@ comment|// exception. The general meaning is: adjust stack by OFFSET and pass
 comment|// execution to HANDLER. Many platform-related details also :)
 name|EH_RETURN
 block|,
+comment|// OUTCHAIN = EH_SJLJ_SETJMP(INCHAIN, buffer)
+comment|// This corresponds to the eh.sjlj.setjmp intrinsic.
+comment|// It takes an input chain and a pointer to the jump buffer as inputs
+comment|// and returns an outchain.
+name|EH_SJLJ_SETJMP
+block|,
+comment|// OUTCHAIN = EH_SJLJ_LONGJMP(INCHAIN, buffer)
+comment|// This corresponds to the eh.sjlj.longjmp intrinsic.
+comment|// It takes an input chain and a pointer to the jump buffer as inputs
+comment|// and returns an outchain.
+name|EH_SJLJ_LONGJMP
+block|,
 comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,
 comment|// simplification, or lowering of the constant. They are used for constants
 comment|// which are known to fit in the immediate fields of their users, or for

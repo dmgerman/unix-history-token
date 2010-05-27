@@ -362,6 +362,55 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// BeginCOFFSymbolDef - Start emitting COFF symbol definition
+comment|///
+comment|/// @param Symbol - The symbol to have its External& Type fields set.
+name|virtual
+name|void
+name|BeginCOFFSymbolDef
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitCOFFSymbolStorageClass - Emit the storage class of the symbol.
+comment|///
+comment|/// @param StorageClass - The storage class the symbol should have.
+name|virtual
+name|void
+name|EmitCOFFSymbolStorageClass
+parameter_list|(
+name|int
+name|StorageClass
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitCOFFSymbolType - Emit the type of the symbol.
+comment|///
+comment|/// @param Type - A COFF type identifier (see COFF::SymbolType in X86COFF.h)
+name|virtual
+name|void
+name|EmitCOFFSymbolType
+parameter_list|(
+name|int
+name|Type
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EndCOFFSymbolDef - Marks the end of the symbol definition.
+name|virtual
+name|void
+name|EndCOFFSymbolDef
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 comment|/// EmitELFSize - Emit an ELF .size directive.
 comment|///
 comment|/// This corresponds to an assembler statement such as:
@@ -424,7 +473,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EmitZerofill - Emit a the zerofill section and an option symbol.
+comment|/// EmitZerofill - Emit the zerofill section and an optional symbol.
 comment|///
 comment|/// @param Section - The zerofill section to create and or to put the symbol
 comment|/// @param Symbol - The zerofill symbol to emit, if non-NULL.
@@ -450,6 +499,37 @@ name|unsigned
 name|Size
 init|=
 literal|0
+parameter_list|,
+name|unsigned
+name|ByteAlignment
+init|=
+literal|0
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// EmitTBSSSymbol - Emit a thread local bss (.tbss) symbol.
+comment|///
+comment|/// @param Section - The thread local common section.
+comment|/// @param Symbol - The thread local common symbol to emit.
+comment|/// @param Size - The size of the symbol.
+comment|/// @param ByteAlignment - The alignment of the thread local common symbol
+comment|/// if non-zero.  This must be a power of 2 on some targets.
+name|virtual
+name|void
+name|EmitTBSSSymbol
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|Section
+parameter_list|,
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+name|uint64_t
+name|Size
 parameter_list|,
 name|unsigned
 name|ByteAlignment
@@ -822,7 +902,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// createMachOStream - Create a machine code streamer which will generative
+comment|/// createMachOStreamer - Create a machine code streamer which will generative
 comment|/// Mach-O format object files.
 name|MCStreamer
 modifier|*
@@ -848,6 +928,23 @@ name|bool
 name|RelaxAll
 init|=
 name|false
+parameter_list|)
+function_decl|;
+comment|/// createLoggingStreamer - Create a machine code streamer which just logs the
+comment|/// API calls and then dispatches to another streamer.
+comment|///
+comment|/// The new streamer takes ownership of the \arg Child.
+name|MCStreamer
+modifier|*
+name|createLoggingStreamer
+parameter_list|(
+name|MCStreamer
+modifier|*
+name|Child
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
 parameter_list|)
 function_decl|;
 block|}

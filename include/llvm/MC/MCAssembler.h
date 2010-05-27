@@ -139,64 +139,14 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCSymbolData
+decl_stmt|;
+name|class
 name|MCValue
 decl_stmt|;
 name|class
 name|TargetAsmBackend
 decl_stmt|;
-comment|/// MCAsmFixup - Represent a fixed size region of bytes inside some fragment
-comment|/// which needs to be rewritten. This region will either be rewritten by the
-comment|/// assembler or cause a relocation entry to be generated.
-comment|//
-comment|// FIXME: This should probably just be merged with MCFixup.
-name|class
-name|MCAsmFixup
-block|{
-name|public
-label|:
-comment|/// Offset - The offset inside the fragment which needs to be rewritten.
-name|uint64_t
-name|Offset
-decl_stmt|;
-comment|/// Value - The expression to eventually write into the fragment.
-specifier|const
-name|MCExpr
-modifier|*
-name|Value
-decl_stmt|;
-comment|/// Kind - The fixup kind.
-name|MCFixupKind
-name|Kind
-decl_stmt|;
-name|public
-label|:
-name|MCAsmFixup
-argument_list|(
-argument|uint64_t _Offset
-argument_list|,
-argument|const MCExpr&_Value
-argument_list|,
-argument|MCFixupKind _Kind
-argument_list|)
-block|:
-name|Offset
-argument_list|(
-name|_Offset
-argument_list|)
-operator|,
-name|Value
-argument_list|(
-operator|&
-name|_Value
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|_Kind
-argument_list|)
-block|{}
-block|}
-empty_stmt|;
 name|class
 name|MCFragment
 range|:
@@ -242,8 +192,6 @@ block|,
 name|FT_Inst
 block|,
 name|FT_Org
-block|,
-name|FT_ZeroFill
 block|}
 block|;
 name|private
@@ -255,6 +203,13 @@ comment|/// Parent - The data for the section this fragment is in.
 name|MCSectionData
 operator|*
 name|Parent
+block|;
+comment|/// Atom - The atom this fragment is in, as represented by it's defining
+comment|/// symbol. Atom's are only used by backends which set
+comment|/// \see MCAsmBackend::hasReliableSymbolDifference().
+name|MCSymbolData
+operator|*
+name|Atom
 block|;
 comment|/// @name Assembler Backend Data
 comment|/// @{
@@ -270,10 +225,10 @@ comment|/// initialized.
 name|uint64_t
 name|EffectiveSize
 block|;
-comment|/// Ordinal - The global index of this fragment. This is the index across all
-comment|/// sections, not just the parent section.
+comment|/// LayoutOrder - The global layout order of this fragment. This is the index
+comment|/// across all fragments in the file, not just within the section.
 name|unsigned
-name|Ordinal
+name|LayoutOrder
 block|;
 comment|/// @}
 name|protected
@@ -289,11 +244,6 @@ block|;
 name|public
 operator|:
 comment|// Only for sentinel.
-name|MCFragment
-argument_list|()
-block|;
-name|virtual
-operator|~
 name|MCFragment
 argument_list|()
 block|;
@@ -326,22 +276,42 @@ name|Parent
 operator|=
 name|Value
 block|; }
-name|unsigned
-name|getOrdinal
+name|MCSymbolData
+operator|*
+name|getAtom
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Ordinal
+name|Atom
 return|;
 block|}
 name|void
-name|setOrdinal
+name|setAtom
+argument_list|(
+argument|MCSymbolData *Value
+argument_list|)
+block|{
+name|Atom
+operator|=
+name|Value
+block|; }
+name|unsigned
+name|getLayoutOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LayoutOrder
+return|;
+block|}
+name|void
+name|setLayoutOrder
 argument_list|(
 argument|unsigned Value
 argument_list|)
 block|{
-name|Ordinal
+name|LayoutOrder
 operator|=
 name|Value
 block|; }
@@ -356,7 +326,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|dump
 argument_list|()
@@ -379,7 +348,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 name|Fixups
 block|;
@@ -390,7 +359,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|::
 name|const_iterator
@@ -401,7 +370,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|::
 name|iterator
@@ -459,7 +428,7 @@ comment|/// @{
 name|void
 name|addFixup
 parameter_list|(
-name|MCAsmFixup
+name|MCFixup
 name|Fixup
 parameter_list|)
 block|{
@@ -474,14 +443,16 @@ argument_list|()
 operator|||
 name|Fixup
 operator|.
-name|Offset
+name|getOffset
+argument_list|()
 operator|>
 name|Fixups
 operator|.
 name|back
 argument_list|()
 operator|.
-name|Offset
+name|getOffset
+argument_list|()
 operator|)
 operator|&&
 literal|"Fixups must be added in order!"
@@ -499,7 +470,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|&
 name|getFixups
@@ -514,7 +485,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|&
 name|getFixups
@@ -618,11 +589,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|dump
-parameter_list|()
-function_decl|;
 block|}
 end_decl_stmt
 
@@ -671,7 +637,7 @@ block|;
 comment|/// Fixups - The list of fixups in this fragment.
 name|SmallVector
 operator|<
-name|MCAsmFixup
+name|MCFixup
 block|,
 literal|1
 operator|>
@@ -682,7 +648,7 @@ operator|:
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|::
 name|const_iterator
@@ -694,7 +660,7 @@ begin_typedef
 typedef|typedef
 name|SmallVectorImpl
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|::
 name|iterator
@@ -835,7 +801,7 @@ end_comment
 begin_expr_stmt
 name|SmallVectorImpl
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|&
 name|getFixups
@@ -851,7 +817,7 @@ begin_expr_stmt
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|MCAsmFixup
+name|MCFixup
 operator|>
 operator|&
 name|getFixups
@@ -981,14 +947,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-name|virtual
-name|void
-name|dump
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 unit|};
 name|class
@@ -1014,10 +972,22 @@ comment|/// cannot be satisfied in this width then this fragment is ignored.
 name|unsigned
 name|MaxBytesToEmit
 block|;
-comment|/// EmitNops - true when aligning code and optimal nops to be used for
-comment|/// filling.
+comment|/// EmitNops - Flag to indicate that (optimal) NOPs should be emitted instead
+comment|/// of using the provided value. The exact interpretation of this flag is
+comment|/// target dependent.
 name|bool
 name|EmitNops
+operator|:
+literal|1
+block|;
+comment|/// OnlyAlignAddress - Flag to indicate that this align is only used to adjust
+comment|/// the address space size of a section and that it should not be included as
+comment|/// part of the section size. This flag can only be used on the last fragment
+comment|/// in a section.
+name|bool
+name|OnlyAlignAddress
+operator|:
+literal|1
 block|;
 name|public
 operator|:
@@ -1030,8 +1000,6 @@ argument_list|,
 argument|unsigned _ValueSize
 argument_list|,
 argument|unsigned _MaxBytesToEmit
-argument_list|,
-argument|bool _EmitNops
 argument_list|,
 argument|MCSectionData *SD =
 literal|0
@@ -1066,7 +1034,12 @@ argument_list|)
 block|,
 name|EmitNops
 argument_list|(
-argument|_EmitNops
+name|false
+argument_list|)
+block|,
+name|OnlyAlignAddress
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// @name Accessors
@@ -1107,8 +1080,8 @@ return|return
 name|MaxBytesToEmit
 return|;
 block|}
-name|unsigned
-name|getEmitNops
+name|bool
+name|hasEmitNops
 argument_list|()
 specifier|const
 block|{
@@ -1116,6 +1089,35 @@ return|return
 name|EmitNops
 return|;
 block|}
+name|void
+name|setEmitNops
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{
+name|EmitNops
+operator|=
+name|Value
+block|; }
+name|bool
+name|hasOnlyAlignAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OnlyAlignAddress
+return|;
+block|}
+name|void
+name|setOnlyAlignAddress
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{
+name|OnlyAlignAddress
+operator|=
+name|Value
+block|; }
 comment|/// @}
 specifier|static
 name|bool
@@ -1146,18 +1148,11 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|dump
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|class
 name|MCFillFragment
-range|:
+operator|:
 name|public
 name|MCFragment
 block|{
@@ -1165,13 +1160,14 @@ comment|/// Value - Value to use for filling bytes.
 name|int64_t
 name|Value
 block|;
-comment|/// ValueSize - The size (in bytes) of \arg Value to use when filling.
+comment|/// ValueSize - The size (in bytes) of \arg Value to use when filling, or 0 if
+comment|/// this is a virtual fill fragment.
 name|unsigned
 name|ValueSize
 block|;
-comment|/// Count - The number of copies of \arg Value to insert.
+comment|/// Size - The number of bytes to insert.
 name|uint64_t
-name|Count
+name|Size
 block|;
 name|public
 operator|:
@@ -1181,7 +1177,7 @@ argument|int64_t _Value
 argument_list|,
 argument|unsigned _ValueSize
 argument_list|,
-argument|uint64_t _Count
+argument|uint64_t _Size
 argument_list|,
 argument|MCSectionData *SD =
 literal|0
@@ -1204,11 +1200,29 @@ argument_list|(
 name|_ValueSize
 argument_list|)
 block|,
-name|Count
+name|Size
 argument_list|(
-argument|_Count
+argument|_Size
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|ValueSize
+operator|||
+operator|(
+name|Size
+operator|%
+name|ValueSize
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+literal|"Fill size must be a multiple of the value size!"
+argument_list|)
+block|;   }
 comment|/// @name Accessors
 comment|/// @{
 name|int64_t
@@ -1230,12 +1244,12 @@ name|ValueSize
 return|;
 block|}
 name|uint64_t
-name|getCount
+name|getSize
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Count
+name|Size
 return|;
 block|}
 comment|/// @}
@@ -1268,18 +1282,11 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|dump
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|class
 name|MCOrgFragment
-range|:
+operator|:
 name|public
 name|MCFragment
 block|{
@@ -1376,140 +1383,14 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|void
-name|dump
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// MCZeroFillFragment - Represent data which has a fixed size and alignment,
-end_comment
-
-begin_comment
-comment|/// but requires no physical space in the object file.
-end_comment
-
-begin_decl_stmt
-name|class
-name|MCZeroFillFragment
-range|:
-name|public
-name|MCFragment
-block|{
-comment|/// Size - The size of this fragment.
-name|uint64_t
-name|Size
+expr|}
 block|;
-comment|/// Alignment - The alignment for this fragment.
-name|unsigned
-name|Alignment
-block|;
-name|public
-operator|:
-name|MCZeroFillFragment
-argument_list|(
-argument|uint64_t _Size
-argument_list|,
-argument|unsigned _Alignment
-argument_list|,
-argument|MCSectionData *SD =
-literal|0
-argument_list|)
-operator|:
-name|MCFragment
-argument_list|(
-name|FT_ZeroFill
-argument_list|,
-name|SD
-argument_list|)
-block|,
-name|Size
-argument_list|(
-name|_Size
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-argument|_Alignment
-argument_list|)
-block|{}
-comment|/// @name Accessors
-comment|/// @{
-name|uint64_t
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Size
-return|;
-block|}
-name|unsigned
-name|getAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Alignment
-return|;
-block|}
-comment|/// @}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCFragment *F
-argument_list|)
-block|{
-return|return
-name|F
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|MCFragment
-operator|::
-name|FT_ZeroFill
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MCZeroFillFragment *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|void
-name|dump
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// FIXME: Should this be a separate class, or just merged into MCSection? Since
-end_comment
-
-begin_comment
 comment|// we anticipate the fast path being through an MCAssembler, the only reason to
-end_comment
-
-begin_comment
 comment|// keep it out is for API abstraction.
-end_comment
-
-begin_decl_stmt
 name|class
 name|MCSectionData
-range|:
+operator|:
 name|public
 name|ilist_node
 operator|<
@@ -1547,34 +1428,25 @@ name|MCFragment
 operator|>
 name|FragmentListType
 expr_stmt|;
+typedef|typedef
+name|FragmentListType
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+typedef|typedef
+name|FragmentListType
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|FragmentListType
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
 end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|FragmentListType
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|FragmentListType
-operator|::
-name|iterator
-name|iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|FragmentListType
-operator|::
-name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -1618,6 +1490,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// LayoutOrder - The index of this section in the layout order.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|LayoutOrder
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Alignment - The maximum alignment seen in this section.
 end_comment
 
@@ -1654,30 +1536,6 @@ end_comment
 begin_decl_stmt
 name|uint64_t
 name|Address
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Size - The content size of this section. This is ~0 until initialized.
-end_comment
-
-begin_decl_stmt
-name|uint64_t
-name|Size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// FileSize - The size of this section in the object file. This is ~0 until
-end_comment
-
-begin_comment
-comment|/// initialized.
-end_comment
-
-begin_decl_stmt
-name|uint64_t
-name|FileSize
 decl_stmt|;
 end_decl_stmt
 
@@ -1823,6 +1681,33 @@ name|Value
 parameter_list|)
 block|{
 name|Ordinal
+operator|=
+name|Value
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|unsigned
+name|getLayoutOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LayoutOrder
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setLayoutOrder
+parameter_list|(
+name|unsigned
+name|Value
+parameter_list|)
+block|{
+name|LayoutOrder
 operator|=
 name|Value
 expr_stmt|;
@@ -2288,6 +2173,26 @@ name|Flags
 operator|=
 name|Value
 block|; }
+comment|/// modifyFlags - Modify the flags via a mask
+name|void
+name|modifyFlags
+argument_list|(
+argument|uint32_t Value
+argument_list|,
+argument|uint32_t Mask
+argument_list|)
+block|{
+name|Flags
+operator|=
+operator|(
+name|Flags
+operator|&
+operator|~
+name|Mask
+operator|)
+operator||
+name|Value
+block|;   }
 comment|/// getIndex - Get the (implementation defined) index.
 name|uint64_t
 name|getIndex
@@ -2525,7 +2430,7 @@ operator|&
 name|Layout
 argument_list|,
 specifier|const
-name|MCAsmFixup
+name|MCFixup
 operator|&
 name|Fixup
 argument_list|,
@@ -2550,7 +2455,7 @@ name|bool
 name|FixupNeedsRelaxation
 argument_list|(
 specifier|const
-name|MCAsmFixup
+name|MCFixup
 operator|&
 name|Fixup
 argument_list|,
@@ -2582,27 +2487,28 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// LayoutSection - Assign the section the given \arg StartAddress, and then
-comment|/// assign offsets and sizes to the fragments in the section \arg SD, and
-comment|/// update the section size.
-comment|///
-comment|/// \return The address at the end of the section, for use in laying out the
-comment|/// succeeding section.
+comment|/// Compute the effective fragment size assuming it is layed out at the given
+comment|/// \arg SectionAddress and \arg FragmentOffset.
 name|uint64_t
-name|LayoutSection
-parameter_list|(
-name|MCSectionData
-modifier|&
-name|SD
-parameter_list|,
+name|ComputeFragmentSize
+argument_list|(
 name|MCAsmLayout
-modifier|&
+operator|&
 name|Layout
-parameter_list|,
+argument_list|,
+specifier|const
+name|MCFragment
+operator|&
+name|F
+argument_list|,
 name|uint64_t
-name|StartAddress
-parameter_list|)
-function_decl|;
+name|SectionAddress
+argument_list|,
+name|uint64_t
+name|FragmentOffset
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
 comment|/// were adjusted.
 name|bool
@@ -2624,34 +2530,8 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-comment|/// Find the symbol which defines the atom containing given address, inside
-comment|/// the given section, or null if there is no such symbol.
-comment|//
-comment|// FIXME-PERF: Eliminate this, it is very slow.
-specifier|const
-name|MCSymbolData
-modifier|*
-name|getAtomForAddress
-argument_list|(
-specifier|const
-name|MCAsmLayout
-operator|&
-name|Layout
-argument_list|,
-specifier|const
-name|MCSectionData
-operator|*
-name|Section
-argument_list|,
-name|uint64_t
-name|Address
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// Find the symbol which defines the atom containing the given symbol, or
 comment|/// null if there is no such symbol.
-comment|//
-comment|// FIXME-PERF: Eliminate this, it is very slow.
 specifier|const
 name|MCSymbolData
 modifier|*

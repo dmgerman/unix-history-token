@@ -281,6 +281,39 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
+comment|/// TLSDataSection - Section for thread local data.
+comment|///
+specifier|const
+name|MCSection
+operator|*
+name|TLSDataSection
+block|;
+comment|// Defaults to ".tdata".
+comment|/// TLSBSSSection - Section for thread local uninitialized data.
+comment|///
+specifier|const
+name|MCSection
+operator|*
+name|TLSBSSSection
+block|;
+comment|// Defaults to ".tbss".
+comment|/// TLSTLVSection - Section for thread local structure infomation.
+comment|/// Contains the source code name of the variable, visibility and a pointer
+comment|/// to the initial value (.tdata or .tbss).
+specifier|const
+name|MCSection
+operator|*
+name|TLSTLVSection
+block|;
+comment|// Defaults to ".tlv".
+comment|/// TLSThreadInitSection - Section for thread local data initialization
+comment|/// functions.
+specifier|const
+name|MCSection
+operator|*
+name|TLSThreadInitSection
+block|;
+comment|// Defaults to ".thread_init_func".
 specifier|const
 name|MCSection
 operator|*
@@ -532,25 +565,20 @@ range|:
 name|public
 name|TargetLoweringObjectFile
 block|{
-name|mutable
-name|void
+specifier|const
+name|MCSection
 operator|*
-name|UniquingMap
+name|DrectveSection
 block|;
 name|public
 operator|:
 name|TargetLoweringObjectFileCOFF
 argument_list|()
-operator|:
-name|UniquingMap
-argument_list|(
-literal|0
-argument_list|)
 block|{}
 operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()
-block|;
+block|{}
 name|virtual
 name|void
 name|Initialize
@@ -565,6 +593,18 @@ operator|&
 name|TM
 argument_list|)
 block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getDrectveSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DrectveSection
+return|;
+block|}
 name|virtual
 specifier|const
 name|MCSection
@@ -594,21 +634,6 @@ argument_list|,
 argument|Mangler *Mang
 argument_list|,
 argument|const TargetMachine&TM
-argument_list|)
-specifier|const
-block|;
-comment|/// getCOFFSection - Return the MCSection for the specified COFF section.
-comment|/// FIXME: Switch this to a semantic view eventually.
-specifier|const
-name|MCSection
-operator|*
-name|getCOFFSection
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|bool isDirective
-argument_list|,
-argument|SectionKind K
 argument_list|)
 specifier|const
 block|; }

@@ -147,6 +147,13 @@ comment|/// MSP430_INTR - Calling convention used for MSP430 interrupt routines.
 name|MSP430_INTR
 init|=
 literal|69
+block|,
+comment|/// X86_ThisCall - Similar to X86_StdCall. Passes first argument in ECX,
+comment|/// others via stack. Callee is responsible for stack cleaning. MSVC uses
+comment|/// this by default for methods in its ABI.
+name|X86_ThisCall
+init|=
+literal|70
 block|}
 enum|;
 block|}

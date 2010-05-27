@@ -88,23 +88,6 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-comment|// Subregister indices, keep in sync with BlackfinRegisterInfo.td
-enum|enum
-name|BfinSubregIdx
-block|{
-name|bfin_subreg_lo16
-init|=
-literal|1
-block|,
-name|bfin_subreg_hi16
-init|=
-literal|2
-block|,
-name|bfin_subreg_lo32
-init|=
-literal|3
-block|}
-enum|;
 name|struct
 name|BlackfinRegisterInfo
 range|:

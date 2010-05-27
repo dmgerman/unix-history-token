@@ -116,23 +116,14 @@ comment|/// This should only be used for debugging, because it plays games with
 comment|/// PassManagers and stuff.
 name|void
 name|lintModule
-argument_list|(
+parameter_list|(
 specifier|const
 name|Module
-operator|&
+modifier|&
 name|M
-argument_list|,
 comment|///< The module to be checked
-name|std
-operator|::
-name|string
-operator|*
-name|ErrorInfo
-operator|=
-literal|0
-comment|///< Information about failures.
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// lintFunction - Check a function.
 name|void
 name|lintFunction

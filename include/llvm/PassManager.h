@@ -166,6 +166,16 @@ argument_list|)
 block|;
 name|private
 operator|:
+comment|/// addImpl - Add a pass to the queue of passes to run, without
+comment|/// checking whether to add a printer pass.
+name|void
+name|addImpl
+argument_list|(
+name|Pass
+operator|*
+name|P
+argument_list|)
+block|;
 comment|/// PassManagerImpl_New is the actual class. PassManager is just the
 comment|/// wraper to publish simple pass manager interface
 name|PassManagerImpl
@@ -235,6 +245,16 @@ argument_list|()
 block|;
 name|private
 operator|:
+comment|/// addImpl - Add a pass to the queue of passes to run, without
+comment|/// checking whether to add a printer pass.
+name|void
+name|addImpl
+argument_list|(
+name|Pass
+operator|*
+name|P
+argument_list|)
+block|;
 name|FunctionPassManagerImpl
 operator|*
 name|FPM

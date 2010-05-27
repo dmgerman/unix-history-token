@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|SparcTargetMachine
+decl_stmt|;
+name|class
 name|SparcSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|SparcSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|SparcTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|SparcSelectionDAGInfo

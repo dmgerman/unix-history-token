@@ -121,7 +121,7 @@ comment|/// For example, loop induction variable increments should be
 comment|/// scheduled as soon as possible after the variable's last use.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|LoopDependencies
 block|{
 specifier|const
@@ -560,7 +560,7 @@ end_comment
 
 begin_decl_stmt
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|ScheduleDAGInstrs
 range|:
 name|public

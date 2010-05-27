@@ -121,7 +121,7 @@ comment|/// involves promoting small sizes to large sizes or splitting up large 
 comment|/// into small values.
 comment|///
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|DAGTypeLegalizer
 block|{
 specifier|const

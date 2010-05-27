@@ -128,6 +128,8 @@ argument_list|)
 operator|:
 name|MCSection
 argument_list|(
+name|SV_PIC16
+argument_list|,
 name|K
 argument_list|)
 block|,
@@ -330,9 +332,36 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
-block|;   }
-decl_stmt|;
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCSection *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|getVariant
+argument_list|()
+operator|==
+name|SV_PIC16
+return|;
 block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const PIC16Section *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

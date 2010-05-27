@@ -122,7 +122,7 @@ end_macro
 begin_block
 block|{
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|PIC16DAGToDAGISel
 range|:
 name|public

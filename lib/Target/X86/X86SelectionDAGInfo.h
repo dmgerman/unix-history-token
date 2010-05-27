@@ -70,19 +70,104 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|X86TargetLowering
+decl_stmt|;
+name|class
+name|X86TargetMachine
+decl_stmt|;
+name|class
+name|X86Subtarget
+decl_stmt|;
+name|class
 name|X86SelectionDAGInfo
 range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
+comment|/// Subtarget - Keep a pointer to the X86Subtarget around so that we can
+comment|/// make the right decision when generating code for different targets.
+specifier|const
+name|X86Subtarget
+operator|*
+name|Subtarget
+block|;
+specifier|const
+name|X86TargetLowering
+operator|&
+name|TLI
+block|;
 name|public
 operator|:
+name|explicit
 name|X86SelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|X86TargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|X86SelectionDAGInfo
 argument_list|()
+block|;
+name|virtual
+name|SDValue
+name|EmitTargetCodeForMemset
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|const Value *DstSV
+argument_list|,
+argument|uint64_t DstSVOff
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
+name|EmitTargetCodeForMemcpy
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|bool AlwaysInline
+argument_list|,
+argument|const Value *DstSV
+argument_list|,
+argument|uint64_t DstSVOff
+argument_list|,
+argument|const Value *SrcSV
+argument_list|,
+argument|uint64_t SrcSVOff
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"SPUSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"SPUFrameInfo.h"
 end_include
 
@@ -131,6 +137,9 @@ name|FrameInfo
 block|;
 name|SPUTargetLowering
 name|TLInfo
+block|;
+name|SPUSelectionDAGInfo
+name|TSInfo
 block|;
 name|InstrItineraryData
 name|InstrItins
@@ -221,6 +230,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|SPUSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

@@ -113,6 +113,12 @@ directive|include
 file|"X86ISelLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"X86SelectionDAGInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -145,6 +151,9 @@ name|JITInfo
 block|;
 name|X86TargetLowering
 name|TLInfo
+block|;
+name|X86SelectionDAGInfo
+name|TSInfo
 block|;
 name|X86ELFWriterInfo
 name|ELFWriterInfo
@@ -242,6 +251,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|X86SelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

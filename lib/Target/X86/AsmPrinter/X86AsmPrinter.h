@@ -127,7 +127,7 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|X86AsmPrinter
 range|:
 name|public

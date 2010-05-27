@@ -106,6 +106,7 @@ return|;
 block|}
 name|public
 label|:
+name|explicit
 name|DefaultDOTGraphTraits
 argument_list|(
 argument|bool simple=false
@@ -165,6 +166,22 @@ specifier|static
 name|bool
 name|renderGraphFromBottomUp
 parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isNodeHidden - If the function returns true, the given node is not
+comment|/// displayed in the graph.
+specifier|static
+name|bool
+name|isNodeHidden
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|Node
+parameter_list|)
 block|{
 return|return
 name|false

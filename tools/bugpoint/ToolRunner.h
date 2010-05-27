@@ -232,6 +232,13 @@ argument_list|,
 specifier|const
 name|std
 operator|::
+name|string
+operator|&
+name|GCCBinary
+argument_list|,
+specifier|const
+name|std
+operator|::
 name|vector
 operator|<
 name|std
@@ -402,6 +409,13 @@ argument_list|,
 specifier|const
 name|std
 operator|::
+name|string
+operator|&
+name|GCCBinary
+argument_list|,
+specifier|const
+name|std
+operator|::
 name|vector
 operator|<
 name|std
@@ -443,6 +457,13 @@ operator|::
 name|string
 operator|&
 name|Message
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|GCCBinary
 argument_list|,
 specifier|const
 name|std
@@ -574,6 +595,12 @@ argument_list|(
 argument|const std::string&Bitcode
 argument_list|,
 argument|std::string *Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
 block|{}
 comment|/// OutputCode - Compile the specified program from bitcode to code
@@ -591,6 +618,12 @@ argument_list|,
 argument|sys::Path&OutFile
 argument_list|,
 argument|std::string&Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
 block|{
 name|Error
@@ -809,18 +842,15 @@ name|virtual
 name|void
 name|compileProgram
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
+argument|std::string *Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
 block|;
 name|virtual
@@ -858,24 +888,17 @@ operator|::
 name|FileType
 name|OutputCode
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-name|sys
-operator|::
-name|Path
-operator|&
-name|OutFile
+argument|sys::Path&OutFile
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Error
+argument|std::string&Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
 block|; }
 decl_stmt|;
@@ -905,17 +928,6 @@ operator|>
 name|ToolArgs
 block|;
 comment|// Extra args to pass to LLC.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|gccArgs
-block|;
-comment|// Extra args to pass to GCC.
 name|GCC
 operator|*
 name|gcc
@@ -932,8 +944,6 @@ argument_list|,
 argument|GCC *Gcc
 argument_list|,
 argument|const std::vector<std::string> *Args
-argument_list|,
-argument|const std::vector<std::string> *GCCArgs
 argument_list|,
 argument|bool useIntegratedAssembler
 argument_list|)
@@ -967,15 +977,6 @@ operator|=
 operator|*
 name|Args
 expr_stmt|;
-if|if
-condition|(
-name|GCCArgs
-condition|)
-name|gccArgs
-operator|=
-operator|*
-name|GCCArgs
-expr_stmt|;
 block|}
 operator|~
 name|LLC
@@ -991,120 +992,42 @@ name|virtual
 name|void
 name|compileProgram
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
+argument|std::string *Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|virtual
 name|int
 name|ExecuteProgram
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|Args
+argument|const std::vector<std::string>&Args
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InputFile
+argument|const std::string&InputFile
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|OutputFile
+argument|const std::string&OutputFile
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|Error
+argument|std::string *Error
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|GCCArgs
-operator|=
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|(
-operator|)
+argument|const std::vector<std::string>&GCCArgs =                                std::vector<std::string>()
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|SharedLibs
-operator|=
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|(
-operator|)
+argument|const std::vector<std::string>&SharedLibs =                                 std::vector<std::string>()
 argument_list|,
-name|unsigned
-name|Timeout
-operator|=
+argument|unsigned Timeout =
 literal|0
 argument_list|,
-name|unsigned
-name|MemoryLimit
-operator|=
+argument|unsigned MemoryLimit =
 literal|0
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// OutputCode - Compile the specified program from bitcode to code
 comment|/// understood by the GCC driver (either C or asm).  If the code generator
 comment|/// fails, it sets Error, otherwise, this function returns the type of code
@@ -1115,35 +1038,24 @@ operator|::
 name|FileType
 name|OutputCode
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Bitcode
+argument|const std::string&Bitcode
 argument_list|,
-name|sys
-operator|::
-name|Path
-operator|&
-name|OutFile
+argument|sys::Path&OutFile
 argument_list|,
-name|std
-operator|::
-name|string
-operator|&
-name|Error
+argument|std::string&Error
+argument_list|,
+argument|unsigned Timeout =
+literal|0
+argument_list|,
+argument|unsigned MemoryLimit =
+literal|0
 argument_list|)
-expr_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

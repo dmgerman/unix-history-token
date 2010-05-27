@@ -267,6 +267,23 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+comment|/// canCombinedSubRegIndex - Given a register class and a list of sub-register
+comment|/// indices, return true if it's possible to combine the sub-register indices
+comment|/// into one that corresponds to a larger sub-register. Return the new sub-
+comment|/// register index by reference. Note the new index by be zero if the given
+comment|/// sub-registers combined to form the whole register.
+name|virtual
+name|bool
+name|canCombinedSubRegIndex
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|SmallVectorImpl<unsigned>&SubIndices
+argument_list|,
+argument|unsigned&NewSubIdx
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|TargetRegisterClass
 operator|*

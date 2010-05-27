@@ -1237,6 +1237,24 @@ name|unsigned
 name|MOIdx
 argument_list|)
 decl_stmt|;
+comment|/// isPartialRedef - Return true if the specified def at the specific index
+comment|/// is partially re-defining the specified live interval. A common case of
+comment|/// this is a definition of the sub-register.
+name|bool
+name|isPartialRedef
+parameter_list|(
+name|SlotIndex
+name|MIIdx
+parameter_list|,
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|,
+name|LiveInterval
+modifier|&
+name|interval
+parameter_list|)
+function_decl|;
 comment|/// handleVirtualRegisterDef - update intervals for a virtual
 comment|/// register def
 name|void

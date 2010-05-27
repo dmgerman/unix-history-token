@@ -367,9 +367,15 @@ comment|///
 name|unsigned
 name|FunctionNumber
 decl_stmt|;
-comment|/// The alignment of the function.
+comment|/// Alignment - The alignment of the function.
 name|unsigned
 name|Alignment
+decl_stmt|;
+comment|/// CallsSetJmp - True if the function calls setjmp or sigsetjmp. This is used
+comment|/// to limit optimizations which cannot reason about the control flow of
+comment|/// setjmp.
+name|bool
+name|CallsSetJmp
 decl_stmt|;
 name|MachineFunction
 argument_list|(
@@ -610,6 +616,30 @@ condition|)
 name|Alignment
 operator|=
 name|A
+expr_stmt|;
+block|}
+comment|/// callsSetJmp - Returns true if the function calls setjmp or sigsetjmp.
+name|bool
+name|callsSetJmp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallsSetJmp
+return|;
+block|}
+comment|/// setCallsSetJmp - Set a flag that indicates if there's a call to setjmp or
+comment|/// sigsetjmp.
+name|void
+name|setCallsSetJmp
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|CallsSetJmp
+operator|=
+name|B
 expr_stmt|;
 block|}
 comment|/// getInfo - Keep track of various per-function pieces of information for

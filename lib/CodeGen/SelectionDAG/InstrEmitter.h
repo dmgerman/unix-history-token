@@ -262,8 +262,12 @@ name|VRBaseMap
 argument_list|,
 name|bool
 name|IsDebug
-operator|=
-name|false
+argument_list|,
+name|bool
+name|IsClone
+argument_list|,
+name|bool
+name|IsCloned
 argument_list|)
 decl_stmt|;
 comment|/// AddOperand - Add the specified operand to the specified machine instr.  II
@@ -299,8 +303,12 @@ name|VRBaseMap
 argument_list|,
 name|bool
 name|IsDebug
-operator|=
-name|false
+argument_list|,
+name|bool
+name|IsClone
+argument_list|,
+name|bool
+name|IsCloned
 argument_list|)
 decl_stmt|;
 comment|/// EmitSubregNode - Generate machine code for subreg nodes.
@@ -320,6 +328,12 @@ name|unsigned
 operator|>
 operator|&
 name|VRBaseMap
+argument_list|,
+name|bool
+name|IsClone
+argument_list|,
+name|bool
+name|IsCloned
 argument_list|)
 decl_stmt|;
 comment|/// EmitCopyToRegClassNode - Generate machine code for COPY_TO_REGCLASS nodes.
@@ -360,6 +374,12 @@ name|unsigned
 operator|>
 operator|&
 name|VRBaseMap
+argument_list|,
+name|bool
+name|IsClone
+argument_list|,
+name|bool
+name|IsCloned
 argument_list|)
 decl_stmt|;
 name|public

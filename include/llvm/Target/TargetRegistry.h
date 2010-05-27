@@ -348,6 +348,45 @@ name|MCContext
 operator|&
 name|Ctx
 argument_list|)
+argument_list|;     typedef
+name|MCStreamer
+operator|*
+operator|(
+operator|*
+name|ObjectStreamerCtorTy
+operator|)
+operator|(
+specifier|const
+name|Target
+operator|&
+name|T
+operator|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+operator|,
+name|MCContext
+operator|&
+name|Ctx
+operator|,
+name|TargetAsmBackend
+operator|&
+name|TAB
+operator|,
+name|raw_ostream
+operator|&
+name|_OS
+operator|,
+name|MCCodeEmitter
+operator|*
+name|_Emitter
+operator|,
+name|bool
+name|RelaxAll
+operator|)
 argument_list|;
 name|private
 operator|:
@@ -420,6 +459,11 @@ comment|/// CodeEmitterCtorFn - Construction function for this target's CodeEmit
 comment|/// if registered.
 name|CodeEmitterCtorTy
 name|CodeEmitterCtorFn
+argument_list|;
+comment|/// ObjectStreamerCtorFn - Construction function for this target's
+comment|/// ObjectStreamer, if registered.
+name|ObjectStreamerCtorTy
+name|ObjectStreamerCtorFn
 argument_list|;
 name|public
 operator|:
@@ -566,6 +610,18 @@ specifier|const
 block|{
 return|return
 name|CodeEmitterCtorFn
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// hasObjectStreamer - Check if this target supports streaming to files.
+name|bool
+name|hasObjectStreamer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjectStreamerCtorFn
 operator|!=
 literal|0
 return|;
@@ -873,6 +929,74 @@ argument_list|,
 name|TM
 argument_list|,
 name|Ctx
+argument_list|)
+return|;
+block|}
+comment|/// createObjectStreamer - Create a target specific MCStreamer.
+comment|///
+comment|/// \arg TT - The target triple.
+comment|/// \arg Ctx - The target context.
+comment|/// \arg TAB - The target assembler backend object.
+comment|/// \arg _OS - The stream object.
+comment|/// \arg _Emitter - The target independent assembler object.
+comment|/// \arg RelaxAll - Relax all fixups?
+name|MCStreamer
+modifier|*
+name|createObjectStreamer
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|TargetAsmBackend
+operator|&
+name|TAB
+argument_list|,
+name|raw_ostream
+operator|&
+name|_OS
+argument_list|,
+name|MCCodeEmitter
+operator|*
+name|_Emitter
+argument_list|,
+name|bool
+name|RelaxAll
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|ObjectStreamerCtorFn
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|ObjectStreamerCtorFn
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|TT
+argument_list|,
+name|Ctx
+argument_list|,
+name|TAB
+argument_list|,
+name|_OS
+argument_list|,
+name|_Emitter
+argument_list|,
+name|RelaxAll
 argument_list|)
 return|;
 block|}
@@ -1883,6 +2007,73 @@ condition|)
 name|T
 operator|.
 name|CodeEmitterCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterObjectStreamer - Register an MCStreamer implementation
+end_comment
+
+begin_comment
+comment|/// for the given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an MCStreamer for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterObjectStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|ObjectStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|T
+operator|.
+name|ObjectStreamerCtorFn
+condition|)
+name|T
+operator|.
+name|ObjectStreamerCtorFn
 operator|=
 name|Fn
 expr_stmt|;

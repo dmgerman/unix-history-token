@@ -606,6 +606,15 @@ modifier|*
 name|createABCDPass
 parameter_list|()
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// Sink - Code Sinking
+comment|//
+name|FunctionPass
+modifier|*
+name|createSinkingPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

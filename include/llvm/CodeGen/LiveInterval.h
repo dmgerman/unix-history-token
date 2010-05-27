@@ -2275,15 +2275,6 @@ modifier|*
 name|ValNo
 parameter_list|)
 function_decl|;
-comment|/// scaleNumbering - Renumber VNI and ranges to provide gaps for new
-comment|/// instructions.
-name|void
-name|scaleNumbering
-parameter_list|(
-name|unsigned
-name|factor
-parameter_list|)
-function_decl|;
 comment|/// getSize - Returns the sum of sizes of all the LiveRange's.
 comment|///
 name|unsigned

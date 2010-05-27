@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"AlphaSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"AlphaSubtarget.h"
 end_include
 
@@ -133,6 +139,9 @@ name|Subtarget
 block|;
 name|AlphaTargetLowering
 name|TLInfo
+block|;
+name|AlphaSelectionDAGInfo
+name|TSInfo
 block|;
 name|public
 operator|:
@@ -224,6 +233,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|AlphaSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

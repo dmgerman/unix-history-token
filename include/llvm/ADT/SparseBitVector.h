@@ -4514,7 +4514,7 @@ argument_list|)
 block|{
 name|out
 operator|<<
-literal|"[ "
+literal|"["
 block|;
 name|typename
 name|SparseBitVector
@@ -4524,22 +4524,39 @@ operator|>
 operator|::
 name|iterator
 name|bi
-block|;
-for|for
-control|(
-name|bi
 operator|=
 name|LHS
 operator|.
 name|begin
 argument_list|()
-init|;
-name|bi
-operator|!=
+block|,
+name|be
+operator|=
 name|LHS
 operator|.
 name|end
 argument_list|()
+block|;
+if|if
+condition|(
+name|bi
+operator|!=
+name|be
+condition|)
+block|{
+name|out
+operator|<<
+operator|*
+name|bi
+expr_stmt|;
+for|for
+control|(
+operator|++
+name|bi
+init|;
+name|bi
+operator|!=
+name|be
 condition|;
 operator|++
 name|bi
@@ -4547,15 +4564,18 @@ control|)
 block|{
 name|out
 operator|<<
+literal|" "
+operator|<<
 operator|*
 name|bi
-operator|<<
-literal|" "
 expr_stmt|;
 block|}
-name|out
+end_expr_stmt
+
+begin_expr_stmt
+unit|}   out
 operator|<<
-literal|" ]\n"
+literal|"]\n"
 expr_stmt|;
 end_expr_stmt
 

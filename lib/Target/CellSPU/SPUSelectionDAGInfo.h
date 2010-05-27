@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|SPUTargetMachine
+decl_stmt|;
+name|class
 name|SPUSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|SPUSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|SPUTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|SPUSelectionDAGInfo

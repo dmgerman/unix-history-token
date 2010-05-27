@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PIC16SelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"PIC16RegisterInfo.h"
 end_include
 
@@ -126,6 +132,9 @@ name|InstrInfo
 block|;
 name|PIC16TargetLowering
 name|TLInfo
+block|;
+name|PIC16SelectionDAGInfo
+name|TSInfo
 block|;
 comment|// PIC16 does not have any call stack frame, therefore not having
 comment|// any PIC16 specific FrameInfo class.
@@ -226,6 +235,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|PIC16SelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

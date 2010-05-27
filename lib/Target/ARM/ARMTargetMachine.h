@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ARMSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"Thumb1InstrInfo.h"
 end_include
 
@@ -280,6 +286,9 @@ comment|// Calculates type size& alignment
 name|ARMTargetLowering
 name|TLInfo
 block|;
+name|ARMSelectionDAGInfo
+name|TSInfo
+block|;
 name|public
 operator|:
 name|ARMTargetMachine
@@ -335,6 +344,19 @@ return|;
 block|}
 name|virtual
 specifier|const
+name|ARMSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
+return|;
+block|}
+name|virtual
+specifier|const
 name|ARMInstrInfo
 operator|*
 name|getInstrInfo
@@ -385,6 +407,9 @@ block|;
 comment|// Calculates type size& alignment
 name|ARMTargetLowering
 name|TLInfo
+block|;
+name|ARMSelectionDAGInfo
+name|TSInfo
 block|;
 name|public
 operator|:
@@ -438,6 +463,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|ARMSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 comment|/// returns either Thumb1InstrInfo or Thumb2InstrInfo

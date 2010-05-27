@@ -123,7 +123,7 @@ specifier|inline
 name|void
 name|createStandardFunctionPasses
 parameter_list|(
-name|FunctionPassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -148,7 +148,7 @@ specifier|inline
 name|void
 name|createStandardModulePasses
 parameter_list|(
-name|PassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -186,7 +186,7 @@ specifier|inline
 name|void
 name|createStandardLTOPasses
 parameter_list|(
-name|PassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -206,7 +206,7 @@ specifier|inline
 name|void
 name|createStandardFunctionPasses
 parameter_list|(
-name|FunctionPassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -269,7 +269,7 @@ specifier|inline
 name|void
 name|createStandardModulePasses
 parameter_list|(
-name|PassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -729,7 +729,7 @@ specifier|inline
 name|void
 name|addOnePass
 parameter_list|(
-name|PassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,
@@ -766,7 +766,7 @@ specifier|inline
 name|void
 name|createStandardLTOPasses
 parameter_list|(
-name|PassManager
+name|PassManagerBase
 modifier|*
 name|PM
 parameter_list|,

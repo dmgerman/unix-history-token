@@ -1190,7 +1190,6 @@ operator|::
 name|f80
 return|;
 block|}
-name|virtual
 specifier|const
 name|X86Subtarget
 operator|*
@@ -1655,6 +1654,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerBIT_CONVERT
+argument_list|(
+argument|SDValue op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSINT_TO_FP
 argument_list|(
 argument|SDValue Op
@@ -2054,62 +2062,6 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|unsigned NewOp
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|EmitTargetCodeForMemset
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Dst
-argument_list|,
-argument|SDValue Src
-argument_list|,
-argument|SDValue Size
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|bool isVolatile
-argument_list|,
-argument|const Value *DstSV
-argument_list|,
-argument|uint64_t DstSVOff
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|EmitTargetCodeForMemcpy
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|DebugLoc dl
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue Dst
-argument_list|,
-argument|SDValue Src
-argument_list|,
-argument|SDValue Size
-argument_list|,
-argument|unsigned Align
-argument_list|,
-argument|bool isVolatile
-argument_list|,
-argument|bool AlwaysInline
-argument_list|,
-argument|const Value *DstSV
-argument_list|,
-argument|uint64_t DstSVOff
-argument_list|,
-argument|const Value *SrcSV
-argument_list|,
-argument|uint64_t SrcSVOff
 argument_list|)
 specifier|const
 block|;

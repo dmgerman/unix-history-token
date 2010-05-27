@@ -261,6 +261,13 @@ name|MCSection
 modifier|*
 name|DwarfMacroInfoSection
 decl_stmt|;
+comment|// Extra TLS Variable Data section.  If the target needs to put additional
+comment|// information for a TLS variable, it'll go here.
+specifier|const
+name|MCSection
+modifier|*
+name|TLSExtraDataSection
+decl_stmt|;
 comment|/// SupportsWeakEmptyEHFrame - True if target object file supports a
 comment|/// weak_definition of constant 0 for an omitted EH frame.
 name|bool
@@ -553,6 +560,17 @@ specifier|const
 block|{
 return|return
 name|DwarfMacroInfoSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getTLSExtraDataSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLSExtraDataSection
 return|;
 block|}
 comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively

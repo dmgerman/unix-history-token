@@ -202,9 +202,10 @@ block|,
 comment|/// Return with a flag operand, matched by 'blr'
 name|RET_FLAG
 block|,
-comment|/// R32 = MFCR(CRREG, INFLAG) - Represents the MFCR/MFOCRF instructions.
-comment|/// This copies the bits corresponding to the specified CRREG into the
-comment|/// resultant GPR.  Bits corresponding to other CR regs are undefined.
+comment|/// R32 = MFCR(CRREG, INFLAG) - Represents the MFCRpseud/MFOCRF
+comment|/// instructions.  This copies the bits corresponding to the specified
+comment|/// CRREG into the resultant GPR.  Bits corresponding to other CR regs
+comment|/// are undefined.
 name|MFCR
 block|,
 comment|/// RESVEC = VCMP(LHS, RHS, OPC) - Represents one of the altivec VCMP*

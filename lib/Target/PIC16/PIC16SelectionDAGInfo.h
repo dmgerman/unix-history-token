@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|PIC16TargetMachine
+decl_stmt|;
+name|class
 name|PIC16SelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|PIC16SelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|PIC16TargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|PIC16SelectionDAGInfo

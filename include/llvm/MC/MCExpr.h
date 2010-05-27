@@ -388,6 +388,15 @@ block|,
 name|VK_TLSGD
 block|,
 name|VK_TPOFF
+block|,
+name|VK_ARM_HI16
+block|,
+comment|// The R_ARM_MOVT_ABS relocation (:upper16: in the asm file)
+name|VK_ARM_LO16
+block|,
+comment|// The R_ARM_MOVW_ABS_NC relocation (:lower16: in the asm file)
+name|VK_TLVP
+comment|// Mach-O thread local variable relocation
 block|}
 block|;
 name|private

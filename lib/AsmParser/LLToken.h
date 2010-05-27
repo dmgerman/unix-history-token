@@ -226,6 +226,8 @@ name|kw_x86_stdcallcc
 block|,
 name|kw_x86_fastcallcc
 block|,
+name|kw_x86_thiscallcc
+block|,
 name|kw_arm_apcscc
 block|,
 name|kw_arm_aapcscc

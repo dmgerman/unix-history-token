@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MBlazeTargetMachine
+decl_stmt|;
+name|class
 name|MBlazeSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|MBlazeSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|MBlazeTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|MBlazeSelectionDAGInfo

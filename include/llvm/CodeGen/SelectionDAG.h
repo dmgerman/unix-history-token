@@ -151,6 +151,9 @@ decl_stmt|;
 name|class
 name|TargetLowering
 decl_stmt|;
+name|class
+name|TargetSelectionDAGInfo
+decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -557,6 +560,11 @@ name|TargetLowering
 modifier|&
 name|TLI
 decl_stmt|;
+specifier|const
+name|TargetSelectionDAGInfo
+modifier|&
+name|TSI
+decl_stmt|;
 name|MachineFunction
 modifier|*
 name|MF
@@ -764,6 +772,17 @@ specifier|const
 block|{
 return|return
 name|TLI
+return|;
+block|}
+specifier|const
+name|TargetSelectionDAGInfo
+operator|&
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TSI
 return|;
 block|}
 name|FunctionLoweringInfo
@@ -1340,6 +1359,8 @@ name|true
 argument_list|)
 return|;
 block|}
+comment|// The forms below that take a double should only be used for simple
+comment|// constants that can be exactly represented in VT.  No checks are made.
 name|SDValue
 name|getConstantFP
 parameter_list|(

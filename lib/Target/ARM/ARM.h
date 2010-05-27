@@ -244,6 +244,7 @@ return|;
 block|}
 block|}
 block|}
+comment|// namespace ARMCC
 specifier|inline
 specifier|static
 specifier|const
@@ -390,6 +391,12 @@ literal|"al"
 return|;
 block|}
 block|}
+comment|/// ModelWithRegSequence - Return true if isel should use REG_SEQUENCE to model
+comment|/// operations involving sub-registers.
+name|bool
+name|ModelWithRegSequence
+parameter_list|()
+function_decl|;
 name|FunctionPass
 modifier|*
 name|createARMISelDag

@@ -144,7 +144,7 @@ name|unsigned
 name|PersonalityIndex
 decl_stmt|;
 name|bool
-name|hasCalls
+name|adjustsStack
 decl_stmt|;
 name|bool
 name|hasLandingPads
@@ -194,7 +194,7 @@ argument_list|(
 name|P
 argument_list|)
 operator|,
-name|hasCalls
+name|adjustsStack
 argument_list|(
 name|hC
 argument_list|)

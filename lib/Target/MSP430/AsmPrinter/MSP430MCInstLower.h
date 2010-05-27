@@ -86,7 +86,7 @@ decl_stmt|;
 comment|/// MSP430MCInstLower - This class is used to lower an MachineInstr
 comment|/// into an MCInst.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|MSP430MCInstLower
 block|{
 name|MCContext

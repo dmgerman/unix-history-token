@@ -95,6 +95,12 @@ directive|include
 file|"XCoreISelLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"XCoreSelectionDAGInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -121,6 +127,9 @@ name|FrameInfo
 block|;
 name|XCoreTargetLowering
 name|TLInfo
+block|;
+name|XCoreSelectionDAGInfo
+name|TSInfo
 block|;
 name|public
 operator|:
@@ -196,6 +205,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|XCoreSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

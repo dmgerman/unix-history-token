@@ -113,6 +113,14 @@ decl_stmt|;
 name|class
 name|RegScavenger
 decl_stmt|;
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 comment|/// TargetRegisterDesc - This record contains all of the information known about
 comment|/// a particular register.  The AliasSet field (if not null) contains a pointer
 comment|/// to a Zero terminated array of registers that this register aliases.  This is
@@ -623,33 +631,6 @@ operator|&&
 literal|"Invalid subregister index"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|unsigned
-name|s
-init|=
-literal|0
-init|;
-name|s
-operator|!=
-name|SubIdx
-operator|-
-literal|1
-condition|;
-operator|++
-name|s
-control|)
-if|if
-condition|(
-operator|!
-name|SubRegClasses
-index|[
-name|s
-index|]
-condition|)
-return|return
-name|NULL
-return|;
 return|return
 name|SubRegClasses
 index|[
@@ -1156,15 +1137,6 @@ decl_stmt|;
 specifier|const
 name|unsigned
 modifier|*
-name|SuperregHash
-decl_stmt|;
-specifier|const
-name|unsigned
-name|SuperregHashSize
-decl_stmt|;
-specifier|const
-name|unsigned
-modifier|*
 name|AliasesHash
 decl_stmt|;
 specifier|const
@@ -1189,6 +1161,14 @@ modifier|*
 name|Desc
 decl_stmt|;
 comment|// Pointer to the descriptor array
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|SubRegIndexNames
+decl_stmt|;
+comment|// Names of subreg indexes.
 name|unsigned
 name|NumRegs
 decl_stmt|;
@@ -1216,6 +1196,8 @@ argument|regclass_iterator RegClassBegin
 argument_list|,
 argument|regclass_iterator RegClassEnd
 argument_list|,
+argument|const char *const *subregindexnames
+argument_list|,
 argument|int CallFrameSetupOpcode = -
 literal|1
 argument_list|,
@@ -1226,12 +1208,6 @@ argument|const unsigned* subregs =
 literal|0
 argument_list|,
 argument|const unsigned subregsize =
-literal|0
-argument_list|,
-argument|const unsigned* superregs =
-literal|0
-argument_list|,
-argument|const unsigned superregsize =
 literal|0
 argument_list|,
 argument|const unsigned* aliases =
@@ -1504,6 +1480,34 @@ return|return
 name|NumRegs
 return|;
 block|}
+comment|/// getSubRegIndexName - Return the human-readable symbolic target-specific
+comment|/// name for the specified SubRegIndex.
+specifier|const
+name|char
+modifier|*
+name|getSubRegIndexName
+argument_list|(
+name|unsigned
+name|SubIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|SubIdx
+operator|&&
+literal|"This is not a subregister index"
+argument_list|)
+expr_stmt|;
+return|return
+name|SubRegIndexNames
+index|[
+name|SubIdx
+operator|-
+literal|1
+index|]
+return|;
+block|}
 comment|/// regsOverlap - Returns true if the two registers are equal or alias each
 comment|/// other. The registers may be virtual register.
 name|bool
@@ -1755,98 +1759,13 @@ name|regB
 argument_list|)
 decl|const
 block|{
-comment|// SuperregHash is a simple quadratically probed hash table.
-name|size_t
-name|index
-init|=
-operator|(
-name|regA
-operator|+
-name|regB
-operator|*
-literal|37
-operator|)
-operator|&
-operator|(
-name|SuperregHashSize
-operator|-
-literal|1
-operator|)
-decl_stmt|;
-name|unsigned
-name|ProbeAmt
-init|=
-literal|2
-decl_stmt|;
-while|while
-condition|(
-name|SuperregHash
-index|[
-name|index
-operator|*
-literal|2
-index|]
-operator|!=
-literal|0
-operator|&&
-name|SuperregHash
-index|[
-name|index
-operator|*
-literal|2
-operator|+
-literal|1
-index|]
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|SuperregHash
-index|[
-name|index
-operator|*
-literal|2
-index|]
-operator|==
-name|regA
-operator|&&
-name|SuperregHash
-index|[
-name|index
-operator|*
-literal|2
-operator|+
-literal|1
-index|]
-operator|==
-name|regB
-condition|)
 return|return
-name|true
-return|;
-name|index
-operator|=
-operator|(
-name|index
-operator|+
-name|ProbeAmt
-operator|)
-operator|&
-operator|(
-name|SuperregHashSize
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-name|ProbeAmt
-operator|+=
-literal|2
-expr_stmt|;
-block|}
-return|return
-name|false
+name|isSubRegister
+argument_list|(
+name|regB
+argument_list|,
+name|regA
+argument_list|)
 return|;
 block|}
 comment|/// getCalleeSavedRegs - Return a null-terminated list of all of the
@@ -2001,6 +1920,37 @@ condition|)
 return|return
 name|SR
 return|;
+return|return
+literal|0
+return|;
+block|}
+comment|/// canCombinedSubRegIndex - Given a register class and a list of sub-register
+comment|/// indices, return true if it's possible to combine the sub-register indices
+comment|/// into one that corresponds to a larger sub-register. Return the new sub-
+comment|/// register index by reference. Note the new index by be zero if the given
+comment|/// sub-registers combined to form the whole register.
+name|virtual
+name|bool
+name|canCombinedSubRegIndex
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|SubIndices
+argument_list|,
+name|unsigned
+operator|&
+name|NewSubIdx
+argument_list|)
+decl|const
+block|{
 return|return
 literal|0
 return|;

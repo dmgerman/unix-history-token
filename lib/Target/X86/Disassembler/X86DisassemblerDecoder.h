@@ -175,14 +175,9 @@ define|\
 value|ENTRY(DR0)        \   ENTRY(DR1)        \   ENTRY(DR2)        \   ENTRY(DR3)        \   ENTRY(DR4)        \   ENTRY(DR5)        \   ENTRY(DR6)        \   ENTRY(DR7)
 define|#
 directive|define
-name|REGS_CONTROL_32BIT
+name|REGS_CONTROL
 define|\
-value|ENTRY(ECR0)               \   ENTRY(ECR1)               \   ENTRY(ECR2)               \   ENTRY(ECR3)               \   ENTRY(ECR4)               \   ENTRY(ECR5)               \   ENTRY(ECR6)               \   ENTRY(ECR7)
-define|#
-directive|define
-name|REGS_CONTROL_64BIT
-define|\
-value|ENTRY(RCR0)               \   ENTRY(RCR1)               \   ENTRY(RCR2)               \   ENTRY(RCR3)               \   ENTRY(RCR4)               \   ENTRY(RCR5)               \   ENTRY(RCR6)               \   ENTRY(RCR7)               \   ENTRY(RCR8)
+value|ENTRY(CR0)          \   ENTRY(CR1)          \   ENTRY(CR2)          \   ENTRY(CR3)          \   ENTRY(CR4)          \   ENTRY(CR5)          \   ENTRY(CR6)          \   ENTRY(CR7)          \   ENTRY(CR8)
 define|#
 directive|define
 name|ALL_EA_BASES
@@ -197,7 +192,7 @@ define|#
 directive|define
 name|ALL_REGS
 define|\
-value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL_32BIT  \   REGS_CONTROL_64BIT  \   ENTRY(RIP)
+value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
 comment|/*  * EABase - All possible values of the base field for effective-address   *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
 typedef|typedef
 enum|enum

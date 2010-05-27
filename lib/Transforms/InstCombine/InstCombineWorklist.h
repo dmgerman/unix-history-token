@@ -93,7 +93,7 @@ block|{
 comment|/// InstCombineWorklist - This is the worklist management logic for
 comment|/// InstCombine.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|InstCombineWorklist
 block|{
 name|SmallVector

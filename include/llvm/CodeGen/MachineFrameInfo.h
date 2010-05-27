@@ -327,6 +327,11 @@ comment|/// to builtin \@llvm.frameaddress.
 name|bool
 name|FrameAddressTaken
 decl_stmt|;
+comment|/// ReturnAddressTaken - This boolean keeps track of whether there is a call
+comment|/// to builtin \@llvm.returnaddress.
+name|bool
+name|ReturnAddressTaken
+decl_stmt|;
 comment|/// StackSize - The prolog/epilog code inserter calculates the final stack
 comment|/// offsets for all of the fixed size objects, updating the Objects list
 comment|/// above.  It then updates StackSize to contain the number of bytes that need
@@ -357,8 +362,13 @@ comment|///
 name|unsigned
 name|MaxAlignment
 decl_stmt|;
-comment|/// HasCalls - Set to true if this function has any function calls.  This is
-comment|/// only valid during and after prolog/epilog code insertion.
+comment|/// AdjustsStack - Set to true if this function adjusts the stack -- e.g.,
+comment|/// when calling another function. This is only valid during and after
+comment|/// prolog/epilog code insertion.
+name|bool
+name|AdjustsStack
+decl_stmt|;
+comment|/// HasCalls - Set to true if this function has any function calls.
 name|bool
 name|HasCalls
 decl_stmt|;
@@ -439,6 +449,14 @@ operator|=
 name|false
 block|;
 name|FrameAddressTaken
+operator|=
+name|false
+block|;
+name|ReturnAddressTaken
+operator|=
+name|false
+block|;
+name|AdjustsStack
 operator|=
 name|false
 block|;
@@ -534,6 +552,30 @@ block|{
 name|FrameAddressTaken
 operator|=
 name|T
+expr_stmt|;
+block|}
+comment|/// isReturnAddressTaken - This method may be called any time after instruction
+comment|/// selection is complete to determine if there is a call to
+comment|/// \@llvm.returnaddress in this function.
+name|bool
+name|isReturnAddressTaken
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnAddressTaken
+return|;
+block|}
+name|void
+name|setReturnAddressIsTaken
+parameter_list|(
+name|bool
+name|s
+parameter_list|)
+block|{
+name|ReturnAddressTaken
+operator|=
+name|s
 expr_stmt|;
 block|}
 comment|/// getObjectIndexBegin - Return the minimum frame object index.
@@ -939,9 +981,31 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// hasCalls - Return true if the current function has no function calls.
-comment|/// This is only valid during or after prolog/epilog code emission.
-comment|///
+comment|/// AdjustsStack - Return true if this function adjusts the stack -- e.g.,
+comment|/// when calling another function. This is only valid during and after
+comment|/// prolog/epilog code insertion.
+name|bool
+name|adjustsStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AdjustsStack
+return|;
+block|}
+name|void
+name|setAdjustsStack
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+block|{
+name|AdjustsStack
+operator|=
+name|V
+expr_stmt|;
+block|}
+comment|/// hasCalls - Return true if the current function has any function calls.
 name|bool
 name|hasCalls
 argument_list|()

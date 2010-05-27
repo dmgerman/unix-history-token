@@ -231,9 +231,6 @@ name|class
 name|TargetRegisterClass
 decl_stmt|;
 name|class
-name|TargetSubtarget
-decl_stmt|;
-name|class
 name|TargetLoweringObjectFile
 decl_stmt|;
 name|class
@@ -327,16 +324,6 @@ block|,
 comment|// All bits zero except for bit 0.
 name|ZeroOrNegativeOneBooleanContent
 comment|// All bits equal to bit 0.
-block|}
-enum|;
-enum|enum
-name|SchedPreference
-block|{
-name|SchedulingForLatency
-block|,
-comment|// Scheduling for shortest total latency.
-name|SchedulingForRegPressure
-comment|// Scheduling for lowest register pressure.
 block|}
 enum|;
 comment|/// NOTE: The constructor takes ownership of TLOF.
@@ -503,7 +490,9 @@ name|BooleanContents
 return|;
 block|}
 comment|/// getSchedulingPreference - Return target scheduling preference.
-name|SchedPreference
+name|Sched
+operator|::
+name|Preference
 name|getSchedulingPreference
 argument_list|()
 specifier|const
@@ -512,8 +501,28 @@ return|return
 name|SchedPreferenceInfo
 return|;
 block|}
+comment|/// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
+comment|/// different scheduling heuristics for different nodes. This function returns
+comment|/// the preference (or none) for the given node.
+name|virtual
+name|Sched
+operator|::
+name|Preference
+name|getSchedulingPreference
+argument_list|(
+argument|SDNode *N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Sched
+operator|::
+name|None
+return|;
+block|}
 comment|/// getRegClassFor - Return the register class that should be used for the
-comment|/// specified value type.  This may only be called on legal types.
+comment|/// specified value type.
+name|virtual
 name|TargetRegisterClass
 modifier|*
 name|getRegClassFor
@@ -643,22 +652,14 @@ block|}
 name|class
 name|ValueTypeActionImpl
 block|{
-comment|/// ValueTypeActions - This is a bitvector that contains two bits for each
-comment|/// value type, where the two bits correspond to the LegalizeAction enum.
-comment|/// This can be queried with "getTypeAction(VT)".
-comment|/// dimension by (MVT::MAX_ALLOWED_VALUETYPE/32) * 2
-name|uint32_t
+comment|/// ValueTypeActions - For each value type, keep a LegalizeAction enum
+comment|/// that indicates how instruction selection should deal with the type.
+name|uint8_t
 name|ValueTypeActions
 index|[
-operator|(
 name|MVT
 operator|::
-name|MAX_ALLOWED_VALUETYPE
-operator|/
-literal|32
-operator|)
-operator|*
-literal|2
+name|LAST_VALUETYPE
 index|]
 decl_stmt|;
 name|public
@@ -763,52 +764,14 @@ argument_list|()
 operator|.
 name|SimpleTy
 decl_stmt|;
-name|assert
-argument_list|(
-name|I
-operator|<
-literal|4
-operator|*
-name|array_lengthof
-argument_list|(
-name|ValueTypeActions
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ValueTypeActions
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
 operator|(
+name|LegalizeAction
+operator|)
 name|ValueTypeActions
 index|[
 name|I
-operator|>>
-literal|4
 index|]
-operator|>>
-operator|(
-operator|(
-literal|2
-operator|*
-name|I
-operator|)
-operator|&
-literal|31
-operator|)
-operator|)
-operator|&
-literal|3
-argument_list|)
 return|;
 block|}
 name|void
@@ -831,44 +794,12 @@ argument_list|()
 operator|.
 name|SimpleTy
 decl_stmt|;
-name|assert
-argument_list|(
-name|I
-operator|<
-literal|4
-operator|*
-name|array_lengthof
-argument_list|(
-name|ValueTypeActions
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ValueTypeActions
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ValueTypeActions
 index|[
 name|I
-operator|>>
-literal|4
 index|]
-operator||=
+operator|=
 name|Action
-operator|<<
-operator|(
-operator|(
-name|I
-operator|*
-literal|2
-operator|)
-operator|&
-literal|31
-operator|)
 expr_stmt|;
 block|}
 block|}
@@ -1449,29 +1380,6 @@ literal|0
 index|]
 argument_list|)
 operator|&&
-operator|(
-name|unsigned
-operator|)
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-operator|<
-sizeof|sizeof
-argument_list|(
-name|OpActions
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|8
-operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
@@ -1488,25 +1396,10 @@ argument_list|()
 operator|.
 name|SimpleTy
 decl_stmt|;
-name|unsigned
-name|J
-init|=
-name|I
-operator|&
-literal|31
-decl_stmt|;
-name|I
-operator|=
-name|I
-operator|>>
-literal|5
-expr_stmt|;
 return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
 operator|(
+name|LegalizeAction
+operator|)
 name|OpActions
 index|[
 name|I
@@ -1514,16 +1407,6 @@ index|]
 index|[
 name|Op
 index|]
-operator|>>
-operator|(
-name|J
-operator|*
-literal|2
-operator|)
-operator|)
-operator|&
-literal|3
-argument_list|)
 return|;
 block|}
 comment|/// isOperationLegalOrCustom - Return true if the specified operation is
@@ -1620,7 +1503,7 @@ name|LegalizeAction
 name|getLoadExtAction
 argument_list|(
 name|unsigned
-name|LType
+name|ExtType
 argument_list|,
 name|EVT
 name|VT
@@ -1629,12 +1512,11 @@ decl|const
 block|{
 name|assert
 argument_list|(
-name|LType
+name|ExtType
 operator|<
-name|array_lengthof
-argument_list|(
-name|LoadExtActions
-argument_list|)
+name|ISD
+operator|::
+name|LAST_LOADEXT_TYPE
 operator|&&
 operator|(
 name|unsigned
@@ -1646,44 +1528,29 @@ argument_list|()
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|LoadExtActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
 operator|(
+name|LegalizeAction
+operator|)
 name|LoadExtActions
 index|[
-name|LType
-index|]
-operator|>>
-operator|(
-literal|2
-operator|*
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
-operator|)
-operator|)
-operator|&
-literal|3
-argument_list|)
+index|]
+index|[
+name|ExtType
+index|]
 return|;
 block|}
 comment|/// isLoadExtLegal - Return true if the specified load with extension is legal
@@ -1692,7 +1559,7 @@ name|bool
 name|isLoadExtLegal
 argument_list|(
 name|unsigned
-name|LType
+name|ExtType
 argument_list|,
 name|EVT
 name|VT
@@ -1708,7 +1575,7 @@ operator|&&
 operator|(
 name|getLoadExtAction
 argument_list|(
-name|LType
+name|ExtType
 argument_list|,
 name|VT
 argument_list|)
@@ -1717,7 +1584,7 @@ name|Legal
 operator|||
 name|getLoadExtAction
 argument_list|(
-name|LType
+name|ExtType
 argument_list|,
 name|VT
 argument_list|)
@@ -1753,10 +1620,9 @@ argument_list|()
 operator|.
 name|SimpleTy
 operator|<
-name|array_lengthof
-argument_list|(
-name|TruncStoreActions
-argument_list|)
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 operator|(
 name|unsigned
@@ -1768,25 +1634,17 @@ argument_list|()
 operator|.
 name|SimpleTy
 operator|<
-sizeof|sizeof
-argument_list|(
-name|TruncStoreActions
-index|[
-literal|0
-index|]
-argument_list|)
-operator|*
-literal|4
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
 operator|(
+name|LegalizeAction
+operator|)
 name|TruncStoreActions
 index|[
 name|ValVT
@@ -1796,21 +1654,14 @@ argument_list|()
 operator|.
 name|SimpleTy
 index|]
-operator|>>
-operator|(
-literal|2
-operator|*
+index|[
 name|MemVT
 operator|.
 name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
-operator|)
-operator|)
-operator|&
-literal|3
-argument_list|)
+index|]
 return|;
 block|}
 comment|/// isTruncStoreLegal - Return true if the specified store with truncation is
@@ -1877,16 +1728,9 @@ name|assert
 argument_list|(
 name|IdxMode
 operator|<
-name|array_lengthof
-argument_list|(
-name|IndexedModeActions
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-argument_list|)
+name|ISD
+operator|::
+name|LAST_INDEXED_MODE
 operator|&&
 operator|(
 operator|(
@@ -1907,14 +1751,9 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
-operator|(
-name|IndexedModeActions
-index|[
+name|unsigned
+name|Ty
+init|=
 operator|(
 name|unsigned
 operator|)
@@ -1924,14 +1763,25 @@ name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
-index|]
+decl_stmt|;
+return|return
+call|(
+name|LegalizeAction
+call|)
+argument_list|(
+operator|(
+name|IndexedModeActions
 index|[
-literal|0
+name|Ty
 index|]
 index|[
 name|IdxMode
 index|]
+operator|&
+literal|0xf0
 operator|)
+operator|>>
+literal|4
 argument_list|)
 return|;
 block|}
@@ -1994,17 +1844,11 @@ name|assert
 argument_list|(
 name|IdxMode
 operator|<
-name|array_lengthof
-argument_list|(
-name|IndexedModeActions
-index|[
-literal|0
-index|]
-index|[
-literal|1
-index|]
-argument_list|)
+name|ISD
+operator|::
+name|LAST_INDEXED_MODE
 operator|&&
+operator|(
 operator|(
 name|unsigned
 operator|)
@@ -2014,6 +1858,7 @@ name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
+operator|)
 operator|<
 name|MVT
 operator|::
@@ -2022,14 +1867,9 @@ operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
-return|return
-call|(
-name|LegalizeAction
-call|)
-argument_list|(
-operator|(
-name|IndexedModeActions
-index|[
+name|unsigned
+name|Ty
+init|=
 operator|(
 name|unsigned
 operator|)
@@ -2039,14 +1879,21 @@ name|getSimpleVT
 argument_list|()
 operator|.
 name|SimpleTy
-index|]
+decl_stmt|;
+return|return
+call|(
+name|LegalizeAction
+call|)
+argument_list|(
+name|IndexedModeActions
 index|[
-literal|1
+name|Ty
 index|]
 index|[
 name|IdxMode
 index|]
-operator|)
+operator|&
+literal|0x0f
 argument_list|)
 return|;
 block|}
@@ -3775,10 +3622,12 @@ block|}
 comment|/// setSchedulingPreference - Specify the target scheduling preference.
 name|void
 name|setSchedulingPreference
-parameter_list|(
-name|SchedPreference
+argument_list|(
+name|Sched
+operator|::
+name|Preference
 name|Pref
-parameter_list|)
+argument_list|)
 block|{
 name|SchedPreferenceInfo
 operator|=
@@ -4002,69 +3851,38 @@ name|LegalizeAction
 name|Action
 parameter_list|)
 block|{
-name|unsigned
-name|I
-init|=
+name|assert
+argument_list|(
+name|Op
+operator|<
+name|array_lengthof
+argument_list|(
+name|OpActions
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+literal|"Table isn't big enough!"
+argument_list|)
+expr_stmt|;
+name|OpActions
+index|[
 operator|(
 name|unsigned
 operator|)
 name|VT
 operator|.
 name|SimpleTy
-decl_stmt|;
-name|unsigned
-name|J
-init|=
-name|I
-operator|&
-literal|31
-decl_stmt|;
-name|I
+index|]
+index|[
+name|Op
+index|]
 operator|=
-name|I
-operator|>>
-literal|5
-expr_stmt|;
-name|OpActions
-index|[
-name|I
-index|]
-index|[
-name|Op
-index|]
-operator|&=
-operator|~
 operator|(
-name|uint64_t
-argument_list|(
-literal|3UL
-argument_list|)
-operator|<<
-operator|(
-name|J
-operator|*
-literal|2
-operator|)
-operator|)
-expr_stmt|;
-name|OpActions
-index|[
-name|I
-index|]
-index|[
-name|Op
-index|]
-operator||=
-operator|(
-name|uint64_t
+name|uint8_t
 operator|)
 name|Action
-operator|<<
-operator|(
-name|J
-operator|*
-literal|2
-operator|)
 expr_stmt|;
 block|}
 comment|/// setLoadExtAction - Indicate that the specified load with extension does
@@ -4084,61 +3902,40 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+name|ExtType
+operator|<
+name|ISD
+operator|::
+name|LAST_LOADEXT_TYPE
+operator|&&
 operator|(
 name|unsigned
 operator|)
 name|VT
 operator|.
 name|SimpleTy
-operator|*
-literal|2
 operator|<
-literal|63
-operator|&&
-name|ExtType
-operator|<
-name|array_lengthof
-argument_list|(
-name|LoadExtActions
-argument_list|)
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
 expr_stmt|;
 name|LoadExtActions
 index|[
-name|ExtType
-index|]
-operator|&=
-operator|~
-operator|(
-name|uint64_t
-argument_list|(
-literal|3UL
-argument_list|)
-operator|<<
 name|VT
 operator|.
 name|SimpleTy
-operator|*
-literal|2
-operator|)
-expr_stmt|;
-name|LoadExtActions
+index|]
 index|[
 name|ExtType
 index|]
-operator||=
+operator|=
 operator|(
-name|uint64_t
+name|uint8_t
 operator|)
 name|Action
-operator|<<
-name|VT
-operator|.
-name|SimpleTy
-operator|*
-literal|2
 expr_stmt|;
 block|}
 comment|/// setTruncStoreAction - Indicate that the specified truncating store does
@@ -4165,10 +3962,9 @@ name|ValVT
 operator|.
 name|SimpleTy
 operator|<
-name|array_lengthof
-argument_list|(
-name|TruncStoreActions
-argument_list|)
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 operator|(
 name|unsigned
@@ -4176,10 +3972,10 @@ operator|)
 name|MemVT
 operator|.
 name|SimpleTy
-operator|*
-literal|2
 operator|<
-literal|63
+name|MVT
+operator|::
+name|LAST_VALUETYPE
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
@@ -4190,38 +3986,16 @@ name|ValVT
 operator|.
 name|SimpleTy
 index|]
-operator|&=
-operator|~
-operator|(
-name|uint64_t
-argument_list|(
-literal|3UL
-argument_list|)
-operator|<<
-name|MemVT
-operator|.
-name|SimpleTy
-operator|*
-literal|2
-operator|)
-expr_stmt|;
-name|TruncStoreActions
 index|[
-name|ValVT
+name|MemVT
 operator|.
 name|SimpleTy
 index|]
-operator||=
+operator|=
 operator|(
-name|uint64_t
+name|uint8_t
 operator|)
 name|Action
-operator|<<
-name|MemVT
-operator|.
-name|SimpleTy
-operator|*
-literal|2
 expr_stmt|;
 block|}
 comment|/// setIndexedLoadAction - Indicate that the specified indexed load does or
@@ -4256,19 +4030,36 @@ name|LAST_VALUETYPE
 operator|&&
 name|IdxMode
 operator|<
-name|array_lengthof
-argument_list|(
-name|IndexedModeActions
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-argument_list|)
+name|ISD
+operator|::
+name|LAST_INDEXED_MODE
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|Action
+operator|<
+literal|0xf
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
+expr_stmt|;
+comment|// Load action are kept in the upper half.
+name|IndexedModeActions
+index|[
+operator|(
+name|unsigned
+operator|)
+name|VT
+operator|.
+name|SimpleTy
+index|]
+index|[
+name|IdxMode
+index|]
+operator|&=
+operator|~
+literal|0xf0
 expr_stmt|;
 name|IndexedModeActions
 index|[
@@ -4280,16 +4071,17 @@ operator|.
 name|SimpleTy
 index|]
 index|[
-literal|0
-index|]
-index|[
 name|IdxMode
 index|]
-operator|=
+operator||=
+operator|(
 operator|(
 name|uint8_t
 operator|)
 name|Action
+operator|)
+operator|<<
+literal|4
 expr_stmt|;
 block|}
 comment|/// setIndexedStoreAction - Indicate that the specified indexed store does or
@@ -4324,19 +4116,36 @@ name|LAST_VALUETYPE
 operator|&&
 name|IdxMode
 operator|<
-name|array_lengthof
-argument_list|(
-name|IndexedModeActions
-index|[
-literal|0
-index|]
-index|[
-literal|1
-index|]
-argument_list|)
+name|ISD
+operator|::
+name|LAST_INDEXED_MODE
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|Action
+operator|<
+literal|0xf
 operator|&&
 literal|"Table isn't big enough!"
 argument_list|)
+expr_stmt|;
+comment|// Store action are kept in the lower half.
+name|IndexedModeActions
+index|[
+operator|(
+name|unsigned
+operator|)
+name|VT
+operator|.
+name|SimpleTy
+index|]
+index|[
+name|IdxMode
+index|]
+operator|&=
+operator|~
+literal|0x0f
 expr_stmt|;
 name|IndexedModeActions
 index|[
@@ -4348,16 +4157,15 @@ operator|.
 name|SimpleTy
 index|]
 index|[
-literal|1
-index|]
-index|[
 name|IdxMode
 index|]
-operator|=
+operator||=
+operator|(
 operator|(
 name|uint8_t
 operator|)
 name|Action
+operator|)
 expr_stmt|;
 block|}
 comment|/// setCondCodeAction - Indicate that the specified condition code is or isn't
@@ -4597,26 +4405,6 @@ expr_stmt|;
 block|}
 name|public
 label|:
-name|virtual
-specifier|const
-name|TargetSubtarget
-operator|*
-name|getSubtarget
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Not Implemented"
-argument_list|)
-block|;
-return|return
-name|NULL
-return|;
-comment|// this is here to silence compiler errors
-block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Lowering methods - These methods must be implemented by targets so that
 comment|// the SelectionDAGLowering code knows how to lower these.
@@ -4992,182 +4780,6 @@ name|SDValue
 argument_list|()
 return|;
 comment|// this is here to silence compiler errors
-block|}
-comment|/// EmitTargetCodeForMemcpy - Emit target-specific code that performs a
-comment|/// memcpy. This can be used by targets to provide code sequences for cases
-comment|/// that don't fit the target's parameters for simple loads/stores and can be
-comment|/// more efficient than using a library call. This function can return a null
-comment|/// SDValue if the target declines to use custom code and a different
-comment|/// lowering strategy should be used.
-comment|///
-comment|/// If AlwaysInline is true, the size is constant and the target should not
-comment|/// emit any calls and is strongly encouraged to attempt to emit inline code
-comment|/// even if it is beyond the usual threshold because this intrinsic is being
-comment|/// expanded in a place where calls are not feasible (e.g. within the prologue
-comment|/// for another call). If the target chooses to decline an AlwaysInline
-comment|/// request here, legalize will resort to using simple loads and stores.
-name|virtual
-name|SDValue
-name|EmitTargetCodeForMemcpy
-argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Op1
-argument_list|,
-name|SDValue
-name|Op2
-argument_list|,
-name|SDValue
-name|Op3
-argument_list|,
-name|unsigned
-name|Align
-argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-name|bool
-name|AlwaysInline
-argument_list|,
-specifier|const
-name|Value
-operator|*
-name|DstSV
-argument_list|,
-name|uint64_t
-name|DstOff
-argument_list|,
-specifier|const
-name|Value
-operator|*
-name|SrcSV
-argument_list|,
-name|uint64_t
-name|SrcOff
-argument_list|)
-decl|const
-block|{
-return|return
-name|SDValue
-argument_list|()
-return|;
-block|}
-comment|/// EmitTargetCodeForMemmove - Emit target-specific code that performs a
-comment|/// memmove. This can be used by targets to provide code sequences for cases
-comment|/// that don't fit the target's parameters for simple loads/stores and can be
-comment|/// more efficient than using a library call. This function can return a null
-comment|/// SDValue if the target declines to use custom code and a different
-comment|/// lowering strategy should be used.
-name|virtual
-name|SDValue
-name|EmitTargetCodeForMemmove
-argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Op1
-argument_list|,
-name|SDValue
-name|Op2
-argument_list|,
-name|SDValue
-name|Op3
-argument_list|,
-name|unsigned
-name|Align
-argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-specifier|const
-name|Value
-operator|*
-name|DstSV
-argument_list|,
-name|uint64_t
-name|DstOff
-argument_list|,
-specifier|const
-name|Value
-operator|*
-name|SrcSV
-argument_list|,
-name|uint64_t
-name|SrcOff
-argument_list|)
-decl|const
-block|{
-return|return
-name|SDValue
-argument_list|()
-return|;
-block|}
-comment|/// EmitTargetCodeForMemset - Emit target-specific code that performs a
-comment|/// memset. This can be used by targets to provide code sequences for cases
-comment|/// that don't fit the target's parameters for simple stores and can be more
-comment|/// efficient than using a library call. This function can return a null
-comment|/// SDValue if the target declines to use custom code and a different
-comment|/// lowering strategy should be used.
-name|virtual
-name|SDValue
-name|EmitTargetCodeForMemset
-argument_list|(
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|,
-name|DebugLoc
-name|dl
-argument_list|,
-name|SDValue
-name|Chain
-argument_list|,
-name|SDValue
-name|Op1
-argument_list|,
-name|SDValue
-name|Op2
-argument_list|,
-name|SDValue
-name|Op3
-argument_list|,
-name|unsigned
-name|Align
-argument_list|,
-name|bool
-name|isVolatile
-argument_list|,
-specifier|const
-name|Value
-operator|*
-name|DstSV
-argument_list|,
-name|uint64_t
-name|DstOff
-argument_list|)
-decl|const
-block|{
-return|return
-name|SDValue
-argument_list|()
-return|;
 block|}
 comment|/// LowerOperationWrapper - This callback is invoked by the type legalizer
 comment|/// to legalize nodes with an illegal operand type but legal result types.
@@ -6076,9 +5688,11 @@ name|BooleanContents
 decl_stmt|;
 comment|/// SchedPreferenceInfo - The target scheduling preference: shortest possible
 comment|/// total cycles or lowest register usage.
-name|SchedPreference
+name|Sched
+operator|::
+name|Preference
 name|SchedPreferenceInfo
-decl_stmt|;
+expr_stmt|;
 comment|/// JumpBufSize - The size, in bytes, of the target's jmp_buf buffers
 name|unsigned
 name|JumpBufSize
@@ -6178,23 +5792,12 @@ comment|/// that indicates how instruction selection should deal with the operat
 comment|/// Most operations are Legal (aka, supported natively by the target), but
 comment|/// operations that are not should be described.  Note that operations on
 comment|/// non-legal value types are not described here.
-comment|/// This array is accessed using VT.getSimpleVT(), so it is subject to
-comment|/// the MVT::MAX_ALLOWED_VALUETYPE * 2 bits.
-name|uint64_t
+name|uint8_t
 name|OpActions
 index|[
 name|MVT
 operator|::
-name|MAX_ALLOWED_VALUETYPE
-operator|/
-operator|(
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-operator|*
-literal|4
-operator|)
+name|LAST_VALUETYPE
 index|]
 index|[
 name|ISD
@@ -6202,21 +5805,32 @@ operator|::
 name|BUILTIN_OP_END
 index|]
 decl_stmt|;
-comment|/// LoadExtActions - For each load of load extension type and each value type,
+comment|/// LoadExtActions - For each load extension type and each value type,
 comment|/// keep a LegalizeAction that indicates how instruction selection should deal
-comment|/// with the load.
-name|uint64_t
+comment|/// with a load of a specific value type and extension type.
+name|uint8_t
 name|LoadExtActions
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
 index|[
 name|ISD
 operator|::
 name|LAST_LOADEXT_TYPE
 index|]
 decl_stmt|;
-comment|/// TruncStoreActions - For each truncating store, keep a LegalizeAction that
-comment|/// indicates how instruction selection should deal with the store.
-name|uint64_t
+comment|/// TruncStoreActions - For each value type pair keep a LegalizeAction that
+comment|/// indicates whether a truncating store of a specific value type and
+comment|/// truncating type is legal.
+name|uint8_t
 name|TruncStoreActions
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
 index|[
 name|MVT
 operator|::
@@ -6225,19 +5839,15 @@ index|]
 decl_stmt|;
 comment|/// IndexedModeActions - For each indexed mode and each value type,
 comment|/// keep a pair of LegalizeAction that indicates how instruction
-comment|/// selection should deal with the load / store.  The first
-comment|/// dimension is now the value_type for the reference.  The second
-comment|/// dimension is the load [0] vs. store[1].  The third dimension
-comment|/// represents the various modes for load store.
+comment|/// selection should deal with the load / store.  The first dimension is the
+comment|/// value_type for the reference. The second dimension represents the various
+comment|/// modes for load store.
 name|uint8_t
 name|IndexedModeActions
 index|[
 name|MVT
 operator|::
 name|LAST_VALUETYPE
-index|]
-index|[
-literal|2
 index|]
 index|[
 name|ISD

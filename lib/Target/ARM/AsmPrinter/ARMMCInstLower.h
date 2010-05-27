@@ -86,7 +86,7 @@ decl_stmt|;
 comment|//class ARMSubtarget;
 comment|/// ARMMCInstLower - This class is used to lower an MachineInstr into an MCInst.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|ARMMCInstLower
 block|{
 name|MCContext

@@ -308,6 +308,69 @@ name|reg_end
 argument_list|()
 return|;
 block|}
+comment|/// reg_nodbg_iterator/reg_nodbg_begin/reg_nodbg_end - Walk all defs and uses
+comment|/// of the specified register, skipping those marked as Debug.
+typedef|typedef
+name|defusechain_iterator
+operator|<
+name|true
+operator|,
+name|true
+operator|,
+name|true
+operator|>
+name|reg_nodbg_iterator
+expr_stmt|;
+name|reg_nodbg_iterator
+name|reg_nodbg_begin
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|reg_nodbg_iterator
+argument_list|(
+name|getRegUseDefListHead
+argument_list|(
+name|RegNo
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|reg_nodbg_iterator
+name|reg_nodbg_end
+parameter_list|()
+block|{
+return|return
+name|reg_nodbg_iterator
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// reg_nodbg_empty - Return true if the only instructions using or defining
+comment|/// Reg are Debug instructions.
+name|bool
+name|reg_nodbg_empty
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|reg_nodbg_begin
+argument_list|(
+name|RegNo
+argument_list|)
+operator|==
+name|reg_nodbg_end
+argument_list|()
+return|;
+block|}
 comment|/// def_iterator/def_begin/def_end - Walk all defs of the specified register.
 typedef|typedef
 name|defusechain_iterator
@@ -618,6 +681,18 @@ name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// clearKillFlags - Iterate over all the uses of the given register and
+comment|/// clear the kill flag from the MachineOperand. This function is used by
+comment|/// optimization passes which extend register lifetimes and need only
+comment|/// preserve conservative kill flag information.
+name|void
+name|clearKillFlags
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -724,6 +799,7 @@ return|;
 block|}
 comment|/// getRegClassVirtRegs - Return the list of virtual registers of the given
 comment|/// target register class.
+specifier|const
 name|std
 operator|::
 name|vector
@@ -735,6 +811,7 @@ name|getRegClassVirtRegs
 argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
+specifier|const
 block|{
 return|return
 name|RegClass2VRegMap
@@ -876,6 +953,22 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// addPhysRegsUsed - Mark the specified registers used in this function.
+comment|/// This should only be called during and after register allocation.
+name|void
+name|addPhysRegsUsed
+parameter_list|(
+specifier|const
+name|BitVector
+modifier|&
+name|Regs
+parameter_list|)
+block|{
+name|UsedPhysRegs
+operator||=
+name|Regs
+expr_stmt|;
+block|}
 comment|/// setPhysRegUnused - Mark the specified register unused in this function.
 comment|/// This should only be called during and after register allocation.
 name|void
@@ -893,6 +986,16 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+comment|/// closePhysRegsUsed - Expand UsedPhysRegs to its transitive closure over
+comment|/// subregisters. That means that if R is used, so are all subregisters.
+name|void
+name|closePhysRegsUsed
+parameter_list|(
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// LiveIn/LiveOut Management
 comment|//===--------------------------------------------------------------------===//
@@ -1066,6 +1169,16 @@ name|getLiveInPhysReg
 argument_list|(
 name|unsigned
 name|VReg
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getLiveInVirtReg - If PReg is a live-in physical register, return the
+comment|/// corresponding live-in physical register.
+name|unsigned
+name|getLiveInVirtReg
+argument_list|(
+name|unsigned
+name|PReg
 argument_list|)
 decl|const
 decl_stmt|;

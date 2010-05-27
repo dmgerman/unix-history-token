@@ -117,6 +117,8 @@ argument_list|)
 operator|:
 name|MCSection
 argument_list|(
+name|SV_ELF
+argument_list|,
 name|K
 argument_list|)
 block|,
@@ -395,6 +397,33 @@ name|SHF_ALLOC
 operator|)
 operator|==
 literal|0
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCSection *S
+argument_list|)
+block|{
+return|return
+name|S
+operator|->
+name|getVariant
+argument_list|()
+operator|==
+name|SV_ELF
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCSectionELF *
+argument_list|)
+block|{
+return|return
+name|true
 return|;
 block|}
 expr|}

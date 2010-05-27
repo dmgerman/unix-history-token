@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -124,6 +130,9 @@ name|FrameInfo
 block|;
 name|MipsTargetLowering
 name|TLInfo
+block|;
+name|MipsSelectionDAGInfo
+name|TSInfo
 block|;
 name|public
 operator|:
@@ -217,6 +226,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|MipsSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 comment|// Pass Pipeline Configuration

@@ -125,6 +125,12 @@ name|bool
 name|HasMachoZeroFillDirective
 decl_stmt|;
 comment|// Default is false.
+comment|/// HasMachoTBSSDirective - True if this is a MachO target that supports
+comment|/// the macho-specific .tbss directive for emitting thread local BSS Symbols
+name|bool
+name|HasMachoTBSSDirective
+decl_stmt|;
+comment|// Default is false.
 comment|/// HasStaticCtorDtorReferenceInStaticMode - True if the compiler should
 comment|/// emit a ".reference .constructors_used" or ".reference .destructors_used"
 comment|/// directive after the a static ctor/dtor list.  This directive is only
@@ -720,6 +726,15 @@ specifier|const
 block|{
 return|return
 name|HasMachoZeroFillDirective
+return|;
+block|}
+name|bool
+name|hasMachoTBSSDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMachoTBSSDirective
 return|;
 block|}
 name|bool

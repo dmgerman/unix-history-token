@@ -84,6 +84,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCLabel
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -144,6 +147,34 @@ comment|/// symbol.
 name|unsigned
 name|NextUniqueID
 decl_stmt|;
+comment|/// Instances of directional local labels.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|MCLabel
+operator|*
+operator|>
+name|Instances
+expr_stmt|;
+comment|/// NextInstance() creates the next instance of the directional local label
+comment|/// for the LocalLabelVal and adds it to the map if needed.
+name|unsigned
+name|NextInstance
+parameter_list|(
+name|int64_t
+name|LocalLabelVal
+parameter_list|)
+function_decl|;
+comment|/// GetInstance() gets the current instance of the directional local label
+comment|/// for the LocalLabelVal and adds it to the map if needed.
+name|unsigned
+name|GetInstance
+parameter_list|(
+name|int64_t
+name|LocalLabelVal
+parameter_list|)
+function_decl|;
 comment|/// Allocator - Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
@@ -157,6 +188,9 @@ name|MachOUniquingMap
 decl_stmt|,
 modifier|*
 name|ELFUniquingMap
+decl_stmt|,
+modifier|*
+name|COFFUniquingMap
 decl_stmt|;
 name|public
 label|:
@@ -192,6 +226,29 @@ name|MCSymbol
 modifier|*
 name|CreateTempSymbol
 parameter_list|()
+function_decl|;
+comment|/// CreateDirectionalLocalSymbol - Create the defintion of a directional
+comment|/// local symbol for numbered label (used for "1:" defintions).
+name|MCSymbol
+modifier|*
+name|CreateDirectionalLocalSymbol
+parameter_list|(
+name|int64_t
+name|LocalLabelVal
+parameter_list|)
+function_decl|;
+comment|/// GetDirectionalLocalSymbol - Create and return a directional local
+comment|/// symbol for numbered label (used for "1b" or 1f" references).
+name|MCSymbol
+modifier|*
+name|GetDirectionalLocalSymbol
+parameter_list|(
+name|int64_t
+name|LocalLabelVal
+parameter_list|,
+name|int
+name|bORf
+parameter_list|)
 function_decl|;
 comment|/// GetOrCreateSymbol - Lookup the symbol inside with the specified
 comment|/// @p Name.  If it exists, return it.  If not, create a forward
@@ -308,6 +365,52 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+specifier|const
+name|MCSection
+modifier|*
+name|getCOFFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Characteristics
+parameter_list|,
+name|int
+name|Selection
+parameter_list|,
+name|SectionKind
+name|Kind
+parameter_list|)
+function_decl|;
+specifier|const
+name|MCSection
+modifier|*
+name|getCOFFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Characteristics
+parameter_list|,
+name|SectionKind
+name|Kind
+parameter_list|)
+block|{
+return|return
+name|getCOFFSection
+argument_list|(
+name|Section
+argument_list|,
+name|Characteristics
+argument_list|,
+literal|0
+argument_list|,
+name|Kind
+argument_list|)
+return|;
+block|}
 comment|/// @}
 name|void
 modifier|*

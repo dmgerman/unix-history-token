@@ -85,7 +85,7 @@ name|X86Subtarget
 decl_stmt|;
 comment|/// X86MCInstLower - This class is used to lower an MachineInstr into an MCInst.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|X86MCInstLower
 block|{
 name|MCContext

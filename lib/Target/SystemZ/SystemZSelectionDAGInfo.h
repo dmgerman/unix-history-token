@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|SystemZTargetMachine
+decl_stmt|;
+name|class
 name|SystemZSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|SystemZSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|SystemZTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|SystemZSelectionDAGInfo

@@ -127,6 +127,13 @@ name|IsTemporary
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsUsedInExpr - True if this symbol has been used in an expression and
+comment|/// cannot be redefined.
+name|unsigned
+name|IsUsedInExpr
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
 comment|// MCContext creates and uniques these.
@@ -158,7 +165,12 @@ argument_list|)
 operator|,
 name|IsTemporary
 argument_list|(
-argument|isTemporary
+name|isTemporary
+argument_list|)
+operator|,
+name|IsUsedInExpr
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|MCSymbol
@@ -191,7 +203,7 @@ return|return
 name|Name
 return|;
 block|}
-comment|/// @name Symbol Type
+comment|/// @name Accessors
 comment|/// @{
 comment|/// isTemporary - Check if this is an assembler temporary symbol.
 name|bool
@@ -202,6 +214,28 @@ block|{
 return|return
 name|IsTemporary
 return|;
+block|}
+comment|/// isUsedInExpr - Check if this is an assembler temporary symbol.
+name|bool
+name|isUsedInExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUsedInExpr
+return|;
+block|}
+name|void
+name|setUsedInExpr
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|IsUsedInExpr
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// @}
 comment|/// @name Associated Sections
@@ -333,35 +367,35 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// getValue() - Get the value for variable symbols, or null if the symbol
-comment|/// is not a variable.
+comment|/// getValue() - Get the value for variable symbols.
 specifier|const
 name|MCExpr
 operator|*
-name|getValue
+name|getVariableValue
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|isVariable
+argument_list|()
+operator|&&
+literal|"Invalid accessor!"
+argument_list|)
+block|;
 return|return
 name|Value
 return|;
 block|}
 name|void
-name|setValue
+name|setVariableValue
 parameter_list|(
 specifier|const
 name|MCExpr
 modifier|*
 name|Value
 parameter_list|)
-block|{
-name|this
-operator|->
-name|Value
-operator|=
-name|Value
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// @}
 comment|/// print - Print the value to the stream \arg OS.
 name|void

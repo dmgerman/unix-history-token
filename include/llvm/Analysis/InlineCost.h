@@ -683,6 +683,11 @@ modifier|*
 name|Callee
 parameter_list|)
 function_decl|;
+comment|/// clear - empty the cache of inline costs
+name|void
+name|clear
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// callIsSmall - If a call is likely to lower to a single target instruction,

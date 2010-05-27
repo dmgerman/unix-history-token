@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/System/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -56,34 +62,6 @@ block|{
 name|class
 name|MCExpr
 decl_stmt|;
-comment|// Private constants, do not use.
-comment|//
-comment|// This is currently laid out so that the MCFixup fields can be efficiently
-comment|// accessed, while keeping the offset field large enough that the assembler
-comment|// backend can reasonably use the MCFixup representation for an entire fragment
-comment|// (splitting any overly large fragments).
-comment|//
-comment|// The division of bits between the kind and the opindex can be tweaked if we
-comment|// end up needing more bits for target dependent kinds.
-enum|enum
-block|{
-name|MCFIXUP_NUM_GENERIC_KINDS
-init|=
-literal|128
-block|,
-name|MCFIXUP_NUM_KIND_BITS
-init|=
-literal|16
-block|,
-name|MCFIXUP_NUM_OFFSET_BITS
-init|=
-operator|(
-literal|32
-operator|-
-name|MCFIXUP_NUM_KIND_BITS
-operator|)
-block|}
-enum|;
 comment|/// MCFixupKind - Extensible enumeration to represent the type of a fixup.
 enum|enum
 name|MCFixupKind
@@ -104,18 +82,20 @@ block|,
 comment|///< A eight-byte fixup.
 name|FirstTargetFixupKind
 init|=
-name|MCFIXUP_NUM_GENERIC_KINDS
+literal|128
 block|,
+comment|// Limit range of target fixups, in case we want to pack more efficiently
+comment|// later.
 name|MaxTargetFixupKind
 init|=
 operator|(
 literal|1
 operator|<<
-name|MCFIXUP_NUM_KIND_BITS
+literal|8
 operator|)
 block|}
 enum|;
-comment|/// MCFixup - Encode information on a single operation to perform on an byte
+comment|/// MCFixup - Encode information on a single operation to perform on a byte
 comment|/// sequence (e.g., an encoded instruction) which requires assemble- or run-
 comment|/// time patching.
 comment|///
@@ -132,35 +112,22 @@ comment|/// be encoded on the target).
 name|class
 name|MCFixup
 block|{
-specifier|static
-specifier|const
-name|unsigned
-name|MaxOffset
-init|=
-literal|1
-operator|<<
-name|MCFIXUP_NUM_KIND_BITS
-decl_stmt|;
 comment|/// The value to put into the fixup location. The exact interpretation of the
-comment|/// expression is target dependent, usually it will one of the operands to an
-comment|/// instruction or an assembler directive.
+comment|/// expression is target dependent, usually it will be one of the operands to
+comment|/// an instruction or an assembler directive.
 specifier|const
 name|MCExpr
 modifier|*
 name|Value
 decl_stmt|;
 comment|/// The byte index of start of the relocation inside the encoded instruction.
-name|unsigned
+name|uint32_t
 name|Offset
-range|:
-name|MCFIXUP_NUM_OFFSET_BITS
 decl_stmt|;
 comment|/// The target dependent kind of fixup item this is. The kind is used to
 comment|/// determine how the operand value should be encoded into the instruction.
 name|unsigned
 name|Kind
-range|:
-name|MCFIXUP_NUM_KIND_BITS
 decl_stmt|;
 name|public
 label|:
@@ -168,7 +135,7 @@ specifier|static
 name|MCFixup
 name|Create
 parameter_list|(
-name|unsigned
+name|uint32_t
 name|Offset
 parameter_list|,
 specifier|const
@@ -180,6 +147,18 @@ name|MCFixupKind
 name|Kind
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|Kind
+argument_list|)
+operator|<
+name|MaxTargetFixupKind
+operator|&&
+literal|"Kind out of range!"
+argument_list|)
+expr_stmt|;
 name|MCFixup
 name|FI
 decl_stmt|;
@@ -204,30 +183,6 @@ argument_list|(
 name|Kind
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|Offset
-operator|==
-name|FI
-operator|.
-name|getOffset
-argument_list|()
-operator|&&
-literal|"Offset out of range!"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|Kind
-operator|==
-name|FI
-operator|.
-name|getKind
-argument_list|()
-operator|&&
-literal|"Kind out of range!"
-argument_list|)
-expr_stmt|;
 return|return
 name|FI
 return|;
@@ -244,7 +199,7 @@ name|Kind
 argument_list|)
 return|;
 block|}
-name|unsigned
+name|uint32_t
 name|getOffset
 argument_list|()
 specifier|const
@@ -252,6 +207,18 @@ block|{
 return|return
 name|Offset
 return|;
+block|}
+name|void
+name|setOffset
+parameter_list|(
+name|uint32_t
+name|Value
+parameter_list|)
+block|{
+name|Offset
+operator|=
+name|Value
+expr_stmt|;
 block|}
 specifier|const
 name|MCExpr

@@ -941,7 +941,10 @@ name|TheMapping
 operator|.
 name|insert
 argument_list|(
+name|ECValue
+argument_list|(
 name|Data
+argument_list|)
 argument_list|)
 operator|.
 name|first

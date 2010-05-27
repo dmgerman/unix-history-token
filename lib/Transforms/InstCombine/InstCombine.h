@@ -213,7 +213,7 @@ comment|/// InstCombineIRInserter - This is an IRBuilder insertion helper that w
 comment|/// just like the normal insertion helper, but also adds any new instructions
 comment|/// to the instcombine worklist.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|InstCombineIRInserter
 range|:
 name|public
@@ -280,7 +280,7 @@ block|}
 decl_stmt|;
 comment|/// InstCombiner - The -instcombine pass.
 name|class
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 name|InstCombiner
 range|:
 name|public

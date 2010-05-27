@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MipsTargetMachine
+decl_stmt|;
+name|class
 name|MipsSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|MipsSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|MipsTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|MipsSelectionDAGInfo

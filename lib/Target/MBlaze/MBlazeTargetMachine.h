@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MBlazeSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MBlazeIntrinsicInfo.h"
 end_include
 
@@ -130,6 +136,9 @@ name|FrameInfo
 block|;
 name|MBlazeTargetLowering
 name|TLInfo
+block|;
+name|MBlazeSelectionDAGInfo
+name|TSInfo
 block|;
 name|MBlazeIntrinsicInfo
 name|IntrinsicInfo
@@ -237,6 +246,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|MBlazeSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 specifier|const

@@ -77,6 +77,12 @@ directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -96,6 +102,24 @@ comment|/// creates these.
 name|class
 name|MCSection
 block|{
+name|public
+label|:
+enum|enum
+name|SectionVariant
+block|{
+name|SV_COFF
+init|=
+literal|0
+block|,
+name|SV_ELF
+block|,
+name|SV_MachO
+block|,
+name|SV_PIC16
+block|}
+enum|;
+name|private
+label|:
 name|MCSection
 argument_list|(
 specifier|const
@@ -118,14 +142,24 @@ name|protected
 label|:
 name|MCSection
 argument_list|(
+argument|SectionVariant V
+argument_list|,
 argument|SectionKind K
 argument_list|)
 block|:
+name|Variant
+argument_list|(
+name|V
+argument_list|)
+operator|,
 name|Kind
 argument_list|(
 argument|K
 argument_list|)
 block|{}
+name|SectionVariant
+name|Variant
+expr_stmt|;
 name|SectionKind
 name|Kind
 decl_stmt|;
@@ -143,6 +177,15 @@ specifier|const
 block|{
 return|return
 name|Kind
+return|;
+block|}
+name|SectionVariant
+name|getVariant
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Variant
 return|;
 block|}
 name|virtual
@@ -176,95 +219,21 @@ return|return
 name|false
 return|;
 block|}
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
-name|class
-name|MCSectionCOFF
-range|:
-name|public
-name|MCSection
-block|{
-comment|// The memory for this string is stored in the same MCContext as *this.
-name|StringRef
-name|Name
-block|;
-comment|/// IsDirective - This is true if the section name is a directive, not
-comment|/// something that should be printed with ".section".
-comment|///
-comment|/// FIXME: This is a hack.  Switch to a semantic view of the section instead
-comment|/// of a syntactic one.
-name|bool
-name|IsDirective
-block|;
-name|MCSectionCOFF
-argument_list|(
-argument|StringRef name
-argument_list|,
-argument|bool isDirective
-argument_list|,
-argument|SectionKind K
-argument_list|)
-operator|:
-name|MCSection
-argument_list|(
-name|K
-argument_list|)
-block|,
-name|Name
-argument_list|(
-name|name
-argument_list|)
-block|,
-name|IsDirective
-argument_list|(
-argument|isDirective
-argument_list|)
-block|{     }
-name|public
-operator|:
-specifier|static
-name|MCSectionCOFF
-operator|*
-name|Create
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|bool IsDirective
-argument_list|,
-argument|SectionKind K
-argument_list|,
-argument|MCContext&Ctx
-argument_list|)
-block|;
-name|StringRef
-name|getName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Name
-return|;
-block|}
-name|bool
-name|isDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsDirective
-return|;
-block|}
-name|virtual
-name|void
-name|PrintSwitchToSection
-argument_list|(
-argument|const MCAsmInfo&MAI
-argument_list|,
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;   }
-decl_stmt|;
 block|}
 end_decl_stmt
 

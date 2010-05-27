@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|XCoreTargetMachine
+decl_stmt|;
+name|class
 name|XCoreSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|XCoreSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|XCoreTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|XCoreSelectionDAGInfo

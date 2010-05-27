@@ -125,45 +125,6 @@ literal|7
 block|}
 enum|;
 block|}
-name|namespace
-name|X86
-block|{
-comment|/// SubregIndex - The index of various sized subregister classes. Note that
-comment|/// these indices must be kept in sync with the class indices in the
-comment|/// X86RegisterInfo.td file.
-enum|enum
-name|SubregIndex
-block|{
-name|SUBREG_8BIT
-init|=
-literal|1
-block|,
-name|SUBREG_8BIT_HI
-init|=
-literal|2
-block|,
-name|SUBREG_16BIT
-init|=
-literal|3
-block|,
-name|SUBREG_32BIT
-init|=
-literal|4
-block|,
-name|SUBREG_SS
-init|=
-literal|1
-block|,
-name|SUBREG_SD
-init|=
-literal|2
-block|,
-name|SUBREG_XMM
-init|=
-literal|3
-block|}
-enum|;
-block|}
 comment|/// DWARFFlavour - Flavour of dwarf regnumbers
 comment|///
 name|namespace

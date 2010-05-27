@@ -167,11 +167,12 @@ block|,
 comment|/// A pointer to a StringRef instance.
 name|StringRefKind
 block|,
-comment|/// A pointer to an unsigned int value, to render as an unsigned decimal
-comment|/// integer.
+comment|/// An unsigned int value reinterpreted as a pointer, to render as an
+comment|/// unsigned decimal integer.
 name|DecUIKind
 block|,
-comment|/// A pointer to an int value, to render as a signed decimal integer.
+comment|/// An int value reinterpreted as a pointer, to render as a signed
+comment|/// decimal integer.
 name|DecIKind
 block|,
 comment|/// A pointer to an unsigned long value, to render as an unsigned decimal
@@ -732,12 +733,18 @@ comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
 name|explicit
 name|Twine
 argument_list|(
-argument|const unsigned int&Val
+argument|unsigned Val
 argument_list|)
 operator|:
 name|LHS
 argument_list|(
-operator|&
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|Val
 argument_list|)
 operator|,
@@ -755,15 +762,18 @@ comment|/// Construct a twine to print \arg Val as a signed decimal integer.
 name|explicit
 name|Twine
 argument_list|(
-specifier|const
-name|int
-operator|&
-name|Val
+argument|int Val
 argument_list|)
 operator|:
 name|LHS
 argument_list|(
-operator|&
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
 name|Val
 argument_list|)
 operator|,

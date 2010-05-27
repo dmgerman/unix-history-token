@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -165,10 +171,12 @@ decl_stmt|;
 name|int
 name|CopyCost
 decl_stmt|;
-name|std
-operator|::
-name|vector
+comment|// Map SubRegIndex -> RegisterClass
+name|DenseMap
 operator|<
+name|Record
+operator|*
+operator|,
 name|Record
 operator|*
 operator|>

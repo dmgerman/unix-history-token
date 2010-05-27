@@ -986,6 +986,9 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|SrcRC
+argument_list|,
+name|DebugLoc
+name|DL
 argument_list|)
 decl|const
 block|{
@@ -1031,6 +1034,11 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 block|{
@@ -1069,6 +1077,11 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 name|RC
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 block|{
@@ -1106,6 +1119,11 @@ name|CalleeSavedInfo
 operator|>
 operator|&
 name|CSI
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 block|{
@@ -1139,6 +1157,11 @@ name|CalleeSavedInfo
 operator|>
 operator|&
 name|CSI
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
 argument_list|)
 decl|const
 block|{

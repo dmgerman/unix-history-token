@@ -54,16 +54,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmFixup
-decl_stmt|;
-name|class
 name|MCDataFragment
 decl_stmt|;
 name|class
-name|MCInst
+name|MCFixup
 decl_stmt|;
 name|class
-name|MCInstFragment
+name|MCInst
 decl_stmt|;
 name|class
 name|MCObjectWriter
@@ -244,6 +241,25 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isSectionAtomizable - Check whether the given section can be split into
+comment|/// atoms.
+comment|///
+comment|/// \see MCAssembler::isSymbolLinkerVisible().
+name|virtual
+name|bool
+name|isSectionAtomizable
+argument_list|(
+specifier|const
+name|MCSection
+operator|&
+name|Section
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// isVirtualSection - Check whether the given section is "virtual", that is
 comment|/// has no actual object file contents.
 name|virtual
@@ -267,7 +283,7 @@ name|void
 name|ApplyFixup
 argument_list|(
 specifier|const
-name|MCAsmFixup
+name|MCFixup
 operator|&
 name|Fixup
 argument_list|,
@@ -285,9 +301,7 @@ decl_stmt|;
 comment|/// MayNeedRelaxation - Check whether the given instruction may need
 comment|/// relaxation.
 comment|///
-comment|/// \arg Inst - The instruction to test.
-comment|/// \arg Fixups - The actual fixups this instruction encoded to, for potential
-comment|/// use by the target backend.
+comment|/// \param Inst - The instruction to test.
 name|virtual
 name|bool
 name|MayNeedRelaxation
@@ -296,14 +310,6 @@ specifier|const
 name|MCInst
 operator|&
 name|Inst
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MCAsmFixup
-operator|>
-operator|&
-name|Fixups
 argument_list|)
 decl|const
 init|=
@@ -311,14 +317,18 @@ literal|0
 decl_stmt|;
 comment|/// RelaxInstruction - Relax the instruction in the given fragment to the next
 comment|/// wider instruction.
+comment|///
+comment|/// \param Inst - The instruction to relax, which may be the same as the
+comment|/// output.
+comment|/// \parm Res [output] - On return, the relaxed instruction.
 name|virtual
 name|void
 name|RelaxInstruction
 argument_list|(
 specifier|const
-name|MCInstFragment
-operator|*
-name|IF
+name|MCInst
+operator|&
+name|Inst
 argument_list|,
 name|MCInst
 operator|&

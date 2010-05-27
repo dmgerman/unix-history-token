@@ -221,11 +221,144 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-expr|}
-block|;  }
+name|public
+operator|:
+comment|/// @name Adjacent Node Accessors
+comment|/// @{
+comment|/// \brief Get the previous node, or 0 for the list head.
+name|NodeTy
+operator|*
+name|getPrevNode
+argument_list|()
+block|{
+name|NodeTy
+operator|*
+name|Prev
+operator|=
+name|this
+operator|->
+name|getPrev
+argument_list|()
+block|;
+comment|// Check for sentinel.
+if|if
+condition|(
+operator|!
+name|Prev
+operator|->
+name|getNext
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Prev
+return|;
+block|}
+comment|/// \brief Get the previous node, or 0 for the list head.
+specifier|const
+name|NodeTy
+operator|*
+name|getPrevNode
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|NodeTy
+operator|*
+name|Prev
+operator|=
+name|this
+operator|->
+name|getPrev
+argument_list|()
+block|;
+comment|// Check for sentinel.
+if|if
+condition|(
+operator|!
+name|Prev
+operator|->
+name|getNext
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Prev
+return|;
+block|}
+comment|/// \brief Get the next node, or 0 for the list tail.
+name|NodeTy
+modifier|*
+name|getNextNode
+parameter_list|()
+block|{
+name|NodeTy
+modifier|*
+name|Next
+init|=
+name|getNext
+argument_list|()
+decl_stmt|;
+comment|// Check for sentinel.
+if|if
+condition|(
+operator|!
+name|Next
+operator|->
+name|getNext
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Next
+return|;
+block|}
+comment|/// \brief Get the next node, or 0 for the list tail.
+specifier|const
+name|NodeTy
+operator|*
+name|getNextNode
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|NodeTy
+operator|*
+name|Next
+operator|=
+name|getNext
+argument_list|()
+block|;
+comment|// Check for sentinel.
+if|if
+condition|(
+operator|!
+name|Next
+operator|->
+name|getNext
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Next
+return|;
+block|}
 end_decl_stmt
 
 begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

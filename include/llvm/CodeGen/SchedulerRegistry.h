@@ -304,11 +304,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// createBURRListDAGScheduler - This creates a bottom up register usage
+comment|/// createBURRListDAGScheduler - This creates a bottom up list scheduler that
 end_comment
 
 begin_comment
-comment|/// reduction list scheduler that schedules in source code order when possible.
+comment|/// schedules nodes in source code order when possible.
 end_comment
 
 begin_decl_stmt
@@ -324,6 +324,34 @@ name|CodeGenOpt
 operator|::
 name|Level
 name|OptLevel
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// createHybridListDAGScheduler - This creates a bottom up hybrid register
+end_comment
+
+begin_comment
+comment|/// usage reduction list scheduler that make use of latency information to
+end_comment
+
+begin_comment
+comment|/// avoid stalls for long latency instructions.
+end_comment
+
+begin_decl_stmt
+name|ScheduleDAGSDNodes
+modifier|*
+name|createHybridListDAGScheduler
+argument_list|(
+name|SelectionDAGISel
+operator|*
+name|IS
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
 argument_list|)
 decl_stmt|;
 end_decl_stmt

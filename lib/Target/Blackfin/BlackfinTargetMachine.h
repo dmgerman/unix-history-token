@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"BlackfinSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"BlackfinIntrinsicInfo.h"
 end_include
 
@@ -120,6 +126,9 @@ name|Subtarget
 block|;
 name|BlackfinTargetLowering
 name|TLInfo
+block|;
+name|BlackfinSelectionDAGInfo
+name|TSInfo
 block|;
 name|BlackfinInstrInfo
 name|InstrInfo
@@ -220,6 +229,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|BlackfinSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

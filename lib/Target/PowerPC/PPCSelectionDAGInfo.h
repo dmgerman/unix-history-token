@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|PPCTargetMachine
+decl_stmt|;
+name|class
 name|PPCSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|PPCSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|PPCTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|PPCSelectionDAGInfo

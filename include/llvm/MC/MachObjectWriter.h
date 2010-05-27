@@ -66,13 +66,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmFixup
-decl_stmt|;
-name|class
 name|MCAssembler
 decl_stmt|;
 name|class
 name|MCFragment
+decl_stmt|;
+name|class
+name|MCFixup
 decl_stmt|;
 name|class
 name|MCValue
@@ -125,7 +125,7 @@ argument|const MCAsmLayout&Layout
 argument_list|,
 argument|const MCFragment *Fragment
 argument_list|,
-argument|const MCAsmFixup&Fixup
+argument|const MCFixup&Fixup
 argument_list|,
 argument|MCValue Target
 argument_list|,

@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AlphaTargetMachine
+decl_stmt|;
+name|class
 name|AlphaSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|AlphaSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|AlphaTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|AlphaSelectionDAGInfo

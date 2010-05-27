@@ -416,7 +416,14 @@ name|iterator
 name|begin
 parameter_list|()
 block|{
+comment|// When the map is empty, avoid the overhead of AdvancePastEmptyBuckets().
 return|return
+name|empty
+argument_list|()
+condition|?
+name|end
+argument_list|()
+else|:
 name|iterator
 argument_list|(
 name|Buckets
@@ -458,6 +465,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|empty
+argument_list|()
+operator|?
+name|end
+argument_list|()
+operator|:
 name|const_iterator
 argument_list|(
 name|Buckets

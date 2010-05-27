@@ -262,6 +262,9 @@ name|TargetLowering
 modifier|&
 name|TLI
 decl_stmt|;
+name|bool
+name|IsBottomUp
+decl_stmt|;
 name|public
 label|:
 comment|/// startNewBlock - Set the current block to which generated machine
@@ -368,15 +371,22 @@ function_decl|;
 comment|/// getRegForGEPIndex - This is a wrapper around getRegForValue that also
 comment|/// takes care of truncating or sign-extending the given getelementptr
 comment|/// index value.
+name|std
+operator|::
+name|pair
+operator|<
 name|unsigned
+operator|,
+name|bool
+operator|>
 name|getRegForGEPIndex
-parameter_list|(
+argument_list|(
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|V
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|virtual
 operator|~
 name|FastISel
@@ -511,6 +521,9 @@ name|Opcode
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|)
 function_decl|;
 comment|/// FastEmit_rr - This method is called by target-independent code
@@ -533,8 +546,14 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
 name|unsigned
 name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
 parameter_list|)
 function_decl|;
 comment|/// FastEmit_ri - This method is called by target-independent code
@@ -556,6 +575,9 @@ name|Opcode
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
@@ -580,6 +602,9 @@ name|Opcode
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 specifier|const
 name|ConstantFP
@@ -607,8 +632,14 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
 name|unsigned
 name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
@@ -629,6 +660,9 @@ name|Opcode
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
@@ -652,6 +686,9 @@ name|Opcode
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 specifier|const
 name|ConstantFP
@@ -735,6 +772,9 @@ name|RC
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|)
 function_decl|;
 comment|/// FastEmitInst_rr - Emit a MachineInstr with two register operands
@@ -754,8 +794,14 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
 name|unsigned
 name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
 parameter_list|)
 function_decl|;
 comment|/// FastEmitInst_ri - Emit a MachineInstr with two register operands
@@ -774,6 +820,9 @@ name|RC
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
@@ -795,6 +844,9 @@ name|RC
 parameter_list|,
 name|unsigned
 name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|,
 specifier|const
 name|ConstantFP
@@ -819,8 +871,14 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
 name|unsigned
 name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
@@ -854,6 +912,9 @@ parameter_list|,
 name|unsigned
 name|Op0
 parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
 name|uint32_t
 name|Idx
 parameter_list|)
@@ -867,7 +928,10 @@ name|MVT
 name|VT
 parameter_list|,
 name|unsigned
-name|Op
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
 parameter_list|)
 function_decl|;
 comment|/// FastEmitBranch - Emit an unconditional branch to the given block,
@@ -1026,6 +1090,17 @@ name|MVT
 name|VT
 parameter_list|)
 function_decl|;
+comment|/// hasTrivialKill - Test whether the given value has exactly one use.
+name|bool
+name|hasTrivialKill
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

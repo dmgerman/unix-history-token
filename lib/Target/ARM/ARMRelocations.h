@@ -104,6 +104,12 @@ name|reloc_arm_pic_jt
 block|,
 comment|// reloc_arm_branch - Branch address relocation.
 name|reloc_arm_branch
+block|,
+comment|// reloc_arm_movt  - MOVT immediate relocation.
+name|reloc_arm_movt
+block|,
+comment|// reloc_arm_movw  - MOVW immediate relocation.
+name|reloc_arm_movw
 block|}
 enum|;
 block|}

@@ -193,6 +193,26 @@ comment|// -O3
 block|}
 enum|;
 block|}
+name|namespace
+name|Sched
+block|{
+enum|enum
+name|Preference
+block|{
+name|None
+block|,
+comment|// No preference
+name|Latency
+block|,
+comment|// Scheduling for shortest total latency.
+name|RegPressure
+block|,
+comment|// Scheduling for lowest register pressure.
+name|Hybrid
+comment|// Scheduling for both latency and register pressure.
+block|}
+enum|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|///
 comment|/// TargetMachine - Primary interface to the complete machine description for
@@ -256,6 +276,11 @@ specifier|const
 name|MCAsmInfo
 modifier|*
 name|AsmInfo
+decl_stmt|;
+name|unsigned
+name|MCRelaxAll
+range|:
+literal|1
 decl_stmt|;
 name|public
 label|:
@@ -457,6 +482,31 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// hasMCRelaxAll - Check whether all machine code instructions should be
+comment|/// relaxed.
+name|bool
+name|hasMCRelaxAll
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCRelaxAll
+return|;
+block|}
+comment|/// setMCRelaxAll - Set whether all machine code instructions should be
+comment|/// relaxed.
+name|void
+name|setMCRelaxAll
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCRelaxAll
+operator|=
+name|Value
+expr_stmt|;
+block|}
 comment|/// getRelocationModel - Returns the code generation relocation model. The
 comment|/// choices are static, PIC, and dynamic-no-pic, and target default.
 specifier|static
@@ -616,44 +666,6 @@ operator|&
 argument_list|,
 name|JITCodeEmitter
 operator|&
-argument_list|,
-name|CodeGenOpt
-operator|::
-name|Level
-argument_list|,
-name|bool
-operator|=
-name|true
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// addPassesToEmitWholeFile - This method can be implemented by targets that
-comment|/// require having the entire module at once.  This is not recommended, do not
-comment|/// use this.
-name|virtual
-name|bool
-name|WantsWholeFile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|virtual
-name|bool
-name|addPassesToEmitWholeFile
-argument_list|(
-name|PassManager
-operator|&
-argument_list|,
-name|formatted_raw_ostream
-operator|&
-argument_list|,
-name|CodeGenFileType
 argument_list|,
 name|CodeGenOpt
 operator|::

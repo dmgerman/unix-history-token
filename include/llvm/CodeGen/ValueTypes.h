@@ -258,29 +258,34 @@ init|=
 literal|26
 block|,
 comment|//  4 x i64
-name|v2f32
+name|v8i64
 init|=
 literal|27
+block|,
+comment|//  8 x i64
+name|v2f32
+init|=
+literal|28
 block|,
 comment|//  2 x f32
 name|v4f32
 init|=
-literal|28
+literal|29
 block|,
 comment|//  4 x f32
 name|v8f32
 init|=
-literal|29
+literal|30
 block|,
 comment|//  8 x f32
 name|v2f64
 init|=
-literal|30
+literal|31
 block|,
 comment|//  2 x f64
 name|v4f64
 init|=
-literal|31
+literal|32
 block|,
 comment|//  4 x f64
 name|FIRST_VECTOR_VALUETYPE
@@ -293,17 +298,17 @@ name|v4f64
 block|,
 name|Flag
 init|=
-literal|32
+literal|33
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|33
+literal|34
 block|,
 comment|// This has no value
 name|LAST_VALUETYPE
 init|=
-literal|34
+literal|35
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
@@ -553,7 +558,7 @@ name|SimpleTy
 operator|<=
 name|MVT
 operator|::
-name|v4i64
+name|v8i64
 operator|)
 operator|)
 return|;
@@ -750,6 +755,9 @@ case|:
 case|case
 name|v4i64
 case|:
+case|case
+name|v8i64
+case|:
 return|return
 name|i64
 return|;
@@ -814,6 +822,9 @@ name|v8i16
 case|:
 case|case
 name|v8i32
+case|:
+case|case
+name|v8i64
 case|:
 case|case
 name|v8f32
@@ -1031,6 +1042,12 @@ name|v4f64
 case|:
 return|return
 literal|256
+return|;
+case|case
+name|v8i64
+case|:
+return|return
+literal|512
 return|;
 block|}
 block|}
@@ -1368,6 +1385,17 @@ return|return
 name|MVT
 operator|::
 name|v4i64
+return|;
+if|if
+condition|(
+name|NumElements
+operator|==
+literal|8
+condition|)
+return|return
+name|MVT
+operator|::
+name|v8i64
 return|;
 break|break;
 case|case
@@ -2093,6 +2121,29 @@ name|v4i64
 operator|)
 operator|:
 name|isExtended256BitVector
+argument_list|()
+return|;
+block|}
+comment|/// is512BitVector - Return true if this is a 512-bit vector type.
+specifier|inline
+name|bool
+name|is512BitVector
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isSimple
+argument_list|()
+operator|?
+operator|(
+name|V
+operator|==
+name|MVT
+operator|::
+name|v8i64
+operator|)
+operator|:
+name|isExtended512BitVector
 argument_list|()
 return|;
 block|}
@@ -2908,6 +2959,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isExtended256BitVector
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isExtended512BitVector
 argument_list|()
 specifier|const
 expr_stmt|;

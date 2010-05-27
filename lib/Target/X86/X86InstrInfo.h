@@ -1726,6 +1726,8 @@ argument_list|,
 argument|const TargetRegisterClass *DestRC
 argument_list|,
 argument|const TargetRegisterClass *SrcRC
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -1744,6 +1746,8 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
@@ -1782,6 +1786,8 @@ argument_list|,
 argument|int FrameIndex
 argument_list|,
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
@@ -1814,6 +1820,8 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
@@ -1826,6 +1834,8 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|const std::vector<CalleeSavedInfo>&CSI
+argument_list|,
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;

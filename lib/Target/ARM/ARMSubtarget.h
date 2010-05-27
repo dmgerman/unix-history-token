@@ -120,6 +120,8 @@ block|,
 name|V6T2
 block|,
 name|V7A
+block|,
+name|V7M
 block|}
 block|;    enum
 name|ARMFPEnum
@@ -141,7 +143,7 @@ name|Thumb2
 block|}
 block|;
 comment|/// ARMArchVersion - ARM architecture version: V4, V4T (base), V5T, V5TE,
-comment|/// V6, V6T2, V7A.
+comment|/// V6, V6T2, V7A, V7M.
 name|ARMArchEnum
 name|ARMArchVersion
 block|;
@@ -185,6 +187,15 @@ comment|/// HasFP16 - True if subtarget supports half-precision FP (We support V
 comment|/// only so far)
 name|bool
 name|HasFP16
+block|;
+comment|/// HasHardwareDivide - True if subtarget supports [su]div
+name|bool
+name|HasHardwareDivide
+block|;
+comment|/// HasT2ExtractPack - True if subtarget supports thumb2 extract/pack
+comment|/// instructions.
+name|bool
+name|HasT2ExtractPack
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -380,6 +391,24 @@ name|hasNEON
 argument_list|()
 operator|&&
 name|UseNEONForSinglePrecisionFP
+return|;
+block|}
+name|bool
+name|hasDivide
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasHardwareDivide
+return|;
+block|}
+name|bool
+name|hasT2ExtractPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasT2ExtractPack
 return|;
 block|}
 name|bool

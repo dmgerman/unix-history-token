@@ -1281,6 +1281,19 @@ argument|unsigned Form
 argument_list|)
 specifier|const
 block|;
+comment|/// getValue - Get MCSymbol.
+comment|///
+specifier|const
+name|MCSymbol
+operator|*
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Label
+return|;
+block|}
 comment|/// SizeOf - Determine size of label value in bytes.
 comment|///
 name|virtual

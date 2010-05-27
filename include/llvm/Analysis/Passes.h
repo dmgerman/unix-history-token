@@ -292,6 +292,12 @@ modifier|*
 name|createDbgInfoPrinterPass
 parameter_list|()
 function_decl|;
+comment|// Print module-level debug info metadata in human-readable form.
+name|ModulePass
+modifier|*
+name|createModuleDebugInfoPrinterPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

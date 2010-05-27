@@ -501,6 +501,16 @@ name|RHS
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// compare_numeric - Compare two strings, treating sequences of digits as
+comment|/// numbers.
+name|int
+name|compare_numeric
+argument_list|(
+name|StringRef
+name|RHS
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Determine the edit distance between this string and another
 comment|/// string.
 comment|///

@@ -64,11 +64,35 @@ name|LLVM_SUPPORT_COMPILER_H
 end_define
 
 begin_comment
-comment|// The VISIBILITY_HIDDEN macro, used for marking classes with the GCC-specific
+comment|/// LLVM_LIBRARY_VISIBILITY - If a class marked with this attribute is linked
 end_comment
 
 begin_comment
-comment|// visibility("hidden") attribute.
+comment|/// into a shared library, then the class should be private to the library and
+end_comment
+
+begin_comment
+comment|/// not accessible from outside it.  Can also be used to mark variables and
+end_comment
+
+begin_comment
+comment|/// functions, making them private to any shared library they are linked into.
+end_comment
+
+begin_comment
+comment|/// LLVM_GLOBAL_VISIBILITY - If a class marked with this attribute is linked
+end_comment
+
+begin_comment
+comment|/// into a shared library, then the class will be accessible from outside the
+end_comment
+
+begin_comment
+comment|/// the library.  Can also be used to mark variables and functions, making them
+end_comment
+
+begin_comment
+comment|/// accessible from outside any shared library they are linked into.
 end_comment
 
 begin_if
@@ -96,8 +120,15 @@ end_if
 begin_define
 define|#
 directive|define
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
 value|__attribute__ ((visibility("hidden")))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_GLOBAL_VISIBILITY
+value|__attribute__ ((visibility("default")))
 end_define
 
 begin_else
@@ -108,7 +139,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|VISIBILITY_HIDDEN
+name|LLVM_LIBRARY_VISIBILITY
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLVM_GLOBAL_VISIBILITY
 end_define
 
 begin_endif

@@ -95,6 +95,12 @@ directive|include
 file|"SparcISelLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"SparcSelectionDAGInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -115,6 +121,9 @@ block|;
 comment|// Calculates type size& alignment
 name|SparcTargetLowering
 name|TLInfo
+block|;
+name|SparcSelectionDAGInfo
+name|TSInfo
 block|;
 name|SparcInstrInfo
 name|InstrInfo
@@ -201,6 +210,19 @@ block|{
 return|return
 operator|&
 name|TLInfo
+return|;
+block|}
+name|virtual
+specifier|const
+name|SparcSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
 return|;
 block|}
 name|virtual

@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|BlackfinTargetMachine
+decl_stmt|;
+name|class
 name|BlackfinSelectionDAGInfo
 range|:
 name|public
@@ -77,8 +80,14 @@ name|TargetSelectionDAGInfo
 block|{
 name|public
 operator|:
+name|explicit
 name|BlackfinSelectionDAGInfo
-argument_list|()
+argument_list|(
+specifier|const
+name|BlackfinTargetMachine
+operator|&
+name|TM
+argument_list|)
 block|;
 operator|~
 name|BlackfinSelectionDAGInfo

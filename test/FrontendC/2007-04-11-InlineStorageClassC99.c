@@ -32,11 +32,11 @@ comment|// RUN:   grep xWeakextnoinline | grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep declare | \
+comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep define | \
 end_comment
 
 begin_comment
-comment|// RUN:   grep xglobnoWeak | grep -v internal | grep -v weak | \
+comment|// RUN:   grep xglobnoWeak | grep available_externally | grep -v weak | \
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ comment|// RUN: %llvmgcc -std=c99 %s -S -emit-llvm -O0 -o - | grep define | \
 end_comment
 
 begin_comment
-comment|// RUN:   grep xextnoWeak | grep -v internal | grep -v weak | \
+comment|// RUN:   grep xextnoWeak | grep -v available_externally | grep -v weak | \
 end_comment
 
 begin_comment

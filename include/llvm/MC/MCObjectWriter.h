@@ -66,13 +66,13 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCAsmFixup
-decl_stmt|;
-name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
 name|MCAssembler
+decl_stmt|;
+name|class
+name|MCFixup
 decl_stmt|;
 name|class
 name|MCFragment
@@ -215,7 +215,7 @@ modifier|*
 name|Fragment
 parameter_list|,
 specifier|const
-name|MCAsmFixup
+name|MCFixup
 modifier|&
 name|Fixup
 parameter_list|,
@@ -232,7 +232,7 @@ function_decl|;
 comment|/// Write the object file.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
-comment|/// complete, fixups have been evaluate and applied, and relocations
+comment|/// complete, fixups have been evaluated and applied, and relocations
 comment|/// generated.
 name|virtual
 name|void
@@ -577,6 +577,24 @@ init|=
 literal|0
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+name|ZeroFillSize
+operator|==
+literal|0
+operator|||
+name|Str
+operator|.
+name|size
+argument_list|()
+operator|<=
+name|ZeroFillSize
+operator|)
+operator|&&
+literal|"data size greater than fill size, unexpected large write will occur"
+argument_list|)
+expr_stmt|;
 name|OS
 operator|<<
 name|Str
