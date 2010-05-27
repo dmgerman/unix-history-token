@@ -5973,6 +5973,36 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|args
+operator|.
+name|fhsize
+operator|<
+literal|0
+operator|||
+name|args
+operator|.
+name|fhsize
+operator|>
+name|NFSX_V3FHMAX
+condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"Bad file handle"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * Make the nfs_ip_paranoia sysctl serve as the default connection 	 * or no-connection mode for those protocols that support  	 * no-connection mode (the flag will be cleared later for protocols 	 * that do not support no-connection mode).  This will allow a client 	 * to receive replies from a different IP then the request was 	 * sent to.  Note: default value for nfs_ip_paranoia is 1 (paranoid), 	 * not 0. 	 */
 if|if
 condition|(
