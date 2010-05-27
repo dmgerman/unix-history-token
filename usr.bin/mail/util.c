@@ -2033,13 +2033,25 @@ name|c
 operator|==
 literal|','
 operator|&&
+operator|!
+name|gotlt
+operator|&&
+operator|(
 operator|*
 name|cp
 operator|==
 literal|' '
-operator|&&
-operator|!
-name|gotlt
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'"'
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'<'
+operator|)
 condition|)
 block|{
 operator|*
@@ -2051,12 +2063,13 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-operator|++
 name|cp
 operator|==
 literal|' '
 condition|)
-empty_stmt|;
+name|cp
+operator|++
+expr_stmt|;
 name|lastsp
 operator|=
 literal|0
