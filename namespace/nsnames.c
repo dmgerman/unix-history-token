@@ -163,10 +163,9 @@ argument_list|)
 expr_stmt|;
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|ParentNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 comment|/* Prefix name with the path separator */
 name|Index
@@ -432,10 +431,9 @@ name|ACPI_PATH_SEGMENT_LENGTH
 expr_stmt|;
 name|NextNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|NextNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 if|if

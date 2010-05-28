@@ -3072,7 +3072,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Warning: there are %d invalid trailing bytes\n"
+literal|"Warning: there are %u invalid trailing bytes\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(

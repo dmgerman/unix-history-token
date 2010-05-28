@@ -81,20 +81,6 @@ name|Child
 operator|)
 return|;
 block|}
-comment|/*      * Get the next node.      *      * If we are at the end of this peer list, return NULL      */
-if|if
-condition|(
-name|ChildNode
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_END_OF_PEER_LIST
-condition|)
-block|{
-return|return
-name|NULL
-return|;
-block|}
 comment|/* Otherwise just return the next peer */
 return|return
 operator|(
@@ -182,13 +168,12 @@ name|NextNode
 operator|)
 return|;
 block|}
-comment|/* Otherwise, move on to the next node */
+comment|/* Otherwise, move on to the next peer node */
 name|NextNode
 operator|=
-name|AcpiNsGetNextValidNode
-argument_list|(
 name|NextNode
-argument_list|)
+operator|->
+name|Peer
 expr_stmt|;
 block|}
 comment|/* Not found */
@@ -594,10 +579,9 @@ name|ParentNode
 expr_stmt|;
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|ParentNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 name|NodePreviouslyVisited
 operator|=

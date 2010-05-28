@@ -1031,7 +1031,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nFound %d external control methods, reparsing with new information\n"
+literal|"\nFound %u external control methods, reparsing with new information\n"
 argument_list|,
 name|AcpiDmGetExternalMethodCount
 argument_list|()
@@ -1074,6 +1074,12 @@ name|ACPI_TYPE_DEVICE
 expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.
+name|Parent
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_RootNodeStruct
+operator|.
 name|Child
 operator|=
 name|NULL
@@ -1094,7 +1100,7 @@ name|AcpiGbl_RootNodeStruct
 operator|.
 name|Flags
 operator|=
-name|ANOBJ_END_OF_PEER_LIST
+literal|0
 expr_stmt|;
 name|Status
 operator|=
@@ -1600,7 +1606,7 @@ block|}
 comment|/* Open the ASL definition block */
 name|AcpiOsPrintf
 argument_list|(
-literal|"DefinitionBlock (\"%s\", \"%4.4s\", %hd, \"%.6s\", \"%.8s\", 0x%8.8X)\n"
+literal|"DefinitionBlock (\"%s\", \"%4.4s\", %hu, \"%.6s\", \"%.8s\", 0x%8.8X)\n"
 argument_list|,
 name|NewFilename
 argument_list|,
@@ -2488,7 +2494,7 @@ name|PointerSize
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"There are %d tables defined in the %4.4s\n\n"
+literal|"There are %u tables defined in the %4.4s\n\n"
 argument_list|,
 name|NumTables
 argument_list|,

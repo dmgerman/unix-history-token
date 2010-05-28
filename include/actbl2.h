@@ -214,6 +214,46 @@ begin_comment
 comment|/* Watchdog Resource Table */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_UNDEFINED_TABLES
+end_ifdef
+
+begin_comment
+comment|/*  * These tables have been seen in the field, but no definition has been found  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_ATKG
+value|"ATKG"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_GSCI
+value|"GSCI"
+end_define
+
+begin_comment
+comment|/* GMCH SCI table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_IEIT
+value|"IEIT"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * All tables must be byte-packed to match the ACPI specification, since  * the tables are provided by the system BIOS.  */
 end_comment

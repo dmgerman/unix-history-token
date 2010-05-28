@@ -1897,7 +1897,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\nFound %d ACPI tables [%8.8X]\n"
+literal|"\nFound %u ACPI tables [%8.8X]\n"
 argument_list|,
 name|TableCount
 argument_list|,

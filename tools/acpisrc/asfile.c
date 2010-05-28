@@ -611,7 +611,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ****File has UNIX format**** (LF only, not CR/LF) %d lines\n"
+literal|"%s: ****File has UNIX format**** (LF only, not CR/LF) %u lines\n"
 argument_list|,
 name|Filename
 argument_list|,
@@ -624,7 +624,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: %d lone linefeeds in file\n"
+literal|"%s: %u lone linefeeds in file\n"
 argument_list|,
 name|Filename
 argument_list|,
@@ -1935,7 +1935,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not allocate buffer of size %d\n"
+literal|"Could not allocate buffer of size %u\n"
 argument_list|,
 name|Size
 operator|*

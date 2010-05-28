@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100428
+value|0x20100528
 end_define
 
 begin_include
@@ -142,6 +142,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 name|AcpiGbl_CopyDsdtLocally
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_TruncateIoAddresses
 decl_stmt|;
 end_decl_stmt
 

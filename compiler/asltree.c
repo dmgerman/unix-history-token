@@ -697,7 +697,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateLeafNode  Ln/Col %d/%d NewNode %p  Op %s\n\n"
+literal|"\nCreateLeafNode  Ln/Col %u/%u NewNode %p  Op %s\n\n"
 argument_list|,
 name|Op
 operator|->
@@ -756,7 +756,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateValuedLeafNode  Ln/Col %d/%d NewNode %p  Op %s  Value %8.8X%8.8X  "
+literal|"\nCreateValuedLeafNode  Ln/Col %u/%u NewNode %p  Op %s  Value %8.8X%8.8X  "
 argument_list|,
 name|Op
 operator|->
@@ -946,7 +946,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nCreateNode  Ln/Col %d/%d NewParent %p Child %d Op %s  "
+literal|"\nCreateNode  Ln/Col %u/%u NewParent %p Child %u Op %s  "
 argument_list|,
 name|Op
 operator|->
@@ -1221,7 +1221,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nLinkChildren  Line [%d to %d] NewParent %p Child %d Op %s  "
+literal|"\nLinkChildren  Line [%u to %u] NewParent %p Child %u Op %s  "
 argument_list|,
 name|Op
 operator|->
@@ -1701,7 +1701,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"\nLinkPeerNodes: (%d) "
+literal|"\nLinkPeerNodes: (%u) "
 argument_list|,
 name|NumPeers
 argument_list|)
@@ -1750,7 +1750,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_PARSE_OUTPUT
 argument_list|,
-literal|"%d=%p "
+literal|"%u=%p "
 argument_list|,
 operator|(
 name|i

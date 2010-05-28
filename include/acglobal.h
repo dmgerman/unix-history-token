@@ -196,6 +196,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Optionally truncate I/O addresses to 16 bits. Provides compatibility  * with other ACPI implementations. NOTE: During ACPICA initialization,  * this value is set to TRUE if any Windows OSI strings have been  * requested by the BIOS.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_TruncateIoAddresses
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
@@ -806,6 +821,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_DisplayFinalMemStats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_DisableMemTracking
 decl_stmt|;
 end_decl_stmt
 

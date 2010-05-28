@@ -1034,6 +1034,17 @@ value|ACPI_FLAG_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f,o)
 end_define
 
 begin_comment
+comment|/*  * Required terminator for all tables below  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_TERMINATOR
+value|{ACPI_DMT_EXIT, 0, NULL, 0}
+end_define
+
+begin_comment
 comment|/*  * ACPI Table Information, used to dump formatted ACPI tables  *  * Each entry is of the form:<Field Type, Field Offset, Field Name>  */
 end_comment
 
@@ -1059,6 +1070,8 @@ index|]
 argument_list|)
 block|,
 literal|"Signature"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1070,6 +1083,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Table Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -1081,6 +1096,8 @@ name|Revision
 argument_list|)
 block|,
 literal|"Revision"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1092,6 +1109,8 @@ name|Checksum
 argument_list|)
 block|,
 literal|"Checksum"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1106,6 +1125,8 @@ index|]
 argument_list|)
 block|,
 literal|"Oem ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1120,6 +1141,8 @@ index|]
 argument_list|)
 block|,
 literal|"Oem Table ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1131,6 +1154,8 @@ name|OemRevision
 argument_list|)
 block|,
 literal|"Oem Revision"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1145,6 +1170,8 @@ index|]
 argument_list|)
 block|,
 literal|"Asl Compiler ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1156,15 +1183,11 @@ name|AslCompilerRevision
 argument_list|)
 block|,
 literal|"Asl Compiler Revision"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1188,6 +1211,8 @@ name|SpaceId
 argument_list|)
 block|,
 literal|"Space ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1199,6 +1224,8 @@ name|BitWidth
 argument_list|)
 block|,
 literal|"Bit Width"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1210,6 +1237,8 @@ name|BitOffset
 argument_list|)
 block|,
 literal|"Bit Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1221,6 +1250,8 @@ name|AccessWidth
 argument_list|)
 block|,
 literal|"Access Width"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1232,15 +1263,11 @@ name|Address
 argument_list|)
 block|,
 literal|"Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1267,6 +1294,8 @@ index|]
 argument_list|)
 block|,
 literal|"Signature"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1278,6 +1307,8 @@ name|Checksum
 argument_list|)
 block|,
 literal|"Checksum"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1292,6 +1323,8 @@ index|]
 argument_list|)
 block|,
 literal|"Oem ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1303,6 +1336,8 @@ name|Revision
 argument_list|)
 block|,
 literal|"Revision"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1314,15 +1349,11 @@ name|RsdtPhysicalAddress
 argument_list|)
 block|,
 literal|"RSDT Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1346,6 +1377,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -1357,6 +1390,8 @@ name|XsdtPhysicalAddress
 argument_list|)
 block|,
 literal|"XSDT Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1368,6 +1403,8 @@ name|ExtendedChecksum
 argument_list|)
 block|,
 literal|"Extended Checksum"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1382,15 +1419,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1417,6 +1450,8 @@ index|]
 argument_list|)
 block|,
 literal|"Signature"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1428,6 +1463,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -1439,6 +1476,8 @@ name|HardwareSignature
 argument_list|)
 block|,
 literal|"Hardware Signature"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1450,6 +1489,8 @@ name|FirmwareWakingVector
 argument_list|)
 block|,
 literal|"32 Firmware Waking Vector"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1461,6 +1502,8 @@ name|GlobalLock
 argument_list|)
 block|,
 literal|"Global Lock"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1472,6 +1515,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -1485,6 +1530,8 @@ literal|0
 argument_list|)
 block|,
 literal|"S4BIOS Support Present"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1498,6 +1545,8 @@ literal|0
 argument_list|)
 block|,
 literal|"64-bit Wake Supported (V2)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1509,6 +1558,8 @@ name|XFirmwareWakingVector
 argument_list|)
 block|,
 literal|"64 Firmware Waking Vector"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1520,6 +1571,8 @@ name|Version
 argument_list|)
 block|,
 literal|"Version"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1534,6 +1587,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1545,6 +1600,8 @@ name|OspmFlags
 argument_list|)
 block|,
 literal|"OspmFlags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -1558,15 +1615,11 @@ literal|0
 argument_list|)
 block|,
 literal|"64-bit Wake Env Required (V2)"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1594,6 +1647,8 @@ name|Facs
 argument_list|)
 block|,
 literal|"FACS Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1605,6 +1660,8 @@ name|Dsdt
 argument_list|)
 block|,
 literal|"DSDT Address"
+block|,
+name|DT_NON_ZERO
 block|}
 block|,
 block|{
@@ -1616,6 +1673,8 @@ name|Model
 argument_list|)
 block|,
 literal|"Model"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1627,6 +1686,8 @@ name|PreferredProfile
 argument_list|)
 block|,
 literal|"PM Profile"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1638,6 +1699,8 @@ name|SciInterrupt
 argument_list|)
 block|,
 literal|"SCI Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1649,6 +1712,8 @@ name|SmiCommand
 argument_list|)
 block|,
 literal|"SMI Command Port"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1660,6 +1725,8 @@ name|AcpiEnable
 argument_list|)
 block|,
 literal|"ACPI Enable Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1671,6 +1738,8 @@ name|AcpiDisable
 argument_list|)
 block|,
 literal|"ACPI Disable Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1682,6 +1751,8 @@ name|S4BiosRequest
 argument_list|)
 block|,
 literal|"S4BIOS Command"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1693,6 +1764,8 @@ name|PstateControl
 argument_list|)
 block|,
 literal|"P-State Control"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1704,6 +1777,8 @@ name|Pm1aEventBlock
 argument_list|)
 block|,
 literal|"PM1A Event Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1715,6 +1790,8 @@ name|Pm1bEventBlock
 argument_list|)
 block|,
 literal|"PM1B Event Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1726,6 +1803,8 @@ name|Pm1aControlBlock
 argument_list|)
 block|,
 literal|"PM1A Control Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1737,6 +1816,8 @@ name|Pm1bControlBlock
 argument_list|)
 block|,
 literal|"PM1B Control Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1748,6 +1829,8 @@ name|Pm2ControlBlock
 argument_list|)
 block|,
 literal|"PM2 Control Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1759,6 +1842,8 @@ name|PmTimerBlock
 argument_list|)
 block|,
 literal|"PM Timer Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1770,6 +1855,8 @@ name|Gpe0Block
 argument_list|)
 block|,
 literal|"GPE0 Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1781,6 +1868,8 @@ name|Gpe1Block
 argument_list|)
 block|,
 literal|"GPE1 Block Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1792,6 +1881,8 @@ name|Pm1EventLength
 argument_list|)
 block|,
 literal|"PM1 Event Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1803,6 +1894,8 @@ name|Pm1ControlLength
 argument_list|)
 block|,
 literal|"PM1 Control Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1814,6 +1907,8 @@ name|Pm2ControlLength
 argument_list|)
 block|,
 literal|"PM2 Control Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1825,6 +1920,8 @@ name|PmTimerLength
 argument_list|)
 block|,
 literal|"PM Timer Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1836,6 +1933,8 @@ name|Gpe0BlockLength
 argument_list|)
 block|,
 literal|"GPE0 Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1847,6 +1946,8 @@ name|Gpe1BlockLength
 argument_list|)
 block|,
 literal|"GPE1 Block Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1858,6 +1959,8 @@ name|Gpe1Base
 argument_list|)
 block|,
 literal|"GPE1 Base Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1869,6 +1972,8 @@ name|CstControl
 argument_list|)
 block|,
 literal|"_CST Support"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1880,6 +1985,8 @@ name|C2Latency
 argument_list|)
 block|,
 literal|"C2 Latency"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1891,6 +1998,8 @@ name|C3Latency
 argument_list|)
 block|,
 literal|"C3 Latency"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1902,6 +2011,8 @@ name|FlushSize
 argument_list|)
 block|,
 literal|"CPU Cache Size"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1913,6 +2024,8 @@ name|FlushStride
 argument_list|)
 block|,
 literal|"Cache Flush Stride"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1924,6 +2037,8 @@ name|DutyOffset
 argument_list|)
 block|,
 literal|"Duty Cycle Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1935,6 +2050,8 @@ name|DutyWidth
 argument_list|)
 block|,
 literal|"Duty Cycle Width"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1946,6 +2063,8 @@ name|DayAlarm
 argument_list|)
 block|,
 literal|"RTC Day Alarm Index"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1957,6 +2076,8 @@ name|MonthAlarm
 argument_list|)
 block|,
 literal|"RTC Month Alarm Index"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1968,6 +2089,8 @@ name|Century
 argument_list|)
 block|,
 literal|"RTC Century Index"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1979,6 +2102,8 @@ name|BootFlags
 argument_list|)
 block|,
 literal|"Boot Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 comment|/* Boot Architecture Flags byte 0 */
@@ -1993,6 +2118,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Legacy Devices Supported (V2)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2006,6 +2133,8 @@ literal|0
 argument_list|)
 block|,
 literal|"8042 Present on ports 60/64 (V2)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2019,6 +2148,8 @@ literal|0
 argument_list|)
 block|,
 literal|"VGA Not Present (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2032,6 +2163,8 @@ literal|0
 argument_list|)
 block|,
 literal|"MSI Not Supported (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2045,6 +2178,8 @@ literal|0
 argument_list|)
 block|,
 literal|"PCIe ASPM Not Supported (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2056,6 +2191,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2067,6 +2204,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 comment|/* Flags byte 0 */
@@ -2081,6 +2220,8 @@ literal|0
 argument_list|)
 block|,
 literal|"WBINVD instruction is operational (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2094,6 +2235,8 @@ literal|0
 argument_list|)
 block|,
 literal|"WBINVD flushes all caches (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2107,6 +2250,8 @@ literal|0
 argument_list|)
 block|,
 literal|"All CPUs support C1 (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2120,6 +2265,8 @@ literal|0
 argument_list|)
 block|,
 literal|"C2 works on MP system (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2133,6 +2280,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Control Method Power Button (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2146,6 +2295,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Control Method Sleep Button (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2159,6 +2310,8 @@ literal|0
 argument_list|)
 block|,
 literal|"RTC wake not in fixed reg space (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2172,6 +2325,8 @@ literal|0
 argument_list|)
 block|,
 literal|"RTC can wake system from S4 (V1)"
+block|,
+literal|0
 block|}
 block|,
 comment|/* Flags byte 1 */
@@ -2186,6 +2341,8 @@ literal|1
 argument_list|)
 block|,
 literal|"32-bit PM Timer (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2199,6 +2356,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Docking Supported (V1)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2212,6 +2371,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Reset Register Supported (V2)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2225,6 +2386,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Sealed Case (V3)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2238,6 +2401,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Headless - No Video (V3)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2251,6 +2416,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Use native instr after SLP_TYPx (V3)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2264,6 +2431,8 @@ literal|1
 argument_list|)
 block|,
 literal|"PCIEXP_WAK Bits Supported (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2277,6 +2446,8 @@ literal|1
 argument_list|)
 block|,
 literal|"Use Platform Timer (V4)"
+block|,
+literal|0
 block|}
 block|,
 comment|/* Flags byte 2 */
@@ -2291,6 +2462,8 @@ literal|2
 argument_list|)
 block|,
 literal|"RTC_STS valid on S4 wake (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2304,6 +2477,8 @@ literal|2
 argument_list|)
 block|,
 literal|"Remote Power-on capable (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2317,6 +2492,8 @@ literal|2
 argument_list|)
 block|,
 literal|"Use APIC Cluster Model (V4)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2330,15 +2507,11 @@ literal|2
 argument_list|)
 block|,
 literal|"Use APIC Physical Destination Mode (V4)"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2362,6 +2535,8 @@ name|ResetRegister
 argument_list|)
 block|,
 literal|"Reset Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2373,6 +2548,8 @@ name|ResetValue
 argument_list|)
 block|,
 literal|"Value to cause reset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2387,15 +2564,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2419,6 +2592,8 @@ name|ResetRegister
 argument_list|)
 block|,
 literal|"Reset Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2430,6 +2605,8 @@ name|ResetValue
 argument_list|)
 block|,
 literal|"Value to cause reset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2444,6 +2621,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2455,6 +2634,8 @@ name|XFacs
 argument_list|)
 block|,
 literal|"FACS Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2466,6 +2647,8 @@ name|XDsdt
 argument_list|)
 block|,
 literal|"DSDT Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2477,6 +2660,8 @@ name|XPm1aEventBlock
 argument_list|)
 block|,
 literal|"PM1A Event Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2488,6 +2673,8 @@ name|XPm1bEventBlock
 argument_list|)
 block|,
 literal|"PM1B Event Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2499,6 +2686,8 @@ name|XPm1aControlBlock
 argument_list|)
 block|,
 literal|"PM1A Control Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2510,6 +2699,8 @@ name|XPm1bControlBlock
 argument_list|)
 block|,
 literal|"PM1B Control Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2521,6 +2712,8 @@ name|XPm2ControlBlock
 argument_list|)
 block|,
 literal|"PM2 Control Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2532,6 +2725,8 @@ name|XPmTimerBlock
 argument_list|)
 block|,
 literal|"PM Timer Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2543,6 +2738,8 @@ name|XGpe0Block
 argument_list|)
 block|,
 literal|"GPE0 Block"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2554,15 +2751,11 @@ name|XGpe1Block
 argument_list|)
 block|,
 literal|"GPE1 Block"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2596,6 +2789,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2609,6 +2804,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2622,15 +2819,11 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2654,6 +2847,8 @@ name|MinResetValue
 argument_list|)
 block|,
 literal|"Minimum Reset Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2665,6 +2860,8 @@ name|MinPollInterval
 argument_list|)
 block|,
 literal|"Minimum Polling Interval"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2676,6 +2873,8 @@ name|SystemId
 argument_list|)
 block|,
 literal|"System ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2687,6 +2886,8 @@ name|MfgId
 argument_list|)
 block|,
 literal|"Manufacturer ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2698,6 +2899,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2712,15 +2915,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2744,6 +2943,8 @@ name|AssertMask
 argument_list|)
 block|,
 literal|"AssertMask"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2755,6 +2956,8 @@ name|DeassertMask
 argument_list|)
 block|,
 literal|"DeassertMask"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2766,6 +2969,8 @@ name|Alerts
 argument_list|)
 block|,
 literal|"Alert Count"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2777,15 +2982,11 @@ name|DataLength
 argument_list|)
 block|,
 literal|"Alert Data Length"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2809,6 +3010,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2820,6 +3023,8 @@ name|Command
 argument_list|)
 block|,
 literal|"Command"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2831,6 +3036,8 @@ name|Mask
 argument_list|)
 block|,
 literal|"Mask"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2842,6 +3049,8 @@ name|Value
 argument_list|)
 block|,
 literal|"Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2853,6 +3062,8 @@ name|SensorType
 argument_list|)
 block|,
 literal|"SensorType"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2864,6 +3075,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2875,6 +3088,8 @@ name|Offset
 argument_list|)
 block|,
 literal|"Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2886,6 +3101,8 @@ name|SourceType
 argument_list|)
 block|,
 literal|"SourceType"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2897,6 +3114,8 @@ name|Severity
 argument_list|)
 block|,
 literal|"Severity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2908,6 +3127,8 @@ name|SensorNumber
 argument_list|)
 block|,
 literal|"SensorNumber"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2919,6 +3140,8 @@ name|Entity
 argument_list|)
 block|,
 literal|"Entity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2930,15 +3153,11 @@ name|Instance
 argument_list|)
 block|,
 literal|"Instance"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2962,6 +3181,8 @@ name|Controls
 argument_list|)
 block|,
 literal|"Control Count"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2973,6 +3194,8 @@ name|DataLength
 argument_list|)
 block|,
 literal|"Control Data Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -2984,15 +3207,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3016,6 +3235,8 @@ name|Function
 argument_list|)
 block|,
 literal|"Function"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3027,6 +3248,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3038,6 +3261,8 @@ name|Command
 argument_list|)
 block|,
 literal|"Command"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3049,15 +3274,11 @@ name|Value
 argument_list|)
 block|,
 literal|"Value"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3083,7 +3304,9 @@ literal|0
 index|]
 argument_list|)
 block|,
-literal|"Capabilites"
+literal|"Capabilities"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3095,6 +3318,8 @@ name|CompletionCode
 argument_list|)
 block|,
 literal|"Completion Code"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3106,6 +3331,8 @@ name|EnterpriseId
 argument_list|)
 block|,
 literal|"Enterprise ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3117,6 +3344,8 @@ name|Command
 argument_list|)
 block|,
 literal|"Command"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3128,6 +3357,8 @@ name|Parameter
 argument_list|)
 block|,
 literal|"Parameter"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3139,6 +3370,8 @@ name|BootOptions
 argument_list|)
 block|,
 literal|"Boot Options"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3150,15 +3383,11 @@ name|OemParameters
 argument_list|)
 block|,
 literal|"Oem Parameters"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3182,6 +3411,8 @@ name|EpromAddress
 argument_list|)
 block|,
 literal|"Eprom Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3193,15 +3424,11 @@ name|Devices
 argument_list|)
 block|,
 literal|"Device Count"
+block|,
+name|DT_COUNT
 block|}
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3225,6 +3452,8 @@ name|RegionLength
 argument_list|)
 block|,
 literal|"Boot Error Region Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3236,15 +3465,11 @@ name|Address
 argument_list|)
 block|,
 literal|"Boot Error Region Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3268,6 +3493,8 @@ name|CmosIndex
 argument_list|)
 block|,
 literal|"Boot Register Index"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3282,15 +3509,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3314,15 +3537,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3344,6 +3563,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3357,6 +3578,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -3368,6 +3591,8 @@ name|Id
 argument_list|)
 block|,
 literal|"Processor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3379,6 +3604,8 @@ name|Eid
 argument_list|)
 block|,
 literal|"Processor EID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3390,15 +3617,11 @@ name|Interval
 argument_list|)
 block|,
 literal|"Polling Interval"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3422,6 +3645,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Interface Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3436,6 +3661,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3447,15 +3674,11 @@ name|DebugPort
 argument_list|)
 block|,
 literal|"Debug Port Register"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3479,6 +3702,8 @@ name|Width
 argument_list|)
 block|,
 literal|"Host Address Width"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3490,15 +3715,11 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3524,6 +3745,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3537,15 +3760,11 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3569,6 +3788,8 @@ name|EntryType
 argument_list|)
 block|,
 literal|"Device Scope Entry Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3580,6 +3801,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Entry Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -3591,6 +3814,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3602,6 +3827,8 @@ name|EnumerationId
 argument_list|)
 block|,
 literal|"Enumeration ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3613,15 +3840,11 @@ name|Bus
 argument_list|)
 block|,
 literal|"PCI Bus Number"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3649,6 +3872,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3660,6 +3885,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3671,6 +3898,8 @@ name|Segment
 argument_list|)
 block|,
 literal|"PCI Segment Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3682,15 +3911,11 @@ name|Address
 argument_list|)
 block|,
 literal|"Register Base Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3714,6 +3939,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3725,6 +3952,8 @@ name|Segment
 argument_list|)
 block|,
 literal|"PCI Segment Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3736,6 +3965,8 @@ name|BaseAddress
 argument_list|)
 block|,
 literal|"Base Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3747,15 +3978,11 @@ name|EndAddress
 argument_list|)
 block|,
 literal|"End Address (limit)"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3779,6 +4006,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3790,6 +4019,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3801,15 +4032,11 @@ name|Segment
 argument_list|)
 block|,
 literal|"PCI Segment Number"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3833,6 +4060,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3844,6 +4073,8 @@ name|BaseAddress
 argument_list|)
 block|,
 literal|"Base Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3855,15 +4086,11 @@ name|ProximityDomain
 argument_list|)
 block|,
 literal|"Proximity Domain"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3887,6 +4114,8 @@ name|Control
 argument_list|)
 block|,
 literal|"Command/Status Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3898,6 +4127,8 @@ name|Data
 argument_list|)
 block|,
 literal|"Data Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3909,6 +4140,8 @@ name|Uid
 argument_list|)
 block|,
 literal|"UID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3920,6 +4153,8 @@ name|Gpe
 argument_list|)
 block|,
 literal|"GPE Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3934,15 +4169,11 @@ index|]
 argument_list|)
 block|,
 literal|"Namepath"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3966,6 +4197,8 @@ name|HeaderLength
 argument_list|)
 block|,
 literal|"Injection Header Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -3977,6 +4210,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -3991,6 +4226,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4002,15 +4239,11 @@ name|Entries
 argument_list|)
 block|,
 literal|"Injection Entry Count"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4030,6 +4263,8 @@ name|Action
 argument_list|)
 block|,
 literal|"Action"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4041,6 +4276,8 @@ name|Instruction
 argument_list|)
 block|,
 literal|"Instruction"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4052,6 +4289,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4063,6 +4302,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4074,6 +4315,8 @@ name|RegisterRegion
 argument_list|)
 block|,
 literal|"Register Region"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4085,6 +4328,8 @@ name|Value
 argument_list|)
 block|,
 literal|"Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4096,15 +4341,11 @@ name|Mask
 argument_list|)
 block|,
 literal|"Mask"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4128,6 +4369,8 @@ name|HeaderLength
 argument_list|)
 block|,
 literal|"Serialization Header Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -4139,6 +4382,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4150,15 +4395,11 @@ name|Entries
 argument_list|)
 block|,
 literal|"Instruction Entry Count"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4182,15 +4423,11 @@ name|ErrorSourceCount
 argument_list|)
 block|,
 literal|"Error Source Count"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4204,7 +4441,7 @@ define|#
 directive|define
 name|ACPI_DM_HEST_HEADER
 define|\
-value|{ACPI_DMT_HEST,     ACPI_HEST0_OFFSET (Header.Type),            "Subtable Type"}, \     {ACPI_DMT_UINT16,   ACPI_HEST0_OFFSET (Header.SourceId),        "Source Id"}
+value|{ACPI_DMT_HEST,     ACPI_HEST0_OFFSET (Header.Type),            "Subtable Type", 0}, \     {ACPI_DMT_UINT16,   ACPI_HEST0_OFFSET (Header.SourceId),        "Source Id", 0}
 end_define
 
 begin_define
@@ -4212,7 +4449,7 @@ define|#
 directive|define
 name|ACPI_DM_HEST_AER
 define|\
-value|{ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved1),              "Reserved"}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Flags),                  "Flags"}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Enabled),                "Enabled"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.RecordsToPreallocate),   "Records To Preallocate"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.MaxSectionsPerRecord),   "Max Sections Per Record"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.Bus),                    "Bus"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Device),                 "Device"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Function),               "Function"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.DeviceControl),          "DeviceControl"}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved2),              "Reserved"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableMask),      "Uncorrectable Mask"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableSeverity),  "Uncorrectable Severity"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.CorrectableMask),        "Correctable Mask"}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.AdvancedCapabilities),   "Advanced Capabilities"}
+value|{ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved1),              "Reserved", 0}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Flags),                  "Flags", 0}, \     {ACPI_DMT_UINT8,    ACPI_HEST6_OFFSET (Aer.Enabled),                "Enabled", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.RecordsToPreallocate),   "Records To Preallocate", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.MaxSectionsPerRecord),   "Max Sections Per Record", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.Bus),                    "Bus", 0}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Device),                 "Device", 0}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Function),               "Function", 0}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.DeviceControl),          "DeviceControl", 0}, \     {ACPI_DMT_UINT16,   ACPI_HEST6_OFFSET (Aer.Reserved2),              "Reserved", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableMask),      "Uncorrectable Mask", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.UncorrectableSeverity),  "Uncorrectable Severity", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.CorrectableMask),        "Correctable Mask", 0}, \     {ACPI_DMT_UINT32,   ACPI_HEST6_OFFSET (Aer.AdvancedCapabilities),   "Advanced Capabilities", 0}
 end_define
 
 begin_comment
@@ -4240,6 +4477,8 @@ name|Reserved1
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4251,6 +4490,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4262,6 +4503,8 @@ name|Enabled
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4273,6 +4516,8 @@ name|RecordsToPreallocate
 argument_list|)
 block|,
 literal|"Records To Preallocate"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4284,6 +4529,8 @@ name|MaxSectionsPerRecord
 argument_list|)
 block|,
 literal|"Max Sections Per Record"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4295,6 +4542,8 @@ name|GlobalCapabilityData
 argument_list|)
 block|,
 literal|"Global Capability Data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4306,6 +4555,8 @@ name|GlobalControlData
 argument_list|)
 block|,
 literal|"Global Control Data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4317,6 +4568,8 @@ name|NumHardwareBanks
 argument_list|)
 block|,
 literal|"Num Hardware Banks"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4331,15 +4584,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4365,6 +4614,8 @@ name|Reserved1
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4376,6 +4627,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4387,6 +4640,8 @@ name|Enabled
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4398,6 +4653,8 @@ name|RecordsToPreallocate
 argument_list|)
 block|,
 literal|"Records To Preallocate"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4409,6 +4666,8 @@ name|MaxSectionsPerRecord
 argument_list|)
 block|,
 literal|"Max Sections Per Record"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4420,6 +4679,8 @@ name|Notify
 argument_list|)
 block|,
 literal|"Notify"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4431,6 +4692,8 @@ name|NumHardwareBanks
 argument_list|)
 block|,
 literal|"Num Hardware Banks"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4445,15 +4708,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4479,6 +4738,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4490,6 +4751,8 @@ name|RecordsToPreallocate
 argument_list|)
 block|,
 literal|"Records To Preallocate"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4501,6 +4764,8 @@ name|MaxSectionsPerRecord
 argument_list|)
 block|,
 literal|"Max Sections Per Record"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4512,15 +4777,11 @@ name|MaxRawDataLength
 argument_list|)
 block|,
 literal|"Max Raw Data Length"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4548,15 +4809,11 @@ name|RootErrorCommand
 argument_list|)
 block|,
 literal|"Root Error Command"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4575,13 +4832,7 @@ name|ACPI_DM_HEST_HEADER
 block|,
 name|ACPI_DM_HEST_AER
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4609,6 +4860,8 @@ name|UncorrectableMask2
 argument_list|)
 block|,
 literal|"2nd Uncorrectable Mask"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4620,6 +4873,8 @@ name|UncorrectableSeverity2
 argument_list|)
 block|,
 literal|"2nd Uncorrectable Severity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4631,15 +4886,11 @@ name|AdvancedCapabilities2
 argument_list|)
 block|,
 literal|"2nd Advanced Capabilities"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4665,6 +4916,8 @@ name|RelatedSourceId
 argument_list|)
 block|,
 literal|"Related Source Id"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4676,6 +4929,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4687,6 +4942,8 @@ name|Enabled
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4698,6 +4955,8 @@ name|RecordsToPreallocate
 argument_list|)
 block|,
 literal|"Records To Preallocate"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4709,6 +4968,8 @@ name|MaxSectionsPerRecord
 argument_list|)
 block|,
 literal|"Max Sections Per Record"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4720,6 +4981,8 @@ name|MaxRawDataLength
 argument_list|)
 block|,
 literal|"Max Raw Data Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4731,6 +4994,8 @@ name|ErrorStatusAddress
 argument_list|)
 block|,
 literal|"Error Status Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4742,6 +5007,8 @@ name|Notify
 argument_list|)
 block|,
 literal|"Notify"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4753,15 +5020,11 @@ name|ErrorBlockLength
 argument_list|)
 block|,
 literal|"Error Status Block Length"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4781,6 +5044,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Notify Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4792,6 +5057,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Notify Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -4803,6 +5070,8 @@ name|ConfigWriteEnable
 argument_list|)
 block|,
 literal|"Configuration Write Enable"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4814,6 +5083,8 @@ name|PollInterval
 argument_list|)
 block|,
 literal|"PollInterval"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4825,6 +5096,8 @@ name|Vector
 argument_list|)
 block|,
 literal|"Vector"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4836,6 +5109,8 @@ name|PollingThresholdValue
 argument_list|)
 block|,
 literal|"Polling Threshold Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4847,6 +5122,8 @@ name|PollingThresholdWindow
 argument_list|)
 block|,
 literal|"Polling Threshold Window"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4858,6 +5135,8 @@ name|ErrorThresholdValue
 argument_list|)
 block|,
 literal|"Error Threshold Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4869,15 +5148,11 @@ name|ErrorThresholdWindow
 argument_list|)
 block|,
 literal|"Error Threshold Window"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4901,6 +5176,8 @@ name|BankNumber
 argument_list|)
 block|,
 literal|"Bank Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4912,6 +5189,8 @@ name|ClearStatusOnInit
 argument_list|)
 block|,
 literal|"Clear Status On Init"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4923,6 +5202,8 @@ name|StatusFormat
 argument_list|)
 block|,
 literal|"Status Format"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4934,6 +5215,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4945,6 +5228,8 @@ name|ControlRegister
 argument_list|)
 block|,
 literal|"Control Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4956,6 +5241,8 @@ name|ControlData
 argument_list|)
 block|,
 literal|"Control Data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4967,6 +5254,8 @@ name|StatusRegister
 argument_list|)
 block|,
 literal|"Status Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4978,6 +5267,8 @@ name|AddressRegister
 argument_list|)
 block|,
 literal|"Address Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -4989,15 +5280,11 @@ name|MiscRegister
 argument_list|)
 block|,
 literal|"Misc Register"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5021,6 +5308,8 @@ name|Id
 argument_list|)
 block|,
 literal|"Hardware Block ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5032,6 +5321,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Timer Block Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5043,6 +5334,8 @@ name|Sequence
 argument_list|)
 block|,
 literal|"Sequence Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5054,6 +5347,8 @@ name|MinimumTick
 argument_list|)
 block|,
 literal|"Minimum Clock Ticks"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5065,6 +5360,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5078,6 +5375,8 @@ literal|0
 argument_list|)
 block|,
 literal|"4K Page Protect"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5091,15 +5390,11 @@ literal|0
 argument_list|)
 block|,
 literal|"64K Page Protect"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5123,6 +5418,8 @@ name|Info
 argument_list|)
 block|,
 literal|"Virtualization Info"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5134,15 +5431,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5166,6 +5459,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5177,6 +5472,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5188,6 +5485,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -5199,15 +5498,11 @@ name|DeviceId
 argument_list|)
 block|,
 literal|"DeviceId"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5235,6 +5530,8 @@ name|CapabilityOffset
 argument_list|)
 block|,
 literal|"Capability Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5246,6 +5543,8 @@ name|BaseAddress
 argument_list|)
 block|,
 literal|"Base Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5257,6 +5556,8 @@ name|PciSegmentGroup
 argument_list|)
 block|,
 literal|"PCI Segment Group"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5268,6 +5569,8 @@ name|Info
 argument_list|)
 block|,
 literal|"Virtualization Info"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5279,15 +5582,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5311,6 +5610,8 @@ name|AuxData
 argument_list|)
 block|,
 literal|"Auxiliary Data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5322,6 +5623,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5333,6 +5636,8 @@ name|StartAddress
 argument_list|)
 block|,
 literal|"Start Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5344,15 +5649,11 @@ name|MemoryLength
 argument_list|)
 block|,
 literal|"Memory Length"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5366,7 +5667,7 @@ define|#
 directive|define
 name|ACPI_DMT_IVRS_DE_HEADER
 define|\
-value|{ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (Type),                   "Entry Type"}, \     {ACPI_DMT_UINT16,   ACPI_IVRSD_OFFSET (Id),                     "Device ID"}, \     {ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (DataSetting),            "Data Setting"}
+value|{ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (Type),                   "Entry Type", 0}, \     {ACPI_DMT_UINT16,   ACPI_IVRSD_OFFSET (Id),                     "Device ID", 0}, \     {ACPI_DMT_UINT8,    ACPI_IVRSD_OFFSET (DataSetting),            "Data Setting", 0}
 end_define
 
 begin_comment
@@ -5387,8 +5688,10 @@ block|,
 literal|0
 block|,
 name|NULL
+block|,
+literal|0
 block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -5413,6 +5716,8 @@ name|Reserved1
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5424,6 +5729,8 @@ name|UsedId
 argument_list|)
 block|,
 literal|"Source Used Device ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5435,15 +5742,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5469,15 +5772,11 @@ name|ExtendedData
 argument_list|)
 block|,
 literal|"Extended Data"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5503,6 +5802,8 @@ name|Handle
 argument_list|)
 block|,
 literal|"Handle"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5514,6 +5815,8 @@ name|UsedId
 argument_list|)
 block|,
 literal|"Source Used Device ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5525,15 +5828,11 @@ name|Variety
 argument_list|)
 block|,
 literal|"Variety"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5557,6 +5856,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Local Apic Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5568,6 +5869,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5581,15 +5884,11 @@ literal|0
 argument_list|)
 block|,
 literal|"PC-AT Compatibility"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5613,6 +5912,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5624,15 +5925,11 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5660,6 +5957,8 @@ name|ProcessorId
 argument_list|)
 block|,
 literal|"Processor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5671,6 +5970,8 @@ name|Id
 argument_list|)
 block|,
 literal|"Local Apic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5682,6 +5983,8 @@ name|LapicFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5695,15 +5998,11 @@ literal|0
 argument_list|)
 block|,
 literal|"Processor Enabled"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5727,6 +6026,8 @@ name|Id
 argument_list|)
 block|,
 literal|"I/O Apic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5738,6 +6039,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5749,6 +6052,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5760,15 +6065,11 @@ name|GlobalIrqBase
 argument_list|)
 block|,
 literal|"Interrupt"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5792,6 +6093,8 @@ name|Bus
 argument_list|)
 block|,
 literal|"Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5803,6 +6106,8 @@ name|SourceIrq
 argument_list|)
 block|,
 literal|"Source"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5814,6 +6119,8 @@ name|GlobalIrq
 argument_list|)
 block|,
 literal|"Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5825,6 +6132,8 @@ name|IntiFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5838,6 +6147,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Polarity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5851,15 +6162,11 @@ literal|0
 argument_list|)
 block|,
 literal|"Trigger Mode"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5883,6 +6190,8 @@ name|IntiFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5896,6 +6205,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Polarity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5909,6 +6220,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Trigger Mode"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5920,15 +6233,11 @@ name|GlobalIrq
 argument_list|)
 block|,
 literal|"Interrupt"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5952,6 +6261,8 @@ name|ProcessorId
 argument_list|)
 block|,
 literal|"Processor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5963,6 +6274,8 @@ name|IntiFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -5976,6 +6289,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Polarity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -5989,6 +6304,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Trigger Mode"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6000,15 +6317,11 @@ name|Lint
 argument_list|)
 block|,
 literal|"Interrupt Input LINT"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6032,6 +6345,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6043,15 +6358,11 @@ name|Address
 argument_list|)
 block|,
 literal|"APIC Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6075,6 +6386,8 @@ name|Id
 argument_list|)
 block|,
 literal|"I/O Sapic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6086,6 +6399,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6097,6 +6412,8 @@ name|GlobalIrqBase
 argument_list|)
 block|,
 literal|"Interrupt Base"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6108,15 +6425,11 @@ name|Address
 argument_list|)
 block|,
 literal|"Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6140,6 +6453,8 @@ name|ProcessorId
 argument_list|)
 block|,
 literal|"Processor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6151,6 +6466,8 @@ name|Id
 argument_list|)
 block|,
 literal|"Local Sapic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6162,6 +6479,8 @@ name|Eid
 argument_list|)
 block|,
 literal|"Local Sapic EID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6176,6 +6495,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6187,6 +6508,8 @@ name|LapicFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -6200,6 +6523,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Processor Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6211,6 +6536,8 @@ name|Uid
 argument_list|)
 block|,
 literal|"Processor UID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6225,15 +6552,11 @@ index|]
 argument_list|)
 block|,
 literal|"Processor UID String"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6257,6 +6580,8 @@ name|IntiFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -6270,6 +6595,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Polarity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6283,6 +6610,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Trigger Mode"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6294,6 +6623,8 @@ name|Type
 argument_list|)
 block|,
 literal|"InterruptType"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6305,6 +6636,8 @@ name|Id
 argument_list|)
 block|,
 literal|"Processor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6316,6 +6649,8 @@ name|Eid
 argument_list|)
 block|,
 literal|"Processor EID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6327,6 +6662,8 @@ name|IoSapicVector
 argument_list|)
 block|,
 literal|"I/O Sapic Vector"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6338,6 +6675,8 @@ name|GlobalIrq
 argument_list|)
 block|,
 literal|"Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6349,6 +6688,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -6360,15 +6701,11 @@ name|Flags
 argument_list|)
 block|,
 literal|"CPEI Override"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6392,6 +6729,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6403,6 +6742,8 @@ name|LocalApicId
 argument_list|)
 block|,
 literal|"Processor x2Apic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6414,6 +6755,8 @@ name|LapicFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -6427,6 +6770,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Processor Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6438,15 +6783,11 @@ name|Uid
 argument_list|)
 block|,
 literal|"Processor UID"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6470,6 +6811,8 @@ name|IntiFlags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -6483,6 +6826,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Polarity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6496,6 +6841,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Trigger Mode"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6507,6 +6854,8 @@ name|Uid
 argument_list|)
 block|,
 literal|"Processor UID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6518,6 +6867,8 @@ name|Lint
 argument_list|)
 block|,
 literal|"Interrupt Input LINT"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6532,15 +6883,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6567,15 +6914,11 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6595,6 +6938,8 @@ name|Address
 argument_list|)
 block|,
 literal|"Base Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6606,6 +6951,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"Segment Group Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6617,6 +6964,8 @@ name|StartBusNumber
 argument_list|)
 block|,
 literal|"Start Bus Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6628,6 +6977,8 @@ name|EndBusNumber
 argument_list|)
 block|,
 literal|"End Bus Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6639,15 +6990,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6671,6 +7018,8 @@ name|InterfaceType
 argument_list|)
 block|,
 literal|"Interface Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6682,6 +7031,8 @@ name|Protocol
 argument_list|)
 block|,
 literal|"Protocol"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6693,6 +7044,8 @@ name|ProtocolData
 argument_list|)
 block|,
 literal|"Protocol Data"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6704,6 +7057,8 @@ name|InterruptType
 argument_list|)
 block|,
 literal|"Interrupt Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6715,6 +7070,8 @@ name|Gpe
 argument_list|)
 block|,
 literal|"Gpe"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6726,6 +7083,8 @@ name|PciDeviceFlag
 argument_list|)
 block|,
 literal|"Pci Device Flag"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6737,6 +7096,8 @@ name|GlobalInterrupt
 argument_list|)
 block|,
 literal|"Global Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6748,6 +7109,8 @@ name|ControlRegister
 argument_list|)
 block|,
 literal|"Control Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6759,6 +7122,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"Pci Segment"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6770,6 +7135,8 @@ name|PciBus
 argument_list|)
 block|,
 literal|"Pci Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6781,6 +7148,8 @@ name|PciDevice
 argument_list|)
 block|,
 literal|"Pci Device"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6792,15 +7161,11 @@ name|PciFunction
 argument_list|)
 block|,
 literal|"Pci Function"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6824,6 +7189,8 @@ name|ProximityOffset
 argument_list|)
 block|,
 literal|"Proximity Offset"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6835,6 +7202,8 @@ name|MaxProximityDomains
 argument_list|)
 block|,
 literal|"Max Proximity Domains"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6846,6 +7215,8 @@ name|MaxClockDomains
 argument_list|)
 block|,
 literal|"Max Clock Domains"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6857,15 +7228,11 @@ name|MaxAddress
 argument_list|)
 block|,
 literal|"Max Physical Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6889,6 +7256,8 @@ name|Revision
 argument_list|)
 block|,
 literal|"Revision"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6900,6 +7269,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
@@ -6911,6 +7282,8 @@ name|RangeStart
 argument_list|)
 block|,
 literal|"Domain Range Start"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6922,6 +7295,8 @@ name|RangeEnd
 argument_list|)
 block|,
 literal|"Domain Range End"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6933,6 +7308,8 @@ name|ProcessorCapacity
 argument_list|)
 block|,
 literal|"Processor Capacity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6944,15 +7321,11 @@ name|MemoryCapacity
 argument_list|)
 block|,
 literal|"Memory Capacity"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6976,6 +7349,8 @@ name|WarningLevel
 argument_list|)
 block|,
 literal|"Warning Level"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6987,6 +7362,8 @@ name|LowLevel
 argument_list|)
 block|,
 literal|"Low Level"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -6998,21 +7375,17 @@ name|CriticalLevel
 argument_list|)
 block|,
 literal|"Critical Level"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table. NOT FULLY IMPLEMENTED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table. NOT FULLY IMPLEMENTED, do not  * have the table definition.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -7021,13 +7394,7 @@ name|AcpiDmTableInfoSlic
 index|[]
 init|=
 block|{
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7051,15 +7418,11 @@ name|LocalityCount
 argument_list|)
 block|,
 literal|"Localities"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7083,6 +7446,8 @@ name|InterfaceType
 argument_list|)
 block|,
 literal|"Interface Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7097,6 +7462,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7108,6 +7475,8 @@ name|SerialPort
 argument_list|)
 block|,
 literal|"Serial Port Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7119,6 +7488,8 @@ name|InterruptType
 argument_list|)
 block|,
 literal|"Interrupt Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7130,6 +7501,8 @@ name|PcInterrupt
 argument_list|)
 block|,
 literal|"PCAT-compatible IRQ"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7141,6 +7514,8 @@ name|Interrupt
 argument_list|)
 block|,
 literal|"Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7152,6 +7527,8 @@ name|BaudRate
 argument_list|)
 block|,
 literal|"Baud Rate"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7163,6 +7540,8 @@ name|Parity
 argument_list|)
 block|,
 literal|"Parity"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7174,6 +7553,8 @@ name|StopBits
 argument_list|)
 block|,
 literal|"Stop Bits"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7185,6 +7566,8 @@ name|FlowControl
 argument_list|)
 block|,
 literal|"Flow Control"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7196,6 +7579,8 @@ name|TerminalType
 argument_list|)
 block|,
 literal|"Terminal Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7207,6 +7592,8 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7218,6 +7605,8 @@ name|PciDeviceId
 argument_list|)
 block|,
 literal|"PCI Device ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7229,6 +7618,8 @@ name|PciVendorId
 argument_list|)
 block|,
 literal|"PCI Vendor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7240,6 +7631,8 @@ name|PciBus
 argument_list|)
 block|,
 literal|"PCI Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7251,6 +7644,8 @@ name|PciDevice
 argument_list|)
 block|,
 literal|"PCI Device"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7262,6 +7657,8 @@ name|PciFunction
 argument_list|)
 block|,
 literal|"PCI Function"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7273,6 +7670,8 @@ name|PciFlags
 argument_list|)
 block|,
 literal|"PCI Flags"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7284,6 +7683,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"PCI Segment"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7295,15 +7696,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7327,6 +7724,8 @@ name|InterfaceType
 argument_list|)
 block|,
 literal|"Interface Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7338,6 +7737,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7349,6 +7750,8 @@ name|SpecRevision
 argument_list|)
 block|,
 literal|"IPMI Spec Version"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7360,6 +7763,8 @@ name|InterruptType
 argument_list|)
 block|,
 literal|"Interrupt Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7371,6 +7776,8 @@ name|GpeNumber
 argument_list|)
 block|,
 literal|"GPE Number"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7382,6 +7789,8 @@ name|Reserved1
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7393,6 +7802,8 @@ name|PciDeviceFlag
 argument_list|)
 block|,
 literal|"PCI Device Flag"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7404,6 +7815,8 @@ name|Interrupt
 argument_list|)
 block|,
 literal|"Interrupt"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7415,6 +7828,8 @@ name|IpmiRegister
 argument_list|)
 block|,
 literal|"IPMI Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7426,6 +7841,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"PCI Segment"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7437,6 +7854,8 @@ name|PciBus
 argument_list|)
 block|,
 literal|"PCI Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7448,6 +7867,8 @@ name|PciDevice
 argument_list|)
 block|,
 literal|"PCI Device"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7459,6 +7880,8 @@ name|PciFunction
 argument_list|)
 block|,
 literal|"PCI Function"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7470,15 +7893,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7502,6 +7921,8 @@ name|TableRevision
 argument_list|)
 block|,
 literal|"Table Revision"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7513,15 +7934,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7545,6 +7962,8 @@ name|Type
 argument_list|)
 block|,
 literal|"Subtable Type"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7556,15 +7975,11 @@ name|Length
 argument_list|)
 block|,
 literal|"Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
-block|{
-name|ACPI_DMT_EXIT
-block|,
-literal|0
-block|,
-name|NULL
-block|}
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7592,6 +8007,8 @@ name|ProximityDomainLo
 argument_list|)
 block|,
 literal|"Proximity Domain Low(8)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7603,6 +8020,8 @@ name|ApicId
 argument_list|)
 block|,
 literal|"Apic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7614,6 +8033,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -7627,6 +8048,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7638,6 +8061,8 @@ name|LocalSapicEid
 argument_list|)
 block|,
 literal|"Local Sapic EID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7652,6 +8077,8 @@ index|]
 argument_list|)
 block|,
 literal|"Proximity Domain High(24)"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7663,15 +8090,11 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7695,6 +8118,8 @@ name|ProximityDomain
 argument_list|)
 block|,
 literal|"Proximity Domain"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7706,6 +8131,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7717,6 +8144,8 @@ name|BaseAddress
 argument_list|)
 block|,
 literal|"Base Address"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7728,6 +8157,8 @@ name|Length
 argument_list|)
 block|,
 literal|"Address Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7739,6 +8170,8 @@ name|Reserved1
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7750,6 +8183,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -7763,6 +8198,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7776,6 +8213,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Hot Pluggable"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7789,6 +8228,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Non-Volatile"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7800,15 +8241,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7832,6 +8269,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7843,6 +8282,8 @@ name|ProximityDomain
 argument_list|)
 block|,
 literal|"Proximity Domain"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7854,6 +8295,8 @@ name|ApicId
 argument_list|)
 block|,
 literal|"Apic ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7865,6 +8308,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -7878,6 +8323,8 @@ literal|0
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7889,6 +8336,8 @@ name|ClockDomain
 argument_list|)
 block|,
 literal|"Clock Domain"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7900,15 +8349,11 @@ name|Reserved2
 argument_list|)
 block|,
 literal|"Reserved"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7932,6 +8377,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7943,6 +8390,8 @@ name|MaxLogLength
 argument_list|)
 block|,
 literal|"Max Event Log Length"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -7954,15 +8403,11 @@ name|LogAddress
 argument_list|)
 block|,
 literal|"Event Log Address"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7989,6 +8434,8 @@ index|]
 argument_list|)
 block|,
 literal|"UUID Identifier"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8000,15 +8447,11 @@ name|DataOffset
 argument_list|)
 block|,
 literal|"Data Offset"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8032,6 +8475,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -8043,6 +8488,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"RTC needs no INT ack"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8054,15 +8501,11 @@ name|Flags
 argument_list|)
 block|,
 literal|"PM timer, one read only"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8086,10 +8529,12 @@ name|HeaderLength
 argument_list|)
 block|,
 literal|"Header Length"
+block|,
+name|DT_LENGTH
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT8
+name|ACPI_DMT_UINT16
 block|,
 name|ACPI_WDAT_OFFSET
 argument_list|(
@@ -8097,6 +8542,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"PCI Segment"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8108,6 +8555,8 @@ name|PciBus
 argument_list|)
 block|,
 literal|"PCI Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8119,6 +8568,8 @@ name|PciDevice
 argument_list|)
 block|,
 literal|"PCI Device"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8130,6 +8581,8 @@ name|PciFunction
 argument_list|)
 block|,
 literal|"PCI Function"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8144,6 +8597,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8155,6 +8610,8 @@ name|TimerPeriod
 argument_list|)
 block|,
 literal|"Timer Period"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8166,6 +8623,8 @@ name|MaxCount
 argument_list|)
 block|,
 literal|"Max Count"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8177,6 +8636,8 @@ name|MinCount
 argument_list|)
 block|,
 literal|"Min Count"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8188,6 +8649,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
 block|}
 block|,
 block|{
@@ -8199,6 +8662,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Enabled"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8210,6 +8675,8 @@ name|Flags
 argument_list|)
 block|,
 literal|"Stopped When Asleep"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8224,6 +8691,8 @@ index|]
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8235,15 +8704,11 @@ name|Entries
 argument_list|)
 block|,
 literal|"Watchdog Entry Count"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8267,6 +8732,8 @@ name|Action
 argument_list|)
 block|,
 literal|"Watchdog Action"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8278,6 +8745,8 @@ name|Instruction
 argument_list|)
 block|,
 literal|"Instruction"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8289,6 +8758,8 @@ name|Reserved
 argument_list|)
 block|,
 literal|"Reserved"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8300,6 +8771,8 @@ name|RegisterRegion
 argument_list|)
 block|,
 literal|"Register Region"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8311,6 +8784,8 @@ name|Value
 argument_list|)
 block|,
 literal|"Value"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8322,15 +8797,11 @@ name|Mask
 argument_list|)
 block|,
 literal|"Register Mask"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8354,6 +8825,8 @@ name|ControlRegister
 argument_list|)
 block|,
 literal|"Control Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8365,6 +8838,8 @@ name|CountRegister
 argument_list|)
 block|,
 literal|"Count Register"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8376,6 +8851,8 @@ name|PciDeviceId
 argument_list|)
 block|,
 literal|"PCI Device ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8387,6 +8864,8 @@ name|PciVendorId
 argument_list|)
 block|,
 literal|"PCI Vendor ID"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8398,6 +8877,8 @@ name|PciBus
 argument_list|)
 block|,
 literal|"PCI Bus"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8409,6 +8890,8 @@ name|PciDevice
 argument_list|)
 block|,
 literal|"PCI Device"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8420,6 +8903,8 @@ name|PciFunction
 argument_list|)
 block|,
 literal|"PCI Function"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8431,6 +8916,8 @@ name|PciSegment
 argument_list|)
 block|,
 literal|"PCI Segment"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8442,6 +8929,8 @@ name|MaxCount
 argument_list|)
 block|,
 literal|"Max Count"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -8453,15 +8942,11 @@ name|Units
 argument_list|)
 block|,
 literal|"Counter Units"
-block|}
-block|,
-block|{
-name|ACPI_DMT_EXIT
 block|,
 literal|0
-block|,
-name|NULL
 block|}
+block|,
+name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
 end_decl_stmt

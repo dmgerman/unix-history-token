@@ -1832,7 +1832,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Arg #%d (%p) done, Arg1=%p\n"
+literal|"Arg #%u (%p) done, Arg1=%p\n"
 operator|,
 name|Index
 operator|,
@@ -1865,7 +1865,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"While creating Arg %d"
+literal|"While creating Arg %u"
 operator|,
 name|Index
 operator|)

@@ -31,6 +31,12 @@ directive|include
 file|"actables.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dtcompiler.h"
+end_include
+
 begin_comment
 comment|/* This module used for application-level code only */
 end_comment
@@ -52,19 +58,6 @@ end_macro
 begin_comment
 comment|/* Local Prototypes */
 end_comment
-
-begin_function_decl
-specifier|static
-name|ACPI_DMTABLE_DATA
-modifier|*
-name|AcpiDmGetTableData
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -354,6 +347,8 @@ name|NULL
 block|,
 name|AcpiDmDumpAsf
 block|,
+name|DtCompileAsf
+block|,
 literal|"Alert Standard Format table"
 block|}
 block|,
@@ -361,6 +356,8 @@ block|{
 name|ACPI_SIG_BOOT
 block|,
 name|AcpiDmTableInfoBoot
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -374,6 +371,8 @@ name|AcpiDmTableInfoBert
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"Boot Error Record Table"
 block|}
 block|,
@@ -384,6 +383,8 @@ name|NULL
 block|,
 name|AcpiDmDumpCpep
 block|,
+name|DtCompileCpep
+block|,
 literal|"Corrected Platform Error Polling table"
 block|}
 block|,
@@ -391,6 +392,8 @@ block|{
 name|ACPI_SIG_DBGP
 block|,
 name|AcpiDmTableInfoDbgp
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -404,6 +407,8 @@ name|NULL
 block|,
 name|AcpiDmDumpDmar
 block|,
+name|DtCompileDmar
+block|,
 literal|"DMA Remapping table"
 block|}
 block|,
@@ -411,6 +416,8 @@ block|{
 name|ACPI_SIG_ECDT
 block|,
 name|AcpiDmTableInfoEcdt
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -424,6 +431,8 @@ name|NULL
 block|,
 name|AcpiDmDumpEinj
 block|,
+name|DtCompileEinj
+block|,
 literal|"Error Injection table"
 block|}
 block|,
@@ -433,6 +442,8 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpErst
+block|,
+name|DtCompileErst
 block|,
 literal|"Error Record Serialization Table"
 block|}
@@ -444,6 +455,8 @@ name|NULL
 block|,
 name|AcpiDmDumpFadt
 block|,
+name|DtCompileFadt
+block|,
 literal|"Fixed ACPI Description Table"
 block|}
 block|,
@@ -454,6 +467,8 @@ name|NULL
 block|,
 name|AcpiDmDumpHest
 block|,
+name|DtCompileHest
+block|,
 literal|"Hardware Error Source Table"
 block|}
 block|,
@@ -461,6 +476,8 @@ block|{
 name|ACPI_SIG_HPET
 block|,
 name|AcpiDmTableInfoHpet
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -474,6 +491,8 @@ name|NULL
 block|,
 name|AcpiDmDumpIvrs
 block|,
+name|DtCompileIvrs
+block|,
 literal|"I/O Virtualization Reporting Structure"
 block|}
 block|,
@@ -483,6 +502,8 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpMadt
+block|,
+name|DtCompileMadt
 block|,
 literal|"Multiple APIC Description Table"
 block|}
@@ -494,6 +515,8 @@ name|NULL
 block|,
 name|AcpiDmDumpMcfg
 block|,
+name|DtCompileMcfg
+block|,
 literal|"Memory Mapped Configuration table"
 block|}
 block|,
@@ -501,6 +524,8 @@ block|{
 name|ACPI_SIG_MCHI
 block|,
 name|AcpiDmTableInfoMchi
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -514,6 +539,8 @@ name|NULL
 block|,
 name|AcpiDmDumpMsct
 block|,
+name|DtCompileMsct
+block|,
 literal|"Maximum System Characteristics Table"
 block|}
 block|,
@@ -524,6 +551,8 @@ name|NULL
 block|,
 name|AcpiDmDumpRsdt
 block|,
+name|DtCompileRsdt
+block|,
 literal|"Root System Description Table"
 block|}
 block|,
@@ -531,6 +560,8 @@ block|{
 name|ACPI_SIG_SBST
 block|,
 name|AcpiDmTableInfoSbst
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -544,6 +575,8 @@ name|AcpiDmTableInfoSlic
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"Software Licensing Description Table"
 block|}
 block|,
@@ -554,6 +587,8 @@ name|NULL
 block|,
 name|AcpiDmDumpSlit
 block|,
+name|DtCompileSlit
+block|,
 literal|"System Locality Information Table"
 block|}
 block|,
@@ -561,6 +596,8 @@ block|{
 name|ACPI_SIG_SPCR
 block|,
 name|AcpiDmTableInfoSpcr
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -574,6 +611,8 @@ name|AcpiDmTableInfoSpmi
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"Server Platform Management Interface table"
 block|}
 block|,
@@ -584,6 +623,8 @@ name|NULL
 block|,
 name|AcpiDmDumpSrat
 block|,
+name|DtCompileSrat
+block|,
 literal|"System Resource Affinity Table"
 block|}
 block|,
@@ -591,6 +632,8 @@ block|{
 name|ACPI_SIG_TCPA
 block|,
 name|AcpiDmTableInfoTcpa
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -604,6 +647,8 @@ name|AcpiDmTableInfoUefi
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"UEFI Boot Optimization Table"
 block|}
 block|,
@@ -611,6 +656,8 @@ block|{
 name|ACPI_SIG_WAET
 block|,
 name|AcpiDmTableInfoWaet
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -624,6 +671,8 @@ name|NULL
 block|,
 name|AcpiDmDumpWdat
 block|,
+name|DtCompileWdat
+block|,
 literal|"Watchdog Action Table"
 block|}
 block|,
@@ -631,6 +680,8 @@ block|{
 name|ACPI_SIG_WDRT
 block|,
 name|AcpiDmTableInfoWdrt
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -644,10 +695,14 @@ name|NULL
 block|,
 name|AcpiDmDumpXsdt
 block|,
+name|DtCompileXsdt
+block|,
 literal|"Extended System Description Table"
 block|}
 block|,
 block|{
+name|NULL
+block|,
 name|NULL
 block|,
 name|NULL
@@ -731,7 +786,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|AcpiDmGetTableData

@@ -323,41 +323,31 @@ literal|"Parsing all Control Methods:"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Set all init info to zero */
+name|ACPI_MEMSET
+argument_list|(
+operator|&
 name|Info
-operator|.
-name|MethodCount
-operator|=
+argument_list|,
 literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|OpRegionCount
-operator|=
-literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|ObjectCount
-operator|=
-literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|DeviceCount
-operator|=
-literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|TableIndex
-operator|=
-name|TableIndex
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_INIT_WALK_INFO
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|Info
 operator|.
 name|OwnerId
 operator|=
 name|OwnerId
+expr_stmt|;
+name|Info
+operator|.
+name|TableIndex
+operator|=
+name|TableIndex
 expr_stmt|;
 comment|/* Walk entire namespace from the supplied root */
 name|Status
@@ -461,7 +451,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nTable [%4.4s](id %4.4X) - %hd Objects with %hd Devices %hd Methods %hd Regions\n"
+literal|"\nTable [%4.4s](id %4.4X) - %u Objects with %u Devices %u Methods %u Regions\n"
 operator|,
 name|Table
 operator|->
@@ -492,7 +482,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%hd Methods, %hd Regions\n"
+literal|"%u Methods, %u Regions\n"
 operator|,
 name|Info
 operator|.

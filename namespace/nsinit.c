@@ -230,8 +230,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nInitialized %hd/%hd Regions %hd/%hd Fields %hd/%hd "
-literal|"Buffers %hd/%hd Packages (%hd nodes)\n"
+literal|"\nInitialized %u/%u Regions %u/%u Fields %u/%u "
+literal|"Buffers %u/%u Packages (%u nodes)\n"
 operator|,
 name|Info
 operator|.
@@ -276,7 +276,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%hd Control Methods found\n"
+literal|"%u Control Methods found\n"
 operator|,
 name|Info
 operator|.
@@ -289,7 +289,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"%hd Op Regions found\n"
+literal|"%u Op Regions found\n"
 operator|,
 name|Info
 operator|.
@@ -499,6 +499,19 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*      * Any _OSI requests should be completed by now. If the BIOS has      * requested any Windows OSI strings, we will always truncate      * I/O addresses to 16 bits -- for Windows compatibility.      */
+if|if
+condition|(
+name|AcpiGbl_OsiData
+operator|>=
+name|ACPI_OSI_WIN_2000
+condition|)
+block|{
+name|AcpiGbl_TruncateIoAddresses
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|ACPI_FREE
 argument_list|(
 name|Info
@@ -523,8 +536,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nExecuted %hd _INI methods requiring %hd _STA executions "
-literal|"(examined %hd objects)\n"
+literal|"\nExecuted %u _INI methods requiring %u _STA executions "
+literal|"(examined %u objects)\n"
 operator|,
 name|Info
 operator|.
@@ -1011,10 +1024,9 @@ block|}
 comment|/*      * The only _INI methods that we care about are those that are      * present under Device, Processor, and Thermal objects.      */
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 switch|switch
 condition|(
@@ -1046,10 +1058,9 @@ name|ANOBJ_SUBTREE_HAS_INI
 expr_stmt|;
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|ParentNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 break|break;

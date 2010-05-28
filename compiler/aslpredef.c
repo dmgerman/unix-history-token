@@ -609,7 +609,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s requires %d"
+literal|"%s requires %u"
 argument_list|,
 name|Op
 operator|->
@@ -687,7 +687,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%4.4s requires %d"
+literal|"%4.4s requires %u"
 argument_list|,
 name|PredefinedNames
 index|[
@@ -1686,7 +1686,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%4.4s    Requires %d arguments, "
+literal|"%4.4s    Requires %u arguments, "
 argument_list|,
 name|ThisName
 operator|->

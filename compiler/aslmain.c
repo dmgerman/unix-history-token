@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:v:w:x:"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:v:w:x:yz"
 end_define
 
 begin_comment
@@ -465,6 +465,16 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -x<level>      Set debug level for trace output\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -y             Temporary: Enable data table compiler\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -z             Do not insert new compiler ID for DataTables\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1590,6 +1600,22 @@ name|NULL
 argument_list|,
 literal|16
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|Gbl_DataTableCompilerAvailable
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|Gbl_UseOriginalCompilerId
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:

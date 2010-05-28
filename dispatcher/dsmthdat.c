@@ -228,8 +228,6 @@ index|]
 operator|.
 name|Flags
 operator|=
-name|ANOBJ_END_OF_PEER_LIST
-operator||
 name|ANOBJ_METHOD_ARG
 expr_stmt|;
 block|}
@@ -311,8 +309,6 @@ index|]
 operator|.
 name|Flags
 operator|=
-name|ANOBJ_END_OF_PEER_LIST
-operator||
 name|ANOBJ_METHOD_LOCAL
 expr_stmt|;
 block|}
@@ -374,7 +370,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Deleting Local%d=%p\n"
+literal|"Deleting Local%u=%p\n"
 operator|,
 name|Index
 operator|,
@@ -435,7 +431,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Deleting Arg%d=%p\n"
+literal|"Deleting Arg%u=%p\n"
 operator|,
 name|Index
 operator|,
@@ -587,7 +583,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%d args passed to method\n"
+literal|"%u args passed to method\n"
 operator|,
 name|Index
 operator|)
@@ -787,7 +783,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"NewObj %p Type %2.2X, Refs=%d [%s]\n"
+literal|"NewObj %p Type %2.2X, Refs=%u [%s]\n"
 operator|,
 name|Object
 operator|,
@@ -1229,7 +1225,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Type=%2.2X Index=%d Obj=%p\n"
+literal|"Type=%2.2X Index=%u Obj=%p\n"
 operator|,
 name|Type
 operator|,

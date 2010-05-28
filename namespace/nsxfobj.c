@@ -277,10 +277,9 @@ block|}
 comment|/* Get the parent entry */
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 operator|*
 name|RetHandle

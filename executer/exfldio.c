@@ -235,7 +235,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Exit now for SMBus or IPMI address space, it has a non-linear address space      * and the request cannot be directly validated      */
+comment|/*      * Exit now for SMBus or IPMI address space, it has a non-linear      * address space and the request cannot be directly validated      */
 if|if
 condition|(
 name|RgnDesc
@@ -1323,7 +1323,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Read %8.8X%8.8X, Width %d\n"
+literal|"Value Read %8.8X%8.8X, Width %u\n"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1347,7 +1347,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Written %8.8X%8.8X, Width %d\n"
+literal|"Value Written %8.8X%8.8X, Width %u\n"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1661,6 +1661,9 @@ name|UINT32
 name|FieldDatumCount
 decl_stmt|;
 name|UINT32
+name|AccessBitWidth
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -1715,6 +1718,97 @@ argument_list|,
 name|BufferLength
 argument_list|)
 expr_stmt|;
+name|AccessBitWidth
+operator|=
+name|ACPI_MUL_8
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|)
+expr_stmt|;
+comment|/* Handle the simple case here */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+operator|==
+name|AccessBitWidth
+operator|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiExFieldDatumIo
+argument_list|(
+name|ObjDesc
+argument_list|,
+literal|0
+argument_list|,
+name|Buffer
+argument_list|,
+name|ACPI_READ
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* TBD: Move to common setup code */
+comment|/* Field algorithm is limited to sizeof(UINT64), truncate if needed */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|>
+sizeof|sizeof
+argument_list|(
+name|UINT64
+argument_list|)
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|=
+sizeof|sizeof
+argument_list|(
+name|UINT64
+argument_list|)
+expr_stmt|;
+name|AccessBitWidth
+operator|=
+sizeof|sizeof
+argument_list|(
+name|UINT64
+argument_list|)
+operator|*
+literal|8
+expr_stmt|;
+block|}
 comment|/* Compute the number of datums (access width data items) */
 name|DatumCount
 operator|=
@@ -1726,10 +1820,6 @@ name|CommonField
 operator|.
 name|BitLength
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
@@ -1749,10 +1839,6 @@ name|CommonField
 operator|.
 name|StartFieldBitOffset
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
@@ -1850,11 +1936,6 @@ block|}
 comment|/*          * Merge with previous datum if necessary.          *          * Note: Before the shift, check if the shift value will be larger than          * the integer size. If so, there is no need to perform the operation.          * This avoids the differences in behavior between different compilers          * concerning shift values larger than the target data width.          */
 if|if
 condition|(
-operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 operator|-
 name|ObjDesc
@@ -1862,7 +1943,6 @@ operator|->
 name|CommonField
 operator|.
 name|StartFieldBitOffset
-operator|)
 operator|<
 name|ACPI_INTEGER_BIT_SIZE
 condition|)
@@ -1872,10 +1952,6 @@ operator||=
 name|RawDatum
 operator|<<
 operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 operator|-
 name|ObjDesc
@@ -1953,10 +2029,6 @@ name|CommonField
 operator|.
 name|BitLength
 operator|%
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 expr_stmt|;
 if|if
@@ -2030,6 +2102,10 @@ name|UINT32
 name|BufferLength
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|NewBuffer
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -2067,14 +2143,13 @@ name|UINT32
 name|FieldDatumCount
 decl_stmt|;
 name|UINT32
-name|i
+name|AccessBitWidth
 decl_stmt|;
 name|UINT32
 name|RequiredLength
 decl_stmt|;
-name|void
-modifier|*
-name|NewBuffer
+name|UINT32
+name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -2152,13 +2227,48 @@ operator|=
 name|RequiredLength
 expr_stmt|;
 block|}
-comment|/*      * Create the bitmasks used for bit insertion.      * Note: This if/else is used to bypass compiler differences with the      * shift operator      */
+comment|/* TBD: Move to common setup code */
+comment|/* Algo is limited to sizeof(UINT64), so cut the AccessByteWidth */
 if|if
 condition|(
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
+name|AccessByteWidth
+operator|>
+sizeof|sizeof
+argument_list|(
+name|UINT64
+argument_list|)
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|=
+sizeof|sizeof
+argument_list|(
+name|UINT64
+argument_list|)
+expr_stmt|;
+block|}
+name|AccessBitWidth
+operator|=
+name|ACPI_MUL_8
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|)
+expr_stmt|;
+comment|/*      * Create the bitmasks used for bit insertion.      * Note: This if/else is used to bypass compiler differences with the      * shift operator      */
+if|if
+condition|(
 name|AccessBitWidth
 operator|==
 name|ACPI_INTEGER_BIT_SIZE
@@ -2175,10 +2285,6 @@ name|WidthMask
 operator|=
 name|ACPI_MASK_BITS_ABOVE
 argument_list|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
@@ -2207,10 +2313,6 @@ name|CommonField
 operator|.
 name|BitLength
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
@@ -2230,10 +2332,6 @@ name|CommonField
 operator|.
 name|StartFieldBitOffset
 argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 argument_list|)
 expr_stmt|;
@@ -2326,10 +2424,6 @@ comment|/*          * Start new output datum by merging with previous input datu
 if|if
 condition|(
 operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 operator|-
 name|ObjDesc
@@ -2347,10 +2441,6 @@ operator|=
 name|RawDatum
 operator|>>
 operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 operator|-
 name|ObjDesc
@@ -2447,10 +2537,6 @@ operator|.
 name|StartFieldBitOffset
 operator|)
 operator|%
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
 name|AccessBitWidth
 expr_stmt|;
 if|if

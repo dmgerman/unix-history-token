@@ -480,7 +480,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Table [%s] obtained from registry, %d bytes\n"
+literal|"Table [%s] obtained from registry, %u bytes\n"
 argument_list|,
 name|TableName
 argument_list|,
@@ -1178,7 +1178,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_MUTEX
 operator|,
-literal|"Handle=%d, Max=%d, Current=%d, OsHandle=%p\n"
+literal|"Handle=%u, Max=%u, Current=%u, OsHandle=%p\n"
 operator|,
 name|i
 operator|,
@@ -1348,7 +1348,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WaitSemaphore: Attempt to receive %d units\n"
+literal|"WaitSemaphore: Attempt to receive %u units\n"
 argument_list|,
 name|Units
 argument_list|)
@@ -1562,7 +1562,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SignalSemaphore: Attempt to signal %d units, Index %2.2X\n"
+literal|"SignalSemaphore: Attempt to signal %u units, Index %2.2X\n"
 argument_list|,
 name|Units
 argument_list|,

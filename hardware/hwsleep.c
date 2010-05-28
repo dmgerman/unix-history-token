@@ -717,7 +717,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"Entering sleep state [S%d]\n"
+literal|"Entering sleep state [S%u]\n"
 operator|,
 name|SleepState
 operator|)

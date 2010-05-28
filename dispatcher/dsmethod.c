@@ -1414,6 +1414,26 @@ name|AOPOBJ_MODULE_LEVEL
 operator|)
 condition|)
 block|{
+comment|/* Delete any direct children of (created by) this method */
+name|AcpiNsDeleteNamespaceSubtree
+argument_list|(
+name|WalkState
+operator|->
+name|MethodNode
+argument_list|)
+expr_stmt|;
+comment|/*              * Delete any objects that were created by this method              * elsewhere in the namespace (if any were created).              */
+if|if
+condition|(
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_MODIFIED_NAMESPACE
+condition|)
+block|{
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
 name|MethodDesc
@@ -1423,6 +1443,7 @@ operator|.
 name|OwnerId
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Decrement the thread count on the method */
@@ -1471,7 +1492,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"*** Completed execution of one thread, %d threads remaining\n"
+literal|"*** Completed execution of one thread, %u threads remaining\n"
 operator|,
 name|MethodDesc
 operator|->

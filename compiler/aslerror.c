@@ -1063,7 +1063,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMaximum error count (%d) exceeded\n"
+literal|"\nMaximum error count (%u) exceeded\n"
 argument_list|,
 name|ASL_MAX_ERROR_COUNT
 argument_list|)

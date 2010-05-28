@@ -499,7 +499,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Missing braces for<if>, line %d: %s\n"
+literal|"Missing braces for<if>, line %u: %s\n"
 argument_list|,
 name|TotalLines
 argument_list|,
@@ -595,7 +595,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Missing braces for<if>, line %d: %s\n"
+literal|"Missing braces for<if>, line %u: %s\n"
 argument_list|,
 name|TotalLines
 argument_list|,
@@ -691,7 +691,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Missing braces for<else>, line %d: %s\n"
+literal|"Missing braces for<else>, line %u: %s\n"
 argument_list|,
 name|TotalLines
 argument_list|,
@@ -2651,7 +2651,7 @@ block|{
 name|VERBOSE_PRINT
 argument_list|(
 operator|(
-literal|"%d Lines longer than 80 found in %s\n"
+literal|"%u Lines longer than 80 found in %s\n"
 operator|,
 name|LongLineCount
 operator|,
@@ -3076,7 +3076,7 @@ expr_stmt|;
 name|VERBOSE_PRINT
 argument_list|(
 operator|(
-literal|"%d Comment %d White %d Code %d Lines in %s\n"
+literal|"%u Comment %u White %u Code %u Lines in %s\n"
 operator|,
 name|CommentCount
 operator|,

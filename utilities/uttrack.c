@@ -790,6 +790,17 @@ argument_list|,
 name|Allocation
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DisableMemTracking
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 name|MemList
 operator|=
 name|AcpiGbl_GlobalList
@@ -1005,6 +1016,17 @@ argument_list|(
 name|UtRemoveAllocation
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DisableMemTracking
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 name|MemList
 operator|=
 name|AcpiGbl_GlobalList
@@ -1213,6 +1235,13 @@ argument_list|(
 name|UtDumpAllocations
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DisableMemTracking
+condition|)
+block|{
+return|return;
+block|}
 comment|/*      * Walk the allocation list.      */
 if|if
 condition|(
@@ -1296,7 +1325,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Length 0x%04X %9.9s-%d "
+literal|"%p Length 0x%04X %9.9s-%u "
 literal|"[Not a Descriptor - too small]\n"
 argument_list|,
 name|Descriptor
@@ -1330,7 +1359,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Length 0x%04X %9.9s-%d [%s] "
+literal|"%p Length 0x%04X %9.9s-%u [%s] "
 argument_list|,
 name|Descriptor
 argument_list|,
@@ -1553,7 +1582,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%d(0x%X) Outstanding allocations"
+literal|"%u(0x%X) Outstanding allocations"
 operator|,
 name|NumOutstanding
 operator|,

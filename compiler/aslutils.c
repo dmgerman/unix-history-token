@@ -320,6 +320,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|CmCleanupAndExit
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -914,12 +917,75 @@ name|__DATE__
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Gbl_FileType
+operator|==
+name|ASL_INPUT_TYPE_ASCII_DATA
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"Table Input:   %s - %u lines, %u bytes, %u fields\n"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|Gbl_CurrentLineNumber
+argument_list|,
+name|Gbl_InputByteCount
+argument_list|,
+name|Gbl_InputFieldCount
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Gbl_ExceptionCount
+index|[
+name|ASL_ERROR
+index|]
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|Gbl_IgnoreErrors
+operator|)
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"Binary Output: %s - %u bytes\n\n"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|Gbl_TableLength
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 comment|/* Input/Output summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"ASL Input:  %s - %d lines, %d bytes, %d keywords\n"
+literal|"ASL Input:  %s - %u lines, %u bytes, %u keywords\n"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -956,7 +1022,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"AML Output: %s - %d bytes, %d named objects, %d executable opcodes\n\n"
+literal|"AML Output: %s - %u bytes, %u named objects, %u executable opcodes\n\n"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -973,12 +1039,13 @@ name|TotalExecutableOpcodes
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Error summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Compilation complete. %d Errors, %d Warnings, %d Remarks, %d Optimizations\n"
+literal|"Compilation complete. %u Errors, %u Warnings, %u Remarks"
 argument_list|,
 name|Gbl_ExceptionCount
 index|[
@@ -1004,11 +1071,33 @@ name|Gbl_ExceptionCount
 index|[
 name|ASL_REMARK
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_FileType
+operator|!=
+name|ASL_INPUT_TYPE_ASCII_DATA
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|", %u Optimizations"
 argument_list|,
 name|Gbl_ExceptionCount
 index|[
 name|ASL_OPTIMIZATION
 index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

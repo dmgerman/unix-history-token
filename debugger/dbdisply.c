@@ -1309,7 +1309,7 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Result%d: "
+literal|"Result%u: "
 argument_list|,
 name|i
 argument_list|)
@@ -1663,7 +1663,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"CID %d: %s\n"
+literal|"CID %u: %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1923,7 +1923,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nBlock %d - Info %p  DeviceNode %p [%s] - %s\n"
+literal|"\nBlock %u - Info %p  DeviceNode %p [%s] - %s\n"
 argument_list|,
 name|Block
 argument_list|,

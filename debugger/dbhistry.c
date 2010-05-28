@@ -416,7 +416,7 @@ block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"Invalid history number: %d\n"
+literal|"Invalid history number: %u\n"
 argument_list|,
 name|HistoryIndex
 argument_list|)

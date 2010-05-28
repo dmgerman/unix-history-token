@@ -462,6 +462,12 @@ comment|/* ACPI Name, always 4 chars per ACPI spec */
 name|struct
 name|acpi_namespace_node
 modifier|*
+name|Parent
+decl_stmt|;
+comment|/* Parent node */
+name|struct
+name|acpi_namespace_node
+modifier|*
 name|Child
 decl_stmt|;
 comment|/* First child */
@@ -470,7 +476,7 @@ name|acpi_namespace_node
 modifier|*
 name|Peer
 decl_stmt|;
-comment|/* Peer. Parent if ANOBJ_END_OF_PEER_LIST set */
+comment|/* First peer */
 comment|/*      * The following fields are used by the ASL compiler and disassembler only      */
 ifdef|#
 directive|ifdef
@@ -500,12 +506,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_END_OF_PEER_LIST
+name|ANOBJ_RESERVED
 value|0x01
 end_define
 
 begin_comment
-comment|/* End-of-list, Peer field points to parent */
+comment|/* Available for use */
 end_comment
 
 begin_define

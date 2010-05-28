@@ -38,25 +38,6 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
-specifier|static
-name|void
-name|FlOpenFile
-parameter_list|(
-name|UINT32
-name|FileId
-parameter_list|,
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|char
-modifier|*
-name|Mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|FILE
 modifier|*
 name|FlOpenIncludeWithPrefix
@@ -191,7 +172,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|FlOpenFile
 parameter_list|(

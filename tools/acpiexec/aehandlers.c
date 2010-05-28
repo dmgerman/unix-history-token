@@ -181,7 +181,7 @@ operator|++
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Caught a ctrl-c (#%d)\n\n"
+literal|"Caught a ctrl-c (#%u)\n\n"
 argument_list|,
 name|SigintCount
 argument_list|)
@@ -1300,7 +1300,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Could not install an OpRegion handler for %s space(%d)"
+literal|"Could not install an OpRegion handler for %s space(%u)"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(

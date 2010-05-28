@@ -1190,7 +1190,7 @@ return|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"(R%d)"
+literal|"(R%u)"
 argument_list|,
 name|ObjDesc
 operator|->

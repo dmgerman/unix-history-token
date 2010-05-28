@@ -76,10 +76,64 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
 block|}
 name|ACPI_DMTABLE_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DT_LENGTH
+value|0x01
+end_define
+
+begin_comment
+comment|/* Field is a subtable length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_FLAG
+value|0x02
+end_define
+
+begin_comment
+comment|/* Field is a flag value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_NON_ZERO
+value|0x04
+end_define
+
+begin_comment
+comment|/* Field must be non-zero */
+end_comment
+
+begin_comment
+comment|/* TBD: Not used at this time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_OPTIONAL
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_COUNT
+value|0x10
+end_define
 
 begin_comment
 comment|/*  * Values for Opcode above.  * Note: 0-7 must not change, used as a flag shift value  */
@@ -330,6 +384,20 @@ name|ACPI_DMT_IVRS
 value|34
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_BUFFER
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_PCI_PATH
+value|36
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -341,6 +409,22 @@ parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_CMTABLE_HANDLER
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|PFieldList
 parameter_list|)
 function_decl|;
 end_typedef
@@ -360,6 +444,9 @@ name|TableInfo
 decl_stmt|;
 name|ACPI_DMTABLE_HANDLER
 name|TableHandler
+decl_stmt|;
+name|ACPI_CMTABLE_HANDLER
+name|CmTableHandler
 decl_stmt|;
 name|char
 modifier|*
@@ -399,6 +486,16 @@ name|ACPI_OP_WALK_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * TBD - another copy of this is in asltypes.h, fix  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASL_WALK_CALLBACK_DEFINED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|ACPI_STATUS
@@ -420,6 +517,17 @@ name|Context
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ASL_WALK_CALLBACK_DEFINED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -1185,6 +1293,18 @@ end_decl_stmt
 begin_comment
 comment|/*  * dmtable  */
 end_comment
+
+begin_function_decl
+name|ACPI_DMTABLE_DATA
+modifier|*
+name|AcpiDmGetTableData
+parameter_list|(
+name|char
+modifier|*
+name|Signature
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

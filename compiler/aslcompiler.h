@@ -308,6 +308,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|FlCheckForAscii
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|FileInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslanalyze - semantic analysis  */
 end_comment
@@ -823,6 +834,28 @@ name|void
 name|CgGenerateAmlOutput
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslfile  */
+end_comment
+
+begin_function_decl
+name|void
+name|FlOpenFile
+parameter_list|(
+name|UINT32
+name|FileId
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|Mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2376,6 +2409,19 @@ name|Op
 parameter_list|,
 name|UINT32
 name|CurrentByteOffset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Entry to data table compiler subsystem  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|DtDoCompile
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

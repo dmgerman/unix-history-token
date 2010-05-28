@@ -300,7 +300,7 @@ name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"%5d  [%d]  %*s %4.4s - %s"
+literal|"%5u  [%u]  %*s %4.4s - %s"
 argument_list|,
 name|Gbl_NumNamespaceObjects
 argument_list|,
@@ -2986,7 +2986,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s requires %d"
+literal|"%s requires %u"
 argument_list|,
 name|Op
 operator|->

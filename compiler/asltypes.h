@@ -480,6 +480,16 @@ begin_comment
 comment|/* Callback interface for a parse tree walk */
 end_comment
 
+begin_comment
+comment|/*  * TBD - another copy of this is in adisasm.h, fix  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASL_WALK_CALLBACK_DEFINED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|ACPI_STATUS
@@ -501,6 +511,17 @@ name|Context
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ASL_WALK_CALLBACK_DEFINED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -825,6 +846,26 @@ block|,
 name|ASL_MSG_INVALID_ACCESS_SIZE
 block|,
 name|ASL_MSG_INVALID_ADDR_FLAGS
+block|,
+name|ASL_MSG_INVALID_FIELD_NAME
+block|,
+name|ASL_MSG_INTEGER_SIZE
+block|,
+name|ASL_MSG_INVALID_HEX_INTEGER
+block|,
+name|ASL_MSG_BUFFER_ELEMENT
+block|,
+name|ASL_MSG_RESERVED_VALUE
+block|,
+name|ASL_MSG_FLAG_VALUE
+block|,
+name|ASL_MSG_ZERO_VALUE
+block|,
+name|ASL_MSG_UNKNOWN_TABLE
+block|,
+name|ASL_MSG_UNKNOWN_SUBTABLE
+block|,
+name|ASL_MSG_OEM_TABLE
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -843,7 +884,7 @@ name|AslMessages
 index|[]
 init|=
 block|{
-comment|/*    The zeroth message is resesrved */
+comment|/*    The zeroth message is reserved */
 literal|""
 block|,
 comment|/*    ASL_MSG_ALPHANUMERIC_STRING */
@@ -1211,6 +1252,37 @@ literal|"Invalid AccessSize (Maximum is 4 - QWord access)"
 block|,
 comment|/*    ASL_MSG_INVALID_ADDR_FLAGS */
 literal|"Invalid combination of Length and Min/Max fixed flags"
+block|,
+comment|/* These messages are used by the data table compiler only */
+comment|/*    ASL_MSG_INVALID_FIELD_NAME */
+literal|"Invalid Field Name"
+block|,
+comment|/*    ASL_MSG_INTEGER_SIZE */
+literal|"Integer too large for target"
+block|,
+comment|/*    ASL_MSG_INVALID_HEX_INTEGER */
+literal|"Invalid hex integer constant"
+block|,
+comment|/*    ASL_MSG_BUFFER_ELEMENT */
+literal|"Invalid element in buffer initializer list"
+block|,
+comment|/*    ASL_MSG_RESERVED_VALUE */
+literal|"Reserved field must be zero"
+block|,
+comment|/*    ASL_MSG_FLAG_VALUE */
+literal|"Flag value is too large"
+block|,
+comment|/*    ASL_MSG_ZERO_VALUE */
+literal|"Value must be non-zero"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_TABLE */
+literal|"Unknown ACPI table signature"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_SUBTABLE */
+literal|"Unknown subtable type"
+block|,
+comment|/*    ASL_MSG_OEM_TABLE */
+literal|"OEM table - unknown contents"
 block|}
 decl_stmt|;
 end_decl_stmt
