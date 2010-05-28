@@ -220,6 +220,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Helper routine for checking compat prop */
+end_comment
+
+begin_function_decl
+name|int
+name|ofw_bus_is_compatible
+parameter_list|(
+name|device_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ofw_bus_is_compatible_strict
+parameter_list|(
+name|device_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

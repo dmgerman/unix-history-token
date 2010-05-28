@@ -99,7 +99,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|OF_init
 parameter_list|(
 name|void
