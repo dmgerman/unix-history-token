@@ -952,17 +952,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|caddr_t
-name|virtual_sys_start
-init|=
-operator|(
-name|caddr_t
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1809,13 +1798,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|virtual_sys_start
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|virtual_avail
-expr_stmt|;
 comment|/* 	 * Allocate segment table for the kernel 	 */
 name|kernel_segmap
 operator|=
