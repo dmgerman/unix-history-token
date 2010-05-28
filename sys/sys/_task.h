@@ -51,14 +51,6 @@ argument_list|)
 name|ta_link
 expr_stmt|;
 comment|/* (q) link for queue */
-name|u_int
-name|ta_flags
-decl_stmt|;
-comment|/* (q) state of this task */
-define|#
-directive|define
-name|TA_FLAGS_RUNNING
-value|0x01
 name|u_short
 name|ta_pending
 decl_stmt|;
