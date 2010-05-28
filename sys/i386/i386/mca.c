@@ -3495,6 +3495,43 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * The machine check registers for the BSP cannot be initialized until  * the local APIC is initialized.  This happens at SI_SUB_CPU,  * SI_ORDER_SECOND.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|mca_init_bsp
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+name|mca_init
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|mca_init_bsp
+argument_list|,
+name|SI_SUB_CPU
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|mca_init_bsp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Called when a machine check exception fires. */
 end_comment
 

@@ -1552,9 +1552,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|mca_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
