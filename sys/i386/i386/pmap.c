@@ -12601,6 +12601,10 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+operator|=
+name|NULL
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -12815,10 +12819,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|free
-operator|=
-name|NULL
-expr_stmt|;
 name|pmap_unuse_pt
 argument_list|(
 name|pmap
@@ -12838,11 +12838,6 @@ argument_list|,
 name|pv
 operator|->
 name|pv_va
-argument_list|)
-expr_stmt|;
-name|pmap_free_zero_pages
-argument_list|(
-name|free
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -12884,6 +12879,11 @@ argument_list|()
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|pmap_free_zero_pages
+argument_list|(
+name|free
+argument_list|)
 expr_stmt|;
 block|}
 end_function
