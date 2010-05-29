@@ -3139,6 +3139,7 @@ name|uc_mcontext
 argument_list|)
 expr_stmt|;
 comment|/* magic */
+comment|/* 	 * The get_fpcontext() call must be placed before assignments 	 * to mc_fsbase and mc_gsbase due to the alignment-override 	 * code in get_fpcontext() that possibly clobbers 12 bytes of 	 * mcontext after mc_fpstate. 	 */
 name|get_fpcontext
 argument_list|(
 name|td
@@ -12308,6 +12309,7 @@ operator|*
 name|mcp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The get_fpcontext() call must be placed before assignments 	 * to mc_fsbase and mc_gsbase due to the alignment-override 	 * code in get_fpcontext() that possibly clobbers 12 bytes of 	 * mcontext after mc_fpstate. 	 */
 name|get_fpcontext
 argument_list|(
 name|td
