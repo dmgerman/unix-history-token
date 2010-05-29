@@ -7031,7 +7031,7 @@ block|,
 operator|.
 name|ssd_dpl
 operator|=
-literal|0
+name|SEL_KPL
 block|,
 operator|.
 name|ssd_p
@@ -7079,7 +7079,7 @@ block|,
 operator|.
 name|ssd_dpl
 operator|=
-literal|0
+name|SEL_KPL
 block|,
 operator|.
 name|ssd_p
@@ -7223,7 +7223,7 @@ block|,
 operator|.
 name|ssd_dpl
 operator|=
-literal|0
+name|SEL_KPL
 block|,
 operator|.
 name|ssd_p
@@ -7271,7 +7271,7 @@ block|,
 operator|.
 name|ssd_dpl
 operator|=
-literal|0
+name|SEL_KPL
 block|,
 operator|.
 name|ssd_p
@@ -7415,7 +7415,7 @@ block|,
 operator|.
 name|ssd_dpl
 operator|=
-literal|0
+name|SEL_KPL
 block|,
 operator|.
 name|ssd_p
