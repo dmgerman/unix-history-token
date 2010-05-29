@@ -1039,6 +1039,9 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
+name|uintmax_t
+name|memsize
+decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|startrtclock
 argument_list|()
@@ -1057,32 +1060,31 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|realmem
+operator|=
+name|Maxmem
+expr_stmt|;
+comment|/* 	 * Display physical memory. 	 */
+name|memsize
+operator|=
+name|ptoa
+argument_list|(
+operator|(
+name|uintmax_t
+operator|)
+name|Maxmem
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"real memory  = %ju (%ju MB)\n"
 argument_list|,
-name|ptoa
-argument_list|(
-operator|(
-name|uintmax_t
-operator|)
-name|Maxmem
-argument_list|)
+name|memsize
 argument_list|,
-name|ptoa
-argument_list|(
-operator|(
-name|uintmax_t
-operator|)
-name|Maxmem
+name|memsize
+operator|>>
+literal|20
 argument_list|)
-operator|/
-literal|1048576
-argument_list|)
-expr_stmt|;
-name|realmem
-operator|=
-name|Maxmem
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
 if|if
@@ -6224,6 +6226,20 @@ comment|/* global descriptor table */
 end_comment
 
 begin_decl_stmt
+name|union
+name|descriptor
+name|ldt
+index|[
+name|NLDT
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local descriptor table */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|gate_descriptor
@@ -6250,20 +6266,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* interrupt descriptor table */
-end_comment
-
-begin_decl_stmt
-name|union
-name|descriptor
-name|ldt
-index|[
-name|NLDT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* local descriptor table */
 end_comment
 
 begin_decl_stmt
@@ -8179,7 +8181,8 @@ name|physmem_tunable
 decl_stmt|;
 name|u_int
 name|extmem
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|under16
 decl_stmt|;
 name|vm_paddr_t
@@ -9225,14 +9228,13 @@ decl_stmt|,
 name|metadata_missing
 decl_stmt|,
 name|x
+decl_stmt|,
+name|pa
 decl_stmt|;
 name|struct
 name|pcpu
 modifier|*
 name|pc
-decl_stmt|;
-name|int
-name|pa
 decl_stmt|;
 name|thread0
 operator|.
