@@ -6628,6 +6628,8 @@ name|VM_PROT_WRITE
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|managed
 condition|)
 name|vm_page_flag_set
 argument_list|(
