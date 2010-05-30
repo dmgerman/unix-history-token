@@ -333,6 +333,10 @@ decl_stmt|;
 name|ACPI_BUFFER
 name|buf
 decl_stmt|;
+name|ACPI_OBJECT
+modifier|*
+name|obj
+decl_stmt|;
 name|device_t
 name|bus
 decl_stmt|;
@@ -468,6 +472,12 @@ name|out
 goto|;
 block|}
 comment|/* Add fd child devices as specified. */
+name|obj
+operator|=
+name|buf
+operator|.
+name|Pointer
+expr_stmt|;
 name|error
 operator|=
 name|fdc_acpi_probe_children
@@ -476,7 +486,9 @@ name|bus
 argument_list|,
 name|dev
 argument_list|,
-name|buf
+name|obj
+operator|->
+name|Buffer
 operator|.
 name|Pointer
 argument_list|)
