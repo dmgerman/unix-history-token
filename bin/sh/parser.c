@@ -867,6 +867,10 @@ comment|/* This assumes the parser is not re-entered, 	 * which could happen if 
 name|parser_temp_free_all
 argument_list|()
 expr_stmt|;
+name|heredoclist
+operator|=
+name|NULL
+expr_stmt|;
 name|tokpushback
 operator|=
 literal|0
