@@ -14217,7 +14217,6 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
-comment|/* 		 * We might be turning off write access to the page, 		 * so we go ahead and sense modify status. 		 */
 if|if
 condition|(
 name|origpte
