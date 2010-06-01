@@ -1511,7 +1511,7 @@ begin_define
 define|#
 directive|define
 name|CIOC_KERNEL_VERSION
-value|_IOWR('c', 10, sizeof (int))
+value|_IOWR('c', 10, int)
 end_define
 
 begin_if
