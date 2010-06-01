@@ -27,6 +27,13 @@ directive|include
 file|"ah_eeprom_v14.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|AR9285_RDEXT_DEFAULT
+value|0x1F
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -613,9 +620,6 @@ decl_stmt|;
 comment|/* XXX these are dynamically calculated for use by shared code */
 name|int8_t
 name|ee_antennaGainMax
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
 name|HAL_EEPROM_v4k

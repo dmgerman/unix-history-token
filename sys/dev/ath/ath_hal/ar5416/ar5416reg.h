@@ -877,6 +877,13 @@ name|AR_PCU_TXBUF_CTRL
 value|0x8340
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2
+value|0x8344
+end_define
+
 begin_comment
 comment|/* DMA& PCI Registers in PCI space (usable during sleep)*/
 end_comment
@@ -1751,6 +1758,27 @@ end_define
 begin_comment
 comment|/* RX TSF out of range */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5
+value|0x0098
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_S
+value|0x00d8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_TIM_TIMER
+value|0x00000010
+end_define
 
 begin_define
 define|#
@@ -3307,6 +3335,13 @@ begin_comment
 comment|/* clear ba state */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_HWWAR1
+value|0x00100000
+end_define
+
 begin_comment
 comment|/* GPIO Interrupt */
 end_comment
@@ -3481,6 +3516,13 @@ define|#
 directive|define
 name|AR_GPIO_INTR_POL_VAL_S
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_GPIO_JTAG_DISABLE
+value|0x00020000
 end_define
 
 begin_define
