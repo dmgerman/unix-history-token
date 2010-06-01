@@ -3038,12 +3038,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|rw_try_upgrade
+name|INP_INFO_TRY_UPGRADE
 argument_list|(
 operator|&
 name|V_tcbinfo
-operator|.
-name|ipi_lock
 argument_list|)
 operator|==
 literal|0
@@ -3240,12 +3238,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|rw_try_upgrade
+name|INP_INFO_TRY_UPGRADE
 argument_list|(
 operator|&
 name|V_tcbinfo
-operator|.
-name|ipi_lock
 argument_list|)
 operator|==
 literal|0
