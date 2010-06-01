@@ -2309,6 +2309,20 @@ name|vp_locked
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/* 	 * XXX: Don't call d_close() if we were called because of 	 * XXX: insmntque1() failure. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_data
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Hack: a tty device that is a controlling terminal 	 * has a reference from the session structure. 	 * We cannot easily tell that a character device is 	 * a controlling terminal, unless it is the closing 	 * process' controlling terminal.  In that case, 	 * if the reference count is 2 (this last descriptor 	 * plus the session), release the reference from the session. 	 */
 name|oldvp
 operator|=
