@@ -4899,6 +4899,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|&
 name|se
 operator|->
 name|se_meshid
