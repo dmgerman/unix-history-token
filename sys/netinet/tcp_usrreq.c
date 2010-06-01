@@ -2554,7 +2554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Accept a connection.  Essentially all the work is  * done at higher levels; just return the address  * of the peer, storing through addr.  */
+comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  *  * The rationale for acquiring the tcbinfo lock here is somewhat complicated,  * and is described in detail in the commit log entry for r175612.  Acquiring  * it delays an accept(2) racing with sonewconn(), which inserts the socket  * before the inpcb address/port fields are initialized.  A better fix would  * prevent the socket from being placed in the listen queue until all fields  * are fully initialized.  */
 end_comment
 
 begin_function
