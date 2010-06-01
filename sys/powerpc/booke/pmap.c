@@ -7377,6 +7377,8 @@ comment|/* 			 * Check existing flags for execute permissions: if we 			 * are t
 if|if
 condition|(
 operator|(
+name|pte
+operator|->
 name|flags
 operator|&
 operator|(
