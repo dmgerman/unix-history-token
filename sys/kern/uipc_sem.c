@@ -4813,6 +4813,16 @@ operator|&
 name|sem_lock
 argument_list|)
 expr_stmt|;
+name|p31b_unsetcfg
+argument_list|(
+name|CTL_P1003_1B_SEM_VALUE_MAX
+argument_list|)
+expr_stmt|;
+name|p31b_unsetcfg
+argument_list|(
+name|CTL_P1003_1B_SEM_NSEMS_MAX
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
