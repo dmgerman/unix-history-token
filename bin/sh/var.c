@@ -233,6 +233,13 @@ name|vhistsize
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|var
+name|vterm
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -413,6 +420,22 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+block|{
+operator|&
+name|vterm
+block|,
+name|VUNSET
+block|,
+literal|"TERM="
+block|,
+name|setterm
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 operator|&
 name|voptind
