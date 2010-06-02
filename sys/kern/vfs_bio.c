@@ -14126,9 +14126,6 @@ operator|->
 name|bo_object
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -14209,9 +14206,6 @@ operator|=
 name|noff
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|bp
