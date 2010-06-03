@@ -2045,12 +2045,6 @@ operator|->
 name|acl_cnt
 operator|>
 name|ACL_MAX_ENTRIES
-operator|||
-name|acl
-operator|->
-name|acl_cnt
-operator|<
-literal|0
 condition|)
 return|return
 operator|(
