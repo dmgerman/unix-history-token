@@ -5957,6 +5957,13 @@ name|td_sched
 modifier|*
 name|ts
 decl_stmt|;
+name|THREAD_LOCK_ASSERT
+argument_list|(
+name|td
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|td
