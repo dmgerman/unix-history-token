@@ -7564,7 +7564,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|u_int
+name|u_long
 name|oldvalid
 decl_stmt|;
 name|int
