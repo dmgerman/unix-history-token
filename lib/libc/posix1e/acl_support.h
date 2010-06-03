@@ -249,7 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|_posix1e_acl_sort
 parameter_list|(
 name|acl_t

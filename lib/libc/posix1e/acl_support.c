@@ -453,11 +453,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _posix1e_acl_sort -- sort ACL entries in POSIX.1e-formatted ACLs  * Give the opportunity to fail, although we don't currently have a way  * to fail.  */
+comment|/*  * _posix1e_acl_sort -- sort ACL entries in POSIX.1e-formatted ACLs.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|_posix1e_acl_sort
 parameter_list|(
 name|acl_t
@@ -502,11 +502,6 @@ operator|)
 name|_posix1e_acl_entry_compare
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
