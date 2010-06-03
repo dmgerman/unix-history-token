@@ -590,7 +590,14 @@ operator|&
 name|next
 argument_list|)
 condition|)
+block|{
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|KASSERT
 argument_list|(
 name|VM_PAGE_INQUEUE2
