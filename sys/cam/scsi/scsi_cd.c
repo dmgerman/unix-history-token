@@ -10985,7 +10985,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|&
 name|params
 operator|.
 name|mode_buf
