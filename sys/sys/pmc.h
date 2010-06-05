@@ -1431,7 +1431,7 @@ modifier|*
 name|pm_owner
 decl_stmt|;
 comment|/* owner thread state */
-name|uint32_t
+name|int
 name|pm_runcount
 decl_stmt|;
 comment|/* #cpus currently on */
