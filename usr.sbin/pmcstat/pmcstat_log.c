@@ -7933,6 +7933,7 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(

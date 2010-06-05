@@ -1244,6 +1244,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|nproc
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(

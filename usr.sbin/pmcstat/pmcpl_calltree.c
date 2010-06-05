@@ -4204,6 +4204,8 @@ name|line
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|pmcstat_image_addr2line
 argument_list|(
 name|ct
@@ -4229,7 +4231,7 @@ argument_list|(
 name|funcname
 argument_list|)
 argument_list|)
-expr_stmt|;
+condition|)
 name|fprintf
 argument_list|(
 name|args
@@ -4245,6 +4247,16 @@ operator|)
 name|addr
 argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|args
+operator|.
+name|pa_graphfile
+argument_list|,
+literal|"* *"
 argument_list|)
 expr_stmt|;
 block|}
