@@ -1338,6 +1338,11 @@ name|ngroups
 index|]
 condition|)
 empty_stmt|;
+name|free
+argument_list|(
+name|groups
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ngroups
