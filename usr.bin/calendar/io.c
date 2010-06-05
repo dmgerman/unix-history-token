@@ -1153,9 +1153,20 @@ argument_list|,
 literal|"cannot get home directory"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|home
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot enter home directory"
 argument_list|)
 expr_stmt|;
 for|for
