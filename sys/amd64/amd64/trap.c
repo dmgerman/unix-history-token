@@ -1370,6 +1370,20 @@ case|case
 name|T_DNA
 case|:
 comment|/* transparent fault (due to context switch "late") */
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"kernel FPU ctx has leaked"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fpudna
 argument_list|()
 expr_stmt|;
@@ -1448,22 +1462,46 @@ goto|;
 case|case
 name|T_DNA
 case|:
-comment|/* 			 * The kernel is apparently using fpu for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
-name|printf
+name|KASSERT
 argument_list|(
-literal|"fpudna in kernel mode!\n"
+operator|!
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"Unregistered use of FPU in kernel"
+operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
-name|kdb_backtrace
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|fpudna
 argument_list|()
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+case|case
+name|T_ARITHTRAP
+case|:
+comment|/* arithmetic trap */
+case|case
+name|T_XMMFLT
+case|:
+comment|/* SIMD floating-point exception */
+case|case
+name|T_FPOPFLT
+case|:
+comment|/* FPU operand fetch fault */
+comment|/* 			 * XXXKIB for now disable any FPU traps in kernel 			 * handler registration seems to be overkill 			 */
+name|trap_fatal
+argument_list|(
+name|frame
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -1929,6 +1967,20 @@ operator|&
 name|Giant
 argument_list|,
 name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"Return from trap with kernel FPU ctx leaked"
+operator|)
 argument_list|)
 expr_stmt|;
 name|userout
@@ -3310,6 +3362,62 @@ name|ksi
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"System call %s returing with kernel FPU ctx leaked"
+operator|,
+name|syscallname
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|sa
+operator|.
+name|code
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|==
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_user_save
+argument_list|,
+operator|(
+literal|"System call %s returning with mangled pcb_save"
+operator|,
+name|syscallname
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|sa
+operator|.
+name|code
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|syscallret
 argument_list|(
 name|td

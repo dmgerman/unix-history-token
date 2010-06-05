@@ -5037,7 +5037,6 @@ argument_list|()
 expr_stmt|;
 name|stopfpu
 operator|=
-operator|&
 name|stopxpcbs
 index|[
 name|cpu

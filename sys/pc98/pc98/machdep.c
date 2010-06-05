@@ -12601,7 +12601,7 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_save
-operator|.
+operator|->
 name|sv_xmm
 argument_list|,
 operator|(
@@ -12629,7 +12629,7 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_save
-operator|.
+operator|->
 name|sv_87
 argument_list|,
 name|fpregs
@@ -12685,7 +12685,7 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_save
-operator|.
+operator|->
 name|sv_xmm
 argument_list|)
 expr_stmt|;
@@ -12708,7 +12708,7 @@ operator|->
 name|td_pcb
 operator|->
 name|pcb_save
-operator|.
+operator|->
 name|sv_87
 argument_list|,
 sizeof|sizeof
