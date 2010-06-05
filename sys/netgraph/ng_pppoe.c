@@ -5739,11 +5739,6 @@ argument_list|)
 decl_stmt|;
 name|sessp
 name|sp
-init|=
-name|NG_HOOK_PRIVATE
-argument_list|(
-name|hook
-argument_list|)
 decl_stmt|;
 specifier|const
 name|struct
