@@ -850,6 +850,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Oh oh there is something wrong. Erase! Erase! */
 for|for
 control|(
 name|i
@@ -882,8 +883,8 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
+return|return;
 block|}
 operator|*
 name|p
