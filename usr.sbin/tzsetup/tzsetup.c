@@ -1924,6 +1924,7 @@ argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
+comment|/* Unused */
 name|file
 operator|=
 name|strsep
