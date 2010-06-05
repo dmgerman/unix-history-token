@@ -3569,18 +3569,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pmpdone: xpt_create_path failed"
-literal|", bus scan halted\n"
+literal|"pmpdone: xpt_create_path failed\n"
 argument_list|)
 expr_stmt|;
-name|xpt_free_ccb
-argument_list|(
-name|done_ccb
-argument_list|)
-expr_stmt|;
-goto|goto
-name|done
-goto|;
+continue|continue;
 block|}
 comment|/* If we did hard reset to this device, inform XPT. */
 if|if
