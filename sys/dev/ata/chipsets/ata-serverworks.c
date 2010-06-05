@@ -1252,7 +1252,7 @@ name|status
 operator|=
 name|ata_serverworks_status
 expr_stmt|;
-comment|/* Make sure that our interrupt is edge triggered */
+comment|/* Make sure that our interrupt is level low */
 name|powerpc_config_intr
 argument_list|(
 name|bus_get_resource_start
