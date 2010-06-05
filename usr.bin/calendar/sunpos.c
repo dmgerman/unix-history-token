@@ -1421,14 +1421,6 @@ argument_list|)
 index|]
 expr_stmt|;
 comment|/* 	 * Find the first equinox, somewhere in March: 	 * It happens when the returned value "dec" goes from 	 * [350 ... 360> -> [0 ... 10] 	 */
-name|found
-operator|=
-literal|0
-expr_stmt|;
-name|prevdec
-operator|=
-literal|350
-expr_stmt|;
 for|for
 control|(
 name|d
@@ -1443,7 +1435,7 @@ name|d
 operator|++
 control|)
 block|{
-comment|//		printf("Comparing day %d to %d.\n", d, d+1);
+comment|/* printf("Comparing day %d to %d.\n", d, d+1); */
 name|sunpos
 argument_list|(
 name|year
@@ -1500,7 +1492,7 @@ operator|&
 name|decright
 argument_list|)
 expr_stmt|;
-comment|//		printf("Found %g and %g.\n", decleft, decright);
+comment|/* printf("Found %g and %g.\n", decleft, decright); */
 if|if
 condition|(
 name|SIGN
@@ -1531,8 +1523,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|//			printf("Obtaining %d (%02d:%02d)\n",
-comment|//			    dial, SHOUR(dial), SMIN(dial));
+comment|/* printf("Obtaining %d (%02d:%02d)\n", 			    dial, SHOUR(dial), SMIN(dial)); */
 name|sunpos
 argument_list|(
 name|year
@@ -1569,7 +1560,7 @@ operator|&
 name|decmiddle
 argument_list|)
 expr_stmt|;
-comment|//			printf("Found %g\n", decmiddle);
+comment|/* printf("Found %g\n", decmiddle); */
 if|if
 condition|(
 name|SIGN
@@ -1603,7 +1594,7 @@ operator|-=
 name|s
 expr_stmt|;
 block|}
-comment|//			printf("New boundaries: %g - %g\n", decleft, decright);
+comment|/* 			 printf("New boundaries: %g - %g\n", decleft, decright); 			*/
 name|s
 operator|/=
 literal|2
@@ -1632,14 +1623,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Find the second equinox, somewhere in September: 	 * It happens when the returned value "dec" goes from 	 * [10 ... 0] -><360 ... 350] 	 */
-name|found
-operator|=
-literal|0
-expr_stmt|;
-name|prevdec
-operator|=
-literal|10
-expr_stmt|;
 for|for
 control|(
 name|d
@@ -1654,7 +1637,7 @@ name|d
 operator|++
 control|)
 block|{
-comment|//		printf("Comparing day %d to %d.\n", d, d+1);
+comment|/* printf("Comparing day %d to %d.\n", d, d+1); */
 name|sunpos
 argument_list|(
 name|year
@@ -1711,7 +1694,7 @@ operator|&
 name|decright
 argument_list|)
 expr_stmt|;
-comment|//		printf("Found %g and %g.\n", decleft, decright);
+comment|/* printf("Found %g and %g.\n", decleft, decright); */
 if|if
 condition|(
 name|SIGN
@@ -1742,8 +1725,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|//			printf("Obtaining %d (%02d:%02d)\n",
-comment|//			    dial, SHOUR(dial), SMIN(dial));
+comment|/* printf("Obtaining %d (%02d:%02d)\n", 			    dial, SHOUR(dial), SMIN(dial)); */
 name|sunpos
 argument_list|(
 name|year
@@ -1780,7 +1762,7 @@ operator|&
 name|decmiddle
 argument_list|)
 expr_stmt|;
-comment|//			printf("Found %g\n", decmiddle);
+comment|/* printf("Found %g\n", decmiddle); */
 if|if
 condition|(
 name|SIGN
@@ -1814,7 +1796,7 @@ operator|-=
 name|s
 expr_stmt|;
 block|}
-comment|//			printf("New boundaries: %g - %g\n", decleft, decright);
+comment|/* 			printf("New boundaries: %g - %g\n", decleft, decright); 			*/
 name|s
 operator|/=
 literal|2
