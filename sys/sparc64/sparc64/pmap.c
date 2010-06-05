@@ -6386,6 +6386,22 @@ name|tte_data
 operator||=
 name|TD_W
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -6458,7 +6474,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If there is an existing mapping, but its for a different 		 * phsyical address, delete the old mapping. 		 */
+comment|/* 		 * If there is an existing mapping, but its for a different 		 * physical address, delete the old mapping. 		 */
 if|if
 condition|(
 name|tp
@@ -6549,6 +6565,22 @@ name|data
 operator||=
 name|TD_SW
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
 name|vm_page_flag_set
 argument_list|(
 name|m
