@@ -3900,6 +3900,14 @@ operator|->
 name|preq_origaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rtorig
+operator|==
+name|NULL
+condition|)
+comment|/* XXX stat */
+return|return;
 name|hrorig
 operator|=
 name|IEEE80211_MESH_ROUTE_PRIV
