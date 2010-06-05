@@ -427,7 +427,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|extradata
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 while|while
 condition|(
 name|fgets
@@ -1020,6 +1027,11 @@ expr_stmt|;
 name|closecal
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|extradata
 argument_list|)
 expr_stmt|;
 block|}
