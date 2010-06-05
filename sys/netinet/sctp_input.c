@@ -24469,6 +24469,17 @@ name|SCTP_PCB_FLAGS_SOCKET_GONE
 condition|)
 block|{
 comment|/* We are not interested anymore */
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|offset
 operator|=
@@ -26975,8 +26986,25 @@ directive|ifdef
 name|INVARIANTS
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(noinline)
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|void
 name|sctp_validate_no_locks
 parameter_list|(
@@ -26989,11 +27017,11 @@ block|{
 name|struct
 name|sctp_tcb
 modifier|*
-name|stcb
+name|lstcb
 decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
-argument|stcb
+argument|lstcb
 argument_list|,
 argument|&inp->sctp_asoc_list
 argument_list|,
@@ -27005,7 +27033,7 @@ condition|(
 name|mtx_owned
 argument_list|(
 operator|&
-name|stcb
+name|lstcb
 operator|->
 name|tcb_mtx
 argument_list|)
