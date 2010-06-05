@@ -89,6 +89,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|p31b_sysctl_proc
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* OID_AUTO isn't working with sysconf(3).  I guess I'd have to  * modify it to do a lookup by name from the index.  * For now I've left it a top-level sysctl.  */
 end_comment
@@ -117,7 +127,20 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_INT(_p1003_1b, num, \ 	name, CTLFLAG_RD, facility + num - 1, 0, "");
+value|SYSCTL_INT(_p1003_1b, num, name, CTLFLAG_RD, facility + num - 1, 0, "");
+end_define
+
+begin_define
+define|#
+directive|define
+name|P1B_SYSCTL_RW
+parameter_list|(
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|SYSCTL_PROC(_p1003_1b, num, name, CTLTYPE_INT | CTLFLAG_RW, NULL, num, \ 	    p31b_sysctl_proc, "I", "");
 end_define
 
 begin_else
@@ -143,7 +166,20 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_INT(_kern_p1003_1b, OID_AUTO, \ 	name, CTLFLAG_RD, facility + num - 1, 0, "");
+value|SYSCTL_INT(_kern_p1003_1b, OID_AUTO, name, CTLFLAG_RD, \ 	    facility + num - 1, 0, "");
+end_define
+
+begin_define
+define|#
+directive|define
+name|P1B_SYSCTL_RW
+parameter_list|(
+name|num
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|SYSCTL_PROC(_p1003_1b, OID_AUTO, name, CTLTYPE_INT | CTLFLAG_RW, NULL, \ 	    num, p31b_sysctl_proc, "I", "");
 end_define
 
 begin_expr_stmt
@@ -391,7 +427,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|P1B_SYSCTL
+name|P1B_SYSCTL_RW
 argument_list|(
 name|CTL_P1003_1B_SEM_NSEMS_MAX
 argument_list|,
@@ -440,6 +476,102 @@ parameter_list|)
 value|((num)>= 1&& (num)< CTL_P1003_1B_MAXID)
 end_define
 
+begin_function
+specifier|static
+name|int
+name|p31b_sysctl_proc
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|,
+name|num
+decl_stmt|,
+name|val
+decl_stmt|;
+name|num
+operator|=
+name|arg2
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|P31B_VALID
+argument_list|(
+name|num
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|val
+operator|=
+name|facility_initialized
+index|[
+name|num
+index|]
+condition|?
+name|facility
+index|[
+name|num
+operator|-
+literal|1
+index|]
+else|:
+literal|0
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|val
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|req
+operator|->
+name|newptr
+operator|!=
+name|NULL
+operator|&&
+name|facility_initialized
+index|[
+name|num
+index|]
+condition|)
+name|facility
+index|[
+name|num
+operator|-
+literal|1
+index|]
+operator|=
+name|val
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* p31b_setcfg: Set the configuration  */
 end_comment
@@ -482,6 +614,35 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|p31b_unsetcfg
+parameter_list|(
+name|int
+name|num
+parameter_list|)
+block|{
+name|facility
+index|[
+name|num
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|facility_initialized
+index|[
+name|num
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
