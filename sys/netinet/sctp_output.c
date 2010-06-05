@@ -14351,7 +14351,7 @@ decl_stmt|;
 name|sa_family_t
 name|fam
 decl_stmt|;
-comment|/*- 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 * 	 * Cavets and issues 	 * 	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4          *------------------------------------------ 	 *      source     *      dest  *  result 	 * ----------------------------------------- 	 *<a>  Private    *    Global  *  NAT 	 * ----------------------------------------- 	 *<b>  Private    *    Private *  No problem 	 * -----------------------------------------          *<c>  Global     *    Private *  Huh, How will this work? 	 * -----------------------------------------          *<d>  Global     *    Global  *  No Problem          *------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V6          *------------------------------------------ 	 *      source     *      dest  *  result 	 * ----------------------------------------- 	 *<a>  Linklocal  *    Global  * 	 * ----------------------------------------- 	 *<b>  Linklocal  * Linklocal  *  No problem 	 * -----------------------------------------          *<c>  Global     * Linklocal  *  Huh, How will this work? 	 * -----------------------------------------          *<d>  Global     *    Global  *  No Problem          *------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz          * 	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 * 	 * Decisions: 	 * 	 * - count the number of addresses on the interface.          * - if it is one, no problem except case<c>.          *   For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 *   or G. We should prefer G -> G and P -> P if possible. 	 *   Then as a secondary fall back to mixed types G->P being a last 	 *   ditch one.          * - The above all works for bound all, but bound specific we need to 	 *   use the same concept but instead only consider the bound 	 *   addresses. If the bound set is NOT assigned to the interface then 	 *   we must use rotation amongst the bound addresses.. 	 */
+comment|/*- 	 * Rules: - Find the route if needed, cache if I can. - Look at 	 * interface address in route, Is it in the bound list. If so we 	 * have the best source. - If not we must rotate amongst the 	 * addresses. 	 * 	 * Cavets and issues 	 * 	 * Do we need to pay attention to scope. We can have a private address 	 * or a global address we are sourcing or sending to. So if we draw 	 * it out 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V4 	 * ------------------------------------------ 	 *      source     *      dest  *  result 	 * ----------------------------------------- 	 *<a>  Private    *    Global  *  NAT 	 * ----------------------------------------- 	 *<b>  Private    *    Private *  No problem 	 * ----------------------------------------- 	 *<c>  Global     *    Private *  Huh, How will this work? 	 * ----------------------------------------- 	 *<d>  Global     *    Global  *  No Problem 	 *------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * For V6 	 *------------------------------------------ 	 *      source     *      dest  *  result 	 * ----------------------------------------- 	 *<a>  Linklocal  *    Global  * 	 * ----------------------------------------- 	 *<b>  Linklocal  * Linklocal  *  No problem 	 * ----------------------------------------- 	 *<c>  Global     * Linklocal  *  Huh, How will this work? 	 * ----------------------------------------- 	 *<d>  Global     *    Global  *  No Problem 	 *------------------------------------------ 	 * zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz 	 * 	 * And then we add to that what happens if there are multiple addresses 	 * assigned to an interface. Remember the ifa on a ifn is a linked 	 * list of addresses. So one interface can have more than one IP 	 * address. What happens if we have both a private and a global 	 * address? Do we then use context of destination to sort out which 	 * one is best? And what about NAT's sending P->G may get you a NAT 	 * translation, or should you select the G thats on the interface in 	 * preference. 	 * 	 * Decisions: 	 * 	 * - count the number of addresses on the interface. 	 * - if it is one, no problem except case<c>. 	 *   For<a> we will assume a NAT out there. 	 * - if there are more than one, then we need to worry about scope P 	 *   or G. We should prefer G -> G and P -> P if possible. 	 *   Then as a secondary fall back to mixed types G->P being a last 	 *   ditch one. 	 * - The above all works for bound all, but bound specific we need to 	 *   use the same concept but instead only consider the bound 	 *   addresses. If the bound set is NOT assigned to the interface then 	 *   we must use rotation amongst the bound addresses.. 	 */
 if|if
 condition|(
 name|ro
@@ -43325,6 +43325,17 @@ if|if
 condition|(
 name|chk
 operator|->
+name|sent
+operator|!=
+name|SCTP_DATAGRAM_RESEND
+condition|)
+block|{
+continue|continue;
+block|}
+if|if
+condition|(
+name|chk
+operator|->
 name|rec
 operator|.
 name|chunk_id
@@ -43655,7 +43666,15 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_SENT
 expr_stmt|;
-comment|/* sctp_ucount_decr(asoc->sent_queue_retran_cnt); */
+name|sctp_ucount_decr
+argument_list|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|sent_queue_retran_cnt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fwd_tsn
@@ -66558,6 +66577,30 @@ literal|"Leaving with tcb send mtx owned?"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+if|if
+condition|(
+name|inp
+condition|)
+block|{
+name|sctp_validate_no_locks
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Warning - inp is NULL so cant validate locks\n"
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
