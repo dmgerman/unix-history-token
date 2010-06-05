@@ -8327,7 +8327,7 @@ name|moea_attr_clear
 argument_list|(
 name|m
 argument_list|,
-name|LPTE_CHG
+name|PTE_CHG
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
