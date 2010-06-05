@@ -51,6 +51,8 @@ name|Iflag
 decl_stmt|,
 name|Mflag
 decl_stmt|,
+name|Pflag
+decl_stmt|,
 name|Tflag
 decl_stmt|;
 end_decl_stmt

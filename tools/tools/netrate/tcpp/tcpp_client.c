@@ -1032,6 +1032,11 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+if|if
+condition|(
+name|Pflag
+condition|)
+block|{
 name|len
 operator|=
 sizeof|sizeof
@@ -1130,6 +1135,7 @@ argument_list|,
 literal|"sched_setaffinity"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|setproctitle

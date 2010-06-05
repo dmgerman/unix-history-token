@@ -166,6 +166,8 @@ name|Cflag
 decl_stmt|,
 name|Mflag
 decl_stmt|,
+name|Pflag
+decl_stmt|,
 name|Tflag
 decl_stmt|;
 end_decl_stmt
@@ -196,15 +198,16 @@ name|stderr
 argument_list|,
 literal|"client: tcpp"
 literal|" -c remoteIP"
-literal|" [-CT]"
+literal|" [-CPT]"
 literal|" [-M localIPcount]"
 literal|" [-l localIPbase]"
+literal|"\n\t"
 literal|" [-b bytespertcp]"
 literal|" [-m maxtcpsatonce]"
-literal|"\n"
-literal|"\t"
 literal|" [-p procs]"
 literal|" [-t tcpsperproc]"
+literal|"\n"
+literal|"\t"
 literal|" [-r baseport]"
 literal|"\n"
 argument_list|)
@@ -215,10 +218,12 @@ name|stderr
 argument_list|,
 literal|"server: tcpp"
 literal|" -s"
-literal|" [-T]"
+literal|" [-PT]"
 literal|" [-l localIPbase]"
 literal|" [-m maxtcpsatonce]"
 literal|" [-p procs]"
+literal|"\n"
+literal|"\t"
 literal|" [-r baseport]"
 literal|"\n"
 argument_list|)
@@ -386,7 +391,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:l:m:p:r:st:CM:T"
+literal|"b:c:l:m:p:r:st:CM:PT"
 argument_list|)
 operator|)
 operator|!=
@@ -683,6 +688,32 @@ operator|=
 name|ll
 expr_stmt|;
 break|break;
+case|case
+literal|'P'
+case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_SETSIZE
+argument_list|)
+operator|&&
+literal|0
+name|Pflag
+operator|++
+expr_stmt|;
+break|break;
+else|#
+directive|else
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-P current unsupported"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 case|case
 literal|'T'
 case|:
