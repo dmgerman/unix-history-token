@@ -22779,8 +22779,11 @@ block|{
 if|if
 condition|(
 name|locked_tcb
+operator|!=
+name|stcb
 condition|)
 block|{
+comment|/* Very unlikely */
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|locked_tcb
@@ -27045,6 +27048,40 @@ literal|"Own lock on stcb at return from input"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|inp_create_mtx
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Own create lock on inp"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|inp
+operator|->
+name|inp_mtx
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"Own inp lock on inp"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
