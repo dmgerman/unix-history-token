@@ -30,6 +30,8 @@ specifier|extern
 name|int
 name|cflag
 decl_stmt|,
+name|hflag
+decl_stmt|,
 name|lflag
 decl_stmt|,
 name|mflag
@@ -45,15 +47,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|Cflag
-decl_stmt|,
 name|Iflag
 decl_stmt|,
 name|Mflag
 decl_stmt|,
 name|Pflag
-decl_stmt|,
-name|Tflag
 decl_stmt|;
 end_decl_stmt
 

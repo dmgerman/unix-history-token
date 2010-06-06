@@ -152,6 +152,8 @@ begin_decl_stmt
 name|int
 name|cflag
 decl_stmt|,
+name|hflag
+decl_stmt|,
 name|lflag
 decl_stmt|,
 name|mflag
@@ -162,13 +164,9 @@ name|sflag
 decl_stmt|,
 name|tflag
 decl_stmt|,
-name|Cflag
-decl_stmt|,
 name|Mflag
 decl_stmt|,
 name|Pflag
-decl_stmt|,
-name|Tflag
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +196,8 @@ name|stderr
 argument_list|,
 literal|"client: tcpp"
 literal|" -c remoteIP"
-literal|" [-CPT]"
+literal|" [-h]"
+literal|" [-P]"
 literal|" [-M localIPcount]"
 literal|" [-l localIPbase]"
 literal|"\n\t"
@@ -218,7 +217,7 @@ name|stderr
 argument_list|,
 literal|"server: tcpp"
 literal|" -s"
-literal|" [-PT]"
+literal|" [-P]"
 literal|" [-l localIPbase]"
 literal|" [-m maxtcpsatonce]"
 literal|" [-p procs]"
@@ -391,7 +390,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:l:m:p:r:st:CM:PT"
+literal|"b:c:hl:m:p:r:st:CM:PT"
 argument_list|)
 operator|)
 operator|!=
@@ -467,6 +466,13 @@ literal|"inet_aton: %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|hflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -648,13 +654,6 @@ name|ll
 expr_stmt|;
 break|break;
 case|case
-literal|'C'
-case|:
-name|Cflag
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'M'
 case|:
 name|ll
@@ -714,13 +713,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-case|case
-literal|'T'
-case|:
-name|Tflag
-operator|++
-expr_stmt|;
-break|break;
 default|default:
 name|usage
 argument_list|()
@@ -779,7 +771,7 @@ condition|(
 name|sflag
 operator|&&
 operator|(
-name|Cflag
+name|hflag
 operator|||
 name|Mflag
 operator|>
