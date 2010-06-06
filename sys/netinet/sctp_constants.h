@@ -4152,6 +4152,13 @@ name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_CALLED_FROM_INPKILL_TIMER
+value|2
+end_define
+
 begin_comment
 comment|/* second argument */
 end_comment

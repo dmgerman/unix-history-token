@@ -10343,7 +10343,7 @@ name|inp
 argument_list|,
 name|SCTP_FREE_SHOULD_USE_ABORT
 argument_list|,
-name|SCTP_CALLED_DIRECTLY_NOCMPSET
+name|SCTP_CALLED_FROM_INPKILL_TIMER
 argument_list|)
 expr_stmt|;
 name|inp

@@ -15526,6 +15526,12 @@ name|sctp_flags
 operator|&
 name|SCTP_PCB_FLAGS_CLOSE_IP
 operator|)
+operator|||
+operator|(
+name|from
+operator|!=
+name|SCTP_CALLED_FROM_INPKILL_TIMER
+operator|)
 condition|)
 block|{
 operator|(
