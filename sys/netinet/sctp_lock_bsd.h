@@ -336,6 +336,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_INP_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_READ_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_rdata_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASOC_CREATE_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_create_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_ASOC_CREATE_LOCK_DESTROY
 parameter_list|(
 name|_inp
