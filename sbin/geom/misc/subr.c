@@ -2114,6 +2114,13 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|free
+argument_list|(
+name|ap
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|req
 operator|->
 name|narg
