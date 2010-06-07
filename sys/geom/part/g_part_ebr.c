@@ -2336,7 +2336,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * The sector is all zeroes, except for the partition entries 	 * and some signatures or disk serial number. Those can be 	 * found in the 9 bytes immediately in front of the partition 	 * table. 	 */
+comment|/* 	 * The sector is all zeroes, except for the partition entries, 	 * pseudo boot code and some signatures or disk serial number. 	 * The latter can be found in the 9 bytes immediately in front 	 * of the partition table. 	 */
 name|sum
 operator|=
 literal|0
@@ -2345,7 +2345,7 @@ for|for
 control|(
 name|index
 operator|=
-literal|0
+literal|96
 init|;
 name|index
 operator|<
