@@ -21677,12 +21677,12 @@ name|SS_ISCONNECTED
 operator|)
 expr_stmt|;
 block|}
-name|SOCK_UNLOCK
+name|socantrcvmore_locked
 argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|socantrcvmore
+name|SOCK_UNLOCK
 argument_list|(
 name|so
 argument_list|)
