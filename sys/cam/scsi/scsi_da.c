@@ -3789,6 +3789,10 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|struct
+name|ccb_trans_settings
+name|cts
+decl_stmt|;
 name|periph
 operator|=
 operator|(
