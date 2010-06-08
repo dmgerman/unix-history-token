@@ -19012,11 +19012,9 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rtval
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 block|}
@@ -19210,6 +19208,8 @@ name|pvf
 condition|)
 do|;
 block|}
+name|out
+label|:
 name|sched_unpin
 argument_list|()
 expr_stmt|;
