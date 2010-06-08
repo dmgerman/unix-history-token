@@ -850,13 +850,28 @@ name|shasta
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Regular Kauai controllers apparently need this hack */
+comment|/* Pre-K2 controllers apparently need this hack */
 if|if
 condition|(
 operator|!
 name|sc
 operator|->
 name|shasta
+operator|&&
+operator|(
+name|compatstring
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|compatstring
+argument_list|,
+literal|"K2-UATA"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 name|bus_set_resource
 argument_list|(
