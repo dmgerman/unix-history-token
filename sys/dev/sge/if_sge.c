@@ -8394,9 +8394,10 @@ block|{
 if|if
 condition|(
 name|m_head
-operator|!=
+operator|==
 name|NULL
 condition|)
+break|break;
 name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
