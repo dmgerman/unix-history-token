@@ -2008,7 +2008,9 @@ literal|0x00
 block|,
 literal|"VIA VT8251"
 block|,
-literal|0
+name|AHCI_Q_NOPMP
+operator||
+name|AHCI_Q_NONCQ
 block|}
 block|,
 block|{
@@ -2018,7 +2020,9 @@ literal|0x00
 block|,
 literal|"VIA VT8251"
 block|,
-literal|0
+name|AHCI_Q_NOPMP
+operator||
+name|AHCI_Q_NONCQ
 block|}
 block|,
 block|{
