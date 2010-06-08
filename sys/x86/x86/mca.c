@@ -21,6 +21,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEV_APIC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"opt_apic.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -152,6 +180,12 @@ block|, }
 enum|;
 end_enum
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
 begin_comment
 comment|/*  * State maintained for each monitored MCx bank to control the  * corrected machine check interrupt threshold.  */
 end_comment
@@ -169,6 +203,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -390,6 +429,12 @@ name|mca_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -423,6 +468,11 @@ end_decl_stmt
 begin_comment
 comment|/* Time in seconds to throttle CMCI. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1849,6 +1899,12 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
 begin_comment
 comment|/*  * Update the interrupt threshold for a CMCI.  The strategy is to use  * a low trigger that interrupts as soon as the first event occurs.  * However, if a steady stream of events arrive, the threshold is  * increased until the interrupts are throttled to once every  * cmc_throttle seconds or the periodic scan.  If a periodic scan  * finds that the threshold is too high, it is lowered.  */
 end_comment
@@ -2121,6 +2177,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * This scans all the machine check banks of the current CPU to see if  * there are any machine checks.  Any non-recoverable errors are  * reported immediately via mca_log().  The current thread must be  * pinned when this is called.  The 'mode' parameter indicates if we  * are being called from the MC exception handler, the CMCI handler,  * or the periodic poller.  In the MC exception case this function  * returns true if the system is restartable.  Otherwise, it returns a  * count of the number of valid MC records found.  */
 end_comment
@@ -2203,6 +2264,9 @@ name|i
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 comment|/* 		 * For a CMCI, only check banks this CPU is 		 * responsible for. 		 */
 if|if
 condition|(
@@ -2223,6 +2287,8 @@ name|i
 operator|)
 condition|)
 continue|continue;
+endif|#
+directive|endif
 name|valid
 operator|=
 name|mca_check_status
@@ -2268,6 +2334,9 @@ name|rec
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 comment|/* 		 * If this is a bank this CPU monitors via CMCI, 		 * update the threshold. 		 */
 if|if
 condition|(
@@ -2294,6 +2363,8 @@ operator|&
 name|rec
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -2630,6 +2701,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -2739,6 +2816,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2891,6 +2973,9 @@ argument_list|,
 literal|"Force an immediate scan for machine checks"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 if|if
 condition|(
 name|mcg_cap
@@ -2902,8 +2987,16 @@ argument_list|(
 name|mcg_cap
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
 
 begin_comment
 comment|/*  * See if we should monitor CMCI for this bank.  If CMCI_EN is already  * set in MC_CTL2, then another CPU is responsible for this bank, so  * ignore it.  If CMCI_EN returns zero after being set, then this bank  * does not support CMCI_EN.  If this CPU sets CMCI_EN, then it should  * now monitor this bank.  */
@@ -3092,6 +3185,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Must be executed on each CPU. */
@@ -3361,6 +3459,9 @@ argument_list|,
 name|ctl
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 if|if
 condition|(
 name|mcg_cap
@@ -3372,6 +3473,8 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Clear all errors. */
 name|wrmsr
 argument_list|(
@@ -3384,6 +3487,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_APIC
 if|if
 condition|(
 name|PCPU_GET
@@ -3396,6 +3502,8 @@ condition|)
 name|lapic_enable_cmc
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|load_cr4
 argument_list|(
@@ -3475,13 +3583,19 @@ block|{
 comment|/* 		 * Just print the values of the old Pentium registers 		 * and panic. 		 */
 name|printf
 argument_list|(
-literal|"MC Type: 0x%lx  Address: 0x%lx\n"
+literal|"MC Type: 0x%jx  Address: 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rdmsr
 argument_list|(
 name|MSR_P5_MC_TYPE
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rdmsr
 argument_list|(
 name|MSR_P5_MC_ADDR
@@ -3540,6 +3654,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
 
 begin_comment
 comment|/* Called for a CMCI (correctable machine check interrupt). */
@@ -3636,6 +3756,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
