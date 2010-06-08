@@ -11619,30 +11619,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|BGE_TX_CONSIDX
-parameter_list|(
-name|x
-parameter_list|,
-name|i
-parameter_list|)
-value|x->bge_idx[i].bge_tx_considx
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_RX_PRODIDX
-parameter_list|(
-name|x
-parameter_list|,
-name|i
-parameter_list|)
-value|x->bge_idx[i].bge_rx_prodidx
-end_define
-
-begin_define
-define|#
-directive|define
 name|BGE_STATFLAG_UPDATED
 value|0x00000001
 end_define
@@ -13184,29 +13160,8 @@ value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s)& ~(x)), s)
 end_define
 
 begin_comment
-comment|/*  * Memory management stuff. Note: the SSLOTS, MSLOTS and JSLOTS  * values are tuneable. They control the actual amount of buffers  * allocated for the standard, mini and jumbo receive rings.  */
+comment|/*  * Memory management stuff.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BGE_SSLOTS
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_MSLOTS
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_JSLOTS
-value|384
-end_define
 
 begin_define
 define|#
