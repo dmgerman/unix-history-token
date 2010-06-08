@@ -2456,7 +2456,7 @@ name|lo_flags
 operator|&
 name|SX_NOADAPTIVE
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
