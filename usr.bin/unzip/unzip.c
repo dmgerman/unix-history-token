@@ -3576,10 +3576,21 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|a
 operator|=
 name|archive_read_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"archive_read_new failed"
+argument_list|)
 expr_stmt|;
 name|ac
 argument_list|(
