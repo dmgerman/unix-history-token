@@ -10263,6 +10263,12 @@ argument_list|,
 name|EOPNOTSUPP
 argument_list|)
 expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+name|NULL
+expr_stmt|;
 name|SCTP_ZONE_FREE
 argument_list|(
 name|SCTP_BASE_INFO
@@ -10399,6 +10405,12 @@ name|SCTP_FROM_SCTP_PCB
 argument_list|,
 name|ENOBUFS
 argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+name|NULL
 expr_stmt|;
 name|SCTP_ZONE_FREE
 argument_list|(
