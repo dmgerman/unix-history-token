@@ -985,10 +985,9 @@ condition|)
 continue|continue;
 name|ctlr
 operator|->
-name|state
-operator|&=
-operator|~
-name|TW_CLI_CTLR_STATE_INTERNAL_REQ_BUSY
+name|internal_req_busy
+operator|=
+name|TW_CL_FALSE
 expr_stmt|;
 name|tw_cli_req_q_insert_tail
 argument_list|(
@@ -1013,10 +1012,9 @@ name|data
 condition|)
 name|ctlr
 operator|->
-name|state
-operator|&=
-operator|~
-name|TW_CLI_CTLR_STATE_INTERNAL_REQ_BUSY
+name|internal_req_busy
+operator|=
+name|TW_CL_FALSE
 expr_stmt|;
 name|tw_cli_req_q_insert_tail
 argument_list|(
@@ -1220,41 +1218,11 @@ operator|(
 name|TW_OSL_ESUCCESS
 operator|)
 return|;
-comment|/* 		 * The OSL should not define TW_OSL_CAN_SLEEP if it calls 		 * tw_cl_deferred_interrupt from within the ISR and not a 		 * lower interrupt level, since, in that case, we might end 		 * up here, and try to sleep (within an ISR). 		 */
-ifndef|#
-directive|ifndef
-name|TW_OSL_CAN_SLEEP
-comment|/* OSL doesn't support sleeping; will spin. */
 name|tw_osl_delay
 argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* TW_OSL_CAN_SLEEP */
-if|#
-directive|if
-literal|0
-comment|/* Will spin if initializing, sleep otherwise. */
-block|if (!(ctlr->state& TW_CLI_CTLR_STATE_ACTIVE)) 			tw_osl_delay(1000); 		else 			tw_osl_sleep(ctlr->ctlr_handle,&(ctlr->sleep_handle), 1
-comment|/* ms */
-block|);
-else|#
-directive|else
-comment|/* #if 0 */
-comment|/* 		 * Will always spin for now (since reset holds a spin lock). 		 * We could free io_lock after the call to TW_CLI_SOFT_RESET, 		 * so we could sleep here.  To block new requests (since 		 * the lock will have been released) we could use the 		 * ...RESET_IN_PROGRESS flag.  Need to revisit. 		 */
-name|tw_osl_delay
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* #if 0 */
-endif|#
-directive|endif
-comment|/* TW_OSL_CAN_SLEEP */
 block|}
 do|while
 condition|(
@@ -2199,13 +2167,12 @@ expr_stmt|;
 comment|/* Check if the 'micro-controller ready' bit is not set. */
 if|if
 condition|(
+operator|!
 operator|(
 name|status_reg
 operator|&
-name|TWA_STATUS_EXPECTED_BITS
+name|TWA_STATUS_MICROCONTROLLER_READY
 operator|)
-operator|!=
-name|TWA_STATUS_EXPECTED_BITS
 condition|)
 block|{
 name|TW_INT8
@@ -2223,21 +2190,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|status_reg
-operator|&
-name|TWA_STATUS_MICROCONTROLLER_READY
-operator|)
-operator|||
-operator|(
 operator|!
 operator|(
 name|ctlr
 operator|->
-name|state
-operator|&
-name|TW_CLI_CTLR_STATE_RESET_PHASE1_IN_PROGRESS
-operator|)
+name|reset_phase1_in_progress
 operator|)
 condition|)
 block|{
@@ -2263,10 +2220,7 @@ name|status_reg
 argument_list|,
 name|tw_cli_describe_bits
 argument_list|(
-operator|~
-name|status_reg
-operator|&
-name|TWA_STATUS_EXPECTED_BITS
+name|TWA_STATUS_MICROCONTROLLER_READY
 argument_list|,
 name|desc
 argument_list|)
@@ -2325,15 +2279,12 @@ operator|)
 operator|)
 operator|||
 operator|(
+operator|!
 operator|(
 name|ctlr
 operator|->
-name|state
-operator|&
-name|TW_CLI_CTLR_STATE_RESET_IN_PROGRESS
+name|reset_in_progress
 operator|)
-operator|==
-literal|0
 operator|)
 operator|||
 operator|(
@@ -2536,15 +2487,12 @@ operator|)
 operator|)
 operator|||
 operator|(
+operator|!
 operator|(
 name|ctlr
 operator|->
-name|state
-operator|&
-name|TW_CLI_CTLR_STATE_RESET_IN_PROGRESS
+name|reset_in_progress
 operator|)
-operator|==
-literal|0
 operator|)
 condition|)
 name|tw_cl_create_event
@@ -2624,6 +2572,7 @@ name|error
 operator|=
 name|TW_OSL_EGENFAILURE
 expr_stmt|;
+comment|// tw_cl_reset_ctlr(ctlr_handle);
 block|}
 block|}
 return|return

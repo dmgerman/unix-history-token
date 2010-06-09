@@ -208,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|TW_CL_MAX_SIMULTANEOUS_REQUESTS
-value|0xFF
+value|256
 end_define
 
 begin_comment
@@ -535,6 +535,10 @@ modifier|*
 name|cl_req_ctxt
 decl_stmt|;
 comment|/* CL's request context */
+name|TW_UINT8
+name|is_io
+decl_stmt|;
+comment|/* Only freeze/release simq for IOs */
 block|}
 struct|;
 end_struct
@@ -1159,34 +1163,6 @@ name|struct
 name|tw_cl_req_handle
 modifier|*
 name|req_handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|tw_osl_ctlr_ready
-end_ifndef
-
-begin_comment
-comment|/* Called on cmd interrupt.  Allows re-submission of any pending requests. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_osl_ctlr_ready
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2038,23 +2014,6 @@ name|vendor_id
 parameter_list|,
 name|TW_INT32
 name|device_id
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Deferred interrupt handler. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|TW_VOID
-name|tw_cl_deferred_interrupt
-parameter_list|(
-name|struct
-name|tw_cl_ctlr_handle
-modifier|*
-name|ctlr_handle
 parameter_list|)
 function_decl|;
 end_function_decl
