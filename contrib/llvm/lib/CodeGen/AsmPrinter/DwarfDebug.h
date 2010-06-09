@@ -1,0 +1,2139 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===-- llvm/CodeGen/DwarfDebug.h - Dwarf Debug Framework ------*- C++ -*--===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file contains support for writing dwarf debug info into asm files.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CODEGEN_ASMPRINTER_DWARFDEBUG_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CODEGEN_ASMPRINTER_DWARFDEBUG_H__
+end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/AsmPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"DIE.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/UniqueVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|CompileUnit
+decl_stmt|;
+name|class
+name|DbgConcreteScope
+decl_stmt|;
+name|class
+name|DbgScope
+decl_stmt|;
+name|class
+name|DbgVariable
+decl_stmt|;
+name|class
+name|MachineFrameInfo
+decl_stmt|;
+name|class
+name|MachineModuleInfo
+decl_stmt|;
+name|class
+name|MachineOperand
+decl_stmt|;
+name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
+name|DIEAbbrev
+decl_stmt|;
+name|class
+name|DIE
+decl_stmt|;
+name|class
+name|DIEBlock
+decl_stmt|;
+name|class
+name|DIEEntry
+decl_stmt|;
+name|class
+name|DIEnumerator
+decl_stmt|;
+name|class
+name|DIDescriptor
+decl_stmt|;
+name|class
+name|DIVariable
+decl_stmt|;
+name|class
+name|DIGlobal
+decl_stmt|;
+name|class
+name|DIGlobalVariable
+decl_stmt|;
+name|class
+name|DISubprogram
+decl_stmt|;
+name|class
+name|DIBasicType
+decl_stmt|;
+name|class
+name|DIDerivedType
+decl_stmt|;
+name|class
+name|DIType
+decl_stmt|;
+name|class
+name|DINameSpace
+decl_stmt|;
+name|class
+name|DISubrange
+decl_stmt|;
+name|class
+name|DICompositeType
+decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|/// SrcLineInfo - This class is used to record source line correspondence.
+comment|///
+name|class
+name|SrcLineInfo
+block|{
+name|unsigned
+name|Line
+decl_stmt|;
+comment|// Source line number.
+name|unsigned
+name|Column
+decl_stmt|;
+comment|// Source column.
+name|unsigned
+name|SourceID
+decl_stmt|;
+comment|// Source ID number.
+name|MCSymbol
+modifier|*
+name|Label
+decl_stmt|;
+comment|// Label in code ID number.
+name|public
+label|:
+name|SrcLineInfo
+argument_list|(
+argument|unsigned L
+argument_list|,
+argument|unsigned C
+argument_list|,
+argument|unsigned S
+argument_list|,
+argument|MCSymbol *label
+argument_list|)
+block|:
+name|Line
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|Column
+argument_list|(
+name|C
+argument_list|)
+operator|,
+name|SourceID
+argument_list|(
+name|S
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+argument|label
+argument_list|)
+block|{}
+comment|// Accessors
+name|unsigned
+name|getLine
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Line
+return|;
+block|}
+name|unsigned
+name|getColumn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Column
+return|;
+block|}
+name|unsigned
+name|getSourceID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceID
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Label
+return|;
+block|}
+block|}
+empty_stmt|;
+name|class
+name|DwarfDebug
+block|{
+comment|/// Asm - Target of Dwarf emission.
+name|AsmPrinter
+modifier|*
+name|Asm
+decl_stmt|;
+comment|/// MMI - Collected machine module information.
+name|MachineModuleInfo
+modifier|*
+name|MMI
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Attributes used to construct specific Dwarf sections.
+comment|//
+name|CompileUnit
+modifier|*
+name|FirstCU
+decl_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|CompileUnit
+operator|*
+operator|>
+name|CUMap
+expr_stmt|;
+comment|/// AbbreviationsSet - Used to uniquely define abbreviations.
+comment|///
+name|FoldingSet
+operator|<
+name|DIEAbbrev
+operator|>
+name|AbbreviationsSet
+expr_stmt|;
+comment|/// Abbreviations - A list of all the unique abbreviations in use.
+comment|///
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEAbbrev
+operator|*
+operator|>
+name|Abbreviations
+expr_stmt|;
+comment|/// DirectoryIdMap - Directory name to directory id map.
+comment|///
+name|StringMap
+operator|<
+name|unsigned
+operator|>
+name|DirectoryIdMap
+expr_stmt|;
+comment|/// DirectoryNames - A list of directory names.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|8
+operator|>
+name|DirectoryNames
+expr_stmt|;
+comment|/// SourceFileIdMap - Source file name to source file id map.
+comment|///
+name|StringMap
+operator|<
+name|unsigned
+operator|>
+name|SourceFileIdMap
+expr_stmt|;
+comment|/// SourceFileNames - A list of source file names.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|8
+operator|>
+name|SourceFileNames
+expr_stmt|;
+comment|/// SourceIdMap - Source id map, i.e. pair of directory id and source file
+comment|/// id mapped to a unique id.
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+operator|,
+name|unsigned
+operator|>
+name|SourceIdMap
+expr_stmt|;
+comment|/// SourceIds - Reverse map from source id to directory id + file id pair.
+comment|///
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+operator|,
+literal|8
+operator|>
+name|SourceIds
+expr_stmt|;
+comment|/// Lines - List of source line correspondence.
+name|std
+operator|::
+name|vector
+operator|<
+name|SrcLineInfo
+operator|>
+name|Lines
+expr_stmt|;
+comment|/// DIEBlocks - A list of all the DIEBlocks in use.
+name|std
+operator|::
+name|vector
+operator|<
+name|DIEBlock
+operator|*
+operator|>
+name|DIEBlocks
+expr_stmt|;
+comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
+name|BumpPtrAllocator
+name|DIEValueAllocator
+decl_stmt|;
+comment|/// StringPool - A String->Symbol mapping of strings used by indirect
+comment|/// references.
+name|StringMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|StringPool
+expr_stmt|;
+name|unsigned
+name|NextStringPoolNumber
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|getStringPoolEntry
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+comment|/// SectionMap - Provides a unique id per text section.
+comment|///
+name|UniqueVector
+operator|<
+specifier|const
+name|MCSection
+operator|*
+operator|>
+name|SectionMap
+expr_stmt|;
+comment|/// SectionSourceLines - Tracks line numbers per text section.
+comment|///
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|SrcLineInfo
+operator|>
+expr|>
+name|SectionSourceLines
+expr_stmt|;
+comment|// CurrentFnDbgScope - Top level scope for the current function.
+comment|//
+name|DbgScope
+modifier|*
+name|CurrentFnDbgScope
+decl_stmt|;
+comment|/// DbgScopeMap - Tracks the scopes in the current function.  Owns the
+comment|/// contained DbgScope*s.
+comment|///
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|DbgScope
+operator|*
+operator|>
+name|DbgScopeMap
+expr_stmt|;
+comment|/// ConcreteScopes - Tracks the concrete scopees in the current function.
+comment|/// These scopes are also included in DbgScopeMap.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|DbgScope
+operator|*
+operator|>
+name|ConcreteScopes
+expr_stmt|;
+comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
+comment|/// not included DbgScopeMap.  AbstractScopes owns its DbgScope*s.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|DbgScope
+operator|*
+operator|>
+name|AbstractScopes
+expr_stmt|;
+comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
+comment|/// a function. This list is cleared during endFunction().
+name|SmallVector
+operator|<
+name|DbgScope
+operator|*
+operator|,
+literal|4
+operator|>
+name|AbstractScopesList
+expr_stmt|;
+comment|/// AbstractVariables - Collection on abstract variables.  Owned by the
+comment|/// DbgScopes in AbstractScopes.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|DbgVariable
+operator|*
+operator|>
+name|AbstractVariables
+expr_stmt|;
+comment|/// DbgVariableToFrameIndexMap - Tracks frame index used to find
+comment|/// variable's value.
+name|DenseMap
+operator|<
+specifier|const
+name|DbgVariable
+operator|*
+operator|,
+name|int
+operator|>
+name|DbgVariableToFrameIndexMap
+expr_stmt|;
+comment|/// DbgVariableToDbgInstMap - Maps DbgVariable to corresponding DBG_VALUE
+comment|/// machine instruction.
+name|DenseMap
+operator|<
+specifier|const
+name|DbgVariable
+operator|*
+operator|,
+specifier|const
+name|MachineInstr
+operator|*
+operator|>
+name|DbgVariableToDbgInstMap
+expr_stmt|;
+comment|/// DbgVariableLabelsMap - Maps DbgVariable to corresponding MCSymbol.
+name|DenseMap
+operator|<
+specifier|const
+name|DbgVariable
+operator|*
+operator|,
+specifier|const
+name|MCSymbol
+operator|*
+operator|>
+name|DbgVariableLabelsMap
+expr_stmt|;
+comment|/// DotDebugLocEntry - This struct describes location entries emitted in
+comment|/// .debug_loc section.
+typedef|typedef
+struct|struct
+name|DotDebugLocEntry
+block|{
+specifier|const
+name|MCSymbol
+modifier|*
+name|Begin
+decl_stmt|;
+specifier|const
+name|MCSymbol
+modifier|*
+name|End
+decl_stmt|;
+name|MachineLocation
+name|Loc
+decl_stmt|;
+name|DotDebugLocEntry
+argument_list|()
+operator|:
+name|Begin
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|End
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|DotDebugLocEntry
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|B
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|E
+argument_list|,
+name|MachineLocation
+operator|&
+name|L
+argument_list|)
+operator|:
+name|Begin
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|E
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|L
+argument_list|)
+block|{}
+comment|/// Empty entries are also used as a trigger to emit temp label. Such
+comment|/// labels are referenced is used to find debug_loc offset for a given DIE.
+name|bool
+name|isEmpty
+argument_list|()
+block|{
+return|return
+name|Begin
+operator|==
+literal|0
+operator|&&
+name|End
+operator|==
+literal|0
+return|;
+block|}
+block|}
+name|DotDebugLocEntry
+typedef|;
+comment|/// DotDebugLocEntries - Collection of DotDebugLocEntry.
+name|SmallVector
+operator|<
+name|DotDebugLocEntry
+operator|,
+literal|4
+operator|>
+name|DotDebugLocEntries
+expr_stmt|;
+comment|/// UseDotDebugLocEntry - DW_AT_location attributes for the DIEs in this set
+comment|/// idetifies corresponding .debug_loc entry offset.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|DIE
+operator|*
+operator|,
+literal|4
+operator|>
+name|UseDotDebugLocEntry
+expr_stmt|;
+comment|/// VarToAbstractVarMap - Maps DbgVariable with corresponding Abstract
+comment|/// DbgVariable, if any.
+name|DenseMap
+operator|<
+specifier|const
+name|DbgVariable
+operator|*
+operator|,
+specifier|const
+name|DbgVariable
+operator|*
+operator|>
+name|VarToAbstractVarMap
+expr_stmt|;
+comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
+comment|/// (at the end of the module) as DW_AT_inline.
+name|SmallPtrSet
+operator|<
+name|DIE
+operator|*
+operator|,
+literal|4
+operator|>
+name|InlinedSubprogramDIEs
+expr_stmt|;
+comment|/// ContainingTypeMap - This map is used to keep track of subprogram DIEs that
+comment|/// need DW_AT_containing_type attribute. This attribute points to a DIE that
+comment|/// corresponds to the MDNode mapped with the subprogram DIE.
+name|DenseMap
+operator|<
+name|DIE
+operator|*
+operator|,
+specifier|const
+name|MDNode
+operator|*
+operator|>
+name|ContainingTypeMap
+expr_stmt|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|DbgScope
+operator|*
+operator|,
+literal|2
+operator|>
+name|ScopeVector
+expr_stmt|;
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+literal|8
+operator|>
+name|InsnsBeginScopeSet
+expr_stmt|;
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+literal|8
+operator|>
+name|InsnsEndScopeSet
+expr_stmt|;
+comment|/// InlineInfo - Keep track of inlined functions and their location.  This
+comment|/// information is used to populate debug_inlined section.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+name|DIE
+operator|*
+operator|>
+name|InlineInfoLabels
+expr_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|InlineInfoLabels
+operator|,
+literal|4
+operator|>
+expr|>
+name|InlineInfo
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+literal|4
+operator|>
+name|InlinedSPNodes
+expr_stmt|;
+comment|/// LabelsBeforeInsn - Maps instruction with label emitted before
+comment|/// instruction.
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+name|LabelsBeforeInsn
+expr_stmt|;
+comment|/// LabelsAfterInsn - Maps instruction with label emitted after
+comment|/// instruction.
+name|DenseMap
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+name|MCSymbol
+operator|*
+operator|>
+name|LabelsAfterInsn
+expr_stmt|;
+comment|/// insnNeedsLabel - Collection of instructions that need a label to mark
+comment|/// a debuggging information entity.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MachineInstr
+operator|*
+operator|,
+literal|8
+operator|>
+name|InsnNeedsLabel
+expr_stmt|;
+comment|/// ProcessedArgs - Collection of arguments already processed.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+literal|8
+operator|>
+name|ProcessedArgs
+expr_stmt|;
+name|SmallVector
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+literal|8
+operator|>
+name|DebugRangeSymbols
+expr_stmt|;
+comment|/// Previous instruction's location information. This is used to determine
+comment|/// label location to indicate scope boundries in dwarf debug info.
+name|DebugLoc
+name|PrevInstLoc
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|PrevLabel
+decl_stmt|;
+struct|struct
+name|FunctionDebugFrameInfo
+block|{
+name|unsigned
+name|Number
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineMove
+operator|>
+name|Moves
+expr_stmt|;
+name|FunctionDebugFrameInfo
+argument_list|(
+argument|unsigned Num
+argument_list|,
+argument|const std::vector<MachineMove>&M
+argument_list|)
+block|:
+name|Number
+argument_list|(
+name|Num
+argument_list|)
+operator|,
+name|Moves
+argument_list|(
+argument|M
+argument_list|)
+block|{}
+block|}
+struct|;
+name|std
+operator|::
+name|vector
+operator|<
+name|FunctionDebugFrameInfo
+operator|>
+name|DebugFrames
+expr_stmt|;
+comment|// Section Symbols: these are assembler temporary labels that are emitted at
+comment|// the beginning of each supported dwarf section.  These are used to form
+comment|// section offsets and are created by EmitSectionLabels.
+name|MCSymbol
+modifier|*
+name|DwarfFrameSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfInfoSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfAbbrevSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|DwarfStrSectionSym
+decl_stmt|,
+modifier|*
+name|TextSectionSym
+decl_stmt|,
+modifier|*
+name|DwarfDebugRangeSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|DwarfDebugLocSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|FunctionBeginSym
+decl_stmt|,
+modifier|*
+name|FunctionEndSym
+decl_stmt|;
+name|private
+label|:
+comment|/// getSourceDirectoryAndFileIds - Return the directory and file ids that
+comment|/// maps to the source id. Source id starts at 1.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|getSourceDirectoryAndFileIds
+argument_list|(
+argument|unsigned SId
+argument_list|)
+specifier|const
+block|{
+return|return
+name|SourceIds
+index|[
+name|SId
+operator|-
+literal|1
+index|]
+return|;
+block|}
+comment|/// getNumSourceDirectories - Return the number of source directories in the
+comment|/// debug info.
+name|unsigned
+name|getNumSourceDirectories
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DirectoryNames
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// getSourceDirectoryName - Return the name of the directory corresponding
+comment|/// to the id.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getSourceDirectoryName
+argument_list|(
+argument|unsigned Id
+argument_list|)
+specifier|const
+block|{
+return|return
+name|DirectoryNames
+index|[
+name|Id
+operator|-
+literal|1
+index|]
+return|;
+block|}
+comment|/// getSourceFileName - Return the name of the source file corresponding
+comment|/// to the id.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getSourceFileName
+argument_list|(
+argument|unsigned Id
+argument_list|)
+specifier|const
+block|{
+return|return
+name|SourceFileNames
+index|[
+name|Id
+operator|-
+literal|1
+index|]
+return|;
+block|}
+comment|/// getNumSourceIds - Return the number of unique source ids.
+name|unsigned
+name|getNumSourceIds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceIds
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// assignAbbrevNumber - Define a unique number for the abbreviation.
+comment|///
+name|void
+name|assignAbbrevNumber
+parameter_list|(
+name|DIEAbbrev
+modifier|&
+name|Abbrev
+parameter_list|)
+function_decl|;
+comment|/// createDIEEntry - Creates a new DIEEntry to be a proxy for a debug
+comment|/// information entry.
+name|DIEEntry
+modifier|*
+name|createDIEEntry
+parameter_list|(
+name|DIE
+modifier|*
+name|Entry
+parameter_list|)
+function_decl|;
+comment|/// addUInt - Add an unsigned integer attribute data and value.
+comment|///
+name|void
+name|addUInt
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|uint64_t
+name|Integer
+parameter_list|)
+function_decl|;
+comment|/// addSInt - Add an signed integer attribute data and value.
+comment|///
+name|void
+name|addSInt
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|int64_t
+name|Integer
+parameter_list|)
+function_decl|;
+comment|/// addString - Add a string attribute data and value.
+comment|///
+name|void
+name|addString
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|StringRef
+name|Str
+parameter_list|)
+function_decl|;
+comment|/// addLabel - Add a Dwarf label attribute data and value.
+comment|///
+name|void
+name|addLabel
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Label
+parameter_list|)
+function_decl|;
+comment|/// addDelta - Add a label delta attribute data and value.
+comment|///
+name|void
+name|addDelta
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Hi
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Lo
+parameter_list|)
+function_decl|;
+comment|/// addDIEEntry - Add a DIE attribute data and value.
+comment|///
+name|void
+name|addDIEEntry
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|DIE
+modifier|*
+name|Entry
+parameter_list|)
+function_decl|;
+comment|/// addBlock - Add block data.
+comment|///
+name|void
+name|addBlock
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+name|unsigned
+name|Form
+parameter_list|,
+name|DIEBlock
+modifier|*
+name|Block
+parameter_list|)
+function_decl|;
+comment|/// addSourceLine - Add location information to specified debug information
+comment|/// entry.
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DIVariable
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DIGlobalVariable
+modifier|*
+name|G
+parameter_list|)
+function_decl|;
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DISubprogram
+modifier|*
+name|SP
+parameter_list|)
+function_decl|;
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DIType
+modifier|*
+name|Ty
+parameter_list|)
+function_decl|;
+name|void
+name|addSourceLine
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|DINameSpace
+modifier|*
+name|NS
+parameter_list|)
+function_decl|;
+comment|/// addAddress - Add an address attribute to a die based on the location
+comment|/// provided.
+name|void
+name|addAddress
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
+comment|/// addRegisterAddress - Add register location entry in variable DIE.
+name|bool
+name|addRegisterAddress
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|VS
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
+comment|/// addConstantValue - Add constant value entry in variable DIE.
+name|bool
+name|addConstantValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|VS
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
+comment|/// addConstantFPValue - Add constant value entry in variable DIE.
+name|bool
+name|addConstantFPValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|VS
+parameter_list|,
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|)
+function_decl|;
+comment|/// addComplexAddress - Start with the address based on the location provided,
+comment|/// and generate the DWARF information necessary to find the actual variable
+comment|/// (navigating the extra location information encoded in the type) based on
+comment|/// the starting location.  Add the DWARF information to the die.
+comment|///
+name|void
+name|addComplexAddress
+parameter_list|(
+name|DbgVariable
+modifier|*
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
+comment|// FIXME: Should be reformulated in terms of addComplexAddress.
+comment|/// addBlockByrefAddress - Start with the address based on the location
+comment|/// provided, and generate the DWARF information necessary to find the
+comment|/// actual Block variable (navigating the Block struct) based on the
+comment|/// starting location.  Add the DWARF information to the die.  Obsolete,
+comment|/// please use addComplexAddress instead.
+comment|///
+name|void
+name|addBlockByrefAddress
+parameter_list|(
+name|DbgVariable
+modifier|*
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Attribute
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|Location
+parameter_list|)
+function_decl|;
+comment|/// addToContextOwner - Add Die into the list of its context owner's children.
+name|void
+name|addToContextOwner
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|DIDescriptor
+name|Context
+parameter_list|)
+function_decl|;
+comment|/// addType - Add a new type attribute to the specified entity.
+name|void
+name|addType
+parameter_list|(
+name|DIE
+modifier|*
+name|Entity
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateNameSpace - Create a DIE for DINameSpace.
+name|DIE
+modifier|*
+name|getOrCreateNameSpace
+parameter_list|(
+name|DINameSpace
+name|NS
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateTypeDIE - Find existing DIE or create new DIE for the
+comment|/// given DIType.
+name|DIE
+modifier|*
+name|getOrCreateTypeDIE
+parameter_list|(
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
+name|void
+name|addPubTypes
+parameter_list|(
+name|DISubprogram
+name|SP
+parameter_list|)
+function_decl|;
+comment|/// constructTypeDIE - Construct basic type die from DIBasicType.
+name|void
+name|constructTypeDIE
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DIBasicType
+name|BTy
+parameter_list|)
+function_decl|;
+comment|/// constructTypeDIE - Construct derived type die from DIDerivedType.
+name|void
+name|constructTypeDIE
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DIDerivedType
+name|DTy
+parameter_list|)
+function_decl|;
+comment|/// constructTypeDIE - Construct type DIE from DICompositeType.
+name|void
+name|constructTypeDIE
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DICompositeType
+name|CTy
+parameter_list|)
+function_decl|;
+comment|/// constructSubrangeDIE - Construct subrange DIE from DISubrange.
+name|void
+name|constructSubrangeDIE
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DISubrange
+name|SR
+parameter_list|,
+name|DIE
+modifier|*
+name|IndexTy
+parameter_list|)
+function_decl|;
+comment|/// constructArrayTypeDIE - Construct array type DIE from DICompositeType.
+name|void
+name|constructArrayTypeDIE
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DICompositeType
+modifier|*
+name|CTy
+parameter_list|)
+function_decl|;
+comment|/// constructEnumTypeDIE - Construct enum type DIE from DIEnumerator.
+name|DIE
+modifier|*
+name|constructEnumTypeDIE
+parameter_list|(
+name|DIEnumerator
+name|ETy
+parameter_list|)
+function_decl|;
+comment|/// createGlobalVariableDIE - Create new DIE using GV.
+name|DIE
+modifier|*
+name|createGlobalVariableDIE
+parameter_list|(
+specifier|const
+name|DIGlobalVariable
+modifier|&
+name|GV
+parameter_list|)
+function_decl|;
+comment|/// createMemberDIE - Create new member DIE.
+name|DIE
+modifier|*
+name|createMemberDIE
+parameter_list|(
+specifier|const
+name|DIDerivedType
+modifier|&
+name|DT
+parameter_list|)
+function_decl|;
+comment|/// createSubprogramDIE - Create new DIE using SP.
+name|DIE
+modifier|*
+name|createSubprogramDIE
+parameter_list|(
+specifier|const
+name|DISubprogram
+modifier|&
+name|SP
+parameter_list|,
+name|bool
+name|MakeDecl
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateDbgScope - Create DbgScope for the scope.
+name|DbgScope
+modifier|*
+name|getOrCreateDbgScope
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|InlinedAt
+parameter_list|)
+function_decl|;
+name|DbgScope
+modifier|*
+name|getOrCreateAbstractScope
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// findAbstractVariable - Find abstract variable associated with Var.
+name|DbgVariable
+modifier|*
+name|findAbstractVariable
+parameter_list|(
+name|DIVariable
+modifier|&
+name|Var
+parameter_list|,
+name|DebugLoc
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// updateSubprogramScopeDIE - Find DIE for the given subprogram and
+comment|/// attach appropriate DW_AT_low_pc and DW_AT_high_pc attributes.
+comment|/// If there are global variables in this scope then create and insert
+comment|/// DIEs for these variables.
+name|DIE
+modifier|*
+name|updateSubprogramScopeDIE
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|SPNode
+parameter_list|)
+function_decl|;
+comment|/// constructLexicalScope - Construct new DW_TAG_lexical_block
+comment|/// for this scope and attach DW_AT_low_pc/DW_AT_high_pc labels.
+name|DIE
+modifier|*
+name|constructLexicalScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+comment|/// constructInlinedScopeDIE - This scope represents inlined body of
+comment|/// a function. Construct DIE to represent this concrete inlined copy
+comment|/// of the function.
+name|DIE
+modifier|*
+name|constructInlinedScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
+name|DIE
+modifier|*
+name|constructVariableDIE
+parameter_list|(
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+name|DbgScope
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+comment|/// constructScopeDIE - Construct a DIE for this scope.
+name|DIE
+modifier|*
+name|constructScopeDIE
+parameter_list|(
+name|DbgScope
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+comment|/// EmitSectionLabels - Emit initial Dwarf sections with a label at
+comment|/// the start of each one.
+name|void
+name|EmitSectionLabels
+parameter_list|()
+function_decl|;
+comment|/// emitDIE - Recusively Emits a debug information entry.
+comment|///
+name|void
+name|emitDIE
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|)
+function_decl|;
+comment|/// computeSizeAndOffset - Compute the size and offset of a DIE.
+comment|///
+name|unsigned
+name|computeSizeAndOffset
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|,
+name|bool
+name|Last
+parameter_list|)
+function_decl|;
+comment|/// computeSizeAndOffsets - Compute the size and offset of all the DIEs.
+comment|///
+name|void
+name|computeSizeAndOffsets
+parameter_list|()
+function_decl|;
+comment|/// EmitDebugInfo - Emit the debug info section.
+comment|///
+name|void
+name|emitDebugInfo
+parameter_list|()
+function_decl|;
+comment|/// emitAbbreviations - Emit the abbreviation section.
+comment|///
+name|void
+name|emitAbbreviations
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// emitEndOfLineMatrix - Emit the last address of the section and the end of
+comment|/// the line matrix.
+comment|///
+name|void
+name|emitEndOfLineMatrix
+parameter_list|(
+name|unsigned
+name|SectionEnd
+parameter_list|)
+function_decl|;
+comment|/// emitDebugLines - Emit source line information.
+comment|///
+name|void
+name|emitDebugLines
+parameter_list|()
+function_decl|;
+comment|/// emitCommonDebugFrame - Emit common frame info into a debug frame section.
+comment|///
+name|void
+name|emitCommonDebugFrame
+parameter_list|()
+function_decl|;
+comment|/// emitFunctionDebugFrame - Emit per function frame info into a debug frame
+comment|/// section.
+name|void
+name|emitFunctionDebugFrame
+parameter_list|(
+specifier|const
+name|FunctionDebugFrameInfo
+modifier|&
+name|DebugFrameInfo
+parameter_list|)
+function_decl|;
+comment|/// emitDebugPubNames - Emit visible names into a debug pubnames section.
+comment|///
+name|void
+name|emitDebugPubNames
+parameter_list|()
+function_decl|;
+comment|/// emitDebugPubTypes - Emit visible types into a debug pubtypes section.
+comment|///
+name|void
+name|emitDebugPubTypes
+parameter_list|()
+function_decl|;
+comment|/// emitDebugStr - Emit visible names into a debug str section.
+comment|///
+name|void
+name|emitDebugStr
+parameter_list|()
+function_decl|;
+comment|/// emitDebugLoc - Emit visible names into a debug loc section.
+comment|///
+name|void
+name|emitDebugLoc
+parameter_list|()
+function_decl|;
+comment|/// EmitDebugARanges - Emit visible names into a debug aranges section.
+comment|///
+name|void
+name|EmitDebugARanges
+parameter_list|()
+function_decl|;
+comment|/// emitDebugRanges - Emit visible names into a debug ranges section.
+comment|///
+name|void
+name|emitDebugRanges
+parameter_list|()
+function_decl|;
+comment|/// emitDebugMacInfo - Emit visible names into a debug macinfo section.
+comment|///
+name|void
+name|emitDebugMacInfo
+parameter_list|()
+function_decl|;
+comment|/// emitDebugInlineInfo - Emit inline info using following format.
+comment|/// Section Header:
+comment|/// 1. length of section
+comment|/// 2. Dwarf version number
+comment|/// 3. address size.
+comment|///
+comment|/// Entries (one "entry" for each function that was inlined):
+comment|///
+comment|/// 1. offset into __debug_str section for MIPS linkage name, if exists;
+comment|///   otherwise offset into __debug_str for regular function name.
+comment|/// 2. offset into __debug_str section for regular function name.
+comment|/// 3. an unsigned LEB128 number indicating the number of distinct inlining
+comment|/// instances for the function.
+comment|///
+comment|/// The rest of the entry consists of a {die_offset, low_pc}  pair for each
+comment|/// inlined instance; the die_offset points to the inlined_subroutine die in
+comment|/// the __debug_info section, and the low_pc is the starting address  for the
+comment|///  inlining instance.
+name|void
+name|emitDebugInlineInfo
+parameter_list|()
+function_decl|;
+comment|/// GetOrCreateSourceID - Look up the source id with the given directory and
+comment|/// source file names. If none currently exists, create a new id and insert it
+comment|/// in the SourceIds map. This can update DirectoryNames and SourceFileNames
+comment|/// maps as well.
+name|unsigned
+name|GetOrCreateSourceID
+parameter_list|(
+name|StringRef
+name|DirName
+parameter_list|,
+name|StringRef
+name|FileName
+parameter_list|)
+function_decl|;
+comment|/// constructCompileUnit - Create new CompileUnit for the given
+comment|/// metadata node with tag DW_TAG_compile_unit.
+name|void
+name|constructCompileUnit
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getCompielUnit - Get CompileUnit DIE.
+name|CompileUnit
+modifier|*
+name|getCompileUnit
+argument_list|(
+specifier|const
+name|MDNode
+operator|*
+name|N
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// constructGlobalVariableDIE - Construct global variable DIE.
+name|void
+name|constructGlobalVariableDIE
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// construct SubprogramDIE - Construct subprogram DIE.
+name|void
+name|constructSubprogramDIE
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|// FIXME: This should go away in favor of complex addresses.
+comment|/// Find the type the programmer originally declared the variable to be
+comment|/// and return that type.  Obsolete, use GetComplexAddrType instead.
+comment|///
+name|DIType
+name|getBlockByrefType
+argument_list|(
+name|DIType
+name|Ty
+argument_list|,
+name|std
+operator|::
+name|string
+name|Name
+argument_list|)
+decl_stmt|;
+comment|/// recordSourceLine - Register a source line with debug info. Returns the
+comment|/// unique label that was emitted and which provides correspondence to
+comment|/// the source line list.
+name|MCSymbol
+modifier|*
+name|recordSourceLine
+parameter_list|(
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|Col
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Scope
+parameter_list|)
+function_decl|;
+comment|/// getSourceLineCount - Return the number of source lines in the debug
+comment|/// info.
+name|unsigned
+name|getSourceLineCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Lines
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// recordVariableFrameIndex - Record a variable's index.
+name|void
+name|recordVariableFrameIndex
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|*
+name|V
+parameter_list|,
+name|int
+name|Index
+parameter_list|)
+function_decl|;
+comment|/// findVariableFrameIndex - Return true if frame index for the variable
+comment|/// is found. Update FI to hold value of the index.
+name|bool
+name|findVariableFrameIndex
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|*
+name|V
+parameter_list|,
+name|int
+modifier|*
+name|FI
+parameter_list|)
+function_decl|;
+comment|/// findVariableLabel - Find MCSymbol for the variable.
+specifier|const
+name|MCSymbol
+modifier|*
+name|findVariableLabel
+parameter_list|(
+specifier|const
+name|DbgVariable
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// findDbgScope - Find DbgScope for the debug loc attached with an
+comment|/// instruction.
+name|DbgScope
+modifier|*
+name|findDbgScope
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// identifyScopeMarkers() - Indentify instructions that are marking
+comment|/// beginning of or end of a scope.
+name|void
+name|identifyScopeMarkers
+parameter_list|()
+function_decl|;
+comment|/// extractScopeInformation - Scan machine instructions in this function
+comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
+name|bool
+name|extractScopeInformation
+parameter_list|()
+function_decl|;
+comment|/// collectVariableInfo - Populate DbgScope entries with variables' info.
+name|void
+name|collectVariableInfo
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// collectVariableInfoFromMMITable - Collect variable information from
+comment|/// side table maintained by MMI.
+name|void
+name|collectVariableInfoFromMMITable
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|P
+argument_list|)
+decl_stmt|;
+name|public
+label|:
+comment|//===--------------------------------------------------------------------===//
+comment|// Main entry points.
+comment|//
+name|DwarfDebug
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+argument_list|,
+name|Module
+operator|*
+name|M
+argument_list|)
+expr_stmt|;
+operator|~
+name|DwarfDebug
+argument_list|()
+expr_stmt|;
+comment|/// beginModule - Emit all Dwarf sections that should come prior to the
+comment|/// content.
+name|void
+name|beginModule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+comment|/// endModule - Emit all Dwarf sections that should come after the content.
+comment|///
+name|void
+name|endModule
+parameter_list|()
+function_decl|;
+comment|/// beginFunction - Gather pre-function debug information.  Assumes being
+comment|/// emitted immediately after the function entry point.
+name|void
+name|beginFunction
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
+function_decl|;
+comment|/// endFunction - Gather and emit post-function debug information.
+comment|///
+name|void
+name|endFunction
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+parameter_list|)
+function_decl|;
+comment|/// getLabelBeforeInsn - Return Label preceding the instruction.
+specifier|const
+name|MCSymbol
+modifier|*
+name|getLabelBeforeInsn
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// getLabelAfterInsn - Return Label immediately following the instruction.
+specifier|const
+name|MCSymbol
+modifier|*
+name|getLabelAfterInsn
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// beginScope - Process beginning of a scope.
+name|void
+name|beginScope
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// endScope - Prcess end of a scope.
+name|void
+name|endScope
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// End of namespace llvm
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

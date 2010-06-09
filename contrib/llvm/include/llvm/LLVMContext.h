@@ -1,0 +1,249 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===-- llvm/LLVMContext.h - Class for managing "global" state --*- C++ -*-===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file declares LLVMContext, a container of "global" state in LLVM, such
+end_comment
+
+begin_comment
+comment|// as the global type and constant uniquing tables.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LLVMCONTEXT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LLVMCONTEXT_H
+end_define
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|LLVMContextImpl
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|Instruction
+decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
+comment|/// This is an important class for using LLVM in a threaded context.  It
+comment|/// (opaquely) owns and manages the core "global" data of LLVM's core
+comment|/// infrastructure, including the type and constant uniquing tables.
+comment|/// LLVMContext itself provides no locking guarantees, so you should be careful
+comment|/// to have one context per thread.
+name|class
+name|LLVMContext
+block|{
+comment|// DO NOT IMPLEMENT
+name|LLVMContext
+argument_list|(
+name|LLVMContext
+operator|&
+argument_list|)
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+name|LLVMContext
+operator|&
+operator|)
+decl_stmt|;
+name|public
+label|:
+name|LLVMContextImpl
+modifier|*
+specifier|const
+name|pImpl
+decl_stmt|;
+name|LLVMContext
+argument_list|()
+expr_stmt|;
+operator|~
+name|LLVMContext
+argument_list|()
+expr_stmt|;
+comment|// Pinned metadata names, which always have the same value.  This is a
+comment|// compile-time performance optimization, not a correctness optimization.
+enum|enum
+block|{
+name|MD_dbg
+init|=
+literal|1
+comment|// "dbg" -> 1.
+block|}
+enum|;
+comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
+comment|/// This ID is uniqued across modules in the current LLVMContext.
+name|unsigned
+name|getMDKindID
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
+comment|/// custom metadata IDs registered in this LLVMContext.   ID #0 is not used,
+comment|/// so it is filled in as an empty string.
+name|void
+name|getMDKindNames
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|StringRef
+operator|>
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// setInlineAsmDiagnosticHandler - This method sets a handler that is invoked
+comment|/// when problems with inline asm are detected by the backend.  The first
+comment|/// argument is a function pointer (of type SourceMgr::DiagHandlerTy) and the
+comment|/// second is a context pointer that gets passed into the DiagHandler.
+comment|///
+comment|/// LLVMContext doesn't take ownership or interpreter either of these
+comment|/// pointers.
+name|void
+name|setInlineAsmDiagnosticHandler
+parameter_list|(
+name|void
+modifier|*
+name|DiagHandler
+parameter_list|,
+name|void
+modifier|*
+name|DiagContext
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// getInlineAsmDiagnosticHandler - Return the diagnostic handler set by
+comment|/// setInlineAsmDiagnosticHandler.
+name|void
+operator|*
+name|getInlineAsmDiagnosticHandler
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getInlineAsmDiagnosticContext - Return the diagnostic context set by
+comment|/// setInlineAsmDiagnosticHandler.
+name|void
+operator|*
+name|getInlineAsmDiagnosticContext
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// emitError - Emit an error message to the currently installed error handler
+comment|/// with optional location information.  This function returns, so code should
+comment|/// be prepared to drop the erroneous construct on the floor and "not crash".
+comment|/// The generated code need not be correct.  The error message will be
+comment|/// implicitly prefixed with "error: " and should not end with a ".".
+name|void
+name|emitError
+parameter_list|(
+name|unsigned
+name|LocCookie
+parameter_list|,
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
+name|void
+name|emitError
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
+name|void
+name|emitError
+parameter_list|(
+name|StringRef
+name|ErrorStr
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
+comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that
+comment|/// only care about operating on a single thread.
+specifier|extern
+name|LLVMContext
+modifier|&
+name|getGlobalContext
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+

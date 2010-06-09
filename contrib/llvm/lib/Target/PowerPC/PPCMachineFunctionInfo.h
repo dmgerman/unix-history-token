@@ -1,0 +1,451 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|//===-- PPCMachineFunctionInfo.h - Private data used for PowerPC --*- C++ -*-=//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//                     The LLVM Compiler Infrastructure
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file is distributed under the University of Illinois Open Source
+end_comment
+
+begin_comment
+comment|// License. See LICENSE.TXT for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This file declares the PowerPC specific subclass of MachineFunctionInfo.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PPC_MACHINE_FUNCTION_INFO_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PPC_MACHINE_FUNCTION_INFO_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+comment|/// PPCFunctionInfo - This class is derived from MachineFunction private
+comment|/// PowerPC target-specific information for each MachineFunction.
+name|class
+name|PPCFunctionInfo
+range|:
+name|public
+name|MachineFunctionInfo
+block|{
+name|private
+operator|:
+comment|/// FramePointerSaveIndex - Frame index of where the old frame pointer is
+comment|/// stored.  Also used as an anchor for instructions that need to be altered
+comment|/// when using frame pointers (dyna_add, dyna_sub.)
+name|int
+name|FramePointerSaveIndex
+block|;
+comment|/// ReturnAddrSaveIndex - Frame index of where the return address is stored.
+comment|///
+name|int
+name|ReturnAddrSaveIndex
+block|;
+comment|/// MustSaveLR - Indicates whether LR is defined (or clobbered) in the current
+comment|/// function.  This is only valid after the initial scan of the function by
+comment|/// PEI.
+name|bool
+name|MustSaveLR
+block|;
+comment|/// SpillsCR - Indicates whether CR is spilled in the current function.
+name|bool
+name|SpillsCR
+block|;
+comment|/// LRStoreRequired - The bool indicates whether there is some explicit use of
+comment|/// the LR/LR8 stack slot that is not obvious from scanning the code.  This
+comment|/// requires that the code generator produce a store of LR to the stack on
+comment|/// entry, even though LR may otherwise apparently not be used.
+name|bool
+name|LRStoreRequired
+block|;
+comment|/// MinReservedArea - This is the frame size that is at least reserved in a
+comment|/// potential caller (parameter+linkage area).
+name|unsigned
+name|MinReservedArea
+block|;
+comment|/// TailCallSPDelta - Stack pointer delta used when tail calling. Maximum
+comment|/// amount the stack pointer is adjusted to make the frame bigger for tail
+comment|/// calls. Used for creating an area before the register spill area.
+name|int
+name|TailCallSPDelta
+block|;
+comment|/// HasFastCall - Does this function contain a fast call. Used to determine
+comment|/// how the caller's stack pointer should be calculated (epilog/dynamicalloc).
+name|bool
+name|HasFastCall
+block|;
+comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|/// VarArgsStackOffset - StackOffset for start of stack
+comment|/// arguments.
+name|int
+name|VarArgsStackOffset
+block|;
+comment|/// VarArgsNumGPR - Index of the first unused integer
+comment|/// register for parameter passing.
+name|unsigned
+name|VarArgsNumGPR
+block|;
+comment|/// VarArgsNumFPR - Index of the first unused double
+comment|/// register for parameter passing.
+name|unsigned
+name|VarArgsNumFPR
+block|;
+name|public
+operator|:
+name|explicit
+name|PPCFunctionInfo
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+operator|:
+name|FramePointerSaveIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ReturnAddrSaveIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SpillsCR
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|LRStoreRequired
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|MinReservedArea
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|TailCallSPDelta
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|HasFastCall
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|VarArgsFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsStackOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsNumGPR
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|VarArgsNumFPR
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|int
+name|getFramePointerSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FramePointerSaveIndex
+return|;
+block|}
+name|void
+name|setFramePointerSaveIndex
+argument_list|(
+argument|int Idx
+argument_list|)
+block|{
+name|FramePointerSaveIndex
+operator|=
+name|Idx
+block|; }
+name|int
+name|getReturnAddrSaveIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ReturnAddrSaveIndex
+return|;
+block|}
+name|void
+name|setReturnAddrSaveIndex
+argument_list|(
+argument|int idx
+argument_list|)
+block|{
+name|ReturnAddrSaveIndex
+operator|=
+name|idx
+block|; }
+name|unsigned
+name|getMinReservedArea
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinReservedArea
+return|;
+block|}
+name|void
+name|setMinReservedArea
+argument_list|(
+argument|unsigned size
+argument_list|)
+block|{
+name|MinReservedArea
+operator|=
+name|size
+block|; }
+name|int
+name|getTailCallSPDelta
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TailCallSPDelta
+return|;
+block|}
+name|void
+name|setTailCallSPDelta
+argument_list|(
+argument|int size
+argument_list|)
+block|{
+name|TailCallSPDelta
+operator|=
+name|size
+block|; }
+comment|/// MustSaveLR - This is set when the prolog/epilog inserter does its initial
+comment|/// scan of the function. It is true if the LR/LR8 register is ever explicitly
+comment|/// defined/clobbered in the machine function (e.g. by calls and movpctolr,
+comment|/// which is used in PIC generation), or if the LR stack slot is explicitly
+comment|/// referenced by builtin_return_address.
+name|void
+name|setMustSaveLR
+argument_list|(
+argument|bool U
+argument_list|)
+block|{
+name|MustSaveLR
+operator|=
+name|U
+block|; }
+name|bool
+name|mustSaveLR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MustSaveLR
+return|;
+block|}
+name|void
+name|setSpillsCR
+argument_list|()
+block|{
+name|SpillsCR
+operator|=
+name|true
+block|; }
+name|bool
+name|isCRSpilled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SpillsCR
+return|;
+block|}
+name|void
+name|setLRStoreRequired
+argument_list|()
+block|{
+name|LRStoreRequired
+operator|=
+name|true
+block|; }
+name|bool
+name|isLRStoreRequired
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LRStoreRequired
+return|;
+block|}
+name|void
+name|setHasFastCall
+argument_list|()
+block|{
+name|HasFastCall
+operator|=
+name|true
+block|; }
+name|bool
+name|hasFastCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFastCall
+return|;
+block|}
+name|int
+name|getVarArgsFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsFrameIndex
+return|;
+block|}
+name|void
+name|setVarArgsFrameIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|VarArgsFrameIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getVarArgsStackOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsStackOffset
+return|;
+block|}
+name|void
+name|setVarArgsStackOffset
+argument_list|(
+argument|int Offset
+argument_list|)
+block|{
+name|VarArgsStackOffset
+operator|=
+name|Offset
+block|; }
+name|unsigned
+name|getVarArgsNumGPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsNumGPR
+return|;
+block|}
+name|void
+name|setVarArgsNumGPR
+argument_list|(
+argument|unsigned Num
+argument_list|)
+block|{
+name|VarArgsNumGPR
+operator|=
+name|Num
+block|; }
+name|unsigned
+name|getVarArgsNumFPR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarArgsNumFPR
+return|;
+block|}
+name|void
+name|setVarArgsNumFPR
+argument_list|(
+argument|unsigned Num
+argument_list|)
+block|{
+name|VarArgsNumFPR
+operator|=
+name|Num
+block|; }
+expr|}
+block|;  }
+end_decl_stmt
+
+begin_comment
+comment|// end of namespace llvm
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+end_unit
+
