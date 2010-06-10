@@ -1775,6 +1775,8 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
