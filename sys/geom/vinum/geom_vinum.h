@@ -1073,6 +1073,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|gv_worker_exit
+parameter_list|(
+name|struct
+name|gv_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|gv_event
 modifier|*

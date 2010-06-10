@@ -4111,6 +4111,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CX20585
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5069)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_CXXXXX
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0xffff)
 end_define
@@ -4510,6 +4517,34 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAMCP7A
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0007)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT220
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT21X
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP89
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAGT240
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x000d)
 end_define
 
 begin_define
@@ -5202,6 +5237,12 @@ literal|"Conexant CX20583 (Pebble HSF)"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CX20585
+block|,
+literal|"Conexant CX20585"
+block|}
+block|,
+block|{
 name|HDA_CODEC_VT1708_8
 block|,
 literal|"VIA VT1708_8"
@@ -5529,6 +5570,30 @@ block|{
 name|HDA_CODEC_NVIDIAMCP7A
 block|,
 literal|"NVidia MCP7A HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGT220
+block|,
+literal|"NVidia GT220 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGT21X
+block|,
+literal|"NVidia GT21x HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP89
+block|,
+literal|"NVidia MCP89 HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAGT240
+block|,
+literal|"NVidia GT240 HDMI"
 block|}
 block|,
 block|{

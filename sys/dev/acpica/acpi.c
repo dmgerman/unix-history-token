@@ -886,22 +886,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|BOOLEAN
-name|acpi_MatchHid
-parameter_list|(
-name|ACPI_HANDLE
-name|h
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|hid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|acpi_sleep_enable
 parameter_list|(
@@ -8865,7 +8849,6 @@ comment|/*  * Match a HID string against a handle  */
 end_comment
 
 begin_function
-specifier|static
 name|BOOLEAN
 name|acpi_MatchHid
 parameter_list|(
@@ -10629,7 +10612,7 @@ argument_list|,
 name|PZERO
 argument_list|)
 expr_stmt|;
-name|KNOTE_UNLOCKED
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|clone

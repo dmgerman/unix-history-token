@@ -120,6 +120,28 @@ name|ufs_extattr_per_mount
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|jblocks
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|inodedep
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|inodedeplst
+argument_list|,
+name|inodedep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
 end_comment
@@ -204,6 +226,32 @@ modifier|*
 name|softdep_worklist_tail
 decl_stmt|;
 comment|/* Tail pointer for above */
+name|struct
+name|workhead
+name|softdep_journal_pending
+decl_stmt|;
+comment|/* journal work queue */
+name|struct
+name|worklist
+modifier|*
+name|softdep_journal_tail
+decl_stmt|;
+comment|/* Tail pointer for above */
+name|struct
+name|jblocks
+modifier|*
+name|softdep_jblocks
+decl_stmt|;
+comment|/* Journal block information */
+name|struct
+name|inodedeplst
+name|softdep_unlinked
+decl_stmt|;
+comment|/* Unlinked inodes */
+name|int
+name|softdep_on_journal
+decl_stmt|;
+comment|/* Items on the journal list */
 name|int
 name|softdep_on_worklist
 decl_stmt|;
@@ -608,6 +656,17 @@ end_define
 
 begin_comment
 comment|/* Q_QUOTAOFF in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QTF_64BIT
+value|0x04
+end_define
+
+begin_comment
+comment|/* 64-bit quota file */
 end_comment
 
 begin_comment

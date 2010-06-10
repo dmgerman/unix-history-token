@@ -1463,19 +1463,6 @@ argument_list|(
 name|aclp
 operator|->
 name|acl_cnt
-operator|>=
-literal|0
-argument_list|,
-operator|(
-literal|"aclp->acl_cnt>= 0"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|aclp
-operator|->
-name|acl_cnt
 operator|<=
 name|ACL_MAX_ENTRIES
 argument_list|,

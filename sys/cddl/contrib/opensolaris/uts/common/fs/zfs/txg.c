@@ -84,6 +84,13 @@ name|zfs_txg_synctime
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|zfs_write_limit_override
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -105,7 +112,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"ZFS TXG"
+literal|"ZFS transaction groups (TXG)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -170,6 +177,39 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Target seconds to sync a txg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.txg.write_limit_override"
+argument_list|,
+operator|&
+name|zfs_write_limit_override
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_QUAD
+argument_list|(
+name|_vfs_zfs_txg
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|write_limit_override
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|zfs_write_limit_override
+argument_list|,
+literal|0
+argument_list|,
+literal|"Override maximum size of a txg to this size in bytes, "
+literal|"value of 0 means don't override"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -443,12 +483,20 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|cv_destroy
+name|rw_destroy
 argument_list|(
 operator|&
 name|tx
 operator|->
-name|tx_exit_cv
+name|tx_suspend
+argument_list|)
+expr_stmt|;
+name|mutex_destroy
+argument_list|(
+operator|&
+name|tx
+operator|->
+name|tx_sync_lock
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -456,15 +504,7 @@ argument_list|(
 operator|&
 name|tx
 operator|->
-name|tx_quiesce_done_cv
-argument_list|)
-expr_stmt|;
-name|cv_destroy
-argument_list|(
-operator|&
-name|tx
-operator|->
-name|tx_quiesce_more_cv
+name|tx_sync_more_cv
 argument_list|)
 expr_stmt|;
 name|cv_destroy
@@ -480,23 +520,23 @@ argument_list|(
 operator|&
 name|tx
 operator|->
-name|tx_sync_more_cv
+name|tx_quiesce_more_cv
 argument_list|)
 expr_stmt|;
-name|rw_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|tx
 operator|->
-name|tx_suspend
+name|tx_quiesce_done_cv
 argument_list|)
 expr_stmt|;
-name|mutex_destroy
+name|cv_destroy
 argument_list|(
 operator|&
 name|tx
 operator|->
-name|tx_sync_lock
+name|tx_exit_cv
 argument_list|)
 expr_stmt|;
 for|for
@@ -1432,7 +1472,7 @@ decl_stmt|;
 name|uint64_t
 name|txg
 decl_stmt|;
-comment|/* 		 * We sync when there's someone waiting on us, or the 		 * quiesce thread has handed off a txg to us, or we have 		 * reached our timeout. 		 */
+comment|/* 		 * We sync when we're scrubbing, there's someone waiting 		 * on us, or the quiesce thread has handed off a txg to 		 * us, or we have reached our timeout. 		 */
 name|timer
 operator|=
 operator|(
@@ -1449,6 +1489,21 @@ operator|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|dp
+operator|->
+name|dp_scrub_func
+operator|==
+name|SCRUB_FUNC_NONE
+operator|||
+name|spa_shutting_down
+argument_list|(
+name|dp
+operator|->
+name|dp_spa
+argument_list|)
+operator|)
+operator|&&
 operator|!
 name|tx
 operator|->

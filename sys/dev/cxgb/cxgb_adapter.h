@@ -717,6 +717,9 @@ decl_stmt|;
 name|uint32_t
 name|gen
 decl_stmt|;
+name|uint32_t
+name|db_pending
+decl_stmt|;
 name|bus_addr_t
 name|phys_addr
 decl_stmt|;
@@ -807,6 +810,9 @@ name|gen
 decl_stmt|;
 name|uint32_t
 name|unacked
+decl_stmt|;
+name|uint32_t
+name|db_pending
 decl_stmt|;
 name|struct
 name|tx_desc

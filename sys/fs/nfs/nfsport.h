@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_NFSPORT_NFS_H_
+name|_NFS_NFSPORT_H_
 end_define
 
 begin_comment
@@ -550,7 +550,7 @@ name|NFSMGET
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -560,7 +560,7 @@ name|NFSMGETHDR
 parameter_list|(
 name|m
 parameter_list|)
-value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 					\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -572,7 +572,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
+value|do { 					\ 		MGET((m), M_TRYWAIT, MT_DATA); 			\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGET((m), M_TRYWAIT, MT_DATA); 		\ 		} 						\ 		MCLGET((m), (w));				\ 	} while (0)
 end_define
 
 begin_define
@@ -584,7 +584,7 @@ name|m
 parameter_list|,
 name|w
 parameter_list|)
-value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
+value|do { 				\ 		MGETHDR((m), M_TRYWAIT, MT_DATA);		\ 		while ((m) == NULL ) { 				\ 			(void) nfs_catnap(PZERO, 0, "nfsmget");	\ 			MGETHDR((m), M_TRYWAIT, MT_DATA); 	\ 		} 						\ 	} while (0)
 end_define
 
 begin_define
@@ -3937,7 +3937,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NFSPORT_NFS_H */
+comment|/* _NFS_NFSPORT_H */
 end_comment
 
 end_unit

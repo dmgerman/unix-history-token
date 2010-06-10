@@ -5136,7 +5136,7 @@ name|PMC_STATE_RUNNING
 condition|)
 continue|continue;
 comment|/* increment PMC runcount */
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -5627,7 +5627,7 @@ name|adjri
 argument_list|)
 expr_stmt|;
 comment|/* reduce this PMC's runcount */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -10316,8 +10316,7 @@ operator|->
 name|po_sscount
 operator|++
 expr_stmt|;
-block|}
-comment|/* 	 * Log mapping information for all existing processes in the 	 * system.  Subsequent mappings are logged as they happen; 	 * see pmc_process_mmap(). 	 */
+comment|/* 		 * Log mapping information for all existing processes in the 		 * system.  Subsequent mappings are logged as they happen; 		 * see pmc_process_mmap(). 		 */
 if|if
 condition|(
 name|po
@@ -10338,6 +10337,7 @@ name|po_logprocmaps
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Move to the CPU associated with this 	 * PMC, and start the hardware. 	 */
 name|pmc_save_cpu_binding
@@ -12333,11 +12333,6 @@ condition|)
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|error
-condition|)
-break|break;
 comment|/* 		 * Look for valid values for 'pm_flags' 		 */
 if|if
 condition|(
@@ -15144,7 +15139,7 @@ name|pm_runcount
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -15895,7 +15890,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* mark entry as free */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -16537,7 +16532,7 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm

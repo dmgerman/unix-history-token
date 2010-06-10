@@ -461,13 +461,13 @@ block|}
 comment|/* Setup the Table Manager (cheat - there is no RSDT) */
 name|AcpiGbl_RootTableList
 operator|.
-name|Size
+name|MaxTableCount
 operator|=
 literal|1
 expr_stmt|;
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|=
 literal|0
 expr_stmt|;
@@ -2856,7 +2856,7 @@ name|TableIndex
 operator|=
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 operator|-
 literal|1
 expr_stmt|;

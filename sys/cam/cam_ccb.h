@@ -547,6 +547,17 @@ init|=
 literal|0x19
 block|,
 comment|/* 				 * Set SIM specific knob values. 				 */
+name|XPT_SCAN_TGT
+init|=
+literal|0x1E
+operator||
+name|XPT_FC_QUEUED
+operator||
+name|XPT_FC_USER_CCB
+operator||
+name|XPT_FC_XPT_ONLY
+block|,
+comment|/* Scan Target */
 comment|/* HBA engine commands 0x20->0x2F */
 name|XPT_ENG_INQ
 init|=
@@ -2790,6 +2801,10 @@ define|#
 directive|define
 name|CTS_SATA_VALID_ATAPI
 value|0x20
+define|#
+directive|define
+name|CTS_SATA_VALID_CAPS
+value|0x40
 name|int
 name|mode
 decl_stmt|;
@@ -2814,6 +2829,39 @@ name|u_int
 name|atapi
 decl_stmt|;
 comment|/* Length of ATAPI CDB */
+name|u_int
+name|caps
+decl_stmt|;
+comment|/* Device and host SATA caps. */
+define|#
+directive|define
+name|CTS_SATA_CAPS_H
+value|0x0000ffff
+define|#
+directive|define
+name|CTS_SATA_CAPS_H_PMREQ
+value|0x00000001
+define|#
+directive|define
+name|CTS_SATA_CAPS_H_APST
+value|0x00000002
+define|#
+directive|define
+name|CTS_SATA_CAPS_H_DMAAA
+value|0x00000010
+comment|/* Auto-activation */
+define|#
+directive|define
+name|CTS_SATA_CAPS_D
+value|0xffff0000
+define|#
+directive|define
+name|CTS_SATA_CAPS_D_PMREQ
+value|0x00010000
+define|#
+directive|define
+name|CTS_SATA_CAPS_D_APST
+value|0x00020000
 block|}
 struct|;
 end_struct

@@ -4302,7 +4302,7 @@ name|dev_priv
 operator|->
 name|sarea
 operator|->
-name|handle
+name|virtual
 operator|+
 name|init
 operator|->
@@ -4333,7 +4333,7 @@ name|dev_priv
 operator|->
 name|ring_map
 operator|->
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -4441,7 +4441,7 @@ name|dev
 operator|->
 name|agp_buffer_map
 operator|->
-name|handle
+name|virtual
 condition|)
 block|{
 name|DRM_ERROR
@@ -4649,7 +4649,7 @@ name|dev_priv
 operator|->
 name|ring_map
 operator|->
-name|handle
+name|virtual
 expr_stmt|;
 name|dev_priv
 operator|->

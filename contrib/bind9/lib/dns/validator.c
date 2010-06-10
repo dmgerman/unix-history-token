@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: validator.c,v 1.164.12.11.8.2 2010/02/25 10:57:12 tbox Exp $ */
+comment|/* $Id: validator.c,v 1.164.12.11.8.3 2010/04/21 04:29:01 marka Exp $ */
 end_comment
 
 begin_include
@@ -13720,6 +13720,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|val
+operator|->
+name|authfail
+operator|!=
+literal|0
+operator|&&
 name|val
 operator|->
 name|authcount

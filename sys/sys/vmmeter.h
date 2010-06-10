@@ -116,7 +116,7 @@ comment|/* (q) pages analyzed by daemon */
 name|u_int
 name|v_tcached
 decl_stmt|;
-comment|/* (q) total pages cached */
+comment|/* (p) total pages cached */
 name|u_int
 name|v_dfree
 decl_stmt|;
@@ -124,7 +124,7 @@ comment|/* (q) pages freed by daemon */
 name|u_int
 name|v_pfree
 decl_stmt|;
-comment|/* (q) pages freed by exiting processes */
+comment|/* (p) pages freed by exiting processes */
 name|u_int
 name|v_tfree
 decl_stmt|;

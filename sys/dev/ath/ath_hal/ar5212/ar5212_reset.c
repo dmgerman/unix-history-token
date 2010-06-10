@@ -1113,6 +1113,21 @@ argument_list|,
 name|regWrites
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_RXCFG_SDMAMW_4BYTES
+comment|/* 	 * Nala doesn't work with 128 byte bursts on pb42(hydra) (ar71xx), 	 * use 4 instead.  Enabling it on all platforms would hurt performance, 	 * so we only enable it on the ones that are affected by it. 	 */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_RXCFG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ahp
 operator|->
 name|ah_rfHal

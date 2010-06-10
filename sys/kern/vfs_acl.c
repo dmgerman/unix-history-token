@@ -389,12 +389,6 @@ condition|(
 name|source
 operator|->
 name|acl_cnt
-operator|<
-literal|0
-operator|||
-name|source
-operator|->
-name|acl_cnt
 operator|>
 name|OLDACL_MAX_ENTRIES
 condition|)

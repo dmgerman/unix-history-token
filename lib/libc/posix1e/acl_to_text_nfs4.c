@@ -132,7 +132,7 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
-name|id_t
+name|uid_t
 modifier|*
 name|id
 decl_stmt|;
@@ -179,7 +179,7 @@ case|:
 name|id
 operator|=
 operator|(
-name|id_t
+name|uid_t
 operator|*
 operator|)
 name|acl_get_qualifier
@@ -274,7 +274,7 @@ case|:
 name|id
 operator|=
 operator|(
-name|id_t
+name|uid_t
 operator|*
 operator|)
 name|acl_get_qualifier
@@ -517,7 +517,7 @@ decl_stmt|;
 name|acl_tag_t
 name|tag
 decl_stmt|;
-name|id_t
+name|uid_t
 modifier|*
 name|id
 decl_stmt|;
@@ -566,7 +566,7 @@ default|default:
 name|id
 operator|=
 operator|(
-name|id_t
+name|uid_t
 operator|*
 operator|)
 name|acl_get_qualifier
@@ -1108,6 +1108,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|free
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL

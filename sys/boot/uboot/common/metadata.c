@@ -77,6 +77,30 @@ directive|include
 file|"glue.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|int
+name|fdt_fixup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Return a 'boothowto' value corresponding to the kernel arguments in  * (kargs) and any relevant environment variables.  */
 end_comment
@@ -915,6 +939,16 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Prepare the bootinfo structure. Put a ptr to the allocated struct in addr,  * return size.  */
 end_comment
@@ -1471,8 +1505,13 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Load the information expected by a powerpc kernel.  *  * - The 'boothowto' argument is constructed  * - The 'bootdev' argument is constructed  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
+comment|/*  * Load the information expected by a kernel.  *  * - The 'boothowto' argument is constructed  * - The 'bootdev' argument is constructed  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
 end_comment
 
 begin_function
@@ -1492,6 +1531,9 @@ name|struct
 name|preloaded_file
 modifier|*
 name|kfp
+decl_stmt|,
+modifier|*
+name|bfp
 decl_stmt|;
 name|struct
 name|preloaded_file
@@ -1523,6 +1565,9 @@ decl_stmt|;
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
+name|vm_offset_t
+name|dtbp
+decl_stmt|;
 name|char
 modifier|*
 name|rootdevname
@@ -1549,6 +1594,16 @@ block|,
 name|MODINFOMD_KERNEND
 block|,
 name|MODINFOMD_ENVP
+block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+name|MODINFOMD_DTBP
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 name|howto
@@ -1585,7 +1640,7 @@ argument_list|(
 name|rootdevname
 argument_list|)
 expr_stmt|;
-comment|/* find the last module in the chain */
+comment|/* Find the last module in the chain */
 name|addr
 operator|=
 literal|0
@@ -1637,7 +1692,7 @@ operator|->
 name|f_size
 expr_stmt|;
 block|}
-comment|/* pad to a page boundary */
+comment|/* Pad to a page boundary */
 name|addr
 operator|=
 name|roundup
@@ -1647,7 +1702,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* copy our environment */
+comment|/* Copy our environment */
 name|envp
 operator|=
 name|addr
@@ -1659,7 +1714,7 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* pad to a page boundary */
+comment|/* Pad to a page boundary */
 name|addr
 operator|=
 name|roundup
@@ -1669,6 +1724,13 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
 comment|/* prepare bootinfo */
 name|bisize
 operator|=
@@ -1678,6 +1740,8 @@ operator|&
 name|bip
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|kernend
 operator|=
 literal|0
@@ -1734,17 +1798,6 @@ name|file_addmetadata
 argument_list|(
 name|kfp
 argument_list|,
-name|MODINFOMD_BOOTINFO
-argument_list|,
-name|bisize
-argument_list|,
-name|bip
-argument_list|)
-expr_stmt|;
-name|file_addmetadata
-argument_list|(
-name|kfp
-argument_list|,
 name|MODINFOMD_ENVP
 argument_list|,
 sizeof|sizeof
@@ -1754,6 +1807,82 @@ operator|&
 name|envp
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+comment|/* Handle device tree blob */
+name|fdt_fixup
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bfp
+operator|=
+name|file_findfile
+argument_list|(
+name|NULL
+argument_list|,
+literal|"dtb"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|howto
+operator|&
+name|RB_VERBOSE
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"**WARNING** Booting with no DTB loaded!\n"
+argument_list|)
+expr_stmt|;
+name|dtbp
+operator|=
+name|bfp
+operator|==
+name|NULL
+condition|?
+literal|0
+else|:
+name|bfp
+operator|->
+name|f_addr
+expr_stmt|;
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_DTBP
+argument_list|,
+sizeof|sizeof
+name|dtbp
+argument_list|,
+operator|&
+name|dtbp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|file_addmetadata
+argument_list|(
+name|kfp
+argument_list|,
+name|MODINFOMD_BOOTINFO
+argument_list|,
+name|bisize
+argument_list|,
+name|bip
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|file_addmetadata
 argument_list|(
 name|kfp
@@ -1767,6 +1896,7 @@ operator|&
 name|kernend
 argument_list|)
 expr_stmt|;
+comment|/* Figure out the size and location of the metadata */
 operator|*
 name|modulep
 operator|=
@@ -1790,6 +1920,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* Provide MODINFOMD_KERNEND */
 name|md
 operator|=
 name|file_findmetadata
@@ -1894,6 +2025,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Only now copy actual modules and metadata */
 operator|(
 name|void
 operator|)

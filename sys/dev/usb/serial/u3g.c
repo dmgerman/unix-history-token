@@ -176,11 +176,11 @@ directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|U3G_MAXPORTS
-value|8
+value|12
 end_define
 
 begin_define

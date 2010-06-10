@@ -57,6 +57,18 @@ parameter_list|)
 value|((a)< 0 ? -(a) : (a))
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|SIGNOF
+define|#
+directive|define
+name|SIGNOF
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)< 0 ? -1 : (a)> 0)
+endif|#
+directive|endif
 comment|/*  * Macro for checking power of 2 address alignment.  */
 define|#
 directive|define
@@ -134,15 +146,15 @@ parameter_list|)
 value|((phase) - (((phase) - (x))& -(align)))
 define|#
 directive|define
-name|P2CROSS
+name|P2BOUNDARY
 parameter_list|(
-name|x
+name|off
 parameter_list|,
-name|y
+name|len
 parameter_list|,
 name|align
 parameter_list|)
-value|(((x) ^ (y))> (align) - 1)
+value|(((off) ^ ((off) + (len) - 1))> (align) - 1)
 comment|/*  * Determine whether two numbers have the same high-order bit.  */
 define|#
 directive|define

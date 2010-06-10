@@ -18611,7 +18611,7 @@ ifdef|#
 directive|ifdef
 name|INET6
 name|struct
-name|in_addr
+name|in6_addr
 modifier|*
 name|ip6
 init|=

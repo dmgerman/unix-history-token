@@ -233,12 +233,12 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * AcpiGbl_RootTableList is the master list of ACPI tables found in the  * RSDT/XSDT.  *  */
+comment|/*  * AcpiGbl_RootTableList is the master list of ACPI tables that were  * found in the RSDT/XSDT.  */
 end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_INTERNAL_RSDT
+name|ACPI_TABLE_LIST
 name|AcpiGbl_RootTableList
 decl_stmt|;
 end_decl_stmt

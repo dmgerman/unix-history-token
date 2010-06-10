@@ -268,11 +268,11 @@ begin_comment
 comment|/* use default */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1325,11 +1325,11 @@ name|UAC_NCLASSES
 value|4
 end_define
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -2083,11 +2083,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -3831,11 +3831,11 @@ begin_comment
 comment|/*========================================================================*  * AS - Audio Stream - routines  *========================================================================*/
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -4947,8 +4947,8 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|uaudio_chan_dump_ep_desc
 argument_list|(
@@ -7823,8 +7823,8 @@ argument_list|,
 name|mc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
@@ -7917,8 +7917,8 @@ name|int
 name|id
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 specifier|const
 name|struct
@@ -7999,8 +7999,8 @@ name|int
 name|id
 parameter_list|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 specifier|const
 name|struct
@@ -10722,11 +10722,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_function
 specifier|static
@@ -11250,11 +11250,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -13562,8 +13562,8 @@ name|i
 operator|--
 condition|)
 do|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
 name|i
 operator|=

@@ -363,7 +363,7 @@ name|vm_offset_t
 operator|)
 name|map
 operator|->
-name|handle
+name|virtual
 argument_list|,
 name|map
 operator|->

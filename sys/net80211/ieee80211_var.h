@@ -786,6 +786,14 @@ name|int
 name|ic_lastnonht
 decl_stmt|;
 comment|/* last time non-HT sta noted */
+name|uint8_t
+name|ic_rxstream
+decl_stmt|;
+comment|/* # RX streams */
+name|uint8_t
+name|ic_txstream
+decl_stmt|;
+comment|/* # TX streams */
 comment|/* optional state for Atheros SuperG protocol extensions */
 name|struct
 name|ieee80211_superg
@@ -1390,9 +1398,6 @@ name|ic_spare
 index|[
 literal|7
 index|]
-decl_stmt|;
-name|uint32_t
-name|ic_spare2
 decl_stmt|;
 block|}
 struct|;

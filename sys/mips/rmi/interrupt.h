@@ -22,30 +22,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IRQ_DUMMY_UART
-value|2
+name|IRQ_IPI
+value|41
 end_define
 
-begin_define
-define|#
-directive|define
-name|IRQ_IPI_SMP_FUNCTION
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IRQ_IPI_SMP_RESCHEDULE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IRQ_REMOTE_DEBUG
-value|5
-end_define
+begin_comment
+comment|/* 8-39 are mapped by PIC intr 0-31 */
+end_comment
 
 begin_define
 define|#

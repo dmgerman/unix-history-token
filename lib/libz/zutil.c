@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-2005, 2010 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -505,6 +505,7 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|ZLIB_INTERNAL
 name|z_verbose
 init|=
 name|verbose
@@ -513,6 +514,7 @@ end_decl_stmt
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|z_error
 parameter_list|(
 name|m
@@ -604,6 +606,7 @@ end_ifndef
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|zmemcpy
 parameter_list|(
 name|dest
@@ -657,6 +660,7 @@ end_function
 
 begin_function
 name|int
+name|ZLIB_INTERNAL
 name|zmemcmp
 parameter_list|(
 name|s1
@@ -734,6 +738,7 @@ end_function
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|zmemzero
 parameter_list|(
 name|dest
@@ -859,6 +864,7 @@ end_comment
 
 begin_function
 name|voidpf
+name|ZLIB_INTERNAL
 name|zcalloc
 parameter_list|(
 name|voidpf
@@ -1012,6 +1018,7 @@ end_function
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|zcfree
 parameter_list|(
 name|voidpf
@@ -1187,6 +1194,7 @@ end_endif
 
 begin_function
 name|voidpf
+name|ZLIB_INTERNAL
 name|zcalloc
 parameter_list|(
 name|voidpf
@@ -1224,6 +1232,7 @@ end_function
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|zcfree
 parameter_list|(
 name|voidpf
@@ -1336,6 +1345,7 @@ end_endif
 
 begin_function
 name|voidpf
+name|ZLIB_INTERNAL
 name|zcalloc
 parameter_list|(
 name|opaque
@@ -1398,6 +1408,7 @@ end_function
 
 begin_function
 name|void
+name|ZLIB_INTERNAL
 name|zcfree
 parameter_list|(
 name|opaque

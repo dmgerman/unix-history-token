@@ -238,6 +238,7 @@ parameter_list|,
 name|int
 name|pages
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|procname

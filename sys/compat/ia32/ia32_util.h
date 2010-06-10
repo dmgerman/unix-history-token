@@ -109,5 +109,41 @@ begin_comment
 comment|/* Unlimited */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|ia32_fetch_syscall_args
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ia32_set_syscall_retval
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

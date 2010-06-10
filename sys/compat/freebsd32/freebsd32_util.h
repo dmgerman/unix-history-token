@@ -237,6 +237,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|iovec32
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|rusage32
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|register_t
 modifier|*
@@ -249,12 +261,6 @@ name|imgp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|iovec32
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
@@ -276,6 +282,24 @@ name|iov
 parameter_list|,
 name|int
 name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|freebsd32_rusage_out
+parameter_list|(
+specifier|const
+name|struct
+name|rusage
+modifier|*
+name|s
+parameter_list|,
+name|struct
+name|rusage32
+modifier|*
+name|s32
 parameter_list|)
 function_decl|;
 end_function_decl

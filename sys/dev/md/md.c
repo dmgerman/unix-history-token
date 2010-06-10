@@ -3193,6 +3193,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_lock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -3216,6 +3221,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* Actions on further pages start at offset 0 */
 name|p

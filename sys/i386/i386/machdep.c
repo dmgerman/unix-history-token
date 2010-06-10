@@ -1552,9 +1552,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|mca_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -3474,6 +3471,7 @@ name|uc_mcontext
 argument_list|)
 expr_stmt|;
 comment|/* magic */
+comment|/* 	 * The get_fpcontext() call must be placed before assignments 	 * to mc_fsbase and mc_gsbase due to the alignment-override 	 * code in get_fpcontext() that possibly clobbers 12 bytes of 	 * mcontext after mc_fpstate. 	 */
 name|get_fpcontext
 argument_list|(
 name|td
@@ -15826,7 +15824,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|,
@@ -15854,7 +15852,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_87
 argument_list|,
@@ -15910,7 +15908,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|)
@@ -15933,7 +15931,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_87
 argument_list|,
@@ -16190,6 +16188,7 @@ operator|*
 name|mcp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The get_fpcontext() call must be placed before assignments 	 * to mc_fsbase and mc_gsbase due to the alignment-override 	 * code in get_fpcontext() that possibly clobbers 12 bytes of 	 * mcontext after mc_fpstate. 	 */
 name|get_fpcontext
 argument_list|(
 name|td
@@ -16587,7 +16586,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|npxgetregs
+name|npxgetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -16854,7 +16853,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
-name|npxsetregs
+name|npxsetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -16893,6 +16892,20 @@ block|{
 name|register_t
 name|s
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"fpstate_drop: kernel-owned fpu"
+operator|)
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|intr_disable
@@ -16923,7 +16936,11 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
+operator|(
 name|PCB_NPXINITDONE
+operator||
+name|PCB_NPXUSERINITDONE
+operator|)
 expr_stmt|;
 name|intr_restore
 argument_list|(

@@ -7759,11 +7759,18 @@ name|flags
 operator|&
 name|RTLD_LO_NOLOAD
 condition|)
+block|{
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* First use of this object, so we must map it in */
 name|obj
 operator|=
@@ -16370,6 +16377,24 @@ operator|->
 name|tlssize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|_rtld_error
+argument_list|(
+literal|"Cannot allocate TLS block for index %d"
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
+name|die
+argument_list|()
+expr_stmt|;
+block|}
 name|memcpy
 argument_list|(
 name|p

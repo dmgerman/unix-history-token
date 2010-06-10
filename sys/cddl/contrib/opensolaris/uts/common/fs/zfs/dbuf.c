@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -1702,6 +1702,7 @@ name|db_size
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We can't assert that db_size matches dn_datablksz because it 	 * can be momentarily different when another thread is doing 	 * dnode_set_blksz(). 	 */
 if|if
 condition|(
 name|db
@@ -1709,38 +1710,7 @@ operator|->
 name|db_level
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* we can be momentarily larger in dnode_set_blksz() */
-if|if
-condition|(
-name|db
-operator|->
-name|db_blkid
-operator|!=
-name|DB_BONUS_BLKID
 operator|&&
-name|dn
-condition|)
-block|{
-name|ASSERT3U
-argument_list|(
-name|db
-operator|->
-name|db
-operator|.
-name|db_size
-argument_list|,
-operator|>=
-argument_list|,
-name|dn
-operator|->
-name|dn_datablksz
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|db
 operator|->
 name|db
@@ -1758,7 +1728,7 @@ name|db
 operator|->
 name|db_data_pending
 decl_stmt|;
-comment|/* 			 * it should only be modified in syncing 			 * context, so make sure we only have 			 * one copy of the data. 			 */
+comment|/* 		 * It should only be modified in syncing context, so 		 * make sure we only have one copy of the data. 		 */
 name|ASSERT
 argument_list|(
 name|dr
@@ -1778,7 +1748,6 @@ operator|->
 name|db_buf
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* verify db->db_blkptr */
 if|if
@@ -2623,9 +2592,18 @@ block|{
 name|int
 name|bonuslen
 init|=
+name|MIN
+argument_list|(
 name|dn
 operator|->
 name|dn_bonuslen
+argument_list|,
+name|dn
+operator|->
+name|dn_phys
+operator|->
+name|dn_bonuslen
+argument_list|)
 decl_stmt|;
 name|ASSERT3U
 argument_list|(
@@ -2654,6 +2632,8 @@ expr_stmt|;
 name|arc_space_consume
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 if|if
@@ -2673,6 +2653,10 @@ argument_list|,
 name|DN_MAX_BONUSLEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bonuslen
+condition|)
 name|bcopy
 argument_list|(
 name|DN_BONUS
@@ -3737,6 +3721,8 @@ expr_stmt|;
 name|arc_space_consume
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -7243,6 +7229,8 @@ expr_stmt|;
 name|arc_space_return
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
@@ -7950,6 +7938,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 return|return
@@ -8079,6 +8069,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 if|if
@@ -8427,6 +8419,8 @@ sizeof|sizeof
 argument_list|(
 name|dmu_buf_impl_t
 argument_list|)
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
@@ -10535,9 +10529,6 @@ name|tx
 operator|->
 name|tx_txg
 decl_stmt|;
-name|int
-name|blksz
-decl_stmt|;
 name|ASSERT
 argument_list|(
 name|dmu_tx_is_syncing
@@ -10729,6 +10720,8 @@ expr_stmt|;
 name|arc_space_return
 argument_list|(
 name|DN_MAX_BONUSLEN
+argument_list|,
+name|ARC_SPACE_OTHER
 argument_list|)
 expr_stmt|;
 block|}
@@ -11112,14 +11105,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|blksz
-operator|=
-name|arc_buf_size
-argument_list|(
-operator|*
-name|datap
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dn
@@ -11127,11 +11112,7 @@ operator|->
 name|dn_object
 operator|!=
 name|DMU_META_DNODE_OBJECT
-condition|)
-block|{
-comment|/* 		 * If this buffer is currently "in use" (i.e., there are 		 * active holds and db_data still references it), then make 		 * a copy before we start the write so that any modifications 		 * from the open txg will not leak into this write. 		 * 		 * NOTE: this copy does not need to be made for objects only 		 * modified in the syncing context (e.g. DNONE_DNODE blocks). 		 */
-if|if
-condition|(
+operator|&&
 name|refcount_count
 argument_list|(
 operator|&
@@ -11150,6 +11131,16 @@ operator|->
 name|db_buf
 condition|)
 block|{
+comment|/* 		 * If this buffer is currently "in use" (i.e., there 		 * are active holds and db_data still references it), 		 * then make a copy before we start the write so that 		 * any modifications from the open txg will not leak 		 * into this write. 		 * 		 * NOTE: this copy does not need to be made for 		 * objects only modified in the syncing context (e.g. 		 * DNONE_DNODE blocks). 		 */
+name|int
+name|blksz
+init|=
+name|arc_buf_size
+argument_list|(
+operator|*
+name|datap
+argument_list|)
+decl_stmt|;
 name|arc_buf_contents_t
 name|type
 init|=
@@ -11192,7 +11183,6 @@ argument_list|,
 name|blksz
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|ASSERT
 argument_list|(

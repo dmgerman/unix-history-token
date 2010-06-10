@@ -1496,7 +1496,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The test below is NOT true if we are the 			 * sole exiting thread. P_STOPPED_SNGL is unset 			 * in exit1() after it is the only survivor. 			 */
+comment|/* 			 * The test below is NOT true if we are the 			 * sole exiting thread. P_STOPPED_SINGLE is unset 			 * in exit1() after it is the only survivor. 			 */
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -1607,19 +1607,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|thread_lock
+name|ruxagg
 argument_list|(
+name|p
+argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Save our tick information with both the thread and proc locked */
-name|ruxagg
+name|thread_lock
 argument_list|(
-operator|&
-name|p
-operator|->
-name|p_rux
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;

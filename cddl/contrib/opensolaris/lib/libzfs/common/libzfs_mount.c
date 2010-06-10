@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -3967,7 +3967,10 @@ argument_list|,
 name|dataset_cmp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * And mount all the datasets, keeping track of which ones 	 * succeeded or failed. By using zfs_alloc(), the good pointer 	 * will always be non-NULL. 	 */
+comment|/* 	 * And mount all the datasets, keeping track of which ones 	 * succeeded or failed. 	 */
+if|if
+condition|(
+operator|(
 name|good
 operator|=
 name|zfs_alloc
@@ -3985,7 +3988,13 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
 name|ret
 operator|=
 literal|0

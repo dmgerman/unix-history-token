@@ -5664,7 +5664,10 @@ endif|#
 directive|endif
 name|ciu_enable_interrupts
 argument_list|(
-name|OCTEON_CORE_ID
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|,
 name|OCTEON_RGMX_CIU_INTX
 argument_list|,

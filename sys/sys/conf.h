@@ -1338,6 +1338,20 @@ name|MAKEDEV_WHTOUT
 value|0x2
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAKEDEV_NOWAIT
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKEDEV_WAITOK
+value|0x8
+end_define
+
 begin_function_decl
 name|struct
 name|cdev

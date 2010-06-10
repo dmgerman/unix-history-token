@@ -1252,7 +1252,7 @@ name|status
 operator|=
 name|ata_serverworks_status
 expr_stmt|;
-comment|/* Make sure that our interrupt is edge triggered */
+comment|/* Make sure that our interrupt is level low */
 name|powerpc_config_intr
 argument_list|(
 name|bus_get_resource_start
@@ -1267,9 +1267,9 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|INTR_TRIGGER_EDGE
+name|INTR_TRIGGER_LEVEL
 argument_list|,
-name|INTR_POLARITY_HIGH
+name|INTR_POLARITY_LOW
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1350,6 +1350,13 @@ operator|&
 operator|~
 literal|0x00040000
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Some controllers have a bug where they will send the command 	 * to the drive before seeing a DMA start, and then can begin 	 * receiving data before the DMA start arrives. The controller 	 * will then become confused and either corrupt the data or crash. 	 * Remedy this by starting DMA before sending the drive command. 	 */
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_DMA_BEFORE_CMD
 expr_stmt|;
 block|}
 comment|/* chip does not reliably do 64K DMA transfers */

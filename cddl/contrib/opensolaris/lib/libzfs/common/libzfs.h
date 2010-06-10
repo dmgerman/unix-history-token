@@ -975,6 +975,14 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zpool_export_force
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zpool_import
 parameter_list|(
 name|libzfs_handle_t

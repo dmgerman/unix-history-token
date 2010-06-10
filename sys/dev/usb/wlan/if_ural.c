@@ -277,11 +277,11 @@ directive|include
 file|<dev/usb/wlan/if_uralvar.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -3018,7 +3018,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3027,7 +3027,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(

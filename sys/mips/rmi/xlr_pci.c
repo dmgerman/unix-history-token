@@ -2962,7 +2962,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pcib
 argument_list|,
-name|nexus
+name|iodi
 argument_list|,
 name|xlr_pcib_driver
 argument_list|,

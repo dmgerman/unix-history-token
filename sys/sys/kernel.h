@@ -128,6 +128,28 @@ name|ticks
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|timer1hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timer 1 frequency */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|timer2hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timer 2 frequency */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

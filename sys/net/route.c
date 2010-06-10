@@ -260,6 +260,24 @@ begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
+name|rtstat
+argument_list|,
+name|rtstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_rtstat
+value|VNET(rtstat)
+end_define
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|radix_node_head
 operator|*
 argument_list|,
@@ -268,20 +286,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|uma_zone_t
-argument_list|,
-name|rtzone
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Routing table UMA zone. */
-end_comment
+begin_define
+define|#
+directive|define
+name|V_rt_tables
+value|VNET(rt_tables)
+end_define
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -297,43 +307,11 @@ begin_comment
 comment|/* routes not in table but not freed */
 end_comment
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
-name|rtstat
-argument_list|,
-name|rtstat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_rt_tables
-value|VNET(rt_tables)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtzone
-value|VNET(rtzone)
-end_define
-
 begin_define
 define|#
 directive|define
 name|V_rttrash
 value|VNET(rttrash)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtstat
-value|VNET(rtstat)
 end_define
 
 begin_comment
@@ -364,6 +342,28 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((struct rtentry *)(p))
+end_define
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|uma_zone_t
+argument_list|,
+name|rtzone
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Routing table UMA zone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_rtzone
+value|VNET(rtzone)
 end_define
 
 begin_if
@@ -2049,6 +2049,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|gateway
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -2757,6 +2759,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|gateway
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3251,6 +3255,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|ifpaddr
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=

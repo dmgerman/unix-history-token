@@ -441,6 +441,10 @@ modifier|*
 name|pc_netisr
 decl_stmt|;
 comment|/* netisr SWI cookie */
+name|int
+name|pc_dnweight
+decl_stmt|;
+comment|/* vm_page_dontneed() */
 comment|/* 	 * Stuff for read mostly lock 	 * 	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue

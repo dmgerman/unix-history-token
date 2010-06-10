@@ -873,6 +873,9 @@ name|kqueue
 name|aux
 decl_stmt|;
 comment|/* auxiliary data queue */
+name|int
+name|retry
+decl_stmt|;
 block|}
 name|atkbdc_softc_t
 typedef|;

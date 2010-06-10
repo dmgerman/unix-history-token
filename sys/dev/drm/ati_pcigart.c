@@ -48,14 +48,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATI_PCIE_WRITE
+name|ATI_GART_NOSNOOP
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATI_GART_WRITE
 value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATI_PCIE_READ
+name|ATI_GART_READ
 value|0x8
 end_define
 
@@ -828,7 +835,13 @@ literal|4
 expr_stmt|;
 name|page_base
 operator||=
-literal|0xc
+name|ATI_GART_READ
+operator||
+name|ATI_GART_WRITE
+expr_stmt|;
+name|page_base
+operator||=
+name|ATI_GART_NOSNOOP
 expr_stmt|;
 break|break;
 case|case
@@ -853,9 +866,13 @@ literal|24
 expr_stmt|;
 name|page_base
 operator||=
-name|ATI_PCIE_READ
+name|ATI_GART_READ
 operator||
-name|ATI_PCIE_WRITE
+name|ATI_GART_WRITE
+expr_stmt|;
+name|page_base
+operator||=
+name|ATI_GART_NOSNOOP
 expr_stmt|;
 break|break;
 default|default:

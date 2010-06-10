@@ -218,6 +218,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|proto_timeout
+parameter_list|(
+specifier|const
+name|struct
+name|proto_conn
+modifier|*
+name|conn
+parameter_list|,
+name|int
+name|timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|proto_close
 parameter_list|(

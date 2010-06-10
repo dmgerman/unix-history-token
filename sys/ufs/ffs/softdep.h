@@ -10,64 +10,64 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * ATTACHED means that the data is not currently being written to  * disk. UNDONE means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes. The COMPLETE flag indicates that the item has been  * written. For example, a dependency that requires that an inode be  * written will be marked COMPLETE after the inode has been written  * to disk. The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set. The two MKDIR flags indicate additional dependencies  * that must be done when creating a new directory. MKDIR_BODY is  * cleared when the directory data block containing the "." and ".."  * entries has been written. MKDIR_PARENT is cleared when the parent  * inode with the increased link count for ".." has been written. When  * both MKDIR flags have been cleared, the DEPCOMPLETE flag is set to  * indicate that the directory dependencies have been completed. The  * writing of the directory inode itself sets the COMPLETE flag which  * then allows the directory entry for the new directory to be written  * to disk. The RMDIR flag marks a dirrem structure as representing  * the removal of a directory rather than a file. When the removal  * dependencies are completed, additional work needs to be done  * (truncation of the "." and ".." entries, an additional decrement  * of the associated inode, and a decrement of the parent inode). The  * DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement. The GOINGAWAY flag indicates that the  * data structure is frozen from further change until its dependencies  * have been completed and its resources freed after which it will be  * discarded. The IOSTARTED flag prevents multiple calls to the I/O  * start routine from doing multiple rollbacks. The SPACECOUNTED flag  * says that the files space has been accounted to the pending free  * space count. The NEWBLOCK flag marks pagedep structures that have  * just been allocated, so must be claimed by the inode before all  * dependencies are complete. The INPROGRESS flag marks worklist  * structures that are still on the worklist, but are being considered  * for action by some process. The UFS1FMT flag indicates that the  * inode being processed is a ufs1 format. The EXTDATA flag indicates  * that the allocdirect describes an extended-attributes dependency.  * The ONWORKLIST flag shows whether the structure is currently linked  * onto a worklist.  */
+comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * The ATTACHED flag means that the data is not currently being written  * to disk.  *   * The UNDONE flag means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes.  *  * The COMPLETE flag indicates that the item has been written. For example,  * a dependency that requires that an inode be written will be marked  * COMPLETE after the inode has been written to disk.  *   * The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set.  *   * The two MKDIR flags indicate additional dependencies that must be done  * when creating a new directory. MKDIR_BODY is cleared when the directory  * data block containing the "." and ".." entries has been written.  * MKDIR_PARENT is cleared when the parent inode with the increased link  * count for ".." has been written. When both MKDIR flags have been  * cleared, the DEPCOMPLETE flag is set to indicate that the directory  * dependencies have been completed. The writing of the directory inode  * itself sets the COMPLETE flag which then allows the directory entry for  * the new directory to be written to disk. The RMDIR flag marks a dirrem  * structure as representing the removal of a directory rather than a  * file. When the removal dependencies are completed, additional work needs  * to be done* (an additional decrement of the associated inode, and a  * decrement of the parent inode).  *  * The DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement.  *   * The GOINGAWAY flag indicates that the data structure is frozen from  * further change until its dependencies have been completed and its  * resources freed after which it will be discarded.  *  * The IOSTARTED flag prevents multiple calls to the I/O start routine from  * doing multiple rollbacks.  *  * The NEWBLOCK flag marks pagedep structures that have just been allocated,  * so must be claimed by the inode before all dependencies are complete.  *  * The INPROGRESS flag marks worklist structures that are still on the  * worklist, but are being considered for action by some process.  *  * The UFS1FMT flag indicates that the inode being processed is a ufs1 format.  *  * The EXTDATA flag indicates that the allocdirect describes an  * extended-attributes dependency.  *  * The ONWORKLIST flag shows whether the structure is currently linked  * onto a worklist.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ATTACHED
-value|0x0001
+value|0x000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|UNDONE
-value|0x0002
+value|0x000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|COMPLETE
-value|0x0004
+value|0x000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEPCOMPLETE
-value|0x0008
+value|0x000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|MKDIR_PARENT
-value|0x0010
+value|0x000010
 end_define
 
 begin_comment
-comment|/* diradd& mkdir only */
+comment|/* diradd, mkdir, jaddref, jsegdep only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MKDIR_BODY
-value|0x0020
+value|0x000020
 end_define
 
 begin_comment
-comment|/* diradd& mkdir only */
+comment|/* diradd, mkdir, jaddref only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RMDIR
-value|0x0040
+value|0x000040
 end_define
 
 begin_comment
@@ -78,40 +78,40 @@ begin_define
 define|#
 directive|define
 name|DIRCHG
-value|0x0080
+value|0x000080
 end_define
 
 begin_comment
-comment|/* diradd& dirrem only */
+comment|/* diradd, dirrem only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GOINGAWAY
-value|0x0100
+value|0x000100
 end_define
 
 begin_comment
-comment|/* indirdep only */
+comment|/* indirdep, jremref only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IOSTARTED
-value|0x0200
+value|0x000200
 end_define
 
 begin_comment
-comment|/* inodedep& pagedep only */
+comment|/* inodedep, pagedep, bmsafemap only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SPACECOUNTED
-value|0x0400
+value|0x000400
 end_define
 
 begin_comment
@@ -122,18 +122,18 @@ begin_define
 define|#
 directive|define
 name|NEWBLOCK
-value|0x0800
+value|0x000800
 end_define
 
 begin_comment
-comment|/* pagedep only */
+comment|/* pagedep, jaddref only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INPROGRESS
-value|0x1000
+value|0x001000
 end_define
 
 begin_comment
@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|UFS1FMT
-value|0x2000
+value|0x002000
 end_define
 
 begin_comment
@@ -155,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|EXTDATA
-value|0x4000
+value|0x004000
 end_define
 
 begin_comment
@@ -166,7 +166,80 @@ begin_define
 define|#
 directive|define
 name|ONWORKLIST
-value|0x8000
+value|0x008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOWAITING
+value|0x010000
+end_define
+
+begin_comment
+comment|/* Thread is waiting for IO to complete. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONDEPLIST
+value|0x020000
+end_define
+
+begin_comment
+comment|/* Structure is on a dependency list. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNLINKED
+value|0x040000
+end_define
+
+begin_comment
+comment|/* inodedep has been unlinked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNLINKNEXT
+value|0x080000
+end_define
+
+begin_comment
+comment|/* inodedep has valid di_freelink */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNLINKPREV
+value|0x100000
+end_define
+
+begin_comment
+comment|/* inodedep is pointed at in the unlink list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNLINKONLIST
+value|0x200000
+end_define
+
+begin_comment
+comment|/* inodedep is in the unlinked list on disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNLINKLINKS
+value|(UNLINKNEXT | UNLINKPREV)
 end_define
 
 begin_define
@@ -192,12 +265,6 @@ begin_struct
 struct|struct
 name|worklist
 block|{
-name|struct
-name|mount
-modifier|*
-name|wk_mp
-decl_stmt|;
-comment|/* Mount we live in */
 name|LIST_ENTRY
 argument_list|(
 argument|worklist
@@ -205,14 +272,22 @@ argument_list|)
 name|wk_list
 expr_stmt|;
 comment|/* list of work requests */
-name|unsigned
-name|short
-name|wk_type
+name|struct
+name|mount
+modifier|*
+name|wk_mp
 decl_stmt|;
-comment|/* type of request */
+comment|/* Mount we live in */
 name|unsigned
-name|short
+name|int
+name|wk_type
+range|:
+literal|8
+decl_stmt|,
+comment|/* type of request */
 name|wk_state
+range|:
+literal|24
 decl_stmt|;
 comment|/* state flags */
 block|}
@@ -257,6 +332,16 @@ parameter_list|(
 name|wk
 parameter_list|)
 value|((struct bmsafemap *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_NEWBLK
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct newblk *)(wk))
 end_define
 
 begin_define
@@ -312,6 +397,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|WK_FREEWORK
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct freework *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
 name|WK_FREEFILE
 parameter_list|(
 name|wk
@@ -357,6 +452,116 @@ parameter_list|(
 name|wk
 parameter_list|)
 value|((struct newdirblk *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JADDREF
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jaddref *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JREMREF
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jremref *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JMVREF
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jmvref *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JSEGDEP
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jsegdep *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JSEG
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jseg *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JNEWBLK
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jnewblk *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JFREEBLK
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jfreeblk *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_FREEDEP
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct freedep *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JFREEFRAG
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jfreefrag *)(wk))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_SBDEP
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct sbdep *)wk)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WK_JTRUNC
+parameter_list|(
+name|wk
+parameter_list|)
+value|((struct jtrunc *)(wk))
 end_define
 
 begin_comment
@@ -433,6 +638,96 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|indirdephd
+argument_list|,
+name|indirdep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|jaddrefhd
+argument_list|,
+name|jaddref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|jremrefhd
+argument_list|,
+name|jremref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|jmvrefhd
+argument_list|,
+name|jmvref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|jnewblkhd
+argument_list|,
+name|jnewblk
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|jfreeblkhd
+argument_list|,
+name|jfreeblk
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|freeworkhd
+argument_list|,
+name|freework
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|jseglst
+argument_list|,
+name|jseg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|inoreflst
+argument_list|,
+name|inoref
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The "pagedep" structure tracks the various dependencies related to  * a particular directory page. If a directory page has any dependencies,  * it will have a pagedep linked to its associated buffer. The  * pd_dirremhd list holds the list of dirrem requests which decrement  * inode reference counts. These requests are processed after the  * directory page with the corresponding zero'ed entries has been  * written. The pd_diraddhd list maintains the list of diradd requests  * which cannot be committed until their corresponding inode has been  * written to disk. Because a directory may have many new entries  * being created, several lists are maintained hashed on bits of the  * offset of the entry into the directory page to keep the lists from  * getting too long. Once a new directory entry has been cleared to  * be written, it is moved to the pd_pendinghd list. After the new  * entry has been written to disk it is removed from the pd_pendinghd  * list, any removed operations are done, and the dependency structure  * is freed.  */
 end_comment
@@ -484,6 +779,12 @@ name|pd_lbn
 decl_stmt|;
 comment|/* block within file */
 name|struct
+name|newdirblk
+modifier|*
+name|pd_newdirblk
+decl_stmt|;
+comment|/* associated newdirblk if NEWBLOCK */
+name|struct
 name|dirremhd
 name|pd_dirremhd
 decl_stmt|;
@@ -501,6 +802,11 @@ name|diraddhd
 name|pd_pendinghd
 decl_stmt|;
 comment|/* directory entries awaiting write */
+name|struct
+name|jmvrefhd
+name|pd_jmvrefhd
+decl_stmt|;
+comment|/* Dependent journal writes. */
 block|}
 struct|;
 end_struct
@@ -530,6 +836,13 @@ argument_list|)
 name|id_hash
 expr_stmt|;
 comment|/* hashed lookup */
+name|TAILQ_ENTRY
+argument_list|(
+argument|inodedep
+argument_list|)
+name|id_unlinked
+expr_stmt|;
+comment|/* Unlinked but ref'd inodes */
 name|struct
 name|fs
 modifier|*
@@ -544,6 +857,10 @@ name|nlink_t
 name|id_nlinkdelta
 decl_stmt|;
 comment|/* saved effective link count */
+name|nlink_t
+name|id_savednlink
+decl_stmt|;
+comment|/* Link saved during rollback */
 name|LIST_ENTRY
 argument_list|(
 argument|inodedep
@@ -552,11 +869,22 @@ name|id_deps
 expr_stmt|;
 comment|/* bmsafemap's list of inodedep's */
 name|struct
-name|buf
+name|bmsafemap
 modifier|*
-name|id_buf
+name|id_bmsafemap
 decl_stmt|;
 comment|/* related bmsafemap (if pending) */
+name|struct
+name|diradd
+modifier|*
+name|id_mkdiradd
+decl_stmt|;
+comment|/* diradd for a mkdir. */
+name|struct
+name|inoreflst
+name|id_inoreflst
+decl_stmt|;
+comment|/* Inode reference adjustments. */
 name|long
 name|id_savedextsize
 decl_stmt|;
@@ -565,6 +893,11 @@ name|off_t
 name|id_savedsize
 decl_stmt|;
 comment|/* file size saved during rollback */
+name|struct
+name|dirremhd
+name|id_dirremhd
+decl_stmt|;
+comment|/* Removals pending. */
 name|struct
 name|workhead
 name|id_pendinghd
@@ -636,52 +969,6 @@ value|id_un.idu_savedino2
 end_define
 
 begin_comment
-comment|/*  * A "newblk" structure is attached to a bmsafemap structure when a block  * or fragment is allocated from a cylinder group. Its state is set to  * DEPCOMPLETE when its cylinder group map is written. It is consumed by  * an associated allocdirect or allocindir allocation which will attach  * themselves to the bmsafemap structure if the newblk's DEPCOMPLETE flag  * is not set (i.e., its cylinder group map has not been written).  */
-end_comment
-
-begin_struct
-struct|struct
-name|newblk
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|newblk
-argument_list|)
-name|nb_hash
-expr_stmt|;
-comment|/* hashed lookup */
-name|struct
-name|fs
-modifier|*
-name|nb_fs
-decl_stmt|;
-comment|/* associated filesystem */
-name|int
-name|nb_state
-decl_stmt|;
-comment|/* state of bitmap dependency */
-name|ufs2_daddr_t
-name|nb_newblkno
-decl_stmt|;
-comment|/* allocated block number */
-name|LIST_ENTRY
-argument_list|(
-argument|newblk
-argument_list|)
-name|nb_deps
-expr_stmt|;
-comment|/* bmsafemap's list of newblk's */
-name|struct
-name|bmsafemap
-modifier|*
-name|nb_bmsafemap
-decl_stmt|;
-comment|/* associated bmsafemap */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * A "bmsafemap" structure maintains a list of dependency structures  * that depend on the update of a particular cylinder group map.  * It has lists for newblks, allocdirects, allocindirs, and inodedeps.  * It is attached to the buffer of a cylinder group block when any of  * these things are allocated from the cylinder group. It is freed  * after the cylinder group map is written and the state of its  * dependencies are updated with DEPCOMPLETE to indicate that it has  * been processed.  */
 end_comment
 
@@ -694,6 +981,20 @@ name|worklist
 name|sm_list
 decl_stmt|;
 comment|/* cylgrp buffer */
+define|#
+directive|define
+name|sm_state
+value|sm_list.wk_state
+name|int
+name|sm_cg
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|bmsafemap
+argument_list|)
+name|sm_hash
+expr_stmt|;
+comment|/* Hash links. */
 name|struct
 name|buf
 modifier|*
@@ -706,20 +1007,121 @@ name|sm_allocdirecthd
 decl_stmt|;
 comment|/* allocdirect deps */
 name|struct
+name|allocdirecthd
+name|sm_allocdirectwr
+decl_stmt|;
+comment|/* writing allocdirect deps */
+name|struct
 name|allocindirhd
 name|sm_allocindirhd
 decl_stmt|;
 comment|/* allocindir deps */
+name|struct
+name|allocindirhd
+name|sm_allocindirwr
+decl_stmt|;
+comment|/* writing allocindir deps */
 name|struct
 name|inodedephd
 name|sm_inodedephd
 decl_stmt|;
 comment|/* inodedep deps */
 name|struct
+name|inodedephd
+name|sm_inodedepwr
+decl_stmt|;
+comment|/* writing inodedep deps */
+name|struct
 name|newblkhd
 name|sm_newblkhd
 decl_stmt|;
 comment|/* newblk deps */
+name|struct
+name|newblkhd
+name|sm_newblkwr
+decl_stmt|;
+comment|/* writing newblk deps */
+name|struct
+name|jaddrefhd
+name|sm_jaddrefhd
+decl_stmt|;
+comment|/* Pending inode allocations. */
+name|struct
+name|jnewblkhd
+name|sm_jnewblkhd
+decl_stmt|;
+comment|/* Pending block allocations. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "newblk" structure is attached to a bmsafemap structure when a block  * or fragment is allocated from a cylinder group. Its state is set to  * DEPCOMPLETE when its cylinder group map is written. It is converted to  * an allocdirect or allocindir allocation once the allocator calls the  * appropriate setup function.  */
+end_comment
+
+begin_struct
+struct|struct
+name|newblk
+block|{
+name|struct
+name|worklist
+name|nb_list
+decl_stmt|;
+define|#
+directive|define
+name|nb_state
+value|nb_list.wk_state
+name|LIST_ENTRY
+argument_list|(
+argument|newblk
+argument_list|)
+name|nb_hash
+expr_stmt|;
+comment|/* hashed lookup */
+name|LIST_ENTRY
+argument_list|(
+argument|newblk
+argument_list|)
+name|nb_deps
+expr_stmt|;
+comment|/* bmsafemap's list of newblks */
+name|struct
+name|jnewblk
+modifier|*
+name|nb_jnewblk
+decl_stmt|;
+comment|/* New block journal entry. */
+name|struct
+name|bmsafemap
+modifier|*
+name|nb_bmsafemap
+decl_stmt|;
+comment|/* cylgrp dep (if pending) */
+name|struct
+name|freefrag
+modifier|*
+name|nb_freefrag
+decl_stmt|;
+comment|/* fragment to be freed (if any) */
+name|struct
+name|indirdephd
+name|nb_indirdeps
+decl_stmt|;
+comment|/* Children indirect blocks. */
+name|struct
+name|workhead
+name|nb_newdirblk
+decl_stmt|;
+comment|/* dir block to notify when written */
+name|struct
+name|workhead
+name|nb_jwork
+decl_stmt|;
+comment|/* Journal work pending. */
+name|ufs2_daddr_t
+name|nb_newblkno
+decl_stmt|;
+comment|/* new value of block pointer */
 block|}
 struct|;
 end_struct
@@ -733,14 +1135,14 @@ struct|struct
 name|allocdirect
 block|{
 name|struct
-name|worklist
-name|ad_list
+name|newblk
+name|ad_block
 decl_stmt|;
-comment|/* buffer holding block */
+comment|/* Common block logic */
 define|#
 directive|define
 name|ad_state
-value|ad_list.wk_state
+value|ad_block.nb_list.wk_state
 comment|/* block pointer state */
 name|TAILQ_ENTRY
 argument_list|(
@@ -749,18 +1151,20 @@ argument_list|)
 name|ad_next
 expr_stmt|;
 comment|/* inodedep's list of allocdirect's */
-name|ufs_lbn_t
-name|ad_lbn
+name|struct
+name|inodedep
+modifier|*
+name|ad_inodedep
 decl_stmt|;
-comment|/* block within file */
-name|ufs2_daddr_t
-name|ad_newblkno
-decl_stmt|;
-comment|/* new value of block pointer */
+comment|/* associated inodedep */
 name|ufs2_daddr_t
 name|ad_oldblkno
 decl_stmt|;
 comment|/* old value of block pointer */
+name|int
+name|ad_offset
+decl_stmt|;
+comment|/* Pointer offset in parent. */
 name|long
 name|ad_newsize
 decl_stmt|;
@@ -769,39 +1173,30 @@ name|long
 name|ad_oldsize
 decl_stmt|;
 comment|/* size of old block */
-name|LIST_ENTRY
-argument_list|(
-argument|allocdirect
-argument_list|)
-name|ad_deps
-expr_stmt|;
-comment|/* bmsafemap's list of allocdirect's */
-name|struct
-name|buf
-modifier|*
-name|ad_buf
-decl_stmt|;
-comment|/* cylgrp buffer (if pending) */
-name|struct
-name|inodedep
-modifier|*
-name|ad_inodedep
-decl_stmt|;
-comment|/* associated inodedep */
-name|struct
-name|freefrag
-modifier|*
-name|ad_freefrag
-decl_stmt|;
-comment|/* fragment to be freed (if any) */
-name|struct
-name|workhead
-name|ad_newdirblk
-decl_stmt|;
-comment|/* dir block to notify when written */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ad_newblkno
+value|ad_block.nb_newblkno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ad_freefrag
+value|ad_block.nb_freefrag
+end_define
+
+begin_define
+define|#
+directive|define
+name|ad_newdirblk
+value|ad_block.nb_newdirblk
+end_define
 
 begin_comment
 comment|/*  * A single "indirdep" structure manages all allocation dependencies for  * pointers in an indirect block. The up-to-date state of the indirect  * block is stored in ir_savedata. The set of pointers that may be safely  * written to the disk is stored in ir_safecopy. The state field is used  * only to track whether the buffer is currently being written (in which  * case it is not safe to update ir_safecopy). Ir_deplisthd contains the  * list of allocindir structures, one for each block that needs to be  * written to disk. Once the block and its bitmap allocation have been  * written the safecopy can be updated to reflect the allocation and the  * allocindir structure freed. If ir_state indicates that an I/O on the  * indirect block is in progress when ir_safecopy is to be updated, the  * update is deferred by placing the allocindir on the ir_donehd list.  * When the I/O on the indirect block completes, the entries on the  * ir_donehd list are processed by updating their corresponding ir_safecopy  * pointers and then freeing the allocindir structure.  */
@@ -821,6 +1216,13 @@ directive|define
 name|ir_state
 value|ir_list.wk_state
 comment|/* indirect block pointer state */
+name|LIST_ENTRY
+argument_list|(
+argument|indirdep
+argument_list|)
+name|ir_next
+expr_stmt|;
+comment|/* alloc{direct,indir} list */
 name|caddr_t
 name|ir_saveddata
 decl_stmt|;
@@ -833,6 +1235,16 @@ decl_stmt|;
 comment|/* buffer holding safe copy */
 name|struct
 name|allocindirhd
+name|ir_completehd
+decl_stmt|;
+comment|/* waiting for indirdep complete */
+name|struct
+name|allocindirhd
+name|ir_writehd
+decl_stmt|;
+comment|/* Waiting for the pointer write. */
+name|struct
+name|allocindirhd
 name|ir_donehd
 decl_stmt|;
 comment|/* done waiting to update safecopy */
@@ -841,6 +1253,11 @@ name|allocindirhd
 name|ir_deplisthd
 decl_stmt|;
 comment|/* allocindir deps for this block */
+name|struct
+name|workhead
+name|ir_jwork
+decl_stmt|;
+comment|/* Journal work pending. */
 block|}
 struct|;
 end_struct
@@ -854,15 +1271,15 @@ struct|struct
 name|allocindir
 block|{
 name|struct
-name|worklist
-name|ai_list
+name|newblk
+name|ai_block
 decl_stmt|;
-comment|/* buffer holding indirect block */
+comment|/* Common block area */
 define|#
 directive|define
 name|ai_state
-value|ai_list.wk_state
-comment|/* indirect block pointer state */
+value|ai_block.nb_list.wk_state
+comment|/* indirect pointer state */
 name|LIST_ENTRY
 argument_list|(
 argument|allocindir
@@ -870,49 +1287,71 @@ argument_list|)
 name|ai_next
 expr_stmt|;
 comment|/* indirdep's list of allocindir's */
-name|int
-name|ai_offset
-decl_stmt|;
-comment|/* pointer offset in indirect block */
-name|ufs2_daddr_t
-name|ai_newblkno
-decl_stmt|;
-comment|/* new block pointer value */
-name|ufs2_daddr_t
-name|ai_oldblkno
-decl_stmt|;
-comment|/* old block pointer value */
-name|struct
-name|freefrag
-modifier|*
-name|ai_freefrag
-decl_stmt|;
-comment|/* block to be freed when complete */
 name|struct
 name|indirdep
 modifier|*
 name|ai_indirdep
 decl_stmt|;
 comment|/* address of associated indirdep */
-name|LIST_ENTRY
-argument_list|(
-argument|allocindir
-argument_list|)
-name|ai_deps
-expr_stmt|;
-comment|/* bmsafemap's list of allocindir's */
-name|struct
-name|buf
-modifier|*
-name|ai_buf
+name|ufs2_daddr_t
+name|ai_oldblkno
 decl_stmt|;
-comment|/* cylgrp buffer (if pending) */
+comment|/* old value of block pointer */
+name|int
+name|ai_offset
+decl_stmt|;
+comment|/* Pointer offset in parent. */
 block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ai_newblkno
+value|ai_block.nb_newblkno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ai_freefrag
+value|ai_block.nb_freefrag
+end_define
+
+begin_define
+define|#
+directive|define
+name|ai_newdirblk
+value|ai_block.nb_newdirblk
+end_define
+
 begin_comment
-comment|/*  * A "freefrag" structure is attached to an "inodedep" when a previously  * allocated fragment is replaced with a larger fragment, rather than extended.  * The "freefrag" structure is constructed and attached when the replacement  * block is first allocated. It is processed after the inode claiming the  * bigger block that replaces it has been written to disk. Note that the  * ff_state field is is used to store the uid, so may lose data. However,  * the uid is used only in printing an error message, so is not critical.  * Keeping it in a short keeps the data structure down to 32 bytes.  */
+comment|/*  * The allblk union is used to size the newblk structure on allocation so  * that it may be any one of three types.  */
+end_comment
+
+begin_union
+union|union
+name|allblk
+block|{
+name|struct
+name|allocindir
+name|ab_allocindir
+decl_stmt|;
+name|struct
+name|allocdirect
+name|ab_allocdirect
+decl_stmt|;
+name|struct
+name|newblk
+name|ab_newblk
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * A "freefrag" structure is attached to an "inodedep" when a previously  * allocated fragment is replaced with a larger fragment, rather than extended.  * The "freefrag" structure is constructed and attached when the replacement  * block is first allocated. It is processed after the inode claiming the  * bigger block that replaces it has been written to disk.  */
 end_comment
 
 begin_struct
@@ -928,7 +1367,17 @@ define|#
 directive|define
 name|ff_state
 value|ff_list.wk_state
-comment|/* owning user; should be uid_t */
+name|struct
+name|jfreefrag
+modifier|*
+name|ff_jfreefrag
+decl_stmt|;
+comment|/* Associated journal entry. */
+name|struct
+name|workhead
+name|ff_jwork
+decl_stmt|;
+comment|/* Journal work pending. */
 name|ufs2_daddr_t
 name|ff_blkno
 decl_stmt|;
@@ -946,7 +1395,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A "freeblks" structure is attached to an "inodedep" when the  * corresponding file's length is reduced to zero. It records all  * the information needed to free the blocks of a file after its  * zero'ed inode has been written to disk.  */
+comment|/*  * A "freeblks" structure is attached to an "inodedep" when the  * corresponding file's length is reduced to zero. It records all  * the information needed to free the blocks of a file after its  * zero'ed inode has been written to disk.  The actual work is done  * by child freework structures which are responsible for individual  * inode pointers while freeblks is responsible for retiring the  * entire operation when it is complete and holding common members.  */
 end_comment
 
 begin_struct
@@ -963,6 +1412,21 @@ directive|define
 name|fb_state
 value|fb_list.wk_state
 comment|/* inode and dirty block state */
+name|struct
+name|jfreeblkhd
+name|fb_jfreeblkhd
+decl_stmt|;
+comment|/* Journal entries pending */
+name|struct
+name|workhead
+name|fb_freeworkhd
+decl_stmt|;
+comment|/* Work items pending */
+name|struct
+name|workhead
+name|fb_jwork
+decl_stmt|;
+comment|/* Journal work pending */
 name|ino_t
 name|fb_previousinum
 decl_stmt|;
@@ -977,39 +1441,100 @@ modifier|*
 name|fb_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
-name|long
-name|fb_oldextsize
-decl_stmt|;
-comment|/* previous ext data size */
-name|off_t
-name|fb_oldsize
-decl_stmt|;
-comment|/* previous file size */
 name|ufs2_daddr_t
 name|fb_chkcnt
 decl_stmt|;
 comment|/* used to check cnt of blks released */
-name|ufs2_daddr_t
-name|fb_dblks
-index|[
-name|NDADDR
-index|]
+name|int
+name|fb_ref
 decl_stmt|;
-comment|/* direct blk ptrs to deallocate */
-name|ufs2_daddr_t
-name|fb_iblks
-index|[
-name|NIADDR
-index|]
+comment|/* Children outstanding. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "freework" structure handles the release of a tree of blocks or a single  * block.  Each indirect block in a tree is allocated its own freework  * structure so that the indrect block may be freed only when all of its  * children are freed.  In this way we enforce the rule that an allocated  * block must have a valid path to a root that is journaled.  Each child  * block acquires a reference and when the ref hits zero the parent ref  * is decremented.  If there is no parent the freeblks ref is decremented.  */
+end_comment
+
+begin_struct
+struct|struct
+name|freework
+block|{
+name|struct
+name|worklist
+name|fw_list
 decl_stmt|;
-comment|/* indirect blk ptrs to deallocate */
-name|ufs2_daddr_t
-name|fb_eblks
-index|[
-name|NXADDR
-index|]
+define|#
+directive|define
+name|fw_state
+value|fw_list.wk_state
+name|LIST_ENTRY
+argument_list|(
+argument|freework
+argument_list|)
+name|fw_next
+expr_stmt|;
+comment|/* Queue for freeblksk. */
+name|struct
+name|freeblks
+modifier|*
+name|fw_freeblks
 decl_stmt|;
-comment|/* indirect blk ptrs to deallocate */
+comment|/* Root of operation. */
+name|struct
+name|freework
+modifier|*
+name|fw_parent
+decl_stmt|;
+comment|/* Parent indirect. */
+name|ufs2_daddr_t
+name|fw_blkno
+decl_stmt|;
+comment|/* Our block #. */
+name|ufs_lbn_t
+name|fw_lbn
+decl_stmt|;
+comment|/* Original lbn before free. */
+name|int
+name|fw_frags
+decl_stmt|;
+comment|/* Number of frags. */
+name|int
+name|fw_ref
+decl_stmt|;
+comment|/* Number of children out. */
+name|int
+name|fw_off
+decl_stmt|;
+comment|/* Current working position. */
+name|struct
+name|workhead
+name|fw_jwork
+decl_stmt|;
+comment|/* Journal work pending. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "freedep" structure is allocated to track the completion of a bitmap  * write for a freework.  One freedep may cover many freed blocks so long  * as they reside in the same cylinder group.  When the cg is written  * the freedep decrements the ref on the freework which may permit it  * to be freed as well.  */
+end_comment
+
+begin_struct
+struct|struct
+name|freedep
+block|{
+name|struct
+name|worklist
+name|fd_list
+decl_stmt|;
+name|struct
+name|freework
+modifier|*
+name|fd_freework
+decl_stmt|;
+comment|/* Parent freework. */
 block|}
 struct|;
 end_struct
@@ -1041,12 +1566,17 @@ modifier|*
 name|fx_devvp
 decl_stmt|;
 comment|/* filesystem device vnode */
+name|struct
+name|workhead
+name|fx_jwork
+decl_stmt|;
+comment|/* journal work pending. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * A "diradd" structure is linked to an "inodedep" id_inowait list when a  * new directory entry is allocated that references the inode described  * by "inodedep". When the inode itself is written (either the initial  * allocation for new inodes or with the increased link count for  * existing inodes), the COMPLETE flag is set in da_state. If the entry  * is for a newly allocated inode, the "inodedep" structure is associated  * with a bmsafemap which prevents the inode from being written to disk  * until the cylinder group has been updated. Thus the da_state COMPLETE  * flag cannot be set until the inode bitmap dependency has been removed.  * When creating a new file, it is safe to write the directory entry that  * claims the inode once the referenced inode has been written. Since  * writing the inode clears the bitmap dependencies, the DEPCOMPLETE flag  * in the diradd can be set unconditionally when creating a file. When  * creating a directory, there are two additional dependencies described by  * mkdir structures (see their description below). When these dependencies  * are resolved the DEPCOMPLETE flag is set in the diradd structure.  * If there are multiple links created to the same inode, there will be  * a separate diradd structure created for each link. The diradd is  * linked onto the pg_diraddhd list of the pagedep for the directory  * page that contains the entry. When a directory page is written,  * the pg_diraddhd list is traversed to rollback any entries that are  * not yet ready to be written to disk. If a directory entry is being  * changed (by rename) rather than added, the DIRCHG flag is set and  * the da_previous entry points to the entry that will be "removed"  * once the new entry has been committed. During rollback, entries  * with da_previous are replaced with the previous inode number rather  * than zero.  *  * The overlaying of da_pagedep and da_previous is done to keep the  * structure down to 32 bytes in size on a 32-bit machine. If a  * da_previous entry is present, the pointer to its pagedep is available  * in the associated dirrem entry. If the DIRCHG flag is set, the  * da_previous entry is valid; if not set the da_pagedep entry is valid.  * The DIRCHG flag never changes; it is set when the structure is created  * if appropriate and is never cleared.  */
+comment|/*  * A "diradd" structure is linked to an "inodedep" id_inowait list when a  * new directory entry is allocated that references the inode described  * by "inodedep". When the inode itself is written (either the initial  * allocation for new inodes or with the increased link count for  * existing inodes), the COMPLETE flag is set in da_state. If the entry  * is for a newly allocated inode, the "inodedep" structure is associated  * with a bmsafemap which prevents the inode from being written to disk  * until the cylinder group has been updated. Thus the da_state COMPLETE  * flag cannot be set until the inode bitmap dependency has been removed.  * When creating a new file, it is safe to write the directory entry that  * claims the inode once the referenced inode has been written. Since  * writing the inode clears the bitmap dependencies, the DEPCOMPLETE flag  * in the diradd can be set unconditionally when creating a file. When  * creating a directory, there are two additional dependencies described by  * mkdir structures (see their description below). When these dependencies  * are resolved the DEPCOMPLETE flag is set in the diradd structure.  * If there are multiple links created to the same inode, there will be  * a separate diradd structure created for each link. The diradd is  * linked onto the pg_diraddhd list of the pagedep for the directory  * page that contains the entry. When a directory page is written,  * the pg_diraddhd list is traversed to rollback any entries that are  * not yet ready to be written to disk. If a directory entry is being  * changed (by rename) rather than added, the DIRCHG flag is set and  * the da_previous entry points to the entry that will be "removed"  * once the new entry has been committed. During rollback, entries  * with da_previous are replaced with the previous inode number rather  * than zero.  *  * The overlaying of da_pagedep and da_previous is done to keep the  * structure down. If a da_previous entry is present, the pointer to its  * pagedep is available in the associated dirrem entry. If the DIRCHG flag  * is set, the da_previous entry is valid; if not set the da_pagedep entry  * is valid. The DIRCHG flag never changes; it is set when the structure  * is created if appropriate and is never cleared.  */
 end_comment
 
 begin_struct
@@ -1095,6 +1625,11 @@ comment|/* pagedep dependency for addition */
 block|}
 name|da_un
 union|;
+name|struct
+name|workhead
+name|da_jwork
+decl_stmt|;
+comment|/* Journal work awaiting completion. */
 block|}
 struct|;
 end_struct
@@ -1114,7 +1649,7 @@ value|da_un.dau_pagedep
 end_define
 
 begin_comment
-comment|/*  * Two "mkdir" structures are needed to track the additional dependencies  * associated with creating a new directory entry. Normally a directory  * addition can be committed as soon as the newly referenced inode has been  * written to disk with its increased link count. When a directory is  * created there are two additional dependencies: writing the directory  * data block containing the "." and ".." entries (MKDIR_BODY) and writing  * the parent inode with the increased link count for ".." (MKDIR_PARENT).  * These additional dependencies are tracked by two mkdir structures that  * reference the associated "diradd" structure. When they have completed,  * they set the DEPCOMPLETE flag on the diradd so that it knows that its  * extra dependencies have been completed. The md_state field is used only  * to identify which type of dependency the mkdir structure is tracking.  * It is not used in the mainline code for any purpose other than consistency  * checking. All the mkdir structures in the system are linked together on  * a list. This list is needed so that a diradd can find its associated  * mkdir structures and deallocate them if it is prematurely freed (as for  * example if a mkdir is immediately followed by a rmdir of the same directory).  * Here, the free of the diradd must traverse the list to find the associated  * mkdir structures that reference it. The deletion would be faster if the  * diradd structure were simply augmented to have two pointers that referenced  * the associated mkdir's. However, this would increase the size of the diradd  * structure from 32 to 64-bits to speed a very infrequent operation.  */
+comment|/*  * Two "mkdir" structures are needed to track the additional dependencies  * associated with creating a new directory entry. Normally a directory  * addition can be committed as soon as the newly referenced inode has been  * written to disk with its increased link count. When a directory is  * created there are two additional dependencies: writing the directory  * data block containing the "." and ".." entries (MKDIR_BODY) and writing  * the parent inode with the increased link count for ".." (MKDIR_PARENT).  * These additional dependencies are tracked by two mkdir structures that  * reference the associated "diradd" structure. When they have completed,  * they set the DEPCOMPLETE flag on the diradd so that it knows that its  * extra dependencies have been completed. The md_state field is used only  * to identify which type of dependency the mkdir structure is tracking.  * It is not used in the mainline code for any purpose other than consistency  * checking. All the mkdir structures in the system are linked together on  * a list. This list is needed so that a diradd can find its associated  * mkdir structures and deallocate them if it is prematurely freed (as for  * example if a mkdir is immediately followed by a rmdir of the same directory).  * Here, the free of the diradd must traverse the list to find the associated  * mkdir structures that reference it. The deletion would be faster if the  * diradd structure were simply augmented to have two pointers that referenced  * the associated mkdir's. However, this would increase the size of the diradd  * structure to speed a very infrequent operation.  */
 end_comment
 
 begin_struct
@@ -1137,6 +1672,12 @@ modifier|*
 name|md_diradd
 decl_stmt|;
 comment|/* associated diradd */
+name|struct
+name|jaddref
+modifier|*
+name|md_jaddref
+decl_stmt|;
+comment|/* dependent jaddref. */
 name|struct
 name|buf
 modifier|*
@@ -1169,7 +1710,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * A "dirrem" structure describes an operation to decrement the link  * count on an inode. The dirrem structure is attached to the pg_dirremhd  * list of the pagedep for the directory page that contains the entry.  * It is processed after the directory page with the deleted entry has  * been written to disk.  *  * The overlaying of dm_pagedep and dm_dirinum is done to keep the  * structure down to 32 bytes in size on a 32-bit machine. It works  * because they are never used concurrently.  */
+comment|/*  * A "dirrem" structure describes an operation to decrement the link  * count on an inode. The dirrem structure is attached to the pg_dirremhd  * list of the pagedep for the directory page that contains the entry.  * It is processed after the directory page with the deleted entry has  * been written to disk.  */
 end_comment
 
 begin_struct
@@ -1193,6 +1734,18 @@ argument_list|)
 name|dm_next
 expr_stmt|;
 comment|/* pagedep's list of dirrem's */
+name|LIST_ENTRY
+argument_list|(
+argument|dirrem
+argument_list|)
+name|dm_inonext
+expr_stmt|;
+comment|/* inodedep's list of dirrem's */
+name|struct
+name|jremrefhd
+name|dm_jremrefhd
+decl_stmt|;
+comment|/* Pending remove reference deps. */
 name|ino_t
 name|dm_oldinum
 decl_stmt|;
@@ -1212,6 +1765,11 @@ comment|/* parent inode number (for rmdir) */
 block|}
 name|dm_un
 union|;
+name|struct
+name|workhead
+name|dm_jwork
+decl_stmt|;
+comment|/* Journal work awaiting completion. */
 block|}
 struct|;
 end_struct
@@ -1231,7 +1789,7 @@ value|dm_un.dmu_dirinum
 end_define
 
 begin_comment
-comment|/*  * A "newdirblk" structure tracks the progress of a newly allocated  * directory block from its creation until it is claimed by its on-disk  * inode. When a block is allocated to a directory, an fsync of a file  * whose name is within that block must ensure not only that the block  * containing the file name has been written, but also that the on-disk  * inode references that block. When a new directory block is created,  * we allocate a newdirblk structure which is linked to the associated  * allocdirect (on its ad_newdirblk list). When the allocdirect has been  * satisfied, the newdirblk structure is moved to the inodedep id_bufwait  * list of its directory to await the inode being written. When the inode  * is written, the directory entries are fully committed and can be  * deleted from their pagedep->id_pendinghd and inodedep->id_pendinghd  * lists. Note that we could track directory blocks allocated to indirect  * blocks using a similar scheme with the allocindir structures. Rather  * than adding this level of complexity, we simply write those newly   * allocated indirect blocks synchronously as such allocations are rare.  */
+comment|/*  * A "newdirblk" structure tracks the progress of a newly allocated  * directory block from its creation until it is claimed by its on-disk  * inode. When a block is allocated to a directory, an fsync of a file  * whose name is within that block must ensure not only that the block  * containing the file name has been written, but also that the on-disk  * inode references that block. When a new directory block is created,  * we allocate a newdirblk structure which is linked to the associated  * allocdirect (on its ad_newdirblk list). When the allocdirect has been  * satisfied, the newdirblk structure is moved to the inodedep id_bufwait  * list of its directory to await the inode being written. When the inode  * is written, the directory entries are fully committed and can be  * deleted from their pagedep->id_pendinghd and inodedep->id_pendinghd  * lists. Note that we could track directory blocks allocated to indirect  * blocks using a similar scheme with the allocindir structures. Rather  * than adding this level of complexity, we simply write those newly   * allocated indirect blocks synchronously as such allocations are rare.  * In the case of a new directory the . and .. links are tracked with  * a mkdir rather than a pagedep.  In this case we track the mkdir  * so it can be released when it is written.  A workhead is used  * to simplify canceling a mkdir that is removed by a subsequent dirrem.  */
 end_comment
 
 begin_struct
@@ -1254,6 +1812,510 @@ modifier|*
 name|db_pagedep
 decl_stmt|;
 comment|/* associated pagedep */
+name|struct
+name|workhead
+name|db_mkdir
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The inoref structure holds the elements common to jaddref and jremref  * so they may easily be queued in-order on the inodedep.  */
+end_comment
+
+begin_struct
+struct|struct
+name|inoref
+block|{
+name|struct
+name|worklist
+name|if_list
+decl_stmt|;
+define|#
+directive|define
+name|if_state
+value|if_list.wk_state
+name|TAILQ_ENTRY
+argument_list|(
+argument|inoref
+argument_list|)
+name|if_deps
+expr_stmt|;
+comment|/* Links for inodedep. */
+name|struct
+name|jsegdep
+modifier|*
+name|if_jsegdep
+decl_stmt|;
+name|off_t
+name|if_diroff
+decl_stmt|;
+comment|/* Directory offset. */
+name|ino_t
+name|if_ino
+decl_stmt|;
+comment|/* Inode number. */
+name|ino_t
+name|if_parent
+decl_stmt|;
+comment|/* Parent inode number. */
+name|nlink_t
+name|if_nlink
+decl_stmt|;
+comment|/* nlink before addition. */
+name|uint16_t
+name|if_mode
+decl_stmt|;
+comment|/* File mode, needed for IFMT. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jaddref" structure tracks a new reference (link count) on an inode  * and prevents the link count increase and bitmap allocation until a  * journal entry can be written.  Once the journal entry is written,  * the inode is put on the pendinghd of the bmsafemap and a diradd or  * mkdir entry is placed on the bufwait list of the inode.  The DEPCOMPLETE  * flag is used to indicate that all of the required information for writing  * the journal entry is present.  MKDIR_BODY and MKDIR_PARENT are used to  * differentiate . and .. links from regular file names.  NEWBLOCK indicates  * a bitmap is still pending.  If a new reference is canceled by a delete  * prior to writing the journal the jaddref write is canceled and the  * structure persists to prevent any disk-visible changes until it is  * ultimately released when the file is freed or the link is dropped again.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jaddref
+block|{
+name|struct
+name|inoref
+name|ja_ref
+decl_stmt|;
+define|#
+directive|define
+name|ja_list
+value|ja_ref.if_list
+comment|/* Journal pending or jseg entries. */
+define|#
+directive|define
+name|ja_state
+value|ja_ref.if_list.wk_state
+name|LIST_ENTRY
+argument_list|(
+argument|jaddref
+argument_list|)
+name|ja_bmdeps
+expr_stmt|;
+comment|/* Links for bmsafemap. */
+union|union
+block|{
+name|struct
+name|diradd
+modifier|*
+name|jau_diradd
+decl_stmt|;
+comment|/* Pending diradd. */
+name|struct
+name|mkdir
+modifier|*
+name|jau_mkdir
+decl_stmt|;
+comment|/* MKDIR_{PARENT,BODY} */
+block|}
+name|ja_un
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ja_diradd
+value|ja_un.jau_diradd
+end_define
+
+begin_define
+define|#
+directive|define
+name|ja_mkdir
+value|ja_un.jau_mkdir
+end_define
+
+begin_define
+define|#
+directive|define
+name|ja_diroff
+value|ja_ref.if_diroff
+end_define
+
+begin_define
+define|#
+directive|define
+name|ja_ino
+value|ja_ref.if_ino
+end_define
+
+begin_define
+define|#
+directive|define
+name|ja_parent
+value|ja_ref.if_parent
+end_define
+
+begin_define
+define|#
+directive|define
+name|ja_mode
+value|ja_ref.if_mode
+end_define
+
+begin_comment
+comment|/*  * A "jremref" structure tracks a removed reference (unlink) on an  * inode and prevents the directory remove from proceeding until the  * journal entry is written.  Once the journal has been written the remove  * may proceed as normal.   */
+end_comment
+
+begin_struct
+struct|struct
+name|jremref
+block|{
+name|struct
+name|inoref
+name|jr_ref
+decl_stmt|;
+define|#
+directive|define
+name|jr_list
+value|jr_ref.if_list
+comment|/* Journal pending or jseg entries. */
+define|#
+directive|define
+name|jr_state
+value|jr_ref.if_list.wk_state
+name|LIST_ENTRY
+argument_list|(
+argument|jremref
+argument_list|)
+name|jr_deps
+expr_stmt|;
+comment|/* Links for pagdep. */
+name|struct
+name|dirrem
+modifier|*
+name|jr_dirrem
+decl_stmt|;
+comment|/* Back pointer to dirrem. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|jmvref
+block|{
+name|struct
+name|worklist
+name|jm_list
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|jmvref
+argument_list|)
+name|jm_deps
+expr_stmt|;
+name|struct
+name|pagedep
+modifier|*
+name|jm_pagedep
+decl_stmt|;
+name|ino_t
+name|jm_parent
+decl_stmt|;
+name|ino_t
+name|jm_ino
+decl_stmt|;
+name|off_t
+name|jm_oldoff
+decl_stmt|;
+name|off_t
+name|jm_newoff
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jnewblk" structure tracks a newly allocated block or fragment and  * prevents the direct or indirect block pointer as well as the cg bitmap  * from being written until it is logged.  After it is logged the jsegdep  * is attached to the allocdirect or allocindir until the operation is  * completed or reverted.  If the operation is reverted prior to the journal  * write the jnewblk structure is maintained to prevent the bitmaps from  * reaching the disk.  Ultimately the jnewblk structure will be passed  * to the free routine as the in memory cg is modified back to the free  * state at which time it can be released.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jnewblk
+block|{
+name|struct
+name|worklist
+name|jn_list
+decl_stmt|;
+define|#
+directive|define
+name|jn_state
+value|jn_list.wk_state
+name|struct
+name|jsegdep
+modifier|*
+name|jn_jsegdep
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|jnewblk
+argument_list|)
+name|jn_deps
+expr_stmt|;
+comment|/* All jnewblks on bmsafemap */
+name|struct
+name|newblk
+modifier|*
+name|jn_newblk
+decl_stmt|;
+name|ino_t
+name|jn_ino
+decl_stmt|;
+name|ufs_lbn_t
+name|jn_lbn
+decl_stmt|;
+name|ufs2_daddr_t
+name|jn_blkno
+decl_stmt|;
+name|int
+name|jn_oldfrags
+decl_stmt|;
+name|int
+name|jn_frags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jfreeblk" structure tracks the journal write for freeing a block  * or tree of blocks.  The block pointer must not be cleared in the inode  * or indirect prior to the jfreeblk being written.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jfreeblk
+block|{
+name|struct
+name|worklist
+name|jf_list
+decl_stmt|;
+define|#
+directive|define
+name|jf_state
+value|jf_list.wk_state
+name|struct
+name|jsegdep
+modifier|*
+name|jf_jsegdep
+decl_stmt|;
+name|struct
+name|freeblks
+modifier|*
+name|jf_freeblks
+decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|jfreeblk
+argument_list|)
+name|jf_deps
+expr_stmt|;
+name|ino_t
+name|jf_ino
+decl_stmt|;
+name|ufs_lbn_t
+name|jf_lbn
+decl_stmt|;
+name|ufs2_daddr_t
+name|jf_blkno
+decl_stmt|;
+name|int
+name|jf_frags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jfreefrag" tracks the freeing of a single block when a fragment is  * extended or an indirect page is replaced.  It is not part of a larger  * freeblks operation.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jfreefrag
+block|{
+name|struct
+name|worklist
+name|fr_list
+decl_stmt|;
+define|#
+directive|define
+name|fr_state
+value|fr_list.wk_state
+name|struct
+name|jsegdep
+modifier|*
+name|fr_jsegdep
+decl_stmt|;
+name|struct
+name|freefrag
+modifier|*
+name|fr_freefrag
+decl_stmt|;
+name|ino_t
+name|fr_ino
+decl_stmt|;
+name|ufs_lbn_t
+name|fr_lbn
+decl_stmt|;
+name|ufs2_daddr_t
+name|fr_blkno
+decl_stmt|;
+name|int
+name|fr_frags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jtrunc" journals the intent to truncate an inode to a non-zero  * value.  This is done synchronously prior to the synchronous partial  * truncation process.  The jsegdep is not released until the truncation  * is complete and the truncated inode is fsync'd.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jtrunc
+block|{
+name|struct
+name|worklist
+name|jt_list
+decl_stmt|;
+name|struct
+name|jsegdep
+modifier|*
+name|jt_jsegdep
+decl_stmt|;
+name|ino_t
+name|jt_ino
+decl_stmt|;
+name|off_t
+name|jt_size
+decl_stmt|;
+name|int
+name|jt_extsize
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jsegdep" structure tracks a single reference to a written journal  * segment so the journal space can be reclaimed when all dependencies  * have been written.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jsegdep
+block|{
+name|struct
+name|worklist
+name|jd_list
+decl_stmt|;
+define|#
+directive|define
+name|jd_state
+value|jd_list.wk_state
+name|struct
+name|jseg
+modifier|*
+name|jd_seg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A "jseg" structure contains all of the journal records written in a  * single disk write.  jaddref and jremref structures are linked into  * js_entries so thay may be completed when the write completes.  The  * js_deps array contains as many entries as there are ref counts to  * reduce the number of allocations required per journal write to one.  */
+end_comment
+
+begin_struct
+struct|struct
+name|jseg
+block|{
+name|struct
+name|worklist
+name|js_list
+decl_stmt|;
+comment|/* b_deps link for journal */
+define|#
+directive|define
+name|js_state
+value|js_list.wk_state
+name|struct
+name|workhead
+name|js_entries
+decl_stmt|;
+comment|/* Entries awaiting write */
+name|TAILQ_ENTRY
+argument_list|(
+argument|jseg
+argument_list|)
+name|js_next
+expr_stmt|;
+name|struct
+name|jblocks
+modifier|*
+name|js_jblocks
+decl_stmt|;
+comment|/* Back pointer to block/seg list */
+name|struct
+name|buf
+modifier|*
+name|js_buf
+decl_stmt|;
+comment|/* Buffer while unwritten */
+name|uint64_t
+name|js_seq
+decl_stmt|;
+name|int
+name|js_size
+decl_stmt|;
+comment|/* Allocated size in bytes */
+name|int
+name|js_cnt
+decl_stmt|;
+comment|/* Total items allocated */
+name|int
+name|js_refs
+decl_stmt|;
+comment|/* Count of items pending completion */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A 'sbdep' structure tracks the head of the free inode list and  * superblock writes.  This makes sure the superblock is always pointing at  * the first possible unlinked inode for the suj recovery process.  If a  * block write completes and we discover a new head is available the buf  * is dirtied and the dep is kept.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sbdep
+block|{
+name|struct
+name|worklist
+name|sb_list
+decl_stmt|;
+comment|/* b_dep linkage */
+name|struct
+name|fs
+modifier|*
+name|sb_fs
+decl_stmt|;
+comment|/* Filesystem pointer within buf. */
+name|struct
+name|ufsmount
+modifier|*
+name|sb_ump
+decl_stmt|;
 block|}
 struct|;
 end_struct

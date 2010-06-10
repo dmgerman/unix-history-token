@@ -239,6 +239,14 @@ name|vhistsize
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|var
+name|vterm
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -334,6 +342,14 @@ parameter_list|()
 value|(vhistsize.text + 9)
 end_define
 
+begin_define
+define|#
+directive|define
+name|termval
+parameter_list|()
+value|(vterm.text + 5)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -424,6 +440,24 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bltinsetlocale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bltinunsetlocale
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

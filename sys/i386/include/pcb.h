@@ -87,7 +87,7 @@ name|pcb_dr7
 decl_stmt|;
 name|union
 name|savefpu
-name|pcb_save
+name|pcb_user_save
 decl_stmt|;
 name|uint16_t
 name|pcb_initial_npxcw
@@ -120,6 +120,16 @@ directive|define
 name|PCB_VM86CALL
 value|0x10
 comment|/* in vm86 call */
+define|#
+directive|define
+name|PCB_NPXUSERINITDONE
+value|0x20
+comment|/* user fpu state is initialized */
+define|#
+directive|define
+name|PCB_KERNNPX
+value|0x40
+comment|/* kernel uses npx */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
@@ -152,6 +162,11 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* vm86bios scratch space */
+name|union
+name|savefpu
+modifier|*
+name|pcb_save
+decl_stmt|;
 block|}
 struct|;
 end_struct

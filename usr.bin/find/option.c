@@ -91,6 +91,7 @@ file|"find.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|typecompare
 parameter_list|(
@@ -1194,6 +1195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|typecompare
 parameter_list|(

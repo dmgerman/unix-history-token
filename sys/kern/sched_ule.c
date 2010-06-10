@@ -247,11 +247,6 @@ name|defined
 argument_list|(
 name|__sparc64__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips__
-argument_list|)
 end_if
 
 begin_error
@@ -9973,9 +9968,11 @@ operator|(
 literal|0
 operator|)
 return|;
-name|thread_lock
+name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10027,11 +10024,6 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 block|}
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pctcpu
@@ -10208,6 +10200,17 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_bind: can only bind curthread"
+operator|)
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|td
@@ -10287,6 +10290,17 @@ argument_list|(
 name|td
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"sched_unbind: can only bind curthread"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ts
@@ -11218,7 +11232,26 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"HTT\">HTT group</flag>\n"
+literal|"<flag name=\"HTT\">HTT group</flag>"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cg
+operator|->
+name|cg_flags
+operator|&
+name|CG_FLAG_THREAD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"<flag name=\"THREAD\">THREAD group</flag>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11237,7 +11270,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>\n"
+literal|"<flag name=\"SMT\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1501,6 +1501,9 @@ decl_stmt|;
 name|uint64_t
 name|port_wwn
 decl_stmt|;
+name|uint32_t
+name|gone_timer
+decl_stmt|;
 block|}
 name|fcportdb_t
 typedef|;

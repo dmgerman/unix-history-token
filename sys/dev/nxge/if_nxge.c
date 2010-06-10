@@ -4973,7 +4973,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|ifnetp
 operator|->

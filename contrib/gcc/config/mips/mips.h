@@ -33,6 +33,8 @@ name|PROCESSOR_24KX
 block|,
 name|PROCESSOR_M4K
 block|,
+name|PROCESSOR_OCTEON
+block|,
 name|PROCESSOR_R3900
 block|,
 name|PROCESSOR_R6000
@@ -621,6 +623,13 @@ name|ISA_MIPS64
 value|(mips_isa == 64)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISA_MIPS64R2
+value|(mips_isa == 65)
+end_define
+
 begin_comment
 comment|/* Architecture target defines.  */
 end_comment
@@ -693,6 +702,13 @@ define|#
 directive|define
 name|TARGET_SR71K
 value|(mips_arch == PROCESSOR_SR71000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_OCTEON
+value|(mips_arch == PROCESSOR_OCTEON)
 end_define
 
 begin_comment
@@ -783,6 +799,13 @@ name|TUNE_SB1
 value|(mips_tune == PROCESSOR_SB1		\ 				     || mips_tune == PROCESSOR_SB1A)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TUNE_OCTEON
+value|(mips_tune == PROCESSOR_OCTEON)
+end_define
+
 begin_comment
 comment|/* True if the pre-reload scheduler should try to create chains of    multiply-add or multiply-subtract instructions.  For example,    suppose we have:  	t1 = a * b 	t2 = t1 + c * d 	t3 = e * f 	t4 = t3 - g * h     t1 will have a higher priority than t2 and t3 will have a higher    priority than t4.  However, before reload, there is no dependence    between t1 and t3, and they can often have similar priorities.    The scheduler will then tend to prefer:  	t1 = a * b 	t3 = e * f 	t2 = t1 + c * d 	t4 = t3 - g * h     which stops us from making full use of macc/madd-style instructions.    This sort of situation occurs frequently in Fourier transforms and    in unrolled loops.     To counter this, the TUNE_MACC_CHAINS code will reorder the ready    queue so that chained multiply-add and multiply-subtract instructions    appear ahead of any other instruction that is likely to clobber lo.    In the example above, if t2 and t3 become ready at the same time,    the code ensures that t2 is scheduled first.     Multiply-accumulate instructions are a bigger win for some targets    than others, so this macro is defined on an opt-in basis.  */
 end_comment
@@ -859,7 +882,7 @@ value|\       if (!TARGET_IRIX)                                         \       
 comment|/* We do this here because __mips is defined below	\ 	 and so we can't use builtin_define_std.  */
 value|\       if (!flag_iso)						\ 	builtin_define ("mips");				\ 								\       if (TARGET_64BIT)						\ 	builtin_define ("__mips64");				\ 								\       if (!TARGET_IRIX)						\ 	{							\
 comment|/* Treat _R3000 and _R4000 like register-size		\ 	     defines, which is how they've historically		\ 	     been used.  */
-value|\ 	  if (TARGET_64BIT)					\ 	    {							\ 	      builtin_define_std ("R4000");			\ 	      builtin_define ("_R4000");			\ 	    }							\ 	  else							\ 	    {							\ 	      builtin_define_std ("R3000");			\ 	      builtin_define ("_R3000");			\ 	    }							\ 	}							\       if (TARGET_FLOAT64)					\ 	builtin_define ("__mips_fpr=64");			\       else							\ 	builtin_define ("__mips_fpr=32");			\ 								\       if (TARGET_MIPS16)					\ 	builtin_define ("__mips16");				\ 								\       if (TARGET_MIPS3D)					\ 	builtin_define ("__mips3d");				\ 								\       if (TARGET_DSP)						\ 	builtin_define ("__mips_dsp");				\ 								\       MIPS_CPP_SET_PROCESSOR ("_MIPS_ARCH", mips_arch_info);	\       MIPS_CPP_SET_PROCESSOR ("_MIPS_TUNE", mips_tune_info);	\ 								\       if (ISA_MIPS1)						\ 	{							\ 	  builtin_define ("__mips=1");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS1");		\ 	}							\       else if (ISA_MIPS2)					\ 	{							\ 	  builtin_define ("__mips=2");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS2");		\ 	}							\       else if (ISA_MIPS3)					\ 	{							\ 	  builtin_define ("__mips=3");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS3");		\ 	}							\       else if (ISA_MIPS4)					\ 	{							\ 	  builtin_define ("__mips=4");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS4");		\ 	}							\       else if (ISA_MIPS32)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");	\ 	}							\       else if (ISA_MIPS32R2)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=2");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");	\ 	}							\       else if (ISA_MIPS64)					\ 	{							\ 	  builtin_define ("__mips=64");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS64");	\ 	}							\ 								\       if (TARGET_HARD_FLOAT)					\ 	builtin_define ("__mips_hard_float");			\       else if (TARGET_SOFT_FLOAT)				\ 	builtin_define ("__mips_soft_float");			\ 								\       if (TARGET_SINGLE_FLOAT)					\ 	builtin_define ("__mips_single_float");			\ 								\       if (TARGET_PAIRED_SINGLE_FLOAT)				\ 	builtin_define ("__mips_paired_single_float");		\ 								\       if (TARGET_BIG_ENDIAN)					\ 	{							\ 	  builtin_define_std ("MIPSEB");			\ 	  builtin_define ("_MIPSEB");				\ 	}							\       else							\ 	{							\ 	  builtin_define_std ("MIPSEL");			\ 	  builtin_define ("_MIPSEL");				\ 	}							\ 								\
+value|\ 	  if (TARGET_64BIT)					\ 	    {							\ 	      builtin_define_std ("R4000");			\ 	      builtin_define ("_R4000");			\ 	    }							\ 	  else							\ 	    {							\ 	      builtin_define_std ("R3000");			\ 	      builtin_define ("_R3000");			\ 	    }							\ 	}							\       if (TARGET_FLOAT64)					\ 	builtin_define ("__mips_fpr=64");			\       else							\ 	builtin_define ("__mips_fpr=32");			\ 								\       if (TARGET_MIPS16)					\ 	builtin_define ("__mips16");				\ 								\       if (TARGET_MIPS3D)					\ 	builtin_define ("__mips3d");				\ 								\       if (TARGET_DSP)						\ 	builtin_define ("__mips_dsp");				\ 								\       MIPS_CPP_SET_PROCESSOR ("_MIPS_ARCH", mips_arch_info);	\       MIPS_CPP_SET_PROCESSOR ("_MIPS_TUNE", mips_tune_info);	\ 								\       if (ISA_MIPS1)						\ 	{							\ 	  builtin_define ("__mips=1");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS1");		\ 	}							\       else if (ISA_MIPS2)					\ 	{							\ 	  builtin_define ("__mips=2");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS2");		\ 	}							\       else if (ISA_MIPS3)					\ 	{							\ 	  builtin_define ("__mips=3");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS3");		\ 	}							\       else if (ISA_MIPS4)					\ 	{							\ 	  builtin_define ("__mips=4");				\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS4");		\ 	}							\       else if (ISA_MIPS32)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");	\ 	}							\       else if (ISA_MIPS32R2)					\ 	{							\ 	  builtin_define ("__mips=32");				\ 	  builtin_define ("__mips_isa_rev=2");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS32");	\ 	}							\       else if (ISA_MIPS64)					\ 	{							\ 	  builtin_define ("__mips=64");				\ 	  builtin_define ("__mips_isa_rev=1");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS64");	\ 	}							\       else if (ISA_MIPS64R2)					\ 	{							\ 	  builtin_define ("__mips=64");				\ 	  builtin_define ("__mips_isa_rev=2");			\ 	  builtin_define ("_MIPS_ISA=_MIPS_ISA_MIPS64");	\ 	}							\ 								\       if (TARGET_HARD_FLOAT)					\ 	builtin_define ("__mips_hard_float");			\       else if (TARGET_SOFT_FLOAT)				\ 	builtin_define ("__mips_soft_float");			\ 								\       if (TARGET_SINGLE_FLOAT)					\ 	builtin_define ("__mips_single_float");			\ 								\       if (TARGET_PAIRED_SINGLE_FLOAT)				\ 	builtin_define ("__mips_paired_single_float");		\ 								\       if (TARGET_BIG_ENDIAN)					\ 	{							\ 	  builtin_define_std ("MIPSEB");			\ 	  builtin_define ("_MIPSEB");				\ 	}							\       else							\ 	{							\ 	  builtin_define_std ("MIPSEL");			\ 	  builtin_define ("_MIPSEL");				\ 	}							\ 								\
 comment|/* Macros dependent on the C dialect.  */
 value|\       if (preprocessing_asm_p ())				\ 	{							\           builtin_define_std ("LANGUAGE_ASSEMBLY");		\ 	  builtin_define ("_LANGUAGE_ASSEMBLY");		\ 	}							\       else if (c_dialect_cxx ())				\         {							\ 	  builtin_define ("_LANGUAGE_C_PLUS_PLUS");		\           builtin_define ("__LANGUAGE_C_PLUS_PLUS");		\           builtin_define ("__LANGUAGE_C_PLUS_PLUS__");		\         }							\       else							\ 	{							\           builtin_define_std ("LANGUAGE_C");			\ 	  builtin_define ("_LANGUAGE_C");			\ 	}							\       if (c_dialect_objc ())					\         {							\ 	  builtin_define ("_LANGUAGE_OBJECTIVE_C");		\           builtin_define ("__LANGUAGE_OBJECTIVE_C");		\
 comment|/* Bizarre, but needed at least for Irix.  */
@@ -1226,12 +1249,37 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|MIPS_ISA_DEFAULT
+operator|==
+literal|65
+end_if
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_ISA_DEFAULT
+value|"mips64r2"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MULTILIB_ISA_DEFAULT
 value|"mips1"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1373,7 +1421,7 @@ begin_define
 define|#
 directive|define
 name|GENERATE_MULT3_SI
-value|((TARGET_MIPS3900                       \                                   || TARGET_MIPS5400                    \                                   || TARGET_MIPS5500                    \                                   || TARGET_MIPS7000                    \                                   || TARGET_MIPS9000                    \ 				  || TARGET_MAD				\                                   || ISA_MIPS32	                        \                                   || ISA_MIPS32R2                       \                                   || ISA_MIPS64)                        \&& !TARGET_MIPS16)
+value|((TARGET_MIPS3900                       \                                   || TARGET_MIPS5400                    \                                   || TARGET_MIPS5500                    \                                   || TARGET_MIPS7000                    \                                   || TARGET_MIPS9000                    \ 				  || TARGET_MAD				\                                   || ISA_MIPS32	                        \                                   || ISA_MIPS32R2                       \                                   || ISA_MIPS64                         \                                   || ISA_MIPS64R2)                      \&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1428,7 +1476,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_64BIT_REGS
-value|(ISA_MIPS3				\ 				 || ISA_MIPS4				\                                  || ISA_MIPS64)
+value|(ISA_MIPS3				\ 				 || ISA_MIPS4				\                                  || ISA_MIPS64				\ 				 || ISA_MIPS64R2)
 end_define
 
 begin_comment
@@ -1454,7 +1502,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_CONDMOVE
-value|((ISA_MIPS4				\ 				  || ISA_MIPS32	                        \ 				  || ISA_MIPS32R2                       \ 				  || ISA_MIPS64)			\&& !TARGET_MIPS5500                    \&& !TARGET_MIPS16)
+value|((ISA_MIPS4				\ 				  || ISA_MIPS32	                        \ 				  || ISA_MIPS32R2                       \ 				  || ISA_MIPS64				\ 				  || ISA_MIPS64R2)			\&& !TARGET_MIPS5500                    \&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1465,7 +1513,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_8CC
-value|(ISA_MIPS4				\                          	 || ISA_MIPS32	                        \                          	 || ISA_MIPS32R2                        \ 				 || ISA_MIPS64)
+value|(ISA_MIPS4				\                          	 || ISA_MIPS32	                        \                          	 || ISA_MIPS32R2                        \ 				 || ISA_MIPS64				\ 				 || ISA_MIPS64R2)
 end_define
 
 begin_comment
@@ -1476,7 +1524,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_FP4
-value|((ISA_MIPS4				\ 				  || ISA_MIPS64)       			\&& !TARGET_MIPS16)
+value|((ISA_MIPS4				\ 				  || ISA_MIPS64				\ 				  || ISA_MIPS64R2)     			\&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1498,7 +1546,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_MADD_MSUB
-value|((ISA_MIPS32				\ 				  || ISA_MIPS32R2			\ 				  || ISA_MIPS64				\ 				  )&& !TARGET_MIPS16)
+value|((ISA_MIPS32				\ 				  || ISA_MIPS32R2			\ 				  || ISA_MIPS64				\ 				  || ISA_MIPS64R2			\ 				  )&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1509,7 +1557,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_NMADD_NMSUB
-value|((ISA_MIPS4				\ 				  || ISA_MIPS64)       			\&& (!TARGET_MIPS5400 || TARGET_MAD)    \&& ! TARGET_MIPS16)
+value|((ISA_MIPS4				\ 				  || ISA_MIPS64				\ 				  || ISA_MIPS64R2)			\&& (!TARGET_MIPS5400 || TARGET_MAD)    \&& ! TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1520,7 +1568,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_CLZ_CLO
-value|((ISA_MIPS32				\                                   || ISA_MIPS32R2			\                                   || ISA_MIPS64				\                                  )&& !TARGET_MIPS16)
+value|((ISA_MIPS32				\                                   || ISA_MIPS32R2			\                                   || ISA_MIPS64				\                                   || ISA_MIPS64R2			\                                  )&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1531,7 +1579,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_DCLZ_DCLO
-value|(ISA_MIPS64				\&& !TARGET_MIPS16)
+value|(ISA_MIPS64				\ 				 || ISA_MIPS64R2			\&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1597,7 +1645,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_ROTR_SI
-value|(!TARGET_MIPS16                         \&& (ISA_MIPS32R2                       \                                      || TARGET_MIPS5400                 \                                      || TARGET_MIPS5500                 \                                      || TARGET_SR71K                    \                                      ))
+value|(!TARGET_MIPS16                         \&& (ISA_MIPS32R2                       \                                      || ISA_MIPS64R2                    \                                      || TARGET_MIPS5400                 \                                      || TARGET_MIPS5500                 \                                      || TARGET_SR71K                    \                                      ))
 end_define
 
 begin_comment
@@ -1619,7 +1667,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_PREFETCH
-value|((ISA_MIPS4				\ 				  || ISA_MIPS32				\ 				  || ISA_MIPS32R2			\ 				  || ISA_MIPS64)	       		\&& !TARGET_MIPS16)
+value|((ISA_MIPS4				\ 				  || ISA_MIPS32				\ 				  || ISA_MIPS32R2			\ 				  || ISA_MIPS64		       		\ 				  || ISA_MIPS64R2)	       		\&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1630,7 +1678,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_PREFETCHX
-value|((ISA_MIPS4				\ 				  || ISA_MIPS64)       			\&& !TARGET_MIPS16)
+value|((ISA_MIPS4				\ 				  || ISA_MIPS64				\ 				  || ISA_MIPS64R2)			\&& !TARGET_MIPS16)
 end_define
 
 begin_comment
@@ -1652,7 +1700,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_SEB_SEH
-value|(!TARGET_MIPS16                        \&& (ISA_MIPS32R2                      \                                      ))
+value|(!TARGET_MIPS16                        \&& (ISA_MIPS32R2                      \ 				     || ISA_MIPS64R2			\                                      ))
 end_define
 
 begin_comment
@@ -1663,7 +1711,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_EXT_INS
-value|(!TARGET_MIPS16                        \&& (ISA_MIPS32R2                      \                                      ))
+value|(!TARGET_MIPS16                        \&& (ISA_MIPS32R2                      \ 				     || ISA_MIPS64R2		       \                                      ))
 end_define
 
 begin_comment
@@ -1707,7 +1755,7 @@ begin_define
 define|#
 directive|define
 name|ISA_HAS_HILO_INTERLOCKS
-value|(ISA_MIPS32				\ 				 || ISA_MIPS32R2			\ 				 || ISA_MIPS64				\ 				 || TARGET_MIPS5500)
+value|(ISA_MIPS32				\ 				 || ISA_MIPS32R2			\ 				 || ISA_MIPS64				\ 				 || ISA_MIPS64R2			\ 				 || TARGET_MIPS5500)
 end_define
 
 begin_escape

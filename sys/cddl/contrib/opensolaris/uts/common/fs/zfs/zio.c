@@ -61,6 +61,101 @@ directive|include
 file|<sys/zio_checksum.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zio_use_uma
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zio_use_uma
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|zio
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"ZFS ZIO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zio.use_uma"
+argument_list|,
+operator|&
+name|zio_use_uma
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_zio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|use_uma
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zio_use_uma
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use uma(9) for ZIO allocations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ==========================================================================  * I/O priority table  * ==========================================================================  */
 end_comment
@@ -179,12 +274,6 @@ name|zio_cache
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
-end_ifdef
-
 begin_expr_stmt
 name|kmem_cache_t
 operator|*
@@ -208,11 +297,6 @@ name|SPA_MINBLOCKSHIFT
 index|]
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -255,14 +339,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 decl_stmt|;
-endif|#
-directive|endif
 name|zio_cache
 operator|=
 name|kmem_cache_create
@@ -289,9 +368,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 comment|/* 	 * For small buffers, we want a cache for each multiple of 	 * SPA_MINBLOCKSIZE.  For medium-size buffers, we want a cache 	 * for each quarter-power of 2.  For large buffers, we want 	 * a cache for each multiple of PAGESIZE. 	 */
 for|for
 control|(
@@ -572,8 +648,6 @@ name|c
 index|]
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|zio_inject_init
 argument_list|()
 expr_stmt|;
@@ -587,9 +661,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 decl_stmt|;
@@ -688,8 +759,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|kmem_cache_destroy
 argument_list|(
 name|zio_cache
@@ -718,9 +787,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 init|=
@@ -741,6 +807,10 @@ operator|>>
 name|SPA_MINBLOCKSHIFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zio_use_uma
+condition|)
 return|return
 operator|(
 name|kmem_cache_alloc
@@ -754,8 +824,7 @@ name|KM_PUSHPAGE
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
+else|else
 return|return
 operator|(
 name|kmem_alloc
@@ -766,8 +835,6 @@ name|KM_SLEEP
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -784,9 +851,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 init|=
@@ -807,6 +871,10 @@ operator|>>
 name|SPA_MINBLOCKSHIFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zio_use_uma
+condition|)
 return|return
 operator|(
 name|kmem_cache_alloc
@@ -820,8 +888,7 @@ name|KM_PUSHPAGE
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
+else|else
 return|return
 operator|(
 name|kmem_alloc
@@ -832,8 +899,6 @@ name|KM_SLEEP
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -849,9 +914,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 init|=
@@ -872,6 +934,10 @@ operator|>>
 name|SPA_MINBLOCKSHIFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zio_use_uma
+condition|)
 name|kmem_cache_free
 argument_list|(
 name|zio_buf_cache
@@ -882,8 +948,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|kmem_free
 argument_list|(
 name|buf
@@ -891,8 +956,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -908,9 +971,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ZIO_USE_UMA
 name|size_t
 name|c
 init|=
@@ -931,6 +991,10 @@ operator|>>
 name|SPA_MINBLOCKSHIFT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|zio_use_uma
+condition|)
 name|kmem_cache_free
 argument_list|(
 name|zio_data_buf_cache
@@ -941,8 +1005,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|kmem_free
 argument_list|(
 name|buf
@@ -950,8 +1013,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4475,7 +4536,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|taskq_dispatch
+name|taskq_dispatch_safe
 argument_list|(
 name|zio
 operator|->
@@ -4497,7 +4558,10 @@ name|zio_execute
 argument_list|,
 name|zio
 argument_list|,
-name|TQ_SLEEP
+operator|&
+name|zio
+operator|->
+name|io_task
 argument_list|)
 expr_stmt|;
 block|}
@@ -10346,7 +10410,7 @@ comment|/* 			 * Reexecution is potentially a huge amount of work. 			 * Hand it
 operator|(
 name|void
 operator|)
-name|taskq_dispatch
+name|taskq_dispatch_safe
 argument_list|(
 name|spa
 operator|->
@@ -10366,7 +10430,10 @@ name|zio_reexecute
 argument_list|,
 name|zio
 argument_list|,
-name|TQ_SLEEP
+operator|&
+name|zio
+operator|->
+name|io_task
 argument_list|)
 expr_stmt|;
 block|}

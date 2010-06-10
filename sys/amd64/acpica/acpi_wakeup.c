@@ -971,7 +971,6 @@ argument_list|)
 expr_stmt|;
 name|stopfpu
 operator|=
-operator|&
 name|stopxpcbs
 index|[
 literal|0

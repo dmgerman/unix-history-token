@@ -544,6 +544,13 @@ name|PCPU_GET
 argument_list|(
 name|impl
 argument_list|)
+operator|>=
+name|CPU_IMPL_ULTRASPARCI
+operator|&&
+name|PCPU_GET
+argument_list|(
+name|impl
+argument_list|)
 operator|<
 name|CPU_IMPL_ULTRASPARCIII
 condition|?
@@ -1340,6 +1347,10 @@ block|{
 if|if
 condition|(
 name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
+name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII
 condition|)
@@ -1372,6 +1383,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
 name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIII

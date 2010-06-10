@@ -198,11 +198,11 @@ directive|include
 file|<dev/usb/serial/uftdi_reg.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -969,6 +969,15 @@ argument_list|(
 name|DRESDENELEKTRONIK
 argument_list|,
 name|WIRELESSHANDHELDTERMINAL
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
+name|GAMMASCOUT
 argument_list|,
 literal|8U232AM
 argument_list|)

@@ -53,53 +53,77 @@ begin_comment
 comment|/*  * Address space.  * 32-bit mips CPUS partition their 32-bit address space into four segments:  *  * kuseg   0x00000000 - 0x7fffffff  User virtual mem,  mapped  * kseg0   0x80000000 - 0x9fffffff  Physical memory, cached, unmapped  * kseg1   0xa0000000 - 0xbfffffff  Physical memory, uncached, unmapped  * kseg2   0xc0000000 - 0xffffffff  kernel-virtual,  mapped  *  * mips1 physical memory is limited to 512Mbytes, which is  * doubly mapped in kseg0 (cached) and kseg1 (uncached.)  * Caching of mapped addresses is controlled by bits in the TLB entry.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_LOCORE
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|MIPS_KUSEG_START
-value|0x0
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG0_START
-value|0x80000000
+value|((intptr_t)(int32_t)0x80000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG0_END
-value|0x9fffffff
+value|((intptr_t)(int32_t)0x9fffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG1_START
-value|0xa0000000
+value|((intptr_t)(int32_t)0xa0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG1_END
-value|0xbfffffff
+value|((intptr_t)(int32_t)0xbfffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSSEG_START
-value|0xc0000000
+value|((intptr_t)(int32_t)0xc0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSSEG_END
-value|0xdfffffff
+value|((intptr_t)(int32_t)0xdfffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG3_START
+value|((intptr_t)(int32_t)0xe0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG3_END
+value|((intptr_t)(int32_t)0xffffffff)
 end_define
 
 begin_define
@@ -116,19 +140,46 @@ name|MIPS_KSEG2_END
 value|MIPS_KSSEG_END
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|MIPS_KSEG3_START
-value|0xe0000000
+name|MIPS_XKPHYS_START
+value|0x8000000000000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_KSEG3_END
-value|0xffffffff
+name|MIPS_XKPHYS_END
+value|0xbfffffffffffffff
 end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_CCA_UC
+value|0x02
+end_define
+
+begin_comment
+comment|/* Uncached.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_CCA_CNC
+value|0x03
+end_define
+
+begin_comment
+comment|/* Cacheable non-coherent.  */
+end_comment
 
 begin_define
 define|#
@@ -150,7 +201,35 @@ name|MIPS_XKPHYS_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x0effffffffffffffULL)
+value|((x)& 0x07ffffffffffffffULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XUSEG_START
+value|0x0000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XUSEG_END
+value|0x0000010000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_START
+value|0xc000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_END
+value|0xc00000ff80000000
 end_define
 
 begin_comment
@@ -1852,7 +1931,7 @@ value|0x80000200
 end_define
 
 begin_comment
-comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LOW	3... r3k TLB entry low.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
+comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
 end_comment
 
 begin_comment
@@ -1972,17 +2051,6 @@ define|#
 directive|define
 name|MIPS_COP_0_PRID
 value|_(15)
-end_define
-
-begin_comment
-comment|/* MIPS-I */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS_COP_0_TLB_LOW
-value|_(2)
 end_define
 
 begin_comment

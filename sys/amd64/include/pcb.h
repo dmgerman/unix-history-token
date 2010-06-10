@@ -78,9 +78,19 @@ value|0x02
 comment|/* process using debug registers */
 define|#
 directive|define
+name|PCB_KERNFPU
+value|0x04
+comment|/* kernel uses fpu */
+define|#
+directive|define
 name|PCB_FPUINITDONE
 value|0x08
 comment|/* fpu state is initialized */
+define|#
+directive|define
+name|PCB_USERFPUINITDONE
+value|0x10
+comment|/* fpu user state is initialized */
 define|#
 directive|define
 name|PCB_GS32BIT
@@ -116,7 +126,7 @@ name|pcb_dr7
 decl_stmt|;
 name|struct
 name|savefpu
-name|pcb_save
+name|pcb_user_save
 decl_stmt|;
 name|uint16_t
 name|pcb_initial_fpucw
@@ -135,6 +145,11 @@ name|struct
 name|amd64tss
 modifier|*
 name|pcb_tssp
+decl_stmt|;
+name|struct
+name|savefpu
+modifier|*
+name|pcb_save
 decl_stmt|;
 name|char
 name|pcb_full_iret

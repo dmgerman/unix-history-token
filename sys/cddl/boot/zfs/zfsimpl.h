@@ -107,15 +107,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|P2CROSS
+name|P2BOUNDARY
 parameter_list|(
-name|x
+name|off
 parameter_list|,
-name|y
+name|len
 parameter_list|,
 name|align
 parameter_list|)
-value|(((x) ^ (y))> (align) - 1)
+value|(((off) ^ ((off) + (len) - 1))> (align) - 1)
 end_define
 
 begin_comment

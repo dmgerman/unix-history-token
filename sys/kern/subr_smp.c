@@ -596,6 +596,18 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|mtx_init
+argument_list|(
+operator|&
+name|smp_ipi_mtx
+argument_list|,
+literal|"smp rendezvous"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* Probe for MP hardware. */
 if|if
 condition|(
@@ -622,18 +634,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_init
-argument_list|(
-operator|&
-name|smp_ipi_mtx
-argument_list|,
-literal|"smp rendezvous"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 name|cpu_mp_start
 argument_list|()
 expr_stmt|;
@@ -1806,6 +1806,27 @@ name|cg_child
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|mp_ncpus
+operator|==
+sizeof|sizeof
+argument_list|(
+name|top
+operator|->
+name|cg_mask
+argument_list|)
+operator|*
+literal|8
+condition|)
+name|top
+operator|->
+name|cg_mask
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
 name|top
 operator|->
 name|cg_mask

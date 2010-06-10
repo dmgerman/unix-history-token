@@ -339,6 +339,14 @@ break|break;
 case|case
 name|DCLEAR
 case|:
+comment|/* if on snapshot, already cleared */
+if|if
+condition|(
+name|cursnapshot
+operator|!=
+literal|0
+condition|)
+break|break;
 name|dp
 operator|=
 name|ginode

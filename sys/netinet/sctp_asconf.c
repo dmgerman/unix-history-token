@@ -5172,6 +5172,8 @@ operator|->
 name|sctp_ep
 argument_list|,
 name|stcb
+argument_list|,
+name|stcb
 operator|->
 name|asoc
 operator|.

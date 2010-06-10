@@ -632,6 +632,8 @@ name|nmp
 decl_stmt|;
 name|int
 name|timeo
+decl_stmt|,
+name|mustflush
 decl_stmt|;
 name|np
 operator|=
@@ -658,6 +660,14 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+name|mustflush
+operator|=
+name|nfscl_mustflush
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* must be before mtx_lock() */
 ifdef|#
 directive|ifdef
 name|NFS_ACDEBUG
@@ -860,6 +870,10 @@ name|n_attrstamp
 operator|)
 operator|>=
 name|timeo
+operator|&&
+name|mustflush
+operator|!=
+literal|0
 condition|)
 block|{
 name|newnfsstats
@@ -875,6 +889,18 @@ operator|->
 name|n_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NFS_ACDEBUG
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* ncl_printf() */
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOENT

@@ -508,6 +508,34 @@ name|AcceptRunt
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|RXMAC_STRIP_VLAN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXMAC_STRIP_FCS
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|RXMAC_PAD_ENB
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_RX_PAD_BYTES
+value|10
+end_define
+
 begin_comment
 comment|/* Station control register. */
 end_comment
@@ -789,6 +817,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TDC_VLAN_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|SGE_TX_INTR_FRAMES
 value|32
 end_define
@@ -796,6 +831,13 @@ end_define
 begin_comment
 comment|/*  * TX descriptor status bits.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TDS_INS_VLAN
+value|0x80000000
+end_define
 
 begin_define
 define|#
@@ -965,6 +1007,13 @@ name|RDC_PREADD
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|RDC_VLAN_MASK
+value|0x0000FFFF
+end_define
+
 begin_comment
 comment|/*  * RX descriptor status bits  */
 end_comment
@@ -972,7 +1021,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RDS_TAGON
+name|RDS_VLAN
 value|0x80000000
 end_define
 
@@ -1064,7 +1113,7 @@ begin_define
 define|#
 directive|define
 name|RX_ERR_BITS
-value|"\20"					\ 				"\21CRCOK\22COLON\23NIBON\24OVRUN"	\ 				"\25MIIER\26LIMIT\27SHORT\30ABORT"	\ 				"\40TAGON"
+value|"\20"					\ 				"\21CRCOK\22COLON\23NIBON\24OVRUN"	\ 				"\25MIIER\26LIMIT\27SHORT\30ABORT"	\ 				"\40VLAN"
 end_define
 
 begin_define
@@ -1276,7 +1325,21 @@ begin_define
 define|#
 directive|define
 name|SGE_MAXTXSEGS
-value|1
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_TSO_MAXSIZE
+value|(65535 + sizeof(struct ether_vlan_header))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SGE_TSO_MAXSEGSIZE
+value|4096
 end_define
 
 begin_define
@@ -1337,6 +1400,41 @@ end_struct
 
 begin_struct
 struct|struct
+name|sge_txdesc
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|tx_m
+decl_stmt|;
+name|bus_dmamap_t
+name|tx_dmamap
+decl_stmt|;
+name|int
+name|tx_ndesc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sge_rxdesc
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|rx_m
+decl_stmt|;
+name|bus_dmamap_t
+name|rx_dmamap
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sge_chain_data
 block|{
 name|bus_dma_tag_t
@@ -1361,35 +1459,21 @@ name|bus_dma_tag_t
 name|sge_rxmbuf_tag
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|sge_rx_mbuf
-index|[
-name|SGE_RX_RING_CNT
-index|]
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|sge_tx_mbuf
+name|sge_txdesc
+name|sge_txdesc
 index|[
 name|SGE_TX_RING_CNT
 index|]
 decl_stmt|;
-name|bus_dmamap_t
-name|sge_rx_map
+name|struct
+name|sge_rxdesc
+name|sge_rxdesc
 index|[
 name|SGE_RX_RING_CNT
 index|]
 decl_stmt|;
 name|bus_dmamap_t
 name|sge_rx_spare_map
-decl_stmt|;
-name|bus_dmamap_t
-name|sge_tx_map
-index|[
-name|SGE_TX_RING_CNT
-index|]
 decl_stmt|;
 name|int
 name|sge_rx_cons
@@ -1486,6 +1570,10 @@ define|#
 directive|define
 name|SGE_FLAG_FASTETHER
 value|0x0001
+define|#
+directive|define
+name|SGE_FLAG_SIS190
+value|0x0002
 define|#
 directive|define
 name|SGE_FLAG_RGMII

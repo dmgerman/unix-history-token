@@ -2294,6 +2294,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|diroff
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|slot
 decl_stmt|;
 end_decl_stmt
@@ -2319,10 +2325,12 @@ name|id_dirp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"slot %d ino %d reclen %d: %s, `%.*s'\n"
+literal|"slot %d off %d ino %d reclen %d: %s, `%.*s'\n"
 argument_list|,
 name|slot
 operator|++
+argument_list|,
+name|diroff
 argument_list|,
 name|dirp
 operator|->
@@ -2347,6 +2355,12 @@ name|dirp
 operator|->
 name|d_name
 argument_list|)
+expr_stmt|;
+name|diroff
+operator|+=
+name|dirp
+operator|->
+name|d_reclen
 expr_stmt|;
 return|return
 operator|(
@@ -2374,6 +2388,10 @@ argument_list|()
 expr_stmt|;
 comment|/* let it go on anyway */
 name|slot
+operator|=
+literal|0
+expr_stmt|;
+name|diroff
 operator|=
 literal|0
 expr_stmt|;

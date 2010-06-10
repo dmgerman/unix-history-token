@@ -98,10 +98,6 @@ define|#
 directive|define
 name|CDP_SCHED_DTR
 value|(1<< 1)
-define|#
-directive|define
-name|CDP_INVALID
-value|(1<< 2)
 name|u_int
 name|cdp_inuse
 decl_stmt|;
@@ -166,7 +162,7 @@ name|cdev
 modifier|*
 name|devfs_alloc
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

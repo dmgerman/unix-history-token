@@ -111,7 +111,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ofw_real_init
 parameter_list|(
 name|ofw_t
@@ -1100,7 +1100,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ofw_real_init
 parameter_list|(
 name|ofw_t
@@ -1141,6 +1141,11 @@ name|of_bounce_virt
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

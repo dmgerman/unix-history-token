@@ -192,7 +192,7 @@ directive|define
 name|SCTP_IPI_ITERATOR_WQ_INIT
 parameter_list|()
 define|\
-value|mtx_init(&SCTP_BASE_INFO(ipi_iterator_wq_mtx), "sctp-it-wq", "sctp_it_wq", MTX_DEF)
+value|mtx_init(&sctp_it_ctl.ipi_iterator_wq_mtx, "sctp-it-wq", "sctp_it_wq", MTX_DEF)
 end_define
 
 begin_define
@@ -201,7 +201,7 @@ directive|define
 name|SCTP_IPI_ITERATOR_WQ_DESTROY
 parameter_list|()
 define|\
-value|mtx_destroy(&SCTP_BASE_INFO(ipi_iterator_wq_mtx))
+value|mtx_destroy(&sctp_it_ctl.ipi_iterator_wq_mtx)
 end_define
 
 begin_define
@@ -209,7 +209,7 @@ define|#
 directive|define
 name|SCTP_IPI_ITERATOR_WQ_LOCK
 parameter_list|()
-value|do { 					\              mtx_lock(&SCTP_BASE_INFO(ipi_iterator_wq_mtx));                \ } while (0)
+value|do { 					\              mtx_lock(&sctp_it_ctl.ipi_iterator_wq_mtx);                \ } while (0)
 end_define
 
 begin_define
@@ -217,7 +217,7 @@ define|#
 directive|define
 name|SCTP_IPI_ITERATOR_WQ_UNLOCK
 parameter_list|()
-value|mtx_unlock(&SCTP_BASE_INFO(ipi_iterator_wq_mtx))
+value|mtx_unlock(&sctp_it_ctl.ipi_iterator_wq_mtx)
 end_define
 
 begin_define
@@ -331,6 +331,36 @@ name|_inp
 parameter_list|)
 define|\
 value|mtx_destroy(&(_inp)->inp_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_INP_READ_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_rdata_mtx.mtx_lock& MTX_CONTESTED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASOC_CREATE_LOCK_CONTENDED
+parameter_list|(
+name|_inp
+parameter_list|)
+value|((_inp)->inp_create_mtx.mtx_lock& MTX_CONTESTED)
 end_define
 
 begin_define
@@ -661,7 +691,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&SCTP_BASE_INFO(it_mtx), "sctp-it", "iterator", MTX_DEF)
+value|mtx_init(&sctp_it_ctl.it_mtx, "sctp-it", "iterator", MTX_DEF)
 end_define
 
 begin_ifdef
@@ -676,7 +706,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK
 parameter_list|()
 define|\
-value|do {								\ 		if (mtx_owned(&SCTP_BASE_INFO(it_mtx)))			\ 			panic("Iterator Lock");				\ 		mtx_lock(&SCTP_BASE_INFO(it_mtx));				\ 	} while (0)
+value|do {								\ 		if (mtx_owned(&sctp_it_ctl.it_mtx))			\ 			panic("Iterator Lock");				\ 		mtx_lock(&sctp_it_ctl.it_mtx);				\ 	} while (0)
 end_define
 
 begin_else
@@ -690,7 +720,7 @@ directive|define
 name|SCTP_ITERATOR_LOCK
 parameter_list|()
 define|\
-value|do {								\ 		mtx_lock(&SCTP_BASE_INFO(it_mtx));				\ 	} while (0)
+value|do {								\ 		mtx_lock(&sctp_it_ctl.it_mtx);				\ 	} while (0)
 end_define
 
 begin_endif
@@ -703,7 +733,7 @@ define|#
 directive|define
 name|SCTP_ITERATOR_UNLOCK
 parameter_list|()
-value|mtx_unlock(&SCTP_BASE_INFO(it_mtx))
+value|mtx_unlock(&sctp_it_ctl.it_mtx)
 end_define
 
 begin_define
@@ -711,7 +741,39 @@ define|#
 directive|define
 name|SCTP_ITERATOR_LOCK_DESTROY
 parameter_list|()
-value|mtx_destroy(&SCTP_BASE_INFO(it_mtx))
+value|mtx_destroy(&sctp_it_ctl.it_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_INIT
+parameter_list|()
+value|do { \         mtx_init(&SCTP_BASE_INFO(wq_addr_mtx), "sctp-addr-wq","sctp_addr_wq",MTX_DEF); \  } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_DESTROY
+parameter_list|()
+value|do  { \         if(mtx_owned(&SCTP_BASE_INFO(wq_addr_mtx))) { \              mtx_unlock(&SCTP_BASE_INFO(wq_addr_mtx)); \         } \ 	    mtx_destroy(&SCTP_BASE_INFO(wq_addr_mtx)); \       }  while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_LOCK
+parameter_list|()
+value|do { \              mtx_lock(&SCTP_BASE_INFO(wq_addr_mtx));  \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_WQ_ADDR_UNLOCK
+parameter_list|()
+value|do { \ 		mtx_unlock(&SCTP_BASE_INFO(wq_addr_mtx)); \ } while (0)
 end_define
 
 begin_define

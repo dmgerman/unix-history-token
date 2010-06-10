@@ -1993,6 +1993,15 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|sym
+operator|.
+name|st_shndx
+operator|==
+name|STN_UNDEF
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|!
 name|firsttime
 operator|&&
@@ -7924,6 +7933,7 @@ name|ret
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(

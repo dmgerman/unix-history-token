@@ -677,7 +677,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Ensure that p1's pcb is up to date. */
+comment|/* Ensure that td1's pcb is up to date. */
 if|if
 condition|(
 name|td1
@@ -712,7 +712,6 @@ name|td1
 condition|)
 name|npxsave
 argument_list|(
-operator|&
 name|td1
 operator|->
 name|td_pcb
@@ -755,7 +754,7 @@ name|td_pcb
 operator|=
 name|pcb2
 expr_stmt|;
-comment|/* Copy p1's pcb */
+comment|/* Copy td1's pcb */
 name|bcopy
 argument_list|(
 name|td1
@@ -770,6 +769,16 @@ operator|*
 name|pcb2
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Properly initialize pcb_save */
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* Point mdproc and then copy over td1's contents */
 name|mdp2
@@ -1421,6 +1430,19 @@ name|pcb_ext
 operator|=
 name|NULL
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_user_save
+expr_stmt|;
 block|}
 end_function
 
@@ -1642,7 +1664,18 @@ operator|(
 name|PCB_NPXTRAP
 operator||
 name|PCB_NPXINITDONE
+operator||
+name|PCB_NPXUSERINITDONE
 operator|)
+expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 */
 name|bcopy

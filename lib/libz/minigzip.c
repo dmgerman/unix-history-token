@@ -125,6 +125,23 @@ directive|include
 file|<io.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNDER_CE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -246,6 +263,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|Z_HAVE_UNISTD_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LARGEFILE64_SOURCE
+argument_list|)
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -270,6 +303,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -856,6 +856,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|usb_error_t
 name|usb_ref_device
 parameter_list|(
@@ -1335,13 +1336,12 @@ condition|)
 block|{
 name|cv_signal
 argument_list|(
+operator|&
 name|cpd
 operator|->
 name|udev
 operator|->
-name|default_cv
-operator|+
-literal|1
+name|ref_cv
 argument_list|)
 expr_stmt|;
 block|}
@@ -1429,6 +1429,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usb_unref_device
 parameter_list|(
@@ -1576,13 +1577,12 @@ condition|)
 block|{
 name|cv_signal
 argument_list|(
+operator|&
 name|cpd
 operator|->
 name|udev
 operator|->
-name|default_cv
-operator|+
-literal|1
+name|ref_cv
 argument_list|)
 expr_stmt|;
 block|}
@@ -2234,9 +2234,10 @@ name|f
 operator|->
 name|priv_mtx
 operator|=
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 expr_stmt|;
 name|f
 operator|->
@@ -2394,9 +2395,10 @@ name|f
 operator|->
 name|priv_mtx
 operator|=
+operator|&
 name|udev
 operator|->
-name|default_mtx
+name|device_mtx
 expr_stmt|;
 name|f
 operator|->
@@ -2813,7 +2815,7 @@ operator|=
 operator|&
 name|udev
 operator|->
-name|default_ep
+name|ctrl_ep
 expr_stmt|;
 block|}
 else|else

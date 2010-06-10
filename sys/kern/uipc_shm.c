@@ -1256,9 +1256,6 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_clear_dirty
 argument_list|(
 name|m
@@ -1269,9 +1266,6 @@ name|PAGE_SIZE
 operator|-
 name|base
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 elseif|else

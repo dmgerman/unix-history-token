@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2009 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-2010 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -688,6 +688,7 @@ end_comment
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|_tr_init
 name|OF
 argument_list|(
@@ -702,6 +703,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|ZLIB_INTERNAL
 name|_tr_tally
 name|OF
 argument_list|(
@@ -722,6 +724,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|_tr_flush_block
 name|OF
 argument_list|(
@@ -746,6 +749,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|_tr_align
 name|OF
 argument_list|(
@@ -760,6 +764,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ZLIB_INTERNAL
 name|_tr_stored_block
 name|OF
 argument_list|(
@@ -825,6 +830,7 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|uch
+name|ZLIB_INTERNAL
 name|_length_code
 index|[]
 decl_stmt|;
@@ -833,6 +839,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|uch
+name|ZLIB_INTERNAL
 name|_dist_code
 index|[]
 decl_stmt|;
@@ -847,6 +854,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|uch
+name|ZLIB_INTERNAL
 name|_length_code
 index|[]
 decl_stmt|;
@@ -856,6 +864,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|uch
+name|ZLIB_INTERNAL
 name|_dist_code
 index|[]
 decl_stmt|;

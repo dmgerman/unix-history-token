@@ -19,27 +19,6 @@ directive|define
 name|_MACHINE_REGNUM_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|STAND_ARG_SIZE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|STAND_FRAME_SIZE
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|STAND_RA_OFFSET
-value|20
-end_define
-
 begin_comment
 comment|/* This must match the numbers  * in pcb.h and is used by  * swtch.S  */
 end_comment

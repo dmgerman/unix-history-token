@@ -257,32 +257,6 @@ name|mips_pic
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|mips_cl_insn
-block|{
-name|unsigned
-name|long
-name|insn_opcode
-decl_stmt|;
-specifier|const
-name|struct
-name|mips_opcode
-modifier|*
-name|insn_mo
-decl_stmt|;
-comment|/* The next two fields are used when generating mips16 code.  */
-name|bfd_boolean
-name|use_extend
-decl_stmt|;
-name|unsigned
-name|short
-name|extend
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 specifier|extern
 name|int
@@ -533,40 +507,6 @@ value|(! SEG_NORMAL (SEG) || mips_force_relocation (FIX))
 end_define
 
 begin_comment
-comment|/* We use this to turn branches to global symbols into branches to    local symbols, so that they can be simplified.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_VALIDATE_FIX
-parameter_list|(
-name|fixp
-parameter_list|,
-name|this_segment
-parameter_list|,
-name|skip_label
-parameter_list|)
-define|\
-value|do \     if (! mips_validate_fix ((fixp), (this_segment))) \       goto skip_label; \   while (0)
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|mips_validate_fix
-parameter_list|(
-name|struct
-name|fix
-modifier|*
-parameter_list|,
-name|asection
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Register mask variables.  These are set by the MIPS assembly code    and used by ECOFF and possibly other object file formats.  */
 end_comment
 
@@ -671,7 +611,7 @@ end_define
 begin_function_decl
 specifier|extern
 name|void
-name|mips_flush_pending_output
+name|mips_emit_delays
 parameter_list|(
 name|void
 parameter_list|)
@@ -682,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|md_flush_pending_output
-value|mips_flush_pending_output
+value|mips_emit_delays
 end_define
 
 begin_function_decl

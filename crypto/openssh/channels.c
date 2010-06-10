@@ -15897,6 +15897,17 @@ name|errno
 operator|!=
 name|EAFNOSUPPORT
 operator|)
+ifdef|#
+directive|ifdef
+name|EPFNOSUPPORT
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|EPFNOSUPPORT
+operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|error

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/asi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cache.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<machine/lsu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mcntl.h>
 end_include
 
 begin_include
@@ -127,7 +139,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/*  * CPU-specific initialization  */
+comment|/*  * CPU-specific initialization - this is used for both the Sun Cheetah and  * later as well as the Fujitsu Zeus and later CPUs.  */
 end_comment
 
 begin_function
@@ -141,15 +153,6 @@ block|{
 name|u_long
 name|val
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
-comment|/* 	 * Disable interrupts for safety, this shouldn't be actually 	 * necessary though. 	 */
-name|s
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
 comment|/* Ensure the TSB Extension Registers hold 0 as TSB_Base. */
 name|stxa
 argument_list|(
@@ -212,6 +215,39 @@ argument_list|(
 name|Sync
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+condition|)
+block|{
+comment|/* Ensure MCNTL_JPS1_TSBP is 0. */
+name|val
+operator|=
+name|ldxa
+argument_list|(
+name|AA_MCNTL
+argument_list|,
+name|ASI_MCNTL
+argument_list|)
+expr_stmt|;
+name|val
+operator|&=
+operator|~
+name|MCNTL_JPS1_TSBP
+expr_stmt|;
+name|stxa
+argument_list|(
+name|AA_MCNTL
+argument_list|,
+name|ASI_MCNTL
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Configure the first large dTLB to hold 4MB pages (e.g. for direct 	 * mappings) for all three contexts and ensure the second one is set 	 * up to hold 8k pages for them.  Note that this is constraint by 	 * US-IV+, whose large dTLBs can only hold entries of certain page 	 * sizes each. 	 * For US-IV+, additionally ensure that the large iTLB is set up to 	 * hold 8k pages for nucleus and primary context (still no secondary 	 * iMMU context. 	 * NB: according to documentation, changing the page size of the same 	 * context requires a context demap before changing the corresponding 	 * page size, but we hardly can flush our locked pages here, so we use 	 * a demap all instead. 	 */
 name|stxa
 argument_list|(
@@ -354,11 +390,6 @@ argument_list|,
 name|val
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -706,6 +737,7 @@ name|cheetah_icache_page_inval
 parameter_list|(
 name|vm_paddr_t
 name|pa
+name|__unused
 parameter_list|)
 block|{  }
 end_function

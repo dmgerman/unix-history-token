@@ -427,7 +427,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|extradata
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 while|while
 condition|(
 name|fgets
@@ -720,6 +727,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 literal|0
@@ -738,8 +749,6 @@ name|strlen
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* No tab in the line, then not a valid line */
@@ -764,6 +773,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|pp
 index|[
 operator|-
@@ -1016,6 +1029,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|extradata
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1147,9 +1165,20 @@ argument_list|,
 literal|"cannot get home directory"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|home
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot enter home directory"
 argument_list|)
 expr_stmt|;
 for|for

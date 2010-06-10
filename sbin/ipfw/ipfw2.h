@@ -382,15 +382,15 @@ value|{if (!(*av)) errx(EX_USAGE, msg);}
 end_define
 
 begin_function_decl
-name|unsigned
-name|long
-name|long
-name|align_uint64
+name|int
+name|pr_u64
 parameter_list|(
-specifier|const
 name|uint64_t
 modifier|*
-name|pll
+name|pd
+parameter_list|,
+name|int
+name|width
 parameter_list|)
 function_decl|;
 end_function_decl

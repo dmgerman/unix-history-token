@@ -65,133 +65,140 @@ begin_define
 define|#
 directive|define
 name|SHOW_COMMENT
-value|0x00001
+value|0x000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DESC
-value|0x00002
+value|0x000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PLIST
-value|0x00004
+value|0x000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INSTALL
-value|0x00008
+value|0x000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DEINSTALL
-value|0x00010
+value|0x000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_REQUIRE
-value|0x00020
+value|0x000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PREFIX
-value|0x00040
+value|0x000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INDEX
-value|0x00080
+value|0x000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_FILES
-value|0x00100
+value|0x000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DISPLAY
-value|0x00200
+value|0x000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_REQBY
-value|0x00400
+value|0x000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_MTREE
-value|0x00800
+value|0x000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_SIZE
-value|0x01000
+value|0x001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_ORIGIN
-value|0x02000
+value|0x002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_CKSUM
-value|0x04000
+value|0x004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_FMTREV
-value|0x08000
+value|0x008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PTREV
-value|0x10000
+value|0x010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DEPEND
-value|0x20000
+value|0x020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PKGNAME
-value|0x40000
+value|0x040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_LPREV
+value|0x100000
 end_define
 
 begin_struct

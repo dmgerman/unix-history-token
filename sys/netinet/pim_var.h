@@ -90,7 +90,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|pimstat.name += (val)
+value|V_pimstat.name += (val)
 end_define
 
 begin_define

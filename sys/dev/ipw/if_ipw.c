@@ -1790,7 +1790,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1799,7 +1799,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
@@ -4937,7 +4937,7 @@ operator|==
 name|IEEE80211_M_IBSS
 condition|)
 block|{
-comment|/* 			 * XXX when joining an ibss network we are called 			 * with a SCAN -> RUN transition on scan complete. 			 * Use that to call ipw_auth_and_assoc.  On completing 			 * the join we are then called again with an 			 * AUTH -> RUN transition and we want to do nothing. 			 * This is all totally bogus and needs to be redone. 			 */
+comment|/* 			 * XXX when joining an ibss network we are called 			 * with a SCAN -> RUN transition on scan complete. 			 * Use that to call ipw_assoc.  On completing the 			 * join we are then called again with an AUTH -> RUN 			 * transition and we want to do nothing.  This is 			 * all totally bogus and needs to be redone. 			 */
 if|if
 condition|(
 name|ostate
@@ -4975,6 +4975,11 @@ break|break;
 case|case
 name|IEEE80211_S_AUTH
 case|:
+comment|/* 		 * Move to ASSOC state after the ipw_assoc() call.  Firmware 		 * takes care of authentication, after the call we'll receive 		 * only an assoc response which would otherwise be discared 		 * if we are still in AUTH state. 		 */
+name|nstate
+operator|=
+name|IEEE80211_S_ASSOC
+expr_stmt|;
 name|ipw_assoc
 argument_list|(
 name|ic
@@ -4986,7 +4991,7 @@ break|break;
 case|case
 name|IEEE80211_S_ASSOC
 case|:
-comment|/* 		 * If we are not transitioning from AUTH the resend the 		 * association request. 		 */
+comment|/* 		 * If we are not transitioning from AUTH then resend the 		 * association request. 		 */
 if|if
 condition|(
 name|ostate
@@ -5577,16 +5582,6 @@ name|flags
 operator||=
 name|IPW_FLAG_ASSOCIATED
 expr_stmt|;
-name|ieee80211_new_state
-argument_list|(
-name|vap
-argument_list|,
-name|IEEE80211_S_RUN
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|IPW_STATE_SCANNING
@@ -5619,10 +5614,20 @@ operator|&
 name|IPW_FLAG_ASSOCIATED
 condition|)
 block|{
+name|IPW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* XXX probably need to issue disassoc to fw */
 name|ieee80211_beacon_miss
 argument_list|(
 name|ic
+argument_list|)
+expr_stmt|;
+name|IPW_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -5676,9 +5681,19 @@ operator|&
 name|IPW_FLAG_SCANNING
 condition|)
 block|{
+name|IPW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ieee80211_scan_done
 argument_list|(
 name|vap
+argument_list|)
+expr_stmt|;
+name|IPW_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5736,6 +5751,12 @@ name|iv_state
 operator|==
 name|IEEE80211_S_RUN
 condition|)
+block|{
+name|IPW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ieee80211_new_state
 argument_list|(
 name|vap
@@ -5746,6 +5767,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|IPW_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|IPW_STATE_DISABLED
@@ -6200,8 +6227,6 @@ name|rssi
 decl_stmt|,
 name|nf
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|5
@@ -6553,6 +6578,8 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
@@ -6574,6 +6601,8 @@ argument_list|,
 name|m
 argument_list|,
 name|rssi
+operator|-
+name|nf
 argument_list|,
 name|nf
 argument_list|)
@@ -7296,11 +7325,23 @@ name|vap
 operator|!=
 name|NULL
 condition|)
+block|{
+name|IPW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ieee80211_cancel_scan
 argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|IPW_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|ieee80211_runtask
 argument_list|(
 name|ic
@@ -7334,8 +7375,6 @@ decl_stmt|;
 name|uint32_t
 name|r
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -9240,8 +9279,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -9518,6 +9555,11 @@ operator|&
 name|IPW_FLAG_SCANNING
 condition|)
 block|{
+name|IPW_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ieee80211_scan_done
 argument_list|(
 name|TAILQ_FIRST
@@ -9527,6 +9569,11 @@ name|ic
 operator|->
 name|ic_vaps
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|IPW_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -9620,8 +9667,6 @@ name|startall
 init|=
 literal|0
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -11645,8 +11690,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -12011,7 +12054,7 @@ if|if
 condition|(
 name|vap
 operator|->
-name|iv_appie_assocreq
+name|iv_appie_wpa
 operator|!=
 name|NULL
 condition|)
@@ -12023,7 +12066,7 @@ name|ie
 init|=
 name|vap
 operator|->
-name|iv_appie_assocreq
+name|iv_appie_wpa
 decl_stmt|;
 name|error
 operator|=
@@ -12189,8 +12232,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -12312,8 +12353,6 @@ name|ifp
 operator|->
 name|if_l2com
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -13187,10 +13226,10 @@ name|data
 operator|=
 name|htole32
 argument_list|(
-literal|0x3
+literal|0xf
 argument_list|)
 expr_stmt|;
-comment|/* 1, 2 */
+comment|/* 1, 2, 5.5, 11 */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -13227,7 +13266,7 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* NB: use the same rate set */
+comment|/* Use the same rate set */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -13264,14 +13303,7 @@ condition|)
 return|return
 name|error
 return|;
-name|data
-operator|=
-name|htole32
-argument_list|(
-literal|0xf
-argument_list|)
-expr_stmt|;
-comment|/* 1, 2, 5.5, 11 */
+comment|/* Use the same rate set */
 name|DPRINTF
 argument_list|(
 operator|(
@@ -13428,8 +13460,6 @@ name|sc
 init|=
 name|priv
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -13916,8 +13946,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -13965,8 +13993,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc
@@ -14072,8 +14098,6 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|IPW_LOCK_DECL
-expr_stmt|;
 name|IPW_LOCK
 argument_list|(
 name|sc

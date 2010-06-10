@@ -240,25 +240,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|SYSCTL_NODE
-argument_list|(
-name|_vfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ufs
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"UFS filesystem"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int

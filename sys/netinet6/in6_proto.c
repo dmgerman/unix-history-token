@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_route.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -372,6 +378,23 @@ include|#
 directive|include
 file|<netinet6/ip6protosw.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/flowtable.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TCP/IP protocol family: IP6, ICMP6, UDP, TCP.  */
@@ -827,11 +850,6 @@ operator|.
 name|pr_ctloutput
 operator|=
 name|rip6_ctloutput
-block|,
-operator|.
-name|pr_init
-operator|=
-name|icmp6_init
 block|,
 operator|.
 name|pr_fasttimo
@@ -1498,6 +1516,81 @@ begin_comment
 comment|/*  * Internet configuration info  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6FORWARDING
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATEWAY6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPV6FORWARDING
+value|1
+end_define
+
+begin_comment
+comment|/* forward IP6 packets not for us */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPV6FORWARDING
+value|0
+end_define
+
+begin_comment
+comment|/* don't forward IP6 packets not for us */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GATEWAY6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IPV6FORWARDING */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPV6_SENDREDIRECTS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPV6_SENDREDIRECTS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1505,8 +1598,14 @@ name|int
 argument_list|,
 name|ip6_forwarding
 argument_list|)
+operator|=
+name|IPV6FORWARDING
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* act as router? */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1515,6 +1614,8 @@ name|int
 argument_list|,
 name|ip6_sendredirects
 argument_list|)
+operator|=
+name|IPV6_SENDREDIRECTS
 expr_stmt|;
 end_expr_stmt
 
@@ -1525,6 +1626,8 @@ name|int
 argument_list|,
 name|ip6_defhlim
 argument_list|)
+operator|=
+name|IPV6_DEFHLIM
 expr_stmt|;
 end_expr_stmt
 
@@ -1535,6 +1638,8 @@ name|int
 argument_list|,
 name|ip6_defmcasthlim
 argument_list|)
+operator|=
+name|IPV6_DEFAULT_MULTICAST_HOPS
 expr_stmt|;
 end_expr_stmt
 
@@ -1545,6 +1650,8 @@ name|int
 argument_list|,
 name|ip6_accept_rtadv
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -1558,6 +1665,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* initialized in frag6.c:frag6_init() */
+end_comment
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1568,6 +1679,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* initialized in frag6.c:frag6_init() */
+end_comment
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1575,6 +1690,8 @@ name|int
 argument_list|,
 name|ip6_log_interval
 argument_list|)
+operator|=
+literal|5
 expr_stmt|;
 end_expr_stmt
 
@@ -1585,8 +1702,14 @@ name|int
 argument_list|,
 name|ip6_hdrnestlimit
 argument_list|)
+operator|=
+literal|15
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* How many header options will we 					 * process? */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1595,8 +1718,14 @@ name|int
 argument_list|,
 name|ip6_dad_count
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* DupAddrDetectionTransmits */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1605,6 +1734,8 @@ name|int
 argument_list|,
 name|ip6_auto_flowlabel
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
 
@@ -1615,8 +1746,14 @@ name|int
 argument_list|,
 name|ip6_use_deprecated
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* allow deprecated addr 					 * (RFC2462 5.5.4) */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1625,8 +1762,14 @@ name|int
 argument_list|,
 name|ip6_rr_prune
 argument_list|)
+operator|=
+literal|5
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* router renumbering prefix 					 * walk list every 5 sec. */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1635,8 +1778,14 @@ name|int
 argument_list|,
 name|ip6_mcast_pmtu
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* enable pMTU discovery for multicast? */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1645,6 +1794,8 @@ name|int
 argument_list|,
 name|ip6_v6only
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
 
@@ -1655,6 +1806,8 @@ name|int
 argument_list|,
 name|ip6_keepfaith
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -1665,8 +1818,19 @@ name|time_t
 argument_list|,
 name|ip6_log_time
 argument_list|)
+operator|=
+operator|(
+name|time_t
+operator|)
+literal|0L
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSTEALTH
+end_ifdef
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1675,8 +1839,15 @@ name|int
 argument_list|,
 name|ip6stealth
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1685,8 +1856,14 @@ name|int
 argument_list|,
 name|nd6_onlink_ns_rfc4861
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* allow 'on-link' nd6 NS 					     * (RFC 4861) */
+end_comment
 
 begin_comment
 comment|/* icmp6 */
@@ -1703,6 +1880,10 @@ name|int
 argument_list|,
 name|pmtu_expire
 argument_list|)
+operator|=
+literal|60
+operator|*
+literal|10
 expr_stmt|;
 end_expr_stmt
 
@@ -1713,6 +1894,10 @@ name|int
 argument_list|,
 name|pmtu_probe
 argument_list|)
+operator|=
+literal|60
+operator|*
+literal|2
 expr_stmt|;
 end_expr_stmt
 
@@ -1724,6 +1909,20 @@ begin_comment
 comment|/*  * Nominal space allocated to a raw ip socket.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RIPV6SNDQ
+value|8192
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIPV6RCVQ
+value|8192
+end_define
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -1731,6 +1930,8 @@ name|u_long
 argument_list|,
 name|rip6_sendspace
 argument_list|)
+operator|=
+name|RIPV6SNDQ
 expr_stmt|;
 end_expr_stmt
 
@@ -1741,6 +1942,8 @@ name|u_long
 argument_list|,
 name|rip6_recvspace
 argument_list|)
+operator|=
+name|RIPV6RCVQ
 expr_stmt|;
 end_expr_stmt
 
@@ -1755,8 +1958,14 @@ name|int
 argument_list|,
 name|icmp6_rediraccept
 argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* accept and process redirects */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1765,8 +1974,16 @@ name|int
 argument_list|,
 name|icmp6_redirtimeout
 argument_list|)
+operator|=
+literal|10
+operator|*
+literal|60
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 10 minutes */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1775,8 +1992,14 @@ name|int
 argument_list|,
 name|icmp6errppslim
 argument_list|)
+operator|=
+literal|100
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 100pps */
+end_comment
 
 begin_comment
 comment|/* control how to respond to NI queries */
@@ -1789,6 +2012,12 @@ name|int
 argument_list|,
 name|icmp6_nodeinfo
 argument_list|)
+operator|=
+operator|(
+name|ICMP6_NODEINFO_FQDNOK
+operator||
+name|ICMP6_NODEINFO_NODEADDROK
+operator|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1803,8 +2032,14 @@ name|int
 argument_list|,
 name|udp6_sendspace
 argument_list|)
+operator|=
+literal|9216
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* really max datagram size */
+end_comment
 
 begin_expr_stmt
 name|VNET_DEFINE
@@ -1813,8 +2048,24 @@ name|int
 argument_list|,
 name|udp6_recvspace
 argument_list|)
+operator|=
+literal|40
+operator|*
+operator|(
+literal|1024
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in6
+argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* 40 1K datagrams */
+end_comment
 
 begin_comment
 comment|/*  * sysctl related items.  */
@@ -2806,6 +3057,72 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FLOWTABLE
+end_ifdef
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip6_output_flowtable_size
+argument_list|)
+operator|=
+literal|2048
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+expr|struct
+name|flowtable
+operator|*
+argument_list|,
+name|ip6_ft
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ip6_output_flowtable_size
+value|VNET(ip6_output_flowtable_size)
+end_define
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|output_flowtable_size
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|ip6_output_flowtable_size
+argument_list|)
+argument_list|,
+literal|2048
+argument_list|,
+literal|"number of entries in the per-cpu output flow caches"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

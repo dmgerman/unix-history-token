@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_NFSKPIPORT_NFS_H_
+name|_NFS_NFSKPIPORT_H_
 end_define
 
 begin_comment
@@ -294,7 +294,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NFSKPIPORT_NFS_H */
+comment|/* _NFS_NFSKPIPORT_H */
 end_comment
 
 end_unit

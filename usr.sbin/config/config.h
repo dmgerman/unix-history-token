@@ -655,6 +655,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|FILE
+modifier|*
+name|open_makefile_template
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_extern
 extern|extern STAILQ_HEAD(device_head
 operator|,

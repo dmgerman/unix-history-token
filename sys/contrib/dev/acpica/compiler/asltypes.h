@@ -807,6 +807,24 @@ block|,
 name|ASL_MSG_NAMED_OBJECT_IN_WHILE
 block|,
 name|ASL_MSG_LOCAL_OUTSIDE_METHOD
+block|,
+name|ASL_MSG_ALIGNMENT
+block|,
+name|ASL_MSG_ISA_ADDRESS
+block|,
+name|ASL_MSG_INVALID_MIN_MAX
+block|,
+name|ASL_MSG_INVALID_LENGTH
+block|,
+name|ASL_MSG_INVALID_LENGTH_FIXED
+block|,
+name|ASL_MSG_INVALID_GRANULARITY
+block|,
+name|ASL_MSG_INVALID_GRAN_FIXED
+block|,
+name|ASL_MSG_INVALID_ACCESS_SIZE
+block|,
+name|ASL_MSG_INVALID_ADDR_FLAGS
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -1166,6 +1184,33 @@ literal|"Creating a named object in a While loop"
 block|,
 comment|/*    ASL_MSG_LOCAL_OUTSIDE_METHOD */
 literal|"Local or Arg used outside a control method"
+block|,
+comment|/*    ASL_MSG_ALIGNMENT */
+literal|"Must be a multiple of alignment/granularity value"
+block|,
+comment|/*    ASL_MSG_ISA_ADDRESS */
+literal|"Maximum 10-bit ISA address (0x3FF)"
+block|,
+comment|/*    ASL_MSG_INVALID_MIN_MAX */
+literal|"Address Min is greater than Address Max"
+block|,
+comment|/*    ASL_MSG_INVALID_LENGTH */
+literal|"Length is larger than Min/Max window"
+block|,
+comment|/*    ASL_MSG_INVALID_LENGTH_FIXED */
+literal|"Length is not equal to fixed Min/Max window"
+block|,
+comment|/*    ASL_MSG_INVALID_GRANULARITY */
+literal|"Granularity must be zero or a power of two minus one"
+block|,
+comment|/*    ASL_MSG_INVALID_GRAN_FIXED */
+literal|"Granularity must be zero for fixed Min/Max"
+block|,
+comment|/*    ASL_MSG_INVALID_ACCESS_SIZE */
+literal|"Invalid AccessSize (Maximum is 4 - QWord access)"
+block|,
+comment|/*    ASL_MSG_INVALID_ADDR_FLAGS */
+literal|"Invalid combination of Length and Min/Max fixed flags"
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1769,6 +1769,12 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pp
+operator|!=
+name|NULL
+condition|)
 name|g_orphan_provider
 argument_list|(
 name|pp

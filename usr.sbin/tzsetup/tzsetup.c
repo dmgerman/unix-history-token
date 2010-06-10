@@ -1924,6 +1924,7 @@ argument_list|,
 literal|"\t"
 argument_list|)
 expr_stmt|;
+comment|/* Unused */
 name|file
 operator|=
 name|strsep
@@ -3144,6 +3145,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
+operator|(
 name|len
 operator|=
 name|write
@@ -3154,7 +3158,11 @@ name|buf
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|len

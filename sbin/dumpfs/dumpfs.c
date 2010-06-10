@@ -1169,7 +1169,17 @@ name|FS_DOSOFTDEP
 condition|)
 name|printf
 argument_list|(
-literal|"soft-updates "
+literal|"soft-updates%s "
+argument_list|,
+operator|(
+name|fsflags
+operator|&
+name|FS_SUJ
+operator|)
+condition|?
+literal|"+journal"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1270,6 +1280,8 @@ operator||
 name|FS_FLAGS_UPDATED
 operator||
 name|FS_NFS4ACLS
+operator||
+name|FS_SUJ
 operator|)
 expr_stmt|;
 if|if

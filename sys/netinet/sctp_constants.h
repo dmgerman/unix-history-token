@@ -135,28 +135,6 @@ name|SCTP_AUDIT_SIZE
 value|256
 end_define
 
-begin_comment
-comment|/* temporary disabled since it does not work with VNET. */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|SCTP_USE_THREAD_BASED_ITERATOR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1525,24 +1503,6 @@ name|SCTP_DATAGRAM_ACKED
 value|10010
 end_define
 
-begin_comment
-comment|/* EY  * If a tsn is nr-gapped, its first tagged as NR_MARKED and then NR_ACKED  * When yet another nr-sack is received, if a particular TSN's sent tag  * is observed to be NR_ACKED after gap-ack info is processed, this implies  * that particular TSN is reneged */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_ACKED
-value|10020
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_DATAGRAM_NR_MARKED
-value|20005
-end_define
-
 begin_define
 define|#
 directive|define
@@ -2198,6 +2158,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_STATE_IN_ACCEPT_QUEUE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_STATE_MASK
 value|0x007f
 end_define
@@ -2609,13 +2576,6 @@ define|#
 directive|define
 name|SCTP_TIMER_TYPE_INPKILL
 value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_TIMER_TYPE_ITERATOR
-value|16
 end_define
 
 begin_define
@@ -4190,6 +4150,13 @@ define|#
 directive|define
 name|SCTP_CALLED_AFTER_CMPSET_OFCLOSE
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CALLED_FROM_INPKILL_TIMER
+value|2
 end_define
 
 begin_comment

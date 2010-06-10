@@ -1246,9 +1246,6 @@ expr_stmt|;
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
-name|mca_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -9451,7 +9448,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 argument_list|,
 name|fpregs
 argument_list|)
@@ -9492,7 +9489,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 argument_list|)
 expr_stmt|;
 return|return
@@ -10211,7 +10208,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|fpugetregs
+name|fpugetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -10336,7 +10333,7 @@ name|en_mxcsr
 operator|&=
 name|cpu_mxcsr_mask
 expr_stmt|;
-name|fpusetregs
+name|fpusetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -10371,6 +10368,20 @@ block|{
 name|register_t
 name|s
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"fpstate_drop: kernel-owned fpu"
+operator|)
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|intr_disable
@@ -10396,7 +10407,11 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
+operator|(
 name|PCB_FPUINITDONE
+operator||
+name|PCB_USERFPUINITDONE
+operator|)
 expr_stmt|;
 name|intr_restore
 argument_list|(

@@ -106,18 +106,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|profclockintr
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|frame
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
 end_comment

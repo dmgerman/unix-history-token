@@ -42,7 +42,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 value|2
 end_define
 
@@ -301,24 +301,27 @@ decl_stmt|;
 comment|/* generic clear stall 						 * messages */
 name|struct
 name|sx
-name|default_sx
-index|[
-literal|2
-index|]
+name|ctrl_sx
+decl_stmt|;
+name|struct
+name|sx
+name|enum_sx
+decl_stmt|;
+name|struct
+name|sx
+name|sr_sx
 decl_stmt|;
 name|struct
 name|mtx
-name|default_mtx
-index|[
-literal|1
-index|]
+name|device_mtx
 decl_stmt|;
 name|struct
 name|cv
-name|default_cv
-index|[
-literal|2
-index|]
+name|ctrlreq_cv
+decl_stmt|;
+name|struct
+name|cv
+name|ref_cv
 decl_stmt|;
 name|struct
 name|usb_interface
@@ -327,7 +330,7 @@ name|ifaces
 decl_stmt|;
 name|struct
 name|usb_endpoint
-name|default_ep
+name|ctrl_ep
 decl_stmt|;
 comment|/* Control Endpoint 0 */
 name|struct
@@ -376,9 +379,9 @@ comment|/* only if this is a hub */
 name|struct
 name|usb_xfer
 modifier|*
-name|default_xfer
+name|ctrl_xfer
 index|[
-name|USB_DEFAULT_XFER_MAX
+name|USB_CTRL_XFER_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -412,7 +415,7 @@ comment|/* our generic symlink */
 name|struct
 name|cdev
 modifier|*
-name|default_dev
+name|ctrl_dev
 decl_stmt|;
 comment|/* Control Endpoint 0 device node */
 name|LIST_HEAD
@@ -517,7 +520,7 @@ name|flags
 decl_stmt|;
 name|struct
 name|usb_endpoint_descriptor
-name|default_ep_desc
+name|ctrl_ep_desc
 decl_stmt|;
 comment|/* for endpoint 0 */
 name|struct
@@ -848,6 +851,28 @@ end_function_decl
 begin_function_decl
 name|void
 name|usbd_enum_unlock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_sr_lock
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_sr_unlock
 parameter_list|(
 name|struct
 name|usb_device

@@ -283,11 +283,11 @@ directive|include
 file|<dev/usb/wlan/if_rumfw.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USB_DEBUG
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1303,6 +1303,18 @@ modifier|*
 parameter_list|,
 specifier|const
 name|uint8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|rum_update_mcast
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3478,7 +3490,7 @@ name|ifp
 operator|->
 name|if_snd
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -3487,7 +3499,7 @@ name|if_snd
 operator|.
 name|ifq_drv_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|IFQ_SET_READY
 argument_list|(
@@ -3644,6 +3656,12 @@ operator|->
 name|ic_vap_delete
 operator|=
 name|rum_vap_delete
+expr_stmt|;
+name|ic
+operator|->
+name|ic_update_mcast
+operator|=
+name|rum_update_mcast
 expr_stmt|;
 name|ieee80211_radiotap_attach
 argument_list|(
@@ -10467,6 +10485,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rum_update_mcast
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+comment|/* XXX do nothing? */
 block|}
 end_function
 

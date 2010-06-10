@@ -19,13 +19,6 @@ directive|define
 name|_SYS_TXG_IMPL_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
@@ -150,10 +143,6 @@ decl_stmt|;
 name|kthread_t
 modifier|*
 name|tx_quiesce_thread
-decl_stmt|;
-name|kthread_t
-modifier|*
-name|tx_timelimit_thread
 decl_stmt|;
 block|}
 name|tx_state_t

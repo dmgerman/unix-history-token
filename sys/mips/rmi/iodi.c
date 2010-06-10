@@ -1141,6 +1141,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"pcib"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xlr_board_info

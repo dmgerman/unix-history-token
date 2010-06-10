@@ -2767,17 +2767,14 @@ decl_stmt|,
 modifier|*
 name|ares
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SO_BINDANY
-comment|/* try SO_BINDANY, but don't insist */
+comment|/* try IP_BINDANY, but don't insist */
 name|setsockopt
 argument_list|(
 name|s
 argument_list|,
-name|SOL_SOCKET
+name|IPPROTO_IP
 argument_list|,
-name|SO_BINDANY
+name|IP_BINDANY
 argument_list|,
 operator|&
 name|on
@@ -2788,8 +2785,6 @@ name|on
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|memset
 argument_list|(
 operator|&

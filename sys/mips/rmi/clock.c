@@ -358,11 +358,9 @@ argument_list|)
 expr_stmt|;
 name|hardclock_cpu
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -378,11 +376,9 @@ condition|)
 block|{
 name|statclock
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -395,11 +391,9 @@ condition|)
 block|{
 name|profclock
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|,
 name|tf
@@ -475,11 +469,9 @@ expr_stmt|;
 comment|/* 		if ((clock_tick_foo % 10000) == 0) { 			printf("Clock tick foo at %ld\n", clock_tick_foo); 		} */
 name|hardclock
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|,
 name|tf
@@ -496,11 +488,9 @@ condition|)
 block|{
 name|statclock
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -513,11 +503,9 @@ condition|)
 block|{
 name|profclock
 argument_list|(
-name|USERMODE
+name|TRAPF_USERMODE
 argument_list|(
 name|tf
-operator|->
-name|sr
 argument_list|)
 argument_list|,
 name|tf

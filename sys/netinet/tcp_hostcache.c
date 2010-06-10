@@ -255,6 +255,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|V_tcp_hostcache
+value|VNET(tcp_hostcache)
+end_define
+
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -266,13 +273,6 @@ name|tcp_hc_callout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_tcp_hostcache
-value|VNET(tcp_hostcache)
-end_define
 
 begin_define
 define|#

@@ -1015,6 +1015,19 @@ modifier|*
 name|cr
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|nfscr
+operator|->
+name|nfsc_ngroups
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"newnfs_copycred: negative nfsc_ngroups"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cr
 operator|->
 name|cr_uid
@@ -1447,7 +1460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sleep for a short period of time.  * Since lbolt doesn't exist in FreeBSD-CURRENT, just use a timeout on  * an event that never gets a wakeup. Only return EINTR or 0.  */
+comment|/*  * Sleep for a short period of time unless errval == NFSERR_GRACE, where  * the sleep should be for 5 seconds.  * Since lbolt doesn't exist in FreeBSD-CURRENT, just use a timeout on  * an event that never gets a wakeup. Only return EINTR or 0.  */
 end_comment
 
 begin_function
@@ -1456,6 +1469,9 @@ name|nfs_catnap
 parameter_list|(
 name|int
 name|prio
+parameter_list|,
+name|int
+name|errval
 parameter_list|,
 specifier|const
 name|char
@@ -1470,6 +1486,29 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|errval
+operator|==
+name|NFSERR_GRACE
+condition|)
+name|ret
+operator|=
+name|tsleep
+argument_list|(
+operator|&
+name|non_event
+argument_list|,
+name|prio
+argument_list|,
+name|wmesg
+argument_list|,
+literal|5
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+else|else
 name|ret
 operator|=
 name|tsleep

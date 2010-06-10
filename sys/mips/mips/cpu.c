@@ -683,6 +683,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MIPS_PRID_CID_RMI
+case|:
+name|printf
+argument_list|(
+literal|"RMI"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MIPS_PRID_CID_CAVIUM
 case|:
 name|printf

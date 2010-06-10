@@ -592,50 +592,22 @@ name|int
 argument_list|,
 name|rtq_reallyold6
 argument_list|)
+operator|=
+literal|60
+operator|*
+literal|60
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_minreallyold6
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|rtq_toomany6
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* one hour is ``really old'' */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|V_rtq_reallyold6
 value|VNET(rtq_reallyold6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_minreallyold6
-value|VNET(rtq_minreallyold6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_rtq_toomany6
-value|VNET(rtq_toomany6)
 end_define
 
 begin_expr_stmt
@@ -663,6 +635,30 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_minreallyold6
+argument_list|)
+operator|=
+literal|10
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* never automatically crank down to less */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_rtq_minreallyold6
+value|VNET(rtq_minreallyold6)
+end_define
+
+begin_expr_stmt
 name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet6_ip6
@@ -685,6 +681,30 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|rtq_toomany6
+argument_list|)
+operator|=
+literal|128
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 128 cached routes is ``too many'' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_rtq_toomany6
+value|VNET(rtq_toomany6)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_VNET_INT
@@ -965,6 +985,8 @@ name|int
 argument_list|,
 name|rtq_timeout6
 argument_list|)
+operator|=
+name|RTQ_TIMEOUT
 expr_stmt|;
 end_expr_stmt
 
@@ -1620,27 +1642,6 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for the real thing */
-name|V_rtq_reallyold6
-operator|=
-literal|60
-operator|*
-literal|60
-expr_stmt|;
-comment|/* one hour is ``really old'' */
-name|V_rtq_minreallyold6
-operator|=
-literal|10
-expr_stmt|;
-comment|/* never automatically crank down to less */
-name|V_rtq_toomany6
-operator|=
-literal|128
-expr_stmt|;
-comment|/* 128 cached routes is ``too many'' */
-name|V_rtq_timeout6
-operator|=
-name|RTQ_TIMEOUT
-expr_stmt|;
 name|rnh
 operator|=
 operator|*

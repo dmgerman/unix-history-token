@@ -3272,7 +3272,7 @@ name|ACPI_WALK_CALLBACK
 function_decl|)
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|UINT32
 name|NestingLevel

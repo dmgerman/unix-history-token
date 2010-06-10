@@ -419,6 +419,46 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cj) means (j) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rusage_ext
+block|{
+name|u_int64_t
+name|rux_runtime
+decl_stmt|;
+comment|/* (cj) Real time. */
+name|u_int64_t
+name|rux_uticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in user mode. */
+name|u_int64_t
+name|rux_sticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in sys mode. */
+name|u_int64_t
+name|rux_iticks
+decl_stmt|;
+comment|/* (cj) Statclock hits in intr mode. */
+name|u_int64_t
+name|rux_uu
+decl_stmt|;
+comment|/* (c) Previous user time in usec. */
+name|u_int64_t
+name|rux_su
+decl_stmt|;
+comment|/* (c) Previous sys time in usec. */
+name|u_int64_t
+name|rux_tu
+decl_stmt|;
+comment|/* (c) Previous total time in usec. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * Thread context.  Processes may have multiple threads.  */
 end_comment
 
@@ -630,7 +670,12 @@ name|struct
 name|rusage
 name|td_ru
 decl_stmt|;
-comment|/* (t) rusage information */
+comment|/* (t) rusage information. */
+name|struct
+name|rusage_ext
+name|td_rux
+decl_stmt|;
+comment|/* (t) Internal rusage information. */
 name|uint64_t
 name|td_incruntime
 decl_stmt|;
@@ -865,6 +910,12 @@ modifier|*
 name|td_vnet_lpush
 decl_stmt|;
 comment|/* (k) Debugging vnet push / pop. */
+name|struct
+name|trapframe
+modifier|*
+name|td_intr_frame
+decl_stmt|;
+comment|/* (k) Frame of the current irq */
 block|}
 struct|;
 end_struct
@@ -1345,6 +1396,39 @@ end_define
 
 begin_comment
 comment|/* Debugger modified memory or registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_SCE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Thread performs syscall enter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_SCX
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Thread performs syscall exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_EXEC
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* TDB_SCX from exec(2) family */
 end_comment
 
 begin_comment
@@ -1968,46 +2052,6 @@ name|td
 parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
 end_define
-
-begin_comment
-comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking: (cj) means (j) for p_rux and (c) for p_crux.  */
-end_comment
-
-begin_struct
-struct|struct
-name|rusage_ext
-block|{
-name|u_int64_t
-name|rux_runtime
-decl_stmt|;
-comment|/* (cj) Real time. */
-name|u_int64_t
-name|rux_uticks
-decl_stmt|;
-comment|/* (cj) Statclock hits in user mode. */
-name|u_int64_t
-name|rux_sticks
-decl_stmt|;
-comment|/* (cj) Statclock hits in sys mode. */
-name|u_int64_t
-name|rux_iticks
-decl_stmt|;
-comment|/* (cj) Statclock hits in intr mode. */
-name|u_int64_t
-name|rux_uu
-decl_stmt|;
-comment|/* (c) Previous user time in usec. */
-name|u_int64_t
-name|rux_su
-decl_stmt|;
-comment|/* (c) Previous sys time in usec. */
-name|u_int64_t
-name|rux_tu
-decl_stmt|;
-comment|/* (c) Previous total time in usec. */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Process structure.  */
@@ -4575,6 +4619,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|syscallenter
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syscallret
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|cpu_exit
@@ -4599,6 +4681,29 @@ argument_list|)
 name|__dead2
 decl_stmt|;
 end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|syscall_args
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|cpu_fetch_syscall_args
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|syscall_args
+modifier|*
+name|sa
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

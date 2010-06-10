@@ -1827,6 +1827,7 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|S_IFIFO
 case|:

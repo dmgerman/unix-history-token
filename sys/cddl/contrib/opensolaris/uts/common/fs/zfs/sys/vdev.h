@@ -488,6 +488,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|boolean_t
+name|vdev_allocatable
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
 name|vdev_accessible
 parameter_list|(
 name|vdev_t

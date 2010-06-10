@@ -1852,24 +1852,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_VISIBILITY_PRAGMA
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ZEXTERN
-value|__attribute__((visibility ("default"))) extern
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2146,14 +2128,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|Z_HAVE_UNISTD_H
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDC
+end_ifdef
 
 begin_include
 include|#
@@ -2164,6 +2143,52 @@ end_include
 begin_comment
 comment|/* for off_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* a little trick to accommodate both "#define _LARGEFILE64_SOURCE" and  * "#define _LARGEFILE64_SOURCE 1" as requesting 64-bit operations, (even  * though the former does not conform to the LFS document), but considering  * both "#undef _LARGEFILE64_SOURCE" and "#define _LARGEFILE64_SOURCE 0" as  * equivalently requesting no 64-bit operations  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|-
+name|_LARGEFILE64_SOURCE
+operator|-
+operator|-
+literal|1
+operator|==
+literal|1
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|_LARGEFILE64_SOURCE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|Z_HAVE_UNISTD_H
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_LARGEFILE64_SOURCE
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -2267,12 +2292,6 @@ begin_comment
 comment|/*  * This is hard-configured for FreeBSD.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -2309,6 +2328,43 @@ define|#
 directive|define
 name|z_off_t
 value|long
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LARGEFILE64_SOURCE
+argument_list|)
+operator|&&
+name|_LFS64_LARGEFILE
+operator|-
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|z_off64_t
+value|off64_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|z_off64_t
+value|z_off_t
 end_define
 
 begin_endif

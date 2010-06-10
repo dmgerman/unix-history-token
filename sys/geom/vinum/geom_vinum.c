@@ -910,7 +910,10 @@ name|gv_worker
 argument_list|,
 name|sc
 argument_list|,
-name|NULL
+operator|&
+name|sc
+operator|->
+name|worker
 argument_list|,
 literal|0
 argument_list|,
@@ -973,19 +976,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|gv_post_event
+name|gv_worker_exit
 argument_list|(
 name|sc
-argument_list|,
-name|GV_EVENT_THREAD_EXIT
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|gp
@@ -1001,11 +994,6 @@ argument_list|,
 name|ENXIO
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
 block|}
 return|return
 operator|(
@@ -5071,11 +5059,10 @@ argument_list|)
 expr_stmt|;
 name|kproc_exit
 argument_list|(
-name|ENXIO
+literal|0
 argument_list|)
 expr_stmt|;
-break|break;
-comment|/* not reached */
+comment|/* NOTREACHED */
 default|default:
 name|G_VINUM_DEBUG
 argument_list|(

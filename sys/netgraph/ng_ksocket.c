@@ -5651,7 +5651,7 @@ name|soupcall_set
 argument_list|(
 name|so
 argument_list|,
-name|SO_RCV
+name|SO_SND
 argument_list|,
 name|ng_ksocket_incoming
 argument_list|,

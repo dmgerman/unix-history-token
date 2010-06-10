@@ -292,25 +292,25 @@ struct|struct
 name|trapdebug
 block|{
 comment|/* trap history buffer for debugging */
-name|u_int
+name|register_t
 name|status
 decl_stmt|;
-name|u_int
+name|register_t
 name|cause
 decl_stmt|;
-name|u_int
+name|register_t
 name|vadr
 decl_stmt|;
-name|u_int
+name|register_t
 name|pc
 decl_stmt|;
-name|u_int
+name|register_t
 name|ra
 decl_stmt|;
-name|u_int
+name|register_t
 name|sp
 decl_stmt|;
-name|u_int
+name|register_t
 name|code
 decl_stmt|;
 block|}
@@ -326,7 +326,7 @@ name|x
 parameter_list|,
 name|cd
 parameter_list|)
-value|{	\ 	intrmask_t s = disableintr();	\ 	trp->status = x->sr;		\ 	trp->cause = x->cause;		\ 	trp->vadr = x->badvaddr;	\ 	trp->pc = x->pc;		\ 	trp->sp = x->sp;		\ 	trp->ra = x->ra;		\ 	trp->code = cd;			\ 	if (++trp ==&trapdebug[TRAPSIZE])	\ 		trp = trapdebug;	\ 	restoreintr(s);			\ }
+value|{	\ 	register_t s = intr_disable();	\ 	trp->status = x->sr;		\ 	trp->cause = x->cause;		\ 	trp->vadr = x->badvaddr;	\ 	trp->pc = x->pc;		\ 	trp->sp = x->sp;		\ 	trp->ra = x->ra;		\ 	trp->code = cd;			\ 	if (++trp ==&trapdebug[TRAPSIZE])	\ 		trp = trapdebug;	\ 	intr_restore(s);		\ }
 end_define
 
 begin_define
@@ -454,7 +454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|register_t
 name|trap
 parameter_list|(
 name|struct

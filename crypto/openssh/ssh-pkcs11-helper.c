@@ -13,12 +13,6 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_PKCS11
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -113,6 +107,12 @@ include|#
 directive|include
 file|"ssh-pkcs11.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_PKCS11
+end_ifdef
 
 begin_comment
 comment|/* borrows code from sftp-server and ssh-agent */

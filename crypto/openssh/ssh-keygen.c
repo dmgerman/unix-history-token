@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keygen.c,v 1.184 2010/03/07 22:16:01 djm Exp $ */
+comment|/* $OpenBSD: ssh-keygen.c,v 1.185 2010/03/15 19:40:02 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -7911,9 +7911,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        %s certificate %s\n"
+literal|"        %s %s certificate %s\n"
 argument_list|,
 name|key_type
+argument_list|(
+name|key
+argument_list|)
+argument_list|,
+name|key_cert_type
 argument_list|(
 name|key
 argument_list|)

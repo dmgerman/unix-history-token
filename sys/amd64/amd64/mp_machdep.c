@@ -4591,22 +4591,6 @@ operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ipi_bitmap
-operator|&
-operator|(
-literal|1
-operator|<<
-name|IPI_PROFCLOCK
-operator|)
-condition|)
-name|profclockintr
-argument_list|(
-operator|&
-name|frame
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5053,7 +5037,6 @@ argument_list|()
 expr_stmt|;
 name|stopfpu
 operator|=
-operator|&
 name|stopxpcbs
 index|[
 name|cpu

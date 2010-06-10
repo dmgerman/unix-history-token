@@ -225,6 +225,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAST_TIMEOUT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAST_CONFIG
 value|"/etc/hast.conf"
 end_define
@@ -452,6 +459,10 @@ name|hr_token
 index|[
 name|HAST_TOKEN_SIZE
 index|]
+decl_stmt|;
+comment|/* Connection timeout. */
+name|int
+name|hr_timeout
 decl_stmt|;
 comment|/* Resource unique identifier. */
 name|uint64_t

@@ -4742,8 +4742,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|out
 label|:
+endif|#
+directive|endif
 name|INP_WUNLOCK
 argument_list|(
 name|inp

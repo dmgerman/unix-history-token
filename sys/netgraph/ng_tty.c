@@ -508,7 +508,7 @@ name|sc
 operator|->
 name|outq
 argument_list|,
-name|IFQ_MAXLEN
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 return|return

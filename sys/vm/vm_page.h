@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O) or by the lock on the page  *	queues (P).  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	Fields in this structure are locked either by the lock on the  *	object that the page belongs to (O), its corresponding page lock (P),  *	or by the lock on the page queues (Q).  *	  */
 end_comment
 
 begin_expr_stmt
@@ -49,7 +49,7 @@ argument|vm_page
 argument_list|)
 name|pageq
 expr_stmt|;
-comment|/* queue info for FIFO queue or free list (P) */
+comment|/* queue info for FIFO queue or free list (Q) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
@@ -76,7 +76,7 @@ comment|/* which object am I in (O,P)*/
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
-comment|/* offset into object (O,P) */
+comment|/* offset into object (O,Q) */
 name|vm_paddr_t
 name|phys_addr
 decl_stmt|;
@@ -89,7 +89,7 @@ comment|/* machine dependant stuff */
 name|uint8_t
 name|queue
 decl_stmt|;
-comment|/* page queue index */
+comment|/* page queue index (P,Q) */
 name|int8_t
 name|segind
 decl_stmt|;
@@ -107,7 +107,7 @@ decl_stmt|;
 name|u_short
 name|cow
 decl_stmt|;
-comment|/* page cow mapping count */
+comment|/* page cow mapping count (P) */
 name|u_int
 name|wire_count
 decl_stmt|;
@@ -115,7 +115,7 @@ comment|/* wired down maps refs (P) */
 name|short
 name|hold_count
 decl_stmt|;
-comment|/* page hold count */
+comment|/* page hold count (P) */
 name|u_short
 name|oflags
 decl_stmt|;
@@ -123,7 +123,7 @@ comment|/* page flags (O) */
 name|u_char
 name|act_count
 decl_stmt|;
-comment|/* page usage count */
+comment|/* page usage count (P) */
 name|u_char
 name|busy
 decl_stmt|;
@@ -142,7 +142,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_char
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -155,7 +155,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_short
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -168,7 +168,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_int
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 elif|#
 directive|elif
 name|PAGE_SIZE
@@ -181,7 +181,7 @@ comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_long
 name|dirty
 decl_stmt|;
-comment|/* map of dirty DEV_BSIZE chunks */
+comment|/* map of dirty DEV_BSIZE chunks (O) */
 endif|#
 directive|endif
 block|}
@@ -405,6 +405,188 @@ name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vpglocks
+name|pa_lock
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|PDR_SHIFT
+end_define
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|PDRSHIFT
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|21
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|pa_index
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa)>> PDRSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCKPTR
+parameter_list|(
+name|pa
+parameter_list|)
+value|&pa_lock[pa_index((pa)) % PA_LOCK_COUNT].data
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCKOBJPTR
+parameter_list|(
+name|pa
+parameter_list|)
+value|((struct lock_object *)PA_LOCKPTR((pa)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_lock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_TRYLOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_trylock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_UNLOCK
+parameter_list|(
+name|pa
+parameter_list|)
+value|mtx_unlock(PA_LOCKPTR(pa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_UNLOCK_COND
+parameter_list|(
+name|pa
+parameter_list|)
+define|\
+value|do {		   			\ 		if ((pa) != 0) {		\ 			PA_UNLOCK((pa));	\ 			(pa) = 0;		\ 		}				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PA_LOCK_ASSERT
+parameter_list|(
+name|pa
+parameter_list|,
+name|a
+parameter_list|)
+value|mtx_assert(PA_LOCKPTR(pa), (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lockptr
+parameter_list|(
+name|m
+parameter_list|)
+value|(PA_LOCKPTR(VM_PAGE_TO_PHYS((m))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_lock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_unlock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_unlock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_trylock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_trylock(vm_page_lockptr((m)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_page_lock_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|a
+parameter_list|)
+value|mtx_assert(vm_page_lockptr((m)), (a))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -413,7 +595,7 @@ value|vm_page_queue_free_lock.data
 end_define
 
 begin_comment
-comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  */
+comment|/*  * These are the flags defined for vm_page.  *  * Note: PG_UNMANAGED (used by OBJT_PHYS) indicates that the page is  * 	 not under PV management but otherwise should be treated as a  *	 normal page.  Pages not under PV management cannot be paged out  *	 via the object/vm_page_t because there is no knowledge of their  *	 pte mappings, nor can they be removed from their objects via   *	 the object, and such pages are also not on any PQ queue.  *  * PG_REFERENCED may be cleared only if the object containing the page is  * locked.  *  * PG_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be VPO_BUSY.  */
 end_comment
 
 begin_define
@@ -1189,6 +1371,20 @@ parameter_list|(
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_page_pa_tryrelock
+parameter_list|(
+name|pmap_t
+parameter_list|,
+name|vm_paddr_t
+parameter_list|,
+name|vm_paddr_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100331
+value|0x20100428
 end_define
 
 begin_include
@@ -481,7 +481,7 @@ name|ACPI_STATUS
 name|AcpiGetName
 parameter_list|(
 name|ACPI_HANDLE
-name|Handle
+name|Object
 parameter_list|,
 name|UINT32
 name|NameType
@@ -515,7 +515,7 @@ name|ACPI_STATUS
 name|AcpiAttachData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -532,7 +532,7 @@ name|ACPI_STATUS
 name|AcpiDetachData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -545,7 +545,7 @@ name|ACPI_STATUS
 name|AcpiGetData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -632,7 +632,7 @@ name|ACPI_STATUS
 name|AcpiGetObjectInfo
 parameter_list|(
 name|ACPI_HANDLE
-name|Handle
+name|Object
 parameter_list|,
 name|ACPI_DEVICE_INFO
 modifier|*
@@ -1122,7 +1122,7 @@ name|ACPI_STATUS
 name|AcpiGetVendorResource
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|char
 modifier|*
@@ -1144,7 +1144,7 @@ name|ACPI_STATUS
 name|AcpiGetCurrentResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1158,7 +1158,7 @@ name|ACPI_STATUS
 name|AcpiGetPossibleResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1172,7 +1172,7 @@ name|ACPI_STATUS
 name|AcpiWalkResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|char
 modifier|*
@@ -1193,7 +1193,7 @@ name|ACPI_STATUS
 name|AcpiSetCurrentResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1207,7 +1207,7 @@ name|ACPI_STATUS
 name|AcpiGetIrqRoutingTable
 parameter_list|(
 name|ACPI_HANDLE
-name|BusDeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*

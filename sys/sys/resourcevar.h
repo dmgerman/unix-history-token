@@ -596,9 +596,9 @@ name|void
 name|ruxagg
 parameter_list|(
 name|struct
-name|rusage_ext
+name|proc
 modifier|*
-name|rux
+name|p
 parameter_list|,
 name|struct
 name|thread

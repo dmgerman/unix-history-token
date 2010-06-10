@@ -2397,7 +2397,7 @@ comment|/* 	 * Maybe this should be above the vnode op call, but so long as 	 * 
 if|#
 directive|if
 literal|0
-block|td = uio->uio_td; 	if (vp->v_type == VREG&& td != NULL) { 		PROC_LOCK(td->td_proc); 		if (uio->uio_offset + uio->uio_resid> 		    lim_cur(td->td_proc, RLIMIT_FSIZE)) { 			psignal(td->td_proc, SIGXFSZ); 			PROC_UNLOCK(td->td_proc); 			return (EFBIG); 		} 		PROC_UNLOCK(td->td_proc); 	}
+block|td = uio->uio_td; 	if (vn_rlimit_fsize(vp, uio, uio->uio_td)) 		return (EFBIG);
 endif|#
 directive|endif
 name|resid

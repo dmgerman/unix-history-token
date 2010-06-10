@@ -788,6 +788,30 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|OF_getproplen
+argument_list|(
+name|cpu
+argument_list|,
+literal|"power-mode-data"
+argument_list|)
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* Use the first CPU's node */
+name|cpu
+operator|=
+name|OF_child
+argument_list|(
+name|OF_parent
+argument_list|(
+name|cpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Collect the PCR values for each mode from the device tree. 	 * These include bus timing information, and so cannot be 	 * directly computed. 	 */
 name|sc
 operator|->

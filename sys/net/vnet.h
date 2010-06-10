@@ -774,6 +774,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCTL_VNET_OPAQUE
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,    \
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_OPAQUE|CTLFLAG_VNET|(access), ptr, len, 		\ 	    vnet_sysctl_handle_opaque, fmt, descr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_VNET_STRING
 parameter_list|(
 name|parent
@@ -1367,6 +1392,31 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_PROC(parent, nbr, name, access, ptr, arg, handler, fmt,	\ 	    descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_VNET_OPAQUE
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|ptr
+parameter_list|,
+name|len
+parameter_list|,
+name|fmt
+parameter_list|,    \
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OPAQUE(parent, nbr, name, access, ptr, len, fmt, descr)
 end_define
 
 begin_define

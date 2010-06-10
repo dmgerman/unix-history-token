@@ -156,7 +156,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EAGAIN
+name|EINTR
 condition|)
 continue|continue;
 return|return
@@ -233,7 +233,7 @@ literal|1
 operator|&&
 name|errno
 operator|==
-name|EAGAIN
+name|EINTR
 condition|)
 do|;
 if|if

@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stdint.h>
 end_include
 
 begin_typedef
@@ -386,7 +386,7 @@ comment|/* Extracting/insertion of data, data.c: */
 end_comment
 
 begin_function_decl
-name|int
+name|int32_t
 name|hid_get_data
 parameter_list|(
 specifier|const
@@ -415,7 +415,7 @@ name|hid_item_t
 modifier|*
 name|h
 parameter_list|,
-name|int
+name|int32_t
 name|data
 parameter_list|)
 function_decl|;

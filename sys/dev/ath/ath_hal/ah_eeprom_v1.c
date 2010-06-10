@@ -470,7 +470,7 @@ comment|/* XXX off stack */
 name|uint16_t
 name|protect
 decl_stmt|,
-name|version
+name|eeprom_version
 decl_stmt|,
 name|eeval
 decl_stmt|;
@@ -593,7 +593,7 @@ argument_list|,
 name|AR_EEPROM_VERSION
 argument_list|,
 operator|&
-name|version
+name|eeprom_version
 argument_list|)
 condition|)
 block|{
@@ -616,7 +616,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|version
+name|eeprom_version
 operator|>>
 literal|12
 operator|)
@@ -638,7 +638,7 @@ literal|"%s: unsupported EEPROM version 0x%x found\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|version
+name|eeprom_version
 argument_list|)
 expr_stmt|;
 return|return
@@ -774,7 +774,7 @@ name|ee
 operator|->
 name|ee_version
 operator|=
-name|version
+name|eeprom_version
 expr_stmt|;
 name|ee
 operator|->
@@ -1668,7 +1668,7 @@ argument_list|)
 operator|->
 name|ah_eeversion
 operator|=
-name|version
+name|eeprom_version
 expr_stmt|;
 name|AH_PRIVATE
 argument_list|(

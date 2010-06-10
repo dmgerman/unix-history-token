@@ -41,7 +41,7 @@ parameter_list|(
 name|u_int
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|di_printf

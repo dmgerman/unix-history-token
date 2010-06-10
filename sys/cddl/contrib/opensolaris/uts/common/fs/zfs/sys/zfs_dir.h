@@ -92,6 +92,11 @@ directive|define
 name|ZCIEXACT
 value|0x0040
 comment|/* c-i requires c-s match (rename) */
+define|#
+directive|define
+name|ZHAVELOCK
+value|0x0080
+comment|/* z_name_lock is already held */
 comment|/* mknode flags */
 define|#
 directive|define

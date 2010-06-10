@@ -1971,6 +1971,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|g_topology_sleep
+parameter_list|(
+name|chan
+parameter_list|,
+name|timo
+parameter_list|)
+define|\
+value|sx_sleep(chan,&topology_lock, 0, "gtopol", timo)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_GEOM_CLASS
 parameter_list|(
 name|class

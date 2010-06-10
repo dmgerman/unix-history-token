@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -225,7 +231,7 @@ comment|/* Initializer */
 end_comment
 
 begin_function
-name|void
+name|int
 name|OF_init
 parameter_list|(
 name|void
@@ -235,6 +241,9 @@ parameter_list|)
 block|{
 name|phandle_t
 name|chosen
+decl_stmt|;
+name|int
+name|rv
 decl_stmt|;
 name|ofw_obj
 operator|=
@@ -260,6 +269,8 @@ argument_list|,
 name|ofw_def_impl
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
 name|OFW_INIT
 argument_list|(
 name|ofw_obj
@@ -277,13 +288,9 @@ argument_list|(
 literal|"/chosen"
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|>
+literal|0
 condition|)
-name|OF_exit
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|OF_getprop
@@ -309,8 +316,19 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDT
+end_ifndef
 
 begin_function
 name|void
@@ -399,6 +417,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -679,7 +702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Resursively search the node and its parent for the given property, working  * downward from the node to the device tree root.  Returns the value of the  * first match.  */
+comment|/*  * Recursively search the node and its parent for the given property, working  * downward from the node to the device tree root.  Returns the value of the  * first match.  */
 end_comment
 
 begin_function
@@ -1097,6 +1120,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FDT
+end_ifndef
 
 begin_comment
 comment|/*  Call the method in the scope of a given instance. */
@@ -1518,6 +1547,11 @@ comment|/* just in case */
 empty_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

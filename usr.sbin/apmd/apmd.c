@@ -137,16 +137,6 @@ directive|include
 file|"apmd.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|yyparse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|debug_level
@@ -450,17 +440,12 @@ case|case
 operator|-
 literal|1
 case|:
-operator|(
-name|void
-operator|)
 name|warn
 argument_list|(
 literal|"cannot fork"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+break|break;
 case|case
 literal|0
 case|:
@@ -541,8 +526,6 @@ condition|)
 do|;
 break|break;
 block|}
-name|out
-label|:
 return|return
 name|status
 return|;
@@ -739,7 +722,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reject commad  */
+comment|/*  * reject command  */
 end_comment
 
 begin_function
@@ -749,13 +732,13 @@ parameter_list|(
 name|void
 modifier|*
 name|this
+name|__unused
 parameter_list|)
 block|{
 name|int
 name|rc
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -776,16 +759,12 @@ argument_list|,
 literal|"fail to reject\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|rc
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
-name|out
-label|:
+block|}
 return|return
 name|rc
 return|;
@@ -877,9 +856,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1034,9 +1010,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1216,9 +1189,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1412,9 +1382,6 @@ argument_list|,
 literal|"canceled"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|event_cmd_reject_act
 argument_list|(
 name|NULL
@@ -1472,9 +1439,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1499,9 +1463,6 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1563,9 +1524,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1584,7 +1542,9 @@ end_function
 begin_function
 name|void
 name|dump_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1826,7 +1786,9 @@ end_function
 begin_function
 name|void
 name|destroy_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1885,9 +1847,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -1988,7 +1947,9 @@ end_function
 begin_function
 name|void
 name|restart
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|destroy_config
 argument_list|()
@@ -2014,7 +1975,9 @@ begin_function
 specifier|static
 name|void
 name|write_pid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -2092,9 +2055,6 @@ operator|!=
 sizeof|sizeof
 name|sig
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2108,7 +2068,9 @@ end_function
 begin_function
 name|void
 name|wait_child
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|status
@@ -2143,8 +2105,7 @@ block|{
 name|int
 name|rc
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 name|int
 name|sig
@@ -2211,9 +2172,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|rc
+return|;
 case|case
 name|SIGCHLD
 case|:
@@ -2222,9 +2183,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|warn
 argument_list|(
 literal|"unexpected signal(%d) received."
@@ -2235,12 +2193,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|rc
-operator|=
-literal|0
-expr_stmt|;
-name|out
-label|:
 return|return
 name|rc
 return|;
@@ -2349,7 +2301,9 @@ end_define
 begin_function
 name|void
 name|check_battery
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -2398,9 +2352,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2435,9 +2386,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2550,6 +2498,9 @@ name|p
 operator|->
 name|level
 operator|==
+operator|(
+name|int
+operator|)
 name|pw_info
 operator|.
 name|ai_batt_life
@@ -2906,9 +2857,6 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -2966,9 +2914,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -2986,9 +2932,6 @@ name|apmctl_fd
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
-return|return;
 block|}
 end_function
 
@@ -3084,9 +3027,6 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3112,9 +3052,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NICE_INCR
-operator|(
-name|void
-operator|)
 name|nice
 argument_list|(
 name|NICE_INCR
@@ -3177,9 +3114,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3203,9 +3137,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3230,9 +3161,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3258,9 +3186,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3288,9 +3213,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
@@ -3316,9 +3238,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|err
 argument_list|(
 literal|1
