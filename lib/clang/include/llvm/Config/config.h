@@ -100,12 +100,9 @@ begin_comment
 comment|/* Define if timestamp information (e.g., __DATE___) is allowed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ENABLE_TIMESTAMPS
-value|1
-end_define
+begin_comment
+comment|/* #undef ENABLE_TIMESTAMPS */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `argz_append' function. */
