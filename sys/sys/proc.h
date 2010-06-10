@@ -910,6 +910,12 @@ modifier|*
 name|td_vnet_lpush
 decl_stmt|;
 comment|/* (k) Debugging vnet push / pop. */
+name|struct
+name|trapframe
+modifier|*
+name|td_intr_frame
+decl_stmt|;
+comment|/* (k) Frame of the current irq */
 block|}
 struct|;
 end_struct
