@@ -3917,10 +3917,7 @@ argument_list|)
 operator||
 name|SM
 argument_list|(
-name|xpdGainValues
-index|[
-literal|2
-index|]
+literal|0
 argument_list|,
 name|AR_PHY_TPCRG1_PD_GAIN_3
 argument_list|)
