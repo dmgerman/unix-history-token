@@ -150,24 +150,6 @@ directive|include
 file|<time.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PRIdOFF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PRIdOFF
-value|PRId64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* what type of file are we dealing with */
 end_comment
@@ -5830,8 +5812,10 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 ifndef|#
@@ -5863,8 +5847,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -5884,7 +5870,7 @@ condition|(
 name|isb
 operator|.
 name|st_nlink
-operator|!=
+operator|>
 literal|1
 operator|&&
 name|fflag
@@ -5894,8 +5880,7 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"%s has %d other link%s -- "
-literal|"skipping"
+literal|"%s has %d other link%s -- skipping"
 argument_list|,
 name|file
 argument_list|,
@@ -5905,9 +5890,13 @@ name|st_nlink
 operator|-
 literal|1
 argument_list|,
+operator|(
 name|isb
 operator|.
 name|st_nlink
+operator|-
+literal|1
+operator|)
 operator|==
 literal|1
 condition|?
@@ -5922,8 +5911,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -5970,8 +5961,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -6053,8 +6046,10 @@ name|in
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 endif|#
@@ -6103,8 +6098,10 @@ name|stdin
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 ifndef|#
@@ -6162,6 +6159,7 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|insize
 operator|==
 operator|-
@@ -6171,6 +6169,7 @@ operator|-
 literal|1
 else|:
 name|size
+operator|)
 return|;
 ifndef|#
 directive|ifndef
@@ -6210,18 +6209,20 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"output file: %s wrong size (%"
-name|PRIdOFF
-literal|" != %"
-name|PRIdOFF
-literal|"), deleting"
+literal|"output file: %s wrong size (%ju != %ju), deleting"
 argument_list|,
 name|outfile
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|osb
 operator|.
 name|st_size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -6270,7 +6271,9 @@ name|isb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|size
+operator|)
 return|;
 ifndef|#
 directive|ifndef
@@ -6305,7 +6308,9 @@ name|outfile
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|size
+operator|)
 return|;
 endif|#
 directive|endif
@@ -7443,14 +7448,16 @@ condition|)
 block|{
 name|maybe_warnx
 argument_list|(
-literal|"stat gave different size: %"
-name|PRIdOFF
-literal|" != %"
-name|PRIdOFF
-literal|" (leaving original)"
+literal|"stat gave different size: %ju != %ju (leaving original)"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|osb
 operator|.
 name|st_size
