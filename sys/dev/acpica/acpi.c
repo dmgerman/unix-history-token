@@ -10142,7 +10142,7 @@ argument_list|,
 name|PZERO
 argument_list|)
 expr_stmt|;
-name|KNOTE_UNLOCKED
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|clone
