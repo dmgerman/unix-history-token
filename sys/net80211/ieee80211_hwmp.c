@@ -3906,8 +3906,10 @@ name|rtorig
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* XXX stat */
 return|return;
+block|}
 name|hrorig
 operator|=
 name|IEEE80211_MESH_ROUTE_PRIV
