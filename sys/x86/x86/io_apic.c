@@ -1559,6 +1559,11 @@ operator|!
 name|intpin
 operator|->
 name|io_masked
+operator|&&
+operator|!
+name|intpin
+operator|->
+name|io_edgetrigger
 condition|)
 block|{
 name|ioapic_write
