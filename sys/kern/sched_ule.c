@@ -11232,7 +11232,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"HTT\">HTT group</flag>\n"
+literal|"<flag name=\"HTT\">HTT group</flag>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11251,7 +11251,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>\n"
+literal|"<flag name=\"THREAD\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
 block|}
