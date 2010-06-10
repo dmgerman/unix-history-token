@@ -1851,6 +1851,28 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bits
+operator|&
+name|PG_REFERENCED
+operator|)
+operator|==
+literal|0
+operator|||
+name|VM_OBJECT_LOCKED
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+argument_list|,
+operator|(
+literal|"PG_REFERENCED and !VM_OBJECT_LOCKED"
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|flags
@@ -4950,7 +4972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_requeue:  *  *	If the given page is contained within a page queue, move it to the tail  *	of that queue.  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_requeue:  *  *	Move the given page to the tail of its present page queue.  *  *	The page queues must be locked.  */
 end_comment
 
 begin_function
@@ -4974,13 +4996,27 @@ name|vpgqueues
 modifier|*
 name|vpq
 decl_stmt|;
-if|if
-condition|(
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|queue
 operator|!=
 name|PQ_NONE
-condition|)
-block|{
+argument_list|,
+operator|(
+literal|"vm_page_requeue: page %p is not queued"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|vpq
 operator|=
 operator|&
@@ -5013,7 +5049,6 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
