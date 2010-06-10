@@ -252,6 +252,9 @@ comment|// C99 conversion specifiers.
 name|dArg
 block|,
 comment|// 'd'
+name|DArg
+block|,
+comment|// 'D' FreeBSD specific specifiers
 name|iArg
 block|,
 comment|// 'i',
@@ -321,6 +324,9 @@ comment|// GlibC specific specifiers.
 name|PrintErrno
 block|,
 comment|// 'm'
+name|bArg
+block|,
+comment|// FreeBSD specific specifiers
 comment|// Specifier ranges.
 name|IntArgBeg
 init|=
@@ -1269,6 +1275,9 @@ specifier|const
 name|char
 modifier|*
 name|end
+parameter_list|,
+name|bool
+name|FormatExtensions
 parameter_list|)
 function_decl|;
 block|}

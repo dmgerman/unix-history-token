@@ -250,6 +250,12 @@ literal|1
 decl_stmt|;
 comment|// Freestanding implementation
 name|unsigned
+name|FormatExtensions
+range|:
+literal|1
+decl_stmt|;
+comment|// FreeBSD format extensions (-fformat-extensions)
+name|unsigned
 name|NoBuiltin
 range|:
 literal|1
