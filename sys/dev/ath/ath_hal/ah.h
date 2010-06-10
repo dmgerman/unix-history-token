@@ -850,6 +850,10 @@ name|HAL_INT_TXDESC
 init|=
 literal|0x00000080
 block|,
+name|HAL_INT_TIM_TIMER
+init|=
+literal|0x00000100
+block|,
 name|HAL_INT_TXURN
 init|=
 literal|0x00000800
