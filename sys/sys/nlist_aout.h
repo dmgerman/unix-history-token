@@ -32,6 +32,7 @@ directive|ifdef
 name|_AOUT_INCLUDE_
 union|union
 block|{
+specifier|const
 name|char
 modifier|*
 name|n_name
@@ -46,6 +47,7 @@ name|n_un
 union|;
 else|#
 directive|else
+specifier|const
 name|char
 modifier|*
 name|n_name
