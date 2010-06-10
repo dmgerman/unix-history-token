@@ -11242,6 +11242,25 @@ name|cg
 operator|->
 name|cg_flags
 operator|&
+name|CG_FLAG_THREAD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"<flag name=\"THREAD\">THREAD group</flag>"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cg
+operator|->
+name|cg_flags
+operator|&
 name|CG_FLAG_SMT
 operator|)
 operator|!=
@@ -11251,7 +11270,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>"
+literal|"<flag name=\"SMT\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
 block|}
