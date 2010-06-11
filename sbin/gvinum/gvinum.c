@@ -3530,6 +3530,10 @@ name|flags
 decl_stmt|,
 name|i
 decl_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|optreset
 operator|=
 literal|1
