@@ -4299,7 +4299,7 @@ if|if
 condition|(
 operator|!
 name|obj
-operator|&&
+operator|||
 name|obj
 operator|->
 name|Type
