@@ -9439,6 +9439,10 @@ name|idx2
 operator|=
 literal|0
 expr_stmt|;
+name|m2
+operator|=
+name|NULL
+expr_stmt|;
 name|rxds2
 operator|=
 name|NULL
@@ -9506,6 +9510,13 @@ index|[
 name|idx2
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+block|{
 name|MGET
 argument_list|(
 name|m2
@@ -9643,6 +9654,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 name|m2
@@ -9655,7 +9667,13 @@ name|m_next
 operator|=
 name|m2
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
 block|{
 name|m_freem
 argument_list|(
