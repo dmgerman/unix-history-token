@@ -3216,6 +3216,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
+literal|"%s"
+argument_list|,
 name|sbuf_data
 argument_list|(
 name|sb
