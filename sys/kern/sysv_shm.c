@@ -490,7 +490,7 @@ begin_define
 define|#
 directive|define
 name|SHMMAXPGS
-value|8192
+value|131072
 end_define
 
 begin_comment

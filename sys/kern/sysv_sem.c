@@ -656,7 +656,7 @@ begin_define
 define|#
 directive|define
 name|SEMMNI
-value|10
+value|50
 end_define
 
 begin_comment
@@ -678,7 +678,7 @@ begin_define
 define|#
 directive|define
 name|SEMMNS
-value|60
+value|340
 end_define
 
 begin_comment
@@ -700,7 +700,7 @@ begin_define
 define|#
 directive|define
 name|SEMUME
-value|10
+value|50
 end_define
 
 begin_comment
@@ -722,7 +722,7 @@ begin_define
 define|#
 directive|define
 name|SEMMNU
-value|30
+value|150
 end_define
 
 begin_comment
