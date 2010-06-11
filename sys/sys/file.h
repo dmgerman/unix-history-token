@@ -1030,6 +1030,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|_fnoop
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1051,7 +1068,7 @@ parameter_list|,
 name|td
 parameter_list|)
 define|\
-value|(refcount_release(&(fp)->f_count) ? _fdrop((fp), (td)) : 0)
+value|(refcount_release(&(fp)->f_count) ? _fdrop((fp), (td)) : _fnoop())
 end_define
 
 begin_decl_stmt
