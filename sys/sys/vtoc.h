@@ -201,6 +201,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VTOC_BOOTSIZE
+value|8192
+end_define
+
+begin_comment
+comment|/* 16 sectors */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VTOC_MAGIC
 value|0xdabe
 end_define
