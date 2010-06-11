@@ -495,6 +495,8 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
+literal|"%s"
+argument_list|,
 name|gp
 operator|->
 name|name

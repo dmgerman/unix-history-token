@@ -5804,6 +5804,8 @@ name|udev
 operator|->
 name|ctrl_dev
 argument_list|,
+literal|"%s"
+argument_list|,
 name|udev
 operator|->
 name|ugen_name
