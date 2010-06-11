@@ -2223,6 +2223,7 @@ name|HAS_SEQ
 argument_list|(
 name|type
 argument_list|)
+operator|&&
 operator|!
 name|IEEE80211_IS_MULTICAST
 argument_list|(
