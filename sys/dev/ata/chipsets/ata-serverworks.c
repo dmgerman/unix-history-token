@@ -1252,7 +1252,7 @@ name|status
 operator|=
 name|ata_serverworks_status
 expr_stmt|;
-comment|/* Make sure that our interrupt is edge triggered */
+comment|/* Make sure that our interrupt is level low */
 name|powerpc_config_intr
 argument_list|(
 name|bus_get_resource_start
@@ -1267,9 +1267,9 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-name|INTR_TRIGGER_EDGE
+name|INTR_TRIGGER_LEVEL
 argument_list|,
-name|INTR_POLARITY_HIGH
+name|INTR_POLARITY_LOW
 argument_list|)
 expr_stmt|;
 endif|#
