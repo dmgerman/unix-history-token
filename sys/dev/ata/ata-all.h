@@ -3025,6 +3025,10 @@ define|#
 directive|define
 name|ATA_SATA
 value|0x80
+define|#
+directive|define
+name|ATA_DMA_BEFORE_CMD
+value|0x100
 name|int
 name|pm_level
 decl_stmt|;

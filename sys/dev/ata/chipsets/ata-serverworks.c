@@ -1351,6 +1351,13 @@ operator|~
 literal|0x00040000
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some controllers have a bug where they will send the command 	 * to the drive before seeing a DMA start, and then can begin 	 * receiving data before the DMA start arrives. The controller 	 * will then become confused and either corrupt the data or crash. 	 * Remedy this by starting DMA before sending the drive command. 	 */
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_DMA_BEFORE_CMD
+expr_stmt|;
 block|}
 comment|/* chip does not reliably do 64K DMA transfers */
 name|ch
