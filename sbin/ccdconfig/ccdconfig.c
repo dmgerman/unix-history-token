@@ -692,9 +692,6 @@ literal|0
 expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
 init|;
 name|argc
 operator|!=
@@ -731,10 +728,6 @@ literal|"invalid ccd name: %s"
 argument_list|,
 name|cp
 argument_list|)
-expr_stmt|;
-name|i
-operator|=
-literal|1
 expr_stmt|;
 continue|continue;
 block|}

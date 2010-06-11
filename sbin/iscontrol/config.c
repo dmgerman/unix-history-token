@@ -1373,10 +1373,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|n
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
