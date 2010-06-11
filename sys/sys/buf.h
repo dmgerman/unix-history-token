@@ -863,6 +863,17 @@ begin_comment
 comment|/* Background write waiting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BV_INFREECNT
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* buf is counted in numfreebufs */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
