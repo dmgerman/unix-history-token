@@ -1484,10 +1484,6 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|int
 name|need_eject
 decl_stmt|;

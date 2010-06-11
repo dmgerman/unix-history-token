@@ -2379,7 +2379,7 @@ literal|"sh"
 argument_list|,
 literal|"-sh"
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|msgDebug

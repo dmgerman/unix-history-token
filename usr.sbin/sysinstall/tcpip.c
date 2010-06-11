@@ -3465,11 +3465,6 @@ decl_stmt|,
 modifier|*
 name|ifa
 decl_stmt|;
-name|struct
-name|if_data
-modifier|*
-name|ifd
-decl_stmt|;
 name|char
 modifier|*
 name|network_dev

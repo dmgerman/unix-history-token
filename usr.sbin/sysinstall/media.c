@@ -1304,7 +1304,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Length of specified URL is %d characters. Allowable maximum is %d."
+literal|"Length of specified URL is %zu characters. Allowable maximum is %zu."
 argument_list|,
 name|urllen
 argument_list|,
@@ -2454,7 +2454,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Length of specified NFS path is %d characters. Allowable maximum is %d."
+literal|"Length of specified NFS path is %zu characters. Allowable maximum is %zu."
 argument_list|,
 name|pathlen
 argument_list|,
