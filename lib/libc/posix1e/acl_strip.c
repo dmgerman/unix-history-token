@@ -104,6 +104,8 @@ name|newacl
 decl_stmt|;
 name|mode_t
 name|mode
+init|=
+literal|0
 decl_stmt|;
 name|newacl
 operator|=
