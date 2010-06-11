@@ -2048,11 +2048,6 @@ name|acpi_hp_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|struct
-name|acpi_softc
-modifier|*
-name|acpi_sc
-decl_stmt|;
 name|devclass_t
 name|wmi_devclass
 decl_stmt|;
@@ -2192,13 +2187,6 @@ name|sc
 operator|->
 name|cmi_order
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|acpi_sc
-operator|=
-name|acpi_device_get_parent_softc
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 if|if

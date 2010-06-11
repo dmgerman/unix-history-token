@@ -3471,12 +3471,6 @@ operator|->
 name|cmos_handle
 condition|)
 block|{
-name|val
-operator|=
-name|val_ec
-operator|&
-name|IBM_EC_MASK_VOL
-expr_stmt|;
 name|Args
 operator|.
 name|Count
