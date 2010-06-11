@@ -1234,6 +1234,8 @@ name|uint32_t
 name|gap
 decl_stmt|,
 name|i
+decl_stmt|,
+name|cumackp1
 decl_stmt|;
 name|int
 name|fnd
@@ -1250,6 +1252,29 @@ operator|==
 literal|0
 condition|)
 block|{
+return|return;
+block|}
+name|cumackp1
+operator|=
+name|asoc
+operator|->
+name|cumulative_tsn
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|compare_with_wrap
+argument_list|(
+name|cumackp1
+argument_list|,
+name|tsn
+argument_list|,
+name|MAX_TSN
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * this tsn is behind the cum ack and thus we don't need to 		 * worry about it being moved from one to the other. 		 */
 return|return;
 block|}
 name|SCTP_CALC_TSN_TO_GAP
@@ -11613,7 +11638,7 @@ modifier|*
 name|stcb
 parameter_list|)
 block|{
-comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 */
+comment|/* 	 * Now we also need to check the mapping array in a couple of ways. 	 * 1) Did we move the cum-ack point? 	 *  	 * When you first glance at this you might think that all entries that 	 * make up the postion of the cum-ack would be in the nr-mapping 	 * array only.. i.e. things up to the cum-ack are always 	 * deliverable. Thats true with one exception, when its a fragmented 	 * message we may not deliver the data until some threshold (or all 	 * of it) is in place. So we must OR the nr_mapping_array and 	 * mapping_array to get a true picture of the cum-ack. 	 */
 name|struct
 name|sctp_association
 modifier|*
@@ -11621,6 +11646,9 @@ name|asoc
 decl_stmt|;
 name|int
 name|at
+decl_stmt|;
+name|uint8_t
+name|val
 decl_stmt|;
 name|int
 name|slide_from
@@ -11631,10 +11659,6 @@ name|lgap
 decl_stmt|,
 name|distance
 decl_stmt|;
-comment|/* EY nr_mapping array variables */
-comment|/* int nr_at; */
-comment|/* int nr_last_all_ones = 0; */
-comment|/* int nr_slide_from, nr_slide_end, nr_lgap, nr_distance; */
 name|uint32_t
 name|old_cumack
 decl_stmt|,
@@ -11696,14 +11720,25 @@ name|slide_from
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|val
+operator|=
 name|asoc
 operator|->
 name|nr_mapping_array
 index|[
 name|slide_from
 index|]
+operator||
+name|asoc
+operator|->
+name|mapping_array
+index|[
+name|slide_from
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|val
 operator|==
 literal|0xff
 condition|)
@@ -11720,12 +11755,7 @@ name|at
 operator|+=
 name|sctp_map_lookup_tab
 index|[
-name|asoc
-operator|->
-name|nr_mapping_array
-index|[
-name|slide_from
-index|]
+name|val
 index|]
 expr_stmt|;
 break|break;
@@ -18233,10 +18263,12 @@ name|sent
 operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
+name|sctp_ucount_incr
+argument_list|(
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20242,10 +20274,12 @@ operator|==
 name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
+name|sctp_ucount_incr
+argument_list|(
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -24785,10 +24819,12 @@ operator|==
 name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
+name|sctp_ucount_incr
+argument_list|(
 name|asoc
 operator|->
 name|sent_queue_retran_cnt
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 block|}
