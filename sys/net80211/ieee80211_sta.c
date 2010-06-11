@@ -2223,6 +2223,14 @@ name|HAS_SEQ
 argument_list|(
 name|type
 argument_list|)
+operator|&&
+operator|!
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|wh
+operator|->
+name|i_addr1
+argument_list|)
 condition|)
 block|{
 name|uint8_t
