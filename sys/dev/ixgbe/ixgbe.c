@@ -16853,7 +16853,7 @@ name|m_head
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -16987,7 +16987,7 @@ name|m_pack
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
