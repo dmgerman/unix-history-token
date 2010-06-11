@@ -1759,6 +1759,17 @@ name|inp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|stcb
+condition|)
+block|{
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 return|return;
