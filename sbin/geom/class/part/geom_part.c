@@ -359,18 +359,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|gpart_autofill_resize
-parameter_list|(
-name|struct
-name|gctl_req
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|gpart_bootcode
 parameter_list|(
