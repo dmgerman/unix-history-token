@@ -12226,6 +12226,12 @@ name|zio
 operator|->
 name|io_bp
 argument_list|)
+operator|&&
+name|zio
+operator|->
+name|io_error
+operator|==
+literal|0
 condition|)
 block|{
 name|arc_byteswap_func_t
