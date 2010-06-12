@@ -412,9 +412,6 @@ name|dsl_dir_t
 modifier|*
 name|winner
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|dd
 operator|=
 name|kmem_zalloc
