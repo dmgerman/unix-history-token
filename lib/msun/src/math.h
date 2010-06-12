@@ -431,7 +431,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((sizeof (x) == sizeof (float)) ? isnanf(x)		\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
+value|((sizeof (x) == sizeof (float)) ? __isnanf(x)	\     : (sizeof (x) == sizeof (double)) ? isnan(x)	\     : __isnanl(x))
 end_define
 
 begin_define
@@ -954,6 +954,16 @@ name|__isinfl
 argument_list|(
 name|long
 name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__isnanf
+argument_list|(
+name|float
 argument_list|)
 name|__pure2
 decl_stmt|;
