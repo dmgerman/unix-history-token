@@ -1374,6 +1374,9 @@ index|[
 name|ADAPTER_LOCK_NAME_LEN
 index|]
 decl_stmt|;
+name|int
+name|timestamp
+decl_stmt|;
 block|}
 struct|;
 end_struct
