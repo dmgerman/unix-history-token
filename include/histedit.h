@@ -307,17 +307,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|unsigned char	_el_fn_complete(EditLine *, int);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|unsigned
+name|char
+name|_el_fn_complete
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * el_set/el_get parameters  */
