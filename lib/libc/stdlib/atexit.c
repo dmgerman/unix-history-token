@@ -149,6 +149,16 @@ parameter_list|)
 value|if (__isthreaded) _pthread_mutex_unlock(x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_MUTEX_DESTROY
+parameter_list|(
+name|x
+parameter_list|)
+value|if (__isthreaded) _pthread_mutex_destroy(x)
+end_define
+
 begin_struct
 struct|struct
 name|atexit
@@ -722,6 +732,18 @@ expr_stmt|;
 block|}
 block|}
 name|_MUTEX_UNLOCK
+argument_list|(
+operator|&
+name|atexit_mutex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dso
+operator|==
+name|NULL
+condition|)
+name|_MUTEX_DESTROY
 argument_list|(
 operator|&
 name|atexit_mutex
