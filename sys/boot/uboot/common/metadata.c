@@ -53,11 +53,26 @@ directive|include
 file|<machine/metadata.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
