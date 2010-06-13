@@ -104,6 +104,16 @@ name|olen
 operator|++
 expr_stmt|;
 comment|/* nul termination */
+if|if
+condition|(
+name|olen
+operator|<
+name|len
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* integer overflow */
 name|out
 operator|=
 name|os_malloc

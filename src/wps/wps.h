@@ -74,7 +74,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/**  * struct wps_credential - WPS Credential  * @ssid: SSID  * @ssid_len: Length of SSID  * @auth_type: Authentication Type (WPS_AUTH_OPEN, .. flags)  * @encr_type: Encryption Type (WPS_ENCR_NONE, .. flags)  * @key_idx: Key index  * @key: Key  * @key_len: Key length in octets  * @mac_addr: MAC address of the peer  * @cred_attr: Unparsed Credential attribute data (used only in cred_cb());  *	this may be %NULL, if not used  * @cred_attr_len: Length of cred_attr in octets  */
+comment|/**  * struct wps_credential - WPS Credential  * @ssid: SSID  * @ssid_len: Length of SSID  * @auth_type: Authentication Type (WPS_AUTH_OPEN, .. flags)  * @encr_type: Encryption Type (WPS_ENCR_NONE, .. flags)  * @key_idx: Key index  * @key: Key  * @key_len: Key length in octets  * @mac_addr: MAC address of the Credential receiver  * @cred_attr: Unparsed Credential attribute data (used only in cred_cb());  *	this may be %NULL, if not used  * @cred_attr_len: Length of cred_attr in octets  */
 end_comment
 
 begin_struct
@@ -523,6 +523,10 @@ comment|/** 	 * disable_auto_conf - Disable auto-configuration on first registra
 name|int
 name|disable_auto_conf
 decl_stmt|;
+comment|/** 	 * static_wep_only - Whether the BSS supports only static WEP 	 */
+name|int
+name|static_wep_only
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -546,6 +550,12 @@ name|WPS_EV_SUCCESS
 block|,
 comment|/** 	 * WPS_EV_PWD_AUTH_FAIL - Password authentication failed 	 */
 name|WPS_EV_PWD_AUTH_FAIL
+block|,
+comment|/** 	 * WPS_EV_PBC_OVERLAP - PBC session overlap detected 	 */
+name|WPS_EV_PBC_OVERLAP
+block|,
+comment|/** 	 * WPS_EV_PBC_TIMEOUT - PBC walktime expired before protocol run start 	 */
+name|WPS_EV_PBC_TIMEOUT
 block|}
 enum|;
 end_enum
@@ -895,6 +905,9 @@ name|pin
 parameter_list|,
 name|size_t
 name|pin_len
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl

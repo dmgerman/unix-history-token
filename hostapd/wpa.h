@@ -540,7 +540,7 @@ name|int
 name|peerkey
 decl_stmt|;
 name|int
-name|wme_enabled
+name|wmm_enabled
 decl_stmt|;
 name|int
 name|okc

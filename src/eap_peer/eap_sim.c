@@ -2304,26 +2304,6 @@ argument_list|,
 name|EAP_SIM_SUBTYPE_NOTIFICATION
 argument_list|)
 expr_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"   AT_NOTIFICATION"
-argument_list|)
-expr_stmt|;
-name|eap_sim_msg_add
-argument_list|(
-name|msg
-argument_list|,
-name|EAP_SIM_AT_NOTIFICATION
-argument_list|,
-name|notification
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|k_aut

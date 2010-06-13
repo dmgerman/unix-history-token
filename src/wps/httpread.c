@@ -721,6 +721,13 @@ name|hbp
 argument_list|,
 literal|"TRANSFER_ENCODING:"
 argument_list|)
+operator|||
+name|word_eq
+argument_list|(
+name|hbp
+argument_list|,
+literal|"TRANSFER-ENCODING:"
+argument_list|)
 condition|)
 block|{
 while|while
@@ -752,13 +759,11 @@ expr_stmt|;
 comment|/* There should (?) be no encodings of interest 		 * other than chunked... 		 */
 if|if
 condition|(
-name|os_strncmp
+name|word_eq
 argument_list|(
 name|hbp
 argument_list|,
 literal|"CHUNKED"
-argument_list|,
-literal|7
 argument_list|)
 condition|)
 block|{
@@ -2072,6 +2077,15 @@ name|got_file
 goto|;
 block|}
 comment|/* Data can be just plain binary data, or if "chunked" 	 * consists of chunks each with a header, ending with 	 * an ending header. 	 */
+if|if
+condition|(
+name|nread
+operator|==
+literal|0
+condition|)
+goto|goto
+name|get_more
+goto|;
 if|if
 condition|(
 operator|!

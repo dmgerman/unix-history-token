@@ -563,6 +563,9 @@ name|wpabuf
 modifier|*
 name|assoc_wps_ie
 decl_stmt|;
+name|Boolean
+name|start_reauth
+decl_stmt|;
 block|}
 struct|;
 end_struct

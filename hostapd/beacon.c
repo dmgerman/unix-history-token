@@ -1355,10 +1355,10 @@ argument_list|,
 name|sta
 argument_list|)
 expr_stmt|;
-comment|/* Wi-Fi Wireless Multimedia Extensions */
+comment|/* Wi-Fi Alliance WMM */
 name|pos
 operator|=
-name|hostapd_eid_wme
+name|hostapd_eid_wmm
 argument_list|(
 name|hapd
 argument_list|,
@@ -1907,10 +1907,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Wi-Fi Wireless Multimedia Extensions */
+comment|/* Wi-Fi Alliance WMM */
 name|tailpos
 operator|=
-name|hostapd_eid_wme
+name|hostapd_eid_wmm
 argument_list|(
 name|hapd
 argument_list|,

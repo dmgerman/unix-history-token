@@ -4440,7 +4440,7 @@ break|break;
 case|case
 name|PAC_TYPE_PAC_TYPE
 case|:
-comment|/* 		 * draft-cam-winget-eap-fast-provisioning-04.txt, 		 * Section 4.2.6 - PAC-Type TLV 		 */
+comment|/* RFC 5422, Section 4.2.6 - PAC-Type TLV */
 if|if
 condition|(
 name|len
@@ -4578,7 +4578,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-comment|/* draft-cam-winget-eap-fast-provisioning-04.txt, Section 4.2.4 */
+comment|/* RFC 5422, Section 4.2.4 */
 comment|/* PAC-Type defaults to Tunnel PAC (Type 1) */
 name|entry
 operator|->

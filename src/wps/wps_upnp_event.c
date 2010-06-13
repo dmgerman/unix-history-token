@@ -306,6 +306,7 @@ comment|/* event_delete -- delete single unqueued event  * (be sure to dequeue f
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|event_delete
 parameter_list|(
@@ -1777,6 +1778,7 @@ comment|/* event_send_all_later_handler -- actually send events as needed */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|event_send_all_later_handler
 parameter_list|(

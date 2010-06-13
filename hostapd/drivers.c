@@ -120,6 +120,33 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|CONFIG_DRIVER_ATHEROS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_atheros_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_atheros.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_ATHEROS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CONFIG_DRIVER_BSD
 end_ifdef
 
@@ -269,6 +296,15 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_MADWIFI */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_ATHEROS
+operator|&
+name|wpa_driver_atheros_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_ATHEROS */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_BSD

@@ -737,29 +737,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|WLAN_STATUS_EXPECTED_RESOURCE_REQ_FT
+name|WLAN_STATUS_INVALID_PMKID
 value|53
 end_define
 
 begin_define
 define|#
 directive|define
-name|WLAN_STATUS_INVALID_PMKID
+name|WLAN_STATUS_INVALID_MDIE
 value|54
 end_define
 
 begin_define
 define|#
 directive|define
-name|WLAN_STATUS_INVALID_MDIE
-value|55
-end_define
-
-begin_define
-define|#
-directive|define
 name|WLAN_STATUS_INVALID_FTIE
-value|56
+value|55
 end_define
 
 begin_comment
@@ -1220,6 +1213,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_ACTION_PUBLIC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_ACTION_RADIO_MEASUREMENT
 value|5
 end_define
@@ -1229,6 +1229,13 @@ define|#
 directive|define
 name|WLAN_ACTION_FT
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_ACTION_HT
+value|7
 end_define
 
 begin_define
@@ -1246,7 +1253,11 @@ value|17
 end_define
 
 begin_comment
-comment|/* SA Query Action frame (IEEE 802.11w/D7.0, 7.4.9) */
+comment|/* WMM Specification 1.1 */
+end_comment
+
+begin_comment
+comment|/* SA Query Action frame (IEEE 802.11w/D8.0, 7.4.9) */
 end_comment
 
 begin_define
@@ -1267,7 +1278,7 @@ begin_define
 define|#
 directive|define
 name|WLAN_SA_QUERY_TR_ID_LEN
-value|16
+value|2
 end_define
 
 begin_comment
@@ -1551,7 +1562,7 @@ index|]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
-name|wme_action
+name|wmm_action
 struct|;
 struct|struct
 block|{
@@ -2662,98 +2673,114 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WME_OUI_TYPE
+name|WMM_OUI_TYPE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_OUI_SUBTYPE_INFORMATION_ELEMENT
+name|WMM_OUI_SUBTYPE_INFORMATION_ELEMENT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_OUI_SUBTYPE_PARAMETER_ELEMENT
+name|WMM_OUI_SUBTYPE_PARAMETER_ELEMENT
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_OUI_SUBTYPE_TSPEC_ELEMENT
+name|WMM_OUI_SUBTYPE_TSPEC_ELEMENT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_VERSION
+name|WMM_VERSION
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_ACTION_CODE_SETUP_REQUEST
+name|WMM_ACTION_CODE_ADDTS_REQ
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_ACTION_CODE_SETUP_RESPONSE
+name|WMM_ACTION_CODE_ADDTS_RESP
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_ACTION_CODE_TEARDOWN
+name|WMM_ACTION_CODE_DELTS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_SETUP_RESPONSE_STATUS_ADMISSION_ACCEPTED
+name|WMM_ADDTS_STATUS_ADMISSION_ACCEPTED
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_SETUP_RESPONSE_STATUS_INVALID_PARAMETERS
+name|WMM_ADDTS_STATUS_INVALID_PARAMETERS
 value|1
 end_define
+
+begin_comment
+comment|/* 2 - Reserved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WME_SETUP_RESPONSE_STATUS_REFUSED
+name|WMM_ADDTS_STATUS_REFUSED
 value|3
 end_define
 
+begin_comment
+comment|/* 4-255 - Reserved */
+end_comment
+
+begin_comment
+comment|/* WMM TSPEC Direction Field Values */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|WME_TSPEC_DIRECTION_UPLINK
+name|WMM_TSPEC_DIRECTION_UPLINK
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|WME_TSPEC_DIRECTION_DOWNLINK
+name|WMM_TSPEC_DIRECTION_DOWNLINK
 value|1
 end_define
+
+begin_comment
+comment|/* 2 - Reserved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WME_TSPEC_DIRECTION_BI_DIRECTIONAL
+name|WMM_TSPEC_DIRECTION_BI_DIRECTIONAL
 value|3
 end_define
 

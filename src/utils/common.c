@@ -1313,5 +1313,21 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|__hide_aliasing_typecast
+parameter_list|(
+name|void
+modifier|*
+name|foo
+parameter_list|)
+block|{
+return|return
+name|foo
+return|;
+block|}
+end_function
+
 end_unit
 

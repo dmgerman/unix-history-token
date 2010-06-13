@@ -418,7 +418,7 @@ block|{
 name|u16
 name|counter
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|size_t
 name|pos

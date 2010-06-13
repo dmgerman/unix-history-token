@@ -235,7 +235,7 @@ block|,
 name|EAP_TYPE_GPSK
 init|=
 literal|51
-comment|/* draft-ietf-emu-eap-gpsk-17.txt */
+comment|/* RFC 5433 */
 block|,
 name|EAP_TYPE_EXPANDED
 init|=

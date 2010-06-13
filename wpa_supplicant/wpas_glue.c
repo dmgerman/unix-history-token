@@ -1709,7 +1709,7 @@ name|wpa_supplicant_req_scan
 argument_list|(
 name|wpa_s
 argument_list|,
-literal|0
+literal|5
 argument_list|,
 literal|0
 argument_list|)
@@ -1742,7 +1742,7 @@ name|wpa_supplicant_req_scan
 argument_list|(
 name|wpa_s
 argument_list|,
-literal|0
+literal|5
 argument_list|,
 literal|0
 argument_list|)

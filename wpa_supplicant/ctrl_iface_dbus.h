@@ -287,6 +287,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|wpa_supplicant_dbus_notify_scanning
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|wpa_supplicant_dbus_notify_state_change
 parameter_list|(
 name|struct
@@ -511,6 +523,20 @@ specifier|static
 specifier|inline
 name|void
 name|wpa_supplicant_dbus_notify_scan_results
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|wpa_supplicant_dbus_notify_scanning
 parameter_list|(
 name|struct
 name|wpa_supplicant

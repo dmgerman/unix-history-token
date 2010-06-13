@@ -4105,6 +4105,12 @@ expr_stmt|;
 comment|/* User-Password; in RADIUS, this is encrypted, but EAP-TTLS encrypts 	 * the data, so no separate encryption is used in the AVP itself. 	 * However, the password is padded to obfuscate its length. */
 name|pad
 operator|=
+name|password_len
+operator|==
+literal|0
+condition|?
+literal|16
+else|:
 operator|(
 literal|16
 operator|-

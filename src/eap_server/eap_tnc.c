@@ -2239,6 +2239,12 @@ operator|->
 name|state
 operator|==
 name|DONE
+operator|||
+name|data
+operator|->
+name|state
+operator|==
+name|FAIL
 return|;
 block|}
 end_function

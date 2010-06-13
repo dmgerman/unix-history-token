@@ -231,7 +231,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * struct wpa_interface_info - Network interface information  * @next: Pointer to the next interface or NULL if this is the last one  * @ifname: Interface name that can be used with init() or init2()  * @desc: Human readable adapter description (e.g., vendor/model) or NULL if  *	not available  * @drv_bame: struct wpa_driver_ops::name (note: unlike other strings, this one  *	is not an allocated copy, i.e., get_interfaces() caller will not free  *	this)  */
+comment|/**  * struct wpa_interface_info - Network interface information  * @next: Pointer to the next interface or NULL if this is the last one  * @ifname: Interface name that can be used with init() or init2()  * @desc: Human readable adapter description (e.g., vendor/model) or NULL if  *	not available  * @drv_name: struct wpa_driver_ops::name (note: unlike other strings, this one  *	is not an allocated copy, i.e., get_interfaces() caller will not free  *	this)  */
 end_comment
 
 begin_struct
@@ -997,7 +997,7 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-comment|/** 	 * flush_pmkid - Flush PMKSA cache 	 * @priv: private driver interface data 	 * 	 * Returns: 0 on success, -1 on failure 	 * 	 * Get driver/firmware/hardware capabilities. 	 */
+comment|/** 	 * get_capa - Get driver capabilities 	 * @priv: private driver interface data 	 * 	 * Returns: 0 on success, -1 on failure 	 * 	 * Get driver/firmware/hardware capabilities. 	 */
 name|int
 function_decl|(
 modifier|*

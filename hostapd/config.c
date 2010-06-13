@@ -885,15 +885,15 @@ specifier|const
 name|int
 name|aCWmin
 init|=
-literal|15
+literal|4
 decl_stmt|,
 name|aCWmax
 init|=
-literal|1024
+literal|10
 decl_stmt|;
 specifier|const
 name|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 name|ac_bk
 init|=
 block|{
@@ -911,7 +911,7 @@ decl_stmt|;
 comment|/* background traffic */
 specifier|const
 name|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 name|ac_be
 init|=
 block|{
@@ -929,13 +929,13 @@ decl_stmt|;
 comment|/* best effort traffic */
 specifier|const
 name|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 name|ac_vi
 init|=
 comment|/* video traffic */
 block|{
 name|aCWmin
-operator|>>
+operator|-
 literal|1
 block|,
 name|aCWmin
@@ -951,17 +951,17 @@ block|}
 decl_stmt|;
 specifier|const
 name|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 name|ac_vo
 init|=
 comment|/* voice traffic */
 block|{
 name|aCWmin
-operator|>>
+operator|-
 literal|2
 block|,
 name|aCWmin
-operator|>>
+operator|-
 literal|1
 block|,
 literal|2
@@ -1185,7 +1185,7 @@ expr_stmt|;
 comment|/* use hw default */
 name|conf
 operator|->
-name|wme_ac_params
+name|wmm_ac_params
 index|[
 literal|0
 index|]
@@ -1194,7 +1194,7 @@ name|ac_be
 expr_stmt|;
 name|conf
 operator|->
-name|wme_ac_params
+name|wmm_ac_params
 index|[
 literal|1
 index|]
@@ -1203,7 +1203,7 @@ name|ac_bk
 expr_stmt|;
 name|conf
 operator|->
-name|wme_ac_params
+name|wmm_ac_params
 index|[
 literal|2
 index|]
@@ -1212,7 +1212,7 @@ name|ac_vi
 expr_stmt|;
 name|conf
 operator|->
-name|wme_ac_params
+name|wmm_ac_params
 index|[
 literal|3
 index|]
@@ -5879,7 +5879,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|hostapd_config_wme_ac
+name|hostapd_config_wmm_ac
 parameter_list|(
 name|struct
 name|hostapd_config
@@ -5905,11 +5905,11 @@ modifier|*
 name|pos
 decl_stmt|;
 name|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 modifier|*
 name|ac
 decl_stmt|;
-comment|/* skip 'wme_ac_' prefix */
+comment|/* skip 'wme_ac_' or 'wmm_ac_' prefix */
 name|pos
 operator|=
 name|name
@@ -6017,7 +6017,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"Unknown wme name '%s'"
+literal|"Unknown WMM name '%s'"
 argument_list|,
 name|pos
 argument_list|)
@@ -6032,7 +6032,7 @@ operator|=
 operator|&
 name|conf
 operator|->
-name|wme_ac_params
+name|wmm_ac_params
 index|[
 name|num
 index|]
@@ -6239,7 +6239,7 @@ return|;
 block|}
 name|ac
 operator|->
-name|txopLimit
+name|txop_limit
 operator|=
 name|v
 expr_stmt|;
@@ -6302,7 +6302,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"Unknown wme_ac_ field '%s'"
+literal|"Unknown wmm_ac_ field '%s'"
 argument_list|,
 name|pos
 argument_list|)
@@ -7475,7 +7475,7 @@ literal|0
 condition|)
 block|{
 name|int
-name|i
+name|j
 decl_stmt|;
 comment|/* clear to get error below if setting is invalid */
 name|conf
@@ -7486,16 +7486,16 @@ name|NULL
 expr_stmt|;
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
 name|hostapd_drivers
 index|[
-name|i
+name|j
 index|]
 condition|;
-name|i
+name|j
 operator|++
 control|)
 block|{
@@ -7507,7 +7507,7 @@ name|pos
 argument_list|,
 name|hostapd_drivers
 index|[
-name|i
+name|j
 index|]
 operator|->
 name|name
@@ -7522,7 +7522,7 @@ name|driver
 operator|=
 name|hostapd_drivers
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 break|break;
@@ -11898,11 +11898,20 @@ literal|"wme_enabled"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|os_strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"wmm_enabled"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|bss
 operator|->
-name|wme_enabled
+name|wmm_enabled
 operator|=
 name|atoi
 argument_list|(
@@ -11923,11 +11932,22 @@ literal|7
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|os_strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"wmm_ac_"
+argument_list|,
+literal|7
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
 condition|(
-name|hostapd_config_wme_ac
+name|hostapd_config_wmm_ac
 argument_list|(
 name|conf
 argument_list|,
@@ -11941,7 +11961,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"Line %d: invalid wme "
+literal|"Line %d: invalid WMM "
 literal|"ac item"
 argument_list|,
 name|line
@@ -13228,6 +13248,32 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|conf
+operator|->
+name|num_bss
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|bss
+operator|=
+operator|&
+name|conf
+operator|->
+name|bss
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|bss
@@ -13237,7 +13283,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* individual keys are not use; can use key idx0 for broadcast 		 * keys */
+comment|/* individual keys are not use; can use key idx0 for 			 * broadcast keys */
 name|bss
 operator|->
 name|broadcast_key_idx_min
@@ -13245,7 +13291,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Select group cipher based on the enabled pairwise cipher suites */
+comment|/* Select group cipher based on the enabled pairwise cipher 		 * suites */
 name|pairwise
 operator|=
 literal|0
@@ -13314,32 +13360,6 @@ operator|->
 name|wpa_group
 operator|=
 name|WPA_CIPHER_CCMP
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|conf
-operator|->
-name|num_bss
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|bss
-operator|=
-operator|&
-name|conf
-operator|->
-name|bss
-index|[
-name|i
-index|]
 expr_stmt|;
 name|bss
 operator|->
@@ -14389,6 +14409,20 @@ argument_list|(
 name|conf
 operator|->
 name|bss
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|conf
+operator|->
+name|supported_rates
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|conf
+operator|->
+name|basic_rates
 argument_list|)
 expr_stmt|;
 name|os_free

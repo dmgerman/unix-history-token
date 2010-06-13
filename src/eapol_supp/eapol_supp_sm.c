@@ -1085,12 +1085,28 @@ block|}
 else|else
 block|{
 comment|/* 		 * Do not send EAPOL-Start immediately since in most cases, 		 * Authenticator is going to start authentication immediately 		 * after association and an extra EAPOL-Start is just going to 		 * delay authentication. Use a short timeout to send the first 		 * EAPOL-Start if Authenticator does not start authentication. 		 */
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS
+comment|/* Reduce latency on starting WPS negotiation. */
+name|sm
+operator|->
+name|startWhen
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+comment|/* CONFIG_WPS */
 name|sm
 operator|->
 name|startWhen
 operator|=
 literal|3
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_WPS */
 block|}
 name|eapol_enable_timer_tick
 argument_list|(
@@ -3309,17 +3325,19 @@ argument_list|,
 name|key_len
 argument_list|)
 expr_stmt|;
-name|rc4
+name|rc4_skip
 argument_list|(
-name|datakey
-argument_list|,
-name|key_len
-argument_list|,
 name|ekey
 argument_list|,
 name|IEEE8021X_KEY_IV_LEN
 operator|+
 name|encr_key_len
+argument_list|,
+literal|0
+argument_list|,
+name|datakey
+argument_list|,
+name|key_len
 argument_list|)
 expr_stmt|;
 name|wpa_hexdump_key

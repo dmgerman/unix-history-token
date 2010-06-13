@@ -109,17 +109,19 @@ name|rsn_ie_len
 decl_stmt|;
 name|u8
 modifier|*
-name|wme
+name|wmm
 decl_stmt|;
+comment|/* WMM Information or Parameter Element */
 name|u8
-name|wme_len
+name|wmm_len
 decl_stmt|;
+comment|/* 7 = WMM Information; 24 = WMM Parameter */
 name|u8
 modifier|*
-name|wme_tspec
+name|wmm_tspec
 decl_stmt|;
 name|u8
-name|wme_tspec_len
+name|wmm_tspec_len
 decl_stmt|;
 name|u8
 modifier|*

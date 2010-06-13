@@ -731,6 +731,10 @@ modifier|*
 name|drv_priv
 decl_stmt|;
 comment|/* private data used by driver_ops */
+name|void
+modifier|*
+name|global_drv_priv
+decl_stmt|;
 name|struct
 name|wpa_ssid
 modifier|*
@@ -772,6 +776,9 @@ name|ctrl_iface
 decl_stmt|;
 name|wpa_states
 name|wpa_state
+decl_stmt|;
+name|int
+name|scanning
 decl_stmt|;
 name|int
 name|new_connection
@@ -846,6 +853,21 @@ decl_stmt|;
 comment|/* WPS success event received */
 name|int
 name|blacklist_cleared
+decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|pending_eapol_rx
+decl_stmt|;
+name|struct
+name|os_time
+name|pending_eapol_rx_time
+decl_stmt|;
+name|u8
+name|pending_eapol_rx_src
+index|[
+name|ETH_ALEN
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1214,6 +1236,18 @@ comment|/* scan.c */
 end_comment
 
 begin_function_decl
+name|int
+name|wpa_supplicant_enabled_networks
+parameter_list|(
+name|struct
+name|wpa_config
+modifier|*
+name|conf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|wpa_supplicant_req_scan
 parameter_list|(
@@ -1239,6 +1273,21 @@ name|struct
 name|wpa_supplicant
 modifier|*
 name|wpa_s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpa_supplicant_notify_scanning
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+name|int
+name|scanning
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1302,7 +1351,7 @@ name|ifname
 argument_list|,
 name|wpa_s
 operator|->
-name|global
+name|global_drv_priv
 argument_list|)
 return|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / Crypto wrapper for Microsoft CryptoAPI  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Crypto wrapper for Microsoft CryptoAPI  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -116,35 +116,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|PCCERT_CONTEXT
-name|WINAPI
-function_decl|(
-modifier|*
-name|CertCreateCertificateContext
-function_decl|)
-parameter_list|(
-name|DWORD
-name|dwCertEncodingType
-parameter_list|,
-specifier|const
-name|BYTE
-modifier|*
-name|pbCertEncoded
-parameter_list|,
-name|DWORD
-name|cbCertEncoded
-parameter_list|)
-init|=
-name|NULL
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* to be loaded from crypt32.dll */
-end_comment
-
-begin_function_decl
-specifier|static
 name|BOOL
 name|WINAPI
 function_decl|(
@@ -188,7 +159,7 @@ decl_stmt|;
 comment|/* MinGW does not yet have full CryptoAPI support, so load the needed 	 * function here. */
 if|if
 condition|(
-name|CertCreateCertificateContext
+name|CryptImportPublicKeyInfo
 condition|)
 return|return
 literal|0
@@ -213,40 +184,6 @@ name|MSG_DEBUG
 argument_list|,
 literal|"CryptoAPI: Could not load crypt32 "
 literal|"library"
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|CertCreateCertificateContext
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|GetProcAddress
-argument_list|(
-name|dll
-argument_list|,
-literal|"CertCreateCertificateContext"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CertCreateCertificateContext
-operator|==
-name|NULL
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"CryptoAPI: Could not get "
-literal|"CertCreateCertificateContext() address from "
-literal|"crypt32 library"
 argument_list|)
 expr_stmt|;
 return|return
