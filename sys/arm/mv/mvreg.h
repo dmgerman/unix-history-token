@@ -1778,6 +1778,23 @@ name|CPU_PM_CTRL_SATA
 value|(CPU_PM_CTRL_SATA0 | CPU_PM_CTRL_SATA1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_GE
+parameter_list|(
+name|u
+parameter_list|)
+value|(CPU_PM_CTRL_GE1 * (u) | CPU_PM_CTRL_GE0 * \ 				(1 - (u)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_IDMA
+value|(CPU_PM_CTRL_NONE)
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -1951,6 +1968,16 @@ name|CPU_PM_CTRL_SATA
 value|(CPU_PM_CTRL_SATA0 | CPU_PM_CTRL_SATA1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_GE
+parameter_list|(
+name|u
+parameter_list|)
+value|(CPU_PM_CTRL_GE1 * (u) | CPU_PM_CTRL_GE0 * \ 				(1 - (u)))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1988,6 +2015,16 @@ begin_define
 define|#
 directive|define
 name|CPU_PM_CTRL_USB
+parameter_list|(
+name|u
+parameter_list|)
+value|(CPU_PM_CTRL_NONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_PM_CTRL_GE
 parameter_list|(
 name|u
 parameter_list|)
@@ -2626,29 +2663,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|MV_GPIO_BLINK
+name|MV_GPIO_IN_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_GPIO_IN_POL_LOW
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_GPIO_IN_IRQ_EDGE
+value|(2<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_GPIO_IN_IRQ_LEVEL
+value|(4<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_GPIO_OUT_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MV_GPIO_OUT_BLINK
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_GPIO_POLAR_LOW
+name|MV_GPIO_OUT_OPEN_DRAIN
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MV_GPIO_EDGE
+name|MV_GPIO_OUT_OPEN_SRC
 value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MV_GPIO_LEVEL
-value|0x8
 end_define
 
 begin_define

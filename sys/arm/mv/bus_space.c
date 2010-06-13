@@ -78,7 +78,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The obio bus space tag.  This is constant for all instances, so  * we never have to explicitly "create" it.  */
+comment|/*  * The bus space tag.  This is constant for all instances, so  * we never have to explicitly "create" it.  */
 end_comment
 
 begin_decl_stmt
@@ -252,7 +252,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bus_space_tag_t
-name|obio_tag
+name|fdtbus_bs_tag
 init|=
 operator|&
 name|_base_tag

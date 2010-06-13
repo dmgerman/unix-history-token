@@ -139,6 +139,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* per-interface network data */
+name|phandle_t
+name|node
+decl_stmt|;
 name|device_t
 name|dev
 decl_stmt|;
@@ -260,6 +263,9 @@ name|mge_mtu
 decl_stmt|;
 name|int
 name|mge_ver
+decl_stmt|;
+name|int
+name|phyaddr
 decl_stmt|;
 block|}
 struct|;

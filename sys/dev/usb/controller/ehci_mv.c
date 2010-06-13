@@ -4,7 +4,7 @@ comment|/*-  * Copyright (C) 2008 MARVELL INTERNATIONAL LTD.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * MBus attachment driver for the USB Enhanced Host Controller.  */
+comment|/*  * FDT attachment driver for the USB Enhanced Host Controller.  */
 end_comment
 
 begin_include
@@ -144,6 +144,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -230,35 +242,35 @@ end_define
 begin_decl_stmt
 specifier|static
 name|device_attach_t
-name|ehci_mbus_attach
+name|mv_ehci_attach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_detach_t
-name|ehci_mbus_detach
+name|mv_ehci_detach
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_shutdown_t
-name|ehci_mbus_shutdown
+name|mv_ehci_shutdown
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_suspend_t
-name|ehci_mbus_suspend
+name|mv_ehci_suspend
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|device_resume_t
-name|ehci_mbus_resume
+name|mv_ehci_resume
 decl_stmt|;
 end_decl_stmt
 
@@ -347,7 +359,7 @@ end_define
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_suspend
+name|mv_ehci_suspend
 parameter_list|(
 name|device_t
 name|self
@@ -397,7 +409,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_resume
+name|mv_ehci_resume
 parameter_list|(
 name|device_t
 name|self
@@ -433,7 +445,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_shutdown
+name|mv_ehci_shutdown
 parameter_list|(
 name|device_t
 name|self
@@ -483,12 +495,27 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_probe
+name|mv_ehci_probe
 parameter_list|(
 name|device_t
 name|self
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|self
+argument_list|,
+literal|"mrvl,usb-ehci"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|self
@@ -507,7 +534,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_attach
+name|mv_ehci_attach
 parameter_list|(
 name|device_t
 name|self
@@ -656,7 +683,7 @@ argument_list|)
 operator|-
 name|MV_USB_HOST_OFST
 expr_stmt|;
-comment|/* 	 * Marvell EHCI host controller registers start at certain offset within 	 * the whole USB registers range, so create a subregion for the host 	 * mode configuration purposes. 	 */
+comment|/* 	 * Marvell EHCI host controller registers start at certain offset 	 * within the whole USB registers range, so create a subregion for the 	 * host mode configuration purposes. 	 */
 if|if
 condition|(
 name|bus_space_subregion
@@ -725,7 +752,7 @@ argument_list|,
 literal|"Could not allocate error irq\n"
 argument_list|)
 expr_stmt|;
-name|ehci_mbus_detach
+name|mv_ehci_detach
 argument_list|(
 name|self
 argument_list|)
@@ -736,7 +763,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Notice: Marvell EHCI controller has TWO interrupt lines, so make sure to 	 * use the correct rid for the main one (controller interrupt) -- 	 * refer to obio_devices[] for the right resource number to use here. 	 */
+comment|/* 	 * Notice: Marvell EHCI controller has TWO interrupt lines, so make 	 * sure to use the correct rid for the main one (controller interrupt) 	 * -- refer to DTS for the right resource number to use here. 	 */
 name|rid
 operator|=
 literal|1
@@ -1040,7 +1067,7 @@ operator|)
 return|;
 name|error
 label|:
-name|ehci_mbus_detach
+name|mv_ehci_detach
 argument_list|(
 name|self
 argument_list|)
@@ -1056,7 +1083,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ehci_mbus_detach
+name|mv_ehci_detach
 parameter_list|(
 name|device_t
 name|self
@@ -1458,42 +1485,42 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|ehci_mbus_probe
+name|mv_ehci_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|ehci_mbus_attach
+name|mv_ehci_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|ehci_mbus_detach
+name|mv_ehci_detach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|ehci_mbus_suspend
+name|mv_ehci_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|ehci_mbus_resume
+name|mv_ehci_resume
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_shutdown
 argument_list|,
-name|ehci_mbus_shutdown
+name|mv_ehci_shutdown
 argument_list|)
 block|,
 comment|/* Bus interface */
@@ -1543,7 +1570,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|ehci
 argument_list|,
-name|mbus
+name|simplebus
 argument_list|,
 name|ehci_driver
 argument_list|,
