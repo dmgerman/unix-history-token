@@ -308,6 +308,25 @@ value|(*DPCPU_ID_PTR(i, n) = v)
 end_define
 
 begin_comment
+comment|/*  * Utility macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCPU_SUM
+parameter_list|(
+name|n
+parameter_list|,
+name|var
+parameter_list|,
+name|sum
+parameter_list|)
+define|\
+value|do {									\ 	(sum) = 0;							\ 	u_int i;							\ 	CPU_FOREACH(i)							\ 		(sum) += (DPCPU_ID_PTR(i, n))->var;			\ } while (0)
+end_define
+
+begin_comment
 comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */
 end_comment
 
