@@ -4995,12 +4995,6 @@ operator|->
 name|private_data
 condition|)
 block|{
-name|char
-name|bootdir
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 name|PartInfo
 modifier|*
 name|pi
@@ -5012,10 +5006,6 @@ operator|)
 name|c1
 operator|->
 name|private_data
-decl_stmt|;
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|sprintf
 argument_list|(
