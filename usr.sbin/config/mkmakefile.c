@@ -3368,6 +3368,12 @@ name|char
 modifier|*
 name|compilewith
 decl_stmt|;
+name|char
+name|cmd
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|ftp
@@ -3602,13 +3608,6 @@ modifier|*
 name|ftype
 init|=
 name|NULL
-decl_stmt|;
-specifier|static
-name|char
-name|cmd
-index|[
-literal|128
-index|]
 decl_stmt|;
 switch|switch
 condition|(
