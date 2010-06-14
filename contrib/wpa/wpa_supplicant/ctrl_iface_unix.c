@@ -1570,6 +1570,45 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* Make sure the group can enter and read the directory */
+if|if
+condition|(
+name|gid_set
+operator|&&
+name|chmod
+argument_list|(
+name|dir
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+operator||
+name|S_IXUSR
+operator||
+name|S_IRGRP
+operator||
+name|S_IXGRP
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"CTRL: chmod[ctrl_interface]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 if|if
 condition|(
 name|os_strlen
@@ -1649,7 +1688,9 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX #ifdef */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|addr
 operator|.
 name|sun_len
@@ -1659,6 +1700,9 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|addr
 operator|.
 name|sun_family
@@ -2539,9 +2583,26 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|int
+name|_errno
+init|=
+name|errno
+decl_stmt|;
+name|wpa_printf
 argument_list|(
-literal|"sendmsg(CTRL_IFACE monitor)"
+name|MSG_INFO
+argument_list|,
+literal|"CTRL_IFACE monitor[%d]: "
+literal|"%d - %s"
+argument_list|,
+name|idx
+argument_list|,
+name|errno
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dst
@@ -2556,6 +2617,10 @@ operator|->
 name|errors
 operator|>
 literal|10
+operator|||
+name|_errno
+operator|==
+name|ENOENT
 condition|)
 block|{
 name|wpa_supplicant_ctrl_iface_detach
@@ -3135,7 +3200,9 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX #ifdef */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|addr
 operator|.
 name|sun_len
@@ -3145,6 +3212,9 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|addr
 operator|.
 name|sun_family

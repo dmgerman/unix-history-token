@@ -505,6 +505,7 @@ name|upnp_wps_device_sm
 modifier|*
 name|sm
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|callback_urls
@@ -629,6 +630,9 @@ name|struct
 name|upnp_wps_device_sm
 modifier|*
 name|sm
+parameter_list|,
+name|int
+name|send_byebye
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -738,18 +742,6 @@ name|struct
 name|wpabuf
 modifier|*
 name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|event_delete
-parameter_list|(
-name|struct
-name|wps_event_
-modifier|*
-name|e
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -899,6 +899,9 @@ name|struct
 name|wpa_ptk
 modifier|*
 name|ptk
+parameter_list|,
+name|size_t
+name|ptk_len
 parameter_list|)
 function_decl|;
 end_function_decl

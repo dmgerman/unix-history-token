@@ -68,6 +68,9 @@ specifier|const
 name|char
 modifier|*
 name|pin
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -963,10 +963,10 @@ if|if
 condition|(
 name|conf
 operator|->
-name|wme_enabled
+name|wmm_enabled
 condition|)
 block|{
-comment|/* 4 PTKSA replay counters when using WME */
+comment|/* 4 PTKSA replay counters when using WMM */
 name|capab
 operator||=
 operator|(

@@ -2864,6 +2864,13 @@ name|eapSuccess
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* 	 * Start reauthentication with identity request even though we know the 	 * previously used identity. This is needed to get reauthentication 	 * started properly. 	 */
+name|sm
+operator|->
+name|start_reauth
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 end_block
 
@@ -5171,6 +5178,11 @@ operator|&&
 name|sm
 operator|->
 name|identity
+operator|&&
+operator|!
+name|sm
+operator|->
+name|start_reauth
 condition|)
 block|{
 name|wpa_printf
@@ -5297,6 +5309,11 @@ operator|&&
 name|sm
 operator|->
 name|identity
+operator|&&
+operator|!
+name|sm
+operator|->
+name|start_reauth
 condition|)
 block|{
 comment|/* 		 * Allow Identity method to be started once to allow identity 		 * selection hint to be sent from the authentication server, 		 * but prevent a loop of Identity requests by only allowing 		 * this to happen once. 		 */
@@ -5439,6 +5456,12 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+name|sm
+operator|->
+name|start_reauth
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|sm
@@ -6012,7 +6035,7 @@ operator|.
 name|eapKeyData
 argument_list|)
 expr_stmt|;
-name|os_free
+name|wpabuf_free
 argument_list|(
 name|sm
 operator|->

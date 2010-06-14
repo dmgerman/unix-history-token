@@ -1699,6 +1699,31 @@ block|}
 block|}
 if|if
 condition|(
+name|iface
+operator|->
+name|conf
+operator|->
+name|channel
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* TODO: could request a scan of neighboring BSSes and select 		 * the channel automatically */
+name|wpa_printf
+argument_list|(
+name|MSG_ERROR
+argument_list|,
+literal|"Channel not configured "
+literal|"(hw_mode/channel in hostapd.conf)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|ok
 operator|==
 literal|0

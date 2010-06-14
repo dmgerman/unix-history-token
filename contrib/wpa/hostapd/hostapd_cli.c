@@ -137,7 +137,7 @@ comment|/* CONFIG_IEEE80211W */
 ifdef|#
 directive|ifdef
 name|CONFIG_WPS
-literal|"   wps_pin<uuid><pin> add WPS Enrollee PIN (Device Password)\n"
+literal|"   wps_pin<uuid><pin> [timeout]  add WPS Enrollee PIN (Device Password)\n"
 literal|"   wps_pbc              indicate button pushed to initiate PBC\n"
 endif|#
 directive|endif
@@ -898,13 +898,13 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|2
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Invalid 'wps_pin' command - exactly two arguments, "
+literal|"Invalid 'wps_pin' command - at least two arguments, "
 literal|"UUID and PIN, are required.\n"
 argument_list|)
 expr_stmt|;
@@ -913,6 +913,40 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+condition|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"WPS_PIN %s %s %s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|snprintf
 argument_list|(
 name|buf

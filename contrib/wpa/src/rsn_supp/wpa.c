@@ -1516,6 +1516,19 @@ modifier|*
 name|ptk
 parameter_list|)
 block|{
+name|size_t
+name|ptk_len
+init|=
+name|sm
+operator|->
+name|pairwise_cipher
+operator|==
+name|WPA_CIPHER_CCMP
+condition|?
+literal|48
+else|:
+literal|64
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_IEEE80211R
@@ -1538,6 +1551,8 @@ argument_list|,
 name|key
 argument_list|,
 name|ptk
+argument_list|,
+name|ptk_len
 argument_list|)
 return|;
 endif|#
@@ -1577,11 +1592,7 @@ operator|*
 operator|)
 name|ptk
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ptk
-argument_list|)
+name|ptk_len
 argument_list|,
 name|wpa_key_mgmt_sha256
 argument_list|(
@@ -1793,7 +1804,9 @@ operator|.
 name|pmkid
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|sm
@@ -1826,7 +1839,9 @@ argument_list|,
 literal|"WPA: Failed to get random data for SNonce"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 name|sm
 operator|->
@@ -1954,7 +1969,9 @@ argument_list|,
 name|ptk
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|failed
+goto|;
 name|os_memcpy
 argument_list|(
 name|sm
@@ -1966,6 +1983,16 @@ operator|->
 name|key_nonce
 argument_list|,
 name|WPA_NONCE_LEN
+argument_list|)
+expr_stmt|;
+return|return;
+name|failed
+label|:
+name|wpa_sm_deauthenticate
+argument_list|(
+name|sm
+argument_list|,
+name|WLAN_REASON_UNSPECIFIED
 argument_list|)
 expr_stmt|;
 block|}
@@ -2425,7 +2452,20 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Failed to set PTK to the "
-literal|"driver."
+literal|"driver (alg=%d keylen=%d bssid="
+name|MACSTR
+literal|")"
+argument_list|,
+name|alg
+argument_list|,
+name|keylen
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|sm
+operator|->
+name|bssid
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2953,7 +2993,19 @@ argument_list|(
 name|MSG_WARNING
 argument_list|,
 literal|"WPA: Failed to set GTK to "
-literal|"the driver."
+literal|"the driver (alg=%d keylen=%d keyidx=%d)"
+argument_list|,
+name|gd
+operator|->
+name|alg
+argument_list|,
+name|gd
+operator|->
+name|gtk_len
+argument_list|,
+name|gd
+operator|->
+name|keyidx
 argument_list|)
 expr_stmt|;
 return|return
@@ -4387,7 +4439,9 @@ argument_list|,
 literal|"WPA: GTK IE in unencrypted key data"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 ifdef|#
 directive|ifdef
@@ -4414,7 +4468,9 @@ literal|"WPA: IGTK KDE in unencrypted key "
 literal|"data"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 if|if
 condition|(
@@ -4448,7 +4504,9 @@ operator|.
 name|igtk_len
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 endif|#
 directive|endif
@@ -4469,7 +4527,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return;
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|os_memcmp
@@ -4506,7 +4566,9 @@ name|bssid
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 name|keylen
 operator|=
@@ -4553,7 +4615,9 @@ name|bssid
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 break|break;
 case|case
@@ -4585,7 +4649,9 @@ name|bssid
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 break|break;
 block|}
@@ -4615,7 +4681,11 @@ operator|->
 name|ptk
 argument_list|)
 condition|)
-return|return;
+block|{
+goto|goto
+name|failed
+goto|;
+block|}
 comment|/* SNonce was successfully used in msg 3/4, so mark it to be renewed 	 * for the next 4-Way Handshake. If msg 3 is received again, the old 	 * SNonce will still be used to avoid changing PTK. */
 name|sm
 operator|->
@@ -4630,13 +4700,18 @@ operator|&
 name|WPA_KEY_INFO_INSTALL
 condition|)
 block|{
+if|if
+condition|(
 name|wpa_supplicant_install_ptk
 argument_list|(
 name|sm
 argument_list|,
 name|key
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|failed
+goto|;
 block|}
 if|if
 condition|(
@@ -4708,6 +4783,9 @@ argument_list|,
 literal|"RSN: Failed to configure GTK"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|failed
+goto|;
 block|}
 if|if
 condition|(
@@ -4721,11 +4799,26 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
 literal|"RSN: Failed to configure IGTK"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
+block|}
+return|return;
+name|failed
+label|:
+name|wpa_sm_deauthenticate
+argument_list|(
+name|sm
+argument_list|,
+name|WLAN_REASON_UNSPECIFIED
 argument_list|)
 expr_stmt|;
 block|}
@@ -5794,7 +5887,9 @@ if|if
 condition|(
 name|ret
 condition|)
-return|return;
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|wpa_supplicant_install_gtk
@@ -5820,7 +5915,9 @@ argument_list|,
 name|key_info
 argument_list|)
 condition|)
-return|return;
+goto|goto
+name|failed
+goto|;
 if|if
 condition|(
 name|rekey
@@ -5885,6 +5982,16 @@ name|WPA_KEY_INFO_SECURE
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|failed
+label|:
+name|wpa_sm_deauthenticate
+argument_list|(
+name|sm
+argument_list|,
+name|WLAN_REASON_UNSPECIFIED
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7176,16 +7283,24 @@ name|ver
 operator|!=
 name|WPA_KEY_INFO_TYPE_HMAC_MD5_RC4
 operator|&&
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
 name|ver
 operator|!=
 name|WPA_KEY_INFO_TYPE_AES_128_CMAC
 operator|&&
 endif|#
 directive|endif
-comment|/* CONFIG_IEEE80211R */
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
 name|ver
 operator|!=
 name|WPA_KEY_INFO_TYPE_HMAC_SHA1_AES

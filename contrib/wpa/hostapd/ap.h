@@ -110,7 +110,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WLAN_STA_WME
+name|WLAN_STA_WMM
 value|BIT(9)
 end_define
 

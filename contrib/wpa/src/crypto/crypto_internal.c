@@ -66,7 +66,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EAP_TLS_FUNCS
+name|CONFIG_CRYPTO_INTERNAL
 end_ifdef
 
 begin_ifdef
@@ -2469,6 +2469,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EAP_TLS_FUNCS
+end_ifdef
+
 begin_function
 specifier|static
 name|struct
@@ -2992,6 +2998,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EAP_TLS_FUNCS */
+end_comment
 
 begin_function
 name|struct
@@ -4049,6 +4064,15 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_TLS_INTERNAL */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -4271,16 +4295,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CONFIG_TLS_INTERNAL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EAP_TLS_FUNCS */
+comment|/* CONFIG_CRYPTO_INTERNAL */
 end_comment
 
 end_unit

@@ -869,7 +869,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|os_free
+name|wpa_scan_results_free
 argument_list|(
 name|res
 argument_list|)
@@ -882,7 +882,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|os_free
+name|wpa_scan_results_free
 argument_list|(
 name|res
 argument_list|)

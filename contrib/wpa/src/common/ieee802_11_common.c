@@ -127,9 +127,9 @@ name|elen
 expr_stmt|;
 break|break;
 case|case
-name|WME_OUI_TYPE
+name|WMM_OUI_TYPE
 case|:
-comment|/* this is a Wi-Fi WME info. element */
+comment|/* WMM information element */
 if|if
 condition|(
 name|elen
@@ -141,7 +141,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_MSGDUMP
 argument_list|,
-literal|"short WME "
+literal|"short WMM "
 literal|"information element ignored "
 literal|"(len=%lu)"
 argument_list|,
@@ -166,36 +166,37 @@ index|]
 condition|)
 block|{
 case|case
-name|WME_OUI_SUBTYPE_INFORMATION_ELEMENT
+name|WMM_OUI_SUBTYPE_INFORMATION_ELEMENT
 case|:
 case|case
-name|WME_OUI_SUBTYPE_PARAMETER_ELEMENT
+name|WMM_OUI_SUBTYPE_PARAMETER_ELEMENT
 case|:
+comment|/* 				 * Share same pointer since only one of these 				 * is used and they start with same data. 				 * Length field can be used to distinguish the 				 * IEs. 				 */
 name|elems
 operator|->
-name|wme
+name|wmm
 operator|=
 name|pos
 expr_stmt|;
 name|elems
 operator|->
-name|wme_len
+name|wmm_len
 operator|=
 name|elen
 expr_stmt|;
 break|break;
 case|case
-name|WME_OUI_SUBTYPE_TSPEC_ELEMENT
+name|WMM_OUI_SUBTYPE_TSPEC_ELEMENT
 case|:
 name|elems
 operator|->
-name|wme_tspec
+name|wmm_tspec
 operator|=
 name|pos
 expr_stmt|;
 name|elems
 operator|->
-name|wme_tspec_len
+name|wmm_tspec_len
 operator|=
 name|elen
 expr_stmt|;
@@ -205,7 +206,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_MSGDUMP
 argument_list|,
-literal|"unknown WME "
+literal|"unknown WMM "
 literal|"information element ignored "
 literal|"(subtype=%d len=%lu)"
 argument_list|,

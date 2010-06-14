@@ -283,6 +283,25 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|char
+modifier|*
+modifier|*
+name|eap_get_names_as_string_array
+parameter_list|(
+name|size_t
+modifier|*
+name|num
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

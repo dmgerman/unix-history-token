@@ -27,6 +27,12 @@ directive|include
 file|"dh_groups.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALL_DH_GROUPS
+end_ifdef
+
 begin_comment
 comment|/* RFC 4306, B.1. Group 1 - 768 Bit MODP  * Generator: 2  * Prime: 2^768 - 2 ^704 - 1 + 2^64 * { [2^638 pi] + 149686 }  */
 end_comment
@@ -539,6 +545,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ALL_DH_GROUPS */
+end_comment
+
 begin_comment
 comment|/* RFC 3526, 2. Group 5 - 1536 Bit MODP  * Generator: 2  * Prime: 2^1536 - 2^1472 - 1 + 2^64 * { [2^1406 pi] + 741804 }  */
 end_comment
@@ -954,6 +969,12 @@ literal|0xFF
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALL_DH_GROUPS
+end_ifdef
 
 begin_comment
 comment|/* RFC 3526, 3. Group 14 - 2048 Bit MODP  * Generator: 2  * Prime: 2^2048 - 2^1984 - 1 + 2^64 * { [2^1918 pi] + 124476 }  */
@@ -7003,6 +7024,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ALL_DH_GROUPS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -7024,17 +7054,20 @@ init|=
 block|{
 name|DH_GROUP
 argument_list|(
+literal|5
+argument_list|)
+block|,
+ifdef|#
+directive|ifdef
+name|ALL_DH_GROUPS
+name|DH_GROUP
+argument_list|(
 literal|1
 argument_list|)
 block|,
 name|DH_GROUP
 argument_list|(
 literal|2
-argument_list|)
-block|,
-name|DH_GROUP
-argument_list|(
-literal|5
 argument_list|)
 block|,
 name|DH_GROUP
@@ -7061,6 +7094,9 @@ name|DH_GROUP
 argument_list|(
 literal|18
 argument_list|)
+endif|#
+directive|endif
+comment|/* ALL_DH_GROUPS */
 block|}
 decl_stmt|;
 end_decl_stmt

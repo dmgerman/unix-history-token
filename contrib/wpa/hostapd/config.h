@@ -450,7 +450,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|hostapd_wme_ac_params
+name|hostapd_wmm_ac_params
 block|{
 name|int
 name|cwmin
@@ -462,7 +462,7 @@ name|int
 name|aifs
 decl_stmt|;
 name|int
-name|txopLimit
+name|txop_limit
 decl_stmt|;
 comment|/* in units of 32us */
 name|int
@@ -835,7 +835,7 @@ name|int
 name|ignore_broadcast_ssid
 decl_stmt|;
 name|int
-name|wme_enabled
+name|wmm_enabled
 decl_stmt|;
 name|struct
 name|hostapd_vlan
@@ -1098,10 +1098,10 @@ index|[
 name|NUM_TX_QUEUES
 index|]
 decl_stmt|;
-comment|/* 	 * WME AC parameters, in same order as 802.1D, i.e. 	 * 0 = BE (best effort) 	 * 1 = BK (background) 	 * 2 = VI (video) 	 * 3 = VO (voice) 	 */
+comment|/* 	 * WMM AC parameters, in same order as 802.1D, i.e. 	 * 0 = BE (best effort) 	 * 1 = BK (background) 	 * 2 = VI (video) 	 * 3 = VO (voice) 	 */
 name|struct
-name|hostapd_wme_ac_params
-name|wme_ac_params
+name|hostapd_wmm_ac_params
+name|wmm_ac_params
 index|[
 literal|4
 index|]

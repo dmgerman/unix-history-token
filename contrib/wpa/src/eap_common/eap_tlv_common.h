@@ -87,7 +87,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* draft-cam-winget-eap-fast-provisioning-04.txt, 			    * Section 4.2 */
+comment|/* RFC 5422, Section 4.2 */
 end_comment
 
 begin_define
@@ -374,7 +374,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* draft-cam-winget-eap-fast-provisiong-04.txt, Section 4.2.6 - PAC-Type TLV */
+comment|/* RFC 5422, Section 4.2.6 - PAC-Type TLV */
 end_comment
 
 begin_struct

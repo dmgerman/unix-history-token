@@ -813,6 +813,11 @@ argument_list|(
 name|hapd
 argument_list|)
 expr_stmt|;
+name|os_free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1

@@ -4809,6 +4809,13 @@ expr_stmt|;
 name|os_free
 argument_list|(
 name|imc
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|imc
 argument_list|)
 expr_stmt|;
 return|return

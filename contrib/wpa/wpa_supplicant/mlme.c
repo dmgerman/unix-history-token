@@ -2292,21 +2292,21 @@ operator|++
 operator|=
 literal|2
 expr_stmt|;
-comment|/* WME */
+comment|/* WMM */
 operator|*
 name|pos
 operator|++
 operator|=
 literal|0
 expr_stmt|;
-comment|/* WME info */
+comment|/* WMM info */
 operator|*
 name|pos
 operator|++
 operator|=
 literal|1
 expr_stmt|;
-comment|/* WME ver */
+comment|/* WMM ver */
 operator|*
 name|pos
 operator|++
@@ -5802,7 +5802,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIX? */
-block|sta->assoc_ap = 1;  	if (elems.wme&& wpa_s->mlme.wmm_enabled) { 		sta->flags |= WLAN_STA_WME; 		ieee80211_sta_wmm_params(wpa_s, elems.wme, elems.wme_len); 	}
+block|sta->assoc_ap = 1;  	if (elems.wmm&& wpa_s->mlme.wmm_enabled) { 		sta->flags |= WLAN_STA_WMM; 		ieee80211_sta_wmm_params(wpa_s, elems.wmm, elems.wmm_len); 	}
 endif|#
 directive|endif
 name|ieee80211_associated
@@ -7068,7 +7068,7 @@ if|if
 condition|(
 name|elems
 operator|.
-name|wme
+name|wmm
 operator|&&
 operator|(
 name|bss
@@ -7083,7 +7083,7 @@ name|wmm_ie_len
 operator|!=
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 operator|||
 name|os_memcmp
 argument_list|(
@@ -7093,11 +7093,11 @@ name|wmm_ie
 argument_list|,
 name|elems
 operator|.
-name|wme
+name|wmm
 argument_list|,
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 argument_list|)
 operator|)
 condition|)
@@ -7117,7 +7117,7 @@ name|os_malloc
 argument_list|(
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 operator|+
 literal|2
 argument_list|)
@@ -7137,13 +7137,13 @@ name|wmm_ie
 argument_list|,
 name|elems
 operator|.
-name|wme
+name|wmm
 operator|-
 literal|2
 argument_list|,
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 operator|+
 literal|2
 argument_list|)
@@ -7154,7 +7154,7 @@ name|wmm_ie_len
 operator|=
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 operator|+
 literal|2
 expr_stmt|;
@@ -7173,7 +7173,7 @@ condition|(
 operator|!
 name|elems
 operator|.
-name|wme
+name|wmm
 operator|&&
 name|bss
 operator|->
@@ -7747,7 +7747,7 @@ if|if
 condition|(
 name|elems
 operator|.
-name|wme
+name|wmm
 operator|&&
 name|wpa_s
 operator|->
@@ -7762,11 +7762,11 @@ name|wpa_s
 argument_list|,
 name|elems
 operator|.
-name|wme
+name|wmm
 argument_list|,
 name|elems
 operator|.
-name|wme_len
+name|wmm_len
 argument_list|)
 expr_stmt|;
 block|}

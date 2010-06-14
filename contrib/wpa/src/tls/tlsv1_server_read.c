@@ -165,6 +165,11 @@ decl_stmt|;
 name|int
 name|compr_null_found
 decl_stmt|;
+name|u16
+name|ext_type
+decl_stmt|,
+name|ext_len
+decl_stmt|;
 if|if
 condition|(
 name|ct
@@ -812,9 +817,6 @@ operator|>=
 literal|2
 condition|)
 block|{
-name|u16
-name|ext_len
-decl_stmt|;
 comment|/* Extension client_hello_extension_list<0..2^16-1> */
 name|ext_len
 operator|=
@@ -855,9 +857,15 @@ literal|"extension list length %u (expected %u)"
 argument_list|,
 name|ext_len
 argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|end
 operator|-
 name|pos
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -872,11 +880,6 @@ operator|<
 name|end
 condition|)
 block|{
-name|u16
-name|ext_type
-decl_stmt|,
-name|ext_len
-decl_stmt|;
 if|if
 condition|(
 name|end
@@ -2038,9 +2041,14 @@ argument_list|,
 literal|"TLSv1: Failed to decrypt "
 literal|"PreMasterSecret (encr_len=%d outlen=%lu)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|end
 operator|-
 name|pos
+argument_list|)
 argument_list|,
 operator|(
 name|unsigned

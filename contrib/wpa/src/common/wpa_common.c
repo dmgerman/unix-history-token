@@ -146,9 +146,17 @@ name|MD5_MAC_LEN
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CONFIG_IEEE80211R
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IEEE80211W
+argument_list|)
 case|case
 name|WPA_KEY_INFO_TYPE_AES_128_CMAC
 case|:
@@ -166,7 +174,7 @@ argument_list|)
 return|;
 endif|#
 directive|endif
-comment|/* CONFIG_IEEE80211R */
+comment|/* CONFIG_IEEE80211R || CONFIG_IEEE80211W */
 default|default:
 return|return
 operator|-

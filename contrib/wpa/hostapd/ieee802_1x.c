@@ -830,8 +830,14 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-name|rc4
+name|rc4_skip
 argument_list|(
+name|ekey
+argument_list|,
+name|ekey_len
+argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|u8
 operator|*
@@ -843,10 +849,6 @@ literal|1
 operator|)
 argument_list|,
 name|key_len
-argument_list|,
-name|ekey
-argument_list|,
-name|ekey_len
 argument_list|)
 expr_stmt|;
 name|os_free

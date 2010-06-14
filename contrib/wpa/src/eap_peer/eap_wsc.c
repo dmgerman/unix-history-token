@@ -624,6 +624,8 @@ argument_list|,
 name|cfg
 operator|.
 name|pin_len
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

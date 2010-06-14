@@ -2684,7 +2684,7 @@ modifier|*
 name|auts
 decl_stmt|,
 modifier|*
-name|rand
+name|__rand
 decl_stmt|;
 name|u8
 name|_auts
@@ -2730,7 +2730,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|rand
+name|__rand
 operator|=
 name|strchr
 argument_list|(
@@ -2741,13 +2741,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rand
+name|__rand
 operator|==
 name|NULL
 condition|)
 return|return;
 operator|*
-name|rand
+name|__rand
 operator|++
 operator|=
 literal|'\0'
@@ -2760,7 +2760,7 @@ name|imsi
 argument_list|,
 name|auts
 argument_list|,
-name|rand
+name|__rand
 argument_list|)
 expr_stmt|;
 if|if
@@ -2776,7 +2776,7 @@ argument_list|)
 operator|||
 name|hexstr2bin
 argument_list|(
-name|rand
+name|__rand
 argument_list|,
 name|_rand
 argument_list|,

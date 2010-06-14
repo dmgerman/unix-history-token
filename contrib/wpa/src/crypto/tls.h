@@ -86,8 +86,22 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TLS_CONN_ALLOW_SIGN_RSA_MD5
+value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_CONN_DISABLE_TIME_CHECKS
+value|BIT(1)
+end_define
+
 begin_comment
-comment|/**  * struct tls_connection_params - Parameters for TLS connection  * @ca_cert: File or reference name for CA X.509 certificate in PEM or DER  * format  * @ca_cert_blob: ca_cert as inlined data or %NULL if not used  * @ca_cert_blob_len: ca_cert_blob length  * @ca_path: Path to CA certificates (OpenSSL specific)  * @subject_match: String to match in the subject of the peer certificate or  * %NULL to allow all subjects  * @altsubject_match: String to match in the alternative subject of the peer  * certificate or %NULL to allow all alternative subjects  * @client_cert: File or reference name for client X.509 certificate in PEM or  * DER format  * @client_cert_blob: client_cert as inlined data or %NULL if not used  * @client_cert_blob_len: client_cert_blob length  * @private_key: File or reference name for client private key in PEM or DER  * format (traditional format (RSA PRIVATE KEY) or PKCS#8 (PRIVATE KEY)  * @private_key_blob: private_key as inlined data or %NULL if not used  * @private_key_blob_len: private_key_blob length  * @private_key_passwd: Passphrase for decrypted private key, %NULL if no  * passphrase is used.  * @dh_file: File name for DH/DSA data in PEM format, or %NULL if not used  * @dh_blob: dh_file as inlined data or %NULL if not used  * @dh_blob_len: dh_blob length  * @engine: 1 = use engine (e.g., a smartcard) for private key operations  * (this is OpenSSL specific for now)  * @engine_id: engine id string (this is OpenSSL specific for now)  * @ppin: pointer to the pin variable in the configuration  * (this is OpenSSL specific for now)  * @key_id: the private key's id when using engine (this is OpenSSL  * specific for now)  * @cert_id: the certificate's id when using engine  * @ca_cert_id: the CA certificate's id when using engine  * @tls_ia: Whether to enable TLS/IA (for EAP-TTLSv1)  *  * TLS connection parameters to be configured with tls_connection_set_params()  * and tls_global_set_params().  *  * Certificates and private key can be configured either as a reference name  * (file path or reference to certificate store) or by providing the same data  * as a pointer to the data in memory. Only one option will be used for each  * field.  */
+comment|/**  * struct tls_connection_params - Parameters for TLS connection  * @ca_cert: File or reference name for CA X.509 certificate in PEM or DER  * format  * @ca_cert_blob: ca_cert as inlined data or %NULL if not used  * @ca_cert_blob_len: ca_cert_blob length  * @ca_path: Path to CA certificates (OpenSSL specific)  * @subject_match: String to match in the subject of the peer certificate or  * %NULL to allow all subjects  * @altsubject_match: String to match in the alternative subject of the peer  * certificate or %NULL to allow all alternative subjects  * @client_cert: File or reference name for client X.509 certificate in PEM or  * DER format  * @client_cert_blob: client_cert as inlined data or %NULL if not used  * @client_cert_blob_len: client_cert_blob length  * @private_key: File or reference name for client private key in PEM or DER  * format (traditional format (RSA PRIVATE KEY) or PKCS#8 (PRIVATE KEY)  * @private_key_blob: private_key as inlined data or %NULL if not used  * @private_key_blob_len: private_key_blob length  * @private_key_passwd: Passphrase for decrypted private key, %NULL if no  * passphrase is used.  * @dh_file: File name for DH/DSA data in PEM format, or %NULL if not used  * @dh_blob: dh_file as inlined data or %NULL if not used  * @dh_blob_len: dh_blob length  * @engine: 1 = use engine (e.g., a smartcard) for private key operations  * (this is OpenSSL specific for now)  * @engine_id: engine id string (this is OpenSSL specific for now)  * @ppin: pointer to the pin variable in the configuration  * (this is OpenSSL specific for now)  * @key_id: the private key's id when using engine (this is OpenSSL  * specific for now)  * @cert_id: the certificate's id when using engine  * @ca_cert_id: the CA certificate's id when using engine  * @tls_ia: Whether to enable TLS/IA (for EAP-TTLSv1)  * @flags: Parameter options (TLS_CONN_*)  *  * TLS connection parameters to be configured with tls_connection_set_params()  * and tls_global_set_params().  *  * Certificates and private key can be configured either as a reference name  * (file path or reference to certificate store) or by providing the same data  * as a pointer to the data in memory. Only one option will be used for each  * field.  */
 end_comment
 
 begin_struct
@@ -197,6 +211,10 @@ specifier|const
 name|char
 modifier|*
 name|ca_cert_id
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;

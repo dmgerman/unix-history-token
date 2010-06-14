@@ -65,6 +65,12 @@ name|defined
 argument_list|(
 name|__DragonFly__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
 begin_include
@@ -100,6 +106,42 @@ name|__BIG_ENDIAN
 value|_BIG_ENDIAN
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|bswap_16
+value|swap16
+end_define
+
+begin_define
+define|#
+directive|define
+name|bswap_32
+value|swap32
+end_define
+
+begin_define
+define|#
+directive|define
+name|bswap_64
+value|swap64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __OpenBSD__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -127,7 +169,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__FreeBSD__) || defined(__NetBSD__) || 	* defined(__DragonFly__) */
+comment|/* __OpenBSD__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__FreeBSD__) || defined(__NetBSD__) || 	* defined(__DragonFly__) || defined(__OpenBSD__) */
 end_comment
 
 begin_ifdef
@@ -2395,6 +2446,34 @@ include|#
 directive|include
 file|"wpa_debug.h"
 end_include
+
+begin_comment
+comment|/*  * gcc 4.4 ends up generating strict-aliasing warnings about some very common  * networking socket uses that do not really result in a real problem and  * cannot be easily avoided with union-based type-punning due to struct  * definitions including another struct in system header files. To avoid having  * to fully disable strict-aliasing warnings, provide a mechanism to hide the  * typecast from aliasing for now. A cleaner solution will hopefully be found  * in the future to handle these cases.  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|__hide_aliasing_typecast
+parameter_list|(
+name|void
+modifier|*
+name|foo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|aliasing_hide_typecast
+parameter_list|(
+name|a
+parameter_list|,
+name|t
+parameter_list|)
+value|(t *) __hide_aliasing_typecast((a))
+end_define
 
 begin_endif
 endif|#

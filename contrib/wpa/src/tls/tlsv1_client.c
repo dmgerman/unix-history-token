@@ -2351,6 +2351,15 @@ index|]
 operator|=
 name|TLS_DH_anon_WITH_DES_CBC_SHA
 expr_stmt|;
+comment|/* 		 * Cisco AP (at least 350 and 1200 series) local authentication 		 * server does not know how to search cipher suites from the 		 * list and seem to require that the last entry in the list is 		 * the one that it wants to use. However, TLS specification 		 * requires the list to be in the client preference order. As a 		 * workaround, add anon-DH AES-128-SHA1 again at the end of the 		 * list to allow the Cisco code to find it. 		 */
+name|suites
+index|[
+name|count
+operator|++
+index|]
+operator|=
+name|TLS_DH_anon_WITH_AES_128_CBC_SHA
+expr_stmt|;
 name|conn
 operator|->
 name|num_cipher_suites

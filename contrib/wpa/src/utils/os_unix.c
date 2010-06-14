@@ -985,6 +985,12 @@ name|defined
 argument_list|(
 name|__APPLE__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|unsetenv
 argument_list|(
 name|name

@@ -5895,11 +5895,6 @@ goto|goto
 name|error
 goto|;
 block|}
-name|callback_urls
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* is now owned by subscription */
 block|}
 else|else
 block|{
@@ -6049,6 +6044,11 @@ expr_stmt|;
 name|wpabuf_free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+name|os_free
+argument_list|(
+name|callback_urls
 argument_list|)
 expr_stmt|;
 block|}

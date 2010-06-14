@@ -3052,6 +3052,7 @@ name|radius_msg
 modifier|*
 name|req
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|shared_secret
@@ -3294,6 +3295,7 @@ name|radius_msg
 modifier|*
 name|req
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|shared_secret

@@ -58,7 +58,7 @@ value|35
 end_define
 
 begin_comment
-comment|/*  * draft-cam-winget-eap-fast-provisioning-04.txt:  * Section 4.2.1 - Formats for PAC TLV Attributes / Type Field  * Note: bit 0x8000 (Mandatory) and bit 0x4000 (Reserved) are also defined  * in the general PAC TLV format (Section 4.2).  */
+comment|/*  * RFC 5422: Section 4.2.1 - Formats for PAC TLV Attributes / Type Field  * Note: bit 0x8000 (Mandatory) and bit 0x4000 (Reserved) are also defined  * in the general PAC TLV format (Section 4.2).  */
 end_comment
 
 begin_define
@@ -201,7 +201,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* draft-cam-winget-eap-fast-provisioning-04.txt: 4.2.6 PAC-Type TLV  * Note: Machine Authentication PAC and User Authorization PAC were removed in  * draft-cam-winget-eap-fast-provisioning-03.txt  */
+comment|/* RFC 5422: 4.2.6 PAC-Type TLV */
 end_comment
 
 begin_define
@@ -242,7 +242,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * draft-cam-winget-eap-fast-provisioning-04.txt:  * Section 3.4 - Key Derivations Used in the EAP-FAST Provisioning Exchange  */
+comment|/*  * RFC 5422:  * Section 3.3 - Key Derivations Used in the EAP-FAST Provisioning Exchange  */
 end_comment
 
 begin_struct
