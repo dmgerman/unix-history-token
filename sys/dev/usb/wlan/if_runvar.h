@@ -679,6 +679,9 @@ decl_stmt|;
 name|uint8_t
 name|cmdq_run
 decl_stmt|;
+name|uint8_t
+name|cmdq_key_set
+decl_stmt|;
 define|#
 directive|define
 name|RUN_CMDQ_ABORT
