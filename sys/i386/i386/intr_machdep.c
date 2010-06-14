@@ -2092,11 +2092,14 @@ name|pic_assign_cpu
 argument_list|(
 name|isrc
 argument_list|,
+name|cpu_apic_ids
+index|[
 name|isrc
 operator|->
 name|is_event
 operator|->
 name|ie_cpu
+index|]
 argument_list|)
 expr_stmt|;
 elseif|else
