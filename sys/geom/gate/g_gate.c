@@ -1071,7 +1071,7 @@ name|g_gate_softc
 modifier|*
 name|g_gate_hold
 parameter_list|(
-name|u_int
+name|int
 name|unit
 parameter_list|,
 specifier|const
