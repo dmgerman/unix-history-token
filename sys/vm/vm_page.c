@@ -1782,7 +1782,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For a managed page, the PG_WRITEABLE flag can be set only if 	 * the page is VPO_BUSY.  Currently this flag is only set by 	 * pmap_enter(). 	 */
+comment|/* 	 * The PG_WRITEABLE flag can only be set if the page is managed and 	 * VPO_BUSY.  Currently, this flag is only set by pmap_enter(). 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -1794,6 +1794,7 @@ operator|==
 literal|0
 operator|||
 operator|(
+operator|(
 name|m
 operator|->
 name|flags
@@ -1804,9 +1805,9 @@ operator||
 name|PG_FICTITIOUS
 operator|)
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
 operator|(
 name|m
 operator|->
@@ -1816,6 +1817,7 @@ name|VPO_BUSY
 operator|)
 operator|!=
 literal|0
+operator|)
 argument_list|,
 operator|(
 literal|"PG_WRITEABLE and !VPO_BUSY"
@@ -1851,6 +1853,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The PG_REFERENCED flag can only be cleared if the object 	 * containing the page is locked. 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -5779,7 +5782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	The page must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	If the page is fictitious, then its wire count must remain one.  *  *	The page must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5800,13 +5803,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"vm_page_wire: fictitious page %p's wire count isn't one"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|m
@@ -5868,7 +5892,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	BUT, if we are in a low-memory situation we have no choice but to  *	put clean pages on the cache queue.  *  *	A number of routines use vm_page_unwire() to guarantee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page must be locked.  *	This routine may not block.  */
+comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "activate" determines to which queue the page is added.  If "activate" is  * non-zero, then the page is added to the active queue.  Otherwise, it is  * added to the inactive queue.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must alway be one.  *  * A managed page must be locked.  */
 end_comment
 
 begin_function
@@ -5903,13 +5927,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_FICTITIOUS
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|wire_count
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"vm_page_unwire: fictitious page %p's wire count isn't one"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|m
@@ -5954,6 +5999,12 @@ name|PG_UNMANAGED
 operator|)
 operator|!=
 literal|0
+operator|||
+name|m
+operator|->
+name|object
+operator|==
+name|NULL
 condition|)
 return|return;
 name|vm_page_lock_queues
@@ -5993,22 +6044,18 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|panic
 argument_list|(
-literal|"vm_page_unwire: invalid wire count: %d"
+literal|"vm_page_unwire: page %p's wire count is zero"
 argument_list|,
 name|m
-operator|->
-name|wire_count
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * This routine may not block.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound   * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * This routine may not block.  */
 end_comment
 
 begin_function
