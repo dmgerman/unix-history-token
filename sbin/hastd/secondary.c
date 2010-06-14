@@ -1142,6 +1142,11 @@ name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_free
+argument_list|(
+name|nvout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
