@@ -770,9 +770,9 @@ name|pjdlog_info
 argument_list|(
 literal|"Connection from %s to %s."
 argument_list|,
-name|laddr
-argument_list|,
 name|raddr
+argument_list|,
+name|laddr
 argument_list|)
 expr_stmt|;
 comment|/* Error in setting timeout is not critical, but why should it fail? */
@@ -1162,7 +1162,7 @@ name|nverr
 argument_list|,
 literal|"errmsg"
 argument_list|,
-literal|"Toke doesn't match."
+literal|"Token doesn't match."
 argument_list|)
 expr_stmt|;
 goto|goto

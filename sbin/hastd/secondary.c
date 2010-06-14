@@ -3207,7 +3207,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"disk: (%p) Moving request to the free queue."
+literal|"send: (%p) Moving request to the free queue."
 argument_list|,
 name|hio
 argument_list|)
