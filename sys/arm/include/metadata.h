@@ -22,6 +22,17 @@ name|MODINFOMD_DTBP
 value|0x1001
 end_define
 
+begin_comment
+comment|/*  * XXX this is for tinderbox compilation sake only and will go away once the  * FDT transition is complete.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_BOOTINFO
+value|0x2000
+end_define
+
 begin_endif
 endif|#
 directive|endif
