@@ -1004,6 +1004,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_SLICES */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1192,6 +1201,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !defined(__ia64__) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
+end_ifdef
 
 begin_ifdef
 ifdef|#
