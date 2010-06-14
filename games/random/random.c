@@ -202,8 +202,6 @@ name|random_exit
 operator|=
 name|randomize_lines
 operator|=
-name|random_type
-operator|=
 name|unbuffer_output
 operator|=
 literal|0
