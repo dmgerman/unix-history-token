@@ -5037,6 +5037,7 @@ argument_list|()
 expr_stmt|;
 name|stopfpu
 operator|=
+operator|&
 name|stopxpcbs
 index|[
 name|cpu
@@ -5044,7 +5045,7 @@ index|]
 operator|->
 name|xpcb_pcb
 operator|.
-name|pcb_save
+name|pcb_user_save
 expr_stmt|;
 if|if
 condition|(
