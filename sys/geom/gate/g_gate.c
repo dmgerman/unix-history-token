@@ -3168,10 +3168,10 @@ block|{
 case|case
 name|BIO_READ
 case|:
-break|break;
 case|case
 name|BIO_DELETE
 case|:
+break|break;
 case|case
 name|BIO_WRITE
 case|:
