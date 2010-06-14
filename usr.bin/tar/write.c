@@ -4263,6 +4263,9 @@ name|comp
 decl_stmt|,
 name|uncomp
 decl_stmt|;
+name|int
+name|compression
+decl_stmt|;
 if|if
 condition|(
 name|bsdtar
@@ -4307,17 +4310,19 @@ name|uncomp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" Out: %s bytes, compression %d%%\n"
-argument_list|,
-name|tar_i64toa
-argument_list|(
+if|if
+condition|(
 name|comp
-argument_list|)
-argument_list|,
+operator|>
+name|uncomp
+condition|)
+name|compression
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|compression
+operator|=
 call|(
 name|int
 call|)
@@ -4332,6 +4337,19 @@ literal|100
 operator|/
 name|uncomp
 argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" Out: %s bytes, compression %d%%\n"
+argument_list|,
+name|tar_i64toa
+argument_list|(
+name|comp
+argument_list|)
+argument_list|,
+name|compression
 argument_list|)
 expr_stmt|;
 comment|/* Can't have two calls to tar_i64toa() pending, so split the output. */
