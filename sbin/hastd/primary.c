@@ -1927,6 +1927,11 @@ argument_list|,
 name|mapsize
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
