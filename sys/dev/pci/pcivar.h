@@ -1797,23 +1797,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Can be used by MD code to request the PCI bus to re-map an MSI or  * MSI-X message.  */
-end_comment
-
-begin_function_decl
-name|int
-name|pci_remap_msi_irq
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Can be used by drivers to manage the MSI-X table. */
 end_comment
 

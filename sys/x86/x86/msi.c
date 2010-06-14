@@ -1089,8 +1089,15 @@ name|msi_vector
 argument_list|)
 expr_stmt|;
 block|}
-name|pci_remap_msi_irq
+name|BUS_REMAP_INTR
 argument_list|(
+name|device_get_parent
+argument_list|(
+name|msi
+operator|->
+name|msi_dev
+argument_list|)
+argument_list|,
 name|msi
 operator|->
 name|msi_dev

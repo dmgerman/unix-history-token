@@ -712,6 +712,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|pci_remap_intr_method
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|irq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -880,6 +897,13 @@ argument_list|(
 name|bus_child_location_str
 argument_list|,
 name|pci_child_location_str_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_remap_intr
+argument_list|,
+name|pci_remap_intr_method
 argument_list|)
 block|,
 comment|/* PCI interface */
@@ -9056,9 +9080,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|pci_remap_msi_irq
+name|pci_remap_intr_method
 parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
@@ -9100,9 +9128,6 @@ name|msix_vector
 modifier|*
 name|mv
 decl_stmt|;
-name|device_t
-name|bus
-decl_stmt|;
 name|uint64_t
 name|addr
 decl_stmt|;
@@ -9116,13 +9141,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|bus
-operator|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Handle MSI first.  We try to find this IRQ among our list 	 * of MSI IRQs.  If we find it, we request updated address and 	 * data registers and apply the results. 	 */
 if|if
 condition|(
