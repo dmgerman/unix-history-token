@@ -40,6 +40,20 @@ name|bpf_u_int32
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int64_t
+name|bpf_int64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|bpf_u_int64
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Alignment macros.  BPF_WORDALIGN rounds up to the next  * even multiple of BPF_ALIGNMENT.  */
 end_comment
@@ -214,147 +228,147 @@ begin_define
 define|#
 directive|define
 name|BIOCGBLEN
-value|_IOR('B',102, u_int)
+value|_IOR('B', 102, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSBLEN
-value|_IOWR('B',102, u_int)
+value|_IOWR('B', 102, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSETF
-value|_IOW('B',103, struct bpf_program)
+value|_IOW('B', 103, struct bpf_program)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCFLUSH
-value|_IO('B',104)
+value|_IO('B', 104)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCPROMISC
-value|_IO('B',105)
+value|_IO('B', 105)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGDLT
-value|_IOR('B',106, u_int)
+value|_IOR('B', 106, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGETIF
-value|_IOR('B',107, struct ifreq)
+value|_IOR('B', 107, struct ifreq)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSETIF
-value|_IOW('B',108, struct ifreq)
+value|_IOW('B', 108, struct ifreq)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSRTIMEOUT
-value|_IOW('B',109, struct timeval)
+value|_IOW('B', 109, struct timeval)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGRTIMEOUT
-value|_IOR('B',110, struct timeval)
+value|_IOR('B', 110, struct timeval)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGSTATS
-value|_IOR('B',111, struct bpf_stat)
+value|_IOR('B', 111, struct bpf_stat)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCIMMEDIATE
-value|_IOW('B',112, u_int)
+value|_IOW('B', 112, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCVERSION
-value|_IOR('B',113, struct bpf_version)
+value|_IOR('B', 113, struct bpf_version)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGRSIG
-value|_IOR('B',114, u_int)
+value|_IOR('B', 114, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSRSIG
-value|_IOW('B',115, u_int)
+value|_IOW('B', 115, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGHDRCMPLT
-value|_IOR('B',116, u_int)
+value|_IOR('B', 116, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSHDRCMPLT
-value|_IOW('B',117, u_int)
+value|_IOW('B', 117, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGDIRECTION
-value|_IOR('B',118, u_int)
+value|_IOR('B', 118, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSDIRECTION
-value|_IOW('B',119, u_int)
+value|_IOW('B', 119, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSDLT
-value|_IOW('B',120, u_int)
+value|_IOW('B', 120, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGDLTLIST
-value|_IOWR('B',121, struct bpf_dltlist)
+value|_IOWR('B', 121, struct bpf_dltlist)
 end_define
 
 begin_define
@@ -368,56 +382,70 @@ begin_define
 define|#
 directive|define
 name|BIOCSETWF
-value|_IOW('B',123, struct bpf_program)
+value|_IOW('B', 123, struct bpf_program)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCFEEDBACK
-value|_IOW('B',124, u_int)
+value|_IOW('B', 124, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGETBUFMODE
-value|_IOR('B',125, u_int)
+value|_IOR('B', 125, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSETBUFMODE
-value|_IOW('B',126, u_int)
+value|_IOW('B', 126, u_int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCGETZMAX
-value|_IOR('B',127, size_t)
+value|_IOR('B', 127, size_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCROTZBUF
-value|_IOR('B',128, struct bpf_zbuf)
+value|_IOR('B', 128, struct bpf_zbuf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSETZBUF
-value|_IOW('B',129, struct bpf_zbuf)
+value|_IOW('B', 129, struct bpf_zbuf)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BIOCSETFNR
-value|_IOW('B',130, struct bpf_program)
+value|_IOW('B', 130, struct bpf_program)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCGTSTAMP
+value|_IOR('B', 131, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCSTSTAMP
+value|_IOW('B', 132, u_int)
 end_define
 
 begin_comment
@@ -459,7 +487,220 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Time stamping functions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MICROTIME
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NANOTIME
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_BINTIME
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NONE
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_FORMAT_MASK
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NORMAL
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_FAST
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MONOTONIC
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MONOTONIC_FAST
+value|(BPF_T_FAST | BPF_T_MONOTONIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_FLAG_MASK
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_FORMAT
+parameter_list|(
+name|t
+parameter_list|)
+value|((t)& BPF_T_FORMAT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_FLAG
+parameter_list|(
+name|t
+parameter_list|)
+value|((t)& BPF_T_FLAG_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_VALID
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|((t) == BPF_T_NONE || (BPF_T_FORMAT(t) != BPF_T_NONE&&	\     ((t)& ~(BPF_T_FORMAT_MASK | BPF_T_FLAG_MASK)) == 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MICROTIME_FAST
+value|(BPF_T_MICROTIME | BPF_T_FAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NANOTIME_FAST
+value|(BPF_T_NANOTIME | BPF_T_FAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_BINTIME_FAST
+value|(BPF_T_BINTIME | BPF_T_FAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MICROTIME_MONOTONIC
+value|(BPF_T_MICROTIME | BPF_T_MONOTONIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NANOTIME_MONOTONIC
+value|(BPF_T_NANOTIME | BPF_T_MONOTONIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_BINTIME_MONOTONIC
+value|(BPF_T_BINTIME | BPF_T_MONOTONIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_MICROTIME_MONOTONIC_FAST
+value|(BPF_T_MICROTIME | BPF_T_MONOTONIC_FAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_NANOTIME_MONOTONIC_FAST
+value|(BPF_T_NANOTIME | BPF_T_MONOTONIC_FAST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_T_BINTIME_MONOTONIC_FAST
+value|(BPF_T_BINTIME | BPF_T_MONOTONIC_FAST)
+end_define
+
+begin_comment
 comment|/*  * Structure prepended to each packet.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bpf_ts
+block|{
+name|bpf_int64
+name|bt_sec
+decl_stmt|;
+comment|/* seconds */
+name|bpf_u_int64
+name|bt_frac
+decl_stmt|;
+comment|/* fraction */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bpf_xhdr
+block|{
+name|struct
+name|bpf_ts
+name|bh_tstamp
+decl_stmt|;
+comment|/* time stamp */
+name|bpf_u_int32
+name|bh_caplen
+decl_stmt|;
+comment|/* length of captured portion */
+name|bpf_u_int32
+name|bh_datalen
+decl_stmt|;
+comment|/* original length of packet */
+name|u_short
+name|bh_hdrlen
+decl_stmt|;
+comment|/* length of bpf header (this struct 					   plus alignment padding) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Obsolete */
 end_comment
 
 begin_struct
@@ -487,10 +728,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Because the structure above is not a multiple of 4 bytes, some compilers  * will insist on inserting padding; hence, sizeof(struct bpf_hdr) won't work.  * Only the kernel needs to know about it; applications use bh_hdrlen.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -500,8 +737,15 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SIZEOF_BPF_HDR
-value|(sizeof(struct bpf_hdr)<= 20 ? 18 : \     sizeof(struct bpf_hdr))
+name|MTAG_BPF
+value|0x627066
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTAG_BPF_TIMESTAMP
+value|0
 end_define
 
 begin_endif
@@ -2440,7 +2684,7 @@ comment|/* link layer type */
 name|u_int
 name|bif_hdrlen
 decl_stmt|;
-comment|/* length of header (with padding) */
+comment|/* length of link header */
 name|struct
 name|ifnet
 modifier|*

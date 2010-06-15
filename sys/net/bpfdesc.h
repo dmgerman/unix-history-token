@@ -147,6 +147,10 @@ name|bd_direction
 decl_stmt|;
 comment|/* select packet direction */
 name|int
+name|bd_tstamp
+decl_stmt|;
+comment|/* select time stamping function */
+name|int
 name|bd_feedback
 decl_stmt|;
 comment|/* true to feed back sent packets */
