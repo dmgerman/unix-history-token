@@ -1062,10 +1062,6 @@ name|int
 name|igb_insert_vlan_header
 decl_stmt|;
 name|struct
-name|task
-name|rxtx_task
-decl_stmt|;
-name|struct
 name|taskqueue
 modifier|*
 name|tq

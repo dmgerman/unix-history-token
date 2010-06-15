@@ -5828,7 +5828,16 @@ name|adapter
 init|=
 name|arg
 decl_stmt|;
-name|uint32_t
+name|struct
+name|igb_queue
+modifier|*
+name|que
+init|=
+name|adapter
+operator|->
+name|queues
+decl_stmt|;
+name|u32
 name|reg_icr
 decl_stmt|;
 name|reg_icr
@@ -5884,14 +5893,14 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|,
 operator|&
-name|adapter
+name|que
 operator|->
-name|rxtx_task
+name|que_task
 argument_list|)
 expr_stmt|;
 comment|/* Link status change */
@@ -5907,7 +5916,7 @@ operator|)
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|,
@@ -6096,7 +6105,7 @@ operator|)
 condition|)
 name|taskqueue_enqueue
 argument_list|(
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|,
@@ -9473,9 +9482,9 @@ comment|/* 	 * Try allocating a fast interrupt and the associated deferred 	 * p
 name|TASK_INIT
 argument_list|(
 operator|&
-name|adapter
+name|que
 operator|->
-name|rxtx_task
+name|que_task
 argument_list|,
 literal|0
 argument_list|,
@@ -9499,7 +9508,7 @@ argument_list|,
 name|adapter
 argument_list|)
 expr_stmt|;
-name|adapter
+name|que
 operator|->
 name|tq
 operator|=
@@ -9512,7 +9521,7 @@ argument_list|,
 name|taskqueue_thread_enqueue
 argument_list|,
 operator|&
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|)
@@ -9520,7 +9529,7 @@ expr_stmt|;
 name|taskqueue_start_threads
 argument_list|(
 operator|&
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|,
@@ -9583,12 +9592,12 @@ argument_list|)
 expr_stmt|;
 name|taskqueue_free
 argument_list|(
-name|adapter
+name|que
 operator|->
 name|tq
 argument_list|)
 expr_stmt|;
-name|adapter
+name|que
 operator|->
 name|tq
 operator|=
