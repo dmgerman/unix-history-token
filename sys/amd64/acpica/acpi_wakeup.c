@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -1241,6 +1247,9 @@ name|load_cr3
 argument_list|(
 name|cr3
 argument_list|)
+expr_stmt|;
+name|mca_resume
+argument_list|()
 expr_stmt|;
 name|intr_resume
 argument_list|()

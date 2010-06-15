@@ -5120,6 +5120,9 @@ argument_list|(
 name|cr3
 argument_list|)
 expr_stmt|;
+name|mca_resume
+argument_list|()
+expr_stmt|;
 name|lapic_setup
 argument_list|(
 literal|0
