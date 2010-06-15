@@ -1602,14 +1602,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
 name|len
-operator|-
-literal|1
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1655,9 +1648,6 @@ literal|0
 init|;
 name|more
 condition|;
-name|i
-operator|++
-operator|,
 name|idx
 operator|++
 control|)
