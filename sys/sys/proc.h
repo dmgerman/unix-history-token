@@ -1019,7 +1019,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|CRITSECT_ASSERT
+name|CRITICAL_ASSERT
 parameter_list|(
 name|td
 parameter_list|)

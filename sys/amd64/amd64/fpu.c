@@ -1350,7 +1350,7 @@ literal|"fpudrop: fpcurthread != curthread"
 operator|)
 argument_list|)
 expr_stmt|;
-name|CRITSECT_ASSERT
+name|CRITICAL_ASSERT
 argument_list|(
 name|td
 argument_list|)
