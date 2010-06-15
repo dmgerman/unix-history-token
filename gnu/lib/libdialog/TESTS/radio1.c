@@ -79,6 +79,9 @@ operator|(
 operator|(
 name|int
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|self
 operator|->
 name|data
@@ -103,6 +106,9 @@ name|spending
 operator|=
 operator|(
 name|int
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|self
 operator|->

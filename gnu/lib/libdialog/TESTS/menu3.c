@@ -146,6 +146,8 @@ block|,
 literal|"10,000,000"
 block|,
 literal|"Friend!  Most Favored customer!"
+block|,
+literal|"On"
 block|}
 decl_stmt|;
 end_decl_stmt
