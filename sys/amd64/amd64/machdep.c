@@ -10365,9 +10365,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|register_t
-name|s
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|PCB_USER_FPU
@@ -10382,9 +10379,7 @@ literal|"fpstate_drop: kernel-owned fpu"
 operator|)
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|intr_disable
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -10413,10 +10408,8 @@ operator||
 name|PCB_USERFPUINITDONE
 operator|)
 expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function

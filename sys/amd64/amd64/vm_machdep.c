@@ -965,6 +965,9 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -975,6 +978,9 @@ name|fpcurthread
 argument_list|)
 condition|)
 name|fpudrop
+argument_list|()
+expr_stmt|;
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|pcb
