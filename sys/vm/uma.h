@@ -1173,9 +1173,13 @@ name|uth_fails
 decl_stmt|;
 comment|/* Zone: number of alloc failures. */
 name|u_int64_t
+name|uth_sleeps
+decl_stmt|;
+comment|/* Zone: number of alloc sleeps. */
+name|u_int64_t
 name|_uth_reserved1
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* Reserved. */

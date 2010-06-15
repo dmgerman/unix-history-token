@@ -5713,6 +5713,12 @@ literal|0
 expr_stmt|;
 name|zone
 operator|->
+name|uz_sleeps
+operator|=
+literal|0
+expr_stmt|;
+name|zone
+operator|->
 name|uz_fills
 operator|=
 name|zone
@@ -9153,6 +9159,11 @@ name|uz_flags
 operator||=
 name|UMA_ZFLAG_FULL
 expr_stmt|;
+name|zone
+operator|->
+name|uz_sleeps
+operator|++
+expr_stmt|;
 name|msleep
 argument_list|(
 name|zone
@@ -12543,6 +12554,10 @@ parameter_list|,
 name|u_int64_t
 modifier|*
 name|freesp
+parameter_list|,
+name|u_int64_t
+modifier|*
+name|sleepsp
 parameter_list|)
 block|{
 name|uma_cache_t
@@ -12552,6 +12567,8 @@ name|u_int64_t
 name|allocs
 decl_stmt|,
 name|frees
+decl_stmt|,
+name|sleeps
 decl_stmt|;
 name|int
 name|cachefree
@@ -12561,6 +12578,8 @@ decl_stmt|;
 name|allocs
 operator|=
 name|frees
+operator|=
+name|sleeps
 operator|=
 literal|0
 expr_stmt|;
@@ -12640,6 +12659,12 @@ name|z
 operator|->
 name|uz_frees
 expr_stmt|;
+name|sleeps
+operator|+=
+name|z
+operator|->
+name|uz_sleeps
+expr_stmt|;
 if|if
 condition|(
 name|cachefreep
@@ -12672,6 +12697,17 @@ operator|*
 name|freesp
 operator|=
 name|frees
+expr_stmt|;
+if|if
+condition|(
+name|sleepsp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|sleepsp
+operator|=
+name|sleeps
 expr_stmt|;
 block|}
 end_function
@@ -13231,6 +13267,14 @@ name|z
 operator|->
 name|uz_fails
 expr_stmt|;
+name|uth
+operator|.
+name|uth_sleeps
+operator|=
+name|z
+operator|->
+name|uz_sleeps
+expr_stmt|;
 if|if
 condition|(
 name|sbuf_bcat
@@ -13499,6 +13543,8 @@ name|u_int64_t
 name|allocs
 decl_stmt|,
 name|frees
+decl_stmt|,
+name|sleeps
 decl_stmt|;
 name|uma_bucket_t
 name|bucket
@@ -13514,7 +13560,7 @@ name|cachefree
 decl_stmt|;
 name|db_printf
 argument_list|(
-literal|"%18s %8s %8s %8s %12s\n"
+literal|"%18s %8s %8s %8s %12s %8s\n"
 argument_list|,
 literal|"Zone"
 argument_list|,
@@ -13525,6 +13571,8 @@ argument_list|,
 literal|"Free"
 argument_list|,
 literal|"Requests"
+argument_list|,
+literal|"Sleeps"
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -13566,6 +13614,12 @@ name|z
 operator|->
 name|uz_frees
 expr_stmt|;
+name|sleeps
+operator|=
+name|z
+operator|->
+name|uz_sleeps
+expr_stmt|;
 name|cachefree
 operator|=
 literal|0
@@ -13584,6 +13638,9 @@ name|allocs
 argument_list|,
 operator|&
 name|frees
+argument_list|,
+operator|&
+name|sleeps
 argument_list|)
 expr_stmt|;
 if|if
@@ -13633,7 +13690,7 @@ name|ub_cnt
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%18s %8ju %8jd %8d %12ju\n"
+literal|"%18s %8ju %8jd %8d %12ju %8ju\n"
 argument_list|,
 name|z
 operator|->
@@ -13661,6 +13718,8 @@ operator|(
 name|uintmax_t
 operator|)
 name|allocs
+argument_list|,
+name|sleeps
 argument_list|)
 expr_stmt|;
 block|}

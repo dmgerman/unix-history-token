@@ -788,6 +788,10 @@ name|u_int64_t
 name|uz_fails
 decl_stmt|;
 comment|/* Total number of alloc failures */
+name|u_int64_t
+name|uz_sleeps
+decl_stmt|;
+comment|/* Total number of alloc sleeps */
 name|uint16_t
 name|uz_fills
 decl_stmt|;

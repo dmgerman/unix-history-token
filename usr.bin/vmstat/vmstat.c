@@ -7271,7 +7271,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%-20s %8s  %8s  %8s  %8s  %8s  %8s\n\n"
+literal|"%-20s %6s %6s %8s %8s %8s %4s %4s\n\n"
 argument_list|,
 literal|"ITEM"
 argument_list|,
@@ -7283,9 +7283,11 @@ literal|"USED"
 argument_list|,
 literal|"FREE"
 argument_list|,
-literal|"REQUESTS"
+literal|"REQ"
 argument_list|,
-literal|"FAILURES"
+literal|"FAIL"
+argument_list|,
+literal|"SLEEP"
 argument_list|)
 expr_stmt|;
 for|for
@@ -7330,7 +7332,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20s %8llu, %8llu, %8llu, %8llu, %8llu, %8llu\n"
+literal|"%-20s %6llu, %6llu,%8llu,%8llu,%8llu,%4llu,%4llu\n"
 argument_list|,
 name|name
 argument_list|,
@@ -7360,6 +7362,11 @@ name|mtp
 argument_list|)
 argument_list|,
 name|memstat_get_failures
+argument_list|(
+name|mtp
+argument_list|)
+argument_list|,
+name|memstat_get_sleeps
 argument_list|(
 name|mtp
 argument_list|)
