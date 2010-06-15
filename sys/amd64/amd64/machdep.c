@@ -10312,7 +10312,6 @@ operator|==
 name|_MC_FPOWNED_PCB
 condition|)
 block|{
-comment|/* 		 * XXX we violate the dubious requirement that fpusetregs() 		 * be called with interrupts disabled. 		 * XXX obsolete on trap-16 systems? 		 */
 name|fpstate
 operator|=
 operator|(
