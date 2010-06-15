@@ -172,9 +172,9 @@ comment|/* Intel Core2/Atom, fixed function */
 value|\ 	__PMC_CLASS(IAP)
 comment|/* Intel Core...Atom, programmable */
 value|\ 	__PMC_CLASS(UCF)
-comment|/* Intel Uncore programmable */
-value|\ 	__PMC_CLASS(UCP)
 comment|/* Intel Uncore fixed function */
+value|\ 	__PMC_CLASS(UCP)
+comment|/* Intel Uncore programmable */
 value|\ 	__PMC_CLASS(XSCALE)
 comment|/* Intel XScale counters */
 value|\ 	__PMC_CLASS(MIPS24K)
