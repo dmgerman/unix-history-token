@@ -320,6 +320,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|unsigned
+name|char
+name|_el_fn_sh_complete
+parameter_list|(
+name|EditLine
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * el_set/el_get parameters  */
 end_comment
