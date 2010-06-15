@@ -4495,7 +4495,13 @@ condition|(
 operator|(
 name|kwritable
 operator|&&
+operator|(
 name|entries
+operator|||
+name|kentries
+operator|>
+literal|1
+operator|)
 operator|)
 operator|||
 operator|(
