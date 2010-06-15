@@ -237,7 +237,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|feeder_eq_presets
 index|[]

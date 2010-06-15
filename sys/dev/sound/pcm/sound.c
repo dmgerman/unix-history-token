@@ -204,7 +204,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|snd_driver_version
 index|[]
