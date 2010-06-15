@@ -26,29 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/endian.h>
-end_include
-
-begin_comment
-comment|/* be64toh(), htobe64() */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -129,18 +119,6 @@ name|ng_patch_disconnect
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|OFFSETOF
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-value|((char *)&((s *)0)->e - (char *)((s *)0))
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -180,7 +158,7 @@ operator|)
 operator|(
 name|buf
 operator|-
-name|OFFSETOF
+name|offsetof
 argument_list|(
 expr|struct
 name|ng_patch_config
