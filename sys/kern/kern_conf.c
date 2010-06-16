@@ -3814,7 +3814,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"make_dev_credf: failed make_dev_credv"
+literal|"make_dev_p: failed make_dev_credv"
 operator|)
 argument_list|)
 expr_stmt|;
