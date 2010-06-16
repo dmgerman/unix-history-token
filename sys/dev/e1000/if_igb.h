@@ -866,6 +866,15 @@ decl_stmt|;
 name|u64
 name|tx_packets
 decl_stmt|;
+comment|/* Statistics for reporting, ONLY. */
+name|u32
+name|tdh
+decl_stmt|;
+comment|/* Transmit Descriptor Head */
+name|u32
+name|tdt
+decl_stmt|;
+comment|/* Transmit Descriptor Tail */
 block|}
 struct|;
 end_struct
@@ -967,6 +976,15 @@ decl_stmt|;
 name|u64
 name|rx_bytes
 decl_stmt|;
+comment|/* Statistics for reporting, ONLY. */
+name|u32
+name|rdh
+decl_stmt|;
+comment|/* Transmit Descriptor Head */
+name|u32
+name|rdt
+decl_stmt|;
+comment|/* Transmit Descriptor Tail */
 block|}
 struct|;
 end_struct
@@ -1161,6 +1179,30 @@ decl_stmt|;
 name|unsigned
 name|long
 name|rx_overruns
+decl_stmt|;
+name|unsigned
+name|long
+name|device_control
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_control
+decl_stmt|;
+name|unsigned
+name|long
+name|int_mask
+decl_stmt|;
+name|unsigned
+name|long
+name|eint_mask
+decl_stmt|;
+name|unsigned
+name|long
+name|packet_buf_alloc_rx
+decl_stmt|;
+name|unsigned
+name|long
+name|packet_buf_alloc_tx
 decl_stmt|;
 name|boolean_t
 name|in_detach
