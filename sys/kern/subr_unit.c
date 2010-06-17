@@ -373,6 +373,22 @@ name|foo
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WITNESS_WARN
+parameter_list|(
+name|flags
+parameter_list|,
+name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|(void)0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -3727,7 +3743,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unr) %d\n"
+literal|"sizeof(struct unr) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3740,7 +3756,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unrb) %d\n"
+literal|"sizeof(struct unrb) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3753,7 +3769,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unrhdr) %d\n"
+literal|"sizeof(struct unrhdr) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
