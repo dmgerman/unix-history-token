@@ -370,7 +370,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|fpugetregs
+name|fpugetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -470,7 +470,7 @@ operator|==
 name|_MC_FPOWNED_PCB
 condition|)
 block|{
-name|fpusetregs
+name|fpusetuserregs
 argument_list|(
 name|td
 argument_list|,
