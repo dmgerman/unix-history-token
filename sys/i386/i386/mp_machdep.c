@@ -719,6 +719,28 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_long
+modifier|*
+name|ipi_hardclock_counts
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+modifier|*
+name|ipi_statclock_counts
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -5419,12 +5441,28 @@ operator|<<
 name|IPI_HARDCLOCK
 operator|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|COUNT_IPIS
+operator|(
+operator|*
+name|ipi_hardclock_counts
+index|[
+name|cpu
+index|]
+operator|)
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 name|hardclockintr
 argument_list|(
 operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ipi_bitmap
@@ -5435,12 +5473,28 @@ operator|<<
 name|IPI_STATCLOCK
 operator|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|COUNT_IPIS
+operator|(
+operator|*
+name|ipi_statclock_counts
+index|[
+name|cpu
+index|]
+operator|)
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 name|statclockintr
 argument_list|(
 operator|&
 name|frame
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6530,7 +6584,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: invltlb"
+literal|"cpu%d:invltlb"
 argument_list|,
 name|i
 argument_list|)
@@ -6555,7 +6609,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: invlrng"
+literal|"cpu%d:invlrng"
 argument_list|,
 name|i
 argument_list|)
@@ -6580,7 +6634,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: invlpg"
+literal|"cpu%d:invlpg"
 argument_list|,
 name|i
 argument_list|)
@@ -6605,7 +6659,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: preempt"
+literal|"cpu%d:preempt"
 argument_list|,
 name|i
 argument_list|)
@@ -6630,7 +6684,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: ast"
+literal|"cpu%d:ast"
 argument_list|,
 name|i
 argument_list|)
@@ -6655,7 +6709,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: rendezvous"
+literal|"cpu%d:rendezvous"
 argument_list|,
 name|i
 argument_list|)
@@ -6680,7 +6734,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"cpu%d: lazypmap"
+literal|"cpu%d:lazypmap"
 argument_list|,
 name|i
 argument_list|)
@@ -6691,6 +6745,56 @@ name|buf
 argument_list|,
 operator|&
 name|ipi_lazypmap_counts
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"cpu%d:hardclock"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|intrcnt_add
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|ipi_hardclock_counts
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"cpu%d:statclock"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|intrcnt_add
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|ipi_statclock_counts
 index|[
 name|i
 index|]
