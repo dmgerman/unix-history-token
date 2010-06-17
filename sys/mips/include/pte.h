@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pte.h,v 1.4 1998/01/28 13:46:25 pefo Exp $	*/
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Utah Hdr: pte.h 1.11 89/09/03  *	from: @(#)pte.h 8.1 (Berkeley) 6/10/93  *	JNPR: pte.h,v 1.1.4.1 2007/09/10 06:20:19 girish  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2010 Juli Mallett<jmallett@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -19,131 +15,149 @@ directive|define
 name|_MACHINE_PTE_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
+begin_comment
+comment|/*  * TLB and PTE management.  Most things operate within the context of  * EntryLo0,1, and begin with TLBLO_.  Things which work with EntryHi  * start with TLBHI_.  PTE bits begin with PG_.  *  * Note that we use the same size VM and TLB pages.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLB_PAGE_SHIFT
+value|(PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_PAGE_SIZE
+value|(1<< TLB_PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_PAGE_MASK
+value|(TLB_PAGE_SIZE - 1)
+end_define
 
 begin_comment
-comment|/*  * MIPS hardware page table entry  */
+comment|/*  * TLB PageMask register.  Has mask bits set above the default, 4K, page mask.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBMASK_SHIFT
+value|(13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBMASK_MASK
+value|((PAGE_MASK>> TLBMASK_SHIFT)<< TLBMASK_SHIFT)
+end_define
+
+begin_comment
+comment|/*  * PFN for EntryLo register.  Upper bits are 0, which is to say that  * bit 29 is the last hardware bit;  Bits 30 and upwards (EntryLo is  * 64 bit though it can be referred to in 32-bits providing 2 software  * bits safely.  We use it as 64 bits to get many software bits, and  * god knows what else.) are unacknowledged by hardware.  They may be  * written as anything, but otherwise they have as much meaning as  * other 0 fields.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBLO_SWBITS_SHIFT
+value|(30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_SWBITS_MASK
+value|(0x3U<< TLBLO_SWBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PFN_SHIFT
+value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PFN_MASK
+value|(0x3FFFFFC0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PA_TO_PFN
+parameter_list|(
+name|pa
+parameter_list|)
+value|((((pa)>> TLB_PAGE_SHIFT)<< TLBLO_PFN_SHIFT)& TLBLO_PFN_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PFN_TO_PA
+parameter_list|(
+name|pfn
+parameter_list|)
+value|((vm_paddr_t)((pfn)>> TLBLO_PFN_SHIFT)<< TLB_PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PTE_TO_PFN
+parameter_list|(
+name|pte
+parameter_list|)
+value|((pte)& TLBLO_PFN_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PTE_TO_PA
+parameter_list|(
+name|pte
+parameter_list|)
+value|(TLBLO_PFN_TO_PA(TLBLO_PTE_TO_PFN((pte))))
+end_define
+
+begin_comment
+comment|/*  * VPN for EntryHi register.  Upper two bits select user, supervisor,  * or kernel.  Bits 61 to 40 copy bit 63.  VPN2 is bits 39 and down to  * as low as 13, down to PAGE_SHIFT, to index 2 TLB pages*.  From bit 12  * to bit 8 there is a 5-bit 0 field.  Low byte is ASID.  *  * Note that in FreeBSD, we map 2 TLB pages is equal to 1 VM page.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBHI_ASID_MASK
+value|(0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_ENTRY
+parameter_list|(
+name|va
+parameter_list|,
+name|asid
+parameter_list|)
+value|(((va)& ~PAGE_MASK) | ((asid)& TLBHI_ASID_MASK))
+end_define
 
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_LOCORE
 end_ifndef
-
-begin_struct
-struct|struct
-name|pte
-block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|unsigned
-name|int
-name|pg_prot
-range|:
-literal|2
-decl_stmt|,
-comment|/* SW: access control */
-name|pg_pfnum
-range|:
-literal|24
-decl_stmt|,
-comment|/* HW: core page frame number or 0 */
-name|pg_attr
-range|:
-literal|3
-decl_stmt|,
-comment|/* HW: cache attribute */
-name|pg_m
-range|:
-literal|1
-decl_stmt|,
-comment|/* HW: modified (dirty) bit */
-name|pg_v
-range|:
-literal|1
-decl_stmt|,
-comment|/* HW: valid bit */
-name|pg_g
-range|:
-literal|1
-decl_stmt|;
-comment|/* HW: ignore pid bit */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-name|unsigned
-name|int
-name|pg_g
-range|:
-literal|1
-decl_stmt|,
-comment|/* HW: ignore pid bit */
-name|pg_v
-range|:
-literal|1
-decl_stmt|,
-comment|/* HW: valid bit */
-name|pg_m
-range|:
-literal|1
-decl_stmt|,
-comment|/* HW: modified (dirty) bit */
-name|pg_attr
-range|:
-literal|3
-decl_stmt|,
-comment|/* HW: cache attribute */
-name|pg_pfnum
-range|:
-literal|24
-decl_stmt|,
-comment|/* HW: core page frame number or 0 */
-name|pg_prot
-range|:
-literal|2
-decl_stmt|;
-comment|/* SW: access control */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Structure defining an tlb entry data set.  */
-end_comment
-
-begin_struct
-struct|struct
-name|tlb
-block|{
-name|int
-name|tlb_mask
-decl_stmt|;
-name|int
-name|tlb_hi
-decl_stmt|;
-name|int
-name|tlb_lo0
-decl_stmt|;
-name|int
-name|tlb_lo1
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_typedef
 typedef|typedef
@@ -160,6 +174,11 @@ modifier|*
 name|pd_entry_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -181,15 +200,6 @@ end_define
 
 begin_comment
 comment|/* for assembly files */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _LOCORE */
 end_comment
 
 begin_define
@@ -389,53 +399,6 @@ begin_comment
 comment|/* Address space ID */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PTE_SHIFT
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|pfn_is_ext
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x3c000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vad_to_pfn
-parameter_list|(
-name|x
-parameter_list|)
-value|(((unsigned)(x)>> PTE_SHIFT)& PTE_FRAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vad_to_pfn64
-parameter_list|(
-name|x
-parameter_list|)
-value|((quad_t)(x)>> PTE_SHIFT)& PTE_FRAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|pfn_to_vad
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& PTE_FRAME)<< PTE_SHIFT)
-end_define
-
 begin_comment
 comment|/* User virtual to pte offset in page table */
 end_comment
@@ -532,79 +495,6 @@ directive|define
 name|mips_pg_wired_bit
 parameter_list|()
 value|(PTE_WIRED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_tlbpfn_to_paddr
-parameter_list|(
-name|x
-parameter_list|)
-value|pfn_to_vad((x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_paddr_to_tlbpfn
-parameter_list|(
-name|x
-parameter_list|)
-value|vad_to_pfn((x))
-end_define
-
-begin_comment
-comment|/* These are not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_4K
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_16K
-value|0x00006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_64K
-value|0x0001e000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_256K
-value|0x0007e000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_1M
-value|0x001fe000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_4M
-value|0x007fe000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SIZE_16M
-value|0x01ffe000
 end_define
 
 begin_endif

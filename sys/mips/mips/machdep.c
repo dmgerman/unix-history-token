@@ -289,6 +289,12 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -458,7 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Each entry in the pcpu_space[] array is laid out in the following manner:  * struct pcpu for cpu 'n'	pcpu_space[n]  * boot stack for cpu 'n'	pcpu_space[n] + PAGE_SIZE * 2 - START_FRAME  *  * Note that the boot stack grows downwards and we assume that we never  * use enough stack space to trample over the 'struct pcpu' that is at  * the beginning of the array.  *  * The array is aligned on a (PAGE_SIZE * 2) boundary so that the 'struct pcpu'  * is always in the even page frame of the wired TLB entry on SMP kernels.  *  * The array is in the .data section so that the stack does not get zeroed out  * when the .bss section is zeroed.  */
+comment|/*  * Each entry in the pcpu_space[] array is laid out in the following manner:  * struct pcpu for cpu 'n'	pcpu_space[n]  * boot stack for cpu 'n'	pcpu_space[n] + PAGE_SIZE * 2 - CALLFRAME_SIZ  *  * Note that the boot stack grows downwards and we assume that we never  * use enough stack space to trample over the 'struct pcpu' that is at  * the beginning of the array.  *  * The array is aligned on a (PAGE_SIZE * 2) boundary so that the 'struct pcpu'  * is always in the even page frame of the wired TLB entry on SMP kernels.  *  * The array is in the .data section so that the stack does not get zeroed out  * when the .bss section is zeroed.  */
 end_comment
 
 begin_decl_stmt
@@ -1526,27 +1532,10 @@ block|{
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|struct
-name|tlb
-name|tlb
-decl_stmt|;
-name|int
-name|lobits
+name|pt_entry_t
+name|pte
 decl_stmt|;
 comment|/* 	 * Map the pcpu structure at the virtual address 'pcpup'. 	 * We use a wired tlb index to do this one-time mapping. 	 */
-name|memset
-argument_list|(
-operator|&
-name|tlb
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tlb
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|pa
 operator|=
 name|vtophys
@@ -1554,7 +1543,7 @@ argument_list|(
 name|pcpu
 argument_list|)
 expr_stmt|;
-name|lobits
+name|pte
 operator|=
 name|PTE_RW
 operator||
@@ -1564,45 +1553,30 @@ name|PTE_G
 operator||
 name|PTE_CACHE
 expr_stmt|;
-name|tlb
-operator|.
-name|tlb_hi
-operator|=
+name|tlb_insert_wired
+argument_list|(
+name|PCPU_TLB_ENTRY
+argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
 name|pcpup
-expr_stmt|;
-name|tlb
-operator|.
-name|tlb_lo0
-operator|=
-name|mips_paddr_to_tlbpfn
+argument_list|,
+name|TLBLO_PA_TO_PFN
 argument_list|(
 name|pa
 argument_list|)
 operator||
-name|lobits
-expr_stmt|;
-name|tlb
-operator|.
-name|tlb_lo1
-operator|=
-name|mips_paddr_to_tlbpfn
+name|pte
+argument_list|,
+name|TLBLO_PA_TO_PFN
 argument_list|(
 name|pa
 operator|+
 name|PAGE_SIZE
 argument_list|)
 operator||
-name|lobits
-expr_stmt|;
-name|Mips_TLBWriteIndexed
-argument_list|(
-name|PCPU_TLB_ENTRY
-argument_list|,
-operator|&
-name|tlb
+name|pte
 argument_list|)
 expr_stmt|;
 block|}

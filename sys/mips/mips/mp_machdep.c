@@ -137,6 +137,12 @@ directive|include
 file|<machine/cache.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|pcb
@@ -457,7 +463,7 @@ name|cpu
 index|]
 argument_list|)
 expr_stmt|;
-name|pmap_save_tlb
+name|tlb_save
 argument_list|()
 expr_stmt|;
 comment|/* Indicate we are stopped */
@@ -848,17 +854,15 @@ name|cpuid
 parameter_list|)
 block|{
 comment|/* TLB */
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|Mips_TLBFlush
-argument_list|(
-name|num_tlbentries
-argument_list|)
+name|tlb_invalidate_all
+argument_list|()
 expr_stmt|;
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 name|VMWIRED_ENTRIES
 argument_list|)
@@ -873,7 +877,7 @@ expr_stmt|;
 name|mips_sync
 argument_list|()
 expr_stmt|;
-name|MachSetPID
+name|mips_wr_entryhi
 argument_list|(
 literal|0
 argument_list|)

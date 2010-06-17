@@ -1504,7 +1504,7 @@ argument_list|)
 expr_stmt|;
 name|pa
 operator|=
-name|mips_tlbpfn_to_paddr
+name|TLBLO_PTE_TO_PA
 argument_list|(
 operator|*
 name|pte
@@ -1699,7 +1699,7 @@ argument_list|)
 expr_stmt|;
 name|pa
 operator|=
-name|mips_tlbpfn_to_paddr
+name|TLBLO_PTE_TO_PA
 argument_list|(
 operator|*
 name|pte

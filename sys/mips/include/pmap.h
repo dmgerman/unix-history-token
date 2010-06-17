@@ -30,18 +30,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|VADDR
-parameter_list|(
-name|pdi
-parameter_list|,
-name|pti
-parameter_list|)
-value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NKPT
 value|120
 end_define
@@ -49,35 +37,6 @@ end_define
 begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPDE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPDE
-value|255
-end_define
-
-begin_comment
-comment|/* addressable number of page tables/pde's */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|KPTDI
-value|(VM_MIN_KERNEL_ADDRESS>> SEGSHIFT)
-end_define
 
 begin_define
 define|#
@@ -309,6 +268,16 @@ parameter_list|(
 name|va
 parameter_list|)
 value|pmap_kextract(((vm_offset_t) (va)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|pmap_asid
+parameter_list|(
+name|pmap
+parameter_list|)
+value|(pmap)->pm_asid[PCPU_GET(cpuid)].asid
 end_define
 
 begin_decl_stmt
@@ -732,20 +701,6 @@ name|pmap_flush_pvcache
 parameter_list|(
 name|vm_page_t
 name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Function to save TLB contents so that they may be inspected in the debugger.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|pmap_save_tlb
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

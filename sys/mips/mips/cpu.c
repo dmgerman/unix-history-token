@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tlb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/hwfunc.h>
 end_include
 
@@ -539,17 +545,15 @@ name|cpuinfo
 operator|.
 name|tlb_nentries
 expr_stmt|;
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|Mips_TLBFlush
-argument_list|(
-name|num_tlbentries
-argument_list|)
+name|tlb_invalidate_all
+argument_list|()
 expr_stmt|;
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 name|VMWIRED_ENTRIES
 argument_list|)
