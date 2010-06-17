@@ -4471,14 +4471,18 @@ name|zio
 operator|->
 name|io_type
 decl_stmt|;
-comment|/* 	 * If we're a config writer, the normal issue and interrupt threads 	 * may all be blocked waiting for the config lock.  In this case, 	 * select the otherwise-unused taskq for ZIO_TYPE_NULL. 	 */
+comment|/* 	 * If we're a config writer or a probe, the normal issue and 	 * interrupt threads may all be blocked waiting for the config lock. 	 * In this case, select the otherwise-unused taskq for ZIO_TYPE_NULL. 	 */
 if|if
 condition|(
 name|zio
 operator|->
 name|io_flags
 operator|&
+operator|(
 name|ZIO_FLAG_CONFIG_WRITER
+operator||
+name|ZIO_FLAG_PROBE
+operator|)
 condition|)
 name|t
 operator|=

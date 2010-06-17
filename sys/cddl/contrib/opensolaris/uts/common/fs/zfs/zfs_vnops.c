@@ -9518,14 +9518,6 @@ name|zp
 operator|->
 name|z_phys
 expr_stmt|;
-name|mutex_enter
-argument_list|(
-operator|&
-name|zp
-operator|->
-name|z_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If ACL is trivial don't bother looking for ACE_READ_ATTRIBUTES. 	 * Also, if we are the owner don't bother, since owner should 	 * always be allowed to read basic attributes of file. 	 */
 if|if
 condition|(
@@ -9568,14 +9560,6 @@ name|cr
 argument_list|)
 condition|)
 block|{
-name|mutex_exit
-argument_list|(
-operator|&
-name|zp
-operator|->
-name|z_lock
-argument_list|)
-expr_stmt|;
 name|ZFS_EXIT
 argument_list|(
 name|zfsvfs
@@ -9589,6 +9573,14 @@ return|;
 block|}
 block|}
 comment|/* 	 * Return all attributes.  It's cheaper to provide the answer 	 * than to determine whether we were asked the question. 	 */
+name|mutex_enter
+argument_list|(
+operator|&
+name|zp
+operator|->
+name|z_lock
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|va_type
