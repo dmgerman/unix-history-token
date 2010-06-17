@@ -1420,9 +1420,6 @@ name|cdevsw
 modifier|*
 name|_devsw
 parameter_list|,
-name|int
-name|_unit
-parameter_list|,
 name|struct
 name|ucred
 modifier|*
@@ -1446,9 +1443,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|9
+function_decl|8
 operator|,
-function_decl|10
+function_decl|9
 end_function_decl
 
 begin_empty_stmt

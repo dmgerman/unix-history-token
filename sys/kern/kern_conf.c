@@ -3731,9 +3731,6 @@ name|cdevsw
 modifier|*
 name|devsw
 parameter_list|,
-name|int
-name|unit
-parameter_list|,
 name|struct
 name|ucred
 modifier|*
@@ -3779,7 +3776,7 @@ name|cdev
 argument_list|,
 name|devsw
 argument_list|,
-name|unit
+literal|0
 argument_list|,
 name|cr
 argument_list|,
