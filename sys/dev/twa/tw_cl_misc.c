@@ -2572,7 +2572,6 @@ name|error
 operator|=
 name|TW_OSL_EGENFAILURE
 expr_stmt|;
-comment|// tw_cl_reset_ctlr(ctlr_handle);
 block|}
 block|}
 return|return
