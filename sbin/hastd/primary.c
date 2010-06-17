@@ -528,7 +528,7 @@ name|SYNCREQ
 parameter_list|(
 name|hio
 parameter_list|)
-value|do { (hio)->hio_ggio.gctl_unit = -1; } while (0)
+value|do {					\ 	(hio)->hio_ggio.gctl_unit = -1;					\ 	(hio)->hio_ggio.gctl_seq = 1;					\ } while (0)
 end_define
 
 begin_define
@@ -1925,6 +1925,11 @@ argument_list|,
 name|buf
 argument_list|,
 name|mapsize
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 if|if

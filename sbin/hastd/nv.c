@@ -3292,8 +3292,18 @@ name|nv_error
 operator|=
 name|errno
 expr_stmt|;
+name|free
+argument_list|(
+name|nvh
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|free
+argument_list|(
+name|nvh
+argument_list|)
+expr_stmt|;
 comment|/* Add the actual data. */
 if|if
 condition|(
