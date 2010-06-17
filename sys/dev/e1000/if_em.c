@@ -23752,50 +23752,6 @@ argument_list|,
 literal|"XOFF Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"good_pkts_recvd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|stats
-operator|.
-name|gprc
-argument_list|,
-literal|"Good Packets Received"
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_QUAD
-argument_list|(
-name|ctx
-argument_list|,
-name|stat_list
-argument_list|,
-name|OID_AUTO
-argument_list|,
-literal|"good_pkts_txd"
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|stats
-operator|.
-name|gptc
-argument_list|,
-literal|"Good Packets Transmitted"
-argument_list|)
-expr_stmt|;
 comment|/* Packet Reception Stats */
 name|SYSCTL_ADD_QUAD
 argument_list|(
