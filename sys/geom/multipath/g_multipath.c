@@ -897,6 +897,14 @@ operator|->
 name|cp_active
 operator|==
 name|NULL
+operator|||
+name|sc
+operator|->
+name|cp_active
+operator|->
+name|provider
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
