@@ -65,7 +65,7 @@ name|pic_id
 parameter_list|,
 name|irq
 parameter_list|)
-value|((powerpc_ign_lookup(pic_id)<< IGN_SHIFT) | irq)
+value|((powerpc_ign_lookup(pic_id)<< IGN_SHIFT) | (irq))
 end_define
 
 begin_comment
