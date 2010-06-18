@@ -217,9 +217,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * First optimistically assume that all pages are resident  	 * (and R/W if for write) if so just mark pages as held (and  	 * dirty if for write) and return 	 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|pages
@@ -246,7 +243,7 @@ name|pages
 operator|++
 control|)
 block|{
-comment|/* 		 * page queue mutex is recursable so this is OK 		 * it would be really nice if we had an unlocked 		 * version of this so we were only acquiring the  		 * pmap lock 1 time as opposed to potentially 		 * many dozens of times 		 */
+comment|/* 		 * it would be really nice if we had an unlocked 		 * version of this so we were only acquiring the  		 * pmap lock 1 time as opposed to potentially 		 * many dozens of times 		 */
 operator|*
 name|pages
 operator|=
@@ -280,15 +277,20 @@ name|prot
 operator|&
 name|VM_PROT_WRITE
 condition|)
+block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|faults
@@ -388,9 +390,6 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|pages
@@ -418,7 +417,19 @@ operator|*
 name|pages
 condition|)
 block|{
+name|vm_page_lock
+argument_list|(
+operator|*
+name|pages
+argument_list|)
+expr_stmt|;
 name|vm_page_unhold
+argument_list|(
+operator|*
+name|pages
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
 argument_list|(
 operator|*
 name|pages
@@ -430,9 +441,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|EFAULT
@@ -466,16 +474,25 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|count
 operator|--
 condition|)
 block|{
+name|vm_page_lock
+argument_list|(
+operator|*
+name|mp
+argument_list|)
+expr_stmt|;
 name|vm_page_unhold
+argument_list|(
+operator|*
+name|mp
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock
 argument_list|(
 operator|*
 name|mp
@@ -485,9 +502,6 @@ name|mp
 operator|++
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
