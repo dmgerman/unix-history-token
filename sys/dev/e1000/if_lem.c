@@ -1184,7 +1184,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|bool
 name|lem_rxeof
 parameter_list|(
 name|struct
@@ -1192,6 +1192,9 @@ name|adapter
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5901,13 +5904,14 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|rx_done
-operator|=
 name|lem_rxeof
 argument_list|(
 name|adapter
 argument_list|,
 name|count
+argument_list|,
+operator|&
+name|rx_done
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -6125,6 +6129,8 @@ name|adapter
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|lem_txeof
@@ -6302,6 +6308,8 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -10949,13 +10957,13 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *    *  For polling we also now return the number of cleaned packets  *********************************************************************/
-argument|static int lem_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static bool lem_rxeof(struct adapter *adapter, int count, int *done) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
 argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i, rx_sent =
 literal|0
-argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (rx_sent); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
+argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		if (done != NULL) 			*done = rx_sent; 		EM_RX_UNLOCK(adapter); 		return (FALSE); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
 argument|)&& 	    (ifp->if_drv_flags& IFF_DRV_RUNNING)) { 		struct mbuf *m = NULL;  		mp = adapter->rx_buffer_area[i].m_head;
 comment|/* 		 * Can't defer bus_dmamap_sync(9) because TBI_ACCEPT 		 * needs to access the last received byte in the mbuf. 		 */
@@ -11035,7 +11043,7 @@ argument|) 		i = adapter->num_rx_desc -
 literal|1
 argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_RDT(
 literal|0
-argument|), i); 	EM_RX_UNLOCK(adapter); 	return (rx_sent); }
+argument|), i); 	if (done != NULL) 		*done = rx_sent; 	EM_RX_UNLOCK(adapter); 	return (current_desc->status& E1000_RXD_STAT_DD); }
 ifndef|#
 directive|ifndef
 name|__NO_STRICT_ALIGNMENT
