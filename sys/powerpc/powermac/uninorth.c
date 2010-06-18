@@ -786,7 +786,7 @@ name|INTR_TRIGGER_LEVEL
 else|:
 name|INTR_TRIGGER_EDGE
 argument_list|,
-name|INTR_POLARITY_HIGH
+name|INTR_POLARITY_LOW
 argument_list|)
 expr_stmt|;
 block|}

@@ -713,7 +713,7 @@ name|OPENPIC_IMASK
 expr_stmt|;
 name|x
 operator||=
-name|OPENPIC_POLARITY_POSITIVE
+name|OPENPIC_POLARITY_NEGATIVE
 expr_stmt|;
 name|x
 operator||=
