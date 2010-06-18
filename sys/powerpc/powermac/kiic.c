@@ -151,6 +151,13 @@ name|DATA
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|REV
+value|8
+end_define
+
 begin_comment
 comment|/* MODE */
 end_comment
@@ -732,6 +739,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|kiic
+argument_list|,
+name|unin
+argument_list|,
+name|kiic_driver
+argument_list|,
+name|kiic_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1159,6 +1184,24 @@ operator||
 name|I2C_INT_STOP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Revision: %02X\n"
+argument_list|,
+name|kiic_readreg
+argument_list|(
+name|sc
+argument_list|,
+name|REV
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Add the IIC bus layer */
 name|sc
 operator|->
@@ -1202,7 +1245,7 @@ name|u_int
 name|val
 parameter_list|)
 block|{
-name|bus_write_1
+name|bus_write_4
 argument_list|(
 name|sc
 operator|->
@@ -1241,7 +1284,7 @@ name|reg
 parameter_list|)
 block|{
 return|return
-name|bus_read_1
+name|bus_read_4
 argument_list|(
 name|sc
 operator|->
@@ -1253,6 +1296,8 @@ name|sc_regstep
 operator|*
 name|reg
 argument_list|)
+operator|&
+literal|0xff
 return|;
 block|}
 end_function
