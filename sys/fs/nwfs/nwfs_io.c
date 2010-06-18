@@ -2919,9 +2919,6 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2952,9 +2949,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 name|rtvals
