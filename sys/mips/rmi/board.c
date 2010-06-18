@@ -449,6 +449,7 @@ name|usb
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Board version 8 has NAND flash */
 name|xlr_board_info
 operator|.
 name|cfi
@@ -556,6 +557,18 @@ operator|.
 name|board_major_version
 operator|==
 name|RMI_XLR_BOARD_ARIZONA_VI
+operator|||
+name|xlr_boot1_info
+operator|.
+name|board_major_version
+operator|==
+name|RMI_XLR_BOARD_ARIZONA_XI
+operator|||
+name|xlr_boot1_info
+operator|.
+name|board_major_version
+operator|==
+name|RMI_XLR_BOARD_ARIZONA_XII
 condition|)
 name|xlr_board_info
 operator|.
@@ -638,7 +651,7 @@ literal|0xf
 expr_stmt|;
 if|if
 condition|(
-name|xlr_is_xls4xx
+name|xlr_is_xls4xx_lite
 argument_list|()
 condition|)
 block|{
@@ -654,7 +667,7 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-comment|/* some ports are not enabled on 4xx, figure this out 			   from the GPIO fuse bank */
+comment|/* some ports are not enabled on the condor 4xx, figure this 			   out from the GPIO fuse bank */
 name|tmp
 operator|=
 name|xlr_read_reg
