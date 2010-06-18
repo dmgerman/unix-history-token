@@ -1663,6 +1663,13 @@ name|SCTP_PCB_FLAGS_SOCKET_ALLGONE
 value|0x20000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_SOCKET_CANT_READ
+value|0x40000000
+end_define
+
 begin_comment
 comment|/* flags to copy to new PCB */
 end_comment
