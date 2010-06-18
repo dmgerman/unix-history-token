@@ -3007,8 +3007,6 @@ decl_stmt|;
 name|ispsoftc_t
 modifier|*
 name|isp
-init|=
-name|NULL
 decl_stmt|;
 name|size_t
 name|psize
@@ -4667,8 +4665,6 @@ label|:
 if|if
 condition|(
 name|pcs
-operator|&&
-name|pcs
 operator|->
 name|ih
 condition|)
@@ -4691,8 +4687,6 @@ block|}
 if|if
 condition|(
 name|locksetup
-operator|&&
-name|isp
 condition|)
 block|{
 name|mtx_destroy
@@ -4729,8 +4723,6 @@ block|}
 if|if
 condition|(
 name|pcs
-operator|&&
-name|pcs
 operator|->
 name|msicount
 condition|)
@@ -4764,11 +4756,6 @@ block|}
 if|if
 condition|(
 name|pcs
-condition|)
-block|{
-if|if
-condition|(
-name|pcs
 operator|->
 name|pci_isp
 operator|.
@@ -4835,7 +4822,6 @@ name|ptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -9225,6 +9211,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dm_segs
+operator|=
+name|NULL
+expr_stmt|;
+name|nseg
+operator|=
+literal|0
+expr_stmt|;
 name|ddir
 operator|=
 name|ISP_NOXFR

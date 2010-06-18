@@ -10199,7 +10199,7 @@ name|isp
 argument_list|,
 name|src
 operator|->
-name|vp_ctrl_idmap
+name|vp_ctrl_reserved
 index|[
 name|i
 index|]
@@ -10207,7 +10207,7 @@ argument_list|,
 operator|&
 name|dst
 operator|->
-name|vp_ctrl_idmap
+name|vp_ctrl_reserved
 index|[
 name|i
 index|]
