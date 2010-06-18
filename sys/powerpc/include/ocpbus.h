@@ -103,6 +103,24 @@ name|OCPBUS_DEVTYPE_SEC
 value|8
 end_define
 
+begin_comment
+comment|/* PIC IDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPIC_ID
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATPIC_ID
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif

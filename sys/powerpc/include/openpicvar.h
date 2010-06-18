@@ -45,6 +45,11 @@ name|resource
 modifier|*
 name|sc_memr
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|sc_intr
+decl_stmt|;
 name|bus_space_tag_t
 name|sc_bt
 decl_stmt|;
@@ -57,6 +62,13 @@ name|sc_version
 decl_stmt|;
 name|int
 name|sc_rid
+decl_stmt|;
+name|int
+name|sc_irq
+decl_stmt|;
+name|void
+modifier|*
+name|sc_icookie
 decl_stmt|;
 name|u_int
 name|sc_ncpu

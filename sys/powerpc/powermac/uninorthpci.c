@@ -1776,6 +1776,9 @@ name|pintr
 decl_stmt|,
 name|mintr
 decl_stmt|;
+name|phandle_t
+name|iparent
+decl_stmt|;
 name|uint8_t
 name|maskbuf
 index|[
@@ -1839,12 +1842,20 @@ argument_list|(
 name|mintr
 argument_list|)
 argument_list|,
+operator|&
+name|iparent
+argument_list|,
 name|maskbuf
 argument_list|)
 condition|)
 return|return
 operator|(
+name|INTR_VEC
+argument_list|(
+name|iparent
+argument_list|,
 name|mintr
+argument_list|)
 operator|)
 return|;
 comment|/* Maybe it's a real interrupt, not an intpin */

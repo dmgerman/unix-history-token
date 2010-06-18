@@ -350,25 +350,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISA_IRQ_START
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRQ_START
-value|(ISA_IRQ_START + 16)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ISA_IRQ
 parameter_list|(
 name|n
 parameter_list|)
-value|(ISA_IRQ_START + (n))
+value|(INTR_VEC(ATPIC_ID, n))
 end_define
 
 begin_define
@@ -378,7 +364,7 @@ name|PIC_IRQ_EXT
 parameter_list|(
 name|n
 parameter_list|)
-value|(PIC_IRQ_START + (n))
+value|(INTR_VEC(OPIC_ID, (n)))
 end_define
 
 begin_define
@@ -388,7 +374,7 @@ name|PIC_IRQ_INT
 parameter_list|(
 name|n
 parameter_list|)
-value|(PIC_IRQ_START + 16 + (n))
+value|(INTR_VEC(OPIC_ID, (16 + (n))))
 end_define
 
 begin_endif

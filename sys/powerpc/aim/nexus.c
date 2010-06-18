@@ -772,6 +772,8 @@ literal|0
 expr_stmt|;
 name|end
 operator|=
+name|MAX_PICS
+operator|*
 name|INTR_VECTORS
 operator|-
 literal|1

@@ -528,7 +528,7 @@ argument_list|()
 expr_stmt|;
 name|PIC_DISPATCH
 argument_list|(
-name|pic
+name|root_pic
 argument_list|,
 name|framep
 argument_list|)

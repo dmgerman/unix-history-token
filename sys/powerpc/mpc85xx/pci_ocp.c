@@ -4383,9 +4383,15 @@ name|SYS_RES_IRQ
 case|:
 if|if
 condition|(
+name|INTR_IGN
+argument_list|(
 name|start
-operator|<
-name|PIC_IRQ_START
+argument_list|)
+operator|==
+name|powerpc_ign_lookup
+argument_list|(
+name|ATPIC_ID
+argument_list|)
 condition|)
 block|{
 name|device_printf

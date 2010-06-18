@@ -221,6 +221,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|uint32_t
+name|hrowpic_id
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -263,6 +274,13 @@ argument_list|(
 name|pic_eoi
 argument_list|,
 name|hrowpic_eoi
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pic_id
+argument_list|,
+name|hrowpic_id
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -646,6 +664,11 @@ argument_list|,
 literal|64
 argument_list|)
 expr_stmt|;
+name|root_pic
+operator|=
+name|dev
+expr_stmt|;
+comment|/* Heathrow systems have only one PIC */
 return|return
 operator|(
 literal|0
@@ -1124,6 +1147,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|uint32_t
+name|hrowpic_id
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 

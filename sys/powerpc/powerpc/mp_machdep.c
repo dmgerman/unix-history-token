@@ -1258,7 +1258,7 @@ argument_list|)
 expr_stmt|;
 name|PIC_IPI
 argument_list|(
-name|pic
+name|root_pic
 argument_list|,
 name|pc
 operator|->

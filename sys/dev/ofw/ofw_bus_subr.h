@@ -181,6 +181,9 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+name|phandle_t
+modifier|*
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)
@@ -216,6 +219,22 @@ name|void
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|phandle_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Helper to get node's interrupt parent */
+end_comment
+
+begin_function_decl
+name|void
+name|ofw_bus_find_iparent
+parameter_list|(
+name|phandle_t
 parameter_list|)
 function_decl|;
 end_function_decl

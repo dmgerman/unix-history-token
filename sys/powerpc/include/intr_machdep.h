@@ -22,6 +22,52 @@ name|INTR_VECTORS
 value|256
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_PICS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGN_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR_INTLINE
+parameter_list|(
+name|irq
+parameter_list|)
+value|(irq& ((1<< IGN_SHIFT) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR_IGN
+parameter_list|(
+name|irq
+parameter_list|)
+value|(irq>> IGN_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTR_VEC
+parameter_list|(
+name|pic_id
+parameter_list|,
+name|irq
+parameter_list|)
+value|((powerpc_ign_lookup(pic_id)<< IGN_SHIFT) | irq)
+end_define
+
 begin_comment
 comment|/*  * Default base address for MSI messages on PowerPC  */
 end_comment
@@ -36,14 +82,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|device_t
-name|pic
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|device_t
-name|pic8259
+name|root_pic
 decl_stmt|;
 end_decl_stmt
 
@@ -71,10 +110,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|powerpc_register_8259
+name|int
+name|powerpc_ign_lookup
 parameter_list|(
-name|device_t
+name|uint32_t
+name|pic_id
 parameter_list|)
 function_decl|;
 end_function_decl
