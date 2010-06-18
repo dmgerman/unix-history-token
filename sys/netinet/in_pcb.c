@@ -2893,6 +2893,8 @@ name|sockaddr
 operator|*
 operator|)
 name|sin
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3435,6 +3437,8 @@ argument_list|(
 operator|&
 name|sain
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
