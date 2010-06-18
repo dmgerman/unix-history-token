@@ -7759,11 +7759,18 @@ name|flags
 operator|&
 name|RTLD_LO_NOLOAD
 condition|)
+block|{
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* First use of this object, so we must map it in */
 name|obj
 operator|=
