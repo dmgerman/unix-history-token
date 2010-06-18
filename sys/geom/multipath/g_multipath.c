@@ -3764,6 +3764,12 @@ condition|(
 name|sc
 operator|->
 name|cp_active
+operator|&&
+name|sc
+operator|->
+name|cp_active
+operator|->
+name|provider
 condition|)
 block|{
 name|sbuf_printf
