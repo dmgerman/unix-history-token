@@ -1541,15 +1541,26 @@ name|vm_map
 operator|.
 name|size
 expr_stmt|;
+comment|/* 		 * Approximate the kernel's method of calculating 		 * this field. 		 */
+define|#
+directive|define
+name|pmap_resident_count
+parameter_list|(
+name|pm
+parameter_list|)
+value|((pm)->pm_stats.resident_count)
 name|kp
 operator|->
 name|ki_rssize
 operator|=
+name|pmap_resident_count
+argument_list|(
+operator|&
 name|vmspace
 operator|.
-name|vm_swrss
+name|vm_pmap
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|kp
 operator|->
 name|ki_swrss
