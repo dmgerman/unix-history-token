@@ -377,46 +377,6 @@ parameter_list|)
 value|mtx_unlock(&(pmap)->pm_mtx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_LOCK_INIT
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_init(&(sysmap)->lock, "pmap-lgmem", \ 				    "per-cpu-map", (MTX_DEF| MTX_DUPOK))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_LOCK
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_lock(&(sysmap)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_UNLOCK
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_unlock(&(sysmap)->lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMAP_LGMEM_DESTROY
-parameter_list|(
-name|sysmap
-parameter_list|)
-value|mtx_destroy(&(sysmap)->lock)
-end_define
-
 begin_comment
 comment|/*  * For each vm_page_t, there is a list of all currently valid virtual  * mappings of that page.  An entry is a pv_entry_t, the list is pv_table.  */
 end_comment

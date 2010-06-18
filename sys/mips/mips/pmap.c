@@ -906,10 +906,6 @@ begin_struct
 struct|struct
 name|local_sysmaps
 block|{
-name|struct
-name|mtx
-name|lock
-decl_stmt|;
 name|vm_offset_t
 name|base
 decl_stmt|;
@@ -947,7 +943,7 @@ parameter_list|,
 name|phys
 parameter_list|)
 define|\
-value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	PMAP_LGMEM_LOCK(sysm);						\ 	intr = intr_disable();						\ 	sched_pin();							\ 	va = sysm->base;						\ 	npte = TLBLO_PA_TO_PFN(phys) |					\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;
+value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	intr = intr_disable();						\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	va = sysm->base;						\ 	npte = TLBLO_PA_TO_PFN(phys) |					\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;
 end_define
 
 begin_define
@@ -964,7 +960,7 @@ parameter_list|,
 name|phys2
 parameter_list|)
 define|\
-value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	PMAP_LGMEM_LOCK(sysm);						\ 	intr = intr_disable();						\ 	sched_pin();							\ 	va1 = sysm->base;						\ 	va2 = sysm->base + PAGE_SIZE;					\ 	npte = TLBLO_PA_TO_PFN(phys1) |					\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va1);				\ 	*pte = npte;							\ 	npte =  TLBLO_PA_TO_PFN(phys2) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va2);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;						\ 	sysm->valid2 = 1;
+value|int cpu;							\ 	struct local_sysmaps *sysm;					\ 	pt_entry_t *pte, npte;						\ 									\ 	intr = intr_disable();						\ 	cpu = PCPU_GET(cpuid);						\ 	sysm =&sysmap_lmem[cpu];					\ 	va1 = sysm->base;						\ 	va2 = sysm->base + PAGE_SIZE;					\ 	npte = TLBLO_PA_TO_PFN(phys1) |					\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va1);				\ 	*pte = npte;							\ 	npte =  TLBLO_PA_TO_PFN(phys2) |				\ 	    PTE_RW | PTE_V | PTE_G | PTE_W | PTE_CACHE;			\ 	pte = pmap_pte(kernel_pmap, va2);				\ 	*pte = npte;							\ 	sysm->valid1 = 1;						\ 	sysm->valid2 = 1;
 end_define
 
 begin_define
@@ -973,7 +969,7 @@ directive|define
 name|PMAP_LMEM_UNMAP
 parameter_list|()
 define|\
-value|pte = pmap_pte(kernel_pmap, sysm->base);			\ 	*pte = PTE_G;							\ 	tlb_invalidate_address(kernel_pmap, sysm->base);		\ 	sysm->valid1 = 0;						\ 	pte = pmap_pte(kernel_pmap, sysm->base + PAGE_SIZE);		\ 	*pte = PTE_G;							\ 	tlb_invalidate_address(kernel_pmap, sysm->base + PAGE_SIZE);	\ 	sysm->valid2 = 0;						\ 	sched_unpin();							\ 	intr_restore(intr);						\ 	PMAP_LGMEM_UNLOCK(sysm);
+value|pte = pmap_pte(kernel_pmap, sysm->base);			\ 	*pte = PTE_G;							\ 	tlb_invalidate_address(kernel_pmap, sysm->base);		\ 	sysm->valid1 = 0;						\ 	pte = pmap_pte(kernel_pmap, sysm->base + PAGE_SIZE);		\ 	*pte = PTE_G;							\ 	tlb_invalidate_address(kernel_pmap, sysm->base + PAGE_SIZE);	\ 	sysm->valid2 = 0;						\ 	intr_restore(intr)
 end_define
 
 begin_function
@@ -1771,15 +1767,6 @@ operator|.
 name|valid2
 operator|=
 literal|0
-expr_stmt|;
-name|PMAP_LGMEM_LOCK_INIT
-argument_list|(
-operator|&
-name|sysmap_lmem
-index|[
-name|i
-index|]
-argument_list|)
 expr_stmt|;
 block|}
 block|}
