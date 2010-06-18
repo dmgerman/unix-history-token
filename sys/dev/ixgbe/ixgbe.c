@@ -51,7 +51,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.2.0"
+literal|"2.2.1"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ixgbe_init_locked
 parameter_list|(
 name|struct
@@ -1636,7 +1636,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Header split has seemed to be beneficial in  * most circumstances tested, so its on by default  * however this variable will allow it to be disabled  * for some debug purposes.  */
+comment|/*  * Header split: this causes the hardware to DMA  * the header into a seperate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.   */
 end_comment
 
 begin_decl_stmt
@@ -3687,6 +3687,11 @@ operator|->
 name|if_softc
 decl_stmt|;
 name|struct
+name|ix_queue
+modifier|*
+name|que
+decl_stmt|;
+name|struct
 name|tx_ring
 modifier|*
 name|txr
@@ -3735,6 +3740,16 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|que
+operator|=
+operator|&
+name|adapter
+operator|->
+name|queues
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|IXGBE_TX_TRYLOCK
@@ -3761,6 +3776,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|err
 operator|=
 name|drbr_enqueue
@@ -3774,6 +3790,19 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|taskqueue_enqueue
+argument_list|(
+name|que
+operator|->
+name|tq
+argument_list|,
+operator|&
+name|que
+operator|->
+name|que_task
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|err
@@ -4301,8 +4330,6 @@ name|ETHER_HDR_LEN
 operator|+
 name|ETHER_CRC_LEN
 expr_stmt|;
-name|error
-operator|=
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
@@ -4380,8 +4407,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|error
-operator|=
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
@@ -4573,8 +4598,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
@@ -4638,7 +4661,7 @@ end_define
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ixgbe_init_locked
 parameter_list|(
 name|struct
@@ -4700,11 +4723,6 @@ expr_stmt|;
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"ixgbe_init: begin"
-argument_list|)
-expr_stmt|;
-name|ixgbe_reset_hw
-argument_list|(
-name|hw
 argument_list|)
 expr_stmt|;
 name|hw
@@ -4811,13 +4829,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+return|return;
 block|}
-name|ixgbe_init_hw
+name|ixgbe_reset_hw
 argument_list|(
 name|hw
 argument_list|)
@@ -4876,11 +4890,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+return|return;
 block|}
 comment|/* Configure RX settings */
 name|ixgbe_initialize_receive_units
@@ -4994,6 +5004,7 @@ name|if_capenable
 operator|&
 name|IFCAP_TXCSUM
 condition|)
+block|{
 name|ifp
 operator|->
 name|if_hwassist
@@ -5027,6 +5038,7 @@ name|CSUM_SCTP
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* Set MTU size */
 if|if
 condition|(
@@ -5463,11 +5475,7 @@ argument_list|,
 literal|"Unsupported SFP+ module type was detected.\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
+return|return;
 block|}
 block|}
 comment|/* Set moderation on the Link interrupt */
@@ -5511,11 +5519,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -6347,15 +6351,6 @@ name|newitr
 init|=
 literal|0
 decl_stmt|;
-name|ixgbe_disable_queue
-argument_list|(
-name|adapter
-argument_list|,
-name|que
-operator|->
-name|msix
-argument_list|)
-expr_stmt|;
 operator|++
 name|que
 operator|->
@@ -9645,6 +9640,30 @@ name|error
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800504
+name|bus_describe_intr
+argument_list|(
+name|dev
+argument_list|,
+name|que
+operator|->
+name|res
+argument_list|,
+name|que
+operator|->
+name|tag
+argument_list|,
+literal|"que %d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|que
 operator|->
 name|msix
@@ -9840,6 +9859,28 @@ name|error
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800504
+name|bus_describe_intr
+argument_list|(
+name|dev
+argument_list|,
+name|adapter
+operator|->
+name|res
+argument_list|,
+name|adapter
+operator|->
+name|tag
+argument_list|,
+literal|"link"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|adapter
 operator|->
 name|linkvec
@@ -16812,7 +16853,7 @@ name|m_head
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -16825,9 +16866,15 @@ name|m_head
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|m_adj
 argument_list|(
 name|rxbuf
@@ -16940,7 +16987,7 @@ name|m_pack
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -16959,9 +17006,15 @@ name|m_pack
 operator|==
 name|NULL
 condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 name|mp
 operator|=
 name|rxbuf
@@ -18691,26 +18744,6 @@ argument_list|(
 name|rxr
 argument_list|)
 expr_stmt|;
-comment|/* Sync the ring. */
-name|bus_dmamap_sync
-argument_list|(
-name|rxr
-operator|->
-name|rxdma
-operator|.
-name|dma_tag
-argument_list|,
-name|rxr
-operator|->
-name|rxdma
-operator|.
-name|dma_map
-argument_list|,
-name|BUS_DMASYNC_POSTREAD
-operator||
-name|BUS_DMASYNC_POSTWRITE
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -18753,6 +18786,26 @@ decl_stmt|;
 name|bool
 name|eop
 decl_stmt|;
+comment|/* Sync the ring. */
+name|bus_dmamap_sync
+argument_list|(
+name|rxr
+operator|->
+name|rxdma
+operator|.
+name|dma_tag
+argument_list|,
+name|rxr
+operator|->
+name|rxdma
+operator|.
+name|dma_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 name|cur
 operator|=
 operator|&
