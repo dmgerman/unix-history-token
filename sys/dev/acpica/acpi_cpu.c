@@ -4419,6 +4419,8 @@ name|end_time
 argument_list|)
 argument_list|,
 literal|500000
+operator|/
+name|hz
 argument_list|)
 operator|)
 operator|/
