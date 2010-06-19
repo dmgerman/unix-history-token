@@ -279,6 +279,10 @@ name|measure_delta
 operator|=
 name|HOSTDOWN
 expr_stmt|;
+name|trials
+operator|=
+literal|0
+expr_stmt|;
 name|errno
 operator|=
 literal|0
@@ -497,10 +501,6 @@ name|wmsec
 argument_list|)
 expr_stmt|;
 name|rcvcount
-operator|=
-literal|0
-expr_stmt|;
-name|trials
 operator|=
 literal|0
 expr_stmt|;
