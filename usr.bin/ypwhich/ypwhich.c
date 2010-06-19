@@ -604,8 +604,6 @@ name|int
 name|notrans
 decl_stmt|,
 name|mode
-decl_stmt|,
-name|getmap
 decl_stmt|;
 name|int
 name|c
@@ -615,8 +613,6 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-name|getmap
-operator|=
 name|notrans
 operator|=
 name|mode
