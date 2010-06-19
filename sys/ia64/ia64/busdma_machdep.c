@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|MAX_BPAGES
-value|256
+value|1024
 end_define
 
 begin_struct
@@ -224,7 +224,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
+name|u_int
 name|busdma_swi_pending
 decl_stmt|;
 end_decl_stmt
