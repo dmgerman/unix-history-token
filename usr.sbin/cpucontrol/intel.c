@@ -398,11 +398,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|devfd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|fw_image
 operator|=
 name|MAP_FAILED
