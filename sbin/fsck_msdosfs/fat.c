@@ -271,6 +271,9 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|read
 argument_list|(
 name|fs
