@@ -639,6 +639,8 @@ name|int
 name|ancestors
 decl_stmt|,
 name|debug_opt
+decl_stmt|,
+name|did_action
 decl_stmt|;
 name|int
 name|i
@@ -1115,14 +1117,6 @@ break|break;
 case|case
 literal|'l'
 case|:
-if|if
-condition|(
-operator|!
-name|pgrep
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|longfmt
 operator|=
 literal|1
@@ -2499,6 +2493,10 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Take the appropriate action for each matched process, if any. 	 */
+name|did_action
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2542,6 +2540,30 @@ condition|)
 block|{
 if|if
 condition|(
+name|longfmt
+operator|&&
+operator|!
+name|pgrep
+condition|)
+block|{
+name|did_action
+operator|=
+literal|1
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"kill -%d %d\n"
+argument_list|,
+name|signum
+argument_list|,
+name|kp
+operator|->
+name|ki_pid
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|inverse
 condition|)
 continue|continue;
@@ -2564,6 +2586,23 @@ name|kp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|did_action
+operator|&&
+operator|!
+name|pgrep
+operator|&&
+name|longfmt
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No matching processes belonging to you were found\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|rv
@@ -2600,7 +2639,7 @@ expr_stmt|;
 else|else
 name|ustr
 operator|=
-literal|"[-signal] [-ILfinovx]"
+literal|"[-signal] [-ILfilnovx]"
 expr_stmt|;
 name|fprintf
 argument_list|(
