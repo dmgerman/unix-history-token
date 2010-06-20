@@ -5681,7 +5681,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|void
 modifier|*
 name|aux
 parameter_list|,
