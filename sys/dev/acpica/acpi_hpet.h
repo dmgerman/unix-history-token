@@ -237,7 +237,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HPET_TCNT_INT_TYPE
+name|HPET_TCNF_INT_TYPE
 value|0x00000002
 end_define
 

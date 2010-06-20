@@ -1546,7 +1546,7 @@ literal|"time lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|cpu_initclocks
@@ -2337,7 +2337,7 @@ name|p_flag
 operator||=
 name|P_PROFIL
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|time_lock
@@ -2353,7 +2353,7 @@ condition|)
 name|cpu_startprofclock
 argument_list|()
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|time_lock
@@ -2466,7 +2466,7 @@ operator|&=
 operator|~
 name|P_PROFIL
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|time_lock
@@ -2482,7 +2482,7 @@ condition|)
 name|cpu_stopprofclock
 argument_list|()
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|time_lock

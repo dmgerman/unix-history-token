@@ -3117,6 +3117,10 @@ condition|)
 name|ia32_pause
 argument_list|()
 expr_stmt|;
+comment|/* Start per-CPU event timers. */
+name|cpu_initclocks_ap
+argument_list|()
+expr_stmt|;
 name|sched_throw
 argument_list|(
 name|NULL

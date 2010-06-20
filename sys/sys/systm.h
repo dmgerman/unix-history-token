@@ -2317,6 +2317,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_initclocks_bsp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cpu_initclocks_ap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|usrinfoinit
 parameter_list|(
 name|void
