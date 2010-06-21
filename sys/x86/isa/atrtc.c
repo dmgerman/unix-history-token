@@ -145,6 +145,14 @@ value|mtx_unlock_spin(&clock_lock)
 end_define
 
 begin_decl_stmt
+name|int
+name|atrtcclock_disable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|rtc_reg
@@ -980,6 +988,9 @@ expr_stmt|;
 if|if
 condition|(
 name|haveirq
+operator|&&
+operator|!
+name|atrtcclock_disable
 operator|&&
 operator|(
 name|resource_int_value
