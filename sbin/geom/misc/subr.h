@@ -45,6 +45,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_parse_lba
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|lbastr
+parameter_list|,
+name|unsigned
+name|sectorsize
+parameter_list|,
+name|off_t
+modifier|*
+name|sectors
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|off_t
 name|g_get_mediasize
 parameter_list|(

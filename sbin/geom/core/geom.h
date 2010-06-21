@@ -81,13 +81,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_TYPE_ASCLBA
-value|0x05
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_TYPE_MASK
 value|0x0f
 end_define
