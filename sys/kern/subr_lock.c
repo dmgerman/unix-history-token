@@ -514,10 +514,10 @@ decl_stmt|;
 name|uint16_t
 name|lpo_cnt
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|lpo_acqtime
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|lpo_waittime
 decl_stmt|;
 name|u_int
@@ -739,7 +739,7 @@ name|USE_CPU_NANOSECONDS
 end_ifndef
 
 begin_function
-name|u_int64_t
+name|uint64_t
 name|nanoseconds
 parameter_list|(
 name|void
@@ -749,7 +749,7 @@ name|struct
 name|bintime
 name|bt
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|ns
 decl_stmt|;
 name|binuptime
@@ -766,7 +766,7 @@ operator|.
 name|sec
 operator|*
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1000000000
 expr_stmt|;
@@ -2872,7 +2872,7 @@ name|lock_prof
 modifier|*
 name|lp
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|curtime
 decl_stmt|,
 name|holdtime

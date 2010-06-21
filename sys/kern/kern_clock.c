@@ -3093,7 +3093,7 @@ block|{
 name|int
 name|nintr
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|inttotal
 decl_stmt|;
 name|u_long

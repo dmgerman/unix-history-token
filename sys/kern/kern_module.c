@@ -1950,13 +1950,13 @@ block|{
 name|int
 name|intval
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|uintval
 decl_stmt|;
 name|int
 name|longval
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ulongval
 decl_stmt|;
 block|}

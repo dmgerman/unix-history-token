@@ -3846,7 +3846,7 @@ name|sp
 parameter_list|)
 block|{
 comment|/* {user, system, interrupt, total} {ticks, usec}: */
-name|u_int64_t
+name|uint64_t
 name|ut
 decl_stmt|,
 name|uu

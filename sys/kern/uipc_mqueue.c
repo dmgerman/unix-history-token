@@ -392,7 +392,7 @@ decl_stmt|;
 name|int
 name|mn_deleted
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mn_fileno
 decl_stmt|;
 name|void

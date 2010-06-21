@@ -111,7 +111,7 @@ begin_function
 name|void
 name|sdt_probe_stub
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|id
 parameter_list|,
 name|uintptr_t

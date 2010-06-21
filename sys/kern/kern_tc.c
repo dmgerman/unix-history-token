@@ -147,7 +147,7 @@ decl_stmt|;
 name|int64_t
 name|th_adjustment
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|th_scale
 decl_stmt|;
 name|u_int
@@ -919,7 +919,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|freq
 decl_stmt|;
 name|struct
@@ -1910,7 +1910,7 @@ comment|/* Report the frequency of the current timecounter. */
 end_comment
 
 begin_function
-name|u_int64_t
+name|uint64_t
 name|tc_getfrequency
 parameter_list|(
 name|void
@@ -2098,7 +2098,7 @@ decl_stmt|,
 modifier|*
 name|tho
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|scale
 decl_stmt|;
 name|u_int
@@ -2370,7 +2370,7 @@ comment|/*- 	 * Recalculate the scaling factor.  We want the number of 1/2^64 	 
 name|scale
 operator|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<
@@ -3592,7 +3592,7 @@ condition|(
 name|fhard
 condition|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|scale
 decl_stmt|;
 comment|/* 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many (hardware) nanoseconds 		 * elapsed since the previous event. 		 */
@@ -3633,7 +3633,7 @@ expr_stmt|;
 name|scale
 operator|=
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1
 operator|<<

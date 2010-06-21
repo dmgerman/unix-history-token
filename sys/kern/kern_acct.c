@@ -1846,7 +1846,7 @@ call|)
 argument_list|(
 operator|(
 operator|(
-name|u_int64_t
+name|uint64_t
 operator|)
 literal|1000000
 operator|*

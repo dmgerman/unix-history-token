@@ -2079,7 +2079,7 @@ name|namecache
 modifier|*
 name|ncp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hash
 decl_stmt|;
 name|int
@@ -3149,7 +3149,7 @@ name|nchashhead
 modifier|*
 name|ncpp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hash
 decl_stmt|;
 name|int

@@ -15,7 +15,7 @@ name|void
 modifier|*
 name|params
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|uarg
 parameter_list|,

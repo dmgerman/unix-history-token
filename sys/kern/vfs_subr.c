@@ -2229,7 +2229,7 @@ name|mp
 parameter_list|)
 block|{
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|mntid_base
 decl_stmt|;
 name|struct
@@ -18457,7 +18457,7 @@ name|fsid_t
 modifier|*
 name|fsid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|event
 parameter_list|,
 name|intptr_t

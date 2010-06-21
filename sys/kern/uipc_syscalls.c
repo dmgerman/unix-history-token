@@ -12349,7 +12349,7 @@ name|defined
 argument_list|(
 name|SCTP
 argument_list|)
-name|u_int8_t
+name|uint8_t
 name|sockbufstore
 index|[
 literal|256

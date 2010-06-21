@@ -15828,10 +15828,10 @@ begin_struct
 struct|struct
 name|timespec32
 block|{
-name|u_int32_t
+name|uint32_t
 name|tv_sec
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tv_nsec
 decl_stmt|;
 block|}

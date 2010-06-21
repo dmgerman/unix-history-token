@@ -62,7 +62,7 @@ block|{
 name|caddr_t
 name|curp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
@@ -89,7 +89,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -132,7 +132,7 @@ name|curp
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -148,7 +148,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -203,7 +203,7 @@ name|curp
 decl_stmt|,
 name|lname
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
@@ -234,7 +234,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -291,7 +291,7 @@ name|curp
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -307,7 +307,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -358,7 +358,7 @@ block|{
 name|caddr_t
 name|curp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
@@ -386,7 +386,7 @@ expr_stmt|;
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -395,7 +395,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -436,7 +436,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -476,7 +476,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -530,11 +530,11 @@ block|{
 name|caddr_t
 name|curp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|type
 init|=
 literal|0
@@ -555,7 +555,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -624,7 +624,7 @@ operator|+
 operator|(
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -636,7 +636,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -688,7 +688,7 @@ block|{
 name|caddr_t
 name|curp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
@@ -722,7 +722,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -766,7 +766,7 @@ name|curp
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -804,7 +804,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -850,7 +850,7 @@ block|{
 name|caddr_t
 name|curp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|hdr
 decl_stmt|;
@@ -881,7 +881,7 @@ block|{
 name|hdr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|curp
@@ -937,7 +937,7 @@ operator|+
 operator|(
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -957,7 +957,7 @@ name|next
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2

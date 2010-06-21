@@ -186,13 +186,13 @@ block|{
 name|int
 name|piod_op
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|piod_offs
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|piod_addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|piod_len
 decl_stmt|;
 block|}

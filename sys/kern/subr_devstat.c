@@ -185,7 +185,7 @@ parameter_list|,
 name|int
 name|unit_number
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|block_size
 parameter_list|,
 name|devstat_support_flags
@@ -218,7 +218,7 @@ parameter_list|,
 name|int
 name|unit_number
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|block_size
 parameter_list|,
 name|devstat_support_flags
@@ -370,7 +370,7 @@ parameter_list|,
 name|int
 name|unit_number
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|block_size
 parameter_list|,
 name|devstat_support_flags
@@ -872,7 +872,7 @@ name|devstat
 modifier|*
 name|ds
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bytes
 parameter_list|,
 name|devstat_tag_type

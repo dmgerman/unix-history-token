@@ -404,7 +404,7 @@ name|device_state_t
 name|state
 decl_stmt|;
 comment|/**< current device state  */
-name|u_int32_t
+name|uint32_t
 name|devflags
 decl_stmt|;
 comment|/**< api level flags for device_get_flags() */
@@ -8262,7 +8262,7 @@ comment|/**  * @brief Return the device's flags  */
 end_comment
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|device_get_flags
 parameter_list|(
 name|device_t
@@ -8635,7 +8635,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{

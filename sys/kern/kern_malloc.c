@@ -462,7 +462,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|kmemsize
 index|[
 name|KMEM_ZSIZE
@@ -2315,7 +2315,7 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|indx
 decl_stmt|;
 name|u_long
@@ -3825,12 +3825,12 @@ name|malloc_type
 modifier|*
 name|mtp
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|allocs
 decl_stmt|,
 name|frees
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|alloced
 decl_stmt|,
 name|freed
