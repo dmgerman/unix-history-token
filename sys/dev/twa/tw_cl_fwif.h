@@ -283,13 +283,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TWA_STATUS_EXPECTED_BITS
-value|0x00002000
-end_define
-
-begin_define
-define|#
-directive|define
 name|TWA_STATUS_UNEXPECTED_BITS
 value|0x00F00000
 end_define
@@ -569,7 +562,7 @@ begin_define
 define|#
 directive|define
 name|TWA_CURRENT_FW_SRL
-value|30
+value|41
 end_define
 
 begin_define
