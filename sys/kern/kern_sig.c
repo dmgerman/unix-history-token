@@ -14305,6 +14305,10 @@ decl_stmt|;
 name|int
 name|new_val
 decl_stmt|;
+name|new_val
+operator|=
+name|num_cores
+expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
