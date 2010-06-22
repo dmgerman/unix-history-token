@@ -1244,6 +1244,13 @@ argument_list|)
 block|,
 name|UPGT_DEV
 argument_list|(
+name|USR
+argument_list|,
+name|USR5422
+argument_list|)
+block|,
+name|UPGT_DEV
+argument_list|(
 name|WISTRONNEWEB
 argument_list|,
 name|UR045G
