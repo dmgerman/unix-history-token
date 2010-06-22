@@ -916,6 +916,11 @@ name|cmd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+condition|)
+block|{
 name|timeout
 operator|=
 operator|(
@@ -949,11 +954,6 @@ name|sc
 operator|->
 name|max_ticks
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-condition|)
-block|{
 if|if
 condition|(
 name|timeout
