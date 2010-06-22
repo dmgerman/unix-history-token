@@ -103,6 +103,37 @@ value|8
 end_define
 
 begin_comment
+comment|/* These macros check if the endpoint descriptor has additional fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEP_MINSIZE
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|UEP_HAS_REFRESH
+parameter_list|(
+name|ep
+parameter_list|)
+value|((ep)->bLength>= 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UEP_HAS_SYNCADDR
+parameter_list|(
+name|ep
+parameter_list|)
+value|((ep)->bLength>= 9)
+end_define
+
+begin_comment
 comment|/* The first fields are identical to struct usb_endpoint_descriptor */
 end_comment
 
