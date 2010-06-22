@@ -17065,15 +17065,6 @@ break|break;
 case|case
 name|UE_BULK
 case|:
-if|if
-condition|(
-name|udev
-operator|->
-name|speed
-operator|!=
-name|USB_SPEED_LOW
-condition|)
-block|{
 name|ep
 operator|->
 name|methods
@@ -17081,7 +17072,6 @@ operator|=
 operator|&
 name|ehci_device_bulk_methods
 expr_stmt|;
-block|}
 break|break;
 default|default:
 comment|/* do nothing */
