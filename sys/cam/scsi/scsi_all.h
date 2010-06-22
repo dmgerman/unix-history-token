@@ -3151,6 +3151,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|uint8_t
+name|desc_list
+index|[]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3250,9 +3254,7 @@ decl_stmt|;
 name|struct
 name|scsi_target_port_descriptor
 name|descriptors
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -3272,9 +3274,7 @@ comment|/* length of returned data, in bytes */
 name|struct
 name|scsi_target_port_group_descriptor
 name|groups
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -3307,9 +3307,7 @@ decl_stmt|;
 name|struct
 name|scsi_target_port_group_descriptor
 name|groups
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
