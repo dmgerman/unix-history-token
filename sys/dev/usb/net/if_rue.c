@@ -287,6 +287,17 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_OQO
+argument_list|,
+argument|USB_PRODUCT_OQO_ETHER01
+argument_list|,
+literal|0
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
