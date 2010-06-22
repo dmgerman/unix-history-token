@@ -97,7 +97,7 @@ name|modstat
 argument_list|(
 name|modfind
 argument_list|(
-literal|"syscall"
+literal|"sys/syscall"
 argument_list|)
 argument_list|,
 operator|&
