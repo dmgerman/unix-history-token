@@ -3107,7 +3107,7 @@ operator|&
 name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
-comment|/* wait until all the AP's are up */
+comment|/* Wait until all the AP's are up. */
 while|while
 condition|(
 name|smp_started

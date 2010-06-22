@@ -3072,7 +3072,7 @@ operator|&
 name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
-comment|/* wait until all the AP's are up */
+comment|/* Wait until all the AP's are up. */
 while|while
 condition|(
 name|smp_started
@@ -3086,7 +3086,7 @@ comment|/* Start per-CPU event timers. */
 name|cpu_initclocks_ap
 argument_list|()
 expr_stmt|;
-comment|/* enter the scheduler */
+comment|/* Enter the scheduler. */
 name|sched_throw
 argument_list|(
 name|NULL
