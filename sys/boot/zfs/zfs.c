@@ -1251,6 +1251,15 @@ name|mze
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+condition|)
+return|return
+operator|(
+name|rc
+operator|)
+return|;
 name|fp
 operator|->
 name|f_seekp
