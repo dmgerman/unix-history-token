@@ -3116,7 +3116,7 @@ value|0x20
 name|uint8_t
 name|reserved1
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 name|uint8_t
