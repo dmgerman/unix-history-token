@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -99,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -564,6 +582,13 @@ name|jrecs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|jmpbuf
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -582,6 +607,21 @@ name|int
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|err_suj
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -666,9 +706,9 @@ name|a
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"malloc(%zu)"
 argument_list|,
@@ -680,6 +720,78 @@ operator|(
 name|a
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * When hit a fatal error in journalling check, print out  * the error and then offer to fallback to normal fsck.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|err_suj
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+specifier|restrict
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|cdevname
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|stdout
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|jmpbuf
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -722,9 +834,9 @@ name|disk
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"malloc(%zu)"
 argument_list|,
@@ -750,7 +862,7 @@ condition|)
 block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"ufs_disk_fillout(%s) failed: %s"
 argument_list|,
@@ -929,7 +1041,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"sbwrite(%s)"
 argument_list|,
@@ -948,7 +1060,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"ufs_disk_close(%s)"
 argument_list|,
@@ -1008,20 +1120,13 @@ name|fs
 operator|->
 name|fs_ncg
 condition|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Bad cg number %d"
+literal|"Bad cg number %d\n"
 argument_list|,
 name|cgx
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|lastcg
@@ -1168,11 +1273,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Unable to read cylinder group %d"
+literal|"Unable to read cylinder group %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -1741,11 +1844,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Failed to read data block %jd"
+literal|"Failed to read data block %jd\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -1872,11 +1973,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Unable to write block %jd"
+literal|"Unable to write block %jd\n"
 argument_list|,
 name|dblk
 operator|->
@@ -2071,11 +2170,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Failed to read inode block %jd"
+literal|"Failed to read inode block %jd\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -2329,11 +2426,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Failed to write inode block %jd"
+literal|"Failed to write inode block %jd\n"
 argument_list|,
 name|iblk
 operator|->
@@ -3311,11 +3406,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid indir lbn %jd"
+literal|"Invalid indir lbn %jd\n"
 argument_list|,
 name|lbn
 argument_list|)
@@ -3330,11 +3423,9 @@ name|lbn
 operator|<
 literal|0
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid lbn %jd"
+literal|"Invalid lbn %jd\n"
 argument_list|,
 name|lbn
 argument_list|)
@@ -3436,11 +3527,9 @@ argument_list|(
 name|fs
 argument_list|)
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid indirect index %d produced by lbn %jd"
+literal|"Invalid indirect index %d produced by lbn %jd\n"
 argument_list|,
 name|i
 argument_list|,
@@ -3523,20 +3612,13 @@ name|level
 operator|==
 literal|0
 condition|)
-block|{
-name|abort
-argument_list|()
-expr_stmt|;
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid lbn %jd at level 0"
+literal|"Invalid lbn %jd at level 0\n"
 argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|indir_blkatoff
 argument_list|(
@@ -3859,15 +3941,14 @@ name|lbn
 argument_list|)
 return|;
 block|}
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"lbn %jd not in ino"
+literal|"lbn %jd not in ino\n"
 argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -4283,11 +4364,9 @@ name|fs
 operator|->
 name|fs_bsize
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Corrupt directory block in dir ino %d"
+literal|"Corrupt directory block in dir ino %d\n"
 argument_list|,
 name|parent
 argument_list|)
@@ -4516,11 +4595,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid level for lbn %jd"
+literal|"Invalid level for lbn %jd\n"
 argument_list|,
 name|lbn
 argument_list|)
@@ -5982,11 +6059,9 @@ name|ino
 operator|==
 name|ROOTINO
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Attempting to free ROOTINO"
+literal|"Attempting to free ROOTINO\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6187,11 +6262,9 @@ name|nlink
 operator|<
 literal|1
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Inode %d link count %d invalid"
+literal|"Inode %d link count %d invalid\n"
 argument_list|,
 name|ino
 argument_list|,
@@ -6204,11 +6277,9 @@ name|mode
 operator|==
 literal|0
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Inode %d has a link of %d with 0 mode."
+literal|"Inode %d has a link of %d with 0 mode\n"
 argument_list|,
 name|ino
 argument_list|,
@@ -6455,11 +6526,9 @@ name|nlink
 operator|>
 name|LINK_MAX
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"ino %d nlink manipulation error, new link %d, old link %d"
+literal|"ino %d nlink manipulation error, new link %d, old link %d\n"
 argument_list|,
 name|ino
 argument_list|,
@@ -6722,11 +6791,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid level for lbn %jd"
+literal|"Invalid level for lbn %jd\n"
 argument_list|,
 name|lbn
 argument_list|)
@@ -7409,10 +7476,8 @@ name|bn
 operator|==
 literal|0
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
 literal|"Bad blk at ino %d lbn %jd\n"
 argument_list|,
 name|ino
@@ -7549,10 +7614,8 @@ name|bn
 operator|==
 literal|0
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
 literal|"Block missing from ino %d at lbn %jd\n"
 argument_list|,
 name|ino
@@ -7764,11 +7827,9 @@ operator|&
 name|IFMT
 operator|)
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Inode mode/directory type mismatch %o != %o"
+literal|"Inode mode/directory type mismatch %o != %o\n"
 argument_list|,
 name|mode
 argument_list|,
@@ -8756,11 +8817,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Unable to write cylinder group %d"
+literal|"Unable to write cylinder group %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -9630,6 +9689,11 @@ argument_list|,
 name|sr_next
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|srn
+argument_list|)
+expr_stmt|;
 name|ino_dup_ref
 argument_list|(
 name|sino
@@ -9851,11 +9915,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"ino_build_ref: Unknown op %d"
+literal|"ino_build_ref: Unknown op %d\n"
 argument_list|,
 name|srn
 operator|->
@@ -9970,11 +10032,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"ino_build: Unknown op %d"
+literal|"ino_build: Unknown op %d\n"
 argument_list|,
 name|srec
 operator|->
@@ -10202,11 +10262,9 @@ name|fs
 operator|->
 name|fs_frag
 condition|)
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Invalid fragment count %d oldfrags %d"
+literal|"Invalid fragment count %d oldfrags %d\n"
 argument_list|,
 name|blkrec
 operator|->
@@ -10576,11 +10634,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Unknown journal operation %d (%d)"
+literal|"Unknown journal operation %d (%d)\n"
 argument_list|,
 name|rec
 operator|->
@@ -10782,17 +10838,17 @@ name|newseq
 operator|!=
 name|oldseq
 condition|)
-name|errx
+block|{
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Journal file sequence mismatch %jd != %jd"
+literal|"Journal file sequence mismatch %jd != %jd\n"
 argument_list|,
 name|newseq
 argument_list|,
 name|oldseq
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The kernel may asynchronously write segments which can create 	 * gaps in the sequence space.  Throw away any segments after the 	 * gap as the kernel guarantees only those that are contiguously 	 * reachable are marked as completed. 	 */
 name|discard
 operator|=
@@ -11802,11 +11858,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Error reading journal block %jd"
+literal|"Error reading journal block %jd\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -11814,6 +11869,7 @@ operator|)
 name|blk
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|rec
@@ -12220,11 +12276,9 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-name|err
+name|err_suj
 argument_list|(
-literal|1
-argument_list|,
-literal|"Failed to read ROOTINO directory block %jd"
+literal|"Failed to read ROOTINO directory block %jd\n"
 argument_list|,
 name|blk
 argument_list|)
@@ -12345,6 +12399,19 @@ decl_stmt|;
 name|uint64_t
 name|blocks
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|struct
+name|suj_seg
+modifier|*
+name|seg
+decl_stmt|;
+name|struct
+name|suj_seg
+modifier|*
+name|segn
+decl_stmt|;
 name|opendisk
 argument_list|(
 name|filesys
@@ -12356,6 +12423,89 @@ operator|&
 name|allsegs
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set an exit point when SUJ check failed 	 */
+name|retval
+operator|=
+name|setjmp
+argument_list|(
+name|jmpbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+block|{
+name|pwarn
+argument_list|(
+literal|"UNEXPECTED SU+J INCONSISTENCY\n"
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH_SAFE
+argument_list|(
+argument|seg
+argument_list|,
+argument|&allsegs
+argument_list|,
+argument|ss_next
+argument_list|,
+argument|segn
+argument_list|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|allsegs
+argument_list|,
+name|seg
+argument_list|,
+name|ss_next
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|seg
+operator|->
+name|ss_blk
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|seg
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"FALLBACK TO FULL FSCK"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ckfini
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EEXIT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Find the journal inode. 	 */
 name|ip
 operator|=
@@ -12385,13 +12535,32 @@ name|sujino
 operator|==
 literal|0
 condition|)
-name|errx
+block|{
+name|printf
 argument_list|(
-literal|1
-argument_list|,
-literal|"Journal inode removed.  Use tunefs to re-create."
+literal|"Journal inode removed.  Use tunefs to re-create.\n"
 argument_list|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_flags
+operator|&=
+operator|~
+name|FS_SUJ
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_sujfree
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * Fetch the journal inode and verify it. 	 */
 name|jip
 operator|=
@@ -12471,15 +12640,21 @@ name|di_size
 argument_list|)
 argument_list|)
 condition|)
-name|errx
+block|{
+name|printf
 argument_list|(
-literal|1
-argument_list|,
 literal|"Sparse journal inode %d.\n"
 argument_list|,
 name|sujino
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|suj_read
 argument_list|()
 expr_stmt|;
@@ -12553,6 +12728,16 @@ name|preen
 operator|==
 literal|0
 operator|&&
+operator|(
+name|jrecs
+operator|>
+literal|0
+operator|||
+name|jbytes
+operator|>
+literal|0
+operator|)
+operator|&&
 name|reply
 argument_list|(
 literal|"WRITE CHANGES"
@@ -12585,6 +12770,17 @@ argument_list|(
 name|filesys
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|jrecs
+operator|>
+literal|0
+operator|||
+name|jbytes
+operator|>
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"** %jd journal records in %jd bytes for %.2f%% utilization\n"
@@ -12625,6 +12821,7 @@ argument_list|,
 name|freefrags
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

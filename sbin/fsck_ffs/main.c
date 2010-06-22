@@ -1763,14 +1763,25 @@ name|sblock
 operator|.
 name|fs_flags
 operator|&
-operator|(
 name|FS_SUJ
-operator||
-name|FS_NEEDSFSCK
-operator|)
 operator|)
 operator|==
 name|FS_SUJ
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NEEDSFSCK
+operator|)
+operator|!=
+name|FS_NEEDSFSCK
+operator|&&
+name|skipclean
 condition|)
 block|{
 if|if
@@ -1793,6 +1804,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM MARKED CLEAN *****\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chkdoreload
@@ -1813,13 +1829,13 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* suj_check failed, fall through. */
 block|}
 name|printf
 argument_list|(
-literal|"** Skipping journal, falling through to full fsck\n"
+literal|"** Skipping journal, falling through to full fsck\n\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Write the superblock so we don't try to recover the 		 * journal on another pass. 		 */
 name|sblock
 operator|.
