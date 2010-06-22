@@ -3827,6 +3827,12 @@ name|data
 operator|=
 name|m_ack
 expr_stmt|;
+name|ack
+operator|->
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|m_ack
@@ -4725,6 +4731,14 @@ operator|->
 name|ro
 argument_list|)
 operator|&&
+operator|(
+operator|(
+name|ifn
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|SCTP_GET_IF_INDEX_FROM_ROUTE
 argument_list|(
 operator|&
@@ -4736,6 +4750,8 @@ operator|!=
 name|ifn
 operator|->
 name|ifn_index
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* clear any cached route */
