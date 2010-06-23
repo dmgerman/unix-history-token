@@ -1142,6 +1142,11 @@ name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_free
+argument_list|(
+name|nvout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -3202,7 +3207,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"disk: (%p) Moving request to the free queue."
+literal|"send: (%p) Moving request to the free queue."
 argument_list|,
 name|hio
 argument_list|)
