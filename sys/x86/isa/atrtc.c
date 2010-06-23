@@ -916,6 +916,13 @@ literal|0
 operator|)
 condition|)
 block|{
+name|sc
+operator|->
+name|intr_rid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
