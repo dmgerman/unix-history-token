@@ -1071,7 +1071,7 @@ name|g_gate_softc
 modifier|*
 name|g_gate_hold
 parameter_list|(
-name|u_int
+name|int
 name|unit
 parameter_list|,
 specifier|const
@@ -3168,10 +3168,10 @@ block|{
 case|case
 name|BIO_READ
 case|:
-break|break;
 case|case
 name|BIO_DELETE
 case|:
+break|break;
 case|case
 name|BIO_WRITE
 case|:
