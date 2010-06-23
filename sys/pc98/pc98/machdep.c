@@ -13665,12 +13665,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|register_t
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|intr_disable
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -13700,10 +13695,8 @@ operator|&=
 operator|~
 name|PCB_NPXINITDONE
 expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
