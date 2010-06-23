@@ -1695,6 +1695,9 @@ name|offset
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|void
@@ -1724,7 +1727,7 @@ name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|flags
 argument_list|,
 name|X86BIOS_RAM_BASE
 argument_list|,

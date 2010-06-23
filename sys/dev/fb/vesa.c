@@ -1429,6 +1429,8 @@ argument_list|(
 operator|*
 name|vmode
 argument_list|)
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1714,6 +1716,8 @@ argument_list|,
 name|colors
 operator|*
 literal|4
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1955,6 +1959,8 @@ argument_list|,
 name|colors
 operator|*
 literal|4
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2178,6 +2184,8 @@ argument_list|,
 name|colors
 operator|*
 literal|4
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2405,6 +2413,8 @@ argument_list|,
 name|colors
 operator|*
 literal|4
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2680,6 +2690,8 @@ operator|&
 name|offs
 argument_list|,
 name|size
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|x86bios_init_regs
@@ -3745,19 +3757,10 @@ argument_list|(
 operator|*
 name|buf
 argument_list|)
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vmbuf
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|regs
 operator|.
 name|R_ES
