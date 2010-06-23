@@ -694,6 +694,9 @@ name|struct
 name|vesa_mode
 modifier|*
 name|vmode
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1405,6 +1408,9 @@ name|struct
 name|vesa_mode
 modifier|*
 name|vmode
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|x86regs_t
@@ -1430,7 +1436,7 @@ operator|*
 name|vmode
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -4190,6 +4196,8 @@ index|]
 argument_list|,
 operator|&
 name|vmode
+argument_list|,
+name|M_WAITOK
 argument_list|)
 condition|)
 continue|continue;
@@ -9367,6 +9375,8 @@ index|]
 argument_list|,
 operator|&
 name|vmode
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 condition|)
 continue|continue;
