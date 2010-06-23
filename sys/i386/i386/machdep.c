@@ -16507,7 +16507,7 @@ name|savefpu
 modifier|*
 name|addr
 decl_stmt|;
-comment|/* 	 * XXX mc_fpstate might be misaligned, since its declaration is not 	 * unportabilized using __attribute__((aligned(16))) like the 	 * declaration of struct savemm, and anyway, alignment doesn't work 	 * for auto variables since we don't use gcc's pessimal stack 	 * alignment.  Work around this by abusing the spare fields after 	 * mcp->mc_fpstate. 	 * 	 * XXX unpessimize most cases by only aligning when fxsave might be 	 * called, although this requires knowing too much about 	 * npxgetregs()'s internals. 	 */
+comment|/* 	 * XXX mc_fpstate might be misaligned, since its declaration is not 	 * unportabilized using __attribute__((aligned(16))) like the 	 * declaration of struct savemm, and anyway, alignment doesn't work 	 * for auto variables since we don't use gcc's pessimal stack 	 * alignment.  Work around this by abusing the spare fields after 	 * mcp->mc_fpstate. 	 * 	 * XXX unpessimize most cases by only aligning when fxsave might be 	 * called, although this requires knowing too much about 	 * npxgetuserregs()'s internals. 	 */
 name|addr
 operator|=
 operator|(
@@ -16852,7 +16852,6 @@ name|cpu_mxcsr_mask
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
 name|npxsetuserregs
 argument_list|(
 name|td
@@ -16923,7 +16922,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * XXX force a full drop of the npx.  The above only drops it if we 	 * owned it.  npxgetregs() has the same bug in the !cpu_fxsr case. 	 * 	 * XXX I don't much like npxgetregs()'s semantics of doing a full 	 * drop.  Dropping only to the pcb matches fnsave's behaviour. 	 * We only need to drop to !PCB_INITDONE in sendsig().  But 	 * sendsig() is the only caller of npxgetregs()... perhaps we just 	 * have too many layers. 	 */
+comment|/* 	 * XXX force a full drop of the npx.  The above only drops it if we 	 * owned it.  npxgetuserregs() has the same bug in the !cpu_fxsr case. 	 * 	 * XXX I don't much like npxgetuserregs()'s semantics of doing a full 	 * drop.  Dropping only to the pcb matches fnsave's behaviour. 	 * We only need to drop to !PCB_INITDONE in sendsig().  But 	 * sendsig() is the only caller of npxgetuserregs()... perhaps we just 	 * have too many layers. 	 */
 name|curthread
 operator|->
 name|td_pcb
