@@ -2947,6 +2947,9 @@ name|void
 modifier|*
 name|dpcpu
 decl_stmt|;
+name|register_t
+name|msr
+decl_stmt|;
 comment|/*          * Set up BAT0 to map the lowest 256 MB area          */
 name|battable
 index|[
@@ -3152,7 +3155,20 @@ argument_list|,
 name|BAT_Vs
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Use an IBAT and a DBAT to map the bottom segment of memory 	 * where we are. 	 */
+comment|/* 	 * Use an IBAT and a DBAT to map the bottom segment of memory 	 * where we are. Turn off instruction relocation temporarily 	 * to prevent faults while reprogramming the IBAT. 	 */
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator|&
+operator|~
+name|PSL_IR
+argument_list|)
+expr_stmt|;
 asm|__asm (".balign 32; \n"
 literal|"mtibatu 0,%0; mtibatl 0,%1; isync; \n"
 literal|"mtdbatu 0,%0; mtdbatl 0,%1; isync"
@@ -3179,6 +3195,14 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* map pci space */
