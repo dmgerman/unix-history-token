@@ -1273,12 +1273,6 @@ name|ng_eiface_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_watchdog
-operator|=
-name|NULL
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen
