@@ -1661,8 +1661,6 @@ name|pcb_flags
 operator|&=
 operator|~
 operator|(
-name|PCB_NPXTRAP
-operator||
 name|PCB_NPXINITDONE
 operator||
 name|PCB_NPXUSERINITDONE

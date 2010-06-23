@@ -107,11 +107,6 @@ value|0x02
 comment|/* process using debug registers */
 define|#
 directive|define
-name|PCB_NPXTRAP
-value|0x04
-comment|/* npx trap pending */
-define|#
-directive|define
 name|PCB_NPXINITDONE
 value|0x08
 comment|/* fpu state is initialized */
