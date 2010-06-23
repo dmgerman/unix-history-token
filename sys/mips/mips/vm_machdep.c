@@ -763,11 +763,7 @@ operator|*
 name|pte
 operator|&
 operator|~
-operator|(
-name|PTE_RO
-operator||
-name|PTE_WIRED
-operator|)
+name|TLBLO_SWBITS_MASK
 expr_stmt|;
 block|}
 block|}
@@ -899,11 +895,7 @@ operator|*
 name|pte
 operator|&
 operator|~
-operator|(
-name|PTE_RO
-operator||
-name|PTE_WIRED
-operator|)
+name|TLBLO_SWBITS_MASK
 expr_stmt|;
 block|}
 block|}

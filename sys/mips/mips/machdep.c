@@ -1545,13 +1545,13 @@ argument_list|)
 expr_stmt|;
 name|pte
 operator|=
-name|PTE_RW
+name|PTE_D
 operator||
 name|PTE_V
 operator||
 name|PTE_G
 operator||
-name|PTE_CACHE
+name|PTE_C_CACHE
 expr_stmt|;
 name|tlb_insert_wired
 argument_list|(

@@ -16,7 +16,7 @@ name|_MACHINE_PTE_H_
 end_define
 
 begin_comment
-comment|/*  * TLB and PTE management.  Most things operate within the context of  * EntryLo0,1, and begin with TLBLO_.  Things which work with EntryHi  * start with TLBHI_.  PTE bits begin with PG_.  *  * Note that we use the same size VM and TLB pages.  */
+comment|/*  * TLB and PTE management.  Most things operate within the context of  * EntryLo0,1, and begin with TLBLO_.  Things which work with EntryHi  * start with TLBHI_.  PTE bits begin with PTE_.  *  * Note that we use the same size VM and TLB pages.  */
 end_comment
 
 begin_define
@@ -161,8 +161,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|uint32_t
 name|pt_entry_t
 typedef|;
 end_typedef
@@ -202,112 +201,46 @@ begin_comment
 comment|/* for assembly files */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PT_ENTRY_NULL
-value|((pt_entry_t *) 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_WIRED
-value|0x80000000
-end_define
-
 begin_comment
-comment|/* SW */
+comment|/*  * TLB flags managed in hardware:  * 	C:	Cache attribute.  * 	D:	Dirty bit.  This means a page is writable.  It is not  * 		set at first, and a write is trapped, and the dirty  * 		bit is set.  See also PTE_RO.  * 	V:	Valid bit.  Obvious, isn't it?  * 	G:	Global bit.  This means that this mapping is present  * 		in EVERY address space, and to ignore the ASID when  * 		it is matched.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTE_W
-value|PTE_WIRED
+name|PTE_C
+parameter_list|(
+name|attr
+parameter_list|)
+value|((attr& 0x07)<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTE_RO
-value|0x40000000
+name|PTE_C_UNCACHED
+value|(PTE_C(0x02))
 end_define
 
 begin_comment
-comment|/* SW */
+comment|/*  * The preferred cache attribute for cacheable pages, this can be   * implementation dependent. We will use the standard value 0x3 as   * default.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PTE_G
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* HW */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_V
-value|0x00000002
-end_define
-
-begin_comment
-comment|/*#define	PTE_NV		0x00000000       Not Used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_M
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_RW
-value|PTE_M
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_ODDPG
-value|0x00001000
-end_define
-
-begin_comment
-comment|/*#define	PG_ATTR		0x0000003f  Not Used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_UNCACHED
-value|0x00000010
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_SB1
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|PTE_CACHE
-value|0x00000028
+name|PTE_C_CACHE
+value|(PTE_C(0x05))
 end_define
-
-begin_comment
-comment|/* cacheable coherent */
-end_comment
 
 begin_else
 else|#
@@ -317,8 +250,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|PTE_CACHE
-value|0x00000018
+name|PTE_C_CACHE
+value|(PTE_C(0x03))
 end_define
 
 begin_endif
@@ -326,175 +259,83 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*#define	PG_CACHEMODE	0x00000038 Not Used*/
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PTE_ROPAGE
-value|(PTE_V | PTE_RO | PTE_CACHE)
-end_define
-
-begin_comment
-comment|/* Write protected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_RWPAGE
-value|(PTE_V | PTE_M | PTE_CACHE)
-end_define
-
-begin_comment
-comment|/* Not wr-prot not clean */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_CWPAGE
-value|(PTE_V | PTE_CACHE)
-end_define
-
-begin_comment
-comment|/* Not wr-prot but clean */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTE_IOPAGE
-value|(PTE_G | PTE_V | PTE_M | PTE_UNCACHED)
+name|PTE_D
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTE_FRAME
-value|0x3fffffc0
+name|PTE_V
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTE_HVPN
-value|0xffffe000
+name|PTE_G
+value|0x01
 end_define
 
 begin_comment
-comment|/* Hardware page no mask */
+comment|/*  * VM flags managed in software:  * 	RO:	Read only.  Never set PTE_D on this page, and don't  * 		listen to requests to write to it.  * 	W:	Wired.  ???  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTE_ASID
-value|0x000000ff
+name|PTE_RO
+value|(0x01<< TLBLO_SWBITS_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_W
+value|(0x02<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_comment
-comment|/* Address space ID */
-end_comment
-
-begin_comment
-comment|/* User virtual to pte offset in page table */
+comment|/*  * PTE management functions for bits defined above.  *  * XXX Can make these atomics, but some users of them are using PTEs in local  * registers and such and don't need the overhead.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|vad_to_pte_offset
+name|pte_clear
 parameter_list|(
-name|adr
+name|pte
+parameter_list|,
+name|bit
 parameter_list|)
-value|(((adr)>> PAGE_SHIFT)& (NPTEPG -1))
+value|(*(pte)&= ~(bit))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mips_pg_v
+name|pte_set
 parameter_list|(
-name|entry
+name|pte
+parameter_list|,
+name|bit
 parameter_list|)
-value|((entry)& PTE_V)
+value|(*(pte) |= (bit))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mips_pg_wired
+name|pte_test
 parameter_list|(
-name|entry
+name|pte
+parameter_list|,
+name|bit
 parameter_list|)
-value|((entry)& PTE_WIRED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_m_bit
-parameter_list|()
-value|(PTE_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_rw_bit
-parameter_list|()
-value|(PTE_M)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_ro_bit
-parameter_list|()
-value|(PTE_RO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_ropage_bit
-parameter_list|()
-value|(PTE_ROPAGE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_rwpage_bit
-parameter_list|()
-value|(PTE_RWPAGE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_cwpage_bit
-parameter_list|()
-value|(PTE_CWPAGE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_global_bit
-parameter_list|()
-value|(PTE_G)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_pg_wired_bit
-parameter_list|()
-value|(PTE_WIRED)
+value|((*(pte)& (bit)) == (bit))
 end_define
 
 begin_endif
