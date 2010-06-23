@@ -180,6 +180,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|powerpc_bind_intr
+parameter_list|(
+name|u_int
+name|irq
+parameter_list|,
+name|u_char
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|powerpc_config_intr
 parameter_list|(
 name|int

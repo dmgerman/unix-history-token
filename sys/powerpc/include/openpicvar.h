@@ -109,6 +109,22 @@ end_comment
 
 begin_function_decl
 name|void
+name|openpic_bind
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|irq
+parameter_list|,
+name|cpumask_t
+name|cpumask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|openpic_config
 parameter_list|(
 name|device_t

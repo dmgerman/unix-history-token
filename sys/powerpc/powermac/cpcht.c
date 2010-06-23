@@ -3636,6 +3636,13 @@ block|,
 comment|/* PIC interface */
 name|DEVMETHOD
 argument_list|(
+name|pic_bind
+argument_list|,
+name|openpic_bind
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pic_config
 argument_list|,
 name|openpic_cpcht_config
