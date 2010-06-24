@@ -6962,11 +6962,6 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"mmu_booke_release: s\n"
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pmap
