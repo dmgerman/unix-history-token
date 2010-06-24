@@ -80,27 +80,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__amd64__
+name|__mips__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
+name|__arm__
 argument_list|)
 end_if
 
@@ -108,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|1000
+value|100
 end_define
 
 begin_else
@@ -120,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|100
+value|1000
 end_define
 
 begin_endif
