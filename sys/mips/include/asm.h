@@ -3233,7 +3233,7 @@ value|PTR_L	reg, _C_LABEL(pcpup);
 end_define
 
 begin_comment
-comment|/*  * Description of the setjmp buffer  *  * word  0	magic number	(dependant on creator)  *       1	RA  *       2	S0  *       3	S1  *       4	S2  *       5	S3  *       6	S4  *       7	S5  *       8	S6  *       9	S7  *       10	SP  *       11	S8  *       12	signal mask	(dependant on magic)  *       13	(con't)  *       14	(con't)  *       15	(con't)  *  * The magic number number identifies the jmp_buf and  * how the buffer was created as well as providing  * a sanity check  *  */
+comment|/*  * Description of the setjmp buffer  *  * word  0	magic number	(dependant on creator)  *       1	RA  *       2	S0  *       3	S1  *       4	S2  *       5	S3  *       6	S4  *       7	S5  *       8	S6  *       9	S7  *       10	SP  *       11	S8  *       12	GP		(dependent on ABI)  *       13	signal mask	(dependant on magic)  *       14	(con't)  *       15	(con't)  *       16	(con't)  *  * The magic number number identifies the jmp_buf and  * how the buffer was created as well as providing  * a sanity check  *  */
 end_comment
 
 begin_define
@@ -3338,6 +3338,32 @@ name|_JB_REG_S8
 value|11
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_JB_REG_GP
+value|12
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Only valid with the _JB_MAGIC_SETJMP magic */
 end_comment
@@ -3346,7 +3372,7 @@ begin_define
 define|#
 directive|define
 name|_JB_SIGMASK
-value|12
+value|13
 end_define
 
 begin_endif

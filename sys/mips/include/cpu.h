@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|MIPS_KSEG0_LARGEST_PHYS
-value|0x20000000
+value|(0x20000000)
 end_define
 
 begin_define
@@ -558,35 +558,35 @@ begin_define
 define|#
 directive|define
 name|RESET_EXC_VEC
-value|0xbfc00000
+value|((intptr_t)(int32_t)0xbfc00000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TLB_MISS_EXC_VEC
-value|0x80000000
+value|((intptr_t)(int32_t)0x80000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|XTLB_MISS_EXC_VEC
-value|0x80000080
+value|((intptr_t)(int32_t)0x80000080)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CACHE_ERR_EXC_VEC
-value|0x80000100
+value|((intptr_t)(int32_t)0x80000100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|GEN_EXC_VEC
-value|0x80000180
+value|((intptr_t)(int32_t)0x80000180)
 end_define
 
 begin_comment

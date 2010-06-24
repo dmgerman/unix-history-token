@@ -232,15 +232,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_MAX_MMAP_ADDR
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)0x80000000)
+value|(VM_MINUSER_ADDRESS + (NPDEPG * NPTEPG * PAGE_SIZE))
 end_define
 
 begin_define
 define|#
 directive|define
-name|VM_MAX_MMAP_ADDR
-value|VM_MAXUSER_ADDRESS
+name|VM_MIN_KERNEL_ADDRESS
+value|((vm_offset_t)0xc000000000000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|(VM_MIN_KERNEL_ADDRESS + (NPDEPG * NPTEPG * PAGE_SIZE))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|((vm_offset_t)0x80000000)
 end_define
 
 begin_define
@@ -256,6 +291,11 @@ directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|((vm_offset_t)0xFFFFC000)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

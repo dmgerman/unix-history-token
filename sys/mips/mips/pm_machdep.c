@@ -671,9 +671,12 @@ name|regs
 operator|->
 name|a2
 operator|=
-operator|(
+call|(
 name|register_t
-operator|)
+call|)
+argument_list|(
+name|intptr_t
+argument_list|)
 operator|&
 name|sfp
 operator|->
@@ -696,9 +699,12 @@ name|regs
 operator|->
 name|a1
 operator|=
-operator|(
+call|(
 name|register_t
-operator|)
+call|)
+argument_list|(
+name|intptr_t
+argument_list|)
 operator|&
 name|sfp
 operator|->
@@ -733,6 +739,9 @@ operator|=
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|regs
 operator|->
@@ -814,6 +823,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|catcher
 expr_stmt|;
 name|regs
@@ -822,6 +834,9 @@ name|t9
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|catcher
 expr_stmt|;
@@ -832,6 +847,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|sfp
 expr_stmt|;
 comment|/* 	 * Signal trampoline code is at base of user stack. 	 */
@@ -841,6 +859,9 @@ name|ra
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|PS_STRINGS
 operator|-
@@ -1062,6 +1083,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|regs
 operator|->
 name|sp
@@ -1070,6 +1094,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|regs
 operator|->
 name|ra
@@ -1077,6 +1104,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|regs
 operator|->
@@ -1091,6 +1121,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1103,6 +1136,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|ucp
 operator|->
@@ -1117,6 +1153,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|ucp
 operator|->
 name|uc_mcontext
@@ -1129,6 +1168,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|ucp
 operator|->
@@ -2487,13 +2529,6 @@ operator|~
 literal|3
 expr_stmt|;
 comment|/* abicall req */
-if|#
-directive|if
-literal|0
-comment|//	td->td_frame->sr = SR_KSU_USER | SR_EXL | SR_INT_ENAB;
-comment|//?	td->td_frame->sr |=  idle_mask& ALL_INT_MASK;
-else|#
-directive|else
 name|td
 operator|->
 name|td_frame
@@ -2512,6 +2547,25 @@ argument_list|()
 operator|&
 name|ALL_INT_MASK
 operator|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+name|td
+operator|->
+name|td_frame
+operator|->
+name|sr
+operator||=
+name|SR_PX
 expr_stmt|;
 endif|#
 directive|endif

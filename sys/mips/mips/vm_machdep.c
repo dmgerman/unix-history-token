@@ -431,6 +431,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* Make sp 64-bit aligned */
@@ -477,6 +480,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fork_return
 expr_stmt|;
 name|pcb2
@@ -489,6 +495,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|td2
 expr_stmt|;
 name|pcb2
@@ -500,6 +509,9 @@ index|]
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|td2
 operator|->
@@ -614,6 +626,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|func
 expr_stmt|;
 name|td
@@ -627,6 +642,9 @@ index|]
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|arg
 expr_stmt|;
@@ -940,6 +958,24 @@ name|quad_syscall
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+if|if
+condition|(
+name|code
+operator|==
+name|SYS___syscall
+condition|)
+name|quad_syscall
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|code
@@ -960,6 +996,10 @@ operator|==
 name|SYS___syscall
 condition|)
 block|{
+if|if
+condition|(
+name|quad_syscall
+condition|)
 name|code
 operator|=
 name|_QUAD_LOWWORD
@@ -972,9 +1012,12 @@ name|locr0
 operator|->
 name|a0
 expr_stmt|;
-name|quad_syscall
+else|else
+name|code
 operator|=
-literal|1
+name|locr0
+operator|->
+name|a0
 expr_stmt|;
 block|}
 switch|switch
@@ -1189,6 +1232,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* Make sp 64-bit aligned */
@@ -1235,6 +1281,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|fork_return
 expr_stmt|;
 name|pcb2
@@ -1247,6 +1296,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|td
 expr_stmt|;
 name|pcb2
@@ -1258,6 +1310,9 @@ index|]
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|td
 operator|->
@@ -1376,6 +1431,9 @@ call|(
 name|register_t
 call|)
 argument_list|(
+name|intptr_t
+argument_list|)
+argument_list|(
 name|stack
 operator|->
 name|ss_sp
@@ -1413,9 +1471,6 @@ name|tf
 operator|->
 name|sp
 operator|=
-operator|(
-name|register_t
-operator|)
 name|sp
 expr_stmt|;
 name|tf
@@ -1424,6 +1479,9 @@ name|pc
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|entry
 expr_stmt|;
@@ -1435,6 +1493,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|entry
 expr_stmt|;
 name|tf
@@ -1443,6 +1504,9 @@ name|a0
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|arg
 expr_stmt|;
@@ -1474,6 +1538,8 @@ operator||=
 name|MIPS_SR_INT_IE
 operator||
 name|MIPS_SR_COP_0_BIT
+operator||
+name|MIPS32_SR_PX
 operator||
 name|MIPS_SR_UX
 operator||
@@ -1527,7 +1593,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|va
 operator|)
@@ -2040,7 +2106,7 @@ parameter_list|,
 name|regname
 parameter_list|)
 define|\
-value|db_printf("  %-12s 0x%lx\n", #regname, (long)((ptr)->regname))
+value|db_printf("  %-12s %p\n", #regname, (void *)(intptr_t)((ptr)->regname))
 end_define
 
 begin_define
@@ -2055,7 +2121,7 @@ parameter_list|,
 name|regname
 parameter_list|)
 define|\
-value|db_printf("  %-12s 0x%lx\n", #regname, (long)((ptr)->arrname[regname]))
+value|db_printf("  %-12s %p\n", #regname, (void *)(intptr_t)((ptr)->arrname[regname]))
 end_define
 
 begin_function
