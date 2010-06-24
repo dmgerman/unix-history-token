@@ -324,13 +324,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|device_t
-name|pic8259
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|device_method_t
 name|atpic_isa_methods
 index|[]
@@ -603,9 +596,9 @@ parameter_list|)
 block|{
 name|atpic_dispatch
 argument_list|(
-name|pic8259
-argument_list|,
 name|arg
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1082,7 +1075,7 @@ name|NULL
 argument_list|,
 name|atpic_intr
 argument_list|,
-name|NULL
+name|dev
 argument_list|,
 operator|&
 name|sc
@@ -1117,10 +1110,6 @@ name|dev
 argument_list|,
 literal|0x10
 argument_list|)
-expr_stmt|;
-name|pic8259
-operator|=
-name|dev
 expr_stmt|;
 return|return
 operator|(
