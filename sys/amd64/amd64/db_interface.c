@@ -470,7 +470,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"curpmap		= %p\n"
+literal|"curpmap      = %p\n"
 argument_list|,
 name|pc
 operator|->
@@ -479,7 +479,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"tssp		= %p\n"
+literal|"tssp         = %p\n"
 argument_list|,
 name|pc
 operator|->
@@ -488,7 +488,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"commontssp	= %p\n"
+literal|"commontssp   = %p\n"
 argument_list|,
 name|pc
 operator|->
@@ -497,7 +497,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"rsp0		= 0x%lx\n"
+literal|"rsp0         = 0x%lx\n"
 argument_list|,
 name|pc
 operator|->
@@ -506,7 +506,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"gs32p		= %p\n"
+literal|"gs32p        = %p\n"
 argument_list|,
 name|pc
 operator|->
@@ -515,7 +515,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"ldt		= %p\n"
+literal|"ldt          = %p\n"
 argument_list|,
 name|pc
 operator|->
@@ -524,7 +524,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"tss		= %p\n"
+literal|"tss          = %p\n"
 argument_list|,
 name|pc
 operator|->

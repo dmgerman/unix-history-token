@@ -1406,7 +1406,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"dynamic pcpu	= %p\n"
+literal|"dynamic pcpu = %p\n"
 argument_list|,
 operator|(
 name|void
@@ -1525,15 +1525,13 @@ name|NULL
 condition|)
 name|db_printf
 argument_list|(
-literal|"%p: pid %d \"%s\"\n"
+literal|"%p: tid %d \"%s\"\n"
 argument_list|,
 name|td
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_pid
+name|td_tid
 argument_list|,
 name|td
 operator|->
