@@ -2049,6 +2049,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|gateway
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -2757,6 +2759,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|gateway
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3251,6 +3255,8 @@ operator|=
 name|ifa_ifwithnet
 argument_list|(
 name|ifpaddr
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=

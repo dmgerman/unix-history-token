@@ -7015,6 +7015,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|int
+name|ignore_ptp
 parameter_list|)
 block|{
 name|struct
@@ -7156,6 +7159,9 @@ operator|->
 name|if_flags
 operator|&
 name|IFF_POINTOPOINT
+operator|&&
+operator|!
+name|ignore_ptp
 condition|)
 block|{
 comment|/* 				 * This is a bit broken as it doesn't 				 * take into account that the remote end may 				 * be a single node in the network we are 				 * looking for. 				 * The trouble is that we don't know the 				 * netmask for the remote end. 				 */

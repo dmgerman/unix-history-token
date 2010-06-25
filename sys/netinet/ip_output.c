@@ -1043,6 +1043,8 @@ name|sintosa
 argument_list|(
 name|dst
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 operator|)
