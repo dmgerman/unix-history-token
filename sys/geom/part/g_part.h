@@ -119,6 +119,9 @@ comment|/* A Microsoft LDM Metadata entry. */
 name|G_PART_ALIAS_MS_RESERVED
 block|,
 comment|/* A Microsoft Reserved part. entry. */
+name|G_PART_ALIAS_MS_NTFS
+block|,
+comment|/* A Microsoft NTFS partition entry */
 name|G_PART_ALIAS_NETBSD_CCD
 block|,
 comment|/* A NetBSD CCD partition entry. */

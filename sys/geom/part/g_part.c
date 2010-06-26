@@ -356,6 +356,12 @@ name|G_PART_ALIAS_MS_RESERVED
 block|}
 block|,
 block|{
+literal|"ntfs"
+block|,
+name|G_PART_ALIAS_MS_NTFS
+block|}
+block|,
+block|{
 literal|"netbsd-ccd"
 block|,
 name|G_PART_ALIAS_NETBSD_CCD

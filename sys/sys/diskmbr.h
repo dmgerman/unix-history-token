@@ -140,6 +140,17 @@ begin_comment
 comment|/* DOS extended partition */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DOSPTYP_NTFS
+value|0x07
+end_define
+
+begin_comment
+comment|/* NTFS partition */
+end_comment
+
 begin_struct
 struct|struct
 name|dos_partition
