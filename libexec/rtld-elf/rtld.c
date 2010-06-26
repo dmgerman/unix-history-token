@@ -16935,20 +16935,10 @@ operator|->
 name|obj
 return|;
 block|}
-name|_rtld_error
-argument_list|(
-literal|"%s: Unexpected inconsistency: dependency %s not found"
-argument_list|,
-name|obj
-operator|->
-name|path
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|die
-argument_list|()
-expr_stmt|;
+comment|/*      * GNU LD sometimes refers to version dependencies on objects to which       * it does not actually link. Treat this as a non-fatal error, and      * ignore this dependency.      */
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -17670,6 +17660,13 @@ operator|->
 name|vn_file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|depobj
+operator|==
+name|NULL
+condition|)
+break|break;
 name|vna
 operator|=
 operator|(
