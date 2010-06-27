@@ -815,6 +815,20 @@ break|break;
 block|}
 if|if
 condition|(
+name|i
+operator|==
+literal|12
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Transfer timed out.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|rp
 operator|->
 name|th_opcode
