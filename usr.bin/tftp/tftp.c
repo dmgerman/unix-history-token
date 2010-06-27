@@ -188,9 +188,6 @@ decl_stmt|;
 name|uint16_t
 name|block
 decl_stmt|;
-name|uint32_t
-name|amount
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|serv
@@ -538,6 +535,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|tftp_stats
+operator|.
 name|amount
 operator|>
 literal|0
@@ -874,12 +873,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|stats_init
-argument_list|(
-operator|&
-name|tftp_stats
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the first packet is an OACK packet instead of an DATA packet, 	 * handle it different. 	 */
 if|if
 condition|(
