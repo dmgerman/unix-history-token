@@ -1051,7 +1051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as paramters.  */
+comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as parameters.  */
 end_comment
 
 begin_function
