@@ -4056,7 +4056,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AR_SREV_MERLIN_20(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_MERLIN_20)
+value|(AR_SREV_MERLIN_20(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_MERLIN)
 end_define
 
 begin_define
