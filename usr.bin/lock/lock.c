@@ -131,6 +131,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1245,25 +1251,31 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"timeout in %ld:%ld minutes\n"
+literal|"timeout in %jd:%jd minutes\n"
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|nexttime
 operator|-
 name|timval
 operator|.
 name|tv_sec
-operator|)
+argument_list|)
 operator|/
 literal|60
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|nexttime
 operator|-
 name|timval
 operator|.
 name|tv_sec
-operator|)
+argument_list|)
 operator|%
 literal|60
 argument_list|)
