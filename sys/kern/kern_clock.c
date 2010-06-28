@@ -946,7 +946,14 @@ name|td
 operator|->
 name|td_blktick
 condition|)
+block|{
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|tticks
 operator|=
 name|ticks
@@ -1010,7 +1017,14 @@ name|td
 operator|->
 name|td_blktick
 condition|)
+block|{
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 					 * Check if the thread is sleeping on a 					 * lock, otherwise skip the check. 					 * Drop the thread lock in order to 					 * avoid a LOR with the sleepqueue 					 * spinlock. 					 */
 name|wchan
 operator|=
