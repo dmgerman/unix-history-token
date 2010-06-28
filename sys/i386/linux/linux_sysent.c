@@ -82,6 +82,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 0 = setup */
@@ -106,6 +108,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 1 = exit */
@@ -127,6 +131,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 2 = linux_fork */
@@ -151,6 +157,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 3 = read */
@@ -175,6 +183,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 4 = write */
@@ -199,6 +209,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 5 = linux_open */
@@ -223,6 +235,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 6 = close */
@@ -247,6 +261,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 7 = linux_waitpid */
@@ -271,6 +287,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 8 = linux_creat */
@@ -295,6 +313,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 9 = linux_link */
@@ -319,6 +339,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 10 = linux_unlink */
@@ -343,6 +365,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 11 = linux_execve */
@@ -367,6 +391,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 12 = linux_chdir */
@@ -391,6 +417,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 13 = linux_time */
@@ -415,6 +443,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 14 = linux_mknod */
@@ -439,6 +469,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 15 = linux_chmod */
@@ -463,6 +495,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 16 = linux_lchown16 */
@@ -484,6 +518,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 17 = break */
@@ -508,6 +544,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 18 = linux_stat */
@@ -532,6 +570,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 19 = linux_lseek */
@@ -553,6 +593,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 20 = linux_getpid */
@@ -577,6 +619,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 21 = linux_mount */
@@ -601,6 +645,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 22 = linux_oldumount */
@@ -625,6 +671,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 23 = linux_setuid16 */
@@ -646,6 +694,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 24 = linux_getuid16 */
@@ -667,6 +717,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 25 = linux_stime */
@@ -691,6 +743,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 26 = linux_ptrace */
@@ -715,6 +769,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 27 = linux_alarm */
@@ -739,6 +795,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 28 = linux_fstat */
@@ -760,6 +818,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 29 = linux_pause */
@@ -784,6 +844,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 30 = linux_utime */
@@ -805,6 +867,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 31 = stty */
@@ -826,6 +890,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 32 = gtty */
@@ -850,6 +916,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 33 = linux_access */
@@ -874,6 +942,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 34 = linux_nice */
@@ -895,6 +965,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 35 = ftime */
@@ -916,6 +988,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 36 = sync */
@@ -940,6 +1014,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 37 = linux_kill */
@@ -964,6 +1040,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 38 = linux_rename */
@@ -988,6 +1066,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 39 = linux_mkdir */
@@ -1012,6 +1092,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 40 = linux_rmdir */
@@ -1036,6 +1118,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 41 = dup */
@@ -1060,6 +1144,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 42 = linux_pipe */
@@ -1084,6 +1170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 43 = linux_times */
@@ -1105,6 +1193,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 44 = prof */
@@ -1129,6 +1219,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 45 = linux_brk */
@@ -1153,6 +1245,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 46 = linux_setgid16 */
@@ -1174,6 +1268,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 47 = linux_getgid16 */
@@ -1198,6 +1294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 48 = linux_signal */
@@ -1219,6 +1317,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 49 = linux_geteuid16 */
@@ -1240,6 +1340,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 50 = linux_getegid16 */
@@ -1264,6 +1366,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 51 = acct */
@@ -1288,6 +1392,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 52 = linux_umount */
@@ -1309,6 +1415,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 53 = lock */
@@ -1333,6 +1441,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 54 = linux_ioctl */
@@ -1357,6 +1467,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 55 = linux_fcntl */
@@ -1378,6 +1490,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 56 = mpx */
@@ -1402,6 +1516,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 57 = setpgid */
@@ -1423,6 +1539,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 58 = ulimit */
@@ -1444,6 +1562,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 59 = linux_olduname */
@@ -1468,6 +1588,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 60 = umask */
@@ -1492,6 +1614,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 61 = chroot */
@@ -1516,6 +1640,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 62 = linux_ustat */
@@ -1540,6 +1666,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 63 = dup2 */
@@ -1561,6 +1689,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 64 = linux_getppid */
@@ -1582,6 +1712,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 65 = getpgrp */
@@ -1603,6 +1735,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 66 = setsid */
@@ -1627,6 +1761,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 67 = linux_sigaction */
@@ -1648,6 +1784,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 68 = linux_sgetmask */
@@ -1672,6 +1810,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 69 = linux_ssetmask */
@@ -1696,6 +1836,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 70 = linux_setreuid16 */
@@ -1720,6 +1862,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 71 = linux_setregid16 */
@@ -1744,6 +1888,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 72 = linux_sigsuspend */
@@ -1768,6 +1914,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 73 = linux_sigpending */
@@ -1792,6 +1940,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 74 = linux_sethostname */
@@ -1816,6 +1966,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 75 = linux_setrlimit */
@@ -1840,6 +1992,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 76 = linux_old_getrlimit */
@@ -1864,6 +2018,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 77 = getrusage */
@@ -1888,6 +2044,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 78 = gettimeofday */
@@ -1912,6 +2070,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 79 = settimeofday */
@@ -1936,6 +2096,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 80 = linux_getgroups16 */
@@ -1960,6 +2122,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 81 = linux_setgroups16 */
@@ -1984,6 +2148,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 82 = linux_old_select */
@@ -2008,6 +2174,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 83 = linux_symlink */
@@ -2032,6 +2200,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 84 = linux_lstat */
@@ -2056,6 +2226,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 85 = linux_readlink */
@@ -2080,6 +2252,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 86 = linux_uselib */
@@ -2104,6 +2278,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 87 = swapon */
@@ -2128,6 +2304,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 88 = linux_reboot */
@@ -2152,6 +2330,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 89 = linux_readdir */
@@ -2176,6 +2356,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 90 = linux_mmap */
@@ -2200,6 +2382,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 91 = munmap */
@@ -2224,6 +2408,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 92 = linux_truncate */
@@ -2248,6 +2434,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 93 = linux_ftruncate */
@@ -2272,6 +2460,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 94 = fchmod */
@@ -2296,6 +2486,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 95 = fchown */
@@ -2320,6 +2512,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 96 = linux_getpriority */
@@ -2344,6 +2538,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 97 = setpriority */
@@ -2365,6 +2561,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 98 = profil */
@@ -2389,6 +2587,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 99 = linux_statfs */
@@ -2413,6 +2613,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 100 = linux_fstatfs */
@@ -2437,6 +2639,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 101 = linux_ioperm */
@@ -2461,6 +2665,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 102 = linux_socketcall */
@@ -2485,6 +2691,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 103 = linux_syslog */
@@ -2509,6 +2717,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 104 = linux_setitimer */
@@ -2533,6 +2743,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 105 = linux_getitimer */
@@ -2557,6 +2769,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 106 = linux_newstat */
@@ -2581,6 +2795,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 107 = linux_newlstat */
@@ -2605,6 +2821,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 108 = linux_newfstat */
@@ -2626,6 +2844,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 109 = linux_uname */
@@ -2650,6 +2870,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 110 = linux_iopl */
@@ -2671,6 +2893,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 111 = linux_vhangup */
@@ -2692,6 +2916,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 112 = idle */
@@ -2713,6 +2939,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 113 = linux_vm86old */
@@ -2737,6 +2965,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 114 = linux_wait4 */
@@ -2758,6 +2988,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 115 = linux_swapoff */
@@ -2782,6 +3014,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 116 = linux_sysinfo */
@@ -2806,6 +3040,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 117 = linux_ipc */
@@ -2830,6 +3066,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 118 = fsync */
@@ -2854,6 +3092,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 119 = linux_sigreturn */
@@ -2878,6 +3118,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 120 = linux_clone */
@@ -2902,6 +3144,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 121 = linux_setdomainname */
@@ -2926,6 +3170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 122 = linux_newuname */
@@ -2950,6 +3196,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 123 = linux_modify_ldt */
@@ -2971,6 +3219,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 124 = linux_adjtimex */
@@ -2995,6 +3245,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 125 = linux_mprotect */
@@ -3019,6 +3271,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 126 = linux_sigprocmask */
@@ -3040,6 +3294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 127 = linux_create_module */
@@ -3061,6 +3317,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 128 = linux_init_module */
@@ -3082,6 +3340,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 129 = linux_delete_module */
@@ -3103,6 +3363,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 130 = linux_get_kernel_syms */
@@ -3124,6 +3386,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 131 = linux_quotactl */
@@ -3148,6 +3412,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 132 = getpgid */
@@ -3172,6 +3438,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 133 = fchdir */
@@ -3193,6 +3461,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 134 = linux_bdflush */
@@ -3217,6 +3487,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 135 = linux_sysfs */
@@ -3241,6 +3513,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 136 = linux_personality */
@@ -3262,6 +3536,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 137 = afs_syscall */
@@ -3286,6 +3562,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 138 = linux_setfsuid16 */
@@ -3310,6 +3588,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 139 = linux_setfsgid16 */
@@ -3334,6 +3614,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 140 = linux_llseek */
@@ -3358,6 +3640,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 141 = linux_getdents */
@@ -3382,6 +3666,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 142 = linux_select */
@@ -3406,6 +3692,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 143 = flock */
@@ -3430,6 +3718,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 144 = linux_msync */
@@ -3454,6 +3744,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 145 = readv */
@@ -3478,6 +3770,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 146 = writev */
@@ -3502,6 +3796,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 147 = linux_getsid */
@@ -3526,6 +3822,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 148 = linux_fdatasync */
@@ -3550,6 +3848,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 149 = linux_sysctl */
@@ -3574,6 +3874,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 150 = mlock */
@@ -3598,6 +3900,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 151 = munlock */
@@ -3622,6 +3926,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 152 = mlockall */
@@ -3643,6 +3949,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 153 = munlockall */
@@ -3667,6 +3975,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 154 = sched_setparam */
@@ -3691,6 +4001,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 155 = sched_getparam */
@@ -3715,6 +4027,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 156 = linux_sched_setscheduler */
@@ -3739,6 +4053,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 157 = linux_sched_getscheduler */
@@ -3760,6 +4076,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 158 = sched_yield */
@@ -3784,6 +4102,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 159 = linux_sched_get_priority_max */
@@ -3808,6 +4128,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 160 = linux_sched_get_priority_min */
@@ -3832,6 +4154,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 161 = sched_rr_get_interval */
@@ -3856,6 +4180,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 162 = linux_nanosleep */
@@ -3880,6 +4206,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 163 = linux_mremap */
@@ -3904,6 +4232,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 164 = linux_setresuid16 */
@@ -3928,6 +4258,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 165 = linux_getresuid16 */
@@ -3949,6 +4281,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 166 = linux_vm86 */
@@ -3970,6 +4304,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 167 = linux_query_module */
@@ -3994,6 +4330,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 168 = poll */
@@ -4015,6 +4353,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 169 = linux_nfsservctl */
@@ -4039,6 +4379,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 170 = linux_setresgid16 */
@@ -4063,6 +4405,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 171 = linux_getresgid16 */
@@ -4087,6 +4431,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 172 = linux_prctl */
@@ -4111,6 +4457,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 173 = linux_rt_sigreturn */
@@ -4135,6 +4483,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 174 = linux_rt_sigaction */
@@ -4159,6 +4509,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 175 = linux_rt_sigprocmask */
@@ -4183,6 +4535,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 176 = linux_rt_sigpending */
@@ -4207,6 +4561,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 177 = linux_rt_sigtimedwait */
@@ -4228,6 +4584,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 178 = linux_rt_sigqueueinfo */
@@ -4252,6 +4610,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 179 = linux_rt_sigsuspend */
@@ -4276,6 +4636,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 180 = linux_pread */
@@ -4300,6 +4662,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 181 = linux_pwrite */
@@ -4324,6 +4688,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 182 = linux_chown16 */
@@ -4348,6 +4714,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 183 = linux_getcwd */
@@ -4369,6 +4737,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 184 = linux_capget */
@@ -4390,6 +4760,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 185 = linux_capset */
@@ -4414,6 +4786,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 186 = linux_sigaltstack */
@@ -4435,6 +4809,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 187 = linux_sendfile */
@@ -4456,6 +4832,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 188 = getpmsg */
@@ -4477,6 +4855,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 189 = putpmsg */
@@ -4498,6 +4878,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 190 = linux_vfork */
@@ -4522,6 +4904,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 191 = linux_getrlimit */
@@ -4546,6 +4930,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 192 = linux_mmap2 */
@@ -4570,6 +4956,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 193 = linux_truncate64 */
@@ -4594,6 +4982,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 194 = linux_ftruncate64 */
@@ -4618,6 +5008,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 195 = linux_stat64 */
@@ -4642,6 +5034,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 196 = linux_lstat64 */
@@ -4666,6 +5060,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 197 = linux_fstat64 */
@@ -4690,6 +5086,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 198 = linux_lchown */
@@ -4711,6 +5109,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 199 = linux_getuid */
@@ -4732,6 +5132,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 200 = linux_getgid */
@@ -4753,6 +5155,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 201 = geteuid */
@@ -4774,6 +5178,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 202 = getegid */
@@ -4798,6 +5204,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 203 = setreuid */
@@ -4822,6 +5230,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 204 = setregid */
@@ -4846,6 +5256,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 205 = linux_getgroups */
@@ -4870,6 +5282,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 206 = linux_setgroups */
@@ -4894,6 +5308,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 207 = fchown */
@@ -4918,6 +5334,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 208 = setresuid */
@@ -4942,6 +5360,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 209 = getresuid */
@@ -4966,6 +5386,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 210 = setresgid */
@@ -4990,6 +5412,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 211 = getresgid */
@@ -5014,6 +5438,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 212 = linux_chown */
@@ -5038,6 +5464,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 213 = setuid */
@@ -5062,6 +5490,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 214 = setgid */
@@ -5086,6 +5516,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 215 = linux_setfsuid */
@@ -5110,6 +5542,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 216 = linux_setfsgid */
@@ -5134,6 +5568,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 217 = linux_pivot_root */
@@ -5158,6 +5594,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 218 = linux_mincore */
@@ -5182,6 +5620,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 219 = madvise */
@@ -5206,6 +5646,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 220 = linux_getdents64 */
@@ -5230,6 +5672,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 221 = linux_fcntl64 */
@@ -5251,6 +5695,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 222 =  */
@@ -5272,6 +5718,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 223 =  */
@@ -5293,6 +5741,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 224 = linux_gettid */
@@ -5314,6 +5764,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 225 = linux_readahead */
@@ -5335,6 +5787,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 226 = linux_setxattr */
@@ -5356,6 +5810,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 227 = linux_lsetxattr */
@@ -5377,6 +5833,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 228 = linux_fsetxattr */
@@ -5398,6 +5856,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 229 = linux_getxattr */
@@ -5419,6 +5879,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 230 = linux_lgetxattr */
@@ -5440,6 +5902,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 231 = linux_fgetxattr */
@@ -5461,6 +5925,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 232 = linux_listxattr */
@@ -5482,6 +5948,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 233 = linux_llistxattr */
@@ -5503,6 +5971,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 234 = linux_flistxattr */
@@ -5524,6 +5994,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 235 = linux_removexattr */
@@ -5545,6 +6017,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 236 = linux_lremovexattr */
@@ -5566,6 +6040,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 237 = linux_fremovexattr */
@@ -5590,6 +6066,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 238 = linux_tkill */
@@ -5611,6 +6089,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 239 = linux_sendfile64 */
@@ -5635,6 +6115,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 240 = linux_sys_futex */
@@ -5659,6 +6141,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 241 = linux_sched_setaffinity */
@@ -5683,6 +6167,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 242 = linux_sched_getaffinity */
@@ -5707,6 +6193,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 243 = linux_set_thread_area */
@@ -5731,6 +6219,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 244 = linux_get_thread_area */
@@ -5752,6 +6242,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 245 = linux_io_setup */
@@ -5773,6 +6265,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 246 = linux_io_destroy */
@@ -5794,6 +6288,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 247 = linux_io_getevents */
@@ -5815,6 +6311,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 248 = linux_io_submit */
@@ -5836,6 +6334,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 249 = linux_io_cancel */
@@ -5857,6 +6357,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 250 = linux_fadvise64 */
@@ -5878,6 +6380,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 251 =  */
@@ -5902,6 +6406,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 252 = linux_exit_group */
@@ -5923,6 +6429,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 253 = linux_lookup_dcookie */
@@ -5944,6 +6452,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 254 = linux_epoll_create */
@@ -5965,6 +6475,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 255 = linux_epoll_ctl */
@@ -5986,6 +6498,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 256 = linux_epoll_wait */
@@ -6007,6 +6521,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 257 = linux_remap_file_pages */
@@ -6031,6 +6547,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 258 = linux_set_tid_address */
@@ -6055,6 +6573,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 259 = linux_timer_create */
@@ -6079,6 +6599,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 260 = linux_timer_settime */
@@ -6103,6 +6625,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 261 = linux_timer_gettime */
@@ -6127,6 +6651,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 262 = linux_timer_getoverrun */
@@ -6151,6 +6677,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 263 = linux_timer_delete */
@@ -6175,6 +6703,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 264 = linux_clock_settime */
@@ -6199,6 +6729,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 265 = linux_clock_gettime */
@@ -6223,6 +6755,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 266 = linux_clock_getres */
@@ -6247,6 +6781,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 267 = linux_clock_nanosleep */
@@ -6271,6 +6807,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 268 = linux_statfs64 */
@@ -6292,6 +6830,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 269 = linux_fstatfs64 */
@@ -6316,6 +6856,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 270 = linux_tgkill */
@@ -6340,6 +6882,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 271 = linux_utimes */
@@ -6361,6 +6905,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 272 = linux_fadvise64_64 */
@@ -6382,6 +6928,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 273 =  */
@@ -6403,6 +6951,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 274 = linux_mbind */
@@ -6424,6 +6974,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 275 = linux_get_mempolicy */
@@ -6445,6 +6997,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 276 = linux_set_mempolicy */
@@ -6469,6 +7023,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 277 = linux_mq_open */
@@ -6493,6 +7049,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 278 = linux_mq_unlink */
@@ -6517,6 +7075,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 279 = linux_mq_timedsend */
@@ -6541,6 +7101,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 280 = linux_mq_timedreceive */
@@ -6565,6 +7127,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 281 = linux_mq_notify */
@@ -6589,6 +7153,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 282 = linux_mq_getsetattr */
@@ -6610,6 +7176,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 283 = linux_kexec_load */
@@ -6631,6 +7199,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 284 = linux_waitid */
@@ -6652,6 +7222,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 285 =  */
@@ -6673,6 +7245,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 286 = linux_add_key */
@@ -6694,6 +7268,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 287 = linux_request_key */
@@ -6715,6 +7291,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 288 = linux_keyctl */
@@ -6736,6 +7314,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 289 = linux_ioprio_set */
@@ -6757,6 +7337,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 290 = linux_ioprio_get */
@@ -6778,6 +7360,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 291 = linux_inotify_init */
@@ -6799,6 +7383,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 292 = linux_inotify_add_watch */
@@ -6820,6 +7406,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 293 = linux_inotify_rm_watch */
@@ -6841,6 +7429,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 294 = linux_migrate_pages */
@@ -6865,6 +7455,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 295 = linux_openat */
@@ -6889,6 +7481,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 296 = linux_mkdirat */
@@ -6913,6 +7507,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 297 = linux_mknodat */
@@ -6937,6 +7533,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 298 = linux_fchownat */
@@ -6961,6 +7559,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 299 = linux_futimesat */
@@ -6985,6 +7585,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 300 = linux_fstatat64 */
@@ -7009,6 +7611,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 301 = linux_unlinkat */
@@ -7033,6 +7637,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 302 = linux_renameat */
@@ -7057,6 +7663,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 303 = linux_linkat */
@@ -7081,6 +7689,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 304 = linux_symlinkat */
@@ -7105,6 +7715,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 305 = linux_readlinkat */
@@ -7129,6 +7741,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 306 = linux_fchmodat */
@@ -7153,6 +7767,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 307 = linux_faccessat */
@@ -7174,6 +7790,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 308 = linux_pselect6 */
@@ -7195,6 +7813,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 309 = linux_ppoll */
@@ -7216,6 +7836,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 310 = linux_unshare */
@@ -7240,6 +7862,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 311 = linux_set_robust_list */
@@ -7264,6 +7888,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 312 = linux_get_robust_list */
@@ -7285,6 +7911,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 313 = linux_splice */
@@ -7306,6 +7934,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 314 = linux_sync_file_range */
@@ -7327,6 +7957,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 315 = linux_tee */
@@ -7348,6 +7980,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 316 = linux_vmsplice */
