@@ -1890,7 +1890,7 @@ value|0x04068
 end_define
 
 begin_comment
-comment|/* Packets Rx (256-511 bytes) - R/clr */
+comment|/* Packets Rx (255-511 bytes) - R/clr */
 end_comment
 
 begin_define
