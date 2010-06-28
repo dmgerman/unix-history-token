@@ -650,7 +650,7 @@ parameter_list|(
 name|syscallname
 parameter_list|)
 define|\
-value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& syscallname,				\ 	SYS_AUE_##syscallname					\ }
+value|static struct sysent syscallname##_sysent = {			\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname,			\ }
 end_define
 
 begin_define
