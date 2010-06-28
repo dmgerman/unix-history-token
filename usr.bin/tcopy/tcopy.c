@@ -317,6 +317,11 @@ name|guesslen
 operator|=
 literal|1
 expr_stmt|;
+name|outp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -676,10 +681,13 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read error, file %d, record %qu"
+literal|"read error, file %d, record %ju"
 argument_list|,
 name|filen
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -717,8 +725,11 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"%qu records\n"
+literal|"%ju records\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -735,10 +746,16 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"records %qu to %qu\n"
+literal|"records %ju to %ju\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|lastrec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -747,8 +764,11 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"record %qu\n"
+literal|"record %ju\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|lastrec
 argument_list|)
 expr_stmt|;
@@ -852,10 +872,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"write error, file %d, record %qu"
+literal|"write error, file %d, record %ju"
 argument_list|,
 name|filen
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -864,10 +887,13 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"write error, file %d, record %qu"
+literal|"write error, file %d, record %ju"
 argument_list|,
 name|filen
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -924,12 +950,18 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"file %d: eof after %qu records: %qu bytes\n"
+literal|"file %d: eof after %ju records: %ju bytes\n"
 argument_list|,
 name|filen
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -966,8 +998,11 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"total length: %qu bytes\n"
+literal|"total length: %ju bytes\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tsize
 argument_list|)
 expr_stmt|;
@@ -1336,10 +1371,16 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"records %qu to %qu\n"
+literal|"records %ju to %ju\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|lastrec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
@@ -1348,8 +1389,11 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"record %qu\n"
+literal|"record %ju\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|lastrec
 argument_list|)
 expr_stmt|;
@@ -1358,10 +1402,13 @@ name|fprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"interrupt at file %d: record %qu\n"
+literal|"interrupt at file %d: record %ju\n"
 argument_list|,
 name|filen
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|record
 argument_list|)
 expr_stmt|;
