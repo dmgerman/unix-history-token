@@ -3875,10 +3875,8 @@ operator|==
 literal|'!'
 condition|)
 return|return
-name|backgndpid
-operator|!=
-operator|-
-literal|1
+name|backgndpidset
+argument_list|()
 return|;
 elseif|else
 if|if
@@ -4123,7 +4121,8 @@ literal|'!'
 case|:
 name|num
 operator|=
-name|backgndpid
+name|backgndpidval
+argument_list|()
 expr_stmt|;
 name|numvar
 label|:
