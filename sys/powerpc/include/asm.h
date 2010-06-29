@@ -192,7 +192,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|GPROF
+name|PROF
 end_ifdef
 
 begin_define

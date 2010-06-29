@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|FUNCTION_ALIGNMENT
-value|16
+value|4
 end_define
 
 begin_typedef
