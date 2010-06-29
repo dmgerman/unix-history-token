@@ -8251,7 +8251,7 @@ name|f_pos
 operator|++
 control|)
 empty_stmt|;
-comment|/* prepare to enter the inner loop */
+comment|/* Re-enter the inner loop at the skipto rule. */
 name|f
 operator|=
 name|chain
@@ -8285,7 +8285,9 @@ name|skip_or
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 break|break;
+comment|/* not reached */
 case|case
 name|O_REJECT
 case|:
