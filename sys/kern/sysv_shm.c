@@ -4757,14 +4757,9 @@ name|int
 name|shmunload
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|MAC
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|shm_nused
