@@ -11950,16 +11950,10 @@ break|break;
 case|case
 name|CAM_DEV_POS_PDRV
 case|:
-name|xpt_lock_buses
-argument_list|()
-expr_stmt|;
 name|xptperiphlistmatch
 argument_list|(
 name|cdm
 argument_list|)
-expr_stmt|;
-name|xpt_unlock_buses
-argument_list|()
 expr_stmt|;
 break|break;
 default|default:
