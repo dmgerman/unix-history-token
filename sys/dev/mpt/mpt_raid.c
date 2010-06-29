@@ -2738,6 +2738,7 @@ literal|1
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|&
 name|mpt
 operator|->
 name|raid_volumes
