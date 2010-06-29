@@ -411,13 +411,11 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-name|psignal
+name|tdsignal
 argument_list|(
 name|uio
 operator|->
 name|uio_td
-operator|->
-name|td_proc
 argument_list|,
 name|SIGPIPE
 argument_list|)
