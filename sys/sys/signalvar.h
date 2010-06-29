@@ -1278,7 +1278,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pksignal
 parameter_list|(
 name|struct
@@ -1510,14 +1510,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|tdsignal
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tdksignal
+parameter_list|(
 name|struct
 name|thread
 modifier|*

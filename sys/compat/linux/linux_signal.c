@@ -2602,12 +2602,8 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-name|tdsignal
+name|tdksignal
 argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|,
 name|td
 argument_list|,
 name|info
@@ -3025,11 +3021,9 @@ name|cr_ruid
 expr_stmt|;
 name|error
 operator|=
-name|tdsignal
+name|pksignal
 argument_list|(
 name|p
-argument_list|,
-name|NULL
 argument_list|,
 name|ksi
 operator|.

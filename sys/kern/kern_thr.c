@@ -1510,10 +1510,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|tdsignal
+name|tdksignal
 argument_list|(
-name|p
-argument_list|,
 name|ttd
 argument_list|,
 name|uap
@@ -1592,10 +1590,8 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|tdsignal
+name|tdksignal
 argument_list|(
-name|p
-argument_list|,
 name|ttd
 argument_list|,
 name|uap
@@ -1837,10 +1833,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|tdsignal
+name|tdksignal
 argument_list|(
-name|p
-argument_list|,
 name|ttd
 argument_list|,
 name|uap
@@ -1919,10 +1913,8 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-name|tdsignal
+name|tdksignal
 argument_list|(
-name|p
-argument_list|,
 name|ttd
 argument_list|,
 name|uap

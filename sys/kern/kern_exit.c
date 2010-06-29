@@ -2716,11 +2716,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|tdsignal
+name|pksignal
 argument_list|(
 name|t
-argument_list|,
-name|NULL
 argument_list|,
 name|SIGCHLD
 argument_list|,
