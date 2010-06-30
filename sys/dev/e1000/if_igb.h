@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|IGB_TX_WTHRESH
-value|((hw->mac.type == e1000_82576&& \                                           adapter->msix_mem) ? 1 : 16)
+value|(((hw->mac.type == e1000_82576 || \ 					  hw->mac.type == e1000_vfadapt)&& \                                           adapter->msix_mem) ? 1 : 16)
 end_define
 
 begin_define
@@ -866,15 +866,6 @@ decl_stmt|;
 name|u64
 name|tx_packets
 decl_stmt|;
-comment|/* Statistics for reporting, ONLY. */
-name|u32
-name|tdh
-decl_stmt|;
-comment|/* Transmit Descriptor Head */
-name|u32
-name|tdt
-decl_stmt|;
-comment|/* Transmit Descriptor Tail */
 block|}
 struct|;
 end_struct
@@ -976,15 +967,6 @@ decl_stmt|;
 name|u64
 name|rx_bytes
 decl_stmt|;
-comment|/* Statistics for reporting, ONLY. */
-name|u32
-name|rdh
-decl_stmt|;
-comment|/* Transmit Descriptor Head */
-name|u32
-name|rdt
-decl_stmt|;
-comment|/* Transmit Descriptor Tail */
 block|}
 struct|;
 end_struct
@@ -1229,8 +1211,8 @@ name|hwtstamp
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|e1000_hw_stats
+name|void
+modifier|*
 name|stats
 decl_stmt|;
 block|}
@@ -1454,11 +1436,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGB_TX_LOCK_ASSERT
+name|IGB_RX_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
+value|mtx_assert(&(_sc)->rx_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPDATE_VF_REG
+parameter_list|(
+name|reg
+parameter_list|,
+name|last
+parameter_list|,
+name|cur
+parameter_list|)
+define|\
+value|{						\ 	u32 new = E1000_READ_REG(hw, reg);	\ 	if (new< last)				\ 		cur += 0x100000000LL;		\ 	last = new;				\ 	cur&= 0xFFFFFFFF00000000LL;		\ 	cur |= new;				\ }
 end_define
 
 begin_endif
