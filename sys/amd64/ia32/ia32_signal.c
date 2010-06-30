@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
