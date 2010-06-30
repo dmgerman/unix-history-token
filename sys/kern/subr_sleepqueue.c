@@ -1856,7 +1856,7 @@ name|ps_mtx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Lock the per-process spinlock prior to dropping the PROC_LOCK 	 * to avoid a signal delivery race.  PROC_LOCK, PROC_SLOCK, and 	 * thread_lock() are currently held in tdsignal(). 	 */
+comment|/* 	 * Lock the per-process spinlock prior to dropping the PROC_LOCK 	 * to avoid a signal delivery race.  PROC_LOCK, PROC_SLOCK, and 	 * thread_lock() are currently held in tdsendsignal(). 	 */
 name|PROC_SLOCK
 argument_list|(
 name|p
