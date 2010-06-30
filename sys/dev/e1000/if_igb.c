@@ -22637,12 +22637,6 @@ operator|->
 name|ifp
 expr_stmt|;
 name|ifp
-operator|=
-name|adapter
-operator|->
-name|ifp
-expr_stmt|;
-name|ifp
 operator|->
 name|if_collisions
 operator|=
@@ -22773,7 +22767,6 @@ operator|->
 name|packet_buf_alloc_rx
 operator|=
 operator|(
-operator|(
 name|E1000_READ_REG
 argument_list|(
 name|hw
@@ -22783,7 +22776,7 @@ argument_list|)
 operator|&
 literal|0xffff
 operator|)
-expr|;
+expr_stmt|;
 block|}
 end_function
 
@@ -23079,7 +23072,6 @@ name|e1000_hw_stats
 modifier|*
 name|stats
 init|=
-operator|&
 name|adapter
 operator|->
 name|stats
@@ -23426,20 +23418,10 @@ literal|"txd_head"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|E1000_READ_REG
-argument_list|(
 operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TDH
-argument_list|(
 name|txr
 operator|->
-name|me
-argument_list|)
-argument_list|)
+name|tdh
 argument_list|,
 literal|0
 argument_list|,
@@ -23458,27 +23440,16 @@ literal|"txd_tail"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|E1000_READ_REG
-argument_list|(
 operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TDT
-argument_list|(
 name|txr
 operator|->
-name|me
-argument_list|)
-argument_list|)
-argument_list|)
-operator|,
+name|tdt
+argument_list|,
 literal|0
-operator|,
+argument_list|,
 literal|"Transmit Descriptor Tail"
-block|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -23520,9 +23491,6 @@ literal|"Queue Packets Transmitted"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_for
 for|for
 control|(
 name|int
@@ -23756,13 +23724,7 @@ literal|"LRO Flushed"
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* MAC stats get the own sub node */
-end_comment
-
-begin_expr_stmt
 name|stat_node
 operator|=
 name|SYSCTL_ADD_NODE
@@ -23782,9 +23744,6 @@ argument_list|,
 literal|"MAC Statistics"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|stat_list
 operator|=
 name|SYSCTL_CHILDREN
@@ -23792,13 +23751,7 @@ argument_list|(
 name|stat_node
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	** VF adapter has a very limited set of stats 	** since its not managing the metal, so to speak. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|adapter
@@ -23825,10 +23778,8 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gprc
 argument_list|,
 literal|"Good Packets Received"
@@ -23847,10 +23798,8 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gptc
 argument_list|,
 literal|"Good Packets Transmitted"
@@ -23869,10 +23818,8 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gorc
 argument_list|,
 literal|"Good Octets Received"
@@ -23891,10 +23838,8 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gotc
 argument_list|,
 literal|"Good Octest Transmitted"
@@ -23913,10 +23858,8 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|mprc
 argument_list|,
 literal|"Multicast Packets Received"
@@ -23924,9 +23867,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -23947,9 +23887,6 @@ argument_list|,
 literal|"Excessive collisions"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -23970,9 +23907,6 @@ argument_list|,
 literal|"Single collisions"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -23993,9 +23927,6 @@ argument_list|,
 literal|"Multiple collisions"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24016,9 +23947,6 @@ argument_list|,
 literal|"Late collisions"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24039,9 +23967,6 @@ argument_list|,
 literal|"Collision Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24055,18 +23980,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|symerrs
 argument_list|,
 literal|"Symbol Errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24080,18 +24000,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|sec
 argument_list|,
 literal|"Sequence Errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24105,18 +24020,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|dc
 argument_list|,
 literal|"Defer Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24130,18 +24040,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|mpc
 argument_list|,
 literal|"Missed Packets"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24155,18 +24060,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|rnbc
 argument_list|,
 literal|"Receive No Buffers"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24180,18 +24080,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ruc
 argument_list|,
 literal|"Receive Undersize"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24205,18 +24100,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|rfc
 argument_list|,
 literal|"Fragmented Packets Received "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24230,18 +24120,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|roc
 argument_list|,
 literal|"Oversized Packets Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24255,18 +24140,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|rjc
 argument_list|,
 literal|"Recevied Jabber"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24280,18 +24160,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|rxerrc
 argument_list|,
 literal|"Receive Errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24305,18 +24180,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|crcerrs
 argument_list|,
 literal|"CRC errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24330,22 +24200,14 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|algnerrc
 argument_list|,
 literal|"Alignment Errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* On 82575 these are collision counts */
-end_comment
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24359,18 +24221,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|cexterr
 argument_list|,
 literal|"Collision/Carrier extension errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24391,9 +24248,6 @@ argument_list|,
 literal|"RX overruns"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24414,9 +24268,6 @@ argument_list|,
 literal|"Watchdog timeouts"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24430,18 +24281,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|xonrxc
 argument_list|,
 literal|"XON Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24455,18 +24301,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|xontxc
 argument_list|,
 literal|"XON Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24480,18 +24321,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|xoffrxc
 argument_list|,
 literal|"XOFF Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24505,22 +24341,14 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|xofftxc
 argument_list|,
 literal|"XOFF Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Packet Reception Stats */
-end_comment
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24534,18 +24362,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|tpr
 argument_list|,
 literal|"Total Packets Received "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24559,18 +24382,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gprc
 argument_list|,
 literal|"Good Packets Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24584,18 +24402,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|bprc
 argument_list|,
 literal|"Broadcast Packets Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24609,18 +24422,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|mprc
 argument_list|,
 literal|"Multicast Packets Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24634,18 +24442,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc64
 argument_list|,
 literal|"64 byte frames received "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24659,18 +24462,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc127
 argument_list|,
 literal|"65-127 byte frames received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24684,18 +24482,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc255
 argument_list|,
 literal|"128-255 byte frames received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24709,18 +24502,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc511
 argument_list|,
 literal|"256-511 byte frames received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24734,18 +24522,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc1023
 argument_list|,
 literal|"512-1023 byte frames received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24759,18 +24542,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|prc1522
 argument_list|,
 literal|"1023-1522 byte frames received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24784,22 +24562,14 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gorc
 argument_list|,
 literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Packet Transmission Stats */
-end_comment
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24813,18 +24583,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gotc
 argument_list|,
 literal|"Good Octest Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24838,18 +24603,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|tpt
 argument_list|,
 literal|"Total Packets Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24863,18 +24623,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|gptc
 argument_list|,
 literal|"Good Packets Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24888,18 +24643,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|bptc
 argument_list|,
 literal|"Broadcast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24913,18 +24663,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|mptc
 argument_list|,
 literal|"Multicast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24938,18 +24683,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc64
 argument_list|,
 literal|"64 byte frames transmitted "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24963,18 +24703,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc127
 argument_list|,
 literal|"65-127 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -24988,18 +24723,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc255
 argument_list|,
 literal|"128-255 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25013,18 +24743,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc511
 argument_list|,
 literal|"256-511 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25038,18 +24763,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc1023
 argument_list|,
 literal|"512-1023 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25063,18 +24783,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ptc1522
 argument_list|,
 literal|"1024-1522 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25088,18 +24803,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|tsctc
 argument_list|,
 literal|"TSO Contexts Transmitted"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25113,22 +24823,14 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|tsctfc
 argument_list|,
 literal|"TSO Contexts Failed"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Interrupt Stats */
-end_comment
-
-begin_expr_stmt
 name|int_node
 operator|=
 name|SYSCTL_ADD_NODE
@@ -25148,9 +24850,6 @@ argument_list|,
 literal|"Interrupt Statistics"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|int_list
 operator|=
 name|SYSCTL_CHILDREN
@@ -25158,9 +24857,6 @@ argument_list|(
 name|int_node
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25174,18 +24870,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|iac
 argument_list|,
 literal|"Interrupt Assertion Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25199,18 +24890,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|icrxptc
 argument_list|,
 literal|"Interrupt Cause Rx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25224,18 +24910,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|icrxatc
 argument_list|,
 literal|"Interrupt Cause Rx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25249,18 +24930,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ictxptc
 argument_list|,
 literal|"Interrupt Cause Tx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25274,18 +24950,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ictxatc
 argument_list|,
 literal|"Interrupt Cause Tx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25299,18 +24970,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ictxqec
 argument_list|,
 literal|"Interrupt Cause Tx Queue Empty Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25324,18 +24990,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|ictxqmtc
 argument_list|,
 literal|"Interrupt Cause Tx Queue Min Thresh Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25349,18 +25010,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|icrxdmtc
 argument_list|,
 literal|"Interrupt Cause Rx Desc Min Thresh Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25374,22 +25030,14 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|icrxoc
 argument_list|,
 literal|"Interrupt Cause Receiver Overrun Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Host to Card Stats */
-end_comment
-
-begin_expr_stmt
 name|host_node
 operator|=
 name|SYSCTL_ADD_NODE
@@ -25409,9 +25057,6 @@ argument_list|,
 literal|"Host to Card Statistics"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|host_list
 operator|=
 name|SYSCTL_CHILDREN
@@ -25419,9 +25064,6 @@ argument_list|(
 name|host_node
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25435,18 +25077,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|cbtmpc
 argument_list|,
 literal|"Circuit Breaker Tx Packet Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25460,18 +25097,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|htdpmc
 argument_list|,
 literal|"Host Transmit Discarded Packets"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25485,18 +25117,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|rpthc
 argument_list|,
 literal|"Rx Packets To Host"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25510,18 +25137,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|cbrmpc
 argument_list|,
 literal|"Circuit Breaker Rx Packet Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25535,18 +25157,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|cbrdpc
 argument_list|,
 literal|"Circuit Breaker Rx Dropped Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25560,18 +25177,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|hgptc
 argument_list|,
 literal|"Host Good Packets Tx Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25585,18 +25197,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|htcbdpc
 argument_list|,
 literal|"Host Tx Circuit Breaker Dropped Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25610,18 +25217,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|hgorc
 argument_list|,
 literal|"Host Good Octets Received Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25635,18 +25237,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|hgotc
 argument_list|,
 literal|"Host Good Octets Transmit Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25660,18 +25257,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|lenerrs
 argument_list|,
 literal|"Length Errors"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25685,18 +25277,13 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|scvpc
 argument_list|,
 literal|"SerDes/SGMII Code Violation Pkt Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ADD_QUAD
 argument_list|(
 name|ctx
@@ -25710,24 +25297,22 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|adapter
-operator|->
 name|stats
-operator|.
+operator|->
 name|hrmpc
 argument_list|,
 literal|"Header Redirection Missed Packet Count"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/**********************************************************************  *  *  This routine provides a way to dump out the adapter eeprom,  *  often a useful debug/service tool. This only dumps the first  *  32 words, stuff that matters is in that extent.  *  **********************************************************************/
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|int
 name|igb_sysctl_nvm_info
 parameter_list|(
