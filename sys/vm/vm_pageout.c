@@ -1334,12 +1334,7 @@ name|vm_page_lock_assert
 argument_list|(
 name|m
 argument_list|,
-name|MA_NOTOWNED
-argument_list|)
-expr_stmt|;
-name|vm_page_lock
-argument_list|(
-name|m
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
@@ -1353,25 +1348,14 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
 comment|/* 	 * Can't clean the page if it's busy or held. 	 */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|hold_count
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
+name|KASSERT
+argument_list|(
 name|m
 operator|->
 name|busy
-operator|!=
+operator|==
 literal|0
-operator|)
-operator|||
+operator|&&
 operator|(
 name|m
 operator|->
@@ -1379,18 +1363,31 @@ name|oflags
 operator|&
 name|VPO_BUSY
 operator|)
-operator|)
-condition|)
-block|{
-name|vm_page_unlock
-argument_list|(
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_pageout_clean: page %p is busy"
+operator|,
 name|m
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|hold_count
+operator|==
 literal|0
-return|;
-block|}
+argument_list|,
+operator|(
+literal|"vm_pageout_clean: page %p is held"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|mc
 index|[
 name|vm_pageout_page_count
@@ -3768,11 +3765,6 @@ name|unlock_and_continue
 goto|;
 block|}
 block|}
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* 			 * If a page is dirty, then it is either being washed 			 * (but not yet cleaned) or it is still in the 			 * laundry.  If it is still in the laundry, then we 			 * start the cleaning operation.  			 * 			 * decrement page_shortage on success to account for 			 * the (future) cleaned page.  Otherwise we could wind 			 * up laundering or cleaning too many pages. 			 */
 name|vm_page_unlock_queues
 argument_list|()
