@@ -509,9 +509,13 @@ operator|<
 name|o
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|hp300
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 name|s_scale
 operator|=
 operator|(
