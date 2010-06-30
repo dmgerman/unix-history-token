@@ -1282,6 +1282,10 @@ comment|/* Info about the board itself */
 name|u32
 name|optics
 decl_stmt|;
+name|int
+name|advertise
+decl_stmt|;
+comment|/* link speeds */
 name|bool
 name|link_active
 decl_stmt|;
