@@ -1933,6 +1933,27 @@ argument_list|,
 name|attimer_ids
 argument_list|)
 expr_stmt|;
+comment|/* ENOENT means no PnP-ID, device is hinted. */
+if|if
+condition|(
+name|result
+operator|==
+name|ENOENT
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AT timer"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|BUS_PROBE_LOW_PRIORITY
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|result

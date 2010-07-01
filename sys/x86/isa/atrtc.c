@@ -732,13 +732,6 @@ block|{
 name|int
 name|result
 decl_stmt|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"AT Real Time Clock"
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|ISA_PNP_PROBE
@@ -753,22 +746,30 @@ argument_list|,
 name|atrtc_ids
 argument_list|)
 expr_stmt|;
-comment|/* ENXIO if wrong PnP-ID, ENOENT ifno PnP-ID, zero if good PnP-iD */
+comment|/* ENOENT means no PnP-ID, device is hinted. */
 if|if
 condition|(
 name|result
-operator|!=
+operator|==
 name|ENOENT
 condition|)
-return|return
-operator|(
-name|result
-operator|)
-return|;
-comment|/* All PC's have an RTC, and we're hosed without it, so... */
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AT realtime clock"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_LOW_PRIORITY
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|result
 operator|)
 return|;
 block|}
