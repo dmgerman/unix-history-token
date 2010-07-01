@@ -143,6 +143,11 @@ value|0x0004
 comment|/* key used for WPA group operation */
 define|#
 directive|define
+name|IEEE80211_KEY_NOREPLAY
+value|0x0008
+comment|/* ignore replay failures */
+define|#
+directive|define
 name|IEEE80211_KEY_SWENCRYPT
 value|0x0010
 comment|/* host-based encrypt */
@@ -240,7 +245,7 @@ directive|define
 name|IEEE80211_KEY_COMMON
 comment|/* common flags passed in by apps */
 define|\
-value|(IEEE80211_KEY_XMIT | IEEE80211_KEY_RECV | IEEE80211_KEY_GROUP)
+value|(IEEE80211_KEY_XMIT | IEEE80211_KEY_RECV | IEEE80211_KEY_GROUP | \ 	 IEEE80211_KEY_NOREPLAY)
 end_define
 
 begin_define
