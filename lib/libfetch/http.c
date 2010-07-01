@@ -8606,6 +8606,8 @@ operator|!=
 name|HTTP_NEED_AUTH
 condition|)
 break|break;
+if|if
+condition|(
 name|http_parse_authenticate
 argument_list|(
 name|p
@@ -8613,6 +8615,9 @@ argument_list|,
 operator|&
 name|server_challenges
 argument_list|)
+condition|)
+operator|++
+name|n
 expr_stmt|;
 break|break;
 case|case
@@ -8627,6 +8632,8 @@ operator|!=
 name|HTTP_NEED_PROXY_AUTH
 condition|)
 break|break;
+if|if
+condition|(
 name|http_parse_authenticate
 argument_list|(
 name|p
@@ -8634,6 +8641,12 @@ argument_list|,
 operator|&
 name|proxy_challenges
 argument_list|)
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+operator|++
+name|n
 expr_stmt|;
 break|break;
 case|case
