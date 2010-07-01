@@ -1301,9 +1301,6 @@ decl_stmt|;
 name|u32
 name|linkvec
 decl_stmt|;
-name|int
-name|advertise
-decl_stmt|;
 comment|/* Mbuf cluster size */
 name|u32
 name|rx_mbuf_sz
