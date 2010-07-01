@@ -189,11 +189,26 @@ define|\
 value|.text; .align 4; .globl x; .type x,@function; x:
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PROF
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|GPROF
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
