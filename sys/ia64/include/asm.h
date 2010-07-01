@@ -40,8 +40,20 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|PROF
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|GPROF
 argument_list|)
+operator|)
 end_if
 
 begin_define
