@@ -647,6 +647,11 @@ index|]
 operator|.
 name|enabled
 operator|=
+name|xlr_is_xls1xx
+argument_list|()
+condition|?
+literal|0
+else|:
 literal|0xf
 expr_stmt|;
 if|if
