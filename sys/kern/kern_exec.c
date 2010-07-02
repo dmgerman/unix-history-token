@@ -3964,11 +3964,14 @@ index|[
 name|i
 index|]
 operator|=
-name|vm_page_lookup
+name|vm_page_next
 argument_list|(
-name|object
-argument_list|,
+name|ma
+index|[
 name|i
+operator|-
+literal|1
+index|]
 argument_list|)
 operator|)
 operator|!=
