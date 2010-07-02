@@ -144,13 +144,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TLBHI_PAGE_MASK
+value|(2 * PAGE_SIZE - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TLBHI_ENTRY
 parameter_list|(
 name|va
 parameter_list|,
 name|asid
 parameter_list|)
-value|(((va)& ~PAGE_MASK) | ((asid)& TLBHI_ASID_MASK))
+value|(((va)& ~TLBHI_PAGE_MASK) | ((asid)& TLBHI_ASID_MASK))
 end_define
 
 begin_ifndef
