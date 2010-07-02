@@ -2949,18 +2949,15 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|VM_PAGE_GETQUEUE
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|queue
 operator|!=
 name|PQ_INACTIVE
 condition|)
-block|{
 goto|goto
 name|rescan0
 goto|;
-block|}
 name|next
 operator|=
 name|TAILQ_NEXT
@@ -3662,10 +3659,9 @@ expr_stmt|;
 comment|/* 				 * The page might have been moved to another 				 * queue during potential blocking in vget() 				 * above.  The page might have been freed and 				 * reused for another vnode. 				 */
 if|if
 condition|(
-name|VM_PAGE_GETQUEUE
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|queue
 operator|!=
 name|PQ_INACTIVE
 operator|||
@@ -3959,12 +3955,11 @@ condition|)
 block|{
 name|KASSERT
 argument_list|(
-name|VM_PAGE_INQUEUE2
-argument_list|(
 name|m
-argument_list|,
+operator|->
+name|queue
+operator|==
 name|PQ_ACTIVE
-argument_list|)
 argument_list|,
 operator|(
 literal|"vm_pageout_scan: page %p isn't active"
@@ -4947,12 +4942,11 @@ name|actcount
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|VM_PAGE_INQUEUE2
-argument_list|(
 name|m
-argument_list|,
+operator|->
+name|queue
+operator|==
 name|PQ_ACTIVE
-argument_list|)
 argument_list|,
 operator|(
 literal|"vm_pageout_page_stats: page %p isn't active"

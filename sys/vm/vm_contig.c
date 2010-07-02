@@ -618,12 +618,11 @@ continue|continue;
 block|}
 name|KASSERT
 argument_list|(
-name|VM_PAGE_INQUEUE2
-argument_list|(
 name|m
-argument_list|,
+operator|->
 name|queue
-argument_list|)
+operator|==
+name|queue
 argument_list|,
 operator|(
 literal|"vm_contig_launder: page %p's queue is not %d"

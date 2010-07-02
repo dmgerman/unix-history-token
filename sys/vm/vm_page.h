@@ -282,66 +282,6 @@ name|PQ_COUNT
 value|4
 end_define
 
-begin_comment
-comment|/* Returns the real queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_GETQUEUE
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->queue)
-end_define
-
-begin_comment
-comment|/* Returns the well known queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_GETKNOWNQUEUE2
-parameter_list|(
-name|m
-parameter_list|)
-value|VM_PAGE_GETQUEUE(m)
-end_define
-
-begin_comment
-comment|/* Returns true if the page is in the named well known queue. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_INQUEUE2
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETKNOWNQUEUE2(m) == (q))
-end_define
-
-begin_comment
-comment|/* Sets the queue a page is on. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_SETQUEUE2
-parameter_list|(
-name|m
-parameter_list|,
-name|q
-parameter_list|)
-value|(VM_PAGE_GETQUEUE(m) = (q))
-end_define
-
 begin_struct
 struct|struct
 name|vpgqueues
