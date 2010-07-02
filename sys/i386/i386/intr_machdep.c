@@ -1398,13 +1398,16 @@ name|MAXCOMLEN
 operator|+
 literal|1
 argument_list|,
-literal|"%s stray"
+literal|"stray irq%d"
 argument_list|,
 name|is
 operator|->
-name|is_event
+name|is_pic
 operator|->
-name|ie_name
+name|pic_vector
+argument_list|(
+name|is
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|intrcnt_updatename
