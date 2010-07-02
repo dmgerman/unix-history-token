@@ -4813,14 +4813,6 @@ decl_stmt|;
 name|int
 name|page_shortage
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|page_shortage
 operator|=
 operator|(
@@ -4858,6 +4850,9 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pcount
 operator|=
 name|cnt
@@ -5227,6 +5222,9 @@ operator|=
 name|next
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -5669,13 +5667,7 @@ name|pass
 operator|=
 literal|0
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_pageout_page_stats
-argument_list|()
-expr_stmt|;
-name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 continue|continue;
