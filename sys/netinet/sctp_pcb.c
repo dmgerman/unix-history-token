@@ -30265,7 +30265,7 @@ block|{
 continue|continue;
 block|}
 comment|/* Its a used tag set */
-name|SCTP_INP_INFO_WUNLOCK
+name|SCTP_INP_INFO_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -30453,7 +30453,7 @@ operator|)
 condition|)
 block|{
 comment|/* Bad tag, sorry :< */
-name|SCTP_INP_INFO_WUNLOCK
+name|SCTP_INP_INFO_RUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
