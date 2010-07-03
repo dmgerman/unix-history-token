@@ -687,6 +687,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|ia64_mca_init_ap
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Get and save the CPU specific MCA records. Should we get the 	 * MCA state for each processor, or just the CMC state? 	 */
 name|ia64_mca_save_state
 argument_list|(
