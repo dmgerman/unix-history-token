@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -188,7 +182,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%2d %4d %p %-8jx %s"
+literal|"%2d %4d %p %-8zx %s"
 argument_list|,
 name|stat
 operator|.
@@ -202,9 +196,6 @@ name|stat
 operator|.
 name|address
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|stat
 operator|.
 name|size
