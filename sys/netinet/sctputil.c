@@ -19046,6 +19046,20 @@ return|return;
 block|}
 if|if
 condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|state
+operator|&
+name|SCTP_STATE_ABOUT_TO_BE_FREED
+condition|)
+block|{
+comment|/* already being freed */
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|stcb
 operator|->
@@ -19416,6 +19430,13 @@ argument_list|,
 name|sp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|data
+condition|)
+block|{
 name|sctp_ulp_notify
 argument_list|(
 name|SCTP_NOTIFY_SPECIAL_SP_FAIL
@@ -19453,6 +19474,7 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
