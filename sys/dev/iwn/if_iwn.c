@@ -16002,7 +16002,9 @@ name|tx
 operator|->
 name|linkq
 operator|=
-literal|0
+name|IWN_RIDX_OFDM54
+operator|-
+name|ridx
 expr_stmt|;
 name|flags
 operator||=
