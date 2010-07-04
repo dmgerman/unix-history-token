@@ -1292,6 +1292,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|vm_page_find_least
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_insert
 parameter_list|(
