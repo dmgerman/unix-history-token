@@ -12867,6 +12867,7 @@ begin_function
 name|void
 name|siginfo_to_siginfo32
 parameter_list|(
+specifier|const
 name|siginfo_t
 modifier|*
 name|src
