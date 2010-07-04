@@ -178,7 +178,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ad_get_geometry
 parameter_list|(
 name|device_t
@@ -457,11 +457,16 @@ name|adp
 argument_list|)
 expr_stmt|;
 comment|/* get device geometry into internal structs */
+if|if
+condition|(
 name|ad_get_geometry
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|ENXIO
+return|;
 comment|/* set the max size if configured */
 if|if
 condition|(
@@ -2104,7 +2109,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ad_get_geometry
 parameter_list|(
 name|device_t
@@ -2274,6 +2279,20 @@ operator|<<
 literal|16
 operator|)
 expr_stmt|;
+comment|/* This device exists, but has no size.  Filter out this bogus device. */
+if|if
+condition|(
+operator|!
+name|lbasize
+operator|&&
+operator|!
+name|adp
+operator|->
+name|total_secs
+condition|)
+return|return
+name|ENXIO
+return|;
 comment|/* does this device need oldstyle CHS addressing */
 if|if
 condition|(
@@ -2396,6 +2415,9 @@ name|total_secs
 operator|=
 name|lbasize48
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
