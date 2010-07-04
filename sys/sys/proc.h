@@ -752,6 +752,11 @@ name|int
 name|td_dbgflags
 decl_stmt|;
 comment|/* (c) Userland debugger flags */
+name|struct
+name|ksiginfo
+name|td_dbgksi
+decl_stmt|;
+comment|/* (c) ksi reflected to debugger. */
 name|int
 name|td_ng_outbound
 decl_stmt|;
