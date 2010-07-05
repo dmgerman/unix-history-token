@@ -3039,6 +3039,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|alloc_unr_specific
+parameter_list|(
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+parameter_list|,
+name|u_int
+name|item
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|alloc_unrl
 parameter_list|(
 name|struct
