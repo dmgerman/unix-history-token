@@ -1027,6 +1027,41 @@ begin_comment
 comment|/* Fail if the page is cached */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_IGN_SBUSY
+value|0x1000
+end_define
+
+begin_comment
+comment|/* vm_page_grab() only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_COUNT_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_COUNT
+parameter_list|(
+name|count
+parameter_list|)
+value|((count)<< VM_ALLOC_COUNT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_COUNT_MASK
+value|VM_ALLOC_COUNT(0xffff)
+end_define
+
 begin_function_decl
 name|void
 name|vm_page_flag_set
