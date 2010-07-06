@@ -374,7 +374,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* For example: val=137 causes a fatal CPU error. */
+comment|/* 	 * Example values for injecting PAL determined machine checks: 	 *	corrected	9 	 *	recoverable	73 	 *	fatal		137 	 */
 name|res
 operator|=
 name|ia64_call_pal_stacked
