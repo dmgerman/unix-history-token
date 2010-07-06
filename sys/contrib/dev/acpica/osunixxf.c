@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * These interfaces are required in order to compile the ASL compiler under  * Linux or other Unix-like system.  */
+comment|/*  * These interfaces are required in order to compile the ASL compiler under  * Linux or other Unix-like system.  *  * Note: Use #define __APPLE__ for OS X generation.  */
 end_comment
 
 begin_include
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -693,6 +699,41 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__APPLE__
+name|Sem
+operator|=
+name|sem_open
+argument_list|(
+name|tmpnam
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|,
+name|O_EXCL
+operator||
+name|O_CREAT
+argument_list|,
+literal|0755
+argument_list|,
+name|InitialUnits
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Sem
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+else|#
+directive|else
 name|Sem
 operator|=
 name|AcpiOsAllocate
@@ -741,6 +782,8 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 operator|*
 name|OutHandle
 operator|=

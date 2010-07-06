@@ -945,7 +945,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"No attached Nsnode: [%s] at line %d name [%s], ignoring typecheck\n"
+literal|"No attached Nsnode: [%s] at line %u name [%s], ignoring typecheck\n"
 argument_list|,
 name|Op
 operator|->

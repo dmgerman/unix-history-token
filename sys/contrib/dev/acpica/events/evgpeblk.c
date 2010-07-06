@@ -1359,6 +1359,33 @@ index|[
 name|GpeIndex
 index|]
 expr_stmt|;
+name|GpeNumber
+operator|=
+name|GpeIndex
+operator|+
+name|GpeBlock
+operator|->
+name|BlockBaseNumber
+expr_stmt|;
+comment|/*              * If the GPE has already been enabled for runtime              * signalling, make sure that it remains enabled, but              * do not increment its reference count.              */
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvEnableGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Enabled
+goto|;
+block|}
 comment|/* Ignore GPEs that can wake the system */
 if|if
 condition|(
@@ -1396,14 +1423,6 @@ block|{
 continue|continue;
 block|}
 comment|/* Enable this GPE */
-name|GpeNumber
-operator|=
-name|GpeIndex
-operator|+
-name|GpeBlock
-operator|->
-name|BlockBaseNumber
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiEnableGpe
@@ -1411,10 +1430,10 @@ argument_list|(
 name|GpeDevice
 argument_list|,
 name|GpeNumber
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
+name|Enabled
+label|:
 if|if
 condition|(
 name|ACPI_FAILURE

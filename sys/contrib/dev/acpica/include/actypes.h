@@ -2169,7 +2169,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Actions for AcpiSetGpe */
+comment|/* Actions for AcpiSetGpe, AcpiGpeWakeup, AcpiHwLowSetGpe */
 end_comment
 
 begin_define
@@ -2186,29 +2186,11 @@ name|ACPI_GPE_DISABLE
 value|1
 end_define
 
-begin_comment
-comment|/* GpeTypes for AcpiEnableGpe and AcpiDisableGpe */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_TYPE_WAKE
-value|(UINT8) 0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_RUNTIME
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_TYPE_WAKE_RUN
-value|(UINT8) 0x03
+name|ACPI_GPE_CONDITIONAL_ENABLE
+value|2
 end_define
 
 begin_comment

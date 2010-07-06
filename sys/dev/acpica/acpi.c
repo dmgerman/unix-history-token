@@ -11651,7 +11651,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|AcpiEnableGpe
+name|AcpiGpeWakeup
 argument_list|(
 name|prw
 operator|.
@@ -11661,7 +11661,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_GPE_TYPE_WAKE_RUN
+name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11699,7 +11699,7 @@ else|else
 block|{
 name|status
 operator|=
-name|AcpiDisableGpe
+name|AcpiGpeWakeup
 argument_list|(
 name|prw
 operator|.
@@ -11709,7 +11709,7 @@ name|prw
 operator|.
 name|gpe_bit
 argument_list|,
-name|ACPI_GPE_TYPE_WAKE
+name|ACPI_GPE_DISABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11815,8 +11815,6 @@ argument_list|,
 name|prw
 operator|.
 name|gpe_bit
-argument_list|,
-name|ACPI_GPE_TYPE_WAKE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11983,8 +11981,6 @@ argument_list|,
 name|prw
 operator|.
 name|gpe_bit
-argument_list|,
-name|ACPI_GPE_TYPE_WAKE_RUN
 argument_list|)
 expr_stmt|;
 if|if

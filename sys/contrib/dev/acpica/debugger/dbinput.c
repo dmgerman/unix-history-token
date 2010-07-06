@@ -1500,7 +1500,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d parameters entered, [%s] requires %d parameters\n"
+literal|"%u parameters entered, [%s] requires %u parameters\n"
 argument_list|,
 name|ParamCount
 argument_list|,

@@ -1791,22 +1791,6 @@ name|Node
 operator|)
 return|;
 block|}
-comment|/* List is circular, this flag marks the end */
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_END_OF_PEER_LIST
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|Node
 operator|=
 name|Node

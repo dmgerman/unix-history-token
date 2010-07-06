@@ -1323,7 +1323,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Read %8.8X%8.8X, Width %d\n"
+literal|"Value Read %8.8X%8.8X, Width %u\n"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
@@ -1347,7 +1347,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Written %8.8X%8.8X, Width %d\n"
+literal|"Value Written %8.8X%8.8X, Width %u\n"
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(

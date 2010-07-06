@@ -1127,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"/* A-CHILDREN: %d Actual %d */\n"
+literal|"/* A-CHILDREN: %u Actual %u */\n"
 argument_list|,
 name|ArgCount
 argument_list|,

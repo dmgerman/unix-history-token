@@ -31,6 +31,18 @@ directive|include
 file|<contrib/dev/acpica/include/actables.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/dtcompiler.h>
+end_include
+
 begin_comment
 comment|/* This module used for application-level code only */
 end_comment
@@ -55,19 +67,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|ACPI_DMTABLE_DATA
-modifier|*
-name|AcpiDmGetTableData
-parameter_list|(
-name|char
-modifier|*
-name|Signature
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|AcpiDmCheckAscii
 parameter_list|(
@@ -81,17 +80,6 @@ name|RepairedName
 parameter_list|,
 name|UINT32
 name|Count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT8
-name|AcpiTbGenerateChecksum
-parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -144,6 +132,158 @@ literal|"Remapping Hardware Static Affinity"
 block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmEinjActions
+index|[]
+init|=
+block|{
+literal|"Begin Operation"
+block|,
+literal|"Get Trigger Table"
+block|,
+literal|"Set Error Type"
+block|,
+literal|"Get Error Type"
+block|,
+literal|"End Operation"
+block|,
+literal|"Execute Operation"
+block|,
+literal|"Check Busy Status"
+block|,
+literal|"Get Command Status"
+block|,
+literal|"Unknown Action"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmEinjInstructions
+index|[]
+init|=
+block|{
+literal|"Read Register"
+block|,
+literal|"Read Register Value"
+block|,
+literal|"Write Register"
+block|,
+literal|"Write Register Value"
+block|,
+literal|"Noop"
+block|,
+literal|"Unknown Instruction"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmErstActions
+index|[]
+init|=
+block|{
+literal|"Begin Write Operation"
+block|,
+literal|"Begin Read Operation"
+block|,
+literal|"Begin Clear Operation"
+block|,
+literal|"End Operation"
+block|,
+literal|"Set Record Offset"
+block|,
+literal|"Execute Operation"
+block|,
+literal|"Check Busy Status"
+block|,
+literal|"Get Command Status"
+block|,
+literal|"Get Record Identifier"
+block|,
+literal|"Set Record Identifier"
+block|,
+literal|"Get Record Count"
+block|,
+literal|"Begin Dummy Write"
+block|,
+literal|"Unused/Unknown Action"
+block|,
+literal|"Get Error Address Range"
+block|,
+literal|"Get Error Address Length"
+block|,
+literal|"Get Error Attributes"
+block|,
+literal|"Unknown Action"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmErstInstructions
+index|[]
+init|=
+block|{
+literal|"Read Register"
+block|,
+literal|"Read Register Value"
+block|,
+literal|"Write Register"
+block|,
+literal|"Write Register Value"
+block|,
+literal|"Noop"
+block|,
+literal|"Load Var1"
+block|,
+literal|"Load Var2"
+block|,
+literal|"Store Var1"
+block|,
+literal|"Add"
+block|,
+literal|"Subtract"
+block|,
+literal|"Add Value"
+block|,
+literal|"Subtract Value"
+block|,
+literal|"Stall"
+block|,
+literal|"Stall While True"
+block|,
+literal|"Skip Next If True"
+block|,
+literal|"GoTo"
+block|,
+literal|"Set Source Address"
+block|,
+literal|"Set Destination Address"
+block|,
+literal|"Move Data"
+block|,
+literal|"Unknown Instruction"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -337,11 +477,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, Description  *  * Simple tables have only a TableInfo structure, complex tables have a handler.  * This table must be NULL terminated. RSDP and FACS are special-cased  * elsewhere.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, DtHandler,  *  Template, Description  *  * Simple tables have only a TableInfo structure, complex tables have a  * handler. This table must be NULL terminated. RSDP and FACS are  * special-cased elsewhere.  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|ACPI_DMTABLE_DATA
 name|AcpiDmTableData
 index|[]
@@ -354,6 +493,10 @@ name|NULL
 block|,
 name|AcpiDmDumpAsf
 block|,
+name|DtCompileAsf
+block|,
+name|TemplateAsf
+block|,
 literal|"Alert Standard Format table"
 block|}
 block|,
@@ -363,6 +506,10 @@ block|,
 name|AcpiDmTableInfoBoot
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBoot
 block|,
 literal|"Simple Boot Flag Table"
 block|}
@@ -374,6 +521,10 @@ name|AcpiDmTableInfoBert
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateBert
+block|,
 literal|"Boot Error Record Table"
 block|}
 block|,
@@ -383,6 +534,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpCpep
+block|,
+name|DtCompileCpep
+block|,
+name|TemplateCpep
 block|,
 literal|"Corrected Platform Error Polling table"
 block|}
@@ -394,6 +549,10 @@ name|AcpiDmTableInfoDbgp
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateDbgp
+block|,
 literal|"Debug Port table"
 block|}
 block|,
@@ -403,6 +562,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpDmar
+block|,
+name|DtCompileDmar
+block|,
+name|TemplateDmar
 block|,
 literal|"DMA Remapping table"
 block|}
@@ -414,6 +577,10 @@ name|AcpiDmTableInfoEcdt
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateEcdt
+block|,
 literal|"Embedded Controller Boot Resources Table"
 block|}
 block|,
@@ -423,6 +590,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpEinj
+block|,
+name|DtCompileEinj
+block|,
+name|TemplateEinj
 block|,
 literal|"Error Injection table"
 block|}
@@ -434,6 +605,10 @@ name|NULL
 block|,
 name|AcpiDmDumpErst
 block|,
+name|DtCompileErst
+block|,
+name|TemplateErst
+block|,
 literal|"Error Record Serialization Table"
 block|}
 block|,
@@ -443,6 +618,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpFadt
+block|,
+name|DtCompileFadt
+block|,
+name|TemplateFadt
 block|,
 literal|"Fixed ACPI Description Table"
 block|}
@@ -454,6 +633,10 @@ name|NULL
 block|,
 name|AcpiDmDumpHest
 block|,
+name|DtCompileHest
+block|,
+name|TemplateHest
+block|,
 literal|"Hardware Error Source Table"
 block|}
 block|,
@@ -463,6 +646,10 @@ block|,
 name|AcpiDmTableInfoHpet
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateHpet
 block|,
 literal|"High Precision Event Timer table"
 block|}
@@ -474,6 +661,10 @@ name|NULL
 block|,
 name|AcpiDmDumpIvrs
 block|,
+name|DtCompileIvrs
+block|,
+name|TemplateIvrs
+block|,
 literal|"I/O Virtualization Reporting Structure"
 block|}
 block|,
@@ -483,6 +674,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpMadt
+block|,
+name|DtCompileMadt
+block|,
+name|TemplateMadt
 block|,
 literal|"Multiple APIC Description Table"
 block|}
@@ -494,6 +689,10 @@ name|NULL
 block|,
 name|AcpiDmDumpMcfg
 block|,
+name|DtCompileMcfg
+block|,
+name|TemplateMcfg
+block|,
 literal|"Memory Mapped Configuration table"
 block|}
 block|,
@@ -503,6 +702,10 @@ block|,
 name|AcpiDmTableInfoMchi
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateMchi
 block|,
 literal|"Management Controller Host Interface table"
 block|}
@@ -514,6 +717,10 @@ name|NULL
 block|,
 name|AcpiDmDumpMsct
 block|,
+name|DtCompileMsct
+block|,
+name|TemplateMsct
+block|,
 literal|"Maximum System Characteristics Table"
 block|}
 block|,
@@ -523,6 +730,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpRsdt
+block|,
+name|DtCompileRsdt
+block|,
+name|TemplateRsdt
 block|,
 literal|"Root System Description Table"
 block|}
@@ -534,6 +745,10 @@ name|AcpiDmTableInfoSbst
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateSbst
+block|,
 literal|"Smart Battery Specification Table"
 block|}
 block|,
@@ -541,6 +756,10 @@ block|{
 name|ACPI_SIG_SLIC
 block|,
 name|AcpiDmTableInfoSlic
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -554,6 +773,10 @@ name|NULL
 block|,
 name|AcpiDmDumpSlit
 block|,
+name|DtCompileSlit
+block|,
+name|TemplateSlit
+block|,
 literal|"System Locality Information Table"
 block|}
 block|,
@@ -563,6 +786,10 @@ block|,
 name|AcpiDmTableInfoSpcr
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateSpcr
 block|,
 literal|"Serial Port Console Redirection table"
 block|}
@@ -574,6 +801,10 @@ name|AcpiDmTableInfoSpmi
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateSpmi
+block|,
 literal|"Server Platform Management Interface table"
 block|}
 block|,
@@ -583,6 +814,10 @@ block|,
 name|NULL
 block|,
 name|AcpiDmDumpSrat
+block|,
+name|DtCompileSrat
+block|,
+name|TemplateSrat
 block|,
 literal|"System Resource Affinity Table"
 block|}
@@ -594,6 +829,10 @@ name|AcpiDmTableInfoTcpa
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateTcpa
+block|,
 literal|"Trusted Computing Platform Alliance table"
 block|}
 block|,
@@ -603,6 +842,10 @@ block|,
 name|AcpiDmTableInfoUefi
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateUefi
 block|,
 literal|"UEFI Boot Optimization Table"
 block|}
@@ -614,6 +857,10 @@ name|AcpiDmTableInfoWaet
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|TemplateWaet
+block|,
 literal|"Windows ACPI Emulated Devices Table"
 block|}
 block|,
@@ -624,7 +871,25 @@ name|NULL
 block|,
 name|AcpiDmDumpWdat
 block|,
+name|DtCompileWdat
+block|,
+name|TemplateWdat
+block|,
 literal|"Watchdog Action Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_WDDT
+block|,
+name|AcpiDmTableInfoWddt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateWddt
+block|,
+literal|"Watchdog Description Table"
 block|}
 block|,
 block|{
@@ -633,6 +898,10 @@ block|,
 name|AcpiDmTableInfoWdrt
 block|,
 name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateWdrt
 block|,
 literal|"Watchdog Resource Table"
 block|}
@@ -644,10 +913,18 @@ name|NULL
 block|,
 name|AcpiDmDumpXsdt
 block|,
+name|DtCompileXsdt
+block|,
+name|TemplateXsdt
+block|,
 literal|"Extended System Description Table"
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
 name|NULL
 block|,
 name|NULL
@@ -661,16 +938,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGenerateChecksum  *  * PARAMETERS:  Table               - Pointer to a valid ACPI table (with a  *                                    standard ACPI header)  *  * RETURN:      8 bit checksum of buffer  *  * DESCRIPTION: Computes an 8 bit checksum of the table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGenerateChecksum  *  * PARAMETERS:  Table               - Pointer to table to be checksummed  *              Length              - Length of the table  *              OriginalChecksum    - Value of the checksum field  *  * RETURN:      8 bit checksum of buffer  *  * DESCRIPTION: Computes an 8 bit checksum of the table.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT8
-name|AcpiTbGenerateChecksum
+name|AcpiDmGenerateChecksum
 parameter_list|(
-name|ACPI_TABLE_HEADER
+name|void
 modifier|*
 name|Table
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|,
+name|UINT8
+name|OriginalChecksum
 parameter_list|)
 block|{
 name|UINT8
@@ -687,8 +970,6 @@ operator|*
 operator|)
 name|Table
 argument_list|,
-name|Table
-operator|->
 name|Length
 argument_list|)
 expr_stmt|;
@@ -701,9 +982,7 @@ call|)
 argument_list|(
 name|Checksum
 operator|-
-name|Table
-operator|->
-name|Checksum
+name|OriginalChecksum
 argument_list|)
 expr_stmt|;
 comment|/* Compute the final checksum */
@@ -731,7 +1010,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|AcpiDmGetTableData
@@ -1010,7 +1288,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Always dump the raw table data */
+if|if
+condition|(
+operator|!
+name|Gbl_DoTemplates
+operator|||
+name|Gbl_VerboseTemplates
+condition|)
+block|{
+comment|/* Dump the raw table data */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\nRaw Table Data\n\n"
@@ -1030,6 +1316,7 @@ argument_list|,
 name|DB_BYTE_DISPLAY
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1051,6 +1338,44 @@ name|char
 modifier|*
 name|Name
 parameter_list|)
+block|{
+if|if
+condition|(
+name|Gbl_DoTemplates
+operator|&&
+operator|!
+name|Gbl_VerboseTemplates
+condition|)
+comment|/* Terse template */
+block|{
+if|if
+condition|(
+name|ByteLength
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[%.3d] %34s : "
+argument_list|,
+name|ByteLength
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%40s : "
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+comment|/* Normal disassembler or verbose template */
 block|{
 if|if
 condition|(
@@ -1082,6 +1407,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_function
@@ -1101,6 +1427,48 @@ parameter_list|,
 name|UINT32
 name|Value
 parameter_list|)
+block|{
+if|if
+condition|(
+name|Gbl_DoTemplates
+operator|&&
+operator|!
+name|Gbl_VerboseTemplates
+condition|)
+comment|/* Terse template */
+block|{
+if|if
+condition|(
+name|ByteLength
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[%.3d] %30s % 3d : "
+argument_list|,
+name|ByteLength
+argument_list|,
+name|Name
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%36s % 3d : "
+argument_list|,
+name|Name
+argument_list|,
+name|Value
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+comment|/* Normal disassembler or verbose template */
 block|{
 if|if
 condition|(
@@ -1140,10 +1508,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Length of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      None  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpTable  *  * PARAMETERS:  TableLength         - Length of the entire ACPI table  *              TableOffset         - Starting offset within the table for this  *                                    sub-descriptor (0 if main table)  *              Table               - The ACPI table  *              SubtableLength      - Length of this sub-descriptor  *              Info                - Info table for this ACPI table  *  * RETURN:      None  *  * DESCRIPTION: Display ACPI table contents by walking the Info table.  *  * Note: This function must remain in sync with DtGetFieldLength.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1322,6 +1691,18 @@ name|ACPI_DMT_HESTNTYP
 case|:
 case|case
 name|ACPI_DMT_FADTPM
+case|:
+case|case
+name|ACPI_DMT_EINJACT
+case|:
+case|case
+name|ACPI_DMT_EINJINST
+case|:
+case|case
+name|ACPI_DMT_ERSTACT
+case|:
+case|case
+name|ACPI_DMT_ERSTINST
 case|:
 name|ByteLength
 operator|=
@@ -1730,7 +2111,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X,"
+literal|"%2.2X"
 argument_list|,
 name|Target
 index|[
@@ -1738,6 +2119,23 @@ name|Temp8
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Temp8
+operator|+
+literal|1
+operator|)
+operator|<
+literal|16
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -1889,9 +2287,27 @@ argument_list|)
 expr_stmt|;
 name|Temp8
 operator|=
-name|AcpiTbGenerateChecksum
+name|AcpiDmGenerateChecksum
 argument_list|(
 name|Table
+argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+name|Table
+argument_list|)
+operator|->
+name|Length
+argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|,
+name|Table
+argument_list|)
+operator|->
+name|Checksum
 argument_list|)
 expr_stmt|;
 if|if
@@ -2056,6 +2472,146 @@ argument_list|,
 name|AcpiDmDmarSubnames
 index|[
 name|Temp16
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_EINJACT
+case|:
+comment|/* EINJ Action types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_EINJ_ACTION_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_EINJ_ACTION_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmEinjActions
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_EINJINST
+case|:
+comment|/* EINJ Instruction types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_EINJ_INSTRUCTION_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_EINJ_INSTRUCTION_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmEinjInstructions
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_ERSTACT
+case|:
+comment|/* ERST Action types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_ERST_ACTION_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_ERST_ACTION_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmErstActions
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_ERSTINST
+case|:
+comment|/* ERST Instruction types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_ERST_INSTRUCTION_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_ERST_INSTRUCTION_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmErstInstructions
+index|[
+name|Temp8
 index|]
 argument_list|)
 expr_stmt|;

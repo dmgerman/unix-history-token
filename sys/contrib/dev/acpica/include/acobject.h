@@ -102,12 +102,20 @@ name|AOPOBJ_AML_CONSTANT
 value|0x01
 end_define
 
+begin_comment
+comment|/* Integer is an AML constant */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AOPOBJ_STATIC_POINTER
 value|0x02
 end_define
+
+begin_comment
+comment|/* Data is part of an ACPI table, don't delete */
+end_comment
 
 begin_define
 define|#
@@ -116,12 +124,20 @@ name|AOPOBJ_DATA_VALID
 value|0x04
 end_define
 
+begin_comment
+comment|/* Object is intialized and data is valid */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AOPOBJ_OBJECT_INITIALIZED
 value|0x08
 end_define
+
+begin_comment
+comment|/* Region is initialized, _REG was run */
+end_comment
 
 begin_define
 define|#
@@ -130,12 +146,20 @@ name|AOPOBJ_SETUP_COMPLETE
 value|0x10
 end_define
 
+begin_comment
+comment|/* Region setup is complete */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AOPOBJ_SINGLE_DATUM
+name|AOPOBJ_INVALID
 value|0x20
 end_define
+
+begin_comment
+comment|/* Host OS won't allow a Region address */
+end_comment
 
 begin_define
 define|#
@@ -143,6 +167,21 @@ directive|define
 name|AOPOBJ_MODULE_LEVEL
 value|0x40
 end_define
+
+begin_comment
+comment|/* Method is actually module-level code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AOPOBJ_MODIFIED_NAMESPACE
+value|0x80
+end_define
+
+begin_comment
+comment|/* Method modified the namespace */
+end_comment
 
 begin_comment
 comment|/******************************************************************************  *  * Basic data types  *  *****************************************************************************/

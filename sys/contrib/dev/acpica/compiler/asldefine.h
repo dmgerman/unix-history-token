@@ -375,6 +375,38 @@ name|FILE_SUFFIX_C_INCLUDE
 value|"h"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
+end_define
+
+begin_comment
+comment|/* Types for input files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_BINARY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_ASL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_DATA
+value|2
+end_define
+
 begin_comment
 comment|/* Misc */
 end_comment

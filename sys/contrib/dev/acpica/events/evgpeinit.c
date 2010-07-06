@@ -1100,8 +1100,6 @@ argument_list|(
 name|GpeDevice
 argument_list|,
 name|GpeNumber
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 if|if

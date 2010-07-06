@@ -194,6 +194,21 @@ value|0xFFFF
 end_define
 
 begin_comment
+comment|/* Maximum sleep allowed via Sleep() operator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_SLEEP
+value|20000
+end_define
+
+begin_comment
+comment|/* Two seconds */
+end_comment
+
+begin_comment
 comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
 end_comment
 

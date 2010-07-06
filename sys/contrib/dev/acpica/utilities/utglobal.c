@@ -2124,6 +2124,12 @@ name|ACPI_TYPE_DEVICE
 expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.
+name|Parent
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_RootNodeStruct
+operator|.
 name|Child
 operator|=
 name|NULL
@@ -2139,12 +2145,6 @@ operator|.
 name|Object
 operator|=
 name|NULL
-expr_stmt|;
-name|AcpiGbl_RootNodeStruct
-operator|.
-name|Flags
-operator|=
-name|ANOBJ_END_OF_PEER_LIST
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2173,6 +2173,10 @@ ifdef|#
 directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiGbl_DisplayFinalMemStats
+operator|=
+name|FALSE
+expr_stmt|;
+name|AcpiGbl_DisableMemTracking
 operator|=
 name|FALSE
 expr_stmt|;

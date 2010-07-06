@@ -244,7 +244,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * This table contains the names of the predefined methods for which we can  * perform more complex repairs.  *  * As necessary:  *  * _ALR: Sort the list ascending by AmbientIlluminance  * _FDE: Convert Buffer of BYTEs to a Buffer of DWORDs  * _GTM: Convert Buffer of BYTEs to a Buffer of DWORDs  * _PSS: Sort the list descending by Power  * _TSS: Sort the list descending by Power  */
+comment|/*  * This table contains the names of the predefined methods for which we can  * perform more complex repairs.  *  * As necessary:  *  * _ALR: Sort the list ascending by AmbientIlluminance  * _FDE: Convert Buffer of BYTEs to a Buffer of DWORDs  * _GTM: Convert Buffer of BYTEs to a Buffer of DWORDs  * _PSS: Sort the list descending by Power  * _TSS: Sort the list descending by Power  *  * Names that must be packages, but cannot be sorted:  *  * _BCL: Values are tied to the Package index where they appear, and cannot  * be moved or sorted. These index values are used for _BQC and _BCM.  * However, we can fix the case where a buffer is returned, by converting  * it to a Package of integers.  */
 end_comment
 
 begin_decl_stmt

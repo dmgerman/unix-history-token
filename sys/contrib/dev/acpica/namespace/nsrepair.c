@@ -1320,6 +1320,9 @@ name|NewObject
 operator|=
 name|AcpiUtCreateIntegerObject
 argument_list|(
+operator|(
+name|UINT64
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

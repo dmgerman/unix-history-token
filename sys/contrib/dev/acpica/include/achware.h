@@ -234,23 +234,30 @@ comment|/*  * hwgpe - GPE support  */
 end_comment
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiHwLowDisableGpe
+name|UINT32
+name|AcpiHwGetGpeRegisterBit
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
+parameter_list|,
+name|ACPI_GPE_REGISTER_INFO
+modifier|*
+name|GpeRegisterInfo
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwWriteGpeEnableReg
+name|AcpiHwLowSetGpe
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
+parameter_list|,
+name|UINT32
+name|Action
 parameter_list|)
 function_decl|;
 end_function_decl

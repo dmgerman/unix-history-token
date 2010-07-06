@@ -406,7 +406,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%d) \"%.24s"
+literal|"(%u) \"%.24s"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -452,7 +452,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%d)"
+literal|"(%u)"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1302,7 +1302,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Arg%d:   "
+literal|"    Arg%u:   "
 argument_list|,
 name|i
 argument_list|)

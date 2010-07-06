@@ -830,7 +830,7 @@ literal|"AE_ABORT_METHOD"
 block|,
 literal|"AE_SAME_HANDLER"
 block|,
-literal|"AE_WAKE_ONLY_GPE"
+literal|"AE_NO_HANDLER"
 block|,
 literal|"AE_OWNER_ID_LIMIT"
 block|}

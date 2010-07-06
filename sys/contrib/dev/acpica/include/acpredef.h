@@ -3325,6 +3325,31 @@ block|}
 block|}
 block|,
 comment|/* Fixed-length (2 Int), but is optional */
+comment|/* _WDG/_WED are MS extensions defined by "Windows Instrumentation" */
+block|{
+block|{
+literal|"_WDG"
+block|,
+literal|0
+block|,
+name|ACPI_RTYPE_BUFFER
+block|}
+block|}
+block|,
+block|{
+block|{
+literal|"_WED"
+block|,
+literal|1
+block|,
+name|ACPI_RTYPE_INTEGER
+operator||
+name|ACPI_RTYPE_STRING
+operator||
+name|ACPI_RTYPE_BUFFER
+block|}
+block|}
+block|,
 block|{
 block|{
 block|{
@@ -3352,20 +3377,6 @@ if|#
 directive|if
 literal|0
 end_if
-
-begin_comment
-comment|/* Not implemented */
-end_comment
-
-begin_comment
-unit|{{"_WDG", 0, ACPI_RTYPE_BUFFER}},
-comment|/* MS Extension */
-end_comment
-
-begin_comment
-unit|{{"_WED", 1, ACPI_RTYPE_PACKAGE}},
-comment|/* MS Extension */
-end_comment
 
 begin_comment
 comment|/* This is an internally implemented control method, no need to check */

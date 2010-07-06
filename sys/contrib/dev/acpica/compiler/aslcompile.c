@@ -54,18 +54,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|ACPI_STATUS
-name|FlCheckForAscii
-parameter_list|(
-name|ASL_FILE_INFO
-modifier|*
-name|FileInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
@@ -635,7 +623,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
@@ -893,92 +880,6 @@ argument_list|(
 literal|"Open input and output files"
 argument_list|)
 expr_stmt|;
-comment|/* Open the required input and output files */
-name|Status
-operator|=
-name|FlOpenInputFile
-argument_list|(
-name|Gbl_Files
-index|[
-name|ASL_FILE_INPUT
-index|]
-operator|.
-name|Filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDERR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-comment|/* Check for 100% ASCII source file (comments are ignored) */
-name|Status
-operator|=
-name|FlCheckForAscii
-argument_list|(
-operator|&
-name|Gbl_Files
-index|[
-name|ASL_FILE_INPUT
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDERR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|Status
-operator|=
-name|FlOpenMiscOutputFiles
-argument_list|(
-name|Gbl_OutputFilenamePrefix
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDERR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 name|UtEndEvent
 argument_list|(
 name|Event
@@ -1893,7 +1794,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%32s : %d\n"
+literal|"%32s : %u\n"
 argument_list|,
 literal|"Total Namespace searches"
 argument_list|,
@@ -1904,7 +1805,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%32s : %d usec\n"
+literal|"%32s : %u usec\n"
 argument_list|,
 literal|"Time per search"
 argument_list|,
@@ -1947,7 +1848,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMaximum error count (%d) exceeded\n"
+literal|"\nMaximum error count (%u) exceeded\n"
 argument_list|,
 name|ASL_MAX_ERROR_COUNT
 argument_list|)
@@ -1995,8 +1896,17 @@ operator|(
 operator|!
 name|Gbl_IgnoreErrors
 operator|)
+operator|&&
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
 condition|)
 block|{
+if|if
+condition|(
 name|remove
 argument_list|(
 name|Gbl_Files
@@ -2006,13 +1916,39 @@ index|]
 operator|.
 name|Filename
 argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"Could not delete AML file"
+argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
+block|}
+comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      * This file is created during normal ASL/AML compiles. It is not      * created by the data table compiler.      *      * If the -ls flag is set, then the .SRC file should not be deleted.      * In this case, Gbl_SourceOutputFlag is set to TRUE.      *      * Note: Handles are cleared by FlCloseFile above, so we look at the      * filename instead, to determine if the .SRC file was actually      * created.      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
 if|if
 condition|(
 operator|!
 name|Gbl_SourceOutputFlag
+operator|&&
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
 condition|)
 block|{
 if|if
@@ -2030,7 +1966,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Could not remove SRC file, %s\n"
+literal|"%s: "
 argument_list|,
 name|Gbl_Files
 index|[
@@ -2038,6 +1974,11 @@ name|ASL_FILE_SOURCE_OUTPUT
 index|]
 operator|.
 name|Filename
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"Could not delete SRC file"
 argument_list|)
 expr_stmt|;
 block|}

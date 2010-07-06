@@ -873,10 +873,9 @@ condition|)
 block|{
 name|PrefixNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|PrefixNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 block|}
@@ -1011,10 +1010,9 @@ operator|++
 expr_stmt|;
 name|ThisNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|ThisNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 if|if
 condition|(
@@ -1052,7 +1050,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Search scope is [%4.4s], path has %d carat(s)\n"
+literal|"Search scope is [%4.4s], path has %u carat(s)\n"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -1157,7 +1155,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Multi Pathname (%d Segments, Flags=%X)\n"
+literal|"Multi Pathname (%u Segments, Flags=%X)\n"
 operator|,
 name|NumSegments
 operator|,

@@ -196,7 +196,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Bit length %d, Bit offset %d\n"
+literal|"Bit length %u, Bit offset %u\n"
 operator|,
 name|FieldBitLength
 operator|,
@@ -209,7 +209,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Byte Length %d, Byte Offset %d, End Offset %d\n"
+literal|"Byte Length %u, Byte Offset %u, End Offset %u\n"
 operator|,
 name|FieldByteLength
 operator|,
@@ -285,7 +285,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"AccessWidth %d end is within region\n"
+literal|"AccessWidth %u end is within region\n"
 operator|,
 name|AccessByteWidth
 operator|)
@@ -296,7 +296,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Field Start %d, Field End %d -- requires %d accesses\n"
+literal|"Field Start %u, Field End %u -- requires %u accesses\n"
 operator|,
 name|FieldStartOffset
 operator|,
@@ -319,7 +319,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Entire field can be accessed with one operation of size %d\n"
+literal|"Entire field can be accessed with one operation of size %u\n"
 operator|,
 name|AccessByteWidth
 operator|)
@@ -356,7 +356,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"AccessWidth %d end is NOT within region\n"
+literal|"AccessWidth %u end is NOT within region\n"
 operator|,
 name|AccessByteWidth
 operator|)
@@ -391,7 +391,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Backing off to previous optimal access width of %d\n"
+literal|"Backing off to previous optimal access width of %u\n"
 operator|,
 name|MinimumAccessWidth
 operator|)
@@ -787,34 +787,6 @@ name|BaseByteOffset
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Does the entire field fit within a single field access element? (datum)      * (i.e., without crossing a datum boundary)      */
-if|if
-condition|(
-operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|StartFieldBitOffset
-operator|+
-name|FieldBitLength
-operator|)
-operator|<=
-operator|(
-name|UINT16
-operator|)
-name|AccessBitWidth
-condition|)
-block|{
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Flags
-operator||=
-name|AOPOBJ_SINGLE_DATUM
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

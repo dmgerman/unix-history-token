@@ -1437,7 +1437,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%d executions, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
+block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u executions, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
 endif|#
 directive|endif
 block|}

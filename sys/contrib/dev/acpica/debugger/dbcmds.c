@@ -990,7 +990,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Found %d predefined names in the namespace\n"
+literal|"Found %u predefined names in the namespace\n"
 argument_list|,
 name|Count
 argument_list|)
@@ -1394,7 +1394,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Executed %d predefined names in the namespace\n"
+literal|"Executed %u predefined names in the namespace\n"
 argument_list|,
 name|Info
 operator|.
@@ -1511,7 +1511,7 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d "
+literal|"%u "
 argument_list|,
 name|i
 argument_list|)
@@ -2518,7 +2518,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arg%d - Invalid argument name\n"
+literal|"Arg%u - Invalid argument name\n"
 argument_list|,
 name|Index
 argument_list|)
@@ -2565,7 +2565,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arg%d: "
+literal|"Arg%u: "
 argument_list|,
 name|Index
 argument_list|)
@@ -2591,7 +2591,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local%d - Invalid local variable name\n"
+literal|"Local%u - Invalid local variable name\n"
 argument_list|,
 name|Index
 argument_list|)
@@ -2638,7 +2638,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local%d: "
+literal|"Local%u: "
 argument_list|,
 name|Index
 argument_list|)
@@ -4576,7 +4576,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Verified %d namespace nodes with %d Objects\n"
+literal|"Verified %u namespace nodes with %u Objects\n"
 argument_list|,
 name|Info
 operator|.

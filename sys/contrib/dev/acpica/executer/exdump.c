@@ -3022,7 +3022,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"**** Start operand dump for opcode [%s], %d operands\n"
+literal|"**** Start operand dump for opcode [%s], %u operands\n"
 operator|,
 name|OpcodeName
 operator|,
@@ -3218,10 +3218,9 @@ name|AcpiExOutPointer
 argument_list|(
 literal|"Parent"
 argument_list|,
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 argument_list|)
 expr_stmt|;
 name|AcpiExDumpObject
@@ -3662,7 +3661,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Package] Contains %d Elements:\n"
+literal|"[Package] Contains %u Elements:\n"
 argument_list|,
 name|ObjDesc
 operator|->

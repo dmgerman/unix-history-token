@@ -317,10 +317,9 @@ condition|)
 block|{
 name|Node
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 name|Path
 operator|++
@@ -1151,7 +1150,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|")    // %d Arguments\n"
+literal|")    // %u Arguments\n"
 argument_list|,
 name|AcpiGbl_ExternalList
 operator|->

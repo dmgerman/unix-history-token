@@ -275,19 +275,6 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * The last entry in the list points back to the parent,          * so a flag is used to indicate the end-of-list          */
-if|if
-condition|(
-name|Node
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_END_OF_PEER_LIST
-condition|)
-block|{
-comment|/* Searched entire list, we are done */
-break|break;
-block|}
 comment|/* Didn't match name, move on to the next peer object */
 name|Node
 operator|=
@@ -378,10 +365,9 @@ argument_list|)
 expr_stmt|;
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 comment|/*      * If there is no parent (i.e., we are at the root) or type is "local",      * we won't be searching the parent tree.      */
 if|if
@@ -509,10 +495,9 @@ block|}
 comment|/* Not found here, go up another level (until we reach the root) */
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|ParentNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 comment|/* Not found in parent tree */
