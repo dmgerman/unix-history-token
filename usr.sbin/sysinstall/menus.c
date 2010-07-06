@@ -10056,9 +10056,8 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"System Console Configuration"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) has a\n"
-literal|"number of configuration options which may be set according to\n"
-literal|"your preference.\n\n"
+literal|"The system console driver for FreeBSD has a number of configuration\n"
+literal|"options which may be set according to your preference.\n\n"
 literal|"When you are done setting configuration options, select Cancel."
 block|,
 literal|"Configure your system console settings"
@@ -10237,9 +10236,9 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n"
-literal|"to a standard \"PC-98x1\" keyboard map.  Users may wish to choose\n"
-literal|"one of the other keymaps below.\n"
+literal|"The system console driver for FreeBSD defaults to a standard\n"
+literal|"\"PC-98x1\" keyboard map.  Users may wish to choose one of the\n"
+literal|"other keymaps below.\n"
 literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
 literal|"which is required to generate the ANSI character subset, but your\n"
 literal|"choice of keymap will also be saved for later (fuller) use."
@@ -10295,10 +10294,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Keymap"
 block|,
-literal|"The default system console driver for FreeBSD (syscons) defaults\n"
-literal|"to a standard \"American\" keyboard map.  Users in other countries\n"
-literal|"(or with different keyboard preferences) may wish to choose one of\n"
-literal|"the other keymaps below.\n"
+literal|"The system console driver for FreeBSD defaults to a standard\n"
+literal|"\"American\" keyboard map.  Users in other countries (or with\n"
+literal|"different keyboard preferences) may wish to choose one of the\n"
+literal|"other keymaps below.\n"
 literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
 literal|"which is required to generate the ANSI character subset, but your\n"
 literal|"choice of keymap will also be saved for later (fuller) use."
