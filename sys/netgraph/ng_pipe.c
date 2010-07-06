@@ -3867,8 +3867,6 @@ literal|"ngp_h zalloc failed (3)"
 operator|)
 argument_list|)
 expr_stmt|;
-name|ngp_h
-operator|->
 name|m
 operator|=
 name|m_dup
@@ -3880,8 +3878,6 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|ngp_h
-operator|->
 name|m
 operator|!=
 name|NULL
@@ -3890,6 +3886,12 @@ operator|(
 literal|"m_dup failed"
 operator|)
 argument_list|)
+expr_stmt|;
+name|ngp_h
+operator|->
+name|m
+operator|=
+name|m
 expr_stmt|;
 block|}
 else|else
