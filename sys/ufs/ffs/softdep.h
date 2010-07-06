@@ -110,12 +110,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPACECOUNTED
+name|UNUSED400
 value|0x000400
 end_define
 
 begin_comment
-comment|/* inodedep only */
+comment|/* currently available. */
 end_comment
 
 begin_define

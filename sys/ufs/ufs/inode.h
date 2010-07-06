@@ -279,17 +279,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_SPACECOUNTED
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Blocks to be freed in free count. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IN_LAZYACCESS
 value|0x0100
 end_define

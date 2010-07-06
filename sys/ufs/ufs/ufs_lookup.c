@@ -740,6 +740,19 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|i_effnlink
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 comment|/* 	 * Create a vm object if vmiodirenable is enabled. 	 * Alternatively we could call vnode_create_vobject 	 * in VFS_VGET but we could end up creating objects 	 * that are never used. 	 */
 name|vnode_create_vobject
 argument_list|(

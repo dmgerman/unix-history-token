@@ -4219,26 +4219,6 @@ name|ip
 operator|->
 name|i_din2
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-name|IN_SPACECOUNTED
-operator|)
-argument_list|,
-operator|(
-literal|"inode %u: inode is dead"
-operator|,
-name|ip
-operator|->
-name|i_number
-operator|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
