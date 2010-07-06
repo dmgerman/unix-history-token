@@ -11806,7 +11806,7 @@ operator|.
 name|lowest_wake
 condition|)
 block|{
-name|AcpiDisableGpe
+name|AcpiGpeWakeup
 argument_list|(
 name|prw
 operator|.
@@ -11815,6 +11815,8 @@ argument_list|,
 name|prw
 operator|.
 name|gpe_bit
+argument_list|,
+name|ACPI_GPE_DISABLE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11972,7 +11974,7 @@ operator|.
 name|lowest_wake
 condition|)
 block|{
-name|AcpiEnableGpe
+name|AcpiGpeWakeup
 argument_list|(
 name|prw
 operator|.
@@ -11981,6 +11983,8 @@ argument_list|,
 name|prw
 operator|.
 name|gpe_bit
+argument_list|,
+name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
 if|if
