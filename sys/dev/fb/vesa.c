@@ -2700,6 +2700,17 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|x86bios_init_regs
 argument_list|(
 operator|&
