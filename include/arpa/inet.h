@@ -20,7 +20,7 @@ name|_ARPA_INET_H_
 end_define
 
 begin_comment
-comment|/* External definitions for functions in inet(3), addr2ascii(3) */
+comment|/* External definitions for functions in inet(3). */
 end_comment
 
 begin_include
