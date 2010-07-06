@@ -1564,17 +1564,6 @@ name|ATPIC_SLAVE
 index|]
 argument_list|)
 expr_stmt|;
-name|atpic_write
-argument_list|(
-name|sc
-argument_list|,
-name|ATPIC_SLAVE
-argument_list|,
-literal|0
-argument_list|,
-name|OCW2_EOI
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1606,17 +1595,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|atpic_write
-argument_list|(
-name|sc
-argument_list|,
-name|ATPIC_MASTER
-argument_list|,
-literal|0
-argument_list|,
-name|OCW2_EOI
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1552,21 +1552,6 @@ name|x
 argument_list|)
 expr_stmt|;
 block|}
-name|openpic_write
-argument_list|(
-name|sc
-argument_list|,
-name|OPENPIC_PCPU_EOI
-argument_list|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
