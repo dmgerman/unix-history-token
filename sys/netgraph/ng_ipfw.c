@@ -1076,26 +1076,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|tee
-operator|==
-literal|0
-condition|)
-name|m_freem
-argument_list|(
-operator|*
-name|m0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ESRCH
 operator|)
 return|;
 comment|/* no hook associated with this rule */
-block|}
 comment|/* 	 * We have two modes: in normal mode we add a tag to packet, which is 	 * important to return packet back to IP stack. In tee mode we make 	 * a copy of a packet and forward it into netgraph without a tag. 	 */
 if|if
 condition|(
