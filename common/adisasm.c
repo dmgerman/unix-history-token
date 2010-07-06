@@ -148,17 +148,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AdDisassemblerHeader
-parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_STATUS
 name|AdDeferredParse
 parameter_list|(
@@ -1366,7 +1355,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" *\n * Original Table Header:\n"
+literal|" * Original Table Header:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1556,7 +1545,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" */\n"
+literal|" */\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* Create AML output filename based on input filename */

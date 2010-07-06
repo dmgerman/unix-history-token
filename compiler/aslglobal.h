@@ -599,7 +599,19 @@ name|ASL_EXTERN
 name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
-name|Gbl_DataTableCompilerAvailable
+name|Gbl_VerboseTemplates
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_DoTemplates
 parameter_list|,
 name|FALSE
 parameter_list|)
@@ -1036,6 +1048,14 @@ name|Gbl_Signature
 argument_list|,
 name|NULL
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|char
+modifier|*
+name|Gbl_TemplateSignature
 decl_stmt|;
 end_decl_stmt
 

@@ -146,8 +146,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_COMPILER
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALL_COMPONENTS
-value|0x0000FFFF
+value|0x0001FFFF
 end_define
 
 begin_define

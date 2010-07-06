@@ -76,16 +76,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|AslInitializeGlobals
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|char
 modifier|*
 modifier|*
@@ -118,7 +108,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|AslInitializeGlobals
 parameter_list|(
@@ -207,6 +196,24 @@ expr_stmt|;
 name|Gbl_Files
 index|[
 name|ASL_FILE_AML_OUTPUT
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
+operator|=
+name|NULL
+expr_stmt|;
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
 index|]
 operator|.
 name|Handle
@@ -857,24 +864,6 @@ comment|/*      * Data Table Compilation      */
 case|case
 name|ASL_INPUT_TYPE_ASCII_DATA
 case|:
-comment|/*          * Require use of command-line option to enable the data table          * compiler -- for now, until development of the compiler is          * complete.          */
-if|if
-condition|(
-operator|!
-name|Gbl_DataTableCompilerAvailable
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Data Table Compiler is not available yet\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_SUPPORT
-operator|)
-return|;
-block|}
 name|Status
 operator|=
 name|DtDoCompile

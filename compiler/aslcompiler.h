@@ -232,8 +232,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * aslstartup - called from main  */
+comment|/*  * aslstartup - entered from main()  */
 end_comment
+
+begin_function_decl
+name|void
+name|AslInitializeGlobals
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -1516,6 +1525,15 @@ end_define
 
 begin_function_decl
 name|void
+name|UtDisplaySupportedTables
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|UtDisplayConstantOpcodes
 parameter_list|(
 name|void
@@ -2422,6 +2440,17 @@ name|ACPI_STATUS
 name|DtDoCompile
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|DtCreateTemplates
+parameter_list|(
+name|char
+modifier|*
+name|Signature
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -143,7 +143,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiEvUpdateGpeEnableMasks
+name|AcpiEvUpdateGpeEnableMask
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
@@ -155,17 +155,6 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiEvEnableGpe
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvDisableGpe
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*

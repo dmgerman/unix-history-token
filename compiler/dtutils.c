@@ -746,17 +746,12 @@ case|:
 case|case
 name|ACPI_DMT_BUF16
 case|:
-name|Type
-operator|=
-name|DT_FIELD_TYPE_BUFFER
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_DMT_PCI_PATH
 case|:
 name|Type
 operator|=
-name|DT_FIELD_TYPE_PCI_PATH
+name|DT_FIELD_TYPE_BUFFER
 expr_stmt|;
 break|break;
 case|case
@@ -847,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldLength  *  * PARAMETERS:  Field               - Current field list pointer  *              Info                - Data table info  *  * RETURN:      Field length  *  * DESCRIPTION: Get length of bytes needed to compile the field  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldLength  *  * PARAMETERS:  Field               - Current field list pointer  *              Info                - Data table info  *  * RETURN:      Field length  *  * DESCRIPTION: Get length of bytes needed to compile the field  *  * Note: This function must remain in sync with AcpiDmDumpTable.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -925,6 +920,9 @@ case|case
 name|ACPI_DMT_SPACEID
 case|:
 case|case
+name|ACPI_DMT_IVRS
+case|:
+case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
@@ -940,7 +938,16 @@ case|case
 name|ACPI_DMT_FADTPM
 case|:
 case|case
-name|ACPI_DMT_IVRS
+name|ACPI_DMT_EINJACT
+case|:
+case|case
+name|ACPI_DMT_EINJINST
+case|:
+case|case
+name|ACPI_DMT_ERSTACT
+case|:
+case|case
+name|ACPI_DMT_ERSTINST
 case|:
 name|ByteLength
 operator|=
@@ -1328,6 +1335,19 @@ condition|(
 name|ChildTable
 condition|)
 block|{
+if|if
+condition|(
+name|ChildTable
+operator|->
+name|LengthField
+condition|)
+block|{
+name|DtSetSubtableLength
+argument_list|(
+name|ChildTable
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ChildTable

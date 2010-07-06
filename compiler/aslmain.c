@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:v:w:x:yz"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:v:w:x:z"
 end_define
 
 begin_comment
@@ -321,6 +321,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\nACPI Data Tables:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -T<Sig>       Create table template file for<Sig> (or \"ALL\")\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -vt            Create verbose templates (full disassembly)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\nAML Disassembler:\n"
 argument_list|)
 expr_stmt|;
@@ -372,6 +387,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -hr            Display ACPI reserved method names\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -ht            Display currently supported ACPI table names\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -465,11 +485,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -x<level>      Set debug level for trace output\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  -y             Temporary: Enable data table compiler\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1124,6 +1139,17 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+case|case
+literal|'t'
+case|:
+name|UtDisplaySupportedTables
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 name|printf
 argument_list|(
@@ -1467,6 +1493,18 @@ return|;
 block|}
 break|break;
 case|case
+literal|'T'
+case|:
+name|Gbl_DoTemplates
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_TemplateSignature
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 switch|switch
@@ -1517,6 +1555,14 @@ case|:
 name|Gbl_DoSignon
 operator|=
 name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|Gbl_VerboseTemplates
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
@@ -1603,14 +1649,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'y'
-case|:
-name|Gbl_DataTableCompilerAvailable
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'z'
 case|:
 name|Gbl_UseOriginalCompilerId
@@ -1691,6 +1729,22 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoTemplates
+condition|)
+block|{
+name|DtCreateTemplates
+argument_list|(
+name|Gbl_TemplateSignature
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Next parameter must be the input filename */
 if|if
 condition|(

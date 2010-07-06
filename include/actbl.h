@@ -298,16 +298,69 @@ name|ACPI_TABLE_RSDP
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|ACPI_RSDP_REV0_SIZE
-value|20
-end_define
+begin_comment
+comment|/* Standalone struct for the ACPI 1.0 RSDP */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_rsdp_common
+block|{
+name|char
+name|Signature
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|UINT8
+name|Checksum
+decl_stmt|;
+name|char
+name|OemId
+index|[
+name|ACPI_OEM_ID_SIZE
+index|]
+decl_stmt|;
+name|UINT8
+name|Revision
+decl_stmt|;
+name|UINT32
+name|RsdtPhysicalAddress
+decl_stmt|;
+block|}
+name|ACPI_RSDP_COMMON
+typedef|;
+end_typedef
 
 begin_comment
-comment|/* Size of original ACPI 1.0 RSDP */
+comment|/* Standalone struct for the extended part of the RSDP (ACPI 2.0+) */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_rsdp_extension
+block|{
+name|UINT32
+name|Length
+decl_stmt|;
+name|UINT64
+name|XsdtPhysicalAddress
+decl_stmt|;
+name|UINT8
+name|ExtendedChecksum
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|ACPI_RSDP_EXTENSION
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*******************************************************************************  *  * RSDT/XSDT - Root System Description Tables  *             Version 1 (both)  *  ******************************************************************************/

@@ -607,14 +607,18 @@ value|\     UINT32                          Value;
 comment|/* Value to store into the Bank or Index register */
 value|\     UINT8                           StartFieldBitOffset;
 comment|/* Bit offset within first field datum (0-63) */
-value|\   typedef struct acpi_object_field_common
+value|\     UINT8                           AccessBitWidth;
 end_define
 
 begin_comment
-comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
+comment|/* Read/Write size in bits (8-64) */
 end_comment
 
-begin_block
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_field_common
+comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -625,12 +629,9 @@ name|RegionObj
 expr_stmt|;
 comment|/* Parent Operation Region object (REGION/BANK fields only) */
 block|}
-end_block
-
-begin_expr_stmt
 name|ACPI_OBJECT_FIELD_COMMON
-expr_stmt|;
-end_expr_stmt
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

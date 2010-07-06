@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100528
+value|0x20100702
 end_define
 
 begin_include
@@ -986,9 +986,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT8
-name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1002,9 +999,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT8
-name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1018,6 +1012,22 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiGpeWakeup
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|UINT8
+name|Action
 parameter_list|)
 function_decl|;
 end_function_decl

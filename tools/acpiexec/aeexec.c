@@ -347,8 +347,6 @@ argument_list|(
 name|Handle2
 argument_list|,
 literal|8
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1440,8 +1438,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiRemoveGpeHandler
@@ -1471,8 +1467,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiSetGpe
@@ -1511,8 +1505,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|1
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiInstallGpeHandler
@@ -1533,8 +1525,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|2
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiInstallGpeHandler
@@ -1594,8 +1584,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0x19
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiInstallGpeHandler
@@ -1616,8 +1604,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0x62
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AcpiDisableGpe
@@ -1625,8 +1611,6 @@ argument_list|(
 name|NULL
 argument_list|,
 literal|0x62
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 name|AfInstallGpeBlock

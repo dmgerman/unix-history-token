@@ -1530,26 +1530,6 @@ name|Dispatch
 operator|.
 name|MethodNode
 expr_stmt|;
-comment|/* Disable the GPE before installing the handler */
-name|Status
-operator|=
-name|AcpiEvDisableGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
 comment|/* Install the handler */
 name|Flags
 operator|=
@@ -1758,26 +1738,6 @@ name|Status
 operator|=
 name|AE_BAD_PARAMETER
 expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-comment|/* Disable the GPE before removing the handler */
-name|Status
-operator|=
-name|AcpiEvDisableGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
 goto|goto
 name|UnlockAndExit
 goto|;

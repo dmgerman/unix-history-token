@@ -1939,11 +1939,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
+comment|/*      * Delete intermediate ("combined") source file (if -ls flag not set)      * This file is created during normal ASL/AML compiles. It is not      * created by the data table compiler.      *      * If the -ls flag is set, then the .SRC file should not be deleted.      * In this case, Gbl_SourceOutputFlag is set to TRUE.      *      * Note: Handles are cleared by FlCloseFile above, so we look at the      * filename instead, to determine if the .SRC file was actually      * created.      *      * TBD: SourceOutput should be .TMP, then rename if we want to keep it?      */
 if|if
 condition|(
 operator|!
 name|Gbl_SourceOutputFlag
+operator|&&
+name|Gbl_Files
+index|[
+name|ASL_FILE_SOURCE_OUTPUT
+index|]
+operator|.
+name|Filename
 condition|)
 block|{
 if|if

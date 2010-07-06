@@ -310,6 +310,7 @@ index|]
 operator|.
 name|Handle
 expr_stmt|;
+comment|/* Use the merged header/source file if present, otherwise use input file */
 name|SourceFile
 operator|=
 name|Gbl_Files
@@ -319,6 +320,22 @@ index|]
 operator|.
 name|Handle
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SourceFile
+condition|)
+block|{
+name|SourceFile
+operator|=
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
+operator|.
+name|Handle
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Header

@@ -375,6 +375,13 @@ name|FILE_SUFFIX_C_INCLUDE
 value|"h"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
+end_define
+
 begin_comment
 comment|/* Types for input files */
 end_comment

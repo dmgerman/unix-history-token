@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"acdisasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acnamesp.h"
 end_include
 
@@ -195,6 +201,130 @@ name|Name
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySupportedTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print all supported ACPI table names.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|UtDisplaySupportedTables
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ACPI_DMTABLE_DATA
+modifier|*
+name|TableData
+decl_stmt|;
+name|UINT32
+name|i
+init|=
+literal|6
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"\nACPI tables supported by iASL subsystems in "
+literal|"version %8.8X:\n"
+literal|"  ASL and Data Table compilers\n"
+literal|"  AML and Data Table disassemblers\n"
+literal|"  ACPI table template generator\n\n"
+argument_list|,
+name|ACPI_CA_VERSION
+argument_list|)
+expr_stmt|;
+comment|/* Special tables */
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_SIG_DSDT
+argument_list|,
+literal|"Differentiated System Description Table"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+literal|2
+argument_list|,
+name|ACPI_SIG_SSDT
+argument_list|,
+literal|"Secondary System Description Table"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+literal|3
+argument_list|,
+name|ACPI_SIG_FADT
+argument_list|,
+literal|"Fixed ACPI Description Table (FADT)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+literal|4
+argument_list|,
+name|ACPI_SIG_FACS
+argument_list|,
+literal|"Firmware ACPI Control Structure"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+literal|5
+argument_list|,
+name|ACPI_RSDP_NAME
+argument_list|,
+literal|"Root System Description Pointer"
+argument_list|)
+expr_stmt|;
+comment|/* All data tables with common table header */
+for|for
+control|(
+name|TableData
+operator|=
+name|AcpiDmTableData
+init|;
+name|TableData
+operator|->
+name|Signature
+condition|;
+name|TableData
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"%8u) %s    %s\n"
+argument_list|,
+name|i
+argument_list|,
+name|TableData
+operator|->
+name|Signature
+argument_list|,
+name|TableData
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDisplayConstantOpcodes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print AML opcodes that can be used in constant expressions.  *  ******************************************************************************/

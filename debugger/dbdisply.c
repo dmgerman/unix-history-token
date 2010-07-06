@@ -2143,7 +2143,7 @@ continue|continue;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"        GPE %.2X: %p  RunRefs %2.2X   WakeRefs %2.2X Flags %2.2X ("
+literal|"        GPE %.2X: %p  RunRefs %2.2X Flags %2.2X ("
 argument_list|,
 name|GpeBlock
 operator|->
@@ -2156,10 +2156,6 @@ argument_list|,
 name|GpeEventInfo
 operator|->
 name|RuntimeCount
-argument_list|,
-name|GpeEventInfo
-operator|->
-name|WakeupCount
 argument_list|,
 name|GpeEventInfo
 operator|->
