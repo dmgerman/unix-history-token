@@ -4046,11 +4046,9 @@ literal|0x000f
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|VESA_STRCPY
 argument_list|(
