@@ -325,10 +325,21 @@ name|PTE_AR_RWX
 operator||
 name|PTE_ED
 expr_stmt|;
-asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_RR_BASE(7)));
+name|pte
+operator||=
+name|IA64_RR_MASK
+argument_list|(
+name|hdr
+operator|->
+name|e_entry
+argument_list|)
+operator|&
+name|PTE_PPN_MASK
+expr_stmt|;
+asm|__asm __volatile("mov cr.ifa=%0" :: "r"(hdr->e_entry));
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(28<< 2));
-asm|__asm __volatile("ptr.i %0,%1" :: "r"(IA64_RR_BASE(7)), "r"(28<<2));
-asm|__asm __volatile("ptr.d %0,%1" :: "r"(IA64_RR_BASE(7)), "r"(28<<2));
+asm|__asm __volatile("ptr.i %0,%1" :: "r"(hdr->e_entry), "r"(28<<2));
+asm|__asm __volatile("ptr.d %0,%1" :: "r"(hdr->e_entry), "r"(28<<2));
 asm|__asm __volatile("srlz.i;;");
 asm|__asm __volatile("itr.i itr[%0]=%1;;" :: "r"(0), "r"(pte));
 asm|__asm __volatile("srlz.i;;");
