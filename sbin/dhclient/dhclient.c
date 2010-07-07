@@ -488,6 +488,7 @@ value|(x += ROUNDUP((n)->sa_len))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|scripttime
 decl_stmt|;
@@ -823,6 +824,9 @@ name|msg
 index|[
 literal|2048
 index|]
+decl_stmt|,
+modifier|*
+name|addr
 decl_stmt|;
 name|struct
 name|rt_msghdr
@@ -932,8 +936,6 @@ block|{
 case|case
 name|RTM_NEWADDR
 case|:
-comment|/* 		 * XXX: If someone other than us adds our address, 		 * we should assume they are taking over from us, 		 * delete the lease record, and exit without modifying 		 * the interface. 		 */
-break|break;
 case|case
 name|RTM_DELADDR
 case|:
@@ -1017,9 +1019,7 @@ name|sa
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|die
-goto|;
+break|break;
 if|if
 condition|(
 operator|(
@@ -1117,11 +1117,56 @@ name|l
 operator|==
 name|NULL
 condition|)
-comment|/* deleted addr is not the one we set */
+comment|/* added/deleted addr is not the one we set */
 break|break;
+name|addr
+operator|=
+name|inet_ntoa
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|sa
+operator|)
+operator|->
+name|sin_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_type
+operator|==
+name|RTM_NEWADDR
+condition|)
+block|{
+comment|/* 			 * XXX: If someone other than us adds our address, 			 * should we assume they are taking over from us, 			 * delete the lease record, and exit without modifying 			 * the interface? 			 */
+name|warning
+argument_list|(
+literal|"My address (%s) was re-added"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|warning
+argument_list|(
+literal|"My address (%s) was deleted, dhclient exiting"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
 goto|goto
 name|die
 goto|;
+block|}
+break|break;
 case|case
 name|RTM_IFINFO
 case|:
@@ -1157,9 +1202,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|warning
+argument_list|(
+literal|"Interface %s is down, dhclient exiting"
+argument_list|,
+name|ifi
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 goto|goto
 name|die
 goto|;
+block|}
 break|break;
 case|case
 name|RTM_IFANNOUNCE
@@ -1189,9 +1245,20 @@ name|ifi
 operator|->
 name|index
 condition|)
+block|{
+name|warning
+argument_list|(
+literal|"Interface %s is gone, dhclient exiting"
+argument_list|,
+name|ifi
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 goto|goto
 name|die
 goto|;
+block|}
 break|break;
 case|case
 name|RTM_IEEE80211
@@ -11683,13 +11750,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|scripttime
-operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|hdr
 operator|.
 name|code
@@ -11836,6 +11896,13 @@ sizeof|sizeof
 argument_list|(
 name|ret
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|scripttime
+operator|=
+name|time
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
