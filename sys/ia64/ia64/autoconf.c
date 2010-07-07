@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_bootp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
 end_include
 
@@ -175,26 +169,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BOOTP
-end_ifdef
-
-begin_function_decl
-name|void
-name|bootpc_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
