@@ -716,23 +716,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|GPIO_FUNC_SPI_CS1_EN
+name|GPIO_FUNC_SPI_CS2_EN
 value|(1<< 15)
 end_define
 
 begin_comment
-comment|/* CS1 is shared with GPIO_1 */
+comment|/* CS2 is shared with GPIO_1 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GPIO_FUNC_SPI_CS0_EN
+name|GPIO_FUNC_SPI_CS1_EN
 value|(1<< 14)
 end_define
 
 begin_comment
-comment|/* CS0 is shared with GPIO_0 */
+comment|/* CS1 is shared with GPIO_0 */
 end_comment
 
 begin_define
