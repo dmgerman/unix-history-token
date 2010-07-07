@@ -934,6 +934,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_SYSLOG_SERVER
+value|"syslogdServer"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_TRY_DHCP
 value|"tryDHCP"
 end_define
