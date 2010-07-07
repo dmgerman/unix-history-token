@@ -242,6 +242,19 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+modifier|*
+name|acpi_find_table
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|busdma_swi
 parameter_list|(
 name|void
