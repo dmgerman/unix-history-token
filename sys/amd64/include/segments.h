@@ -225,9 +225,9 @@ define|#
 directive|define
 name|USD_GETBASE
 parameter_list|(
-name|_sd
+name|sd
 parameter_list|)
-value|(((_sd)->sd_lobase) | (_sd)->sd_hibase<< 24)
+value|(((sd)->sd_lobase) | (sd)->sd_hibase<< 24)
 end_define
 
 begin_define
@@ -235,11 +235,11 @@ define|#
 directive|define
 name|USD_SETBASE
 parameter_list|(
-name|_sd
+name|sd
 parameter_list|,
-name|_b
+name|b
 parameter_list|)
-value|(_sd)->sd_lobase = (_b); 	\ 				(_sd)->sd_hibase = ((_b)>> 24);
+value|(sd)->sd_lobase = (b); 	\ 				(sd)->sd_hibase = ((b)>> 24);
 end_define
 
 begin_define
@@ -247,9 +247,9 @@ define|#
 directive|define
 name|USD_GETLIMIT
 parameter_list|(
-name|_sd
+name|sd
 parameter_list|)
-value|(((_sd)->sd_lolimit) | (_sd)->sd_hilimit<< 16)
+value|(((sd)->sd_lolimit) | (sd)->sd_hilimit<< 16)
 end_define
 
 begin_define
@@ -257,11 +257,11 @@ define|#
 directive|define
 name|USD_SETLIMIT
 parameter_list|(
-name|_sd
+name|sd
 parameter_list|,
-name|_l
+name|l
 parameter_list|)
-value|(_sd)->sd_lolimit = (_l);	\ 				(_sd)->sd_hilimit = ((_l)>> 16);
+value|(sd)->sd_lolimit = (l);	\ 				(sd)->sd_hilimit = ((l)>> 16);
 end_define
 
 begin_comment
