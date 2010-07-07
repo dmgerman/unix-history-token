@@ -8383,9 +8383,9 @@ name|SYSINIT
 argument_list|(
 name|flowtable_init
 argument_list|,
-name|SI_SUB_SMP
+name|SI_SUB_KTHREAD_INIT
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|SI_ORDER_FIRST
 argument_list|,
 name|flowtable_init
 argument_list|,
