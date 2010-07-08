@@ -381,8 +381,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|args_and_returns
 parameter_list|)
@@ -2763,8 +2762,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|args_and_returns
 parameter_list|)
@@ -2809,9 +2807,7 @@ struct|;
 name|cell_t
 modifier|*
 name|cp
-decl_stmt|;
-name|unsigned
-name|long
+decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;

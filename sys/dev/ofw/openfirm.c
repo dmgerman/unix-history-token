@@ -1155,8 +1155,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|unsigned
-name|long
+name|cell_t
 name|args_n_results
 index|[
 literal|12
@@ -1206,9 +1205,9 @@ index|]
 operator|=
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned long
+name|cell_t
 argument_list|)
 expr_stmt|;
 name|status
@@ -1254,9 +1253,10 @@ control|)
 operator|*
 name|va_arg
 argument_list|(
-argument|ap
+name|ap
 argument_list|,
-argument|unsigned long *
+name|cell_t
+operator|*
 argument_list|)
 operator|=
 name|args_n_results
