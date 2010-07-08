@@ -532,6 +532,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RXMAC_CSUM_ENB
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SGE_RX_PAD_BYTES
 value|10
 end_define
