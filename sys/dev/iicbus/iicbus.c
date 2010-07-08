@@ -665,10 +665,6 @@ case|case
 name|IICBUS_IVAR_ADDR
 case|:
 operator|*
-operator|(
-name|uint32_t
-operator|*
-operator|)
 name|result
 operator|=
 name|devi
