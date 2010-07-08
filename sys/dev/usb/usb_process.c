@@ -728,6 +728,8 @@ name|up
 operator|->
 name|up_ptr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pmesg
 argument_list|)
 condition|)

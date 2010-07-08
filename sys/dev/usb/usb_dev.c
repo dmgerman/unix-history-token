@@ -7442,6 +7442,8 @@ name|gid
 argument_list|,
 name|mode
 argument_list|,
+literal|"%s"
+argument_list|,
 name|devname
 argument_list|)
 expr_stmt|;

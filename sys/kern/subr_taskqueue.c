@@ -1459,6 +1459,8 @@ name|RFSTOPPED
 argument_list|,
 literal|0
 argument_list|,
+literal|"%s"
+argument_list|,
 name|ktname
 argument_list|)
 expr_stmt|;
