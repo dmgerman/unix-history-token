@@ -2340,7 +2340,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-comment|/* 	 * Allocate the pages early, before acquiring the lock, 	 * because vm_page_grab() used with VM_ALLOC_RETRY may 	 * block and we can't hold a mutex while blocking. 	 */
+comment|/* 	 * Allocate the pages early, before acquiring the lock, 	 * because vm_page_grab() may sleep and we can't hold a mutex 	 * while sleeping. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|mem
