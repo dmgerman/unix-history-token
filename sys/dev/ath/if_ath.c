@@ -2228,7 +2228,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (sc->sc_debug& (m))					\ 		printf(fmt, __VA_ARGS__);			\ } while (0)
+value|do {				\ 	if (sc->sc_debug& (m))					\ 		device_printf(sc->sc_dev, fmt, __VA_ARGS__);		\ } while (0)
 end_define
 
 begin_define
