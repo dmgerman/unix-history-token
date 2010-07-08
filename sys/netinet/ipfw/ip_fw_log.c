@@ -680,8 +680,8 @@ ifndef|#
 directive|ifndef
 name|WITHOUT_BPF
 name|struct
-name|m_hdr
-name|mh
+name|mbuf
+name|m0
 decl_stmt|;
 if|if
 condition|(
@@ -697,13 +697,29 @@ name|NULL
 condition|)
 return|return;
 comment|/* BPF treats the "mbuf" as read-only */
-name|mh
+name|bzero
+argument_list|(
+operator|&
+name|m0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|m0
+operator|.
+name|m_hdr
 operator|.
 name|mh_next
 operator|=
 name|m
 expr_stmt|;
-name|mh
+name|m0
+operator|.
+name|m_hdr
 operator|.
 name|mh_len
 operator|=
@@ -717,7 +733,9 @@ name|eh
 condition|)
 block|{
 comment|/* layer2, use orig hdr */
-name|mh
+name|m0
+operator|.
+name|m_hdr
 operator|.
 name|mh_data
 operator|=
@@ -733,7 +751,9 @@ block|}
 else|else
 block|{
 comment|/* add fake header. Later we will store 			 * more info in the header 			 */
-name|mh
+name|m0
+operator|.
+name|m_hdr
 operator|.
 name|mh_data
 operator|=
@@ -744,13 +764,8 @@ name|BPF_MTAP
 argument_list|(
 name|log_if
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
 operator|&
-name|mh
+name|m0
 argument_list|)
 expr_stmt|;
 endif|#
