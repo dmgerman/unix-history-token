@@ -38,13 +38,6 @@ begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NUSERPGTBLS
-value|(VM_MAXUSER_ADDRESS>> SEGSHIFT)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -233,19 +226,6 @@ parameter_list|(
 name|pmap_t
 parameter_list|,
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|pd_entry_t
-name|pmap_segmap
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|,
-name|vm_offset_t
-name|va
 parameter_list|)
 function_decl|;
 end_function_decl

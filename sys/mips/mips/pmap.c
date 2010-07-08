@@ -272,19 +272,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get PDEs and PTEs for user/kernel address space  */
+comment|/*  * Get PDEs and PTEs for user/kernel address space  *  * XXX The& for pmap_segshift() is wrong, as is the fact that it doesn't  *     trim off gratuitous bits of the address space.  By having the&  *     there, we break defining NUSERPGTBLS below because the address space  *     is defined such that it ends immediately after NPDEPG*NPTEPG*PAGE_SIZE,  *     so we end up getting NUSERPGTBLS of 0.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|pmap_pde
+name|pmap_segshift
 parameter_list|(
-name|m
-parameter_list|,
 name|v
 parameter_list|)
-value|(&((m)->pm_segtab[(vm_offset_t)(v)>> SEGSHIFT]))
+value|(((v)>> SEGSHIFT)& (NPDEPG - 1))
 end_define
 
 begin_define
@@ -296,14 +294,14 @@ name|m
 parameter_list|,
 name|v
 parameter_list|)
-value|(m[(vm_offset_t)(v)>> SEGSHIFT])
+value|((m)[pmap_segshift((v))])
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_SEGSIZE
-value|(1L<< SEGSHIFT)
+name|NUSERPGTBLS
+value|(pmap_segshift(VM_MAXUSER_ADDRESS))
 end_define
 
 begin_define
@@ -313,7 +311,7 @@ name|mips_segtrunc
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)& ~(MIPS_SEGSIZE-1))
+value|((va)& ~SEGOFSET)
 end_define
 
 begin_define
@@ -326,14 +324,18 @@ parameter_list|)
 value|((x) == kernel_pmap)
 end_define
 
+begin_comment
+comment|/*  * Given a virtual address, get the offset of its PTE within its page  * directory page.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|vad_to_pte_offset
+name|PDE_OFFSET
 parameter_list|(
-name|adr
+name|va
 parameter_list|)
-value|(((adr)>> PAGE_SHIFT)& (NPTEPG -1))
+value|(((vm_offset_t)(va)>> PAGE_SHIFT)& (NPTEPG - 1))
 end_define
 
 begin_decl_stmt
@@ -894,7 +896,10 @@ value|pte = pmap_pte(kernel_pmap, sysm->base);			\ 	*pte = PTE_G;							\ 	tlb_i
 end_define
 
 begin_function
-name|pd_entry_t
+specifier|static
+specifier|inline
+name|pt_entry_t
+modifier|*
 name|pmap_segmap
 parameter_list|(
 name|pmap_t
@@ -909,33 +914,25 @@ condition|(
 name|pmap
 operator|->
 name|pm_segtab
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
+name|segtab_pde
+argument_list|(
 name|pmap
 operator|->
 name|pm_segtab
-index|[
-operator|(
-call|(
-name|vm_offset_t
-call|)
-argument_list|(
+argument_list|,
 name|va
 argument_list|)
-operator|>>
-name|SEGSHIFT
-operator|)
-index|]
 operator|)
 return|;
 else|else
 return|return
 operator|(
-operator|(
-name|pd_entry_t
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -968,10 +965,6 @@ condition|)
 block|{
 name|pdeaddr
 operator|=
-operator|(
-name|pt_entry_t
-operator|*
-operator|)
 name|pmap_segmap
 argument_list|(
 name|pmap
@@ -987,7 +980,7 @@ block|{
 return|return
 name|pdeaddr
 operator|+
-name|vad_to_pte_offset
+name|PDE_OFFSET
 argument_list|(
 name|va
 argument_list|)
@@ -3326,11 +3319,10 @@ condition|)
 block|{
 name|ptepindex
 operator|=
-operator|(
+name|pmap_segshift
+argument_list|(
 name|va
-operator|>>
-name|SEGSHIFT
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3360,8 +3352,7 @@ else|else
 block|{
 name|pteva
 operator|=
-operator|*
-name|pmap_pde
+name|pmap_segmap
 argument_list|(
 name|pmap
 argument_list|,
@@ -4233,9 +4224,10 @@ expr_stmt|;
 comment|/* 	 * Calculate pagetable page index 	 */
 name|ptepindex
 operator|=
+name|pmap_segshift
+argument_list|(
 name|va
-operator|>>
-name|SEGSHIFT
+argument_list|)
 expr_stmt|;
 name|retry
 label|:
@@ -4676,9 +4668,6 @@ argument_list|,
 name|kernel_vm_end
 argument_list|)
 operator|=
-operator|(
-name|pd_entry_t
-operator|)
 name|pte
 expr_stmt|;
 comment|/* 		 * The R[4-7]?00 stores only one copy of the Global bit in 		 * the translation lookaside buffer for each 2 page entry. 		 * Thus invalid entrys must have the Global bit set so when 		 * Entry LO and Entry HI G bits are anded together they will 		 * produce a global bit to store in the tlb. 		 */
@@ -6046,14 +6035,14 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-operator|*
-name|pmap_pde
+name|pmap_segmap
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|nva
@@ -6062,7 +6051,7 @@ name|mips_segtrunc
 argument_list|(
 name|va
 operator|+
-name|MIPS_SEGSIZE
+name|NBSEG
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6502,14 +6491,14 @@ decl_stmt|;
 comment|/* 		 * If segment table entry is empty, skip this segment. 		 */
 if|if
 condition|(
-operator|!
-operator|*
-name|pmap_pde
+name|pmap_segmap
 argument_list|(
 name|pmap
 argument_list|,
 name|sva
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|sva
@@ -6518,7 +6507,7 @@ name|mips_segtrunc
 argument_list|(
 name|sva
 operator|+
-name|MIPS_SEGSIZE
+name|NBSEG
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -7682,9 +7671,10 @@ decl_stmt|;
 comment|/* 		 * Calculate pagetable page index 		 */
 name|ptepindex
 operator|=
+name|pmap_segshift
+argument_list|(
 name|va
-operator|>>
-name|SEGSHIFT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10313,13 +10303,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|pmap_pde
+name|pmap_segmap
 argument_list|(
 name|pmap
 argument_list|,
 name|addr
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|pte

@@ -15,6 +15,36 @@ directive|define
 name|_MACHINE_PTE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LOCORE
+end_ifndef
+
+begin_comment
+comment|/* pt_entry_t is 32 bit for now, has to be made 64 bit for n64 */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|pt_entry_t
+modifier|*
+name|pd_entry_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * TLB and PTE management.  Most things operate within the context of  * EntryLo0,1, and begin with TLBLO_.  Things which work with EntryHi  * start with TLBHI_.  PTE bits begin with PTE_.  *  * Note that we use the same size VM and TLB pages.  */
 end_comment
@@ -131,7 +161,7 @@ value|(TLBLO_PFN_TO_PA(TLBLO_PTE_TO_PFN((pte))))
 end_define
 
 begin_comment
-comment|/*  * VPN for EntryHi register.  Upper two bits select user, supervisor,  * or kernel.  Bits 61 to 40 copy bit 63.  VPN2 is bits 39 and down to  * as low as 13, down to PAGE_SHIFT, to index 2 TLB pages*.  From bit 12  * to bit 8 there is a 5-bit 0 field.  Low byte is ASID.  *  * Note that in FreeBSD, we map 2 TLB pages is equal to 1 VM page.  */
+comment|/*  * XXX This comment is not correct for anything more modern than R4K.  *  * VPN for EntryHi register.  Upper two bits select user, supervisor,  * or kernel.  Bits 61 to 40 copy bit 63.  VPN2 is bits 39 and down to  * as low as 13, down to PAGE_SHIFT, to index 2 TLB pages*.  From bit 12  * to bit 8 there is a 5-bit 0 field.  Low byte is ASID.  *  * XXX This comment is not correct for FreeBSD.  * Note that in FreeBSD, we map 2 TLB pages is equal to 1 VM page.  */
 end_comment
 
 begin_define
@@ -159,54 +189,6 @@ name|asid
 parameter_list|)
 value|(((va)& ~TLBHI_PAGE_MASK) | ((asid)& TLBHI_ASID_MASK))
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LOCORE
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pt_entry_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|pt_entry_t
-modifier|*
-name|pd_entry_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|PDESIZE
-value|sizeof(pd_entry_t)
-end_define
-
-begin_comment
-comment|/* for assembly files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTESIZE
-value|sizeof(pt_entry_t)
-end_define
-
-begin_comment
-comment|/* for assembly files */
-end_comment
 
 begin_comment
 comment|/*  * TLB flags managed in hardware:  * 	C:	Cache attribute.  * 	D:	Dirty bit.  This means a page is writable.  It is not  * 		set at first, and a write is trapped, and the dirty  * 		bit is set.  See also PTE_RO.  * 	V:	Valid bit.  Obvious, isn't it?  * 	G:	Global bit.  This means that this mapping is present  * 		in EVERY address space, and to ignore the ASID when  * 		it is matched.  */
