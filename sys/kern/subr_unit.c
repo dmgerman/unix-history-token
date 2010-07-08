@@ -1080,11 +1080,19 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|low
+operator|>=
+literal|0
+operator|&&
+name|high
+operator|>=
+literal|0
+operator|&&
+name|low
 operator|<=
 name|high
 argument_list|,
 operator|(
-literal|"UNR: use error: new_unrhdr(%u, %u)"
+literal|"UNR: use error: new_unrhdr(%d, %d)"
 operator|,
 name|low
 operator|,
