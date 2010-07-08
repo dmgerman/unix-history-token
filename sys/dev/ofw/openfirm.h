@@ -138,6 +138,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OFW_STD_32BIT
+value|"ofw_32bit"
+end_define
+
+begin_comment
+comment|/* 32-bit OF interface */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OFW_FDT
 value|"ofw_fdt"
 end_define
