@@ -524,7 +524,11 @@ index|[
 name|PCB_REG_SR
 index|]
 operator|=
+operator|(
+name|MIPS_SR_KX
+operator||
 name|SR_INT_MASK
+operator|)
 operator|&
 name|mips_rd_status
 argument_list|()
@@ -1326,7 +1330,11 @@ index|[
 name|PCB_REG_SR
 index|]
 operator|=
+operator|(
+name|MIPS_SR_KX
+operator||
 name|SR_INT_MASK
+operator|)
 operator|&
 name|mips_rd_status
 argument_list|()
