@@ -1304,6 +1304,16 @@ literal|"ttys"
 block|}
 block|,
 block|{
+literal|" Upgrade"
+block|,
+literal|"Upgrade an existing system."
+block|,
+name|NULL
+block|,
+name|installUpgrade
+block|}
+block|,
+block|{
 literal|" Usage"
 block|,
 literal|"Quick start - How to use this menu system."
@@ -1506,6 +1516,16 @@ name|NULL
 block|,
 operator|&
 name|MenuFixit
+block|}
+block|,
+block|{
+literal|"Upgrade"
+block|,
+literal|"Upgrade an existing system"
+block|,
+name|NULL
+block|,
+name|installUpgrade
 block|}
 block|,
 block|{
