@@ -15,6 +15,42 @@ directive|define
 name|_MACHINE_RUNQ_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RQB_LEN
+value|(1)
+end_define
+
+begin_comment
+comment|/* Number of priority status words. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQB_L2BPW
+value|(6)
+end_define
+
+begin_comment
+comment|/* Log2(sizeof(rqb_word_t) * NBBY)). */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -37,6 +73,11 @@ begin_comment
 comment|/* Log2(sizeof(rqb_word_t) * NBBY)). */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -55,7 +96,7 @@ name|RQB_BIT
 parameter_list|(
 name|pri
 parameter_list|)
-value|(1<< ((pri)& (RQB_BPW - 1)))
+value|(1ul<< ((pri)& (RQB_BPW - 1)))
 end_define
 
 begin_define
@@ -82,12 +123,38 @@ begin_comment
 comment|/*  * Type of run queue status word.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|rqb_word_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|u_int32_t
 name|rqb_word_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
