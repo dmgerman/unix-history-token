@@ -6760,6 +6760,13 @@ name|pm_active
 operator|=
 literal|0
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curpmap
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -22494,6 +22501,13 @@ expr_stmt|;
 name|load_cr3
 argument_list|(
 name|cr3
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curpmap
+argument_list|,
+name|pmap
 argument_list|)
 expr_stmt|;
 name|critical_exit
