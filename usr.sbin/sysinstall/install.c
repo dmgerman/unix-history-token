@@ -4104,11 +4104,6 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-name|Boolean
-name|upgrade
-init|=
-name|FALSE
-decl_stmt|;
 comment|/* If we've already done this, bail out */
 if|if
 condition|(
@@ -4123,16 +4118,6 @@ condition|)
 return|return
 name|DITEM_SUCCESS
 return|;
-name|upgrade
-operator|=
-operator|!
-name|variable_cmp
-argument_list|(
-name|SYSTEM_STATE
-argument_list|,
-literal|"upgrade"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4327,18 +4312,6 @@ condition|(
 name|root
 operator|->
 name|do_newfs
-operator|&&
-operator|(
-operator|!
-name|upgrade
-operator|||
-operator|!
-name|msgNoYes
-argument_list|(
-literal|"You are upgrading - are you SURE you want to newfs "
-literal|"the root partition?"
-argument_list|)
-operator|)
 condition|)
 block|{
 name|int
@@ -4389,18 +4362,11 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|!
-name|upgrade
-condition|)
-block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Using existing root partition."
 argument_list|)
 expr_stmt|;
-block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -4911,22 +4877,6 @@ condition|(
 name|tmp
 operator|->
 name|do_newfs
-operator|&&
-operator|(
-operator|!
-name|upgrade
-operator|||
-operator|!
-name|msgNoYes
-argument_list|(
-literal|"You are upgrading - are you SURE you"
-literal|" want to newfs /dev/%s?"
-argument_list|,
-name|c2
-operator|->
-name|name
-argument_list|)
-operator|)
 condition|)
 name|performNewfs
 argument_list|(
@@ -5089,8 +5039,6 @@ operator|(
 name|root
 operator|->
 name|do_newfs
-operator|||
-name|upgrade
 operator|)
 condition|)
 block|{
@@ -5185,22 +5133,6 @@ condition|(
 name|pi
 operator|->
 name|do_newfs
-operator|&&
-operator|(
-operator|!
-name|upgrade
-operator|||
-operator|!
-name|msgNoYes
-argument_list|(
-literal|"You are upgrading - are you SURE you want to "
-literal|"newfs /dev/%s?"
-argument_list|,
-name|c1
-operator|->
-name|name
-argument_list|)
-operator|)
 condition|)
 name|performNewfs
 argument_list|(

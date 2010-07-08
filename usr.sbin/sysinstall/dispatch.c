@@ -304,12 +304,6 @@ name|installStandard
 block|}
 block|,
 block|{
-literal|"installUpgrade"
-block|,
-name|installUpgrade
-block|}
-block|,
-block|{
 literal|"installFixupBase"
 block|,
 name|installFixupBase
