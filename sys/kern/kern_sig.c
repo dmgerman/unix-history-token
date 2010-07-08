@@ -725,6 +725,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|kern_logsigexit
 init|=
@@ -968,6 +969,7 @@ value|((cr1)->cr_uid == 0 || \ 	    (cr1)->cr_ruid == (cr2)->cr_ruid || \ 	    (
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sugid_coredump
 decl_stmt|;
