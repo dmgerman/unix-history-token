@@ -514,6 +514,17 @@ decl_stmt|;
 name|uint32_t
 name|arge_debug
 decl_stmt|;
+struct|struct
+block|{
+name|uint32_t
+name|tx_pkts_unaligned
+decl_stmt|;
+name|uint32_t
+name|tx_pkts_aligned
+decl_stmt|;
+block|}
+name|stats
+struct|;
 block|}
 struct|;
 end_struct
