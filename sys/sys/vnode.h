@@ -2119,6 +2119,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_define
@@ -2130,6 +2131,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_define
@@ -2141,6 +2143,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_if
@@ -2174,6 +2177,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_if
@@ -2207,6 +2211,7 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|((void)0)
 end_define
 
 begin_endif
