@@ -3300,19 +3300,15 @@ expr|struct
 name|p2d_tx_desc
 operator|*
 operator|)
-call|(
-name|uint32_t
-call|)
-argument_list|(
+operator|(
+name|intptr_t
+operator|)
 name|tx_desc
 operator|->
 name|frag
 index|[
 name|XLR_MAX_TX_FRAGS
 index|]
-operator|&
-literal|0x00000000ffffffff
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3344,10 +3340,9 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
-call|(
-name|uint32_t
-call|)
-argument_list|(
+operator|(
+name|intptr_t
+operator|)
 name|tx_desc
 operator|->
 name|frag
@@ -3356,9 +3351,6 @@ name|XLR_MAX_TX_FRAGS
 operator|+
 literal|1
 index|]
-operator|&
-literal|0x00000000ffffffff
-argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -3517,6 +3509,9 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|um
 expr_stmt|;
 if|if
@@ -3586,8 +3581,7 @@ name|XLR_CACHELINE_SIZE
 operator|-
 operator|(
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|)
 name|m_new
 operator|->
@@ -3614,8 +3608,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|)
 name|m_new
 expr_stmt|;
@@ -5125,8 +5118,11 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"rmi_xlr_config_pde: bucket_map=%llx\n"
+literal|"rmi_xlr_config_pde: bucket_map=%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bucket_map
 argument_list|)
 expr_stmt|;
@@ -7855,7 +7851,7 @@ operator|++
 expr_stmt|;
 name|dbg_msg
 argument_list|(
-literal|"Failed packet to cpu %d, rv = %d, stid %d, msg0=%llx\n"
+literal|"Failed packet to cpu %d, rv = %d, stid %d, msg0=%jx\n"
 argument_list|,
 name|vcpu
 argument_list|,
@@ -7863,6 +7859,9 @@ name|rv
 argument_list|,
 name|stid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|.
 name|msg0
@@ -7890,14 +7889,20 @@ block|}
 comment|/* Send the packet to MAC */
 name|dbg_msg
 argument_list|(
-literal|"Sent tx packet to stid %d, msg0=%llx, msg1=%llx \n"
+literal|"Sent tx packet to stid %d, msg0=%jx, msg1=%jx \n"
 argument_list|,
 name|stid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|.
 name|msg0
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|.
 name|msg1
@@ -8563,7 +8568,7 @@ argument_list|()
 decl_stmt|;
 name|dbg_msg
 argument_list|(
-literal|"mac: bucket=%d, size=%d, code=%d, stid=%d, msg0=%llx msg1=%llx\n"
+literal|"mac: bucket=%d, size=%d, code=%d, stid=%d, msg0=%jx msg1=%jx\n"
 argument_list|,
 name|bucket
 argument_list|,
@@ -8573,10 +8578,16 @@ name|code
 argument_list|,
 name|stid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|->
 name|msg0
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|->
 name|msg1
@@ -8749,8 +8760,11 @@ operator|)
 expr_stmt|;
 name|dbg_msg
 argument_list|(
-literal|"msg0 = %llx, stid = %d, port = %d, addr=%lx, length=%d, ctrl=%d\n"
+literal|"msg0 = %jx, stid = %d, port = %d, addr=%lx, length=%d, ctrl=%d\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|->
 name|msg0
@@ -8905,12 +8919,15 @@ expr_stmt|;
 block|}
 name|dbg_msg
 argument_list|(
-literal|"gmac_%d: rx packet: phys_addr = %llx, length = %x\n"
+literal|"gmac_%d: rx packet: phys_addr = %jx, length = %x\n"
 argument_list|,
 name|priv
 operator|->
 name|instance
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|phys_addr
 argument_list|,
 name|length
@@ -9971,6 +9988,9 @@ expr|struct
 name|resource_i
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|sc
 operator|->
 name|irq
@@ -10742,6 +10762,9 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|tm
 expr_stmt|;
@@ -12589,10 +12612,13 @@ argument_list|)
 expr_stmt|;
 name|dbg_msg
 argument_list|(
-literal|"Allocate spill %d bytes at %llx\n"
+literal|"Allocate spill %d bytes at %jx\n"
 argument_list|,
 name|size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|phys_addr
 argument_list|)
 expr_stmt|;

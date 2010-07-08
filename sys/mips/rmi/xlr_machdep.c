@@ -1139,6 +1139,12 @@ expr|struct
 name|boot1_info
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
+operator|(
+name|int
+operator|)
 name|read_c0_register32
 argument_list|(
 name|MIPS_COP_0_OSSCRATCH
@@ -1189,6 +1195,12 @@ name|char
 operator|*
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
+operator|(
+name|int
+operator|)
 name|read_c0_register32
 argument_list|(
 name|MIPS_COP_0_OSSCRATCH
@@ -1202,6 +1214,12 @@ operator|(
 name|char
 operator|*
 operator|*
+operator|)
+operator|(
+name|intptr_t
+operator|)
+operator|(
+name|int
 operator|)
 name|read_c0_register32
 argument_list|(
@@ -1592,8 +1610,11 @@ literal|0xfffff000
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"boot map size was %llx\n"
+literal|"boot map size was %jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|boot_map
 operator|->
 name|physmem_map
@@ -1627,8 +1648,11 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"reduced to %llx\n"
+literal|"reduced to %jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|boot_map
 operator|->
 name|physmem_map

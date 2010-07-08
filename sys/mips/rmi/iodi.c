@@ -525,7 +525,7 @@ comment|/* This is a hack to pass in the irq */
 name|irq
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|ires
 operator|->
@@ -956,7 +956,10 @@ name|res
 operator|->
 name|r_bushandle
 operator|=
-literal|0xbef24000
+name|MIPS_PHYS_TO_KSEG1
+argument_list|(
+literal|0x1ef24000
+argument_list|)
 expr_stmt|;
 name|res
 operator|->
@@ -985,7 +988,10 @@ name|res
 operator|->
 name|r_bushandle
 operator|=
-literal|0xbc000000
+name|MIPS_PHYS_TO_KSEG1
+argument_list|(
+literal|0x1c000000
+argument_list|)
 expr_stmt|;
 name|res
 operator|->

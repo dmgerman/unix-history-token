@@ -926,7 +926,7 @@ block|{
 name|printf
 argument_list|(
 literal|"[%s]: No Handler for message from stn_id=%d, bucket=%d, "
-literal|"size=%d, msg0=%llx, dropping message\n"
+literal|"size=%d, msg0=%jx, dropping message\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -936,6 +936,9 @@ name|bucket
 argument_list|,
 name|size
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|msg
 operator|.
 name|msg0
