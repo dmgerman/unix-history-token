@@ -980,7 +980,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* vm_page_grab() only */
+comment|/* Mandatory with vm_page_grab() */
 end_comment
 
 begin_define

@@ -7296,7 +7296,7 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * This routine may block.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * The caller must always specify the VM_ALLOC_RETRY flag.  This is intended  * to facilitate its eventual removal.  *  * This routine may block.  */
 name|vm_page_t
 name|vm_page_grab
 parameter_list|(
@@ -7321,6 +7321,21 @@ argument_list|(
 name|object
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|allocflags
+operator|&
+name|VM_ALLOC_RETRY
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_grab: VM_ALLOC_RETRY is required"
+operator|)
 argument_list|)
 expr_stmt|;
 name|retrylookup
@@ -7370,18 +7385,7 @@ literal|0
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|allocflags
-operator|&
-name|VM_ALLOC_RETRY
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
+comment|/* 			 * Reference the page before unlocking and 			 * sleeping so that the page daemon is less 			 * likely to reclaim it. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -7392,7 +7396,6 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_sleep
 argument_list|(
 name|m
@@ -7400,21 +7403,6 @@ argument_list|,
 literal|"pgrbwt"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|allocflags
-operator|&
-name|VM_ALLOC_RETRY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 goto|goto
 name|retrylookup
 goto|;
@@ -7532,21 +7520,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|allocflags
-operator|&
-name|VM_ALLOC_RETRY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 goto|goto
 name|retrylookup
 goto|;
