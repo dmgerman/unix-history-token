@@ -1036,7 +1036,7 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
-name|bus_addr_t
+name|uint32_t
 name|fb_phys
 decl_stmt|;
 name|int
@@ -3469,7 +3469,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -4227,7 +4227,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
