@@ -16179,17 +16179,6 @@ name|buf
 expr_stmt|;
 name|ioqs
 operator|->
-name|bufsize
-operator|-=
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
-expr_stmt|;
-name|ioqs
-operator|->
 name|ioq_rx_enable
 operator|=
 operator|*
