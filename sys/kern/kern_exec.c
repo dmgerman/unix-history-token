@@ -3209,7 +3209,7 @@ operator|&=
 operator|~
 name|P_INEXEC
 expr_stmt|;
-comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes. 	 * Use tdsignal to deliver signal to current thread, using 	 * psignal may cause the signal to be delivered to wrong thread 	 * because that thread will exit, remember we are going to enter 	 * single thread mode. 	 */
+comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes.  We have to use 	 * tdsignal() to deliver the signal to the current thread 	 * since any other threads in this process will exit if 	 * execve() succeeds. 	 */
 if|if
 condition|(
 name|p
