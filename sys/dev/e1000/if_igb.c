@@ -12268,7 +12268,7 @@ name|if_capabilities
 operator|=
 name|IFCAP_HWCSUM
 operator||
-name|IFCAP_VLAN_MTU
+name|IFCAP_VLAN_HWCSUM
 expr_stmt|;
 name|ifp
 operator|->
