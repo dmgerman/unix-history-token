@@ -1299,6 +1299,18 @@ operator|)
 operator|&
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|link_ok
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -8242,12 +8254,6 @@ condition|)
 return|return
 name|err
 return|;
-name|phy
-operator|->
-name|caps
-operator||=
-name|POLL_LINK_1ST_TIME
-expr_stmt|;
 comment|/* enable standard Link Alarm Status Interrupts */
 name|err
 operator|=

@@ -137,13 +137,7 @@ name|SUPPORTED_LINK_IRQ
 operator||
 name|SUPPORTED_MISC_IRQ
 operator|)
-block|,
-name|POLL_LINK_1ST_TIME
-init|=
-literal|1
-operator|<<
-literal|27
-block|}
+block|, }
 enum|;
 end_enum
 
