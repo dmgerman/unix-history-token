@@ -457,6 +457,15 @@ parameter_list|)
 block|{
 define|#
 directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)> (b)) ? (a) : (b))
+define|#
+directive|define
 name|PCHAR
 parameter_list|(
 name|c
