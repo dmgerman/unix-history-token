@@ -233,15 +233,6 @@ begin_comment
 comment|/* TW_OSL_PCI_CONFIG_ACCESSIBLE */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|1
-name|)
-end_pragma
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -643,14 +634,6 @@ comment|/* TW_OSL_DEBUG */
 block|}
 struct|;
 end_struct
-
-begin_pragma
-pragma|#
-directive|pragma
-name|pack
-name|(
-name|)
-end_pragma
 
 begin_comment
 comment|/*  * Queue primitives  */
