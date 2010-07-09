@@ -3091,17 +3091,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|t3_phy_intr_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|t3_link_changed
 parameter_list|(

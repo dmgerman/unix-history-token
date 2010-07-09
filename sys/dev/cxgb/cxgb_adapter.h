@@ -1230,10 +1230,6 @@ decl_stmt|;
 comment|/* Tasks */
 name|struct
 name|task
-name|ext_intr_task
-decl_stmt|;
-name|struct
-name|task
 name|slow_intr_task
 decl_stmt|;
 name|struct
@@ -2038,17 +2034,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_os_ext_intr_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl

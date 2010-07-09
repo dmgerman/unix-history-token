@@ -10145,8 +10145,9 @@ comment|/*  * Interrupt handler for PHY events.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|t3_phy_intr_handler
+name|phy_intr_handler
 parameter_list|(
 name|adapter_t
 modifier|*
@@ -10555,7 +10556,7 @@ name|cause
 operator|&
 name|F_T3DBG
 condition|)
-name|t3_os_ext_intr_handler
+name|phy_intr_handler
 argument_list|(
 name|adapter
 argument_list|)
