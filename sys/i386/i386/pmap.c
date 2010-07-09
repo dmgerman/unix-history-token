@@ -17996,13 +17996,9 @@ if|if
 condition|(
 name|pmap
 operator|!=
-name|vmspace_pmap
+name|PCPU_GET
 argument_list|(
-name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_vmspace
+name|curpmap
 argument_list|)
 condition|)
 block|{
