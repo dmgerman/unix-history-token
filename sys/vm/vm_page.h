@@ -1055,13 +1055,6 @@ parameter_list|)
 value|((count)<< VM_ALLOC_COUNT_SHIFT)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_ALLOC_COUNT_MASK
-value|VM_ALLOC_COUNT(0xffff)
-end_define
-
 begin_function_decl
 name|void
 name|vm_page_flag_set
