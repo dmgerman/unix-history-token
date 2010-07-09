@@ -370,6 +370,14 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
+operator|||
+name|OF_finddevice
+argument_list|(
+literal|"/memory@0"
+argument_list|)
+operator|!=
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -443,7 +451,7 @@ block|{
 name|phandle_t
 name|phandle
 decl_stmt|;
-name|long
+name|int32_t
 name|ticks
 init|=
 operator|-
@@ -503,7 +511,7 @@ name|phandle_t
 name|cpu
 parameter_list|)
 block|{
-name|int
+name|cell_t
 name|cpuid
 decl_stmt|,
 name|res
