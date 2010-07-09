@@ -3209,7 +3209,7 @@ operator|&=
 operator|~
 name|P_INEXEC
 expr_stmt|;
-comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes.  We have to use 	 * tdsignal() to deliver the signal to the current thread 	 * since any other threads in this process will exit if 	 * execve() succeeds. 	 */
+comment|/* 	 * If tracing the process, trap to the debugger so that 	 * breakpoints can be set before the program executes.  We 	 * have to use tdsignal() to deliver the signal to the current 	 * thread since any other threads in this process will exit if 	 * execve() succeeds. 	 */
 if|if
 condition|(
 name|p
