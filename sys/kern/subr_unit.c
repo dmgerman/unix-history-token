@@ -1083,10 +1083,6 @@ name|low
 operator|>=
 literal|0
 operator|&&
-name|high
-operator|>=
-literal|0
-operator|&&
 name|low
 operator|<=
 name|high
