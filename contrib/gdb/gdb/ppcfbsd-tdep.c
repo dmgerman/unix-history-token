@@ -82,49 +82,49 @@ name|REG_FIXREG_OFFSET
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * 4)
+value|((x) * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_LR_OFFSET
-value|(32 * 4)
+value|(32 * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_CR_OFFSET
-value|(33 * 4)
+value|(33 * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_XER_OFFSET
-value|(34 * 4)
+value|(34 * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_CTR_OFFSET
-value|(35 * 4)
+value|(35 * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|REG_PC_OFFSET
-value|(36 * 4)
+value|(36 * sizeof(register_t))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_STRUCT_REG
-value|(37 * 4)
+value|(37 * sizeof(register_t))
 end_define
 
 begin_define
@@ -1148,6 +1148,18 @@ argument_list|,
 name|ppcfbsd_return_value
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|set_solib_svr4_fetch_link_map_offsets
+argument_list|(
+name|gdbarch
+argument_list|,
+name|svr4_lp64_fetch_link_map_offsets
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|set_solib_svr4_fetch_link_map_offsets
 argument_list|(
 name|gdbarch
@@ -1155,6 +1167,8 @@ argument_list|,
 name|svr4_ilp32_fetch_link_map_offsets
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

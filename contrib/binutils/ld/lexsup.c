@@ -6112,11 +6112,17 @@ break|break;
 case|case
 name|OPTION_AS_NEEDED
 case|:
+comment|/* XXX: --as-needed is broken on powerpc64 */
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 name|as_needed
 operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|OPTION_NO_AS_NEEDED
 case|:
