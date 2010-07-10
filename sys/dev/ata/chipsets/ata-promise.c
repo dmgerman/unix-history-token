@@ -3167,6 +3167,8 @@ name|PR_NEW
 case|:
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2
@@ -3224,6 +3226,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2
@@ -3256,6 +3260,8 @@ name|PR_MIO
 case|:
 if|if
 condition|(
+name|ata_dma_check_80pin
+operator|&&
 name|mode
 operator|>
 name|ATA_UDMA2
