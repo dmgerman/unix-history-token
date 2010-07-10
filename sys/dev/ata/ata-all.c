@@ -1073,6 +1073,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
 comment|/* setup interrupt delivery */
 name|rid
 operator|=
@@ -1109,6 +1117,14 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"unable to allocate interrupt\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -1151,13 +1167,21 @@ argument_list|,
 literal|"unable to setup interrupt\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
+goto|goto
+name|err1
+goto|;
 block|}
 ifndef|#
 directive|ifndef
 name|ATA_CAM
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|state_mtx
+argument_list|)
+expr_stmt|;
 comment|/* probe and attach devices on this channel unless we are in early boot */
 if|if
 condition|(
@@ -1176,14 +1200,6 @@ operator|)
 return|;
 else|#
 directive|else
-name|mtx_lock
-argument_list|(
-operator|&
-name|ch
-operator|->
-name|state_mtx
-argument_list|)
-expr_stmt|;
 comment|/* Create the device queue for our SIM. */
 name|devq
 operator|=
@@ -1380,6 +1396,8 @@ comment|/*free_devq*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|err1
 label|:
 name|bus_release_resource
@@ -1408,8 +1426,6 @@ operator|(
 name|error
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
