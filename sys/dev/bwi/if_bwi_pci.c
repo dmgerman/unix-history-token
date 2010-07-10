@@ -306,6 +306,14 @@ literal|0x431a
 block|,
 literal|"Broadcom BCM4318 802.11a Wireless Lan"
 block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|}
 block|}
 struct|;
 end_struct
