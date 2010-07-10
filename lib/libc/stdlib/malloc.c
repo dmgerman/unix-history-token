@@ -590,7 +590,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc__
+name|__powerpc64__
 end_ifdef
 
 begin_define
@@ -598,6 +598,46 @@ define|#
 directive|define
 name|LG_QUANTUM
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LG_SIZEOF_PTR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+end_define
+
+begin_comment
+comment|/* default */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LG_QUANTUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LG_SIZEOF_PTR
+value|2
 end_define
 
 begin_define

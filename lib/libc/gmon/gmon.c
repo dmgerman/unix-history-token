@@ -149,15 +149,31 @@ argument_list|(
 name|__amd64__
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+operator|)
 end_if
 
 begin_extern
 extern|extern char *minbrk
 asm|__asm (".minbrk");
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+extern|extern char *minbrk
+asm|__asm ("_minbrk");
 else|#
 directive|else
 extern|extern char *minbrk
