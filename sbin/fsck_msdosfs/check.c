@@ -378,9 +378,6 @@ literal|1
 init|;
 name|i
 operator|<
-operator|(
-name|int
-operator|)
 name|boot
 operator|.
 name|bpbFATs
