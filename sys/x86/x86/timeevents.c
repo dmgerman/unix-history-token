@@ -1395,6 +1395,20 @@ argument_list|,
 name|ET_FLAGS_PERIODIC
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|timer
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"No usable event timer found!"
+argument_list|)
+expr_stmt|;
 name|et_init
 argument_list|(
 name|timer
