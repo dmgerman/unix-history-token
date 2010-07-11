@@ -761,8 +761,14 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not process 'reg' "
+literal|"%s: could not process 'reg' "
 literal|"property\n"
+argument_list|,
+name|di
+operator|->
+name|di_ofw
+operator|.
+name|obd_name
 argument_list|)
 expr_stmt|;
 name|ofw_bus_gen_destroy_devinfo
@@ -803,8 +809,14 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not process 'interrupts' "
-literal|"property\n"
+literal|"%s: could not process "
+literal|"'interrupts' property\n"
+argument_list|,
+name|di
+operator|->
+name|di_ofw
+operator|.
+name|obd_name
 argument_list|)
 expr_stmt|;
 name|resource_list_free
@@ -890,6 +902,24 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"added child: %s\n\n"
+argument_list|,
+name|di
+operator|->
+name|di_ofw
+operator|.
+name|obd_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|device_set_ivars
 argument_list|(
 name|dev_child
