@@ -2359,7 +2359,7 @@ argument_list|)
 expr_stmt|;
 name|intr_sl
 index|[
-name|intr_num
+name|i
 index|]
 operator|.
 name|trig
@@ -2368,7 +2368,7 @@ name|trig
 expr_stmt|;
 name|intr_sl
 index|[
-name|intr_num
+name|i
 index|]
 operator|.
 name|pol
