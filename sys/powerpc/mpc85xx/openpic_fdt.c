@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2006 by Juniper Networks. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2009-2010 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by Semihalf under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -39,18 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -80,7 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ocpbus.h>
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
@@ -89,14 +77,10 @@ directive|include
 file|"pic_if.h"
 end_include
 
-begin_comment
-comment|/*  * OpenPIC attachment to ocpbus  */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
-name|openpic_ocpbus_probe
+name|openpic_fdt_probe
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -106,7 +90,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint32_t
-name|openpic_ocpbus_id
+name|openpic_fdt_id
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -116,7 +100,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|openpic_ocpbus_methods
+name|openpic_fdt_methods
 index|[]
 init|=
 block|{
@@ -125,7 +109,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|openpic_ocpbus_probe
+name|openpic_fdt_probe
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -196,7 +180,7 @@ name|DEVMETHOD
 argument_list|(
 name|pic_id
 argument_list|,
-name|openpic_ocpbus_id
+name|openpic_fdt_id
 argument_list|)
 block|,
 block|{
@@ -211,12 +195,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|openpic_ocpbus_driver
+name|openpic_fdt_driver
 init|=
 block|{
 literal|"openpic"
 block|,
-name|openpic_ocpbus_methods
+name|openpic_fdt_methods
 block|,
 expr|sizeof
 operator|(
@@ -232,9 +216,9 @@ name|DRIVER_MODULE
 argument_list|(
 name|openpic
 argument_list|,
-name|ocpbus
+name|simplebus
 argument_list|,
-name|openpic_ocpbus_driver
+name|openpic_fdt_driver
 argument_list|,
 name|openpic_devclass
 argument_list|,
@@ -248,56 +232,21 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|openpic_ocpbus_probe
+name|openpic_fdt_probe
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
-name|device_t
-name|parent
-decl_stmt|;
-name|uintptr_t
-name|devtype
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|parent
-operator|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|BUS_READ_IVAR
-argument_list|(
-name|parent
-argument_list|,
-name|dev
-argument_list|,
-name|OCPBUS_IVAR_DEVTYPE
-argument_list|,
-operator|&
-name|devtype
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-if|if
-condition|(
-name|devtype
-operator|!=
-name|OCPBUS_DEVTYPE_PIC
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"chrp,open-pic"
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -322,7 +271,7 @@ end_function
 begin_function
 specifier|static
 name|uint32_t
-name|openpic_ocpbus_id
+name|openpic_fdt_id
 parameter_list|(
 name|device_t
 name|dev
@@ -330,7 +279,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|OPIC_ID
+name|ofw_bus_get_node
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}

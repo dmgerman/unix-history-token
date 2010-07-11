@@ -307,26 +307,23 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * Add OCP (on-chip peripheral) bus 	 */
 name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
-literal|"ocpbus"
+literal|"fdtbus"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|device_set_desc
+name|device_quiet
 argument_list|(
 name|dev
-argument_list|,
-literal|"MPC85xx Nexus device"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 2006-2008 Semihalf, Grzegorz Bernacki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (C) 2006-2008 Semihalf, Grzegorz Bernacki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * From: FreeBSD: src/sys/powerpc/mpc85xx/ds1553_bus_lbc.c,v 1.2 2009/06/24 15:48:20 raj  */
 end_comment
 
 begin_include
@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<powerpc/mpc85xx/ds1553_reg.h>
+file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<powerpc/mpc85xx/lbc.h>
+file|"ds1553_reg.h"
 end_include
 
 begin_include
@@ -234,47 +234,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|uintptr_t
-name|devtype
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
-name|BUS_READ_IVAR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|LBC_IVAR_DEVTYPE
-argument_list|,
-operator|&
-name|devtype
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|error
+operator|!
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"dallas,ds1553"
+argument_list|)
 condition|)
 return|return
 operator|(
-name|error
-operator|)
-return|;
-if|if
-condition|(
-name|devtype
-operator|!=
-name|LBC_DEVTYPE_RTC
-condition|)
-return|return
-operator|(
-name|EINVAL
+name|ENXIO
 operator|)
 return|;
 name|device_set_desc
@@ -286,7 +258,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
