@@ -48,11 +48,11 @@ begin_define
 define|#
 directive|define
 name|TP_OFFSET
-value|0x7008
+value|0x7010
 end_define
 
 begin_comment
-comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  * %r2 points to end of the structure.  */
+comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it.  * %r13 points to end of the structure.  */
 end_comment
 
 begin_struct
@@ -116,7 +116,7 @@ modifier|*
 name|_tp
 name|__asm__
 argument_list|(
-literal|"%r2"
+literal|"%r13"
 argument_list|)
 decl_stmt|;
 asm|__asm __volatile("mr %0,%1" : "=r"(_tp) :
@@ -151,7 +151,7 @@ modifier|*
 name|_tp
 name|__asm__
 argument_list|(
-literal|"%r2"
+literal|"%r13"
 argument_list|)
 decl_stmt|;
 return|return
