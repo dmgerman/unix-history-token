@@ -547,9 +547,12 @@ name|sp
 operator|&
 literal|3
 operator|||
+operator|(
+name|uintptr_t
+operator|)
 name|sp
 operator|<
-literal|0x80000000
+literal|0x80000000u
 condition|)
 block|{
 call|(
@@ -1849,6 +1852,9 @@ operator|=
 operator|(
 name|register_t
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|__builtin_frame_address
 argument_list|(
 literal|0
@@ -1858,6 +1864,9 @@ name|ra
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|__builtin_return_address
 argument_list|(
