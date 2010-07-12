@@ -1059,7 +1059,7 @@ literal|0x0f
 expr_stmt|;
 break|break;
 case|case
-literal|4
+literal|3
 case|:
 name|reset
 operator|+=
