@@ -914,6 +914,7 @@ argument_list|,
 argument|td
 argument_list|)
 block|{
+comment|/* 				 * Once a thread is found in "interesting" 				 * state a possible ticks wrap-up needs to be 				 * checked. 				 */
 name|thread_lock
 argument_list|(
 name|td
@@ -925,6 +926,12 @@ name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)
+operator|&&
+name|ticks
+operator|<
+name|td
+operator|->
+name|td_blktick
 condition|)
 block|{
 comment|/* 					 * The thread should be blocked on a 					 * turnstile, simply check if the 					 * turnstile channel is in good state. 					 */
@@ -937,16 +944,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Handle ticks wrap-up. */
-if|if
-condition|(
-name|ticks
-operator|<
-name|td
-operator|->
-name|td_blktick
-condition|)
-continue|continue;
 name|tticks
 operator|=
 name|ticks
@@ -999,18 +996,19 @@ name|TD_IS_SLEEPING
 argument_list|(
 name|td
 argument_list|)
-condition|)
-block|{
-comment|/* Handle ticks wrap-up. */
-if|if
-condition|(
+operator|&&
+name|TD_ON_SLEEPQ
+argument_list|(
+name|td
+argument_list|)
+operator|&&
 name|ticks
 operator|<
 name|td
 operator|->
 name|td_blktick
 condition|)
-continue|continue;
+block|{
 comment|/* 					 * Check if the thread is sleeping on a 					 * lock, otherwise skip the check. 					 * Drop the thread lock in order to 					 * avoid a LOR with the sleepqueue 					 * spinlock. 					 */
 name|wchan
 operator|=
