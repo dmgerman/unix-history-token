@@ -193,6 +193,17 @@ begin_comment
 comment|/* Performance monitor mark */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PSL_FE_DFLT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* default: no FP */
+end_comment
+
 begin_comment
 comment|/* Initial kernel MSR, use IS=1 ad DS=1. */
 end_comment
