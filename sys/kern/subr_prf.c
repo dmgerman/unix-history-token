@@ -3780,7 +3780,7 @@ name|width
 operator|-=
 name|tmp
 operator|+
-name|MAX
+name|imax
 argument_list|(
 name|dwidth
 argument_list|,
