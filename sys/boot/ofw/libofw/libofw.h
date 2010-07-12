@@ -252,6 +252,25 @@ name|ofw_elf
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|file_format
+name|ofw_elf64
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void

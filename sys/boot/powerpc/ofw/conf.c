@@ -242,6 +242,9 @@ block|{
 operator|&
 name|ofw_elf
 block|,
+operator|&
+name|ofw_elf64
+block|,
 name|NULL
 block|}
 decl_stmt|;
