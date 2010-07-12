@@ -2725,13 +2725,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|_SIG_VALID
+argument_list|(
 name|sig
-operator|<
-literal|1
-operator|||
-name|sig
-operator|>
-name|_SIG_MAXSIG
+argument_list|)
 condition|)
 name|DB_ERROR
 argument_list|(
