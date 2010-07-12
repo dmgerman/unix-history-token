@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -1751,6 +1751,33 @@ name|ap
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|EAGAIN
+case|:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"pool I/O is currently suspended"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zfs_verror
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_POOLUNAVAIL
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|zfs_error_aux
 argument_list|(
@@ -2080,6 +2107,33 @@ operator|-
 literal|1
 operator|)
 return|;
+case|case
+name|EAGAIN
+case|:
+name|zfs_error_aux
+argument_list|(
+name|hdl
+argument_list|,
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"pool I/O is currently suspended"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zfs_verror
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_POOLUNAVAIL
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|zfs_error_aux
 argument_list|(
@@ -2247,11 +2301,6 @@ operator|)
 name|no_memory
 argument_list|(
 name|hdl
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -2740,6 +2789,11 @@ expr_stmt|;
 name|zpool_prop_init
 argument_list|()
 expr_stmt|;
+name|libzfs_mnttab_init
+argument_list|(
+name|hdl
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hdl
@@ -2826,6 +2880,11 @@ name|hdl
 argument_list|)
 expr_stmt|;
 name|namespace_clear
+argument_list|(
+name|hdl
+argument_list|)
+expr_stmt|;
+name|libzfs_mnttab_fini
 argument_list|(
 name|hdl
 argument_list|)
@@ -3705,6 +3764,28 @@ literal|"SOURCE"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* first property is always NAME */
+name|assert
+argument_list|(
+name|cbp
+operator|->
+name|cb_proplist
+operator|->
+name|pl_prop
+operator|==
+operator|(
+operator|(
+name|type
+operator|==
+name|ZFS_TYPE_POOL
+operator|)
+condition|?
+name|ZPOOL_PROP_NAME
+else|:
+name|ZFS_PROP_NAME
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Go through and calculate the widths for each column.  For the 	 * 'source' column, we kludge it up by taking the worst-case scenario of 	 * inheriting from the longest name.  This is acceptable because in the 	 * majority of cases 'SOURCE' is the last column displayed, and we don't 	 * use the width anyway.  Note that the 'VALUE' column can be oversized, 	 * if the name of the property is much longer the any values we find. 	 */
 for|for
 control|(
@@ -3820,21 +3901,14 @@ operator|=
 name|len
 expr_stmt|;
 block|}
-comment|/* 		 * 'VALUE' column 		 */
+comment|/* 		 * 'VALUE' column.  The first property is always the 'name' 		 * property that was tacked on either by /sbin/zfs's 		 * zfs_do_get() or when calling zprop_expand_list(), so we 		 * ignore its width.  If the user specified the name property 		 * to display, then it will be later in the list in any case. 		 */
 if|if
 condition|(
-operator|(
 name|pl
-operator|->
-name|pl_prop
 operator|!=
-name|ZFS_PROP_NAME
-operator|||
-operator|!
-name|pl
+name|cbp
 operator|->
-name|pl_all
-operator|)
+name|cb_proplist
 operator|&&
 name|pl
 operator|->
@@ -4609,7 +4683,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Rely on stroll() to process the numeric portion.  */
+comment|/* Rely on stroull() to process the numeric portion.  */
 name|errno
 operator|=
 literal|0
@@ -4617,7 +4691,7 @@ expr_stmt|;
 operator|*
 name|num
 operator|=
-name|strtoll
+name|strtoull
 argument_list|(
 name|value
 argument_list|,
@@ -5427,11 +5501,19 @@ name|type
 operator|==
 name|ZFS_TYPE_POOL
 operator|||
+operator|(
 operator|!
 name|zfs_prop_user
 argument_list|(
 name|propname
 argument_list|)
+operator|&&
+operator|!
+name|zfs_prop_userquota
+argument_list|(
+name|propname
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{

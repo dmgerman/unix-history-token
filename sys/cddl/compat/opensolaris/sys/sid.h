@@ -118,6 +118,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ksid_getid
+parameter_list|(
+name|void
+modifier|*
+name|ksid
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"%s has been unexpectedly called"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

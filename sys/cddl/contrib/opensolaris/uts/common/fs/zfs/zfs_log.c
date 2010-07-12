@@ -121,8 +121,27 @@ directive|include
 file|<sys/zfs_fuid.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/dsl_dataset.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ZFS_HANDLE_REPLAY
+parameter_list|(
+name|zilog
+parameter_list|,
+name|tx
+parameter_list|)
+define|\
+value|if (zilog->zl_replay) { \ 		dsl_dataset_dirty(dmu_objset_ds(zilog->zl_os), tx); \ 		zilog->zl_replayed_seq[dmu_tx_get_txg(tx)& TXG_MASK] = \ 		    zilog->zl_replaying_seq; \ 		return; \ 	}
+end_define
+
 begin_comment
-comment|/*  * All the functions in this file are used to construct the log entries  * to record transactions. They allocate * an intent log transaction  * structure (itx_t) and save within it all the information necessary to  * possibly replay the transaction. The itx is then assigned a sequence  * number and inserted in the in-memory list anchored in the zilog.  */
+comment|/*  * These zfs_log_* functions must be called within a dmu tx, in one  * of 2 contexts depending on zilog->z_replay:  *  * Non replay mode  * ---------------  * We need to record the transaction so that if it is committed to  * the Intent Log then it can be replayed.  An intent log transaction  * structure (itx_t) is allocated and all the information necessary to  * possibly replay the transaction is saved in it. The itx is then assigned  * a sequence number and inserted in the in-memory list anchored in the zilog.  *  * Replay mode  * -----------  * We need to mark the intent log record as replayed in the log header.  * This is done in the same transaction as the replay so that they  * commit atomically.  */
 end_comment
 
 begin_function
@@ -1016,6 +1035,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 comment|/* 	 * If we have FUIDs present then add in space for 	 * domains and ACE fuid's if any. 	 */
 if|if
 condition|(
@@ -1606,6 +1633,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|itx
 operator|=
 name|zil_itx_create
@@ -1737,6 +1772,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|itx
 operator|=
 name|zil_itx_create
@@ -1896,6 +1939,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|itx
 operator|=
 name|zil_itx_create
@@ -2152,6 +2203,14 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|itx
 operator|=
 name|zil_itx_create
@@ -2332,6 +2391,14 @@ operator|->
 name|z_unlinked
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 comment|/* 	 * Writes are handled in three different ways: 	 * 	 * WR_INDIRECT: 	 *    In this mode, if we need to commit the write later, then the block 	 *    is immediately written into the file system (using dmu_sync), 	 *    and a pointer to the block is put into the log record. 	 *    When the txg commits the block is linked in. 	 *    This saves additionally writing the data into the log record. 	 *    There are a few requirements for this to occur: 	 *	- write is greater than zfs_immediate_write_sz 	 *	- not using slogs (as slogs are assumed to always be faster 	 *	  than writing into the main pool) 	 *	- the write occupies only one block 	 * WR_COPIED: 	 *    If we know we'll immediately be committing the 	 *    transaction (FSYNC or FDSYNC), the we allocate a larger 	 *    log record here for the data and copy the data in. 	 * WR_NEED_COPY: 	 *    Otherwise we don't allocate a buffer, and *if* we need to 	 *    flush the write later then a buffer is allocated and 	 *    we retrieve the data using the dmu. 	 */
 name|slogging
 operator|=
@@ -2514,6 +2581,8 @@ argument_list|,
 name|lr
 operator|+
 literal|1
+argument_list|,
+name|DMU_READ_NO_PREFETCH
 argument_list|)
 operator|!=
 literal|0
@@ -2742,6 +2811,14 @@ operator|->
 name|z_unlinked
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|itx
 operator|=
 name|zil_itx_create
@@ -2897,6 +2974,14 @@ operator|->
 name|z_unlinked
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 comment|/* 	 * If XVATTR set, then log record size needs to allow 	 * for lr_attr_t + xvattr mask, mapsize and create time 	 * plus actual attribute values 	 */
 if|if
 condition|(
@@ -3249,6 +3334,14 @@ operator|->
 name|z_unlinked
 condition|)
 return|return;
+name|ZFS_HANDLE_REPLAY
+argument_list|(
+name|zilog
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+comment|/* exits if replay */
 name|txtype
 operator|=
 operator|(

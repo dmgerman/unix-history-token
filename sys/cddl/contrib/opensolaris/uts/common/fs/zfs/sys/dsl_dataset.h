@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -721,7 +721,7 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
-name|int
+name|boolean_t
 name|dsl_dataset_block_freeable
 parameter_list|(
 name|dsl_dataset_t

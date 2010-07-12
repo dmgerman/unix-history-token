@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Common routines used by zfs and zpool property management.  */
@@ -983,17 +976,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-if|if
-condition|(
-name|colname
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|B_FALSE
-operator|)
-return|;
 endif|#
 directive|endif
 if|if
@@ -1026,6 +1008,10 @@ directive|ifndef
 name|_KERNEL
 if|if
 condition|(
+name|colname
+operator|==
+name|NULL
+operator|||
 name|len
 operator|!=
 name|strlen

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZIL_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -170,12 +163,16 @@ name|zl_destroy_txg
 decl_stmt|;
 comment|/* txg of last zil_destroy() */
 name|uint64_t
-name|zl_replay_seq
+name|zl_replayed_seq
 index|[
 name|TXG_SIZE
 index|]
 decl_stmt|;
-comment|/* seq of last replayed rec */
+comment|/* last replayed rec seq */
+name|uint64_t
+name|zl_replaying_seq
+decl_stmt|;
+comment|/* current replay seq number */
 name|uint32_t
 name|zl_suspend
 decl_stmt|;
@@ -197,9 +194,9 @@ name|zl_keep_first
 decl_stmt|;
 comment|/* keep first log block in destroy */
 name|uint8_t
-name|zl_stop_replay
+name|zl_replay
 decl_stmt|;
-comment|/* don't replay any further */
+comment|/* replaying records while set */
 name|uint8_t
 name|zl_stop_sync
 decl_stmt|;

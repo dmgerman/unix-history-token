@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FM_FS_ZFS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_ifdef
 ifdef|#
@@ -130,6 +123,10 @@ define|#
 directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_VDEV_DEVID
 value|"vdev_devid"
+define|#
+directive|define
+name|FM_EREPORT_PAYLOAD_ZFS_VDEV_FRU
+value|"vdev_fru"
 define|#
 directive|define
 name|FM_EREPORT_PAYLOAD_ZFS_PARENT_GUID

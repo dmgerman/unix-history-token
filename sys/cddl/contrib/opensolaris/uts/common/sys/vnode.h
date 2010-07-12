@@ -31,13 +31,6 @@ directive|define
 name|_SYS_VNODE_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_empty
 empty|#include_next<sys/vnode.h>
 end_empty
@@ -434,6 +427,17 @@ name|attr
 parameter_list|)
 define|\
 value|ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)] |= XVA_ATTRBIT(attr)
+comment|/*  * XVA_CLR_REQ() clears an attribute bit in the proper element in the bitmap  * of requested attributes (xva_reqattrmap[]).  */
+define|#
+directive|define
+name|XVA_CLR_REQ
+parameter_list|(
+name|xvap
+parameter_list|,
+name|attr
+parameter_list|)
+define|\
+value|ASSERT((xvap)->xva_vattr.va_mask | AT_XVATTR);		\ 	ASSERT((xvap)->xva_magic == XVA_MAGIC);			\ 	(xvap)->xva_reqattrmap[XVA_INDEX(attr)]&= ~XVA_ATTRBIT(attr)
 comment|/*  * XVA_SET_RTN() sets an attribute bit in the proper element in the bitmap  * of returned attributes (xva_rtnattrmap[]).  */
 define|#
 directive|define

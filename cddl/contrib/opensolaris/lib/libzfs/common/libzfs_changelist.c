@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  */
 end_comment
 
 begin_include
@@ -552,6 +552,9 @@ decl_stmt|;
 name|boolean_t
 name|sharesmb
 decl_stmt|;
+name|boolean_t
+name|mounted
+decl_stmt|;
 comment|/* 		 * If we are in the global zone, but this dataset is exported 		 * to a local zone, do nothing. 		 */
 if|if
 condition|(
@@ -792,23 +795,8 @@ literal|0
 operator|)
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cn
-operator|->
-name|cn_mounted
-operator|||
-name|clp
-operator|->
-name|cl_waslegacy
-operator|||
-name|sharenfs
-operator|||
-name|sharesmb
-operator|)
-operator|&&
-operator|!
+name|mounted
+operator|=
 name|zfs_is_mounted
 argument_list|(
 name|cn
@@ -817,7 +805,46 @@ name|cn_handle
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mounted
 operator|&&
+operator|(
+name|cn
+operator|->
+name|cn_mounted
+operator|||
+operator|(
+operator|(
+name|sharenfs
+operator|||
+name|sharesmb
+operator|||
+name|clp
+operator|->
+name|cl_waslegacy
+operator|)
+operator|&&
+operator|(
+name|zfs_prop_get_int
+argument_list|(
+name|cn
+operator|->
+name|cn_handle
+argument_list|,
+name|ZFS_PROP_CANMOUNT
+argument_list|)
+operator|==
+name|ZFS_CANMOUNT_ON
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|zfs_mount
 argument_list|(
 name|cn
@@ -834,10 +861,18 @@ condition|)
 name|errors
 operator|++
 expr_stmt|;
-comment|/* 		 * We always re-share even if the filesystem is currently 		 * shared, so that we can adopt any new options. 		 */
+else|else
+name|mounted
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+comment|/* 		 * If the file system is mounted we always re-share even 		 * if the filesystem is currently shared, so that we can 		 * adopt any new options. 		 */
 if|if
 condition|(
 name|sharenfs
+operator|&&
+name|mounted
 condition|)
 name|errors
 operator|+=
@@ -873,6 +908,8 @@ expr_stmt|;
 if|if
 condition|(
 name|sharesmb
+operator|&&
+name|mounted
 condition|)
 name|errors
 operator|+=
@@ -2347,21 +2384,6 @@ condition|(
 name|prop
 operator|==
 name|ZFS_PROP_VOLSIZE
-condition|)
-block|{
-name|clp
-operator|->
-name|cl_prop
-operator|=
-name|ZFS_PROP_MOUNTPOINT
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|prop
-operator|==
-name|ZFS_PROP_VERSION
 condition|)
 block|{
 name|clp

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -105,6 +105,29 @@ name|zfs_prop_table
 index|[
 name|ZFS_NUM_PROPS
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Note this is indexed by zfs_userquota_prop_t, keep the order the same */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|zfs_userquota_prop_prefixes
+index|[]
+init|=
+block|{
+literal|"userused@"
+block|,
+literal|"userquota@"
+block|,
+literal|"groupused@"
+block|,
+literal|"groupquota@"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +507,12 @@ block|{
 literal|"3"
 block|,
 literal|3
+block|}
+block|,
+block|{
+literal|"4"
+block|,
+literal|4
 block|}
 block|,
 block|{
@@ -944,7 +973,7 @@ name|ZFS_TYPE_FILESYSTEM
 operator||
 name|ZFS_TYPE_SNAPSHOT
 argument_list|,
-literal|"1 | 2 | 3 | current"
+literal|"1 | 2 | 3 | 4 | current"
 argument_list|,
 literal|"VERSION"
 argument_list|,
@@ -1508,6 +1537,21 @@ argument_list|,
 literal|"GUID"
 argument_list|)
 expr_stmt|;
+name|register_hidden
+argument_list|(
+name|ZFS_PROP_USERACCOUNTING
+argument_list|,
+literal|"useraccounting"
+argument_list|,
+name|PROP_TYPE_NUMBER
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* oddball properties */
 name|register_impl
 argument_list|(
@@ -1737,6 +1781,75 @@ return|;
 return|return
 operator|(
 name|B_TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns true if this is a valid userspace-type property (one with a '@').  * Note that after the @, any character is valid (eg, another @, for SID  * user@domain).  */
+end_comment
+
+begin_function
+name|boolean_t
+name|zfs_prop_userquota
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|zfs_userquota_prop_t
+name|prop
+decl_stmt|;
+for|for
+control|(
+name|prop
+operator|=
+literal|0
+init|;
+name|prop
+operator|<
+name|ZFS_NUM_USERQUOTA_PROPS
+condition|;
+name|prop
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+name|zfs_userquota_prop_prefixes
+index|[
+name|prop
+index|]
+argument_list|,
+name|strlen
+argument_list|(
+name|zfs_userquota_prop_prefixes
+index|[
+name|prop
+index|]
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|B_TRUE
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|B_FALSE
 operator|)
 return|;
 block|}

@@ -500,6 +500,18 @@ define|#
 directive|define
 name|ESC_ZFS_CONFIG_SYNC
 value|"ESC_ZFS_config_sync"
+define|#
+directive|define
+name|ESC_ZFS_SCRUB_START
+value|"ESC_ZFS_scrub_start"
+define|#
+directive|define
+name|ESC_ZFS_SCRUB_FINISH
+value|"ESC_ZFS_scrub_finish"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_SPARE
+value|"ESC_ZFS_vdev_spare"
 comment|/*  * datalink subclass definitions.  */
 define|#
 directive|define

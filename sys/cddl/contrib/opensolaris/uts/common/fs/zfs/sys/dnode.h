@@ -216,6 +216,10 @@ define|#
 directive|define
 name|DNODE_FLAG_USED_BYTES
 value|(1<<0)
+define|#
+directive|define
+name|DNODE_FLAG_USERUSED_ACCOUNTED
+value|(1<<1)
 typedef|typedef
 struct|struct
 name|dnode_phys
@@ -304,7 +308,7 @@ comment|/* 	 * dn_struct_rwlock protects the structure of the dnode, 	 * includi
 name|krwlock_t
 name|dn_struct_rwlock
 decl_stmt|;
-comment|/* 	 * Our link on dataset's dd_dnodes list. 	 * Protected by dd_accounting_mtx. 	 */
+comment|/* Our link on dn_objset->os_dnodes list; protected by os_lock.  */
 name|list_node_t
 name|dn_link
 decl_stmt|;
@@ -473,6 +477,11 @@ comment|/* parent IO for current sync write */
 name|zio_t
 modifier|*
 name|dn_zio
+decl_stmt|;
+comment|/* used in syncing context */
+name|dnode_phys_t
+modifier|*
+name|dn_oldphys
 decl_stmt|;
 comment|/* holds prefetch structure */
 name|struct

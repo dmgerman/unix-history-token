@@ -2266,6 +2266,11 @@ literal|0
 operator|&&
 operator|(
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 operator|&
 name|FWRITE
 operator|)

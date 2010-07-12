@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -107,6 +107,14 @@ modifier|*
 name|ashift
 parameter_list|)
 block|{
+name|spa_t
+modifier|*
+name|spa
+init|=
+name|vd
+operator|->
+name|vdev_spa
+decl_stmt|;
 name|vdev_disk_t
 modifier|*
 name|dvd
@@ -236,9 +244,7 @@ operator|&&
 operator|!
 name|spa_is_root
 argument_list|(
-name|vd
-operator|->
-name|vdev_spa
+name|spa
 argument_list|)
 condition|)
 block|{
@@ -304,6 +310,9 @@ argument_list|(
 name|buf
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|,
@@ -343,6 +352,9 @@ argument_list|(
 name|lh
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|)
@@ -368,6 +380,9 @@ operator|->
 name|vdev_path
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|,
@@ -433,6 +448,9 @@ operator|->
 name|vd_lh
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|)
@@ -497,6 +515,9 @@ operator|->
 name|vd_minor
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|,
@@ -533,7 +554,7 @@ name|vdev_physpath
 argument_list|)
 operator|)
 operator|!=
-name|ENODEV
+name|NODEV
 condition|)
 name|error
 operator|=
@@ -545,6 +566,9 @@ argument_list|,
 name|OTYP_BLK
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|,
@@ -570,9 +594,7 @@ operator|&&
 operator|!
 name|spa_is_root
 argument_list|(
-name|vd
-operator|->
-name|vdev_spa
+name|spa
 argument_list|)
 condition|)
 name|error
@@ -584,6 +606,9 @@ operator|->
 name|vdev_path
 argument_list|,
 name|spa_mode
+argument_list|(
+name|spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|,
@@ -985,6 +1010,11 @@ operator|->
 name|vd_lh
 argument_list|,
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 name|kcred
 argument_list|)
@@ -1861,7 +1891,7 @@ name|tmpdevid
 argument_list|,
 name|minor_name
 argument_list|,
-name|spa_mode
+name|FREAD
 argument_list|,
 name|kcred
 argument_list|,
@@ -2011,8 +2041,6 @@ operator|)
 name|label
 argument_list|,
 name|VDEV_SKIP_SIZE
-operator|+
-name|VDEV_BOOT_HEADER_SIZE
 operator|+
 name|VDEV_PHYS_SIZE
 argument_list|,

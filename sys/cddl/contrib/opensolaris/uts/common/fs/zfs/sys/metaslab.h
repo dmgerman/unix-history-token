@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -71,6 +71,11 @@ name|struct
 name|metaslab_group
 name|metaslab_group_t
 typedef|;
+specifier|extern
+name|space_map_ops_t
+modifier|*
+name|zfs_metaslab_ops
+decl_stmt|;
 specifier|extern
 name|metaslab_t
 modifier|*
@@ -214,7 +219,9 @@ name|metaslab_class_t
 modifier|*
 name|metaslab_class_create
 parameter_list|(
-name|void
+name|space_map_ops_t
+modifier|*
+name|ops
 parameter_list|)
 function_decl|;
 specifier|extern

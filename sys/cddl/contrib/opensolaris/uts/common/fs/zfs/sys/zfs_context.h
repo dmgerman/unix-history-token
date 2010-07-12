@@ -321,6 +321,13 @@ parameter_list|)
 value|do {					\ 	if (((lvl)& 0xff)<= zfs_debug_level) {			\ 		mtx_lock(&zfs_debug_mtx);				\ 		printf("%s:%u[%d]: ", __func__, __LINE__, (lvl));	\ 		printf(__VA_ARGS__);					\ 		printf("\n");						\ 		if ((lvl)& 0x100)					\ 			kdb_backtrace();				\ 		mtx_unlock(&zfs_debug_mtx);				\ 	}								\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sys_shutdown
+value|rebooting
+end_define
+
 begin_endif
 endif|#
 directive|endif

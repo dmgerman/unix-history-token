@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Iterate over all children of the current object.  This includes the normal  * dataset hierarchy, but also arbitrary hierarchies due to clones.  We want to  * walk all datasets in the pool, and construct a directed graph of the form:  *  * 			home  *                        |  *                   +----+----+  *                   |         |  *                   v         v             ws  *                  bar       baz             |  *                             |              |  *                             v              v  *                          @yesterday ----> foo  *  * In order to construct this graph, we have to walk every dataset in the pool,  * because the clone parent is stored as a property of the child, not the  * parent.  The parent only keeps track of the number of clones.  *  * In the normal case (without clones) this would be rather expensive.  To avoid  * unnecessary computation, we first try a walk of the subtree hierarchy  * starting from the initial node.  At each dataset, we construct a node in the  * graph and an edge leading from its parent.  If we don't see any snapshots  * with a non-zero clone count, then we are finished.  *  * If we do find a cloned snapshot, then we finish the walk of the current  * subtree, but indicate that we need to do a complete walk.  We then perform a  * global walk of all datasets, avoiding the subtree we already processed.  *  * At the end of this, we'll end up with a directed graph of all relevant (and  * possible some irrelevant) datasets in the system.  We need to both find our  * limiting subgraph and determine a safe ordering in which to destroy the  * datasets.  We do a topological ordering of our graph starting at our target  * dataset, and then walk the results in reverse.  *  * It's possible for the graph to have cycles if, for example, the user renames  * a clone to be the parent of its origin snapshot.  The user can request to  * generate an error in this case, or ignore the cycle and continue.  *  * When removing datasets, we want to destroy the snapshots in chronological  * order (because this is the most efficient method).  In order to accomplish  * this, we store the creation transaction group with each vertex and keep each  * vertex's edges sorted according to this value.  The topological sort will  * automatically walk the snapshots in the correct order.  */
@@ -1429,17 +1422,6 @@ argument_list|)
 argument_list|)
 control|)
 block|{
-comment|/* 		 * Ignore private dataset names. 		 */
-if|if
-condition|(
-name|dataset_name_hidden
-argument_list|(
-name|zc
-operator|.
-name|zc_name
-argument_list|)
-condition|)
-continue|continue;
 comment|/* 		 * Get statistics for this dataset, to determine the type of the 		 * dataset and clone statistics.  If this fails, the dataset has 		 * since been removed, and we're pretty much screwed anyway. 		 */
 name|zc
 operator|.

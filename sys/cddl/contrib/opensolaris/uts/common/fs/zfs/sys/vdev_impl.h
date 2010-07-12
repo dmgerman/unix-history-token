@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -341,13 +341,12 @@ name|vdev_children
 decl_stmt|;
 comment|/* number of children		*/
 name|space_map_t
-name|vdev_dtl_map
+name|vdev_dtl
+index|[
+name|DTL_TYPES
+index|]
 decl_stmt|;
-comment|/* dirty time log in-core state	*/
-name|space_map_t
-name|vdev_dtl_scrub
-decl_stmt|;
-comment|/* DTL for scrub repair writes	*/
+comment|/* in-core dirty time logs	*/
 name|vdev_stat_t
 name|vdev_stat
 decl_stmt|;
@@ -418,9 +417,9 @@ name|vdev_psize
 decl_stmt|;
 comment|/* physical device capacity	*/
 name|space_map_obj_t
-name|vdev_dtl
+name|vdev_dtl_smo
 decl_stmt|;
-comment|/* dirty time log on-disk state	*/
+comment|/* dirty time log space map obj	*/
 name|txg_node_t
 name|vdev_dtl_node
 decl_stmt|;
@@ -464,6 +463,11 @@ modifier|*
 name|vdev_physpath
 decl_stmt|;
 comment|/* vdev device path (if any)	*/
+name|char
+modifier|*
+name|vdev_fru
+decl_stmt|;
+comment|/* physical FRU location	*/
 name|uint64_t
 name|vdev_not_present
 decl_stmt|;
@@ -547,12 +551,13 @@ block|}
 struct|;
 define|#
 directive|define
-name|VDEV_SKIP_SIZE
+name|VDEV_PAD_SIZE
 value|(8<< 10)
+comment|/* 2 padding areas (vl_pad1 and vl_pad2) to skip */
 define|#
 directive|define
-name|VDEV_BOOT_HEADER_SIZE
-value|(8<< 10)
+name|VDEV_SKIP_SIZE
+value|VDEV_PAD_SIZE * 2
 define|#
 directive|define
 name|VDEV_PHYS_SIZE
@@ -594,52 +599,6 @@ parameter_list|(
 name|vd
 parameter_list|)
 value|(1ULL<< VDEV_UBERBLOCK_SHIFT(vd))
-comment|/* ZFS boot block */
-define|#
-directive|define
-name|VDEV_BOOT_MAGIC
-value|0x2f5b007b10cULL
-define|#
-directive|define
-name|VDEV_BOOT_VERSION
-value|1
-comment|/* version number	*/
-typedef|typedef
-struct|struct
-name|vdev_boot_header
-block|{
-name|uint64_t
-name|vb_magic
-decl_stmt|;
-comment|/* VDEV_BOOT_MAGIC	*/
-name|uint64_t
-name|vb_version
-decl_stmt|;
-comment|/* VDEV_BOOT_VERSION	*/
-name|uint64_t
-name|vb_offset
-decl_stmt|;
-comment|/* start offset	(bytes) */
-name|uint64_t
-name|vb_size
-decl_stmt|;
-comment|/* size (bytes)		*/
-name|char
-name|vb_pad
-index|[
-name|VDEV_BOOT_HEADER_SIZE
-operator|-
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|vdev_boot_header_t
-typedef|;
 typedef|typedef
 struct|struct
 name|vdev_phys
@@ -666,16 +625,19 @@ struct|struct
 name|vdev_label
 block|{
 name|char
-name|vl_pad
+name|vl_pad1
 index|[
-name|VDEV_SKIP_SIZE
+name|VDEV_PAD_SIZE
 index|]
 decl_stmt|;
-comment|/*   8K	*/
-name|vdev_boot_header_t
-name|vl_boot_header
+comment|/*  8K */
+name|char
+name|vl_pad2
+index|[
+name|VDEV_PAD_SIZE
+index|]
 decl_stmt|;
-comment|/*   8K	*/
+comment|/*  8K */
 name|vdev_phys_t
 name|vl_vdev_phys
 decl_stmt|;

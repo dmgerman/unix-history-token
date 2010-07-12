@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_include
@@ -147,9 +147,6 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
-name|int
-name|state
-decl_stmt|;
 comment|/* 	 * If we are doing a spa_tryimport(), ignore errors. 	 */
 if|if
 condition|(
@@ -207,26 +204,29 @@ operator|&
 name|ZIO_FLAG_SPECULATIVE
 condition|)
 return|return;
-comment|/* 		 * If the vdev has already been marked as failing due to a 		 * failed probe, then ignore any subsequent I/O errors, as the 		 * DE will automatically fault the vdev on the first such 		 * failure. 		 */
 if|if
 condition|(
 name|vd
 operator|!=
 name|NULL
+condition|)
+block|{
+comment|/* 			 * If the vdev has already been marked as failing due 			 * to a failed probe, then ignore any subsequent I/O 			 * errors, as the DE will automatically fault the vdev 			 * on the first such failure.  This also catches cases 			 * where vdev_remove_wanted is set and the device has 			 * not yet been asynchronously placed into the REMOVED 			 * state. 			 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_vd
+operator|==
+name|vd
 operator|&&
-operator|(
 operator|!
-name|vdev_readable
+name|vdev_accessible
 argument_list|(
 name|vd
+argument_list|,
+name|zio
 argument_list|)
-operator|||
-operator|!
-name|vdev_writeable
-argument_list|(
-name|vd
-argument_list|)
-operator|)
 operator|&&
 name|strcmp
 argument_list|(
@@ -238,6 +238,42 @@ operator|!=
 literal|0
 condition|)
 return|return;
+comment|/* 			 * Ignore checksum errors for reads from DTL regions of 			 * leaf vdevs. 			 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_READ
+operator|&&
+name|zio
+operator|->
+name|io_error
+operator|==
+name|ECKSUM
+operator|&&
+name|vd
+operator|->
+name|vdev_ops
+operator|->
+name|vdev_op_leaf
+operator|&&
+name|vdev_dtl_contains
+argument_list|(
+name|vd
+argument_list|,
+name|DTL_MISSING
+argument_list|,
+name|zio
+operator|->
+name|io_txg
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+return|return;
+block|}
 block|}
 name|nanotime
 argument_list|(
@@ -353,19 +389,6 @@ name|FM_ZFS_SCHEME_VERSION
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Construct the per-ereport payload, depending on which parameters are 	 * passed in. 	 */
-comment|/* 	 * If we are importing a faulted pool, then we treat it like an open, 	 * not an import.  Otherwise, the DE will ignore all faults during 	 * import, since the default behavior is to mark the devices as 	 * persistently unavailable, not leave them in the faulted state. 	 */
-name|state
-operator|=
-name|spa
-operator|->
-name|spa_import_faulted
-condition|?
-name|SPA_LOAD_OPEN
-else|:
-name|spa
-operator|->
-name|spa_load_state
-expr_stmt|;
 comment|/* 	 * Generic payload members common to all ereports. 	 */
 name|sbuf_printf
 argument_list|(
@@ -406,7 +429,9 @@ literal|" %s=%d"
 argument_list|,
 name|FM_EREPORT_PAYLOAD_ZFS_POOL_CONTEXT
 argument_list|,
-name|state
+name|spa
+operator|->
+name|spa_load_state
 argument_list|)
 expr_stmt|;
 if|if
@@ -497,6 +522,8 @@ condition|(
 name|vd
 operator|->
 name|vdev_path
+operator|!=
+name|NULL
 condition|)
 name|sbuf_printf
 argument_list|(
@@ -517,6 +544,8 @@ condition|(
 name|vd
 operator|->
 name|vdev_devid
+operator|!=
+name|NULL
 condition|)
 name|sbuf_printf
 argument_list|(
@@ -530,6 +559,28 @@ argument_list|,
 name|vd
 operator|->
 name|vdev_devid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_fru
+operator|!=
+name|NULL
+condition|)
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|" %s=%s"
+argument_list|,
+name|FM_EREPORT_PAYLOAD_ZFS_VDEV_FRU
+argument_list|,
+name|vd
+operator|->
+name|vdev_fru
 argument_list|)
 expr_stmt|;
 if|if

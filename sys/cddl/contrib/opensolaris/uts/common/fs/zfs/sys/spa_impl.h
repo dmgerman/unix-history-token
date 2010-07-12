@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -292,6 +292,10 @@ name|spa_load_state_t
 name|spa_load_state
 decl_stmt|;
 comment|/* current load operation */
+name|boolean_t
+name|spa_load_verbatim
+decl_stmt|;
+comment|/* load the given config? */
 name|taskq_t
 modifier|*
 name|spa_zio_taskq
@@ -447,18 +451,6 @@ name|uint16_t
 name|spa_async_tasks
 decl_stmt|;
 comment|/* async task mask */
-name|kmutex_t
-name|spa_async_root_lock
-decl_stmt|;
-comment|/* protects async root count */
-name|uint64_t
-name|spa_async_root_count
-decl_stmt|;
-comment|/* number of async root zios */
-name|kcondvar_t
-name|spa_async_root_cv
-decl_stmt|;
-comment|/* notify when count == 0 */
 name|char
 modifier|*
 name|spa_root
@@ -539,6 +531,11 @@ decl_stmt|;
 comment|/* previous cache file(s) */
 name|zio_t
 modifier|*
+name|spa_async_zio_root
+decl_stmt|;
+comment|/* root of all async I/O */
+name|zio_t
+modifier|*
 name|spa_suspend_zio_root
 decl_stmt|;
 comment|/* root of all suspended I/O */
@@ -555,10 +552,6 @@ name|spa_suspended
 decl_stmt|;
 comment|/* pool is suspended */
 name|boolean_t
-name|spa_import_faulted
-decl_stmt|;
-comment|/* allow faulted vdevs */
-name|boolean_t
 name|spa_is_root
 decl_stmt|;
 comment|/* pool is root */
@@ -566,6 +559,10 @@ name|int
 name|spa_minref
 decl_stmt|;
 comment|/* num refs when first opened */
+name|int
+name|spa_mode
+decl_stmt|;
+comment|/* FREAD | FWRITE */
 name|spa_log_state_t
 name|spa_log_state
 decl_stmt|;

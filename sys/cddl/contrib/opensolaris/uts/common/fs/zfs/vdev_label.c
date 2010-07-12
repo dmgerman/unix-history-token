@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -642,6 +642,30 @@ if|if
 condition|(
 name|vd
 operator|->
+name|vdev_fru
+operator|!=
+name|NULL
+condition|)
+name|VERIFY
+argument_list|(
+name|nvlist_add_string
+argument_list|(
+name|nv
+argument_list|,
+name|ZPOOL_CONFIG_FRU
+argument_list|,
+name|vd
+operator|->
+name|vdev_fru
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|->
 name|vdev_nparity
 operator|!=
 literal|0
@@ -871,7 +895,7 @@ if|if
 condition|(
 name|vd
 operator|->
-name|vdev_dtl
+name|vdev_dtl_smo
 operator|.
 name|smo_object
 operator|!=
@@ -887,7 +911,7 @@ name|ZPOOL_CONFIG_DTL
 argument_list|,
 name|vd
 operator|->
-name|vdev_dtl
+name|vdev_dtl_smo
 operator|.
 name|smo_object
 argument_list|)
@@ -1792,9 +1816,9 @@ name|vdev_phys_t
 modifier|*
 name|vp
 decl_stmt|;
-name|vdev_boot_header_t
+name|char
 modifier|*
-name|vb
+name|pad2
 decl_stmt|;
 name|uberblock_t
 modifier|*
@@ -1937,26 +1961,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|ASSERT
-argument_list|(
-name|reason
-operator|!=
-name|VDEV_LABEL_REMOVE
-operator|||
-name|vdev_inuse
-argument_list|(
-name|vd
-argument_list|,
-name|crtxg
-argument_list|,
-name|reason
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If this is a request to add or replace a spare or l2cache device 	 * that is in use elsewhere on the system, then we must update the 	 * guid (which was initialized to a random value) to reflect the 	 * actual GUID (which is shared between multiple pools). 	 */
 if|if
 condition|(
@@ -2389,51 +2393,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Initialize boot block header. 	 */
-name|vb
-operator|=
-name|zio_buf_alloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|vdev_boot_header_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|vb
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vdev_boot_header_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vb
-operator|->
-name|vb_magic
-operator|=
-name|VDEV_BOOT_MAGIC
-expr_stmt|;
-name|vb
-operator|->
-name|vb_version
-operator|=
-name|VDEV_BOOT_VERSION
-expr_stmt|;
-name|vb
-operator|->
-name|vb_offset
-operator|=
-name|VDEV_BOOT_OFFSET
-expr_stmt|;
-name|vb
-operator|->
-name|vb_size
-operator|=
-name|VDEV_BOOT_SIZE
-expr_stmt|;
 comment|/* 	 * Initialize uberblock template. 	 */
 name|ub
 operator|=
@@ -2467,6 +2426,21 @@ operator|->
 name|ub_txg
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Initialize the 2nd padding area. */
+name|pad2
+operator|=
+name|zio_buf_alloc
+argument_list|(
+name|VDEV_PAD_SIZE
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|pad2
+argument_list|,
+name|VDEV_PAD_SIZE
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Write everything in parallel. 	 */
 name|zio
@@ -2526,6 +2500,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Skip the 1st padding area. 		 * Zero out the 2nd padding area where it might have 		 * left over data from previous filesystem format. 		 */
 name|vdev_label_write
 argument_list|(
 name|zio
@@ -2534,19 +2509,16 @@ name|vd
 argument_list|,
 name|l
 argument_list|,
-name|vb
+name|pad2
 argument_list|,
 name|offsetof
 argument_list|(
 name|vdev_label_t
 argument_list|,
-name|vl_boot_header
+name|vl_pad2
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vdev_boot_header_t
-argument_list|)
+name|VDEV_PAD_SIZE
 argument_list|,
 name|NULL
 argument_list|,
@@ -2618,21 +2590,18 @@ argument_list|)
 expr_stmt|;
 name|zio_buf_free
 argument_list|(
+name|pad2
+argument_list|,
+name|VDEV_PAD_SIZE
+argument_list|)
+expr_stmt|;
+name|zio_buf_free
+argument_list|(
 name|ub
 argument_list|,
 name|VDEV_UBERBLOCK_SIZE
 argument_list|(
 name|vd
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|zio_buf_free
-argument_list|(
-name|vb
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|vdev_boot_header_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2722,6 +2691,18 @@ end_function
 begin_comment
 comment|/*  * ==========================================================================  * uberblock load/sync  * ==========================================================================  */
 end_comment
+
+begin_comment
+comment|/*  * For use by zdb and debugging purposes only  */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|ub_max_txg
+init|=
+name|UINT64_MAX
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Consider the following situation: txg is safely synced to disk.  We've  * written the first uberblock for txg + 1, and then we lose power.  When we  * come back up, we fail to see the uberblock for txg + 1 because, say,  * it was on a mirrored device and the replica to which we wrote txg + 1  * is now offline.  If we then make some changes and sync txg + 1, and then  * the missing replica comes back, then for a new seconds we'll have two  * conflicting uberblocks on disk with the same txg.  The solution is simple:  * among uberblocks with equal txg, choose the one with the latest timestamp.  */
@@ -2887,6 +2868,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ub
+operator|->
+name|ub_txg
+operator|<=
+name|ub_max_txg
+operator|&&
 name|vdev_uberblock_compare
 argument_list|(
 name|ub
@@ -3996,6 +3983,8 @@ argument_list|(
 name|zio
 argument_list|,
 name|spa
+argument_list|,
+name|NULL
 argument_list|,
 operator|(
 name|vd

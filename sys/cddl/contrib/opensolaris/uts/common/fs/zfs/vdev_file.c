@@ -168,6 +168,11 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 operator||
 name|FOFFMAX
 argument_list|,
@@ -232,6 +237,11 @@ argument_list|(
 name|vp
 argument_list|,
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -320,6 +330,11 @@ argument_list|(
 name|vp
 argument_list|,
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -407,6 +422,11 @@ operator|->
 name|vf_vnode
 argument_list|,
 name|spa_mode
+argument_list|(
+name|vd
+operator|->
+name|vdev_spa
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,

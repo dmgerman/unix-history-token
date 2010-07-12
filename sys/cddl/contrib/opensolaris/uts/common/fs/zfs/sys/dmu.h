@@ -112,6 +112,9 @@ struct_decl|struct
 name|objset_impl
 struct_decl|;
 struct_decl|struct
+name|arc_buf
+struct_decl|;
+struct_decl|struct
 name|file
 struct_decl|;
 typedef|typedef
@@ -256,6 +259,12 @@ name|DMU_OT_NEXT_CLONES
 block|,
 comment|/* ZAP */
 name|DMU_OT_SCRUB_QUEUE
+block|,
+comment|/* ZAP */
+name|DMU_OT_USERGROUP_USED
+block|,
+comment|/* ZAP */
+name|DMU_OT_USERGROUP_QUOTA
 block|,
 comment|/* ZAP */
 name|DMU_OT_NUMTYPES
@@ -439,6 +448,14 @@ directive|define
 name|DMU_MAX_DELETEBLKCNT
 value|(20480)
 comment|/* ~5MB of indirect blocks */
+define|#
+directive|define
+name|DMU_USERUSED_OBJECT
+value|(-1ULL)
+define|#
+directive|define
+name|DMU_GROUPUSED_OBJECT
+value|(-2ULL)
 comment|/*  * Public routines to create, destroy, open, and close objsets.  */
 name|int
 name|dmu_objset_open
@@ -578,6 +595,11 @@ parameter_list|,
 name|char
 modifier|*
 name|snapname
+parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|props
 parameter_list|,
 name|boolean_t
 name|recursive
@@ -1180,6 +1202,14 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+comment|/*  * Tells if the given dbuf is freeable.  */
+name|boolean_t
+name|dmu_buf_freeable
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/*  * You must create a transaction, then hold the objects which you will  * (or might) modify as part of this transaction.  Then you must assign  * the transaction to a transaction group.  Once the transaction has  * been assigned, you can modify buffers which belong to held objects as  * part of this transaction.  You can't modify buffers before the  * transaction has been assigned; you can't modify buffers which don't  * belong to objects which this transaction holds; you can't hold  * objects once the transaction has been assigned.  You may hold an  * object which you are going to free (with dmu_object_free()), but you  * don't have to.  *  * You can abort the transaction before it has been assigned.  *  * Note that you may hold buffers (with dmu_buf_hold) at any time,  * regardless of transaction state.  */
 define|#
 directive|define
@@ -1245,6 +1275,7 @@ parameter_list|,
 name|int
 name|add
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1347,6 +1378,16 @@ name|object
 parameter_list|)
 function_decl|;
 comment|/*  * Convenience functions.  *  * Canfail routines will return 0 on success, or an errno if there is a  * nonrecoverable I/O error.  */
+define|#
+directive|define
+name|DMU_READ_PREFETCH
+value|0
+comment|/* prefetch */
+define|#
+directive|define
+name|DMU_READ_NO_PREFETCH
+value|1
+comment|/* don't prefetch */
 name|int
 name|dmu_read
 parameter_list|(
@@ -1366,6 +1407,9 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|uint32_t
+name|flags
 parameter_list|)
 function_decl|;
 name|void
@@ -1456,6 +1500,48 @@ name|struct
 name|page
 modifier|*
 name|pp
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|struct
+name|arc_buf
+modifier|*
+name|dmu_request_arcbuf
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|handle
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_return_arcbuf
+parameter_list|(
+name|struct
+name|arc_buf
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_assign_arcbuf
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|handle
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|struct
+name|arc_buf
+modifier|*
+name|buf
 parameter_list|,
 name|dmu_tx_t
 modifier|*
@@ -1876,6 +1962,48 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|offp
+parameter_list|)
+function_decl|;
+typedef|typedef
+name|void
+name|objset_used_cb_t
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|dmu_object_type_t
+name|bonustype
+parameter_list|,
+name|void
+modifier|*
+name|oldbonus
+parameter_list|,
+name|void
+modifier|*
+name|newbonus
+parameter_list|,
+name|uint64_t
+name|oldused
+parameter_list|,
+name|uint64_t
+name|newused
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dmu_objset_register_type
+parameter_list|(
+name|dmu_objset_type_t
+name|ost
+parameter_list|,
+name|objset_used_cb_t
+modifier|*
+name|cb
 parameter_list|)
 function_decl|;
 specifier|extern

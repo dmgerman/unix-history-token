@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -473,10 +473,6 @@ name|acl_ops_t
 name|z_ops
 decl_stmt|;
 comment|/* ACL operations */
-name|boolean_t
-name|z_has_fuids
-decl_stmt|;
-comment|/* FUIDs present in ACL? */
 block|}
 name|zfs_acl_t
 typedef|;
@@ -491,6 +487,39 @@ parameter_list|(
 name|aclcnt
 parameter_list|)
 value|(sizeof (ace_t) * (aclcnt))
+struct_decl|struct
+name|zfs_fuid_info
+struct_decl|;
+typedef|typedef
+struct|struct
+name|zfs_acl_ids
+block|{
+name|uint64_t
+name|z_fuid
+decl_stmt|;
+comment|/* file owner fuid */
+name|uint64_t
+name|z_fgid
+decl_stmt|;
+comment|/* file group owner fuid */
+name|uint64_t
+name|z_mode
+decl_stmt|;
+comment|/* mode to set on create */
+name|zfs_acl_t
+modifier|*
+name|z_aclp
+decl_stmt|;
+comment|/* ACL to create with file */
+name|struct
+name|zfs_fuid_info
+modifier|*
+name|z_fuidp
+decl_stmt|;
+comment|/* for tracking fuids for log */
+block|}
+name|zfs_acl_ids_t
+typedef|;
 comment|/*  * Property values for acl_mode and acl_inherit.  *  * acl_mode can take discard, noallow, groupmask and passthrough.  * whereas acl_inherit has secure instead of groupmask.  */
 define|#
 directive|define
@@ -522,19 +551,12 @@ struct_decl|;
 struct_decl|struct
 name|zfsvfs
 struct_decl|;
-struct_decl|struct
-name|zfs_fuid_info
-struct_decl|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|void
-name|zfs_perm_init
+name|int
+name|zfs_acl_ids_create
 parameter_list|(
-name|struct
-name|znode
-modifier|*
-parameter_list|,
 name|struct
 name|znode
 modifier|*
@@ -544,17 +566,31 @@ parameter_list|,
 name|vattr_t
 modifier|*
 parameter_list|,
-name|dmu_tx_t
-modifier|*
-parameter_list|,
 name|cred_t
 modifier|*
 parameter_list|,
-name|zfs_acl_t
+name|vsecattr_t
 modifier|*
 parameter_list|,
-name|zfs_fuid_info_t
+name|zfs_acl_ids_t
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|zfs_acl_ids_free
+parameter_list|(
+name|zfs_acl_ids_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfs_acl_ids_overquota
+parameter_list|(
+name|struct
+name|zfsvfs
+modifier|*
+parameter_list|,
+name|zfs_acl_ids_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -751,6 +787,14 @@ parameter_list|,
 name|vsecattr_t
 modifier|*
 parameter_list|,
+name|cred_t
+modifier|*
+parameter_list|,
+name|struct
+name|zfs_fuid_info
+modifier|*
+modifier|*
+parameter_list|,
 name|zfs_acl_t
 modifier|*
 modifier|*
@@ -767,11 +811,6 @@ name|zfs_acl_t
 modifier|*
 parameter_list|,
 name|cred_t
-modifier|*
-parameter_list|,
-name|struct
-name|zfs_fuid_info
-modifier|*
 modifier|*
 parameter_list|,
 name|dmu_tx_t

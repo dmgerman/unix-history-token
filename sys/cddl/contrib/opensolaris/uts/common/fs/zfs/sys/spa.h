@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -469,7 +469,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(BP_IS_HOLE(bp) ? 0 : \ 	BF64_GET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1))
+value|BF64_GET_SB((bp)->blk_prop, 0, 16, SPA_MINBLOCKSHIFT, 1)
 define|#
 directive|define
 name|BP_SET_LSIZE
@@ -868,7 +868,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|spa_import_faulted
+name|spa_import_verbatim
 parameter_list|(
 specifier|const
 name|char
@@ -1054,6 +1054,9 @@ parameter_list|,
 name|uint64_t
 name|guid
 parameter_list|,
+name|uint64_t
+name|pguid
+parameter_list|,
 name|int
 name|replace_done
 parameter_list|)
@@ -1088,6 +1091,23 @@ specifier|const
 name|char
 modifier|*
 name|newpath
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_vdev_setfru
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|uint64_t
+name|guid
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|newfru
 parameter_list|)
 function_decl|;
 comment|/* spare state (which is global across all pools) */
@@ -1954,6 +1974,48 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
+specifier|extern
+name|boolean_t
+name|spa_writeable
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_mode
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|zfs_strtonum
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|nptr
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|strtonum
+parameter_list|(
+name|str
+parameter_list|,
+name|nptr
+parameter_list|)
+value|zfs_strtonum((str), (nptr))
 comment|/* history logging */
 typedef|typedef
 enum|enum
@@ -2303,6 +2365,19 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|spa_configfile_set
+parameter_list|(
+name|spa_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
 comment|/* asynchronous event notification */
 specifier|extern
 name|void
@@ -2352,7 +2427,7 @@ endif|#
 directive|endif
 specifier|extern
 name|int
-name|spa_mode
+name|spa_mode_global
 decl_stmt|;
 comment|/* mode, e.g. FREAD | FWRITE */
 ifdef|#

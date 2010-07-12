@@ -78,6 +78,12 @@ name|_FIO_SEEK_HOLE
 value|FIOSEEKHOLE
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|opensolaris_utsname
@@ -107,6 +113,11 @@ name|opensolaris_utsname
 name|utsname
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

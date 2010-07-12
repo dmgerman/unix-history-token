@@ -159,6 +159,12 @@ comment|/* libshare handle */
 name|uint_t
 name|libzfs_shareflags
 decl_stmt|;
+name|boolean_t
+name|libzfs_mnttab_enable
+decl_stmt|;
+name|avl_tree_t
+name|libzfs_mnttab_cache
+decl_stmt|;
 block|}
 struct|;
 define|#
@@ -825,7 +831,6 @@ name|zfs_unshare_proto
 parameter_list|(
 name|zfs_handle_t
 modifier|*
-name|zhp
 parameter_list|,
 specifier|const
 name|char

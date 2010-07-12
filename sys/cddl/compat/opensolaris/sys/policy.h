@@ -481,6 +481,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|secpolicy_smb
+parameter_list|(
+name|cred_t
+modifier|*
+name|cr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
