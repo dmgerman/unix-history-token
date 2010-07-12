@@ -53,6 +53,20 @@ begin_comment
 comment|/*  * Address space.  * 32-bit mips CPUS partition their 32-bit address space into four segments:  *  * kuseg   0x00000000 - 0x7fffffff  User virtual mem,  mapped  * kseg0   0x80000000 - 0x9fffffff  Physical memory, cached, unmapped  * kseg1   0xa0000000 - 0xbfffffff  Physical memory, uncached, unmapped  * kseg2   0xc0000000 - 0xffffffff  kernel-virtual,  mapped  *  * mips1 physical memory is limited to 512Mbytes, which is  * doubly mapped in kseg0 (cached) and kseg1 (uncached.)  * Caching of mapped addresses is controlled by bits in the TLB entry.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG0_LARGEST_PHYS
+value|(0x20000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_MASK
+value|(0x1fffffff)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -140,10 +154,77 @@ name|MIPS_KSEG2_END
 value|MIPS_KSSEG_END
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_KSEG0
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x) | MIPS_KSEG0_START)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_KSEG1
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x) | MIPS_KSEG1_START)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG0_TO_PHYS
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x)& MIPS_PHYS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG1_TO_PHYS
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x)& MIPS_PHYS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG0_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG0_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG0_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG1_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG1_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG1_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_VALID_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|(MIPS_IS_KSEG0_ADDR(x) || \ 					    MIPS_IS_KSEG1_ADDR(x))
+end_define
 
 begin_define
 define|#
@@ -197,6 +278,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS_PHYS_TO_XKPHYS_CACHED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_XKPHYS_CCA_CNC)<< 59) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_XKPHYS_UNCACHED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_XKPHYS_CCA_UC)<< 59) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIPS_XKPHYS_TO_PHYS
 parameter_list|(
 name|x
@@ -231,6 +334,11 @@ directive|define
 name|MIPS_XKSEG_END
 value|0xc00000ff80000000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* CPU dependent mtc0 hazard hook */
