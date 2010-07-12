@@ -20,15 +20,33 @@ begin_comment
 comment|/*  * EABI ELF definitions for the PowerPC architecture.  * See "PowerPC Embedded Application Binary Interface, 32-Bit Impliementation"  * [ppc-eabi-1995-01.pdf] for details.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/elf32.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ELF_WORD_SIZE
+value|64
+end_define
 
 begin_comment
-comment|/* Definitions common to all 32 bit architectures. */
+comment|/* Used by<sys/elf_generic.h> */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -41,16 +59,83 @@ begin_comment
 comment|/* Used by<sys/elf_generic.h> */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/elf32.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 32 bit architectures. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 64 bit architectures. */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/elf_generic.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
 begin_define
 define|#
 directive|define
 name|ELF_ARCH
+value|EM_PPC64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_MACHINE_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == EM_PPC64)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ELF_ARCH
+value|EM_PPC
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_ARCH32
 value|EM_PPC
 end_define
 
@@ -63,6 +148,11 @@ name|x
 parameter_list|)
 value|((x) == EM_PPC)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Auxiliary vector entries for passing information to the interpreter.  *  * The PowerPC supplement to the SVR4 ABI specification names this "auxv_t",  * but POSIX lays claim to all symbols ending with "_t".  */
@@ -103,6 +193,44 @@ name|a_un
 union|;
 block|}
 name|Elf32_Auxinfo
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Auxiliary vector entry on initial stack */
+name|long
+name|a_type
+decl_stmt|;
+comment|/* Entry type. */
+union|union
+block|{
+name|long
+name|a_val
+decl_stmt|;
+comment|/* Integer value. */
+name|void
+modifier|*
+name|a_ptr
+decl_stmt|;
+comment|/* Address. */
+name|void
+function_decl|(
+modifier|*
+name|a_fcn
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* Function pointer (not used). */
+block|}
+name|a_un
+union|;
+block|}
+name|Elf64_Auxinfo
 typedef|;
 end_typedef
 
@@ -313,6 +441,47 @@ begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_DATA
+value|ELFDATA2MSB
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_MACH
+value|EM_PPC64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_VER
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -340,6 +509,11 @@ directive|define
 name|ELF_TARG_VER
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
