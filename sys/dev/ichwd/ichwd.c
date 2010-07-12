@@ -254,6 +254,14 @@ literal|7
 block|}
 block|,
 block|{
+name|DEVICEID_NM10
+block|,
+literal|"Intel NM10 watchdog timer"
+block|,
+literal|7
+block|}
+block|,
+block|{
 name|DEVICEID_ICH8
 block|,
 literal|"Intel ICH8 watchdog timer"
