@@ -2170,7 +2170,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"grackle mapdev: start %x, len %ld\n"
+literal|"grackle mapdev: start %zx, len %ld\n"
 argument_list|,
 name|start
 argument_list|,
