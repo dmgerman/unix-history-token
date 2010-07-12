@@ -3045,10 +3045,10 @@ comment|/*maxsize*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*nsegments*/
-name|BUS_SPACE_MAXSIZE_32BIT
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 comment|/*maxsegsz*/
-name|BUS_SPACE_UNRESTRICTED
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*flags*/
 literal|0
