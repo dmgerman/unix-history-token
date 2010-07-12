@@ -244,6 +244,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|mpt_dma_buf_alloc
+parameter_list|(
+name|struct
+name|mpt_softc
+modifier|*
+name|mpt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|mpt_dma_buf_free
 parameter_list|(
@@ -10627,6 +10640,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_dma_buf_alloc
 parameter_list|(
@@ -10677,7 +10691,15 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MAXBSIZE
+operator|(
+name|mpt
+operator|->
+name|max_cam_seg_cnt
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 argument_list|,
 name|mpt
 operator|->

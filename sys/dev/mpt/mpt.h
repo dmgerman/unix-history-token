@@ -5513,18 +5513,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mpt_dma_buf_alloc
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-name|mpt
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mpt_set_config_regs
 parameter_list|(
