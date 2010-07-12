@@ -171,6 +171,112 @@ name|TLBHI_ASID_MASK
 value|(0xff)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TLBHI_R_SHIFT
+value|62
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_R_USER
+value|(0x00UL<< TLBHI_R_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_R_SUPERVISOR
+value|(0x01UL<< TLBHI_R_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_R_KERNEL
+value|(0x03UL<< TLBHI_R_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_R_MASK
+value|(0x03UL<< TLBHI_R_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_VA_R
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)& TLBHI_R_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_FILL_SHIFT
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_VPN2_SHIFT
+value|(TLB_PAGE_SHIFT + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_VPN2_MASK
+value|(((~((1UL<< TLBHI_VPN2_SHIFT) - 1))<< (63 - TLBHI_FILL_SHIFT))>> (63 - TLBHI_FILL_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_VA_TO_VPN2
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)& TLBHI_VPN2_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBHI_ENTRY
+parameter_list|(
+name|va
+parameter_list|,
+name|asid
+parameter_list|)
+value|((TLBHI_VA_R((va)))
+comment|/* Region. */
+value|| \ 				 (TLBHI_VA_TO_VPN2((va)))
+comment|/* VPN2. */
+value|| \ 				 ((asid)& TLBHI_ASID_MASK))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -189,6 +295,11 @@ name|asid
 parameter_list|)
 value|(((va)& ~TLBHI_PAGE_MASK) | ((asid)& TLBHI_ASID_MASK))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TLB flags managed in hardware:  * 	C:	Cache attribute.  * 	D:	Dirty bit.  This means a page is writable.  It is not  * 		set at first, and a write is trapped, and the dirty  * 		bit is set.  See also PTE_RO.  * 	V:	Valid bit.  Obvious, isn't it?  * 	G:	Global bit.  This means that this mapping is present  * 		in EVERY address space, and to ignore the ASID when  * 		it is matched.  */
