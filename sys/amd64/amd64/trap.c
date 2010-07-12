@@ -895,13 +895,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We shouldn't enable interrupts while holding a 			 * spin lock or servicing an NMI. 			 */
+comment|/* 			 * We shouldn't enable interrupts while holding a 			 * spin lock. 			 */
 if|if
 condition|(
-name|type
-operator|!=
-name|T_NMI
-operator|&&
 name|td
 operator|->
 name|td_md
