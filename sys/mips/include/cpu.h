@@ -1137,20 +1137,6 @@ begin_comment
 comment|/*  * Exported definitions unique to mips cpu support.  */
 end_comment
 
-begin_comment
-comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COPY_SIGCODE
-end_define
-
-begin_comment
-comment|/* copy sigcode above user stack in exec */
-end_comment
-
 begin_define
 define|#
 directive|define
