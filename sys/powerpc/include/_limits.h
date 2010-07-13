@@ -129,15 +129,19 @@ begin_comment
 comment|/* min value for an int */
 end_comment
 
-begin_comment
-comment|/* Bad hack for gcc configured to give 64-bit longs. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_LARGE_LONG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -232,6 +236,39 @@ begin_comment
 comment|/* min for a long long */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__SSIZE_MAX
+value|__LONG_MAX
+end_define
+
+begin_comment
+comment|/* max value for a ssize_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__SIZE_T_MAX
+value|__ULONG_MAX
+end_define
+
+begin_comment
+comment|/* max value for a size_t */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -253,6 +290,11 @@ end_define
 begin_comment
 comment|/* max value for a size_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -313,11 +355,19 @@ begin_comment
 comment|/* min value for a quad_t */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_LARGE_LONG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+end_if
 
 begin_define
 define|#

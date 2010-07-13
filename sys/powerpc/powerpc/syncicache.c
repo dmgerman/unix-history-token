@@ -102,7 +102,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|int
+name|register_t
 name|l
 decl_stmt|,
 name|off
@@ -114,7 +114,7 @@ decl_stmt|;
 name|off
 operator|=
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|from
 operator|&

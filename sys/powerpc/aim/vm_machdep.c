@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -307,6 +301,24 @@ name|sf_buf_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|uintptr_t
+name|tocbase
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -374,16 +386,10 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"cpu_fork: called td1=%08x p2=%08x flags=%x"
+literal|"cpu_fork: called td1=%p p2=%p flags=%x"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|td1
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|p2
 argument_list|,
 name|flags
@@ -433,7 +439,7 @@ argument_list|)
 operator|)
 operator|&
 operator|~
-literal|0x2fU
+literal|0x2fUL
 operator|)
 expr_stmt|;
 name|td2
@@ -543,6 +549,17 @@ name|callframe
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|cf
+operator|->
+name|cf_toc
+operator|=
+name|tocbase
+expr_stmt|;
+endif|#
+directive|endif
 name|cf
 operator|->
 name|cf_func
@@ -579,6 +596,41 @@ name|register_t
 operator|)
 name|cf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|pcb
+operator|->
+name|pcb_lr
+operator|=
+operator|(
+operator|(
+name|register_t
+operator|*
+operator|)
+name|fork_trampoline
+operator|)
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_toc
+operator|=
+operator|(
+operator|(
+name|register_t
+operator|*
+operator|)
+name|fork_trampoline
+operator|)
+index|[
+literal|1
+index|]
+expr_stmt|;
+else|#
+directive|else
 name|pcb
 operator|->
 name|pcb_lr
@@ -588,20 +640,27 @@ name|register_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
+endif|#
+directive|endif
 name|pcb
 operator|->
 name|pcb_cpu
 operator|.
 name|aim
 operator|.
-name|usr
+name|usr_vsid
 operator|=
-name|kernel_pmap
+literal|0
+expr_stmt|;
+name|pcb
 operator|->
-name|pm_sr
-index|[
-name|USER_SR
-index|]
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_esid
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Setup to release spin count in fork_exit(). */
 name|td2
@@ -676,23 +735,14 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"%s called with td=%08x func=%08x arg=%08x"
+literal|"%s called with td=%p func=%p arg=%p"
 argument_list|,
 name|__func__
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|td
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|func
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|arg
 argument_list|)
 expr_stmt|;
@@ -1318,7 +1368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Threading functions  */
+comment|/*  * CPU threading functions related to the VM layer. These could be used  * to map the SLB bits required for the kernel stack instead of forcing a  * fixed-size KVA.  */
 end_comment
 
 begin_function

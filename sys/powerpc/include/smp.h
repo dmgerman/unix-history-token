@@ -109,6 +109,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cpudep_ap_early_bootstrap
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uintptr_t
 name|cpudep_ap_bootstrap
 parameter_list|(

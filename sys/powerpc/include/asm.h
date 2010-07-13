@@ -137,6 +137,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PIC_PLT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PIC_PLT
+parameter_list|(
+name|x
+parameter_list|)
+value|__CONCAT(.,x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -157,6 +184,27 @@ parameter_list|)
 value|asmsym
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HIDENAME
+parameter_list|(
+name|asmsym
+parameter_list|)
+value|__CONCAT(_,asmsym)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -166,6 +214,11 @@ name|asmsym
 parameter_list|)
 value|__CONCAT(.,asmsym)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -178,6 +231,28 @@ define|\
 value|.data; .align 2; .globl x; x:
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_ENTRY
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.text; .align 2; .globl x; .section ".opd","aw"; \ 	.align 3; x: \ 	    .quad .x,.TOC.@tocbase,0; .previous; \ 	.align 4; .globl .x; .type .x,@function; .x:
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -188,6 +263,11 @@ parameter_list|)
 define|\
 value|.text; .align 4; .globl x; .type x,@function; x:
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

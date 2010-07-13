@@ -1260,7 +1260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Thread functions  */
+comment|/*  * CPU threading functions related to VM.  */
 end_comment
 
 begin_function

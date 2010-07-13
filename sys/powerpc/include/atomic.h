@@ -118,6 +118,37 @@ unit|\
 comment|/* __ATOMIC_ADD_32 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_ADD_64
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	add	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+end_define
+
+begin_comment
+unit|\
+comment|/* __ATOMIC_ADD_64 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -132,6 +163,11 @@ parameter_list|)
 define|\
 value|64-bit atomic_add not implemented
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -187,6 +223,50 @@ argument|u_int
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_macro
+name|_ATOMIC_ADD
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_ADD
+argument_list|(
+literal|64
+argument_list|,
+argument|long
+argument_list|,
+argument|u_long
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_ADD
+argument_list|(
+literal|64
+argument_list|,
+argument|ptr
+argument_list|,
+argument|uintptr_t
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|_ATOMIC_ADD
 argument_list|(
@@ -209,14 +289,7 @@ argument|uintptr_t
 argument_list|)
 end_macro
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_endif
-unit|_ATOMIC_ADD(64, 64, uint64_t) _ATOMIC_ADD(64, long_long, u_long_long)
 endif|#
 directive|endif
 end_endif
@@ -305,6 +378,37 @@ unit|\
 comment|/* __ATOMIC_CLEAR_32 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_CLEAR_64
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	andc	%0, %0, %3\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+end_define
+
+begin_comment
+unit|\
+comment|/* __ATOMIC_CLEAR_64 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -319,6 +423,11 @@ parameter_list|)
 define|\
 value|64-bit atomic_clear not implemented
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -374,6 +483,50 @@ argument|u_int
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_macro
+name|_ATOMIC_CLEAR
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_CLEAR
+argument_list|(
+literal|64
+argument_list|,
+argument|long
+argument_list|,
+argument|u_long
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_CLEAR
+argument_list|(
+literal|64
+argument_list|,
+argument|ptr
+argument_list|,
+argument|uintptr_t
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|_ATOMIC_CLEAR
 argument_list|(
@@ -396,14 +549,7 @@ argument|uintptr_t
 argument_list|)
 end_macro
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_endif
-unit|_ATOMIC_CLEAR(64, 64, uint64_t) _ATOMIC_CLEAR(64, long_long, u_long_long)
 endif|#
 directive|endif
 end_endif
@@ -516,6 +662,37 @@ unit|\
 comment|/* __ATOMIC_SET_32 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_SET_64
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	or	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+end_define
+
+begin_comment
+unit|\
+comment|/* __ATOMIC_SET_64 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -530,6 +707,11 @@ parameter_list|)
 define|\
 value|64-bit atomic_set not implemented
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -585,6 +767,50 @@ argument|u_int
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_macro
+name|_ATOMIC_SET
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_SET
+argument_list|(
+literal|64
+argument_list|,
+argument|long
+argument_list|,
+argument|u_long
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_SET
+argument_list|(
+literal|64
+argument_list|,
+argument|ptr
+argument_list|,
+argument|uintptr_t
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|_ATOMIC_SET
 argument_list|(
@@ -607,14 +833,7 @@ argument|uintptr_t
 argument_list|)
 end_macro
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_endif
-unit|_ATOMIC_SET(64, 64, uint64_t) _ATOMIC_SET(64, long_long, u_long_long)
 endif|#
 directive|endif
 end_endif
@@ -703,6 +922,37 @@ unit|\
 comment|/* __ATOMIC_SUBTRACT_32 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ATOMIC_SUBTRACT_64
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|,
+name|t
+parameter_list|)
+define|\
+value|__asm __volatile(						\ 	"1:	ldarx	%0, 0, %2\n"				\ 	"	subf	%0, %3, %0\n"				\ 	"	stdcx.	%0, 0, %2\n"				\ 	"	bne-	1b\n"					\ 	: "=&r" (t), "=m" (*p)					\ 	: "r" (p), "r" (v), "m" (*p)				\ 	: "cc", "memory")
+end_define
+
+begin_comment
+unit|\
+comment|/* __ATOMIC_SUBTRACT_64 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -717,6 +967,11 @@ parameter_list|)
 define|\
 value|64-bit atomic_subtract not implemented
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -772,6 +1027,50 @@ argument|u_int
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_macro
+name|_ATOMIC_SUBTRACT
+argument_list|(
+literal|64
+argument_list|,
+literal|64
+argument_list|,
+argument|uint64_t
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_SUBTRACT
+argument_list|(
+literal|64
+argument_list|,
+argument|long
+argument_list|,
+argument|u_long
+argument_list|)
+end_macro
+
+begin_macro
+name|_ATOMIC_SUBTRACT
+argument_list|(
+literal|64
+argument_list|,
+argument|ptr
+argument_list|,
+argument|uintptr_t
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|_ATOMIC_SUBTRACT
 argument_list|(
@@ -794,14 +1093,7 @@ argument|uintptr_t
 argument_list|)
 end_macro
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_endif
-unit|_ATOMIC_SUBTRACT(64, 64, uint64_t) _ATOMIC_SUBTRACT(64, long_long, u_long_long)
 endif|#
 directive|endif
 end_endif
@@ -927,13 +1219,129 @@ operator|)
 return|;
 end_return
 
-begin_define
+begin_ifdef
 unit|}
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_function
+unit|static
+name|__inline
+name|uint64_t
+name|atomic_readandclear_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|uint64_t
+name|result
+decl_stmt|,
+name|temp
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUCLIKE_ASM
+asm|__asm __volatile (
+literal|"\tsync\n"
+comment|/* drain writes */
+literal|"1:\tldarx %0, 0, %3\n\t"
+comment|/* load old value */
+literal|"li %1, 0\n\t"
+comment|/* load new value */
+literal|"stdcx. %1, 0, %3\n\t"
+comment|/* attempt to store */
+literal|"bne- 1b\n\t"
+comment|/* spin if failed */
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+operator|,
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|addr
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
+
+begin_define
 define|#
 directive|define
 name|atomic_readandclear_int
 value|atomic_readandclear_32
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_long
+value|atomic_readandclear_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_readandclear_ptr
+value|atomic_readandclear_64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -948,6 +1356,11 @@ directive|define
 name|atomic_readandclear_ptr
 value|atomic_readandclear_32
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We assume that a = b will do atomic loads and stores.  */
@@ -985,6 +1398,38 @@ argument|int
 argument_list|,
 literal|32
 argument_list|)
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|ATOMIC_STORE_LOAD
+argument_list|(
+argument|long
+argument_list|,
+literal|64
+argument_list|)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+define|#
+directive|define
+name|atomic_load_acq_long
+value|atomic_load_acq_64
+define|#
+directive|define
+name|atomic_store_rel_long
+value|atomic_store_rel_64
+define|#
+directive|define
+name|atomic_load_acq_ptr
+value|atomic_load_acq_64
+define|#
+directive|define
+name|atomic_store_rel_ptr
+value|atomic_store_rel_64
+else|#
+directive|else
 define|#
 directive|define
 name|atomic_load_acq_long
@@ -1001,13 +1446,15 @@ define|#
 directive|define
 name|atomic_store_rel_ptr
 value|atomic_store_rel_32
+endif|#
+directive|endif
 undef|#
 directive|undef
 name|ATOMIC_STORE_LOAD
 comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
 specifier|static
 name|__inline
-name|uint32_t
+name|int
 name|atomic_cmpset_32
 argument_list|(
 argument|volatile uint32_t* p
@@ -1017,7 +1464,7 @@ argument_list|,
 argument|uint32_t newval
 argument_list|)
 block|{
-name|uint32_t
+name|int
 name|ret
 block|;
 ifdef|#
@@ -1100,7 +1547,7 @@ end_return
 begin_function
 unit|}  static
 name|__inline
-name|u_long
+name|int
 name|atomic_cmpset_long
 parameter_list|(
 specifier|volatile
@@ -1115,13 +1562,26 @@ name|u_long
 name|newval
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|ret
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUCLIKE_ASM
 asm|__asm __volatile (
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"1:\tldarx %0, 0, %2\n\t"
+comment|/* load old value */
+literal|"cmpld %3, %0\n\t"
+comment|/* compare */
+literal|"bne 2f\n\t"
+comment|/* exit if not equal */
+literal|"stdcx. %4, 0, %2\n\t"
+comment|/* attempt to store */
+else|#
+directive|else
 literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
 literal|"cmplw %3, %0\n\t"
@@ -1130,6 +1590,8 @@ literal|"bne 2f\n\t"
 comment|/* exit if not equal */
 literal|"stwcx. %4, 0, %2\n\t"
 comment|/* attempt to store */
+endif|#
+directive|endif
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"li %0, 1\n\t"
@@ -1137,8 +1599,17 @@ comment|/* success - retval = 1 */
 literal|"b 3f\n\t"
 comment|/* we've succeeded */
 literal|"2:\n\t"
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+literal|"stdcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+else|#
+directive|else
 literal|"stwcx. %0, 0, %2\n\t"
 comment|/* clear reservation (74xx) */
+endif|#
+directive|endif
 literal|"li %0, 0\n\t"
 comment|/* failure - retval = 0 */
 literal|"3:\n\t"
@@ -1203,6 +1674,32 @@ name|atomic_cmpset_int
 value|atomic_cmpset_32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_ptr
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_long((volatile u_long *)(dst), (u_long)(old), (u_long)(new))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1218,10 +1715,15 @@ define|\
 value|atomic_cmpset_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 unit|static
 name|__inline
-name|uint32_t
+name|int
 name|atomic_cmpset_acq_32
 parameter_list|(
 specifier|volatile
@@ -1263,7 +1765,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|uint32_t
+name|int
 name|atomic_cmpset_rel_32
 parameter_list|(
 specifier|volatile
@@ -1298,7 +1800,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|int
 name|atomic_cmpset_acq_long
 parameter_list|(
 specifier|volatile
@@ -1313,7 +1815,7 @@ name|u_long
 name|newval
 parameter_list|)
 block|{
-name|int
+name|u_long
 name|retval
 decl_stmt|;
 name|retval
@@ -1340,7 +1842,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|uint32_t
+name|int
 name|atomic_cmpset_rel_long
 parameter_list|(
 specifier|volatile
@@ -1386,6 +1888,47 @@ name|atomic_cmpset_rel_int
 value|atomic_cmpset_rel_32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_acq_ptr
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_acq_long((volatile u_long *)(dst), (u_long)(old), (u_long)(new))
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_rel_ptr
+parameter_list|(
+name|dst
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|atomic_cmpset_rel_long((volatile u_long *)(dst), (u_long)(old), (u_long)(new))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1415,6 +1958,11 @@ parameter_list|)
 define|\
 value|atomic_cmpset_rel_32((volatile u_int *)(dst), (u_int)(old), (u_int)(new))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1472,6 +2020,73 @@ name|atomic_fetchadd_int
 value|atomic_fetchadd_32
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_fetchadd_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|value
+decl_stmt|;
+do|do
+block|{
+name|value
+operator|=
+operator|*
+name|p
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|!
+name|atomic_cmpset_long
+argument_list|(
+name|p
+argument_list|,
+name|value
+argument_list|,
+name|value
+operator|+
+name|v
+argument_list|)
+condition|)
+do|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|atomic_fetchadd_long
+value|atomic_fetchadd_64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1484,6 +2099,11 @@ parameter_list|)
 define|\
 value|(u_long)atomic_fetchadd_32((volatile u_int *)(p), (u_int)(v))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

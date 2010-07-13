@@ -699,6 +699,9 @@ literal|"cpu%d: dev=%x"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pc
 operator|->
 name|pc_hwref
@@ -802,6 +805,9 @@ name|pc
 operator|->
 name|pc_cpuid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|pc
 operator|->
 name|pc_hwref

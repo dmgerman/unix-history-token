@@ -770,7 +770,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08x - 0x%08x, %d bytes (%d pages)\n"
+literal|"0x%08x - 0x%08x, %d bytes (%ld pages)\n"
 argument_list|,
 name|phys_avail
 index|[

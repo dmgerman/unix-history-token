@@ -971,7 +971,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|", %lld.%02lld MHz"
+literal|", %jd.%02jd MHz"
 argument_list|,
 name|cps
 operator|/

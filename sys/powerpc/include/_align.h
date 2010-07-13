@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|_ALIGNBYTES
-value|(sizeof(int) - 1)
+value|(sizeof(register_t) - 1)
 end_define
 
 begin_define
@@ -33,7 +33,7 @@ name|_ALIGN
 parameter_list|(
 name|p
 parameter_list|)
-value|(((unsigned)(p) + _ALIGNBYTES)& ~_ALIGNBYTES)
+value|(((uintptr_t)(p) + _ALIGNBYTES)& ~_ALIGNBYTES)
 end_define
 
 begin_endif

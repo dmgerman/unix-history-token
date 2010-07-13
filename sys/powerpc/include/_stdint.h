@@ -63,16 +63,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## LL)
-end_define
-
-begin_define
-define|#
-directive|define
 name|UINT8_C
 parameter_list|(
 name|c
@@ -98,6 +88,67 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(c ## U)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## UL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## LL)
 end_define
 
 begin_define
@@ -129,6 +180,11 @@ name|c
 parameter_list|)
 value|(c ## ULL)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -215,12 +271,35 @@ name|INT32_MAX
 value|0x7fffffff
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INT64_MAX
+value|0x7fffffffffffffffL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|INT64_MAX
 value|0x7fffffffffffffffLL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Maximum values of exact-width unsigned integer types. */
@@ -247,12 +326,35 @@ name|UINT32_MAX
 value|0xffffffffU
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UINT64_MAX
+value|0xffffffffffffffffUL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|UINT64_MAX
 value|0xffffffffffffffffULL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.2  Limits of minimum-width integer types  */
@@ -458,6 +560,38 @@ begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.4  Limits of integer types capable of holding object pointers  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INTPTR_MIN
+value|INT64_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTPTR_MAX
+value|INT64_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINTPTR_MAX
+value|UINT64_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -478,6 +612,11 @@ directive|define
 name|UINTPTR_MAX
 value|UINT32_MAX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.5  Limits of greatest-width integer types  */
@@ -507,6 +646,64 @@ end_define
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.3  Limits of other integer types  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_comment
+comment|/* Limits of ptrdiff_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_MIN
+value|INT64_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_MAX
+value|INT64_MAX
+end_define
+
+begin_comment
+comment|/* Limits of sig_atomic_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_ATOMIC_MIN
+value|INT64_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_ATOMIC_MAX
+value|INT64_MAX
+end_define
+
+begin_comment
+comment|/* Limit of size_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT64_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/* Limits of ptrdiff_t. */
@@ -554,6 +751,11 @@ directive|define
 name|SIZE_MAX
 value|UINT32_MAX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

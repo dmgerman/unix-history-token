@@ -25,6 +25,12 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -35,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|DB_ELFSIZE
-value|32
+value|__ELF_WORD_SIZE
 end_define
 
 begin_define
@@ -58,7 +64,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|intptr_t
 name|db_expr_t
 typedef|;
 end_typedef

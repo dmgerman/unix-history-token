@@ -15,20 +15,26 @@ directive|define
 name|POWERPC_INCLUDE__BUS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
+end_include
+
 begin_comment
 comment|/*  * Bus address and size types  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|vm_paddr_t
 name|bus_addr_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|vm_size_t
 name|bus_size_t
 typedef|;
 end_typedef
@@ -48,7 +54,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|vm_offset_t
 name|bus_space_handle_t
 typedef|;
 end_typedef

@@ -15,6 +15,39 @@ directive|define
 name|_MACHINE_RUNQ_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RQB_LEN
+value|(1UL)
+end_define
+
+begin_comment
+comment|/* Number of priority status words. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQB_L2BPW
+value|(6UL)
+end_define
+
+begin_comment
+comment|/* Log2(sizeof(rqb_word_t) * NBBY)). */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -37,11 +70,16 @@ begin_comment
 comment|/* Log2(sizeof(rqb_word_t) * NBBY)). */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|RQB_BPW
-value|(1<<RQB_L2BPW)
+value|(1UL<<RQB_L2BPW)
 end_define
 
 begin_comment
@@ -55,7 +93,7 @@ name|RQB_BIT
 parameter_list|(
 name|pri
 parameter_list|)
-value|(1<< ((pri)& (RQB_BPW - 1)))
+value|(1UL<< ((pri)& (RQB_BPW - 1)))
 end_define
 
 begin_define
@@ -75,12 +113,30 @@ name|RQB_FFS
 parameter_list|(
 name|word
 parameter_list|)
-value|(ffs(word) - 1)
+value|(ffsl(word) - 1)
 end_define
 
 begin_comment
 comment|/*  * Type of run queue status word.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|rqb_word_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -88,6 +144,11 @@ name|u_int32_t
 name|rqb_word_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -179,6 +179,38 @@ name|LOCORE
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_ADDRESS
+value|(0x0000000000000000UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|(0x7ffffffffffff000UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|(0xffffffffffffffffUL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -193,10 +225,32 @@ name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x7ffff000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|VM_MAXUSER_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* LOCORE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+end_ifndef
 
 begin_define
 define|#
@@ -217,6 +271,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* LOCORE */
 end_comment
@@ -224,39 +283,64 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
-value|VM_MAXUSER_ADDRESS
+name|FREEBSD32_USRSTACK
+value|0x7ffff000
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|AIM
-argument_list|)
-end_if
-
-begin_comment
-comment|/* AIM */
-end_comment
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|0x00100000
+value|0x00100000UL
 end_define
 
 begin_comment
 comment|/* start of kernel virtual */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)(KERNEL_SR<< ADDR_SR_SHFT))
+value|0xc000000000000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|0xc0000001c7ffffffUL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_SAFE_KERNEL_ADDRESS
+value|VM_MAX_KERNEL_ADDRESS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_KERNEL_ADDRESS
+value|((vm_offset_t)KERNEL_SR<< ADDR_SR_SHFT)
 end_define
 
 begin_define
@@ -273,6 +357,11 @@ name|VM_MAX_KERNEL_ADDRESS
 value|(VM_MIN_KERNEL_ADDRESS + 3*SEGMENT_LENGTH - 1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Use the direct-mapped BAT registers for UMA small allocs. This  * takes pressure off the small amount of available KVA.  */
 end_comment
@@ -287,6 +376,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Book-E */
+end_comment
 
 begin_comment
 comment|/*  * Kernel CCSRBAR location. We make this the reset location.  */
@@ -550,6 +643,57 @@ directive|define
 name|VM_KMEM_SIZE
 value|(12 * 1024 * 1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_SCALE
+value|(3)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MAX
+value|0x1c0000000
+end_define
+
+begin_comment
+comment|/* 7 GB */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

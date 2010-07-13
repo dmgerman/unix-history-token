@@ -385,7 +385,7 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
-literal|"PPC: hwref   = %#x\n"
+literal|"PPC: hwref   = %#zx\n"
 argument_list|,
 name|pc
 operator|->

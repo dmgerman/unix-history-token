@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|KERNEL_VSIDBITS
-value|0xfffff
+value|0xfffffUL
 end_define
 
 begin_define
@@ -134,25 +134,55 @@ name|EMPTY_SEGMENT
 value|0xfffff0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|USER_ADDR
-value|((void *)(USER_SR<< ADDR_SR_SHFT))
+value|0xcffffffff0000000UL
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USER_ADDR
+value|((uintptr_t)USER_SR<< ADDR_SR_SHFT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|SEGMENT_LENGTH
-value|0x10000000
+value|0x10000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_INVMASK
+value|0x0fffffffUL
 end_define
 
 begin_define
 define|#
 directive|define
 name|SEGMENT_MASK
-value|0xf0000000
+value|~SEGMENT_INVMASK
 end_define
 
 begin_endif

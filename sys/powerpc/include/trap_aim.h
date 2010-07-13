@@ -62,12 +62,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXC_DSE
+value|0x0380
+end_define
+
+begin_comment
+comment|/* Data Segment Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EXC_ISI
 value|0x0400
 end_define
 
 begin_comment
 comment|/* Instruction Storage Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_ISE
+value|0x0480
+end_define
+
+begin_comment
+comment|/* Instruction Segment Interrupt */
 end_comment
 
 begin_define
