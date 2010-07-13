@@ -660,7 +660,9 @@ end_function
 begin_enum
 enum|enum
 name|e0
-block|{}
+block|{
+name|one
+block|}
 enum|;
 end_enum
 

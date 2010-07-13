@@ -85,6 +85,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// PR7025
+end_comment
+
+begin_function_decl
+name|void
+name|FASTCALL
+name|f1
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|int
+name|j
+parameter_list|,
+name|int
+name|k
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// CHECK: define void @f1(i32 inreg %i, i32 inreg %j, i32 %k)
+end_comment
+
+begin_function
+name|void
+name|f1
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+name|int
+name|j
+parameter_list|,
+name|int
+name|k
+parameter_list|)
+block|{ }
+end_function
+
 begin_function
 name|int
 name|main

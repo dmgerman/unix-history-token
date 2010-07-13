@@ -194,6 +194,7 @@ comment|/// \brief Determine whether the given template argument is invalid.
 name|bool
 name|isInvalid
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Arg

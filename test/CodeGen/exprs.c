@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o -
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -687,6 +687,78 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://7530813
+end_comment
+
+begin_comment
+comment|// CHECK: define i32 @f11
+end_comment
+
+begin_function
+name|int
+name|f11
+parameter_list|(
+name|long
+name|X
+parameter_list|)
+block|{
+name|int
+name|A
+index|[
+literal|100
+index|]
+decl_stmt|;
+return|return
+name|A
+index|[
+name|X
+index|]
+return|;
+comment|// CHECK: [[Xaddr:%[^ ]+]] = alloca i64, align 8
+comment|// CHECK: load {{.*}}* [[Xaddr]]
+comment|// CHECK-NEXT: getelementptr inbounds [100 x i32]* %A, i32 0,
+comment|// CHECK-NEXT: load i32*
+block|}
+end_function
+
+begin_function
+name|int
+name|f12
+parameter_list|()
+block|{
+comment|// PR3150
+comment|// CHECK: define i32 @f12
+comment|// CHECK: ret i32 1
+return|return
+literal|1
+operator|||
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Make sure negate of fp uses -0.0 for proper -0 handling.
+end_comment
+
+begin_function
+name|double
+name|f13
+parameter_list|(
+name|double
+name|X
+parameter_list|)
+block|{
+comment|// CHECK: define double @f13
+comment|// CHECK: fsub double -0.0
+return|return
+operator|-
+name|X
+return|;
 block|}
 end_function
 

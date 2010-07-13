@@ -38,24 +38,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|z
-parameter_list|()
-function_decl|__attribute__
-parameter_list|(
-function_decl|(bogusattr
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// expected-warning {{'bogusattr' attribute ignored}}
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -248,7 +230,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'invalid_attribute' attribute ignored}}
+comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}}
 end_comment
 
 begin_decl_stmt

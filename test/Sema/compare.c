@@ -2099,7 +2099,7 @@ name|function_pointers
 operator|>
 name|function_pointers
 return|;
-comment|// expected-warning {{ordered comparison of function pointers}}
+comment|// expected-warning {{self-comparison always evaluates to false}} expected-warning{{ordered comparison of function pointers}}
 return|return
 name|a
 operator|>

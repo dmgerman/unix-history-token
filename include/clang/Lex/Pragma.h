@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -99,34 +111,38 @@ comment|/// pragmas.
 name|class
 name|PragmaHandler
 block|{
-specifier|const
-name|IdentifierInfo
-modifier|*
+name|std
+operator|::
+name|string
 name|Name
-decl_stmt|;
+expr_stmt|;
 name|public
 label|:
+name|explicit
 name|PragmaHandler
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|name
 argument_list|)
-operator|:
+range|:
 name|Name
 argument_list|(
 argument|name
 argument_list|)
 block|{}
+name|PragmaHandler
+argument_list|()
+block|{}
 name|virtual
 operator|~
 name|PragmaHandler
 argument_list|()
-expr_stmt|;
-specifier|const
-name|IdentifierInfo
-operator|*
+decl_stmt|;
+name|llvm
+operator|::
+name|StringRef
 name|getName
 argument_list|()
 specifier|const
@@ -164,6 +180,33 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// EmptyPragmaHandler - A pragma handler which takes no action, which can be
+comment|/// used to ignore particular pragmas.
+name|class
+name|EmptyPragmaHandler
+range|:
+name|public
+name|PragmaHandler
+block|{
+name|public
+operator|:
+name|EmptyPragmaHandler
+argument_list|()
+block|;
+name|virtual
+name|void
+name|HandlePragma
+argument_list|(
+name|Preprocessor
+operator|&
+name|PP
+argument_list|,
+name|Token
+operator|&
+name|FirstToken
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// PragmaNamespace - This PragmaHandler subdivides the namespace of pragmas,
 comment|/// allowing hierarchical pragmas to be defined.  Common examples of namespaces
 comment|/// are "#pragma GCC", "#pragma STDC", and "#pragma omp", but any namespaces may
@@ -174,11 +217,12 @@ range|:
 name|public
 name|PragmaHandler
 block|{
-comment|/// Handlers - This is the list of handlers in this namespace.
+comment|/// Handlers - This is a map of the handlers in this namespace with their name
+comment|/// as key.
 comment|///
-name|std
+name|llvm
 operator|::
-name|vector
+name|StringMap
 operator|<
 name|PragmaHandler
 operator|*
@@ -187,12 +231,10 @@ name|Handlers
 block|;
 name|public
 operator|:
+name|explicit
 name|PragmaNamespace
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
 operator|:
 name|PragmaHandler
@@ -206,14 +248,14 @@ name|PragmaNamespace
 argument_list|()
 block|;
 comment|/// FindHandler - Check to see if there is already a handler for the
-comment|/// specified name.  If not, return the handler for the null identifier if it
+comment|/// specified name.  If not, return the handler for the null name if it
 comment|/// exists, otherwise return null.  If IgnoreNull is true (the default) then
 comment|/// the null handler isn't returned on failure to match.
 name|PragmaHandler
 operator|*
 name|FindHandler
 argument_list|(
-argument|const IdentifierInfo *Name
+argument|llvm::StringRef Name
 argument_list|,
 argument|bool IgnoreNull = true
 argument_list|)
@@ -224,16 +266,11 @@ comment|///
 name|void
 name|AddPragma
 argument_list|(
-argument|PragmaHandler *Handler
-argument_list|)
-block|{
-name|Handlers
-operator|.
-name|push_back
-argument_list|(
+name|PragmaHandler
+operator|*
 name|Handler
 argument_list|)
-block|;   }
+block|;
 comment|/// RemovePragmaHandler - Remove the given handler from the
 comment|/// namespace.
 name|void

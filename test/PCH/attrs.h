@@ -11,8 +11,19 @@ name|int
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
-function_decl|(overloadable
+function_decl|(visibility
+parameter_list|(
+function_decl|"default"
 end_function_decl
+
+begin_operator
+unit|)
+operator|,
+end_operator
+
+begin_expr_stmt
+name|overloadable
+end_expr_stmt
 
 begin_empty_stmt
 unit|))

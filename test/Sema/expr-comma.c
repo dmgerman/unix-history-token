@@ -121,6 +121,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|X
@@ -146,6 +150,10 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
 
 begin_decl_stmt
 name|int
@@ -174,6 +182,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{expression result unused}} // expected-warning {{expression result unused}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|Z
@@ -200,6 +212,10 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
 
 end_unit
 

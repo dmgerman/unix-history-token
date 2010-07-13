@@ -183,7 +183,7 @@ comment|// CHECK: define %0 @f8_1()
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_2(%0)
+comment|// CHECK: define void @f8_2(i64 %a0.coerce0, double %a0.coerce1)
 end_comment
 
 begin_union
@@ -256,7 +256,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f10(i64)
+comment|// CHECK: define void @f10(i64 %a0.coerce)
 decl|struct
 name|s10
 block|{
@@ -310,7 +310,7 @@ condition|)
 block|{}
 block|}
 comment|// CHECK: define i64 @f12_0()
-comment|// CHECK: define void @f12_1(i64)
+comment|// CHECK: define void @f12_1(i64 %a0.coerce)
 decl|struct
 name|s12
 block|{
@@ -366,7 +366,7 @@ comment|// registers.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f13(%struct.s13_0* sret %agg.result, i32 %a, i32 %b, i32 %c, i32 %d, %struct.s13_1* byval %e, i32 %f)
+comment|// CHECK: define void @f13(%struct.s13_0* sret %agg.result, i32 %a, i32 %b, i32 %c, i32 %d, {{.*}}* byval %e, i32 %f)
 end_comment
 
 begin_struct
@@ -575,19 +575,19 @@ block|{}
 end_function
 
 begin_comment
-comment|// Check for valid coercion.
+comment|// Check for valid coercion.  The struct should be passed/returned as i32, not
 end_comment
 
 begin_comment
-comment|// CHECK: [[f18_t0:%.*]] = bitcast i64* {{.*}} to %struct.f18_s0*
+comment|// as i64 for better code quality.
 end_comment
 
 begin_comment
-comment|// CHECK: [[f18_t1:%.*]] = load %struct.f18_s0* [[f18_t0]], align 1
+comment|// rdar://8135035
 end_comment
 
 begin_comment
-comment|// CHECK: store %struct.f18_s0 [[f18_t1]], %struct.f18_s0* %f18_arg1
+comment|// CHECK: define void @f18(i32 %a, i32 %f18_arg1.coerce)
 end_comment
 
 begin_struct
@@ -686,6 +686,106 @@ name|x
 parameter_list|)
 block|{}
 end_function
+
+begin_struct
+struct|struct
+name|StringRef
+block|{
+name|long
+name|x
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|Ptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// rdar://7375902
+end_comment
+
+begin_comment
+comment|// CHECK: define i8* @f21(i64 %S.coerce0, i8* %S.coerce1)
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|f21
+parameter_list|(
+name|struct
+name|StringRef
+name|S
+parameter_list|)
+block|{
+return|return
+name|S
+operator|.
+name|x
+operator|+
+name|S
+operator|.
+name|Ptr
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// PR7567
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(aligned(
+literal|16
+argument|))
+argument_list|)
+struct|struct
+name|f22s
+block|{
+name|unsigned
+name|long
+name|long
+name|x
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|L
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|f22
+parameter_list|(
+name|L
+name|x
+parameter_list|,
+name|L
+name|y
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: @f22
+end_comment
+
+begin_comment
+comment|// CHECK: %x = alloca{{.*}}, align 16
+end_comment
+
+begin_comment
+comment|// CHECK: %y = alloca{{.*}}, align 16
+end_comment
 
 end_unit
 

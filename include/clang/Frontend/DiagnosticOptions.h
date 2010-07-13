@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -140,6 +146,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Show diagnostics with ANSI color sequences.
+name|unsigned
+name|ShowOverloads
+range|:
+literal|1
+decl_stmt|;
+comment|/// Overload candidates to show.  Values from
+comment|/// Diagnostic::OverloadsShown
 name|unsigned
 name|VerifyDiagnostics
 range|:
@@ -251,6 +264,12 @@ expr_stmt|;
 name|ShowColors
 operator|=
 literal|0
+expr_stmt|;
+name|ShowOverloads
+operator|=
+name|Diagnostic
+operator|::
+name|Ovl_All
 expr_stmt|;
 name|ShowColumn
 operator|=

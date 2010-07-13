@@ -459,14 +459,6 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|// Same as above, but excluding checks for non-object and void types in C
-name|isLvalueResult
-name|isLvalueInternal
-argument_list|(
-argument|ASTContext&Ctx
-argument_list|)
-specifier|const
-block|;
 comment|/// isModifiableLvalue - C99 6.3.2.1: an lvalue that does not have array type,
 comment|/// does not have an incomplete type, does not have a const-qualified type,
 comment|/// and if it is a structure or union, does not have any member (including,
@@ -521,6 +513,287 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief The return type of classify(). Represents the C++0x expression
+comment|///        taxonomy.
+name|class
+name|Classification
+block|{
+name|public
+operator|:
+comment|/// \brief The various classification results. Most of these mean prvalue.
+expr|enum
+name|Kinds
+block|{
+name|CL_LValue
+block|,
+name|CL_XValue
+block|,
+name|CL_Function
+block|,
+comment|// Functions cannot be lvalues in C.
+name|CL_Void
+block|,
+comment|// Void cannot be an lvalue in C.
+name|CL_DuplicateVectorComponents
+block|,
+comment|// A vector shuffle with dupes.
+name|CL_MemberFunction
+block|,
+comment|// An expression referring to a member function
+name|CL_SubObjCPropertySetting
+block|,
+name|CL_ClassTemporary
+block|,
+comment|// A prvalue of class type
+name|CL_PRValue
+comment|// A prvalue for any other reason, of any other type
+block|}
+block|;
+comment|/// \brief The results of modification testing.
+block|enum
+name|ModifiableType
+block|{
+name|CM_Untested
+block|,
+comment|// testModifiable was false.
+name|CM_Modifiable
+block|,
+name|CM_RValue
+block|,
+comment|// Not modifiable because it's an rvalue
+name|CM_Function
+block|,
+comment|// Not modifiable because it's a function; C++ only
+name|CM_LValueCast
+block|,
+comment|// Same as CM_RValue, but indicates GCC cast-as-lvalue ext
+name|CM_NotBlockQualified
+block|,
+comment|// Not captured in the closure
+name|CM_NoSetterProperty
+block|,
+comment|// Implicit assignment to ObjC property without setter
+name|CM_ConstQualified
+block|,
+name|CM_ArrayType
+block|,
+name|CM_IncompleteType
+block|}
+block|;
+name|private
+operator|:
+name|friend
+name|class
+name|Expr
+block|;
+name|unsigned
+name|short
+name|Kind
+block|;
+name|unsigned
+name|short
+name|Modifiable
+block|;
+name|explicit
+name|Classification
+argument_list|(
+argument|Kinds k
+argument_list|,
+argument|ModifiableType m
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|k
+argument_list|)
+block|,
+name|Modifiable
+argument_list|(
+argument|m
+argument_list|)
+block|{}
+name|public
+operator|:
+name|Classification
+argument_list|()
+block|{}
+name|Kinds
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|Kinds
+operator|>
+operator|(
+name|Kind
+operator|)
+return|;
+block|}
+name|ModifiableType
+name|getModifiable
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Modifiable
+operator|!=
+name|CM_Untested
+operator|&&
+literal|"Did not test for modifiability."
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|ModifiableType
+operator|>
+operator|(
+name|Modifiable
+operator|)
+return|;
+block|}
+name|bool
+name|isLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|CL_LValue
+return|;
+block|}
+name|bool
+name|isXValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|CL_XValue
+return|;
+block|}
+name|bool
+name|isGLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|<=
+name|CL_XValue
+return|;
+block|}
+name|bool
+name|isPRValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|>=
+name|CL_Function
+return|;
+block|}
+name|bool
+name|isRValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|>=
+name|CL_XValue
+return|;
+block|}
+name|bool
+name|isModifiable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getModifiable
+argument_list|()
+operator|==
+name|CM_Modifiable
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief classify - Classify this expression according to the C++0x
+comment|///        expression taxonomy.
+comment|///
+comment|/// C++0x defines ([basic.lval]) a new taxonomy of expressions to replace the
+comment|/// old lvalue vs rvalue. This function determines the type of expression this
+comment|/// is. There are three expression types:
+comment|/// - lvalues are classical lvalues as in C++03.
+comment|/// - prvalues are equivalent to rvalues in C++03.
+comment|/// - xvalues are expressions yielding unnamed rvalue references, e.g. a
+comment|///   function returning an rvalue reference.
+comment|/// lvalues and xvalues are collectively referred to as glvalues, while
+comment|/// prvalues and xvalues together form rvalues.
+comment|/// If a
+name|Classification
+name|Classify
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ClassifyImpl
+argument_list|(
+name|Ctx
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// \brief classifyModifiable - Classify this expression according to the
+comment|///        C++0x expression taxonomy, and see if it is valid on the left side
+comment|///        of an assignment.
+comment|///
+comment|/// This function extends classify in that it also tests whether the
+comment|/// expression is modifiable (C99 6.3.2.1p1).
+comment|/// \param Loc A source location that might be filled with a relevant location
+comment|///            if the expression is not modifiable.
+name|Classification
+name|ClassifyModifiable
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
+argument|SourceLocation&Loc
+argument_list|)
+specifier|const
+block|{
+return|return
+name|ClassifyImpl
+argument_list|(
+name|Ctx
+argument_list|,
+operator|&
+name|Loc
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|Classification
+name|ClassifyImpl
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
+argument|SourceLocation *Loc
+argument_list|)
+specifier|const
+block|;
+name|public
+operator|:
 comment|/// \brief If this expression refers to a bit-field, retrieve the
 comment|/// declaration of that bit-field.
 name|FieldDecl
@@ -1096,6 +1369,15 @@ operator|::
 name|size_t
 name|sizeFor
 argument_list|(
+argument|unsigned NumTemplateArgs
+argument_list|)
+block|;
+specifier|static
+name|std
+operator|::
+name|size_t
+name|sizeFor
+argument_list|(
 specifier|const
 name|TemplateArgumentListInfo
 operator|&
@@ -1300,52 +1582,27 @@ argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
 argument|QualType T
 argument_list|)
-empty_stmt|;
-name|protected
-label|:
+block|;
+comment|/// \brief Construct an empty declaration reference expression.
+name|explicit
+name|DeclRefExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|DeclRefExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 comment|/// \brief Computes the type- and value-dependence flags for this
 comment|/// declaration reference expression.
 name|void
 name|computeDependence
-parameter_list|()
-function_decl|;
-name|DeclRefExpr
-argument_list|(
-argument|StmtClass SC
-argument_list|,
-argument|ValueDecl *d
-argument_list|,
-argument|QualType t
-argument_list|,
-argument|SourceLocation l
-argument_list|)
-block|:
-name|Expr
-argument_list|(
-name|SC
-argument_list|,
-name|t
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|DecoratedD
-argument_list|(
-name|d
-argument_list|,
-literal|0
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-argument|l
-argument_list|)
-block|{
-name|computeDependence
 argument_list|()
-block|;   }
+block|;
 name|public
 operator|:
 name|DeclRefExpr
@@ -1367,14 +1624,14 @@ name|false
 argument_list|,
 name|false
 argument_list|)
-operator|,
+block|,
 name|DecoratedD
 argument_list|(
 name|d
 argument_list|,
 literal|0
 argument_list|)
-operator|,
+block|,
 name|Loc
 argument_list|(
 argument|l
@@ -1383,20 +1640,6 @@ block|{
 name|computeDependence
 argument_list|()
 block|;   }
-comment|/// \brief Construct an empty declaration reference expression.
-name|explicit
-name|DeclRefExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-argument|DeclRefExprClass
-argument_list|,
-argument|Empty
-argument_list|)
-block|{ }
 specifier|static
 name|DeclRefExpr
 operator|*
@@ -1417,11 +1660,24 @@ argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs =
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
+comment|/// \brief Construct an empty declaration reference expression.
+specifier|static
+name|DeclRefExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|bool HasQualifier
+argument_list|,
+argument|unsigned NumTemplateArgs
+argument_list|)
+block|;
 name|ValueDecl
-modifier|*
+operator|*
 name|getDecl
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DecoratedD
@@ -1446,11 +1702,9 @@ return|;
 block|}
 name|void
 name|setDecl
-parameter_list|(
-name|ValueDecl
-modifier|*
-name|NewD
-parameter_list|)
+argument_list|(
+argument|ValueDecl *NewD
+argument_list|)
 block|{
 name|DecoratedD
 operator|.
@@ -1458,8 +1712,7 @@ name|setPointer
 argument_list|(
 name|NewD
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1471,22 +1724,20 @@ return|;
 block|}
 name|void
 name|setLocation
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|Loc
 operator|=
 name|L
-expr_stmt|;
-block|}
+block|; }
 name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this declaration reference was preceded by a
 comment|/// C++ nested-name-specifier, e.g., \c N::foo.
 name|bool
@@ -1528,17 +1779,8 @@ operator|->
 name|Range
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief If the name was qualified, retrieves the nested-name-specifier
-end_comment
-
-begin_comment
 comment|/// that precedes the name. Otherwise, returns NULL.
-end_comment
-
-begin_expr_stmt
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -1554,19 +1796,16 @@ condition|)
 return|return
 literal|0
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getNameQualifier
 argument_list|()
 operator|->
 name|NNS
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// \brief Determines whether this member expression actually had a C++
 end_comment
 
@@ -1574,13 +1813,10 @@ begin_comment
 comment|/// template argument list explicitly specified, e.g., x.f<int>.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|hasExplicitTemplateArgumentList
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1835,6 +2071,20 @@ name|child_end
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|friend
+name|class
+name|PCHStmtReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|PCHStmtWriter
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -6372,30 +6622,6 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-comment|/// \brief Build an empty member reference expression.
-name|explicit
-name|MemberExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|MemberExprClass
-argument_list|,
-name|Empty
-argument_list|)
-operator|,
-name|HasQualifierOrFoundDecl
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|HasExplicitTemplateArgumentList
-argument_list|(
-argument|false
-argument_list|)
-block|{ }
 specifier|static
 name|MemberExpr
 operator|*
@@ -7812,6 +8038,15 @@ return|return
 name|BasePath
 return|;
 block|}
+name|CXXBaseSpecifierArray
+operator|&
+name|getBasePath
+argument_list|()
+block|{
+return|return
+name|BasePath
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -8759,10 +8994,12 @@ operator|<=
 name|Rem
 return|;
 block|}
+specifier|static
 name|bool
 name|isAdditiveOp
-argument_list|()
-specifier|const
+argument_list|(
+argument|Opcode Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -8772,6 +9009,18 @@ operator|||
 name|Opc
 operator|==
 name|Sub
+return|;
+block|}
+name|bool
+name|isAdditiveOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAdditiveOp
+argument_list|(
+name|Opc
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -13031,7 +13280,19 @@ name|ParenListExpr
 argument_list|()
 block|{}
 comment|/// \brief Build an empty paren list.
-comment|//explicit ParenListExpr(EmptyShell Empty) : Expr(ParenListExprClass, Empty) { }
+name|explicit
+name|ParenListExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ParenListExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
 name|unsigned
 name|getNumExprs
 argument_list|()
@@ -13191,6 +13452,14 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
+block|;
+name|friend
+name|class
+name|PCHStmtReader
+block|;
+name|friend
+name|class
+name|PCHStmtWriter
 block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
@@ -13676,6 +13945,10 @@ name|ConstQualAdded
 operator|:
 literal|1
 block|;
+name|Stmt
+operator|*
+name|CopyConstructorVal
+block|;
 name|public
 operator|:
 comment|// FIXME: Fix type/value dependence!
@@ -13690,6 +13963,9 @@ argument_list|,
 argument|bool ByRef
 argument_list|,
 argument|bool constAdded = false
+argument_list|,
+argument|Stmt *copyConstructorVal =
+literal|0
 argument_list|)
 operator|:
 name|Expr
@@ -13698,7 +13974,18 @@ name|BlockDeclRefExprClass
 argument_list|,
 name|t
 argument_list|,
-name|false
+operator|(
+operator|!
+name|t
+operator|.
+name|isNull
+argument_list|()
+operator|&&
+name|t
+operator|->
+name|isDependentType
+argument_list|()
+operator|)
 argument_list|,
 name|false
 argument_list|)
@@ -13720,7 +14007,12 @@ argument_list|)
 block|,
 name|ConstQualAdded
 argument_list|(
-argument|constAdded
+name|constAdded
+argument_list|)
+block|,
+name|CopyConstructorVal
+argument_list|(
+argument|copyConstructorVal
 argument_list|)
 block|{}
 comment|// \brief Build an empty reference to a declared variable in a
@@ -13837,6 +14129,48 @@ block|{
 name|ConstQualAdded
 operator|=
 name|C
+block|; }
+specifier|const
+name|Expr
+operator|*
+name|getCopyConstructorExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|CopyConstructorVal
+operator|)
+return|;
+block|}
+name|Expr
+operator|*
+name|getCopyConstructorExpr
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+name|CopyConstructorVal
+operator|)
+return|;
+block|}
+name|void
+name|setCopyConstructorExpr
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|CopyConstructorVal
+operator|=
+name|E
 block|; }
 specifier|static
 name|bool

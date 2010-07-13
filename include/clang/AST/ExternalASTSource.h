@@ -171,24 +171,15 @@ operator|~
 name|ExternalASTSource
 argument_list|()
 expr_stmt|;
-comment|/// \brief Resolve a type ID into a type, potentially building a new
-comment|/// type.
-name|virtual
-name|QualType
-name|GetType
-parameter_list|(
-name|uint32_t
-name|ID
-parameter_list|)
-init|=
-literal|0
-function_decl|;
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
+comment|///
+comment|/// This method only needs to be implemented if the AST source ever
+comment|/// passes back decl sets as VisibleDeclaration objects.
 name|virtual
 name|Decl
 modifier|*
-name|GetDecl
+name|GetExternalDecl
 parameter_list|(
 name|uint32_t
 name|ID
@@ -197,9 +188,12 @@ init|=
 literal|0
 function_decl|;
 comment|/// \brief Resolve a selector ID into a selector.
+comment|///
+comment|/// This operation only needs to be implemented if the AST source
+comment|/// returns non-zero for GetNumKnownSelectors().
 name|virtual
 name|Selector
-name|GetSelector
+name|GetExternalSelector
 parameter_list|(
 name|uint32_t
 name|ID
@@ -211,21 +205,21 @@ comment|/// \brief Returns the number of selectors known to the external AST
 comment|/// source.
 name|virtual
 name|uint32_t
-name|GetNumKnownSelectors
+name|GetNumExternalSelectors
 parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Resolve the offset of a statement in the decl stream into a
-comment|/// statement.
+comment|/// \brief Resolve the offset of a statement in the decl stream into
+comment|/// a statement.
 comment|///
-comment|/// This operation will read a new statement from the external
-comment|/// source each time it is called, and is meant to be used via a
-comment|/// LazyOffsetPtr.
+comment|/// This operation is meant to be used via a LazyOffsetPtr.  It only
+comment|/// needs to be implemented if the AST source uses methods like
+comment|/// FunctionDecl::setLazyBody when building decls.
 name|virtual
 name|Stmt
 modifier|*
-name|GetDeclStmt
+name|GetExternalDeclStmt
 parameter_list|(
 name|uint64_t
 name|Offset
@@ -233,55 +227,34 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Read all of the declarations lexically stored in a
-comment|/// declaration context.
+comment|/// \brief Finds all declarations with the given name in the
+comment|/// given context.
 comment|///
-comment|/// \param DC The declaration context whose declarations will be
-comment|/// read.
-comment|///
-comment|/// \param Decls Vector that will contain the declarations loaded
-comment|/// from the external source. The caller is responsible for merging
-comment|/// these declarations with any declarations already stored in the
-comment|/// declaration context.
-comment|///
-comment|/// \returns true if there was an error while reading the
-comment|/// declarations for this declaration context.
+comment|/// Generally the final step of this method is either to call
+comment|/// SetExternalVisibleDeclsForName or to recursively call lookup on
+comment|/// the DeclContext after calling SetExternalVisibleDecls.
 name|virtual
-name|bool
-name|ReadDeclsLexicallyInContext
-argument_list|(
 name|DeclContext
-operator|*
-name|DC
-argument_list|,
-name|llvm
 operator|::
-name|SmallVectorImpl
-operator|<
-name|uint32_t
-operator|>
-operator|&
-name|Decls
+name|lookup_result
+name|FindExternalVisibleDeclsByName
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
-comment|/// \brief Read all of the declarations visible from a declaration
-comment|/// context.
+expr_stmt|;
+comment|/// \brief Finds all declarations lexically contained within the given
+comment|/// DeclContext.
 comment|///
-comment|/// \param DC The declaration context whose visible declarations
-comment|/// will be read.
-comment|///
-comment|/// \param Decls A vector of visible declaration structures,
-comment|/// providing the mapping from each name visible in the declaration
-comment|/// context to the declaration IDs of declarations with that name.
-comment|///
-comment|/// \returns true if there was an error while reading the
-comment|/// declarations for this declaration context.
+comment|/// \return true if an error occurred
 name|virtual
 name|bool
-name|ReadDeclsVisibleInContext
+name|FindExternalLexicalDecls
 argument_list|(
+specifier|const
 name|DeclContext
 operator|*
 name|DC
@@ -290,16 +263,19 @@ name|llvm
 operator|::
 name|SmallVectorImpl
 operator|<
-name|VisibleDeclaration
+name|Decl
+operator|*
 operator|>
 operator|&
-name|Decls
+name|Result
 argument_list|)
 init|=
 literal|0
 decl_stmt|;
 comment|/// \brief Function that will be invoked when we begin parsing a new
 comment|/// translation unit involving this external AST source.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|StartTranslationUnit
@@ -311,11 +287,103 @@ parameter_list|)
 block|{ }
 comment|/// \brief Print any statistics that have been gathered regarding
 comment|/// the external AST source.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+name|protected
+label|:
+comment|/// \brief Initialize the context's lookup map with the given decls.
+comment|/// It is assumed that none of the declarations are redeclarations of
+comment|/// each other.
+specifier|static
+name|void
+name|SetExternalVisibleDecls
+argument_list|(
+specifier|const
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|VisibleDeclaration
+operator|>
+operator|&
+name|Decls
+argument_list|)
+decl_stmt|;
+comment|/// \brief Initialize the context's lookup map with the given decls.
+comment|/// It is assumed that none of the declarations are redeclarations of
+comment|/// each other.
+specifier|static
+name|void
+name|SetExternalVisibleDecls
+argument_list|(
+specifier|const
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|&
+name|Decls
+argument_list|)
+decl_stmt|;
+specifier|static
+name|DeclContext
+operator|::
+name|lookup_result
+name|SetExternalVisibleDeclsForName
+argument_list|(
+specifier|const
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+specifier|const
+name|VisibleDeclaration
+operator|&
+name|VD
+argument_list|)
+expr_stmt|;
+specifier|static
+name|DeclContext
+operator|::
+name|lookup_result
+name|SetExternalVisibleDeclsForName
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|llvm::SmallVectorImpl<NamedDecl*>&Decls
+argument_list|)
+expr_stmt|;
+specifier|static
+name|DeclContext
+operator|::
+name|lookup_result
+name|SetNoExternalVisibleDeclsForName
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief A lazy pointer to an AST node (of base type T) that resides
@@ -599,7 +667,7 @@ operator|,
 operator|&
 name|ExternalASTSource
 operator|::
-name|GetDeclStmt
+name|GetExternalDeclStmt
 operator|>
 name|LazyDeclStmtPtr
 expr_stmt|;

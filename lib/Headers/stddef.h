@@ -131,6 +131,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// Some C libraries expect to see a wint_t here. Others (notably MinGW) will use
+end_comment
+
+begin_comment
+comment|// __WINT_TYPE__ directly; accomodate both by requiring __need_wint_t
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__need_wint_t
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WINT_T
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_WINT_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|__WINT_TYPE__
+name|wint_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

@@ -177,6 +177,11 @@ operator|::
 name|Factory
 name|BCounterFactory
 expr_stmt|;
+comment|/// A flag that indicates whether paths were halted because
+comment|///  ProcessBlockEntrace returned false.
+name|bool
+name|BlockAborted
+decl_stmt|;
 name|void
 name|GenerateNode
 parameter_list|(
@@ -437,10 +442,6 @@ comment|/// Construct a GRCoreEngine object to analyze the provided CFG using
 comment|///  a DFS exploration of the exploded graph.
 name|GRCoreEngine
 argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|,
 name|GRSubEngine
 operator|&
 name|subengine
@@ -453,7 +454,7 @@ argument_list|)
 operator|,
 name|G
 argument_list|(
-argument|new ExplodedGraph(ctx)
+argument|new ExplodedGraph()
 argument_list|)
 operator|,
 name|WList
@@ -466,7 +467,15 @@ argument_list|)
 operator|,
 name|BCounterFactory
 argument_list|(
-argument|G->getAllocator()
+name|G
+operator|->
+name|getAllocator
+argument_list|()
+argument_list|)
+operator|,
+name|BlockAborted
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// Construct a GRCoreEngine object to analyze the provided CFG and to
@@ -474,10 +483,6 @@ comment|///  use the provided worklist object to execute the worklist algorithm.
 comment|///  The GRCoreEngine object assumes ownership of 'wlist'.
 name|GRCoreEngine
 argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|,
 name|GRWorkList
 operator|*
 name|wlist
@@ -494,7 +499,7 @@ argument_list|)
 operator|,
 name|G
 argument_list|(
-argument|new ExplodedGraph(ctx)
+argument|new ExplodedGraph()
 argument_list|)
 operator|,
 name|WList
@@ -504,7 +509,15 @@ argument_list|)
 operator|,
 name|BCounterFactory
 argument_list|(
-argument|G->getAllocator()
+name|G
+operator|->
+name|getAllocator
+argument_list|()
+argument_list|)
+operator|,
+name|BlockAborted
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~

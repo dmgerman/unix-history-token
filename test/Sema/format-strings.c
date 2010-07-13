@@ -1261,6 +1261,22 @@ literal|1.0
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+name|printf
+argument_list|(
+literal|"%c\n"
+argument_list|,
+literal|"x"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'int' but the argument has type 'char *'}}
+name|printf
+argument_list|(
+literal|"%c\n"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'int' but the argument has type 'double'}}
 block|}
 end_function
 
@@ -1287,12 +1303,20 @@ expr_stmt|;
 comment|// no-warning
 name|printf
 argument_list|(
+literal|"%p"
+argument_list|,
+literal|123
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'void *' but the argument has type 'int'}}
+name|printf
+argument_list|(
 literal|"%.4p"
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{precision used in 'p' conversion specifier (where it has no meaning)}}
+comment|// expected-warning{{precision used with 'p' conversion specifier, resulting in undefined behavior}}
 name|printf
 argument_list|(
 literal|"%+p"
@@ -1300,7 +1324,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '+' results in undefined behavior in 'p' conversion specifier}}
+comment|// expected-warning{{flag '+' results in undefined behavior with 'p' conversion specifier}}
 name|printf
 argument_list|(
 literal|"% p"
@@ -1308,7 +1332,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag ' ' results in undefined behavior in 'p' conversion specifier}}
+comment|// expected-warning{{flag ' ' results in undefined behavior with 'p' conversion specifier}}
 name|printf
 argument_list|(
 literal|"%0p"
@@ -1316,7 +1340,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '0' results in undefined behavior in 'p' conversion specifier}}
+comment|// expected-warning{{flag '0' results in undefined behavior with 'p' conversion specifier}}
 name|printf
 argument_list|(
 literal|"%s"
@@ -1332,7 +1356,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '+' results in undefined behavior in 's' conversion specifier}}
+comment|// expected-warning{{flag '+' results in undefined behavior with 's' conversion specifier}}
 name|printf
 argument_list|(
 literal|"% s"
@@ -1340,7 +1364,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag ' ' results in undefined behavior in 's' conversion specifier}}
+comment|// expected-warning{{flag ' ' results in undefined behavior with 's' conversion specifier}}
 name|printf
 argument_list|(
 literal|"%0s"
@@ -1348,7 +1372,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{flag '0' results in undefined behavior in 's' conversion specifier}}
+comment|// expected-warning{{flag '0' results in undefined behavior with 's' conversion specifier}}
 block|}
 end_function
 
@@ -1845,6 +1869,187 @@ literal|"\%"
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{incomplete format specifier}}
+block|}
+end_function
+
+begin_function
+name|void
+name|bug7377_bad_length_mod_usage
+parameter_list|()
+block|{
+comment|// Bad length modifiers
+name|printf
+argument_list|(
+literal|"%hhs"
+argument_list|,
+literal|"foo"
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{length modifier 'hh' results in undefined behavior or no effect with 's' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%1$zp"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{length modifier 'z' results in undefined behavior or no effect with 'p' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%ls"
+argument_list|,
+literal|L"foo"
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%#.2Lf"
+argument_list|,
+operator|(
+name|long
+name|double
+operator|)
+literal|1.234
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// Bad flag usage
+name|printf
+argument_list|(
+literal|"%#p"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '#' results in undefined behavior with 'p' conversion specifier}}
+name|printf
+argument_list|(
+literal|"%0d"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%#n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '#' results in undefined behavior with 'n' conversion specifier}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+name|printf
+argument_list|(
+literal|"%-n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '-' results in undefined behavior with 'n' conversion specifier}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+name|printf
+argument_list|(
+literal|"%-p"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+comment|// Bad optional amount use
+name|printf
+argument_list|(
+literal|"%.2c"
+argument_list|,
+literal|'a'
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{precision used with 'c' conversion specifier, resulting in undefined behavior}}
+name|printf
+argument_list|(
+literal|"%1n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{field width used with 'n' conversion specifier, resulting in undefined behavior}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+name|printf
+argument_list|(
+literal|"%.9n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{precision used with 'n' conversion specifier, resulting in undefined behavior}} expected-warning{{use of '%n' in format string discouraged (potentially insecure)}}
+comment|// Ignored flags
+name|printf
+argument_list|(
+literal|"% +f"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag ' ' is ignored when flag '+' is present}}
+name|printf
+argument_list|(
+literal|"%+ f"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag ' ' is ignored when flag '+' is present}}
+name|printf
+argument_list|(
+literal|"%0-f"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '0' is ignored when flag '-' is present}}
+name|printf
+argument_list|(
+literal|"%-0f"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{flag '0' is ignored when flag '-' is present}}
+name|printf
+argument_list|(
+literal|"%-+f"
+argument_list|,
+literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 

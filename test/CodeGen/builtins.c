@@ -287,9 +287,64 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
+name|P
+argument_list|(
+name|fpclassify
+argument_list|,
+operator|(
+literal|0
+operator|,
+literal|1
+operator|,
+literal|2
+operator|,
+literal|3
+operator|,
+literal|4
+operator|,
+literal|1.0
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|fpclassify
+argument_list|,
+operator|(
+literal|0
+operator|,
+literal|1
+operator|,
+literal|2
+operator|,
+literal|3
+operator|,
+literal|4
+operator|,
+literal|1.0f
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|fpclassify
+argument_list|,
+operator|(
+literal|0
+operator|,
+literal|1
+operator|,
+literal|2
+operator|,
+literal|3
+operator|,
+literal|4
+operator|,
+literal|1.0l
+operator|)
+argument_list|)
+expr_stmt|;
 comment|// FIXME:
-comment|// XXX note funny semantics for the (last) argument
-comment|//  P(fpclassify, (FP_NAN, FP_INFINITE, FP_NORMAL, FP_SUBNORMAL, FP_ZERO, 1.0));
 comment|//  P(isinf_sign, (1.0));
 name|Q
 argument_list|(
@@ -1176,6 +1231,33 @@ comment|// CHECK: fcmp ult float {{.*}}, 0x7FF0000000000000
 comment|// CHECK: fcmp uge float {{.*}}, 0x3810000000000000
 comment|// CHECK: and i1
 comment|// CHECK: and i1
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @test_builtin_longjmp
+end_comment
+
+begin_function
+name|void
+name|test_builtin_longjmp
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+comment|// CHECK: [[BITCAST:%.*]] = bitcast
+comment|// CHECK-NEXT: call void @llvm.eh.sjlj.longjmp(i8* [[BITCAST]])
+name|__builtin_longjmp
+argument_list|(
+name|buffer
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK-NEXT: unreachable
 block|}
 end_function
 

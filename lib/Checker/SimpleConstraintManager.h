@@ -153,13 +153,15 @@ block|;
 specifier|const
 name|GRState
 operator|*
-name|AssumeSymInt
+name|AssumeSymRel
 argument_list|(
 argument|const GRState *state
 argument_list|,
-argument|bool Assumption
+argument|const SymExpr *LHS
 argument_list|,
-argument|const SymIntExpr *SE
+argument|BinaryOperator::Opcode op
+argument_list|,
+argument|const llvm::APSInt& Int
 argument_list|)
 block|;
 specifier|const
@@ -181,6 +183,8 @@ operator|:
 comment|//===------------------------------------------------------------------===//
 comment|// Interface that subclasses must implement.
 comment|//===------------------------------------------------------------------===//
+comment|// Each of these is of the form "$sym+Adj<> V", where "<>" is the comparison
+comment|// operation for the method being invoked.
 name|virtual
 specifier|const
 name|GRState
@@ -192,6 +196,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -207,6 +213,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -222,6 +230,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -237,6 +247,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -252,6 +264,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0
@@ -267,6 +281,8 @@ argument_list|,
 argument|SymbolRef sym
 argument_list|,
 argument|const llvm::APSInt& V
+argument_list|,
+argument|const llvm::APSInt& Adjustment
 argument_list|)
 operator|=
 literal|0

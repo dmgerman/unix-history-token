@@ -826,7 +826,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error{{incompatible block pointer types initializing 'int const (^)(void)' with an expression of type 'int (^)(void)'}}
+comment|// expected-error{{incompatible block pointer types initializing 'int const (^)(void)' with an expression of type 'int (^)(void)'}} \
+end_comment
+
+begin_comment
+comment|// expected-warning{{type qualifier on return type has no effect}}
 end_comment
 
 begin_function_decl
@@ -860,7 +864,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// OK
+comment|// expected-warning{{type qualifier on return type has no effect}}
 end_comment
 
 begin_decl_stmt

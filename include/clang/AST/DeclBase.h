@@ -256,38 +256,44 @@ define|#
 directive|define
 name|DECL
 parameter_list|(
-name|Derived
+name|DERIVED
 parameter_list|,
-name|Base
+name|BASE
 parameter_list|)
-value|Derived,
+value|DERIVED,
+define|#
+directive|define
+name|ABSTRACT_DECL
+parameter_list|(
+name|DECL
+parameter_list|)
 define|#
 directive|define
 name|DECL_RANGE
 parameter_list|(
-name|CommonBase
+name|BASE
 parameter_list|,
-name|Start
+name|START
 parameter_list|,
-name|End
+name|END
 parameter_list|)
 define|\
-value|CommonBase##First = Start, CommonBase##Last = End,
+value|first##BASE = START, last##BASE = END,
 define|#
 directive|define
 name|LAST_DECL_RANGE
 parameter_list|(
-name|CommonBase
+name|BASE
 parameter_list|,
-name|Start
+name|START
 parameter_list|,
-name|End
+name|END
 parameter_list|)
 define|\
-value|CommonBase##First = Start, CommonBase##Last = End
+value|first##BASE = START, last##BASE = END
 include|#
 directive|include
-file|"clang/AST/DeclNodes.def"
+file|"clang/AST/DeclNodes.inc"
 block|}
 enum|;
 comment|/// \brief A placeholder type used to construct an empty shell of a
@@ -701,7 +707,72 @@ operator|::
 name|CollectingStats
 argument_list|()
 condition|)
-name|addDeclKind
+name|add
+argument_list|(
+name|DK
+argument_list|)
+expr_stmt|;
+block|}
+name|Decl
+argument_list|(
+argument|Kind DK
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|:
+name|NextDeclInContext
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|DeclKind
+argument_list|(
+name|DK
+argument_list|)
+operator|,
+name|InvalidDecl
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|HasAttrs
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Implicit
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Used
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Access
+argument_list|(
+name|AS_none
+argument_list|)
+operator|,
+name|PCHLevel
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IdentifierNamespace
+argument_list|(
+argument|getIdentifierNamespaceForKind(DK)
+argument_list|)
+block|{
+if|if
+condition|(
+name|Decl
+operator|::
+name|CollectingStats
+argument_list|()
+condition|)
+name|add
 argument_list|(
 name|DK
 argument_list|)
@@ -934,6 +1005,14 @@ name|HasAttrs
 return|;
 block|}
 name|void
+name|initAttrs
+parameter_list|(
+name|Attr
+modifier|*
+name|attrs
+parameter_list|)
+function_decl|;
+name|void
 name|addAttr
 parameter_list|(
 name|Attr
@@ -1138,13 +1217,34 @@ begin_comment
 comment|/// is required.
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CheckUsedAttr When true, also consider the "used" attribute
+end_comment
+
+begin_comment
+comment|/// (in addition to the "used" bit set by \c setUsed()) when determining
+end_comment
+
+begin_comment
+comment|/// whether the function is used.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isUsed
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|(
+name|bool
+name|CheckUsedAttr
+operator|=
+name|true
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -1890,16 +1990,27 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getCompoundBody - Returns getBody(), dyn_casted to a CompoundStmt.
+comment|/// \brief Returns true if this Decl represents a declaration for a body of
+end_comment
+
+begin_comment
+comment|/// code, such as a function or method definition.
 end_comment
 
 begin_expr_stmt
-name|CompoundStmt
-operator|*
-name|getCompoundBody
+name|virtual
+name|bool
+name|hasBody
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|getBody
+argument_list|()
+operator|!=
+literal|0
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -1925,7 +2036,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|addDeclKind
+name|add
 parameter_list|(
 name|Kind
 name|k
@@ -2621,6 +2732,10 @@ name|Decl
 modifier|*
 name|LastDecl
 decl_stmt|;
+name|friend
+name|class
+name|ExternalASTSource
+decl_stmt|;
 name|protected
 label|:
 name|DeclContext
@@ -2852,13 +2967,13 @@ name|DeclKind
 operator|>=
 name|Decl
 operator|::
-name|FunctionFirst
+name|firstFunction
 operator|&&
 name|DeclKind
 operator|<=
 name|Decl
 operator|::
-name|FunctionLast
+name|lastFunction
 return|;
 block|}
 block|}
@@ -2904,13 +3019,13 @@ name|DeclKind
 operator|>=
 name|Decl
 operator|::
-name|RecordFirst
+name|firstRecord
 operator|&&
 name|DeclKind
 operator|<=
 name|Decl
 operator|::
-name|RecordLast
+name|lastRecord
 return|;
 block|}
 name|bool
@@ -4488,18 +4603,29 @@ end_function
 begin_define
 define|#
 directive|define
+name|DECL
+parameter_list|(
+name|NAME
+parameter_list|,
+name|BASE
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECL_CONTEXT
 parameter_list|(
-name|Name
+name|NAME
 parameter_list|)
 define|\
-value|static bool classof(const Name##Decl *D) { return true; }
+value|static bool classof(const NAME##Decl *D) { return true; }
 end_define
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclNodes.def"
+file|"clang/AST/DeclNodes.inc"
 end_include
 
 begin_expr_stmt

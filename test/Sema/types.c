@@ -198,7 +198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{invalid vector type}}
+comment|// expected-error {{invalid vector element type}}
 end_comment
 
 end_unit

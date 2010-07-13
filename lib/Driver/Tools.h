@@ -1373,6 +1373,83 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Dsymutil
+operator|:
+name|public
+name|DarwinTool
+block|{
+name|public
+operator|:
+name|Dsymutil
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|DarwinTool
+argument_list|(
+literal|"darwin::Dsymutil"
+argument_list|,
+literal|"dsymutil"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
 block|; }
 comment|/// openbsd -- Directly call GNU Binutils assembler and linker
 name|namespace
@@ -1692,6 +1769,165 @@ specifier|const
 block|;   }
 block|; }
 comment|// end namespace freebsd
+comment|/// minix -- Directly call GNU Binutils assembler and linker
+name|namespace
+name|minix
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Assemble
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Assemble
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"minix::Assemble"
+argument_list|,
+literal|"assembler"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"minix::Link"
+argument_list|,
+literal|"linker"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|acceptsPipedInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|canPipeOutput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|Job&Dest
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|; }
+comment|// end namespace minix
 comment|/// auroraux -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|auroraux

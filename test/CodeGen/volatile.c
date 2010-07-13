@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-llvm< %s -o %t
 end_comment
 
 begin_comment
-comment|// RUN: grep volatile %t | count 29
+comment|// RUN: grep volatile %t | count 28
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: grep memcpy %t | count 7
 end_comment
 
 begin_comment
-comment|// The number 29 comes from the current codegen for volatile loads;
+comment|// The number 28 comes from the current codegen for volatile loads;
 end_comment
 
 begin_comment
@@ -405,6 +405,7 @@ argument_list|()
 operator|.
 name|x
 expr_stmt|;
+comment|// Note: not volatile
 name|i
 operator|=
 name|vtS

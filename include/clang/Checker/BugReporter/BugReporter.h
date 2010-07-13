@@ -270,6 +270,13 @@ operator|.
 name|getRawEncoding
 argument_list|()
 argument_list|)
+block|;
+name|hash
+operator|.
+name|AddString
+argument_list|(
+name|Description
+argument_list|)
 block|;   }
 name|public
 operator|:

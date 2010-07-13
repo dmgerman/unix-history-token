@@ -236,8 +236,7 @@ operator|=
 name|__sync_fetch_and_add
 argument_list|(
 operator|(
-name|int
-operator|*
+name|unsigned
 operator|*
 operator|)
 literal|0
@@ -246,6 +245,25 @@ literal|42i
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{imaginary constants are an extension}}
+comment|// PR7600: Pointers are implicitly casted to integers and back.
+name|void
+modifier|*
+name|old_ptr
+init|=
+name|__sync_val_compare_and_swap
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 block|}
 end_function
 

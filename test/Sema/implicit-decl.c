@@ -74,16 +74,6 @@ name|C99
 block|}
 block|}
 block|}
-return|return
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
-operator|)
-return|;
-comment|// expected-warning {{void function 'func' should not return a value}}
 block|}
 end_function
 

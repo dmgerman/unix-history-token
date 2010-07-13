@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 -emit-pch -fblocks -o %t %S/types.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fblocks -include-pch %t -fsyntax-only -verify %s -ast-print
 end_comment
 
 begin_typedef

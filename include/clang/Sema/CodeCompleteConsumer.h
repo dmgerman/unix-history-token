@@ -165,6 +165,24 @@ init|=
 literal|2
 block|}
 enum|;
+comment|/// \brief Priority value factors by which we will divide or multiply the
+comment|/// priority of a code-completion result.
+enum|enum
+block|{
+comment|/// \brief Divide by this factor when a code-completion result's type exactly
+comment|/// matches the type we expect.
+name|CCF_ExactTypeMatch
+init|=
+literal|4
+block|,
+comment|/// \brief Divide by this factor when a code-completion result's type is
+comment|/// similar to the type we expect (e.g., both arithmetic types, both
+comment|/// Objective-C object pointer types).
+name|CCF_SimilarTypeMatch
+init|=
+literal|2
+block|}
+enum|;
 name|class
 name|FunctionDecl
 decl_stmt|;
@@ -947,6 +965,13 @@ name|AllParametersAreInformative
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether we're completing a declaration of the given entity,
+comment|/// rather than a use of that entity.
+name|bool
+name|DeclaringEntity
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief If the result should have a nested-name-specifier, this is it.
 comment|/// When \c QualifierIsInformative, the nested-name-specifier is
 comment|/// informative rather than required.
@@ -1008,6 +1033,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|DeclaringEntity
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Qualifier
 argument_list|(
 argument|Qualifier
@@ -1057,6 +1087,11 @@ name|false
 argument_list|)
 operator|,
 name|AllParametersAreInformative
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)
@@ -1114,6 +1149,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|DeclaringEntity
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Qualifier
 argument_list|(
 literal|0
@@ -1163,6 +1203,11 @@ name|false
 argument_list|)
 operator|,
 name|AllParametersAreInformative
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DeclaringEntity
 argument_list|(
 name|false
 argument_list|)

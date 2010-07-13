@@ -49,11 +49,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-NEG: warning: void function 'bar' should not return a value
+comment|// CHECK-NEG: error: void function 'bar' should not return a value
 end_comment
 
 begin_comment
-comment|// CHECK-NEG: 1 warning generated
+comment|// CHECK-NEG: 1 error generated
 end_comment
 
 begin_comment
@@ -61,11 +61,11 @@ comment|// CHECK-POS: warning: 'dllimport' attribute only applies to variable an
 end_comment
 
 begin_comment
-comment|// CHECK-POS: warning: void function 'bar' should not return a value
+comment|// CHECK-POS: error: void function 'bar' should not return a value
 end_comment
 
 begin_comment
-comment|// CHECK-POS: 2 warnings generated
+comment|// CHECK-POS: 1 warning and 1 error generated
 end_comment
 
 end_unit

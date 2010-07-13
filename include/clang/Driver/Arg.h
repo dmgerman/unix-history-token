@@ -46,53 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"Util.h"
 end_include
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|isa
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast_or_null
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast_or_null
-expr_stmt|;
-end_expr_stmt
 
 begin_include
 include|#
 directive|include
-file|"Util.h"
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -130,31 +96,26 @@ comment|/// particular option.
 name|class
 name|Arg
 block|{
-name|public
-label|:
-enum|enum
-name|ArgClass
-block|{
-name|FlagClass
+name|Arg
+argument_list|(
+specifier|const
+name|Arg
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
 init|=
-literal|0
-block|,
-name|PositionalClass
-block|,
-name|JoinedClass
-block|,
-name|SeparateClass
-block|,
-name|CommaJoinedClass
-block|,
-name|JoinedAndSeparateClass
-block|}
-enum|;
+operator|(
+specifier|const
+name|Arg
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
 name|private
 label|:
-name|ArgClass
-name|Kind
-decl_stmt|;
 comment|/// The option this argument is an instance of.
 specifier|const
 name|Option
@@ -173,19 +134,38 @@ comment|/// ArgList.
 name|unsigned
 name|Index
 decl_stmt|;
-comment|/// Flag indicating whether this argument was used to effect
-comment|/// compilation; used for generating "argument unused"
-comment|/// diagnostics.
+comment|/// Was this argument used to effect compilation; used for generating
+comment|/// "argument unused" diagnostics.
 name|mutable
-name|bool
+name|unsigned
 name|Claimed
+range|:
+literal|1
 decl_stmt|;
-name|protected
+comment|/// Does this argument own its values.
+name|mutable
+name|unsigned
+name|OwnsValues
+range|:
+literal|1
+decl_stmt|;
+comment|/// The argument values, as C strings.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+literal|2
+operator|>
+name|Values
+expr_stmt|;
+name|public
 label|:
 name|Arg
 argument_list|(
-argument|ArgClass Kind
-argument_list|,
 argument|const Option *Opt
 argument_list|,
 argument|unsigned Index
@@ -194,29 +174,36 @@ argument|const Arg *BaseArg =
 literal|0
 argument_list|)
 empty_stmt|;
-name|public
-label|:
 name|Arg
 argument_list|(
-specifier|const
-name|Arg
-operator|&
+argument|const Option *Opt
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const char *Value0
+argument_list|,
+argument|const Arg *BaseArg =
+literal|0
 argument_list|)
-expr_stmt|;
-name|virtual
+empty_stmt|;
+name|Arg
+argument_list|(
+argument|const Option *Opt
+argument_list|,
+argument|unsigned Index
+argument_list|,
+argument|const char *Value0
+argument_list|,
+argument|const char *Value1
+argument_list|,
+argument|const Arg *BaseArg =
+literal|0
+argument_list|)
+empty_stmt|;
 operator|~
 name|Arg
 argument_list|()
 expr_stmt|;
-name|ArgClass
-name|getKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-return|;
-block|}
 specifier|const
 name|Option
 operator|&
@@ -273,6 +260,28 @@ name|_BaseArg
 expr_stmt|;
 block|}
 name|bool
+name|getOwnsValues
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwnsValues
+return|;
+block|}
+name|void
+name|setOwnsValues
+argument_list|(
+name|bool
+name|Value
+argument_list|)
+decl|const
+block|{
+name|OwnsValues
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
 name|isClaimed
 argument_list|()
 specifier|const
@@ -285,8 +294,6 @@ name|Claimed
 return|;
 block|}
 comment|/// claim - Set the Arg claimed bit.
-comment|// FIXME: We need to deal with derived arguments and set the bit
-comment|// in the original argument; not the derived one.
 name|void
 name|claim
 argument_list|()
@@ -299,15 +306,18 @@ name|Claimed
 operator|=
 name|true
 block|; }
-name|virtual
 name|unsigned
 name|getNumValues
 argument_list|()
 specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
+block|{
+return|return
+name|Values
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
 specifier|const
 name|char
 modifier|*
@@ -324,11 +334,76 @@ operator|=
 literal|0
 argument_list|)
 decl|const
+block|{
+return|return
+name|Values
+index|[
+name|N
+index|]
+return|;
+block|}
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|getValues
+argument_list|()
+block|{
+return|return
+name|Values
+return|;
+block|}
+name|bool
+name|containsValue
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Value
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
 init|=
 literal|0
-decl_stmt|;
+init|,
+name|e
+init|=
+name|getNumValues
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Values
+index|[
+name|i
+index|]
+operator|==
+name|Value
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|/// render - Append the argument onto the given array as strings.
-name|virtual
 name|void
 name|render
 argument_list|(
@@ -342,8 +417,6 @@ operator|&
 name|Output
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 comment|/// renderAsInput - Append the argument, render as an input, onto
 comment|/// the given array as strings. The distinction is that some
@@ -394,532 +467,7 @@ specifier|const
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/// FlagArg - An argument with no value.
-name|class
-name|FlagArg
-range|:
-name|public
-name|Arg
-block|{
-name|public
-operator|:
-name|FlagArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
-return|;
 block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|FlagClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const FlagArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// PositionalArg - A simple positional argument.
-name|class
-name|PositionalArg
-operator|:
-name|public
-name|Arg
-block|{
-name|public
-operator|:
-name|PositionalArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|1
-return|;
-block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|PositionalClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PositionalArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// JoinedArg - A single value argument where the value is joined
-comment|/// (suffixed) to the option.
-name|class
-name|JoinedArg
-operator|:
-name|public
-name|Arg
-block|{
-name|public
-operator|:
-name|JoinedArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|1
-return|;
-block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|JoinedClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const JoinedArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// SeparateArg - An argument where one or more values follow the
-comment|/// option specifier immediately in the argument vector.
-name|class
-name|SeparateArg
-operator|:
-name|public
-name|Arg
-block|{
-name|unsigned
-name|NumValues
-block|;
-name|public
-operator|:
-name|SeparateArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|unsigned NumValues
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumValues
-return|;
-block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|SeparateClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SeparateArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// CommaJoinedArg - An argument with multiple values joined by
-comment|/// commas and joined (suffixed) to the option specifier.
-comment|///
-comment|/// The key point of this arg is that it renders its values into
-comment|/// separate arguments, which allows it to be used as a generic
-comment|/// mechanism for passing arguments through to tools.
-name|class
-name|CommaJoinedArg
-operator|:
-name|public
-name|Arg
-block|{
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|Values
-block|;
-name|public
-operator|:
-name|CommaJoinedArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const char *Str
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Values
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|CommaJoinedClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CommaJoinedArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
-comment|/// JoinedAndSeparateArg - An argument with both joined and separate
-comment|/// values.
-name|class
-name|JoinedAndSeparateArg
-operator|:
-name|public
-name|Arg
-block|{
-name|public
-operator|:
-name|JoinedAndSeparateArg
-argument_list|(
-argument|const Option *Opt
-argument_list|,
-argument|unsigned Index
-argument_list|,
-argument|const Arg *BaseArg =
-literal|0
-argument_list|)
-block|;
-name|virtual
-name|void
-name|render
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|ArgStringList&Output
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getNumValues
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|2
-return|;
-block|}
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getValue
-argument_list|(
-argument|const ArgList&Args
-argument_list|,
-argument|unsigned N=
-literal|0
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Arg *A
-argument_list|)
-block|{
-return|return
-name|A
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|Arg
-operator|::
-name|JoinedAndSeparateClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const JoinedAndSeparateArg *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|; }
 comment|// end namespace driver
 block|}
 end_decl_stmt

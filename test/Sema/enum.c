@@ -260,7 +260,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|// expected-warning {{use of empty enum extension}}
+comment|// expected-error {{use of empty enum}}
 end_comment
 
 begin_comment

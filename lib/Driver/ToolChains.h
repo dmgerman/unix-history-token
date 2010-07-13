@@ -129,17 +129,6 @@ name|Generic_GCC
 argument_list|()
 block|;
 name|virtual
-name|DerivedArgList
-operator|*
-name|TranslateArgs
-argument_list|(
-argument|InputArgList&Args
-argument_list|,
-argument|const char *BoundArch
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|Tool
 operator|&
 name|SelectTool
@@ -649,7 +638,8 @@ name|DerivedArgList
 modifier|*
 name|TranslateArgs
 argument_list|(
-name|InputArgList
+specifier|const
+name|DerivedArgList
 operator|&
 name|Args
 argument_list|,
@@ -713,6 +703,14 @@ name|IsIntegratedAssemblerDefault
 argument_list|()
 specifier|const
 block|{
+ifdef|#
+directive|ifdef
+name|DISABLE_DEFAULT_INTEGRATED_ASSEMBLER
+return|return
+name|false
+return|;
+else|#
+directive|else
 comment|// Default integrated assembler to on for x86.
 return|return
 operator|(
@@ -741,6 +739,8 @@ operator|::
 name|x86_64
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 name|virtual
 name|bool
@@ -1166,6 +1166,42 @@ block|; }
 block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
+name|Minix
+operator|:
+name|public
+name|Generic_GCC
+block|{
+name|public
+operator|:
+name|Minix
+argument_list|(
+specifier|const
+name|HostInfo
+operator|&
+name|Host
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
 name|DragonFly
 operator|:
 name|public
@@ -1256,17 +1292,6 @@ name|TCEToolChain
 argument_list|()
 block|;
 name|virtual
-name|DerivedArgList
-operator|*
-name|TranslateArgs
-argument_list|(
-argument|InputArgList&Args
-argument_list|,
-argument|const char *BoundArch
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|Tool
 operator|&
 name|SelectTool
@@ -1318,11 +1343,14 @@ block|;  }
 block|;  }
 comment|// end namespace toolchains
 block|}
-comment|// end namespace driver
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace driver
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

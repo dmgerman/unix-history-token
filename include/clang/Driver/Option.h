@@ -106,7 +106,7 @@ name|class
 name|Arg
 decl_stmt|;
 name|class
-name|InputArgList
+name|ArgList
 decl_stmt|;
 name|class
 name|OptionGroup
@@ -153,6 +153,18 @@ block|,
 name|JoinedAndSeparateClass
 block|}
 enum|;
+enum|enum
+name|RenderStyleKind
+block|{
+name|RenderCommaJoinedStyle
+block|,
+name|RenderJoinedStyle
+block|,
+name|RenderSeparateStyle
+block|,
+name|RenderValuesStyle
+block|}
+enum|;
 name|private
 label|:
 name|OptionClass
@@ -180,7 +192,7 @@ name|Option
 modifier|*
 name|Alias
 decl_stmt|;
-comment|/// Unsupported options will not be rejected.
+comment|/// Unsupported options will be rejected.
 name|bool
 name|Unsupported
 range|:
@@ -199,17 +211,11 @@ name|NoOptAsInput
 range|:
 literal|1
 decl_stmt|;
-comment|/// Always render this option as separate form its value.
-name|bool
-name|ForceSeparateRender
+comment|/// The style to using when rendering arguments parsed by this option.
+name|unsigned
+name|RenderStyle
 range|:
-literal|1
-decl_stmt|;
-comment|/// Always render this option joined with its value.
-name|bool
-name|ForceJoinedRender
-range|:
-literal|1
+literal|2
 decl_stmt|;
 comment|/// This option is only consumed by the driver.
 name|bool
@@ -362,44 +368,26 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
-name|bool
-name|hasForceSeparateRender
+name|RenderStyleKind
+name|getRenderStyle
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ForceSeparateRender
+name|RenderStyleKind
+argument_list|(
+name|RenderStyle
+argument_list|)
 return|;
 block|}
 name|void
-name|setForceSeparateRender
+name|setRenderStyle
 parameter_list|(
-name|bool
+name|RenderStyleKind
 name|Value
 parameter_list|)
 block|{
-name|ForceSeparateRender
-operator|=
-name|Value
-expr_stmt|;
-block|}
-name|bool
-name|hasForceJoinedRender
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ForceJoinedRender
-return|;
-block|}
-name|void
-name|setForceJoinedRender
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|ForceJoinedRender
+name|RenderStyle
 operator|=
 name|Value
 expr_stmt|;
@@ -526,7 +514,7 @@ modifier|*
 name|accept
 argument_list|(
 specifier|const
-name|InputArgList
+name|ArgList
 operator|&
 name|Args
 argument_list|,
@@ -582,7 +570,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -639,7 +627,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -695,7 +683,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -757,7 +745,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -818,7 +806,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -879,7 +867,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -940,7 +928,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -1018,7 +1006,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -1081,7 +1069,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)
@@ -1144,7 +1132,7 @@ name|Arg
 operator|*
 name|accept
 argument_list|(
-argument|const InputArgList&Args
+argument|const ArgList&Args
 argument_list|,
 argument|unsigned&Index
 argument_list|)

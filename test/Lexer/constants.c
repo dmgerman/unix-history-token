@@ -87,6 +87,50 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|//  PR4499
+end_comment
+
+begin_decl_stmt
+name|int
+name|m0
+init|=
+literal|'0'
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|m1
+init|=
+literal|'\\\''
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{multi-character character constant}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|m2
+init|=
+literal|'\\\\'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{multi-character character constant}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|m3
+init|=
+literal|'\\\ '
+decl_stmt|;
+end_decl_stmt
+
 begin_pragma
 pragma|#
 directive|pragma

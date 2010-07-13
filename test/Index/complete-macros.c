@@ -19,11 +19,50 @@ parameter_list|)
 value|foobar
 end_define
 
+begin_define
+define|#
+directive|define
+name|nil
+value|0
+end_define
+
 begin_function
 name|void
 name|f
 parameter_list|()
 block|{  }
+end_function
+
+begin_function_decl
+name|void
+name|g
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f2
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|ip
+init|=
+name|nil
+decl_stmt|;
+name|ip
+operator|=
+name|nil
+expr_stmt|;
+name|g
+argument_list|(
+name|nil
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -32,6 +71,26 @@ end_comment
 
 begin_comment
 comment|// CHECK-CC1: macro definition:{TypedText FOO}{LeftParen (}{Placeholder Arg1}{Comma , }{Placeholder Arg2}{RightParen )}
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:13:13 %s | FileCheck -check-prefix=CHECK-CC2 %s
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:14:8 %s | FileCheck -check-prefix=CHECK-CC2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC2: macro definition:{TypedText nil} (30)
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:15:5 %s | FileCheck -check-prefix=CHECK-CC3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC3: macro definition:{TypedText nil} (60)
 end_comment
 
 end_unit

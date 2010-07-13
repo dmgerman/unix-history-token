@@ -64,6 +64,10 @@ comment|// CXX0X:#define __GXX_EXPERIMENTAL_CXX0X__ 1
 end_comment
 
 begin_comment
+comment|// CXX0X:#define __GXX_RTTI 1
+end_comment
+
+begin_comment
 comment|// CXX0X:#define __GXX_WEAK__ 1
 end_comment
 
@@ -97,6 +101,10 @@ end_comment
 
 begin_comment
 comment|// CXX98:#define __GNUG__
+end_comment
+
+begin_comment
+comment|// CXX98:#define __GXX_RTTI 1
 end_comment
 
 begin_comment
@@ -200,15 +208,15 @@ comment|// COMMON:#define __clang__ 1
 end_comment
 
 begin_comment
-comment|// COMMON:#define __clang_major__ 2
+comment|// COMMON:#define __clang_major__ {{[0-9]+}}
 end_comment
 
 begin_comment
-comment|// COMMON:#define __clang_minor__ 0
+comment|// COMMON:#define __clang_minor__ {{[0-9]+}}
 end_comment
 
 begin_comment
-comment|// COMMON:#define __clang_patchlevel__ 0
+comment|// COMMON:#define __clang_patchlevel__ {{[0-9]+}}
 end_comment
 
 begin_comment
@@ -488,6 +496,14 @@ comment|// ARM:#define __ARM_ARCH_6J__ 1
 end_comment
 
 begin_comment
+comment|// ARM:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
 comment|// ARM:#define __CHAR_BIT__ 8
 end_comment
 
@@ -748,6 +764,54 @@ comment|// ARM:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// ARM:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// ARM:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -825,6 +889,14 @@ end_comment
 
 begin_comment
 comment|// BFIN:#define __BFIN__ 1
+end_comment
+
+begin_comment
+comment|// BFIN:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// BFIN:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -1080,6 +1152,54 @@ comment|// BFIN:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// BFIN:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// BFIN:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// BFIN:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -1137,6 +1257,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// I386:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -1404,6 +1532,54 @@ comment|// I386:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_LONG_DOUBLE__ 12
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// I386:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// I386:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -1477,6 +1653,14 @@ end_comment
 
 begin_comment
 comment|// MSP430:#define MSP430 1
+end_comment
+
+begin_comment
+comment|// MSP430:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -1732,6 +1916,54 @@ comment|// MSP430:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// MSP430:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_INT__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_POINTER__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_PTRDIFF_T__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_SIZE_T__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_WCHAR_T__ 2
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIZEOF_WINT_T__ 2
+end_comment
+
+begin_comment
 comment|// MSP430:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -1781,6 +2013,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// PIC16:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PIC16:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -2036,6 +2276,54 @@ comment|// PIC16:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PIC16:#define __SIZEOF_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_INT__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_LONG_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_LONG_LONG__ 4
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_POINTER__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_PTRDIFF_T__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_SIZE_T__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_WCHAR_T__ 2
+end_comment
+
+begin_comment
+comment|// PIC16:#define __SIZEOF_WINT_T__ 2
+end_comment
+
+begin_comment
 comment|// PIC16:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -2145,6 +2433,14 @@ end_comment
 
 begin_comment
 comment|// PPC64:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC64:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -2424,6 +2720,54 @@ comment|// PPC64:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC64:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// PPC64:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -2489,6 +2833,14 @@ end_comment
 
 begin_comment
 comment|// PPC:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// PPC:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -2764,6 +3116,54 @@ comment|// PPC:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// PPC:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// PPC:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -2813,6 +3213,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// S390X:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// S390X:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -2952,7 +3360,7 @@ comment|// S390X:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
-comment|// S390X:#define __INT64_TYPE__ long int
+comment|// S390X:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
@@ -3072,6 +3480,54 @@ comment|// S390X:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// S390X:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// S390X:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// S390X:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -3125,6 +3581,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// SPARC:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -3384,6 +3848,54 @@ comment|// SPARC:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// SPARC:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// SPARC:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// SPARC:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -3449,6 +3961,14 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// TCE:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// TCE:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -3696,6 +4216,54 @@ comment|// TCE:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// TCE:#define __SIZEOF_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_LONG_DOUBLE__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_LONG_LONG__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// TCE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// TCE:#define __SIZE_TYPE__ unsigned int
 end_comment
 
@@ -3765,6 +4333,14 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// X86_64:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __CHAR32_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -4040,6 +4616,54 @@ comment|// X86_64:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// X86_64:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
 comment|// X86_64:#define __SIZE_TYPE__ long unsigned int
 end_comment
 
@@ -4133,6 +4757,22 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=c++98 -fno-rtti -E -dM< /dev/null | FileCheck -check-prefix NORTTI %s
+end_comment
+
+begin_comment
+comment|// NORTTI: __GXX_ABI_VERSION
+end_comment
+
+begin_comment
+comment|// NORTTI-NOT:#define __GXX_RTTI
+end_comment
+
+begin_comment
+comment|// NORTTI: __STDC__
 end_comment
 
 end_unit

@@ -428,7 +428,7 @@ block|;
 specifier|const
 name|llvm
 operator|::
-name|Type
+name|PointerType
 operator|*
 name|PtrToInt8Ty
 block|;
@@ -597,10 +597,6 @@ name|CodeGenModule
 operator|&
 name|CGM
 block|;
-name|CodeGenFunction
-operator|&
-name|CGF
-block|;
 name|ASTContext
 operator|&
 name|getContext
@@ -617,6 +613,10 @@ name|VMContext
 block|;
 name|public
 operator|:
+name|CodeGenFunction
+operator|&
+name|CGF
+block|;
 specifier|const
 name|llvm
 operator|::

@@ -227,5 +227,41 @@ comment|// expected-error {{can't convert between vector values of different siz
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|2
+argument|) )
+argument_list|)
+name|float2
+name|vecfloat2
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error{{invalid vector element type 'float2'}}
+end_comment
+
+begin_function
+name|void
+name|inc
+parameter_list|(
+name|float2
+name|f2
+parameter_list|)
+block|{
+name|f2
+operator|++
+expr_stmt|;
+comment|// expected-error{{cannot increment value of type 'float2'}}
+name|__real
+name|f2
+decl_stmt|;
+comment|// expected-error{{invalid type 'float2' to __real operator}}
+block|}
+end_function
+
 end_unit
 

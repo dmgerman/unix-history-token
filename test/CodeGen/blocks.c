@@ -160,6 +160,39 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_typedef
 unit|};
+typedef|typedef
+name|double
+name|ftype
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|// It's not clear that we *should* support this syntax, but until that decision
+end_comment
+
+begin_comment
+comment|// is made, we should support it properly and not crash.
+end_comment
+
+begin_decl_stmt
+name|ftype
+modifier|^
+name|test2
+init|=
+lambda|^
+name|ftype
+block|{
+return|return
+literal|0
+return|;
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

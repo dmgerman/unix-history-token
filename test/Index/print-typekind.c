@@ -56,7 +56,7 @@ comment|// CHECK: VarDecl=p:2:6 typekind=Pointer
 end_comment
 
 begin_comment
-comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=Unexposed [canonical=Unexposed]
+comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=FunctionProto [canonical=FunctionProto] [result=Pointer]
 end_comment
 
 begin_comment

@@ -132,11 +132,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef int64_t intmax_t;
+comment|// ARM:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef uint64_t uintmax_t;
+comment|// ARM:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -564,11 +564,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// BFIN:typedef int64_t intmax_t;
+comment|// BFIN:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// BFIN:typedef uint64_t uintmax_t;
+comment|// BFIN:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -996,11 +996,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef int64_t intmax_t;
+comment|// I386:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef uint64_t uintmax_t;
+comment|// I386:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -1396,11 +1396,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef int32_t intmax_t;
+comment|// MSP430:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef uint32_t uintmax_t;
+comment|// MSP430:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -1796,11 +1796,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PIC16:typedef int32_t intmax_t;
+comment|// PIC16:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// PIC16:typedef uint32_t uintmax_t;
+comment|// PIC16:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -2224,11 +2224,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef int64_t intmax_t;
+comment|// PPC64:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef uint64_t uintmax_t;
+comment|// PPC64:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -2656,11 +2656,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef int64_t intmax_t;
+comment|// PPC:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef uint64_t uintmax_t;
+comment|// PPC:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -2960,11 +2960,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef signed long int int64_t;
+comment|// S390X:typedef signed long long int int64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned long int uint64_t;
+comment|// S390X:typedef unsigned long long int uint64_t;
 end_comment
 
 begin_comment
@@ -3084,11 +3084,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef int64_t intmax_t;
+comment|// S390X:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef uint64_t uintmax_t;
+comment|// S390X:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -3220,7 +3220,7 @@ comment|// S390X:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:INT64_MIN_ (-9223372036854775807L -1)
+comment|// S390X:INT64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3228,7 +3228,7 @@ comment|// S390X:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807L -1)
+comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3240,7 +3240,7 @@ comment|// S390X:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807L -1)
+comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3256,7 +3256,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INTPTR_MIN_ (-9223372036854775807L -1)
+comment|// S390X:INTPTR_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3268,7 +3268,7 @@ comment|// S390X:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807L -1)
+comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3284,7 +3284,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INTMAX_MIN_ (-9223372036854775807L -1)
+comment|// S390X:INTMAX_MIN_ (-9223372036854775807LL -1)
 end_comment
 
 begin_comment
@@ -3512,11 +3512,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef int64_t intmax_t;
+comment|// SPARC:typedef long long int intmax_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef uint64_t uintmax_t;
+comment|// SPARC:typedef long long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -3912,11 +3912,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef int32_t intmax_t;
+comment|// TCE:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// TCE:typedef uint32_t uintmax_t;
+comment|// TCE:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -4344,11 +4344,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef int64_t intmax_t;
+comment|// X86_64:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef uint64_t uintmax_t;
+comment|// X86_64:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -4668,7 +4668,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -ffreestanding -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
+comment|// RUN: %clang_cc1 -E -ffreestanding -U__UINTMAX_TYPE__ -U__INTMAX_TYPE__ -Dint=a -Duint=b -D_t=c -DINT=d -DUINT=e -D_MIN=f -D_MAX=g '-D_C(v)=h' -triple=i386-none-none %s | FileCheck -check-prefix JOIN %s
 end_comment
 
 begin_comment
@@ -4680,11 +4680,11 @@ comment|// JOIN:typedef uint32_t uintptr_t;
 end_comment
 
 begin_comment
-comment|// JOIN:typedef int64_t intmax_t;
+comment|// JOIN:typedef __INTMAX_TYPE__ intmax_t;
 end_comment
 
 begin_comment
-comment|// JOIN:typedef uint64_t uintmax_t;
+comment|// JOIN:typedef __UINTMAX_TYPE__ uintmax_t;
 end_comment
 
 begin_comment

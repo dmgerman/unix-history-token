@@ -970,6 +970,24 @@ operator|=
 name|T
 expr_stmt|;
 block|}
+comment|/// \brief Determine the type of an expression that sends a message to this
+comment|/// function.
+name|QualType
+name|getSendResultType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getResultType
+argument_list|()
+operator|.
+name|getCallResultType
+argument_list|(
+name|getASTContext
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|TypeSourceInfo
 operator|*
 name|getResultTypeSourceInfo
@@ -1902,11 +1920,11 @@ block|{
 return|return
 name|K
 operator|>=
-name|ObjCContainerFirst
+name|firstObjCContainer
 operator|&&
 name|K
 operator|<=
-name|ObjCContainerLast
+name|lastObjCContainer
 return|;
 block|}
 specifier|static
@@ -2574,7 +2592,7 @@ end_function
 begin_expr_stmt
 name|ObjCCategoryDecl
 operator|*
-name|getClassExtension
+name|getFirstClassExtension
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -4717,6 +4735,16 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+specifier|const
+name|ObjCCategoryDecl
+operator|*
+name|getNextClassExtension
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_typedef
 typedef|typedef
 name|specific_decl_iterator
@@ -5147,11 +5175,11 @@ block|{
 return|return
 name|K
 operator|>=
-name|ObjCImplFirst
+name|firstObjCImpl
 operator|&&
 name|K
 operator|<=
-name|ObjCImplLast
+name|lastObjCImpl
 return|;
 block|}
 block|}
@@ -6157,11 +6185,17 @@ name|SourceLocation
 name|AtLoc
 block|;
 comment|// location of @property
-name|QualType
+name|TypeSourceInfo
+operator|*
 name|DeclType
 block|;
 name|unsigned
 name|PropertyAttributes
+operator|:
+literal|8
+block|;
+name|unsigned
+name|PropertyAttributesAsWritten
 operator|:
 literal|8
 block|;
@@ -6204,7 +6238,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|SourceLocation AtLocation
 argument_list|,
-argument|QualType T
+argument|TypeSourceInfo *T
 argument_list|)
 operator|:
 name|NamedDecl
@@ -6229,6 +6263,11 @@ name|T
 argument_list|)
 block|,
 name|PropertyAttributes
+argument_list|(
+name|OBJC_PR_noattr
+argument_list|)
+block|,
+name|PropertyAttributesAsWritten
 argument_list|(
 name|OBJC_PR_noattr
 argument_list|)
@@ -6282,7 +6321,7 @@ argument|IdentifierInfo *Id
 argument_list|,
 argument|SourceLocation AtLocation
 argument_list|,
-argument|QualType T
+argument|TypeSourceInfo *T
 argument_list|,
 argument|PropertyControl propControl = None
 argument_list|)
@@ -6306,8 +6345,9 @@ name|AtLoc
 operator|=
 name|L
 block|; }
-name|QualType
-name|getType
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
 argument_list|()
 specifier|const
 block|{
@@ -6315,10 +6355,22 @@ return|return
 name|DeclType
 return|;
 block|}
+name|QualType
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclType
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
 name|void
 name|setType
 argument_list|(
-argument|QualType T
+argument|TypeSourceInfo *T
 argument_list|)
 block|{
 name|DeclType
@@ -6345,6 +6397,28 @@ argument_list|)
 block|{
 name|PropertyAttributes
 operator||=
+name|PRVal
+block|;   }
+name|PropertyAttributeKind
+name|getPropertyAttributesAsWritten
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PropertyAttributeKind
+argument_list|(
+name|PropertyAttributesAsWritten
+argument_list|)
+return|;
+block|}
+name|void
+name|setPropertyAttributesAsWritten
+argument_list|(
+argument|PropertyAttributeKind PRVal
+argument_list|)
+block|{
+name|PropertyAttributesAsWritten
+operator|=
 name|PRVal
 block|;   }
 name|void

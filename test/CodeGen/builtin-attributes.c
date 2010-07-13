@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm-unknown-unknown -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm-unknown-linux-gnueabi -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: declare arm_aapcscc i32 @printf(i8*, ...)
+comment|// CHECK: declare i32 @printf(i8*, ...)
 end_comment
 
 begin_function
@@ -21,7 +21,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call arm_aapcscc void @exit
+comment|// CHECK: call void @exit
 end_comment
 
 begin_comment

@@ -75,7 +75,7 @@ operator|,
 name|foo
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{expression result unused}} expected-warning {{expression result unused}}
 name|i
 operator|,
 name|foo
@@ -83,7 +83,7 @@ argument_list|()
 operator|,
 name|j
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{expression result unused}} expected-warning {{expression result unused}}
 name|foo
 argument_list|()
 operator|,
@@ -91,7 +91,7 @@ name|i
 operator|,
 name|j
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{expression result unused}} expected-warning {{expression result unused}}
 name|i
 operator|++
 expr_stmt|;
@@ -304,9 +304,67 @@ argument_list|()
 operator|)
 expr_stmt|;
 comment|// no-warning
+name|x
+operator|||
+name|test_logical_foo1
+argument_list|()
+expr_stmt|;
+comment|// no-warning
 return|return
 name|x
 return|;
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|s0
+block|{
+name|int
+name|f0
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|f0
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f1
+parameter_list|(
+name|struct
+name|s0
+modifier|*
+name|a
+parameter_list|)
+block|{
+comment|// rdar://8139785
+name|f0
+argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
+name|a
+operator|->
+name|f0
+operator|+
+literal|1
+argument_list|,
+literal|10
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
 block|}
 end_function
 

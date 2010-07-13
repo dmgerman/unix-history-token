@@ -171,7 +171,7 @@ comment|// CHECK: load i32* %{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK: mul i32 %{{.*}}, %{{.*}}
+comment|// CHECK: mul nsw i32 %{{.*}}, %{{.*}}
 end_comment
 
 begin_function

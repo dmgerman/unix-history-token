@@ -297,6 +297,26 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// Resets this builder to the newly-initialized state.
+name|void
+name|clear
+parameter_list|()
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|LastTy
+operator|=
+name|QualType
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|Index
+operator|=
+name|Capacity
+expr_stmt|;
+block|}
 comment|/// Pushes space for a new TypeLoc of the given type.  Invalidates
 comment|/// any TypeLocs previously retrieved from this builder.
 name|template

@@ -14,7 +14,7 @@ end_macro
 
 begin_function_decl
 name|int
-name|x
+name|x0
 parameter_list|(
 name|void
 parameter_list|)
@@ -32,7 +32,7 @@ end_macro
 
 begin_function_decl
 name|int
-name|x
+name|x1
 parameter_list|(
 name|void
 parameter_list|)
@@ -54,7 +54,7 @@ end_macro
 
 begin_function_decl
 name|int
-name|x
+name|x2
 parameter_list|(
 name|void
 parameter_list|)
@@ -76,7 +76,7 @@ end_macro
 
 begin_function_decl
 name|int
-name|x
+name|x3
 parameter_list|(
 name|void
 parameter_list|)
@@ -100,7 +100,7 @@ end_macro
 
 begin_function_decl
 name|int
-name|x
+name|x4
 parameter_list|(
 name|void
 parameter_list|)
@@ -109,6 +109,59 @@ end_function_decl
 
 begin_comment
 comment|// expected-error{{attribute requires 1 argument(s)}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|regparm
+argument_list|(
+literal|3
+argument_list|)
+operator|)
+argument_list|)
+name|x5
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|x5
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{previous declaration is here}}
+end_comment
+
+begin_decl_stmt
+name|void
+name|__attribute__
+argument_list|(
+operator|(
+name|regparm
+argument_list|(
+literal|2
+argument_list|)
+operator|)
+argument_list|)
+name|x5
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{function declared with with regparm(2) attribute was previously declared with the regparm(3) attribute}}
 end_comment
 
 end_unit

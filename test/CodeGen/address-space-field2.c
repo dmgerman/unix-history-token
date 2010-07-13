@@ -72,22 +72,6 @@ comment|// CHECK: addrspace(1)
 end_comment
 
 begin_comment
-comment|// CHECK: addrspace(1)
-end_comment
-
-begin_comment
-comment|// CHECK: addrspace(1)
-end_comment
-
-begin_comment
-comment|// CHECK: addrspace(2)
-end_comment
-
-begin_comment
-comment|// CHECK: addrspace(2)
-end_comment
-
-begin_comment
 comment|// CHECK: addrspace(2)
 end_comment
 

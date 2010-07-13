@@ -14,7 +14,7 @@ block|{
 return|return
 name|v
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 block|}
 end_function
 

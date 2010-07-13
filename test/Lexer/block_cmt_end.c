@@ -21,7 +21,7 @@ comment|/* abc  next comment ends with normal escaped newline: */
 end_comment
 
 begin_comment
-comment|/* expected-warning {{escaped newline}} expected-warning {{backslash and newline}}  *\   /  int bar /* expected-error {{invalid token after top level declarator}} */
+comment|/* expected-warning {{escaped newline}} expected-warning {{backslash and newline}}  *\   /  int bar /* expected-error {{expected ';' after top level declarator}} */
 end_comment
 
 begin_comment

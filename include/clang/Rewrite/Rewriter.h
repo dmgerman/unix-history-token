@@ -586,6 +586,16 @@ name|Range
 argument_list|)
 decl|const
 decl_stmt|;
+name|int
+name|getRangeSize
+argument_list|(
+specifier|const
+name|CharSourceRange
+operator|&
+name|Range
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getRewrittenText - Return the rewritten form of the text in the specified
 comment|/// range.  If the start or end of the range was unrewritable or if they are
 comment|/// in different buffers, this returns an empty string.

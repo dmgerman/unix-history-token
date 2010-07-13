@@ -297,7 +297,7 @@ block|{
 return|return
 literal|0
 return|;
-comment|// expected-warning {{void function 't13' should not return a value}}
+comment|// expected-error {{void function 't13' should not return a value}}
 block|}
 end_function
 
@@ -307,7 +307,7 @@ name|t14
 parameter_list|()
 block|{
 return|return;
-comment|// expected-warning {{non-void function 't14' should return a value}}
+comment|// expected-error {{non-void function 't14' should return a value}}
 block|}
 end_function
 

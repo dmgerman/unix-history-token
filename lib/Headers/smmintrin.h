@@ -1105,7 +1105,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__                      \                               ({ union { int i; float f; } __t;  \                                  __v4sf __a = (__v4sf)X;         \                                  __t.f = __a[N];                 \                                  __t.i;}))
+value|(__extension__                      \                               ({ union { int i; float f; } __t;  \                                  __v4sf __a = (__v4sf)(X);       \                                  __t.f = __a[N];                 \                                  __t.i;}))
 end_define
 
 begin_comment
@@ -1127,7 +1127,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4sf __a = (__v4sf)X; \                                                     (D) = __a[N]; }))
+value|(__extension__ ({ __v4sf __a = (__v4sf)(X); \                                                     (D) = __a[N]; }))
 end_define
 
 begin_comment
@@ -1179,7 +1179,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v16qi __a = (__v16qi)X; \                                                    __a[N] = I;               \                                                    __a;}))
+value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                    __a[N] = I;               \                                                    __a;}))
 end_define
 
 begin_define
@@ -1193,7 +1193,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4si __a = (__v4si)X; \                                                     __a[N] = I;             \                                                     __a;}))
+value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                     __a[N] = I;             \                                                     __a;}))
 end_define
 
 begin_ifdef
@@ -1213,7 +1213,7 @@ name|I
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v2di __a = (__v2di)X; \                                                     __a[N] = I;             \                                                     __a;}))
+value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                     __a[N] = I;             \                                                     __a;}))
 end_define
 
 begin_endif
@@ -1238,7 +1238,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v16qi __a = (__v16qi)X; \                                                  __a[N];}))
+value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                  __a[N];}))
 end_define
 
 begin_define
@@ -1250,7 +1250,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4si __a = (__v4si)X; \                                                   __a[N];}))
+value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                   __a[N];}))
 end_define
 
 begin_ifdef
@@ -1268,7 +1268,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v2di __a = (__v2di)X; \                                                   __a[N];}))
+value|(__extension__ ({ __v2di __a = (__v2di)(X); \                                                   __a[N];}))
 end_define
 
 begin_endif

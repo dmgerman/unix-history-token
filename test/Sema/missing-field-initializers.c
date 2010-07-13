@@ -122,6 +122,22 @@ begin_comment
 comment|// expected-warning {{missing field 'b' initializer}}
 end_comment
 
+begin_decl_stmt
+name|struct
+name|Foo
+name|bar2
+index|[]
+init|=
+block|{
+block|{}
+block|,
+block|{}
+block|,
+block|{}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|One

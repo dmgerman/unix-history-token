@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
 end_comment
 
 begin_typedef
@@ -570,6 +570,36 @@ literal|0xDEADBEEF
 expr_stmt|;
 comment|// no-warning
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|f6e
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|offset
+parameter_list|)
+block|{
+comment|// PR7406 - crash from treating an UnknownVal as defined, to see if it's 0.
+name|bar
+argument_list|(
+operator|(
+name|p
+operator|+
+name|offset
+operator|)
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// not crash
 block|}
 end_function
 

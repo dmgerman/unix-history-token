@@ -371,6 +371,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|comma2
@@ -386,6 +390,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|comma3
@@ -400,7 +408,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{size of static array must be an integer constant expression}}
+comment|// expected-warning {{size of static array must be an integer constant expression}} \
+end_comment
+
+begin_comment
+comment|// expected-warning {{expression result unused}}
 end_comment
 
 begin_comment

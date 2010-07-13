@@ -102,14 +102,14 @@ comment|/// incompatible with previous versions (such that a reader
 comment|/// designed for the previous version could not support reading
 comment|/// the new version), this number should be increased.
 comment|///
-comment|/// Version 3 of PCH files also requires that the version control branch and
+comment|/// Version 4 of PCH files also requires that the version control branch and
 comment|/// revision match exactly, since there is no backward compatibility of
 comment|/// PCH files at this time.
 specifier|const
 name|unsigned
 name|VERSION_MAJOR
 init|=
-literal|3
+literal|4
 decl_stmt|;
 comment|/// \brief PCH minor version number supported by this version of
 comment|/// Clang.
@@ -127,7 +127,7 @@ literal|0
 decl_stmt|;
 comment|/// \brief An ID number that refers to a declaration in a PCH file.
 comment|///
-comment|/// The ID numbers of types are consecutive (in order of
+comment|/// The ID numbers of declarations are consecutive (in order of
 comment|/// discovery) and start at 2. 0 is reserved for NULL, and 1 is
 comment|/// reserved for the translation unit declaration.
 typedef|typedef
@@ -368,6 +368,22 @@ comment|/// entries in the preprocessing record.
 name|MACRO_DEFINITION_OFFSETS
 init|=
 literal|23
+block|,
+comment|/// \brief Record code for the array of VTable uses.
+name|VTABLE_USES
+init|=
+literal|24
+block|,
+comment|/// \brief Record code for the array of dynamic classes.
+name|DYNAMIC_CLASSES
+init|=
+literal|25
+block|,
+comment|/// \brief Record code for the chained PCH metadata, including the
+comment|/// PCH version and the name of the PCH this is chained to.
+name|CHAINED_METADATA
+init|=
+literal|26
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -759,6 +775,31 @@ comment|/// \brief An ObjCObjectType record.
 name|TYPE_OBJC_OBJECT
 init|=
 literal|28
+block|,
+comment|/// \brief An TemplateTypeParmType record.
+name|TYPE_TEMPLATE_TYPE_PARM
+init|=
+literal|29
+block|,
+comment|/// \brief An TemplateSpecializationType record.
+name|TYPE_TEMPLATE_SPECIALIZATION
+init|=
+literal|30
+block|,
+comment|/// \brief A DependentNameType record.
+name|TYPE_DEPENDENT_NAME
+init|=
+literal|31
+block|,
+comment|/// \brief A DependentTemplateSpecializationType record.
+name|TYPE_DEPENDENT_TEMPLATE_SPECIALIZATION
+init|=
+literal|32
+block|,
+comment|/// \brief A DependentSizedArrayType record.
+name|TYPE_DEPENDENT_SIZED_ARRAY
+init|=
+literal|33
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -848,6 +889,11 @@ comment|/// \brief NSConstantString type
 name|SPECIAL_TYPE_NS_CONSTANT_STRING
 init|=
 literal|15
+block|,
+comment|/// \brief Whether __[u]int128_t identifier is installed.
+name|SPECIAL_TYPE_INT128_INSTALLED
+init|=
+literal|16
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
@@ -997,13 +1043,14 @@ block|,
 comment|/// \brief A CXXConversionDecl record.
 name|DECL_CXX_CONVERSION
 block|,
+comment|/// \brief An AccessSpecDecl record.
+name|DECL_ACCESS_SPEC
+block|,
 comment|// FIXME: Implement serialization for these decl types. This just
 comment|// allocates the order in which
 name|DECL_FRIEND
 block|,
 name|DECL_FRIEND_TEMPLATE
-block|,
-name|DECL_TEMPLATE
 block|,
 name|DECL_CLASS_TEMPLATE
 block|,
@@ -1115,6 +1162,9 @@ name|EXPR_CHARACTER_LITERAL
 block|,
 comment|/// \brief A ParenExpr record.
 name|EXPR_PAREN
+block|,
+comment|/// \brief A ParenListExpr record.
+name|EXPR_PAREN_LIST
 block|,
 comment|/// \brief A UnaryOperator record.
 name|EXPR_UNARY_OPERATOR
@@ -1250,6 +1300,9 @@ block|,
 comment|/// \brief A CXXConstructExpr record.
 name|EXPR_CXX_CONSTRUCT
 block|,
+comment|/// \brief A CXXTemporaryObjectExpr record.
+name|EXPR_CXX_TEMPORARY_OBJECT
+block|,
 comment|// \brief A CXXStaticCastExpr record.
 name|EXPR_CXX_STATIC_CAST
 block|,
@@ -1289,15 +1342,41 @@ comment|// CXXDefaultArgExpr
 name|EXPR_CXX_BIND_TEMPORARY
 block|,
 comment|// CXXBindTemporaryExpr
-comment|//
-name|EXPR_CXX_ZERO_INIT_VALUE
+name|EXPR_CXX_BIND_REFERENCE
 block|,
-comment|// CXXZeroInitValueExpr
+comment|// CXXBindReferenceExpr
+name|EXPR_CXX_SCALAR_VALUE_INIT
+block|,
+comment|// CXXScalarValueInitExpr
 name|EXPR_CXX_NEW
 block|,
 comment|// CXXNewExpr
+name|EXPR_CXX_DELETE
+block|,
+comment|// CXXDeleteExpr
+name|EXPR_CXX_PSEUDO_DESTRUCTOR
+block|,
+comment|// CXXPseudoDestructorExpr
 name|EXPR_CXX_EXPR_WITH_TEMPORARIES
+block|,
 comment|// CXXExprWithTemporaries
+name|EXPR_CXX_DEPENDENT_SCOPE_MEMBER
+block|,
+comment|// CXXDependentScopeMemberExpr
+name|EXPR_CXX_DEPENDENT_SCOPE_DECL_REF
+block|,
+comment|// DependentScopeDeclRefExpr
+name|EXPR_CXX_UNRESOLVED_CONSTRUCT
+block|,
+comment|// CXXUnresolvedConstructExpr
+name|EXPR_CXX_UNRESOLVED_MEMBER
+block|,
+comment|// UnresolvedMemberExpr
+name|EXPR_CXX_UNRESOLVED_LOOKUP
+block|,
+comment|// UnresolvedLookupExpr
+name|EXPR_CXX_UNARY_TYPE_TRAIT
+comment|// UnaryTypeTraitExpr
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

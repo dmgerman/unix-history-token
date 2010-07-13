@@ -23,7 +23,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 empty_stmt|;
-comment|// CHECK: code-complete-errors.c:4:12: warning: extra ';' inside a struct or union
+comment|// CHECK: code-complete-errors.c:4:12: warning: extra ';' inside a struct
 block|}
 struct|;
 end_struct

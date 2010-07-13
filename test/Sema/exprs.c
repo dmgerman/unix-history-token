@@ -660,5 +660,39 @@ comment|// expected-error {{too few arguments to function call, expected 1, have
 block|}
 end_function
 
+begin_comment
+comment|// PR7569
+end_comment
+
+begin_function
+name|void
+name|test19
+parameter_list|()
+block|{
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+operator|=
+literal|0
+expr_stmt|;
+comment|// expected-warning {{indirection of non-volatile null pointer}} \
+comment|// expected-note {{consider using __builtin_trap}}
+operator|*
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+literal|0
+operator|=
+literal|0
+expr_stmt|;
+comment|// Ok.
+block|}
+end_function
+
 end_unit
 

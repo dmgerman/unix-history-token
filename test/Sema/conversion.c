@@ -45,17 +45,17 @@ name|c
 operator|=
 name|s
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|c
 operator|=
 name|i
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|c
 operator|=
 name|l
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|s
 operator|=
 name|c
@@ -68,12 +68,12 @@ name|s
 operator|=
 name|i
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|s
 operator|=
 name|l
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|i
 operator|=
 name|c
@@ -90,7 +90,7 @@ name|i
 operator|=
 name|l
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|l
 operator|=
 name|c
@@ -233,7 +233,7 @@ name|short
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|c
 operator|=
 operator|(
@@ -241,7 +241,7 @@ name|int
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|c
 operator|=
 operator|(
@@ -249,7 +249,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|s
 operator|=
 operator|(
@@ -271,7 +271,7 @@ name|int
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|s
 operator|=
 operator|(
@@ -279,7 +279,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|i
 operator|=
 operator|(
@@ -308,7 +308,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|l
 operator|=
 operator|(
@@ -356,28 +356,28 @@ name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|short
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|char
@@ -391,28 +391,28 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|short
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|char
@@ -438,21 +438,21 @@ name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|short
@@ -472,21 +472,21 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|short
@@ -518,14 +518,14 @@ name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|ll
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
@@ -551,14 +551,14 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 return|return
 operator|(
 name|int
@@ -867,7 +867,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_short
 argument_list|(
 name|v
@@ -919,13 +919,13 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_int
 argument_list|(
 name|v
@@ -972,19 +972,19 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_int
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_long
 argument_list|(
 name|v
@@ -1027,19 +1027,19 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_int
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 name|takes_long
 argument_list|(
 name|v
@@ -1081,31 +1081,31 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_int
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_long
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_longlong
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_float
 argument_list|(
 name|v
@@ -1137,37 +1137,37 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_int
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_long
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_longlong
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_float
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses floating-point precision}}
+comment|// expected-warning {{implicit conversion loses floating-point precision}}
 name|takes_double
 argument_list|(
 name|v
@@ -1195,43 +1195,43 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_short
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_int
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_long
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_longlong
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast turns floating-point number into integer}}
+comment|// expected-warning {{implicit conversion turns floating-point number into integer}}
 name|takes_float
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses floating-point precision}}
+comment|// expected-warning {{implicit conversion loses floating-point precision}}
 name|takes_double
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses floating-point precision}}
+comment|// expected-warning {{implicit conversion loses floating-point precision}}
 name|takes_longdouble
 argument_list|(
 name|v
@@ -1332,7 +1332,7 @@ name|c
 operator|*
 literal|2
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 block|}
 end_function
 
@@ -1365,7 +1365,7 @@ operator|)
 operator|&
 name|test16_external
 decl_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 block|}
 end_function
 
@@ -1424,7 +1424,7 @@ name|U
 operator|.
 name|c
 expr_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision}}
+comment|// expected-warning {{implicit conversion loses integer precision}}
 block|}
 end_function
 
@@ -1555,7 +1555,7 @@ name|s
 init|=
 name|LONG_MAX
 decl_stmt|;
-comment|// expected-warning {{implicit cast loses integer precision: 'long' to 'char'}}
+comment|// expected-warning {{implicit conversion loses integer precision: 'long' to 'char'}}
 block|}
 end_function
 
@@ -1622,25 +1622,25 @@ name|u1
 init|=
 name|i
 decl_stmt|;
-comment|// expected-warning {{implicit cast changes signedness}}
+comment|// expected-warning {{implicit conversion changes signedness}}
 name|u1
 operator|=
 name|i
 expr_stmt|;
-comment|// expected-warning {{implicit cast changes signedness}}
+comment|// expected-warning {{implicit conversion changes signedness}}
 name|unsigned
 name|u2
 init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|// expected-warning {{implicit cast changes signedness}}
+comment|// expected-warning {{implicit conversion changes signedness}}
 name|u2
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|// expected-warning {{implicit cast changes signedness}}
+comment|// expected-warning {{implicit conversion changes signedness}}
 block|}
 end_function
 

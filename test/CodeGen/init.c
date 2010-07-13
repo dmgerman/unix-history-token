@@ -372,5 +372,32 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// rdar://problem/8154689
+end_comment
+
+begin_function
+name|void
+name|f6
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+name|long
+name|ids
+index|[]
+init|=
+block|{
+operator|(
+name|long
+operator|)
+operator|&
+name|x
+block|}
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

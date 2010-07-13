@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple armv7-apple-darwin9 -target-abi aapcs -emit-l
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc signext i8 @f0()
+comment|// APCS-GNU: define signext i8 @f0()
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i8 @f1()
+comment|// APCS-GNU: define i8 @f1()
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i16 @f2()
+comment|// APCS-GNU: define i16 @f2()
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f3()
+comment|// APCS-GNU: define i32 @f3()
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f4()
+comment|// APCS-GNU: define i32 @f4()
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f5(
+comment|// APCS-GNU: define void @f5(
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f6(
+comment|// APCS-GNU: define void @f6(
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f7()
+comment|// APCS-GNU: define void @f7()
 end_comment
 
 begin_comment
@@ -259,7 +259,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f8(
+comment|// APCS-GNU: define void @f8(
 end_comment
 
 begin_comment
@@ -301,7 +301,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f9()
+comment|// APCS-GNU: define i32 @f9()
 end_comment
 
 begin_comment
@@ -334,7 +334,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f10()
+comment|// APCS-GNU: define i32 @f10()
 end_comment
 
 begin_comment
@@ -371,7 +371,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f11(
+comment|// APCS-GNU: define void @f11(
 end_comment
 
 begin_comment
@@ -408,7 +408,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f12()
+comment|// APCS-GNU: define i32 @f12()
 end_comment
 
 begin_comment
@@ -443,7 +443,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f13(
+comment|// APCS-GNU: define void @f13(
 end_comment
 
 begin_comment
@@ -455,7 +455,7 @@ comment|// FIXME: This should return a float.
 end_comment
 
 begin_comment
-comment|// AAPCS-FIXME: define arm_aapcscc float @f13()
+comment|// AAPCS-FIXME: darm_aapcscc efine float @f13()
 end_comment
 
 begin_struct
@@ -480,7 +480,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f14(
+comment|// APCS-GNU: define void @f14(
 end_comment
 
 begin_comment
@@ -513,7 +513,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f15()
+comment|// APCS-GNU: define void @f15()
 end_comment
 
 begin_comment
@@ -532,7 +532,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f16()
+comment|// APCS-GNU: define void @f16()
 end_comment
 
 begin_comment
@@ -551,7 +551,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f17()
+comment|// APCS-GNU: define i32 @f17()
 end_comment
 
 begin_comment
@@ -587,7 +587,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f18()
+comment|// APCS-GNU: define i32 @f18()
 end_comment
 
 begin_comment
@@ -621,7 +621,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f19(
+comment|// APCS-GNU: define void @f19(
 end_comment
 
 begin_comment
@@ -658,7 +658,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f20(
+comment|// APCS-GNU: define void @f20(
 end_comment
 
 begin_comment
@@ -695,7 +695,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i8 @f21()
+comment|// APCS-GNU: define i8 @f21()
 end_comment
 
 begin_comment
@@ -730,27 +730,27 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i16 @f22()
+comment|// APCS-GNU: define i16 @f22()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f23()
+comment|// APCS-GNU: define i32 @f23()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i64 @f24()
+comment|// APCS-GNU: define i64 @f24()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i128 @f25()
+comment|// APCS-GNU: define i128 @f25()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i64 @f26()
+comment|// APCS-GNU: define i64 @f26()
 end_comment
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i128 @f27()
+comment|// APCS-GNU: define i128 @f27()
 end_comment
 
 begin_comment
@@ -839,7 +839,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i16 @f28()
+comment|// APCS-GNU: define i16 @f28()
 end_comment
 
 begin_comment
@@ -867,7 +867,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc i32 @f29()
+comment|// APCS-GNU: define i32 @f29()
 end_comment
 
 begin_comment
@@ -895,7 +895,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// APCS-GNU: define arm_apcscc void @f30({{.*}} sret
+comment|// APCS-GNU: define void @f30({{.*}} sret
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|// RUN: %clang -fsyntax-only -fno-lax-vector-conversions %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -x c++ %s
+comment|// RUN: %clangxx -fsyntax-only -x c++ %s
 end_comment
 
 begin_if

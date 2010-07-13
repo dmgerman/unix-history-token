@@ -527,6 +527,10 @@ name|PtrData
 operator|=
 literal|0
 expr_stmt|;
+name|UintData
+operator|=
+literal|0
+expr_stmt|;
 name|Loc
 operator|=
 name|SourceLocation
@@ -630,11 +634,14 @@ argument_list|)
 expr_stmt|;
 name|PtrData
 operator|=
-operator|(
-name|void
+name|const_cast
+operator|<
+name|char
 operator|*
-operator|)
+operator|>
+operator|(
 name|Ptr
+operator|)
 expr_stmt|;
 block|}
 name|void
@@ -884,6 +891,39 @@ end_struct
 begin_comment
 unit|}
 comment|// end namespace clang
+end_comment
+
+begin_macro
+unit|namespace
+name|llvm
+end_macro
+
+begin_block
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|Token
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|// end namespace llvm
 end_comment
 
 begin_endif

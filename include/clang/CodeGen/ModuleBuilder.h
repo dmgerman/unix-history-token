@@ -126,6 +126,9 @@ operator|=
 literal|0
 block|;   }
 decl_stmt|;
+comment|/// CreateLLVMCodeGen - Create a CodeGenerator instance.
+comment|/// It is the responsibility of the caller to call delete on
+comment|/// the allocated CodeGenerator instance.
 name|CodeGenerator
 modifier|*
 name|CreateLLVMCodeGen

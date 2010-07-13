@@ -201,6 +201,26 @@ literal|0
 function_decl|;
 name|virtual
 name|Store
+name|BindDefault
+parameter_list|(
+name|Store
+name|store
+parameter_list|,
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+parameter_list|,
+name|SVal
+name|V
+parameter_list|)
+block|{
+return|return
+name|store
+return|;
+block|}
+name|virtual
+name|Store
 name|Remove
 parameter_list|(
 name|Store
@@ -279,7 +299,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|SVal
+name|Loc
 name|getLValueVar
 parameter_list|(
 specifier|const
@@ -310,7 +330,7 @@ argument_list|)
 return|;
 block|}
 name|virtual
-name|SVal
+name|Loc
 name|getLValueString
 parameter_list|(
 specifier|const
@@ -333,7 +353,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|SVal
+name|Loc
 name|getLValueCompoundLiteral
 parameter_list|(
 specifier|const
@@ -421,7 +441,8 @@ name|SVal
 name|Base
 parameter_list|)
 function_decl|;
-comment|// FIXME: Make out-of-line.
+comment|// FIXME: This should soon be eliminated altogether; clients should deal with
+comment|// region extents directly.
 name|virtual
 name|DefinedOrUnknownSVal
 name|getSizeInElements
@@ -587,10 +608,6 @@ name|GRState
 operator|&
 name|state
 argument_list|,
-name|Stmt
-operator|*
-name|Loc
-argument_list|,
 specifier|const
 name|StackFrameContext
 operator|*
@@ -715,58 +732,13 @@ parameter_list|,
 name|InvalidatedSymbols
 modifier|*
 name|IS
+parameter_list|,
+name|bool
+name|invalidateGlobals
 parameter_list|)
+init|=
+literal|0
 function_decl|;
-comment|// FIXME: Make out-of-line.
-name|virtual
-specifier|const
-name|GRState
-modifier|*
-name|setExtent
-parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|state
-parameter_list|,
-specifier|const
-name|MemRegion
-modifier|*
-name|region
-parameter_list|,
-name|SVal
-name|extent
-parameter_list|)
-block|{
-return|return
-name|state
-return|;
-block|}
-name|virtual
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|SVal
-operator|>
-name|getExtent
-argument_list|(
-argument|const GRState *state
-argument_list|,
-argument|const MemRegion *R
-argument_list|)
-block|{
-return|return
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|SVal
-operator|>
-operator|(
-operator|)
-return|;
-block|}
 comment|/// EnterStackFrame - Let the StoreManager to do something when execution
 comment|/// engine is about to execute into a callee.
 name|virtual

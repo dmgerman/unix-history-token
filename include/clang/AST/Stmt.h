@@ -654,7 +654,7 @@ parameter_list|,
 name|LAST
 parameter_list|)
 define|\
-value|first##BASE##Constant = FIRST##Class, \         last##BASE##Constant = LAST##Class,
+value|first##BASE##Constant=FIRST##Class, last##BASE##Constant=LAST##Class,
 define|#
 directive|define
 name|LAST_STMT_RANGE
@@ -666,7 +666,7 @@ parameter_list|,
 name|LAST
 parameter_list|)
 define|\
-value|first##BASE##Constant = FIRST##Class, \         last##BASE##Constant = LAST##Class
+value|first##BASE##Constant=FIRST##Class, last##BASE##Constant=LAST##Class
 define|#
 directive|define
 name|ABSTRACT_STMT
@@ -3356,6 +3356,8 @@ name|public
 name|Stmt
 block|{   enum
 block|{
+name|VAR
+block|,
 name|COND
 block|,
 name|THEN
@@ -3372,11 +3374,6 @@ index|[
 name|END_EXPR
 index|]
 block|;
-comment|/// \brief If non-NULL, the declaration in the "if" statement.
-name|VarDecl
-operator|*
-name|Var
-block|;
 name|SourceLocation
 name|IfLoc
 block|;
@@ -3387,6 +3384,8 @@ name|public
 operator|:
 name|IfStmt
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|SourceLocation IL
 argument_list|,
 argument|VarDecl *var
@@ -3400,55 +3399,7 @@ argument_list|,
 argument|Stmt *elsev =
 literal|0
 argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-name|IfStmtClass
-argument_list|)
-block|,
-name|Var
-argument_list|(
-name|var
-argument_list|)
-block|,
-name|IfLoc
-argument_list|(
-name|IL
-argument_list|)
-block|,
-name|ElseLoc
-argument_list|(
-argument|EL
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|COND
-index|]
-operator|=
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|cond
-operator|)
 block|;
-name|SubExprs
-index|[
-name|THEN
-index|]
-operator|=
-name|then
-block|;
-name|SubExprs
-index|[
-name|ELSE
-index|]
-operator|=
-name|elsev
-block|;   }
 comment|/// \brief Build an empty if/then/else statement
 name|explicit
 name|IfStmt
@@ -3476,21 +3427,19 @@ operator|*
 name|getConditionVariable
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Var
-return|;
-block|}
+block|;
 name|void
 name|setConditionVariable
 argument_list|(
-argument|VarDecl *V
-argument_list|)
-block|{
-name|Var
-operator|=
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|VarDecl
+operator|*
 name|V
-block|; }
+argument_list|)
+block|;
 specifier|const
 name|Expr
 operator|*
@@ -3779,6 +3728,8 @@ name|public
 name|Stmt
 block|{   enum
 block|{
+name|VAR
+block|,
 name|COND
 block|,
 name|BODY
@@ -3792,10 +3743,6 @@ name|SubExprs
 index|[
 name|END_EXPR
 index|]
-block|;
-name|VarDecl
-operator|*
-name|Var
 block|;
 comment|// This points to a linked list of case and default statements.
 name|SwitchCase
@@ -3820,6 +3767,10 @@ name|public
 operator|:
 name|SwitchStmt
 argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|,
 name|VarDecl
 operator|*
 name|Var
@@ -3828,43 +3779,7 @@ name|Expr
 operator|*
 name|cond
 argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-name|SwitchStmtClass
-argument_list|)
-block|,
-name|Var
-argument_list|(
-name|Var
-argument_list|)
-block|,
-name|FirstCase
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|COND
-index|]
-operator|=
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|cond
-operator|)
 block|;
-name|SubExprs
-index|[
-name|BODY
-index|]
-operator|=
-name|NULL
-block|;   }
 comment|/// \brief Build a empty switch statement.
 name|explicit
 name|SwitchStmt
@@ -3893,21 +3808,19 @@ operator|*
 name|getConditionVariable
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Var
-return|;
-block|}
+block|;
 name|void
 name|setConditionVariable
 argument_list|(
-argument|VarDecl *V
-argument_list|)
-block|{
-name|Var
-operator|=
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|VarDecl
+operator|*
 name|V
-block|; }
+argument_list|)
+block|;
 specifier|const
 name|Expr
 operator|*
@@ -4190,16 +4103,14 @@ name|public
 name|Stmt
 block|{   enum
 block|{
+name|VAR
+block|,
 name|COND
 block|,
 name|BODY
 block|,
 name|END_EXPR
 block|}
-block|;
-name|VarDecl
-operator|*
-name|Var
 block|;
 name|Stmt
 operator|*
@@ -4215,6 +4126,8 @@ name|public
 operator|:
 name|WhileStmt
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|VarDecl *Var
 argument_list|,
 argument|Expr *cond
@@ -4223,42 +4136,7 @@ argument|Stmt *body
 argument_list|,
 argument|SourceLocation WL
 argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-name|WhileStmtClass
-argument_list|)
-block|,
-name|Var
-argument_list|(
-argument|Var
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|COND
-index|]
-operator|=
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|cond
-operator|)
 block|;
-name|SubExprs
-index|[
-name|BODY
-index|]
-operator|=
-name|body
-block|;
-name|WhileLoc
-operator|=
-name|WL
-block|;   }
 comment|/// \brief Build an empty while statement.
 name|explicit
 name|WhileStmt
@@ -4286,21 +4164,19 @@ operator|*
 name|getConditionVariable
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Var
-return|;
-block|}
+block|;
 name|void
 name|setConditionVariable
 argument_list|(
-argument|VarDecl *V
-argument_list|)
-block|{
-name|Var
-operator|=
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|VarDecl
+operator|*
 name|V
-block|; }
+argument_list|)
+block|;
 name|Expr
 operator|*
 name|getCond
@@ -4840,6 +4716,8 @@ block|{   enum
 block|{
 name|INIT
 block|,
+name|CONDVAR
+block|,
 name|COND
 block|,
 name|INC
@@ -4857,10 +4735,6 @@ name|END_EXPR
 index|]
 block|;
 comment|// SubExprs[INIT] is an expression or declstmt.
-name|VarDecl
-operator|*
-name|CondVar
-block|;
 name|SourceLocation
 name|ForLoc
 block|;
@@ -4873,6 +4747,8 @@ name|public
 operator|:
 name|ForStmt
 argument_list|(
+argument|ASTContext&C
+argument_list|,
 argument|Stmt *Init
 argument_list|,
 argument|Expr *Cond
@@ -4889,74 +4765,7 @@ argument|SourceLocation LP
 argument_list|,
 argument|SourceLocation RP
 argument_list|)
-operator|:
-name|Stmt
-argument_list|(
-name|ForStmtClass
-argument_list|)
-block|,
-name|CondVar
-argument_list|(
-name|condVar
-argument_list|)
-block|,
-name|ForLoc
-argument_list|(
-name|FL
-argument_list|)
-block|,
-name|LParenLoc
-argument_list|(
-name|LP
-argument_list|)
-block|,
-name|RParenLoc
-argument_list|(
-argument|RP
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|INIT
-index|]
-operator|=
-name|Init
 block|;
-name|SubExprs
-index|[
-name|COND
-index|]
-operator|=
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|Cond
-operator|)
-block|;
-name|SubExprs
-index|[
-name|INC
-index|]
-operator|=
-name|reinterpret_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|Inc
-operator|)
-block|;
-name|SubExprs
-index|[
-name|BODY
-index|]
-operator|=
-name|Body
-block|;   }
 comment|/// \brief Build an empty for statement.
 name|explicit
 name|ForStmt
@@ -4996,21 +4805,19 @@ operator|*
 name|getConditionVariable
 argument_list|()
 specifier|const
-block|{
-return|return
-name|CondVar
-return|;
-block|}
+block|;
 name|void
 name|setConditionVariable
 argument_list|(
-argument|VarDecl *V
-argument_list|)
-block|{
-name|CondVar
-operator|=
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|VarDecl
+operator|*
 name|V
-block|; }
+argument_list|)
+block|;
 name|Expr
 operator|*
 name|getCond

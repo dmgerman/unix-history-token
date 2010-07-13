@@ -759,6 +759,11 @@ range|:
 literal|1
 decl_stmt|;
 name|bool
+name|TypeAltiVecBool
+range|:
+literal|1
+decl_stmt|;
+name|bool
 name|TypeSpecOwned
 range|:
 literal|1
@@ -958,6 +963,11 @@ name|false
 argument_list|)
 operator|,
 name|TypeAltiVecPixel
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|TypeAltiVecBool
 argument_list|(
 name|false
 argument_list|)
@@ -1175,6 +1185,15 @@ specifier|const
 block|{
 return|return
 name|TypeAltiVecPixel
+return|;
+block|}
+name|bool
+name|isTypeAltiVecBool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeAltiVecBool
 return|;
 block|}
 name|bool
@@ -3218,6 +3237,23 @@ name|delete
 index|[]
 name|Exceptions
 decl_stmt|;
+block|}
+comment|/// isKNRPrototype - Return true if this is a K&R style identifier list,
+comment|/// like "void foo(a,b,c)".  In a function definition, this will be followed
+comment|/// by the argument type definitions.
+name|bool
+name|isKNRPrototype
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasPrototype
+operator|&&
+name|NumArgs
+operator|!=
+literal|0
+return|;
 block|}
 name|SourceLocation
 name|getEllipsisLoc

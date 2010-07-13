@@ -1,0 +1,54 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -o - -O0 -triple x86_64-apple-darwin10 %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// Ensure that we don't emit available_externally functions at -O0.
+end_comment
+
+begin_decl_stmt
+name|int
+name|x
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|inline
+name|void
+name|f0
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+name|x
+operator|=
+name|y
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @test()
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f0(i32)
+end_comment
+
+begin_function
+name|void
+name|test
+parameter_list|()
+block|{
+name|f0
+argument_list|(
+literal|17
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+end_unit
+

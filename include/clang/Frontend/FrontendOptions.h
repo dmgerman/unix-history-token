@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/FrontendAction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -175,34 +181,6 @@ name|FrontendOptions
 block|{
 name|public
 label|:
-enum|enum
-name|InputKind
-block|{
-name|IK_None
-block|,
-name|IK_Asm
-block|,
-name|IK_C
-block|,
-name|IK_CXX
-block|,
-name|IK_ObjC
-block|,
-name|IK_ObjCXX
-block|,
-name|IK_PreprocessedC
-block|,
-name|IK_PreprocessedCXX
-block|,
-name|IK_PreprocessedObjC
-block|,
-name|IK_PreprocessedObjCXX
-block|,
-name|IK_OpenCL
-block|,
-name|IK_AST
-block|}
-enum|;
 name|unsigned
 name|DebugCodeCompletionPrinter
 range|:
@@ -224,6 +202,14 @@ decl_stmt|;
 comment|///< When generating PCH files,
 comment|/// instruct the PCH writer to create
 comment|/// relocatable PCH files.
+name|unsigned
+name|ChainedPCH
+range|:
+literal|1
+decl_stmt|;
+comment|///< When generating PCH files,
+comment|/// instruct the PCH writer to create
+comment|/// chained PCH files.
 name|unsigned
 name|ShowHelp
 range|:
@@ -316,6 +302,17 @@ operator|::
 name|string
 name|ActionName
 expr_stmt|;
+comment|/// Arg to pass to the plugin
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|PluginArgs
+expr_stmt|;
 comment|/// The list of plugins to load.
 name|std
 operator|::
@@ -374,6 +371,10 @@ operator|=
 literal|""
 expr_stmt|;
 name|RelocatablePCH
+operator|=
+literal|0
+expr_stmt|;
+name|ChainedPCH
 operator|=
 literal|0
 expr_stmt|;

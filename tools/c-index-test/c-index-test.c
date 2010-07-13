@@ -2470,14 +2470,6 @@ argument_list|(
 name|cursor
 argument_list|)
 decl_stmt|;
-name|CXType
-name|CT
-init|=
-name|clang_getCanonicalType
-argument_list|(
-name|T
-argument_list|)
-decl_stmt|;
 name|CXString
 name|S
 init|=
@@ -2503,6 +2495,21 @@ name|S
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|clang_disposeString
+argument_list|(
+name|S
+argument_list|)
+expr_stmt|;
+comment|/* Print the canonical type if it is different. */
+block|{
+name|CXType
+name|CT
+init|=
+name|clang_getCanonicalType
+argument_list|(
+name|T
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2540,11 +2547,53 @@ name|CS
 argument_list|)
 expr_stmt|;
 block|}
-name|clang_disposeString
+block|}
+comment|/* Print the return type if it exists. */
+block|{
+name|CXType
+name|RT
+init|=
+name|clang_getCursorResultType
 argument_list|(
-name|S
+name|cursor
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|RT
+operator|.
+name|kind
+operator|!=
+name|CXType_Invalid
+condition|)
+block|{
+name|CXString
+name|RS
+init|=
+name|clang_getTypeKindSpelling
+argument_list|(
+name|RT
+operator|.
+name|kind
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" [result=%s]"
+argument_list|,
+name|clang_getCString
+argument_list|(
+name|RS
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|clang_disposeString
+argument_list|(
+name|RS
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -4213,6 +4262,9 @@ name|char
 modifier|*
 modifier|*
 name|argv
+parameter_list|,
+name|int
+name|timing_only
 parameter_list|)
 block|{
 specifier|const
@@ -4261,6 +4313,18 @@ name|results
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|timing_only
+condition|)
+name|input
+operator|+=
+name|strlen
+argument_list|(
+literal|"-code-completion-timing="
+argument_list|)
+expr_stmt|;
+else|else
 name|input
 operator|+=
 name|strlen
@@ -4375,6 +4439,11 @@ name|results
 operator|->
 name|NumResults
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|timing_only
+condition|)
 for|for
 control|(
 name|i
@@ -6476,6 +6545,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: c-index-test -code-completion-at=<site><compiler arguments>\n"
+literal|"       c-index-test -code-completion-timing=<site><compiler arguments>\n"
 literal|"       c-index-test -cursor-at=<site><compiler arguments>\n"
 literal|"       c-index-test -test-file-scan<AST file><source file> "
 literal|"[FileCheck prefix]\n"
@@ -6484,13 +6554,13 @@ literal|"[FileCheck prefix]\n"
 literal|"       c-index-test -test-load-tu-usrs<AST file><symbol filter> "
 literal|"[FileCheck prefix]\n"
 literal|"       c-index-test -test-load-source<symbol filter> {<args>}*\n"
-literal|"       c-index-test -test-load-source-usrs<symbol filter> {<args>}*\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"       c-index-test -test-load-source-usrs<symbol filter> {<args>}*\n"
 literal|"       c-index-test -test-annotate-tokens=<range> {<args>}*\n"
 literal|"       c-index-test -test-inclusion-stack-source {<args>}*\n"
 literal|"       c-index-test -test-inclusion-stack-tu<AST file>\n"
@@ -6557,6 +6627,39 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
+argument_list|,
+literal|0
+argument_list|)
+return|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+operator|&&
+name|strstr
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-code-completion-timing="
+argument_list|)
+operator|==
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+return|return
+name|perform_code_completion
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|1
 argument_list|)
 return|;
 if|if

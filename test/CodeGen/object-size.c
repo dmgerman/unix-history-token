@@ -74,6 +74,10 @@ name|gj
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: define void @test1
+end_comment
+
 begin_function
 name|void
 name|test1
@@ -94,6 +98,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test2
+end_comment
+
 begin_function
 name|void
 name|test2
@@ -109,6 +117,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test3
+end_comment
 
 begin_function
 name|void
@@ -129,6 +141,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test4
+end_comment
 
 begin_function
 name|void
@@ -159,6 +175,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test5
+end_comment
+
 begin_function
 name|void
 name|test5
@@ -175,6 +195,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test6
+end_comment
 
 begin_function
 name|void
@@ -202,6 +226,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test7
+end_comment
+
 begin_function
 name|void
 name|test7
@@ -226,6 +254,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test8
+end_comment
 
 begin_function
 name|void
@@ -255,6 +287,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test9
+end_comment
+
 begin_function
 name|void
 name|test9
@@ -282,6 +318,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test10
+end_comment
 
 begin_decl_stmt
 name|char
@@ -312,13 +352,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test11
+end_comment
+
 begin_function
 name|void
 name|test11
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|gp
@@ -330,6 +374,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test12
+end_comment
 
 begin_function
 name|void
@@ -349,6 +397,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test13
+end_comment
+
 begin_function
 name|void
 name|test13
@@ -366,6 +418,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test14
+end_comment
 
 begin_function
 name|void
@@ -385,6 +441,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: define void @test15
+end_comment
+
 begin_function
 name|void
 name|test15
@@ -402,6 +462,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: define void @test16
+end_comment
 
 begin_function
 name|void

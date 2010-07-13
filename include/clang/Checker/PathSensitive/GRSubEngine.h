@@ -146,8 +146,8 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// ProcessStmt - Called by GRCoreEngine. Used to generate new successor
-comment|///  nodes by processing the 'effects' of a block-level statement.
+comment|/// Called by GRCoreEngine. Used to generate new successor
+comment|/// nodes by processing the 'effects' of a block-level statement.
 name|virtual
 name|void
 name|ProcessStmt
@@ -162,9 +162,9 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ProcessBlockEntrance - Called by GRCoreEngine when start processing
-comment|///  a CFGBlock.  This method returns true if the analysis should continue
-comment|///  exploring the given path, and false otherwise.
+comment|/// Called by GRCoreEngine when start processing
+comment|/// a CFGBlock.  This method returns true if the analysis should continue
+comment|/// exploring the given path, and false otherwise.
 name|virtual
 name|bool
 name|ProcessBlockEntrance
@@ -184,7 +184,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ProcessBranch - Called by GRCoreEngine.  Used to generate successor
+comment|/// Called by GRCoreEngine.  Used to generate successor
 comment|///  nodes by processing the 'effects' of a branch condition.
 name|virtual
 name|void
@@ -205,8 +205,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ProcessIndirectGoto - Called by GRCoreEngine.  Used to generate successor
-comment|///  nodes by processing the 'effects' of a computed goto jump.
+comment|/// Called by GRCoreEngine.  Used to generate successor
+comment|/// nodes by processing the 'effects' of a computed goto jump.
 name|virtual
 name|void
 name|ProcessIndirectGoto
@@ -218,8 +218,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// ProcessSwitch - Called by GRCoreEngine.  Used to generate successor
-comment|///  nodes by processing the 'effects' of a switch statement.
+comment|/// Called by GRCoreEngine.  Used to generate successor
+comment|/// nodes by processing the 'effects' of a switch statement.
 name|virtual
 name|void
 name|ProcessSwitch
@@ -268,8 +268,8 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// EvalAssume - Called by ConstraintManager. Used to call checker-specific
-comment|///  logic for handling assumptions on symbolic values.
+comment|/// Called by ConstraintManager. Used to call checker-specific
+comment|/// logic for handling assumptions on symbolic values.
 name|virtual
 specifier|const
 name|GRState
@@ -286,6 +286,18 @@ name|cond
 parameter_list|,
 name|bool
 name|assumption
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Called by GRCoreEngine when the analysis worklist is either empty or the
+comment|//  maximum number of analysis steps have been reached.
+name|virtual
+name|void
+name|ProcessEndWorklist
+parameter_list|(
+name|bool
+name|hasWorkRemaining
 parameter_list|)
 init|=
 literal|0

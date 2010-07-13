@@ -52,16 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|"llvm/Type.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|Type
-decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
@@ -145,11 +142,9 @@ label|:
 name|Kind
 name|TheKind
 decl_stmt|;
-specifier|const
 name|llvm
 operator|::
-name|Type
-operator|*
+name|PATypeHolder
 name|TypeData
 expr_stmt|;
 name|unsigned
@@ -479,6 +474,24 @@ operator|::
 name|LLVMContext
 operator|&
 name|VMContext
+argument_list|,
+comment|// This is the preferred type for argument lowering
+comment|// which can be used to generate better IR.
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+specifier|const
+operator|*
+name|PrefTypes
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|NumPrefTypes
+operator|=
+literal|0
 argument_list|)
 decl|const
 init|=

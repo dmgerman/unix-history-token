@@ -862,5 +862,50 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// PR7359
+end_comment
+
+begin_function
+name|void
+name|test17
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|x
+operator|>=
+literal|17
+condition|)
+block|{
+comment|// expected-warning {{switch condition has boolean value}}
+case|case
+literal|0
+case|:
+return|return;
+block|}
+switch|switch
+condition|(
+call|(
+name|int
+call|)
+argument_list|(
+name|x
+operator|<=
+literal|17
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return;
+block|}
+block|}
+end_function
+
 end_unit
 

@@ -749,6 +749,10 @@ literal|2.0
 argument_list|)
 end_macro
 
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
+
 begin_macro
 name|EVAL_EXPR
 argument_list|(

@@ -383,6 +383,16 @@ name|compound_literal
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|typeof
+argument_list|(
+argument|i + sizeof(int[i + Enumerator])
+argument_list|)
+name|add_result_with_typeinfo
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|// ExtVectorElementExpr
 end_comment

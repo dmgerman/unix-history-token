@@ -299,11 +299,19 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-note {{previous definition is here}}
+end_comment
+
 begin_decl_stmt
 name|int
 name|a
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-error {{non-static declaration of 'a' follows static declaration}}
+end_comment
 
 end_unit
 

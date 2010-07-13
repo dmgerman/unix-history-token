@@ -121,6 +121,12 @@ name|InputArgList
 modifier|*
 name|Args
 decl_stmt|;
+comment|/// The driver translated arguments. Note that toolchains may perform their
+comment|/// own argument translation.
+name|DerivedArgList
+modifier|*
+name|TranslatedArgs
+decl_stmt|;
 comment|/// The list of actions.
 name|ActionList
 name|Actions
@@ -129,7 +135,8 @@ comment|/// The root list of jobs.
 name|JobList
 name|Jobs
 decl_stmt|;
-comment|/// Cache of translated arguments for a particular tool chain.
+comment|/// Cache of translated arguments for a particular tool chain and bound
+comment|/// architecture.
 name|llvm
 operator|::
 name|DenseMap
@@ -177,6 +184,10 @@ argument_list|,
 name|InputArgList
 operator|*
 name|Args
+argument_list|,
+name|DerivedArgList
+operator|*
+name|TranslatedArgs
 argument_list|)
 expr_stmt|;
 operator|~
@@ -208,13 +219,25 @@ block|}
 specifier|const
 name|InputArgList
 operator|&
-name|getArgs
+name|getInputArgs
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|*
 name|Args
+return|;
+block|}
+specifier|const
+name|DerivedArgList
+operator|&
+name|getArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TranslatedArgs
 return|;
 block|}
 name|ActionList

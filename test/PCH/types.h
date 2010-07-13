@@ -195,5 +195,33 @@ name|int_ptr_ptr2
 expr_stmt|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|S2
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|S2
+block|{}
+struct|;
+end_struct
+
+begin_enum_decl
+enum_decl|enum
+name|E
+enum_decl|;
+end_enum_decl
+
+begin_enum
+enum|enum
+name|E
+block|{
+name|myenum
+block|}
+enum|;
+end_enum
+
 end_unit
 

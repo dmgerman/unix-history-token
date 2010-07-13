@@ -22,7 +22,7 @@ return|return
 operator|&
 name|x
 return|;
-comment|// expected-warning{{Address of stack memory associated with local variable 'x' returned.}} expected-warning{{address of stack memory associated with local variable 'x' returned}}
+comment|// expected-warning{{Address of stack memory associated with local variable 'x' returned}} expected-warning{{address of stack memory associated with local variable 'x' returned}}
 block|}
 end_function
 
@@ -39,7 +39,7 @@ return|return
 operator|&
 name|y
 return|;
-comment|// expected-warning{{Address of stack memory associated with local variable 'y' returned.}} expected-warning{{address of stack memory associated with local variable 'y' returned}}
+comment|// expected-warning{{Address of stack memory associated with local variable 'y' returned}} expected-warning{{address of stack memory associated with local variable 'y' returned}}
 block|}
 end_function
 
@@ -73,7 +73,7 @@ expr_stmt|;
 return|return
 name|y
 return|;
-comment|// expected-warning{{Address of stack memory associated with local variable 'w' returned.}}
+comment|// expected-warning{{Address of stack memory associated with local variable 'w' returned to caller}}
 block|}
 end_function
 

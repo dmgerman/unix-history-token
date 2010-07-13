@@ -17,7 +17,9 @@ end_struct
 begin_enum
 enum|enum
 name|mad_flow
-block|{}
+block|{
+name|ont
+block|}
 enum|;
 end_enum
 

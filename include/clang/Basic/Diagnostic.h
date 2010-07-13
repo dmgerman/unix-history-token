@@ -113,9 +113,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -146,12 +143,6 @@ name|PartialDiagnostic
 decl_stmt|;
 name|class
 name|Preprocessor
-decl_stmt|;
-name|class
-name|SourceManager
-decl_stmt|;
-name|class
-name|SourceRange
 decl_stmt|;
 comment|// Import the diagnostic enums themselves.
 name|namespace
@@ -303,8 +294,8 @@ name|FixItHint
 block|{
 name|public
 label|:
-comment|/// \brief Tokens that should be removed to correct the error.
-name|SourceRange
+comment|/// \brief Code that should be removed to correct the error.
+name|CharSourceRange
 name|RemoveRange
 decl_stmt|;
 comment|/// \brief The location at which we should insert code to correct
@@ -389,7 +380,7 @@ specifier|static
 name|FixItHint
 name|CreateRemoval
 parameter_list|(
-name|SourceRange
+name|CharSourceRange
 name|RemoveRange
 parameter_list|)
 block|{
@@ -406,13 +397,33 @@ return|return
 name|Hint
 return|;
 block|}
+specifier|static
+name|FixItHint
+name|CreateRemoval
+parameter_list|(
+name|SourceRange
+name|RemoveRange
+parameter_list|)
+block|{
+return|return
+name|CreateRemoval
+argument_list|(
+name|CharSourceRange
+operator|::
+name|getTokenRange
+argument_list|(
+name|RemoveRange
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create a code modification hint that replaces the given
 comment|/// source range with the given code string.
 specifier|static
 name|FixItHint
 name|CreateReplacement
 argument_list|(
-name|SourceRange
+name|CharSourceRange
 name|RemoveRange
 argument_list|,
 name|llvm
@@ -447,6 +458,33 @@ name|Code
 expr_stmt|;
 return|return
 name|Hint
+return|;
+block|}
+specifier|static
+name|FixItHint
+name|CreateReplacement
+argument_list|(
+name|SourceRange
+name|RemoveRange
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Code
+argument_list|)
+block|{
+return|return
+name|CreateReplacement
+argument_list|(
+name|CharSourceRange
+operator|::
+name|getTokenRange
+argument_list|(
+name|RemoveRange
+argument_list|)
+argument_list|,
+name|Code
+argument_list|)
 return|;
 block|}
 block|}
@@ -528,6 +566,18 @@ name|ak_declcontext
 comment|// DeclContext *
 block|}
 block|;
+comment|/// Specifies which overload candidates to display when overload resolution
+comment|/// fails.
+block|enum
+name|OverloadsShown
+block|{
+name|Ovl_All
+block|,
+comment|///< Show all overloads.
+name|Ovl_Best
+comment|///< Show just the "best" overload candidates.
+block|}
+block|;
 comment|/// ArgumentValue - This typedef represents on argument value, which is a
 comment|/// union discriminated by ArgumentKind, with a value.
 typedef|typedef
@@ -568,6 +618,10 @@ name|bool
 name|SuppressAllDiagnostics
 decl_stmt|;
 comment|// Suppress all diagnostics.
+name|OverloadsShown
+name|ShowOverloads
+decl_stmt|;
+comment|// Which overload candidates to show.
 name|unsigned
 name|ErrorLimit
 decl_stmt|;
@@ -950,6 +1004,29 @@ specifier|const
 block|{
 return|return
 name|SuppressAllDiagnostics
+return|;
+block|}
+comment|/// \brief Specify which overload candidates to show when overload resolution
+comment|/// fails.  By default, we show all candidates.
+name|void
+name|setShowOverloads
+parameter_list|(
+name|OverloadsShown
+name|Val
+parameter_list|)
+block|{
+name|ShowOverloads
+operator|=
+name|Val
+expr_stmt|;
+block|}
+name|OverloadsShown
+name|getShowOverloads
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShowOverloads
 return|;
 block|}
 comment|/// \brief Pretend that the last diagnostic issued was ignored. This can
@@ -1709,7 +1786,7 @@ index|]
 decl_stmt|;
 comment|/// DiagRanges - The list of ranges added to this diagnostic.  It currently
 comment|/// only support 10 ranges, could easily be extended if needed.
-name|SourceRange
+name|CharSourceRange
 name|DiagRanges
 index|[
 literal|10
@@ -2083,7 +2160,7 @@ name|void
 name|AddSourceRange
 argument_list|(
 specifier|const
-name|SourceRange
+name|CharSourceRange
 operator|&
 name|R
 argument_list|)
@@ -2491,6 +2568,43 @@ name|DB
 operator|,
 specifier|const
 name|SourceRange
+operator|&
+name|R
+operator|)
+block|{
+name|DB
+operator|.
+name|AddSourceRange
+argument_list|(
+name|CharSourceRange
+operator|::
+name|getTokenRange
+argument_list|(
+name|R
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|DB
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+specifier|const
+name|CharSourceRange
 operator|&
 name|R
 operator|)
@@ -2976,7 +3090,9 @@ operator|->
 name|NumDiagRanges
 return|;
 block|}
-name|SourceRange
+specifier|const
+name|CharSourceRange
+modifier|&
 name|getRange
 argument_list|(
 name|unsigned
@@ -3132,7 +3248,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|SourceRange
+name|CharSourceRange
 operator|>
 name|Ranges
 expr_stmt|;
@@ -3220,7 +3336,7 @@ name|std
 operator|::
 name|vector
 operator|<
-name|SourceRange
+name|CharSourceRange
 operator|>
 operator|::
 name|const_iterator

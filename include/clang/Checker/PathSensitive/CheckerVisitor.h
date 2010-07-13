@@ -302,7 +302,14 @@ argument|CheckerContext&C
 argument_list|,
 argument|const Stmt *S
 argument_list|)
-block|{}
+block|{
+operator|*
+name|C
+operator|.
+name|respondsToCallback
+operator|=
+name|false
+block|;   }
 name|void
 name|PostVisitStmt
 argument_list|(
@@ -310,7 +317,14 @@ argument|CheckerContext&C
 argument_list|,
 argument|const Stmt *S
 argument_list|)
-block|{}
+block|{
+operator|*
+name|C
+operator|.
+name|respondsToCallback
+operator|=
+name|false
+block|;   }
 name|void
 name|PreVisitCastExpr
 argument_list|(

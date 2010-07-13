@@ -1120,22 +1120,16 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__intn_t
-argument_list|(
-argument|__INTMAX_WIDTH__
-argument_list|)
+name|__INTMAX_TYPE__
 name|intmax_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uintn_t
-argument_list|(
-argument|__INTMAX_WIDTH__
-argument_list|)
+name|__UINTMAX_TYPE__
 name|uintmax_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_comment

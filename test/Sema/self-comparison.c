@@ -16,7 +16,7 @@ name|x
 operator|==
 name|x
 return|;
-comment|// expected-warning {{self-comparison always results}}
+comment|// expected-warning {{self-comparison always evaluates to true}}
 block|}
 end_function
 
@@ -41,7 +41,69 @@ operator|)
 operator|)
 operator|)
 return|;
-comment|// expected-warning {{self-comparison always results}}
+comment|// expected-warning {{self-comparison always evaluates to false}}
+block|}
+end_function
+
+begin_function
+name|void
+name|foo3
+parameter_list|(
+name|short
+name|s
+parameter_list|,
+name|short
+name|t
+parameter_list|)
+block|{
+if|if
+condition|(
+name|s
+operator|==
+name|s
+condition|)
+block|{}
+comment|// expected-warning {{self-comparison always evaluates to true}}
+if|if
+condition|(
+name|s
+operator|==
+name|t
+condition|)
+block|{}
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|foo4
+parameter_list|(
+name|void
+modifier|*
+name|v
+parameter_list|,
+name|void
+modifier|*
+name|w
+parameter_list|)
+block|{
+if|if
+condition|(
+name|v
+operator|==
+name|v
+condition|)
+block|{}
+comment|// expected-warning {{self-comparison always evaluates to true}}
+if|if
+condition|(
+name|v
+operator|==
+name|w
+condition|)
+block|{}
+comment|// no-warning
 block|}
 end_function
 
@@ -113,34 +175,27 @@ comment|// no-warning
 block|}
 end_function
 
-begin_comment
-comment|// Motivated by<rdar://problem/6703892>, self-comparisons of enum constants
-end_comment
-
-begin_comment
-comment|// should not be warned about.  These can be expanded from macros, and thus
-end_comment
-
-begin_comment
-comment|// are usually deliberate.
-end_comment
+begin_define
+define|#
+directive|define
+name|IS_THE_ANSWER
+parameter_list|(
+name|x
+parameter_list|)
+value|(x == 42)
+end_define
 
 begin_function
 name|int
-name|compare_enum
+name|macro_comparison
 parameter_list|()
 block|{
-enum|enum
-block|{
-name|A
-block|}
-enum|;
 return|return
-name|A
-operator|==
-name|A
+name|IS_THE_ANSWER
+argument_list|(
+literal|42
+argument_list|)
 return|;
-comment|// no-warning
 block|}
 end_function
 
@@ -165,6 +220,107 @@ name|x
 argument_list|)
 return|;
 comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|int
+name|array_comparisons
+parameter_list|()
+block|{
+name|int
+name|array1
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|array2
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|//
+comment|// compare same array
+comment|//
+return|return
+name|array1
+operator|==
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to true}}
+return|return
+name|array1
+operator|!=
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to false}}
+return|return
+name|array1
+operator|<
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to false}}
+return|return
+name|array1
+operator|<=
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to true}}
+return|return
+name|array1
+operator|>
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to false}}
+return|return
+name|array1
+operator|>=
+name|array1
+return|;
+comment|// expected-warning{{self-comparison always evaluates to true}}
+comment|//
+comment|// compare differrent arrays
+comment|//
+return|return
+name|array1
+operator|==
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to false}}
+return|return
+name|array1
+operator|!=
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to true}}
+comment|//
+comment|// we don't know what these are going to be
+comment|//
+return|return
+name|array1
+operator|<
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to a constant}}
+return|return
+name|array1
+operator|<=
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to a constant}}
+return|return
+name|array1
+operator|>
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to a constant}}
+return|return
+name|array1
+operator|>=
+name|array2
+return|;
+comment|// expected-warning{{array comparison always evaluates to a constant}}
 block|}
 end_function
 

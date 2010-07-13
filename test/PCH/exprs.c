@@ -291,6 +291,13 @@ name|integer
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|add_result_with_typeinfo
+modifier|*
+name|int_typeinfo_ptr6
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// ConditionalOperator
 end_comment

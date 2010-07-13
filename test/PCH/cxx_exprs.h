@@ -327,6 +327,10 @@ name|int
 argument_list|()
 block|;
 comment|// CXXZeroInitValueExpr
+name|Base
+operator|*
+name|b
+operator|=
 name|new
 name|Base
 argument_list|(
@@ -334,6 +338,10 @@ literal|4
 argument_list|)
 block|;
 comment|// CXXNewExpr
+name|delete
+name|b
+block|;
+comment|// CXXDeleteExpr
 block|}
 comment|// FIXME: The comment on CXXTemporaryObjectExpr is broken, this doesn't make
 comment|// one.

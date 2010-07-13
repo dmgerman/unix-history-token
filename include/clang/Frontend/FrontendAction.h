@@ -61,22 +61,68 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|ASTUnit
-decl_stmt|;
-name|class
 name|ASTConsumer
-decl_stmt|;
-name|class
-name|CompilerInstance
 decl_stmt|;
 name|class
 name|ASTMergeAction
 decl_stmt|;
+name|class
+name|ASTUnit
+decl_stmt|;
+name|class
+name|CompilerInstance
+decl_stmt|;
+enum|enum
+name|InputKind
+block|{
+name|IK_None
+block|,
+name|IK_Asm
+block|,
+name|IK_C
+block|,
+name|IK_CXX
+block|,
+name|IK_ObjC
+block|,
+name|IK_ObjCXX
+block|,
+name|IK_PreprocessedC
+block|,
+name|IK_PreprocessedCXX
+block|,
+name|IK_PreprocessedObjC
+block|,
+name|IK_PreprocessedObjCXX
+block|,
+name|IK_OpenCL
+block|,
+name|IK_AST
+block|,
+name|IK_LLVM_IR
+block|}
+enum|;
 comment|/// FrontendAction - Abstract base class for actions which can be performed by
 comment|/// the frontend.
 name|class
@@ -87,6 +133,9 @@ operator|::
 name|string
 name|CurrentFile
 expr_stmt|;
+name|InputKind
+name|CurrentFileKind
+decl_stmt|;
 name|llvm
 operator|::
 name|OwningPtr
@@ -274,6 +323,26 @@ return|return
 name|CurrentFile
 return|;
 block|}
+name|InputKind
+name|getCurrentFileKind
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CurrentFile
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"No current file!"
+argument_list|)
+block|;
+return|return
+name|CurrentFileKind
+return|;
+block|}
 name|ASTUnit
 operator|&
 name|getCurrentASTUnit
@@ -312,6 +381,9 @@ name|llvm
 operator|::
 name|StringRef
 name|Value
+argument_list|,
+name|InputKind
+name|Kind
 argument_list|,
 name|ASTUnit
 operator|*
@@ -358,10 +430,10 @@ name|usesPreprocessorOnly
 argument_list|()
 return|;
 block|}
-comment|/// hasASTSupport - Does this action support use with AST files?
+comment|/// hasASTFileSupport - Does this action support use with AST files?
 name|virtual
 name|bool
-name|hasASTSupport
+name|hasASTFileSupport
 argument_list|()
 specifier|const
 block|{
@@ -369,6 +441,17 @@ return|return
 operator|!
 name|usesPreprocessorOnly
 argument_list|()
+return|;
+block|}
+comment|/// hasIRSupport - Does this action support use with IR files?
+name|virtual
+name|bool
+name|hasIRSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
 return|;
 block|}
 comment|/// hasCodeCompletionSupport - Does this action support use with code
@@ -397,12 +480,13 @@ comment|///
 comment|/// \param Filename - The input filename, which will be made available to
 comment|/// clients via \see getCurrentFile().
 comment|///
-comment|/// \param IsAST - Indicates whether this is an AST input. AST inputs require
-comment|/// special handling, since the AST file itself contains several objects which
-comment|/// would normally be owned by the CompilerInstance. When processing AST input
-comment|/// files, these objects should generally not be initialized in the
-comment|/// CompilerInstance -- they will automatically be shared with the AST file in
-comment|/// between \see BeginSourceFile() and \see EndSourceFile().
+comment|/// \param InputKind - The type of input. Some input kinds are handled
+comment|/// specially, for example AST inputs, since the AST file itself contains
+comment|/// several objects which would normally be owned by the
+comment|/// CompilerInstance. When processing AST input files, these objects should
+comment|/// generally not be initialized in the CompilerInstance -- they will
+comment|/// automatically be shared with the AST file in between \see
+comment|/// BeginSourceFile() and \see EndSourceFile().
 comment|///
 comment|/// \return True on success; the compilation of this file should be aborted
 comment|/// and neither Execute nor EndSourceFile should be called.
@@ -418,10 +502,8 @@ operator|::
 name|StringRef
 name|Filename
 argument_list|,
-name|bool
-name|IsAST
-operator|=
-name|false
+name|InputKind
+name|Kind
 argument_list|)
 decl_stmt|;
 comment|/// Execute - Set the source managers main input file, and run the action.
@@ -446,6 +528,8 @@ range|:
 name|public
 name|FrontendAction
 block|{
+name|protected
+operator|:
 comment|/// ExecuteAction - Implement the ExecuteAction interface by running Sema on
 comment|/// the already initialized AST consumer.
 comment|///
@@ -469,6 +553,60 @@ name|false
 return|;
 block|}
 expr|}
+block|;
+name|class
+name|PluginASTAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|)
+operator|=
+literal|0
+block|;
+name|public
+operator|:
+name|virtual
+name|bool
+name|ParseArgs
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|arg
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|PrintHelp
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+argument_list|)
+operator|=
+literal|0
+block|; }
 block|;
 comment|/// PreprocessorFrontendAction - Abstract base class to use for preprocessor
 comment|/// based frontend actions.

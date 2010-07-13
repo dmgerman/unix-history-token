@@ -12,7 +12,7 @@ name|int
 name|nan_ne_check
 parameter_list|()
 block|{
-comment|// CHECK: store i32 1
+comment|// CHECK: ret i32 1
 return|return
 operator|(
 name|__builtin_nanf

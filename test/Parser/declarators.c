@@ -478,5 +478,57 @@ argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|//<rdar://problem/8044088>
+end_comment
+
+begin_expr_stmt
+unit|struct
+name|X
+operator|<
+name|foo
+operator|::
+name|int
+operator|>
+block|{ }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-error{{expected identifier or '('}}
+end_comment
+
+begin_comment
+comment|// PR7617 - error recovery on missing ;.
+end_comment
+
+begin_expr_stmt
+name|void
+name|test14
+argument_list|()
+comment|// expected-error {{expected ';' after top level declarator}}
+name|void
+name|test14a
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|test14b
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|test14a
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Make sure test14a didn't get skipped.
+end_comment
+
 end_unit
 

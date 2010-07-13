@@ -90,10 +90,6 @@ name|=
 name|mac68k
 end_pragma
 
-begin_comment
-comment|/* expected-warning {{unsupported alignment option}} */
-end_comment
-
 begin_pragma
 pragma|#
 directive|pragma

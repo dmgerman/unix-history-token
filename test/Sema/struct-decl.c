@@ -205,5 +205,21 @@ parameter_list|)
 block|{}
 end_function
 
+begin_comment
+comment|//<rdar://problem/8177927> - This previously triggered an assertion failure.
+end_comment
+
+begin_struct
+struct|struct
+name|x0
+block|{
+name|unsigned
+name|int
+name|x1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 end_unit
 

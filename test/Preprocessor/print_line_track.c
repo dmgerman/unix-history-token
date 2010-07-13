@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %clang_cc1 -E %s | grep 'a 3'  * RUN: %clang_cc1 -E %s | grep 'b 16'  * RUN: %clang_cc1 -E -P %s | grep 'a 3'  * RUN: %clang_cc1 -E -P %s | grep 'b 16'  * RUN: %clang_cc1 -E %s | not grep '# 0 '  * PR1848  * PR3437 */
+comment|/* RUN: %clang_cc1 -E %s | grep 'a 3'  * RUN: %clang_cc1 -E %s | grep 'b 16'  * RUN: %clang_cc1 -E -P %s | grep 'a 3'  * RUN: %clang_cc1 -E -P %s | grep 'b 16'  * RUN: %clang_cc1 -E %s | not grep '# 0 '  * RUN: %clang_cc1 -E -P %s | count 4  * PR1848 PR3437 PR7360 */
 end_comment
 
 begin_define

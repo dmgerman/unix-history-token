@@ -132,6 +132,9 @@ name|class
 name|Compilation
 decl_stmt|;
 name|class
+name|DerivedArgList
+decl_stmt|;
+name|class
 name|HostInfo
 decl_stmt|;
 name|class
@@ -368,6 +371,21 @@ name|string
 operator|>
 name|ResultFiles
 expr_stmt|;
+name|private
+label|:
+comment|/// TranslateInputArgs - Create a new derived argument list from the input
+comment|/// arguments, after applying the standard argument translations.
+name|DerivedArgList
+modifier|*
+name|TranslateInputArgs
+argument_list|(
+specifier|const
+name|InputArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|Driver

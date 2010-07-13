@@ -133,6 +133,9 @@ name|class
 name|FrontendAction
 decl_stmt|;
 name|class
+name|PCHReader
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -295,6 +298,11 @@ operator|>
 expr|>
 name|OutputFiles
 expr_stmt|;
+comment|/// The PCH reader. Not owned; the ASTContext owns this.
+name|PCHReader
+modifier|*
+name|Reader
+decl_stmt|;
 name|void
 name|operator
 init|=
@@ -1463,6 +1471,16 @@ operator|&
 name|Context
 argument_list|)
 decl_stmt|;
+comment|/// Get the PCH reader, if any.
+name|PCHReader
+modifier|*
+name|getPCHReader
+parameter_list|()
+block|{
+return|return
+name|Reader
+return|;
+block|}
 comment|/// Create a code completion consumer using the invocation; note that this
 comment|/// will cause the source manager to truncate the input source file at the
 comment|/// completion point.

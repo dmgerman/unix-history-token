@@ -68,5 +68,37 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR7564
+end_comment
+
+begin_struct
+struct|struct
+name|GLGENH
+block|{
+name|int
+label|:
+literal|27
+expr_stmt|;
+name|int
+name|EMHJAA
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|GLGENH
+name|ABHFBF
+init|=
+block|{
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

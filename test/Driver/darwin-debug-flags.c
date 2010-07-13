@@ -12,19 +12,11 @@ comment|// CHECK: !1 = metadata !{
 end_comment
 
 begin_comment
-comment|// CHECK: -cc1
+comment|// CHECK: -mmacosx-version-min=10.5.0
 end_comment
 
 begin_comment
-comment|// CHECK: -triple i386-apple-darwin9
-end_comment
-
-begin_comment
-comment|// CHECK: -g
-end_comment
-
-begin_comment
-comment|// CHECK: -Os
+comment|// CHECK: -g -Os
 end_comment
 
 begin_comment

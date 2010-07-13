@@ -1312,6 +1312,14 @@ expr_stmt|;
 block|}
 block|}
 name|bool
+name|isSupersetOf
+argument_list|(
+name|Qualifiers
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
 name|operator
 operator|==
 operator|(
@@ -2708,6 +2716,42 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine the type of an expression that calls a function of
+end_comment
+
+begin_comment
+comment|/// with the given result type.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine removes a top-level reference (since there are no
+end_comment
+
+begin_comment
+comment|/// expressions of reference type) and deletes top-level cvr-qualifiers
+end_comment
+
+begin_comment
+comment|/// from non-class types (in C++) or all types (in C).
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getCallResultType
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getDesugaredType - Return the specified type with any "sugar" removed from
 end_comment
 
@@ -3488,6 +3532,12 @@ specifier|const
 expr_stmt|;
 comment|/// Helper methods to distinguish type categories. All type predicates
 comment|/// operate on the canonical type, ignoring typedefs and qualifiers.
+comment|/// isBuiltinType - returns true if the type is a builtin type.
+name|bool
+name|isBuiltinType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// isSpecificBuiltinType - Test for a particular builtin type.
 name|bool
 name|isSpecificBuiltinType
@@ -3532,6 +3582,16 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isIntegralType
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Determine whether this type is an integral or enumeration type.
+name|bool
+name|isIntegralOrEnumerationType
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -3858,6 +3918,13 @@ name|hasObjCPointerRepresentation
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Determine whether this type has a floating-point representation
+comment|/// of some sort, e.g., it is a floating-point type or a vector thereof.
+name|bool
+name|hasFloatingRepresentation
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Type Checking Functions: Check to see if this type is structurally the
 comment|// specified type, ignoring typedefs and qualifiers, and return a pointer to
 comment|// the best type we can.
@@ -4058,6 +4125,14 @@ return|return
 name|true
 return|;
 block|}
+name|friend
+name|class
+name|PCHReader
+decl_stmt|;
+name|friend
+name|class
+name|PCHWriter
+decl_stmt|;
 block|}
 empty_stmt|;
 name|template
@@ -6668,6 +6743,24 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+name|public
+operator|:
+expr|enum
+name|AltiVecSpecific
+block|{
+name|NotAltiVec
+block|,
+comment|// is not AltiVec vector
+name|AltiVec
+block|,
+comment|// is AltiVec vector
+name|Pixel
+block|,
+comment|// is AltiVec 'vector Pixel'
+name|Bool
+comment|// is AltiVec 'vector bool ...'
+block|}
+block|;
 name|protected
 operator|:
 comment|/// ElementType - The element type of the vector.
@@ -6678,13 +6771,8 @@ comment|/// NumElements - The number of elements in the vector.
 name|unsigned
 name|NumElements
 block|;
-comment|/// AltiVec - True if this is for an Altivec vector.
-name|bool
-name|AltiVec
-block|;
-comment|/// Pixel - True if this is for an Altivec vector pixel.
-name|bool
-name|Pixel
+name|AltiVecSpecific
+name|AltiVecSpec
 block|;
 name|VectorType
 argument_list|(
@@ -6694,9 +6782,7 @@ argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
 argument_list|,
-argument|bool isAltiVec
-argument_list|,
-argument|bool isPixel
+argument|AltiVecSpecific altiVecSpec
 argument_list|)
 operator|:
 name|Type
@@ -6721,14 +6807,9 @@ argument_list|(
 name|nElements
 argument_list|)
 block|,
-name|AltiVec
+name|AltiVecSpec
 argument_list|(
-name|isAltiVec
-argument_list|)
-block|,
-name|Pixel
-argument_list|(
-argument|isPixel
+argument|altiVecSpec
 argument_list|)
 block|{}
 name|VectorType
@@ -6741,9 +6822,7 @@ argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
 argument_list|,
-argument|bool isAltiVec
-argument_list|,
-argument|bool isPixel
+argument|AltiVecSpecific altiVecSpec
 argument_list|)
 operator|:
 name|Type
@@ -6768,14 +6847,9 @@ argument_list|(
 name|nElements
 argument_list|)
 block|,
-name|AltiVec
+name|AltiVecSpec
 argument_list|(
-name|isAltiVec
-argument_list|)
-block|,
-name|Pixel
-argument_list|(
-argument|isPixel
+argument|altiVecSpec
 argument_list|)
 block|{}
 name|friend
@@ -6832,22 +6906,13 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|bool
-name|isAltiVec
+name|AltiVecSpecific
+name|getAltiVecSpecific
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AltiVec
-return|;
-block|}
-name|bool
-name|isPixel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Pixel
+name|AltiVecSpec
 return|;
 block|}
 name|void
@@ -6869,9 +6934,7 @@ argument_list|,
 name|getTypeClass
 argument_list|()
 argument_list|,
-name|AltiVec
-argument_list|,
-name|Pixel
+name|AltiVecSpec
 argument_list|)
 block|;   }
 specifier|static
@@ -6886,9 +6949,7 @@ argument|unsigned NumElements
 argument_list|,
 argument|TypeClass TypeClass
 argument_list|,
-argument|bool isAltiVec
-argument_list|,
-argument|bool isPixel
+argument|unsigned AltiVecSpec
 argument_list|)
 block|{
 name|ID
@@ -6917,16 +6978,9 @@ argument_list|)
 block|;
 name|ID
 operator|.
-name|AddBoolean
+name|AddInteger
 argument_list|(
-name|isAltiVec
-argument_list|)
-block|;
-name|ID
-operator|.
-name|AddBoolean
-argument_list|(
-name|isPixel
+name|AltiVecSpec
 argument_list|)
 block|;   }
 specifier|static
@@ -6995,9 +7049,7 @@ argument|nElements
 argument_list|,
 argument|canonType
 argument_list|,
-argument|false
-argument_list|,
-argument|false
+argument|NotAltiVec
 argument_list|)
 block|{}
 name|friend
@@ -7729,6 +7781,25 @@ operator|(
 name|CallingConv
 operator|)
 name|CallConv
+argument_list|)
+return|;
+block|}
+comment|/// \brief Determine the type of an expression that calls a function of
+comment|/// this type.
+name|QualType
+name|getCallResultType
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getResultType
+argument_list|()
+operator|.
+name|getCallResultType
+argument_list|(
+name|Context
 argument_list|)
 return|;
 block|}
@@ -10173,23 +10244,6 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|// The ASTContext is currently needed in order to profile expressions.
-comment|// FIXME: avoid this.
-comment|//
-comment|// The bool is whether this is a current instantiation.
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|ASTContext
-operator|*
-block|,
-literal|1
-block|,
-name|bool
-operator|>
-name|ContextAndCurrentInstantiation
-block|;
 comment|/// \brief The name of the template being specialized.
 name|TemplateName
 name|Template
@@ -10201,11 +10255,7 @@ name|NumArgs
 block|;
 name|TemplateSpecializationType
 argument_list|(
-argument|ASTContext&Context
-argument_list|,
 argument|TemplateName T
-argument_list|,
-argument|bool IsCurrentInstantiation
 argument_list|,
 argument|const TemplateArgument *Args
 argument_list|,
@@ -10311,10 +10361,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ContextAndCurrentInstantiation
-operator|.
-name|getInt
+name|isa
+operator|<
+name|InjectedClassNameType
+operator|>
+operator|(
+name|getCanonicalTypeInternal
 argument_list|()
+operator|)
 return|;
 block|}
 typedef|typedef
@@ -10338,6 +10392,7 @@ name|end
 argument_list|()
 specifier|const
 block|;
+comment|// defined inline in TemplateBase.h
 comment|/// \brief Retrieve the name of the template that we are specializing.
 name|TemplateName
 name|getTemplateName
@@ -10391,6 +10446,7 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+comment|// in TemplateBase.h
 name|bool
 name|isSugared
 argument_list|()
@@ -10419,6 +10475,8 @@ name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|ASTContext&Ctx
 argument_list|)
 block|{
 name|Profile
@@ -10427,19 +10485,12 @@ name|ID
 argument_list|,
 name|Template
 argument_list|,
-name|isCurrentInstantiation
-argument_list|()
-argument_list|,
 name|getArgs
 argument_list|()
 argument_list|,
 name|NumArgs
 argument_list|,
-operator|*
-name|ContextAndCurrentInstantiation
-operator|.
-name|getPointer
-argument_list|()
+name|Ctx
 argument_list|)
 block|;   }
 specifier|static
@@ -10449,8 +10500,6 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|TemplateName T
-argument_list|,
-argument|bool IsCurrentInstantiation
 argument_list|,
 argument|const TemplateArgument *Args
 argument_list|,
@@ -10537,6 +10586,13 @@ name|class
 name|TagDecl
 block|;
 comment|// TagDecl mutilates the Decl
+name|friend
+name|class
+name|PCHReader
+block|;
+comment|// FIXME: ASTContext::getInjectedClassNameType is not
+comment|// currently suitable for PCH reading, too much
+comment|// interdependencies.
 name|InjectedClassNameType
 argument_list|(
 argument|CXXRecordDecl *D
@@ -10967,6 +11023,10 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
+operator|~
+name|ElaboratedType
+argument_list|()
+block|;
 comment|/// \brief Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
@@ -11115,23 +11175,10 @@ name|NestedNameSpecifier
 operator|*
 name|NNS
 block|;
-typedef|typedef
-name|llvm
-operator|::
-name|PointerUnion
-operator|<
+comment|/// \brief The type that this typename specifier refers to.
 specifier|const
 name|IdentifierInfo
 operator|*
-operator|,
-specifier|const
-name|TemplateSpecializationType
-operator|*
-operator|>
-name|NameType
-expr_stmt|;
-comment|/// \brief The type that this typename specifier refers to.
-name|NameType
 name|Name
 block|;
 name|DependentNameType
@@ -11176,48 +11223,6 @@ operator|&&
 literal|"DependentNameType requires a dependent nested-name-specifier"
 argument_list|)
 block|;   }
-name|DependentNameType
-argument_list|(
-argument|ElaboratedTypeKeyword Keyword
-argument_list|,
-argument|NestedNameSpecifier *NNS
-argument_list|,
-argument|const TemplateSpecializationType *Ty
-argument_list|,
-argument|QualType CanonType
-argument_list|)
-operator|:
-name|TypeWithKeyword
-argument_list|(
-name|Keyword
-argument_list|,
-name|DependentName
-argument_list|,
-name|CanonType
-argument_list|,
-name|true
-argument_list|)
-block|,
-name|NNS
-argument_list|(
-name|NNS
-argument_list|)
-block|,
-name|Name
-argument_list|(
-argument|Ty
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|NNS
-operator|->
-name|isDependent
-argument_list|()
-operator|&&
-literal|"DependentNameType requires a dependent nested-name-specifier"
-argument_list|)
-block|;   }
 name|friend
 name|class
 name|ASTContext
@@ -11225,6 +11230,11 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
+name|virtual
+operator|~
+name|DependentNameType
+argument_list|()
+block|;
 comment|/// \brief Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
@@ -11251,37 +11261,6 @@ specifier|const
 block|{
 return|return
 name|Name
-operator|.
-name|dyn_cast
-operator|<
-specifier|const
-name|IdentifierInfo
-operator|*
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-comment|/// \brief Retrieve the type named by the typename specifier as a
-comment|/// type specialization.
-specifier|const
-name|TemplateSpecializationType
-operator|*
-name|getTemplateId
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Name
-operator|.
-name|dyn_cast
-operator|<
-specifier|const
-name|TemplateSpecializationType
-operator|*
-operator|>
-operator|(
-operator|)
 return|;
 block|}
 name|bool
@@ -11335,7 +11314,7 @@ argument|ElaboratedTypeKeyword Keyword
 argument_list|,
 argument|NestedNameSpecifier *NNS
 argument_list|,
-argument|NameType Name
+argument|const IdentifierInfo *Name
 argument_list|)
 block|{
 name|ID
@@ -11357,9 +11336,6 @@ operator|.
 name|AddPointer
 argument_list|(
 name|Name
-operator|.
-name|getOpaqueValue
-argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -11383,6 +11359,285 @@ name|bool
 name|classof
 argument_list|(
 argument|const DependentNameType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// DependentTemplateSpecializationType - Represents a template
+comment|/// specialization type whose template cannot be resolved, e.g.
+comment|///   A<T>::template B<T>
+name|class
+name|DependentTemplateSpecializationType
+operator|:
+name|public
+name|TypeWithKeyword
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// \brief The nested name specifier containing the qualifier.
+name|NestedNameSpecifier
+operator|*
+name|NNS
+block|;
+comment|/// \brief The identifier of the template.
+specifier|const
+name|IdentifierInfo
+operator|*
+name|Name
+block|;
+comment|/// \brief - The number of template arguments named in this class
+comment|/// template specialization.
+name|unsigned
+name|NumArgs
+block|;
+specifier|const
+name|TemplateArgument
+operator|*
+name|getArgBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|TemplateArgument
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|TemplateArgument
+operator|*
+name|getArgBuffer
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|TemplateArgument
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|DependentTemplateSpecializationType
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|const IdentifierInfo *Name
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|,
+argument|QualType Canon
+argument_list|)
+block|;
+name|virtual
+name|void
+name|Destroy
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|)
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these
+name|public
+operator|:
+name|virtual
+operator|~
+name|DependentTemplateSpecializationType
+argument_list|()
+block|;
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NNS
+return|;
+block|}
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+comment|/// \brief Retrieve the template arguments.
+specifier|const
+name|TemplateArgument
+operator|*
+name|getArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getArgBuffer
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the number of template arguments.
+name|unsigned
+name|getNumArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumArgs
+return|;
+block|}
+specifier|const
+name|TemplateArgument
+operator|&
+name|getArg
+argument_list|(
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+comment|// in TemplateBase.h
+typedef|typedef
+specifier|const
+name|TemplateArgument
+modifier|*
+name|iterator
+typedef|;
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getArgs
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+specifier|const
+block|;
+comment|// inline in TemplateBase.h
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|ASTContext&Context
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Context
+argument_list|,
+name|getKeyword
+argument_list|()
+argument_list|,
+name|NNS
+argument_list|,
+name|Name
+argument_list|,
+name|NumArgs
+argument_list|,
+name|getArgs
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|ASTContext&Context
+argument_list|,
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
+argument|NestedNameSpecifier *Qualifier
+argument_list|,
+argument|const IdentifierInfo *Name
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|const TemplateArgument *Args
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|DependentTemplateSpecialization
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DependentTemplateSpecializationType *T
 argument_list|)
 block|{
 return|return
@@ -13476,6 +13731,36 @@ name|t
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether this set of qualifiers is a superset of the given
+comment|/// set of qualifiers.
+specifier|inline
+name|bool
+name|Qualifiers
+operator|::
+name|isSupersetOf
+argument_list|(
+argument|Qualifiers Other
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Mask
+operator|!=
+name|Other
+operator|.
+name|Mask
+operator|&&
+operator|(
+name|Mask
+operator||
+name|Other
+operator|.
+name|Mask
+operator|)
+operator|==
+name|Mask
+return|;
+block|}
 comment|/// isMoreQualifiedThan - Determine whether this type is more
 comment|/// qualified than the Other type. For example, "const volatile int"
 comment|/// is more qualified than "const int", "volatile int", and
@@ -14113,9 +14398,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14144,16 +14426,14 @@ operator|->
 name|isObjCIdType
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|} inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -14271,6 +14551,26 @@ name|TemplateTypeParmType
 operator|>
 operator|(
 name|CanonicalType
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isBuiltinType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAs
+operator|<
+name|BuiltinType
+operator|>
+operator|(
 operator|)
 return|;
 block|}

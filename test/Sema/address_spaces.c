@@ -226,7 +226,7 @@ index|[
 literal|0
 index|]
 return|;
-comment|// expected-error {{illegal implicit cast between two pointers with different address spaces}} \
+comment|// expected-error {{illegal implicit conversion between two pointers with different address spaces}} \
 name|expected
 operator|-
 name|warning

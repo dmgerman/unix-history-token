@@ -1354,6 +1354,10 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
+
 begin_expr_stmt
 operator|(
 name|void
@@ -1401,6 +1405,10 @@ begin_empty_stmt
 unit|))
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// expected-warning {{expression result unused}}
+end_comment
 
 begin_expr_stmt
 operator|(

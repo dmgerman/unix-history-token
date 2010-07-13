@@ -203,5 +203,31 @@ begin_comment
 comment|// expected-warning{{field}}
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|int4
+name|__attribute__
+typedef|((
+name|ext_vector_type
+typedef|(4)));
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|int4
+name|vec
+decl_stmt|;
+comment|// expected-warning{{first field of a transparent union cannot have vector type 'int4'; transparent_union attribute ignored}}
+block|}
+name|TU5
+name|__attribute__
+typedef|((
+name|transparent_union
+typedef|));
+end_typedef
+
 end_unit
 

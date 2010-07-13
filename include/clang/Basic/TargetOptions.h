@@ -65,6 +65,14 @@ name|TargetOptions
 block|{
 name|public
 label|:
+name|TargetOptions
+argument_list|()
+block|{
+name|CXXABI
+operator|=
+literal|"itanium"
+expr_stmt|;
+block|}
 comment|/// If given, the name of the target triple to compile for. If not given the
 comment|/// target will be selected to match the host.
 name|std
@@ -83,6 +91,13 @@ name|std
 operator|::
 name|string
 name|ABI
+expr_stmt|;
+comment|/// If given, the name of the target C++ ABI to use. If not given, defaults
+comment|/// to "itanium".
+name|std
+operator|::
+name|string
+name|CXXABI
 expr_stmt|;
 comment|/// The list of target specific features to enable or disable -- this should
 comment|/// be a list of strings starting with by '+' or '-'.

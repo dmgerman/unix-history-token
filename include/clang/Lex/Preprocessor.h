@@ -1156,34 +1156,72 @@ comment|/// If 'Namespace' is non-null, then it is a token required to exist on 
 comment|/// pragma line before the pragma string starts, e.g. "STDC" or "GCC".
 name|void
 name|AddPragmaHandler
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|Namespace
-parameter_list|,
+argument_list|,
+name|PragmaHandler
+operator|*
+name|Handler
+argument_list|)
+decl_stmt|;
+name|void
+name|AddPragmaHandler
+parameter_list|(
 name|PragmaHandler
 modifier|*
 name|Handler
 parameter_list|)
-function_decl|;
+block|{
+name|AddPragmaHandler
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
+argument_list|,
+name|Handler
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// RemovePragmaHandler - Remove the specific pragma handler from
 comment|/// the preprocessor. If \arg Namespace is non-null, then it should
 comment|/// be the namespace that \arg Handler was added to. It is an error
 comment|/// to remove a handler that has not been registered.
 name|void
 name|RemovePragmaHandler
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|Namespace
-parameter_list|,
+argument_list|,
+name|PragmaHandler
+operator|*
+name|Handler
+argument_list|)
+decl_stmt|;
+name|void
+name|RemovePragmaHandler
+parameter_list|(
 name|PragmaHandler
 modifier|*
 name|Handler
 parameter_list|)
-function_decl|;
+block|{
+name|RemovePragmaHandler
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|()
+argument_list|,
+name|Handler
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Add the specified comment handler to the preprocessor.
 name|void
 name|AddCommentHandler
@@ -2721,6 +2759,8 @@ name|InCachingLexMode
 argument_list|()
 specifier|const
 block|{
+comment|// If the Lexer pointers are 0 and IncludeMacroStack is empty, it means
+comment|// that we are past EOF, not that we are in CachingLex mode.
 return|return
 name|CurPPLexer
 operator|==
@@ -2729,6 +2769,12 @@ operator|&&
 name|CurTokenLexer
 operator|==
 literal|0
+operator|&&
+operator|!
+name|IncludeMacroStack
+operator|.
+name|empty
+argument_list|()
 return|;
 block|}
 name|void
@@ -2966,6 +3012,14 @@ parameter_list|(
 name|Token
 modifier|&
 name|CommentTok
+parameter_list|)
+function_decl|;
+name|void
+name|HandlePragmaMessage
+parameter_list|(
+name|Token
+modifier|&
+name|MessageTok
 parameter_list|)
 function_decl|;
 comment|// Return true and store the first token only if any CommentHandler

@@ -304,6 +304,7 @@ comment|/// Program manages all Entities.
 name|idx
 operator|::
 name|Program
+operator|&
 name|Prog
 expr_stmt|;
 typedef|typedef
@@ -350,7 +351,13 @@ decl_stmt|;
 name|public
 label|:
 name|CallGraph
-argument_list|()
+argument_list|(
+name|idx
+operator|::
+name|Program
+operator|&
+name|P
+argument_list|)
 expr_stmt|;
 operator|~
 name|CallGraph

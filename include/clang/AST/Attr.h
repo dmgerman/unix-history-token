@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/AttrKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -109,6 +115,9 @@ name|IdentifierInfo
 decl_stmt|;
 name|class
 name|ObjCInterfaceDecl
+decl_stmt|;
+name|class
+name|Expr
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -184,154 +193,17 @@ comment|/// Attr - This represents one attribute.
 name|class
 name|Attr
 block|{
-name|public
-label|:
-enum|enum
-name|Kind
-block|{
-name|Alias
-block|,
-name|Aligned
-block|,
-name|AlignMac68k
-block|,
-name|AlwaysInline
-block|,
-name|AnalyzerNoReturn
-block|,
-comment|// Clang-specific.
-name|Annotate
-block|,
-name|AsmLabel
-block|,
-comment|// Represent GCC asm label extension.
-name|BaseCheck
-block|,
-name|Blocks
-block|,
-name|CDecl
-block|,
-name|Cleanup
-block|,
-name|Const
-block|,
-name|Constructor
-block|,
-name|Deprecated
-block|,
-name|Destructor
-block|,
-name|FastCall
-block|,
-name|Final
-block|,
-name|Format
-block|,
-name|FormatArg
-block|,
-name|GNUInline
-block|,
-name|Hiding
-block|,
-name|IBOutletKind
-block|,
-comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
-name|IBOutletCollectionKind
-block|,
-comment|// Clang-specific.
-name|IBActionKind
-block|,
-comment|// Clang-specific. Use "Kind" suffix to not conflict w/ macro.
-name|Malloc
-block|,
-name|MaxFieldAlignment
-block|,
-name|NoDebug
-block|,
-name|NoInline
-block|,
-name|NonNull
-block|,
-name|NoReturn
-block|,
-name|NoThrow
-block|,
-name|ObjCException
-block|,
-name|ObjCNSObject
-block|,
-name|Override
-block|,
-name|CFReturnsRetained
-block|,
-comment|// Clang/Checker-specific.
-name|CFReturnsNotRetained
-block|,
-comment|// Clang/Checker-specific.
-name|NSReturnsRetained
-block|,
-comment|// Clang/Checker-specific.
-name|NSReturnsNotRetained
-block|,
-comment|// Clang/Checker-specific.
-name|Overloadable
-block|,
-comment|// Clang-specific
-name|Packed
-block|,
-name|Pure
-block|,
-name|Regparm
-block|,
-name|ReqdWorkGroupSize
-block|,
-comment|// OpenCL-specific
-name|Section
-block|,
-name|Sentinel
-block|,
-name|StdCall
-block|,
-name|ThisCall
-block|,
-name|TransparentUnion
-block|,
-name|Unavailable
-block|,
-name|Unused
-block|,
-name|Used
-block|,
-name|Visibility
-block|,
-name|WarnUnusedResult
-block|,
-name|Weak
-block|,
-name|WeakImport
-block|,
-name|WeakRef
-block|,
-name|FIRST_TARGET_ATTRIBUTE
-block|,
-name|DLLExport
-block|,
-name|DLLImport
-block|,
-name|MSP430Interrupt
-block|,
-name|X86ForceAlignArgPointer
-block|}
-enum|;
 name|private
 label|:
 name|Attr
 modifier|*
 name|Next
 decl_stmt|;
+name|attr
+operator|::
 name|Kind
 name|AttrKind
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|Inherited
 range|:
@@ -384,7 +256,7 @@ name|protected
 label|:
 name|Attr
 argument_list|(
-argument|Kind AK
+argument|attr::Kind AK
 argument_list|)
 block|:
 name|Next
@@ -439,6 +311,8 @@ return|return
 name|true
 return|;
 block|}
+name|attr
+operator|::
 name|Kind
 name|getKind
 argument_list|()
@@ -621,6 +495,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/Attrs.inc"
+end_include
+
 begin_decl_stmt
 name|class
 name|AttrWithString
@@ -642,7 +522,7 @@ name|protected
 operator|:
 name|AttrWithString
 argument_list|(
-argument|Attr::Kind AK
+argument|attr::Kind AK
 argument_list|,
 argument|ASTContext&C
 argument_list|,
@@ -697,7 +577,7 @@ parameter_list|(
 name|ATTR
 parameter_list|)
 define|\
-value|class ATTR##Attr : public Attr {                                        \ public:                                                                 \   ATTR##Attr() : Attr(ATTR) {}                                          \   virtual Attr *clone(ASTContext&C) const;                             \   static bool classof(const Attr *A) { return A->getKind() == ATTR; }   \   static bool classof(const ATTR##Attr *A) { return true; }             \ }
+value|class ATTR##Attr : public Attr {                                        \ public:                                                                 \   ATTR##Attr() : Attr(attr::ATTR) {}                                          \   virtual Attr *clone(ASTContext&C) const;                             \   static bool classof(const Attr *A) { return A->getKind() == attr::ATTR; }   \   static bool classof(const ATTR##Attr *A) { return true; }             \ }
 end_define
 
 begin_expr_stmt
@@ -735,6 +615,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|MaxFieldAlignment
 argument_list|)
 block|,
@@ -776,6 +658,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|MaxFieldAlignment
 return|;
 block|}
@@ -797,6 +681,12 @@ argument_list|(
 name|AlignMac68k
 argument_list|)
 block|;
+comment|/// \brief Atribute for specifying the alignment of a variable or type.
+comment|///
+comment|/// This node will either contain the precise Alignment (in bits, not bytes!)
+comment|/// or will contain the expression for the alignment attribute in the case of
+comment|/// a dependent expression within a class or function template. At template
+comment|/// instantiation time these are transformed into concrete attributes.
 name|class
 name|AlignedAttr
 operator|:
@@ -805,6 +695,10 @@ name|Attr
 block|{
 name|unsigned
 name|Alignment
+block|;
+name|Expr
+operator|*
+name|AlignmentExpr
 block|;
 name|public
 operator|:
@@ -815,20 +709,82 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Aligned
 argument_list|)
 block|,
 name|Alignment
 argument_list|(
-argument|alignment
+name|alignment
+argument_list|)
+block|,
+name|AlignmentExpr
+argument_list|(
+literal|0
 argument_list|)
 block|{}
-comment|/// getAlignment - The specified alignment in bits.
+name|AlignedAttr
+argument_list|(
+name|Expr
+operator|*
+name|E
+argument_list|)
+operator|:
+name|Attr
+argument_list|(
+name|attr
+operator|::
+name|Aligned
+argument_list|)
+block|,
+name|Alignment
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|AlignmentExpr
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+comment|/// getAlignmentExpr - Get a dependent alignment expression if one is present.
+name|Expr
+operator|*
+name|getAlignmentExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AlignmentExpr
+return|;
+block|}
+comment|/// isDependent - Is the alignment a dependent expression
+name|bool
+name|isDependent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getAlignmentExpr
+argument_list|()
+return|;
+block|}
+comment|/// getAlignment - The specified alignment in bits. Requires !isDependent().
 name|unsigned
 name|getAlignment
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+operator|!
+name|isDependent
+argument_list|()
+operator|&&
+literal|"Cannot get a value dependent alignment"
+argument_list|)
+block|;
 return|return
 name|Alignment
 return|;
@@ -865,12 +821,14 @@ operator|->
 name|getMaxAlignment
 argument_list|()
 argument_list|,
-name|Alignment
+name|getAlignment
+argument_list|()
 argument_list|)
 return|;
 else|else
 return|return
-name|Alignment
+name|getAlignment
+argument_list|()
 return|;
 block|}
 name|virtual
@@ -896,6 +854,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Aligned
 return|;
 block|}
@@ -929,7 +889,7 @@ argument_list|)
 operator|:
 name|AttrWithString
 argument_list|(
-argument|Annotate
+argument|attr::Annotate
 argument_list|,
 argument|C
 argument_list|,
@@ -971,6 +931,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Annotate
 return|;
 block|}
@@ -1004,7 +966,7 @@ argument_list|)
 operator|:
 name|AttrWithString
 argument_list|(
-argument|AsmLabel
+argument|attr::AsmLabel
 argument_list|,
 argument|C
 argument_list|,
@@ -1046,6 +1008,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|AsmLabel
 return|;
 block|}
@@ -1084,7 +1048,7 @@ argument_list|)
 operator|:
 name|AttrWithString
 argument_list|(
-argument|Alias
+argument|attr::Alias
 argument_list|,
 argument|C
 argument_list|,
@@ -1126,6 +1090,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Alias
 return|;
 block|}
@@ -1160,6 +1126,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Constructor
 argument_list|)
 block|,
@@ -1200,6 +1168,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Constructor
 return|;
 block|}
@@ -1234,6 +1204,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Destructor
 argument_list|)
 block|,
@@ -1274,6 +1246,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Destructor
 return|;
 block|}
@@ -1303,7 +1277,7 @@ argument_list|()
 operator|:
 name|Attr
 argument_list|(
-argument|IBOutletKind
+argument|attr::IBOutlet
 argument_list|)
 block|{}
 name|virtual
@@ -1329,7 +1303,9 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|IBOutletKind
+name|attr
+operator|::
+name|IBOutlet
 return|;
 block|}
 specifier|static
@@ -1370,7 +1346,9 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
-name|IBOutletCollectionKind
+name|attr
+operator|::
+name|IBOutletCollection
 argument_list|)
 block|,
 name|D
@@ -1412,7 +1390,9 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|IBOutletCollectionKind
+name|attr
+operator|::
+name|IBOutletCollection
 return|;
 block|}
 specifier|static
@@ -1441,7 +1421,7 @@ argument_list|()
 operator|:
 name|Attr
 argument_list|(
-argument|IBActionKind
+argument|attr::IBAction
 argument_list|)
 block|{}
 name|virtual
@@ -1467,7 +1447,9 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|IBActionKind
+name|attr
+operator|::
+name|IBAction
 return|;
 block|}
 specifier|static
@@ -1495,11 +1477,6 @@ argument_list|)
 block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
-name|Final
-argument_list|)
-block|;
-name|DEF_SIMPLE_ATTR
-argument_list|(
 name|GNUInline
 argument_list|)
 block|;
@@ -1511,6 +1488,11 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|NoReturn
+argument_list|)
+block|;
+name|DEF_SIMPLE_ATTR
+argument_list|(
+name|NoInstrumentFunction
 argument_list|)
 block|;
 name|class
@@ -1530,7 +1512,7 @@ argument_list|)
 operator|:
 name|AttrWithString
 argument_list|(
-argument|Section
+argument|attr::Section
 argument_list|,
 argument|C
 argument_list|,
@@ -1572,6 +1554,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Section
 return|;
 block|}
@@ -1751,6 +1735,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|NonNull
 return|;
 block|}
@@ -1793,6 +1779,8 @@ argument_list|)
 operator|:
 name|AttrWithString
 argument_list|(
+name|attr
+operator|::
 name|Format
 argument_list|,
 name|C
@@ -1871,6 +1859,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Format
 return|;
 block|}
@@ -1905,6 +1895,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|FormatArg
 argument_list|)
 block|,
@@ -1945,6 +1937,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|FormatArg
 return|;
 block|}
@@ -1983,6 +1977,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Sentinel
 argument_list|)
 block|,
@@ -2037,6 +2033,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Sentinel
 return|;
 block|}
@@ -2088,6 +2086,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Visibility
 argument_list|)
 block|,
@@ -2128,6 +2128,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Visibility
 return|;
 block|}
@@ -2192,7 +2194,7 @@ argument_list|()
 operator|:
 name|Attr
 argument_list|(
-argument|Overloadable
+argument|attr::Overloadable
 argument_list|)
 block|{ }
 name|virtual
@@ -2227,6 +2229,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Overloadable
 return|;
 block|}
@@ -2273,6 +2277,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Blocks
 argument_list|)
 block|,
@@ -2313,6 +2319,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Blocks
 return|;
 block|}
@@ -2353,6 +2361,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Cleanup
 argument_list|)
 block|,
@@ -2395,6 +2405,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Cleanup
 return|;
 block|}
@@ -2444,6 +2456,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|Regparm
 argument_list|)
 block|,
@@ -2484,6 +2498,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|Regparm
 return|;
 block|}
@@ -2526,6 +2542,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|ReqdWorkGroupSize
 argument_list|)
 block|,
@@ -2594,6 +2612,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|ReqdWorkGroupSize
 return|;
 block|}
@@ -2602,6 +2622,97 @@ name|bool
 name|classof
 argument_list|(
 argument|const ReqdWorkGroupSizeAttr *A
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|InitPriorityAttr
+operator|:
+name|public
+name|Attr
+block|{
+name|unsigned
+name|Priority
+block|;
+name|public
+operator|:
+name|InitPriorityAttr
+argument_list|(
+argument|unsigned priority
+argument_list|)
+operator|:
+name|Attr
+argument_list|(
+name|attr
+operator|::
+name|InitPriority
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+argument|priority
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|Destroy
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+block|{
+name|Attr
+operator|::
+name|Destroy
+argument_list|(
+name|C
+argument_list|)
+block|; }
+name|unsigned
+name|getPriority
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Priority
+return|;
+block|}
+name|virtual
+name|Attr
+operator|*
+name|clone
+argument_list|(
+argument|ASTContext&C
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Attr *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|attr
+operator|::
+name|InitPriority
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InitPriorityAttr *A
 argument_list|)
 block|{
 return|return
@@ -2629,22 +2740,6 @@ block|;
 name|DEF_SIMPLE_ATTR
 argument_list|(
 name|NSReturnsRetained
-argument_list|)
-block|;
-comment|// C++0x member checking attributes.
-name|DEF_SIMPLE_ATTR
-argument_list|(
-name|BaseCheck
-argument_list|)
-block|;
-name|DEF_SIMPLE_ATTR
-argument_list|(
-name|Hiding
-argument_list|)
-block|;
-name|DEF_SIMPLE_ATTR
-argument_list|(
-name|Override
 argument_list|)
 block|;
 comment|// Target-specific attributes
@@ -2676,6 +2771,8 @@ argument_list|)
 operator|:
 name|Attr
 argument_list|(
+name|attr
+operator|::
 name|MSP430Interrupt
 argument_list|)
 block|,
@@ -2716,6 +2813,8 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
+name|attr
+operator|::
 name|MSP430Interrupt
 return|;
 block|}

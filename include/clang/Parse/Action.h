@@ -265,8 +265,41 @@ range|:
 name|public
 name|ActionBase
 block|{
+comment|/// \brief The parser's current scope.
+comment|///
+comment|/// The parser maintains this state here so that is accessible to \c Action
+comment|/// subclasses via \c getCurScope().
+name|Scope
+operator|*
+name|CurScope
+block|;
+name|protected
+operator|:
+name|friend
+name|class
+name|Parser
+block|;
+comment|/// \brief Retrieve the parser's current scope.
+name|Scope
+operator|*
+name|getCurScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurScope
+return|;
+block|}
 name|public
 operator|:
+name|Action
+argument_list|()
+operator|:
+name|CurScope
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 comment|/// Out-of-line virtual destructor to provide home for this class.
 name|virtual
 operator|~
@@ -6883,23 +6916,115 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnCXXNew - Parsed a C++ 'new' expression. UseGlobal is true if the
+comment|/// \brief Parsed a C++ 'new' expression.
 end_comment
 
 begin_comment
-comment|/// new was qualified (::new). In a full new like
+comment|///
 end_comment
 
 begin_comment
-comment|/// @code new (p1, p2) type(c1, c2) @endcode
+comment|/// \param StartLoc The start of the new expression, which is either the
 end_comment
 
 begin_comment
-comment|/// the p1 and p2 expressions will be in PlacementArgs and the c1 and c2
+comment|/// "new" keyword or the "::" preceding it, depending on \p UseGlobal.
 end_comment
 
 begin_comment
-comment|/// expressions in ConstructorArgs. The type is passed as a declarator.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param UseGlobal True if the "new" was qualified with "::".
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param PlacementLParen The location of the opening parenthesis ('(') for
+end_comment
+
+begin_comment
+comment|/// the placement arguments, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param PlacementArgs The placement arguments, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param PlacementRParen The location of the closing parenthesis (')') for
+end_comment
+
+begin_comment
+comment|/// the placement arguments, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TypeIdParens If the type was expressed as a type-id in parentheses,
+end_comment
+
+begin_comment
+comment|/// the source range covering the parenthesized type-id.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D The parsed declarator, which may include an array size (for
+end_comment
+
+begin_comment
+comment|/// array new) as the first declarator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ConstructorLParen The location of the opening parenthesis ('(') for
+end_comment
+
+begin_comment
+comment|/// the constructor arguments, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ConstructorArgs The constructor arguments, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ConstructorRParen The location of the closing parenthesis (')') for
+end_comment
+
+begin_comment
+comment|/// the constructor arguments, if any.
 end_comment
 
 begin_function
@@ -6922,8 +7047,8 @@ parameter_list|,
 name|SourceLocation
 name|PlacementRParen
 parameter_list|,
-name|bool
-name|ParenTypeId
+name|SourceRange
+name|TypeIdParens
 parameter_list|,
 name|Declarator
 modifier|&
@@ -7416,6 +7541,40 @@ block|{   }
 end_function
 
 begin_comment
+comment|/// ActOnAccessSpecifier - This is invoked when an access specifier
+end_comment
+
+begin_comment
+comment|/// (and the colon following it) is found during the parsing of a
+end_comment
+
+begin_comment
+comment|/// C++ class member declarator.
+end_comment
+
+begin_function
+name|virtual
+name|DeclPtrTy
+name|ActOnAccessSpecifier
+parameter_list|(
+name|AccessSpecifier
+name|AS
+parameter_list|,
+name|SourceLocation
+name|ASLoc
+parameter_list|,
+name|SourceLocation
+name|ColonLoc
+parameter_list|)
+block|{
+return|return
+name|DeclPtrTy
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// ActOnCXXMemberDeclarator - This is invoked when a C++ class member
 end_comment
 
@@ -7639,55 +7798,159 @@ comment|//===---------------------------C++ Templates---------------------------
 end_comment
 
 begin_comment
-comment|/// ActOnTypeParameter - Called when a C++ template type parameter
+comment|/// \brief Called when a C++ template type parameter(e.g., "typename T") has
 end_comment
 
 begin_comment
-comment|/// (e.g., "typename T") has been parsed. Typename specifies whether
+comment|/// been parsed.
 end_comment
 
 begin_comment
-comment|/// the keyword "typename" was used to declare the type parameter
+comment|///
 end_comment
 
 begin_comment
-comment|/// (otherwise, "class" was used), ellipsis specifies whether this is a
+comment|/// Given
 end_comment
 
 begin_comment
-comment|/// C++0x parameter pack, EllipsisLoc specifies the start of the ellipsis,
+comment|///
 end_comment
 
 begin_comment
-comment|/// and KeyLoc is the location of the "class" or "typename" keyword.
+comment|/// \code
 end_comment
 
 begin_comment
-comment|//  ParamName is the name of the parameter (NULL indicates an unnamed template
+comment|/// template<typename T, typename U = T> struct pair;
 end_comment
 
 begin_comment
-comment|//  parameter) and ParamNameLoc is the location of the parameter name (if any)
+comment|/// \endcode
 end_comment
 
 begin_comment
-comment|/// If the type parameter has a default argument, it will be added
+comment|///
 end_comment
 
 begin_comment
-comment|/// later via ActOnTypeParameterDefault. Depth and Position provide
+comment|/// this callback will be invoked twice: once for the type parameter \c T
 end_comment
 
 begin_comment
-comment|/// the number of enclosing templates (see
+comment|/// with \p Depth=0 and \p Position=0, and once for the type parameter \c U
 end_comment
 
 begin_comment
-comment|/// ActOnTemplateParameterList) and the number of previous
+comment|/// with \p Depth=0 and \p Position=1.
 end_comment
 
 begin_comment
-comment|/// parameters within this template parameter list.
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Typename Specifies whether the keyword "typename" was used to
+end_comment
+
+begin_comment
+comment|/// declare the type parameter (otherwise, "class" was used).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Ellipsis Specifies whether this is a C++0x parameter pack.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EllipsisLoc Specifies the start of the ellipsis.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param KeyLoc The location of the "class" or "typename" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ParamName The name of the parameter, where NULL indicates an
+end_comment
+
+begin_comment
+comment|/// unnamed template parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ParamNameLoc The location of the parameter name (if any).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Depth The depth of this template parameter, e.g., the number of
+end_comment
+
+begin_comment
+comment|/// template parameter lists that occurred outside the template parameter
+end_comment
+
+begin_comment
+comment|/// list in which this template type parameter occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Position The zero-based position of this template parameter within
+end_comment
+
+begin_comment
+comment|/// its template parameter list, which is also the number of template
+end_comment
+
+begin_comment
+comment|/// parameters that precede this parameter in the template parameter list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EqualLoc The location of the '=' sign for the default template
+end_comment
+
+begin_comment
+comment|/// argument, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param DefaultArg The default argument, if provided.
 end_comment
 
 begin_function
@@ -7723,6 +7986,13 @@ name|Depth
 parameter_list|,
 name|unsigned
 name|Position
+parameter_list|,
+name|SourceLocation
+name|EqualLoc
+parameter_list|,
+name|TypeTy
+modifier|*
+name|DefaultArg
 parameter_list|)
 block|{
 return|return
@@ -7733,60 +8003,107 @@ block|}
 end_function
 
 begin_comment
-comment|/// ActOnTypeParameterDefault - Adds a default argument (the type
+comment|/// \brief Called when a C++ non-type template parameter has been parsed.
 end_comment
 
 begin_comment
-comment|/// Default) to the given template type parameter (TypeParam).
-end_comment
-
-begin_function
-name|virtual
-name|void
-name|ActOnTypeParameterDefault
-parameter_list|(
-name|DeclPtrTy
-name|TypeParam
-parameter_list|,
-name|SourceLocation
-name|EqualLoc
-parameter_list|,
-name|SourceLocation
-name|DefaultLoc
-parameter_list|,
-name|TypeTy
-modifier|*
-name|Default
-parameter_list|)
-block|{   }
-end_function
-
-begin_comment
-comment|/// ActOnNonTypeTemplateParameter - Called when a C++ non-type
+comment|///
 end_comment
 
 begin_comment
-comment|/// template parameter (e.g., "int Size" in "template<int Size>
+comment|/// Given
 end_comment
 
 begin_comment
-comment|/// class Array") has been parsed. S is the current scope and D is
+comment|///
 end_comment
 
 begin_comment
-comment|/// the parsed declarator. Depth and Position provide the number of
+comment|/// \code
 end_comment
 
 begin_comment
-comment|/// enclosing templates (see
+comment|/// template<int Size> class Array;
 end_comment
 
 begin_comment
-comment|/// ActOnTemplateParameterList) and the number of previous
+comment|/// \endcode
 end_comment
 
 begin_comment
-comment|/// parameters within this template parameter list.
+comment|///
+end_comment
+
+begin_comment
+comment|/// This callback will be invoked for the 'Size' non-type template parameter.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The current scope.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D The parsed declarator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Depth The depth of this template parameter, e.g., the number of
+end_comment
+
+begin_comment
+comment|/// template parameter lists that occurred outside the template parameter
+end_comment
+
+begin_comment
+comment|/// list in which this template type parameter occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Position The zero-based position of this template parameter within
+end_comment
+
+begin_comment
+comment|/// its template parameter list, which is also the number of template
+end_comment
+
+begin_comment
+comment|/// parameters that precede this parameter in the template parameter list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EqualLoc The location of the '=' sign for the default template
+end_comment
+
+begin_comment
+comment|/// argument, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param DefaultArg The default argument, if provided.
 end_comment
 
 begin_function
@@ -7807,6 +8124,12 @@ name|Depth
 parameter_list|,
 name|unsigned
 name|Position
+parameter_list|,
+name|SourceLocation
+name|EqualLoc
+parameter_list|,
+name|ExprArg
+name|DefaultArg
 parameter_list|)
 block|{
 return|return
@@ -7842,27 +8165,131 @@ block|{   }
 end_function
 
 begin_comment
-comment|/// ActOnTemplateTemplateParameter - Called when a C++ template template
+comment|/// \brief Called when a C++ template template parameter has been parsed.
 end_comment
 
 begin_comment
-comment|/// parameter (e.g., "int T" in "template<template<typename> class T> class
+comment|///
 end_comment
 
 begin_comment
-comment|/// Array") has been parsed. TmpLoc is the location of the "template" keyword,
+comment|/// Given
 end_comment
 
 begin_comment
-comment|/// TemplateParams is the sequence of parameters required by the template,
+comment|///
 end_comment
 
 begin_comment
-comment|/// ParamName is the name of the parameter (null if unnamed), and ParamNameLoc
+comment|/// \code
 end_comment
 
 begin_comment
-comment|/// is the source location of the identifier (if given).
+comment|/// template<template<typename> class T> class X;
+end_comment
+
+begin_comment
+comment|/// \endcode
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// this callback will be invoked for the template template parameter \c T.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which this template template parameter occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TmpLoc The location of the "template" keyword.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param TemplateParams The template parameters required by the template.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ParamName The name of the parameter, or NULL if unnamed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ParamNameLoc The source location of the parameter name (if given).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Depth The depth of this template parameter, e.g., the number of
+end_comment
+
+begin_comment
+comment|/// template parameter lists that occurred outside the template parameter
+end_comment
+
+begin_comment
+comment|/// list in which this template parameter occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Position The zero-based position of this template parameter within
+end_comment
+
+begin_comment
+comment|/// its template parameter list, which is also the number of template
+end_comment
+
+begin_comment
+comment|/// parameters that precede this parameter in the template parameter list.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EqualLoc The location of the '=' sign for the default template
+end_comment
+
+begin_comment
+comment|/// argument, if any.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param DefaultArg The default argument, if provided.
 end_comment
 
 begin_function
@@ -7893,30 +8320,6 @@ name|Depth
 parameter_list|,
 name|unsigned
 name|Position
-parameter_list|)
-block|{
-return|return
-name|DeclPtrTy
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// \brief Adds a default argument to the given template template
-end_comment
-
-begin_comment
-comment|/// parameter.
-end_comment
-
-begin_function
-name|virtual
-name|void
-name|ActOnTemplateTemplateParameterDefault
-parameter_list|(
-name|DeclPtrTy
-name|TemplateParam
 parameter_list|,
 name|SourceLocation
 name|EqualLoc
@@ -7924,9 +8327,14 @@ parameter_list|,
 specifier|const
 name|ParsedTemplateArgument
 modifier|&
-name|Default
+name|DefaultArg
 parameter_list|)
-block|{   }
+block|{
+return|return
+name|DeclPtrTy
+argument_list|()
+return|;
+block|}
 end_function
 
 begin_comment
@@ -8252,6 +8660,14 @@ comment|///
 end_comment
 
 begin_comment
+comment|/// \param S The scope in which the dependent template name was parsed.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
 comment|/// \param TemplateKWLoc the location of the "template" keyword (if any).
 end_comment
 
@@ -8311,11 +8727,43 @@ begin_comment
 comment|/// template.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Template Will be set to the dependent template name, on success.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The kind of template name that was produced. Generally, this will
+end_comment
+
+begin_comment
+comment|/// be \c TNK_Dependent_template_name. However, if the nested-name-specifier
+end_comment
+
+begin_comment
+comment|/// is not dependent, or refers to the current instantiation, then we may
+end_comment
+
+begin_comment
+comment|/// be able to resolve the template kind more specifically.
+end_comment
+
 begin_function
 name|virtual
-name|TemplateTy
+name|TemplateNameKind
 name|ActOnDependentTemplateName
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|TemplateKWLoc
 parameter_list|,
@@ -8333,11 +8781,14 @@ name|ObjectType
 parameter_list|,
 name|bool
 name|EnteringContext
+parameter_list|,
+name|TemplateTy
+modifier|&
+name|Template
 parameter_list|)
 block|{
 return|return
-name|TemplateTy
-argument_list|()
+name|TNK_Non_template
 return|;
 block|}
 end_function
@@ -9251,6 +9702,10 @@ name|virtual
 name|TypeResult
 name|ActOnTypenameType
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|TypenameLoc
 parameter_list|,
@@ -9312,6 +9767,10 @@ name|virtual
 name|TypeResult
 name|ActOnTypenameType
 parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
 name|SourceLocation
 name|TypenameLoc
 parameter_list|,
@@ -9333,6 +9792,38 @@ name|TypeResult
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// \brief Called when the parser begins parsing a construct which should not
+end_comment
+
+begin_comment
+comment|/// have access control applied to it.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnStartSuppressingAccessChecks
+parameter_list|()
+block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Called when the parser finishes parsing a construct which should
+end_comment
+
+begin_comment
+comment|/// not have access control applied to it.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|ActOnStopSuppressingAccessChecks
+parameter_list|()
+block|{   }
 end_function
 
 begin_comment
@@ -10538,9 +11029,15 @@ begin_enum
 enum|enum
 name|PragmaOptionsAlignKind
 block|{
+name|POAK_Native
+block|,
+comment|// #pragma options align=native
 name|POAK_Natural
 block|,
 comment|// #pragma options align=natural
+name|POAK_Packed
+block|,
+comment|// #pragma options align=packed
 name|POAK_Power
 block|,
 comment|// #pragma options align=power
@@ -11080,6 +11577,105 @@ name|Args
 parameter_list|,
 name|unsigned
 name|NumArgs
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the initializer of a variable declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the initializer occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param D The declaration being initialized.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteInitializer
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|DeclPtrTy
+name|D
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion after the "return" keyword within a function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the return statement occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteReturn
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the right-hand side of an assignment or
+end_comment
+
+begin_comment
+comment|/// compound assignment operator.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the assignment occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param LHS The left-hand side of the assignment expression.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteAssignmentRHS
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|ExprTy
+modifier|*
+name|LHS
 parameter_list|)
 block|{ }
 end_function
@@ -11631,6 +12227,42 @@ name|unsigned
 name|NumMethods
 parameter_list|)
 block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for the receiver in an Objective-C message send.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This code completion action is invoked when we see a '[' that indicates
+end_comment
+
+begin_comment
+comment|/// the start of an Objective-C message send.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which the Objective-C message send occurs.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCMessageReceiver
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment
@@ -12242,6 +12874,108 @@ name|DeclPtrTy
 name|IDecl
 parameter_list|)
 block|{   }
+end_function
+
+begin_comment
+comment|/// \brief Code completion for a selector identifier or argument name within
+end_comment
+
+begin_comment
+comment|/// an Objective-C method declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which this code completion occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IsInstanceMethod Whether we are parsing an instance method (or,
+end_comment
+
+begin_comment
+comment|/// if false, a class method).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AtParameterName Whether the actual code completion point is at the
+end_comment
+
+begin_comment
+comment|/// argument name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ReturnType If non-NULL, the specified return type of the method
+end_comment
+
+begin_comment
+comment|/// being declared or defined.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SelIdents The identifiers that occurred in the selector for the
+end_comment
+
+begin_comment
+comment|/// method declaration prior to the code completion point.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param NumSelIdents The number of identifiers provided by SelIdents.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|CodeCompleteObjCMethodDeclSelector
+parameter_list|(
+name|Scope
+modifier|*
+name|S
+parameter_list|,
+name|bool
+name|IsInstanceMethod
+parameter_list|,
+name|bool
+name|AtParameterName
+parameter_list|,
+name|TypeTy
+modifier|*
+name|ReturnType
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+modifier|*
+name|SelIdents
+parameter_list|,
+name|unsigned
+name|NumSelIdents
+parameter_list|)
+block|{ }
 end_function
 
 begin_comment

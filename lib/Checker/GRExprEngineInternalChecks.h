@@ -184,7 +184,7 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterReturnStackAddressChecker
+name|RegisterReturnUndefChecker
 parameter_list|(
 name|GRExprEngine
 modifier|&
@@ -192,7 +192,7 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterReturnUndefChecker
+name|RegisterStackAddrLeakChecker
 parameter_list|(
 name|GRExprEngine
 modifier|&

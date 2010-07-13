@@ -96,18 +96,33 @@ comment|///
 comment|/// When instantiating X<int>::Y<17>::f, the multi-level template argument
 comment|/// list will contain a template argument list (int) at depth 0 and a
 comment|/// template argument list (17) at depth 1.
-struct|struct
+name|class
 name|MultiLevelTemplateArgumentList
 block|{
+name|public
+label|:
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TemplateArgument
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|ArgList
+expr_stmt|;
+name|private
+label|:
 comment|/// \brief The template argument lists, stored from the innermost template
 comment|/// argument list (first) to the outermost template argument list (last).
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-specifier|const
-name|TemplateArgumentList
-operator|*
+name|ArgList
 operator|,
 literal|4
 operator|>
@@ -129,9 +144,7 @@ modifier|&
 name|TemplateArgs
 parameter_list|)
 block|{
-name|TemplateArgumentLists
-operator|.
-name|push_back
+name|addOuterTemplateArguments
 argument_list|(
 operator|&
 name|TemplateArgs
@@ -190,9 +203,8 @@ name|Depth
 operator|-
 literal|1
 index|]
-operator|->
-name|size
-argument_list|()
+operator|.
+name|second
 argument_list|)
 block|;
 return|return
@@ -205,11 +217,11 @@ name|Depth
 operator|-
 literal|1
 index|]
-operator|->
-name|get
-argument_list|(
+operator|.
+name|first
+index|[
 name|Index
-argument_list|)
+index|]
 return|;
 block|}
 comment|/// \brief Determine whether there is a non-NULL template argument at the
@@ -250,9 +262,8 @@ name|Depth
 operator|-
 literal|1
 index|]
-operator|->
-name|size
-argument_list|()
+operator|.
+name|second
 condition|)
 return|return
 name|false
@@ -288,20 +299,57 @@ name|TemplateArgumentLists
 operator|.
 name|push_back
 argument_list|(
+name|ArgList
+argument_list|(
 name|TemplateArgs
+operator|->
+name|getFlatArgumentList
+argument_list|()
+argument_list|,
+name|TemplateArgs
+operator|->
+name|flat_size
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a new outmost level to the multi-level template argument
+comment|/// list.
+name|void
+name|addOuterTemplateArguments
+parameter_list|(
+specifier|const
+name|TemplateArgument
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|)
+block|{
+name|TemplateArgumentLists
+operator|.
+name|push_back
+argument_list|(
+name|ArgList
+argument_list|(
+name|Args
+argument_list|,
+name|NumArgs
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 comment|/// \brief Retrieve the innermost template argument list.
 specifier|const
-name|TemplateArgumentList
+name|ArgList
 operator|&
 name|getInnermost
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
 name|TemplateArgumentLists
 operator|.
 name|front
@@ -309,7 +357,7 @@ argument_list|()
 return|;
 block|}
 block|}
-struct|;
+empty_stmt|;
 comment|/// \brief The context in which partial ordering of function templates occurs.
 enum|enum
 name|TemplatePartialOrderingContext
