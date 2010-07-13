@@ -4733,6 +4733,11 @@ operator|&
 name|pkt_queue
 argument_list|)
 expr_stmt|;
+name|DPCPU_ZERO
+argument_list|(
+name|ss
+argument_list|)
+expr_stmt|;
 name|siftr_exit_pkt_manager_thread
 operator|=
 literal|0
