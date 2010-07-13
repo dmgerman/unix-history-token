@@ -2096,6 +2096,13 @@ name|secsperint
 operator|*
 name|DEV_BSIZE
 expr_stmt|;
+else|else
+name|atadev
+operator|->
+name|max_iosize
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
 block|}
 else|else
 name|atadev
