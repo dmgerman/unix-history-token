@@ -4890,7 +4890,7 @@ name|totalss
 operator|.
 name|n_in
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4901,7 +4901,7 @@ name|totalss
 operator|.
 name|n_out
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4912,7 +4912,7 @@ name|totalss
 operator|.
 name|nskip_in_malloc
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4923,7 +4923,7 @@ name|totalss
 operator|.
 name|nskip_out_malloc
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4934,7 +4934,7 @@ name|totalss
 operator|.
 name|nskip_in_mtx
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4945,7 +4945,7 @@ name|totalss
 operator|.
 name|nskip_out_mtx
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4956,7 +4956,7 @@ name|totalss
 operator|.
 name|nskip_in_tcpcb
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4967,7 +4967,7 @@ name|totalss
 operator|.
 name|nskip_out_tcpcb
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4978,7 +4978,7 @@ name|totalss
 operator|.
 name|nskip_in_inpcb
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
@@ -4989,7 +4989,7 @@ name|totalss
 operator|.
 name|nskip_out_inpcb
 operator|=
-name|DPCPU_SUM
+name|DPCPU_VARSUM
 argument_list|(
 name|ss
 argument_list|,
