@@ -1438,6 +1438,12 @@ operator|&=
 operator|~
 name|NDELEGMOD
 expr_stmt|;
+comment|/* 				 * Invalidate the attribute cache, so that 				 * attributes that pre-date the issue of a 				 * delegation are not cached, since the 				 * cached attributes will remain valid while 				 * the delegation is held. 				 */
+name|NFSINVALATTRCACHE
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
 name|NFSUNLOCKNODE
 argument_list|(
 name|np
@@ -10776,6 +10782,7 @@ operator|&
 name|unlocked
 argument_list|)
 expr_stmt|;
+comment|/* 		 * There is no need to invalidate cached attributes here, 		 * since new post-delegation issue attributes are always 		 * returned by nfsrpc_createv4() and these will update the 		 * attribute cache. 		 */
 if|if
 condition|(
 name|dp
