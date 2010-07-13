@@ -109,7 +109,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Hash and lru lists for nfs V4.  * (Some would put them in the .h file, but I don't like declaring storage  *  in a .h)  */
+comment|/*  * Hash lists for nfs V4.  * (Some would put them in the .h file, but I don't like declaring storage  *  in a .h)  */
 end_comment
 
 begin_decl_stmt
