@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpuregs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -869,7 +863,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|XTLB_MISS_EXC_VEC
+name|MIPS3_XTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -991,7 +985,7 @@ expr_stmt|;
 name|config
 operator|&=
 operator|~
-name|CFG_K0_MASK
+name|MIPS3_CONFIG_K0_MASK
 expr_stmt|;
 name|config
 operator||=
@@ -1159,7 +1153,7 @@ argument_list|)
 expr_stmt|;
 name|set_intr_mask
 argument_list|(
-name|ALL_INT_MASK
+name|MIPS_SR_INT_MASK
 operator|&
 operator|~
 operator|(
