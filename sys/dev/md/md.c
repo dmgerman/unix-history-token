@@ -975,8 +975,6 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|layer
 decl_stmt|;
 name|rcnt
@@ -1002,27 +1000,6 @@ name|layer
 operator|++
 expr_stmt|;
 block|}
-comment|/* figure out log2(NINDIR) */
-for|for
-control|(
-name|i
-operator|=
-name|NINDIR
-operator|,
-name|nshift
-operator|=
-operator|-
-literal|1
-init|;
-name|i
-condition|;
-name|nshift
-operator|++
-control|)
-name|i
-operator|>>=
-literal|1
-expr_stmt|;
 comment|/* 	 * XXX: the top layer is probably not fully populated, so we allocate 	 * too much space for ip->array in here. 	 */
 name|ip
 operator|=
@@ -6142,6 +6119,30 @@ decl_stmt|;
 name|unsigned
 name|len
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* figure out log2(NINDIR) */
+for|for
+control|(
+name|i
+operator|=
+name|NINDIR
+operator|,
+name|nshift
+operator|=
+operator|-
+literal|1
+init|;
+name|i
+condition|;
+name|nshift
+operator|++
+control|)
+name|i
+operator|>>=
+literal|1
+expr_stmt|;
 name|mod
 operator|=
 name|NULL
