@@ -4413,6 +4413,12 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|!=
+name|NULL
+condition|)
 name|destroy_dev_sched_cb
 argument_list|(
 name|dev
