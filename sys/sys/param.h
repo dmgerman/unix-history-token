@@ -85,7 +85,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  * MAXLOGNAME should be == UT_NAMESIZE+1 (see<utmp.h>)  */
+comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  */
 end_comment
 
 begin_include
