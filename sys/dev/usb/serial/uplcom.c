@@ -1010,6 +1010,20 @@ argument_list|,
 name|PL2303X
 argument_list|)
 block|,
+comment|/* I/O DATA USB-RSAQ3 */
+name|UPLCOM_DEV
+argument_list|(
+name|IODATA
+argument_list|,
+name|USBRSAQ5
+argument_list|,
+literal|0
+argument_list|,
+literal|0xFFFF
+argument_list|,
+name|PL2303X
+argument_list|)
+block|,
 comment|/* PLANEX USB-RS232 URS-03 */
 name|UPLCOM_DEV
 argument_list|(
