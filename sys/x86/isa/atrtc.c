@@ -651,7 +651,6 @@ name|et
 operator|.
 name|et_active
 condition|)
-block|{
 name|sc
 operator|->
 name|et
@@ -668,19 +667,8 @@ operator|->
 name|et
 operator|.
 name|et_arg
-condition|?
-name|sc
-operator|->
-name|et
-operator|.
-name|et_arg
-else|:
-name|curthread
-operator|->
-name|td_intr_frame
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

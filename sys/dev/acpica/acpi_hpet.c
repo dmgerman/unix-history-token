@@ -1176,7 +1176,6 @@ name|et
 operator|.
 name|et_active
 condition|)
-block|{
 name|mt
 operator|->
 name|et
@@ -1193,19 +1192,8 @@ operator|->
 name|et
 operator|.
 name|et_arg
-condition|?
-name|mt
-operator|->
-name|et
-operator|.
-name|et_arg
-else|:
-name|curthread
-operator|->
-name|td_intr_frame
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|FILTER_HANDLED

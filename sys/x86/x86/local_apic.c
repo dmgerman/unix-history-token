@@ -3632,12 +3632,6 @@ argument_list|,
 name|lapic_et
 operator|.
 name|et_arg
-condition|?
-name|lapic_et
-operator|.
-name|et_arg
-else|:
-name|frame
 argument_list|)
 expr_stmt|;
 name|td
