@@ -333,6 +333,16 @@ parameter_list|)
 value|__extension__				\ ({									\ 	u_int _i;							\ 	__typeof((DPCPU_PTR(n))->var) sum;				\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += (DPCPU_ID_PTR(_i, n))->var;			\ 	}								\ 	sum;								\ })
 end_define
 
+begin_define
+define|#
+directive|define
+name|DPCPU_ZERO
+parameter_list|(
+name|n
+parameter_list|)
+value|do {						\ 	u_int _i;							\ 									\ 	CPU_FOREACH(_i) {						\ 		bzero(DPCPU_ID_PTR(_i, n),				\ 		    sizeof(__typeof(DPCPU_PTR(n))));			\ 	}								\ } while(0)
+end_define
+
 begin_comment
 comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */
 end_comment
