@@ -67,15 +67,11 @@ name|MIPS_PHYS_MASK
 value|(0x1fffffff)
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_LOCORE
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_define
 define|#
@@ -153,6 +149,11 @@ directive|define
 name|MIPS_KSEG2_END
 value|MIPS_KSSEG_END
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -243,7 +244,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIPS_XKPHYS_CCA_UC
+name|MIPS_CCA_UC
 value|0x02
 end_define
 
@@ -254,7 +255,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MIPS_XKPHYS_CCA_CNC
+name|MIPS_CCA_CNC
 value|0x03
 end_define
 
@@ -283,7 +284,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_XKPHYS_CCA_CNC)<< 59) | (x))
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_CNC)<< 59) | (x))
 end_define
 
 begin_define
@@ -294,7 +295,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_XKPHYS_CCA_UC)<< 59) | (x))
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_UC)<< 59) | (x))
 end_define
 
 begin_define
@@ -334,11 +335,6 @@ directive|define
 name|MIPS_XKSEG_END
 value|0xc00000ff80000000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* CPU dependent mtc0 hazard hook */
@@ -553,9 +549,12 @@ begin_comment
 comment|/* Never used, true for r3k */
 end_comment
 
-begin_comment
-comment|/*#define MIPS_SR_INT_MASK	0x0000ff00*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MIPS_SR_INT_MASK
+value|0x0000ff00
+end_define
 
 begin_comment
 comment|/*  * The R2000/R3000-specific status register bit definitions.  * all bits are active when set to 1.  *  *	MIPS_SR_PARITY_ERR	Parity error.  *	MIPS_SR_CACHE_MISS	Most recent D-cache load resulted in a miss.  *	MIPS_SR_PARITY_ZERO	Zero replaces outgoing parity bits.  *	MIPS_SR_SWAP_CACHES	Swap I-cache and D-cache.  *	MIPS_SR_ISOL_CACHES	Isolate D-cache from main memory.  *				Interrupt enable bits defined below.  *	MIPS_SR_KU_OLD		Old kernel/user mode bit. 1 => user mode.  *	MIPS_SR_INT_ENA_OLD	Old interrupt enable bit.  *	MIPS_SR_KU_PREV		Previous kernel/user mode bit. 1 => user mode.  *	MIPS_SR_INT_ENA_PREV	Previous interrupt enable bit.  *	MIPS_SR_KU_CUR		Current kernel/user mode bit. 1 => user mode.  */
@@ -1963,14 +1962,14 @@ begin_define
 define|#
 directive|define
 name|MIPS_RESET_EXC_VEC
-value|0xBFC00000
+value|((intptr_t)(int32_t)0xBFC00000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_UTLB_MISS_EXC_VEC
-value|0x80000000
+value|((intptr_t)(int32_t)0x80000000)
 end_define
 
 begin_comment
@@ -1981,7 +1980,7 @@ begin_define
 define|#
 directive|define
 name|MIPS1_GEN_EXC_VEC
-value|0x80000080
+value|((intptr_t)(int32_t)0x80000080)
 end_define
 
 begin_comment
@@ -1992,21 +1991,21 @@ begin_define
 define|#
 directive|define
 name|MIPS3_XTLB_MISS_EXC_VEC
-value|0x80000080
+value|((intptr_t)(int32_t)0x80000080)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS3_CACHE_ERR_EXC_VEC
-value|0x80000100
+value|((intptr_t)(int32_t)0x80000100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS3_GEN_EXC_VEC
-value|0x80000180
+value|((intptr_t)(int32_t)0x80000180)
 end_define
 
 begin_comment
@@ -2684,6 +2683,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS_BREAK_DDB_VAL
+value|516
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIPS_BREAK_KDB
 value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_KDB_VAL<< MIPS_BREAK_VAL_SHIFT))
 end_define
@@ -2707,6 +2713,13 @@ define|#
 directive|define
 name|MIPS_BREAK_SOVER
 value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_SOVER_VAL<< MIPS_BREAK_VAL_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_BREAK_DDB
+value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_DDB_VAL<< MIPS_BREAK_VAL_SHIFT))
 end_define
 
 begin_comment
