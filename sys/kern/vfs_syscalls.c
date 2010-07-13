@@ -21092,6 +21092,12 @@ operator|->
 name|v_type
 operator|!=
 name|VCHR
+operator|||
+name|vp
+operator|->
+name|v_rdev
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
