@@ -1462,14 +1462,11 @@ name|private
 label|:
 end_label
 
-begin_expr_stmt
-name|iplist
-operator|<
-name|MCFragment
-operator|>
+begin_decl_stmt
+name|FragmentListType
 name|Fragments
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -2557,8 +2554,8 @@ name|bool
 name|isSymbolLinkerVisible
 argument_list|(
 specifier|const
-name|MCSymbolData
-operator|*
+name|MCSymbol
+operator|&
 name|SD
 argument_list|)
 decl|const

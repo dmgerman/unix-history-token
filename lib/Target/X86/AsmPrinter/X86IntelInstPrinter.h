@@ -174,16 +174,6 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printLeaMemReference
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned Op
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printSSECC
 argument_list|(
 argument|const MCInst *MI
@@ -434,7 +424,7 @@ name|O
 argument_list|)
 block|;   }
 name|void
-name|printlea32mem
+name|printf256mem
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -445,55 +435,9 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"DWORD PTR "
+literal|"YMMWORD PTR "
 block|;
-name|printLeaMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|,
-name|O
-argument_list|)
-block|;   }
-name|void
-name|printlea64mem
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|{
-name|O
-operator|<<
-literal|"QWORD PTR "
-block|;
-name|printLeaMemReference
-argument_list|(
-name|MI
-argument_list|,
-name|OpNo
-argument_list|,
-name|O
-argument_list|)
-block|;   }
-name|void
-name|printlea64_32mem
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNo
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|{
-name|O
-operator|<<
-literal|"QWORD PTR "
-block|;
-name|printLeaMemReference
+name|printMemReference
 argument_list|(
 name|MI
 argument_list|,

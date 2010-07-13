@@ -584,37 +584,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printHex8ImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printHex16ImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printHex32ImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printHex64ImmOperand
+name|printNEONModImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

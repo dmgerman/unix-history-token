@@ -301,10 +301,12 @@ name|namespace
 name|internal
 block|{
 comment|// Protects copying of all linked_ptr objects.
-specifier|extern
-name|Mutex
+name|GTEST_API_
+name|GTEST_DECLARE_STATIC_MUTEX_
+parameter_list|(
 name|g_linked_ptr_mutex
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// This is used internally by all instances of linked_ptr<>.  It needs to be
 comment|// a non-template class because different types of linked_ptr<> can refer to
 comment|// the same object (linked_ptr<Superclass>(obj) vs linked_ptr<Subclass>(obj)).

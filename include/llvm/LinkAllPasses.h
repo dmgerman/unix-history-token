@@ -767,6 +767,14 @@ name|void
 operator|)
 name|llvm
 operator|::
+name|createStripDeadDebugInfoPass
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|llvm
+operator|::
 name|createStripDeadPrototypesPass
 argument_list|()
 expr_stmt|;

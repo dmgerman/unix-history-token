@@ -163,6 +163,7 @@ comment|// generated in the same thread that created this object or it can inter
 comment|// all generated failures. The scope of this mock object can be controlled with
 comment|// the second argument to the two arguments constructor.
 name|class
+name|GTEST_API_
 name|ScopedFakeTestPartResultReporter
 range|:
 name|public
@@ -256,6 +257,7 @@ comment|// TestPartResultArray contains exactly one failure that has the given
 comment|// type and contains the given substring.  If that's not the case, a
 comment|// non-fatal failure will be generated.
 name|class
+name|GTEST_API_
 name|SingleFailureChecker
 block|{
 name|public
@@ -265,7 +267,7 @@ name|SingleFailureChecker
 argument_list|(
 argument|const TestPartResultArray* results
 argument_list|,
-argument|TestPartResultType type
+argument|TestPartResult::Type type
 argument_list|,
 argument|const char* substr
 argument_list|)
@@ -283,9 +285,11 @@ specifier|const
 name|results_
 decl_stmt|;
 specifier|const
-name|TestPartResultType
+name|TestPartResult
+operator|::
+name|Type
 name|type_
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|String
 name|substr_
@@ -408,7 +412,7 @@ parameter_list|,
 name|substr
 parameter_list|)
 define|\
-value|do { \     class GTestExpectFatalFailureHelper {\      public:\       static void Execute() { statement; }\     };\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TPRT_FATAL_FAILURE, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ONLY_CURRENT_THREAD,&gtest_failures);\       GTestExpectFatalFailureHelper::Execute();\     }\   } while (false)
+value|do { \     class GTestExpectFatalFailureHelper {\      public:\       static void Execute() { statement; }\     };\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ONLY_CURRENT_THREAD,&gtest_failures);\       GTestExpectFatalFailureHelper::Execute();\     }\   } while (::testing::internal::AlwaysFalse())
 end_define
 
 begin_define
@@ -421,7 +425,7 @@ parameter_list|,
 name|substr
 parameter_list|)
 define|\
-value|do { \     class GTestExpectFatalFailureHelper {\      public:\       static void Execute() { statement; }\     };\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TPRT_FATAL_FAILURE, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ALL_THREADS,&gtest_failures);\       GTestExpectFatalFailureHelper::Execute();\     }\   } while (false)
+value|do { \     class GTestExpectFatalFailureHelper {\      public:\       static void Execute() { statement; }\     };\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ALL_THREADS,&gtest_failures);\       GTestExpectFatalFailureHelper::Execute();\     }\   } while (::testing::internal::AlwaysFalse())
 end_define
 
 begin_comment
@@ -509,11 +513,47 @@ comment|// helper macro, due to some peculiarity in how the preprocessor
 end_comment
 
 begin_comment
-comment|// works.  The AcceptsMacroThatExpandsToUnprotectedComma test in
+comment|// works.  If we do that, the code won't compile when the user gives
 end_comment
 
 begin_comment
-comment|// gtest_unittest.cc will fail to compile if we do that.
+comment|// EXPECT_NONFATAL_FAILURE() a statement that contains a macro that
+end_comment
+
+begin_comment
+comment|// expands to code containing an unprotected comma.  The
+end_comment
+
+begin_comment
+comment|// AcceptsMacroThatExpandsToUnprotectedComma test in gtest_unittest.cc
+end_comment
+
+begin_comment
+comment|// catches that.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// For the same reason, we have to write
+end_comment
+
+begin_comment
+comment|//   if (::testing::internal::AlwaysTrue()) { statement; }
+end_comment
+
+begin_comment
+comment|// instead of
+end_comment
+
+begin_comment
+comment|//   GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)
+end_comment
+
+begin_comment
+comment|// to avoid an MSVC warning on unreachable code.
 end_comment
 
 begin_define
@@ -526,7 +566,7 @@ parameter_list|,
 name|substr
 parameter_list|)
 define|\
-value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TPRT_NONFATAL_FAILURE, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ONLY_CURRENT_THREAD,&gtest_failures);\       statement;\     }\   } while (false)
+value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kNonFatalFailure, \         (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter:: \           INTERCEPT_ONLY_CURRENT_THREAD,&gtest_failures);\       if (::testing::internal::AlwaysTrue()) { statement; }\     }\   } while (::testing::internal::AlwaysFalse())
 end_define
 
 begin_define
@@ -539,7 +579,7 @@ parameter_list|,
 name|substr
 parameter_list|)
 define|\
-value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TPRT_NONFATAL_FAILURE, (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS,\&gtest_failures);\       statement;\     }\   } while (false)
+value|do {\     ::testing::TestPartResultArray gtest_failures;\     ::testing::internal::SingleFailureChecker gtest_checker(\&gtest_failures, ::testing::TestPartResult::kNonFatalFailure, \         (substr));\     {\       ::testing::ScopedFakeTestPartResultReporter gtest_reporter(\           ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS,\&gtest_failures);\       if (::testing::internal::AlwaysTrue()) { statement; }\     }\   } while (::testing::internal::AlwaysFalse())
 end_define
 
 begin_endif

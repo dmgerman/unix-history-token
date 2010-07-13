@@ -92,6 +92,11 @@ comment|/// of memory, and provides simple methods for reading files and standar
 comment|/// into a memory buffer.  In addition to basic access to the characters in the
 comment|/// file, this interface guarantees you can read one character past the end of
 comment|/// the file, and that this character will read as '\0'.
+comment|///
+comment|/// The '\0' guarantee is needed to support an optimization -- it's intended to
+comment|/// be more efficient for clients which are reading all the data to stop
+comment|/// reading when they encounter a '\0' than to continually check the file
+comment|/// position to see if it has reached the end of the file.
 name|class
 name|MemoryBuffer
 block|{
@@ -107,37 +112,32 @@ modifier|*
 name|BufferEnd
 decl_stmt|;
 comment|// End of the buffer.
-comment|/// MustDeleteBuffer - True if we allocated this buffer.  If so, the
-comment|/// destructor must know the delete[] it.
-name|bool
-name|MustDeleteBuffer
+name|MemoryBuffer
+argument_list|(
+specifier|const
+name|MemoryBuffer
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|MemoryBuffer
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|MemoryBuffer
+operator|&
+operator|)
 decl_stmt|;
+comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 name|MemoryBuffer
 argument_list|()
-operator|:
-name|MustDeleteBuffer
-argument_list|(
-argument|false
-argument_list|)
 block|{}
 name|void
 name|init
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|BufStart
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|BufEnd
-argument_list|)
-expr_stmt|;
-name|void
-name|initCopyOf
 parameter_list|(
 specifier|const
 name|char
@@ -253,6 +253,38 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+specifier|static
+name|MemoryBuffer
+modifier|*
+name|getFile
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Filename
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrStr
+operator|=
+literal|0
+argument_list|,
+name|int64_t
+name|FileSize
+operator|=
+operator|-
+literal|1
+argument_list|,
+expr|struct
+name|stat
+operator|*
+name|FileInfo
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
 comment|/// that EndPtr[0] must be a null byte and be accessible!
 specifier|static
@@ -263,9 +295,7 @@ parameter_list|(
 name|StringRef
 name|InputData
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BufferName
 init|=
 literal|""
@@ -282,9 +312,7 @@ parameter_list|(
 name|StringRef
 name|InputData
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BufferName
 init|=
 literal|""
@@ -302,9 +330,7 @@ parameter_list|(
 name|size_t
 name|Size
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|BufferName
 init|=
 literal|""
@@ -329,12 +355,21 @@ literal|""
 parameter_list|)
 function_decl|;
 comment|/// getSTDIN - Read all of stdin into a file buffer, and return it.
+comment|/// If an error occurs, this returns null and fills in *ErrStr with a reason.
 specifier|static
 name|MemoryBuffer
 modifier|*
 name|getSTDIN
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|ErrStr
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// getFileOrSTDIN - Open the specified file as a MemoryBuffer, or open stdin
 comment|/// if the Filename is "-".  If an error occurs, this returns null and fills
 comment|/// in *ErrStr with a reason.
@@ -344,6 +379,38 @@ modifier|*
 name|getFileOrSTDIN
 argument_list|(
 name|StringRef
+name|Filename
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrStr
+operator|=
+literal|0
+argument_list|,
+name|int64_t
+name|FileSize
+operator|=
+operator|-
+literal|1
+argument_list|,
+expr|struct
+name|stat
+operator|*
+name|FileInfo
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+specifier|static
+name|MemoryBuffer
+modifier|*
+name|getFileOrSTDIN
+argument_list|(
+specifier|const
+name|char
+operator|*
 name|Filename
 argument_list|,
 name|std

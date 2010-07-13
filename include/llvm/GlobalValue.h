@@ -143,6 +143,9 @@ comment|///< Like Internal, but omit from symbol table.
 name|LinkerPrivateLinkage
 block|,
 comment|///< Like Private, but linker removes.
+name|LinkerPrivateWeakLinkage
+block|,
+comment|///< Like LinkerPrivate, but weak.
 name|DLLImportLinkage
 block|,
 comment|///< Function to be imported from DLL
@@ -570,6 +573,19 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isLinkerPrivateWeakLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|Linkage
+operator|==
+name|LinkerPrivateWeakLinkage
+return|;
+block|}
+specifier|static
+name|bool
 name|isLocalLinkage
 argument_list|(
 argument|LinkageTypes Linkage
@@ -587,6 +603,11 @@ name|Linkage
 argument_list|)
 operator|||
 name|isLinkerPrivateLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isLinkerPrivateWeakLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -671,6 +692,10 @@ operator|||
 name|Linkage
 operator|==
 name|ExternalWeakLinkage
+operator|||
+name|Linkage
+operator|==
+name|LinkerPrivateWeakLinkage
 operator|)
 return|;
 block|}
@@ -712,6 +737,10 @@ operator|||
 name|Linkage
 operator|==
 name|ExternalWeakLinkage
+operator|||
+name|Linkage
+operator|==
+name|LinkerPrivateWeakLinkage
 operator|)
 return|;
 block|}
@@ -806,6 +835,18 @@ specifier|const
 block|{
 return|return
 name|isLinkerPrivateLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasLinkerPrivateWeakLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLinkerPrivateWeakLinkage
 argument_list|(
 name|Linkage
 argument_list|)

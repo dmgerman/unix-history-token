@@ -175,8 +175,8 @@ argument_list|(
 name|death_test_style
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_DEATH_TEST
 comment|// The following macros are useful for writing death tests.
 comment|// Here's what happens when an ASSERT_DEATH* or EXPECT_DEATH* is
@@ -211,6 +211,57 @@ comment|//     return WIFSIGNALED(exit_code)&& WTERMSIG(exit_code) == SIGHUP;
 comment|//   }
 comment|//
 comment|//   ASSERT_EXIT(client.HangUpServer(), KilledBySIGHUP, "Hanging up!");
+comment|//
+comment|// On the regular expressions used in death tests:
+comment|//
+comment|//   On POSIX-compliant systems (*nix), we use the<regex.h> library,
+comment|//   which uses the POSIX extended regex syntax.
+comment|//
+comment|//   On other platforms (e.g. Windows), we only support a simple regex
+comment|//   syntax implemented as part of Google Test.  This limited
+comment|//   implementation should be enough most of the time when writing
+comment|//   death tests; though it lacks many features you can find in PCRE
+comment|//   or POSIX extended regex syntax.  For example, we don't support
+comment|//   union ("x|y"), grouping ("(xy)"), brackets ("[xy]"), and
+comment|//   repetition count ("x{5,7}"), among others.
+comment|//
+comment|//   Below is the syntax that we do support.  We chose it to be a
+comment|//   subset of both PCRE and POSIX extended regex, so it's easy to
+comment|//   learn wherever you come from.  In the following: 'A' denotes a
+comment|//   literal character, period (.), or a single \\ escape sequence;
+comment|//   'x' and 'y' denote regular expressions; 'm' and 'n' are for
+comment|//   natural numbers.
+comment|//
+comment|//     c     matches any literal character c
+comment|//     \\d   matches any decimal digit
+comment|//     \\D   matches any character that's not a decimal digit
+comment|//     \\f   matches \f
+comment|//     \\n   matches \n
+comment|//     \\r   matches \r
+comment|//     \\s   matches any ASCII whitespace, including \n
+comment|//     \\S   matches any character that's not a whitespace
+comment|//     \\t   matches \t
+comment|//     \\v   matches \v
+comment|//     \\w   matches any letter, _, or decimal digit
+comment|//     \\W   matches any character that \\w doesn't match
+comment|//     \\c   matches any literal character c, which must be a punctuation
+comment|//     .     matches any single character except \n
+comment|//     A?    matches 0 or 1 occurrences of A
+comment|//     A*    matches 0 or many occurrences of A
+comment|//     A+    matches 1 or many occurrences of A
+comment|//     ^     matches the beginning of a string (not that of each line)
+comment|//     $     matches the end of a string (not that of each line)
+comment|//     xy    matches x followed by y
+comment|//
+comment|//   If you accidentally use PCRE or POSIX extended regex features
+comment|//   not implemented by us, you will get a run-time failure.  In that
+comment|//   case, please try to rewrite your regular expression within the
+comment|//   above syntax.
+comment|//
+comment|//   This implementation is *not* meant to be as highly tuned or robust
+comment|//   as a compiled regex library, but should perform well enough for a
+comment|//   death test, which already incurs significant overhead by launching
+comment|//   a child process.
 comment|//
 comment|// Known caveats:
 comment|//
@@ -282,6 +333,7 @@ value|EXPECT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
 comment|// Two predicate classes that can be used in {ASSERT,EXPECT}_EXIT*:
 comment|// Tests that an exit code describes a normal exit with a given exit code.
 name|class
+name|GTEST_API_
 name|ExitedWithCode
 block|{
 name|public
@@ -304,15 +356,31 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ExitedWithCode
+operator|&
+name|other
+operator|)
+decl_stmt|;
 specifier|const
 name|int
 name|exit_code_
 decl_stmt|;
 block|}
 empty_stmt|;
+if|#
+directive|if
+operator|!
+name|GTEST_OS_WINDOWS
 comment|// Tests that an exit code describes an exit due to termination by a
 comment|// given signal.
 name|class
+name|GTEST_API_
 name|KilledBySignal
 block|{
 name|public
@@ -341,6 +409,9 @@ name|signum_
 decl_stmt|;
 block|}
 empty_stmt|;
+endif|#
+directive|endif
+comment|// !GTEST_OS_WINDOWS
 comment|// EXPECT_DEBUG_DEATH asserts that the given statements die in debug mode.
 comment|// The death testing framework causes this to have interesting semantics,
 comment|// since the sideeffects of the call are only visible in opt mode, and not
@@ -396,7 +467,7 @@ parameter_list|,
 name|regex
 parameter_list|)
 define|\
-value|do { statement; } while (false)
+value|do { statement; } while (::testing::internal::AlwaysFalse())
 define|#
 directive|define
 name|ASSERT_DEBUG_DEATH
@@ -406,7 +477,7 @@ parameter_list|,
 name|regex
 parameter_list|)
 define|\
-value|do { statement; } while (false)
+value|do { statement; } while (::testing::internal::AlwaysFalse())
 else|#
 directive|else
 define|#
@@ -435,6 +506,58 @@ comment|// NDEBUG for EXPECT_DEBUG_DEATH
 endif|#
 directive|endif
 comment|// GTEST_HAS_DEATH_TEST
+comment|// EXPECT_DEATH_IF_SUPPORTED(statement, regex) and
+comment|// ASSERT_DEATH_IF_SUPPORTED(statement, regex) expand to real death tests if
+comment|// death tests are supported; otherwise they just issue a warning.  This is
+comment|// useful when you are combining death test assertions with normal test
+comment|// assertions in one test.
+if|#
+directive|if
+name|GTEST_HAS_DEATH_TEST
+define|#
+directive|define
+name|EXPECT_DEATH_IF_SUPPORTED
+parameter_list|(
+name|statement
+parameter_list|,
+name|regex
+parameter_list|)
+define|\
+value|EXPECT_DEATH(statement, regex)
+define|#
+directive|define
+name|ASSERT_DEATH_IF_SUPPORTED
+parameter_list|(
+name|statement
+parameter_list|,
+name|regex
+parameter_list|)
+define|\
+value|ASSERT_DEATH(statement, regex)
+else|#
+directive|else
+define|#
+directive|define
+name|EXPECT_DEATH_IF_SUPPORTED
+parameter_list|(
+name|statement
+parameter_list|,
+name|regex
+parameter_list|)
+define|\
+value|GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, )
+define|#
+directive|define
+name|ASSERT_DEATH_IF_SUPPORTED
+parameter_list|(
+name|statement
+parameter_list|,
+name|regex
+parameter_list|)
+define|\
+value|GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, return)
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 

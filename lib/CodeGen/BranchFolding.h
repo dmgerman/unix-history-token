@@ -456,7 +456,7 @@ modifier|*
 name|PredBB
 parameter_list|)
 function_decl|;
-name|unsigned
+name|bool
 name|CreateCommonTailOnlyBlock
 parameter_list|(
 name|MachineBasicBlock
@@ -466,6 +466,10 @@ name|PredBB
 parameter_list|,
 name|unsigned
 name|maxCommonTailLength
+parameter_list|,
+name|unsigned
+modifier|&
+name|commonTailIndex
 parameter_list|)
 function_decl|;
 name|bool

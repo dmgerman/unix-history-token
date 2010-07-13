@@ -48,23 +48,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// The details of the ELF32 bits in this file are largely based on
+comment|// The details of the ELF32 bits in this file are largely based on the Tool
 end_comment
 
 begin_comment
-comment|// the Tool Interface Standard (TIS) Executable and Linking Format
+comment|// Interface Standard (TIS) Executable and Linking Format (ELF) Specification
 end_comment
 
 begin_comment
-comment|// (ELF) Specification Version 1.2, May 1995. The ELF64 stuff is not
+comment|// Version 1.2, May 1995. The ELF64 stuff is based on ELF-64 Object File Format
 end_comment
 
 begin_comment
-comment|// standardized, as far as I can tell. It was largely based on information
-end_comment
-
-begin_comment
-comment|// I found in OpenBSD header files.
+comment|// Version 1.5, Draft 2, May 1998 as well as OpenBSD header files.
 end_comment
 
 begin_comment
@@ -183,6 +179,65 @@ block|,
 literal|'\0'
 block|}
 decl_stmt|;
+comment|// e_ident size and indices.
+enum|enum
+block|{
+name|EI_MAG0
+init|=
+literal|0
+block|,
+comment|// File identification index.
+name|EI_MAG1
+init|=
+literal|1
+block|,
+comment|// File identification index.
+name|EI_MAG2
+init|=
+literal|2
+block|,
+comment|// File identification index.
+name|EI_MAG3
+init|=
+literal|3
+block|,
+comment|// File identification index.
+name|EI_CLASS
+init|=
+literal|4
+block|,
+comment|// File class.
+name|EI_DATA
+init|=
+literal|5
+block|,
+comment|// Data encoding.
+name|EI_VERSION
+init|=
+literal|6
+block|,
+comment|// File version.
+name|EI_OSABI
+init|=
+literal|7
+block|,
+comment|// OS/ABI identification.
+name|EI_ABIVERSION
+init|=
+literal|8
+block|,
+comment|// ABI version.
+name|EI_PAD
+init|=
+literal|9
+block|,
+comment|// Start of padding bytes.
+name|EI_NIDENT
+init|=
+literal|16
+comment|// Number of bytes in e_ident.
+block|}
+enum|;
 struct|struct
 name|Elf32_Ehdr
 block|{
@@ -190,7 +245,7 @@ name|unsigned
 name|char
 name|e_ident
 index|[
-literal|16
+name|EI_NIDENT
 index|]
 decl_stmt|;
 comment|// ELF Identification bytes
@@ -278,19 +333,20 @@ block|{
 return|return
 name|e_ident
 index|[
-literal|4
+name|EI_CLASS
 index|]
 return|;
 block|}
 name|unsigned
 name|char
 name|getDataEncoding
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|e_ident
 index|[
-literal|5
+name|EI_DATA
 index|]
 return|;
 block|}
@@ -305,7 +361,7 @@ name|unsigned
 name|char
 name|e_ident
 index|[
-literal|16
+name|EI_NIDENT
 index|]
 decl_stmt|;
 name|Elf64_Quarter
@@ -347,6 +403,55 @@ decl_stmt|;
 name|Elf64_Quarter
 name|e_shstrndx
 decl_stmt|;
+name|bool
+name|checkMagic
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|memcmp
+argument_list|(
+name|e_ident
+argument_list|,
+name|ElfMagic
+argument_list|,
+name|strlen
+argument_list|(
+name|ElfMagic
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+literal|0
+return|;
+block|}
+name|unsigned
+name|char
+name|getFileClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|e_ident
+index|[
+name|EI_CLASS
+index|]
+return|;
+block|}
+name|unsigned
+name|char
+name|getDataEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|e_ident
+index|[
+name|EI_DATA
+index|]
+return|;
+block|}
 block|}
 struct|;
 comment|// File types
@@ -453,6 +558,11 @@ init|=
 literal|20
 block|,
 comment|// PowerPC
+name|EM_PPC64
+init|=
+literal|21
+block|,
+comment|// PowerPC64
 name|EM_ARM
 init|=
 literal|40
@@ -491,6 +601,11 @@ enum|;
 comment|// Object file byte orderings.
 enum|enum
 block|{
+name|ELFDATANONE
+init|=
+literal|0
+block|,
+comment|// Invalid data encoding.
 name|ELFDATA2LSB
 init|=
 literal|1
@@ -502,12 +617,240 @@ literal|2
 comment|// Big-endian object file
 block|}
 enum|;
-comment|// OS ABI identification -- unused.
+comment|// OS ABI identification.
 enum|enum
 block|{
 name|ELFOSABI_NONE
 init|=
 literal|0
+block|,
+comment|// UNIX System V ABI
+name|ELFOSABI_HPUX
+init|=
+literal|1
+block|,
+comment|// HP-UX operating system
+name|ELFOSABI_NETBSD
+init|=
+literal|2
+block|,
+comment|// NetBSD
+name|ELFOSABI_LINUX
+init|=
+literal|3
+block|,
+comment|// GNU/Linux
+name|ELFOSABI_HURD
+init|=
+literal|4
+block|,
+comment|// GNU/Hurd
+name|ELFOSABI_SOLARIS
+init|=
+literal|6
+block|,
+comment|// Solaris
+name|ELFOSABI_AIX
+init|=
+literal|7
+block|,
+comment|// AIX
+name|ELFOSABI_IRIX
+init|=
+literal|8
+block|,
+comment|// IRIX
+name|ELFOSABI_FREEBSD
+init|=
+literal|9
+block|,
+comment|// FreeBSD
+name|ELFOSABI_TRU64
+init|=
+literal|10
+block|,
+comment|// TRU64 UNIX
+name|ELFOSABI_MODESTO
+init|=
+literal|11
+block|,
+comment|// Novell Modesto
+name|ELFOSABI_OPENBSD
+init|=
+literal|12
+block|,
+comment|// OpenBSD
+name|ELFOSABI_OPENVMS
+init|=
+literal|13
+block|,
+comment|// OpenVMS
+name|ELFOSABI_NSK
+init|=
+literal|14
+block|,
+comment|// Hewlett-Packard Non-Stop Kernel
+name|ELFOSABI_AROS
+init|=
+literal|15
+block|,
+comment|// AROS
+name|ELFOSABI_FENIXOS
+init|=
+literal|16
+block|,
+comment|// FenixOS
+name|ELFOSABI_C6000_ELFABI
+init|=
+literal|64
+block|,
+comment|// Bare-metal TMS320C6000
+name|ELFOSABI_C6000_LINUX
+init|=
+literal|65
+block|,
+comment|// Linux TMS320C6000
+name|ELFOSABI_ARM
+init|=
+literal|97
+block|,
+comment|// ARM
+name|ELFOSABI_STANDALONE
+init|=
+literal|255
+comment|// Standalone (embedded) application
+block|}
+enum|;
+comment|// X86_64 relocations.
+enum|enum
+block|{
+name|R_X86_64_NONE
+init|=
+literal|0
+block|,
+name|R_X86_64_64
+init|=
+literal|1
+block|,
+name|R_X86_64_PC32
+init|=
+literal|2
+block|,
+name|R_X86_64_GOT32
+init|=
+literal|3
+block|,
+name|R_X86_64_PLT32
+init|=
+literal|4
+block|,
+name|R_X86_64_COPY
+init|=
+literal|5
+block|,
+name|R_X86_64_GLOB_DAT
+init|=
+literal|6
+block|,
+name|R_X86_64_JUMP_SLOT
+init|=
+literal|7
+block|,
+name|R_X86_64_RELATIVE
+init|=
+literal|8
+block|,
+name|R_X86_64_GOTPCREL
+init|=
+literal|9
+block|,
+name|R_X86_64_32
+init|=
+literal|10
+block|,
+name|R_X86_64_32S
+init|=
+literal|11
+block|,
+name|R_X86_64_16
+init|=
+literal|12
+block|,
+name|R_X86_64_PC16
+init|=
+literal|13
+block|,
+name|R_X86_64_8
+init|=
+literal|14
+block|,
+name|R_X86_64_PC8
+init|=
+literal|15
+block|,
+name|R_X86_64_DTPMOD64
+init|=
+literal|16
+block|,
+name|R_X86_64_DTPOFF64
+init|=
+literal|17
+block|,
+name|R_X86_64_TPOFF64
+init|=
+literal|18
+block|,
+name|R_X86_64_TLSGD
+init|=
+literal|19
+block|,
+name|R_X86_64_TLSLD
+init|=
+literal|20
+block|,
+name|R_X86_64_DTPOFF32
+init|=
+literal|21
+block|,
+name|R_X86_64_GOTTPOFF
+init|=
+literal|22
+block|,
+name|R_X86_64_TPOFF32
+init|=
+literal|23
+block|,
+name|R_X86_64_PC64
+init|=
+literal|24
+block|,
+name|R_X86_64_GOTOFF64
+init|=
+literal|25
+block|,
+name|R_X86_64_GOTPC32
+init|=
+literal|26
+block|,
+name|R_X86_64_SIZE32
+init|=
+literal|32
+block|,
+name|R_X86_64_SIZE64
+init|=
+literal|33
+block|,
+name|R_X86_64_GOTPC32_TLSDESC
+init|=
+literal|34
+block|,
+name|R_X86_64_TLSDESC_CALL
+init|=
+literal|35
+block|,
+name|R_X86_64_TLSDESC
+init|=
+literal|36
 block|}
 enum|;
 comment|// Section header.
@@ -739,7 +1082,7 @@ literal|0xf0000000
 comment|// Bits indicating processor-specific flags.
 block|}
 enum|;
-comment|// Symbol table entries.
+comment|// Symbol table entries for ELF32.
 struct|struct
 name|Elf32_Sym
 block|{
@@ -771,6 +1114,125 @@ decl_stmt|;
 comment|// Which section (header table index) it's defined in
 comment|// These accessors and mutators correspond to the ELF32_ST_BIND,
 comment|// ELF32_ST_TYPE, and ELF32_ST_INFO macros defined in the ELF specification:
+name|unsigned
+name|char
+name|getBinding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|st_info
+operator|>>
+literal|4
+return|;
+block|}
+name|unsigned
+name|char
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|st_info
+operator|&
+literal|0x0f
+return|;
+block|}
+name|void
+name|setBinding
+parameter_list|(
+name|unsigned
+name|char
+name|b
+parameter_list|)
+block|{
+name|setBindingAndType
+argument_list|(
+name|b
+argument_list|,
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setType
+parameter_list|(
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|setBindingAndType
+argument_list|(
+name|getBinding
+argument_list|()
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setBindingAndType
+parameter_list|(
+name|unsigned
+name|char
+name|b
+parameter_list|,
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|st_info
+operator|=
+operator|(
+name|b
+operator|<<
+literal|4
+operator|)
+operator|+
+operator|(
+name|t
+operator|&
+literal|0x0f
+operator|)
+expr_stmt|;
+block|}
+block|}
+struct|;
+comment|// Symbol table entries for ELF64.
+struct|struct
+name|Elf64_Sym
+block|{
+name|Elf64_Word
+name|st_name
+decl_stmt|;
+comment|// Symbol name (index into string table)
+name|unsigned
+name|char
+name|st_info
+decl_stmt|;
+comment|// Symbol's type and binding attributes
+name|unsigned
+name|char
+name|st_other
+decl_stmt|;
+comment|// Must be zero; reserved
+name|Elf64_Half
+name|st_shndx
+decl_stmt|;
+comment|// Which section (header table index) it's defined in
+name|Elf64_Addr
+name|st_value
+decl_stmt|;
+comment|// Value or address associated with the symbol
+name|Elf64_Xword
+name|st_size
+decl_stmt|;
+comment|// Size of the symbol
+comment|// These accessors and mutators are identical to those defined for ELF32
+comment|// symbol table entries.
 name|unsigned
 name|char
 name|getBinding
@@ -1136,7 +1598,225 @@ block|}
 empty_stmt|;
 block|}
 struct|;
-comment|// Program header.
+comment|// Relocation entry, without explicit addend.
+struct|struct
+name|Elf64_Rel
+block|{
+name|Elf64_Addr
+name|r_offset
+decl_stmt|;
+comment|// Location (file byte offset, or program virtual addr).
+name|Elf64_Xword
+name|r_info
+decl_stmt|;
+comment|// Symbol table index and type of relocation to apply.
+comment|// These accessors and mutators correspond to the ELF64_R_SYM, ELF64_R_TYPE,
+comment|// and ELF64_R_INFO macros defined in the ELF specification:
+name|Elf64_Xword
+name|getSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|r_info
+operator|>>
+literal|32
+operator|)
+return|;
+block|}
+name|unsigned
+name|char
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|r_info
+operator|&
+literal|0xffffffffL
+argument_list|)
+return|;
+block|}
+name|void
+name|setSymbol
+parameter_list|(
+name|Elf32_Word
+name|s
+parameter_list|)
+block|{
+name|setSymbolAndType
+argument_list|(
+name|s
+argument_list|,
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setType
+parameter_list|(
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|setSymbolAndType
+argument_list|(
+name|getSymbol
+argument_list|()
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setSymbolAndType
+parameter_list|(
+name|Elf64_Xword
+name|s
+parameter_list|,
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|r_info
+operator|=
+operator|(
+name|s
+operator|<<
+literal|32
+operator|)
+operator|+
+operator|(
+name|t
+operator|&
+literal|0xffffffffL
+operator|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+struct|;
+comment|// Relocation entry with explicit addend.
+struct|struct
+name|Elf64_Rela
+block|{
+name|Elf64_Addr
+name|r_offset
+decl_stmt|;
+comment|// Location (file byte offset, or program virtual addr).
+name|Elf64_Xword
+name|r_info
+decl_stmt|;
+comment|// Symbol table index and type of relocation to apply.
+name|Elf64_Sxword
+name|r_addend
+decl_stmt|;
+comment|// Compute value for relocatable field by adding this.
+comment|// These accessors and mutators correspond to the ELF64_R_SYM, ELF64_R_TYPE,
+comment|// and ELF64_R_INFO macros defined in the ELF specification:
+name|Elf64_Xword
+name|getSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|r_info
+operator|>>
+literal|32
+operator|)
+return|;
+block|}
+name|unsigned
+name|char
+name|getType
+argument_list|()
+specifier|const
+block|{
+return|return
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|r_info
+operator|&
+literal|0xffffffffL
+argument_list|)
+return|;
+block|}
+name|void
+name|setSymbol
+parameter_list|(
+name|Elf64_Xword
+name|s
+parameter_list|)
+block|{
+name|setSymbolAndType
+argument_list|(
+name|s
+argument_list|,
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setType
+parameter_list|(
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|setSymbolAndType
+argument_list|(
+name|getSymbol
+argument_list|()
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|setSymbolAndType
+parameter_list|(
+name|Elf64_Xword
+name|s
+parameter_list|,
+name|unsigned
+name|char
+name|t
+parameter_list|)
+block|{
+name|r_info
+operator|=
+operator|(
+name|s
+operator|<<
+literal|32
+operator|)
+operator|+
+operator|(
+name|t
+operator|&
+literal|0xffffffffL
+operator|)
+expr_stmt|;
+block|}
+empty_stmt|;
+block|}
+struct|;
+comment|// Program header for ELF32.
 struct|struct
 name|Elf32_Phdr
 block|{
@@ -1169,6 +1849,44 @@ name|p_flags
 decl_stmt|;
 comment|// Segment flags
 name|Elf32_Word
+name|p_align
+decl_stmt|;
+comment|// Segment alignment constraint
+block|}
+struct|;
+comment|// Program header for ELF64.
+struct|struct
+name|Elf64_Phdr
+block|{
+name|Elf64_Word
+name|p_type
+decl_stmt|;
+comment|// Type of segment
+name|Elf64_Word
+name|p_flags
+decl_stmt|;
+comment|// Segment flags
+name|Elf64_Off
+name|p_offset
+decl_stmt|;
+comment|// File offset where segment is located, in bytes
+name|Elf64_Addr
+name|p_vaddr
+decl_stmt|;
+comment|// Virtual address of beginning of segment
+name|Elf64_Addr
+name|p_paddr
+decl_stmt|;
+comment|// Physical address of beginning of segment (OS-specific)
+name|Elf64_Xword
+name|p_filesz
+decl_stmt|;
+comment|// Num. of bytes in file image of segment (may be zero)
+name|Elf64_Xword
+name|p_memsz
+decl_stmt|;
+comment|// Num. of bytes in mem image of segment (may be zero)
+name|Elf64_Xword
 name|p_align
 decl_stmt|;
 comment|// Segment alignment constraint
@@ -1245,6 +1963,221 @@ name|PF_MASKPROC
 init|=
 literal|0xf0000000
 comment|// Unspecified
+block|}
+enum|;
+comment|// Dynamic table entry for ELF32.
+struct|struct
+name|Elf32_Dyn
+block|{
+name|Elf32_Sword
+name|d_tag
+decl_stmt|;
+comment|// Type of dynamic table entry.
+union|union
+block|{
+name|Elf32_Word
+name|d_val
+decl_stmt|;
+comment|// Integer value of entry.
+name|Elf32_Addr
+name|d_ptr
+decl_stmt|;
+comment|// Pointer value of entry.
+block|}
+name|d_un
+union|;
+block|}
+struct|;
+comment|// Dynamic table entry for ELF64.
+struct|struct
+name|Elf64_Dyn
+block|{
+name|Elf64_Sxword
+name|d_tag
+decl_stmt|;
+comment|// Type of dynamic table entry.
+union|union
+block|{
+name|Elf64_Xword
+name|d_val
+decl_stmt|;
+comment|// Integer value of entry.
+name|Elf64_Addr
+name|d_ptr
+decl_stmt|;
+comment|// Pointer value of entry.
+block|}
+name|d_un
+union|;
+block|}
+struct|;
+comment|// Dynamic table entry tags.
+enum|enum
+block|{
+name|DT_NULL
+init|=
+literal|0
+block|,
+comment|// Marks end of dynamic array.
+name|DT_NEEDED
+init|=
+literal|1
+block|,
+comment|// String table offset of needed library.
+name|DT_PLTRELSZ
+init|=
+literal|2
+block|,
+comment|// Size of relocation entries in PLT.
+name|DT_PLTGOT
+init|=
+literal|3
+block|,
+comment|// Address associated with linkage table.
+name|DT_HASH
+init|=
+literal|4
+block|,
+comment|// Address of symbolic hash table.
+name|DT_STRTAB
+init|=
+literal|5
+block|,
+comment|// Address of dynamic string table.
+name|DT_SYMTAB
+init|=
+literal|6
+block|,
+comment|// Address of dynamic symbol table.
+name|DT_RELA
+init|=
+literal|7
+block|,
+comment|// Address of relocation table (Rela entries).
+name|DT_RELASZ
+init|=
+literal|8
+block|,
+comment|// Size of Rela relocation table.
+name|DT_RELAENT
+init|=
+literal|9
+block|,
+comment|// Size of a Rela relocation entry.
+name|DT_STRSZ
+init|=
+literal|10
+block|,
+comment|// Total size of the string table.
+name|DT_SYMENT
+init|=
+literal|11
+block|,
+comment|// Size of a symbol table entry.
+name|DT_INIT
+init|=
+literal|12
+block|,
+comment|// Address of initialization function.
+name|DT_FINI
+init|=
+literal|13
+block|,
+comment|// Address of termination function.
+name|DT_SONAME
+init|=
+literal|14
+block|,
+comment|// String table offset of a shared objects name.
+name|DT_RPATH
+init|=
+literal|15
+block|,
+comment|// String table offset of library search path.
+name|DT_SYMBOLIC
+init|=
+literal|16
+block|,
+comment|// Changes symbol resolution algorithm.
+name|DT_REL
+init|=
+literal|17
+block|,
+comment|// Address of relocation table (Rel entries).
+name|DT_RELSZ
+init|=
+literal|18
+block|,
+comment|// Size of Rel relocation table.
+name|DT_RELENT
+init|=
+literal|19
+block|,
+comment|// Size of a Rel relocation entry.
+name|DT_PLTREL
+init|=
+literal|20
+block|,
+comment|// Type of relocation entry used for linking.
+name|DT_DEBUG
+init|=
+literal|21
+block|,
+comment|// Reserved for debugger.
+name|DT_TEXTREL
+init|=
+literal|22
+block|,
+comment|// Relocations exist for non-writable segements.
+name|DT_JMPREL
+init|=
+literal|23
+block|,
+comment|// Address of relocations associated with PLT.
+name|DT_BIND_NOW
+init|=
+literal|24
+block|,
+comment|// Process all relocations before execution.
+name|DT_INIT_ARRAY
+init|=
+literal|25
+block|,
+comment|// Pointer to array of initialization functions.
+name|DT_FINI_ARRAY
+init|=
+literal|26
+block|,
+comment|// Pointer to array of termination functions.
+name|DT_INIT_ARRAYSZ
+init|=
+literal|27
+block|,
+comment|// Size of DT_INIT_ARRAY.
+name|DT_FINI_ARRAYSZ
+init|=
+literal|28
+block|,
+comment|// Size of DT_FINI_ARRAY.
+name|DT_LOOS
+init|=
+literal|0x60000000
+block|,
+comment|// Start of environment specific tags.
+name|DT_HIOS
+init|=
+literal|0x6FFFFFFF
+block|,
+comment|// End of environment specific tags.
+name|DT_LOPROC
+init|=
+literal|0x70000000
+block|,
+comment|// Start of processor specific tags.
+name|DT_HIPROC
+init|=
+literal|0x7FFFFFFF
+comment|// End of processor specific tags.
 block|}
 enum|;
 block|}

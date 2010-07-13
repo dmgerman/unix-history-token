@@ -70,9 +70,9 @@ comment|/// PointerMayBeCaptured - Return true if this pointer value may be capt
 comment|/// by the enclosing function (which is required to exist).  This routine can
 comment|/// be expensive, so consider caching the results.  The boolean ReturnCaptures
 comment|/// specifies whether returning the value (or part of it) from the function
-comment|/// counts as capturing it or not.  The boolean StoreCaptures specified whether
-comment|/// storing the value (or part of it) into memory anywhere automatically
-comment|/// counts as capturing it or not.
+comment|/// counts as capturing it or not.  The boolean StoreCaptures specified
+comment|/// whether storing the value (or part of it) into memory anywhere
+comment|/// automatically counts as capturing it or not.
 name|bool
 name|PointerMayBeCaptured
 parameter_list|(

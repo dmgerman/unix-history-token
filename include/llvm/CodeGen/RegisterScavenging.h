@@ -294,6 +294,21 @@ name|bool
 name|includeReserved
 parameter_list|)
 function_decl|;
+comment|/// getRegsAvailable - Return all available registers in the register class
+comment|/// in Mask.
+name|void
+name|getRegsAvailable
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|BitVector
+modifier|&
+name|Mask
+parameter_list|)
+function_decl|;
 comment|/// FindUnusedReg - Find a unused register of the specified register class.
 comment|/// Return 0 if none is found.
 name|unsigned
@@ -501,13 +516,18 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
+comment|/// findSurvivorReg - Return the candidate register that is unused for the
+comment|/// longest after StartMI. UseMI is set to the instruction where the search
+comment|/// stopped.
+comment|///
+comment|/// No more than InstrLimit instructions are inspected.
 name|unsigned
 name|findSurvivorReg
 argument_list|(
 name|MachineBasicBlock
 operator|::
 name|iterator
-name|MI
+name|StartMI
 argument_list|,
 name|BitVector
 operator|&

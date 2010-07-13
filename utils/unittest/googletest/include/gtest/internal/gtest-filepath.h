@@ -144,7 +144,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is #included in testing/base/internal/gtest-internal.h
+comment|// This file is #included in<gtest/internal/gtest-internal.h>.
 end_comment
 
 begin_comment
@@ -187,6 +187,7 @@ comment|// it may or may not represent an actual file or directory in the file s
 comment|// Names are NOT checked for syntax correctness -- no checking for illegal
 comment|// characters, malformed paths, etc.
 name|class
+name|GTEST_API_
 name|FilePath
 block|{
 name|public
@@ -339,6 +340,24 @@ modifier|*
 name|extension
 parameter_list|)
 function_decl|;
+comment|// Given directory = "dir", relative_path = "test.xml",
+comment|// returns "dir/test.xml".
+comment|// On Windows, uses \ as the separator rather than /.
+specifier|static
+name|FilePath
+name|ConcatPaths
+parameter_list|(
+specifier|const
+name|FilePath
+modifier|&
+name|directory
+parameter_list|,
+specifier|const
+name|FilePath
+modifier|&
+name|relative_path
+parameter_list|)
+function_decl|;
 comment|// Returns a pathname for a file that does not currently exist. The pathname
 comment|// will be directory/base_name.extension or
 comment|// directory/base_name_<number>.extension if directory/base_name.extension
@@ -477,6 +496,12 @@ name|IsRootDirectory
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Returns true if pathname describes an absolute path.
+name|bool
+name|IsAbsolutePath
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|// Replaces multiple consecutive separators with a single separator.
@@ -494,10 +519,24 @@ comment|// but some of the functions in FilePath will not handle that correctly.
 comment|// particular, RemoveTrailingPathSeparator() only removes one separator, and
 comment|// it is called in CreateDirectoriesRecursively() assuming that it will change
 comment|// a pathname from directory syntax (trailing separator) to filename syntax.
+comment|//
+comment|// On Windows this method also replaces the alternate path separator '/' with
+comment|// the primary path separator '\\', so that for example "bar\\/\\foo" becomes
+comment|// "bar\\foo".
 name|void
 name|Normalize
 parameter_list|()
 function_decl|;
+comment|// Returns a pointer to the last occurence of a valid path separator in
+comment|// the FilePath. On Windows, for example, both '/' and '\' are valid path
+comment|// separators. Returns NULL if no path separator was found.
+specifier|const
+name|char
+operator|*
+name|FindLastPathSeparator
+argument_list|()
+specifier|const
+expr_stmt|;
 name|String
 name|pathname_
 decl_stmt|;

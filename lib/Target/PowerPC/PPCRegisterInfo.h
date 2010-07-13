@@ -168,18 +168,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF =
-literal|0
-argument_list|)
-specifier|const
-block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(

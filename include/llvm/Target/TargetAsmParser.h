@@ -43,6 +43,12 @@ directive|define
 name|LLVM_TARGET_TARGETPARSER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCParser/MCAsmParserExtension.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -76,6 +82,9 @@ expr_stmt|;
 comment|/// TargetAsmParser - Generic interface to target specific assembly parsers.
 name|class
 name|TargetAsmParser
+range|:
+name|public
+name|MCAsmParserExtension
 block|{
 name|TargetAsmParser
 argument_list|(
@@ -83,20 +92,20 @@ specifier|const
 name|TargetAsmParser
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|TargetAsmParser
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|protected
-label|:
+operator|:
 comment|// Can only create subclasses.
 name|TargetAsmParser
 argument_list|(
@@ -104,20 +113,20 @@ specifier|const
 name|Target
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// TheTarget - The Target that this machine was created for.
 specifier|const
 name|Target
-modifier|&
+operator|&
 name|TheTarget
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|virtual
 operator|~
 name|TargetAsmParser
 argument_list|()
-expr_stmt|;
+block|;
 specifier|const
 name|Target
 operator|&
@@ -146,25 +155,15 @@ name|virtual
 name|bool
 name|ParseInstruction
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Name
+argument|const StringRef&Name
 argument_list|,
-name|SMLoc
-name|NameLoc
+argument|SMLoc NameLoc
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MCParsedAsmOperand
-operator|*
-operator|>
-operator|&
-name|Operands
+argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// ParseDirective - Parse a target specific assembler directive
 comment|///
 comment|/// The parser is positioned following the directive name.  The target
@@ -178,13 +177,12 @@ comment|/// \param DirectiveID - the identifier token of the directive.
 name|virtual
 name|bool
 name|ParseDirective
-parameter_list|(
-name|AsmToken
-name|DirectiveID
-parameter_list|)
-init|=
+argument_list|(
+argument|AsmToken DirectiveID
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+block|;
 comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
 comment|/// as an actual MCInst.  This returns false and fills in Inst on success and
 comment|/// returns true on failure to match.
@@ -205,11 +203,10 @@ name|MCInst
 operator|&
 name|Inst
 argument_list|)
-init|=
+operator|=
 literal|0
+block|;    }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

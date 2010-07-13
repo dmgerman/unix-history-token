@@ -122,6 +122,14 @@ name|createStripDebugDeclarePass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// These pass removes unused symbols' debug info.
+name|ModulePass
+modifier|*
+name|createStripDeadDebugInfoPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
 comment|/// createLowerSetJmpPass - This function lowers the setjmp/longjmp intrinsics
 comment|/// to invoke/unwind instructions.  This should really be part of the C/C++
 comment|/// front-end, but it's so much easier to write transformations in LLVM proper.

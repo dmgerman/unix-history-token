@@ -65,6 +65,12 @@ directive|include
 file|"llvm/MC/MCSection.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/COFF.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -158,117 +164,6 @@ argument_list|,
 argument|const MCAsmInfo&MAI
 argument_list|)
 specifier|const
-block|;
-comment|//FIXME: all COFF enumerations/flags should be standardized into one place...
-comment|// Target/X86COFF.h doesn't seem right as COFF can be used for other targets,
-comment|// MC/WinCOFF.h maybe right as it isn't target or entity specific, and it is
-comment|//   pretty low on the dependancy graph (is there any need to support non
-comment|//   windows COFF?)
-comment|// here is good for section stuff, but others should go elsewhere
-comment|/// Valid section flags.
-block|enum
-block|{
-name|IMAGE_SCN_TYPE_NO_PAD
-operator|=
-literal|0x00000008
-block|,
-name|IMAGE_SCN_CNT_CODE
-operator|=
-literal|0x00000020
-block|,
-name|IMAGE_SCN_CNT_INITIALIZED_DATA
-operator|=
-literal|0x00000040
-block|,
-name|IMAGE_SCN_CNT_UNINITIALIZED_DATA
-operator|=
-literal|0x00000080
-block|,
-name|IMAGE_SCN_LNK_OTHER
-operator|=
-literal|0x00000100
-block|,
-name|IMAGE_SCN_LNK_INFO
-operator|=
-literal|0x00000200
-block|,
-name|IMAGE_SCN_LNK_REMOVE
-operator|=
-literal|0x00000800
-block|,
-name|IMAGE_SCN_LNK_COMDAT
-operator|=
-literal|0x00001000
-block|,
-name|IMAGE_SCN_MEM_FARDATA
-operator|=
-literal|0x00008000
-block|,
-name|IMAGE_SCN_MEM_PURGEABLE
-operator|=
-literal|0x00020000
-block|,
-name|IMAGE_SCN_MEM_16BIT
-operator|=
-literal|0x00020000
-block|,
-name|IMAGE_SCN_MEM_LOCKED
-operator|=
-literal|0x00040000
-block|,
-name|IMAGE_SCN_MEM_PRELOAD
-operator|=
-literal|0x00080000
-block|,
-comment|/* these are handled elsewhere       IMAGE_SCN_ALIGN_1BYTES                    = 0x00100000,       IMAGE_SCN_ALIGN_2BYTES                    = 0x00200000,       IMAGE_SCN_ALIGN_4BYTES                    = 0x00300000,       IMAGE_SCN_ALIGN_8BYTES                    = 0x00400000,       IMAGE_SCN_ALIGN_16BYTES                   = 0x00500000,       IMAGE_SCN_ALIGN_32BYTES                   = 0x00600000,       IMAGE_SCN_ALIGN_64BYTES                   = 0x00700000,       */
-name|IMAGE_SCN_LNK_NRELOC_OVFL
-operator|=
-literal|0x01000000
-block|,
-name|IMAGE_SCN_MEM_DISCARDABLE
-operator|=
-literal|0x02000000
-block|,
-name|IMAGE_SCN_MEM_NOT_CACHED
-operator|=
-literal|0x04000000
-block|,
-name|IMAGE_SCN_MEM_NOT_PAGED
-operator|=
-literal|0x08000000
-block|,
-name|IMAGE_SCN_MEM_SHARED
-operator|=
-literal|0x10000000
-block|,
-name|IMAGE_SCN_MEM_EXECUTE
-operator|=
-literal|0x20000000
-block|,
-name|IMAGE_SCN_MEM_READ
-operator|=
-literal|0x40000000
-block|,
-name|IMAGE_SCN_MEM_WRITE
-operator|=
-literal|0x80000000
-block|}
-block|;      enum
-block|{
-name|IMAGE_COMDAT_SELECT_NODUPLICATES
-operator|=
-literal|1
-block|,
-name|IMAGE_COMDAT_SELECT_ANY
-block|,
-name|IMAGE_COMDAT_SELECT_SAME_SIZE
-block|,
-name|IMAGE_COMDAT_SELECT_EXACT_MATCH
-block|,
-name|IMAGE_COMDAT_SELECT_ASSOCIATIVE
-block|,
-name|IMAGE_COMDAT_SELECT_LARGEST
-block|}
 block|;
 name|StringRef
 name|getSectionName

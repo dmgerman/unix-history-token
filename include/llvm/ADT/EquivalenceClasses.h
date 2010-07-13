@@ -811,18 +811,17 @@ begin_comment
 comment|/// returned.
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|const
 name|ElemTy
 modifier|&
 name|getOrInsertLeaderValue
-argument_list|(
+parameter_list|(
 specifier|const
 name|ElemTy
-operator|&
+modifier|&
 name|V
-argument_list|)
-decl|const
+parameter_list|)
 block|{
 name|member_iterator
 name|MI
@@ -850,7 +849,7 @@ operator|*
 name|MI
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// getNumClasses - Return the number of equivalence classes in this set.

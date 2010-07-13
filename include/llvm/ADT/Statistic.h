@@ -250,6 +250,10 @@ operator|++
 operator|(
 operator|)
 block|{
+comment|// FIXME: This function and all those that follow carefully use an
+comment|// atomic operation to update the value safely in the presence of
+comment|// concurrent accesses, but not to read the return value, so the
+comment|// return value is not thread safe.
 name|sys
 operator|::
 name|AtomicIncrement

@@ -302,7 +302,7 @@ operator|*
 name|TD
 argument_list|)
 decl_stmt|;
-comment|/// FindScalarValue - Given an aggregrate and an sequence of indices, see if
+comment|/// FindInsertedValue - Given an aggregrate and an sequence of indices, see if
 comment|/// the scalar value indexed is already around as a register, for example if
 comment|/// it were inserted directly into the aggregrate.
 comment|///

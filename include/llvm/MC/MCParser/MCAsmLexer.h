@@ -424,6 +424,11 @@ comment|// DO NOT IMPLEMENT
 name|protected
 label|:
 comment|// Can only create subclasses.
+specifier|const
+name|char
+modifier|*
+name|TokStart
+decl_stmt|;
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
@@ -483,6 +488,19 @@ name|LexToken
 argument_list|()
 return|;
 block|}
+name|virtual
+name|StringRef
+name|LexUntilEndOfStatement
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// getLoc - Get the current source location.
+name|SMLoc
+name|getLoc
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getTok - Get the current (last) lexed token.
 specifier|const
 name|AsmToken

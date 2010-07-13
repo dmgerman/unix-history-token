@@ -2639,7 +2639,7 @@ specifier|const
 block|;
 comment|/// A lossless cast is one that does not alter the basic value. It implies
 comment|/// a no-op cast but is more stringent, preventing things like int->float,
-comment|/// long->double, int->ptr, or vector->anything.
+comment|/// long->double, or int->ptr.
 comment|/// @returns true iff the cast is lossless.
 comment|/// @brief Determine if this is a lossless cast.
 name|bool
@@ -2655,6 +2655,24 @@ comment|/// is the same size as the pointer. However, pointer size varies with
 comment|/// platform. Generally, the result of TargetData::getIntPtrType() should be
 comment|/// passed in. If that's not available, use Type::Int64Ty, which will make
 comment|/// the isNoopCast call conservative.
+comment|/// @brief Determine if the described cast is a no-op cast.
+specifier|static
+name|bool
+name|isNoopCast
+argument_list|(
+argument|Instruction::CastOps Opcode
+argument_list|,
+comment|///< Opcode of cast
+argument|const Type *SrcTy
+argument_list|,
+comment|///< SrcTy of cast
+argument|const Type *DstTy
+argument_list|,
+comment|///< DstTy of cast
+argument|const Type *IntPtrTy
+comment|///< Integer type corresponding to Ptr types, or null
+argument_list|)
+block|;
 comment|/// @brief Determine if this cast is a no-op cast.
 name|bool
 name|isNoopCast

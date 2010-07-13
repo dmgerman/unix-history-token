@@ -138,7 +138,7 @@ argument|unsigned SubIdx
 argument_list|,
 argument|const MachineInstr *Orig
 argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;

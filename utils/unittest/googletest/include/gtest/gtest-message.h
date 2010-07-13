@@ -190,6 +190,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<limits>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gtest/internal/gtest-string.h>
 end_include
 
@@ -230,6 +236,7 @@ comment|// latter (it causes an access violation if you do).  The Message
 comment|// class hides this difference by treating a NULL char pointer as
 comment|// "(null)".
 name|class
+name|GTEST_API_
 name|Message
 block|{
 name|private
@@ -266,7 +273,28 @@ name|ss_
 argument_list|(
 argument|new internal::StrStream
 argument_list|)
-block|{}
+block|{
+comment|// By default, we want there to be enough precision when printing
+comment|// a double to a Message.
+operator|*
+name|ss_
+operator|<<
+name|std
+operator|::
+name|setprecision
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|double
+operator|>
+operator|::
+name|digits10
+operator|+
+literal|2
+argument_list|)
+block|;   }
 comment|// Copy constructor.
 name|Message
 argument_list|(
@@ -317,8 +345,8 @@ block|{
 name|delete
 name|ss_
 block|; }
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_OS_SYMBIAN
 comment|// Streams a value (either a pointer or not) to this object.
 name|template
@@ -610,8 +638,8 @@ return|;
 block|}
 name|private
 label|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_OS_SYMBIAN
 comment|// These are needed as the Nokia Symbian Compiler cannot decide between
 comment|// const T& and const T* in a function template. The Nokia compiler _can_
@@ -626,7 +654,8 @@ specifier|inline
 name|void
 name|StreamHelper
 argument_list|(
-argument|internal::true_type dummy
+argument|internal::true_type
+comment|/*dummy*/
 argument_list|,
 argument|T* pointer
 argument_list|)
@@ -665,7 +694,8 @@ specifier|inline
 name|void
 name|StreamHelper
 argument_list|(
-argument|internal::false_type dummy
+argument|internal::false_type
+comment|/*dummy*/
 argument_list|,
 argument|const T& value
 argument_list|)

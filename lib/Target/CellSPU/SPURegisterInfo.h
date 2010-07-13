@@ -162,19 +162,6 @@ argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 block|;
-comment|//! Return the register class array of the callee-saved registers
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-specifier|const
-block|;
 comment|//! Allow for scavenging, so we can get scratch registers when needed.
 name|virtual
 name|bool
@@ -290,21 +277,6 @@ block|;
 comment|//------------------------------------------------------------------------
 comment|// New methods added:
 comment|//------------------------------------------------------------------------
-comment|//! Return the array of argument passing registers
-comment|/*!       \note The size of this array is returned by getArgRegsSize().      */
-specifier|static
-specifier|const
-name|unsigned
-operator|*
-name|getArgRegs
-argument_list|()
-block|;
-comment|//! Return the size of the argument passing register array
-specifier|static
-name|unsigned
-name|getNumArgRegs
-argument_list|()
-block|;
 comment|//! Get DWARF debugging register number
 name|int
 name|getDwarfRegNum

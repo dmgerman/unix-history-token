@@ -89,6 +89,12 @@ directive|include
 file|"llvm/ADT/ValueMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Analysis/CodeMetrics.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -116,113 +122,6 @@ operator|>
 name|class
 name|SmallPtrSet
 expr_stmt|;
-comment|// CodeMetrics - Calculate size and a few similar metrics for a set of
-comment|// basic blocks.
-struct|struct
-name|CodeMetrics
-block|{
-comment|/// NeverInline - True if this callee should never be inlined into a
-comment|/// caller.
-name|bool
-name|NeverInline
-decl_stmt|;
-comment|/// usesDynamicAlloca - True if this function calls alloca (in the C sense).
-name|bool
-name|usesDynamicAlloca
-decl_stmt|;
-comment|/// NumInsts, NumBlocks - Keep track of how large each function is, which
-comment|/// is used to estimate the code size cost of inlining it.
-name|unsigned
-name|NumInsts
-decl_stmt|,
-name|NumBlocks
-decl_stmt|;
-comment|/// NumBBInsts - Keeps track of basic block code size estimates.
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-operator|,
-name|unsigned
-operator|>
-name|NumBBInsts
-expr_stmt|;
-comment|/// NumCalls - Keep track of the number of calls to 'big' functions.
-name|unsigned
-name|NumCalls
-decl_stmt|;
-comment|/// NumVectorInsts - Keep track of how many instructions produce vector
-comment|/// values.  The inliner is being more aggressive with inlining vector
-comment|/// kernels.
-name|unsigned
-name|NumVectorInsts
-decl_stmt|;
-comment|/// NumRets - Keep track of how many Ret instructions the block contains.
-name|unsigned
-name|NumRets
-decl_stmt|;
-name|CodeMetrics
-argument_list|()
-operator|:
-name|NeverInline
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|usesDynamicAlloca
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|NumInsts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumBlocks
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumCalls
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumVectorInsts
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumRets
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-comment|/// analyzeBasicBlock - Add information about the specified basic block
-comment|/// to the current structure.
-name|void
-name|analyzeBasicBlock
-argument_list|(
-specifier|const
-name|BasicBlock
-operator|*
-name|BB
-argument_list|)
-expr_stmt|;
-comment|/// analyzeFunction - Add information about the specified function
-comment|/// to the current structure.
-name|void
-name|analyzeFunction
-parameter_list|(
-name|Function
-modifier|*
-name|F
-parameter_list|)
-function_decl|;
-block|}
-struct|;
 name|namespace
 name|InlineConstants
 block|{
@@ -576,6 +475,12 @@ name|Function
 modifier|*
 name|F
 parameter_list|)
+function_decl|;
+comment|/// NeverInline - Returns true if the function should never be
+comment|/// inlined into any caller.
+name|bool
+name|NeverInline
+parameter_list|()
 function_decl|;
 block|}
 struct|;

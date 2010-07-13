@@ -66,6 +66,7 @@ name|LLVM_TARGET
 parameter_list|(
 name|TargetName
 parameter_list|)
+define|\
 value|void LLVMInitialize##TargetName##TargetInfo(void);
 include|#
 directive|include

@@ -286,6 +286,8 @@ argument|bool isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -552,6 +554,8 @@ argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -574,6 +578,8 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
@@ -588,11 +594,9 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|const SmallVectorImpl<EVT>&OutTys
+argument|const SmallVectorImpl<ISD::OutputArg>&ArgsFlags
 argument_list|,
-argument|const SmallVectorImpl<ISD::ArgFlagsTy>&ArgsFlags
-argument_list|,
-argument|SelectionDAG&DAG
+argument|LLVMContext&Context
 argument_list|)
 specifier|const
 block|;   }

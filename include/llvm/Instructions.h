@@ -1038,6 +1038,32 @@ argument_list|)
 block|;
 name|Value
 operator|*
+name|getValueOperand
+argument_list|()
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getValueOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+name|Value
+operator|*
 name|getPointerOperand
 argument_list|()
 block|{
@@ -3687,7 +3713,7 @@ block|{
 return|return
 name|new
 argument_list|(
-argument|(unsigned)(ArgEnd - ArgBegin +
+argument|unsigned(ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|)
@@ -3729,7 +3755,7 @@ block|{
 return|return
 name|new
 argument_list|(
-argument|(unsigned)(ArgEnd - ArgBegin +
+argument|unsigned(ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|)
@@ -3902,6 +3928,12 @@ name|ArraySize
 operator|=
 literal|0
 argument_list|,
+name|Function
+operator|*
+name|MallocF
+operator|=
+literal|0
+argument_list|,
 specifier|const
 name|Twine
 operator|&
@@ -3955,7 +3987,8 @@ argument_list|)
 block|;
 comment|/// CreateFree - Generate the IR for a call to the builtin free function.
 specifier|static
-name|void
+name|Instruction
+operator|*
 name|CreateFree
 argument_list|(
 name|Value
@@ -4019,12 +4052,97 @@ name|isTC
 argument_list|)
 argument_list|)
 block|;   }
+comment|/// @deprecated these "define hacks" will go away soon
+comment|/// @brief coerce out-of-tree code to abandon the low-level interfaces
+comment|/// @detail see below comments and update your code to high-level interfaces
+comment|///    - getOperand(0)  --->  getCalledValue(), or possibly getCalledFunction
+comment|///    - setOperand(0, V)  --->  setCalledFunction(V)
+comment|///
+comment|///    in LLVM v2.8-only code
+comment|///    - getOperand(N+1)  --->  getArgOperand(N)
+comment|///    - setOperand(N+1, V)  --->  setArgOperand(N, V)
+comment|///    - getNumOperands()  --->  getNumArgOperands()+1  // note the "+1"!
+comment|///
+comment|///    in backward compatible code please consult llvm/Support/CallSite.h,
+comment|///    you should create a callsite using the CallInst pointer and call its
+comment|///    methods
+comment|///
+define|#
+directive|define
+name|public
+value|private
+define|#
+directive|define
+name|protected
+value|private
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
 block|;
+undef|#
+directive|undef
+name|public
+undef|#
+directive|undef
+name|protected
+name|public
+operator|:
+expr|enum
+block|{
+name|ArgOffset
+operator|=
+literal|0
+block|}
+block|;
+comment|///< temporary, do not use for new code!
+name|unsigned
+name|getNumArgOperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|-
+literal|1
+return|;
+block|}
+name|Value
+operator|*
+name|getArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+name|i
+operator|+
+name|ArgOffset
+argument_list|)
+return|;
+block|}
+name|void
+name|setArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Value *v
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+name|i
+operator|+
+name|ArgOffset
+argument_list|,
+name|v
+argument_list|)
+block|; }
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -4168,7 +4286,7 @@ block|}
 name|void
 name|setIsNoInline
 argument_list|(
-argument|bool Value
+argument|bool Value = true
 argument_list|)
 block|{
 if|if
@@ -4457,7 +4575,9 @@ operator|>
 operator|(
 name|Op
 operator|<
-literal|0
+name|ArgOffset
+operator|-
+literal|1
 operator|>
 operator|(
 operator|)
@@ -4476,7 +4596,9 @@ block|{
 return|return
 name|Op
 operator|<
-literal|0
+name|ArgOffset
+operator|-
+literal|1
 operator|>
 operator|(
 operator|)
@@ -4490,7 +4612,9 @@ block|{
 return|return
 name|Op
 operator|<
-literal|0
+name|ArgOffset
+operator|-
+literal|1
 operator|>
 operator|(
 operator|)
@@ -4505,7 +4629,9 @@ argument_list|)
 block|{
 name|Op
 operator|<
-literal|0
+name|ArgOffset
+operator|-
+literal|1
 operator|>
 operator|(
 operator|)
@@ -4638,7 +4764,7 @@ argument|OperandTraits<CallInst>::op_end(this) - (ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|,
-argument|(unsigned)(ArgEnd - ArgBegin +
+argument|unsigned(ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|,
@@ -4688,7 +4814,7 @@ argument|OperandTraits<CallInst>::op_end(this) - (ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|,
-argument|(unsigned)(ArgEnd - ArgBegin +
+argument|unsigned(ArgEnd - ArgBegin +
 literal|1
 argument|)
 argument_list|,
@@ -4708,6 +4834,9 @@ argument_list|,
 argument|typename std::iterator_traits<InputIterator>::iterator_category()
 argument_list|)
 block|; }
+comment|// Note: if you get compile errors about private methods then
+comment|//       please update your code to use the high-level operand
+comment|//       interfaces. See line 943 above.
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|CallInst
@@ -10793,6 +10922,48 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
+name|unsigned
+name|getNumArgOperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNumOperands
+argument_list|()
+operator|-
+literal|3
+return|;
+block|}
+name|Value
+operator|*
+name|getArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+name|void
+name|setArgOperand
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Value *v
+argument_list|)
+block|{
+name|setOperand
+argument_list|(
+name|i
+argument_list|,
+name|v
+argument_list|)
+block|; }
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -10923,7 +11094,7 @@ block|}
 name|void
 name|setIsNoInline
 argument_list|(
-argument|bool Value
+argument|bool Value = true
 argument_list|)
 block|{
 if|if

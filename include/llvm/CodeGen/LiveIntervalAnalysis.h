@@ -568,10 +568,10 @@ name|unsigned
 name|reg
 parameter_list|)
 function_decl|;
-comment|/// conflictsWithSubPhysRegRef - Similar to conflictsWithPhysRegRef except
-comment|/// it checks for sub-register reference and it can check use as well.
+comment|/// conflictsWithAliasRef - Similar to conflictsWithPhysRegRef except
+comment|/// it checks for alias uses and defs.
 name|bool
-name|conflictsWithSubPhysRegRef
+name|conflictsWithAliasRef
 argument_list|(
 name|LiveInterval
 operator|&
@@ -579,9 +579,6 @@ name|li
 argument_list|,
 name|unsigned
 name|Reg
-argument_list|,
-name|bool
-name|CheckUse
 argument_list|,
 name|SmallPtrSet
 operator|<
@@ -984,18 +981,6 @@ return|return
 name|VNInfoAllocator
 return|;
 block|}
-comment|/// getVNInfoSourceReg - Helper function that parses the specified VNInfo
-comment|/// copy field and returns the source register that defines it.
-name|unsigned
-name|getVNInfoSourceReg
-argument_list|(
-specifier|const
-name|VNInfo
-operator|*
-name|VNI
-argument_list|)
-decl|const
-decl_stmt|;
 name|virtual
 name|void
 name|getAnalysisUsage
@@ -1061,32 +1046,6 @@ operator|*
 operator|>
 operator|&
 name|SpillIs
-argument_list|,
-specifier|const
-name|MachineLoopInfo
-operator|*
-name|loopInfo
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|)
-expr_stmt|;
-comment|/// addIntervalsForSpillsFast - Quickly create new intervals for spilled
-comment|/// defs / uses without remat or splitting.
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-name|addIntervalsForSpillsFast
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
 argument_list|,
 specifier|const
 name|MachineLoopInfo

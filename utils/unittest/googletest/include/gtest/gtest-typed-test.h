@@ -417,11 +417,11 @@ begin_comment
 comment|// Implements typed tests.
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|GTEST_HAS_TYPED_TEST
-end_ifdef
+end_if
 
 begin_comment
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
@@ -449,6 +449,18 @@ parameter_list|)
 value|gtest_type_params_##TestCaseName##_
 end_define
 
+begin_comment
+comment|// The 'Types' template argument below must have spaces around it
+end_comment
+
+begin_comment
+comment|// since some compilers may choke on '>>' when passing a template
+end_comment
+
+begin_comment
+comment|// instance (e.g. Types<int>)
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -459,7 +471,7 @@ parameter_list|,
 name|Types
 parameter_list|)
 define|\
-value|typedef ::testing::internal::TypeList<Types>::type \       GTEST_TYPE_PARAMS_(CaseName)
+value|typedef ::testing::internal::TypeList< Types>::type \       GTEST_TYPE_PARAMS_(CaseName)
 end_define
 
 begin_define
@@ -488,11 +500,11 @@ begin_comment
 comment|// Implements type-parameterized tests.
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|GTEST_HAS_TYPED_TEST_P
-end_ifdef
+end_if
 
 begin_comment
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
@@ -628,6 +640,18 @@ define|\
 value|namespace GTEST_CASE_NAMESPACE_(CaseName) { \   typedef ::testing::internal::Templates<__VA_ARGS__>::type gtest_AllTests_; \   } \   static const char* const GTEST_REGISTERED_TEST_NAMES_(CaseName) = \       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).VerifyRegisteredTestNames(\           __FILE__, __LINE__, #__VA_ARGS__)
 end_define
 
+begin_comment
+comment|// The 'Types' template argument below must have spaces around it
+end_comment
+
+begin_comment
+comment|// since some compilers may choke on '>>' when passing a template
+end_comment
+
+begin_comment
+comment|// instance (e.g. Types<int>)
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -640,7 +664,7 @@ parameter_list|,
 name|Types
 parameter_list|)
 define|\
-value|bool gtest_##Prefix##_##CaseName = \       ::testing::internal::TypeParameterizedTestCase<CaseName, \           GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_, \           ::testing::internal::TypeList<Types>::type>::Register(\               #Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
+value|bool gtest_##Prefix##_##CaseName = \       ::testing::internal::TypeParameterizedTestCase<CaseName, \           GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_, \           ::testing::internal::TypeList< Types>::type>::Register(\               #Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
 end_define
 
 begin_endif

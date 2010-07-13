@@ -276,6 +276,8 @@ argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -297,6 +299,8 @@ argument_list|,
 argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|DebugLoc dl
 argument_list|,

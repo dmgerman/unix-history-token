@@ -147,6 +147,15 @@ operator|*
 operator|>
 name|InsertedValues
 expr_stmt|;
+name|std
+operator|::
+name|set
+operator|<
+name|Value
+operator|*
+operator|>
+name|InsertedPostIncValues
+expr_stmt|;
 comment|/// PostIncLoops - Addrecs referring to any of the given loops are expanded
 comment|/// in post-inc mode. For example, expanding {1,+,1}<L> in post-inc mode
 comment|/// returns the add instruction that adds one to the phi for {0,+,1}<L>,
@@ -350,6 +359,13 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
+comment|// When we change the post-inc loop set, cached expansions may no
+comment|// longer be valid.
+name|InsertedPostIncValues
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
 block|}
 comment|/// disableCanonicalMode - Disable the behavior of expanding expressions in
 comment|/// canonical form rather than in a more literal form. Non-canonical mode
@@ -409,6 +425,34 @@ argument_list|,
 name|Value
 operator|*
 name|RHS
+argument_list|)
+decl_stmt|;
+comment|/// ReuseOrCreateCast - Arange for there to be a cast of V to Ty at IP,
+comment|/// reusing an existing cast if a suitable one exists, moving an existing
+comment|/// cast if a suitable one exists but isn't in the right place, or
+comment|/// or creating a new one.
+name|Value
+modifier|*
+name|ReuseOrCreateCast
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|,
+name|Instruction
+operator|::
+name|CastOps
+name|Op
+argument_list|,
+name|BasicBlock
+operator|::
+name|iterator
+name|IP
 argument_list|)
 decl_stmt|;
 comment|/// InsertNoopCastOfTo - Insert a cast of V to the specified type,
@@ -508,6 +552,13 @@ decl|const
 block|{
 return|return
 name|InsertedValues
+operator|.
+name|count
+argument_list|(
+name|I
+argument_list|)
+operator|||
+name|InsertedPostIncValues
 operator|.
 name|count
 argument_list|(

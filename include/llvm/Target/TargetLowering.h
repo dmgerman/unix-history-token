@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Attributes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
@@ -154,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetCallingConv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -190,6 +202,9 @@ name|Function
 decl_stmt|;
 name|class
 name|FastISel
+decl_stmt|;
+name|class
+name|FunctionLoweringInfo
 decl_stmt|;
 name|class
 name|MachineBasicBlock
@@ -2847,27 +2862,15 @@ return|return
 name|JumpBufAlignment
 return|;
 block|}
-comment|/// getIfCvtBlockLimit - returns the target specific if-conversion block size
-comment|/// limit. Any block whose size is greater should not be predicated.
+comment|/// getMinStackArgumentAlignment - return the minimum stack alignment of an
+comment|/// argument.
 name|unsigned
-name|getIfCvtBlockSizeLimit
+name|getMinStackArgumentAlignment
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IfCvtBlockSizeLimit
-return|;
-block|}
-comment|/// getIfCvtDupBlockLimit - returns the target specific size limit for a
-comment|/// block to be considered for duplication. Any block whose size is greater
-comment|/// should not be duplicated to facilitate its predication.
-name|unsigned
-name|getIfCvtDupBlockSizeLimit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IfCvtDupBlockSizeLimit
+name|MinStackArgumentAlignment
 return|;
 block|}
 comment|/// getPrefLoopAlignment - return the preferred loop alignment.
@@ -2879,6 +2882,18 @@ specifier|const
 block|{
 return|return
 name|PrefLoopAlignment
+return|;
+block|}
+comment|/// getShouldFoldAtomicFences - return whether the combiner should fold
+comment|/// fence MEMBARRIER instructions into the atomic intrinsic instructions.
+comment|///
+name|bool
+name|getShouldFoldAtomicFences
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShouldFoldAtomicFences
 return|;
 block|}
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
@@ -3065,6 +3080,28 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// getStackCookieLocation - Return true if the target stores stack
+comment|/// protector cookies at a fixed offset in some non-standard address
+comment|/// space, and populates the address space and offset as
+comment|/// appropriate.
+name|virtual
+name|bool
+name|getStackCookieLocation
+argument_list|(
+name|unsigned
+operator|&
+name|AddressSpace
+argument_list|,
+name|unsigned
+operator|&
+name|Offset
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Optimization Methods
 comment|//
@@ -3084,9 +3121,6 @@ decl_stmt|;
 name|bool
 name|LegalOps
 decl_stmt|;
-name|bool
-name|ShrinkOps
-decl_stmt|;
 name|SDValue
 name|Old
 decl_stmt|;
@@ -3101,8 +3135,6 @@ argument_list|,
 argument|bool LT
 argument_list|,
 argument|bool LO
-argument_list|,
-argument|bool Shrink = false
 argument_list|)
 block|:
 name|DAG
@@ -3117,12 +3149,7 @@ argument_list|)
 operator|,
 name|LegalOps
 argument_list|(
-name|LO
-argument_list|)
-operator|,
-name|ShrinkOps
-argument_list|(
-argument|Shrink
+argument|LO
 argument_list|)
 block|{}
 name|bool
@@ -4360,35 +4387,6 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setIfCvtBlockSizeLimit - Set the target's if-conversion block size
-comment|/// limit (in number of instructions); default is 2.
-name|void
-name|setIfCvtBlockSizeLimit
-parameter_list|(
-name|unsigned
-name|Limit
-parameter_list|)
-block|{
-name|IfCvtBlockSizeLimit
-operator|=
-name|Limit
-expr_stmt|;
-block|}
-comment|/// setIfCvtDupBlockSizeLimit - Set the target's block size limit (in number
-comment|/// of instructions) to be considered for code duplication during
-comment|/// if-conversion; default is 2.
-name|void
-name|setIfCvtDupBlockSizeLimit
-parameter_list|(
-name|unsigned
-name|Limit
-parameter_list|)
-block|{
-name|IfCvtDupBlockSizeLimit
-operator|=
-name|Limit
-expr_stmt|;
-block|}
 comment|/// setPrefLoopAlignment - Set the target's preferred loop alignment. Default
 comment|/// alignment is zero, it means the target does not care about loop alignment.
 name|void
@@ -4401,6 +4399,34 @@ block|{
 name|PrefLoopAlignment
 operator|=
 name|Align
+expr_stmt|;
+block|}
+comment|/// setMinStackArgumentAlignment - Set the minimum stack alignment of an
+comment|/// argument.
+name|void
+name|setMinStackArgumentAlignment
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|MinStackArgumentAlignment
+operator|=
+name|Align
+expr_stmt|;
+block|}
+comment|/// setShouldFoldAtomicFences - Set if the target's implementation of the
+comment|/// atomic operation intrinsics includes locking. Default is false.
+name|void
+name|setShouldFoldAtomicFences
+parameter_list|(
+name|bool
+name|fold
+parameter_list|)
+block|{
+name|ShouldFoldAtomicFences
+operator|=
+name|fold
 expr_stmt|;
 block|}
 name|public
@@ -4648,6 +4674,14 @@ argument_list|,
 specifier|const
 name|SmallVectorImpl
 operator|<
+name|SDValue
+operator|>
+operator|&
+name|OutVals
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
 name|ISD
 operator|::
 name|InputArg
@@ -4703,24 +4737,16 @@ argument_list|,
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|EVT
-operator|>
-operator|&
-name|OutTys
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
 name|ISD
 operator|::
-name|ArgFlagsTy
+name|OutputArg
 operator|>
 operator|&
-name|ArgsFlags
+name|Outs
 argument_list|,
-name|SelectionDAG
+name|LLVMContext
 operator|&
-name|DAG
+name|Context
 argument_list|)
 decl|const
 block|{
@@ -4758,6 +4784,14 @@ name|OutputArg
 operator|>
 operator|&
 name|Outs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|OutVals
 argument_list|,
 name|DebugLoc
 name|dl
@@ -4889,71 +4923,9 @@ name|FastISel
 modifier|*
 name|createFastISel
 argument_list|(
-name|MachineFunction
+name|FunctionLoweringInfo
 operator|&
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|Value
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|&
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|AllocaInst
-operator|*
-argument_list|,
-name|int
-operator|>
-operator|&
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-expr|>
-operator|&
-ifndef|#
-directive|ifndef
-name|NDEBUG
-argument_list|,
-name|SmallSet
-operator|<
-specifier|const
-name|Instruction
-operator|*
-argument_list|,
-literal|8
-operator|>
-operator|&
-name|CatchInfoLost
-endif|#
-directive|endif
+name|funcInfo
 argument_list|)
 decl|const
 block|{
@@ -5091,8 +5063,7 @@ comment|/// ComputeConstraintToUse - Determines the constraint code and constrai
 comment|/// type to use for the specific AsmOperandInfo, setting
 comment|/// OpInfo.ConstraintCode and OpInfo.ConstraintType.  If the actual operand
 comment|/// being passed in is available, it can be passed in as Op, otherwise an
-comment|/// empty SDValue can be passed. If hasMemory is true it means one of the asm
-comment|/// constraint of the inline asm instruction being processed is 'm'.
+comment|/// empty SDValue can be passed.
 name|virtual
 name|void
 name|ComputeConstraintToUse
@@ -5103,9 +5074,6 @@ name|OpInfo
 argument_list|,
 name|SDValue
 name|Op
-argument_list|,
-name|bool
-name|hasMemory
 argument_list|,
 name|SelectionDAG
 operator|*
@@ -5193,9 +5161,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is true
-comment|/// it means one of the asm constraint of the inline asm instruction being
-comment|/// processed is 'm'.
+comment|/// vector.  If it is invalid, don't add anything to Ops.
 name|virtual
 name|void
 name|LowerAsmOperandForConstraint
@@ -5205,9 +5171,6 @@ name|Op
 argument_list|,
 name|char
 name|ConstraintLetter
-argument_list|,
-name|bool
-name|hasMemory
 argument_list|,
 name|std
 operator|::
@@ -5702,20 +5665,22 @@ comment|/// buffers
 name|unsigned
 name|JumpBufAlignment
 decl_stmt|;
-comment|/// IfCvtBlockSizeLimit - The maximum allowed size for a block to be
-comment|/// if-converted.
+comment|/// MinStackArgumentAlignment - The minimum alignment that any argument
+comment|/// on the stack needs to have.
+comment|///
 name|unsigned
-name|IfCvtBlockSizeLimit
-decl_stmt|;
-comment|/// IfCvtDupBlockSizeLimit - The maximum allowed size for a block to be
-comment|/// duplicated during if-conversion.
-name|unsigned
-name|IfCvtDupBlockSizeLimit
+name|MinStackArgumentAlignment
 decl_stmt|;
 comment|/// PrefLoopAlignment - The perferred loop alignment.
 comment|///
 name|unsigned
 name|PrefLoopAlignment
+decl_stmt|;
+comment|/// ShouldFoldAtomicFences - Whether fencing MEMBARRIER instructions should
+comment|/// be folded into the enclosed atomic intrinsic instruction by the
+comment|/// combiner.
+name|bool
+name|ShouldFoldAtomicFences
 decl_stmt|;
 comment|/// StackPointerRegisterToSaveRestore - If set to a physical register, this
 comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
@@ -6014,6 +5979,44 @@ name|benefitFromCodePlacementOpt
 decl_stmt|;
 block|}
 empty_stmt|;
+comment|/// GetReturnInfo - Given an LLVM IR type and return type attributes,
+comment|/// compute the return value EVTs and flags, and optionally also
+comment|/// the offsets, if the return value is being lowered to memory.
+name|void
+name|GetReturnInfo
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ReturnType
+argument_list|,
+name|Attributes
+name|attr
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+specifier|const
+name|TargetLowering
+operator|&
+name|TLI
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|uint64_t
+operator|>
+operator|*
+name|Offsets
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

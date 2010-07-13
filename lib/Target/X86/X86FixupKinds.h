@@ -67,6 +67,9 @@ comment|// 32-bit pcrel, e.g. a branch.
 name|reloc_pcrel_1byte
 block|,
 comment|// 8-bit pcrel, e.g. branch_1
+name|reloc_pcrel_2byte
+block|,
+comment|// 16-bit pcrel, e.g. callw
 name|reloc_riprel_4byte
 block|,
 comment|// 32-bit rip-relative

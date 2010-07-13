@@ -140,17 +140,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getPhysicalRegisterRegClass
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|EVT VT = MVT::Other
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|hasReservedCallFrame
 argument_list|(

@@ -310,6 +310,10 @@ block|,
 comment|// TLSADDR - Thread Local Storage.
 name|TLSADDR
 block|,
+comment|// TLSCALL - Thread Local Storage.  When calling to an OS provided
+comment|// thunk at the address from an earlier relocation.
+name|TLSCALL
+block|,
 comment|// SegmentBaseAddress - The address segment:0
 name|SegmentBaseAddress
 block|,
@@ -1018,8 +1022,6 @@ argument|SDValue Op
 argument_list|,
 argument|char ConstraintLetter
 argument_list|,
-argument|bool hasMemory
-argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
 argument|SelectionDAG&DAG
@@ -1241,33 +1243,7 @@ name|FastISel
 operator|*
 name|createFastISel
 argument_list|(
-argument|MachineFunction&mf
-argument_list|,
-argument|DenseMap<const Value *
-argument_list|,
-argument|unsigned>&
-argument_list|,
-argument|DenseMap<const BasicBlock *
-argument_list|,
-argument|MachineBasicBlock *>&
-argument_list|,
-argument|DenseMap<const AllocaInst *
-argument_list|,
-argument|int>&
-argument_list|,
-argument|std::vector<std::pair<MachineInstr*
-argument_list|,
-argument|unsigned>>&
-ifndef|#
-directive|ifndef
-name|NDEBUG
-argument_list|,
-argument|SmallSet<const Instruction *
-argument_list|,
-literal|8
-argument|>&
-endif|#
-directive|endif
+argument|FunctionLoweringInfo&funcInfo
 argument_list|)
 specifier|const
 block|;
@@ -1277,6 +1253,20 @@ name|unsigned
 name|getFunctionAlignment
 argument_list|(
 argument|const Function *F
+argument_list|)
+specifier|const
+block|;
+comment|/// getStackCookieLocation - Return true if the target stores stack
+comment|/// protector cookies at a fixed offset in some non-standard address
+comment|/// space, and populates the address space and offset as
+comment|/// appropriate.
+name|virtual
+name|bool
+name|getStackCookieLocation
+argument_list|(
+argument|unsigned&AddressSpace
+argument_list|,
+argument|unsigned&Offset
 argument_list|)
 specifier|const
 block|;
@@ -1416,6 +1406,8 @@ argument_list|,
 argument|bool isCallerStructRet
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
@@ -2008,6 +2000,8 @@ argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -2030,6 +2024,8 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
@@ -2044,11 +2040,9 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isVarArg
 argument_list|,
-argument|const SmallVectorImpl<EVT>&OutTys
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
-argument|const SmallVectorImpl<ISD::ArgFlagsTy>&ArgsFlags
-argument_list|,
-argument|SelectionDAG&DAG
+argument|LLVMContext&Context
 argument_list|)
 specifier|const
 block|;
@@ -2181,6 +2175,16 @@ argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
 block|;
+name|MachineBasicBlock
+operator|*
+name|EmitLoweredTLSCall
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
 comment|/// Emit nodes that will be selected as "test Op0,Op0", or something
 comment|/// equivalent, for use with the given x86 condition code.
 name|SDValue
@@ -2216,74 +2220,12 @@ block|{
 name|FastISel
 modifier|*
 name|createFastISel
-argument_list|(
-name|MachineFunction
-operator|&
-name|mf
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|Value
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|BasicBlock
-operator|*
-argument_list|,
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|&
-argument_list|,
-name|DenseMap
-operator|<
-specifier|const
-name|AllocaInst
-operator|*
-argument_list|,
-name|int
-operator|>
-operator|&
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-expr|>
-operator|&
-ifndef|#
-directive|ifndef
-name|NDEBUG
-argument_list|,
-name|SmallSet
-operator|<
-specifier|const
-name|Instruction
-operator|*
-argument_list|,
-literal|8
-operator|>
-operator|&
-endif|#
-directive|endif
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|FunctionLoweringInfo
+modifier|&
+name|funcInfo
+parameter_list|)
+function_decl|;
 block|}
 block|}
 end_decl_stmt

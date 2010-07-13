@@ -91,6 +91,9 @@ name|class
 name|ARMSubtarget
 decl_stmt|;
 name|class
+name|ScheduleHazardRecognizer
+decl_stmt|;
+name|class
 name|Thumb2InstrInfo
 range|:
 name|public
@@ -119,22 +122,60 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;
+name|void
+name|ReplaceTailWithBranchTo
+argument_list|(
+argument|MachineBasicBlock::iterator Tail
+argument_list|,
+argument|MachineBasicBlock *NewDest
+argument_list|)
+specifier|const
+block|;
 name|bool
-name|copyRegToReg
+name|isLegalToSplitMBBAt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MBBI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumInstrs
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|unsigned NumTInstrs
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|,
+argument|unsigned NumFInstrs
+argument_list|)
+specifier|const
+block|;
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
+argument|DebugLoc DL
+argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
@@ -174,6 +215,19 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
+comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
+comment|/// two-addrss instruction inserted by two-address pass.
+name|void
+name|scheduleTwoAddrSource
+argument_list|(
+argument|MachineInstr *SrcMI
+argument_list|,
+argument|MachineInstr *UseMI
+argument_list|,
+argument|const TargetRegisterInfo&TRI
+argument_list|)
+specifier|const
+block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
@@ -189,8 +243,34 @@ return|return
 name|RI
 return|;
 block|}
-expr|}
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData&II
+argument_list|)
+specifier|const
 block|; }
+decl_stmt|;
+comment|/// getITInstrPredicate - Valid only in Thumb2 mode. This function is identical
+comment|/// to llvm::getInstrPredicate except it returns AL for conditional branch
+comment|/// instructions which are "predicated", but are not in IT blocks.
+name|ARMCC
+operator|::
+name|CondCodes
+name|getITInstrPredicate
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|PredReg
+argument_list|)
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

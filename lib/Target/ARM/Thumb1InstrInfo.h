@@ -160,22 +160,20 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|copyRegToReg
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
+argument|DebugLoc DL
+argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
@@ -214,50 +212,9 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|)
-specifier|const
-block|;
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|MachineInstr* LoadMI
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|0
-return|;
+block|;  }
+decl_stmt|;
 block|}
-expr|}
-block|; }
 end_decl_stmt
 
 begin_endif

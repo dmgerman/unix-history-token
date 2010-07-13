@@ -148,7 +148,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This header file is #included by testing/base/internal/gtest-internal.h.
+comment|// This header file is #included by<gtest/internal/gtest-internal.h>.
 end_comment
 
 begin_comment
@@ -167,6 +167,27 @@ directive|define
 name|GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BORLANDC__
+end_ifdef
+
+begin_comment
+comment|// string.h is not guaranteed to provide strcpy on C++ Builder.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<mem.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -179,28 +200,11 @@ directive|include
 file|<gtest/internal/gtest-port.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|GTEST_HAS_GLOBAL_STRING
-operator|||
-name|GTEST_HAS_STD_STRING
-end_if
-
 begin_include
 include|#
 directive|include
 file|<string>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// GTEST_HAS_GLOBAL_STRING || GTEST_HAS_STD_STRING
-end_comment
 
 begin_decl_stmt
 name|namespace
@@ -211,14 +215,13 @@ name|internal
 block|{
 comment|// String - a UTF-8 string class.
 comment|//
-comment|// We cannot use std::string as Microsoft's STL implementation in
-comment|// Visual C++ 7.1 has problems when exception is disabled.  There is a
-comment|// hack to work around this, but we've seen cases where the hack fails
-comment|// to work.
+comment|// For historic reasons, we don't use std::string.
 comment|//
-comment|// Also, String is different from std::string in that it can represent
-comment|// both NULL and the empty string, while std::string cannot represent
-comment|// NULL.
+comment|// TODO(wan@google.com): replace this class with std::string or
+comment|// implement it in terms of the latter.
+comment|//
+comment|// Note that String can represent both NULL and the empty string,
+comment|// while std::string cannot represent NULL.
 comment|//
 comment|// NULL and the empty string are considered different.  NULL is less
 comment|// than anything (including the empty string) except itself.
@@ -235,41 +238,12 @@ comment|//
 comment|// In order to make the representation efficient, the d'tor of String
 comment|// is not virtual.  Therefore DO NOT INHERIT FROM String.
 name|class
+name|GTEST_API_
 name|String
 block|{
 name|public
 label|:
 comment|// Static utility methods
-comment|// Returns the input if it's not NULL, otherwise returns "(null)".
-comment|// This function serves two purposes:
-comment|//
-comment|// 1. ShowCString(NULL) has type 'const char *', instead of the
-comment|// type of NULL (which is int).
-comment|//
-comment|// 2. In MSVC, streaming a null char pointer to StrStream generates
-comment|// an access violation, so we need to convert NULL to "(null)"
-comment|// before streaming it.
-specifier|static
-specifier|inline
-specifier|const
-name|char
-modifier|*
-name|ShowCString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|c_str
-parameter_list|)
-block|{
-return|return
-name|c_str
-condition|?
-name|c_str
-else|:
-literal|"(null)"
-return|;
-block|}
 comment|// Returns the input enclosed in double quotes if it's not NULL;
 comment|// otherwise returns "(null)".  For example, "\"Hello\"" is returned
 comment|// for input "Hello".
@@ -306,9 +280,9 @@ modifier|*
 name|c_str
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|_WIN32_WCE
+if|#
+directive|if
+name|GTEST_OS_WINDOWS_MOBILE
 comment|// Windows CE does not have the 'ANSI' versions of Win32 APIs. To be
 comment|// able to pass strings to Win32 APIs on CE we need to convert them
 comment|// to 'Unicode', UTF-16.
@@ -493,38 +467,69 @@ argument_list|()
 operator|:
 name|c_str_
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+operator|,
+name|length_
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|// Constructs a String by cloning a 0-terminated C string.
 name|String
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|c_str
-argument_list|)
-operator|:
-name|c_str_
-argument_list|(
-argument|NULL
+argument|const char* a_c_str
 argument_list|)
 block|{
 comment|// NOLINT
-operator|*
-name|this
+if|if
+condition|(
+name|a_c_str
+operator|==
+name|NULL
+condition|)
+block|{
+name|c_str_
 operator|=
-name|c_str
-block|;   }
+name|NULL
+expr_stmt|;
+name|length_
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ConstructNonNull
+argument_list|(
+name|a_c_str
+argument_list|,
+name|strlen
+argument_list|(
+name|a_c_str
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|// Constructs a String by copying a given number of chars from a
-comment|// buffer.  E.g. String("hello", 3) will create the string "hel".
+comment|// buffer.  E.g. String("hello", 3) creates the string "hel",
+comment|// String("a\0bcd", 4) creates "a\0bc", String(NULL, 0) creates "",
+comment|// and String(NULL, 1) results in access violation.
 name|String
 argument_list|(
 argument|const char* buffer
 argument_list|,
-argument|size_t len
+argument|size_t a_length
 argument_list|)
-expr_stmt|;
+block|{
+name|ConstructNonNull
+argument_list|(
+name|buffer
+argument_list|,
+name|a_length
+argument_list|)
+block|;   }
 comment|// The copy c'tor creates a new copy of the string.  The two
 comment|// String objects do not share content.
 name|String
@@ -537,14 +542,19 @@ argument_list|)
 operator|:
 name|c_str_
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+operator|,
+name|length_
+argument_list|(
+literal|0
 argument_list|)
 block|{
 operator|*
 name|this
 operator|=
 name|str
-block|;   }
+block|; }
 comment|// D'tor.  String is intended to be a final class, so the d'tor
 comment|// doesn't need to be virtual.
 operator|~
@@ -561,33 +571,24 @@ comment|// pointer to ::std::string or ::string is undefined behavior.
 comment|// Converting a ::std::string or ::string containing an embedded NUL
 comment|// character to a String will result in the prefix up to the first
 comment|// NUL character.
-if|#
-directive|if
-name|GTEST_HAS_STD_STRING
 name|String
 argument_list|(
-specifier|const
-operator|::
-name|std
-operator|::
-name|string
-operator|&
-name|str
-argument_list|)
-operator|:
-name|c_str_
-argument_list|(
-argument|NULL
+argument|const ::std::string& str
 argument_list|)
 block|{
-operator|*
-name|this
-operator|=
+name|ConstructNonNull
+argument_list|(
 name|str
 operator|.
 name|c_str
 argument_list|()
-block|; }
+argument_list|,
+name|str
+operator|.
+name|length
+argument_list|()
+argument_list|)
+block|;   }
 name|operator
 operator|::
 name|std
@@ -602,38 +603,36 @@ name|std
 operator|::
 name|string
 argument_list|(
-name|c_str_
+name|c_str
+argument_list|()
+argument_list|,
+name|length
+argument_list|()
 argument_list|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|// GTEST_HAS_STD_STRING
 if|#
 directive|if
 name|GTEST_HAS_GLOBAL_STRING
 name|String
 argument_list|(
-specifier|const
-operator|::
-name|string
-operator|&
-name|str
-argument_list|)
-operator|:
-name|c_str_
-argument_list|(
-argument|NULL
+argument|const ::string& str
 argument_list|)
 block|{
-operator|*
-name|this
-operator|=
+name|ConstructNonNull
+argument_list|(
 name|str
 operator|.
 name|c_str
 argument_list|()
-block|; }
+argument_list|,
+name|str
+operator|.
+name|length
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|operator
 operator|::
 name|string
@@ -644,7 +643,11 @@ return|return
 operator|::
 name|string
 argument_list|(
-name|c_str_
+name|c_str
+argument_list|()
+argument_list|,
+name|length
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -659,16 +662,17 @@ specifier|const
 block|{
 return|return
 operator|(
-name|c_str_
+name|c_str
+argument_list|()
 operator|!=
 name|NULL
 operator|)
 operator|&&
 operator|(
-operator|*
-name|c_str_
+name|length
+argument_list|()
 operator|==
-literal|'\0'
+literal|0
 operator|)
 return|;
 block|}
@@ -694,21 +698,21 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|c_str
+name|a_c_str
 operator|)
 specifier|const
 block|{
 return|return
-name|CStringEquals
+name|Compare
 argument_list|(
-name|c_str_
-argument_list|,
-name|c_str
+name|a_c_str
 argument_list|)
+operator|==
+literal|0
 return|;
 block|}
-comment|// Returns true iff this String is less than the given C string.  A NULL
-comment|// string is considered less than "".
+comment|// Returns true iff this String is less than the given String.  A
+comment|// NULL string is considered less than "".
 name|bool
 name|operator
 operator|<
@@ -738,18 +742,18 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|c_str
+name|a_c_str
 operator|)
 specifier|const
 block|{
 return|return
 operator|!
-name|CStringEquals
-argument_list|(
-name|c_str_
-argument_list|,
-name|c_str
-argument_list|)
+operator|(
+operator|*
+name|this
+operator|==
+name|a_c_str
+operator|)
 return|;
 block|}
 comment|// Returns true iff this String ends with the given suffix.  *Any*
@@ -776,29 +780,15 @@ name|suffix
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Returns the length of the encapsulated string, or -1 if the
+comment|// Returns the length of the encapsulated string, or 0 if the
 comment|// string is NULL.
-name|int
-name|GetLength
+name|size_t
+name|length
 argument_list|()
 specifier|const
 block|{
 return|return
-name|c_str_
-operator|?
-name|static_cast
-operator|<
-name|int
-operator|>
-operator|(
-name|strlen
-argument_list|(
-name|c_str_
-argument_list|)
-operator|)
-operator|:
-operator|-
-literal|1
+name|length_
 return|;
 block|}
 comment|// Gets the 0-terminated C string this String object represents.
@@ -815,26 +805,6 @@ return|return
 name|c_str_
 return|;
 block|}
-comment|// Sets the 0-terminated C string this String object represents.
-comment|// The old string in this object is deleted, and this object will
-comment|// own a clone of the input string.  This function copies only up to
-comment|// length bytes (plus a terminating null byte), or until the first
-comment|// null byte, whichever comes first.
-comment|//
-comment|// This function works even when the c_str parameter has the same
-comment|// value as that of the c_str_ field.
-name|void
-name|Set
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|c_str
-parameter_list|,
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
 comment|// Assigns a C string to this object.  Self-assignment works.
 specifier|const
 name|String
@@ -845,9 +815,19 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|c_str
+name|a_c_str
 operator|)
-decl_stmt|;
+block|{
+return|return
+operator|*
+name|this
+operator|=
+name|String
+argument_list|(
+name|a_c_str
+argument_list|)
+return|;
+block|}
 comment|// Assigns a String object to this object.  Self-assignment works.
 specifier|const
 name|String
@@ -861,13 +841,54 @@ operator|&
 name|rhs
 operator|)
 block|{
-operator|*
+if|if
+condition|(
 name|this
-operator|=
+operator|!=
+operator|&
+name|rhs
+condition|)
+block|{
+name|delete
+index|[]
+name|c_str_
+decl_stmt|;
+if|if
+condition|(
 name|rhs
 operator|.
+name|c_str
+argument_list|()
+operator|==
+name|NULL
+condition|)
+block|{
 name|c_str_
-block|;
+operator|=
+name|NULL
+expr_stmt|;
+name|length_
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ConstructNonNull
+argument_list|(
+name|rhs
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+name|rhs
+operator|.
+name|length
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|*
 name|this
@@ -875,14 +896,73 @@ return|;
 block|}
 name|private
 label|:
+comment|// Constructs a non-NULL String from the given content.  This
+comment|// function can only be called when data_ has not been allocated.
+comment|// ConstructNonNull(NULL, 0) results in an empty string ("").
+comment|// ConstructNonNull(NULL, non_zero) is undefined behavior.
+name|void
+name|ConstructNonNull
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buffer
+parameter_list|,
+name|size_t
+name|a_length
+parameter_list|)
+block|{
+name|char
+modifier|*
+specifier|const
+name|str
+init|=
+name|new
+name|char
+index|[
+name|a_length
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|memcpy
+argument_list|(
+name|str
+argument_list|,
+name|buffer
+argument_list|,
+name|a_length
+argument_list|)
+expr_stmt|;
+name|str
+index|[
+name|a_length
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|c_str_
+operator|=
+name|str
+expr_stmt|;
+name|length_
+operator|=
+name|a_length
+expr_stmt|;
+block|}
 specifier|const
 name|char
 modifier|*
 name|c_str_
 decl_stmt|;
+name|size_t
+name|length_
+decl_stmt|;
 block|}
 empty_stmt|;
-comment|// Streams a String to an ostream.
+comment|// class String
+comment|// Streams a String to an ostream.  Each '\0' character in the String
+comment|// is replaced with "\\0".
 specifier|inline
 operator|::
 name|std
@@ -905,24 +985,86 @@ operator|&
 name|str
 operator|)
 block|{
-comment|// We call String::ShowCString() to convert NULL to "(null)".
-comment|// Otherwise we'll get an access violation on Windows.
-return|return
-name|os
-operator|<<
-name|String
-operator|::
-name|ShowCString
-argument_list|(
+if|if
+condition|(
 name|str
 operator|.
 name|c_str
 argument_list|()
-argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|os
+operator|<<
+literal|"(null)"
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|c_str
+init|=
+name|str
+operator|.
+name|c_str
+argument_list|()
+decl_stmt|;
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|str
+operator|.
+name|length
+argument_list|()
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|c_str
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|os
+operator|<<
+literal|"\\0"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|os
+operator|<<
+name|c_str
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+block|}
+block|}
+return|return
+name|os
 return|;
 block|}
 comment|// Gets the content of the StrStream's buffer as a String.  Each '\0'
 comment|// character in the buffer is replaced with "\\0".
+name|GTEST_API_
 name|String
 name|StrStreamToString
 parameter_list|(

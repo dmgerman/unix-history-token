@@ -100,6 +100,9 @@ name|class
 name|TargetMachine
 decl_stmt|;
 name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -817,6 +820,40 @@ operator|)
 name|subReg
 expr_stmt|;
 block|}
+comment|/// substVirtReg - Substitute the current register with the virtual
+comment|/// subregister Reg:SubReg. Take any existing SubReg index into account,
+comment|/// using TargetRegisterInfo to compose the subreg indices if necessary.
+comment|/// Reg must be a virtual register, SubIdx can be 0.
+comment|///
+name|void
+name|substVirtReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|SubIdx
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+parameter_list|)
+function_decl|;
+comment|/// substPhysReg - Substitute the current register with the physical register
+comment|/// Reg, taking any existing SubReg into account. For instance,
+comment|/// substPhysReg(%EAX) will change %reg1024:sub_8bit to %AL.
+comment|///
+name|void
+name|substPhysReg
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+parameter_list|)
+function_decl|;
 name|void
 name|setIsUse
 parameter_list|(

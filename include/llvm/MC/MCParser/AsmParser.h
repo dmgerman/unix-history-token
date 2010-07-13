@@ -118,6 +118,9 @@ name|class
 name|AsmToken
 decl_stmt|;
 name|class
+name|MCAsmParserExtension
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -147,6 +150,24 @@ range|:
 name|public
 name|MCAsmParser
 block|{
+name|AsmParser
+argument_list|(
+specifier|const
+name|AsmParser
+operator|&
+argument_list|)
+block|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|AsmParser
+operator|&
+operator|)
+block|;
+comment|// DO NOT IMPLEMENT
 name|private
 operator|:
 name|AsmLexer
@@ -163,6 +184,14 @@ block|;
 name|SourceMgr
 operator|&
 name|SrcMgr
+block|;
+name|MCAsmParserExtension
+operator|*
+name|GenericParser
+block|;
+name|MCAsmParserExtension
+operator|*
+name|PlatformParser
 block|;
 name|TargetAsmParser
 operator|*
@@ -190,24 +219,27 @@ comment|/// parsing and validating the rest of the directive.  The handler is pa
 comment|/// in the directive name and the location of the directive keyword.
 name|StringMap
 operator|<
-name|bool
-argument_list|(
-name|AsmParser
+name|std
 operator|::
+name|pair
+operator|<
+name|MCAsmParserExtension
 operator|*
-argument_list|)
-argument_list|(
-name|StringRef
-argument_list|,
-name|SMLoc
-argument_list|)
+block|,
+name|DirectiveHandler
 operator|>
+expr|>
 name|DirectiveMap
 block|;
 name|public
 operator|:
 name|AsmParser
 argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
 name|SourceMgr
 operator|&
 name|SM
@@ -241,9 +273,11 @@ block|;
 name|void
 name|AddDirectiveHandler
 argument_list|(
+argument|MCAsmParserExtension *Object
+argument_list|,
 argument|StringRef Directive
 argument_list|,
-argument|bool (AsmParser::*Handler)(StringRef, SMLoc)
+argument|DirectiveHandler Handler
 argument_list|)
 block|{
 name|DirectiveMap
@@ -251,7 +285,14 @@ index|[
 name|Directive
 index|]
 operator|=
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Object
+argument_list|,
 name|Handler
+argument_list|)
 block|;   }
 name|public
 operator|:
@@ -269,16 +310,23 @@ block|}
 name|void
 name|setTargetParser
 argument_list|(
-argument|TargetAsmParser&P
-argument_list|)
-block|{
-name|TargetParser
-operator|=
+name|TargetAsmParser
 operator|&
 name|P
-block|; }
+argument_list|)
+block|;
 comment|/// @name MCAsmParser Interface
 comment|/// {
+name|virtual
+name|SourceMgr
+operator|&
+name|getSourceManager
+argument_list|()
+block|{
+return|return
+name|SrcMgr
+return|;
+block|}
 name|virtual
 name|MCAsmLexer
 operator|&
@@ -385,25 +433,9 @@ block|;
 comment|/// }
 name|private
 operator|:
-name|MCSymbol
-operator|*
-name|CreateSymbol
-argument_list|(
-argument|StringRef Name
-argument_list|)
-block|;
 name|bool
 name|ParseStatement
 argument_list|()
-block|;
-name|bool
-name|TokError
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Msg
-argument_list|)
 block|;
 name|void
 name|PrintMessage
@@ -491,28 +523,6 @@ argument_list|)
 block|;
 comment|// Directive Parsing.
 name|bool
-name|ParseDirectiveDarwinSection
-argument_list|()
-block|;
-comment|// Darwin specific ".section".
-name|bool
-name|ParseDirectiveSectionSwitch
-argument_list|(
-argument|const char *Segment
-argument_list|,
-argument|const char *Section
-argument_list|,
-argument|unsigned TAA =
-literal|0
-argument_list|,
-argument|unsigned ImplicitAlign =
-literal|0
-argument_list|,
-argument|unsigned StubSize =
-literal|0
-argument_list|)
-block|;
-name|bool
 name|ParseDirectiveAscii
 argument_list|(
 argument|bool ZeroTerminated
@@ -569,46 +579,12 @@ argument_list|()
 block|;
 comment|// ELF specific ".type"
 name|bool
-name|ParseDirectiveDarwinSymbolDesc
-argument_list|()
-block|;
-comment|// Darwin specific ".desc"
-name|bool
-name|ParseDirectiveDarwinLsym
-argument_list|()
-block|;
-comment|// Darwin specific ".lsym"
-name|bool
 name|ParseDirectiveComm
 argument_list|(
 argument|bool IsLocal
 argument_list|)
 block|;
 comment|// ".comm" and ".lcomm"
-name|bool
-name|ParseDirectiveDarwinZerofill
-argument_list|()
-block|;
-comment|// Darwin specific ".zerofill"
-name|bool
-name|ParseDirectiveDarwinTBSS
-argument_list|()
-block|;
-comment|// Darwin specific ".tbss"
-comment|// Darwin specific ".subsections_via_symbols"
-name|bool
-name|ParseDirectiveDarwinSubsectionsViaSymbols
-argument_list|()
-block|;
-comment|// Darwin specific .dump and .load
-name|bool
-name|ParseDirectiveDarwinDumpOrLoad
-argument_list|(
-argument|SMLoc IDLoc
-argument_list|,
-argument|bool IsDump
-argument_list|)
-block|;
 name|bool
 name|ParseDirectiveAbort
 argument_list|()
@@ -647,33 +623,6 @@ argument|SMLoc DirectiveLoc
 argument_list|)
 block|;
 comment|// .endif
-name|bool
-name|ParseDirectiveFile
-argument_list|(
-argument|StringRef
-argument_list|,
-argument|SMLoc DirectiveLoc
-argument_list|)
-block|;
-comment|// ".file"
-name|bool
-name|ParseDirectiveLine
-argument_list|(
-argument|StringRef
-argument_list|,
-argument|SMLoc DirectiveLoc
-argument_list|)
-block|;
-comment|// ".line"
-name|bool
-name|ParseDirectiveLoc
-argument_list|(
-argument|StringRef
-argument_list|,
-argument|SMLoc DirectiveLoc
-argument_list|)
-block|;
-comment|// ".loc"
 comment|/// ParseEscapedString - Parse the current token as a string which may include
 comment|/// escaped characters and return the string contents.
 name|bool

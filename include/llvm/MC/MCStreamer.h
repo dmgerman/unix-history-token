@@ -832,7 +832,7 @@ modifier|&
 name|String
 parameter_list|)
 function_decl|;
-comment|/// Finish - Finish emission of machine code and flush any output.
+comment|/// Finish - Finish emission of machine code.
 name|virtual
 name|void
 name|Finish
@@ -902,7 +902,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// createMachOStreamer - Create a machine code streamer which will generative
+comment|/// createMachOStreamer - Create a machine code streamer which will generate
 comment|/// Mach-O format object files.
 name|MCStreamer
 modifier|*
@@ -928,6 +928,29 @@ name|bool
 name|RelaxAll
 init|=
 name|false
+parameter_list|)
+function_decl|;
+comment|/// createWinCOFFStreamer - Create a machine code streamer which will
+comment|/// generate Microsoft COFF format object files.
+name|MCStreamer
+modifier|*
+name|createWinCOFFStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|TargetAsmBackend
+modifier|&
+name|TAB
+parameter_list|,
+name|MCCodeEmitter
+modifier|&
+name|CE
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
 parameter_list|)
 function_decl|;
 comment|/// createLoggingStreamer - Create a machine code streamer which just logs the

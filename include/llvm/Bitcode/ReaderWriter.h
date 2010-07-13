@@ -138,7 +138,8 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/// WriteBitcodeToFile - Write the specified module to the specified
-comment|/// raw output stream.
+comment|/// raw output stream.  For streams where it matters, the given stream
+comment|/// should be in "binary" mode.
 name|void
 name|WriteBitcodeToFile
 parameter_list|(

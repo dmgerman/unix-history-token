@@ -440,15 +440,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Please also note that generator expressions are evaluated in
+comment|// Please also note that generator expressions (including parameters to the
 end_comment
 
 begin_comment
-comment|// RUN_ALL_TESTS(), after main() has started. This allows evaluation of
+comment|// generators) are evaluated in InitGoogleTest(), after main() has started.
 end_comment
 
 begin_comment
-comment|// parameter list based on command line parameters.
+comment|// This allows the user on one hand, to adjust generator parameters in order
+end_comment
+
+begin_comment
+comment|// to dynamically determine a set of tests to run and on the other hand,
+end_comment
+
+begin_comment
+comment|// give the user a chance to inspect the generated tests with Google Test
+end_comment
+
+begin_comment
+comment|// reflection API before RUN_ALL_TESTS() is executed.
 end_comment
 
 begin_comment
@@ -491,20 +503,38 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<gtest/internal/gtest-port.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_OS_SYMBIAN
+end_if
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|<utility>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GTEST_HAS_PARAM_TEST
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// scripts/fuse_gtest.py depends on gtest's own header being #included
+end_comment
+
+begin_comment
+comment|// *unconditionally*.  Therefore these #includes cannot be moved
+end_comment
+
+begin_comment
+comment|// inside #if GTEST_HAS_PARAM_TEST.
+end_comment
 
 begin_include
 include|#
@@ -517,6 +547,12 @@ include|#
 directive|include
 file|<gtest/internal/gtest-param-util.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_PARAM_TEST
+end_if
 
 begin_decl_stmt
 name|namespace
@@ -15783,8 +15819,8 @@ name|true
 argument_list|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_COMBINE
 comment|// Combine() allows the user to combine two or more sequences to produce
 comment|// values of a Cartesian product of those sequences' elements.

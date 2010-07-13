@@ -127,7 +127,10 @@ name|MCSA_WeakDefinition
 block|,
 comment|///< .weak_definition (MachO)
 name|MCSA_WeakReference
+block|,
 comment|///< .weak_reference (MachO)
+name|MCSA_WeakDefAutoPrivate
+comment|///< .weak_def_can_be_hidden (MachO)
 block|}
 enum|;
 enum|enum

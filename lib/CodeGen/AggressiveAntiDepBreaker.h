@@ -366,6 +366,11 @@ operator|&
 name|MRI
 block|;
 specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+block|;
+specifier|const
 name|TargetRegisterInfo
 operator|*
 name|TRI

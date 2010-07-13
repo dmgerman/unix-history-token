@@ -898,11 +898,7 @@ argument_list|)
 block|;
 name|void
 name|PrepareEHLandingPad
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|)
+argument_list|()
 block|;
 name|void
 name|SelectAllBasicBlocks
@@ -915,20 +911,11 @@ argument_list|)
 block|;
 name|void
 name|FinishBasicBlock
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|)
+argument_list|()
 block|;
-name|MachineBasicBlock
-operator|*
+name|void
 name|SelectBasicBlock
 argument_list|(
-argument|MachineBasicBlock *BB
-argument_list|,
-argument|const BasicBlock *LLVMBB
-argument_list|,
 argument|BasicBlock::const_iterator Begin
 argument_list|,
 argument|BasicBlock::const_iterator End
@@ -936,14 +923,9 @@ argument_list|,
 argument|bool&HadTailCall
 argument_list|)
 block|;
-name|MachineBasicBlock
-operator|*
+name|void
 name|CodeGenAndEmitDAG
-argument_list|(
-name|MachineBasicBlock
-operator|*
-name|BB
-argument_list|)
+argument_list|()
 block|;
 name|void
 name|LowerArguments
@@ -953,10 +935,6 @@ name|BasicBlock
 operator|*
 name|BB
 argument_list|)
-block|;
-name|void
-name|ShrinkDemandedOps
-argument_list|()
 block|;
 name|void
 name|ComputeLiveOutVRegInfo

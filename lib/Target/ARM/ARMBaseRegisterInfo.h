@@ -231,18 +231,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF =
-literal|0
-argument_list|)
-specifier|const
-block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
@@ -267,14 +255,15 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-comment|/// canCombinedSubRegIndex - Given a register class and a list of sub-register
-comment|/// indices, return true if it's possible to combine the sub-register indices
-comment|/// into one that corresponds to a larger sub-register. Return the new sub-
-comment|/// register index by reference. Note the new index by be zero if the given
-comment|/// sub-registers combined to form the whole register.
+comment|/// canCombineSubRegIndices - Given a register class and a list of
+comment|/// subregister indices, return true if it's possible to combine the
+comment|/// subregister indices into one that corresponds to a larger
+comment|/// subregister. Return the new subregister index by reference. Note the
+comment|/// new index may be zero if the given subregisters can be combined to
+comment|/// form the whole register.
 name|virtual
 name|bool
-name|canCombinedSubRegIndex
+name|canCombineSubRegIndices
 argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|,

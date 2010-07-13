@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stack>
+file|<algorithm>
 end_include
 
 begin_include
@@ -168,7 +168,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -362,7 +362,7 @@ name|IntervalIterator
 block|{
 name|std
 operator|::
-name|stack
+name|vector
 operator|<
 name|std
 operator|::
@@ -517,7 +517,7 @@ name|operator
 function_decl|*();
 name|IntStack
 operator|.
-name|pop
+name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
@@ -576,7 +576,7 @@ block|{
 return|return
 name|IntStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -592,7 +592,7 @@ block|{
 return|return
 name|IntStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -670,7 +670,7 @@ name|SuccIt
 operator|=
 name|IntStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|second
@@ -681,7 +681,7 @@ name|succ_end
 argument_list|(
 name|IntStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -737,7 +737,7 @@ condition|)
 name|delete
 name|IntStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -751,7 +751,7 @@ end_comment
 begin_expr_stmt
 name|IntStack
 operator|.
-name|pop
+name|pop_back
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -933,7 +933,7 @@ argument_list|)
 expr_stmt|;
 name|IntStack
 operator|.
-name|push
+name|push_back
 argument_list|(
 name|std
 operator|::

@@ -65,6 +65,12 @@ directive|include
 file|"llvm/CodeGen/MachineConstantPool.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm

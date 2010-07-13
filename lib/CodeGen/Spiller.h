@@ -102,9 +102,23 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|/// Spill the given live range. The method used will depend on the Spiller
-comment|/// implementation selected.
+comment|/// spill - Spill the given live interval. The method used will depend on
+comment|/// the Spiller implementation selected.
+comment|///
+comment|/// @param li            The live interval to be spilled.
+comment|/// @param spillIs       A list of intervals that are about to be spilled,
+comment|///                      and so cannot be used for remat etc.
+comment|/// @param newIntervals  The newly created intervals will be appended here.
+comment|/// @param earliestIndex The earliest point for splitting. (OK, it's another
+comment|///                      pointer to the allocator guts).
 name|virtual
+name|void
+name|spill
+argument_list|(
+name|LiveInterval
+operator|*
+name|li
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -112,11 +126,8 @@ operator|<
 name|LiveInterval
 operator|*
 operator|>
-name|spill
-argument_list|(
-name|LiveInterval
-operator|*
-name|li
+operator|&
+name|newIntervals
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -132,9 +143,9 @@ name|earliestIndex
 operator|=
 literal|0
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// Create and return a spiller object, as specified on the command line.

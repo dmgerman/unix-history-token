@@ -248,20 +248,6 @@ operator|&
 argument_list|)
 block|;
 comment|// do not implement
-name|LoopInfoBase
-operator|<
-name|MachineBasicBlock
-block|,
-name|MachineLoop
-operator|>
-operator|&
-name|getBase
-argument_list|()
-block|{
-return|return
-name|LI
-return|;
-block|}
 name|public
 operator|:
 specifier|static
@@ -277,6 +263,20 @@ argument_list|(
 argument|&ID
 argument_list|)
 block|{}
+name|LoopInfoBase
+operator|<
+name|MachineBasicBlock
+block|,
+name|MachineLoop
+operator|>
+operator|&
+name|getBase
+argument_list|()
+block|{
+return|return
+name|LI
+return|;
+block|}
 comment|/// iterator/begin/end - The interface to the top-level loops in the current
 comment|/// function.
 comment|///

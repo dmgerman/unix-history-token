@@ -487,9 +487,13 @@ name|Op_MDNode
 operator|=
 literal|2
 block|,
-name|Op_FirstOperand
+name|Op_IsAlignStack
 operator|=
 literal|3
+block|,
+name|Op_FirstOperand
+operator|=
+literal|4
 block|,
 name|Kind_RegUse
 operator|=

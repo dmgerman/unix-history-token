@@ -1052,18 +1052,6 @@ argument_list|,
 argument|bool isSigned
 argument_list|)
 block|;
-comment|/// getLoopPredecessor - If the given loop's header has exactly one unique
-comment|/// predecessor outside the loop, return it. Otherwise return null.
-name|BasicBlock
-operator|*
-name|getLoopPredecessor
-argument_list|(
-specifier|const
-name|Loop
-operator|*
-name|L
-argument_list|)
-block|;
 comment|/// getPredecessorWithUniqueSuccessorForBB - Return a predecessor of BB
 comment|/// (which may not be an immediate predecessor) which has exactly one
 comment|/// successor from which BB is reachable, or null if no such block is
@@ -1933,18 +1921,6 @@ specifier|const
 name|Type
 operator|*
 name|Ty
-argument_list|)
-block|;
-comment|/// getIntegerSCEV - Given a SCEVable type, create a constant for the
-comment|/// specified signed integer value and return a SCEV for the constant.
-specifier|const
-name|SCEV
-operator|*
-name|getIntegerSCEV
-argument_list|(
-argument|int64_t Val
-argument_list|,
-argument|const Type *Ty
 argument_list|)
 block|;
 comment|/// getUMaxFromMismatchedTypes - Promote the operands to the wider of

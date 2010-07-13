@@ -620,6 +620,8 @@ name|explicit
 name|NamedRegionTimer
 argument_list|(
 argument|StringRef Name
+argument_list|,
+argument|bool Enabled = true
 argument_list|)
 block|;
 name|explicit
@@ -628,6 +630,8 @@ argument_list|(
 argument|StringRef Name
 argument_list|,
 argument|StringRef GroupName
+argument_list|,
+argument|bool Enabled = true
 argument_list|)
 block|; }
 decl_stmt|;

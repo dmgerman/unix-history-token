@@ -130,19 +130,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|// PIC16 callee saved register classes
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|BitVector
 name|getReservedRegs

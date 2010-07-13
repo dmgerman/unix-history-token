@@ -617,6 +617,15 @@ block|}
 comment|/// @}
 block|}
 empty_stmt|;
+name|MCObjectWriter
+modifier|*
+name|createWinCOFFObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

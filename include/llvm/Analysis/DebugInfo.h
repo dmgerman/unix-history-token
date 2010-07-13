@@ -221,6 +221,15 @@ name|Elt
 argument_list|)
 decl|const
 decl_stmt|;
+name|Function
+modifier|*
+name|getFunctionField
+argument_list|(
+name|unsigned
+name|Elt
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1961,6 +1970,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|Function
+operator|*
+name|getFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFunctionField
+argument_list|(
+literal|16
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
@@ -3284,6 +3309,12 @@ name|bool
 name|isOptimized
 init|=
 name|false
+parameter_list|,
+name|Function
+modifier|*
+name|Fn
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// CreateSubprogramDefinition - Create new subprogram descriptor for the

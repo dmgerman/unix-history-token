@@ -80,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cstdlib>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -965,8 +977,7 @@ name|T
 operator|*
 operator|>
 operator|(
-name|operator
-name|new
+name|malloc
 argument_list|(
 name|NewCapacity
 operator|*
@@ -1036,15 +1047,14 @@ operator|->
 name|isSmall
 argument_list|()
 condition|)
-name|operator
-name|delete
+name|free
 argument_list|(
 name|this
 operator|->
 name|begin
 argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 end_if
 
 begin_expr_stmt
@@ -1289,9 +1299,23 @@ name|value
 operator|>
 name|SuperClass
 expr_stmt|;
-name|public
-operator|:
+name|SmallVectorImpl
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|&
+argument_list|)
+expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// DISABLED.
+end_comment
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_typedef
 typedef|typedef
@@ -1379,15 +1403,14 @@ operator|->
 name|isSmall
 argument_list|()
 condition|)
-name|operator
-name|delete
+name|free
 argument_list|(
 name|this
 operator|->
 name|begin
 argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_expr_stmt
 
@@ -2827,7 +2850,7 @@ return|;
 end_return
 
 begin_decl_stmt
-unit|}      const
+unit|}    const
 name|SmallVectorImpl
 modifier|&
 name|operator

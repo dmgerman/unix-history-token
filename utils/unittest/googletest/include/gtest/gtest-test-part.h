@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gtest/internal/gtest-internal.h>
 end_include
 
@@ -157,74 +163,75 @@ begin_decl_stmt
 name|namespace
 name|testing
 block|{
-comment|// The possible outcomes of a test part (i.e. an assertion or an
-comment|// explicit SUCCEED(), FAIL(), or ADD_FAILURE()).
-enum|enum
-name|TestPartResultType
-block|{
-name|TPRT_SUCCESS
-block|,
-comment|// Succeeded.
-name|TPRT_NONFATAL_FAILURE
-block|,
-comment|// Failed but the test can continue.
-name|TPRT_FATAL_FAILURE
-comment|// Failed and the test should be terminated.
-block|}
-enum|;
 comment|// A copyable object representing the result of a test part (i.e. an
 comment|// assertion or an explicit FAIL(), ADD_FAILURE(), or SUCCESS()).
 comment|//
 comment|// Don't inherit from TestPartResult as its destructor is not virtual.
 name|class
+name|GTEST_API_
 name|TestPartResult
 block|{
 name|public
 label|:
+comment|// The possible outcomes of a test part (i.e. an assertion or an
+comment|// explicit SUCCEED(), FAIL(), or ADD_FAILURE()).
+enum|enum
+name|Type
+block|{
+name|kSuccess
+block|,
+comment|// Succeeded.
+name|kNonFatalFailure
+block|,
+comment|// Failed but the test can continue.
+name|kFatalFailure
+comment|// Failed and the test should be terminated.
+block|}
+enum|;
 comment|// C'tor.  TestPartResult does NOT have a default constructor.
 comment|// Always use this constructor (with parameters) to create a
 comment|// TestPartResult object.
 name|TestPartResult
 argument_list|(
-argument|TestPartResultType type
+argument|Type a_type
 argument_list|,
-argument|const char* file_name
+argument|const char* a_file_name
 argument_list|,
-argument|int line_number
+argument|int a_line_number
 argument_list|,
-argument|const char* message
+argument|const char* a_message
 argument_list|)
 block|:
 name|type_
 argument_list|(
-name|type
+name|a_type
 argument_list|)
 operator|,
 name|file_name_
 argument_list|(
-name|file_name
+name|a_file_name
 argument_list|)
 operator|,
 name|line_number_
 argument_list|(
-name|line_number
+name|a_line_number
 argument_list|)
 operator|,
 name|summary_
 argument_list|(
 name|ExtractSummary
 argument_list|(
-name|message
+name|a_message
 argument_list|)
 argument_list|)
 operator|,
 name|message_
 argument_list|(
-argument|message
+argument|a_message
 argument_list|)
 block|{   }
 comment|// Gets the outcome of the test part.
-name|TestPartResultType
+name|Type
 name|type
 argument_list|()
 specifier|const
@@ -299,7 +306,7 @@ block|{
 return|return
 name|type_
 operator|==
-name|TPRT_SUCCESS
+name|kSuccess
 return|;
 block|}
 comment|// Returns true iff the test part failed.
@@ -311,7 +318,7 @@ block|{
 return|return
 name|type_
 operator|!=
-name|TPRT_SUCCESS
+name|kSuccess
 return|;
 block|}
 comment|// Returns true iff the test part non-fatally failed.
@@ -323,7 +330,7 @@ block|{
 return|return
 name|type_
 operator|==
-name|TPRT_NONFATAL_FAILURE
+name|kNonFatalFailure
 return|;
 block|}
 comment|// Returns true iff the test part fatally failed.
@@ -335,12 +342,12 @@ block|{
 return|return
 name|type_
 operator|==
-name|TPRT_FATAL_FAILURE
+name|kFatalFailure
 return|;
 block|}
 name|private
 label|:
-name|TestPartResultType
+name|Type
 name|type_
 decl_stmt|;
 comment|// Gets the summary of the failure message by omitting the stack
@@ -405,23 +412,17 @@ operator|)
 expr_stmt|;
 comment|// An array of TestPartResult objects.
 comment|//
-comment|// We define this class as we cannot use STL containers when compiling
-comment|// Google Test with MSVC 7.1 and exceptions disabled.
-comment|//
 comment|// Don't inherit from TestPartResultArray as its destructor is not
 comment|// virtual.
 name|class
+name|GTEST_API_
 name|TestPartResultArray
 block|{
 name|public
 label|:
 name|TestPartResultArray
 argument_list|()
-expr_stmt|;
-operator|~
-name|TestPartResultArray
-argument_list|()
-expr_stmt|;
+block|{}
 comment|// Appends the given TestPartResult to the array.
 name|void
 name|Append
@@ -451,17 +452,13 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-comment|// Internally we use a list to simulate the array.  Yes, this means
-comment|// that random access is O(N) in time, but it's OK for its purpose.
-name|internal
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|TestPartResult
 operator|>
-operator|*
-specifier|const
-name|list_
+name|array_
 expr_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
@@ -505,6 +502,7 @@ comment|// reported, it only delegates the reporting to the former result report
 comment|// The original result reporter is restored in the destructor.
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
 name|class
+name|GTEST_API_
 name|HasNewFatalFailureHelper
 range|:
 name|public

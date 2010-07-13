@@ -217,11 +217,14 @@ specifier|static
 name|void
 name|onRAUW
 argument_list|(
-argument|const ExtraDataT&Data
+argument|const ExtraDataT&
+comment|/*Data*/
 argument_list|,
-argument|KeyT Old
+argument|KeyT
+comment|/*Old*/
 argument_list|,
-argument|KeyT New
+argument|KeyT
+comment|/*New*/
 argument_list|)
 block|{}
 name|template
@@ -233,9 +236,11 @@ specifier|static
 name|void
 name|onDelete
 argument_list|(
-argument|const ExtraDataT&Data
+argument|const ExtraDataT&
+comment|/*Data*/
 argument_list|,
-argument|KeyT Old
+argument|KeyT
+comment|/*Old*/
 argument_list|)
 block|{}
 comment|/// Returns a mutex that should be acquired around any changes to the map.
@@ -254,7 +259,8 @@ name|Mutex
 operator|*
 name|getMutex
 argument_list|(
-argument|const ExtraDataT&Data
+argument|const ExtraDataT&
+comment|/*Data*/
 argument_list|)
 block|{
 return|return

@@ -96,6 +96,39 @@ decl_stmt|;
 name|namespace
 name|X86
 block|{
+comment|// Enums for memory operand decoding.  Each memory operand is represented with
+comment|// a 5 operand sequence in the form:
+comment|//   [BaseReg, ScaleAmt, IndexReg, Disp, Segment]
+comment|// These enums help decode this.
+enum|enum
+block|{
+name|AddrBaseReg
+init|=
+literal|0
+block|,
+name|AddrScaleAmt
+init|=
+literal|1
+block|,
+name|AddrIndexReg
+init|=
+literal|2
+block|,
+name|AddrDisp
+init|=
+literal|3
+block|,
+comment|/// AddrSegmentReg - The operand # of the segment in the memory operand.
+name|AddrSegmentReg
+init|=
+literal|4
+block|,
+comment|/// AddrNumOperands - Total number of operands in a memory reference.
+name|AddrNumOperands
+init|=
+literal|5
+block|}
+enum|;
 comment|// X86 specific condition code. These correspond to X86_*_COND in
 comment|// X86InstrInfo.td. They must be kept in synch.
 enum|enum
@@ -310,6 +343,18 @@ comment|/// indicates that the reference is actually to "FOO$non_lazy_ptr -PICBA
 comment|/// which is a PIC-base-relative reference to a hidden dyld lazy pointer
 comment|/// stub.
 name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
+block|,
+comment|/// MO_TLVP - On a symbol operand this indicates that the immediate is
+comment|/// some TLS offset.
+comment|///
+comment|/// This is the TLS offset for the Darwin TLS mechanism.
+name|MO_TLVP
+block|,
+comment|/// MO_TLVP_PIC_BASE - On a symbol operand this indicates that the immediate
+comment|/// is some TLS offset from the picbase.
+comment|///
+comment|/// This is the 32-bit TLS offset for Darwin TLS in PIC mode.
+name|MO_TLVP_PIC_BASE
 block|}
 enum|;
 block|}
@@ -423,6 +468,12 @@ operator|::
 name|MO_DARWIN_HIDDEN_NONLAZY_PIC_BASE
 case|:
 comment|// Darwin/32 hidden global.
+case|case
+name|X86II
+operator|::
+name|MO_TLVP
+case|:
+comment|// ??? Pretty sure..
 return|return
 name|true
 return|;
@@ -799,21 +850,27 @@ literal|3
 operator|<<
 name|ImmShift
 block|,
-name|Imm32
+name|Imm16PCRel
 init|=
 literal|4
 operator|<<
 name|ImmShift
 block|,
-name|Imm32PCRel
+name|Imm32
 init|=
 literal|5
 operator|<<
 name|ImmShift
 block|,
-name|Imm64
+name|Imm32PCRel
 init|=
 literal|6
+operator|<<
+name|ImmShift
+block|,
+name|Imm64
+init|=
+literal|7
 operator|<<
 name|ImmShift
 block|,
@@ -941,6 +998,40 @@ init|=
 literal|0xFF
 operator|<<
 name|OpcodeShift
+block|,
+comment|//===------------------------------------------------------------------===//
+comment|// VEX - The opcode prefix used by AVX instructions
+name|VEX
+init|=
+literal|1ULL
+operator|<<
+literal|32
+block|,
+comment|// VEX_W - Has a opcode specific functionality, but is used in the same
+comment|// way as REX_W is for regular SSE instructions.
+name|VEX_W
+init|=
+literal|1ULL
+operator|<<
+literal|33
+block|,
+comment|// VEX_4V - Used to specify an additional AVX/SSE register. Several 2
+comment|// address instructions in SSE are represented as 3 address ones in AVX
+comment|// and the additional register is encoded in VEX_VVVV prefix.
+name|VEX_4V
+init|=
+literal|1ULL
+operator|<<
+literal|34
+block|,
+comment|// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
+comment|// must be encoded in the i8 immediate field. This usually happens in
+comment|// instructions with 4 operands.
+name|VEX_I8IMM
+init|=
+literal|1ULL
+operator|<<
+literal|35
 block|}
 enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the
@@ -952,7 +1043,7 @@ name|unsigned
 name|char
 name|getBaseOpcodeFor
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -969,7 +1060,7 @@ specifier|inline
 name|bool
 name|hasImm
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -992,7 +1083,7 @@ specifier|inline
 name|unsigned
 name|getSizeOfImm
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -1031,6 +1122,11 @@ name|X86II
 operator|::
 name|Imm16
 case|:
+case|case
+name|X86II
+operator|::
+name|Imm16PCRel
+case|:
 return|return
 literal|2
 return|;
@@ -1064,7 +1160,7 @@ specifier|inline
 name|unsigned
 name|isImmPCRel
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -1089,6 +1185,11 @@ case|case
 name|X86II
 operator|::
 name|Imm8PCRel
+case|:
+case|case
+name|X86II
+operator|::
+name|Imm16PCRel
 case|:
 case|case
 name|X86II
@@ -1123,13 +1224,268 @@ name|false
 return|;
 block|}
 block|}
-block|}
-specifier|const
+comment|/// getMemoryOperandNo - The function returns the MCInst operand # for the
+comment|/// first field of the memory operand.  If the instruction doesn't have a
+comment|/// memory operand, this returns -1.
+comment|///
+comment|/// Note that this ignores tied operands.  If there is a tied register which
+comment|/// is duplicated in the MCInst (e.g. "EAX = addl EAX, [mem]") it is only
+comment|/// counted as one operand.
+comment|///
+specifier|static
+specifier|inline
 name|int
-name|X86AddrNumOperands
+name|getMemoryOperandNo
+parameter_list|(
+name|uint64_t
+name|TSFlags
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|TSFlags
+operator|&
+name|X86II
+operator|::
+name|FormMask
+condition|)
+block|{
+case|case
+name|X86II
+operator|::
+name|MRMInitReg
+case|:
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"FIXME: Remove this form"
+argument_list|)
+expr_stmt|;
+default|default:
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Unknown FormMask value in getMemoryOperandNo!"
+argument_list|)
+expr_stmt|;
+case|case
+name|X86II
+operator|::
+name|Pseudo
+case|:
+case|case
+name|X86II
+operator|::
+name|RawFrm
+case|:
+case|case
+name|X86II
+operator|::
+name|AddRegFrm
+case|:
+case|case
+name|X86II
+operator|::
+name|MRMDestReg
+case|:
+case|case
+name|X86II
+operator|::
+name|MRMSrcReg
+case|:
+return|return
+operator|-
+literal|1
+return|;
+case|case
+name|X86II
+operator|::
+name|MRMDestMem
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|X86II
+operator|::
+name|MRMSrcMem
+case|:
+block|{
+name|bool
+name|HasVEX_4V
 init|=
-literal|5
+name|TSFlags
+operator|&
+name|X86II
+operator|::
+name|VEX_4V
 decl_stmt|;
+name|unsigned
+name|FirstMemOp
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|HasVEX_4V
+condition|)
+operator|++
+name|FirstMemOp
+expr_stmt|;
+comment|// Skip the register source (which is encoded in VEX_VVVV).
+comment|// FIXME: Maybe lea should have its own form?  This is a horrible hack.
+comment|//if (Opcode == X86::LEA64r || Opcode == X86::LEA64_32r ||
+comment|//    Opcode == X86::LEA16r || Opcode == X86::LEA32r)
+return|return
+name|FirstMemOp
+return|;
+block|}
+case|case
+name|X86II
+operator|::
+name|MRM0r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM1r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM2r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM3r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM4r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM5r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM6r
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM7r
+case|:
+return|return
+operator|-
+literal|1
+return|;
+case|case
+name|X86II
+operator|::
+name|MRM0m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM1m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM2m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM3m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM4m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM5m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM6m
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM7m
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|X86II
+operator|::
+name|MRM_C1
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_C2
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_C3
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_C4
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_C8
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_C9
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_E8
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_F0
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_F8
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_F9
+case|:
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+block|}
 specifier|inline
 specifier|static
 name|bool
@@ -1623,7 +1979,7 @@ argument|unsigned SubIdx
 argument_list|,
 argument|const MachineInstr *Orig
 argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;
@@ -1708,26 +2064,26 @@ argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|copyRegToReg
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|,
+argument|DebugLoc DL
+argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;

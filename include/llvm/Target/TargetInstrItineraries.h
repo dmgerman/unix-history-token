@@ -226,9 +226,11 @@ comment|//===-------------------------------------------------------------------
 comment|/// Instruction itinerary Data - Itinerary data supplied by a subtarget to be
 comment|/// used by a target.
 comment|///
-struct|struct
+name|class
 name|InstrItineraryData
 block|{
+name|public
+label|:
 specifier|const
 name|InstrStage
 modifier|*
@@ -566,7 +568,7 @@ index|]
 return|;
 block|}
 block|}
-struct|;
+empty_stmt|;
 block|}
 end_decl_stmt
 

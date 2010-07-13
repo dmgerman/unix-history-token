@@ -67,6 +67,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -175,6 +181,24 @@ name|int64_t
 name|LocalLabelVal
 parameter_list|)
 function_decl|;
+comment|/// The file name of the log file from the enviromment variable
+comment|/// AS_SECURE_LOG_FILE.  Which must be set before the .secure_log_unique
+comment|/// directive is used or it is an error.
+name|char
+modifier|*
+name|SecureLogFile
+decl_stmt|;
+comment|/// The stream that gets written to for the .secure_log_unique directive.
+name|raw_ostream
+modifier|*
+name|SecureLog
+decl_stmt|;
+comment|/// Boolean toggled when .secure_log_unique / .secure_log_reset is seen to
+comment|/// catch errors if .secure_log_unique appears twice without
+comment|/// .secure_log_reset appearing between them.
+name|bool
+name|SecureLogUsed
+decl_stmt|;
 comment|/// Allocator - Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
@@ -412,6 +436,57 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
+name|char
+modifier|*
+name|getSecureLogFile
+parameter_list|()
+block|{
+return|return
+name|SecureLogFile
+return|;
+block|}
+name|raw_ostream
+modifier|*
+name|getSecureLog
+parameter_list|()
+block|{
+return|return
+name|SecureLog
+return|;
+block|}
+name|bool
+name|getSecureLogUsed
+parameter_list|()
+block|{
+return|return
+name|SecureLogUsed
+return|;
+block|}
+name|void
+name|setSecureLog
+parameter_list|(
+name|raw_ostream
+modifier|*
+name|Value
+parameter_list|)
+block|{
+name|SecureLog
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|void
+name|setSecureLogUsed
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|SecureLogUsed
+operator|=
+name|Value
+expr_stmt|;
+block|}
 name|void
 modifier|*
 name|Allocate

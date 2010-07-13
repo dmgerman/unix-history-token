@@ -369,41 +369,14 @@ name|Again
 parameter_list|)
 function_decl|;
 comment|/// JoinIntervals - Attempt to join these two intervals.  On failure, this
-comment|/// returns false.  Otherwise, if one of the intervals being joined is a
-comment|/// physreg, this method always canonicalizes DestInt to be it.  The output
-comment|/// "SrcInt" will not have been modified, so we can use this information
-comment|/// below to update aliases.
+comment|/// returns false.  The output "SrcInt" will not have been modified, so we can
+comment|/// use this information below to update aliases.
 name|bool
 name|JoinIntervals
 parameter_list|(
-name|LiveInterval
+name|CoalescerPair
 modifier|&
-name|LHS
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|RHS
-parameter_list|,
-name|bool
-modifier|&
-name|Swapped
-parameter_list|)
-function_decl|;
-comment|/// SimpleJoin - Attempt to join the specified interval into this one. The
-comment|/// caller of this method must guarantee that the RHS only contains a single
-comment|/// value number and that the RHS is not defined by a copy from this
-comment|/// interval.  This returns false if the intervals are not joinable, or it
-comment|/// joins them and returns true.
-name|bool
-name|SimpleJoin
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|LHS
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|RHS
+name|CP
 parameter_list|)
 function_decl|;
 comment|/// Return true if the two specified registers belong to different register
@@ -426,13 +399,10 @@ comment|/// value number, eliminating a copy.
 name|bool
 name|AdjustCopiesBackFrom
 parameter_list|(
-name|LiveInterval
+specifier|const
+name|CoalescerPair
 modifier|&
-name|IntA
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|IntB
+name|CP
 parameter_list|,
 name|MachineInstr
 modifier|*
@@ -468,13 +438,10 @@ comment|/// can transform the copy into a noop by commuting the definition.
 name|bool
 name|RemoveCopyByCommutingDef
 parameter_list|(
-name|LiveInterval
+specifier|const
+name|CoalescerPair
 modifier|&
-name|IntA
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|IntB
+name|CP
 parameter_list|,
 name|MachineInstr
 modifier|*
@@ -524,84 +491,6 @@ modifier|*
 name|CopyMI
 parameter_list|)
 function_decl|;
-comment|/// CanCoalesceWithImpDef - Returns true if the specified copy instruction
-comment|/// from an implicit def to another register can be coalesced away.
-name|bool
-name|CanCoalesceWithImpDef
-argument_list|(
-name|MachineInstr
-operator|*
-name|CopyMI
-argument_list|,
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-name|LiveInterval
-operator|&
-name|ImpLi
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// TurnCopiesFromValNoToImpDefs - The specified value# is defined by an
-comment|/// implicit_def and it is being removed. Turn all copies from this value#
-comment|/// into implicit_defs.
-name|void
-name|TurnCopiesFromValNoToImpDefs
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|VNInfo
-modifier|*
-name|VNI
-parameter_list|)
-function_decl|;
-comment|/// isWinToJoinVRWithSrcPhysReg - Return true if it's worth while to join a
-comment|/// a virtual destination register with physical source register.
-name|bool
-name|isWinToJoinVRWithSrcPhysReg
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|CopyMI
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|CopyMBB
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|DstInt
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|SrcInt
-parameter_list|)
-function_decl|;
-comment|/// isWinToJoinVRWithDstPhysReg - Return true if it's worth while to join a
-comment|/// copy from a virtual source register to a physical destination register.
-name|bool
-name|isWinToJoinVRWithDstPhysReg
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|CopyMI
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|CopyMBB
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|DstInt
-parameter_list|,
-name|LiveInterval
-modifier|&
-name|SrcInt
-parameter_list|)
-function_decl|;
 comment|/// isWinToJoinCrossClass - Return true if it's profitable to coalesce
 comment|/// two virtual registers from different register classes.
 name|bool
@@ -629,103 +518,6 @@ modifier|*
 name|NewRC
 parameter_list|)
 function_decl|;
-comment|/// HasIncompatibleSubRegDefUse - If we are trying to coalesce a virtual
-comment|/// register with a physical register, check if any of the virtual register
-comment|/// operand is a sub-register use or def. If so, make sure it won't result
-comment|/// in an illegal extract_subreg or insert_subreg instruction.
-name|bool
-name|HasIncompatibleSubRegDefUse
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|CopyMI
-parameter_list|,
-name|unsigned
-name|VirtReg
-parameter_list|,
-name|unsigned
-name|PhysReg
-parameter_list|)
-function_decl|;
-comment|/// CanJoinExtractSubRegToPhysReg - Return true if it's possible to coalesce
-comment|/// an extract_subreg where dst is a physical register, e.g.
-comment|/// cl = EXTRACT_SUBREG reg1024, 1
-name|bool
-name|CanJoinExtractSubRegToPhysReg
-parameter_list|(
-name|unsigned
-name|DstReg
-parameter_list|,
-name|unsigned
-name|SrcReg
-parameter_list|,
-name|unsigned
-name|SubIdx
-parameter_list|,
-name|unsigned
-modifier|&
-name|RealDstReg
-parameter_list|)
-function_decl|;
-comment|/// CanJoinInsertSubRegToPhysReg - Return true if it's possible to coalesce
-comment|/// an insert_subreg where src is a physical register, e.g.
-comment|/// reg1024 = INSERT_SUBREG reg1024, c1, 0
-name|bool
-name|CanJoinInsertSubRegToPhysReg
-parameter_list|(
-name|unsigned
-name|DstReg
-parameter_list|,
-name|unsigned
-name|SrcReg
-parameter_list|,
-name|unsigned
-name|SubIdx
-parameter_list|,
-name|unsigned
-modifier|&
-name|RealDstReg
-parameter_list|)
-function_decl|;
-comment|/// ValueLiveAt - Return true if the LiveRange pointed to by the given
-comment|/// iterator, or any subsequent range with the same value number,
-comment|/// is live at the given point.
-name|bool
-name|ValueLiveAt
-argument_list|(
-name|LiveInterval
-operator|::
-name|iterator
-name|LRItr
-argument_list|,
-name|LiveInterval
-operator|::
-name|iterator
-name|LREnd
-argument_list|,
-name|SlotIndex
-name|defPoint
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// RangeIsDefinedByCopyFromReg - Return true if the specified live range of
-comment|/// the specified live interval is defined by a copy from the specified
-comment|/// register.
-name|bool
-name|RangeIsDefinedByCopyFromReg
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|LiveRange
-modifier|*
-name|LR
-parameter_list|,
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
 comment|/// UpdateRegDefsUses - Replace all defs and uses of SrcReg to DstReg and
 comment|/// update the subregister number if it is not zero. If DstReg is a
 comment|/// physical register and the existing subregister number of the def / use
@@ -734,14 +526,10 @@ comment|/// subregister.
 name|void
 name|UpdateRegDefsUses
 parameter_list|(
-name|unsigned
-name|SrcReg
-parameter_list|,
-name|unsigned
-name|DstReg
-parameter_list|,
-name|unsigned
-name|SubIdx
+specifier|const
+name|CoalescerPair
+modifier|&
+name|CP
 parameter_list|)
 function_decl|;
 comment|/// ShortenDeadCopyLiveRange - Shorten a live range defined by a dead copy.
@@ -787,6 +575,20 @@ parameter_list|,
 name|MachineInstr
 modifier|*
 name|DefMI
+parameter_list|)
+function_decl|;
+comment|/// RemoveCopyFlag - If DstReg is no longer defined by CopyMI, clear the
+comment|/// VNInfo copy flag for DstReg and all aliases.
+name|void
+name|RemoveCopyFlag
+parameter_list|(
+name|unsigned
+name|DstReg
+parameter_list|,
+specifier|const
+name|MachineInstr
+modifier|*
+name|CopyMI
 parameter_list|)
 function_decl|;
 comment|/// lastRegisterUse - Returns the last use of the specific register between

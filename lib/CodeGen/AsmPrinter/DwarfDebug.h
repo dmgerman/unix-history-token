@@ -528,6 +528,18 @@ operator|*
 operator|>
 name|AbstractScopes
 expr_stmt|;
+comment|/// AbstractSPDies - Collection of abstract subprogram DIEs.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|DIE
+operator|*
+operator|>
+name|AbstractSPDies
+expr_stmt|;
 comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
 comment|/// a function. This list is cleared during endFunction().
 name|SmallVector
@@ -752,16 +764,6 @@ operator|*
 operator|,
 literal|8
 operator|>
-name|InsnsBeginScopeSet
-expr_stmt|;
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MachineInstr
-operator|*
-operator|,
-literal|8
-operator|>
 name|InsnsEndScopeSet
 expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
@@ -805,6 +807,18 @@ literal|4
 operator|>
 name|InlinedSPNodes
 expr_stmt|;
+comment|// ProcessedSPNodes - This is a collection of subprogram MDNodes that
+comment|// are processed to create DIEs.
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+literal|16
+operator|>
+name|ProcessedSPNodes
+expr_stmt|;
 comment|/// LabelsBeforeInsn - Maps instruction with label emitted before
 comment|/// instruction.
 name|DenseMap
@@ -842,17 +856,6 @@ operator|,
 literal|8
 operator|>
 name|InsnNeedsLabel
-expr_stmt|;
-comment|/// ProcessedArgs - Collection of arguments already processed.
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-literal|8
-operator|>
-name|ProcessedArgs
 expr_stmt|;
 name|SmallVector
 operator|<
@@ -943,10 +946,21 @@ name|DwarfDebugLocSectionSym
 decl_stmt|;
 name|MCSymbol
 modifier|*
+name|DwarfDebugLineSectionSym
+decl_stmt|,
+modifier|*
+name|CurrentLineSectionSym
+decl_stmt|;
+name|MCSymbol
+modifier|*
 name|FunctionBeginSym
 decl_stmt|,
 modifier|*
 name|FunctionEndSym
+decl_stmt|;
+name|DIEInteger
+modifier|*
+name|DIEIntegerOne
 decl_stmt|;
 name|private
 label|:
@@ -1991,12 +2005,23 @@ function_decl|;
 comment|/// collectVariableInfo - Populate DbgScope entries with variables' info.
 name|void
 name|collectVariableInfo
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineFunction
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|,
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MDNode
+operator|*
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ProcessedVars
+argument_list|)
+decl_stmt|;
 comment|/// collectVariableInfoFromMMITable - Collect variable information from
 comment|/// side table maintained by MMI.
 name|void

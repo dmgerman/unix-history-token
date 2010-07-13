@@ -393,32 +393,7 @@ operator|*
 name|createPass
 argument_list|()
 specifier|const
-block|{
-name|assert
-argument_list|(
-operator|(
-operator|!
-name|isAnalysisGroup
-argument_list|()
-operator|||
-name|NormalCtor
-operator|)
-operator|&&
-literal|"No default implementation found for analysis group!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|NormalCtor
-operator|&&
-literal|"Cannot call createPass on PassInfo without default ctor!"
-argument_list|)
-block|;
-return|return
-name|NormalCtor
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 comment|/// addInterfaceImplemented - This method is called when this pass is
 comment|/// registered as a member of an analysis group with the RegisterAnalysisGroup
 comment|/// template.

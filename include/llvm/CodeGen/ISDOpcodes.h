@@ -212,7 +212,7 @@ comment|/// RESULT = INTRINSIC_WO_CHAIN(INTRINSICID, arg1, arg2, ...)
 comment|/// This node represents a target intrinsic function with no side effects.
 comment|/// The first operand is the ID number of the intrinsic from the
 comment|/// llvm::Intrinsic namespace.  The operands to the intrinsic follow.  The
-comment|/// node has returns the result of the intrinsic.
+comment|/// node returns the result of the intrinsic.
 name|INTRINSIC_WO_CHAIN
 block|,
 comment|/// RESULT,OUTCHAIN = INTRINSIC_W_CHAIN(INCHAIN, INTRINSICID, arg1, ...)
@@ -687,8 +687,9 @@ comment|// Beginning of a call sequence
 name|CALLSEQ_END
 block|,
 comment|// End of a call sequence
-comment|// VAARG - VAARG has three operands: an input chain, a pointer, and a
-comment|// SRCVALUE.  It returns a pair of values: the vaarg value and a new chain.
+comment|// VAARG - VAARG has four operands: an input chain, a pointer, a SRCVALUE,
+comment|// and the alignment. It returns a pair of values: the vaarg value and a
+comment|// new chain.
 name|VAARG
 block|,
 comment|// VACOPY - VACOPY has five operands: an input chain, a destination pointer,

@@ -197,6 +197,7 @@ name|JumpTables
 expr_stmt|;
 name|public
 label|:
+name|explicit
 name|MachineJumpTableInfo
 argument_list|(
 argument|JTEntryKind Kind

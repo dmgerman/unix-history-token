@@ -152,6 +152,10 @@ comment|/// The hasREX_WPrefix field from the record
 name|bool
 name|HasREX_WPrefix
 decl_stmt|;
+comment|/// The hasVEX_4VPrefix field from the record
+name|bool
+name|HasVEX_4VPrefix
+decl_stmt|;
 comment|/// The hasLockPrefix field from the record
 name|bool
 name|HasLockPrefix

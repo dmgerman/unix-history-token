@@ -278,11 +278,14 @@ name|SMDiagnostic
 argument_list|(
 name|Filename
 argument_list|,
-literal|"Could not open input file '"
+literal|"Could not open input file "
+literal|"'"
 operator|+
 name|Filename
 operator|+
-literal|"'"
+literal|"': "
+operator|+
+name|ErrMsg
 argument_list|)
 expr_stmt|;
 return|return
@@ -467,11 +470,14 @@ name|SMDiagnostic
 argument_list|(
 name|Filename
 argument_list|,
-literal|"Could not open input file '"
+literal|"Could not open input file "
+literal|"'"
 operator|+
 name|Filename
 operator|+
-literal|"'"
+literal|"': "
+operator|+
+name|ErrMsg
 argument_list|)
 expr_stmt|;
 return|return

@@ -60,6 +60,9 @@ name|class
 name|MCAsmLexer
 decl_stmt|;
 name|class
+name|MCAsmParserExtension
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -72,6 +75,12 @@ name|class
 name|SMLoc
 decl_stmt|;
 name|class
+name|SourceMgr
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|Twine
 decl_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
@@ -79,6 +88,24 @@ comment|/// assembly parsers.
 name|class
 name|MCAsmParser
 block|{
+name|public
+label|:
+typedef|typedef
+name|bool
+argument_list|(
+name|MCAsmParserExtension
+operator|::
+operator|*
+name|DirectiveHandler
+argument_list|)
+argument_list|(
+name|StringRef
+argument_list|,
+name|SMLoc
+argument_list|)
+expr_stmt|;
+name|private
+label|:
 name|MCAsmParser
 argument_list|(
 specifier|const
@@ -111,6 +138,31 @@ name|MCAsmParser
 argument_list|()
 expr_stmt|;
 name|virtual
+name|void
+name|AddDirectiveHandler
+parameter_list|(
+name|MCAsmParserExtension
+modifier|*
+name|Object
+parameter_list|,
+name|StringRef
+name|Directive
+parameter_list|,
+name|DirectiveHandler
+name|Handler
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|SourceMgr
+modifier|&
+name|getSourceManager
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
 name|MCAsmLexer
 modifier|&
 name|getLexer
@@ -126,7 +178,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getSteamer - Return the output streamer for the assembler.
+comment|/// getStreamer - Return the output streamer for the assembler.
 name|virtual
 name|MCStreamer
 modifier|&
@@ -152,7 +204,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Warning - Emit an error at the location \arg L, with the message \arg
+comment|/// Error - Emit an error at the location \arg L, with the message \arg
 comment|/// Msg.
 comment|///
 comment|/// \return The return value is always true, as an idiomatic convenience to
@@ -189,6 +241,29 @@ name|AsmToken
 modifier|&
 name|getTok
 parameter_list|()
+function_decl|;
+comment|/// \brief Report an error at the current lexer location.
+name|bool
+name|TokError
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Msg
+parameter_list|)
+function_decl|;
+comment|/// ParseIdentifier - Parse an identifier or string (as a quoted identifier)
+comment|/// and set \arg Res to the identifier contents.
+name|virtual
+name|bool
+name|ParseIdentifier
+parameter_list|(
+name|StringRef
+modifier|&
+name|Res
+parameter_list|)
+init|=
+literal|0
 function_decl|;
 comment|/// ParseExpression - Parse an arbitrary expression.
 comment|///

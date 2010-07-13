@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAGNodes.h"
+file|"llvm/Target/TargetCallingConv.h"
 end_include
 
 begin_include
@@ -99,9 +99,6 @@ name|TargetMachine
 decl_stmt|;
 name|class
 name|CCState
-decl_stmt|;
-name|class
-name|SDNode
 decl_stmt|;
 comment|/// CCValAssign - Represent assignment of one arg/retval to a location.
 name|class
@@ -127,6 +124,11 @@ comment|// The value is extended with undefined upper bits.
 name|BCvt
 block|,
 comment|// The value is bit-converted in the location.
+name|VExt
+block|,
+comment|// The value is vector-widened in the location.
+comment|// FIXME: Not implemented yet. Code that uses AExt to mean
+comment|// vector-widen should be fixed to use VExt instead.
 name|Indirect
 comment|// The location contains pointer to the value.
 comment|// TODO: a subset of the value is in the location.
@@ -796,17 +798,9 @@ argument_list|(
 specifier|const
 name|SmallVectorImpl
 operator|<
-name|EVT
-operator|>
-operator|&
-name|OutTys
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
 name|ISD
 operator|::
-name|ArgFlagsTy
+name|OutputArg
 operator|>
 operator|&
 name|ArgsFlags
