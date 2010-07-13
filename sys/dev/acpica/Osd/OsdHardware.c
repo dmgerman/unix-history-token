@@ -166,10 +166,6 @@ case|case
 literal|8
 case|:
 operator|*
-operator|(
-name|u_int8_t
-operator|*
-operator|)
 name|Value
 operator|=
 name|bus_space_read_1
@@ -186,10 +182,6 @@ case|case
 literal|16
 case|:
 operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|Value
 operator|=
 name|bus_space_read_2
@@ -206,10 +198,6 @@ case|case
 literal|32
 case|:
 operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 name|Value
 operator|=
 name|bus_space_read_4
