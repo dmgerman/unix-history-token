@@ -20784,7 +20784,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"no memory for std Rx buffers.\n"
+literal|"no memory for jumbo Rx buffers.\n"
 argument_list|)
 expr_stmt|;
 name|bge_stop
