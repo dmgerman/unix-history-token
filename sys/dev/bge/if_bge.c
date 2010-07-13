@@ -15355,9 +15355,7 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
 literal|"Disabling fastboot\n"
 argument_list|)
@@ -15944,9 +15942,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
 literal|"reset timed out\n"
 argument_list|)
@@ -16014,12 +16010,9 @@ name|BGE_TIMEOUT
 condition|)
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
-literal|"firmware handshake timed out, "
-literal|"found 0x%08x\n"
+literal|"firmware handshake timed out, found 0x%08x\n"
 argument_list|,
 name|val
 argument_list|)
