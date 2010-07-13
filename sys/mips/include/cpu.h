@@ -1872,47 +1872,6 @@ begin_comment
 comment|/* NEC Vr5400 FPU		ISA IV+	 */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_LOCORE
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|union
-name|cpuprid
-name|cpu_id
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|mips_proc_type
-parameter_list|()
-value|((cpu_id.cpu.cp_vendor<< 8) | cpu_id.cpu.cp_imp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_set_proc_type
-parameter_list|(
-name|type
-parameter_list|)
-value|(cpu_id.cpu.cp_vendor = (type)>> 8, \ 					 cpu_id.cpu.cp_imp = ((type)& 0x00ff))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_LOCORE */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -1927,14 +1886,6 @@ argument_list|(
 name|_LOCORE
 argument_list|)
 end_if
-
-begin_decl_stmt
-specifier|extern
-name|union
-name|cpuprid
-name|fpu_id
-decl_stmt|;
-end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct

@@ -137,6 +137,16 @@ directive|include
 file|<machine/hwfunc.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|cpu_identify
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|mips_cpuinfo
@@ -144,22 +154,8 @@ name|cpuinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|union
-name|cpuprid
-name|cpu_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|union
-name|cpuprid
-name|fpu_id
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Attempt to identify the MIPS CPU as much as possible.  *  * XXX: Assumes the CPU is MIPS32 compliant.  * XXX: For now, skip config register selections 2 and 3  * as we don't currently use L2/L3 cache or additional  * MIPS32 processor features.  */
+comment|/*  * Attempt to identify the MIPS CPU as much as possible.  *  * XXX: Assumes the CPU is MIPS{32,64}{,r2} compliant.  * XXX: For now, skip config register selections 2 and 3  * as we don't currently use L2/L3 cache or additional  * MIPS32 processor features.  */
 end_comment
 
 begin_function
@@ -581,6 +577,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cpu_identify
 parameter_list|(
