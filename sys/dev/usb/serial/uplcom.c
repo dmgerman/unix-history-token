@@ -1010,7 +1010,7 @@ argument_list|,
 name|PL2303X
 argument_list|)
 block|,
-comment|/* I/O DATA USB-RSAQ3 */
+comment|/* I/O DATA USB-RSAQ5 */
 name|UPLCOM_DEV
 argument_list|(
 name|IODATA
