@@ -12931,7 +12931,10 @@ argument_list|)
 expr_stmt|;
 name|rid
 operator|=
-name|BGE_PCI_BAR0
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -15140,7 +15143,10 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|BGE_PCI_BAR0
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|sc
 operator|->
