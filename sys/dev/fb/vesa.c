@@ -4992,6 +4992,11 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vesa_state_buf_size
+operator|=
+name|vesa_bios_state_buf_size
+argument_list|()
+expr_stmt|;
 name|vesa_palette
 operator|=
 name|x86bios_alloc
@@ -5005,11 +5010,6 @@ name|vesa_state_buf_size
 argument_list|,
 name|M_WAITOK
 argument_list|)
-expr_stmt|;
-name|vesa_state_buf_size
-operator|=
-name|vesa_bios_state_buf_size
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
