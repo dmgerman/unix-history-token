@@ -1475,6 +1475,16 @@ name|m_flags
 operator||=
 name|M_EXT
 expr_stmt|;
+name|n
+operator|->
+name|m_flags
+operator||=
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_RDONLY
+expr_stmt|;
 block|}
 end_function
 
