@@ -711,6 +711,12 @@ name|initialized
 operator|=
 name|B_TRUE
 expr_stmt|;
+name|rwlp
+operator|->
+name|rw_count
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -723,6 +729,15 @@ modifier|*
 name|rwlp
 parameter_list|)
 block|{
+name|ASSERT
+argument_list|(
+name|rwlp
+operator|->
+name|rw_count
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|rwlock_destroy
 argument_list|(
 operator|&
