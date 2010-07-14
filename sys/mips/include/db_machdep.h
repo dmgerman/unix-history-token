@@ -143,7 +143,7 @@ name|BKPT_SET
 parameter_list|(
 name|ins
 parameter_list|)
-value|(BREAK_DDB)
+value|(MIPS_BREAK_DDB)
 end_define
 
 begin_define
@@ -197,7 +197,7 @@ define|#
 directive|define
 name|BKPT_SKIP
 define|\
-value|do {							\ 		if((db_get_value(kdb_frame->pc, sizeof(int), FALSE)&	\ 		    ~BREAK_VAL_MASK) == BREAK_INSTR) {			\ 			kdb_frame->pc += BKPT_SIZE;			\ 			kdb_thrctx->pcb_regs.pc +=  BKPT_SIZE;		\ 		}							\ 	} while (0);
+value|do {							\ 		if((db_get_value(kdb_frame->pc, sizeof(int), FALSE)&	\ 		    ~MIPS_BREAK_VAL_MASK) == MIPS_BREAK_INSTR) {	\ 			kdb_frame->pc += BKPT_SIZE;			\ 			kdb_thrctx->pcb_regs.pc +=  BKPT_SIZE;		\ 		}							\ 	} while (0);
 end_define
 
 begin_comment
