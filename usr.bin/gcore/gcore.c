@@ -148,7 +148,7 @@ end_include
 
 begin_decl_stmt
 name|int
-name|sflag
+name|pflags
 decl_stmt|;
 end_decl_stmt
 
@@ -246,7 +246,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|sflag
+name|pflags
 operator|=
 literal|0
 expr_stmt|;
@@ -265,7 +265,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:s"
+literal|"c:fs"
 argument_list|)
 operator|)
 operator|!=
@@ -287,11 +287,19 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|pflags
+operator||=
+name|PFLAGS_FULL
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
-name|sflag
-operator|=
-literal|1
+name|pflags
+operator||=
+name|PFLAGS_RESUME
 expr_stmt|;
 break|break;
 default|default:
