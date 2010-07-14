@@ -1316,7 +1316,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|TLB_MISS_EXC_VEC
+name|MIPS_UTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -1343,7 +1343,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|XTLB_MISS_EXC_VEC
+name|MIPS3_XTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -1360,7 +1360,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|GEN_EXC_VEC
+name|MIPS3_GEN_EXC_VEC
 argument_list|,
 name|MipsExceptionEnd
 operator|-
@@ -1375,7 +1375,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|CACHE_ERR_EXC_VEC
+name|MIPS3_CACHE_ERR_EXC_VEC
 argument_list|,
 name|MipsCacheEnd
 operator|-
@@ -1392,7 +1392,7 @@ expr_stmt|;
 comment|/*  	 * Mask all interrupts. Each interrupt will be enabled 	 * when handler is installed for it 	 */
 name|set_intr_mask
 argument_list|(
-name|ALL_INT_MASK
+name|MIPS_SR_INT_MASK
 argument_list|)
 expr_stmt|;
 comment|/* Clear BEV in SR so we start handling our own exceptions */
@@ -1402,7 +1402,7 @@ name|mips_rd_status
 argument_list|()
 operator|&
 operator|~
-name|SR_BOOT_EXC_VEC
+name|MIPS_SR_BEV
 argument_list|)
 expr_stmt|;
 block|}
@@ -1802,7 +1802,7 @@ condition|(
 name|mips_rd_status
 argument_list|()
 operator|&
-name|SR_INT_ENAB
+name|MIPS_SR_INT_IE
 condition|)
 asm|__asm __volatile ("wait");
 else|else

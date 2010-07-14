@@ -1010,10 +1010,10 @@ name|trapframe
 operator|->
 name|cause
 operator|&
-name|CR_EXC_CODE
+name|MIPS3_CR_EXC_CODE
 operator|)
 operator|>>
-name|CR_EXC_CODE_SHIFT
+name|MIPS_CR_EXC_CODE_SHIFT
 expr_stmt|;
 if|if
 condition|(
@@ -1046,7 +1046,7 @@ name|trapframe
 operator|->
 name|sr
 operator|&
-name|SR_INT_ENAB
+name|MIPS_SR_INT_IE
 condition|)
 block|{
 name|set_intr_mask
@@ -1057,7 +1057,7 @@ name|trapframe
 operator|->
 name|sr
 operator|&
-name|ALL_INT_MASK
+name|MIPS_SR_INT_MASK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3466,7 +3466,7 @@ name|va
 operator|||
 name|instr
 operator|!=
-name|BREAK_SSTEP
+name|MIPS_BREAK_SSTEP
 condition|)
 block|{
 name|i
@@ -3721,7 +3721,7 @@ name|trapframe
 operator|->
 name|cause
 operator|&
-name|CR_COP_ERR
+name|MIPS_CR_COP_ERR
 operator|)
 operator|==
 literal|0x10000000
@@ -3749,7 +3749,7 @@ name|trapframe
 operator|->
 name|cause
 operator|&
-name|CR_COP_ERR
+name|MIPS_CR_COP_ERR
 operator|)
 operator|!=
 literal|0x10000000
@@ -3800,7 +3800,7 @@ name|td_frame
 operator|->
 name|sr
 operator||=
-name|SR_COP_1_BIT
+name|MIPS_SR_COP_1_BIT
 expr_stmt|;
 name|td
 operator|->
@@ -4439,10 +4439,10 @@ name|trp
 operator|->
 name|cause
 operator|&
-name|CR_EXC_CODE
+name|MIPS3_CR_EXC_CODE
 operator|)
 operator|>>
-name|CR_EXC_CODE_SHIFT
+name|MIPS_CR_EXC_CODE_SHIFT
 index|]
 argument_list|,
 operator|(
@@ -5072,7 +5072,7 @@ name|condition
 operator|=
 name|fpcCSR
 operator|&
-name|FPC_COND_BIT
+name|MIPS_FPU_COND_BIT
 expr_stmt|;
 else|else
 name|condition
@@ -5081,7 +5081,7 @@ operator|!
 operator|(
 name|fpcCSR
 operator|&
-name|FPC_COND_BIT
+name|MIPS_FPU_COND_BIT
 operator|)
 expr_stmt|;
 if|if

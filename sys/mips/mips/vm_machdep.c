@@ -527,7 +527,7 @@ operator|=
 operator|(
 name|MIPS_SR_KX
 operator||
-name|SR_INT_MASK
+name|MIPS_SR_INT_MASK
 operator|)
 operator|&
 name|mips_rd_status
@@ -574,7 +574,7 @@ index|]
 operator||=
 name|MIPS_SR_COP_2_BIT
 operator||
-name|MIPS32_SR_PX
+name|MIPS_SR_PX
 operator||
 name|MIPS_SR_UX
 operator||
@@ -1333,7 +1333,7 @@ operator|=
 operator|(
 name|MIPS_SR_KX
 operator||
-name|SR_INT_MASK
+name|MIPS_SR_INT_MASK
 operator|)
 operator|&
 name|mips_rd_status
@@ -1353,7 +1353,7 @@ name|MIPS_SR_COP_2_BIT
 operator||
 name|MIPS_SR_COP_0_BIT
 operator||
-name|MIPS32_SR_PX
+name|MIPS_SR_PX
 operator||
 name|MIPS_SR_UX
 operator||
@@ -1385,7 +1385,7 @@ if|#
 directive|if
 literal|0
 comment|/* Maybe we need to fix this? */
-block|td->td_md.md_saved_sr = ( (MIPS_SR_COP_2_BIT | MIPS_SR_COP_0_BIT) | 	                          (MIPS32_SR_PX | MIPS_SR_UX | MIPS_SR_KX | MIPS_SR_SX) | 	                          (MIPS_SR_INT_IE | MIPS_HARD_INT_MASK));
+block|td->td_md.md_saved_sr = ( (MIPS_SR_COP_2_BIT | MIPS_SR_COP_0_BIT) | 	                          (MIPS_SR_PX | MIPS_SR_UX | MIPS_SR_KX | MIPS_SR_SX) | 	                          (MIPS_SR_INT_IE | MIPS_HARD_INT_MASK));
 endif|#
 directive|endif
 block|}
@@ -1523,12 +1523,12 @@ name|tf
 operator|->
 name|sr
 operator|=
-name|SR_KSU_USER
+name|MIPS_SR_KSU_USER
 operator||
-name|SR_EXL
+name|MIPS_SR_EXL
 operator||
 operator|(
-name|SR_INT_MASK
+name|MIPS_SR_INT_MASK
 operator|&
 name|mips_rd_status
 argument_list|()
@@ -1547,7 +1547,7 @@ name|MIPS_SR_INT_IE
 operator||
 name|MIPS_SR_COP_0_BIT
 operator||
-name|MIPS32_SR_PX
+name|MIPS_SR_PX
 operator||
 name|MIPS_SR_UX
 operator||
