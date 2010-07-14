@@ -2721,7 +2721,7 @@ begin_define
 define|#
 directive|define
 name|MC_CTL2_THRESHOLD
-value|0x0000000000003fff
+value|0x0000000000007fff
 end_define
 
 begin_define

@@ -104,8 +104,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|APIC_IPI_INTS
+name|APIC_CMC_INT
 value|(APIC_LOCAL_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IPI_INTS
+value|(APIC_LOCAL_INTS + 3)
 end_define
 
 begin_define
@@ -311,8 +318,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|LVT_CMCI
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|LVT_MAX
-value|LVT_THERMAL
+value|LVT_CMCI
 end_define
 
 begin_ifndef
@@ -484,6 +498,11 @@ decl_stmt|,
 name|IDTVEC
 argument_list|(
 name|apic_isr7
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|cmcint
 argument_list|)
 decl_stmt|,
 name|IDTVEC
@@ -840,6 +859,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|lapic_enable_cmc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|lapic_enable_pmc
 parameter_list|(
@@ -918,6 +946,15 @@ name|lapic_ipi_wait
 parameter_list|(
 name|int
 name|delay
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lapic_handle_cmc
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

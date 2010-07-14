@@ -146,7 +146,9 @@ value|\ 	struct user_segment_descriptor	*pc_gs32p;			\
 comment|/* Pointer to the CPU LDT descriptor */
 value|\ 	struct system_segment_descriptor *pc_ldt;			\
 comment|/* Pointer to the CPU TSS descriptor */
-value|\ 	struct system_segment_descriptor *pc_tss			\ 	PCPU_XEN_FIELDS
+value|\ 	struct system_segment_descriptor *pc_tss;			\ 	u_int	pc_cmci_mask
+comment|/* MCx banks for CMCI */
+value|\ 	PCPU_XEN_FIELDS
 end_define
 
 begin_ifdef
