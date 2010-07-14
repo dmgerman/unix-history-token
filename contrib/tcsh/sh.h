@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.146 2006/07/03 22:59:01 mitr Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/sh.h,v 3.150 2009/06/25 21:27:37 christos Exp $ */
 end_comment
 
 begin_comment
@@ -393,7 +393,7 @@ define|#
 directive|define
 name|reset_mbtowc
 parameter_list|()
-value|mbtowc(NULL, NULL, 0)
+value|IGNORE(mbtowc(NULL, NULL, 0))
 end_define
 
 begin_else
@@ -551,6 +551,34 @@ name|a
 parameter_list|)
 value|(void) (a)
 end_define
+
+begin_define
+define|#
+directive|define
+name|IGNORE
+parameter_list|(
+name|a
+parameter_list|)
+value|ignore((intptr_t)a)
+end_define
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ignore
+parameter_list|(
+name|intptr_t
+name|a
+parameter_list|)
+block|{
+name|USE
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Return true if the path is absolute  */
@@ -3397,6 +3425,18 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|compat_expr
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* csh-style expressions? */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|isoutatty
 name|IZERO
 decl_stmt|;
@@ -4192,7 +4232,7 @@ begin_define
 define|#
 directive|define
 name|UNDER
-value|0x20000000
+value|0x08000000
 end_define
 
 begin_comment
@@ -4203,7 +4243,7 @@ begin_define
 define|#
 directive|define
 name|BOLD
-value|0x10000000
+value|0x04000000
 end_define
 
 begin_comment
@@ -4214,7 +4254,7 @@ begin_define
 define|#
 directive|define
 name|STANDOUT
-value|0x08000000
+value|0x02000000
 end_define
 
 begin_comment
@@ -4225,7 +4265,7 @@ begin_define
 define|#
 directive|define
 name|LITERAL
-value|0x04000000
+value|0x01000000
 end_define
 
 begin_comment
@@ -4236,7 +4276,7 @@ begin_define
 define|#
 directive|define
 name|ATTRIBUTES
-value|0x3C000000
+value|0x0F000000
 end_define
 
 begin_comment
@@ -4247,23 +4287,50 @@ begin_define
 define|#
 directive|define
 name|INVALID_BYTE
-value|0x00200000
+value|0x00800000
 end_define
 
 begin_comment
 comment|/* Invalid character on input */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS2
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|CHAR
-value|0x003FFFFF
+value|0x30FFFFFF
 end_define
 
 begin_comment
 comment|/* Mask to mask out the character */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CHAR
+value|0x00FFFFFF
+end_define
+
+begin_comment
+comment|/* Mask to mask out the character */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_elif
 elif|#
