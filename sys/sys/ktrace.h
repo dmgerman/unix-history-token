@@ -384,6 +384,10 @@ name|KTR_STRUCT
 value|8
 end_define
 
+begin_comment
+comment|/* 	 * record contains null-terminated struct name followed by 	 * struct contents 	 */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|sockaddr
@@ -675,8 +679,6 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|size_t
-parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -693,7 +695,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|ktrstruct("sockaddr", 8, (s), ((struct sockaddr *)(s))->sa_len)
+value|ktrstruct("sockaddr", (s), ((struct sockaddr *)(s))->sa_len)
 end_define
 
 begin_define
@@ -704,7 +706,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|ktrstruct("stat", 4, (s), sizeof(struct stat))
+value|ktrstruct("stat", (s), sizeof(struct stat))
 end_define
 
 begin_else
