@@ -1749,7 +1749,7 @@ name|Strstr
 argument_list|(
 name|cp
 argument_list|,
-name|STRslptssl
+name|STRptssl
 argument_list|)
 operator|!=
 name|NULL
