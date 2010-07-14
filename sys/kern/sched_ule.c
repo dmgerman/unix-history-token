@@ -10198,9 +10198,11 @@ operator|(
 literal|0
 operator|)
 return|;
-name|thread_lock
+name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -10252,11 +10254,6 @@ operator|>>
 name|FSHIFT
 expr_stmt|;
 block|}
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pctcpu
