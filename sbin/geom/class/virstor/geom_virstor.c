@@ -2283,13 +2283,6 @@ argument_list|(
 name|ssize
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|sect
-argument_list|,
-name|ssize
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sect
@@ -2301,6 +2294,13 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"Cannot allocate sector of %zu bytes"
+argument_list|,
+name|ssize
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|sect
 argument_list|,
 name|ssize
 argument_list|)
