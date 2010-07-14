@@ -2633,13 +2633,13 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
-name|psignal
+name|tdksignal
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|SIGPIPE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
