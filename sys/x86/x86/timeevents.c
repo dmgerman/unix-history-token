@@ -34,12 +34,6 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"opt_clock.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -131,18 +125,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/intr_machdep.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
 end_include
 
 begin_include
