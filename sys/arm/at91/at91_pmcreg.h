@@ -268,6 +268,99 @@ begin_comment
 comment|/* Interrupt Mask Register */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AT91SAM9G20
+end_ifdef
+
+begin_comment
+comment|/* PMC Specific AT91SAM9G20 */
+end_comment
+
+begin_comment
+comment|/* PMC System Clock Enable Register */
+end_comment
+
+begin_comment
+comment|/* PMC System Clock Disable Register */
+end_comment
+
+begin_comment
+comment|/* PMC System Clock StatusRegister */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_UHP
+value|(1UL<< 6)
+end_define
+
+begin_comment
+comment|/* UHP: USB Host Port Clock Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_UDP
+value|(1UL<< 7)
+end_define
+
+begin_comment
+comment|/* UDP: USB Device Port Clock Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_PCK0
+value|(1UL<< 8)
+end_define
+
+begin_comment
+comment|/* PCK0: Programmable Clock out en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_PCK1
+value|(1UL<< 9)
+end_define
+
+begin_comment
+comment|/* PCK1: Programmable Clock out en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_PCK2
+value|(1UL<< 10)
+end_define
+
+begin_comment
+comment|/* PCK2: Programmable Clock out en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_SCER_PCK3
+value|(1UL<< 11)
+end_define
+
+begin_comment
+comment|/* PCK3: Programmable Clock out en */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/* PMC System Clock Enable Register */
 end_comment
@@ -366,6 +459,15 @@ end_define
 
 begin_comment
 comment|/* PCK3: Programmable Clock out en */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AT91SAM9G20 */
 end_comment
 
 begin_comment
