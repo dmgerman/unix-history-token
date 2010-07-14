@@ -1326,9 +1326,6 @@ expr_stmt|;
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
-name|mca_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 

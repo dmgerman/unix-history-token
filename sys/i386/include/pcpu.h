@@ -57,18 +57,12 @@ value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
 value|\ 	struct	pmap *pc_curpmap;					\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	struct	segment_descriptor *pc_fsgs_gdt;			\ 	int	pc_currentldt;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss
+value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
+comment|/* Flag indicating private tss*/
+value|\ 	u_int	pc_cmci_mask
+comment|/* MCx banks for CMCI */
+value|\   #ifdef _KERNEL
 end_define
-
-begin_comment
-comment|/* Flag indicating private tss */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_ifdef
 ifdef|#

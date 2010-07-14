@@ -47,8 +47,12 @@ value|\ 	struct	pmap *pc_curpmap;					\ 	struct	amd64tss *pc_tssp;					\ 	regist
 comment|/* User %rsp in syscall */
 value|\ 	u_int	pc_apic_id;						\ 	u_int   pc_acpi_id;
 comment|/* ACPI CPU id */
-value|\ 	struct user_segment_descriptor	*pc_gs32p
+value|\ 	struct user_segment_descriptor	*pc_gs32p;			\ 	u_int	pc_cmci_mask
 end_define
+
+begin_comment
+comment|/* MCx banks for CMCI */
+end_comment
 
 begin_ifdef
 ifdef|#
