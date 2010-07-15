@@ -2002,7 +2002,6 @@ name|tab_col
 decl_stmt|,
 name|tab_size
 decl_stmt|;
-empty_stmt|;
 name|tab_col
 operator|=
 operator|(

@@ -2739,7 +2739,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 operator|(

@@ -865,7 +865,6 @@ name|mb
 operator|->
 name|size
 expr_stmt|;
-empty_stmt|;
 name|mb
 operator|->
 name|nxt
