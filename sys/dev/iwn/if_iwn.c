@@ -22394,7 +22394,9 @@ name|sc
 operator|->
 name|chainmask
 operator|=
-literal|0
+name|sc
+operator|->
+name|rxchainmask
 expr_stmt|;
 for|for
 control|(
@@ -22419,7 +22421,7 @@ name|rssi
 index|[
 name|i
 index|]
-operator|<=
+operator|>
 literal|15
 operator|*
 literal|20
@@ -22427,10 +22429,32 @@ condition|)
 name|sc
 operator|->
 name|chainmask
-operator||=
+operator|&=
+operator|~
+operator|(
 literal|1
 operator|<<
 name|i
+operator|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_CALIBRATE
+argument_list|,
+literal|"%s: RX chains mask: theoretical=0x%x, actual=0x%x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|rxchainmask
+argument_list|,
+name|sc
+operator|->
+name|chainmask
+argument_list|)
 expr_stmt|;
 comment|/* If none of the TX antennas are connected, keep at least one. */
 if|if
