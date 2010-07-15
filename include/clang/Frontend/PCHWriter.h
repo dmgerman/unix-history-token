@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/PCHDeserializationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -300,9 +306,12 @@ comment|/// data structures. This bitstream can be de-serialized via an
 comment|/// instance of the PCHReader class.
 name|class
 name|PCHWriter
+range|:
+name|public
+name|PCHDeserializationListener
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|llvm
 operator|::
@@ -315,14 +324,19 @@ operator|>
 name|RecordData
 expr_stmt|;
 name|private
-label|:
+operator|:
 comment|/// \brief The bitstream writer used to emit this precompiled header.
 name|llvm
 operator|::
 name|BitstreamWriter
 operator|&
 name|Stream
-expr_stmt|;
+decl_stmt|;
+comment|/// \brief The reader of existing PCH files, if we're chaining.
+name|PCHReader
+modifier|*
+name|Chain
+decl_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the PCH file.
 name|class
 name|DeclOrType
@@ -737,11 +751,6 @@ modifier|&
 name|Context
 parameter_list|,
 specifier|const
-name|PCHReader
-modifier|*
-name|Chain
-parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|isysroot
@@ -895,11 +904,6 @@ modifier|*
 name|StatCalls
 parameter_list|,
 specifier|const
-name|PCHReader
-modifier|*
-name|Chain
-parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|isysroot
@@ -916,6 +920,10 @@ operator|::
 name|BitstreamWriter
 operator|&
 name|Stream
+argument_list|,
+name|PCHReader
+operator|*
+name|Chain
 argument_list|)
 expr_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
@@ -941,11 +949,6 @@ parameter_list|,
 name|MemorizeStatCalls
 modifier|*
 name|StatCalls
-parameter_list|,
-specifier|const
-name|PCHReader
-modifier|*
-name|Chain
 parameter_list|,
 specifier|const
 name|char
@@ -1427,12 +1430,42 @@ return|return
 name|ParmVarDeclAbbrev
 return|;
 block|}
-block|}
-empty_stmt|;
+comment|// PCHDeserializationListener implementation
+name|void
+name|TypeRead
+argument_list|(
+name|pch
+operator|::
+name|TypeID
+name|ID
+argument_list|,
+name|QualType
+name|T
+argument_list|)
+decl_stmt|;
+name|void
+name|DeclRead
+argument_list|(
+name|pch
+operator|::
+name|DeclID
+name|ID
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

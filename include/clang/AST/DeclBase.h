@@ -313,7 +313,7 @@ comment|///
 comment|/// These are meant as bitmasks, so that searches in
 comment|/// C++ can look into the "tag" namespace during ordinary lookup.
 comment|///
-comment|/// Decl currently provides 16 bits of IDNS bits.
+comment|/// Decl currently provides 15 bits of IDNS bits.
 enum|enum
 name|IdentifierNamespace
 block|{
@@ -607,13 +607,13 @@ comment|// declaration was built.
 name|unsigned
 name|PCHLevel
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/// IdentifierNamespace - This specifies what IDNS_* namespace this lives in.
 name|unsigned
 name|IdentifierNamespace
 range|:
-literal|16
+literal|15
 decl_stmt|;
 name|private
 label|:
@@ -1321,7 +1321,7 @@ specifier|const
 name|unsigned
 name|MaxPCHLevel
 init|=
-literal|3
+literal|7
 decl_stmt|;
 end_decl_stmt
 
@@ -1340,7 +1340,7 @@ block|{
 name|assert
 argument_list|(
 name|Level
-operator|<
+operator|<=
 name|MaxPCHLevel
 operator|&&
 literal|"PCH level exceeds the maximum"

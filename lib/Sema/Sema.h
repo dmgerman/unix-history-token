@@ -419,7 +419,8 @@ name|IsBlockInfo
 decl_stmt|;
 comment|/// \brief Set true when a function, method contains a VLA or ObjC try block,
 comment|/// which introduce scopes that need to be checked for goto conditions.  If a
-comment|/// function does not contain this, then it need not have the jump checker run on it.
+comment|/// function does not contain this, then it need not have the jump checker run
+comment|/// on it.
 name|bool
 name|NeedsScopeChecking
 decl_stmt|;
@@ -7621,7 +7622,7 @@ parameter_list|,
 specifier|const
 name|AttributeList
 modifier|*
-name|AttrList
+name|AL
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15012,6 +15013,10 @@ parameter_list|,
 name|bool
 modifier|&
 name|IsExplicitSpecialization
+parameter_list|,
+name|bool
+modifier|&
+name|Invalid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15340,7 +15345,7 @@ name|TemplateSpecializationKind
 name|PrevTSK
 parameter_list|,
 name|SourceLocation
-name|PrevPointOfInstantiation
+name|PrevPtOfInstantiation
 parameter_list|,
 name|bool
 modifier|&
@@ -18597,7 +18602,7 @@ name|DeclPtrTy
 name|ActOnForwardProtocolDeclaration
 parameter_list|(
 name|SourceLocation
-name|AtProtocolLoc
+name|AtProtoclLoc
 parameter_list|,
 specifier|const
 name|IdentifierLocPair
@@ -20387,6 +20392,9 @@ name|rex
 parameter_list|,
 name|SourceLocation
 name|OpLoc
+parameter_list|,
+name|unsigned
+name|Opc
 parameter_list|)
 function_decl|;
 end_function_decl

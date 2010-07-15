@@ -694,5 +694,33 @@ comment|// Ok.
 block|}
 end_function
 
+begin_function
+name|int
+name|test20
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|&&
+literal|4
+return|;
+comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+return|return
+name|x
+operator|&&
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|==
+literal|4
+return|;
+comment|// no warning.
+block|}
+end_function
+
 end_unit
 

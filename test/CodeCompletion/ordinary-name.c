@@ -1,4 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_include
+include|#
+directive|include
+file|<reserved.h>
+end_include
+
 begin_struct
 struct|struct
 name|X
@@ -18,6 +24,14 @@ name|TYPEDEF
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|struct
+name|t
+name|_TYPEDEF
+typedef|;
+end_typedef
+
 begin_function
 name|void
 name|foo
@@ -29,7 +43,23 @@ decl_stmt|;
 end_function
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: %clang_cc1 -isystem %S/Inputs -fsyntax-only -code-completion-at=%s:6:9 %s -o - | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC1: _Imaginary
+end_comment
+
+begin_comment
+comment|// CHECK-CC1-NOT: _INTEGER_TYPE;
+end_comment
+
+begin_comment
+comment|// CHECK-CC1: _TYPEDEF
+end_comment
+
+begin_comment
+comment|// CHECK-CC1: FLOATING_TYPE
 end_comment
 
 begin_comment
@@ -37,11 +67,11 @@ comment|// CHECK-CC1: foo
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: y
+comment|// CHECK-CC1: TYPEDEF
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: TYPEDEF
+comment|// CHECK-CC1: y
 end_comment
 
 end_unit

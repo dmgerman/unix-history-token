@@ -7626,6 +7626,10 @@ block|,
 comment|/// CK_BitCast - Used for reinterpret_cast.
 name|CK_BitCast
 block|,
+comment|/// CK_LValueBitCast - Used for reinterpret_cast of expressions to
+comment|/// a reference type.
+name|CK_LValueBitCast
+block|,
 comment|/// CK_NoOp - Used for const_cast.
 name|CK_NoOp
 block|,
@@ -7768,6 +7772,9 @@ name|CK_Unknown
 case|:
 case|case
 name|CK_BitCast
+case|:
+case|case
+name|CK_LValueBitCast
 case|:
 case|case
 name|CK_NoOp

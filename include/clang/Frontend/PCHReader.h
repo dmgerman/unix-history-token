@@ -263,6 +263,9 @@ name|class
 name|NamedDecl
 decl_stmt|;
 name|class
+name|PCHDeserializationListener
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -277,6 +280,32 @@ decl_stmt|;
 struct_decl|struct
 name|HeaderFileInfo
 struct_decl|;
+struct|struct
+name|PCHPredefinesBlock
+block|{
+comment|/// \brief The file ID for this predefines buffer in a PCH file.
+name|FileID
+name|BufferID
+decl_stmt|;
+comment|/// \brief This predefines buffer in a PCH file.
+name|llvm
+operator|::
+name|StringRef
+name|Data
+expr_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PCHPredefinesBlock
+operator|,
+literal|2
+operator|>
+name|PCHPredefinesBlocks
+expr_stmt|;
 comment|/// \brief Abstract interface for callback invocations by the PCHReader.
 comment|///
 comment|/// While reading a PCH file, the PCHReader will call the methods of the
@@ -329,10 +358,7 @@ return|;
 block|}
 comment|/// \brief Receives the contents of the predefines buffer.
 comment|///
-comment|/// \param PCHPredef The start of the predefines buffer in the PCH
-comment|/// file.
-comment|///
-comment|/// \param PCHBufferID The FileID for the PCH predefines buffer.
+comment|/// \param Buffers Information about the predefines buffers.
 comment|///
 comment|/// \param OriginalFileName The original file name for the PCH, which will
 comment|/// appear as an entry in the predefines buffer.
@@ -345,13 +371,10 @@ name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|PCHPredef
-argument_list|,
-name|FileID
-name|PCHBufferID
+specifier|const
+name|PCHPredefinesBlocks
+operator|&
+name|Buffers
 argument_list|,
 name|llvm
 operator|::
@@ -462,9 +485,7 @@ name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-argument|llvm::StringRef PCHPredef
-argument_list|,
-argument|FileID PCHBufferID
+argument|const PCHPredefinesBlocks&Buffers
 argument_list|,
 argument|llvm::StringRef OriginalFileName
 argument_list|,
@@ -550,7 +571,7 @@ name|PCHValidator
 decl_stmt|;
 name|private
 label|:
-comment|/// \ brief The receiver of some callbacks invoked by PCHReader.
+comment|/// \brief The receiver of some callbacks invoked by PCHReader.
 name|llvm
 operator|::
 name|OwningPtr
@@ -559,6 +580,11 @@ name|PCHReaderListener
 operator|>
 name|Listener
 expr_stmt|;
+comment|/// \brief The receiver of deserialization events.
+name|PCHDeserializationListener
+modifier|*
+name|DeserializationListener
+decl_stmt|;
 name|SourceManager
 modifier|&
 name|SourceMgr
@@ -1274,20 +1300,10 @@ name|PrevKind
 block|; }
 block|}
 empty_stmt|;
-comment|/// \brief The file ID for the predefines buffer in the PCH file.
-name|FileID
-name|PCHPredefinesBufferID
-decl_stmt|;
-comment|/// \brief Pointer to the beginning of the predefines buffer in the
-comment|/// PCH file.
-specifier|const
-name|char
-modifier|*
-name|PCHPredefines
-decl_stmt|;
-comment|/// \brief Length of the predefines buffer in the PCH file.
-name|unsigned
-name|PCHPredefinesLen
+comment|/// \brief All predefines buffers in all PCH files, to be treated as if
+comment|/// concatenated.
+name|PCHPredefinesBlocks
+name|PCHPredefinesBuffers
 decl_stmt|;
 comment|/// \brief Suggested contents of the predefines buffer, after this
 comment|/// PCH file has been processed.
@@ -1329,17 +1345,9 @@ name|ReadPCHBlock
 parameter_list|()
 function_decl|;
 name|bool
-name|CheckPredefinesBuffer
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|PCHPredef
-argument_list|,
-name|FileID
-name|PCHBufferID
-argument_list|)
-decl_stmt|;
+name|CheckPredefinesBuffers
+parameter_list|()
+function_decl|;
 name|bool
 name|ParseLineTable
 argument_list|(
@@ -1559,6 +1567,19 @@ name|listener
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|setDeserializationListener
+parameter_list|(
+name|PCHDeserializationListener
+modifier|*
+name|Listener
+parameter_list|)
+block|{
+name|DeserializationListener
+operator|=
+name|Listener
+expr_stmt|;
+block|}
 comment|/// \brief Set the Preprocessor to use.
 name|void
 name|setPreprocessor
@@ -1646,6 +1667,44 @@ name|void
 name|ReadPreprocessedEntities
 parameter_list|()
 function_decl|;
+comment|/// \brief Returns the number of types found in this file.
+name|unsigned
+name|getTotalNumTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|TypesLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the number of declarations found in this file.
+name|unsigned
+name|getTotalNumDecls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|DeclsLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
 comment|/// given TemplateArgument kind.
 name|TemplateArgumentLocInfo

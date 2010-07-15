@@ -186,7 +186,6 @@ name|raw_ostream
 operator|*
 name|OS
 argument_list|,
-specifier|const
 name|PCHReader
 operator|*
 name|Chain

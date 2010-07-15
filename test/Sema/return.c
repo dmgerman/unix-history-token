@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -Wreturn-type -Xclang -verify -fblocks -Wno-unreachable-code -Wno-unused-value
+comment|// RUN: %clang %s -fsyntax-only -Wignored-qualifiers -Wreturn-type -Xclang -verify -fblocks -Wno-unreachable-code -Wno-unused-value
 end_comment
 
 begin_comment
@@ -1085,6 +1085,35 @@ end_function
 
 begin_comment
 comment|// expected-warning{{control reaches end of non-void function}}
+end_comment
+
+begin_comment
+comment|// Test warnings on ignored qualifiers on return types.
+end_comment
+
+begin_function_decl
+specifier|const
+name|int
+name|ignored_c_quals
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{'const' type qualifier on return type has no effect}}
+end_comment
+
+begin_function_decl
+specifier|const
+specifier|volatile
+name|int
+name|ignored_cv_quals
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{'const volatile' type qualifiers on return type have no effect}}
 end_comment
 
 end_unit

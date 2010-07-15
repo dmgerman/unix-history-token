@@ -301,6 +301,16 @@ name|LatestBranchIndex
 decl_stmt|;
 block|}
 struct|;
+enum|enum
+name|CleanupKind
+block|{
+name|NormalAndEHCleanup
+block|,
+name|EHCleanup
+block|,
+name|NormalCleanup
+block|}
+enum|;
 comment|/// A stack of scopes which respond to exceptions, including cleanups
 comment|/// and catch blocks.
 name|class
@@ -412,6 +422,52 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// A lazy cleanup.  Subclasses must be POD-like:  cleanups will
+comment|/// not be destructed, and they will be allocated on the cleanup
+comment|/// stack and freely copied and moved around.
+comment|///
+comment|/// LazyCleanup implementations should generally be declared in an
+comment|/// anonymous namespace.
+name|class
+name|LazyCleanup
+block|{
+name|public
+label|:
+comment|// Anchor the construction vtable.  We use the destructor because
+comment|// gcc gives an obnoxious warning if there are virtual methods
+comment|// with an accessible non-virtual destructor.  Unfortunately,
+comment|// declaring this destructor makes it non-trivial, but there
+comment|// doesn't seem to be any other way around this warning.
+comment|//
+comment|// This destructor will never be called.
+name|virtual
+operator|~
+name|LazyCleanup
+argument_list|()
+expr_stmt|;
+comment|/// Emit the cleanup.  For normal cleanups, this is run in the
+comment|/// same EH context as when the cleanup was pushed, i.e. the
+comment|/// immediately-enclosing context of the cleanup scope.  For
+comment|/// EH cleanups, this is run in a terminate context.
+comment|///
+comment|// \param IsForEHCleanup true if this is for an EH cleanup, false
+comment|///  if for a normal cleanup.
+name|virtual
+name|void
+name|Emit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|bool
+name|IsForEHCleanup
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
 name|private
 label|:
 comment|// The implementation for this class is in CGException.h and
@@ -485,6 +541,17 @@ name|void
 name|popNullFixups
 parameter_list|()
 function_decl|;
+name|void
+modifier|*
+name|pushLazyCleanup
+parameter_list|(
+name|CleanupKind
+name|K
+parameter_list|,
+name|size_t
+name|DataSize
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|EHScopeStack
@@ -530,6 +597,287 @@ name|delete
 index|[]
 name|StartOfBuffer
 block|; }
+comment|// Variadic templates would make this not terrible.
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|()
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|,
+name|class
+name|A2
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|,
+argument|A2 a2
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|,
+name|class
+name|A2
+operator|,
+name|class
+name|A3
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|,
+argument|A2 a2
+argument_list|,
+argument|A3 a3
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
 comment|/// Push a cleanup on the stack.
 name|void
 name|pushCleanup
@@ -1125,16 +1473,6 @@ modifier|&
 name|FinallyInfo
 parameter_list|)
 function_decl|;
-enum|enum
-name|CleanupKind
-block|{
-name|NormalAndEHCleanup
-block|,
-name|EHCleanup
-block|,
-name|NormalCleanup
-block|}
-enum|;
 comment|/// PushDestructorCleanup - Push a cleanup to call the
 comment|/// complete-object destructor of an object of the given type at the
 comment|/// given address.  Does nothing if T is not a C++ class type with a

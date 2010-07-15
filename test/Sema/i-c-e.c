@@ -391,7 +391,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{expression result unused}} \
+end_comment
+
+begin_comment
+comment|// expected-warning {{use of logical || with constant operand}}
 end_comment
 
 begin_decl_stmt

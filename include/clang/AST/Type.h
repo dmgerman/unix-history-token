@@ -2716,11 +2716,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine the type of an expression that calls a function of
+comment|/// \brief Determine the type of a (typically non-lvalue) expression with the
 end_comment
 
 begin_comment
-comment|/// with the given result type.
+comment|/// specified result type.
 end_comment
 
 begin_comment
@@ -2728,7 +2728,15 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This routine removes a top-level reference (since there are no
+comment|/// This routine should be used for expressions for which the return type is
+end_comment
+
+begin_comment
+comment|/// explicitly specified (e.g., in a cast or call) and isn't necessarily
+end_comment
+
+begin_comment
+comment|/// an lvalue. It removes a top-level reference (since there are no
 end_comment
 
 begin_comment
@@ -2741,7 +2749,7 @@ end_comment
 
 begin_decl_stmt
 name|QualType
-name|getCallResultType
+name|getNonLValueExprType
 argument_list|(
 name|ASTContext
 operator|&
@@ -3353,6 +3361,29 @@ name|CachedLinkage
 range|:
 literal|2
 decl_stmt|;
+comment|/// \brief FromPCH - Whether this type comes from a PCH file.
+name|mutable
+name|bool
+name|FromPCH
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Set whether this type comes from a PCH file.
+name|void
+name|setFromPCH
+argument_list|(
+name|bool
+name|V
+operator|=
+name|true
+argument_list|)
+decl|const
+block|{
+name|FromPCH
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|protected
 label|:
 comment|/// \brief Compute the linkage of this type.
@@ -3366,7 +3397,7 @@ enum|enum
 block|{
 name|BitsRemainingInType
 init|=
-literal|20
+literal|19
 block|}
 enum|;
 comment|// silence VC++ warning C4355: 'this' : used in base member initializer list
@@ -3423,7 +3454,12 @@ argument_list|)
 operator|,
 name|CachedLinkage
 argument_list|(
-argument|NoLinkage
+name|NoLinkage
+argument_list|)
+operator|,
+name|FromPCH
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|virtual
@@ -3459,6 +3495,16 @@ operator|>
 operator|(
 name|TC
 operator|)
+return|;
+block|}
+comment|/// \brief Whether this type comes from a PCH file.
+name|bool
+name|isFromPCH
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FromPCH
 return|;
 block|}
 name|bool
@@ -7797,7 +7843,7 @@ return|return
 name|getResultType
 argument_list|()
 operator|.
-name|getCallResultType
+name|getNonLValueExprType
 argument_list|(
 name|Context
 argument_list|)

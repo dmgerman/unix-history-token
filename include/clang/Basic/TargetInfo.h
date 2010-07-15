@@ -249,6 +249,11 @@ name|HasAlignMac68kSupport
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|RealTypeUsesObjCFPRet
+range|:
+literal|3
+decl_stmt|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
 argument_list|(
@@ -309,6 +314,18 @@ block|,
 name|SignedLongLong
 block|,
 name|UnsignedLongLong
+block|}
+enum|;
+enum|enum
+name|RealType
+block|{
+name|Float
+init|=
+literal|0
+block|,
+name|Double
+block|,
+name|LongDouble
 block|}
 enum|;
 name|protected
@@ -938,6 +955,26 @@ name|IntType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Check whether the given real type should use the "fpret" flavor of
+comment|/// Obj-C message passing on this target.
+name|bool
+name|useObjCFPRetForRealType
+argument_list|(
+name|RealType
+name|T
+argument_list|)
+decl|const
+block|{
+return|return
+name|RealTypeUsesObjCFPRet
+operator|&
+operator|(
+literal|1
+operator|<<
+name|T
+operator|)
+return|;
+block|}
 comment|///===---- Other target property query methods --------------------------===//
 comment|/// getTargetDefines - Appends the target-specific #define values for this
 comment|/// target set to the specified buffer.

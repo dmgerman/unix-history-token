@@ -773,6 +773,24 @@ name|Id2
 argument_list|)
 decl|const
 decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArg
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|,
+name|OptSpecifier
+name|Id3
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getArgString - Return the input argument string at \arg Index.
 name|virtual
 specifier|const

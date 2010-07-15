@@ -981,7 +981,7 @@ return|return
 name|getResultType
 argument_list|()
 operator|.
-name|getCallResultType
+name|getNonLValueExprType
 argument_list|(
 name|getASTContext
 argument_list|()

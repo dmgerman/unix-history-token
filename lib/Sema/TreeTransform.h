@@ -20155,33 +20155,6 @@ argument_list|()
 return|;
 end_if
 
-begin_comment
-comment|// Set DeclContext if inside a Block.
-end_comment
-
-begin_if
-if|if
-condition|(
-name|BlockScopeInfo
-modifier|*
-name|CurBlock
-init|=
-name|SemaRef
-operator|.
-name|getCurBlock
-argument_list|()
-condition|)
-name|ND
-operator|->
-name|setDeclContext
-argument_list|(
-name|CurBlock
-operator|->
-name|TheDecl
-argument_list|)
-expr_stmt|;
-end_if
-
 begin_if
 if|if
 condition|(

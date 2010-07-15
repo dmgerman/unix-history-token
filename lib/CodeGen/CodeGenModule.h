@@ -1766,15 +1766,24 @@ operator|*
 name|F
 argument_list|)
 decl_stmt|;
-comment|/// ReturnTypeUsesSret - Return true iff the given type uses 'sret' when used
+comment|/// ReturnTypeUsesSRet - Return true iff the given type uses 'sret' when used
 comment|/// as a return type.
 name|bool
-name|ReturnTypeUsesSret
+name|ReturnTypeUsesSRet
 parameter_list|(
 specifier|const
 name|CGFunctionInfo
 modifier|&
 name|FI
+parameter_list|)
+function_decl|;
+comment|/// ReturnTypeUsesSret - Return true iff the given type uses 'fpret' when used
+comment|/// as a return type.
+name|bool
+name|ReturnTypeUsesFPRet
+parameter_list|(
+name|QualType
+name|ResultType
 parameter_list|)
 function_decl|;
 comment|/// ConstructAttributeList - Get the LLVM attributes and calling convention to

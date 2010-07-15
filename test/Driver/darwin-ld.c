@@ -251,5 +251,45 @@ begin_comment
 comment|// LINK_IPHONE_3_1: -lSystem
 end_comment
 
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -fpie %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_EXPLICIT_PIE %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_EXPLICIT_PIE: ld"
+end_comment
+
+begin_comment
+comment|// LINK_EXPLICIT_PIE: "-pie"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -fno-pie %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_EXPLICIT_NO_PIE %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_EXPLICIT_NO_PIE: ld"
+end_comment
+
+begin_comment
+comment|// LINK_EXPLICIT_NO_PIE: "-no_pie"
+end_comment
+
 end_unit
 

@@ -90,8 +90,7 @@ parameter_list|()
 init|=
 name|IFP
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int const (^)()' with an expression of type 'int (^)()'}} \
-comment|// expected-warning{{type qualifier on return type has no effect}}
+comment|// expected-error {{incompatible block pointer types initializing 'int const (^)()' with an expression of type 'int (^)()'}}
 specifier|const
 name|int
 function_decl|(
@@ -102,7 +101,6 @@ parameter_list|()
 init|=
 name|CIC
 function_decl|;
-comment|// expected-warning{{type qualifier on return type has no effect}}
 name|int
 modifier|*
 specifier|const

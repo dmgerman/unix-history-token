@@ -28,10 +28,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// expected-warning{{type qualifier on return type has no effect}}
-end_comment
-
 begin_decl_stmt
 name|struct
 name|S

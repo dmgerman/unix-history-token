@@ -204,6 +204,12 @@ operator|::
 name|string
 name|Dir
 expr_stmt|;
+comment|/// The original path to the clang executable.
+name|std
+operator|::
+name|string
+name|ClangExecutable
+expr_stmt|;
 comment|/// The path to the compiler resource directory.
 name|std
 operator|::
@@ -480,6 +486,18 @@ name|DriverTitle
 operator|=
 name|Value
 expr_stmt|;
+block|}
+comment|/// \brief Get the path to the main clang executable.
+name|std
+operator|::
+name|string
+name|getClangProgramPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ClangExecutable
+return|;
 block|}
 comment|/// @}
 comment|/// @name Primary Functionality

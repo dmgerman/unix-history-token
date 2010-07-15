@@ -331,8 +331,6 @@ operator|::
 name|string
 name|GetFilePath
 argument_list|(
-argument|const Compilation&C
-argument_list|,
 argument|const char *Name
 argument_list|)
 specifier|const
@@ -342,8 +340,6 @@ operator|::
 name|string
 name|GetProgramPath
 argument_list|(
-argument|const Compilation&C
-argument_list|,
 argument|const char *Name
 argument_list|,
 argument|bool WantFile = false
