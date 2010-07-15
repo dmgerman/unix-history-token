@@ -475,13 +475,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TUKLIB_FAST_UNALIGNED_ACCESS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|TUKLIB_PHYSMEM_SYSCONF
 value|1
 end_define
