@@ -3368,6 +3368,12 @@ name|char
 modifier|*
 name|compilewith
 decl_stmt|;
+name|char
+name|cmd
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|ftp
@@ -3603,13 +3609,6 @@ name|ftype
 init|=
 name|NULL
 decl_stmt|;
-specifier|static
-name|char
-name|cmd
-index|[
-literal|128
-index|]
-decl_stmt|;
 switch|switch
 condition|(
 name|ftp
@@ -3658,7 +3657,9 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"${%s_%c%s}\n.if defined(NORMAL_CTFCONVERT)&& !empty(NORMAL_CTFCONVERT)\n\t${NORMAL_CTFCONVERT}\n.endif"
+literal|"${%s_%c%s}\n.if defined(NORMAL_CTFCONVERT)&& "
+literal|"!empty(NORMAL_CTFCONVERT)\n"
+literal|"\t${NORMAL_CTFCONVERT}\n.endif"
 argument_list|,
 name|ftype
 argument_list|,
