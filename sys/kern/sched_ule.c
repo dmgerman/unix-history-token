@@ -11170,6 +11170,15 @@ argument_list|,
 literal|"</cpu>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cg
+operator|->
+name|cg_flags
+operator|!=
+literal|0
+condition|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11181,15 +11190,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cg
-operator|->
-name|cg_flags
-operator|!=
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -11247,7 +11247,6 @@ argument_list|,
 literal|"<flag name=\"SMT\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11255,6 +11254,7 @@ argument_list|,
 literal|"</flags>\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cg
