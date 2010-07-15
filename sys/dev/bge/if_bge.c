@@ -15462,7 +15462,7 @@ argument_list|)
 condition|)
 name|reset
 operator||=
-literal|0x04000000
+name|BGE_MISCCFG_GPHY_PD_OVERRIDE
 expr_stmt|;
 comment|/* Issue global reset */
 name|write_op
