@@ -82,69 +82,6 @@ comment|/* END: These are going away */
 end_comment
 
 begin_comment
-comment|/*  * The first TLB entry that write random hits.  * TLB entry 0 maps the kernel stack of the currently running thread  * TLB entry 1 maps the pcpu area of processor (only for SMP builds)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSTACK_TLB_ENTRY
-value|0
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCPU_TLB_ENTRY
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMWIRED_ENTRIES
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|VMWIRED_ENTRIES
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
-
-begin_comment
-comment|/*  * The number of process id entries.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMNUM_PIDS
-value|256
-end_define
-
-begin_comment
 comment|/*  * Exported definitions unique to mips cpu support.  */
 end_comment
 
