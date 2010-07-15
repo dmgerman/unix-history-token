@@ -708,7 +708,7 @@ name|pcBetween
 argument_list|(
 name|savectx
 argument_list|,
-name|mips_cpu_throw
+name|cpu_throw
 argument_list|)
 condition|)
 name|subr
@@ -723,7 +723,7 @@ if|if
 condition|(
 name|pcBetween
 argument_list|(
-name|mips_cpu_throw
+name|cpu_throw
 argument_list|,
 name|cpu_switch
 argument_list|)
