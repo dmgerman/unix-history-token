@@ -5359,7 +5359,7 @@ case|case
 name|O_DIVERTED
 case|:
 block|{
-comment|/* For diverted packets, args->rule.info 				 * contains the divert port (in host format) 				 * reason and direction. 	 			 */
+comment|/* For diverted packets, args->rule.info 				 * contains the divert port (in host format) 				 * reason and direction. 				 */
 name|uint32_t
 name|i
 init|=
