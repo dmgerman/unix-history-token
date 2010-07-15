@@ -568,13 +568,6 @@ operator|->
 name|dst_port
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"BKT Prot ___Source IP/port____ "
-literal|"____Dest. IP/port____ "
-literal|"Tot_pkt/bytes Pkt/Byte Drp\n"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -665,6 +658,37 @@ operator|->
 name|dst_port
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|print_header
+parameter_list|(
+name|struct
+name|ipfw_flow_id
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|IS_IP6_FLOW_ID
+argument_list|(
+name|id
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"BKT Prot ___Source IP/port____ "
+literal|"____Dest. IP/port____ "
+literal|"Tot_pkt/bytes Pkt/Byte Drp\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"BKT ___Prot___ _flow-id_ "
@@ -673,7 +697,6 @@ literal|"_______________Dest. IPv6/port_______________ "
 literal|"Tot_pkt/bytes Pkt/Byte Drp\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -686,6 +709,10 @@ name|struct
 name|dn_flow
 modifier|*
 name|ni
+parameter_list|,
+name|int
+modifier|*
+name|print
 parameter_list|)
 block|{
 name|char
@@ -698,6 +725,8 @@ name|struct
 name|protoent
 modifier|*
 name|pe
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|in_addr
@@ -713,6 +742,26 @@ name|ni
 operator|->
 name|fid
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|print
+condition|)
+block|{
+name|print_header
+argument_list|(
+operator|&
+name|ni
+operator|->
+name|fid
+argument_list|)
+expr_stmt|;
+operator|*
+name|print
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|pe
 operator|=
 name|getprotobynumber
@@ -1382,6 +1431,12 @@ literal|160
 index|]
 decl_stmt|;
 comment|/* pending buffer */
+name|int
+name|toPrint
+init|=
+literal|1
+decl_stmt|;
+comment|/* print header */
 name|buf
 index|[
 literal|0
@@ -1658,6 +1713,9 @@ name|dn_flow
 operator|*
 operator|)
 name|oid
+argument_list|,
+operator|&
+name|toPrint
 argument_list|)
 expr_stmt|;
 break|break;
