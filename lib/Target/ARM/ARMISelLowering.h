@@ -169,6 +169,8 @@ comment|// ARM conditional move instructions.
 name|CNEG
 block|,
 comment|// ARM conditional negate instructions.
+name|BCC_i64
+block|,
 name|RBIT
 block|,
 comment|// ARM bitreverse instruction
@@ -313,6 +315,11 @@ comment|// zero-extend vector extract element
 name|VGETLANEs
 block|,
 comment|// sign-extend vector extract element
+comment|// Vector move immediate and move negated immediate:
+name|VMOVIMM
+block|,
+name|VMVNIMM
+block|,
 comment|// Vector duplicate:
 name|VDUP
 block|,
@@ -358,28 +365,6 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
 block|{
-comment|/// getNEONModImm - If this is a valid vector constant for a NEON
-comment|/// instruction with a "modified immediate" operand (e.g., VMOV) of the
-comment|/// specified element size, return the encoded value for that immediate.
-comment|/// The ByteSize field indicates the number of bytes of each element [1248].
-name|SDValue
-name|getNEONModImm
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|,
-name|unsigned
-name|ByteSize
-parameter_list|,
-name|bool
-name|isVMOV
-parameter_list|,
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|)
-function_decl|;
 comment|/// getVFPf32Imm / getVFPf64Imm - If the given fp immediate can be
 comment|/// materialized with a VMOV.f32 / VMOV.f64 (i.e. fconsts / fconstd)
 comment|/// instruction, returns its 8-bit integer representation. Otherwise,
@@ -1357,7 +1342,7 @@ name|CC
 argument_list|,
 name|SDValue
 operator|&
-name|ARMCC
+name|ARMcc
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -1372,21 +1357,10 @@ name|SDValue
 name|getVFPCmp
 argument_list|(
 name|SDValue
-operator|&
 name|LHS
 argument_list|,
 name|SDValue
-operator|&
 name|RHS
-argument_list|,
-name|ISD
-operator|::
-name|CondCode
-name|CC
-argument_list|,
-name|SDValue
-operator|&
-name|ARMCC
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -1394,6 +1368,18 @@ name|DAG
 argument_list|,
 name|DebugLoc
 name|dl
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|OptimizeVFPBrcond
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;

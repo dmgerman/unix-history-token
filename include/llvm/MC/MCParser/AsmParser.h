@@ -467,10 +467,7 @@ block|;
 name|bool
 name|ParseAssignment
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|)
 block|;
 name|bool

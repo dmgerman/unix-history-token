@@ -151,7 +151,7 @@ comment|/// -enable-unsafe-fp-math flag is specified on the command line.  When
 comment|/// this flag is off (the default), the code generator is not allowed to
 comment|/// produce results that are "less precise" than IEEE allows.  This includes
 comment|/// use of X86 instructions like FSIN and FCOS instead of libcalls.
-comment|/// UnsafeFPMath implies FiniteOnlyFPMath and LessPreciseFPMAD.
+comment|/// UnsafeFPMath implies LessPreciseFPMAD.
 specifier|extern
 name|bool
 name|UnsafeFPMath

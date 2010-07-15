@@ -1145,12 +1145,6 @@ name|PhysReg
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// processImplicitDefs - Process IMPLICIT_DEF instructions. Add isUndef
-comment|/// marker to implicit_def defs and their uses.
-name|void
-name|processImplicitDefs
-parameter_list|()
-function_decl|;
 comment|/// intervalIsInOneMBB - Returns true if the specified interval is entirely
 comment|/// within a single basic block.
 name|bool

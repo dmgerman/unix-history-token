@@ -155,7 +155,7 @@ name|virtual
 name|bool
 name|ParseInstruction
 argument_list|(
-argument|const StringRef&Name
+argument|StringRef Name
 argument_list|,
 argument|SMLoc NameLoc
 argument_list|,

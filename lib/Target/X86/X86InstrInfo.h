@@ -1032,6 +1032,16 @@ init|=
 literal|1ULL
 operator|<<
 literal|35
+block|,
+comment|// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
+comment|// instruction uses 256-bit wide registers. This is usually auto detected if
+comment|// a VR256 register is used, but some AVX instructions also have this field
+comment|// marked when using a f256 memory references.
+name|VEX_L
+init|=
+literal|1ULL
+operator|<<
+literal|36
 block|}
 enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the

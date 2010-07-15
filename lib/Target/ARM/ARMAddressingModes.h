@@ -2049,9 +2049,8 @@ comment|// addrmode6 := reg with optional alignment
 comment|//
 comment|// This is stored in two operands [regaddr, align].  The first is the
 comment|// address register.  The second operand is the value of the alignment
-comment|// specifier to use or zero if no explicit alignment.
-comment|// Valid alignments are: 0, 8, 16, and 32 bytes, depending on the specific
-comment|// instruction.
+comment|// specifier in bytes or zero if no explicit alignment.
+comment|// Valid alignments depend on the specific instruction.
 comment|//===--------------------------------------------------------------------===//
 comment|// NEON Modified Immediates
 comment|//===--------------------------------------------------------------------===//

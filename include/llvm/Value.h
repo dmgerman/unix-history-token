@@ -779,6 +779,17 @@ operator|->
 name|SubclassOptionalData
 expr_stmt|;
 block|}
+comment|/// hasValueHandle - Return true if there is a value handle associated with
+comment|/// this value.
+name|bool
+name|hasValueHandle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasValueHandle
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

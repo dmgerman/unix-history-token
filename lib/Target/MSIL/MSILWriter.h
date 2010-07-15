@@ -1132,7 +1132,7 @@ name|char
 operator|*
 name|getLibraryForSymbol
 argument_list|(
-argument|const StringRef&Name
+argument|StringRef Name
 argument_list|,
 argument|bool isFunction
 argument_list|,

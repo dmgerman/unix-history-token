@@ -2097,8 +2097,6 @@ argument|unsigned loadOpc
 argument_list|,
 argument|unsigned cxchgOpc
 argument_list|,
-argument|unsigned copyOpc
-argument_list|,
 argument|unsigned notOpc
 argument_list|,
 argument|unsigned EAXreg

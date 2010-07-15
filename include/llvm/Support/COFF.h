@@ -48,7 +48,7 @@ comment|// Structures and enums defined within this file where created using
 end_comment
 
 begin_comment
-comment|// information from Microsofts publicly available PE/COFF format document:
+comment|// information from Microsoft's publicly available PE/COFF format document:
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// As of 5/2/2010, hosted by microsoft at:
+comment|// As of 5/2/2010, hosted by Microsoft at:
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ decl_stmt|;
 block|}
 struct|;
 enum|enum
-name|symbol_flags
+name|SymbolFlags
 block|{
 name|SF_TypeMask
 init|=
@@ -214,94 +214,117 @@ init|=
 literal|0x01000000
 block|}
 enum|;
+comment|/// Storage class tells where and what the symbol represents
 enum|enum
-name|symbol_storage_class
+name|SymbolStorageClass
 block|{
 name|IMAGE_SYM_CLASS_END_OF_FUNCTION
 init|=
 operator|-
 literal|1
 block|,
+comment|///< Physical end of function
 name|IMAGE_SYM_CLASS_NULL
 init|=
 literal|0
 block|,
+comment|///< No symbol
 name|IMAGE_SYM_CLASS_AUTOMATIC
 init|=
 literal|1
 block|,
+comment|///< Stack variable
 name|IMAGE_SYM_CLASS_EXTERNAL
 init|=
 literal|2
 block|,
+comment|///< External symbol
 name|IMAGE_SYM_CLASS_STATIC
 init|=
 literal|3
 block|,
+comment|///< Static
 name|IMAGE_SYM_CLASS_REGISTER
 init|=
 literal|4
 block|,
+comment|///< Register variable
 name|IMAGE_SYM_CLASS_EXTERNAL_DEF
 init|=
 literal|5
 block|,
+comment|///< External definition
 name|IMAGE_SYM_CLASS_LABEL
 init|=
 literal|6
 block|,
+comment|///< Label
 name|IMAGE_SYM_CLASS_UNDEFINED_LABEL
 init|=
 literal|7
 block|,
+comment|///< Undefined label
 name|IMAGE_SYM_CLASS_MEMBER_OF_STRUCT
 init|=
 literal|8
 block|,
+comment|///< Member of structure
 name|IMAGE_SYM_CLASS_ARGUMENT
 init|=
 literal|9
 block|,
+comment|///< Function argument
 name|IMAGE_SYM_CLASS_STRUCT_TAG
 init|=
 literal|10
 block|,
+comment|///< Structure tag
 name|IMAGE_SYM_CLASS_MEMBER_OF_UNION
 init|=
 literal|11
 block|,
+comment|///< Member of union
 name|IMAGE_SYM_CLASS_UNION_TAG
 init|=
 literal|12
 block|,
+comment|///< Union tag
 name|IMAGE_SYM_CLASS_TYPE_DEFINITION
 init|=
 literal|13
 block|,
+comment|///< Type definition
 name|IMAGE_SYM_CLASS_UNDEFINED_STATIC
 init|=
 literal|14
 block|,
+comment|///< Undefined static
 name|IMAGE_SYM_CLASS_ENUM_TAG
 init|=
 literal|15
 block|,
+comment|///< Enumeration tag
 name|IMAGE_SYM_CLASS_MEMBER_OF_ENUM
 init|=
 literal|16
 block|,
+comment|///< Member of enumeration
 name|IMAGE_SYM_CLASS_REGISTER_PARAM
 init|=
 literal|17
 block|,
+comment|///< Register parameter
 name|IMAGE_SYM_CLASS_BIT_FIELD
 init|=
 literal|18
 block|,
+comment|///< Bit field
+comment|/// ".bb" or ".eb" - beginning or end of block
 name|IMAGE_SYM_CLASS_BLOCK
 init|=
 literal|100
 block|,
+comment|/// ".bf" or ".ef" - beginning or end of function
 name|IMAGE_SYM_CLASS_FUNCTION
 init|=
 literal|101
@@ -310,10 +333,13 @@ name|IMAGE_SYM_CLASS_END_OF_STRUCT
 init|=
 literal|102
 block|,
+comment|///< End of structure
 name|IMAGE_SYM_CLASS_FILE
 init|=
 literal|103
 block|,
+comment|///< File name
+comment|/// Line number, reformatted as symbol
 name|IMAGE_SYM_CLASS_SECTION
 init|=
 literal|104
@@ -322,9 +348,124 @@ name|IMAGE_SYM_CLASS_WEAK_EXTERNAL
 init|=
 literal|105
 block|,
+comment|///< Duplicate tag
+comment|/// External symbol in dmert public lib
 name|IMAGE_SYM_CLASS_CLR_TOKEN
 init|=
 literal|107
+block|}
+enum|;
+enum|enum
+name|SymbolBaseType
+block|{
+name|IMAGE_SYM_TYPE_NULL
+init|=
+literal|0
+block|,
+comment|///< No type information or unknown base type.
+name|IMAGE_SYM_TYPE_VOID
+init|=
+literal|1
+block|,
+comment|///< Used with void pointers and functions.
+name|IMAGE_SYM_TYPE_CHAR
+init|=
+literal|2
+block|,
+comment|///< A character (signed byte).
+name|IMAGE_SYM_TYPE_SHORT
+init|=
+literal|3
+block|,
+comment|///< A 2-byte signed integer.
+name|IMAGE_SYM_TYPE_INT
+init|=
+literal|4
+block|,
+comment|///< A natural integer type on the target.
+name|IMAGE_SYM_TYPE_LONG
+init|=
+literal|5
+block|,
+comment|///< A 4-byte signed integer.
+name|IMAGE_SYM_TYPE_FLOAT
+init|=
+literal|6
+block|,
+comment|///< A 4-byte floating-point number.
+name|IMAGE_SYM_TYPE_DOUBLE
+init|=
+literal|7
+block|,
+comment|///< An 8-byte floating-point number.
+name|IMAGE_SYM_TYPE_STRUCT
+init|=
+literal|8
+block|,
+comment|///< A structure.
+name|IMAGE_SYM_TYPE_UNION
+init|=
+literal|9
+block|,
+comment|///< An union.
+name|IMAGE_SYM_TYPE_ENUM
+init|=
+literal|10
+block|,
+comment|///< An enumerated type.
+name|IMAGE_SYM_TYPE_MOE
+init|=
+literal|11
+block|,
+comment|///< A member of enumeration (a specific value).
+name|IMAGE_SYM_TYPE_BYTE
+init|=
+literal|12
+block|,
+comment|///< A byte; unsigned 1-byte integer.
+name|IMAGE_SYM_TYPE_WORD
+init|=
+literal|13
+block|,
+comment|///< A word; unsigned 2-byte integer.
+name|IMAGE_SYM_TYPE_UINT
+init|=
+literal|14
+block|,
+comment|///< An unsigned integer of natural size.
+name|IMAGE_SYM_TYPE_DWORD
+init|=
+literal|15
+comment|///< An unsigned 4-byte integer.
+block|}
+enum|;
+enum|enum
+name|SymbolComplexType
+block|{
+name|IMAGE_SYM_DTYPE_NULL
+init|=
+literal|0
+block|,
+comment|///< No complex type; simple scalar variable.
+name|IMAGE_SYM_DTYPE_POINTER
+init|=
+literal|1
+block|,
+comment|///< A pointer to base type.
+name|IMAGE_SYM_DTYPE_FUNCTION
+init|=
+literal|2
+block|,
+comment|///< A function that returns a base type.
+name|IMAGE_SYM_DTYPE_ARRAY
+init|=
+literal|3
+block|,
+comment|///< An array of base type.
+comment|/// Type is formed as (base + (derived<< SCT_COMPLEX_TYPE_SHIFT))
+name|SCT_COMPLEX_TYPE_SHIFT
+init|=
+literal|4
 block|}
 enum|;
 struct|struct
@@ -366,7 +507,7 @@ decl_stmt|;
 block|}
 struct|;
 enum|enum
-name|section_characteristics
+name|SectionCharacteristics
 block|{
 name|IMAGE_SCN_TYPE_NO_PAD
 init|=
@@ -524,7 +665,7 @@ decl_stmt|;
 block|}
 struct|;
 enum|enum
-name|relocation_type_x86
+name|RelocationTypeX86
 block|{
 name|IMAGE_REL_I386_ABSOLUTE
 init|=

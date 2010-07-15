@@ -335,24 +335,33 @@ name|void
 name|recomputeInsertPt
 parameter_list|()
 function_decl|;
+struct|struct
+name|SavePoint
+block|{
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPt
+expr_stmt|;
+name|DebugLoc
+name|DL
+decl_stmt|;
+block|}
+struct|;
 comment|/// enterLocalValueArea - Prepare InsertPt to begin inserting instructions
 comment|/// into the local value area and return the old insert position.
-name|MachineBasicBlock
-operator|::
-name|iterator
+name|SavePoint
 name|enterLocalValueArea
-argument_list|()
-expr_stmt|;
-comment|/// leaveLocalValueArea - Reset InsertPt to the given old insert position
+parameter_list|()
+function_decl|;
+comment|/// leaveLocalValueArea - Reset InsertPt to the given old insert position.
 name|void
 name|leaveLocalValueArea
-argument_list|(
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|OldInsertPt
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|SavePoint
+name|Old
+parameter_list|)
+function_decl|;
 name|virtual
 operator|~
 name|FastISel
@@ -903,15 +912,6 @@ return|;
 block|}
 name|private
 label|:
-name|bool
-name|SelectLoad
-parameter_list|(
-specifier|const
-name|User
-modifier|*
-name|I
-parameter_list|)
-function_decl|;
 name|bool
 name|SelectBinaryOp
 parameter_list|(

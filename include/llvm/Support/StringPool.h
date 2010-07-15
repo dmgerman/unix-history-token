@@ -217,9 +217,7 @@ comment|/// exists in the pool.
 name|PooledStringPtr
 name|intern
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|Str
 parameter_list|)
 function_decl|;
