@@ -964,11 +964,6 @@ name|td_proc
 expr_stmt|;
 name|td
 operator|->
-name|td_syscalls
-operator|++
-expr_stmt|;
-name|td
-operator|->
 name|td_pticks
 operator|=
 literal|0

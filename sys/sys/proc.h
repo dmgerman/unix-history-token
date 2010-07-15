@@ -881,10 +881,6 @@ modifier|*
 name|td_ar
 decl_stmt|;
 comment|/* (k) Active audit record, if any. */
-name|int
-name|td_syscalls
-decl_stmt|;
-comment|/* per-thread syscall count (used by NFS :)) */
 name|struct
 name|lpohead
 name|td_lprof
