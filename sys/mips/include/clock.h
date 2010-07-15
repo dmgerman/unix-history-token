@@ -42,7 +42,7 @@ parameter_list|(
 name|uint32_t
 parameter_list|,
 name|struct
-name|clockframe
+name|trapframe
 modifier|*
 parameter_list|)
 function_decl|;

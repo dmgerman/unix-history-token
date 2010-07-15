@@ -288,6 +288,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|u_int32_t
+name|set_intr_mask
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int32_t
+name|get_intr_mask
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
