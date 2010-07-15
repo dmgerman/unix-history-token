@@ -19,16 +19,6 @@ directive|define
 name|_MIPS_CPUREGS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_comment
-comment|/* For __CONCAT() */
-end_comment
-
 begin_if
 if|#
 directive|if
