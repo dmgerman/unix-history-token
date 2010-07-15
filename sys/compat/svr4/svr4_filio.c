@@ -86,18 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -201,14 +189,7 @@ name|uap
 operator|->
 name|nfds
 operator|>
-name|lim_cur
-argument_list|(
-name|td
-operator|->
-name|td_proc
-argument_list|,
-name|RLIMIT_NOFILE
-argument_list|)
+name|maxfilesperproc
 operator|&&
 name|uap
 operator|->
