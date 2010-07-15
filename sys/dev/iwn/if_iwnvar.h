@@ -1004,7 +1004,7 @@ parameter_list|(
 name|_sc
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->sc_dev), \ 	     MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init(&(_sc)->sc_mtx, device_get_nameunit((_sc)->sc_dev), \ 	    MTX_NETWORK_LOCK, MTX_DEF)
 end_define
 
 begin_define
