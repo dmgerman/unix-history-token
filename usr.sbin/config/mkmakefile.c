@@ -1643,8 +1643,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: missing include filename.\n"
 argument_list|,
 name|fname
@@ -1725,8 +1727,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: No type for %s.\n"
 argument_list|,
 name|fname
@@ -1845,8 +1849,10 @@ literal|"optional"
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s must be optional, mandatory or standard\n"
 argument_list|,
 name|fname
@@ -1912,8 +1918,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -1977,8 +1985,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: alternate rule required when "
 literal|"\"no-implicit-rule\" is specified.\n"
 argument_list|,
@@ -2034,8 +2044,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
@@ -2084,8 +2096,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing clean file list.\n"
 argument_list|,
 name|fname
@@ -2134,8 +2148,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing compile command string.\n"
 argument_list|,
 name|fname
@@ -2184,8 +2200,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s missing warning text string.\n"
 argument_list|,
 name|fname
@@ -2320,8 +2338,10 @@ condition|(
 name|mandatory
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: mandatory device \"%s\" not found\n"
 argument_list|,
 name|fname
@@ -2340,8 +2360,10 @@ condition|(
 name|std
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"standard entry %s has a device keyword - %s!\n"
 argument_list|,
 name|this
@@ -2403,8 +2425,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: what is %s optional on?\n"
 argument_list|,
 name|fname
@@ -2423,8 +2447,10 @@ condition|(
 name|wd
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -3389,8 +3415,10 @@ name|ftp
 operator|->
 name|f_warn
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"WARNING: %s\n"
 argument_list|,
 name|ftp
@@ -3639,8 +3667,10 @@ literal|"PROFILE"
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"config: don't know rules for %s\n"
 argument_list|,
 name|np

@@ -257,7 +257,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* printf("maxusers not specified; will auto-size\n"); */
+comment|/* fprintf(stderr, "maxusers not specified; will auto-size\n"); */
 block|}
 elseif|else
 if|if
@@ -269,8 +269,10 @@ operator|.
 name|u_min
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"minimum of %d maxusers assumed\n"
 argument_list|,
 name|users
@@ -294,8 +296,10 @@ name|users
 operator|.
 name|u_max
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"warning: maxusers> %d (%d)\n"
 argument_list|,
 name|users
@@ -500,8 +504,10 @@ name|OL_ALIAS
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Mapping option %s to %s.\n"
 argument_list|,
 name|op
@@ -568,8 +574,10 @@ literal|4
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: unknown option \"%s\"\n"
 argument_list|,
 name|PREFIX
@@ -720,8 +728,10 @@ argument_list|,
 name|oldvalue
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: option \"%s\" redefined from %s to %s\n"
 argument_list|,
 name|PREFIX
@@ -1021,8 +1031,10 @@ operator|!
 name|ol
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"WARNING: unknown option `%s' removed from %s\n"
 argument_list|,
 name|inw
@@ -1052,8 +1064,10 @@ name|o_file
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"WARNING: option `%s' moved from %s to %s\n"
 argument_list|,
 name|inw
@@ -1561,8 +1575,10 @@ name|this
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: Duplicate option %s.\n"
 argument_list|,
 name|fname
@@ -1737,8 +1753,10 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Compat option %s not listed in options file.\n"
 argument_list|,
 name|this
@@ -1906,10 +1924,12 @@ condition|(
 name|flags
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: compat file requires two words "
-literal|"per line at %s\n"
+name|stderr
+argument_list|,
+literal|"%s: compat file requires two"
+literal|" words per line at %s\n"
 argument_list|,
 name|fname
 argument_list|,
