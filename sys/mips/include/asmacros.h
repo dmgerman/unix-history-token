@@ -21,15 +21,15 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_comment
+comment|/*  * This appears to be a verbatim copy of an old version of amd64's  * asmacros.h and has no prayer of acatually working on mips.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 literal|0
 end_if
-
-begin_comment
-comment|/* XXX too much duplication in various asm*.h's. */
-end_comment
 
 begin_comment
 comment|/*  * CNAME and HIDENAME manage the relationship between symbol names in C  * and the equivalent assembly language names.  CNAME is given a name as  * it would be used in a C program.  It expands to the equivalent assembly  * language name.  HIDENAME is given an assembly-language name, and expands  * to a possibly-modified form that will be invisible to C programs.  */
