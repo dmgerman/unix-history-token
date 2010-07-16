@@ -259,7 +259,7 @@ name|LogicalAddress
 decl_stmt|;
 name|LogicalAddress
 operator|=
-name|AcpiOsMapMemory
+name|pmap_mapdev
 argument_list|(
 name|Address
 argument_list|,
@@ -330,8 +330,11 @@ name|LogicalAddress
 expr_stmt|;
 break|break;
 block|}
-name|AcpiOsUnmapMemory
+name|pmap_unmapdev
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|LogicalAddress
 argument_list|,
 name|Width
@@ -367,7 +370,7 @@ name|LogicalAddress
 decl_stmt|;
 name|LogicalAddress
 operator|=
-name|AcpiOsMapMemory
+name|pmap_mapdev
 argument_list|(
 name|Address
 argument_list|,
@@ -435,8 +438,11 @@ name|Value
 expr_stmt|;
 break|break;
 block|}
-name|AcpiOsUnmapMemory
+name|pmap_unmapdev
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|LogicalAddress
 argument_list|,
 name|Width
