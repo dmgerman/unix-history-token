@@ -11203,6 +11203,15 @@ argument_list|,
 literal|"</cpu>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cg
+operator|->
+name|cg_flags
+operator|!=
+literal|0
+condition|)
+block|{
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11214,15 +11223,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cg
-operator|->
-name|cg_flags
-operator|!=
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -11239,7 +11239,26 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"HTT\">HTT group</flag>\n"
+literal|"<flag name=\"HTT\">HTT group</flag>"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cg
+operator|->
+name|cg_flags
+operator|&
+name|CG_FLAG_THREAD
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"<flag name=\"THREAD\">THREAD group</flag>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11258,10 +11277,9 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<flag name=\"THREAD\">SMT group</flag>\n"
+literal|"<flag name=\"SMT\">SMT group</flag>"
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -11269,6 +11287,7 @@ argument_list|,
 literal|"</flags>\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cg
