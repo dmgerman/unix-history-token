@@ -2853,7 +2853,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to configure any Ethernet or SLIP/PPP network devices?"
+literal|"Would you like to configure any Ethernet network devices?"
 argument_list|)
 condition|)
 block|{
