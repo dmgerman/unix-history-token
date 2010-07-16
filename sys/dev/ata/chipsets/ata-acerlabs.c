@@ -723,6 +723,9 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 block|}
 name|ctlr
