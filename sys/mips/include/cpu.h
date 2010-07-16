@@ -160,23 +160,13 @@ begin_comment
 comment|/*  * A machine-independent interface to the CPU's counter.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|uint64_t
+begin_define
+define|#
+directive|define
 name|get_cyclecount
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|mips_rd_count
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
+parameter_list|()
+value|mips_rd_count()
+end_define
 
 begin_endif
 endif|#
