@@ -5419,7 +5419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function frees an open owner and all associated opens.  * Must be called with soft clock interrupts disabled.  */
+comment|/*  * This function frees an open owner and all associated opens.  */
 end_comment
 
 begin_function
@@ -6082,7 +6082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free an nfslock structure.  * Must be called with soft clock interrupts disabled.  */
+comment|/*  * Free an nfslock structure.  */
 end_comment
 
 begin_function
@@ -6144,7 +6144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function frees an nfslockfile structure.  * Must be called with soft clock interrupts disabled.  */
+comment|/*  * This function frees an nfslockfile structure.  */
 end_comment
 
 begin_function
@@ -6916,7 +6916,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Since the code is manipulating lists that are also 	 * manipulated by nfsrv_servertimer(), soft clock interrupts 	 * must be masked off. 	 */
 if|if
 condition|(
 name|specialid
@@ -9442,7 +9441,7 @@ expr_stmt|;
 name|NFSLOCKSTATE
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Get the nfsclient structure. 	 * Since the code is manipulating lists that are also 	 * manipulated by nfsrv_servertimer(), soft clock interrupts 	 * must be masked off. 	 */
+comment|/* 	 * Get the nfsclient structure. 	 */
 name|error
 operator|=
 name|nfsrv_getclient
@@ -15211,7 +15210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function adds a nfslock lock structure to the list for the associated  * nfsstate and nfslockfile structures. It will be inserted after the  * entry pointed at by insert_lop.  * Must be called with soft clock interrupts disabled.  */
+comment|/*  * This function adds a nfslock lock structure to the list for the associated  * nfsstate and nfslockfile structures. It will be inserted after the  * entry pointed at by insert_lop.  */
 end_comment
 
 begin_function
@@ -15463,7 +15462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function updates the locking for a lock owner and given file. It  * maintains a list of lock ranges ordered on increasing file offset that  * are NFSLCK_READ or NFSLCK_WRITE and non-overlapping (aka POSIX style).  * It always adds new_lop to the list and sometimes uses the one pointed  * at by other_lopp.  * Must be called with soft clock interrupts disabled.  */
+comment|/*  * This function updates the locking for a lock owner and given file. It  * maintains a list of lock ranges ordered on increasing file offset that  * are NFSLCK_READ or NFSLCK_WRITE and non-overlapping (aka POSIX style).  * It always adds new_lop to the list and sometimes uses the one pointed  * at by other_lopp.  */
 end_comment
 
 begin_function
