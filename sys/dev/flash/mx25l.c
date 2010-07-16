@@ -1451,7 +1451,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"count for BIO_WRITE is not sector size (%d bytes) aligned"
+literal|"count for BIO_READ is not sector size (%d bytes) aligned"
 operator|,
 name|sc
 operator|->
@@ -1470,7 +1470,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"offset for BIO_WRITE is not sector size (%d bytes) aligned"
+literal|"offset for BIO_READ is not sector size (%d bytes) aligned"
 operator|,
 name|sc
 operator|->
