@@ -3375,6 +3375,28 @@ name|_JB_SIGMASK
 value|13
 end_define
 
+begin_comment
+comment|/*  * Various macros for dealing with TLB hazards  * (a) why so many?  * (b) when to use?  * (c) why not used everywhere?  */
+end_comment
+
+begin_comment
+comment|/*  * Assume that w alaways need nops to escape CP0 hazard  * TODO: Make hazard delays configurable. Stuck with 5 cycles on the moment  * For more info on CP0 hazards see Chapter 7 (p.99) of "MIPS32 Architecture   *    For Programmers Volume III: The MIPS32 Privileged Resource Architecture"  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ITLBNOPFIX
+value|nop;nop;nop;nop;nop;nop;nop;nop;nop;nop;
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAZARD_DELAY
+value|nop;nop;nop;nop;nop;
+end_define
+
 begin_endif
 endif|#
 directive|endif
