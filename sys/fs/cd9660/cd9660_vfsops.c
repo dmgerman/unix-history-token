@@ -3808,17 +3808,7 @@ name|cd9660_fifoops
 expr_stmt|;
 break|break;
 default|default:
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|VN_LOCK_ASHARE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
