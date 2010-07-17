@@ -1538,6 +1538,7 @@ name|i
 operator|!=
 name|Z_OK
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1547,6 +1548,12 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|250
+argument_list|)
+expr_stmt|;
+block|}
 name|assert
 argument_list|(
 name|i
