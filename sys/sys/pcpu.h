@@ -318,7 +318,7 @@ name|DPCPU_SUM
 parameter_list|(
 name|n
 parameter_list|)
-value|__extension__					\ ({									\ 	u_int _i;							\ 	__typeof(*DPCPU_PTR(n)) sum;					\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += DPCPU_ID_PTR(_i, n);				\ 	}								\ 	sum;								\ })
+value|__extension__					\ ({									\ 	u_int _i;							\ 	__typeof(*DPCPU_PTR(n)) sum;					\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += *DPCPU_ID_PTR(_i, n);				\ 	}								\ 	sum;								\ })
 end_define
 
 begin_define
