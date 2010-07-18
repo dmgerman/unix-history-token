@@ -569,7 +569,7 @@ name|OID_AUTO
 argument_list|,
 name|ata_dma_check_80pin
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ata_dma_check_80pin
