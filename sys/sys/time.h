@@ -311,7 +311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Background information:  *  * When converting between timestamps on parallel timescales of differing  * resolutions it is historical and scientific practice to round down rather  * than doing 4/5 rounding.  *  *   The date changes at midnight, not at noon.  *  *   Even at 15:59:59.999999999 it's not four'o'clock.  *  *   time_second ticks after N.999999999 not after N.4999999999  */
+comment|/*  * Background information:  *  * When converting between timestamps on parallel timescales of differing  * resolutions it is historical and scientific practice to round down rather  * than doing 4/5 rounding.  *  *   The date changes at midnight, not at noon.  *  *   Even at 15:59:59.999999999 it's not four'o'clock.  *  *   time_second ticks after N.999999999 not after N.4999999999  */
 end_comment
 
 begin_function

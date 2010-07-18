@@ -5948,7 +5948,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Determine if u1 "can see" the subject specified by u2, according to the  * 'see_other_uids' policy.  * Returns: 0 for permitted, ESRCH otherwise  * Locks: none  * References: *u1 and *u2 must not change during the call  *             u1 may equal u2, in which case only one reference is required  */
+comment|/*  * Determine if u1 "can see" the subject specified by u2, according to the  * 'see_other_uids' policy.  * Returns: 0 for permitted, ESRCH otherwise  * Locks: none  * References: *u1 and *u2 must not change during the call  *             u1 may equal u2, in which case only one reference is required  */
 end_comment
 
 begin_function
@@ -6152,7 +6152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine if u1 "can see" the subject specified by u2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: none  * References: *u1 and *u2 must not change during the call  *             u1 may equal u2, in which case only one reference is required  */
+comment|/*  * Determine if u1 "can see" the subject specified by u2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: none  * References: *u1 and *u2 must not change during the call  *             u1 may equal u2, in which case only one reference is required  */
 end_comment
 
 begin_function
@@ -6259,7 +6259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine if td "can see" the subject specified by p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect p->p_ucred must be held.  td really  *        should be curthread.  * References: td and p must be valid for the lifetime of the call  */
+comment|/*  * Determine if td "can see" the subject specified by p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect p->p_ucred must be held.  td really  *        should be curthread.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6351,7 +6351,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Determine whether cred may deliver the specified signal to proc.  * Returns: 0 for permitted, an errno value otherwise.  * Locks: A lock must be held for proc.  * References: cred and proc must be valid for the lifetime of the call.  */
+comment|/*  * Determine whether cred may deliver the specified signal to proc.  * Returns: 0 for permitted, an errno value otherwise.  * Locks: A lock must be held for proc.  * References: cred and proc must be valid for the lifetime of the call.  */
 end_comment
 
 begin_function
@@ -6623,7 +6623,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether td may deliver the specified signal to p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must be  *        held for p.  * References: td and p must be valid for the lifetime of the call  */
+comment|/*  * Determine whether td may deliver the specified signal to p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must be  *        held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6754,7 +6754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether td may reschedule p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
+comment|/*  * Determine whether td may reschedule p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6988,7 +6988,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Determine whether td may debug p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
+comment|/*  * Determine whether td may debug p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -7407,7 +7407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether the subject represented by cred can "see" a socket.  * Returns: 0 for permitted, ENOENT otherwise.  */
+comment|/*  * Determine whether the subject represented by cred can "see" a socket.  * Returns: 0 for permitted, ENOENT otherwise.  */
 end_comment
 
 begin_function
@@ -7526,7 +7526,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*-  * Determine whether the subject represented by cred can "see" a socket.  * Returns: 0 for permitted, ENOENT otherwise.  */
+comment|/*  * Determine whether the subject represented by cred can "see" a socket.  * Returns: 0 for permitted, ENOENT otherwise.  */
 end_comment
 
 begin_function
@@ -7641,7 +7641,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  * Determine whether td can wait for the exit of p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call   */
+comment|/*  * Determine whether td can wait for the exit of p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call   */
 end_comment
 
 begin_function
@@ -9143,7 +9143,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's effective uid.  * Side effects: newcred->cr_uid and newcred->cr_uidinfo will be modified.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's effective uid.  * Side effects: newcred->cr_uid and newcred->cr_uidinfo will be modified.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function
@@ -9191,7 +9191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's effective gid.  * Side effects: newcred->cr_gid will be modified.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's effective gid.  * Side effects: newcred->cr_gid will be modified.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function
@@ -9220,7 +9220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's real uid.  * Side effects: newcred->cr_ruid will be updated, newcred->cr_ruidinfo  *               will be updated, and the old and new cr_ruidinfo proc  *               counts will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's real uid.  * Side effects: newcred->cr_ruid will be updated, newcred->cr_ruidinfo  *               will be updated, and the old and new cr_ruidinfo proc  *               counts will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function
@@ -9297,7 +9297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's real gid.  * Side effects: newcred->cr_rgid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's real gid.  * Side effects: newcred->cr_rgid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function
@@ -9323,7 +9323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's saved uid.  * Side effects: newcred->cr_svuid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's saved uid.  * Side effects: newcred->cr_svuid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function
@@ -9349,7 +9349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Change a process's saved gid.  * Side effects: newcred->cr_svgid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
+comment|/*  * Change a process's saved gid.  * Side effects: newcred->cr_svgid will be updated.  * References: newcred must be an exclusive credential reference for the  *             duration of the call.  */
 end_comment
 
 begin_function

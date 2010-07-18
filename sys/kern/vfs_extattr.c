@@ -534,7 +534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Set a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*  * Set a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function
@@ -1289,7 +1289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Get a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*  * Get a named extended attribute on a file or directory  *  * Arguments: unlocked vnode "vp", attribute namespace "attrnamespace",  *            kernelspace string pointer "attrname", userspace buffer  *            pointer "data", buffer length "nbytes", thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function
@@ -2722,7 +2722,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Retrieve a list of extended attributes on a file or directory.  *  * Arguments: unlocked vnode "vp", attribute namespace 'attrnamespace",  *            userspace buffer pointer "data", buffer length "nbytes",  *            thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
+comment|/*  * Retrieve a list of extended attributes on a file or directory.  *  * Arguments: unlocked vnode "vp", attribute namespace 'attrnamespace",  *            userspace buffer pointer "data", buffer length "nbytes",  *            thread "td".  * Returns: 0 on success, an error number otherwise  * Locks: none  * References: vp must be a valid reference for the duration of the call  */
 end_comment
 
 begin_function

@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  * `struct timecounter' is the interface between the hardware which implements  * a timecounter and the MI code which uses this to keep track of time.  *  * A timecounter is a binary counter which has two properties:  *    * it runs at a fixed, known frequency.  *    * it has sufficient bits to not roll over in less than approximately  *      max(2 msec, 2/HZ seconds).  (The value 2 here is really 1 + delta,  *      for some indeterminate value of delta.)  */
+comment|/*  * `struct timecounter' is the interface between the hardware which implements  * a timecounter and the MI code which uses this to keep track of time.  *  * A timecounter is a binary counter which has two properties:  *    * it runs at a fixed, known frequency.  *    * it has sufficient bits to not roll over in less than approximately  *      max(2 msec, 2/HZ seconds).  (The value 2 here is really 1 + delta,  *      for some indeterminate value of delta.)  */
 end_comment
 
 begin_struct_decl

@@ -2386,7 +2386,7 @@ operator|->
 name|sv_maxuser
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * call the init and ctor for the new thread and proc 	 * we wait to do this until all other structures 	 * are fairly sane. 	 */
+comment|/* 	 * call the init and ctor for the new thread and proc 	 * we wait to do this until all other structures 	 * are fairly sane. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_init
