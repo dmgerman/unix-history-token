@@ -149,7 +149,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Per uid resource consumption.  This structure is used to track  * the total resource consumption (process count, socket buffer size,  * etc) for the uid and impose limits.  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  * (d) Locked by the ui_vmsize_mtx  */
+comment|/*-  * Per uid resource consumption.  This structure is used to track  * the total resource consumption (process count, socket buffer size,  * etc) for the uid and impose limits.  *  * Locking guide:  * (a) Constant from inception  * (b) Lockless, updated using atomics  * (c) Locked by global uihashtbl_mtx  * (d) Locked by the ui_vmsize_mtx  */
 end_comment
 
 begin_struct

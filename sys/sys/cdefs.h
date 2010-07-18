@@ -2255,7 +2255,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  _POSIX_C_SOURCE == 200809		1003.1-2008  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
+comment|/*-  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  _POSIX_C_SOURCE == 200809		1003.1-2008  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
 end_comment
 
 begin_comment
@@ -2645,7 +2645,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * Deal with _ANSI_SOURCE:  * If it is defined, and no other compilation environment is explicitly  * requested, then define our internal feature-test macros to zero.  This  * makes no difference to the preprocessor (undefined symbols in preprocessing  * expressions are defined to have value zero), but makes it more convenient for  * a test program to print out the values.  *  * If a program mistakenly defines _ANSI_SOURCE and some other macro such as  * _POSIX_C_SOURCE, we will assume that it wants the broader compilation  * environment (and in fact we will never get here).  */
+comment|/*-  * Deal with _ANSI_SOURCE:  * If it is defined, and no other compilation environment is explicitly  * requested, then define our internal feature-test macros to zero.  This  * makes no difference to the preprocessor (undefined symbols in preprocessing  * expressions are defined to have value zero), but makes it more convenient for  * a test program to print out the values.  *  * If a program mistakenly defines _ANSI_SOURCE and some other macro such as  * _POSIX_C_SOURCE, we will assume that it wants the broader compilation  * environment (and in fact we will never get here).  */
 end_comment
 
 begin_if

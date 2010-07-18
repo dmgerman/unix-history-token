@@ -22,7 +22,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * A kernel process descriptor; used to start "internal" daemons.  *  * Note: global_procpp may be NULL for no global save area.  */
+comment|/*-  * A kernel process descriptor; used to start "internal" daemons.  *  * Note: global_procpp may be NULL for no global save area.  */
 end_comment
 
 begin_struct
