@@ -632,7 +632,8 @@ name|nmp
 decl_stmt|;
 name|int
 name|timeo
-decl_stmt|,
+decl_stmt|;
+name|boolean_t
 name|mustflush
 decl_stmt|;
 name|np
@@ -873,8 +874,6 @@ name|timeo
 operator|&&
 operator|(
 name|mustflush
-operator|!=
-literal|0
 operator|||
 name|np
 operator|->
