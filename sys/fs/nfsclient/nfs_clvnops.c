@@ -3279,8 +3279,14 @@ block|{
 comment|/* 		 * Get attributes so "change" is up to date. 		 */
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
+operator|&&
+name|nfscl_mustflush
+argument_list|(
+name|vp
+argument_list|)
 condition|)
 block|{
 name|ret
