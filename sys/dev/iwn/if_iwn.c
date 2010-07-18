@@ -2519,14 +2519,6 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x4236
-block|,
-literal|"Intel(R) PRO/Wireless 5350"
-block|}
-block|,
-block|{
-literal|0x8086
-block|,
 literal|0x423A
 block|,
 literal|"Intel(R) PRO/Wireless 5350"
