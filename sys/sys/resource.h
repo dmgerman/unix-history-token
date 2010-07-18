@@ -301,7 +301,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* virtual process size (inclusive of mmap) */
+comment|/* virtual process size (incl. mmap) */
 end_comment
 
 begin_define
