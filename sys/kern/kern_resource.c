@@ -5298,10 +5298,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Find the uidinfo structure for a uid.  This structure is used to  * track the total resource consumption (process count, socket buffer  * size, etc.) for the uid and impose limits.  */
-end_comment
-
 begin_function
 name|void
 name|uihashinit
