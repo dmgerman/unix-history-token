@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pmap.h>
 end_include
 
@@ -44,29 +50,6 @@ include|#
 directive|include
 file|<machine/intr.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/mv/mvvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/mv/mvwin.h>
-end_include
-
-begin_comment
-comment|/*  * This is the base virtual address the internal mem-mapped registers (IMMR)  * range is available at.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDT_IMMR_VA
-value|MV_BASE
-end_define
 
 begin_comment
 comment|/* Max interrupt number */

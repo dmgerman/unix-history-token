@@ -827,7 +827,7 @@ operator|)
 return|;
 name|start
 operator|+=
-name|FDT_IMMR_VA
+name|fdt_immr_va
 expr_stmt|;
 name|uart_bus_space_mem
 operator|=

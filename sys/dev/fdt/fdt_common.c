@@ -173,7 +173,8 @@ begin_function
 name|int
 name|fdt_immr_addr
 parameter_list|(
-name|void
+name|vm_offset_t
+name|immr_va
 parameter_list|)
 block|{
 name|pcell_t
@@ -475,7 +476,7 @@ name|base
 expr_stmt|;
 name|fdt_immr_va
 operator|=
-name|FDT_IMMR_VA
+name|immr_va
 expr_stmt|;
 name|fdt_immr_size
 operator|=

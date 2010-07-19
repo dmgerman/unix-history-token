@@ -349,7 +349,7 @@ begin_function_decl
 name|int
 name|fdt_immr_addr
 parameter_list|(
-name|void
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl

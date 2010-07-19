@@ -1241,7 +1241,9 @@ empty_stmt|;
 if|if
 condition|(
 name|fdt_immr_addr
-argument_list|()
+argument_list|(
+name|CCSRBAR_VA
+argument_list|)
 operator|!=
 literal|0
 condition|)

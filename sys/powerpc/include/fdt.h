@@ -27,29 +27,6 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/platform.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_comment
-comment|/*  * This is the base virtual address the internal mem-mapped registers (IMMR)  * range is available at.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDT_IMMR_VA
-value|CCSRBAR_VA
-end_define
-
 begin_comment
 comment|/* Max interrupt number */
 end_comment
