@@ -843,29 +843,32 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|VIDEO_MEMORY_POS
+name|GET_PIXEL
 parameter_list|(
 name|scp
 parameter_list|,
 name|pos
 parameter_list|,
 name|x
+parameter_list|,
+name|w
 parameter_list|)
 define|\
-value|scp->sc->adp->va_window +					\ 	x * scp->xoff +							\ 	scp->yoff * scp->font_size * scp->sc->adp->va_line_width +	\ 	x * (pos % scp->xsize) +					\ 	scp->font_size * scp->sc->adp->va_line_width * (pos / scp->xsize)
+value|({									\ 	(scp)->sc->adp->va_window +					\ 	    (x) * (scp)->xoff +						\ 	    (scp)->yoff * (scp)->font_size * (w) +			\ 	    (x) * ((pos) % (scp)->xsize) +				\ 	    (scp)->font_size * (w) * ((pos) / (scp)->xsize);		\ })
 end_define
 
 begin_define
 define|#
 directive|define
-name|vga_drawpxl
+name|DRAW_PIXEL
 parameter_list|(
+name|scp
+parameter_list|,
 name|pos
 parameter_list|,
 name|color
 parameter_list|)
-define|\
-value|switch (scp->sc->adp->va_info.vi_depth) {			\ 		case 32:						\ 			writel(pos, vga_palette32[color]);		\ 			break;						\ 		case 24:						\ 			if (((pos)& 1) == 0) {				\ 				writew(pos, vga_palette32[color]);	\ 				writeb(pos + 2, vga_palette32[color]>> 16);\ 			} else {					\ 				writeb(pos, vga_palette32[color]);	\ 				writew(pos + 1, vga_palette32[color]>> 8);\ 			}						\ 			break;						\ 		case 16:						\ 			if (scp->sc->adp->va_info.vi_pixel_fsizes[1] == 5)\ 				writew(pos, vga_palette15[color]);	\ 			else						\ 				writew(pos, vga_palette16[color]);	\ 			break;						\ 		case 15:						\ 			writew(pos, vga_palette15[color]);		\ 			break;						\ 		case 8:							\ 			writeb(pos, (uint8_t)color);			\ 		}
+value|do {				\ 	switch ((scp)->sc->adp->va_info.vi_depth) {			\ 	case 32:							\ 		writel((pos), vga_palette32[color]);			\ 		break;							\ 	case 24:							\ 		if (((pos)& 1) == 0) {					\ 			writew((pos), vga_palette32[color]);		\ 			writeb((pos) + 2, vga_palette32[color]>> 16);	\ 		} else {						\ 			writeb((pos), vga_palette32[color]);		\ 			writew((pos) + 1, vga_palette32[color]>> 8);	\ 		}							\ 		break;							\ 	case 16:							\ 		if ((scp)->sc->adp->va_info.vi_pixel_fsizes[1] == 5)	\ 			writew((pos), vga_palette15[color]);		\ 		else							\ 			writew((pos), vga_palette16[color]);		\ 		break;							\ 	case 15:							\ 		writew((pos), vga_palette15[color]);			\ 		break;							\ 	case 8:								\ 		writeb((pos), (uint8_t)(color));			\ 	}								\ } while (0)
 end_define
 
 begin_decl_stmt
@@ -3476,8 +3479,10 @@ name|f
 operator|+=
 name|pixel_size
 control|)
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|f
 argument_list|,
 name|color
@@ -3551,8 +3556,10 @@ name|f
 operator|+=
 name|pixel_size
 control|)
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|f
 argument_list|,
 name|color
@@ -3658,8 +3665,10 @@ name|f
 operator|+=
 name|pixel_size
 control|)
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|f
 argument_list|,
 name|color
@@ -3731,8 +3740,10 @@ name|f
 operator|+=
 name|pixel_size
 control|)
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|f
 argument_list|,
 name|color
@@ -4119,13 +4130,15 @@ name|va_line_width
 expr_stmt|;
 name|d
 operator|=
-name|VIDEO_MEMORY_POS
+name|GET_PIXEL
 argument_list|(
 name|scp
 argument_list|,
 name|from
 argument_list|,
 literal|1
+argument_list|,
+name|line_width
 argument_list|)
 expr_stmt|;
 name|outw
@@ -4490,8 +4503,6 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|d
-init|=
-literal|0
 decl_stmt|;
 name|vm_offset_t
 name|e
@@ -4546,7 +4557,7 @@ name|vi_pixel_size
 expr_stmt|;
 name|d
 operator|=
-name|VIDEO_MEMORY_POS
+name|GET_PIXEL
 argument_list|(
 name|scp
 argument_list|,
@@ -4555,6 +4566,8 @@ argument_list|,
 literal|8
 operator|*
 name|pixel_size
+argument_list|,
+name|line_width
 argument_list|)
 expr_stmt|;
 if|if
@@ -4763,8 +4776,10 @@ name|col1
 else|:
 name|col2
 expr_stmt|;
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|e
 operator|+
 name|pixel_size
@@ -4881,17 +4896,6 @@ decl_stmt|;
 name|u_char
 name|c
 decl_stmt|;
-name|d
-operator|=
-name|VIDEO_MEMORY_POS
-argument_list|(
-name|scp
-argument_list|,
-name|from
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|line_width
 operator|=
 name|scp
@@ -4901,6 +4905,19 @@ operator|->
 name|adp
 operator|->
 name|va_line_width
+expr_stmt|;
+name|d
+operator|=
+name|GET_PIXEL
+argument_list|(
+name|scp
+argument_list|,
+name|from
+argument_list|,
+literal|1
+argument_list|,
+name|line_width
+argument_list|)
 expr_stmt|;
 name|outw
 argument_list|(
@@ -5308,8 +5325,6 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|d
-init|=
-literal|0
 decl_stmt|;
 name|u_char
 modifier|*
@@ -5362,7 +5377,7 @@ name|vi_pixel_size
 expr_stmt|;
 name|d
 operator|=
-name|VIDEO_MEMORY_POS
+name|GET_PIXEL
 argument_list|(
 name|scp
 argument_list|,
@@ -5371,6 +5386,8 @@ argument_list|,
 literal|8
 operator|*
 name|pixel_size
+argument_list|,
+name|line_width
 argument_list|)
 operator|+
 operator|(
@@ -5615,8 +5632,10 @@ name|col1
 else|:
 name|col2
 expr_stmt|;
-name|vga_drawpxl
+name|DRAW_PIXEL
 argument_list|(
+name|scp
+argument_list|,
 name|d
 operator|+
 name|pixel_size
@@ -5691,13 +5710,15 @@ name|va_line_width
 expr_stmt|;
 name|d
 operator|=
-name|VIDEO_MEMORY_POS
+name|GET_PIXEL
 argument_list|(
 name|scp
 argument_list|,
 name|at
 argument_list|,
 literal|1
+argument_list|,
+name|line_width
 argument_list|)
 operator|+
 operator|(
