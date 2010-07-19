@@ -113,6 +113,27 @@ directive|include
 file|<dev/flash/mx25lreg.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|FL_NONE
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_ERASE_4K
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FL_ERASE_32K
+value|0x02
+end_define
+
 begin_struct
 struct|struct
 name|mx25l_flash_ident
@@ -135,6 +156,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|sectorcount
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -174,6 +199,10 @@ decl_stmt|;
 name|struct
 name|bio_queue_head
 name|sc_bio_queue
+decl_stmt|;
+name|unsigned
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -337,6 +366,8 @@ operator|*
 literal|1024
 block|,
 literal|64
+block|,
+name|FL_NONE
 block|}
 block|,
 block|{
@@ -351,6 +382,8 @@ operator|*
 literal|1024
 block|,
 literal|128
+block|,
+name|FL_NONE
 block|}
 block|,
 block|{
@@ -365,6 +398,10 @@ operator|*
 literal|1024
 block|,
 literal|256
+block|,
+name|FL_ERASE_4K
+operator||
+name|FL_ERASE_32K
 block|}
 block|,
 block|{
@@ -379,6 +416,8 @@ operator|*
 literal|1024
 block|,
 literal|256
+block|,
+name|FL_NONE
 block|}
 block|, }
 decl_stmt|;
@@ -1805,6 +1844,14 @@ operator|=
 name|ident
 operator|->
 name|sectorsize
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator|=
+name|ident
+operator|->
+name|flags
 expr_stmt|;
 comment|/* NB: use stripesize to hold the erase/region size for RedBoot */
 name|sc
