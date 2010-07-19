@@ -756,13 +756,11 @@ block|{
 comment|/* Check if the signal number is out of range: */
 if|if
 condition|(
+operator|!
+name|_SIG_VALID
+argument_list|(
 name|sig
-operator|<
-literal|1
-operator|||
-name|sig
-operator|>
-name|_SIG_MAXSIG
+argument_list|)
 operator|||
 name|sig
 operator|==
