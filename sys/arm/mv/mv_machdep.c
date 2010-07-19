@@ -653,7 +653,7 @@ specifier|static
 name|void
 name|physmap_init
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -880,8 +880,7 @@ specifier|static
 name|void
 name|physmap_init
 parameter_list|(
-name|int
-name|hardcoded
+name|void
 parameter_list|)
 block|{
 name|int
@@ -925,56 +924,6 @@ name|kernload
 operator|=
 name|KERNPHYSADDR
 expr_stmt|;
-comment|/* 	 * Use hardcoded physical addresses if we don't use memory regions 	 * from metadata. 	 */
-if|if
-condition|(
-name|hardcoded
-condition|)
-block|{
-name|phys_avail
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-literal|1
-index|]
-operator|=
-name|kernload
-expr_stmt|;
-name|phys_avail
-index|[
-literal|2
-index|]
-operator|=
-name|phys_kernelend
-expr_stmt|;
-name|phys_avail
-index|[
-literal|3
-index|]
-operator|=
-name|PHYSMEM_SIZE
-expr_stmt|;
-name|phys_avail
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-literal|5
-index|]
-operator|=
-literal|0
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Remove kernel physical address range from avail 	 * regions list. Page align all regions. 	 * Non-page aligned memory isn't very interesting to us. 	 * Also, sort the entries for ascending addresses. 	 */
 name|sz
 operator|=
@@ -1580,11 +1529,6 @@ name|lastaddr
 operator|=
 name|fake_preload_metadata
 argument_list|()
-expr_stmt|;
-comment|/* 		 * Assume a single memory region of size specified in board 		 * configuration file. 		 */
-name|memsize
-operator|=
-name|PHYSMEM_SIZE
 expr_stmt|;
 block|}
 if|#
@@ -2544,19 +2488,9 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Prepare map of physical memory regions available to vm subsystem. 	 * If metadata pointer doesn't point to a valid address, use hardcoded 	 * values. 	 */
+comment|/* 	 * Prepare map of physical memory regions available to vm subsystem. 	 */
 name|physmap_init
-argument_list|(
-operator|(
-name|mdp
-operator|!=
-name|NULL
-operator|)
-condition|?
-literal|0
-else|:
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1
