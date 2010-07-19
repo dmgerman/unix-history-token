@@ -2562,7 +2562,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bce_init_ctx
 parameter_list|(
 name|struct
@@ -19801,7 +19801,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bce_init_ctx
 parameter_list|(
 name|struct
@@ -19810,6 +19810,26 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|u32
+name|offset
+decl_stmt|,
+name|val
+decl_stmt|,
+name|vcid_addr
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|rc
+decl_stmt|,
+name|retry_cnt
+decl_stmt|;
+name|rc
+operator|=
+literal|0
+expr_stmt|;
 name|DBENTER
 argument_list|(
 name|BCE_VERBOSE_RESET
@@ -19838,16 +19858,10 @@ name|BCE_CHIP_NUM_5716
 operator|)
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|,
 name|retry_cnt
-init|=
+operator|=
 name|CTX_INIT_RETRY_COUNT
-decl_stmt|;
-name|u32
-name|val
-decl_stmt|;
+expr_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -19929,24 +19943,32 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ToDo: Consider returning an error here. */
-name|DBRUNIF
-argument_list|(
+if|if
+condition|(
 operator|(
 name|val
 operator|&
 name|BCE_CTX_COMMAND_MEM_INIT
 operator|)
-argument_list|,
+operator|!=
+literal|0
+condition|)
+block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(): Context memory initialization "
-literal|"failed!\n"
+literal|"%s(): Context memory initialization failed!\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
-argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|init_ctx_fail
+goto|;
+block|}
 for|for
 control|(
 name|i
@@ -19963,9 +19985,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|j
-decl_stmt|;
 comment|/* Set the physical address of the context memory. */
 name|REG_WR
 argument_list|(
@@ -20057,15 +20076,17 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ToDo: Consider returning an error here. */
-name|DBRUNIF
-argument_list|(
+if|if
+condition|(
 operator|(
 name|val
 operator|&
 name|BCE_CTX_HOST_PAGE_TBL_CTRL_WRITE_REQ
 operator|)
-argument_list|,
+operator|!=
+literal|0
+condition|)
+block|{
 name|BCE_PRINTF
 argument_list|(
 literal|"%s(): Failed to initialize "
@@ -20075,17 +20096,19 @@ name|__FUNCTION__
 argument_list|,
 name|i
 argument_list|)
-argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|init_ctx_fail
+goto|;
+block|}
 block|}
 block|}
 else|else
 block|{
-name|u32
-name|vcid_addr
-decl_stmt|,
-name|offset
-decl_stmt|;
 name|DBPRINT
 argument_list|(
 name|sc
@@ -20177,6 +20200,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|init_ctx_fail
+label|:
 name|DBEXIT
 argument_list|(
 name|BCE_VERBOSE_RESET
@@ -20184,6 +20209,11 @@ operator||
 name|BCE_VERBOSE_CTX
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
 block|}
 end_function
 
@@ -21340,11 +21370,22 @@ name|BCE_MISC_ENABLE_STATUS_BITS_CONTEXT_ENABLE
 argument_list|)
 expr_stmt|;
 comment|/* Initialize context mapping and zero out the quick contexts. */
+if|if
+condition|(
+operator|(
+name|rc
+operator|=
 name|bce_init_ctx
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|bce_chipinit_exit
+goto|;
 comment|/* Initialize the on-boards CPUs */
 name|bce_init_cpus
 argument_list|(
