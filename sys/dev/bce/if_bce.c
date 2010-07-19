@@ -13897,7 +13897,10 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -13913,9 +13916,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_SPACE_UNRESTRICTED
+literal|0
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
