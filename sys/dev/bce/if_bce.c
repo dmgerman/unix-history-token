@@ -10271,10 +10271,16 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-name|rc
-operator|=
-name|ENODEV
+name|DBEXIT
+argument_list|(
+name|BCE_VERBOSE_NVRAM
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 block|}
 name|bce_init_nvram_get_flash_size
 label|:
@@ -21379,20 +21385,20 @@ block|}
 comment|/* Prepare NVRAM for access. */
 if|if
 condition|(
+operator|(
+name|rc
+operator|=
 name|bce_init_nvram
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-block|{
-name|rc
-operator|=
-name|ENODEV
-expr_stmt|;
 goto|goto
 name|bce_chipinit_exit
 goto|;
-block|}
 comment|/* Set the kernel bypass block size */
 name|val
 operator|=
