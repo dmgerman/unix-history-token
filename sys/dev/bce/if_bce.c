@@ -2498,7 +2498,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bce_ifmedia_upd_locked
 parameter_list|(
 name|struct
@@ -25778,6 +25778,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|DBENTER
 argument_list|(
 name|BCE_VERBOSE
@@ -25788,6 +25791,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|bce_ifmedia_upd_locked
 argument_list|(
 name|ifp
@@ -25805,7 +25810,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -25837,7 +25842,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bce_ifmedia_upd_locked
 parameter_list|(
 name|struct
@@ -25860,10 +25865,17 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|DBENTER
 argument_list|(
 name|BCE_VERBOSE_PHY
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
 expr_stmt|;
 name|BCE_LOCK_ASSERT
 argument_list|(
@@ -25917,6 +25929,8 @@ name|miisc
 argument_list|)
 expr_stmt|;
 block|}
+name|error
+operator|=
 name|mii_mediachg
 argument_list|(
 name|mii
@@ -25928,6 +25942,11 @@ argument_list|(
 name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
