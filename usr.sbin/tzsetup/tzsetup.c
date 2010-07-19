@@ -4437,7 +4437,7 @@ name|reallydoit
 condition|)
 name|unlink
 argument_list|(
-name|_PATH_WALL_CMOS_CLOCK
+name|path_wall_cmos_clock
 argument_list|)
 expr_stmt|;
 block|}
@@ -4452,7 +4452,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|_PATH_WALL_CMOS_CLOCK
+name|path_wall_cmos_clock
 argument_list|,
 name|O_WRONLY
 operator||
@@ -4483,7 +4483,7 @@ literal|1
 argument_list|,
 literal|"create %s"
 argument_list|,
-name|_PATH_WALL_CMOS_CLOCK
+name|path_wall_cmos_clock
 argument_list|)
 expr_stmt|;
 block|}
