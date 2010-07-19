@@ -531,7 +531,7 @@ name|md
 operator|->
 name|md_size
 operator|=
-name|le16dec
+name|le32dec
 argument_list|(
 name|data
 operator|+
