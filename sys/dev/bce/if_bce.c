@@ -13696,6 +13696,21 @@ name|busaddr
 init|=
 name|arg
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|nseg
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"%s(): Too many segments returned (%d)!"
+operator|,
+name|__FUNCTION__
+operator|,
+name|nseg
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Simulate a mapping failure. */
 name|DBRUNIF
 argument_list|(
