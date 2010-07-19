@@ -202,7 +202,7 @@ name|sc_bio_queue
 decl_stmt|;
 name|unsigned
 name|int
-name|flags
+name|sc_flags
 decl_stmt|;
 block|}
 struct|;
@@ -1852,7 +1852,7 @@ name|sectorsize
 expr_stmt|;
 name|sc
 operator|->
-name|flags
+name|sc_flags
 operator|=
 name|ident
 operator|->
