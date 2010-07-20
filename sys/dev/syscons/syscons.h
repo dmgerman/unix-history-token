@@ -867,6 +867,9 @@ decl_stmt|;
 name|char
 name|blink_in_progress
 decl_stmt|;
+name|char
+name|suspend_in_progress
+decl_stmt|;
 name|struct
 name|mtx
 name|video_mtx

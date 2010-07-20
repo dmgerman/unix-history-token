@@ -9420,6 +9420,12 @@ name|scp
 operator|->
 name|sc
 operator|->
+name|suspend_in_progress
+operator|||
+name|scp
+operator|->
+name|sc
+operator|->
 name|font_loading_in_progress
 condition|)
 return|return;
@@ -9641,6 +9647,10 @@ return|return;
 comment|/* don't do anything when we are performing some I/O operations */
 if|if
 condition|(
+name|sc
+operator|->
+name|suspend_in_progress
+operator|||
 name|sc
 operator|->
 name|font_loading_in_progress
