@@ -184,6 +184,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IAF_COUNTER_MASK
+value|0x0000ffffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|IAF_CTR0
 value|0x309
 end_define
@@ -202,6 +209,10 @@ name|IAF_CTR2
 value|0x30B
 end_define
 
+begin_comment
+comment|/*  * The IAF_CTRL MSR is laid out in the following way.  *  * Bit Position    Use  * 63 - 12         Reserved (do not touch)  * 11              Ctr 2 PMI  * 10              Reserved (do not touch)  * 9-8             Ctr 2 Enable  * 7               Ctr 1 PMI  * 6               Reserved (do not touch)  * 5-4             Ctr 1 Enable  * 3               Ctr 0 PMI  * 2               Reserved (do not touch)  * 1-0             Ctr 0 Enable (3: All Levels, 2: User, 1: OS, 0: Disable)  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -216,6 +227,13 @@ name|IAF_CTRL
 value|0x38D
 end_define
 
+begin_define
+define|#
+directive|define
+name|IAF_CTRL_MASK
+value|0x0000000000000bbb
+end_define
+
 begin_comment
 comment|/*  * Programmable counters.  */
 end_comment
@@ -225,6 +243,17 @@ define|#
 directive|define
 name|IAP_PMC0
 value|0x0C1
+end_define
+
+begin_comment
+comment|/*  * IAP_EVSEL(n) is laid out in the following way.  *  * Bit Position    Use  * 63-31           Reserved (do not touch)  * 31-24           Counter Mask  * 23              Invert  * 22              Enable  * 21              Reserved (do not touch)  * 20              APIC Interrupt Enable  * 19              Pin Control  * 18              Edge Detect  * 17              OS  * 16              User  * 15-8            Unit Mask  * 7-0             Event Select  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IAP_EVSEL_MASK
+value|0x00000000ffdfffff
 end_define
 
 begin_define
@@ -250,6 +279,21 @@ define|#
 directive|define
 name|IA_GLOBAL_CTRL
 value|0x38F
+end_define
+
+begin_comment
+comment|/*  * IA_GLOBAL_CTRL is layed out in the following way.  *   * Bit Position    Use  * 63-35           Reserved (do not touch)  * 34              IAF Counter 2 Enable  * 33              IAF Counter 1 Enable  * 32              IAF Counter 0 Enable  * 31-0            Depends on programmable counters  */
+end_comment
+
+begin_comment
+comment|/* The mask is only for the fixed porttion of the register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IAF_GLOBAL_CTRL_MASK
+value|0x0000000700000000
 end_define
 
 begin_define
