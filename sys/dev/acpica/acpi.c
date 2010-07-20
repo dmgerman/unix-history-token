@@ -113,22 +113,11 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/sched.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -11282,9 +11271,11 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SMP
+if|if
+condition|(
+name|smp_started
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -11302,8 +11293,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/*      * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE      * drivers need this.      */
 name|mtx_lock
 argument_list|(
@@ -11556,9 +11546,11 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
+if|if
+condition|(
+name|smp_started
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -11574,8 +11566,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* Allow another sleep request after a while. */
 name|timeout
 argument_list|(
