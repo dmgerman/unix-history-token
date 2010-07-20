@@ -10,24 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"executive-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cvmx-config.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CVMX_ENABLE_PKO_FUNCTIONS
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|"cvmx.h"
 end_include
 
@@ -48,6 +30,12 @@ include|#
 directive|include
 file|"cvmx-helper.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_ENABLE_PKO_FUNCTIONS
+end_ifdef
 
 begin_comment
 comment|/* CVMX_HELPER_SPI_TIMEOUT is used to determine how long the SPI initialization     routines wait for SPI training. You can override the value using     executive-config.h if necessary */

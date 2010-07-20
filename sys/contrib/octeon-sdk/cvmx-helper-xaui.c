@@ -10,24 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"executive-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cvmx-config.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CVMX_ENABLE_PKO_FUNCTIONS
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|"cvmx.h"
 end_include
 
@@ -36,6 +18,12 @@ include|#
 directive|include
 file|"cvmx-helper.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_ENABLE_PKO_FUNCTIONS
+end_ifdef
 
 begin_comment
 comment|/**  * @INTERNAL  * Probe a XAUI interface and determine the number of ports  * connected to it. The XAUI interface should still be down  * after this call.  *  * @param interface Interface to probe  *  * @return Number of ports on the interface. Zero to disable.  */

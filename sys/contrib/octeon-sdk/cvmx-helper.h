@@ -19,6 +19,12 @@ directive|define
 name|__CVMX_HELPER_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVMX_DONT_INCLUDE_CONFIG
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -30,6 +36,11 @@ include|#
 directive|include
 file|"cvmx-config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -141,9 +152,6 @@ file|"cvmx-helper-sgmii.h"
 include|#
 directive|include
 file|"cvmx-helper-spi.h"
-include|#
-directive|include
-file|"cvmx-helper-util.h"
 include|#
 directive|include
 file|"cvmx-helper-xaui.h"
@@ -281,6 +289,9 @@ name|int
 name|enable_external
 parameter_list|)
 function_decl|;
+include|#
+directive|include
+file|"cvmx-helper-util.h"
 endif|#
 directive|endif
 comment|/* CVMX_ENABLE_PKO_FUNCTIONS */

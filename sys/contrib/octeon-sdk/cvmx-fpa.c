@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"cvmx-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cvmx.h"
 end_include
 

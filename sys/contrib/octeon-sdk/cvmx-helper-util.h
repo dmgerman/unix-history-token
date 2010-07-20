@@ -190,14 +190,6 @@ name|int
 name|interface
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|cvmx_helper_ports_on_interface
-argument_list|(
-name|int
-name|interface
-argument_list|)
-decl_stmt|;
 return|return
 operator|(
 name|cvmx_helper_get_first_ipd_port

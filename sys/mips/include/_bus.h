@@ -32,7 +32,7 @@ operator|!
 operator|(
 name|defined
 argument_list|(
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 argument_list|)
 operator|&&
 name|defined

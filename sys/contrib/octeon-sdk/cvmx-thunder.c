@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"cvmx-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"cvmx.h"
 end_include
 
@@ -416,6 +410,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cvmx_rtc_ds1374_alarm_config
 parameter_list|(
@@ -522,6 +517,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cvmx_rtc_ds1374_alarm_set
 parameter_list|(
@@ -589,6 +585,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cvmx_rtc_ds1374_alarm_counter_set
 parameter_list|(
@@ -644,62 +641,21 @@ return|;
 block|}
 end_function
 
-begin_function
-name|uint32_t
-name|cvmx_rtc_ds1374_alarm_counter_get
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|uint32_t
-name|interval
-init|=
+begin_if
+if|#
+directive|if
 literal|0
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|interval
-operator||=
-operator|(
-name|cvmx_twsi_read8
-argument_list|(
-name|CVMX_RTC_DS1374_ADDR
-argument_list|,
-name|RTC_WD_ALM_CNT_BYTE0_ADDR
-operator|+
-name|i
-argument_list|)
-operator|&
-literal|0xff
-operator|)
-operator|<<
-operator|(
-name|i
-operator|*
-literal|8
-operator|)
-expr_stmt|;
-block|}
-return|return
-name|interval
-return|;
-block|}
-end_function
+end_if
+
+begin_comment
+comment|/* XXX unused */
+end_comment
+
+begin_endif
+unit|static uint32_t cvmx_rtc_ds1374_alarm_counter_get(void) {     int i;     uint32_t interval = 0;      for(i=0;i<3;i++)     {         interval |= ( cvmx_twsi_read8(CVMX_RTC_DS1374_ADDR,RTC_WD_ALM_CNT_BYTE0_ADDR+i)& 0xff)<< (i*8);     }     return interval; }
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

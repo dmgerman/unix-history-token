@@ -2577,7 +2577,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|td
 operator|->
 name|td_frame

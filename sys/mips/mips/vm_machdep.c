@@ -564,7 +564,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|pcb2
 operator|->
 name|pcb_context
@@ -1341,7 +1341,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|pcb2
 operator|->
 name|pcb_context
@@ -1538,7 +1538,7 @@ name|MIPS_SR_INT_IE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|tf
 operator|->
 name|sr

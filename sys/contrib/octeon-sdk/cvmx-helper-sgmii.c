@@ -10,24 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"executive-config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cvmx-config.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CVMX_ENABLE_PKO_FUNCTIONS
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|"cvmx.h"
 end_include
 
@@ -54,6 +36,12 @@ include|#
 directive|include
 file|"cvmx-helper-board.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_ENABLE_PKO_FUNCTIONS
+end_ifdef
 
 begin_comment
 comment|/**  * @INTERNAL  * Perform initialization required only once for an SGMII port.  *  * @param interface Interface to init  * @param index     Index of prot on the interface  *  * @return Zero on success, negative on failure  */

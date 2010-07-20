@@ -19,6 +19,12 @@ directive|define
 name|__CVMX_CMD_QUEUE_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVMX_DONT_INCLUDE_CONFIG
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -30,6 +36,11 @@ include|#
 directive|include
 file|"cvmx-config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -212,6 +223,12 @@ expr_stmt|;
 block|}
 name|__cvmx_cmd_queue_all_state_t
 typedef|;
+specifier|extern
+name|CVMX_SHARED
+name|__cvmx_cmd_queue_all_state_t
+modifier|*
+name|__cvmx_cmd_queue_state_ptr
+decl_stmt|;
 comment|/**  * Initialize a command queue for use. The initial FPA buffer is  * allocated and the hardware unit is configured to point to the  * new command queue.  *  * @param queue_id  Hardware command queue to initialize.  * @param max_depth Maximum outstanding commands that can be queued.  * @param fpa_pool  FPA pool the command queues should come from.  * @param pool_size Size of each buffer in the FPA pool (bytes)  *  * @return CVMX_CMD_QUEUE_SUCCESS or a failure code  */
 name|cvmx_cmd_queue_result_t
 name|cvmx_cmd_queue_initialize
@@ -316,12 +333,6 @@ modifier|*
 name|qptr
 parameter_list|)
 block|{
-specifier|extern
-name|CVMX_SHARED
-name|__cvmx_cmd_queue_all_state_t
-modifier|*
-name|__cvmx_cmd_queue_state_ptr
-decl_stmt|;
 name|int
 name|tmp
 decl_stmt|;
@@ -391,12 +402,6 @@ name|cvmx_cmd_queue_id_t
 name|queue_id
 parameter_list|)
 block|{
-specifier|extern
-name|CVMX_SHARED
-name|__cvmx_cmd_queue_all_state_t
-modifier|*
-name|__cvmx_cmd_queue_state_ptr
-decl_stmt|;
 if|if
 condition|(
 name|CVMX_ENABLE_PARAMETER_CHECKING

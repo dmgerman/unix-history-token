@@ -418,6 +418,18 @@ argument_list|(
 name|__KERNEL__
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
 comment|/* NOTE: This for internal use only!!!!! */
 specifier|static
 specifier|inline

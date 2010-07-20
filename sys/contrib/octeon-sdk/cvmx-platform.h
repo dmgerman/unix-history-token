@@ -220,6 +220,26 @@ directive|define
 name|CVMX_BUILD_FOR_TOOLCHAIN
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|CVMX_BUILD_FOR_FREEBSD
+end_define
+
 begin_else
 else|#
 directive|else
@@ -244,12 +264,37 @@ begin_comment
 comment|/* To have a global variable be shared among all cores,  * declare with the CVMX_SHARED attribute.  Ex:  * CVMX_SHARED int myglobal;  * This will cause the variable to be placed in a special  * section that the loader will map as shared for all cores  * This is for data structures use by software ONLY,  * as it is not 1-1 VA-PA mapped.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CVMX_SHARED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|CVMX_SHARED
 value|__attribute__ ((cvmx_shared))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -588,6 +633,21 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<mips/cavium/cvmx_config.h>
 end_include
 
 begin_else

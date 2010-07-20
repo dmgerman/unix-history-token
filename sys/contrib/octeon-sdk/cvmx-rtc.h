@@ -79,7 +79,9 @@ specifier|static
 specifier|inline
 name|cvmx_rtc_options_t
 name|cvmx_rtc_supported
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int

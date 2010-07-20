@@ -733,7 +733,7 @@ name|regstr
 parameter_list|,
 name|ASM_STMT
 parameter_list|)
-value|({			\   if (regstr == 31) {							\     if (sizeof(result) == 8) {						\       ASM_STMT (".set\tpush\n"						\ 		"\t.set\tmips64r2\n"					\ 		"\trdhwr\t%L0,$31\n"					\ 		"\tdsra\t%M0,%L0,32\n"					\ 		"\tsll\t%L0,%L0,0\n"					\ 		"\t.set\tpop": "=d"(result));				\     } else {								\       unsigned long _v;							\       ASM_STMT ("rdhwr\t%0,$31\n"					\ 		"\tsll\t%0,%0,0" : "=d"(_v));				\       result = (typeof(result))_v;					\     }									\   } else {								\     unsigned long _v;							\     ASM_STMT ("rdhwr\t%0,$" CVMX_TMP_STR(regstr) : "=d"(_v));		\     result = (typeof(result))_v;					\   }})
+value|({			\   if (regstr == 31) {							\     if (sizeof(result) == 8) {						\       ASM_STMT (".set\tpush\n"						\ 		"\t.set\tmips64r2\n"					\ 		"\trdhwr\t%L0,$31\n"					\ 		"\tdsra\t%M0,%L0,32\n"					\ 		"\tsll\t%L0,%L0,0\n"					\ 		"\t.set\tpop": "=d"(result));				\     } else {								\       unsigned long _v;							\       ASM_STMT ("rdhwr\t%0,$31\n"					\ 		"\tsll\t%0,%0,0" : "=d"(_v));				\       result = (__typeof(result))_v;					\     }									\   } else {								\     unsigned long _v;							\     ASM_STMT ("rdhwr\t%0,$" CVMX_TMP_STR(regstr) : "=d"(_v));		\     result = (__typeof(result))_v;					\   }})
 define|#
 directive|define
 name|CVMX_RDHWR

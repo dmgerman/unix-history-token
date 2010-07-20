@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<contrib/octeon-sdk/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"uart_if.h"
 end_include
 
@@ -318,6 +324,7 @@ name|bst
 operator|=
 name|uart_bus_space_mem
 expr_stmt|;
+comment|/* 	 * XXX 	 * RBR isn't really a great base address and it'd be great to not have 	 * a hard-coded 1024. 	 */
 if|if
 condition|(
 name|bus_space_map
@@ -328,9 +335,12 @@ name|sc_bas
 operator|.
 name|bst
 argument_list|,
-name|OCTEON_MIO_UART0
+name|CVMX_MIO_UARTX_RBR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
-name|OCTEON_MIO_UART_SIZE
+literal|1024
 argument_list|,
 literal|0
 argument_list|,

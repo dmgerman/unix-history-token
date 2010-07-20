@@ -136,7 +136,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_define
@@ -2130,7 +2130,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_function

@@ -279,19 +279,26 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
-name|ISA_MIPS32
+name|__mips_n32
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+operator|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<mips/cavium/octeon_pcmap_regs.h>
+file|<contrib/octeon-sdk/cvmx.h>
 end_include
 
 begin_define
@@ -301,7 +308,7 @@ name|rd8
 parameter_list|(
 name|a
 parameter_list|)
-value|oct_read8(a)
+value|cvmx_read64_uint8(a)
 end_define
 
 begin_define
@@ -311,7 +318,7 @@ name|rd16
 parameter_list|(
 name|a
 parameter_list|)
-value|oct_read16(a)
+value|cvmx_read64_uint16(a)
 end_define
 
 begin_define
@@ -321,7 +328,7 @@ name|rd32
 parameter_list|(
 name|a
 parameter_list|)
-value|oct_read32(a)
+value|cvmx_read64_uint32(a)
 end_define
 
 begin_define
@@ -333,7 +340,7 @@ name|a
 parameter_list|,
 name|v
 parameter_list|)
-value|oct_write8(a, v)
+value|cvmx_write64_uint8(a, v)
 end_define
 
 begin_define
@@ -345,7 +352,7 @@ name|a
 parameter_list|,
 name|v
 parameter_list|)
-value|oct_write16(a, v)
+value|cvmx_write64_uint16(a, v)
 end_define
 
 begin_define
@@ -357,7 +364,7 @@ name|a
 parameter_list|,
 name|v
 parameter_list|)
-value|oct_write32(a, v)
+value|cvmx_write64_uint32(a, v)
 end_define
 
 begin_elif
