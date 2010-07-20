@@ -105,7 +105,7 @@ comment|/// This implementation supports regexes and matching strings with embed
 comment|/// NUL characters.
 name|Regex
 argument_list|(
-argument|const StringRef&Regex
+argument|StringRef Regex
 argument_list|,
 argument|unsigned Flags = NoFlags
 argument_list|)
@@ -144,9 +144,7 @@ comment|/// This returns true on a successful match.
 name|bool
 name|match
 argument_list|(
-specifier|const
 name|StringRef
-operator|&
 name|String
 argument_list|,
 name|SmallVectorImpl

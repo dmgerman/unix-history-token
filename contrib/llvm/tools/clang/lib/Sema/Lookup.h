@@ -1210,6 +1210,22 @@ block|}
 end_function
 
 begin_comment
+comment|/// Determines whether this lookup is suppressing diagnostics.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isSuppressingDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diagnose
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Sets a 'context' source range.
 end_comment
 

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"GlobalDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Type.h"
 end_include
 
@@ -329,6 +335,11 @@ argument_list|(
 argument|Diags
 argument_list|)
 block|{ }
+name|virtual
+operator|~
+name|MangleContext
+argument_list|()
+block|{ }
 name|ASTContext
 operator|&
 name|getASTContext
@@ -493,6 +504,7 @@ return|;
 block|}
 comment|/// @name Mangler Entry Points
 comment|/// @{
+name|virtual
 name|bool
 name|shouldMangleDeclName
 parameter_list|(
@@ -572,6 +584,24 @@ decl_stmt|;
 name|virtual
 name|void
 name|mangleGuardVariable
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+argument_list|)
+decl_stmt|;
+name|virtual
+name|void
+name|mangleReferenceTemporary
 argument_list|(
 specifier|const
 name|VarDecl
@@ -726,6 +756,9 @@ decl_stmt|;
 name|void
 name|mangleBlock
 argument_list|(
+name|GlobalDecl
+name|GD
+argument_list|,
 specifier|const
 name|BlockDecl
 operator|*
@@ -861,6 +894,9 @@ block|}
 name|void
 name|mangleBlock
 parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|,
 specifier|const
 name|BlockDecl
 modifier|*

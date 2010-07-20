@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -132,6 +126,12 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
 name|CriticalAntiDepBreaker
 range|:
 name|public
@@ -144,6 +144,11 @@ block|;
 name|MachineRegisterInfo
 operator|&
 name|MRI
+block|;
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
 block|;
 specifier|const
 name|TargetRegisterInfo

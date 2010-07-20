@@ -538,6 +538,25 @@ end_comment
 begin_function_decl
 name|void
 name|ClusterNeighboringLoads
+parameter_list|(
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// ClusterNodes - Cluster certain nodes which should be scheduled together.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function_decl
+name|void
+name|ClusterNodes
 parameter_list|()
 function_decl|;
 end_function_decl

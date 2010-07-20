@@ -579,7 +579,7 @@ argument|CodeGenOpt::Level OptLevel =                                       Code
 argument_list|,
 argument|bool GVsWithCode = true
 argument_list|,
-argument|CodeModel::Model CMM = 				      CodeModel::Default
+argument|CodeModel::Model CMM =                                       CodeModel::Default
 argument_list|)
 argument_list|;
 comment|/// addModule - Add a Module to the list of modules that we can JIT from.

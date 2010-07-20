@@ -65,12 +65,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|class
-name|FixItRewriter
-decl_stmt|;
-name|class
-name|FixItPathRewriter
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Custom Consumer Actions
 comment|//===----------------------------------------------------------------------===//
@@ -114,25 +108,6 @@ block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// AST Consumer Actions
 comment|//===----------------------------------------------------------------------===//
-name|class
-name|AnalysisAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
-block|;
 name|class
 name|ASTPrintAction
 operator|:
@@ -229,74 +204,6 @@ argument_list|)
 block|; }
 block|;
 name|class
-name|FixItAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|FixItRewriter
-operator|>
-name|Rewriter
-block|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|FixItPathRewriter
-operator|>
-name|PathRewriter
-block|;
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|BeginSourceFileAction
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef Filename
-argument_list|)
-block|;
-name|virtual
-name|void
-name|EndSourceFileAction
-argument_list|()
-block|;
-name|virtual
-name|bool
-name|hasASTSupport
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|public
-operator|:
-name|FixItAction
-argument_list|()
-block|;
-operator|~
-name|FixItAction
-argument_list|()
-block|; }
-block|;
-name|class
 name|GeneratePCHAction
 operator|:
 name|public
@@ -325,7 +232,7 @@ return|;
 block|}
 name|virtual
 name|bool
-name|hasASTSupport
+name|hasASTFileSupport
 argument_list|()
 specifier|const
 block|{
@@ -336,45 +243,7 @@ block|}
 expr|}
 block|;
 name|class
-name|HTMLPrintAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
-block|;
-name|class
 name|InheritanceViewAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
-block|;
-name|class
-name|RewriteObjCAction
 operator|:
 name|public
 name|ASTFrontendAction
@@ -532,7 +401,7 @@ specifier|const
 block|;
 name|virtual
 name|bool
-name|hasASTSupport
+name|hasASTFileSupport
 argument_list|()
 specifier|const
 block|;
@@ -647,32 +516,6 @@ name|true
 return|;
 block|}
 expr|}
-block|;
-name|class
-name|RewriteMacrosAction
-operator|:
-name|public
-name|PreprocessorFrontendAction
-block|{
-name|protected
-operator|:
-name|void
-name|ExecuteAction
-argument_list|()
-block|; }
-block|;
-name|class
-name|RewriteTestAction
-operator|:
-name|public
-name|PreprocessorFrontendAction
-block|{
-name|protected
-operator|:
-name|void
-name|ExecuteAction
-argument_list|()
-block|; }
 block|;  }
 end_decl_stmt
 

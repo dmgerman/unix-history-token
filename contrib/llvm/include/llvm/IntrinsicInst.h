@@ -408,9 +408,9 @@ operator|<
 name|MDNode
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -517,9 +517,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 operator|)
 operator|)
@@ -540,9 +540,9 @@ operator|<
 name|MDNode
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|3
+literal|2
 argument_list|)
 operator|)
 return|;
@@ -633,9 +633,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -653,9 +653,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|3
+literal|2
 argument_list|)
 operator|)
 return|;
@@ -678,9 +678,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|4
+literal|3
 argument_list|)
 operator|)
 operator|)
@@ -717,9 +717,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|5
+literal|4
 argument_list|)
 operator|)
 operator|)
@@ -731,13 +731,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|getVolatileCst
 argument_list|()
 operator|->
-name|getZExtValue
+name|isZero
 argument_list|()
-operator|!=
-literal|0
 return|;
 block|}
 comment|/// getDest - This is just like getRawDest, but it strips off any cast
@@ -781,9 +780,9 @@ operator|&&
 literal|"setDest called with pointer of wrong type!"
 argument_list|)
 block|;
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 name|Ptr
 argument_list|)
@@ -810,9 +809,9 @@ operator|&&
 literal|"setLength called with value of wrong type!"
 argument_list|)
 block|;
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 name|L
 argument_list|)
@@ -823,9 +822,9 @@ argument_list|(
 argument|Constant* A
 argument_list|)
 block|{
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|4
+literal|3
 argument_list|,
 name|A
 argument_list|)
@@ -836,9 +835,9 @@ argument_list|(
 argument|Constant* V
 argument_list|)
 block|{
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|5
+literal|4
 argument_list|,
 name|V
 argument_list|)
@@ -851,9 +850,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|4
+literal|3
 argument_list|)
 operator|->
 name|getType
@@ -969,9 +968,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -995,12 +994,12 @@ operator|->
 name|getType
 argument_list|()
 operator|&&
-literal|"setSource called with pointer of wrong type!"
+literal|"setValue called with value of wrong type!"
 argument_list|)
 block|;
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 name|Val
 argument_list|)
@@ -1093,9 +1092,9 @@ name|Value
 operator|*
 operator|>
 operator|(
-name|getOperand
+name|getArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 operator|)
 return|;
@@ -1139,9 +1138,9 @@ operator|&&
 literal|"setSource called with pointer of wrong type!"
 argument_list|)
 block|;
-name|setOperand
+name|setArgOperand
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 name|Ptr
 argument_list|)

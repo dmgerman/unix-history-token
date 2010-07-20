@@ -263,6 +263,9 @@ name|class
 name|NamedDecl
 decl_stmt|;
 name|class
+name|PCHDeserializationListener
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -277,6 +280,32 @@ decl_stmt|;
 struct_decl|struct
 name|HeaderFileInfo
 struct_decl|;
+struct|struct
+name|PCHPredefinesBlock
+block|{
+comment|/// \brief The file ID for this predefines buffer in a PCH file.
+name|FileID
+name|BufferID
+decl_stmt|;
+comment|/// \brief This predefines buffer in a PCH file.
+name|llvm
+operator|::
+name|StringRef
+name|Data
+expr_stmt|;
+block|}
+struct|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PCHPredefinesBlock
+operator|,
+literal|2
+operator|>
+name|PCHPredefinesBlocks
+expr_stmt|;
 comment|/// \brief Abstract interface for callback invocations by the PCHReader.
 comment|///
 comment|/// While reading a PCH file, the PCHReader will call the methods of the
@@ -329,10 +358,7 @@ return|;
 block|}
 comment|/// \brief Receives the contents of the predefines buffer.
 comment|///
-comment|/// \param PCHPredef The start of the predefines buffer in the PCH
-comment|/// file.
-comment|///
-comment|/// \param PCHBufferID The FileID for the PCH predefines buffer.
+comment|/// \param Buffers Information about the predefines buffers.
 comment|///
 comment|/// \param OriginalFileName The original file name for the PCH, which will
 comment|/// appear as an entry in the predefines buffer.
@@ -345,13 +371,10 @@ name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|PCHPredef
-argument_list|,
-name|FileID
-name|PCHBufferID
+specifier|const
+name|PCHPredefinesBlocks
+operator|&
+name|Buffers
 argument_list|,
 name|llvm
 operator|::
@@ -462,9 +485,7 @@ name|virtual
 name|bool
 name|ReadPredefinesBuffer
 argument_list|(
-argument|llvm::StringRef PCHPredef
-argument_list|,
-argument|FileID PCHBufferID
+argument|const PCHPredefinesBlocks&Buffers
 argument_list|,
 argument|llvm::StringRef OriginalFileName
 argument_list|,
@@ -550,7 +571,7 @@ name|PCHValidator
 decl_stmt|;
 name|private
 label|:
-comment|/// \ brief The receiver of some callbacks invoked by PCHReader.
+comment|/// \brief The receiver of some callbacks invoked by PCHReader.
 name|llvm
 operator|::
 name|OwningPtr
@@ -559,6 +580,11 @@ name|PCHReaderListener
 operator|>
 name|Listener
 expr_stmt|;
+comment|/// \brief The receiver of deserialization events.
+name|PCHDeserializationListener
+modifier|*
+name|DeserializationListener
+decl_stmt|;
 name|SourceManager
 modifier|&
 name|SourceMgr
@@ -861,7 +887,7 @@ literal|16
 operator|>
 name|TentativeDefinitions
 expr_stmt|;
-comment|/// \brief The set of tentative definitions stored in the the PCH
+comment|/// \brief The set of unused static functions stored in the the PCH
 comment|/// file.
 name|llvm
 operator|::
@@ -896,6 +922,28 @@ operator|,
 literal|4
 operator|>
 name|ExtVectorDecls
+expr_stmt|;
+comment|/// \brief The set of VTable uses of CXXRecordDecls stored in the PCH file.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|64
+operator|>
+name|VTableUses
+expr_stmt|;
+comment|/// \brief The set of dynamic CXXRecord declarations stored in the PCH file.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|16
+operator|>
+name|DynamicClasses
 expr_stmt|;
 comment|/// \brief The set of Objective-C category definitions stored in the
 comment|/// the PCH file.
@@ -1148,31 +1196,114 @@ comment|///
 comment|/// "Interesting" declarations are those that have data that may
 comment|/// need to be emitted, such as inline function definitions or
 comment|/// Objective-C protocols.
+name|std
+operator|::
+name|deque
+operator|<
+name|Decl
+operator|*
+operator|>
+name|InterestingDecls
+expr_stmt|;
+comment|/// \brief When reading a Stmt tree, Stmt operands are placed in this stack.
 name|llvm
 operator|::
 name|SmallVector
 operator|<
-name|Decl
+name|Stmt
 operator|*
 operator|,
 literal|16
 operator|>
-name|InterestingDecls
+name|StmtStack
 expr_stmt|;
-comment|/// \brief The file ID for the predefines buffer in the PCH file.
-name|FileID
-name|PCHPredefinesBufferID
+comment|/// \brief What kind of records we are reading.
+enum|enum
+name|ReadingKind
+block|{
+name|Read_Decl
+block|,
+name|Read_Type
+block|,
+name|Read_Stmt
+block|}
+enum|;
+comment|/// \brief What kind of records we are reading.
+name|ReadingKind
+name|ReadingKind
 decl_stmt|;
-comment|/// \brief Pointer to the beginning of the predefines buffer in the
-comment|/// PCH file.
+comment|/// \brief RAII object to change the reading kind.
+name|class
+name|ReadingKindTracker
+block|{
+name|PCHReader
+modifier|&
+name|Reader
+decl_stmt|;
+name|enum
+name|ReadingKind
+name|PrevKind
+decl_stmt|;
+name|ReadingKindTracker
+argument_list|(
 specifier|const
-name|char
-modifier|*
-name|PCHPredefines
+name|ReadingKindTracker
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// do not implement
+name|ReadingKindTracker
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|ReadingKindTracker
+operator|&
+operator|)
 decl_stmt|;
-comment|/// \brief Length of the predefines buffer in the PCH file.
-name|unsigned
-name|PCHPredefinesLen
+comment|// do not implement
+name|public
+label|:
+name|ReadingKindTracker
+argument_list|(
+argument|enum ReadingKind newKind
+argument_list|,
+argument|PCHReader&reader
+argument_list|)
+block|:
+name|Reader
+argument_list|(
+name|reader
+argument_list|)
+operator|,
+name|PrevKind
+argument_list|(
+argument|Reader.ReadingKind
+argument_list|)
+block|{
+name|Reader
+operator|.
+name|ReadingKind
+operator|=
+name|newKind
+block|;     }
+operator|~
+name|ReadingKindTracker
+argument_list|()
+block|{
+name|Reader
+operator|.
+name|ReadingKind
+operator|=
+name|PrevKind
+block|; }
+block|}
+empty_stmt|;
+comment|/// \brief All predefines buffers in all PCH files, to be treated as if
+comment|/// concatenated.
+name|PCHPredefinesBlocks
+name|PCHPredefinesBuffers
 decl_stmt|;
 comment|/// \brief Suggested contents of the predefines buffer, after this
 comment|/// PCH file has been processed.
@@ -1187,6 +1318,18 @@ operator|::
 name|string
 name|SuggestedPredefines
 expr_stmt|;
+comment|/// \brief Reads a statement from the specified cursor.
+name|Stmt
+modifier|*
+name|ReadStmtFromStream
+argument_list|(
+name|llvm
+operator|::
+name|BitstreamCursor
+operator|&
+name|Cursor
+argument_list|)
+decl_stmt|;
 name|void
 name|MaybeAddSystemRootToFilename
 argument_list|(
@@ -1202,17 +1345,9 @@ name|ReadPCHBlock
 parameter_list|()
 function_decl|;
 name|bool
-name|CheckPredefinesBuffer
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|PCHPredef
-argument_list|,
-name|FileID
-name|PCHBufferID
-argument_list|)
-decl_stmt|;
+name|CheckPredefinesBuffers
+parameter_list|()
+function_decl|;
 name|bool
 name|ParseLineTable
 argument_list|(
@@ -1279,6 +1414,10 @@ parameter_list|,
 name|unsigned
 name|Index
 parameter_list|)
+function_decl|;
+name|void
+name|PassInterestingDeclsToConsumer
+parameter_list|()
 function_decl|;
 comment|/// \brief Produce an error diagnostic and return true.
 comment|///
@@ -1428,6 +1567,19 @@ name|listener
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|setDeserializationListener
+parameter_list|(
+name|PCHDeserializationListener
+modifier|*
+name|Listener
+parameter_list|)
+block|{
+name|DeserializationListener
+operator|=
+name|Listener
+expr_stmt|;
+block|}
 comment|/// \brief Set the Preprocessor to use.
 name|void
 name|setPreprocessor
@@ -1454,6 +1606,7 @@ name|string
 operator|&
 name|getFileName
 argument_list|()
+specifier|const
 block|{
 return|return
 name|FileName
@@ -1514,6 +1667,44 @@ name|void
 name|ReadPreprocessedEntities
 parameter_list|()
 function_decl|;
+comment|/// \brief Returns the number of types found in this file.
+name|unsigned
+name|getTotalNumTypes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|TypesLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the number of declarations found in this file.
+name|unsigned
+name|getTotalNumDecls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|DeclsLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
 comment|/// given TemplateArgument kind.
 name|TemplateArgumentLocInfo
@@ -1534,8 +1725,21 @@ operator|&
 name|Idx
 argument_list|)
 decl_stmt|;
+comment|/// \brief Reads a TemplateArgumentLoc.
+name|TemplateArgumentLoc
+name|ReadTemplateArgumentLoc
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads a declarator info from the given record.
-name|virtual
 name|TypeSourceInfo
 modifier|*
 name|GetTypeSourceInfo
@@ -1550,9 +1754,14 @@ modifier|&
 name|Idx
 parameter_list|)
 function_decl|;
+comment|/// \brief Resolve and return the translation unit declaration.
+name|TranslationUnitDecl
+modifier|*
+name|GetTranslationUnitDecl
+parameter_list|()
+function_decl|;
 comment|/// \brief Resolve a type ID into a type, potentially building a new
 comment|/// type.
-name|virtual
 name|QualType
 name|GetType
 argument_list|(
@@ -1564,7 +1773,6 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
-name|virtual
 name|Decl
 modifier|*
 name|GetDecl
@@ -1575,6 +1783,15 @@ name|DeclID
 name|ID
 argument_list|)
 decl_stmt|;
+name|virtual
+name|Decl
+modifier|*
+name|GetExternalDecl
+parameter_list|(
+name|uint32_t
+name|ID
+parameter_list|)
+function_decl|;
 comment|/// \brief Resolve the offset of a statement into a statement.
 comment|///
 comment|/// This operation will read a new statement from the external
@@ -1583,7 +1800,7 @@ comment|/// LazyOffsetPtr (which is used by Decls for the body of functions, etc
 name|virtual
 name|Stmt
 modifier|*
-name|GetDeclStmt
+name|GetExternalDeclStmt
 parameter_list|(
 name|uint64_t
 name|Offset
@@ -1605,6 +1822,20 @@ name|unsigned
 name|BlockID
 argument_list|)
 decl_stmt|;
+comment|/// \brief Finds all the visible declarations with a given name.
+comment|/// The current implementation of this method just loads the entire
+comment|/// lookup table as unmaterialized references.
+name|virtual
+name|DeclContext
+operator|::
+name|lookup_result
+name|FindExternalVisibleDeclsByName
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|DeclarationName Name
+argument_list|)
+expr_stmt|;
 comment|/// \brief Read all of the declarations lexically stored in a
 comment|/// declaration context.
 comment|///
@@ -1620,8 +1851,9 @@ comment|/// \returns true if there was an error while reading the
 comment|/// declarations for this declaration context.
 name|virtual
 name|bool
-name|ReadDeclsLexicallyInContext
+name|FindExternalLexicalDecls
 argument_list|(
+specifier|const
 name|DeclContext
 operator|*
 name|DC
@@ -1630,43 +1862,8 @@ name|llvm
 operator|::
 name|SmallVectorImpl
 operator|<
-name|pch
-operator|::
-name|DeclID
-operator|>
-operator|&
-name|Decls
-argument_list|)
-decl_stmt|;
-comment|/// \brief Read all of the declarations visible from a declaration
-comment|/// context.
-comment|///
-comment|/// \param DC The declaration context whose visible declarations
-comment|/// will be read.
-comment|///
-comment|/// \param Decls A vector of visible declaration structures,
-comment|/// providing the mapping from each name visible in the declaration
-comment|/// context to the declaration IDs of declarations with that name.
-comment|///
-comment|/// \returns true if there was an error while reading the
-comment|/// declarations for this declaration context.
-comment|///
-comment|/// FIXME: Using this intermediate data structure results in an
-comment|/// extraneous copying of the data. Could we pass in a reference to
-comment|/// the StoredDeclsMap instead?
-name|virtual
-name|bool
-name|ReadDeclsVisibleInContext
-argument_list|(
-name|DeclContext
+name|Decl
 operator|*
-name|DC
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|VisibleDeclaration
 operator|>
 operator|&
 name|Decls
@@ -1901,15 +2098,14 @@ parameter_list|)
 function_decl|;
 name|virtual
 name|Selector
-name|GetSelector
+name|GetExternalSelector
 parameter_list|(
 name|uint32_t
 name|ID
 parameter_list|)
 function_decl|;
-name|virtual
 name|uint32_t
-name|GetNumKnownSelectors
+name|GetNumExternalSelectors
 parameter_list|()
 function_decl|;
 name|Selector
@@ -1953,6 +2149,106 @@ function_decl|;
 name|NestedNameSpecifier
 modifier|*
 name|ReadNestedNameSpecifier
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a template name.
+name|TemplateName
+name|ReadTemplateName
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a template argument.
+name|TemplateArgument
+name|ReadTemplateArgument
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a template parameter list.
+name|TemplateParameterList
+modifier|*
+name|ReadTemplateParameterList
+parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a template argument array.
+name|void
+name|ReadTemplateArgumentList
+argument_list|(
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|TemplateArgument
+argument_list|,
+literal|8
+operator|>
+operator|&
+name|TemplArgs
+argument_list|,
+specifier|const
+name|RecordData
+operator|&
+name|Record
+argument_list|,
+name|unsigned
+operator|&
+name|Idx
+argument_list|)
+decl_stmt|;
+comment|/// \brief Read a UnresolvedSet structure.
+name|void
+name|ReadUnresolvedSet
+parameter_list|(
+name|UnresolvedSetImpl
+modifier|&
+name|Set
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a C++ base specifier.
+name|CXXBaseSpecifier
+name|ReadCXXBaseSpecifier
 parameter_list|(
 specifier|const
 name|RecordData
@@ -2089,43 +2385,59 @@ modifier|*
 name|ReadAttributes
 parameter_list|()
 function_decl|;
-comment|/// \brief ReadDeclExpr - Reads an expression from the current decl cursor.
-name|Expr
-modifier|*
-name|ReadDeclExpr
-parameter_list|()
-function_decl|;
-comment|/// \brief ReadTypeExpr - Reads an expression from the current type cursor.
-name|Expr
-modifier|*
-name|ReadTypeExpr
-parameter_list|()
-function_decl|;
-comment|/// \brief Reads a statement from the specified cursor.
+comment|/// \brief Reads a statement.
 name|Stmt
 modifier|*
 name|ReadStmt
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|Cursor
-argument_list|)
-decl_stmt|;
-comment|/// \brief Read a statement from the current DeclCursor.
+parameter_list|()
+function_decl|;
+comment|/// \brief Reads an expression.
+name|Expr
+modifier|*
+name|ReadExpr
+parameter_list|()
+function_decl|;
+comment|/// \brief Reads a sub-statement operand during statement reading.
 name|Stmt
 modifier|*
-name|ReadDeclStmt
+name|ReadSubStmt
 parameter_list|()
 block|{
-return|return
-name|ReadStmt
+name|assert
 argument_list|(
-name|DeclsCursor
+name|ReadingKind
+operator|==
+name|Read_Stmt
+operator|&&
+literal|"Should be called only during statement reading!"
 argument_list|)
+expr_stmt|;
+comment|// Subexpressions are stored from last to first, so the next Stmt we need
+comment|// is at the back of the stack.
+name|assert
+argument_list|(
+operator|!
+name|StmtStack
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Read too many sub statements!"
+argument_list|)
+expr_stmt|;
+return|return
+name|StmtStack
+operator|.
+name|pop_back_val
+argument_list|()
 return|;
 block|}
+comment|/// \brief Reads a sub-expression operand during statement reading.
+name|Expr
+modifier|*
+name|ReadSubExpr
+parameter_list|()
+function_decl|;
 comment|/// \brief Reads the macro record located at the given offset.
 name|void
 name|ReadMacroRecord

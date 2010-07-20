@@ -394,28 +394,101 @@ literal|24
 operator|<<
 name|FormShift
 block|,
-comment|// NEON format
-name|NEONFrm
+comment|// Miscelleaneous format
+name|MiscFrm
 init|=
 literal|25
 operator|<<
 name|FormShift
 block|,
-name|NEONGetLnFrm
+comment|// NEON formats
+name|NGetLnFrm
 init|=
 literal|26
 operator|<<
 name|FormShift
 block|,
-name|NEONSetLnFrm
+name|NSetLnFrm
 init|=
 literal|27
 operator|<<
 name|FormShift
 block|,
-name|NEONDupFrm
+name|NDupFrm
 init|=
 literal|28
+operator|<<
+name|FormShift
+block|,
+name|NLdStFrm
+init|=
+literal|29
+operator|<<
+name|FormShift
+block|,
+name|N1RegModImmFrm
+init|=
+literal|30
+operator|<<
+name|FormShift
+block|,
+name|N2RegFrm
+init|=
+literal|31
+operator|<<
+name|FormShift
+block|,
+name|NVCVTFrm
+init|=
+literal|32
+operator|<<
+name|FormShift
+block|,
+name|NVDupLnFrm
+init|=
+literal|33
+operator|<<
+name|FormShift
+block|,
+name|N2RegVShLFrm
+init|=
+literal|34
+operator|<<
+name|FormShift
+block|,
+name|N2RegVShRFrm
+init|=
+literal|35
+operator|<<
+name|FormShift
+block|,
+name|N3RegFrm
+init|=
+literal|36
+operator|<<
+name|FormShift
+block|,
+name|N3RegVShFrm
+init|=
+literal|37
+operator|<<
+name|FormShift
+block|,
+name|NVExtFrm
+init|=
+literal|38
+operator|<<
+name|FormShift
+block|,
+name|NVMulSLFrm
+init|=
+literal|39
+operator|<<
+name|FormShift
+block|,
+name|NVTBLFrm
+init|=
+literal|40
 operator|<<
 name|FormShift
 block|,
@@ -689,6 +762,8 @@ argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -867,22 +942,20 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|copyRegToReg
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|,
+argument|DebugLoc DL
+argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
@@ -942,46 +1015,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|MachineInstr* LoadMI
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|void
 name|reMaterialize
 argument_list|(
@@ -995,7 +1028,7 @@ argument|unsigned SubIdx
 argument_list|,
 argument|const MachineInstr *Orig
 argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;
@@ -1018,20 +1051,115 @@ argument_list|,
 argument|const MachineInstr *MI1
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+comment|/// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler to
+comment|/// determine if two loads are loading from the same base address. It should
+comment|/// only return true if the base pointers are the same and the only
+comment|/// differences between the two addresses is the offset. It also returns the
+comment|/// offsets by reference.
+name|virtual
+name|bool
+name|areLoadsFromSameBasePtr
+argument_list|(
+argument|SDNode *Load1
+argument_list|,
+argument|SDNode *Load2
+argument_list|,
+argument|int64_t&Offset1
+argument_list|,
+argument|int64_t&Offset2
+argument_list|)
+specifier|const
+block|;
+comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
+comment|/// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
+comment|/// be scheduled togther. On some targets if two loads are loading from
+comment|/// addresses in the same cache line, it's better if they are scheduled
+comment|/// together. This function takes two integers that represent the load offsets
+comment|/// from the common base address. It returns true if it decides it's desirable
+comment|/// to schedule the two loads together. "NumLoads" is the number of loads that
+comment|/// have already been scheduled after Load1.
+name|virtual
+name|bool
+name|shouldScheduleLoadsNear
+argument_list|(
+argument|SDNode *Load1
+argument_list|,
+argument|SDNode *Load2
+argument_list|,
+argument|int64_t Offset1
+argument_list|,
+argument|int64_t Offset2
+argument_list|,
+argument|unsigned NumLoads
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isSchedulingBoundary
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumInstrs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+argument|MachineBasicBlock&TMBB
+argument_list|,
+argument|unsigned NumT
+argument_list|,
+argument|MachineBasicBlock&FMBB
+argument_list|,
+argument|unsigned NumF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isProfitableToDupForIfCvt
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|unsigned NumInstrs
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NumInstrs
+operator|&&
+name|NumInstrs
+operator|==
+literal|1
+return|;
+block|}
+expr|}
+block|;
 specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultPred
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1056,14 +1184,11 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultCC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1078,19 +1203,13 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|,
-name|bool
-name|isDead
-init|=
-name|false
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|,
+argument|bool isDead = false
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1117,14 +1236,11 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddNoT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1139,10 +1255,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isUncondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1168,10 +1283,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isCondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1197,10 +1311,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isJumpTableBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1238,10 +1351,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isIndirectBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1280,146 +1392,92 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-expr_stmt|;
+block|;
 name|int
 name|getMatchingCondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int Opc
+argument_list|)
+block|;
 comment|/// emitARMRegPlusImmediate / emitT2RegPlusImmediate - Emits a series of
 comment|/// instructions to materializea destreg = basereg + immediate in ARM / Thumb2
 comment|/// code.
 name|void
 name|emitARMRegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-name|DebugLoc
-name|dl
+argument|DebugLoc dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|emitT2RegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-name|DebugLoc
-name|dl
+argument|DebugLoc dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
 comment|/// offset could not be handled directly in MI, and return the left-over
 comment|/// portion by reference.
 name|bool
 name|rewriteARMFrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;
 name|bool
 name|rewriteT2FrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
-block|}
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;  }
 end_decl_stmt
 
 begin_comment

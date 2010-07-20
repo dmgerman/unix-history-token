@@ -155,6 +155,12 @@ decl_stmt|;
 comment|// FIXME: This is not a permanent API change.
 name|public
 label|:
+name|bool
+modifier|*
+name|respondsToCallback
+decl_stmt|;
+name|public
+label|:
 name|CheckerContext
 argument_list|(
 argument|ExplodedNodeSet&dst
@@ -168,6 +174,9 @@ argument_list|,
 argument|const void *tag
 argument_list|,
 argument|ProgramPoint::Kind K
+argument_list|,
+argument|bool *respondsToCB =
+literal|0
 argument_list|,
 argument|const Stmt *stmt =
 literal|0
@@ -240,7 +249,15 @@ argument_list|)
 operator|,
 name|size
 argument_list|(
-argument|Dst.size()
+name|Dst
+operator|.
+name|size
+argument_list|()
+argument_list|)
+operator|,
+name|respondsToCallback
+argument_list|(
+argument|respondsToCB
 argument_list|)
 block|{}
 operator|~
@@ -727,6 +744,7 @@ name|Pred
 argument_list|)
 operator|)
 condition|)
+comment|// state is new or equals to ST.
 name|GenerateNode
 argument_list|(
 name|state
@@ -945,6 +963,10 @@ name|tag
 parameter_list|,
 name|bool
 name|isPrevisit
+parameter_list|,
+name|bool
+modifier|&
+name|respondsToCallback
 parameter_list|)
 block|{
 name|CheckerContext
@@ -969,6 +991,9 @@ else|:
 name|ProgramPoint
 operator|::
 name|PostStmtKind
+argument_list|,
+operator|&
+name|respondsToCallback
 argument_list|,
 name|S
 argument_list|)
@@ -1044,6 +1069,8 @@ name|ProgramPoint
 operator|::
 name|PostStmtKind
 argument_list|,
+literal|0
+argument_list|,
 name|ME
 argument_list|,
 name|state
@@ -1103,6 +1130,8 @@ argument_list|,
 name|ProgramPoint
 operator|::
 name|PostStmtKind
+argument_list|,
+literal|0
 argument_list|,
 name|CE
 argument_list|)
@@ -1182,6 +1211,8 @@ else|:
 name|ProgramPoint
 operator|::
 name|PostStmtKind
+argument_list|,
+literal|0
 argument_list|,
 name|StoreE
 argument_list|)
@@ -1271,6 +1302,8 @@ name|ProgramPoint
 operator|::
 name|PreStoreKind
 argument_list|,
+literal|0
+argument_list|,
 name|S
 argument_list|,
 name|state
@@ -1336,14 +1369,14 @@ name|ProgramPoint
 operator|::
 name|PostPurgeDeadSymbolsKind
 argument_list|,
+literal|0
+argument_list|,
 name|S
 argument_list|)
 decl_stmt|;
 name|EvalDeadSymbols
 argument_list|(
 name|C
-argument_list|,
-name|S
 argument_list|,
 name|SymReaper
 argument_list|)
@@ -1433,11 +1466,6 @@ parameter_list|(
 name|CheckerContext
 modifier|&
 name|C
-parameter_list|,
-specifier|const
-name|Stmt
-modifier|*
-name|S
 parameter_list|,
 name|SymbolReaper
 modifier|&
@@ -1540,6 +1568,22 @@ return|return
 name|state
 return|;
 block|}
+name|virtual
+name|void
+name|VisitEndAnalysis
+parameter_list|(
+name|ExplodedGraph
+modifier|&
+name|G
+parameter_list|,
+name|BugReporter
+modifier|&
+name|B
+parameter_list|,
+name|bool
+name|hasWorkRemaining
+parameter_list|)
+block|{}
 block|}
 empty_stmt|;
 block|}

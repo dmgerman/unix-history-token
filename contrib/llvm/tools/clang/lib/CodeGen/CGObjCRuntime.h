@@ -318,6 +318,8 @@ argument_list|(
 argument|CGBuilderTy&Builder
 argument_list|,
 argument|Selector Sel
+argument_list|,
+argument|bool lval=false
 argument_list|)
 operator|=
 literal|0
@@ -579,7 +581,7 @@ literal|0
 expr_stmt|;
 name|virtual
 name|void
-name|EmitTryOrSynchronizedStmt
+name|EmitSynchronizedStmt
 argument_list|(
 name|CodeGen
 operator|::
@@ -588,7 +590,25 @@ operator|&
 name|CGF
 argument_list|,
 specifier|const
-name|Stmt
+name|ObjCAtSynchronizedStmt
+operator|&
+name|S
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+name|void
+name|EmitTryStmt
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|ObjCAtTryStmt
 operator|&
 name|S
 argument_list|)
@@ -819,8 +839,11 @@ name|Value
 operator|*
 name|SrcPtr
 argument_list|,
-name|QualType
-name|Ty
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Size
 argument_list|)
 init|=
 literal|0

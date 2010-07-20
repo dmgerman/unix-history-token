@@ -1083,18 +1083,7 @@ name|Function
 modifier|&
 name|F
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unable to find on the fly pass"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
+function_decl|;
 comment|/// Initialize available analysis information.
 name|void
 name|initializeAnalysisInfo

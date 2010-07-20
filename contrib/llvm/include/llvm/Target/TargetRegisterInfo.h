@@ -475,6 +475,30 @@ name|Reg
 argument_list|)
 return|;
 block|}
+comment|/// contains - Return true if both registers are in this class.
+name|bool
+name|contains
+argument_list|(
+name|unsigned
+name|Reg1
+argument_list|,
+name|unsigned
+name|Reg2
+argument_list|)
+decl|const
+block|{
+return|return
+name|contains
+argument_list|(
+name|Reg1
+argument_list|)
+operator|&&
+name|contains
+argument_list|(
+name|Reg2
+argument_list|)
+return|;
+block|}
 comment|/// hasType - return true if this TargetRegisterClass has the ValueType vt.
 comment|///
 name|bool
@@ -1288,14 +1312,13 @@ operator|>=
 name|FirstVirtualRegister
 return|;
 block|}
-comment|/// getPhysicalRegisterRegClass - Returns the Register Class of a physical
-comment|/// register of the given type. If type is EVT::Other, then just return any
-comment|/// register class the register belongs to.
-name|virtual
+comment|/// getMinimalPhysRegClass - Returns the Register Class of a physical
+comment|/// register of the given type, picking the most sub register class of
+comment|/// the right type that contains this physreg.
 specifier|const
 name|TargetRegisterClass
 modifier|*
-name|getPhysicalRegisterRegClass
+name|getMinimalPhysRegClass
 argument_list|(
 name|unsigned
 name|Reg
@@ -1789,26 +1812,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getCalleeSavedRegClasses - Return a null-terminated list of the preferred
-comment|/// register classes to spill each callee saved register with.  The order and
-comment|/// length of this list match the getCalleeSaveRegs() list.
-name|virtual
-specifier|const
-name|TargetRegisterClass
-modifier|*
-specifier|const
-modifier|*
-name|getCalleeSavedRegClasses
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 comment|/// indicating if a register is a special register that has particular uses
 comment|/// and should be considered unavailable at all times, e.g. SP, RA. This is
@@ -1844,7 +1847,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// getSubRegIndex - For a given register pair, return the sub-register index
-comment|/// if the are second register is a sub-register of the first. Return zero
+comment|/// if the second register is a sub-register of the first. Return zero
 comment|/// otherwise.
 name|virtual
 name|unsigned
@@ -1924,14 +1927,15 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// canCombinedSubRegIndex - Given a register class and a list of sub-register
-comment|/// indices, return true if it's possible to combine the sub-register indices
-comment|/// into one that corresponds to a larger sub-register. Return the new sub-
-comment|/// register index by reference. Note the new index by be zero if the given
-comment|/// sub-registers combined to form the whole register.
+comment|/// canCombineSubRegIndices - Given a register class and a list of
+comment|/// subregister indices, return true if it's possible to combine the
+comment|/// subregister indices into one that corresponds to a larger
+comment|/// subregister. Return the new subregister index by reference. Note the
+comment|/// new index may be zero if the given subregisters can be combined to
+comment|/// form the whole register.
 name|virtual
 name|bool
-name|canCombinedSubRegIndex
+name|canCombineSubRegIndices
 argument_list|(
 specifier|const
 name|TargetRegisterClass
@@ -1981,6 +1985,35 @@ decl|const
 block|{
 return|return
 literal|0
+return|;
+block|}
+comment|/// composeSubRegIndices - Return the subregister index you get from composing
+comment|/// two subregister indices.
+comment|///
+comment|/// If R:a:b is the same register as R:c, then composeSubRegIndices(a, b)
+comment|/// returns c. Note that composeSubRegIndices does not tell you about illegal
+comment|/// compositions. If R does not have a subreg a, or R:a does not have a subreg
+comment|/// b, composeSubRegIndices doesn't tell you.
+comment|///
+comment|/// The ARM register Q0 has two D subregs dsub_0:D0 and dsub_1:D1. It also has
+comment|/// ssub_0:S0 - ssub_3:S3 subregs.
+comment|/// If you compose subreg indices dsub_1, ssub_0 you get ssub_2.
+comment|///
+name|virtual
+name|unsigned
+name|composeSubRegIndices
+argument_list|(
+name|unsigned
+name|a
+argument_list|,
+name|unsigned
+name|b
+argument_list|)
+decl|const
+block|{
+comment|// This default implementation is correct for most targets.
+return|return
+name|b
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -2039,7 +2072,7 @@ block|{
 name|assert
 argument_list|(
 name|i
-operator|<=
+operator|<
 name|getNumRegClasses
 argument_list|()
 operator|&&
@@ -2047,16 +2080,10 @@ literal|"Register Class ID out of range"
 argument_list|)
 expr_stmt|;
 return|return
-name|i
-condition|?
 name|RegClassBegin
 index|[
 name|i
-operator|-
-literal|1
 index|]
-else|:
-name|NULL
 return|;
 block|}
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer

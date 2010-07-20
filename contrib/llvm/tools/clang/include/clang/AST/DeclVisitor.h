@@ -138,30 +138,28 @@ name|assert
 argument_list|(
 name|false
 operator|&&
-literal|"Decl that isn't part of DeclNodes.def!"
+literal|"Decl that isn't part of DeclNodes.inc!"
 argument_list|)
 expr_stmt|;
 define|#
 directive|define
 name|DECL
 parameter_list|(
-name|Derived
+name|DERIVED
 parameter_list|,
-name|Base
+name|BASE
 parameter_list|)
 define|\
-value|case Decl::Derived: DISPATCH(Derived##Decl, Derived##Decl);
+value|case Decl::DERIVED: DISPATCH(DERIVED##Decl, DERIVED##Decl);
 define|#
 directive|define
 name|ABSTRACT_DECL
 parameter_list|(
-name|Derived
-parameter_list|,
-name|Base
+name|DECL
 parameter_list|)
 include|#
 directive|include
-file|"clang/AST/DeclNodes.def"
+file|"clang/AST/DeclNodes.inc"
 block|}
 block|}
 comment|// If the implementation chooses not to implement a certain visit
@@ -170,24 +168,15 @@ define|#
 directive|define
 name|DECL
 parameter_list|(
-name|Derived
+name|DERIVED
 parameter_list|,
-name|Base
+name|BASE
 parameter_list|)
 define|\
-value|RetTy Visit##Derived##Decl(Derived##Decl *D) { DISPATCH(Base, Base); }
-define|#
-directive|define
-name|ABSTRACT_DECL
-parameter_list|(
-name|Derived
-parameter_list|,
-name|Base
-parameter_list|)
-value|DECL(Derived, Base)
+value|RetTy Visit##DERIVED##Decl(DERIVED##Decl *D) { DISPATCH(BASE, BASE); }
 include|#
 directive|include
-file|"clang/AST/DeclNodes.def"
+file|"clang/AST/DeclNodes.inc"
 name|RetTy
 name|VisitDecl
 argument_list|(

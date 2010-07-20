@@ -63,6 +63,12 @@ directive|define
 name|LLVM_TARGET_TARGETINSTRDESC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/System/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -123,7 +129,6 @@ comment|/// get a dynamic register class.
 comment|///
 comment|/// NOTE: This member should be considered to be private, all access should go
 comment|/// through "getRegClass(TRI)" below.
-name|unsigned
 name|short
 name|RegClass
 decl_stmt|;
@@ -312,7 +317,7 @@ name|unsigned
 name|Flags
 decl_stmt|;
 comment|// Flags identifying machine instr class
-name|unsigned
+name|uint64_t
 name|TSFlags
 decl_stmt|;
 comment|// Target Specific Flag values

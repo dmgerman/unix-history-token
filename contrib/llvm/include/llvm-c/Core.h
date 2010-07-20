@@ -590,7 +590,10 @@ name|LLVMCommonLinkage
 block|,
 comment|/**< Tentative definitions */
 name|LLVMLinkerPrivateLinkage
+block|,
 comment|/**< Like Private, but linker removes. */
+name|LLVMLinkerPrivateWeakLinkage
+comment|/**< Like LinkerPrivate, but is weak. */
 block|}
 name|LLVMLinkage
 typedef|;

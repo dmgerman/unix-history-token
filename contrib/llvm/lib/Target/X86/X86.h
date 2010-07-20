@@ -117,6 +117,13 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
+comment|/// createGlobalBaseRegPass - This pass initializes a global base
+comment|/// register for PIC on x86-32.
+name|FunctionPass
+modifier|*
+name|createGlobalBaseRegPass
+parameter_list|()
+function_decl|;
 comment|/// createX86FloatingPointStackifierPass - This function returns a pass which
 comment|/// converts floating point register references and pseudo instructions into
 comment|/// floating point stack references and physical instructions.

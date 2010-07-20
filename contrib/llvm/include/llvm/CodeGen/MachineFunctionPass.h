@@ -128,17 +128,6 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{}
-comment|/// createPrinterPass - Get a machine function printer pass.
-name|Pass
-operator|*
-name|createPrinterPass
-argument_list|(
-argument|raw_ostream&O
-argument_list|,
-argument|const std::string&Banner
-argument_list|)
-specifier|const
-block|;
 comment|/// runOnMachineFunction - This method must be overloaded to perform the
 comment|/// desired machine code transformation or analysis.
 comment|///
@@ -169,6 +158,19 @@ specifier|const
 block|;
 name|private
 operator|:
+comment|/// createPrinterPass - Get a machine function printer pass.
+name|virtual
+name|Pass
+operator|*
+name|createPrinterPass
+argument_list|(
+argument|raw_ostream&O
+argument_list|,
+argument|const std::string&Banner
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|bool
 name|runOnFunction
 argument_list|(

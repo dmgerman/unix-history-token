@@ -78,7 +78,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_include
@@ -175,7 +175,7 @@ name|Module
 operator|*
 name|M
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -185,7 +185,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|)
 decl_stmt|;
 comment|/// ClonedCodeInfo - This struct can be used to capture information about code
@@ -244,7 +244,7 @@ comment|/// successors will have to have any PHI nodes updated to account for th
 comment|/// incoming edges.
 comment|///
 comment|/// The correlation between instructions in the source and result basic blocks
-comment|/// is recorded in the ValueMap map.
+comment|/// is recorded in the VMap map.
 comment|///
 comment|/// If you have a particular suffix you'd like to use to add to any cloned
 comment|/// names, specify it as the optional third parameter.
@@ -265,7 +265,7 @@ name|BasicBlock
 operator|*
 name|BB
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -275,7 +275,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|,
 specifier|const
 name|Twine
@@ -298,7 +298,7 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/// CloneLoop - Clone Loop. Clone dominator info for loop insiders. Populate
-comment|/// ValueMap using old blocks to new blocks mapping.
+comment|/// VMap using old blocks to new blocks mapping.
 name|Loop
 modifier|*
 name|CloneLoop
@@ -315,7 +315,7 @@ name|LoopInfo
 operator|*
 name|LI
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -325,7 +325,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|,
 name|Pass
 operator|*
@@ -334,9 +334,9 @@ argument_list|)
 decl_stmt|;
 comment|/// CloneFunction - Return a copy of the specified function, but without
 comment|/// embedding the function into another module.  Also, any references specified
-comment|/// in the ValueMap are changed to refer to their mapped value instead of the
-comment|/// original one.  If any of the arguments to the function are in the ValueMap,
-comment|/// the arguments are deleted from the resultant function.  The ValueMap is
+comment|/// in the VMap are changed to refer to their mapped value instead of the
+comment|/// original one.  If any of the arguments to the function are in the VMap,
+comment|/// the arguments are deleted from the resultant function.  The VMap is
 comment|/// updated to include mappings from all of the instructions and basicblocks in
 comment|/// the function from their old to new values.  The final argument captures
 comment|/// information about the cloned code if non-null.
@@ -350,7 +350,7 @@ name|Function
 operator|*
 name|F
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -360,7 +360,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|,
 name|ClonedCodeInfo
 operator|*
@@ -369,7 +369,7 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
-comment|/// CloneFunction - Version of the function that doesn't need the ValueMap.
+comment|/// CloneFunction - Version of the function that doesn't need the VMap.
 comment|///
 specifier|inline
 name|Function
@@ -388,7 +388,7 @@ init|=
 literal|0
 parameter_list|)
 block|{
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -397,14 +397,14 @@ operator|,
 name|Value
 operator|*
 operator|>
-name|ValueMap
+name|VMap
 expr_stmt|;
 return|return
 name|CloneFunction
 argument_list|(
 name|F
 argument_list|,
-name|ValueMap
+name|VMap
 argument_list|,
 name|CodeInfo
 argument_list|)
@@ -428,7 +428,7 @@ name|Function
 operator|*
 name|OldFunc
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -438,7 +438,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -481,7 +481,7 @@ name|Function
 operator|*
 name|OldFunc
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -491,7 +491,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|,
 name|SmallVectorImpl
 operator|<

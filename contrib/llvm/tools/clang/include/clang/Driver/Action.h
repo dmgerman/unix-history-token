@@ -172,13 +172,15 @@ name|LinkJobClass
 block|,
 name|LipoJobClass
 block|,
+name|DsymutilJobClass
+block|,
 name|JobClassFirst
 init|=
 name|PreprocessJobClass
 block|,
 name|JobClassLast
 init|=
-name|LipoJobClass
+name|DsymutilJobClass
 block|}
 enum|;
 specifier|static
@@ -948,6 +950,50 @@ name|bool
 name|classof
 argument_list|(
 argument|const LipoJobAction *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|DsymutilJobAction
+operator|:
+name|public
+name|JobAction
+block|{
+name|public
+operator|:
+name|DsymutilJobAction
+argument_list|(
+argument|ActionList&Inputs
+argument_list|,
+argument|types::ID Type
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Action *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|DsymutilJobClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DsymutilJobAction *
 argument_list|)
 block|{
 return|return

@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_decl_stmt
@@ -258,7 +258,7 @@ comment|// This ValueMap maps the auto variables of the original functions with
 comment|// the corresponding cloned auto variable of the cloned function.
 comment|// This value map is passed during the function cloning so that all the
 comment|// uses of auto variables be updated properly.
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -267,7 +267,7 @@ block|,
 name|Value
 operator|*
 operator|>
-name|ValueMap
+name|VMap
 block|;
 comment|// Map of a already cloned functions.
 name|map

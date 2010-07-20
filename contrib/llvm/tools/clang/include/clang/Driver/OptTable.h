@@ -148,6 +148,9 @@ name|class
 name|Arg
 decl_stmt|;
 name|class
+name|ArgList
+decl_stmt|;
+name|class
 name|InputArgList
 decl_stmt|;
 name|class
@@ -531,7 +534,7 @@ modifier|*
 name|ParseOneArg
 argument_list|(
 specifier|const
-name|InputArgList
+name|ArgList
 operator|&
 name|Args
 argument_list|,

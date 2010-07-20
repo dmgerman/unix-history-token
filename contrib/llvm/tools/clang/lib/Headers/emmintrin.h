@@ -7248,7 +7248,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, 0, 1, 2, 3, \                                     4 + ((imm)& 0x3), 4 + ((imm)& 0xc)>> 2, \                                     4 + ((imm)& 0x30)>> 4, \                                     4 + ((imm)& 0xc0)>> 6))
+value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
 end_define
 
 begin_decl_stmt

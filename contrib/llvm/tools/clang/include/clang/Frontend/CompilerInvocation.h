@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/CodeGen/CodeGenOptions.h"
+file|"clang/Frontend/AnalyzerOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Frontend/AnalysisConsumer.h"
+file|"clang/Frontend/CodeGenOptions.h"
 end_include
 
 begin_include

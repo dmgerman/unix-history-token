@@ -158,20 +158,23 @@ function_decl|;
 name|public
 label|:
 typedef|typedef
-specifier|const
 name|Arg
+modifier|*
+specifier|const
 modifier|*
 name|value_type
 typedef|;
 typedef|typedef
-specifier|const
 name|Arg
 modifier|*
+specifier|const
+modifier|&
 name|reference
 typedef|;
 typedef|typedef
-specifier|const
 name|Arg
+modifier|*
+specifier|const
 modifier|*
 name|pointer
 typedef|;
@@ -263,7 +266,6 @@ block|)
 decl|const
 block|{
 return|return
-operator|*
 name|Current
 return|;
 block|}
@@ -363,6 +365,26 @@ comment|/// and to iterate over groups of arguments.
 name|class
 name|ArgList
 block|{
+name|private
+label|:
+name|ArgList
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ArgList
+operator|&
+operator|)
+decl_stmt|;
+comment|// DO NOT IMPLEMENT
 name|public
 label|:
 typedef|typedef
@@ -403,19 +425,14 @@ name|const_reverse_iterator
 expr_stmt|;
 name|private
 label|:
-comment|/// The full list of arguments.
+comment|/// The internal list of arguments.
 name|arglist_type
-modifier|&
 name|Args
 decl_stmt|;
 name|protected
 label|:
 name|ArgList
-argument_list|(
-name|arglist_type
-operator|&
-name|Args
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|public
 label|:
@@ -756,6 +773,24 @@ name|Id2
 argument_list|)
 decl|const
 decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArg
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|,
+name|OptSpecifier
+name|Id3
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getArgString - Return the input argument string at \arg Index.
 name|virtual
 specifier|const
@@ -770,6 +805,17 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// getNumInputArgStrings - Return the number of original argument strings,
+comment|/// which are guaranteed to be the first strings in the argument string
+comment|/// list.
+name|virtual
+name|unsigned
+name|getNumInputArgStrings
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 comment|/// @}
 comment|/// @name Argument Lookup Utilities
 comment|/// @{
@@ -1024,6 +1070,28 @@ name|Str
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Create an arg string for (\arg LHS + \arg RHS), reusing the
+comment|/// string at \arg Index if possible.
+specifier|const
+name|char
+modifier|*
+name|GetOrMakeJoinedArgString
+argument_list|(
+name|unsigned
+name|Index
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|LHS
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|RHS
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;
@@ -1035,10 +1103,6 @@ name|ArgList
 block|{
 name|private
 operator|:
-comment|/// The internal list of arguments.
-name|arglist_type
-name|ActualArgs
-block|;
 comment|/// List of argument strings used by the contained Args.
 comment|///
 comment|/// This is mutable since we treat the ArgList as being the list
@@ -1085,13 +1149,6 @@ operator|*
 name|ArgEnd
 argument_list|)
 block|;
-name|InputArgList
-argument_list|(
-specifier|const
-name|ArgList
-operator|&
-argument_list|)
-block|;
 operator|~
 name|InputArgList
 argument_list|()
@@ -1113,8 +1170,7 @@ name|Index
 index|]
 return|;
 block|}
-comment|/// getNumInputArgStrings - Return the number of original input
-comment|/// argument strings.
+name|virtual
 name|unsigned
 name|getNumInputArgStrings
 argument_list|()
@@ -1166,34 +1222,25 @@ range|:
 name|public
 name|ArgList
 block|{
+specifier|const
 name|InputArgList
 operator|&
 name|BaseArgs
-block|;
-comment|/// The internal list of arguments.
-name|arglist_type
-name|ActualArgs
 block|;
 comment|/// The list of arguments we synthesized.
 name|mutable
 name|arglist_type
 name|SynthesizedArgs
 block|;
-comment|/// Is this only a proxy for the base ArgList?
-name|bool
-name|OnlyProxy
-block|;
 name|public
 operator|:
 comment|/// Construct a new derived arg list from \arg BaseArgs.
-comment|///
-comment|/// \param OnlyProxy - If true, this is only a proxy for the base
-comment|/// list (to adapt the type), and it's Args list is unused.
 name|DerivedArgList
 argument_list|(
-argument|InputArgList&BaseArgs
-argument_list|,
-argument|bool OnlyProxy
+specifier|const
+name|InputArgList
+operator|&
+name|BaseArgs
 argument_list|)
 block|;
 operator|~
@@ -1219,8 +1266,47 @@ name|Index
 argument_list|)
 return|;
 block|}
+name|virtual
+name|unsigned
+name|getNumInputArgStrings
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseArgs
+operator|.
+name|getNumInputArgStrings
+argument_list|()
+return|;
+block|}
+specifier|const
+name|InputArgList
+operator|&
+name|getBaseArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseArgs
+return|;
+block|}
 comment|/// @name Arg Synthesis
 comment|/// @{
+comment|/// AddSynthesizedArg - Add a argument to the list of synthesized arguments
+comment|/// (to be freed).
+name|void
+name|AddSynthesizedArg
+argument_list|(
+argument|Arg *A
+argument_list|)
+block|{
+name|SynthesizedArgs
+operator|.
+name|push_back
+argument_list|(
+name|A
+argument_list|)
+block|;     }
 name|virtual
 specifier|const
 name|char
@@ -1231,6 +1317,100 @@ argument|llvm::StringRef Str
 argument_list|)
 specifier|const
 block|;
+comment|/// AddFlagArg - Construct a new FlagArg for the given option \arg Id and
+comment|/// append it to the argument list.
+name|void
+name|AddFlagArg
+argument_list|(
+argument|const Arg *BaseArg
+argument_list|,
+argument|const Option *Opt
+argument_list|)
+block|{
+name|append
+argument_list|(
+name|MakeFlagArg
+argument_list|(
+name|BaseArg
+argument_list|,
+name|Opt
+argument_list|)
+argument_list|)
+block|;     }
+comment|/// AddPositionalArg - Construct a new Positional arg for the given option
+comment|/// \arg Id, with the provided \arg Value and append it to the argument
+comment|/// list.
+name|void
+name|AddPositionalArg
+argument_list|(
+argument|const Arg *BaseArg
+argument_list|,
+argument|const Option *Opt
+argument_list|,
+argument|llvm::StringRef Value
+argument_list|)
+block|{
+name|append
+argument_list|(
+name|MakePositionalArg
+argument_list|(
+name|BaseArg
+argument_list|,
+name|Opt
+argument_list|,
+name|Value
+argument_list|)
+argument_list|)
+block|;     }
+comment|/// AddSeparateArg - Construct a new Positional arg for the given option
+comment|/// \arg Id, with the provided \arg Value and append it to the argument
+comment|/// list.
+name|void
+name|AddSeparateArg
+argument_list|(
+argument|const Arg *BaseArg
+argument_list|,
+argument|const Option *Opt
+argument_list|,
+argument|llvm::StringRef Value
+argument_list|)
+block|{
+name|append
+argument_list|(
+name|MakeSeparateArg
+argument_list|(
+name|BaseArg
+argument_list|,
+name|Opt
+argument_list|,
+name|Value
+argument_list|)
+argument_list|)
+block|;     }
+comment|/// AddJoinedArg - Construct a new Positional arg for the given option \arg
+comment|/// Id, with the provided \arg Value and append it to the argument list.
+name|void
+name|AddJoinedArg
+argument_list|(
+argument|const Arg *BaseArg
+argument_list|,
+argument|const Option *Opt
+argument_list|,
+argument|llvm::StringRef Value
+argument_list|)
+block|{
+name|append
+argument_list|(
+name|MakeJoinedArg
+argument_list|(
+name|BaseArg
+argument_list|,
+name|Opt
+argument_list|,
+name|Value
+argument_list|)
+argument_list|)
+block|;     }
 comment|/// MakeFlagArg - Construct a new FlagArg for the given option
 comment|/// \arg Id.
 name|Arg

@@ -98,6 +98,10 @@ name|SemaSource
 operator|=
 name|true
 block|;   }
+operator|~
+name|ExternalSemaSource
+argument_list|()
+block|;
 comment|/// \brief Initialize the semantic source with the Sema instance
 comment|/// being used to perform semantic analysis on the abstract syntax
 comment|/// tree.

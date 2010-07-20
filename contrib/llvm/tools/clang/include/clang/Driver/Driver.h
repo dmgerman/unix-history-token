@@ -132,6 +132,9 @@ name|class
 name|Compilation
 decl_stmt|;
 name|class
+name|DerivedArgList
+decl_stmt|;
+name|class
 name|HostInfo
 decl_stmt|;
 name|class
@@ -200,6 +203,12 @@ name|std
 operator|::
 name|string
 name|Dir
+expr_stmt|;
+comment|/// The original path to the clang executable.
+name|std
+operator|::
+name|string
+name|ClangExecutable
 expr_stmt|;
 comment|/// The path to the compiler resource directory.
 name|std
@@ -368,6 +377,21 @@ name|string
 operator|>
 name|ResultFiles
 expr_stmt|;
+name|private
+label|:
+comment|/// TranslateInputArgs - Create a new derived argument list from the input
+comment|/// arguments, after applying the standard argument translations.
+name|DerivedArgList
+modifier|*
+name|TranslateInputArgs
+argument_list|(
+specifier|const
+name|InputArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|Driver
@@ -462,6 +486,18 @@ name|DriverTitle
 operator|=
 name|Value
 expr_stmt|;
+block|}
+comment|/// \brief Get the path to the main clang executable.
+name|std
+operator|::
+name|string
+name|getClangProgramPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ClangExecutable
+return|;
 block|}
 comment|/// @}
 comment|/// @name Primary Functionality

@@ -277,7 +277,9 @@ argument|unsigned RegParm
 argument_list|,
 argument|CanQualType ResTy
 argument_list|,
-argument|const llvm::SmallVectorImpl<CanQualType>&ArgTys
+argument|const CanQualType *ArgTys
+argument_list|,
+argument|unsigned NumArgTys
 argument_list|)
 empty_stmt|;
 operator|~

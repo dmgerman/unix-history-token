@@ -134,6 +134,8 @@ name|kw_private
 block|,
 name|kw_linker_private
 block|,
+name|kw_linker_private_weak
+block|,
 name|kw_internal
 block|,
 name|kw_linkonce

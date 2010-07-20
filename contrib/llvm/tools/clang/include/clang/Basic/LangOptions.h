@@ -296,13 +296,6 @@ decl_stmt|;
 comment|// Math functions must respect errno
 comment|// (modulo the platform support).
 name|unsigned
-name|OverflowChecking
-range|:
-literal|1
-decl_stmt|;
-comment|// Extension to call a handler function when
-comment|// signed integer arithmetic overflows.
-name|unsigned
 name|HeinousExtensions
 range|:
 literal|1
@@ -419,6 +412,20 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Do not do CF strings
+name|unsigned
+name|InlineVisibilityHidden
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether inline C++ methods have
+comment|// hidden visibility by default.
+name|unsigned
+name|SpellChecking
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether to perform spell-checking for error
+comment|// recovery.
 comment|// FIXME: This is just a temporary option, for testing purposes.
 name|unsigned
 name|NoBitFieldTypeAlign
@@ -427,15 +434,14 @@ literal|1
 decl_stmt|;
 name|private
 label|:
+comment|// We declare multibit enums as unsigned because MSVC insists on making enums
+comment|// signed.  Set/Query these values using accessors.
 name|unsigned
 name|GC
 range|:
 literal|2
 decl_stmt|;
-comment|// Objective-C Garbage Collection modes.  We
-comment|// declare this enum as unsigned because MSVC
-comment|// insists on making enums signed.  Set/Query
-comment|// this value using accessors.
+comment|// Objective-C Garbage Collection modes.
 name|unsigned
 name|SymbolVisibility
 range|:
@@ -447,10 +453,13 @@ name|StackProtector
 range|:
 literal|2
 decl_stmt|;
-comment|// Whether stack protectors are on. We declare
-comment|// this enum as unsigned because MSVC insists
-comment|// on making enums signed.  Set/Query this
-comment|// value using accessors.
+comment|// Whether stack protectors are on.
+name|unsigned
+name|SignedOverflowBehavior
+range|:
+literal|2
+decl_stmt|;
+comment|// How to handle signed integer overflow.
 name|public
 label|:
 name|unsigned
@@ -490,6 +499,19 @@ block|,
 name|Protected
 block|,
 name|Hidden
+block|}
+enum|;
+enum|enum
+name|SignedOverflowBehaviorTy
+block|{
+name|SOB_Undefined
+block|,
+comment|// Default C standard behavior.
+name|SOB_Defined
+block|,
+comment|// -fwrapv
+name|SOB_Trapping
+comment|// -ftrapv
 block|}
 enum|;
 name|LangOptions
@@ -534,6 +556,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|NoConstantCFStrings
+operator|=
+literal|0
+expr_stmt|;
+name|InlineVisibilityHidden
 operator|=
 literal|0
 expr_stmt|;
@@ -618,20 +644,23 @@ name|MathErrno
 operator|=
 literal|1
 expr_stmt|;
+name|SignedOverflowBehavior
+operator|=
+name|SOB_Undefined
+expr_stmt|;
 name|AssumeSaneOperatorNew
 operator|=
 literal|1
 expr_stmt|;
-comment|// FIXME: The default should be 1.
 name|AccessControl
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|ElideConstructors
 operator|=
 literal|1
 expr_stmt|;
-name|OverflowChecking
+name|SignedOverflowBehavior
 operator|=
 literal|0
 expr_stmt|;
@@ -686,6 +715,10 @@ expr_stmt|;
 name|DumpVTableLayouts
 operator|=
 literal|0
+expr_stmt|;
+name|SpellChecking
+operator|=
+literal|1
 expr_stmt|;
 name|NoBitFieldTypeAlign
 operator|=
@@ -777,6 +810,33 @@ operator|(
 name|unsigned
 operator|)
 name|v
+expr_stmt|;
+block|}
+name|SignedOverflowBehaviorTy
+name|getSignedOverflowBehavior
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SignedOverflowBehaviorTy
+operator|)
+name|SignedOverflowBehavior
+return|;
+block|}
+name|void
+name|setSignedOverflowBehavior
+parameter_list|(
+name|SignedOverflowBehaviorTy
+name|V
+parameter_list|)
+block|{
+name|SignedOverflowBehavior
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|V
 expr_stmt|;
 block|}
 block|}

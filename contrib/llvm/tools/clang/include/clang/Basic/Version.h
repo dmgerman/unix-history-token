@@ -69,39 +69,11 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
-begin_comment
-comment|/// \brief Clang major version
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLANG_VERSION_MAJOR
-value|2
-end_define
-
-begin_comment
-comment|// FIXME: Updates to this file must also update CMakeLists.txt and VER.
-end_comment
-
-begin_comment
-comment|/// \brief Clang minor version
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLANG_VERSION_MINOR
-value|0
-end_define
-
-begin_comment
-comment|/// \brief Clang patchlevel version
-end_comment
-
-begin_comment
-comment|// #define CLANG_VERSION_PATCHLEVEL 1
-end_comment
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Version.inc"
+end_include
 
 begin_comment
 comment|/// \brief Helper macro for CLANG_VERSION_STRING.

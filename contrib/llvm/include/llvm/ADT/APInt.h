@@ -442,9 +442,7 @@ parameter_list|(
 name|unsigned
 name|numBits
 parameter_list|,
-specifier|const
 name|StringRef
-modifier|&
 name|str
 parameter_list|,
 name|uint8_t
@@ -689,7 +687,7 @@ name|APInt
 argument_list|(
 argument|unsigned numBits
 argument_list|,
-argument|const StringRef&str
+argument|StringRef str
 argument_list|,
 argument|uint8_t radix
 argument_list|)
@@ -4949,9 +4947,7 @@ unit|static
 name|unsigned
 name|getBitsNeeded
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 name|str
 parameter_list|,
 name|uint8_t

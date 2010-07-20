@@ -202,8 +202,6 @@ argument|GRStmtNodeBuilder& Builder
 argument_list|,
 argument|ExplodedNode* Pred
 argument_list|,
-argument|Stmt* S
-argument_list|,
 argument|const GRState* state
 argument_list|,
 argument|SymbolReaper& SymReaper

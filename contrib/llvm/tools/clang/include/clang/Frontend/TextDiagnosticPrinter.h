@@ -77,16 +77,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -94,9 +84,6 @@ name|DiagnosticOptions
 decl_stmt|;
 name|class
 name|LangOptions
-decl_stmt|;
-name|class
-name|SourceManager
 decl_stmt|;
 name|class
 name|TextDiagnosticPrinter
@@ -203,7 +190,7 @@ block|;
 name|void
 name|HighlightRange
 argument_list|(
-argument|const SourceRange&R
+argument|const CharSourceRange&R
 argument_list|,
 argument|const SourceManager&SrcMgr
 argument_list|,
@@ -221,7 +208,7 @@ name|EmitCaretDiagnostic
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|SourceRange *Ranges
+argument|CharSourceRange *Ranges
 argument_list|,
 argument|unsigned NumRanges
 argument_list|,

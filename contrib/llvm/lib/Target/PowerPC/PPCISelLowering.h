@@ -672,9 +672,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
-comment|/// true it means one of the asm constraint of the inline asm instruction
-comment|/// being processed is 'm'.
+comment|/// vector.  If it is invalid, don't add anything to Ops.
 name|virtual
 name|void
 name|LowerAsmOperandForConstraint
@@ -682,8 +680,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|char ConstraintLetter
-argument_list|,
-argument|bool hasMemory
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -1151,6 +1147,8 @@ argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -1172,6 +1170,8 @@ argument_list|,
 argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|DebugLoc dl
 argument_list|,
@@ -1232,6 +1232,8 @@ argument|bool isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -1256,6 +1258,8 @@ argument_list|,
 argument|bool isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,

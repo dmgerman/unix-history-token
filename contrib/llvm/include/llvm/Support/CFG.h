@@ -295,11 +295,9 @@ decl|const
 block|{
 return|return
 operator|&
-operator|(
 name|operator
 operator|*
 operator|(
-operator|)
 operator|)
 return|;
 block|}

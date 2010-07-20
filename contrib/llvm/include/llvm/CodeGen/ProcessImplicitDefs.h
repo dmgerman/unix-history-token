@@ -49,6 +49,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -79,6 +85,11 @@ argument_list|,
 argument|unsigned OpIdx
 argument_list|,
 argument|const TargetInstrInfo *tii_
+argument_list|,
+argument|SmallSet<unsigned
+argument_list|,
+literal|8
+argument|>&ImpDefRegs
 argument_list|)
 block|;
 name|public

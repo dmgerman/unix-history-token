@@ -252,6 +252,9 @@ name|class
 name|TagDecl
 decl_stmt|;
 name|class
+name|TemplateTemplateParmDecl
+decl_stmt|;
+name|class
 name|TemplateTypeParmDecl
 decl_stmt|;
 name|class
@@ -284,6 +287,16 @@ comment|/// decls) that can be referred to throughout the semantic analysis of a
 name|class
 name|ASTContext
 block|{
+name|ASTContext
+modifier|&
+name|this_
+parameter_list|()
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|std
 operator|::
 name|vector
@@ -448,9 +461,12 @@ name|SubstTemplateTypeParmTypes
 expr_stmt|;
 name|llvm
 operator|::
-name|FoldingSet
+name|ContextualFoldingSet
 operator|<
 name|TemplateSpecializationType
+operator|,
+name|ASTContext
+operator|&
 operator|>
 name|TemplateSpecializationTypes
 expr_stmt|;
@@ -469,6 +485,17 @@ operator|<
 name|DependentNameType
 operator|>
 name|DependentNameTypes
+expr_stmt|;
+name|llvm
+operator|::
+name|ContextualFoldingSet
+operator|<
+name|DependentTemplateSpecializationType
+operator|,
+name|ASTContext
+operator|&
+operator|>
+name|DependentTemplateSpecializationTypes
 expr_stmt|;
 name|llvm
 operator|::
@@ -579,6 +606,94 @@ operator|*
 operator|>
 name|ObjCImpls
 expr_stmt|;
+comment|/// \brief Representation of a "canonical" template template parameter that
+comment|/// is used in canonical template names.
+name|class
+name|CanonicalTemplateTemplateParm
+range|:
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|TemplateTemplateParmDecl
+operator|*
+name|Parm
+block|;
+name|public
+operator|:
+name|CanonicalTemplateTemplateParm
+argument_list|(
+name|TemplateTemplateParmDecl
+operator|*
+name|Parm
+argument_list|)
+operator|:
+name|Parm
+argument_list|(
+argument|Parm
+argument_list|)
+block|{ }
+name|TemplateTemplateParmDecl
+operator|*
+name|getParam
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Parm
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|Parm
+argument_list|)
+block|; }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|TemplateTemplateParmDecl
+operator|*
+name|Parm
+argument_list|)
+block|;   }
+decl_stmt|;
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|CanonicalTemplateTemplateParm
+operator|>
+name|CanonTemplateTemplateParms
+expr_stmt|;
+name|TemplateTemplateParmDecl
+modifier|*
+name|getCanonicalTemplateTemplateParmDecl
+parameter_list|(
+name|TemplateTemplateParmDecl
+modifier|*
+name|TTP
+parameter_list|)
+function_decl|;
+comment|/// \brief Whether __[u]int128_t identifier is installed.
+name|bool
+name|IsInt128Installed
+decl_stmt|;
 comment|/// BuiltinVaListType - built-in va list type.
 comment|/// This is initially null and set by Sema::LazilyCreateBuiltin when
 comment|/// a builtin that takes a valist is encountered.
@@ -645,6 +760,9 @@ comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
 name|RecordDecl
 modifier|*
 name|BlockDescriptorExtendedType
+decl_stmt|;
+name|TypeSourceInfo
+name|NullTypeSourceInfo
 decl_stmt|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
@@ -1046,6 +1164,12 @@ name|Tmpl
 parameter_list|,
 name|TemplateSpecializationKind
 name|TSK
+parameter_list|,
+name|SourceLocation
+name|PointOfInstantiation
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// \brief If the given using decl is an instantiation of a
@@ -1135,6 +1259,16 @@ decl|const
 decl_stmt|;
 name|overridden_cxx_method_iterator
 name|overridden_methods_end
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|overridden_methods_size
 argument_list|(
 specifier|const
 name|CXXMethodDecl
@@ -1797,20 +1931,19 @@ comment|/// getVectorType - Return the unique reference to a vector type of
 comment|/// the specified element type and size. VectorType must be a built-in type.
 name|QualType
 name|getVectorType
-parameter_list|(
+argument_list|(
 name|QualType
 name|VectorType
-parameter_list|,
+argument_list|,
 name|unsigned
 name|NumElts
-parameter_list|,
-name|bool
-name|AltiVec
-parameter_list|,
-name|bool
-name|IsPixel
-parameter_list|)
-function_decl|;
+argument_list|,
+name|VectorType
+operator|::
+name|AltiVecSpecific
+name|AltiVecSpec
+argument_list|)
+decl_stmt|;
 comment|/// getExtVectorType - Return the unique reference to an extended vector type
 comment|/// of the specified element type and size.  VectorType must be a built-in
 comment|/// type.
@@ -2011,6 +2144,30 @@ specifier|const
 name|TypedefDecl
 modifier|*
 name|Decl
+parameter_list|,
+name|QualType
+name|Canon
+init|=
+name|QualType
+argument_list|()
+parameter_list|)
+function_decl|;
+name|QualType
+name|getRecordType
+parameter_list|(
+specifier|const
+name|RecordDecl
+modifier|*
+name|Decl
+parameter_list|)
+function_decl|;
+name|QualType
+name|getEnumType
+parameter_list|(
+specifier|const
+name|EnumDecl
+modifier|*
+name|Decl
 parameter_list|)
 function_decl|;
 name|QualType
@@ -2074,11 +2231,21 @@ name|Canon
 init|=
 name|QualType
 argument_list|()
+parameter_list|)
+function_decl|;
+name|QualType
+name|getCanonicalTemplateSpecializationType
+parameter_list|(
+name|TemplateName
+name|T
 parameter_list|,
-name|bool
-name|IsCurrentInstantiation
-init|=
-name|false
+specifier|const
+name|TemplateArgument
+modifier|*
+name|Args
+parameter_list|,
+name|unsigned
+name|NumArgs
 parameter_list|)
 function_decl|;
 name|QualType
@@ -2097,11 +2264,6 @@ name|Canon
 init|=
 name|QualType
 argument_list|()
-parameter_list|,
-name|bool
-name|IsCurrentInstantiation
-init|=
-name|false
 parameter_list|)
 function_decl|;
 name|TypeSourceInfo
@@ -2163,7 +2325,7 @@ argument_list|()
 parameter_list|)
 function_decl|;
 name|QualType
-name|getDependentNameType
+name|getDependentTemplateSpecializationType
 parameter_list|(
 name|ElaboratedTypeKeyword
 name|Keyword
@@ -2173,15 +2335,38 @@ modifier|*
 name|NNS
 parameter_list|,
 specifier|const
-name|TemplateSpecializationType
+name|IdentifierInfo
 modifier|*
-name|TemplateId
+name|Name
 parameter_list|,
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|Args
+parameter_list|)
+function_decl|;
 name|QualType
-name|Canon
-init|=
-name|QualType
-argument_list|()
+name|getDependentTemplateSpecializationType
+parameter_list|(
+name|ElaboratedTypeKeyword
+name|Keyword
+parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|NNS
+parameter_list|,
+specifier|const
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|,
+name|unsigned
+name|NumArgs
+parameter_list|,
+specifier|const
+name|TemplateArgument
+modifier|*
+name|Args
 parameter_list|)
 function_decl|;
 name|QualType
@@ -2649,6 +2834,25 @@ name|QualType
 name|t
 parameter_list|)
 function_decl|;
+comment|/// \brief Whether __[u]int128_t identifier is installed.
+name|bool
+name|isInt128Installed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsInt128Installed
+return|;
+block|}
+name|void
+name|setInt128Installed
+parameter_list|()
+block|{
+name|IsInt128Installed
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|/// This setter/getter represents the ObjC 'id' type. It is setup lazily, by
 comment|/// Sema.  id is always a (typedef for a) pointer type, a pointer to a struct.
 name|QualType
@@ -3270,8 +3474,9 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// getKeyFunction - Get the key function for the given record decl.
-comment|/// The key function is, according to the Itanium C++ ABI section 5.2.3:
+comment|/// getKeyFunction - Get the key function for the given record decl, or NULL
+comment|/// if there isn't one.  The key function is, according to the Itanium C++ ABI
+comment|/// section 5.2.3:
 comment|///
 comment|/// ...the first non-pure virtual function that is not inline at the point
 comment|/// of class definition.
@@ -3524,6 +3729,18 @@ operator|==
 name|UnqualT2
 return|;
 block|}
+name|bool
+name|UnwrapSimilarPointerTypes
+parameter_list|(
+name|QualType
+modifier|&
+name|T1
+parameter_list|,
+name|QualType
+modifier|&
+name|T2
+parameter_list|)
+function_decl|;
 comment|/// \brief Retrieves the "canonical" declaration of
 comment|/// \brief Retrieves the "canonical" nested name specifier for a
 comment|/// given nested name specifier.
@@ -4302,6 +4519,16 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
+name|TypeSourceInfo
+modifier|*
+name|getNullTypeSourceInfo
+parameter_list|()
+block|{
+return|return
+operator|&
+name|NullTypeSourceInfo
+return|;
+block|}
 comment|/// \brief Add a deallocation callback that will be invoked when the
 comment|/// ASTContext is destroyed.
 comment|///
@@ -4327,6 +4554,53 @@ modifier|*
 name|Data
 parameter_list|)
 function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//                    Statistics
+comment|//===--------------------------------------------------------------------===//
+comment|/// \brief The number of implicitly-declared default constructors.
+specifier|static
+name|unsigned
+name|NumImplicitDefaultConstructors
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared default constructors for
+comment|/// which declarations were built.
+specifier|static
+name|unsigned
+name|NumImplicitDefaultConstructorsDeclared
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared copy constructors.
+specifier|static
+name|unsigned
+name|NumImplicitCopyConstructors
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared copy constructors for
+comment|/// which declarations were built.
+specifier|static
+name|unsigned
+name|NumImplicitCopyConstructorsDeclared
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared copy assignment operators.
+specifier|static
+name|unsigned
+name|NumImplicitCopyAssignmentOperators
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared copy assignment operators for
+comment|/// which declarations were built.
+specifier|static
+name|unsigned
+name|NumImplicitCopyAssignmentOperatorsDeclared
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared destructors.
+specifier|static
+name|unsigned
+name|NumImplicitDestructors
+decl_stmt|;
+comment|/// \brief The number of implicitly-declared destructors for which
+comment|/// declarations were built.
+specifier|static
+name|unsigned
+name|NumImplicitDestructorsDeclared
+decl_stmt|;
 name|private
 label|:
 name|ASTContext
@@ -4458,6 +4732,15 @@ literal|1
 operator|>
 name|LastSDM
 expr_stmt|;
+comment|/// \brief A counter used to uniquely identify "blocks".
+name|unsigned
+name|int
+name|UniqueBlockByRefTypeID
+decl_stmt|;
+name|unsigned
+name|int
+name|UniqueBlockParmTypeID
+decl_stmt|;
 name|friend
 name|class
 name|DeclContext

@@ -171,6 +171,26 @@ argument_list|(
 argument|FriendL
 argument_list|)
 block|{   }
+name|explicit
+name|FriendDecl
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|Decl
+operator|::
+name|Friend
+argument_list|,
+name|Empty
+argument_list|)
+operator|,
+name|NextFriend
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 name|public
 operator|:
 specifier|static
@@ -189,6 +209,19 @@ argument_list|,
 argument|SourceLocation FriendL
 argument_list|)
 expr_stmt|;
+specifier|static
+name|FriendDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|EmptyShell
+name|Empty
+parameter_list|)
+function_decl|;
 comment|/// If this friend declaration names an (untemplated but
 comment|/// possibly dependent) type, return the type;  otherwise
 comment|/// return null.  This is used only for C++0x's unelaborated
@@ -292,6 +325,14 @@ operator|::
 name|Friend
 return|;
 block|}
+name|friend
+name|class
+name|PCHDeclReader
+decl_stmt|;
+name|friend
+name|class
+name|PCHDeclWriter
+decl_stmt|;
 block|}
 end_decl_stmt
 

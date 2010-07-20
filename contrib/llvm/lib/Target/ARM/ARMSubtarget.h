@@ -162,6 +162,10 @@ comment|/// the VML[AS] instructions are slow (if so, don't use them).
 name|bool
 name|SlowVMLx
 block|;
+comment|/// SlowFPBrcc - True if floating point compare + branch is slow.
+name|bool
+name|SlowFPBrcc
+block|;
 comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
 name|bool
 name|IsThumb
@@ -422,6 +426,15 @@ argument_list|()
 operator|&&
 operator|!
 name|SlowVMLx
+return|;
+block|}
+name|bool
+name|isFPBrccSlow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlowFPBrcc
 return|;
 block|}
 name|bool

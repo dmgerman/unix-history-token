@@ -97,6 +97,15 @@ decl_stmt|;
 name|class
 name|MachineInstr
 decl_stmt|;
+name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
 comment|/// An abstract interface for register coalescers.  Coalescers must
 comment|/// implement this interface to be part of the coalescer analysis
 comment|/// group.
@@ -332,6 +341,270 @@ decl|const
 block|{
 return|return
 name|true
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// CoalescerPair - A helper class for register coalescers. When deciding if
+comment|/// two registers can be coalesced, CoalescerPair can determine if a copy
+comment|/// instruction would become an identity copy after coalescing.
+name|class
+name|CoalescerPair
+block|{
+specifier|const
+name|TargetInstrInfo
+modifier|&
+name|tii_
+decl_stmt|;
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|tri_
+decl_stmt|;
+comment|/// dstReg_ - The register that will be left after coalescing. It can be a
+comment|/// virtual or physical register.
+name|unsigned
+name|dstReg_
+decl_stmt|;
+comment|/// srcReg_ - the virtual register that will be coalesced into dstReg.
+name|unsigned
+name|srcReg_
+decl_stmt|;
+comment|/// subReg_ - The subregister index of srcReg in dstReg_. It is possible the
+comment|/// coalesce srcReg_ into a subreg of the larger dstReg_ when dstReg_ is a
+comment|/// virtual register.
+name|unsigned
+name|subIdx_
+decl_stmt|;
+comment|/// partial_ - True when the original copy was a partial subregister copy.
+name|bool
+name|partial_
+decl_stmt|;
+comment|/// crossClass_ - True when both regs are virtual, and newRC is constrained.
+name|bool
+name|crossClass_
+decl_stmt|;
+comment|/// flipped_ - True when DstReg and SrcReg are reversed from the oriignal copy
+comment|/// instruction.
+name|bool
+name|flipped_
+decl_stmt|;
+comment|/// newRC_ - The register class of the coalesced register, or NULL if dstReg_
+comment|/// is a physreg.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|newRC_
+decl_stmt|;
+comment|/// compose - Compose subreg indices a and b, either may be 0.
+name|unsigned
+name|compose
+argument_list|(
+name|unsigned
+argument_list|,
+name|unsigned
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isMoveInstr - Return true if MI is a move or subreg instruction.
+name|bool
+name|isMoveInstr
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|Src
+argument_list|,
+name|unsigned
+operator|&
+name|Dst
+argument_list|,
+name|unsigned
+operator|&
+name|SrcSub
+argument_list|,
+name|unsigned
+operator|&
+name|DstSub
+argument_list|)
+decl|const
+decl_stmt|;
+name|public
+label|:
+name|CoalescerPair
+argument_list|(
+specifier|const
+name|TargetInstrInfo
+operator|&
+name|tii
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|tri
+argument_list|)
+operator|:
+name|tii_
+argument_list|(
+name|tii
+argument_list|)
+operator|,
+name|tri_
+argument_list|(
+name|tri
+argument_list|)
+operator|,
+name|dstReg_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|srcReg_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|subIdx_
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|partial_
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|crossClass_
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|flipped_
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|newRC_
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// setRegisters - set registers to match the copy instruction MI. Return
+comment|/// false if MI is not a coalescable copy instruction.
+name|bool
+name|setRegisters
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+argument_list|)
+expr_stmt|;
+comment|/// flip - Swap srcReg_ and dstReg_. Return false if swapping is impossible
+comment|/// because dstReg_ is a physical register, or subIdx_ is set.
+name|bool
+name|flip
+parameter_list|()
+function_decl|;
+comment|/// isCoalescable - Return true if MI is a copy instruction that will become
+comment|/// an identity copy after coalescing.
+name|bool
+name|isCoalescable
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isPhys - Return true if DstReg is a physical register.
+name|bool
+name|isPhys
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|newRC_
+return|;
+block|}
+comment|/// isPartial - Return true if the original copy instruction did not copy the
+comment|/// full register, but was a subreg operation.
+name|bool
+name|isPartial
+argument_list|()
+specifier|const
+block|{
+return|return
+name|partial_
+return|;
+block|}
+comment|/// isCrossClass - Return true if DstReg is virtual and NewRC is a smaller register class than DstReg's.
+name|bool
+name|isCrossClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|crossClass_
+return|;
+block|}
+comment|/// isFlipped - Return true when getSrcReg is the register being defined by
+comment|/// the original copy instruction.
+name|bool
+name|isFlipped
+argument_list|()
+specifier|const
+block|{
+return|return
+name|flipped_
+return|;
+block|}
+comment|/// getDstReg - Return the register (virtual or physical) that will remain
+comment|/// after coalescing.
+name|unsigned
+name|getDstReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|dstReg_
+return|;
+block|}
+comment|/// getSrcReg - Return the virtual register that will be coalesced away.
+name|unsigned
+name|getSrcReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|srcReg_
+return|;
+block|}
+comment|/// getSubIdx - Return the subregister index in DstReg that SrcReg will be
+comment|/// coalesced into, or 0.
+name|unsigned
+name|getSubIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|subIdx_
+return|;
+block|}
+comment|/// getNewRC - Return the register class of the coalesced register.
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getNewRC
+argument_list|()
+specifier|const
+block|{
+return|return
+name|newRC_
 return|;
 block|}
 block|}

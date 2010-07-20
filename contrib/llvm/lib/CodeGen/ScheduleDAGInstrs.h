@@ -353,9 +353,6 @@ name|E
 condition|;
 operator|++
 name|I
-operator|,
-operator|++
-name|Count
 control|)
 block|{
 specifier|const
@@ -365,6 +362,14 @@ name|MI
 init|=
 name|I
 decl_stmt|;
+if|if
+condition|(
+name|MI
+operator|->
+name|isDebugValue
+argument_list|()
+condition|)
+continue|continue;
 for|for
 control|(
 name|unsigned
@@ -454,6 +459,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|++
+name|Count
+expr_stmt|;
+comment|// Not every iteration due to dbg_value above.
 block|}
 specifier|const
 name|std

@@ -207,6 +207,11 @@ name|virtual
 name|SVal
 name|EvalBinOpLL
 argument_list|(
+specifier|const
+name|GRState
+operator|*
+name|state
+argument_list|,
 name|BinaryOperator
 operator|::
 name|Opcode
@@ -250,6 +255,23 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// getKnownValue - Evaluates a given SVal. If the SVal has only one possible
+comment|///  (integer) value, that value is returned. Otherwise, returns NULL.
+name|virtual
+specifier|const
+name|llvm
+operator|::
+name|APSInt
+operator|*
+name|getKnownValue
+argument_list|(
+argument|const GRState *state
+argument_list|,
+argument|SVal V
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|SVal
 name|EvalBinOp
 argument_list|(

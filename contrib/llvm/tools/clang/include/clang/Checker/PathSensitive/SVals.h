@@ -438,6 +438,14 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isConstant
+argument_list|(
+name|int
+name|I
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
 name|isZeroConstant
 argument_list|()
 specifier|const
@@ -459,7 +467,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// getAsLocSymbol - If this SVal is a location (subclasses Loc) and
-comment|///  wraps a symbol, return that SymbolRef.  Otherwise return a SymbolData*
+comment|///  wraps a symbol, return that SymbolRef.  Otherwise return NULL.
 name|SymbolRef
 name|getAsLocSymbol
 argument_list|()

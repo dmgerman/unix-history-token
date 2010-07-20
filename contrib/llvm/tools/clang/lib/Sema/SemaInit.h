@@ -191,6 +191,10 @@ block|,
 comment|/// \brief The entity being initialized is an element of a vector.
 comment|/// or vector.
 name|EK_VectorElement
+block|,
+comment|/// \brief The entity being initialized is a field of block descriptor for
+comment|/// the copied-in c++ object.
+name|EK_BlockElement
 block|}
 enum|;
 name|private
@@ -503,6 +507,33 @@ argument_list|(
 name|EK_Result
 argument_list|,
 name|ReturnLoc
+argument_list|,
+name|Type
+argument_list|,
+name|NRVO
+argument_list|)
+return|;
+block|}
+specifier|static
+name|InitializedEntity
+name|InitializeBlock
+parameter_list|(
+name|SourceLocation
+name|BlockVarLoc
+parameter_list|,
+name|QualType
+name|Type
+parameter_list|,
+name|bool
+name|NRVO
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|EK_BlockElement
+argument_list|,
+name|BlockVarLoc
 argument_list|,
 name|Type
 argument_list|,

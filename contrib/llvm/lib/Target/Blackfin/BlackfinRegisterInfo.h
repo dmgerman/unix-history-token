@@ -126,18 +126,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF =
-literal|0
-argument_list|)
-specifier|const
-block|;
 name|BitVector
 name|getReservedRegs
 argument_list|(
@@ -163,17 +151,6 @@ operator|::
 name|PRegClass
 return|;
 block|}
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getPhysicalRegisterRegClass
-argument_list|(
-argument|unsigned reg
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|hasFP
 argument_list|(

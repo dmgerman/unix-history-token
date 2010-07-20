@@ -64,6 +64,10 @@ name|namespace
 name|llvm
 block|{
 comment|/// Invariant opcodes: All instruction sets have these as their low opcodes.
+comment|///
+comment|/// Every instruction defined here must also appear in Target.td and the order
+comment|/// must be the same as in CodeGenTarget.cpp.
+comment|///
 name|namespace
 name|TargetOpcode
 block|{
@@ -104,11 +108,11 @@ name|EXTRACT_SUBREG
 init|=
 literal|6
 block|,
-comment|/// INSERT_SUBREG - This instruction takes three operands: a register
-comment|/// that has subregisters, a register providing an insert value, and a
-comment|/// subregister index. It returns the value of the first register with
-comment|/// the value of the second register inserted. The first register is
-comment|/// often defined by an IMPLICIT_DEF, as is commonly used to implement
+comment|/// INSERT_SUBREG - This instruction takes three operands: a register that
+comment|/// has subregisters, a register providing an insert value, and a
+comment|/// subregister index. It returns the value of the first register with the
+comment|/// value of the second register inserted. The first register is often
+comment|/// defined by an IMPLICIT_DEF, because it is commonly used to implement
 comment|/// anyext operations on target architectures which support it.
 name|INSERT_SUBREG
 init|=
@@ -119,11 +123,10 @@ name|IMPLICIT_DEF
 init|=
 literal|8
 block|,
-comment|/// SUBREG_TO_REG - This instruction is similar to INSERT_SUBREG except
-comment|/// that the first operand is an immediate integer constant. This constant
-comment|/// is often zero, as is commonly used to implement zext operations on
-comment|/// target architectures which support it, such as with x86-64 (with
-comment|/// zext from i32 to i64 via implicit zero-extension).
+comment|/// SUBREG_TO_REG - This instruction is similar to INSERT_SUBREG except that
+comment|/// the first operand is an immediate integer constant. This constant is
+comment|/// often zero, because it is commonly used to assert that the instruction
+comment|/// defining the register implicitly clears the high bits.
 name|SUBREG_TO_REG
 init|=
 literal|9
@@ -133,8 +136,7 @@ comment|/// register-to-register copy into a specific register class. This is on
 comment|/// used between instruction selection and MachineInstr creation, before
 comment|/// virtual registers have been created for all the instructions, and it's
 comment|/// only needed in cases where the register classes implied by the
-comment|/// instructions are insufficient. The actual MachineInstrs to perform
-comment|/// the copy are emitted with the TargetInstrInfo::copyRegToReg hook.
+comment|/// instructions are insufficient. It is emitted as a COPY MachineInstr.
 name|COPY_TO_REGCLASS
 init|=
 literal|10
@@ -153,6 +155,12 @@ comment|/// v1027:3, v1025 with v1027:4, etc.
 name|REG_SEQUENCE
 init|=
 literal|12
+block|,
+comment|/// COPY - Target-independent register copy. This instruction can also be
+comment|/// used to copy between subregisters of virtual registers.
+name|COPY
+init|=
+literal|13
 block|}
 enum|;
 block|}

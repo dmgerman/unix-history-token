@@ -912,7 +912,7 @@ argument_list|(
 argument|bool Value = true
 argument_list|)
 block|{
-name|CALLSITE_DELEGATE_GETTER
+name|CALLSITE_DELEGATE_SETTER
 argument_list|(
 name|setIsNoInline
 argument_list|(
@@ -1102,7 +1102,9 @@ name|isCall
 argument_list|()
 condition|)
 return|return
-literal|1
+name|CallInst
+operator|::
+name|ArgOffset
 return|;
 comment|// Skip Function (ATM)
 else|else
@@ -1125,7 +1127,13 @@ name|isCall
 argument_list|()
 condition|)
 return|return
+name|CallInst
+operator|::
+name|ArgOffset
+operator|?
 literal|0
+operator|:
+literal|1
 return|;
 comment|// Unchanged (ATM)
 else|else
@@ -1151,13 +1159,26 @@ name|isCall
 argument_list|()
 condition|)
 return|return
+name|CallInst
+operator|::
+name|ArgOffset
+operator|?
 name|getInstruction
 argument_list|()
 operator|->
 name|op_begin
 argument_list|()
+comment|// Unchanged
+operator|:
+name|getInstruction
+argument_list|()
+operator|->
+name|op_end
+argument_list|()
+operator|-
+literal|1
 return|;
-comment|// Unchanged (ATM)
+comment|// Skip Function
 else|else
 return|return
 name|getInstruction

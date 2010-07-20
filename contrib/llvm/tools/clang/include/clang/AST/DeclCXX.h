@@ -370,6 +370,195 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+comment|/// AccessSpecDecl - An access specifier followed by colon ':'.
+comment|///
+comment|/// An objects of this class represents sugar for the syntactic occurrence
+comment|/// of an access specifier followed by a colon in the list of member
+comment|/// specifiers of a C++ class definition.
+comment|///
+comment|/// Note that they do not represent other uses of access specifiers,
+comment|/// such as those occurring in a list of base specifiers.
+comment|/// Also note that this class has nothing to do with so-called
+comment|/// "access declarations" (C++98 11.3 [class.access.dcl]).
+name|class
+name|AccessSpecDecl
+range|:
+name|public
+name|Decl
+block|{
+comment|/// ColonLoc - The location of the ':'.
+name|SourceLocation
+name|ColonLoc
+block|;
+name|AccessSpecDecl
+argument_list|(
+argument|AccessSpecifier AS
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation ASLoc
+argument_list|,
+argument|SourceLocation ColonLoc
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|AccessSpec
+argument_list|,
+name|DC
+argument_list|,
+name|ASLoc
+argument_list|)
+block|,
+name|ColonLoc
+argument_list|(
+argument|ColonLoc
+argument_list|)
+block|{
+name|setAccess
+argument_list|(
+name|AS
+argument_list|)
+block|;   }
+name|public
+operator|:
+comment|/// getAccessSpecifierLoc - The location of the access specifier.
+name|SourceLocation
+name|getAccessSpecifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocation
+argument_list|()
+return|;
+block|}
+comment|/// setAccessSpecifierLoc - Sets the location of the access specifier.
+name|void
+name|setAccessSpecifierLoc
+argument_list|(
+argument|SourceLocation ASLoc
+argument_list|)
+block|{
+name|setLocation
+argument_list|(
+name|ASLoc
+argument_list|)
+block|; }
+comment|/// getColonLoc - The location of the colon following the access specifier.
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+comment|/// setColonLoc - Sets the location of the colon.
+name|void
+name|setColonLoc
+argument_list|(
+argument|SourceLocation CLoc
+argument_list|)
+block|{
+name|ColonLoc
+operator|=
+name|CLoc
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getAccessSpecifierLoc
+argument_list|()
+argument_list|,
+name|getColonLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|AccessSpecDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|AccessSpecifier AS
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation ASLoc
+argument_list|,
+argument|SourceLocation ColonLoc
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|C
+argument_list|)
+name|AccessSpecDecl
+argument_list|(
+name|AS
+argument_list|,
+name|DC
+argument_list|,
+name|ASLoc
+argument_list|,
+name|ColonLoc
+argument_list|)
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AccessSpecDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|AccessSpec
+return|;
+block|}
+expr|}
+block|;
 comment|/// CXXBaseSpecifier - A base class of a C++ class.
 comment|///
 comment|/// Each CXXBaseSpecifier represents a single, direct base class (or
@@ -395,38 +584,38 @@ comment|/// specifier (if present).
 comment|// FIXME: Move over to a TypeLoc!
 name|SourceRange
 name|Range
-decl_stmt|;
+block|;
 comment|/// Virtual - Whether this is a virtual base class or not.
 name|bool
 name|Virtual
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// BaseOfClass - Whether this is the base of a class (true) or of a
 comment|/// struct (false). This determines the mapping from the access
 comment|/// specifier as written in the source code to the access specifier
 comment|/// used for semantic analysis.
 name|bool
 name|BaseOfClass
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
 comment|/// Access - Access specifier as written in the source code (which
 comment|/// may be AS_none). The actual type of data stored here is an
 comment|/// AccessSpecifier, but we use "unsigned" here to work around a
 comment|/// VC++ bug.
 name|unsigned
 name|Access
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
 comment|/// BaseType - The type of the base class. This will be a class or
 comment|/// struct (or a typedef of such).
 name|QualType
 name|BaseType
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|CXXBaseSpecifier
 argument_list|()
 block|{ }
@@ -442,27 +631,27 @@ argument|AccessSpecifier A
 argument_list|,
 argument|QualType T
 argument_list|)
-block|:
+operator|:
 name|Range
 argument_list|(
 name|R
 argument_list|)
-operator|,
+block|,
 name|Virtual
 argument_list|(
 name|V
 argument_list|)
-operator|,
+block|,
 name|BaseOfClass
 argument_list|(
 name|BC
 argument_list|)
-operator|,
+block|,
 name|Access
 argument_list|(
 name|A
 argument_list|)
-operator|,
+block|,
 name|BaseType
 argument_list|(
 argument|T
@@ -562,14 +751,14 @@ return|return
 name|BaseType
 return|;
 block|}
-block|}
-empty_stmt|;
+expr|}
+block|;
 comment|/// CXXRecordDecl - Represents a C++ struct/union/class.
 comment|/// FIXME: This class will disappear once we've properly taught RecordDecl
 comment|/// to deal with C++-specific things.
 name|class
 name|CXXRecordDecl
-range|:
+operator|:
 name|public
 name|RecordDecl
 block|{
@@ -713,6 +902,31 @@ comment|/// ComputedVisibleConversions - True when visible conversion functions 
 comment|/// already computed and are available.
 name|bool
 name|ComputedVisibleConversions
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared the default constructor or
+comment|/// do not need to have one declared.
+name|bool
+name|DeclaredDefaultConstructor
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared the copy constructor.
+name|bool
+name|DeclaredCopyConstructor
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared the copy-assignment operator.
+name|bool
+name|DeclaredCopyAssignment
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether we have already declared a destructor within the class.
+name|bool
+name|DeclaredDestructor
 operator|:
 literal|1
 block|;
@@ -944,6 +1158,44 @@ argument_list|()
 operator|)
 return|;
 block|}
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getPreviousDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|RecordDecl
+operator|::
+name|getPreviousDeclaration
+argument_list|()
+operator|)
+return|;
+block|}
+name|CXXRecordDecl
+modifier|*
+name|getPreviousDeclaration
+parameter_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|CXXRecordDecl
+operator|>
+operator|(
+name|RecordDecl
+operator|::
+name|getPreviousDeclaration
+argument_list|()
+operator|)
+return|;
+block|}
 name|CXXRecordDecl
 operator|*
 name|getDefinition
@@ -1021,6 +1273,22 @@ name|bool
 name|DelayTypeCreation
 init|=
 name|false
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|CXXRecordDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|EmptyShell
+name|Empty
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1565,6 +1833,63 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether this class has had its default constructor
+end_comment
+
+begin_comment
+comment|/// declared implicitly or does not need one declared implicitly.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This value is used for lazy creation of default constructors.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredDefaultConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredDefaultConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note whether this class has already had its default constructor
+end_comment
+
+begin_comment
+comment|/// implicitly declared or doesn't need one.
+end_comment
+
+begin_function
+name|void
+name|setDeclaredDefaultConstructor
+parameter_list|(
+name|bool
+name|DDC
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|DeclaredDefaultConstructor
+operator|=
+name|DDC
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// hasConstCopyConstructor - Determines whether this class has a
 end_comment
 
@@ -1605,30 +1930,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// hasConstCopyAssignment - Determines whether this class has a
+comment|/// \brief Retrieve the copy-assignment operator for this class, if available.
 end_comment
 
 begin_comment
-comment|/// copy assignment operator that accepts a const-qualified argument.
+comment|///
 end_comment
 
 begin_comment
-comment|/// It returns its decl in MD if found.
+comment|/// This routine attempts to find the copy-assignment operator for this
+end_comment
+
+begin_comment
+comment|/// class, using a simplistic form of overload resolution.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ArgIsConst Whether the argument to the copy-assignment operator
+end_comment
+
+begin_comment
+comment|/// is const-qualified.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The copy-assignment operator that can be invoked, or NULL if
+end_comment
+
+begin_comment
+comment|/// a unique copy-assignment operator could not be found.
 end_comment
 
 begin_decl_stmt
-name|bool
-name|hasConstCopyAssignment
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|,
-specifier|const
 name|CXXMethodDecl
-operator|*
-operator|&
-name|MD
+modifier|*
+name|getCopyAssignmentOperator
+argument_list|(
+name|bool
+name|ArgIsConst
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1716,6 +2063,63 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether this class has had its copy constructor
+end_comment
+
+begin_comment
+comment|/// declared, either via the user or via an implicit declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This value is used for lazy creation of copy constructors.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredCopyConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredCopyConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note whether this class has already had its copy constructor
+end_comment
+
+begin_comment
+comment|/// declared.
+end_comment
+
+begin_function
+name|void
+name|setDeclaredCopyConstructor
+parameter_list|(
+name|bool
+name|DCC
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|DeclaredCopyConstructor
+operator|=
+name|DCC
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// addedAssignmentOperator - Notify the class that another assignment
 end_comment
 
@@ -1770,6 +2174,63 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether this class has had its copy assignment operator
+end_comment
+
+begin_comment
+comment|/// declared, either via the user or via an implicit declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This value is used for lazy creation of copy assignment operators.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredCopyAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredCopyAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note whether this class has already had its copy assignment
+end_comment
+
+begin_comment
+comment|/// operator declared.
+end_comment
+
+begin_function
+name|void
+name|setDeclaredCopyAssignment
+parameter_list|(
+name|bool
+name|DCA
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|DeclaredCopyAssignment
+operator|=
+name|DCA
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// hasUserDeclaredDestructor - Whether this class has a
 end_comment
 
@@ -1822,6 +2283,70 @@ operator|.
 name|UserDeclaredDestructor
 operator|=
 name|UCD
+expr_stmt|;
+if|if
+condition|(
+name|UCD
+condition|)
+name|data
+argument_list|()
+operator|.
+name|DeclaredDestructor
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this class has had its destructor declared,
+end_comment
+
+begin_comment
+comment|/// either via the user or via an implicit declaration.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This value is used for lazy creation of destructors.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasDeclaredDestructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|DeclaredDestructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Note whether this class has already had its destructor declared.
+end_comment
+
+begin_function
+name|void
+name|setDeclaredDestructor
+parameter_list|(
+name|bool
+name|DD
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|DeclaredDestructor
+operator|=
+name|DD
 expr_stmt|;
 block|}
 end_function
@@ -2755,11 +3280,7 @@ begin_function_decl
 name|CXXConstructorDecl
 modifier|*
 name|getDefaultConstructor
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -2767,18 +3288,14 @@ begin_comment
 comment|/// getDestructor - Returns the destructor decl for this class.
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 name|CXXDestructorDecl
-modifier|*
+operator|*
 name|getDestructor
-argument_list|(
-name|ASTContext
-operator|&
-name|Context
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// isLocalClass - If the class is a local class [class.local], returns
@@ -3692,16 +4209,12 @@ parameter_list|)
 block|{
 return|return
 name|K
-operator|==
-name|CXXRecord
-operator|||
+operator|>=
+name|firstCXXRecord
+operator|&&
 name|K
-operator|==
-name|ClassTemplateSpecialization
-operator|||
-name|K
-operator|==
-name|ClassTemplatePartialSpecialization
+operator|<=
+name|lastCXXRecord
 return|;
 block|}
 end_function
@@ -3739,6 +4252,20 @@ name|true
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|class
+name|PCHDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|PCHDeclWriter
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -4024,6 +4551,14 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|unsigned
+name|size_overridden_methods
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// getParent - Returns the parent of this method declaration, which
 end_comment
@@ -4198,11 +4733,11 @@ block|{
 return|return
 name|K
 operator|>=
-name|CXXMethod
+name|firstCXXMethod
 operator|&&
 name|K
 operator|<=
-name|CXXConversion
+name|lastCXXMethod
 return|;
 block|}
 end_function
@@ -5524,6 +6059,20 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|friend
+name|class
+name|PCHDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|PCHDeclWriter
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 unit|};
 comment|/// CXXDestructorDecl - Represents a C++ destructor within a
@@ -5773,20 +6322,57 @@ operator|==
 name|CXXDestructor
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|PCHDeclReader
 block|;
+name|friend
+name|class
+name|PCHDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// CXXConversionDecl - Represents a C++ conversion function within a
+end_comment
+
+begin_comment
 comment|/// class. For example:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// class X {
+end_comment
+
+begin_comment
 comment|/// public:
+end_comment
+
+begin_comment
 comment|///   operator bool();
+end_comment
+
+begin_comment
 comment|/// };
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_decl_stmt
 name|class
 name|CXXConversionDecl
-operator|:
+range|:
 name|public
 name|CXXMethodDecl
 block|{
@@ -5975,53 +6561,72 @@ operator|==
 name|CXXConversion
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|PCHDeclReader
 block|;
+name|friend
+name|class
+name|PCHDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LinkageSpecDecl - This represents a linkage specification.  For example:
+end_comment
+
+begin_comment
 comment|///   extern "C" void foo();
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|LinkageSpecDecl
-operator|:
+range|:
 name|public
 name|Decl
-block|,
+decl_stmt|,
 name|public
 name|DeclContext
 block|{
 name|public
-operator|:
+label|:
 comment|/// LanguageIDs - Used to represent the language in a linkage
 comment|/// specification.  The values are part of the serialization abi for
 comment|/// ASTs and cannot be changed without altering that abi.  To help
 comment|/// ensure a stable abi for this, we choose the DW_LANG_ encodings
 comment|/// from the dwarf standard.
-expr|enum
+enum|enum
 name|LanguageIDs
 block|{
 name|lang_c
-operator|=
+init|=
 comment|/* DW_LANG_C */
 literal|0x0002
 block|,
 name|lang_cxx
-operator|=
+init|=
 comment|/* DW_LANG_C_plus_plus */
 literal|0x0004
 block|}
-block|;
+enum|;
 name|private
-operator|:
+label|:
 comment|/// Language - The language for this linkage specification.
 name|LanguageIDs
 name|Language
-block|;
+decl_stmt|;
 comment|/// HadBraces - Whether this linkage specification had curly braces or not.
 name|bool
 name|HadBraces
-operator|:
+range|:
 literal|1
-block|;
+decl_stmt|;
 name|LinkageSpecDecl
 argument_list|(
 argument|DeclContext *DC
@@ -6032,7 +6637,7 @@ argument|LanguageIDs lang
 argument_list|,
 argument|bool Braces
 argument_list|)
-operator|:
+block|:
 name|Decl
 argument_list|(
 name|LinkageSpec
@@ -6041,17 +6646,17 @@ name|DC
 argument_list|,
 name|L
 argument_list|)
-block|,
+operator|,
 name|DeclContext
 argument_list|(
 name|LinkageSpec
 argument_list|)
-block|,
+operator|,
 name|Language
 argument_list|(
 name|lang
 argument_list|)
-block|,
+operator|,
 name|HadBraces
 argument_list|(
 argument|Braces
@@ -6074,7 +6679,7 @@ argument|LanguageIDs Lang
 argument_list|,
 argument|bool Braces
 argument_list|)
-block|;
+expr_stmt|;
 comment|/// \brief Return the language specified by this linkage specification.
 name|LanguageIDs
 name|getLanguage
@@ -6088,14 +6693,16 @@ block|}
 comment|/// \brief Set the language specified by this linkage specification.
 name|void
 name|setLanguage
-argument_list|(
-argument|LanguageIDs L
-argument_list|)
+parameter_list|(
+name|LanguageIDs
+name|L
+parameter_list|)
 block|{
 name|Language
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
 comment|/// \brief Determines whether this linkage specification had braces in
 comment|/// its syntactic form.
 name|bool
@@ -6111,20 +6718,25 @@ comment|/// \brief Set whether this linkage specification has braces in its
 comment|/// syntactic form.
 name|void
 name|setHasBraces
-argument_list|(
-argument|bool B
-argument_list|)
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
 block|{
 name|HadBraces
 operator|=
 name|B
-block|; }
+expr_stmt|;
+block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -6139,9 +6751,12 @@ block|}
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const LinkageSpecDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|LinkageSpecDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
@@ -6150,9 +6765,10 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
@@ -6162,11 +6778,14 @@ return|;
 block|}
 specifier|static
 name|DeclContext
-operator|*
+modifier|*
 name|castToDeclContext
-argument_list|(
-argument|const LinkageSpecDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|LinkageSpecDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -6188,11 +6807,14 @@ return|;
 block|}
 specifier|static
 name|LinkageSpecDecl
-operator|*
+modifier|*
 name|castFromDeclContext
-argument_list|(
-argument|const DeclContext *DC
-argument_list|)
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
 block|{
 return|return
 name|static_cast
@@ -6212,18 +6834,45 @@ operator|)
 operator|)
 return|;
 block|}
-expr|}
-block|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// UsingDirectiveDecl - Represents C++ using-directive. For example:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|///    using namespace std;
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|// NB: UsingDirectiveDecl should be Decl not NamedDecl, but we provide
+end_comment
+
+begin_comment
 comment|// artificial name, for all using-directives in order to store
+end_comment
+
+begin_comment
 comment|// them in DeclContext effectively.
+end_comment
+
+begin_decl_stmt
 name|class
 name|UsingDirectiveDecl
-operator|:
+range|:
 name|public
 name|NamedDecl
 block|{
@@ -6294,8 +6943,6 @@ argument_list|)
 operator|:
 name|NamedDecl
 argument_list|(
-name|Decl
-operator|::
 name|UsingDirective
 argument_list|,
 name|DC
@@ -6581,8 +7228,6 @@ block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|UsingDirective
 return|;
 block|}
@@ -6591,15 +7236,33 @@ name|friend
 name|class
 name|DeclContext
 block|; }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// NamespaceAliasDecl - Represents a C++ namespace alias. For example:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// @code
+end_comment
+
+begin_comment
 comment|/// namespace Foo = Bar;
+end_comment
+
+begin_comment
 comment|/// @endcode
+end_comment
+
+begin_decl_stmt
 name|class
 name|NamespaceAliasDecl
-operator|:
+range|:
 name|public
 name|NamedDecl
 block|{
@@ -6648,8 +7311,6 @@ argument_list|)
 operator|:
 name|NamedDecl
 argument_list|(
-name|Decl
-operator|::
 name|NamespaceAlias
 argument_list|,
 name|DC
@@ -6769,6 +7430,9 @@ name|Namespace
 operator|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|NamespaceDecl
 operator|*
@@ -6790,8 +7454,17 @@ name|getNamespace
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the location of the alias name, i.e. 'foo' in
+end_comment
+
+begin_comment
 comment|/// "namespace foo = ns::bar;".
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getAliasLoc
 argument_list|()
@@ -6801,19 +7474,36 @@ return|return
 name|AliasLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Set the location o;f the alias name, e.e., 'foo' in
+end_comment
+
+begin_comment
 comment|/// "namespace foo = ns::bar;".
+end_comment
+
+begin_function
 name|void
 name|setAliasLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|AliasLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// Returns the location of the 'namespace' keyword.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getNamespaceLoc
 argument_list|()
@@ -6824,7 +7514,13 @@ name|getLocation
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Returns the location of the identifier in the named namespace.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getTargetNameLoc
 argument_list|()
@@ -6834,19 +7530,36 @@ return|return
 name|IdentLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Set the location of the identifier in the named namespace.
+end_comment
+
+begin_function
 name|void
 name|setTargetNameLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
+parameter_list|(
+name|SourceLocation
+name|L
+parameter_list|)
 block|{
 name|IdentLoc
 operator|=
 name|L
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieve the namespace that this alias refers to, which
+end_comment
+
+begin_comment
 comment|/// may either be a NamespaceDecl or a NamespaceAliasDecl.
+end_comment
+
+begin_expr_stmt
 name|NamedDecl
 operator|*
 name|getAliasedNamespace
@@ -6857,13 +7570,24 @@ return|return
 name|Namespace
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Set the namespace or namespace alias pointed to by this
+end_comment
+
+begin_comment
 comment|/// alias decl.
+end_comment
+
+begin_function
 name|void
 name|setAliasedNamespace
-argument_list|(
-argument|NamedDecl *ND
-argument_list|)
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -6887,41 +7611,65 @@ operator|)
 operator|&&
 literal|"expecting namespace or namespace alias decl"
 argument_list|)
-block|;
+expr_stmt|;
 name|Namespace
 operator|=
 name|ND
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
 specifier|static
 name|NamespaceAliasDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|SourceLocation AliasLoc
-argument_list|,
-argument|IdentifierInfo *Alias
-argument_list|,
-argument|SourceRange QualifierRange
-argument_list|,
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceLocation IdentLoc
-argument_list|,
-argument|NamedDecl *Namespace
-argument_list|)
-block|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|SourceLocation
+name|AliasLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Alias
+parameter_list|,
+name|SourceRange
+name|QualifierRange
+parameter_list|,
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|,
+name|SourceLocation
+name|IdentLoc
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Namespace
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const Decl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|classofKind
@@ -6933,48 +7681,91 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
-argument_list|(
-argument|const NamespaceAliasDecl *D
-argument_list|)
+parameter_list|(
+specifier|const
+name|NamespaceAliasDecl
+modifier|*
+name|D
+parameter_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
-argument_list|(
-argument|Kind K
-argument_list|)
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
 block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|NamespaceAlias
 return|;
 block|}
-expr|}
-block|;
+end_function
+
+begin_comment
+unit|};
 comment|/// UsingShadowDecl - Represents a shadow declaration introduced into
+end_comment
+
+begin_comment
 comment|/// a scope by a (resolved) using declaration.  For example,
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// namespace A {
+end_comment
+
+begin_comment
 comment|///   void foo();
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_comment
 comment|/// namespace B {
+end_comment
+
+begin_comment
 comment|///   using A::foo(); //<- a UsingDecl
+end_comment
+
+begin_comment
 comment|///                   // Also creates a UsingShadowDecl for A::foo in B
+end_comment
+
+begin_comment
 comment|/// }
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|UsingShadowDecl
-operator|:
+range|:
 name|public
 name|NamedDecl
 block|{
@@ -7007,9 +7798,7 @@ name|DC
 argument_list|,
 name|Loc
 argument_list|,
-name|Target
-operator|->
-name|getDeclName
+name|DeclarationName
 argument_list|()
 argument_list|)
 block|,
@@ -7023,16 +7812,31 @@ argument_list|(
 argument|Using
 argument_list|)
 block|{
+if|if
+condition|(
+name|Target
+condition|)
+block|{
+name|setDeclName
+argument_list|(
+name|Target
+operator|->
+name|getDeclName
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|IdentifierNamespace
 operator|=
 name|Target
 operator|->
 name|getIdentifierNamespace
 argument_list|()
-block|;
+expr_stmt|;
+block|}
 name|setImplicit
 argument_list|()
-block|;   }
+expr_stmt|;
+block|}
 name|public
 operator|:
 specifier|static
@@ -7088,10 +7892,24 @@ argument_list|(
 argument|NamedDecl* ND
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|ND
+operator|&&
+literal|"Target decl is null!"
+argument_list|)
+block|;
 name|Underlying
 operator|=
 name|ND
-block|; }
+block|;
+name|IdentifierNamespace
+operator|=
+name|ND
+operator|->
+name|getIdentifierNamespace
+argument_list|()
+block|;   }
 comment|/// \brief Gets the using declaration to which this declaration is tied.
 name|UsingDecl
 operator|*
@@ -7219,8 +8037,6 @@ argument_list|)
 operator|:
 name|NamedDecl
 argument_list|(
-name|Decl
-operator|::
 name|Using
 argument_list|,
 name|DC
@@ -7522,24 +8338,56 @@ block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|Using
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|PCHDeclReader
 block|;
+name|friend
+name|class
+name|PCHDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// UnresolvedUsingValueDecl - Represents a dependent using
+end_comment
+
+begin_comment
 comment|/// declaration which was not marked with 'typename'.  Unlike
+end_comment
+
+begin_comment
 comment|/// non-dependent using declarations, these *only* bring through
+end_comment
+
+begin_comment
 comment|/// non-types; otherwise they would break two-phase lookup.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// template<class T> class A : public Base<T> {
+end_comment
+
+begin_comment
 comment|///   using Base<T>::foo;
+end_comment
+
+begin_comment
 comment|/// };
+end_comment
+
+begin_decl_stmt
 name|class
 name|UnresolvedUsingValueDecl
-operator|:
+range|:
 name|public
 name|ValueDecl
 block|{
@@ -7575,8 +8423,6 @@ argument_list|)
 operator|:
 name|ValueDecl
 argument_list|(
-name|Decl
-operator|::
 name|UnresolvedUsingValue
 argument_list|,
 name|DC
@@ -7728,8 +8574,6 @@ block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|UnresolvedUsingValue
 return|;
 block|}
@@ -7786,8 +8630,6 @@ argument_list|)
 operator|:
 name|TypeDecl
 argument_list|(
-name|Decl
-operator|::
 name|UnresolvedUsingTypename
 argument_list|,
 name|DC
@@ -7965,8 +8807,6 @@ block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|UnresolvedUsingTypename
 return|;
 block|}
@@ -8127,8 +8967,6 @@ block|{
 return|return
 name|K
 operator|==
-name|Decl
-operator|::
 name|StaticAssert
 return|;
 block|}

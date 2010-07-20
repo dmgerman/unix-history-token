@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCAsmInfo.h"
 end_include
 
@@ -71,9 +77,6 @@ name|llvm
 block|{
 name|class
 name|Target
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|class
 name|MipsMCAsmInfo
@@ -86,15 +89,9 @@ operator|:
 name|explicit
 name|MipsMCAsmInfo
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|StringRef
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|)
 block|;   }
 decl_stmt|;

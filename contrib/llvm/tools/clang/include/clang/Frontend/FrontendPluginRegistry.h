@@ -65,7 +65,7 @@ name|llvm
 operator|::
 name|Registry
 operator|<
-name|FrontendAction
+name|PluginASTAction
 operator|>
 name|FrontendPluginRegistry
 expr_stmt|;

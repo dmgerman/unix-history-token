@@ -127,8 +127,15 @@ name|SmallPtrSetIteratorImpl
 decl_stmt|;
 name|protected
 label|:
-comment|/// CurArray - This is the current set of buckets.  If it points to
-comment|/// SmallArray, then the set is in 'small mode'.
+comment|/// SmallArray - Points to a fixed size set of buckets, used in 'small mode'.
+specifier|const
+name|void
+modifier|*
+modifier|*
+name|SmallArray
+decl_stmt|;
+comment|/// CurArray - This is the current set of buckets.  If equal to SmallArray,
+comment|/// then the set is in 'small mode'.
 specifier|const
 name|void
 modifier|*
@@ -148,18 +155,15 @@ decl_stmt|;
 name|unsigned
 name|NumTombstones
 decl_stmt|;
-specifier|const
-name|void
-modifier|*
-name|SmallArray
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|// Must be last ivar.
 comment|// Helper to copy construct a SmallPtrSet.
 name|SmallPtrSetImpl
 argument_list|(
+specifier|const
+name|void
+operator|*
+operator|*
+name|SmallStorage
+argument_list|,
 specifier|const
 name|SmallPtrSetImpl
 operator|&
@@ -168,10 +172,26 @@ argument_list|)
 expr_stmt|;
 name|explicit
 name|SmallPtrSetImpl
-parameter_list|(
-name|unsigned
-name|SmallSize
-parameter_list|)
+argument_list|(
+argument|const void **SmallStorage
+argument_list|,
+argument|unsigned SmallSize
+argument_list|)
+block|:
+name|SmallArray
+argument_list|(
+name|SmallStorage
+argument_list|)
+operator|,
+name|CurArray
+argument_list|(
+name|SmallStorage
+argument_list|)
+operator|,
+name|CurArraySize
+argument_list|(
+argument|SmallSize
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -191,19 +211,7 @@ literal|0
 operator|&&
 literal|"Initial size must be a power of two!"
 argument_list|)
-expr_stmt|;
-name|CurArray
-operator|=
-operator|&
-name|SmallArray
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|CurArraySize
-operator|=
-name|SmallSize
-expr_stmt|;
+block|;
 comment|// The end pointer, always valid, is set to a valid element to help the
 comment|// iterator.
 name|CurArray
@@ -212,11 +220,10 @@ name|SmallSize
 index|]
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|clear
 argument_list|()
-expr_stmt|;
-block|}
+block|;   }
 operator|~
 name|SmallPtrSetImpl
 argument_list|()
@@ -440,11 +447,7 @@ block|{
 return|return
 name|CurArray
 operator|==
-operator|&
 name|SmallArray
-index|[
-literal|0
-index|]
 return|;
 block|}
 name|unsigned
@@ -770,11 +773,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// NextPowerOfTwo - This is a helper template that rounds N up to the next
+comment|/// RoundUpToPowerOfTwo - This is a helper template that rounds N up to the next
 end_comment
 
 begin_comment
-comment|/// power of two.
+comment|/// power of two (which means N itself if N is already a power of two).
 end_comment
 
 begin_expr_stmt
@@ -784,16 +787,16 @@ name|unsigned
 name|N
 operator|>
 expr|struct
-name|NextPowerOfTwo
+name|RoundUpToPowerOfTwo
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// NextPowerOfTwoH - If N is not a power of two, increase it.  This is a helper
+comment|/// RoundUpToPowerOfTwoH - If N is not a power of two, increase it.  This is a
 end_comment
 
 begin_comment
-comment|/// template used to implement NextPowerOfTwo.
+comment|/// helper template used to implement RoundUpToPowerOfTwo.
 end_comment
 
 begin_expr_stmt
@@ -806,7 +809,7 @@ name|bool
 name|isPowerTwo
 operator|>
 expr|struct
-name|NextPowerOfTwoH
+name|RoundUpToPowerOfTwoH
 block|{   enum
 block|{
 name|Val
@@ -824,7 +827,7 @@ name|unsigned
 name|N
 operator|>
 expr|struct
-name|NextPowerOfTwoH
+name|RoundUpToPowerOfTwoH
 operator|<
 name|N
 operator|,
@@ -836,7 +839,7 @@ comment|// We could just use NextVal = N+1, but this converges faster.  N|(N-1) 
 comment|// the right-most zero bits to one all at once, e.g. 0b0011000 -> 0b0011111.
 name|Val
 operator|=
-name|NextPowerOfTwo
+name|RoundUpToPowerOfTwo
 operator|<
 operator|(
 name|N
@@ -864,12 +867,12 @@ name|unsigned
 name|N
 operator|>
 expr|struct
-name|NextPowerOfTwo
+name|RoundUpToPowerOfTwo
 block|{   enum
 block|{
 name|Val
 operator|=
-name|NextPowerOfTwoH
+name|RoundUpToPowerOfTwoH
 operator|<
 name|N
 block|,
@@ -928,7 +931,7 @@ block|enum
 block|{
 name|SmallSizePowTwo
 operator|=
-name|NextPowerOfTwo
+name|RoundUpToPowerOfTwo
 operator|<
 name|SmallSize
 operator|>
@@ -936,11 +939,16 @@ operator|::
 name|Val
 block|}
 block|;
+comment|/// SmallStorage - Fixed size storage used in 'small mode'.  The extra element
+comment|/// ensures that the end iterator actually points to valid memory.
+specifier|const
 name|void
 operator|*
-name|SmallArray
+name|SmallStorage
 index|[
 name|SmallSizePowTwo
+operator|+
+literal|1
 index|]
 block|;
 typedef|typedef
@@ -957,7 +965,9 @@ argument_list|()
 operator|:
 name|SmallPtrSetImpl
 argument_list|(
-argument|NextPowerOfTwo<SmallSizePowTwo>::Val
+argument|SmallStorage
+argument_list|,
+argument|SmallSizePowTwo
 argument_list|)
 block|{}
 name|SmallPtrSet
@@ -970,6 +980,8 @@ argument_list|)
 operator|:
 name|SmallPtrSetImpl
 argument_list|(
+argument|SmallStorage
+argument_list|,
 argument|that
 argument_list|)
 block|{}
@@ -987,7 +999,9 @@ argument_list|)
 operator|:
 name|SmallPtrSetImpl
 argument_list|(
-argument|NextPowerOfTwo<SmallSizePowTwo>::Val
+argument|SmallStorage
+argument_list|,
+argument|SmallSizePowTwo
 argument_list|)
 block|{
 name|insert

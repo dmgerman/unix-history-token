@@ -157,11 +157,11 @@ directive|include
 file|<gtest/internal/gtest-port.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|GTEST_OS_LINUX
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -522,6 +522,10 @@ name|testing
 block|{
 comment|// Forward declaration of classes.
 name|class
+name|AssertionResult
+block|;
+comment|// Result of an assertion.
+name|class
 name|Message
 block|;
 comment|// Represents a failure message.
@@ -530,29 +534,17 @@ name|Test
 block|;
 comment|// Represents a test.
 name|class
-name|TestCase
+name|TestInfo
 block|;
-comment|// A collection of related tests.
+comment|// Information about a test.
 name|class
 name|TestPartResult
 block|;
 comment|// Result of a test part.
 name|class
-name|TestInfo
-block|;
-comment|// Information about a test.
-name|class
 name|UnitTest
 block|;
 comment|// A collection of test cases.
-name|class
-name|UnitTestEventListenerInterface
-block|;
-comment|// Listens to Google Test events.
-name|class
-name|AssertionResult
-block|;
-comment|// Result of an assertion.
 name|namespace
 name|internal
 block|{  struct
@@ -568,31 +560,9 @@ name|TestInfoImpl
 block|;
 comment|// Opaque implementation of TestInfo
 name|class
-name|TestResult
-block|;
-comment|// Result of a single Test.
-name|class
 name|UnitTestImpl
 block|;
 comment|// Opaque implementation of UnitTest
-name|template
-operator|<
-name|typename
-name|E
-operator|>
-name|class
-name|List
-block|;
-comment|// A generic list.
-name|template
-operator|<
-name|typename
-name|E
-operator|>
-name|class
-name|ListNode
-block|;
-comment|// A node in a generic list.
 comment|// How many times InitGoogleTest() has been called.
 specifier|extern
 name|int
@@ -600,6 +570,7 @@ name|g_init_gtest_count
 block|;
 comment|// The text used in failure messages to indicate the start of the
 comment|// stack trace.
+name|GTEST_API_
 specifier|extern
 specifier|const
 name|char
@@ -652,12 +623,9 @@ comment|// null pointer literal (i.e. NULL or any 0-valued compile-time
 comment|// integral constant).
 ifdef|#
 directive|ifdef
-name|GTEST_ELLIPSIS_NEEDS_COPY_
-comment|// Passing non-POD classes through ellipsis (...) crashes the ARM
-comment|// compiler.  The Nokia Symbian and the IBM XL C/C++ compiler try to
-comment|// instantiate a copy constructor for objects passed through ellipsis
-comment|// (...), failing for uncopyable objects.  Hence we define this to
-comment|// false (and lose support for NULL detection).
+name|GTEST_ELLIPSIS_NEEDS_POD_
+comment|// We lose support for NULL detection where the compiler doesn't like
+comment|// passing non-POD classes through ellipsis (...).
 define|#
 directive|define
 name|GTEST_IS_NULL_LITERAL_
@@ -677,8 +645,9 @@ define|\
 value|(sizeof(::testing::internal::IsNullLiteralHelper(x)) == 1)
 endif|#
 directive|endif
-comment|// GTEST_ELLIPSIS_NEEDS_COPY_
+comment|// GTEST_ELLIPSIS_NEEDS_POD_
 comment|// Appends the user-supplied message to the Google-Test-generated message.
+name|GTEST_API_
 name|String
 name|AppendUserMessage
 argument_list|(
@@ -695,6 +664,7 @@ argument_list|)
 block|;
 comment|// A helper class for creating scoped traces in user programs.
 name|class
+name|GTEST_API_
 name|ScopedTrace
 block|{
 name|public
@@ -771,7 +741,8 @@ specifier|inline
 name|String
 name|FormatValueForFailureMessage
 argument_list|(
-argument|internal::true_type dummy
+argument|internal::true_type
+comment|/*dummy*/
 argument_list|,
 argument|T* pointer
 argument_list|)
@@ -800,7 +771,8 @@ specifier|inline
 name|String
 name|FormatValueForFailureMessage
 argument_list|(
-argument|internal::false_type dummy
+argument|internal::false_type
+comment|/*dummy*/
 argument_list|,
 argument|const T& value
 argument_list|)
@@ -890,12 +862,14 @@ endif|#
 directive|endif
 comment|// GTEST_NEEDS_IS_POINTER_
 comment|// These overloaded versions handle narrow and wide characters.
+name|GTEST_API_
 name|String
 name|FormatForFailureMessage
 argument_list|(
 argument|char ch
 argument_list|)
 block|;
+name|GTEST_API_
 name|String
 name|FormatForFailureMessage
 argument_list|(
@@ -920,18 +894,12 @@ comment|/*operand2*/
 value|) {\   return operand1_printer(str);\ }\ inline String FormatForComparisonFailureMessage(\     const operand2_type::value_type* str, const operand2_type&
 comment|/*operand2*/
 value|) {\   return operand1_printer(str);\ }
-if|#
-directive|if
-name|GTEST_HAS_STD_STRING
 name|GTEST_FORMAT_IMPL_
 argument_list|(
 argument|::std::string
 argument_list|,
 argument|String::ShowCStringQuoted
 argument_list|)
-endif|#
-directive|endif
-comment|// GTEST_HAS_STD_STRING
 if|#
 directive|if
 name|GTEST_HAS_STD_WSTRING
@@ -986,6 +954,7 @@ comment|//
 comment|// The ignoring_case parameter is true iff the assertion is a
 comment|// *_STRCASEEQ*.  When it's true, the string " (ignoring case)" will
 comment|// be inserted into the message.
+name|GTEST_API_
 name|AssertionResult
 name|EqFailure
 argument_list|(
@@ -998,6 +967,32 @@ argument_list|,
 argument|const String& actual_value
 argument_list|,
 argument|bool ignoring_case
+argument_list|)
+block|;
+comment|// Constructs a failure message for Boolean assertions such as EXPECT_TRUE.
+name|GTEST_API_
+name|String
+name|GetBoolAssertionFailureMessage
+argument_list|(
+specifier|const
+name|AssertionResult
+operator|&
+name|assertion_result
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expression_text
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|actual_predicate_value
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expected_predicate_value
 argument_list|)
 block|;
 comment|// This template class represents an IEEE floating-point number
@@ -1179,17 +1174,15 @@ comment|// preserve the bits in x when x is a NAN.
 name|explicit
 name|FloatingPoint
 argument_list|(
-specifier|const
-name|RawType
-operator|&
-name|x
+argument|const RawType& x
 argument_list|)
-operator|:
+block|{
+name|u_
+operator|.
 name|value_
-argument_list|(
-argument|x
-argument_list|)
-block|{}
+operator|=
+name|x
+block|; }
 comment|// Static methods
 comment|// Reinterprets a bit pattern as a floating-point number.
 comment|//
@@ -1209,12 +1202,16 @@ argument_list|)
 block|;
 name|fp
 operator|.
+name|u_
+operator|.
 name|bits_
 operator|=
 name|bits
 block|;
 return|return
 name|fp
+operator|.
+name|u_
 operator|.
 name|value_
 return|;
@@ -1242,6 +1239,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|u_
+operator|.
 name|bits_
 return|;
 block|}
@@ -1254,6 +1253,8 @@ block|{
 return|return
 name|kExponentBitMask
 operator|&
+name|u_
+operator|.
 name|bits_
 return|;
 block|}
@@ -1266,6 +1267,8 @@ block|{
 return|return
 name|kFractionBitMask
 operator|&
+name|u_
+operator|.
 name|bits_
 return|;
 block|}
@@ -1278,6 +1281,8 @@ block|{
 return|return
 name|kSignBitMask
 operator|&
+name|u_
+operator|.
 name|bits_
 return|;
 block|}
@@ -1336,9 +1341,13 @@ return|;
 return|return
 name|DistanceBetweenSignAndMagnitudeNumbers
 argument_list|(
+name|u_
+operator|.
 name|bits_
 argument_list|,
 name|rhs
+operator|.
+name|u_
 operator|.
 name|bits_
 argument_list|)
@@ -1348,6 +1357,20 @@ return|;
 block|}
 name|private
 operator|:
+comment|// The data type used to store the actual floating-point number.
+expr|union
+name|FloatingPointUnion
+block|{
+name|RawType
+name|value_
+block|;
+comment|// The raw floating-point number.
+name|Bits
+name|bits_
+block|;
+comment|// The bits that represent the number.
+block|}
+block|;
 comment|// Converts an integer from the sign-and-magnitude representation to
 comment|// the biased representation.  More precisely, let N be 2 to the
 comment|// power of (kBitCount - 1), an integer x is represented by the
@@ -1444,17 +1467,8 @@ name|biased1
 operator|)
 return|;
 block|}
-expr|union
-block|{
-name|RawType
-name|value_
-block|;
-comment|// The raw floating-point number.
-name|Bits
-name|bits_
-block|;
-comment|// The bits that represent the number.
-block|}
+name|FloatingPointUnion
+name|u_
 block|; }
 decl_stmt|;
 comment|// Typedefs the instances of the FloatingPoint template class that we
@@ -1551,6 +1565,7 @@ comment|// of GetTypeId< ::testing::Test>() to get the type ID of
 comment|// ::testing::Test, as the latter may give the wrong result due to a
 comment|// suspected linker bug when compiling Google Test as a Mac OS X
 comment|// framework.
+name|GTEST_API_
 name|TypeId
 name|GetTestTypeId
 parameter_list|()
@@ -1619,13 +1634,14 @@ return|;
 block|}
 expr|}
 block|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_OS_WINDOWS
 comment|// Predicate-formatters for implementing the HRESULT checking macros
 comment|// {ASSERT|EXPECT}_HRESULT_{SUCCEEDED|FAILED}
 comment|// We pass a long instead of HRESULT to avoid causing an
 comment|// include dependency for the HRESULT type.
+name|GTEST_API_
 name|AssertionResult
 name|IsHRESULTSuccess
 argument_list|(
@@ -1635,6 +1651,7 @@ argument|long hr
 argument_list|)
 block|;
 comment|// NOLINT
+name|GTEST_API_
 name|AssertionResult
 name|IsHRESULTFailure
 argument_list|(
@@ -1757,6 +1774,7 @@ comment|//   tear_down_tc:     pointer to the function that tears down the test 
 comment|//   factory:          pointer to the factory that creates a test object.
 comment|//                     The newly created TestInfo instance will assume
 comment|//                     ownership of the factory object.
+name|GTEST_API_
 name|TestInfo
 modifier|*
 name|MakeAndRegisterTestInfo
@@ -1795,19 +1813,32 @@ modifier|*
 name|factory
 parameter_list|)
 function_decl|;
+comment|// If *pstr starts with the given prefix, modifies *pstr to be right
+comment|// past the prefix and returns true; otherwise leaves *pstr unchanged
+comment|// and returns false.  None of pstr, *pstr, and prefix can be NULL.
+name|bool
+name|SkipPrefix
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|pstr
+parameter_list|)
+function_decl|;
 if|#
 directive|if
-name|defined
-argument_list|(
 name|GTEST_HAS_TYPED_TEST
-argument_list|)
 operator|||
-name|defined
-argument_list|(
 name|GTEST_HAS_TYPED_TEST_P
-argument_list|)
 comment|// State of the definition of a type-parameterized test case.
 name|class
+name|GTEST_API_
 name|TypedTestCasePState
 block|{
 name|public
@@ -1862,7 +1893,14 @@ argument_list|,
 name|case_name
 argument_list|)
 expr_stmt|;
-name|abort
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|posix
+operator|::
+name|Abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -2391,11 +2429,14 @@ specifier|static
 name|bool
 name|Register
 argument_list|(
-argument|const char* prefix
+argument|const char*
+comment|/*prefix*/
 argument_list|,
-argument|const char* case_name
+argument|const char*
+comment|/*case_name*/
 argument_list|,
-argument|const char* test_names
+argument|const char*
+comment|/*test_names*/
 argument_list|)
 block|{
 return|return
@@ -2455,6 +2496,7 @@ comment|// the trace but Bar() and GetCurrentOsStackTraceExceptTop() won't.
 end_comment
 
 begin_function_decl
+name|GTEST_API_
 name|String
 name|GetCurrentOsStackTraceExceptTop
 parameter_list|(
@@ -2469,20 +2511,127 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Returns the number of failed test parts in the given test result object.
+comment|// Helpers for suppressing warnings on unreachable code or constant
+end_comment
+
+begin_comment
+comment|// condition.
+end_comment
+
+begin_comment
+comment|// Always returns true.
 end_comment
 
 begin_function_decl
-name|int
-name|GetFailedPartCount
-parameter_list|(
-specifier|const
-name|TestResult
-modifier|*
-name|result
-parameter_list|)
+name|GTEST_API_
+name|bool
+name|AlwaysTrue
+parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|// Always returns false.
+end_comment
+
+begin_function
+specifier|inline
+name|bool
+name|AlwaysFalse
+parameter_list|()
+block|{
+return|return
+operator|!
+name|AlwaysTrue
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// A simple Linear Congruential Generator for generating random
+end_comment
+
+begin_comment
+comment|// numbers with a uniform distribution.  Unlike rand() and srand(), it
+end_comment
+
+begin_comment
+comment|// doesn't use global state (and therefore can't interfere with user
+end_comment
+
+begin_comment
+comment|// code).  Unlike rand_r(), it's portable.  An LCG isn't very random,
+end_comment
+
+begin_comment
+comment|// but it's good enough for our purposes.
+end_comment
+
+begin_decl_stmt
+name|class
+name|GTEST_API_
+name|Random
+block|{
+name|public
+label|:
+specifier|static
+specifier|const
+name|UInt32
+name|kMaxRange
+init|=
+literal|1u
+operator|<<
+literal|31
+decl_stmt|;
+name|explicit
+name|Random
+argument_list|(
+argument|UInt32 seed
+argument_list|)
+block|:
+name|state_
+argument_list|(
+argument|seed
+argument_list|)
+block|{}
+name|void
+name|Reseed
+parameter_list|(
+name|UInt32
+name|seed
+parameter_list|)
+block|{
+name|state_
+operator|=
+name|seed
+expr_stmt|;
+block|}
+comment|// Generates a random number from [0, range).  Crashes if 'range' is
+comment|// 0 or greater than kMaxRange.
+name|UInt32
+name|Generate
+parameter_list|(
+name|UInt32
+name|range
+parameter_list|)
+function_decl|;
+name|private
+label|:
+name|UInt32
+name|state_
+decl_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|Random
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 unit|}
@@ -2515,7 +2664,7 @@ parameter_list|(
 name|message
 parameter_list|)
 define|\
-value|return GTEST_MESSAGE_(message, ::testing::TPRT_FATAL_FAILURE)
+value|return GTEST_MESSAGE_(message, ::testing::TestPartResult::kFatalFailure)
 end_define
 
 begin_define
@@ -2526,7 +2675,7 @@ parameter_list|(
 name|message
 parameter_list|)
 define|\
-value|GTEST_MESSAGE_(message, ::testing::TPRT_NONFATAL_FAILURE)
+value|GTEST_MESSAGE_(message, ::testing::TestPartResult::kNonFatalFailure)
 end_define
 
 begin_define
@@ -2537,7 +2686,30 @@ parameter_list|(
 name|message
 parameter_list|)
 define|\
-value|GTEST_MESSAGE_(message, ::testing::TPRT_SUCCESS)
+value|GTEST_MESSAGE_(message, ::testing::TestPartResult::kSuccess)
+end_define
+
+begin_comment
+comment|// Suppresses MSVC warnings 4072 (unreachable code) for the code following
+end_comment
+
+begin_comment
+comment|// statement if it returns or throws (or doesn't return or throw in some
+end_comment
+
+begin_comment
+comment|// situations).
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_
+parameter_list|(
+name|statement
+parameter_list|)
+define|\
+value|if (::testing::internal::AlwaysTrue()) { statement; }
 end_define
 
 begin_define
@@ -2552,7 +2724,7 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     bool gtest_caught_expected = false; \     try { \       statement; \     } \     catch (expected_exception const&) { \       gtest_caught_expected = true; \     } \     catch (...) { \       gtest_msg = "Expected: " #statement " throws an exception of type " \                   #expected_exception ".\n  Actual: it throws a different " \                   "type."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__); \     } \     if (!gtest_caught_expected) { \       gtest_msg = "Expected: " #statement " throws an exception of type " \                   #expected_exception ".\n  Actual: it throws nothing."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__): \       fail(gtest_msg)
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     bool gtest_caught_expected = false; \     try { \       GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \     } \     catch (expected_exception const&) { \       gtest_caught_expected = true; \     } \     catch (...) { \       gtest_msg = "Expected: " #statement " throws an exception of type " \                   #expected_exception ".\n  Actual: it throws a different " \                   "type."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__); \     } \     if (!gtest_caught_expected) { \       gtest_msg = "Expected: " #statement " throws an exception of type " \                   #expected_exception ".\n  Actual: it throws nothing."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__): \       fail(gtest_msg)
 end_define
 
 begin_define
@@ -2565,7 +2737,7 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     try { \       statement; \     } \     catch (...) { \       gtest_msg = "Expected: " #statement " doesn't throw an exception.\n" \                   "  Actual: it throws."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__): \       fail(gtest_msg)
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     try { \       GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \     } \     catch (...) { \       gtest_msg = "Expected: " #statement " doesn't throw an exception.\n" \                   "  Actual: it throws."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__): \       fail(gtest_msg)
 end_define
 
 begin_define
@@ -2578,17 +2750,29 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     bool gtest_caught_any = false; \     try { \       statement; \     } \     catch (...) { \       gtest_caught_any = true; \     } \     if (!gtest_caught_any) { \       gtest_msg = "Expected: " #statement " throws an exception.\n" \                   "  Actual: it doesn't."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__): \       fail(gtest_msg)
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     bool gtest_caught_any = false; \     try { \       GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \     } \     catch (...) { \       gtest_caught_any = true; \     } \     if (!gtest_caught_any) { \       gtest_msg = "Expected: " #statement " throws an exception.\n" \                   "  Actual: it doesn't."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__): \       fail(gtest_msg)
 end_define
+
+begin_comment
+comment|// Implements Boolean test assertions such as EXPECT_TRUE. expression can be
+end_comment
+
+begin_comment
+comment|// either a boolean expression or an AssertionResult. text is a textual
+end_comment
+
+begin_comment
+comment|// represenation of expression as it was passed into the EXPECT_TRUE.
+end_comment
 
 begin_define
 define|#
 directive|define
 name|GTEST_TEST_BOOLEAN_
 parameter_list|(
-name|boolexpr
+name|expression
 parameter_list|,
-name|booltext
+name|text
 parameter_list|,
 name|actual
 parameter_list|,
@@ -2597,7 +2781,7 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (boolexpr) \     ; \   else \     fail("Value of: " booltext "\n  Actual: " #actual "\nExpected: " #expected)
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const ::testing::AssertionResult gtest_ar_ = \       ::testing::AssertionResult(expression)) \     ; \   else \     fail(::testing::internal::GetBoolAssertionFailureMessage(\         gtest_ar_, text, #actual, #expected).c_str())
 end_define
 
 begin_define
@@ -2610,7 +2794,7 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     ::testing::internal::HasNewFatalFailureHelper gtest_fatal_failure_checker; \     { statement; } \     if (gtest_fatal_failure_checker.has_new_fatal_failure()) { \       gtest_msg = "Expected: " #statement " doesn't generate new fatal " \                   "failures in the current thread.\n" \                   "  Actual: it does."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__): \       fail(gtest_msg)
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (const char* gtest_msg = "") { \     ::testing::internal::HasNewFatalFailureHelper gtest_fatal_failure_checker; \     GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \     if (gtest_fatal_failure_checker.has_new_fatal_failure()) { \       gtest_msg = "Expected: " #statement " doesn't generate new fatal " \                   "failures in the current thread.\n" \                   "  Actual: it does."; \       goto GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__); \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__): \       fail(gtest_msg)
 end_define
 
 begin_comment

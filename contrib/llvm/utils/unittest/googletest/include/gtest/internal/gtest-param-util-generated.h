@@ -171,17 +171,17 @@ directive|define
 name|GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<gtest/internal/gtest-port.h>
-end_include
+begin_comment
+comment|// scripts/fuse_gtest.py depends on gtest's own header being #included
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GTEST_HAS_PARAM_TEST
-end_ifdef
+begin_comment
+comment|// *unconditionally*.  Therefore these #includes cannot be moved
+end_comment
+
+begin_comment
+comment|// inside #if GTEST_HAS_PARAM_TEST.
+end_comment
 
 begin_include
 include|#
@@ -189,10 +189,100 @@ directive|include
 file|<gtest/internal/gtest-param-util.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<gtest/internal/gtest-port.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_PARAM_TEST
+end_if
+
 begin_decl_stmt
 name|namespace
 name|testing
 block|{
+comment|// Forward declarations of ValuesIn(), which is implemented in
+comment|// include/gtest/gtest-param-test.h.
+name|template
+operator|<
+name|typename
+name|ForwardIterator
+operator|>
+name|internal
+operator|::
+name|ParamGenerator
+operator|<
+name|typename
+operator|::
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|ForwardIterator
+operator|>
+operator|::
+name|value_type
+operator|>
+name|ValuesIn
+argument_list|(
+argument|ForwardIterator begin
+argument_list|,
+argument|ForwardIterator end
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|size_t
+name|N
+operator|>
+name|internal
+operator|::
+name|ParamGenerator
+operator|<
+name|T
+operator|>
+name|ValuesIn
+argument_list|(
+specifier|const
+name|T
+argument_list|(
+operator|&
+name|array
+argument_list|)
+index|[
+name|N
+index|]
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+name|class
+name|Container
+operator|>
+name|internal
+operator|::
+name|ParamGenerator
+operator|<
+name|typename
+name|Container
+operator|::
+name|value_type
+operator|>
+name|ValuesIn
+argument_list|(
+specifier|const
+name|Container
+operator|&
+name|container
+argument_list|)
+expr_stmt|;
 name|namespace
 name|internal
 block|{
@@ -247,6 +337,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray1
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -316,6 +417,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray2
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -401,6 +513,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray3
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -502,6 +625,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray4
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -619,6 +753,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray5
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -752,6 +897,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray6
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -901,6 +1057,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray7
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -1066,6 +1233,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray8
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -1247,6 +1425,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray9
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -1444,6 +1633,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray10
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -1657,6 +1857,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray11
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -1886,6 +2097,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray12
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -2131,6 +2353,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray13
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -2392,6 +2625,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray14
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -2669,6 +2913,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray15
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -2962,6 +3217,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray16
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -3271,6 +3537,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray17
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -3596,6 +3873,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray18
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -3937,6 +4225,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray19
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -4294,6 +4593,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray20
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -4667,6 +4977,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray21
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -5056,6 +5377,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray22
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -5461,6 +5793,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray23
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -5882,6 +6225,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray24
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -6319,6 +6673,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray25
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -6772,6 +7137,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray26
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -7241,6 +7617,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray27
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -7726,6 +8113,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray28
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -8227,6 +8625,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray29
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -8744,6 +9153,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray30
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -9277,6 +9697,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray31
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -9826,6 +10257,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray32
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -10391,6 +10833,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray33
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -10972,6 +11425,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray34
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -11569,6 +12033,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray35
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -12182,6 +12657,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray36
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -12811,6 +13297,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray37
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -13456,6 +13953,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray38
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -14117,6 +14625,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray39
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -14794,6 +15313,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray40
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -15487,6 +16017,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray41
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -16196,6 +16737,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray42
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -16921,6 +17473,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray43
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -17662,6 +18225,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray44
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -18419,6 +18993,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray45
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -19192,6 +19777,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray46
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -19981,6 +20577,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray47
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -20786,6 +21393,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray48
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -21607,6 +22225,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray49
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -22444,6 +23073,17 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ValueArray50
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|T1
 name|v1_
@@ -22645,8 +23285,8 @@ name|T50
 name|v50_
 block|; }
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_COMBINE
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 comment|//
@@ -23130,6 +23770,17 @@ operator|==
 name|end2_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -23203,6 +23854,18 @@ name|ParamType
 name|current_value_
 block|;   }
 decl_stmt|;
+comment|// class CartesianProductGenerator2::Iterator
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator2
+operator|&
+name|other
+operator|)
+decl_stmt|;
 specifier|const
 name|ParamGenerator
 operator|<
@@ -23219,6 +23882,7 @@ name|g2_
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|// class CartesianProductGenerator2
 name|template
 operator|<
 name|typename
@@ -23804,6 +24468,17 @@ operator|==
 name|end3_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -23906,6 +24581,18 @@ name|ParamType
 name|current_value_
 block|;   }
 decl_stmt|;
+comment|// class CartesianProductGenerator3::Iterator
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator3
+operator|&
+name|other
+operator|)
+decl_stmt|;
 specifier|const
 name|ParamGenerator
 operator|<
@@ -23933,6 +24620,10 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// class CartesianProductGenerator3
+end_comment
 
 begin_expr_stmt
 name|template
@@ -24637,6 +25328,17 @@ operator|==
 name|end4_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -24770,6 +25472,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator4::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator4
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -24810,8 +25533,12 @@ name|g4_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator4
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -25622,6 +26349,17 @@ operator|==
 name|end5_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -25784,6 +26522,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator5::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator5
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -25834,8 +26593,12 @@ name|g5_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator5
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -26754,6 +27517,17 @@ operator|==
 name|end6_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -26945,6 +27719,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator6::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator6
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -27005,8 +27800,12 @@ name|g6_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator6
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -28033,6 +28832,17 @@ operator|==
 name|end7_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -28253,6 +29063,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator7::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator7
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -28323,8 +29154,12 @@ name|g7_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator7
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -29459,6 +30294,17 @@ operator|==
 name|end8_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -29708,6 +30554,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator8::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator8
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -29788,8 +30655,12 @@ name|g8_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator8
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -31032,6 +31903,17 @@ operator|==
 name|end9_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -31310,6 +32192,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator9::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator9
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -31400,8 +32303,12 @@ name|g9_
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductGenerator9
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -32752,6 +33659,17 @@ operator|==
 name|end10_
 return|;
 block|}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -33059,6 +33977,27 @@ block|;   }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// class CartesianProductGenerator10::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CartesianProductGenerator10
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|const
 name|ParamGenerator
@@ -33161,6 +34100,10 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|// class CartesianProductGenerator10
+end_comment
+
+begin_comment
 comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 end_comment
 
@@ -33299,11 +34242,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder2
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -33312,8 +34269,12 @@ name|g2_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder2
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -33461,11 +34422,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder3
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -33481,8 +34456,12 @@ name|g3_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder3
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -33663,11 +34642,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder4
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -33690,8 +34683,12 @@ name|g4_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder4
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -33905,11 +34902,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder5
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -33939,8 +34950,12 @@ name|g5_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder5
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -34187,11 +35202,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder6
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -34228,8 +35257,12 @@ name|g6_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder6
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -34509,11 +35542,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder7
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -34557,8 +35604,12 @@ name|g7_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder7
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -34871,11 +35922,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder8
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -34926,8 +35991,12 @@ name|g8_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder8
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -35273,11 +36342,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder9
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -35335,8 +36418,12 @@ name|g9_
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// class CartesianProductHolder9
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -35715,11 +36802,25 @@ return|;
 block|}
 name|private
 operator|:
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CartesianProductHolder10
+operator|&
+name|other
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 specifier|const
 name|Generator1
 name|g1_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -35784,8 +36885,12 @@ name|g10_
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
+begin_comment
 unit|};
+comment|// class CartesianProductHolder10
+end_comment
+
+begin_endif
 endif|#
 directive|endif
 end_endif

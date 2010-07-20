@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_decl_stmt
@@ -80,7 +80,7 @@ name|class
 name|Instruction
 decl_stmt|;
 typedef|typedef
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value

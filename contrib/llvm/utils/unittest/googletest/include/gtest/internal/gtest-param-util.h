@@ -153,38 +153,23 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<gtest/internal/gtest-port.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GTEST_HAS_PARAM_TEST
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|GTEST_HAS_RTTI
-end_if
-
-begin_include
-include|#
-directive|include
-file|<typeinfo>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|// scripts/fuse_gtest.py depends on gtest's own header being #included
+end_comment
 
 begin_comment
-comment|// GTEST_HAS_RTTI
+comment|// *unconditionally*.  Therefore these #includes cannot be moved
 end_comment
+
+begin_comment
+comment|// inside #if GTEST_HAS_PARAM_TEST.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<gtest/internal/gtest-internal.h>
+end_include
 
 begin_include
 include|#
@@ -195,8 +180,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-internal.h>
+file|<gtest/internal/gtest-port.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_PARAM_TEST
+end_if
 
 begin_decl_stmt
 name|namespace
@@ -211,6 +202,7 @@ comment|// Outputs a message explaining invalid registration of different
 comment|// fixture class for the same test case. This may happen when
 comment|// TEST_P macro is used to define two tests with the same name
 comment|// but in different namespaces.
+name|GTEST_API_
 name|void
 name|ReportInvalidTestCaseType
 parameter_list|(
@@ -228,82 +220,6 @@ name|int
 name|line
 parameter_list|)
 function_decl|;
-comment|// INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
-comment|//
-comment|// Downcasts the pointer of type Base to Derived.
-comment|// Derived must be a subclass of Base. The parameter MUST
-comment|// point to a class of type Derived, not any subclass of it.
-comment|// When RTTI is available, the function performs a runtime
-comment|// check to enforce this.
-name|template
-operator|<
-name|class
-name|Derived
-operator|,
-name|class
-name|Base
-operator|>
-name|Derived
-operator|*
-name|CheckedDowncastToActualType
-argument_list|(
-argument|Base* base
-argument_list|)
-block|{
-if|#
-directive|if
-name|GTEST_HAS_RTTI
-name|GTEST_CHECK_
-argument_list|(
-name|typeid
-argument_list|(
-operator|*
-name|base
-argument_list|)
-operator|==
-name|typeid
-argument_list|(
-name|Derived
-argument_list|)
-argument_list|)
-block|;
-name|Derived
-operator|*
-name|derived
-operator|=
-name|dynamic_cast
-operator|<
-name|Derived
-operator|*
-operator|>
-operator|(
-name|base
-operator|)
-block|;
-comment|// NOLINT
-else|#
-directive|else
-name|Derived
-operator|*
-name|derived
-operator|=
-name|static_cast
-operator|<
-name|Derived
-operator|*
-operator|>
-operator|(
-name|base
-operator|)
-block|;
-comment|// Poor man's downcast.
-endif|#
-directive|endif
-comment|// GTEST_HAS_RTTI
-return|return
-name|derived
-return|;
-block|}
 name|template
 operator|<
 name|typename
@@ -741,7 +657,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// Wraps ParamGeneratorInetrface<T> and provides general generator syntax
+comment|// Wraps ParamGeneratorInterface<T> and provides general generator syntax
 end_comment
 
 begin_comment
@@ -1186,6 +1102,13 @@ operator|&
 name|other
 argument_list|)
 operator|:
+name|ParamIteratorInterface
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+block|,
 name|base_
 argument_list|(
 name|other
@@ -1212,6 +1135,17 @@ argument_list|(
 argument|other.step_
 argument_list|)
 block|{}
+comment|// No implementation - assignment is unsupported.
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Iterator
+operator|&
+name|other
+operator|)
+block|;
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -1289,6 +1223,23 @@ name|end_index
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|RangeGenerator
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -1716,8 +1667,29 @@ name|value_
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
 unit|};
+comment|// class ValuesInIteratorRangeGenerator::Iterator
+end_comment
+
+begin_comment
+comment|// No implementation - assignment is unsupported.
+end_comment
+
+begin_decl_stmt
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ValuesInIteratorRangeGenerator
+operator|&
+name|other
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|ContainerType
 name|container_
@@ -2283,10 +2255,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|file
+comment|/* file */
 parameter_list|,
 name|int
-name|line
+comment|/* line */
 parameter_list|)
 block|{
 name|instantiations_
@@ -2585,34 +2557,34 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|test_case_base_name
+name|a_test_case_base_name
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|test_base_name
+name|a_test_base_name
 argument_list|,
 name|TestMetaFactoryBase
 operator|<
 name|ParamType
 operator|>
 operator|*
-name|test_meta_factory
+name|a_test_meta_factory
 argument_list|)
 operator|:
 name|test_case_base_name
 argument_list|(
-name|test_case_base_name
+name|a_test_case_base_name
 argument_list|)
 operator|,
 name|test_base_name
 argument_list|(
-name|test_base_name
+name|a_test_base_name
 argument_list|)
 operator|,
 name|test_meta_factory
 argument_list|(
-argument|test_meta_factory
+argument|a_test_meta_factory
 argument_list|)
 block|{}
 specifier|const

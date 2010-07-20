@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stack>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -265,7 +259,7 @@ comment|// VisitStack - Used to maintain the ordering.  Top = current block
 comment|// First element is basic block pointer, second is the 'next child' to visit
 name|std
 operator|::
-name|stack
+name|vector
 operator|<
 name|std
 operator|::
@@ -287,7 +281,7 @@ while|while
 condition|(
 name|VisitStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|second
@@ -298,7 +292,7 @@ name|child_end
 argument_list|(
 name|VisitStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -312,7 +306,7 @@ init|=
 operator|*
 name|VisitStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|second
@@ -343,7 +337,7 @@ argument_list|)
 expr_stmt|;
 name|VisitStack
 operator|.
-name|push
+name|push_back
 argument_list|(
 name|std
 operator|::
@@ -380,7 +374,7 @@ argument_list|)
 block|;
 name|VisitStack
 operator|.
-name|push
+name|push_back
 argument_list|(
 name|std
 operator|::
@@ -449,7 +443,7 @@ argument_list|)
 expr_stmt|;
 name|VisitStack
 operator|.
-name|push
+name|push_back
 argument_list|(
 name|std
 operator|::
@@ -647,7 +641,7 @@ block|{
 return|return
 name|VisitStack
 operator|.
-name|top
+name|back
 argument_list|()
 operator|.
 name|first
@@ -687,7 +681,7 @@ block|{
 comment|// Preincrement
 name|VisitStack
 operator|.
-name|pop
+name|pop_back
 argument_list|()
 block|;
 if|if

@@ -82,7 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/TemplateBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/PCHBitCodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/PCHDeserializationListener.h"
 end_include
 
 begin_include
@@ -149,6 +161,9 @@ name|MacroDefinition
 decl_stmt|;
 name|class
 name|MemorizeStatCalls
+decl_stmt|;
+name|class
+name|PCHReader
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -291,9 +306,12 @@ comment|/// data structures. This bitstream can be de-serialized via an
 comment|/// instance of the PCHReader class.
 name|class
 name|PCHWriter
+range|:
+name|public
+name|PCHDeserializationListener
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|llvm
 operator|::
@@ -306,14 +324,19 @@ operator|>
 name|RecordData
 expr_stmt|;
 name|private
-label|:
+operator|:
 comment|/// \brief The bitstream writer used to emit this precompiled header.
 name|llvm
 operator|::
 name|BitstreamWriter
 operator|&
 name|Stream
-expr_stmt|;
+decl_stmt|;
+comment|/// \brief The reader of existing PCH files, if we're chaining.
+name|PCHReader
+modifier|*
+name|Chain
+decl_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the PCH file.
 name|class
 name|DeclOrType
@@ -647,9 +670,23 @@ operator|<
 name|Stmt
 operator|*
 operator|,
-literal|8
+literal|16
 operator|>
 name|StmtsToEmit
+expr_stmt|;
+comment|/// \brief Statements collection to use for PCHWriter::AddStmt().
+comment|/// It will point to StmtsToEmit unless it is overriden.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Stmt
+operator|*
+operator|,
+literal|16
+operator|>
+operator|*
+name|CollectedStmts
 expr_stmt|;
 comment|/// \brief Mapping from SwitchCase statements to IDs.
 name|std
@@ -693,6 +730,15 @@ comment|/// file.
 name|unsigned
 name|NumVisibleDeclContexts
 decl_stmt|;
+comment|/// \brief Write the given subexpression to the bitstream.
+name|void
+name|WriteSubStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
 name|void
 name|WriteBlockInfoBlock
 parameter_list|()
@@ -725,11 +771,6 @@ parameter_list|(
 name|MemorizeStatCalls
 modifier|&
 name|StatCalls
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|isysroot
 parameter_list|)
 function_decl|;
 name|void
@@ -834,6 +875,40 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|void
+name|WritePCHCore
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|,
+name|MemorizeStatCalls
+modifier|*
+name|StatCalls
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
+parameter_list|)
+function_decl|;
+name|void
+name|WritePCHChain
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|,
+name|MemorizeStatCalls
+modifier|*
+name|StatCalls
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// \brief Create a new precompiled header writer that outputs to
@@ -845,6 +920,10 @@ operator|::
 name|BitstreamWriter
 operator|&
 name|Stream
+argument_list|,
+name|PCHReader
+operator|*
+name|Chain
 argument_list|)
 expr_stmt|;
 comment|/// \brief Write a precompiled header for the given semantic analysis.
@@ -1075,6 +1154,25 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emits a template argument location info.
+name|void
+name|AddTemplateArgumentLocInfo
+argument_list|(
+name|TemplateArgument
+operator|::
+name|ArgKind
+name|Kind
+argument_list|,
+specifier|const
+name|TemplateArgumentLocInfo
+operator|&
+name|Arg
+argument_list|,
+name|RecordData
+operator|&
+name|Record
+argument_list|)
+decl_stmt|;
 comment|/// \brief Emits a template argument location.
 name|void
 name|AddTemplateArgumentLoc
@@ -1141,6 +1239,88 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emit a template name.
+name|void
+name|AddTemplateName
+parameter_list|(
+name|TemplateName
+name|Name
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a template argument.
+name|void
+name|AddTemplateArgument
+parameter_list|(
+specifier|const
+name|TemplateArgument
+modifier|&
+name|Arg
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a template parameter list.
+name|void
+name|AddTemplateParameterList
+parameter_list|(
+specifier|const
+name|TemplateParameterList
+modifier|*
+name|TemplateParams
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a template argument list.
+name|void
+name|AddTemplateArgumentList
+parameter_list|(
+specifier|const
+name|TemplateArgumentList
+modifier|*
+name|TemplateArgs
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a UnresolvedSet structure.
+name|void
+name|AddUnresolvedSet
+parameter_list|(
+specifier|const
+name|UnresolvedSetImpl
+modifier|&
+name|Set
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// brief Emit a C++ base specifier.
+name|void
+name|AddCXXBaseSpecifier
+parameter_list|(
+specifier|const
+name|CXXBaseSpecifier
+modifier|&
+name|Base
+parameter_list|,
+name|RecordData
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a string to the given record.
 name|void
 name|AddString
@@ -1199,23 +1379,14 @@ modifier|*
 name|S
 parameter_list|)
 block|{
-name|StmtsToEmit
-operator|.
+name|CollectedStmts
+operator|->
 name|push_back
 argument_list|(
 name|S
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Write the given subexpression to the bitstream.
-name|void
-name|WriteSubStmt
-parameter_list|(
-name|Stmt
-modifier|*
-name|S
-parameter_list|)
-function_decl|;
 comment|/// \brief Flush all of the statements and expressions that have
 comment|/// been added to the queue via AddStmt().
 name|void
@@ -1259,12 +1430,42 @@ return|return
 name|ParmVarDeclAbbrev
 return|;
 block|}
-block|}
-empty_stmt|;
+comment|// PCHDeserializationListener implementation
+name|void
+name|TypeRead
+argument_list|(
+name|pch
+operator|::
+name|TypeID
+name|ID
+argument_list|,
+name|QualType
+name|T
+argument_list|)
+decl_stmt|;
+name|void
+name|DeclRead
+argument_list|(
+name|pch
+operator|::
+name|DeclID
+name|ID
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

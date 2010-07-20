@@ -169,6 +169,8 @@ comment|// ARM conditional move instructions.
 name|CNEG
 block|,
 comment|// ARM conditional negate instructions.
+name|BCC_i64
+block|,
 name|RBIT
 block|,
 comment|// ARM bitreverse instruction
@@ -205,6 +207,9 @@ comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp.
+name|TC_RETURN
+block|,
+comment|// Tail call return pseudo.
 name|THREAD_POINTER
 block|,
 name|DYN_ALLOC
@@ -310,6 +315,11 @@ comment|// zero-extend vector extract element
 name|VGETLANEs
 block|,
 comment|// sign-extend vector extract element
+comment|// Vector move immediate and move negated immediate:
+name|VMOVIMM
+block|,
+name|VMVNIMM
+block|,
 comment|// Vector duplicate:
 name|VDUP
 block|,
@@ -337,6 +347,13 @@ comment|// unzip (deinterleave)
 name|VTRN
 block|,
 comment|// transpose
+comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
+comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
+comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
+comment|// operands need to be legalized.  Define an ARM-specific version of
+comment|// BUILD_VECTOR for this purpose.
+name|BUILD_VECTOR
+block|,
 comment|// Floating-point max and min:
 name|FMAX
 block|,
@@ -348,25 +365,6 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
 block|{
-comment|/// getVMOVImm - If this is a build_vector of constants which can be
-comment|/// formed by using a VMOV instruction of the specified element size,
-comment|/// return the constant being splatted.  The ByteSize field indicates the
-comment|/// number of bytes of each element [1248].
-name|SDValue
-name|getVMOVImm
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|,
-name|unsigned
-name|ByteSize
-parameter_list|,
-name|SelectionDAG
-modifier|&
-name|DAG
-parameter_list|)
-function_decl|;
 comment|/// getVFPf32Imm / getVFPf64Imm - If the given fp immediate can be
 comment|/// materialized with a VMOV.f32 / VMOV.f64 (i.e. fconsts / fconstd)
 comment|/// instruction, returns its 8-bit integer representation. Otherwise,
@@ -497,9 +495,9 @@ argument_list|)
 specifier|const
 block|;
 comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
-comment|/// icmp immediate, that is the target has icmp instructions which can compare
-comment|/// a register against the immediate without having to materialize the
-comment|/// immediate into a register.
+comment|/// icmp immediate, that is the target has icmp instructions which can
+comment|/// compare a register against the immediate without having to materialize
+comment|/// the immediate into a register.
 name|virtual
 name|bool
 name|isLegalICmpImmediate
@@ -616,8 +614,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|char ConstraintLetter
-argument_list|,
-argument|bool hasMemory
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -1010,6 +1006,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerFCOPYSIGN
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerRETURNADDR
 argument_list|(
 name|SDValue
@@ -1188,6 +1196,14 @@ argument_list|,
 specifier|const
 name|SmallVectorImpl
 operator|<
+name|SDValue
+operator|>
+operator|&
+name|OutVals
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
 name|ISD
 operator|::
 name|InputArg
@@ -1208,6 +1224,63 @@ name|SDValue
 operator|>
 operator|&
 name|InVals
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// IsEligibleForTailCallOptimization - Check whether the call is eligible
+comment|/// for tail call optimization. Targets which want to do tail call
+comment|/// optimization should implement this function.
+name|bool
+name|IsEligibleForTailCallOptimization
+argument_list|(
+name|SDValue
+name|Callee
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CalleeCC
+argument_list|,
+name|bool
+name|isVarArg
+argument_list|,
+name|bool
+name|isCalleeStructRet
+argument_list|,
+name|bool
+name|isCallerStructRet
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|OutputArg
+operator|>
+operator|&
+name|Outs
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|OutVals
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|ISD
+operator|::
+name|InputArg
+operator|>
+operator|&
+name|Ins
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1236,6 +1309,14 @@ operator|>
 operator|&
 name|Outs
 argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|SDValue
+operator|>
+operator|&
+name|OutVals
+argument_list|,
 name|DebugLoc
 name|dl
 argument_list|,
@@ -1261,7 +1342,7 @@ name|CC
 argument_list|,
 name|SDValue
 operator|&
-name|ARMCC
+name|ARMcc
 argument_list|,
 name|SelectionDAG
 operator|&
@@ -1269,6 +1350,36 @@ name|DAG
 argument_list|,
 name|DebugLoc
 name|dl
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|getVFPCmp
+argument_list|(
+name|SDValue
+name|LHS
+argument_list|,
+name|SDValue
+name|RHS
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|OptimizeVFPBrcond
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;

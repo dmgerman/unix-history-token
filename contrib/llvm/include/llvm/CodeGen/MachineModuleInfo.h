@@ -1504,17 +1504,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_function_decl
 name|VariableDbgInfoMapTy
 modifier|&
 name|getVariableDbgInfo
 parameter_list|()
-block|{
-return|return
-name|VariableDbgInfo
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};

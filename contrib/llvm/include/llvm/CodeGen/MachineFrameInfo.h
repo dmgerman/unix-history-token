@@ -119,21 +119,15 @@ block|{
 name|unsigned
 name|Reg
 decl_stmt|;
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|RegClass
-decl_stmt|;
 name|int
 name|FrameIdx
 decl_stmt|;
 name|public
 label|:
+name|explicit
 name|CalleeSavedInfo
 argument_list|(
 argument|unsigned R
-argument_list|,
-argument|const TargetRegisterClass *RC
 argument_list|,
 argument|int FI =
 literal|0
@@ -142,11 +136,6 @@ block|:
 name|Reg
 argument_list|(
 name|R
-argument_list|)
-operator|,
-name|RegClass
-argument_list|(
-name|RC
 argument_list|)
 operator|,
 name|FrameIdx
@@ -162,17 +151,6 @@ specifier|const
 block|{
 return|return
 name|Reg
-return|;
-block|}
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getRegClass
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RegClass
 return|;
 block|}
 name|int
@@ -1069,9 +1047,6 @@ name|SPOffset
 parameter_list|,
 name|bool
 name|Immutable
-parameter_list|,
-name|bool
-name|isSS
 parameter_list|)
 function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a

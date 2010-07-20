@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -281,67 +275,26 @@ name|public
 label|:
 name|explicit
 name|Pass
-argument_list|(
-argument|PassKind K
-argument_list|,
-argument|intptr_t pid
-argument_list|)
-block|:
-name|Resolver
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PassID
-argument_list|(
+parameter_list|(
+name|PassKind
+name|K
+parameter_list|,
+name|intptr_t
 name|pid
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|K
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pid
-operator|&&
-literal|"pid cannot be 0"
-argument_list|)
-block|;   }
+parameter_list|)
+function_decl|;
 name|explicit
 name|Pass
-argument_list|(
-argument|PassKind K
-argument_list|,
-argument|const void *pid
-argument_list|)
-operator|:
-name|Resolver
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|PassID
-argument_list|(
-operator|(
-name|intptr_t
-operator|)
+parameter_list|(
+name|PassKind
+name|K
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|pid
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-argument|K
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|pid
-operator|&&
-literal|"pid cannot be 0"
-argument_list|)
-block|;    }
+parameter_list|)
+function_decl|;
 name|virtual
 operator|~
 name|Pass
@@ -459,7 +412,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// Access AnalysisResolver
-specifier|inline
 name|void
 name|setResolver
 parameter_list|(
@@ -467,25 +419,12 @@ name|AnalysisResolver
 modifier|*
 name|AR
 parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|Resolver
-operator|&&
-literal|"Resolver is already set"
-argument_list|)
-expr_stmt|;
-name|Resolver
-operator|=
-name|AR
-expr_stmt|;
-block|}
-specifier|inline
+function_decl|;
 name|AnalysisResolver
-modifier|*
+operator|*
 name|getResolver
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Resolver
@@ -534,31 +473,19 @@ specifier|const
 name|PassInfo
 modifier|*
 parameter_list|)
-block|{
-return|return
-name|this
-return|;
-block|}
+function_decl|;
 name|virtual
 name|ImmutablePass
 modifier|*
 name|getAsImmutablePass
 parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
+function_decl|;
 name|virtual
 name|PMDataManager
 modifier|*
 name|getAsPMDataManager
 parameter_list|()
-block|{
-return|return
-literal|0
-return|;
-block|}
+function_decl|;
 comment|/// verifyAnalysis() - This member can be implemented by a analysis pass to
 comment|/// check state of analysis information.
 name|virtual

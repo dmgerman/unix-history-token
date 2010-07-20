@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_include
@@ -1111,7 +1111,7 @@ operator|>
 operator|&
 name|F
 argument_list|,
-name|DenseMap
+name|ValueMap
 operator|<
 specifier|const
 name|Value
@@ -1121,7 +1121,7 @@ name|Value
 operator|*
 operator|>
 operator|&
-name|ValueMap
+name|VMap
 argument_list|)
 decl_stmt|;
 block|}

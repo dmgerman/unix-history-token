@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CallingConv.h"
 end_include
 
 begin_include
@@ -203,13 +215,6 @@ comment|/// operands. This may require setting a feature bit in the processor.
 name|bool
 name|HasVectorUAMem
 block|;
-comment|/// DarwinVers - Nonzero if this is a darwin platform: the numeric
-comment|/// version of the platform, e.g. 8 = 10.4 (Tiger), 9 = 10.5 (Leopard), etc.
-name|unsigned
-name|char
-name|DarwinVers
-block|;
-comment|// Is any darwin-x86 platform.
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
 name|unsigned
@@ -220,6 +225,10 @@ comment|///
 name|unsigned
 name|MaxInlineSizeThreshold
 block|;
+comment|/// TargetTriple - What processor and OS we're targeting.
+name|Triple
+name|TargetTriple
+block|;
 name|private
 operator|:
 comment|/// Is64Bit - True if the processor supports 64-bit instructions and
@@ -229,20 +238,6 @@ name|Is64Bit
 block|;
 name|public
 operator|:
-expr|enum
-block|{
-name|isELF
-block|,
-name|isCygwin
-block|,
-name|isDarwin
-block|,
-name|isWindows
-block|,
-name|isMingw
-block|}
-name|TargetType
-block|;
 comment|/// This constructor initializes the data members to match that
 comment|/// of the specified triple.
 comment|///
@@ -522,20 +517,51 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isDarwin
+name|Triple
+operator|::
+name|Darwin
 return|;
 block|}
+comment|// ELF is a reasonably sane default and the only other X86 targets we
+comment|// support are Darwin and Windows. Just use "not those".
 name|bool
 name|isTargetELF
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+operator|!
+name|isTargetDarwin
+argument_list|()
+operator|&&
+operator|!
+name|isTargetWindows
+argument_list|()
+operator|&&
+operator|!
+name|isTargetCygMing
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetLinux
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isELF
+name|Triple
+operator|::
+name|Linux
 return|;
 block|}
 name|bool
@@ -544,9 +570,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isWindows
+name|Triple
+operator|::
+name|Win32
 return|;
 block|}
 name|bool
@@ -555,9 +586,23 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isMingw
+name|Triple
+operator|::
+name|MinGW32
+operator|||
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MinGW64
 return|;
 block|}
 name|bool
@@ -566,9 +611,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isCygwin
+name|Triple
+operator|::
+name|Cygwin
 return|;
 block|}
 name|bool
@@ -577,13 +627,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
-operator|==
-name|isMingw
+name|isTargetMingw
+argument_list|()
 operator|||
-name|TargetType
-operator|==
-name|isCygwin
+name|isTargetCygwin
+argument_list|()
 return|;
 block|}
 comment|/// isTargetCOFF - Return true if this is any COFF/Windows target variant.
@@ -593,17 +641,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
-operator|==
-name|isMingw
+name|isTargetMingw
+argument_list|()
 operator|||
-name|TargetType
-operator|==
-name|isCygwin
+name|isTargetCygwin
+argument_list|()
 operator|||
-name|TargetType
-operator|==
-name|isWindows
+name|isTargetWindows
+argument_list|()
 return|;
 block|}
 name|bool
@@ -615,13 +660,11 @@ return|return
 name|Is64Bit
 operator|&&
 operator|(
-name|TargetType
-operator|==
-name|isMingw
+name|isTargetMingw
+argument_list|()
 operator|||
-name|TargetType
-operator|==
-name|isWindows
+name|isTargetWindows
+argument_list|()
 operator|)
 return|;
 block|}
@@ -774,13 +817,36 @@ name|getDarwinVers
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isTargetDarwin
+argument_list|()
+condition|)
 return|return
-name|DarwinVers
+name|TargetTriple
+operator|.
+name|getDarwinMajorNumber
+argument_list|()
+return|;
+return|return
+literal|0
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
+end_comment
+
+begin_comment
 comment|/// current subtarget according to how we should reference it in a non-pcrel
+end_comment
+
+begin_comment
 comment|/// context.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|char
 name|ClassifyGlobalReference
@@ -797,17 +863,38 @@ name|TM
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// ClassifyBlockAddressReference - Classify a blockaddress reference for the
+end_comment
+
+begin_comment
 comment|/// current subtarget according to how we should reference it in a non-pcrel
+end_comment
+
+begin_comment
 comment|/// context.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|char
 name|ClassifyBlockAddressReference
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
+end_comment
+
+begin_comment
 comment|/// to immediate address.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|IsLegalToCallImmediateAddr
 argument_list|(
@@ -818,11 +905,29 @@ name|TM
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// This function returns the name of a function which has an interface
+end_comment
+
+begin_comment
 comment|/// like the non-standard bzero function, if such a function exists on
+end_comment
+
+begin_comment
 comment|/// the current subtarget and it is considered prefereable over
+end_comment
+
+begin_comment
 comment|/// memset with zero passed as the second argument. Otherwise it
+end_comment
+
+begin_comment
 comment|/// returns null.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -830,24 +935,54 @@ name|getBZeroEntry
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getSpecialAddressLatency - For targets where it is beneficial to
+end_comment
+
+begin_comment
 comment|/// backschedule instructions that compute addresses, return a value
+end_comment
+
+begin_comment
 comment|/// indicating the number of scheduling cycles of backscheduling that
+end_comment
+
+begin_comment
 comment|/// should be attempted.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getSpecialAddressLatency
 argument_list|()
 specifier|const
 expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
-unit|}
+comment|/// IsCalleePop - Test whether a function should pop its own arguments.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|IsCalleePop
+argument_list|(
+name|bool
+name|isVarArg
+argument_list|,
+name|CallingConv
+operator|::
+name|ID
+name|CallConv
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

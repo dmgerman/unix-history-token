@@ -2302,7 +2302,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -3064,7 +3064,7 @@ literal|1
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -3389,7 +3389,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -3605,7 +3605,7 @@ literal|2
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -3791,7 +3791,7 @@ literal|1
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -3974,7 +3974,7 @@ literal|2
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -4423,7 +4423,7 @@ literal|0
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 name|OpInfo
@@ -4690,7 +4690,7 @@ literal|1
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|||
 name|OpInfo
@@ -5303,7 +5303,7 @@ literal|0
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 name|OpInfo
@@ -5458,7 +5458,7 @@ literal|0
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 literal|"1 imm operand expected"
@@ -7043,7 +7043,7 @@ literal|3
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 literal|"Expect>= 4 operands and first 3 as reg operands"
@@ -7515,7 +7515,7 @@ literal|2
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 name|OpInfo
@@ -7524,7 +7524,7 @@ literal|3
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 literal|"Exactlt 4 operands expect and first two as reg operands"
@@ -7841,7 +7841,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -8208,7 +8208,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -8824,7 +8824,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -10020,7 +10020,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -10182,7 +10182,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -10336,7 +10336,7 @@ literal|1
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 literal|"Expect>= 2 operands, first as reg, and second as imm operand"
@@ -10899,7 +10899,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!
@@ -11185,7 +11185,7 @@ name|OpIdx
 index|]
 operator|.
 name|RegClass
-operator|==
+operator|<
 literal|0
 operator|&&
 operator|!

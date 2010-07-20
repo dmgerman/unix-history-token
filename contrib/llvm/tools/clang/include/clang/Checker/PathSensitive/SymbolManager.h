@@ -126,6 +126,9 @@ name|class
 name|MemRegion
 decl_stmt|;
 name|class
+name|SubRegion
+decl_stmt|;
+name|class
 name|TypedRegion
 decl_stmt|;
 name|class
@@ -154,6 +157,8 @@ block|,
 name|ConjuredKind
 block|,
 name|DerivedKind
+block|,
+name|ExtentKind
 block|,
 name|END_SYMBOLS
 block|,
@@ -804,6 +809,123 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|SymbolExtent
+operator|:
+name|public
+name|SymbolData
+block|{
+specifier|const
+name|SubRegion
+operator|*
+name|R
+block|;
+name|public
+operator|:
+name|SymbolExtent
+argument_list|(
+argument|SymbolID sym
+argument_list|,
+argument|const SubRegion *r
+argument_list|)
+operator|:
+name|SymbolData
+argument_list|(
+name|ExtentKind
+argument_list|,
+name|sym
+argument_list|)
+block|,
+name|R
+argument_list|(
+argument|r
+argument_list|)
+block|{}
+specifier|const
+name|SubRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
+return|;
+block|}
+name|QualType
+name|getType
+argument_list|(
+argument|ASTContext&
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|,
+argument|const SubRegion *R
+argument_list|)
+block|{
+name|profile
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|ExtentKind
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|R
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|profile
+argument_list|,
+name|R
+argument_list|)
+block|;   }
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr* SE
+argument_list|)
+block|{
+return|return
+name|SE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|ExtentKind
+return|;
+block|}
+expr|}
+block|;
 comment|// SymIntExpr - Represents symbolic expression like 'x' + 3.
 name|class
 name|SymIntExpr
@@ -1374,6 +1496,17 @@ argument|const TypedRegion *R
 argument_list|)
 block|;
 specifier|const
+name|SymbolExtent
+operator|*
+name|getExtentSymbol
+argument_list|(
+specifier|const
+name|SubRegion
+operator|*
+name|R
+argument_list|)
+block|;
+specifier|const
 name|SymIntExpr
 operator|*
 name|getSymIntExpr
@@ -1488,6 +1621,11 @@ name|LocationContext
 operator|*
 name|LCtx
 block|;
+specifier|const
+name|Stmt
+operator|*
+name|Loc
+block|;
 name|SymbolManager
 operator|&
 name|SymMgr
@@ -1501,6 +1639,11 @@ name|LocationContext
 operator|*
 name|ctx
 argument_list|,
+specifier|const
+name|Stmt
+operator|*
+name|s
+argument_list|,
 name|SymbolManager
 operator|&
 name|symmgr
@@ -1509,6 +1652,11 @@ operator|:
 name|LCtx
 argument_list|(
 name|ctx
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+name|s
 argument_list|)
 block|,
 name|SymMgr
@@ -1531,6 +1679,17 @@ return|return
 name|LCtx
 return|;
 block|}
+specifier|const
+name|Stmt
+operator|*
+name|getCurrentStatement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
 name|bool
 name|isLive
 argument_list|(
@@ -1540,17 +1699,13 @@ block|;
 name|bool
 name|isLive
 argument_list|(
-argument|const Stmt* Loc
-argument_list|,
-argument|const Stmt* ExprVal
+argument|const Stmt *ExprVal
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isLive
 argument_list|(
-argument|const Stmt* Loc
-argument_list|,
 argument|const VarRegion *VR
 argument_list|)
 specifier|const

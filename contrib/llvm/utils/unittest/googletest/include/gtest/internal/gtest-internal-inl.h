@@ -148,18 +148,19 @@ name|GTEST_SRC_GTEST_INTERNAL_INL_H_
 end_define
 
 begin_comment
-comment|// GTEST_IMPLEMENTATION is defined iff the current translation unit is
+comment|// GTEST_IMPLEMENTATION_ is defined to 1 iff the current translation unit is
 end_comment
 
 begin_comment
-comment|// part of Google Test's implementation.
+comment|// part of Google Test's implementation; otherwise it's undefined.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GTEST_IMPLEMENTATION
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_IMPLEMENTATION_
+end_if
 
 begin_comment
 comment|// A user is trying to include this from his code - just say no.
@@ -183,7 +184,28 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// GTEST_IMPLEMENTATION
+comment|// GTEST_IMPLEMENTATION_
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32_WCE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !_WIN32_WCE
 end_comment
 
 begin_include
@@ -195,14 +217,52 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|// For strtoll/_strtoul64/malloc/free.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|// For memmove.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gtest/internal/gtest-port.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|GTEST_OS_WINDOWS
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -211,7 +271,7 @@ file|<windows.h>
 end_include
 
 begin_comment
-comment|// NOLINT
+comment|// For DWORD.
 end_comment
 
 begin_endif
@@ -229,6 +289,10 @@ directive|include
 file|<gtest/gtest.h>
 end_include
 
+begin_comment
+comment|// NOLINT
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -241,57 +305,12 @@ name|testing
 block|{
 comment|// Declares the flags.
 comment|//
-comment|// We don't want the users to modify these flags in the code, but want
-comment|// Google Test's own unit tests to be able to access them.  Therefore we
-comment|// declare them here as opposed to in gtest.h.
+comment|// We don't want the users to modify this flag in the code, but want
+comment|// Google Test's own unit tests to be able to access it. Therefore we
+comment|// declare it here as opposed to in gtest.h.
 name|GTEST_DECLARE_bool_
 argument_list|(
-name|break_on_failure
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_bool_
-argument_list|(
-name|catch_exceptions
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_string_
-argument_list|(
-name|color
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_string_
-argument_list|(
-name|filter
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_bool_
-argument_list|(
-name|list_tests
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_string_
-argument_list|(
-name|output
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_bool_
-argument_list|(
-name|print_time
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_int32_
-argument_list|(
-name|repeat
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_int32_
-argument_list|(
-name|stack_trace_depth
-argument_list|)
-expr_stmt|;
-name|GTEST_DECLARE_bool_
-argument_list|(
-name|show_internal_stack_frames
+name|death_test_use_fork
 argument_list|)
 expr_stmt|;
 name|namespace
@@ -299,12 +318,20 @@ name|internal
 block|{
 comment|// The value of GetTestTypeId() as seen from within the Google Test
 comment|// library.  This is solely for testing GetTestTypeId().
+name|GTEST_API_
 specifier|extern
 specifier|const
 name|TypeId
 name|kTestTypeIdInGoogleTest
 decl_stmt|;
 comment|// Names of the flags (needed for parsing Google Test flags).
+specifier|const
+name|char
+name|kAlsoRunDisabledTestsFlag
+index|[]
+init|=
+literal|"also_run_disabled_tests"
+decl_stmt|;
 specifier|const
 name|char
 name|kBreakOnFailureFlag
@@ -356,11 +383,226 @@ literal|"print_time"
 decl_stmt|;
 specifier|const
 name|char
+name|kRandomSeedFlag
+index|[]
+init|=
+literal|"random_seed"
+decl_stmt|;
+specifier|const
+name|char
 name|kRepeatFlag
 index|[]
 init|=
 literal|"repeat"
 decl_stmt|;
+specifier|const
+name|char
+name|kShuffleFlag
+index|[]
+init|=
+literal|"shuffle"
+decl_stmt|;
+specifier|const
+name|char
+name|kStackTraceDepthFlag
+index|[]
+init|=
+literal|"stack_trace_depth"
+decl_stmt|;
+specifier|const
+name|char
+name|kThrowOnFailureFlag
+index|[]
+init|=
+literal|"throw_on_failure"
+decl_stmt|;
+comment|// A valid random seed must be in [1, kMaxRandomSeed].
+specifier|const
+name|int
+name|kMaxRandomSeed
+init|=
+literal|99999
+decl_stmt|;
+comment|// g_help_flag is true iff the --help flag or an equivalent form is
+comment|// specified on the command line.
+name|GTEST_API_
+specifier|extern
+name|bool
+name|g_help_flag
+decl_stmt|;
+comment|// Returns the current time in milliseconds.
+name|GTEST_API_
+name|TimeInMillis
+name|GetTimeInMillis
+parameter_list|()
+function_decl|;
+comment|// Returns true iff Google Test should use colors in the output.
+name|GTEST_API_
+name|bool
+name|ShouldUseColor
+parameter_list|(
+name|bool
+name|stdout_is_tty
+parameter_list|)
+function_decl|;
+comment|// Formats the given time in milliseconds as seconds.
+name|GTEST_API_
+name|std
+operator|::
+name|string
+name|FormatTimeInMillisAsSeconds
+argument_list|(
+argument|TimeInMillis ms
+argument_list|)
+expr_stmt|;
+comment|// Parses a string for an Int32 flag, in the form of "--flag=value".
+comment|//
+comment|// On success, stores the value of the flag in *value, and returns
+comment|// true.  On failure, returns false without changing *value.
+name|GTEST_API_
+name|bool
+name|ParseInt32Flag
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|flag
+parameter_list|,
+name|Int32
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+comment|// Returns a random seed in range [1, kMaxRandomSeed] based on the
+comment|// given --gtest_random_seed flag value.
+specifier|inline
+name|int
+name|GetRandomSeedFromFlag
+parameter_list|(
+name|Int32
+name|random_seed_flag
+parameter_list|)
+block|{
+specifier|const
+name|unsigned
+name|int
+name|raw_seed
+init|=
+operator|(
+name|random_seed_flag
+operator|==
+literal|0
+operator|)
+condition|?
+name|static_cast
+operator|<
+name|unsigned
+name|int
+operator|>
+operator|(
+name|GetTimeInMillis
+argument_list|()
+operator|)
+else|:
+name|static_cast
+operator|<
+name|unsigned
+name|int
+operator|>
+operator|(
+name|random_seed_flag
+operator|)
+decl_stmt|;
+comment|// Normalizes the actual seed to range [1, kMaxRandomSeed] such that
+comment|// it's easy to type.
+specifier|const
+name|int
+name|normalized_seed
+init|=
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+operator|(
+name|raw_seed
+operator|-
+literal|1U
+operator|)
+operator|%
+name|static_cast
+operator|<
+name|unsigned
+name|int
+operator|>
+operator|(
+name|kMaxRandomSeed
+operator|)
+operator|)
+operator|+
+literal|1
+decl_stmt|;
+return|return
+name|normalized_seed
+return|;
+block|}
+comment|// Returns the first valid random seed after 'seed'.  The behavior is
+comment|// undefined if 'seed' is invalid.  The seed after kMaxRandomSeed is
+comment|// considered to be 1.
+specifier|inline
+name|int
+name|GetNextRandomSeed
+parameter_list|(
+name|int
+name|seed
+parameter_list|)
+block|{
+name|GTEST_CHECK_
+argument_list|(
+literal|1
+operator|<=
+name|seed
+operator|&&
+name|seed
+operator|<=
+name|kMaxRandomSeed
+argument_list|)
+operator|<<
+literal|"Invalid random seed "
+operator|<<
+name|seed
+operator|<<
+literal|" - must be in [1, "
+operator|<<
+name|kMaxRandomSeed
+operator|<<
+literal|"]."
+expr_stmt|;
+specifier|const
+name|int
+name|next_seed
+init|=
+name|seed
+operator|+
+literal|1
+decl_stmt|;
+return|return
+operator|(
+name|next_seed
+operator|>
+name|kMaxRandomSeed
+operator|)
+condition|?
+literal|1
+else|:
+name|next_seed
+return|;
+block|}
 comment|// This class saves the values of all Google Test flags in its c'tor, and
 comment|// restores them in its d'tor.
 name|class
@@ -372,6 +614,13 @@ comment|// The c'tor.
 name|GTestFlagSaver
 argument_list|()
 block|{
+name|also_run_disabled_tests_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|also_run_disabled_tests
+argument_list|)
+expr_stmt|;
 name|break_on_failure_
 operator|=
 name|GTEST_FLAG
@@ -398,6 +647,13 @@ operator|=
 name|GTEST_FLAG
 argument_list|(
 name|death_test_style
+argument_list|)
+expr_stmt|;
+name|death_test_use_fork_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|death_test_use_fork
 argument_list|)
 expr_stmt|;
 name|filter_
@@ -435,11 +691,39 @@ argument_list|(
 name|print_time
 argument_list|)
 expr_stmt|;
+name|random_seed_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|random_seed
+argument_list|)
+expr_stmt|;
 name|repeat_
 operator|=
 name|GTEST_FLAG
 argument_list|(
 name|repeat
+argument_list|)
+expr_stmt|;
+name|shuffle_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|shuffle
+argument_list|)
+expr_stmt|;
+name|stack_trace_depth_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|stack_trace_depth
+argument_list|)
+expr_stmt|;
+name|throw_on_failure_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|throw_on_failure
 argument_list|)
 expr_stmt|;
 block|}
@@ -450,6 +734,13 @@ argument_list|()
 block|{
 name|GTEST_FLAG
 argument_list|(
+name|also_run_disabled_tests
+argument_list|)
+operator|=
+name|also_run_disabled_tests_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|break_on_failure
 argument_list|)
 operator|=
@@ -475,6 +766,13 @@ name|death_test_style
 argument_list|)
 operator|=
 name|death_test_style_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|death_test_use_fork
+argument_list|)
+operator|=
+name|death_test_use_fork_
 block|;
 name|GTEST_FLAG
 argument_list|(
@@ -513,17 +811,48 @@ name|print_time_
 block|;
 name|GTEST_FLAG
 argument_list|(
+name|random_seed
+argument_list|)
+operator|=
+name|random_seed_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|repeat
 argument_list|)
 operator|=
 name|repeat_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|shuffle
+argument_list|)
+operator|=
+name|shuffle_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|stack_trace_depth
+argument_list|)
+operator|=
+name|stack_trace_depth_
+block|;
+name|GTEST_FLAG
+argument_list|(
+name|throw_on_failure
+argument_list|)
+operator|=
+name|throw_on_failure_
 block|;   }
 name|private
 operator|:
 comment|// Fields for saving the original values of flags.
 name|bool
-name|break_on_failure_
+name|also_run_disabled_tests_
 expr_stmt|;
+name|bool
+name|break_on_failure_
+decl_stmt|;
 name|bool
 name|catch_exceptions_
 decl_stmt|;
@@ -532,6 +861,9 @@ name|color_
 decl_stmt|;
 name|String
 name|death_test_style_
+decl_stmt|;
+name|bool
+name|death_test_use_fork_
 decl_stmt|;
 name|String
 name|filter_
@@ -554,8 +886,24 @@ decl_stmt|;
 name|internal
 operator|::
 name|Int32
+name|random_seed_
+expr_stmt|;
+name|internal
+operator|::
+name|Int32
 name|repeat_
 expr_stmt|;
+name|bool
+name|shuffle_
+decl_stmt|;
+name|internal
+operator|::
+name|Int32
+name|stack_trace_depth_
+expr_stmt|;
+name|bool
+name|throw_on_failure_
+decl_stmt|;
 block|}
 name|GTEST_ATTRIBUTE_UNUSED_
 expr_stmt|;
@@ -567,6 +915,7 @@ comment|// The function returns the address of the output buffer.
 comment|// If the code_point is not a valid Unicode code point
 comment|// (i.e. outside of Unicode range U+0 to U+10FFFF) it will be output
 comment|// as '(Invalid Unicode 0xXXXXXXXX)'.
+name|GTEST_API_
 name|char
 modifier|*
 name|CodePointToUtf8
@@ -592,6 +941,7 @@ comment|// (i.e. outside of Unicode range U+0 to U+10FFFF) they will be output
 comment|// as '(Invalid Unicode 0xXXXXXXXX)'. If the string is in UTF16 encoding
 comment|// and contains invalid UTF-16 surrogate pairs, values in those pairs
 comment|// will be encoded as individual Unicode characters from Basic Normal Plane.
+name|GTEST_API_
 name|String
 name|WideStringToUtf8
 parameter_list|(
@@ -604,976 +954,378 @@ name|int
 name|num_chars
 parameter_list|)
 function_decl|;
-comment|// Returns the number of active threads, or 0 when there is an error.
-name|size_t
-name|GetThreadCount
+comment|// Reads the GTEST_SHARD_STATUS_FILE environment variable, and creates the file
+comment|// if the variable is present. If a file already exists at this location, this
+comment|// function will write over it. If the variable is present, but the file cannot
+comment|// be created, prints an error and exits.
+name|void
+name|WriteToShardStatusFileIfNeeded
 parameter_list|()
 function_decl|;
-comment|// List is a simple singly-linked list container.
-comment|//
-comment|// We cannot use std::list as Microsoft's implementation of STL has
-comment|// problems when exception is disabled.  There is a hack to work
-comment|// around this, but we've seen cases where the hack fails to work.
-comment|//
-comment|// TODO(wan): switch to std::list when we have a reliable fix for the
-comment|// STL problem, e.g. when we upgrade to the next version of Visual
-comment|// C++, or (more likely) switch to STLport.
-comment|//
-comment|// The element type must support copy constructor.
-comment|// Forward declare List
-name|template
-operator|<
-name|typename
-name|E
-operator|>
-comment|// E is the element type.
-name|class
-name|List
-expr_stmt|;
-comment|// ListNode is a node in a singly-linked list.  It consists of an
-comment|// element and a pointer to the next node.  The last node in the list
-comment|// has a NULL value for its next pointer.
-name|template
-operator|<
-name|typename
-name|E
-operator|>
-comment|// E is the element type.
-name|class
-name|ListNode
-block|{
-name|friend
-name|class
-name|List
-operator|<
-name|E
-operator|>
-block|;
-name|private
-operator|:
-name|E
-name|element_
-block|;
-name|ListNode
-operator|*
-name|next_
-block|;
-comment|// The c'tor is private s.t. only in the ListNode class and in its
-comment|// friend class List we can create a ListNode object.
-comment|//
-comment|// Creates a node with a given element value.  The next pointer is
-comment|// set to NULL.
-comment|//
-comment|// ListNode does NOT have a default constructor.  Always use this
-comment|// constructor (with parameter) to create a ListNode object.
-name|explicit
-name|ListNode
-argument_list|(
+comment|// Checks whether sharding is enabled by examining the relevant
+comment|// environment variable values. If the variables are present,
+comment|// but inconsistent (e.g., shard_index>= total_shards), prints
+comment|// an error and exits. If in_subprocess_for_death_test, sharding is
+comment|// disabled because it must only be applied to the original test
+comment|// process. Otherwise, we could filter out death tests we intended to execute.
+name|GTEST_API_
+name|bool
+name|ShouldShard
+parameter_list|(
 specifier|const
-name|E
-operator|&
-name|element
-argument_list|)
-operator|:
-name|element_
-argument_list|(
-name|element
-argument_list|)
-block|,
-name|next_
-argument_list|(
-argument|NULL
-argument_list|)
-block|{}
-comment|// We disallow copying ListNode
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|ListNode
-argument_list|)
-block|;
-name|public
-operator|:
-comment|// Gets the element in this node.
-name|E
-operator|&
-name|element
-argument_list|()
-block|{
-return|return
-name|element_
-return|;
-block|}
+name|char
+modifier|*
+name|total_shards_str
+parameter_list|,
 specifier|const
-name|E
-operator|&
-name|element
-argument_list|()
+name|char
+modifier|*
+name|shard_index_str
+parameter_list|,
+name|bool
+name|in_subprocess_for_death_test
+parameter_list|)
+function_decl|;
+comment|// Parses the environment variable var as an Int32. If it is unset,
+comment|// returns default_val. If it is not an Int32, prints an error and
+comment|// and aborts.
+name|GTEST_API_
+name|Int32
+name|Int32FromEnvOrDie
+parameter_list|(
 specifier|const
-block|{
-return|return
-name|element_
-return|;
-block|}
-comment|// Gets the next node in the list.
-name|ListNode
-operator|*
-name|next
-argument_list|()
-block|{
-return|return
-name|next_
-return|;
-block|}
-specifier|const
-name|ListNode
-operator|*
-name|next
-argument_list|()
-specifier|const
-block|{
-return|return
-name|next_
-return|;
-block|}
-expr|}
-block|;
-comment|// List is a simple singly-linked list container.
-name|template
-operator|<
-name|typename
-name|E
-operator|>
-comment|// E is the element type.
-name|class
-name|List
-block|{
-name|public
-operator|:
-comment|// Creates an empty list.
-name|List
-argument_list|()
-operator|:
-name|head_
-argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|last_
-argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|size_
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-comment|// D'tor.
-name|virtual
-operator|~
-name|List
-argument_list|()
-block|;
-comment|// Clears the list.
-name|void
-name|Clear
-argument_list|()
-block|{
-if|if
-condition|(
-name|size_
-operator|>
-literal|0
-condition|)
-block|{
-comment|// 1. Deletes every node.
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|node
-operator|=
-name|head_
-expr_stmt|;
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|next
-operator|=
-name|node
-operator|->
-name|next
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|delete
-name|node
-decl_stmt|;
-name|node
-operator|=
-name|next
-expr_stmt|;
-if|if
-condition|(
-name|node
-operator|==
-name|NULL
-condition|)
-break|break;
-name|next
-operator|=
-name|node
-operator|->
-name|next
-argument_list|()
-expr_stmt|;
-block|}
-comment|// 2. Resets the member variables.
-name|head_
-operator|=
-name|last_
-operator|=
-name|NULL
-expr_stmt|;
-name|size_
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-comment|// Gets the number of elements.
+name|char
+modifier|*
+name|env_var
+parameter_list|,
+name|Int32
+name|default_val
+parameter_list|)
+function_decl|;
+comment|// Given the total number of shards, the shard index, and the test id,
+comment|// returns true iff the test should be run on this shard. The test id is
+comment|// some arbitrary but unique non-negative integer assigned to each test
+comment|// method. Assumes that 0<= shard_index< total_shards.
+name|GTEST_API_
+name|bool
+name|ShouldRunTestOnShard
+parameter_list|(
 name|int
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|size_
-return|;
-block|}
-comment|// Returns true if the list is empty.
-name|bool
-name|IsEmpty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|size
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
-comment|// Gets the first element of the list, or NULL if the list is empty.
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|Head
-argument_list|()
-block|{
-return|return
-name|head_
-return|;
-block|}
-specifier|const
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|Head
-argument_list|()
-specifier|const
-block|{
-return|return
-name|head_
-return|;
-block|}
-comment|// Gets the last element of the list, or NULL if the list is empty.
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|Last
-argument_list|()
-block|{
-return|return
-name|last_
-return|;
-block|}
-specifier|const
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|Last
-argument_list|()
-specifier|const
-block|{
-return|return
-name|last_
-return|;
-block|}
-comment|// Adds an element to the end of the list.  A copy of the element is
-comment|// created using the copy constructor, and then stored in the list.
-comment|// Changes made to the element in the list doesn't affect the source
-comment|// object, and vice versa.
-name|void
-name|PushBack
-argument_list|(
-argument|const E& element
-argument_list|)
-block|{
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|new_node
-operator|=
-name|new
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|(
-name|element
-operator|)
-block|;
-if|if
-condition|(
-name|size_
-operator|==
-literal|0
-condition|)
-block|{
-name|head_
-operator|=
-name|last_
-operator|=
-name|new_node
-expr_stmt|;
-name|size_
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|last_
-operator|->
-name|next_
-operator|=
-name|new_node
-expr_stmt|;
-name|last_
-operator|=
-name|new_node
-expr_stmt|;
-name|size_
-operator|++
-expr_stmt|;
-block|}
-block|}
-comment|// Adds an element to the beginning of this list.
-name|void
-name|PushFront
-argument_list|(
-argument|const E& element
-argument_list|)
-block|{
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-specifier|const
-name|new_node
-operator|=
-name|new
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|(
-name|element
-operator|)
-block|;
-if|if
-condition|(
-name|size_
-operator|==
-literal|0
-condition|)
-block|{
-name|head_
-operator|=
-name|last_
-operator|=
-name|new_node
-expr_stmt|;
-name|size_
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|new_node
-operator|->
-name|next_
-operator|=
-name|head_
-expr_stmt|;
-name|head_
-operator|=
-name|new_node
-expr_stmt|;
-name|size_
-operator|++
-expr_stmt|;
-block|}
-block|}
-comment|// Removes an element from the beginning of this list.  If the
-comment|// result argument is not NULL, the removed element is stored in the
-comment|// memory it points to.  Otherwise the element is thrown away.
-comment|// Returns true iff the list wasn't empty before the operation.
-name|bool
-name|PopFront
-argument_list|(
-argument|E* result
-argument_list|)
-block|{
-if|if
-condition|(
-name|size_
-operator|==
-literal|0
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|result
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|*
-name|result
-operator|=
-name|head_
-operator|->
-name|element_
-expr_stmt|;
-block|}
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-specifier|const
-name|old_head
-operator|=
-name|head_
-expr_stmt|;
-name|size_
-operator|--
-block|;
-if|if
-condition|(
-name|size_
-operator|==
-literal|0
-condition|)
-block|{
-name|head_
-operator|=
-name|last_
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|head_
-operator|=
-name|head_
-operator|->
-name|next_
-expr_stmt|;
-block|}
-name|delete
-name|old_head
-decl_stmt|;
-return|return
-name|true
-return|;
-block|}
-comment|// Inserts an element after a given node in the list.  It's the
-comment|// caller's responsibility to ensure that the given node is in the
-comment|// list.  If the given node is NULL, inserts the element at the
-comment|// front of the list.
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|InsertAfter
-argument_list|(
-argument|ListNode<E>* node
-argument_list|,
-argument|const E& element
-argument_list|)
-block|{
-if|if
-condition|(
-name|node
-operator|==
-name|NULL
-condition|)
-block|{
-name|PushFront
-argument_list|(
-name|element
-argument_list|)
-expr_stmt|;
-return|return
-name|Head
-argument_list|()
-return|;
-block|}
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-specifier|const
-name|new_node
-operator|=
-name|new
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|(
-name|element
-operator|)
-expr_stmt|;
-name|new_node
-operator|->
-name|next_
-operator|=
-name|node
-operator|->
-name|next_
-expr_stmt|;
-name|node
-operator|->
-name|next_
-operator|=
-name|new_node
-expr_stmt|;
-name|size_
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|node
-operator|==
-name|last_
-condition|)
-block|{
-name|last_
-operator|=
-name|new_node
-expr_stmt|;
-block|}
-return|return
-name|new_node
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// Returns the number of elements that satisfy a given predicate.
-end_comment
-
-begin_comment
-comment|// The parameter 'predicate' is a Boolean function or functor that
-end_comment
-
-begin_comment
-comment|// accepts a 'const E&', where E is the element type.
-end_comment
-
-begin_expr_stmt
+name|total_shards
+parameter_list|,
+name|int
+name|shard_index
+parameter_list|,
+name|int
+name|test_id
+parameter_list|)
+function_decl|;
+comment|// STL container utilities.
+comment|// Returns the number of elements in the given container that satisfy
+comment|// the given predicate.
 name|template
 operator|<
+name|class
+name|Container
+operator|,
 name|typename
-name|P
+name|Predicate
 operator|>
-comment|// P is the type of the predicate function/functor
+specifier|inline
 name|int
 name|CountIf
 argument_list|(
-argument|P predicate
+argument|const Container& c
+argument_list|,
+argument|Predicate predicate
 argument_list|)
-specifier|const
 block|{
+return|return
+name|static_cast
+operator|<
 name|int
-name|count
-operator|=
-literal|0
-block|;
-for|for
-control|(
-specifier|const
-name|ListNode
-operator|<
-name|E
 operator|>
-operator|*
-name|node
-operator|=
-name|Head
-argument_list|()
-init|;
-name|node
-operator|!=
-name|NULL
-condition|;
-name|node
-operator|=
-name|node
-operator|->
-name|next
-argument_list|()
-control|)
-block|{
-if|if
-condition|(
-name|predicate
+operator|(
+name|std
+operator|::
+name|count_if
 argument_list|(
-name|node
-operator|->
-name|element
+name|c
+operator|.
+name|begin
 argument_list|()
+argument_list|,
+name|c
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|predicate
 argument_list|)
-condition|)
-block|{
-name|count
-operator|++
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}      return
-name|count
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|// Applies a function/functor to each element in the list.  The
-end_comment
-
-begin_comment
-comment|// parameter 'functor' is a function/functor that accepts a 'const
-end_comment
-
-begin_comment
-comment|// E&', where E is the element type.  This method does not change
-end_comment
-
-begin_comment
-comment|// the elements.
-end_comment
-
-begin_expr_stmt
-unit|template
+comment|// Applies a function/functor to each element in the container.
+name|template
 operator|<
+name|class
+name|Container
+operator|,
 name|typename
-name|F
+name|Functor
 operator|>
-comment|// F is the type of the function/functor
 name|void
 name|ForEach
 argument_list|(
-argument|F functor
+argument|const Container& c
+argument_list|,
+argument|Functor functor
 argument_list|)
-specifier|const
 block|{
-for|for
-control|(
-specifier|const
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|node
-operator|=
-name|Head
+name|std
+operator|::
+name|for_each
+argument_list|(
+name|c
+operator|.
+name|begin
 argument_list|()
-init|;
-name|node
-operator|!=
-name|NULL
-condition|;
-name|node
-operator|=
-name|node
-operator|->
-name|next
+argument_list|,
+name|c
+operator|.
+name|end
 argument_list|()
-control|)
-block|{
+argument_list|,
 name|functor
-argument_list|(
-name|node
-operator|->
-name|element
-argument_list|()
 argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|// Returns the first node whose element satisfies a given predicate,
-end_comment
-
-begin_comment
-comment|// or NULL if none is found.  The parameter 'predicate' is a
-end_comment
-
-begin_comment
-comment|// function/functor that accepts a 'const E&', where E is the
-end_comment
-
-begin_comment
-comment|// element type.  This method does not change the elements.
-end_comment
-
-begin_expr_stmt
-unit|template
-operator|<
-name|typename
-name|P
-operator|>
-comment|// P is the type of the predicate function/functor.
-specifier|const
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|FindIf
-argument_list|(
-argument|P predicate
-argument_list|)
-specifier|const
-block|{
-for|for
-control|(
-specifier|const
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|node
-operator|=
-name|Head
-argument_list|()
-init|;
-name|node
-operator|!=
-name|NULL
-condition|;
-name|node
-operator|=
-name|node
-operator|->
-name|next
-argument_list|()
-control|)
-block|{
-if|if
-condition|(
-name|predicate
-argument_list|(
-name|node
-operator|->
-name|element
-argument_list|()
-argument_list|)
-condition|)
-block|{
-return|return
-name|node
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}      return
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}    template
-operator|<
-name|typename
-name|P
-operator|>
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|FindIf
-argument_list|(
-argument|P predicate
-argument_list|)
-block|{
-for|for
-control|(
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|node
-operator|=
-name|Head
-argument_list|()
-init|;
-name|node
-operator|!=
-name|NULL
-condition|;
-name|node
-operator|=
-name|node
-operator|->
-name|next
-argument_list|()
-control|)
-block|{
-if|if
-condition|(
-name|predicate
-argument_list|(
-name|node
-operator|->
-name|element
-argument_list|()
-argument_list|)
-condition|)
-block|{
-return|return
-name|node
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}      return
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}   private:
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|head_
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// The first node of the list.
-end_comment
-
-begin_expr_stmt
-name|ListNode
-operator|<
-name|E
-operator|>
-operator|*
-name|last_
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// The last node of the list.
-end_comment
-
-begin_decl_stmt
-name|int
-name|size_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// The number of elements in the list.
-end_comment
-
-begin_comment
-comment|// We disallow copying List.
-end_comment
-
-begin_expr_stmt
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|List
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|// The virtual destructor of List.
-end_comment
-
-begin_expr_stmt
+block|; }
+comment|// Returns the i-th element of the vector, or default_value if i is not
+comment|// in range [0, v.size()).
 name|template
 operator|<
 name|typename
 name|E
 operator|>
-name|List
+specifier|inline
+name|E
+name|GetElementOr
+argument_list|(
+argument|const std::vector<E>& v
+argument_list|,
+argument|int i
+argument_list|,
+argument|E default_value
+argument_list|)
+block|{
+return|return
+operator|(
+name|i
 operator|<
+literal|0
+operator|||
+name|i
+operator|>=
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|v
+operator|.
+name|size
+argument_list|()
+operator|)
+operator|)
+operator|?
+name|default_value
+operator|:
+name|v
+index|[
+name|i
+index|]
+return|;
+block|}
+comment|// Performs an in-place shuffle of a range of the vector's elements.
+comment|// 'begin' and 'end' are element indices as an STL-style range;
+comment|// i.e. [begin, end) are shuffled, where 'end' == size() means to
+comment|// shuffle to the end of the vector.
+name|template
+operator|<
+name|typename
 name|E
 operator|>
-operator|::
-operator|~
-name|List
-argument_list|()
+name|void
+name|ShuffleRange
+argument_list|(
+argument|internal::Random* random
+argument_list|,
+argument|int begin
+argument_list|,
+argument|int end
+argument_list|,
+argument|std::vector<E>* v
+argument_list|)
 block|{
-name|Clear
+specifier|const
+name|int
+name|size
+operator|=
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|v
+operator|->
+name|size
 argument_list|()
+operator|)
+block|;
+name|GTEST_CHECK_
+argument_list|(
+literal|0
+operator|<=
+name|begin
+operator|&&
+name|begin
+operator|<=
+name|size
+argument_list|)
+operator|<<
+literal|"Invalid shuffle range start "
+operator|<<
+name|begin
+operator|<<
+literal|": must be in range [0, "
+operator|<<
+name|size
+operator|<<
+literal|"]."
+block|;
+name|GTEST_CHECK_
+argument_list|(
+name|begin
+operator|<=
+name|end
+operator|&&
+name|end
+operator|<=
+name|size
+argument_list|)
+operator|<<
+literal|"Invalid shuffle range finish "
+operator|<<
+name|end
+operator|<<
+literal|": must be in range ["
+operator|<<
+name|begin
+operator|<<
+literal|", "
+operator|<<
+name|size
+operator|<<
+literal|"]."
+block|;
+comment|// Fisher-Yates shuffle, from
+comment|// http://en.wikipedia.org/wiki/Fisher-Yates_shuffle
+for|for
+control|(
+name|int
+name|range_width
+init|=
+name|end
+operator|-
+name|begin
+init|;
+name|range_width
+operator|>=
+literal|2
+condition|;
+name|range_width
+operator|--
+control|)
+block|{
+specifier|const
+name|int
+name|last_in_range
+init|=
+name|begin
+operator|+
+name|range_width
+operator|-
+literal|1
+decl_stmt|;
+specifier|const
+name|int
+name|selected
+init|=
+name|begin
+operator|+
+name|random
+operator|->
+name|Generate
+argument_list|(
+name|range_width
+argument_list|)
+decl_stmt|;
+name|std
+operator|::
+name|swap
+argument_list|(
+operator|(
+operator|*
+name|v
+operator|)
+index|[
+name|selected
+index|]
+argument_list|,
+operator|(
+operator|*
+name|v
+operator|)
+index|[
+name|last_in_range
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|// Performs an in-place shuffle of the vector's elements.
+name|template
+operator|<
+name|typename
+name|E
+operator|>
+specifier|inline
+name|void
+name|Shuffle
+argument_list|(
+argument|internal::Random* random
+argument_list|,
+argument|std::vector<E>* v
+argument_list|)
+block|{
+name|ShuffleRange
+argument_list|(
+name|random
+argument_list|,
+literal|0
+argument_list|,
+name|static_cast
+operator|<
+name|int
+operator|>
+operator|(
+name|v
+operator|->
+name|size
+argument_list|()
+operator|)
+argument_list|,
+name|v
+argument_list|)
 block|; }
 comment|// A function for deleting an object.  Handy for being used as a
 comment|// functor.
@@ -1586,144 +1338,20 @@ specifier|static
 name|void
 name|Delete
 argument_list|(
-argument|T * x
+argument|T* x
 argument_list|)
 block|{
 name|delete
 name|x
 block|; }
-comment|// A copyable object representing a user specified test property which can be
-comment|// output as a key/value string pair.
-comment|//
-comment|// Don't inherit from TestProperty as its destructor is not virtual.
-name|class
-name|TestProperty
-block|{
-name|public
-operator|:
-comment|// C'tor.  TestProperty does NOT have a default constructor.
-comment|// Always use this constructor (with parameters) to create a
-comment|// TestProperty object.
-name|TestProperty
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|key
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|value
-argument_list|)
-operator|:
-name|key_
-argument_list|(
-name|key
-argument_list|)
-block|,
-name|value_
-argument_list|(
-argument|value
-argument_list|)
-block|{   }
-comment|// Gets the user supplied key.
-specifier|const
-name|char
-operator|*
-name|key
-argument_list|()
-specifier|const
-block|{
-return|return
-name|key_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Gets the user supplied value.
-specifier|const
-name|char
-operator|*
-name|value
-argument_list|()
-specifier|const
-block|{
-return|return
-name|value_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// Sets a new value, overriding the one supplied in the constructor.
-end_comment
-
-begin_function
-name|void
-name|SetValue
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|new_value
-parameter_list|)
-block|{
-name|value_
-operator|=
-name|new_value
-expr_stmt|;
-block|}
-end_function
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_comment
-comment|// The key supplied by the user.
-end_comment
-
-begin_decl_stmt
-name|String
-name|key_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// The value supplied by the user.
-end_comment
-
-begin_decl_stmt
-name|String
-name|value_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-unit|};
 comment|// A predicate that checks the key of a TestProperty against a known key.
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// TestPropertyKeyIs is copyable.
-end_comment
-
-begin_decl_stmt
 name|class
 name|TestPropertyKeyIs
 block|{
 name|public
-label|:
+operator|:
 comment|// Constructor.
 comment|//
 comment|// TestPropertyKeyIs has NO default constructor.
@@ -1771,286 +1399,11 @@ literal|0
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|String
 name|key_
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// The result of a single Test.  This includes a list of
-end_comment
-
-begin_comment
-comment|// TestPartResults, a list of TestProperties, a count of how many
-end_comment
-
-begin_comment
-comment|// death tests there are in the Test, and how much time it took to run
-end_comment
-
-begin_comment
-comment|// the Test.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// TestResult is not copyable.
-end_comment
-
-begin_decl_stmt
-name|class
-name|TestResult
-block|{
-name|public
-label|:
-comment|// Creates an empty TestResult.
-name|TestResult
-argument_list|()
+block|; }
 expr_stmt|;
-comment|// D'tor.  Do not inherit from TestResult.
-operator|~
-name|TestResult
-argument_list|()
-expr_stmt|;
-comment|// Gets the list of TestPartResults.
-specifier|const
-name|internal
-operator|::
-name|List
-operator|<
-name|TestPartResult
-operator|>
-operator|&
-name|test_part_results
-argument_list|()
-specifier|const
-block|{
-return|return
-name|test_part_results_
-return|;
-block|}
-comment|// Gets the list of TestProperties.
-specifier|const
-name|internal
-operator|::
-name|List
-operator|<
-name|internal
-operator|::
-name|TestProperty
-operator|>
-operator|&
-name|test_properties
-argument_list|()
-specifier|const
-block|{
-return|return
-name|test_properties_
-return|;
-block|}
-comment|// Gets the number of successful test parts.
-name|int
-name|successful_part_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Gets the number of failed test parts.
-name|int
-name|failed_part_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Gets the number of all test parts.  This is the sum of the number
-comment|// of successful test parts and the number of failed test parts.
-name|int
-name|total_part_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Returns true iff the test passed (i.e. no test part failed).
-name|bool
-name|Passed
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|Failed
-argument_list|()
-return|;
-block|}
-comment|// Returns true iff the test failed.
-name|bool
-name|Failed
-argument_list|()
-specifier|const
-block|{
-return|return
-name|failed_part_count
-argument_list|()
-operator|>
-literal|0
-return|;
-block|}
-comment|// Returns true iff the test fatally failed.
-name|bool
-name|HasFatalFailure
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Returns the elapsed time, in milliseconds.
-name|TimeInMillis
-name|elapsed_time
-argument_list|()
-specifier|const
-block|{
-return|return
-name|elapsed_time_
-return|;
-block|}
-comment|// Sets the elapsed time.
-name|void
-name|set_elapsed_time
-parameter_list|(
-name|TimeInMillis
-name|elapsed
-parameter_list|)
-block|{
-name|elapsed_time_
-operator|=
-name|elapsed
-expr_stmt|;
-block|}
-comment|// Adds a test part result to the list.
-name|void
-name|AddTestPartResult
-parameter_list|(
-specifier|const
-name|TestPartResult
-modifier|&
-name|test_part_result
-parameter_list|)
-function_decl|;
-comment|// Adds a test property to the list. The property is validated and may add
-comment|// a non-fatal failure if invalid (e.g., if it conflicts with reserved
-comment|// key names). If a property is already recorded for the same key, the
-comment|// value will be updated, rather than storing multiple values for the same
-comment|// key.
-name|void
-name|RecordProperty
-argument_list|(
-specifier|const
-name|internal
-operator|::
-name|TestProperty
-operator|&
-name|test_property
-argument_list|)
-decl_stmt|;
-comment|// Adds a failure if the key is a reserved attribute of Google Test
-comment|// testcase tags.  Returns true if the property is valid.
-comment|// TODO(russr): Validate attribute names are legal and human readable.
-specifier|static
-name|bool
-name|ValidateTestProperty
-argument_list|(
-specifier|const
-name|internal
-operator|::
-name|TestProperty
-operator|&
-name|test_property
-argument_list|)
-decl_stmt|;
-comment|// Returns the death test count.
-name|int
-name|death_test_count
-argument_list|()
-specifier|const
-block|{
-return|return
-name|death_test_count_
-return|;
-block|}
-comment|// Increments the death test count, returning the new count.
-name|int
-name|increment_death_test_count
-parameter_list|()
-block|{
-return|return
-operator|++
-name|death_test_count_
-return|;
-block|}
-comment|// Clears the object.
-name|void
-name|Clear
-parameter_list|()
-function_decl|;
-name|private
-label|:
-comment|// Protects mutable state of the property list and of owned properties, whose
-comment|// values may be updated.
-name|internal
-operator|::
-name|Mutex
-name|test_properites_mutex_
-expr_stmt|;
-comment|// The list of TestPartResults
-name|internal
-operator|::
-name|List
-operator|<
-name|TestPartResult
-operator|>
-name|test_part_results_
-expr_stmt|;
-comment|// The list of TestProperties
-name|internal
-operator|::
-name|List
-operator|<
-name|internal
-operator|::
-name|TestProperty
-operator|>
-name|test_properties_
-expr_stmt|;
-comment|// Running count of death tests.
-name|int
-name|death_test_count_
-decl_stmt|;
-comment|// The elapsed time, in milliseconds.
-name|TimeInMillis
-name|elapsed_time_
-decl_stmt|;
-comment|// We disallow copying TestResult.
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|TestResult
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// class TestResult
-end_comment
-
-begin_decl_stmt
 name|class
 name|TestInfoImpl
 block|{
@@ -2121,6 +1474,29 @@ block|{
 name|is_disabled_
 operator|=
 name|is
+expr_stmt|;
+block|}
+comment|// Returns true if this test matches the filter specified by the user.
+name|bool
+name|matches_filter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|matches_filter_
+return|;
+block|}
+comment|// Sets the matches_filter member.
+name|void
+name|set_matches_filter
+parameter_list|(
+name|bool
+name|matches
+parameter_list|)
+block|{
+name|matches_filter_
+operator|=
+name|matches
 expr_stmt|;
 block|}
 comment|// Returns the test case name.
@@ -2194,12 +1570,10 @@ name|fixture_class_id_
 return|;
 block|}
 comment|// Returns the test result.
-name|internal
-operator|::
 name|TestResult
-operator|*
+modifier|*
 name|result
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|&
@@ -2207,8 +1581,6 @@ name|result_
 return|;
 block|}
 specifier|const
-name|internal
-operator|::
 name|TestResult
 operator|*
 name|result
@@ -2226,25 +1598,6 @@ name|void
 name|Run
 parameter_list|()
 function_decl|;
-comment|// Calls the given TestInfo object's Run() method.
-specifier|static
-name|void
-name|RunTest
-parameter_list|(
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-name|test_info
-operator|->
-name|impl
-argument_list|()
-operator|->
-name|Run
-argument_list|()
-expr_stmt|;
-block|}
 comment|// Clears the test result.
 name|void
 name|ClearResult
@@ -2317,6 +1670,11 @@ name|bool
 name|is_disabled_
 decl_stmt|;
 comment|// True iff this test is disabled
+name|bool
+name|matches_filter_
+decl_stmt|;
+comment|// True if this test matches the
+comment|// user-specified filter.
 name|internal
 operator|::
 name|TestFactoryBase
@@ -2328,480 +1686,16 @@ comment|// The factory that creates
 comment|// the test object
 comment|// This field is mutable and needs to be reset before running the
 comment|// test for the second time.
-name|internal
-operator|::
 name|TestResult
 name|result_
-expr_stmt|;
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|TestInfoImpl
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|}
-comment|// namespace internal
-end_comment
-
-begin_comment
-comment|// A test case, which consists of a list of TestInfos.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// TestCase is not copyable.
-end_comment
-
-begin_macro
-unit|class
-name|TestCase
-end_macro
-
-begin_block
-block|{
-name|public
-label|:
-comment|// Creates a TestCase with the given name.
-comment|//
-comment|// TestCase does NOT have a default constructor.  Always use this
-comment|// constructor to create a TestCase object.
-comment|//
-comment|// Arguments:
-comment|//
-comment|//   name:         name of the test case
-comment|//   set_up_tc:    pointer to the function that sets up the test case
-comment|//   tear_down_tc: pointer to the function that tears down the test case
-name|TestCase
-argument_list|(
-argument|const char* name
-argument_list|,
-argument|const char* comment
-argument_list|,
-argument|Test::SetUpTestCaseFunc set_up_tc
-argument_list|,
-argument|Test::TearDownTestCaseFunc tear_down_tc
-argument_list|)
-empty_stmt|;
-comment|// Destructor of TestCase.
-name|virtual
-operator|~
-name|TestCase
-argument_list|()
-expr_stmt|;
-comment|// Gets the name of the TestCase.
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|()
-specifier|const
-block|{
-return|return
-name|name_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns the test case comment.
-specifier|const
-name|char
-operator|*
-name|comment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|comment_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns true if any test in this test case should run.
-name|bool
-name|should_run
-argument_list|()
-specifier|const
-block|{
-return|return
-name|should_run_
-return|;
-block|}
-comment|// Sets the should_run member.
-name|void
-name|set_should_run
-parameter_list|(
-name|bool
-name|should
-parameter_list|)
-block|{
-name|should_run_
-operator|=
-name|should
-expr_stmt|;
-block|}
-comment|// Gets the (mutable) list of TestInfos in this TestCase.
-name|internal
-operator|::
-name|List
-operator|<
-name|TestInfo
-operator|*
-operator|>
-operator|&
-name|test_info_list
-argument_list|()
-block|{
-return|return
-operator|*
-name|test_info_list_
-return|;
-block|}
-comment|// Gets the (immutable) list of TestInfos in this TestCase.
-specifier|const
-name|internal
-operator|::
-name|List
-operator|<
-name|TestInfo
-operator|*
-operator|>
-operator|&
-name|test_info_list
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|test_info_list_
-return|;
-block|}
-comment|// Gets the number of successful tests in this test case.
-name|int
-name|successful_test_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Gets the number of failed tests in this test case.
-name|int
-name|failed_test_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Gets the number of disabled tests in this test case.
-name|int
-name|disabled_test_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Get the number of tests in this test case that should run.
-name|int
-name|test_to_run_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Gets the number of all tests in this test case.
-name|int
-name|total_test_count
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|// Returns true iff the test case passed.
-name|bool
-name|Passed
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|Failed
-argument_list|()
-return|;
-block|}
-comment|// Returns true iff the test case failed.
-name|bool
-name|Failed
-argument_list|()
-specifier|const
-block|{
-return|return
-name|failed_test_count
-argument_list|()
-operator|>
-literal|0
-return|;
-block|}
-comment|// Returns the elapsed time, in milliseconds.
-name|internal
-operator|::
-name|TimeInMillis
-name|elapsed_time
-argument_list|()
-specifier|const
-block|{
-return|return
-name|elapsed_time_
-return|;
-block|}
-comment|// Adds a TestInfo to this test case.  Will delete the TestInfo upon
-comment|// destruction of the TestCase object.
-name|void
-name|AddTestInfo
-parameter_list|(
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-function_decl|;
-comment|// Finds and returns a TestInfo with the given name.  If one doesn't
-comment|// exist, returns NULL.
-name|TestInfo
-modifier|*
-name|GetTestInfo
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|test_name
-parameter_list|)
-function_decl|;
-comment|// Clears the results of all tests in this test case.
-name|void
-name|ClearResult
-parameter_list|()
-function_decl|;
-comment|// Clears the results of all tests in the given test case.
-specifier|static
-name|void
-name|ClearTestCaseResult
-parameter_list|(
-name|TestCase
-modifier|*
-name|test_case
-parameter_list|)
-block|{
-name|test_case
-operator|->
-name|ClearResult
-argument_list|()
-expr_stmt|;
-block|}
-comment|// Runs every test in this TestCase.
-name|void
-name|Run
-parameter_list|()
-function_decl|;
-comment|// Runs every test in the given TestCase.
-specifier|static
-name|void
-name|RunTestCase
-parameter_list|(
-name|TestCase
-modifier|*
-name|test_case
-parameter_list|)
-block|{
-name|test_case
-operator|->
-name|Run
-argument_list|()
-expr_stmt|;
-block|}
-comment|// Returns true iff test passed.
-specifier|static
-name|bool
-name|TestPassed
-parameter_list|(
-specifier|const
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-specifier|const
-name|internal
-operator|::
-name|TestInfoImpl
-operator|*
-specifier|const
-name|impl
-operator|=
-name|test_info
-operator|->
-name|impl
-argument_list|()
-expr_stmt|;
-return|return
-name|impl
-operator|->
-name|should_run
-argument_list|()
-operator|&&
-name|impl
-operator|->
-name|result
-argument_list|()
-operator|->
-name|Passed
-argument_list|()
-return|;
-block|}
-comment|// Returns true iff test failed.
-specifier|static
-name|bool
-name|TestFailed
-parameter_list|(
-specifier|const
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-specifier|const
-name|internal
-operator|::
-name|TestInfoImpl
-operator|*
-specifier|const
-name|impl
-operator|=
-name|test_info
-operator|->
-name|impl
-argument_list|()
-expr_stmt|;
-return|return
-name|impl
-operator|->
-name|should_run
-argument_list|()
-operator|&&
-name|impl
-operator|->
-name|result
-argument_list|()
-operator|->
-name|Failed
-argument_list|()
-return|;
-block|}
-comment|// Returns true iff test is disabled.
-specifier|static
-name|bool
-name|TestDisabled
-parameter_list|(
-specifier|const
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-return|return
-name|test_info
-operator|->
-name|impl
-argument_list|()
-operator|->
-name|is_disabled
-argument_list|()
-return|;
-block|}
-comment|// Returns true if the given test should run.
-specifier|static
-name|bool
-name|ShouldRunTest
-parameter_list|(
-specifier|const
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-return|return
-name|test_info
-operator|->
-name|impl
-argument_list|()
-operator|->
-name|should_run
-argument_list|()
-return|;
-block|}
-name|private
-label|:
-comment|// Name of the test case.
-name|internal
-operator|::
-name|String
-name|name_
-expr_stmt|;
-comment|// Comment on the test case.
-name|internal
-operator|::
-name|String
-name|comment_
-expr_stmt|;
-comment|// List of TestInfos.
-name|internal
-operator|::
-name|List
-operator|<
-name|TestInfo
-operator|*
-operator|>
-operator|*
-name|test_info_list_
-expr_stmt|;
-comment|// Pointer to the function that sets up the test case.
-name|Test
-operator|::
-name|SetUpTestCaseFunc
-name|set_up_tc_
-expr_stmt|;
-comment|// Pointer to the function that tears down the test case.
-name|Test
-operator|::
-name|TearDownTestCaseFunc
-name|tear_down_tc_
-expr_stmt|;
-comment|// True iff any test in this test case should run.
-name|bool
-name|should_run_
 decl_stmt|;
-comment|// Elapsed time, in milliseconds.
-name|internal
-operator|::
-name|TimeInMillis
-name|elapsed_time_
-expr_stmt|;
-comment|// We disallow copying TestCases.
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
-name|TestCase
+name|TestInfoImpl
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-name|namespace
-name|internal
-block|{
 comment|// Class UnitTestOptions.
 comment|//
 comment|// This class contains functions for processing options the user
@@ -2813,6 +1707,7 @@ comment|// test filter using either GTEST_FILTER or --gtest_filter.  If both
 comment|// the variable and the flag are present, the latter overrides the
 comment|// former.
 name|class
+name|GTEST_API_
 name|UnitTestOptions
 block|{
 name|public
@@ -2824,11 +1719,12 @@ name|String
 name|GetOutputFormat
 parameter_list|()
 function_decl|;
-comment|// Returns the name of the requested output file, or the default if none
-comment|// was explicitly specified.
+comment|// Returns the absolute path of the requested output file, or the
+comment|// default (test_detail.xml in the original working directory) if
+comment|// none was explicitly specified.
 specifier|static
 name|String
-name|GetOutputFile
+name|GetAbsolutePathToOutputFile
 parameter_list|()
 function_decl|;
 comment|// Functions for processing the gtest_filter flag.
@@ -2869,8 +1765,8 @@ modifier|&
 name|test_name
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_OS_WINDOWS
 comment|// Function for supporting the gtest_catch_exception flag.
 comment|// Returns EXCEPTION_EXECUTE_HANDLER if Google Test should handle the
@@ -2908,6 +1804,7 @@ block|}
 empty_stmt|;
 comment|// Returns the current application's name, removing directory path if that
 comment|// is present.  Used by UnitTestOptions::GetOutputFile.
+name|GTEST_API_
 name|FilePath
 name|GetCurrentExecutableName
 parameter_list|()
@@ -2973,6 +1870,11 @@ name|public
 operator|:
 name|OsStackTraceGetter
 argument_list|()
+operator|:
+name|caller_frame_
+argument_list|(
+argument|NULL
+argument_list|)
 block|{}
 name|virtual
 name|String
@@ -3070,6 +1972,11 @@ name|UnitTestImpl
 operator|*
 specifier|const
 name|unit_test_
+block|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|DefaultGlobalTestPartResultReporter
+argument_list|)
 block|; }
 decl_stmt|;
 comment|// This is the default per thread test part result reporter used in
@@ -3108,6 +2015,11 @@ name|UnitTestImpl
 operator|*
 specifier|const
 name|unit_test_
+block|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|DefaultPerThreadTestPartResultReporter
+argument_list|)
 block|; }
 decl_stmt|;
 comment|// The private implementation of the UnitTest class.  We don't protect
@@ -3115,6 +2027,7 @@ comment|// the methods under a mutex, as this class is not accessible by a
 comment|// user and the UnitTest class that delegates work to this class does
 comment|// proper locking.
 name|class
+name|GTEST_API_
 name|UnitTestImpl
 block|{
 name|public
@@ -3265,19 +2178,102 @@ name|Failed
 argument_list|()
 return|;
 block|}
+comment|// Gets the i-th test case among all the test cases. i can range from 0 to
+comment|// total_test_case_count() - 1. If i is not in that range, returns NULL.
+specifier|const
+name|TestCase
+modifier|*
+name|GetTestCase
+argument_list|(
+name|int
+name|i
+argument_list|)
+decl|const
+block|{
+specifier|const
+name|int
+name|index
+init|=
+name|GetElementOr
+argument_list|(
+name|test_case_indices_
+argument_list|,
+name|i
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+return|return
+name|index
+operator|<
+literal|0
+condition|?
+name|NULL
+else|:
+name|test_cases_
+index|[
+name|i
+index|]
+return|;
+block|}
+comment|// Gets the i-th test case among all the test cases. i can range from 0 to
+comment|// total_test_case_count() - 1. If i is not in that range, returns NULL.
+name|TestCase
+modifier|*
+name|GetMutableTestCase
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+specifier|const
+name|int
+name|index
+init|=
+name|GetElementOr
+argument_list|(
+name|test_case_indices_
+argument_list|,
+name|i
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+return|return
+name|index
+operator|<
+literal|0
+condition|?
+name|NULL
+else|:
+name|test_cases_
+index|[
+name|index
+index|]
+return|;
+block|}
+comment|// Provides access to the event listener list.
+name|TestEventListeners
+modifier|*
+name|listeners
+parameter_list|()
+block|{
+return|return
+operator|&
+name|listeners_
+return|;
+block|}
 comment|// Returns the TestResult for the test that's currently running, or
 comment|// the TestResult for the ad hoc test if no test is running.
-name|internal
-operator|::
 name|TestResult
-operator|*
+modifier|*
 name|current_test_result
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|// Returns the TestResult for the ad hoc test.
 specifier|const
-name|internal
-operator|::
 name|TestResult
 operator|*
 name|ad_hoc_test_result
@@ -3289,27 +2285,6 @@ operator|&
 name|ad_hoc_test_result_
 return|;
 block|}
-comment|// Sets the unit test result printer.
-comment|//
-comment|// Does nothing if the input and the current printer object are the
-comment|// same; otherwise, deletes the old printer object and makes the
-comment|// input the current printer.
-name|void
-name|set_result_printer
-parameter_list|(
-name|UnitTestEventListenerInterface
-modifier|*
-name|result_printer
-parameter_list|)
-function_decl|;
-comment|// Returns the current unit test result printer if it is not NULL;
-comment|// otherwise, creates an appropriate result printer, makes it the
-comment|// current printer, and returns it.
-name|UnitTestEventListenerInterface
-modifier|*
-name|result_printer
-parameter_list|()
-function_decl|;
 comment|// Sets the OS stack trace getter.
 comment|//
 comment|// Does nothing if the input and the current OS stack trace getter
@@ -3431,25 +2406,17 @@ name|GetCurrentDir
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|GTEST_CHECK_
+argument_list|(
+operator|!
 name|original_working_dir_
 operator|.
 name|IsEmpty
 argument_list|()
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-literal|"Failed to get the current working directory."
 argument_list|)
+operator|<<
+literal|"Failed to get the current working directory."
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 name|GetTestCase
 argument_list|(
@@ -3474,8 +2441,8 @@ name|test_info
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_PARAM_TEST
 comment|// Returns ParameterizedTestCaseRegistry object used to keep track of
 comment|// value-parameterized tests and instantiate and register them.
@@ -3499,12 +2466,12 @@ name|set_current_test_case
 parameter_list|(
 name|TestCase
 modifier|*
-name|current_test_case
+name|a_current_test_case
 parameter_list|)
 block|{
 name|current_test_case_
 operator|=
-name|current_test_case
+name|a_current_test_case
 expr_stmt|;
 block|}
 comment|// Sets the TestInfo object for the test that's currently running.  If
@@ -3515,12 +2482,12 @@ name|set_current_test_info
 parameter_list|(
 name|TestInfo
 modifier|*
-name|current_test_info
+name|a_current_test_info
 parameter_list|)
 block|{
 name|current_test_info_
 operator|=
-name|current_test_info
+name|a_current_test_info
 expr_stmt|;
 block|}
 comment|// Registers all parameterized tests defined using TEST_P and
@@ -3548,10 +2515,10 @@ name|void
 name|ClearResult
 parameter_list|()
 block|{
-name|test_cases_
-operator|.
 name|ForEach
 argument_list|(
+name|test_cases_
+argument_list|,
 name|TestCase
 operator|::
 name|ClearTestCaseResult
@@ -3563,17 +2530,30 @@ name|Clear
 argument_list|()
 expr_stmt|;
 block|}
+enum|enum
+name|ReactionToSharding
+block|{
+name|HONOR_SHARDING_PROTOCOL
+block|,
+name|IGNORE_SHARDING_PROTOCOL
+block|}
+enum|;
 comment|// Matches the full name of each test against the user-specified
 comment|// filter to decide whether the test should run, then records the
 comment|// result in each TestCase and TestInfo object.
+comment|// If shard_tests == HONOR_SHARDING_PROTOCOL, further filters tests
+comment|// based on sharding variables in the environment.
 comment|// Returns the number of tests that should run.
 name|int
 name|FilterTests
-parameter_list|()
+parameter_list|(
+name|ReactionToSharding
+name|shard_tests
+parameter_list|)
 function_decl|;
-comment|// Lists all the tests by name.
+comment|// Prints the names of the tests matching the user-specified filter flag.
 name|void
-name|ListAllTests
+name|ListTestsMatchingFilter
 parameter_list|()
 function_decl|;
 specifier|const
@@ -3607,100 +2587,52 @@ return|return
 name|current_test_info_
 return|;
 block|}
-comment|// Returns the list of environments that need to be set-up/torn-down
+comment|// Returns the vector of environments that need to be set-up/torn-down
 comment|// before/after the tests are run.
-name|internal
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|Environment
 operator|*
 operator|>
-operator|*
+operator|&
 name|environments
 argument_list|()
 block|{
 return|return
-operator|&
 name|environments_
 return|;
 block|}
-name|internal
-operator|::
-name|List
-operator|<
-name|Environment
-operator|*
-operator|>
-operator|*
-name|environments_in_reverse_order
-argument_list|()
-block|{
-return|return
-operator|&
-name|environments_in_reverse_order_
-return|;
-block|}
-name|internal
-operator|::
-name|List
-operator|<
-name|TestCase
-operator|*
-operator|>
-operator|*
-name|test_cases
-argument_list|()
-block|{
-return|return
-operator|&
-name|test_cases_
-return|;
-block|}
-specifier|const
-name|internal
-operator|::
-name|List
-operator|<
-name|TestCase
-operator|*
-operator|>
-operator|*
-name|test_cases
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|test_cases_
-return|;
-block|}
 comment|// Getters for the per-thread Google Test trace stack.
-name|internal
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|TraceInfo
 operator|>
-operator|*
+operator|&
 name|gtest_trace_stack
 argument_list|()
 block|{
 return|return
+operator|*
+operator|(
 name|gtest_trace_stack_
 operator|.
 name|pointer
 argument_list|()
+operator|)
 return|;
 block|}
 specifier|const
-name|internal
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|TraceInfo
 operator|>
-operator|*
+operator|&
 name|gtest_trace_stack
 argument_list|()
 specifier|const
@@ -3708,16 +2640,30 @@ block|{
 return|return
 name|gtest_trace_stack_
 operator|.
-name|pointer
+name|get
 argument_list|()
 return|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_DEATH_TEST
+name|void
+name|InitDeathTestSubprocessControlInfo
+parameter_list|()
+block|{
+name|internal_run_death_test_flag_
+operator|.
+name|reset
+argument_list|(
+name|ParseInternalRunDeathTestFlag
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 comment|// Returns a pointer to the parsed --gtest_internal_run_death_test
 comment|// flag, or NULL if that flag was not specified.
 comment|// This information is useful only in a death test child process.
+comment|// Must not be called before a call to InitGoogleTest.
 specifier|const
 name|InternalRunDeathTestFlag
 operator|*
@@ -3747,6 +2693,10 @@ name|get
 argument_list|()
 return|;
 block|}
+name|void
+name|SuppressTestEventsIfInSubprocess
+parameter_list|()
+function_decl|;
 name|friend
 name|class
 name|ReplaceDeathTestFactory
@@ -3754,6 +2704,55 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|// GTEST_HAS_DEATH_TEST
+comment|// Initializes the event listener performing XML output as specified by
+comment|// UnitTestOptions. Must not be called before InitGoogleTest.
+name|void
+name|ConfigureXmlOutput
+parameter_list|()
+function_decl|;
+comment|// Performs initialization dependent upon flag values obtained in
+comment|// ParseGoogleTestFlagsOnly.  Is called from InitGoogleTest after the call to
+comment|// ParseGoogleTestFlagsOnly.  In case a user neglects to call InitGoogleTest
+comment|// this function is also called from RunAllTests.  Since this function can be
+comment|// called more than once, it has to be idempotent.
+name|void
+name|PostFlagParsingInit
+parameter_list|()
+function_decl|;
+comment|// Gets the random seed used at the start of the current test iteration.
+name|int
+name|random_seed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|random_seed_
+return|;
+block|}
+comment|// Gets the random number generator.
+name|internal
+operator|::
+name|Random
+operator|*
+name|random
+argument_list|()
+block|{
+return|return
+operator|&
+name|random_
+return|;
+block|}
+comment|// Shuffles all test cases, and the tests within each test case,
+comment|// making sure that death tests are still run first.
+name|void
+name|ShuffleTests
+parameter_list|()
+function_decl|;
+comment|// Restores the test cases and tests to their order before the first shuffle.
+name|void
+name|UnshuffleTests
+parameter_list|()
+function_decl|;
 name|private
 label|:
 name|friend
@@ -3804,39 +2803,42 @@ operator|*
 operator|>
 name|per_thread_test_part_result_reporter_
 expr_stmt|;
-comment|// The list of environments that need to be set-up/torn-down
-comment|// before/after the tests are run.  environments_in_reverse_order_
-comment|// simply mirrors environments_ in reverse order.
-name|internal
+comment|// The vector of environments that need to be set-up/torn-down
+comment|// before/after the tests are run.
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|Environment
 operator|*
 operator|>
 name|environments_
 expr_stmt|;
-name|internal
+comment|// The vector of TestCases in their original order.  It owns the
+comment|// elements in the vector.
+name|std
 operator|::
-name|List
-operator|<
-name|Environment
-operator|*
-operator|>
-name|environments_in_reverse_order_
-expr_stmt|;
-name|internal
-operator|::
-name|List
+name|vector
 operator|<
 name|TestCase
 operator|*
 operator|>
 name|test_cases_
 expr_stmt|;
-comment|// The list of TestCases.
-ifdef|#
-directive|ifdef
+comment|// Provides a level of indirection for the test case list to allow
+comment|// easy shuffling and restoring the test case order.  The i-th
+comment|// element of this vector is the index of the i-th test case in the
+comment|// shuffled order.
+name|std
+operator|::
+name|vector
+operator|<
+name|int
+operator|>
+name|test_case_indices_
+expr_stmt|;
+if|#
+directive|if
 name|GTEST_HAS_PARAM_TEST
 comment|// ParameterizedTestRegistry object used to register value-parameterized
 comment|// tests.
@@ -3852,21 +2854,14 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|// GTEST_HAS_PARAM_TEST
-comment|// Points to the last death test case registered.  Initially NULL.
-name|internal
-operator|::
-name|ListNode
-operator|<
-name|TestCase
-operator|*
-operator|>
-operator|*
+comment|// Index of the last death test case registered.  Initially -1.
+name|int
 name|last_death_test_case_
-expr_stmt|;
+decl_stmt|;
 comment|// This points to the TestCase for the currently running test.  It
 comment|// changes as Google Test goes through one test case after another.
 comment|// When no test is running, this is set to NULL and Google Test
-comment|// stores assertion results in ad_hoc_test_result_.  Initally NULL.
+comment|// stores assertion results in ad_hoc_test_result_.  Initially NULL.
 name|TestCase
 modifier|*
 name|current_test_case_
@@ -3887,18 +2882,13 @@ comment|//
 comment|// If an assertion is encountered when no TEST or TEST_F is running,
 comment|// Google Test attributes the assertion result to an imaginary "ad hoc"
 comment|// test, and records the result in ad_hoc_test_result_.
-name|internal
-operator|::
 name|TestResult
 name|ad_hoc_test_result_
-expr_stmt|;
-comment|// The unit test result printer.  Will be deleted when the UnitTest
-comment|// object is destructed.  By default, a plain text printer is used,
-comment|// but the user can set this field to use a custom printer if that
-comment|// is desired.
-name|UnitTestEventListenerInterface
-modifier|*
-name|result_printer_
+decl_stmt|;
+comment|// The list of event listeners that can be used to track events inside
+comment|// Google Test.
+name|TestEventListeners
+name|listeners_
 decl_stmt|;
 comment|// The OS stack trace getter.  Will be deleted when the UnitTest
 comment|// object is destructed.  By default, an OsStackTraceGetter is used,
@@ -3908,12 +2898,26 @@ name|OsStackTraceGetterInterface
 modifier|*
 name|os_stack_trace_getter_
 decl_stmt|;
+comment|// True iff PostFlagParsingInit() has been called.
+name|bool
+name|post_flag_parse_init_performed_
+decl_stmt|;
+comment|// The random number seed used at the beginning of the test run.
+name|int
+name|random_seed_
+decl_stmt|;
+comment|// Our random number generator.
+name|internal
+operator|::
+name|Random
+name|random_
+expr_stmt|;
 comment|// How long the test took to run, in milliseconds.
 name|TimeInMillis
 name|elapsed_time_
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|GTEST_HAS_DEATH_TEST
 comment|// The decomposed components of the gtest_internal_run_death_test flag,
 comment|// parsed when RUN_ALL_TESTS is called.
@@ -3943,9 +2947,9 @@ name|internal
 operator|::
 name|ThreadLocal
 operator|<
-name|internal
+name|std
 operator|::
-name|List
+name|vector
 operator|<
 name|TraceInfo
 operator|>
@@ -3978,8 +2982,150 @@ name|impl
 argument_list|()
 return|;
 block|}
+comment|// Internal helper functions for implementing the simple regular
+comment|// expression matcher.
+name|GTEST_API_
+name|bool
+name|IsInSet
+parameter_list|(
+name|char
+name|ch
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsDigit
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsPunct
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsRepeat
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsWhiteSpace
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsWordChar
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|IsValidEscape
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|AtomMatchesChar
+parameter_list|(
+name|bool
+name|escaped
+parameter_list|,
+name|char
+name|pattern
+parameter_list|,
+name|char
+name|ch
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|ValidateRegex
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|regex
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|MatchRegexAtHead
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|regex
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|MatchRepetitionAndRegexAtHead
+parameter_list|(
+name|bool
+name|escaped
+parameter_list|,
+name|char
+name|ch
+parameter_list|,
+name|char
+name|repeat
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|regex
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+name|GTEST_API_
+name|bool
+name|MatchRegexAnywhere
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|regex
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
 comment|// Parses the command line for Google Test flags, without initializing
 comment|// other parts of Google Test.
+name|GTEST_API_
 name|void
 name|ParseGoogleTestFlagsOnly
 parameter_list|(
@@ -3993,6 +3139,7 @@ modifier|*
 name|argv
 parameter_list|)
 function_decl|;
+name|GTEST_API_
 name|void
 name|ParseGoogleTestFlagsOnly
 parameter_list|(
@@ -4006,6 +3153,372 @@ modifier|*
 name|argv
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|GTEST_HAS_DEATH_TEST
+comment|// Returns the message describing the last system error, regardless of the
+comment|// platform.
+name|String
+name|GetLastErrnoDescription
+parameter_list|()
+function_decl|;
+if|#
+directive|if
+name|GTEST_OS_WINDOWS
+comment|// Provides leak-safe Windows kernel handle ownership.
+name|class
+name|AutoHandle
+block|{
+name|public
+label|:
+name|AutoHandle
+argument_list|()
+operator|:
+name|handle_
+argument_list|(
+argument|INVALID_HANDLE_VALUE
+argument_list|)
+block|{}
+name|explicit
+name|AutoHandle
+argument_list|(
+argument|HANDLE handle
+argument_list|)
+operator|:
+name|handle_
+argument_list|(
+argument|handle
+argument_list|)
+block|{}
+operator|~
+name|AutoHandle
+argument_list|()
+block|{
+name|Reset
+argument_list|()
+block|; }
+name|HANDLE
+name|Get
+argument_list|()
+specifier|const
+block|{
+return|return
+name|handle_
+return|;
+block|}
+name|void
+name|Reset
+parameter_list|()
+block|{
+name|Reset
+argument_list|(
+name|INVALID_HANDLE_VALUE
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|Reset
+parameter_list|(
+name|HANDLE
+name|handle
+parameter_list|)
+block|{
+if|if
+condition|(
+name|handle
+operator|!=
+name|handle_
+condition|)
+block|{
+if|if
+condition|(
+name|handle_
+operator|!=
+name|INVALID_HANDLE_VALUE
+condition|)
+operator|::
+name|CloseHandle
+argument_list|(
+name|handle_
+argument_list|)
+expr_stmt|;
+name|handle_
+operator|=
+name|handle
+expr_stmt|;
+block|}
+block|}
+name|private
+label|:
+name|HANDLE
+name|handle_
+decl_stmt|;
+name|GTEST_DISALLOW_COPY_AND_ASSIGN_
+argument_list|(
+name|AutoHandle
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_OS_WINDOWS
+comment|// Attempts to parse a string into a positive integer pointed to by the
+comment|// number parameter.  Returns true if that is possible.
+comment|// GTEST_HAS_DEATH_TEST implies that we have ::std::string, so we can use
+comment|// it here.
+name|template
+operator|<
+name|typename
+name|Integer
+operator|>
+name|bool
+name|ParseNaturalNumber
+argument_list|(
+argument|const ::std::string& str
+argument_list|,
+argument|Integer* number
+argument_list|)
+block|{
+comment|// Fail fast if the given string does not begin with a digit;
+comment|// this bypasses strtoXXX's "optional leading whitespace and plus
+comment|// or minus sign" semantics, which are undesirable here.
+if|if
+condition|(
+name|str
+operator|.
+name|empty
+argument_list|()
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+name|str
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
+return|return
+name|false
+return|;
+block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|char
+operator|*
+name|end
+expr_stmt|;
+comment|// BiggestConvertible is the largest integer type that system-provided
+comment|// string-to-number conversion routines can return.
+if|#
+directive|if
+name|GTEST_OS_WINDOWS
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+comment|// MSVC and C++ Builder define __int64 instead of the standard long long.
+typedef|typedef
+name|unsigned
+name|__int64
+name|BiggestConvertible
+typedef|;
+specifier|const
+name|BiggestConvertible
+name|parsed
+init|=
+name|_strtoui64
+argument_list|(
+name|str
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|10
+argument_list|)
+decl_stmt|;
+else|#
+directive|else
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|BiggestConvertible
+typedef|;
+comment|// NOLINT
+specifier|const
+name|BiggestConvertible
+name|parsed
+init|=
+name|strtoull
+argument_list|(
+name|str
+operator|.
+name|c_str
+argument_list|()
+argument_list|,
+operator|&
+name|end
+argument_list|,
+literal|10
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_OS_WINDOWS&& !defined(__GNUC__)
+specifier|const
+name|bool
+name|parse_success
+init|=
+operator|*
+name|end
+operator|==
+literal|'\0'
+operator|&&
+name|errno
+operator|==
+literal|0
+decl_stmt|;
+comment|// TODO(vladl@google.com): Convert this to compile time assertion when it is
+comment|// available.
+name|GTEST_CHECK_
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Integer
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|parsed
+argument_list|)
+argument_list|)
+expr_stmt|;
+specifier|const
+name|Integer
+name|result
+init|=
+name|static_cast
+operator|<
+name|Integer
+operator|>
+operator|(
+name|parsed
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|parse_success
+operator|&&
+name|static_cast
+operator|<
+name|BiggestConvertible
+operator|>
+operator|(
+name|result
+operator|)
+operator|==
+name|parsed
+condition|)
+block|{
+operator|*
+name|number
+operator|=
+name|result
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+endif|#
+directive|endif
+comment|// GTEST_HAS_DEATH_TEST
+comment|// TestResult contains some private methods that should be hidden from
+comment|// Google Test user but are required for testing. This class allow our tests
+comment|// to access them.
+comment|//
+comment|// This class is supplied only for the purpose of testing Google Test's own
+comment|// constructs. Do not use it in user tests, either directly or indirectly.
+name|class
+name|TestResultAccessor
+block|{
+name|public
+label|:
+specifier|static
+name|void
+name|RecordProperty
+parameter_list|(
+name|TestResult
+modifier|*
+name|test_result
+parameter_list|,
+specifier|const
+name|TestProperty
+modifier|&
+name|property
+parameter_list|)
+block|{
+name|test_result
+operator|->
+name|RecordProperty
+argument_list|(
+name|property
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|ClearTestPartResults
+parameter_list|(
+name|TestResult
+modifier|*
+name|test_result
+parameter_list|)
+block|{
+name|test_result
+operator|->
+name|ClearTestPartResults
+argument_list|()
+expr_stmt|;
+block|}
+specifier|static
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|testing
+operator|::
+name|TestPartResult
+operator|>
+operator|&
+name|test_part_results
+argument_list|(
+argument|const TestResult& test_result
+argument_list|)
+block|{
+return|return
+name|test_result
+operator|.
+name|test_part_results
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

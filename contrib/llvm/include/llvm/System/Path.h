@@ -723,17 +723,6 @@ comment|/// @name Disk Accessors
 comment|/// @{
 name|public
 label|:
-comment|/// This function determines if the path name in this object references
-comment|/// the root (top level directory) of the file system. The details of what
-comment|/// is considered the "root" may vary from system to system so this method
-comment|/// will do the necessary checking.
-comment|/// @returns true iff the path name references the root directory.
-comment|/// @brief Determines if the path references the root directory.
-name|bool
-name|isRootDirectory
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// This function determines if the path name is absolute, as opposed to
 comment|/// relative.
 comment|/// @brief Determine if the path is absolute.

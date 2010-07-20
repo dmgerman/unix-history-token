@@ -66,6 +66,9 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
+name|class
+name|Preprocessor
+decl_stmt|;
 name|namespace
 name|idx
 block|{
@@ -90,6 +93,14 @@ name|virtual
 name|ASTContext
 modifier|&
 name|getASTContext
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|Preprocessor
+modifier|&
+name|getPreprocessor
 parameter_list|()
 init|=
 literal|0

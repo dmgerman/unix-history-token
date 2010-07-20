@@ -2054,6 +2054,15 @@ name|get
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|Ty
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 specifier|const
 name|Type
 operator|*
@@ -2063,7 +2072,10 @@ name|Ty
 operator|->
 name|getForwardedType
 argument_list|()
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -2079,7 +2091,7 @@ operator|(
 name|Ty
 operator|)
 return|;
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -2105,15 +2117,10 @@ operator|::
 name|addRef
 argument_list|()
 block|{
-name|assert
-argument_list|(
-name|Ty
-operator|&&
-literal|"Type Holder has a null type!"
-argument_list|)
-block|;
 if|if
 condition|(
+name|Ty
+operator|&&
 name|Ty
 operator|->
 name|isAbstract
@@ -2137,6 +2144,8 @@ argument_list|()
 block|{
 if|if
 condition|(
+name|Ty
+operator|&&
 name|Ty
 operator|->
 name|isAbstract

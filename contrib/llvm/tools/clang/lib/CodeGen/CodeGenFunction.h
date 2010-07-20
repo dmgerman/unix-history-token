@@ -168,6 +168,9 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
+name|class
+name|CallSite
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -256,6 +259,937 @@ decl_stmt|;
 name|class
 name|CGBlockInfo
 decl_stmt|;
+comment|/// A branch fixup.  These are required when emitting a goto to a
+comment|/// label which hasn't been emitted yet.  The goto is optimistically
+comment|/// emitted as a branch to the basic block for the label, and (if it
+comment|/// occurs in a scope with non-trivial cleanups) a fixup is added to
+comment|/// the innermost cleanup.  When a (normal) cleanup is popped, any
+comment|/// unresolved fixups in that scope are threaded through the cleanup.
+struct|struct
+name|BranchFixup
+block|{
+comment|/// The origin of the branch.  Any switch-index stores required by
+comment|/// cleanup threading are added before this instruction.
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|Origin
+expr_stmt|;
+comment|/// The destination of the branch.
+comment|///
+comment|/// This can be set to null to indicate that this fixup was
+comment|/// successfully resolved.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Destination
+expr_stmt|;
+comment|/// The last branch of the fixup.  It is an invariant that
+comment|/// LatestBranch->getSuccessor(LatestBranchIndex) == Destination.
+comment|///
+comment|/// The branch is always either a BranchInst or a SwitchInst.
+name|llvm
+operator|::
+name|TerminatorInst
+operator|*
+name|LatestBranch
+expr_stmt|;
+name|unsigned
+name|LatestBranchIndex
+decl_stmt|;
+block|}
+struct|;
+enum|enum
+name|CleanupKind
+block|{
+name|NormalAndEHCleanup
+block|,
+name|EHCleanup
+block|,
+name|NormalCleanup
+block|}
+enum|;
+comment|/// A stack of scopes which respond to exceptions, including cleanups
+comment|/// and catch blocks.
+name|class
+name|EHScopeStack
+block|{
+name|public
+label|:
+comment|/// A saved depth on the scope stack.  This is necessary because
+comment|/// pushing scopes onto the stack invalidates iterators.
+name|class
+name|stable_iterator
+block|{
+name|friend
+name|class
+name|EHScopeStack
+decl_stmt|;
+comment|/// Offset from StartOfData to EndOfBuffer.
+name|ptrdiff_t
+name|Size
+decl_stmt|;
+name|stable_iterator
+argument_list|(
+argument|ptrdiff_t Size
+argument_list|)
+block|:
+name|Size
+argument_list|(
+argument|Size
+argument_list|)
+block|{}
+name|public
+label|:
+specifier|static
+name|stable_iterator
+name|invalid
+parameter_list|()
+block|{
+return|return
+name|stable_iterator
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+return|;
+block|}
+name|stable_iterator
+argument_list|()
+operator|:
+name|Size
+argument_list|(
+argument|-
+literal|1
+argument_list|)
+block|{}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Size
+operator|>=
+literal|0
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|stable_iterator
+name|A
+operator|,
+name|stable_iterator
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|Size
+operator|==
+name|B
+operator|.
+name|Size
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|stable_iterator
+name|A
+operator|,
+name|stable_iterator
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|Size
+operator|!=
+name|B
+operator|.
+name|Size
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// A lazy cleanup.  Subclasses must be POD-like:  cleanups will
+comment|/// not be destructed, and they will be allocated on the cleanup
+comment|/// stack and freely copied and moved around.
+comment|///
+comment|/// LazyCleanup implementations should generally be declared in an
+comment|/// anonymous namespace.
+name|class
+name|LazyCleanup
+block|{
+name|public
+label|:
+comment|// Anchor the construction vtable.  We use the destructor because
+comment|// gcc gives an obnoxious warning if there are virtual methods
+comment|// with an accessible non-virtual destructor.  Unfortunately,
+comment|// declaring this destructor makes it non-trivial, but there
+comment|// doesn't seem to be any other way around this warning.
+comment|//
+comment|// This destructor will never be called.
+name|virtual
+operator|~
+name|LazyCleanup
+argument_list|()
+expr_stmt|;
+comment|/// Emit the cleanup.  For normal cleanups, this is run in the
+comment|/// same EH context as when the cleanup was pushed, i.e. the
+comment|/// immediately-enclosing context of the cleanup scope.  For
+comment|/// EH cleanups, this is run in a terminate context.
+comment|///
+comment|// \param IsForEHCleanup true if this is for an EH cleanup, false
+comment|///  if for a normal cleanup.
+name|virtual
+name|void
+name|Emit
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|bool
+name|IsForEHCleanup
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
+name|private
+label|:
+comment|// The implementation for this class is in CGException.h and
+comment|// CGException.cpp; the definition is here because it's used as a
+comment|// member of CodeGenFunction.
+comment|/// The start of the scope-stack buffer, i.e. the allocated pointer
+comment|/// for the buffer.  All of these pointers are either simultaneously
+comment|/// null or simultaneously valid.
+name|char
+modifier|*
+name|StartOfBuffer
+decl_stmt|;
+comment|/// The end of the buffer.
+name|char
+modifier|*
+name|EndOfBuffer
+decl_stmt|;
+comment|/// The first valid entry in the buffer.
+name|char
+modifier|*
+name|StartOfData
+decl_stmt|;
+comment|/// The innermost normal cleanup on the stack.
+name|stable_iterator
+name|InnermostNormalCleanup
+decl_stmt|;
+comment|/// The innermost EH cleanup on the stack.
+name|stable_iterator
+name|InnermostEHCleanup
+decl_stmt|;
+comment|/// The number of catches on the stack.
+name|unsigned
+name|CatchDepth
+decl_stmt|;
+comment|/// The current set of branch fixups.  A branch fixup is a jump to
+comment|/// an as-yet unemitted label, i.e. a label for which we don't yet
+comment|/// know the EH stack depth.  Whenever we pop a cleanup, we have
+comment|/// to thread all the current branch fixups through it.
+comment|///
+comment|/// Fixups are recorded as the Use of the respective branch or
+comment|/// switch statement.  The use points to the final destination.
+comment|/// When popping out of a cleanup, these uses are threaded through
+comment|/// the cleanup and adjusted to point to the new cleanup.
+comment|///
+comment|/// Note that branches are allowed to jump into protected scopes
+comment|/// in certain situations;  e.g. the following code is legal:
+comment|///     struct A { ~A(); }; // trivial ctor, non-trivial dtor
+comment|///     goto foo;
+comment|///     A a;
+comment|///    foo:
+comment|///     bar();
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|BranchFixup
+operator|,
+literal|8
+operator|>
+name|BranchFixups
+expr_stmt|;
+name|char
+modifier|*
+name|allocate
+parameter_list|(
+name|size_t
+name|Size
+parameter_list|)
+function_decl|;
+name|void
+name|popNullFixups
+parameter_list|()
+function_decl|;
+name|void
+modifier|*
+name|pushLazyCleanup
+parameter_list|(
+name|CleanupKind
+name|K
+parameter_list|,
+name|size_t
+name|DataSize
+parameter_list|)
+function_decl|;
+name|public
+label|:
+name|EHScopeStack
+argument_list|()
+operator|:
+name|StartOfBuffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|EndOfBuffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|StartOfData
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|InnermostNormalCleanup
+argument_list|(
+name|stable_end
+argument_list|()
+argument_list|)
+operator|,
+name|InnermostEHCleanup
+argument_list|(
+name|stable_end
+argument_list|()
+argument_list|)
+operator|,
+name|CatchDepth
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+operator|~
+name|EHScopeStack
+argument_list|()
+block|{
+name|delete
+index|[]
+name|StartOfBuffer
+block|; }
+comment|// Variadic templates would make this not terrible.
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|()
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|,
+name|class
+name|A2
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|,
+argument|A2 a2
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a lazily-created cleanup on the stack.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|class
+name|A0
+operator|,
+name|class
+name|A1
+operator|,
+name|class
+name|A2
+operator|,
+name|class
+name|A3
+operator|>
+name|void
+name|pushLazyCleanup
+argument_list|(
+argument|CleanupKind Kind
+argument_list|,
+argument|A0 a0
+argument_list|,
+argument|A1 a1
+argument_list|,
+argument|A2 a2
+argument_list|,
+argument|A3 a3
+argument_list|)
+block|{
+name|void
+operator|*
+name|Buffer
+operator|=
+name|pushLazyCleanup
+argument_list|(
+name|Kind
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+argument_list|)
+block|;
+name|LazyCleanup
+operator|*
+name|Obj
+operator|=
+name|new
+argument_list|(
+argument|Buffer
+argument_list|)
+name|T
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|Obj
+block|;   }
+comment|/// Push a cleanup on the stack.
+name|void
+name|pushCleanup
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|NormalEntry
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|NormalExit
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|EHEntry
+argument_list|,
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|EHExit
+argument_list|)
+expr_stmt|;
+comment|/// Pops a cleanup scope off the stack.  This should only be called
+comment|/// by CodeGenFunction::PopCleanupBlock.
+name|void
+name|popCleanup
+parameter_list|()
+function_decl|;
+comment|/// Push a set of catch handlers on the stack.  The catch is
+comment|/// uninitialized and will need to have the given number of handlers
+comment|/// set on it.
+name|class
+name|EHCatchScope
+modifier|*
+name|pushCatch
+parameter_list|(
+name|unsigned
+name|NumHandlers
+parameter_list|)
+function_decl|;
+comment|/// Pops a catch scope off the stack.
+name|void
+name|popCatch
+parameter_list|()
+function_decl|;
+comment|/// Push an exceptions filter on the stack.
+name|class
+name|EHFilterScope
+modifier|*
+name|pushFilter
+parameter_list|(
+name|unsigned
+name|NumFilters
+parameter_list|)
+function_decl|;
+comment|/// Pops an exceptions filter off the stack.
+name|void
+name|popFilter
+parameter_list|()
+function_decl|;
+comment|/// Push a terminate handler on the stack.
+name|void
+name|pushTerminate
+parameter_list|()
+function_decl|;
+comment|/// Pops a terminate handler off the stack.
+name|void
+name|popTerminate
+parameter_list|()
+function_decl|;
+comment|/// Determines whether the exception-scopes stack is empty.
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StartOfData
+operator|==
+name|EndOfBuffer
+return|;
+block|}
+name|bool
+name|requiresLandingPad
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|CatchDepth
+operator|||
+name|hasEHCleanups
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// Determines whether there are any normal cleanups on the stack.
+name|bool
+name|hasNormalCleanups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InnermostNormalCleanup
+operator|!=
+name|stable_end
+argument_list|()
+return|;
+block|}
+comment|/// Returns the innermost normal cleanup on the stack, or
+comment|/// stable_end() if there are no normal cleanups.
+name|stable_iterator
+name|getInnermostNormalCleanup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InnermostNormalCleanup
+return|;
+block|}
+comment|/// Determines whether there are any EH cleanups on the stack.
+name|bool
+name|hasEHCleanups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InnermostEHCleanup
+operator|!=
+name|stable_end
+argument_list|()
+return|;
+block|}
+comment|/// Returns the innermost EH cleanup on the stack, or stable_end()
+comment|/// if there are no EH cleanups.
+name|stable_iterator
+name|getInnermostEHCleanup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InnermostEHCleanup
+return|;
+block|}
+comment|/// An unstable reference to a scope-stack depth.  Invalidated by
+comment|/// pushes but not pops.
+name|class
+name|iterator
+decl_stmt|;
+comment|/// Returns an iterator pointing to the innermost EH scope.
+name|iterator
+name|begin
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns an iterator pointing to the outermost EH scope.
+name|iterator
+name|end
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Create a stable reference to the top of the EH stack.  The
+comment|/// returned reference is valid until that scope is popped off the
+comment|/// stack.
+name|stable_iterator
+name|stable_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|stable_iterator
+argument_list|(
+name|EndOfBuffer
+operator|-
+name|StartOfData
+argument_list|)
+return|;
+block|}
+comment|/// Create a stable reference to the bottom of the EH stack.
+specifier|static
+name|stable_iterator
+name|stable_end
+parameter_list|()
+block|{
+return|return
+name|stable_iterator
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// Translates an iterator into a stable_iterator.
+name|stable_iterator
+name|stabilize
+argument_list|(
+name|iterator
+name|it
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Finds the nearest cleanup enclosing the given iterator.
+comment|/// Returns stable_iterator::invalid() if there are no such cleanups.
+name|stable_iterator
+name|getEnclosingEHCleanup
+argument_list|(
+name|iterator
+name|it
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Turn a stable reference to a scope depth into a unstable pointer
+comment|/// to the EH stack.
+name|iterator
+name|find
+argument_list|(
+name|stable_iterator
+name|save
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Removes the cleanup pointed to by the given stable_iterator.
+name|void
+name|removeCleanup
+parameter_list|(
+name|stable_iterator
+name|save
+parameter_list|)
+function_decl|;
+comment|/// Add a branch fixup to the current cleanup scope.
+name|BranchFixup
+modifier|&
+name|addBranchFixup
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|hasNormalCleanups
+argument_list|()
+operator|&&
+literal|"adding fixup in scope without cleanups"
+argument_list|)
+expr_stmt|;
+name|BranchFixups
+operator|.
+name|push_back
+argument_list|(
+name|BranchFixup
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|BranchFixups
+operator|.
+name|back
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getNumBranchFixups
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BranchFixups
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|BranchFixup
+modifier|&
+name|getBranchFixup
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|I
+operator|<
+name|getNumBranchFixups
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|BranchFixups
+index|[
+name|I
+index|]
+return|;
+block|}
+comment|/// Mark any branch fixups leading to the given block as resolved.
+name|void
+name|resolveBranchFixups
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Dest
+argument_list|)
+decl_stmt|;
+block|}
+empty_stmt|;
 comment|/// CodeGenFunction - This class organizes the per-function state that is used
 comment|/// while generating LLVM code.
 name|class
@@ -284,6 +1218,52 @@ block|;
 comment|// DO NOT IMPLEMENT
 name|public
 operator|:
+comment|/// A jump destination is a pair of a basic block and a cleanup
+comment|/// depth.  They are used to implement direct jumps across cleanup
+comment|/// scopes, e.g. goto, break, continue, and return.
+expr|struct
+name|JumpDest
+block|{
+name|JumpDest
+argument_list|()
+operator|:
+name|Block
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ScopeDepth
+argument_list|()
+block|{}
+name|JumpDest
+argument_list|(
+argument|llvm::BasicBlock *Block
+argument_list|,
+argument|EHScopeStack::stable_iterator Depth
+argument_list|)
+operator|:
+name|Block
+argument_list|(
+name|Block
+argument_list|)
+block|,
+name|ScopeDepth
+argument_list|(
+argument|Depth
+argument_list|)
+block|{}
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|Block
+block|;
+name|EHScopeStack
+operator|::
+name|stable_iterator
+name|ScopeDepth
+block|;   }
+block|;
 name|CodeGenModule
 operator|&
 name|CGM
@@ -346,12 +1326,9 @@ name|GlobalDecl
 name|CurGD
 decl_stmt|;
 comment|/// ReturnBlock - Unified return block.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
+name|JumpDest
 name|ReturnBlock
-expr_stmt|;
+decl_stmt|;
 comment|/// ReturnValue - The temporary alloca to hold the return value. This is null
 comment|/// iff the function has no return value.
 name|llvm
@@ -372,12 +1349,19 @@ name|Instruction
 operator|>
 name|AllocaInsertPt
 expr_stmt|;
+comment|// intptr_t, i32, i64
 specifier|const
 name|llvm
 operator|::
-name|Type
+name|IntegerType
 operator|*
-name|LLVMIntTy
+name|IntPtrTy
+operator|,
+operator|*
+name|Int32Ty
+operator|,
+operator|*
+name|Int64Ty
 expr_stmt|;
 name|uint32_t
 name|LLVMPointerWidth
@@ -405,6 +1389,32 @@ operator|*
 operator|>
 name|NRVOFlags
 expr_stmt|;
+name|EHScopeStack
+name|EHStack
+decl_stmt|;
+comment|/// The exception slot.  All landing pads write the current
+comment|/// exception pointer into this alloca.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|ExceptionSlot
+expr_stmt|;
+comment|/// Emits a landing pad for the current EH stack.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|EmitLandingPad
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getInvokeDestImpl
+argument_list|()
+expr_stmt|;
 name|public
 label|:
 comment|/// ObjCEHValueStack - Stack of Objective-C exception values, used for
@@ -422,433 +1432,160 @@ literal|8
 operator|>
 name|ObjCEHValueStack
 expr_stmt|;
-comment|/// PushCleanupBlock - Push a new cleanup entry on the stack and set the
-comment|/// passed in block as the cleanup block.
-name|void
-name|PushCleanupBlock
-argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupEntryBlock
-argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupExitBlock
-argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|PreviousInvokeDest
-argument_list|,
-name|bool
-name|EHOnly
-operator|=
-name|false
-argument_list|)
-decl_stmt|;
-name|void
-name|PushCleanupBlock
-argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupEntryBlock
-argument_list|)
-block|{
-name|PushCleanupBlock
-argument_list|(
-name|CleanupEntryBlock
-argument_list|,
-literal|0
-argument_list|,
-name|getInvokeDest
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// CleanupBlockInfo - A struct representing a popped cleanup block.
+comment|// A struct holding information about a finally block's IR
+comment|// generation.  For now, doesn't actually hold anything.
 struct|struct
-name|CleanupBlockInfo
-block|{
-comment|/// CleanupEntryBlock - the cleanup entry block
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupBlock
-expr_stmt|;
-comment|/// SwitchBlock - the block (if any) containing the switch instruction used
-comment|/// for jumping to the final destination.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|SwitchBlock
-expr_stmt|;
-comment|/// EndBlock - the default destination for the switch instruction.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|EndBlock
-expr_stmt|;
-comment|/// EHOnly - True iff this cleanup should only be performed on the
-comment|/// exceptional edge.
-name|bool
-name|EHOnly
-decl_stmt|;
-name|CleanupBlockInfo
-argument_list|(
-argument|llvm::BasicBlock *cb
-argument_list|,
-argument|llvm::BasicBlock *sb
-argument_list|,
-argument|llvm::BasicBlock *eb
-argument_list|,
-argument|bool ehonly = false
-argument_list|)
-block|:
-name|CleanupBlock
-argument_list|(
-name|cb
-argument_list|)
-operator|,
-name|SwitchBlock
-argument_list|(
-name|sb
-argument_list|)
-operator|,
-name|EndBlock
-argument_list|(
-name|eb
-argument_list|)
-operator|,
-name|EHOnly
-argument_list|(
-argument|ehonly
-argument_list|)
-block|{}
-block|}
+name|FinallyInfo
+block|{   }
 struct|;
-comment|/// EHCleanupBlock - RAII object that will create a cleanup block for the
-comment|/// exceptional edge and set the insert point to that block.  When destroyed,
-comment|/// it creates the cleanup edge and sets the insert point to the previous
-comment|/// block.
-name|class
-name|EHCleanupBlock
-block|{
-name|CodeGenFunction
-modifier|&
-name|CGF
-decl_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
+name|FinallyInfo
+name|EnterFinallyBlock
+argument_list|(
+specifier|const
+name|Stmt
 operator|*
-name|PreviousInsertionBlock
-expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupHandler
-expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|PreviousInvokeDest
-expr_stmt|;
-name|public
-label|:
-name|EHCleanupBlock
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|cgf
-argument_list|)
-operator|:
-name|CGF
-argument_list|(
-name|cgf
-argument_list|)
-operator|,
-name|PreviousInsertionBlock
-argument_list|(
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|GetInsertBlock
-argument_list|()
-argument_list|)
-operator|,
-name|CleanupHandler
-argument_list|(
-name|CGF
-operator|.
-name|createBasicBlock
-argument_list|(
-literal|"ehcleanup"
+name|Stmt
 argument_list|,
-name|CGF
-operator|.
-name|CurFn
-argument_list|)
-argument_list|)
-operator|,
-name|PreviousInvokeDest
-argument_list|(
-argument|CGF.getInvokeDest()
-argument_list|)
-block|{
 name|llvm
 operator|::
-name|BasicBlock
+name|Constant
 operator|*
-name|TerminateHandler
-operator|=
-name|CGF
-operator|.
-name|getTerminateHandler
-argument_list|()
-block|;
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|SetInsertPoint
-argument_list|(
-name|CleanupHandler
+name|BeginCatchFn
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EndCatchFn
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|RethrowFn
 argument_list|)
-block|;
-name|CGF
-operator|.
-name|setInvokeDest
+decl_stmt|;
+name|void
+name|ExitFinallyBlock
+parameter_list|(
+name|FinallyInfo
+modifier|&
+name|FinallyInfo
+parameter_list|)
+function_decl|;
+comment|/// PushDestructorCleanup - Push a cleanup to call the
+comment|/// complete-object destructor of an object of the given type at the
+comment|/// given address.  Does nothing if T is not a C++ class type with a
+comment|/// non-trivial destructor.
+name|void
+name|PushDestructorCleanup
 argument_list|(
-name|TerminateHandler
+name|QualType
+name|T
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Addr
 argument_list|)
-block|;     }
-operator|~
-name|EHCleanupBlock
-argument_list|()
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack, process all
-comment|/// branch fixups and return a block info struct with the switch block and end
-comment|/// block.  This will also reset the invoke handler to the previous value
-comment|/// from when the cleanup block was created.
-name|CleanupBlockInfo
+decl_stmt|;
+comment|/// PopCleanupBlock - Will pop the cleanup entry on the stack and
+comment|/// process all branch fixups.
+name|void
 name|PopCleanupBlock
 parameter_list|()
 function_decl|;
-comment|/// DelayedCleanupBlock - RAII object that will create a cleanup block and set
-comment|/// the insert point to that block. When destructed, it sets the insert point
-comment|/// to the previous block and pushes a new cleanup entry on the stack.
+comment|/// CleanupBlock - RAII object that will create a cleanup block and
+comment|/// set the insert point to that block. When destructed, it sets the
+comment|/// insert point to the previous block and pushes a new cleanup
+comment|/// entry on the stack.
 name|class
-name|DelayedCleanupBlock
+name|CleanupBlock
 block|{
 name|CodeGenFunction
 modifier|&
 name|CGF
 decl_stmt|;
-name|llvm
+name|CGBuilderTy
 operator|::
-name|BasicBlock
-operator|*
-name|CurBB
+name|InsertPoint
+name|SavedIP
 expr_stmt|;
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupEntryBB
+name|NormalCleanupEntryBB
 expr_stmt|;
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupExitBB
+name|NormalCleanupExitBB
 expr_stmt|;
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CurInvokeDest
+name|EHCleanupEntryBB
 expr_stmt|;
-name|bool
-name|EHOnly
-decl_stmt|;
 name|public
 label|:
-name|DelayedCleanupBlock
+name|CleanupBlock
 argument_list|(
-argument|CodeGenFunction&cgf
+argument|CodeGenFunction&CGF
 argument_list|,
-argument|bool ehonly = false
+argument|CleanupKind Kind
 argument_list|)
-block|:
-name|CGF
-argument_list|(
-name|cgf
-argument_list|)
-operator|,
-name|CurBB
-argument_list|(
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|GetInsertBlock
-argument_list|()
-argument_list|)
-operator|,
-name|CleanupEntryBB
-argument_list|(
-name|CGF
-operator|.
-name|createBasicBlock
-argument_list|(
-literal|"cleanup"
-argument_list|)
-argument_list|)
-operator|,
-name|CleanupExitBB
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|CurInvokeDest
-argument_list|(
-name|CGF
-operator|.
-name|getInvokeDest
-argument_list|()
-argument_list|)
-operator|,
-name|EHOnly
-argument_list|(
-argument|ehonly
-argument_list|)
-block|{
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|SetInsertPoint
-argument_list|(
-name|CleanupEntryBB
-argument_list|)
-block|;     }
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|getCleanupExitBlock
-argument_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|CleanupExitBB
-condition|)
-name|CleanupExitBB
-operator|=
-name|CGF
-operator|.
-name|createBasicBlock
-argument_list|(
-literal|"cleanup.exit"
-argument_list|)
-expr_stmt|;
-return|return
-name|CleanupExitBB
-return|;
-block|}
+empty_stmt|;
+comment|/// If we're currently writing a normal cleanup, tie that off and
+comment|/// start writing an EH cleanup.
+name|void
+name|beginEHCleanup
+parameter_list|()
+function_decl|;
 operator|~
-name|DelayedCleanupBlock
-argument_list|()
-block|{
-name|CGF
-operator|.
-name|PushCleanupBlock
-argument_list|(
-name|CleanupEntryBB
-argument_list|,
-name|CleanupExitBB
-argument_list|,
-name|CurInvokeDest
-argument_list|,
-name|EHOnly
-argument_list|)
-block|;
-comment|// FIXME: This is silly, move this into the builder.
-if|if
-condition|(
-name|CurBB
-condition|)
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|SetInsertPoint
-argument_list|(
-name|CurBB
-argument_list|)
-expr_stmt|;
-else|else
-name|CGF
-operator|.
-name|Builder
-operator|.
-name|ClearInsertionPoint
+name|CleanupBlock
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 empty_stmt|;
-comment|/// \brief Enters a new scope for capturing cleanups, all of which will be
-comment|/// executed once the scope is exited.
+comment|/// \brief Enters a new scope for capturing cleanups, all of which
+comment|/// will be executed once the scope is exited.
 name|class
-name|CleanupScope
+name|RunCleanupsScope
 block|{
 name|CodeGenFunction
 modifier|&
 name|CGF
 decl_stmt|;
-name|size_t
+name|EHScopeStack
+operator|::
+name|stable_iterator
 name|CleanupStackDepth
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|OldDidCallStackSave
 decl_stmt|;
 name|bool
 name|PerformCleanup
 decl_stmt|;
-name|CleanupScope
+name|RunCleanupsScope
 argument_list|(
 specifier|const
-name|CleanupScope
+name|RunCleanupsScope
 operator|&
 argument_list|)
 expr_stmt|;
 comment|// DO NOT IMPLEMENT
-name|CleanupScope
+name|RunCleanupsScope
 modifier|&
 name|operator
 init|=
 operator|(
 specifier|const
-name|CleanupScope
+name|RunCleanupsScope
 operator|&
 operator|)
 decl_stmt|;
@@ -857,7 +1594,7 @@ name|public
 label|:
 comment|/// \brief Enter a new cleanup scope.
 name|explicit
-name|CleanupScope
+name|RunCleanupsScope
 argument_list|(
 name|CodeGenFunction
 operator|&
@@ -878,9 +1615,9 @@ name|CleanupStackDepth
 operator|=
 name|CGF
 operator|.
-name|CleanupEntries
+name|EHStack
 operator|.
-name|size
+name|stable_begin
 argument_list|()
 block|;
 name|OldDidCallStackSave
@@ -892,7 +1629,7 @@ block|;     }
 comment|/// \brief Exit this cleanup scope, emitting any accumulated
 comment|/// cleanups.
 operator|~
-name|CleanupScope
+name|RunCleanupsScope
 argument_list|()
 block|{
 if|if
@@ -908,7 +1645,7 @@ name|OldDidCallStackSave
 expr_stmt|;
 name|CGF
 operator|.
-name|EmitCleanupBlocks
+name|PopCleanupBlocks
 argument_list|(
 name|CleanupStackDepth
 argument_list|)
@@ -924,11 +1661,11 @@ block|{
 return|return
 name|CGF
 operator|.
-name|CleanupEntries
+name|EHStack
 operator|.
-name|size
+name|stable_begin
 argument_list|()
-operator|>
+operator|!=
 name|CleanupStackDepth
 return|;
 block|}
@@ -953,7 +1690,7 @@ name|OldDidCallStackSave
 expr_stmt|;
 name|CGF
 operator|.
-name|EmitCleanupBlocks
+name|PopCleanupBlocks
 argument_list|(
 name|CleanupStackDepth
 argument_list|)
@@ -965,103 +1702,92 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/// CXXTemporariesCleanupScope - Enters a new scope for catching live
-comment|/// temporaries, all of which will be popped once the scope is exited.
-name|class
-name|CXXTemporariesCleanupScope
-block|{
-name|CodeGenFunction
-modifier|&
-name|CGF
-decl_stmt|;
-name|size_t
-name|NumLiveTemporaries
-decl_stmt|;
-comment|// DO NOT IMPLEMENT
-name|CXXTemporariesCleanupScope
-argument_list|(
-specifier|const
-name|CXXTemporariesCleanupScope
-operator|&
-argument_list|)
-expr_stmt|;
-name|CXXTemporariesCleanupScope
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|CXXTemporariesCleanupScope
-operator|&
-operator|)
-decl_stmt|;
-name|public
-label|:
-name|explicit
-name|CXXTemporariesCleanupScope
-argument_list|(
-name|CodeGenFunction
-operator|&
-name|CGF
-argument_list|)
-operator|:
-name|CGF
-argument_list|(
-name|CGF
-argument_list|)
-operator|,
-name|NumLiveTemporaries
-argument_list|(
-argument|CGF.LiveTemporaries.size()
-argument_list|)
-block|{ }
-operator|~
-name|CXXTemporariesCleanupScope
-argument_list|()
-block|{
-while|while
-condition|(
-name|CGF
-operator|.
-name|LiveTemporaries
-operator|.
-name|size
-argument_list|()
-operator|>
-name|NumLiveTemporaries
-condition|)
-name|CGF
-operator|.
-name|PopCXXTemporary
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
-comment|/// EmitCleanupBlocks - Takes the old cleanup stack size and emits the cleanup
-comment|/// blocks that have been added.
+comment|/// PopCleanupBlocks - Takes the old cleanup stack size and emits
+comment|/// the cleanup blocks that have been added.
 name|void
-name|EmitCleanupBlocks
-parameter_list|(
-name|size_t
+name|PopCleanupBlocks
+argument_list|(
+name|EHScopeStack
+operator|::
+name|stable_iterator
 name|OldCleanupStackSize
-parameter_list|)
-function_decl|;
-comment|/// EmitBranchThroughCleanup - Emit a branch from the current insert block
-comment|/// through the cleanup handling code (if any) and then on to \arg Dest.
-comment|///
-comment|/// FIXME: Maybe this should really be in EmitBranch? Don't we always want
-comment|/// this behavior for branches?
-name|void
-name|EmitBranchThroughCleanup
+argument_list|)
+decl_stmt|;
+comment|/// The given basic block lies in the current EH scope, but may be a
+comment|/// target of a potentially scope-crossing jump; get a stable handle
+comment|/// to which we can perform this jump later.
+name|JumpDest
+name|getJumpDestInCurrentScope
 argument_list|(
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|Dest
+name|Target
 argument_list|)
-decl_stmt|;
+decl|const
+block|{
+return|return
+name|JumpDest
+argument_list|(
+name|Target
+argument_list|,
+name|EHStack
+operator|.
+name|stable_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// The given basic block lies in the current EH scope, but may be a
+comment|/// target of a potentially scope-crossing jump; get a stable handle
+comment|/// to which we can perform this jump later.
+name|JumpDest
+name|getJumpDestInCurrentScope
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+init|=
+literal|0
+parameter_list|)
+block|{
+return|return
+name|JumpDest
+argument_list|(
+name|createBasicBlock
+argument_list|(
+name|Name
+argument_list|)
+argument_list|,
+name|EHStack
+operator|.
+name|stable_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// EmitBranchThroughCleanup - Emit a branch from the current insert
+comment|/// block through the normal cleanup handling code (if any) and then
+comment|/// on to \arg Dest.
+name|void
+name|EmitBranchThroughCleanup
+parameter_list|(
+name|JumpDest
+name|Dest
+parameter_list|)
+function_decl|;
+comment|/// EmitBranchThroughEHCleanup - Emit a branch from the current
+comment|/// insert block through the EH cleanup handling code (if any) and
+comment|/// then on to \arg Dest.
+name|void
+name|EmitBranchThroughEHCleanup
+parameter_list|(
+name|JumpDest
+name|Dest
+parameter_list|)
+function_decl|;
 comment|/// BeginConditionalBranch - Should be called before a conditional part of an
 comment|/// expression is emitted. For example, before the RHS of the expression below
 comment|/// is emitted:
@@ -1139,10 +1865,7 @@ specifier|const
 name|LabelStmt
 operator|*
 operator|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
+name|JumpDest
 operator|>
 name|LabelMap
 expr_stmt|;
@@ -1153,41 +1876,27 @@ name|BreakContinue
 block|{
 name|BreakContinue
 argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|bb
+argument|JumpDest Break
 argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|cb
+argument|JumpDest Continue
 argument_list|)
-operator|:
+block|:
 name|BreakBlock
 argument_list|(
-name|bb
+name|Break
 argument_list|)
 operator|,
 name|ContinueBlock
 argument_list|(
-argument|cb
+argument|Continue
 argument_list|)
 block|{}
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
+name|JumpDest
 name|BreakBlock
 expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
+name|JumpDest
 name|ContinueBlock
-expr_stmt|;
+decl_stmt|;
 block|}
 struct|;
 name|llvm
@@ -1250,136 +1959,14 @@ comment|/// calling llvm.stacksave for multiple VLAs in the same scope.
 name|bool
 name|DidCallStackSave
 decl_stmt|;
-struct|struct
-name|CleanupEntry
-block|{
-comment|/// CleanupEntryBlock - The block of code that does the actual cleanup.
+comment|/// A block containing a single 'unreachable' instruction.  Created
+comment|/// lazily by getUnreachableBlock().
 name|llvm
 operator|::
 name|BasicBlock
 operator|*
-name|CleanupEntryBlock
+name|UnreachableBlock
 expr_stmt|;
-comment|/// CleanupExitBlock - The cleanup exit block.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupExitBlock
-expr_stmt|;
-comment|/// Blocks - Basic blocks that were emitted in the current cleanup scope.
-name|std
-operator|::
-name|vector
-operator|<
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-operator|>
-name|Blocks
-expr_stmt|;
-comment|/// BranchFixups - Branch instructions to basic blocks that haven't been
-comment|/// inserted into the current function yet.
-name|std
-operator|::
-name|vector
-operator|<
-name|llvm
-operator|::
-name|BranchInst
-operator|*
-operator|>
-name|BranchFixups
-expr_stmt|;
-comment|/// PreviousInvokeDest - The invoke handler from the start of the cleanup
-comment|/// region.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|PreviousInvokeDest
-expr_stmt|;
-comment|/// EHOnly - Perform this only on the exceptional edge, not the main edge.
-name|bool
-name|EHOnly
-decl_stmt|;
-name|explicit
-name|CleanupEntry
-argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupEntryBlock
-argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|CleanupExitBlock
-argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|PreviousInvokeDest
-argument_list|,
-name|bool
-name|ehonly
-argument_list|)
-range|:
-name|CleanupEntryBlock
-argument_list|(
-name|CleanupEntryBlock
-argument_list|)
-decl_stmt|,
-name|CleanupExitBlock
-argument_list|(
-name|CleanupExitBlock
-argument_list|)
-decl_stmt|,
-name|PreviousInvokeDest
-argument_list|(
-name|PreviousInvokeDest
-argument_list|)
-decl_stmt|,
-name|EHOnly
-argument_list|(
-name|ehonly
-argument_list|)
-block|{}
-block|}
-struct|;
-comment|/// CleanupEntries - Stack of cleanup entries.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|CleanupEntry
-operator|,
-literal|8
-operator|>
-name|CleanupEntries
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-operator|,
-name|size_t
-operator|>
-name|BlockScopeMap
-expr_stmt|;
-comment|/// BlockScopes - Map of which "cleanup scope" scope basic blocks have.
-name|BlockScopeMap
-name|BlockScopes
-decl_stmt|;
 comment|/// CXXThisDecl - When generating code for a C++ member function,
 comment|/// this will hold the implicit 'this' declaration.
 name|ImplicitParamDecl
@@ -1404,97 +1991,6 @@ operator|::
 name|Value
 operator|*
 name|CXXVTTValue
-expr_stmt|;
-comment|/// CXXLiveTemporaryInfo - Holds information about a live C++ temporary.
-struct|struct
-name|CXXLiveTemporaryInfo
-block|{
-comment|/// Temporary - The live temporary.
-specifier|const
-name|CXXTemporary
-modifier|*
-name|Temporary
-decl_stmt|;
-comment|/// ThisPtr - The pointer to the temporary.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|ThisPtr
-expr_stmt|;
-comment|/// DtorBlock - The destructor block.
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|DtorBlock
-expr_stmt|;
-comment|/// CondPtr - If this is a conditional temporary, this is the pointer to the
-comment|/// condition variable that states whether the destructor should be called
-comment|/// or not.
-name|llvm
-operator|::
-name|Value
-operator|*
-name|CondPtr
-expr_stmt|;
-name|CXXLiveTemporaryInfo
-argument_list|(
-specifier|const
-name|CXXTemporary
-operator|*
-name|temporary
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|thisptr
-argument_list|,
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|dtorblock
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|condptr
-argument_list|)
-operator|:
-name|Temporary
-argument_list|(
-name|temporary
-argument_list|)
-operator|,
-name|ThisPtr
-argument_list|(
-name|thisptr
-argument_list|)
-operator|,
-name|DtorBlock
-argument_list|(
-name|dtorblock
-argument_list|)
-operator|,
-name|CondPtr
-argument_list|(
-argument|condptr
-argument_list|)
-block|{ }
-block|}
-struct|;
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|CXXLiveTemporaryInfo
-operator|,
-literal|4
-operator|>
-name|LiveTemporaries
 expr_stmt|;
 comment|/// ConditionalBranchLevel - Contains the nesting level of the current
 comment|/// conditional branch. This is used so that we know if a temporary should be
@@ -1543,6 +2039,12 @@ name|llvm
 operator|::
 name|BasicBlock
 operator|*
+name|TerminateLandingPad
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
 name|TerminateHandler
 expr_stmt|;
 name|llvm
@@ -1551,9 +2053,6 @@ name|BasicBlock
 operator|*
 name|TrapBB
 expr_stmt|;
-name|int
-name|UniqueAggrDestructorCount
-decl_stmt|;
 name|public
 label|:
 name|CodeGenFunction
@@ -1578,6 +2077,51 @@ return|return
 name|DebugInfo
 return|;
 block|}
+comment|/// Returns a pointer to the function's exception object slot, which
+comment|/// is assigned in every landing pad.
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getExceptionSlot
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getUnreachableBlock
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|UnreachableBlock
+condition|)
+block|{
+name|UnreachableBlock
+operator|=
+name|createBasicBlock
+argument_list|(
+literal|"unreachable"
+argument_list|)
+expr_stmt|;
+name|new
+name|llvm
+operator|::
+name|UnreachableInst
+argument_list|(
+name|getLLVMContext
+argument_list|()
+argument_list|,
+name|UnreachableBlock
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|UnreachableBlock
+return|;
+block|}
 name|llvm
 operator|::
 name|BasicBlock
@@ -1585,24 +2129,21 @@ operator|*
 name|getInvokeDest
 argument_list|()
 block|{
+if|if
+condition|(
+operator|!
+name|EHStack
+operator|.
+name|requiresLandingPad
+argument_list|()
+condition|)
 return|return
-name|InvokeDest
+literal|0
 return|;
-block|}
-name|void
-name|setInvokeDest
-argument_list|(
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|B
-argument_list|)
-block|{
-name|InvokeDest
-operator|=
-name|B
-expr_stmt|;
+return|return
+name|getInvokeDestImpl
+argument_list|()
+return|;
 block|}
 name|llvm
 operator|::
@@ -1738,34 +2279,17 @@ name|Function
 operator|*
 name|GenerateBlockFunction
 argument_list|(
-specifier|const
-name|BlockExpr
-operator|*
-name|BExpr
+argument|GlobalDecl GD
 argument_list|,
-name|CGBlockInfo
-operator|&
-name|Info
+argument|const BlockExpr *BExpr
 argument_list|,
-specifier|const
-name|Decl
-operator|*
-name|OuterFuncDecl
+argument|CGBlockInfo&Info
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Decl
-operator|*
+argument|const Decl *OuterFuncDecl
 argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-name|ldm
+argument|llvm::DenseMap<const Decl*
+argument_list|,
+argument|llvm::Value*> ldm
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -2054,6 +2578,24 @@ name|CXXDtorType
 name|Type
 parameter_list|)
 function_decl|;
+comment|/// ShouldInstrumentFunction - Return true if the current function should be
+comment|/// instrumented with __cyg_profile_func_* calls
+name|bool
+name|ShouldInstrumentFunction
+parameter_list|()
+function_decl|;
+comment|/// EmitFunctionInstrumentation - Emit LLVM code to call the specified
+comment|/// instrumentation function with the current function and the call site, if
+comment|/// function instrumentation is enabled.
+name|void
+name|EmitFunctionInstrumentation
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Fn
+parameter_list|)
+function_decl|;
 comment|/// EmitFunctionProlog - Emit the target specific LLVM code to load the
 comment|/// arguments for the given function. This is also responsible for naming the
 comment|/// LLVM function arguments.
@@ -2081,19 +2623,13 @@ comment|/// EmitFunctionEpilog - Emit the target specific LLVM code to return th
 comment|/// given temporary.
 name|void
 name|EmitFunctionEpilog
-argument_list|(
+parameter_list|(
 specifier|const
 name|CGFunctionInfo
-operator|&
+modifier|&
 name|FI
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|ReturnValue
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// EmitStartEHSpec - Emit the start of the exception spec.
 name|void
 name|EmitStartEHSpec
@@ -2114,7 +2650,17 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// getTerminateHandler - Return a handler that just calls terminate.
+comment|/// getTerminateLandingPad - Return a landing pad that just calls terminate.
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getTerminateLandingPad
+argument_list|()
+expr_stmt|;
+comment|/// getTerminateHandler - Return a handler (not a landing pad, just
+comment|/// a catch handler) that just calls terminate.  This is used when
+comment|/// a terminate scope encloses a try.
 name|llvm
 operator|::
 name|BasicBlock
@@ -2256,20 +2802,17 @@ begin_comment
 comment|/// label maps to.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|getBasicBlockForLabel
-argument_list|(
+begin_function_decl
+name|JumpDest
+name|getJumpDestForLabel
+parameter_list|(
 specifier|const
 name|LabelStmt
-operator|*
+modifier|*
 name|S
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// SimplifyForwardingBlocks - If the given basic block is only a branch to
@@ -2619,7 +3162,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Value
+name|AllocaInst
 operator|*
 name|CreateIRTemp
 argument_list|(
@@ -2642,7 +3185,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Value
+name|AllocaInst
 operator|*
 name|CreateMemTemp
 argument_list|(
@@ -3414,7 +3957,7 @@ end_decl_stmt
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|Function
 operator|*
 name|GenerateCXXAggrDestructorHelper
 argument_list|(
@@ -3463,7 +4006,31 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|PushCXXTemporary
+name|EmitNewArrayInitializer
+argument_list|(
+specifier|const
+name|CXXNewExpr
+operator|*
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NewPtr
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|NumElements
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|EmitCXXTemporary
 argument_list|(
 specifier|const
 name|CXXTemporary
@@ -3478,13 +4045,6 @@ name|Ptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|PopCXXTemporary
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_expr_stmt
 name|llvm
@@ -3684,6 +4244,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|void
+name|SpecialInitFn
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|Init
+argument_list|,
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Address
+argument_list|)
+typedef|;
+end_typedef
+
 begin_comment
 comment|/// EmitLocalBlockVarDecl - Emit a local block variable declaration.
 end_comment
@@ -3704,6 +4287,12 @@ specifier|const
 name|VarDecl
 modifier|&
 name|D
+parameter_list|,
+name|SpecialInitFn
+modifier|*
+name|SpecialInit
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4153,40 +4742,19 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|CXXTryStmtInfo
-block|{
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|SavedLandingPad
-expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|HandlerBlock
-expr_stmt|;
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|FinallyBlock
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_function_decl
-name|CXXTryStmtInfo
+name|void
 name|EnterCXXTryStmt
 parameter_list|(
 specifier|const
 name|CXXTryStmt
 modifier|&
 name|S
+parameter_list|,
+name|bool
+name|IsFnTryBlock
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4200,8 +4768,10 @@ name|CXXTryStmt
 modifier|&
 name|S
 parameter_list|,
-name|CXXTryStmtInfo
-name|Info
+name|bool
+name|IsFnTryBlock
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4888,7 +5458,7 @@ name|LValue
 name|EmitNullInitializationLValue
 parameter_list|(
 specifier|const
-name|CXXZeroInitValueExpr
+name|CXXScalarValueInitExpr
 modifier|*
 name|E
 parameter_list|)
@@ -5179,6 +5749,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|LValue
+name|EmitObjCSelectorLValue
+parameter_list|(
+specifier|const
+name|ObjCSelectorExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -5310,6 +5892,46 @@ argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|CallSite
+name|EmitCallOrInvoke
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Callee
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+specifier|const
+operator|*
+name|ArgBegin
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+specifier|const
+operator|*
+name|ArgEnd
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Twine
+operator|&
+name|Name
+operator|=
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|llvm
@@ -5526,6 +6148,67 @@ name|llvm
 operator|::
 name|Value
 operator|*
+name|EmitNeonCall
+argument_list|(
+argument|llvm::Function *F
+argument_list|,
+argument|llvm::SmallVectorImpl<llvm::Value*>&O
+argument_list|,
+argument|const char *name
+argument_list|,
+argument|bool splat = false
+argument_list|,
+argument|unsigned shift =
+literal|0
+argument_list|,
+argument|bool rightshift = false
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitNeonSplat
+argument_list|(
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|Idx
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitNeonShiftVector
+argument_list|(
+argument|llvm::Value *V
+argument_list|,
+argument|const llvm::Type *Ty
+argument_list|,
+argument|bool negateForRightShift
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
 name|EmitX86BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
@@ -5705,10 +6388,10 @@ name|Expr
 modifier|*
 name|E
 parameter_list|,
-name|bool
-name|IsInitializer
-init|=
-name|false
+specifier|const
+name|NamedDecl
+modifier|*
+name|InitializedDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6213,8 +6896,7 @@ name|pair
 operator|<
 name|llvm
 operator|::
-name|Constant
-operator|*
+name|WeakVH
 argument_list|,
 name|llvm
 operator|::
@@ -6605,38 +7287,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// EmitCleanupBlock - emits a single cleanup block.
-end_comment
-
-begin_function_decl
-name|void
-name|EmitCleanupBlock
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// AddBranchFixup - adds a branch instruction to the list of fixups for the
-end_comment
-
-begin_comment
-comment|/// current cleanup scope.
-end_comment
-
-begin_decl_stmt
-name|void
-name|AddBranchFixup
-argument_list|(
-name|llvm
-operator|::
-name|BranchInst
-operator|*
-name|BI
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// EmitCallArgs - Emit call arguments for a function.
 end_comment
 
@@ -6862,6 +7512,13 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|EmitDeclMetadata
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 unit|};   }

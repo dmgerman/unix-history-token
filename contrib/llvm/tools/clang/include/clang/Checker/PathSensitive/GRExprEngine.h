@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Checker/PathSensitive/AnalysisManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Checker/PathSensitive/GRSubEngine.h"
 end_include
 
@@ -227,9 +233,6 @@ name|unsigned
 operator|>
 name|CheckerMap
 expr_stmt|;
-name|CheckerMap
-name|CheckerM
-decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -248,12 +251,43 @@ operator|>
 expr|>
 name|CheckersOrdered
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+operator|,
+name|CheckersOrdered
+operator|*
+operator|>
+name|CheckersOrderedCache
+expr_stmt|;
+comment|/// A registration map from checker tag to the index into the
+comment|///  ordered checkers vector.
+name|CheckerMap
+name|CheckerM
+decl_stmt|;
+comment|/// An ordered vector of checkers that are called when evaluating
+comment|///  various expressions and statements.
 name|CheckersOrdered
 name|Checkers
 decl_stmt|;
-comment|/// BR - The BugReporter associated with this engine.  It is important that
-comment|//   this object be placed at the very end of member variables so that its
-comment|//   destructor is called before the rest of the GRExprEngine is destroyed.
+comment|/// A map used for caching the checkers that respond to the callback for
+comment|///  a particular statement and visitation order.
+name|CheckersOrderedCache
+name|COCache
+decl_stmt|;
+comment|/// The BugReporter associated with this engine.  It is important that
+comment|///  this object be placed at the very end of member variables so that its
+comment|///  destructor is called before the rest of the GRExprEngine is destroyed.
 name|GRBugReporter
 name|BR
 decl_stmt|;
@@ -354,9 +388,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|G
+name|AMgr
 operator|.
-name|getContext
+name|getASTContext
 argument_list|()
 return|;
 block|}
@@ -666,7 +700,7 @@ modifier|&
 name|builder
 parameter_list|)
 function_decl|;
-comment|// Generate the entry node of the callee.
+comment|/// Generate the entry node of the callee.
 name|void
 name|ProcessCallEnter
 parameter_list|(
@@ -675,13 +709,21 @@ modifier|&
 name|builder
 parameter_list|)
 function_decl|;
-comment|// Generate the first post callsite node.
+comment|/// Generate the first post callsite node.
 name|void
 name|ProcessCallExit
 parameter_list|(
 name|GRCallExitNodeBuilder
 modifier|&
 name|builder
+parameter_list|)
+function_decl|;
+comment|/// Called by GRCoreEngine when the analysis worklist has terminated.
+name|void
+name|ProcessEndWorklist
+parameter_list|(
+name|bool
+name|hasWorkRemaining
 parameter_list|)
 function_decl|;
 comment|/// EvalAssume - Callback function invoked by the ConstraintManager when

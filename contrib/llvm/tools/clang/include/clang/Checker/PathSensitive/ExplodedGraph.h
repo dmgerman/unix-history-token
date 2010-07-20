@@ -162,9 +162,6 @@ name|class
 name|CFG
 decl_stmt|;
 name|class
-name|ASTContext
-decl_stmt|;
-name|class
 name|ExplodedGraph
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -1017,11 +1014,6 @@ comment|/// and successor groups.
 name|BumpVectorContext
 name|BVC
 decl_stmt|;
-comment|/// Ctx - The ASTContext used to "interpret" CodeDecl.
-name|ASTContext
-modifier|&
-name|Ctx
-decl_stmt|;
 comment|/// NumNodes - The number of nodes in the graph.
 name|unsigned
 name|NumNodes
@@ -1062,9 +1054,7 @@ block|{
 return|return
 name|new
 name|ExplodedGraph
-argument_list|(
-name|Ctx
-argument_list|)
+argument_list|()
 return|;
 block|}
 comment|/// addRoot - Add an untyped node to the set of roots.
@@ -1110,17 +1100,8 @@ name|V
 return|;
 block|}
 name|ExplodedGraph
-argument_list|(
-name|ASTContext
-operator|&
-name|ctx
-argument_list|)
+argument_list|()
 operator|:
-name|Ctx
-argument_list|(
-name|ctx
-argument_list|)
-operator|,
 name|NumNodes
 argument_list|(
 literal|0
@@ -1385,15 +1366,6 @@ parameter_list|()
 block|{
 return|return
 name|BVC
-return|;
-block|}
-name|ASTContext
-modifier|&
-name|getContext
-parameter_list|()
-block|{
-return|return
-name|Ctx
 return|;
 block|}
 typedef|typedef

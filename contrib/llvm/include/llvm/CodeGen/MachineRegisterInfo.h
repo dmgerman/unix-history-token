@@ -118,13 +118,9 @@ name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
 name|unsigned
 operator|>
-expr|>
+operator|*
 name|RegClass2VRegMap
 expr_stmt|;
 comment|/// RegAllocHints - This vector records register allocation hints for virtual
@@ -1508,6 +1504,52 @@ name|this
 block|;
 return|return
 name|tmp
+return|;
+block|}
+comment|/// skipInstruction - move forward until reaching a different instruction.
+comment|/// Return the skipped instruction that is no longer pointed to, or NULL if
+comment|/// already pointing to end().
+name|MachineInstr
+modifier|*
+name|skipInstruction
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+return|return
+literal|0
+return|;
+name|MachineInstr
+modifier|*
+name|MI
+init|=
+name|Op
+operator|->
+name|getParent
+argument_list|()
+decl_stmt|;
+do|do
+operator|++
+operator|*
+name|this
+expr_stmt|;
+do|while
+condition|(
+name|Op
+operator|&&
+name|Op
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|MI
+condition|)
+do|;
+return|return
+name|MI
 return|;
 block|}
 name|MachineOperand

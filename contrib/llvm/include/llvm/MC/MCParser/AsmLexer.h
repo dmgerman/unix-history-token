@@ -130,11 +130,6 @@ name|MemoryBuffer
 operator|*
 name|CurBuf
 block|;
-specifier|const
-name|char
-operator|*
-name|TokStart
-block|;
 name|void
 name|operator
 operator|=
@@ -191,11 +186,7 @@ operator|=
 name|NULL
 argument_list|)
 block|;
-name|SMLoc
-name|getLoc
-argument_list|()
-specifier|const
-block|;
+name|virtual
 name|StringRef
 name|LexUntilEndOfStatement
 argument_list|()

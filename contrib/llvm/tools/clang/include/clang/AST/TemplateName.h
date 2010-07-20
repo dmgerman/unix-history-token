@@ -293,6 +293,19 @@ expr_stmt|;
 block|}
 name|public
 label|:
+comment|// \brief Kind of name that is actually stored.
+enum|enum
+name|NameKind
+block|{
+name|Template
+block|,
+name|OverloadedTemplate
+block|,
+name|QualifiedTemplate
+block|,
+name|DependentTemplate
+block|}
+enum|;
 name|TemplateName
 argument_list|()
 operator|:
@@ -364,6 +377,12 @@ name|isNull
 argument_list|()
 return|;
 block|}
+comment|// \brief Get the kind of name that is actually stored.
+name|NameKind
+name|getKind
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the the underlying template declaration that
 comment|/// this template name refers to, if known.
 comment|///

@@ -343,6 +343,13 @@ argument_list|(
 argument|QualType T
 argument_list|)
 expr_stmt|;
+comment|/// HandleLateResolvedPointers - For top-level ConvertType calls, this handles
+comment|/// pointers that are referenced but have not been converted yet.  This is
+comment|/// used to handle cyclic structures properly.
+name|void
+name|HandleLateResolvedPointers
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|CodeGenTypes
@@ -442,6 +449,8 @@ operator|*
 name|ConvertType
 argument_list|(
 argument|QualType T
+argument_list|,
+argument|bool IsRecursive = false
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -466,6 +475,8 @@ operator|*
 name|ConvertTypeForMem
 argument_list|(
 argument|QualType T
+argument_list|,
+argument|bool IsRecursive = false
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -477,7 +488,16 @@ name|ConvertTypeForMemRecursive
 argument_list|(
 argument|QualType T
 argument_list|)
-expr_stmt|;
+block|{
+return|return
+name|ConvertTypeForMem
+argument_list|(
+name|T
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// GetFunctionType - Get the LLVM function type for \arg Info.
 specifier|const
 name|llvm
@@ -489,6 +509,8 @@ argument_list|(
 argument|const CGFunctionInfo&Info
 argument_list|,
 argument|bool IsVariadic
+argument_list|,
+argument|bool IsRecursive = false
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -501,6 +523,21 @@ argument_list|(
 argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
+comment|/// VerifyFuncTypeComplete - Utility to check whether a function type can
+comment|/// be converted to an LLVM type (i.e. doesn't depend on an incomplete tag
+comment|/// type).
+specifier|static
+specifier|const
+name|TagType
+modifier|*
+name|VerifyFuncTypeComplete
+parameter_list|(
+specifier|const
+name|Type
+modifier|*
+name|T
+parameter_list|)
+function_decl|;
 comment|/// GetFunctionTypeForVTable - Get the LLVM function type for use in a vtable,
 comment|/// given a CXXMethodDecl. If the method to has an incomplete return type,
 comment|/// and/or incomplete argument types, this will return the opaque type.
@@ -653,6 +690,11 @@ operator|<
 name|FunctionProtoType
 operator|>
 name|Ty
+argument_list|,
+name|bool
+name|IsRecursive
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -665,6 +707,11 @@ operator|<
 name|FunctionNoProtoType
 operator|>
 name|Ty
+argument_list|,
+name|bool
+name|IsRecursive
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|// getFunctionInfo - Get the function info for a member function.
@@ -756,6 +803,11 @@ operator|::
 name|ExtInfo
 operator|&
 name|Info
+argument_list|,
+name|bool
+name|IsRecursive
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// \brief Compute a new LLVM record layout object for the given record.
@@ -808,6 +860,9 @@ operator|*
 operator|>
 operator|&
 name|ArgTys
+argument_list|,
+name|bool
+name|IsRecursive
 argument_list|)
 decl_stmt|;
 comment|/// ContainsPointerToDataMember - Return whether the given type contains a

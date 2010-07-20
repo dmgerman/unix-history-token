@@ -84,15 +84,9 @@ block|{
 name|explicit
 name|SystemZMCAsmInfo
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|StringRef
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|)
 block|;
 name|virtual

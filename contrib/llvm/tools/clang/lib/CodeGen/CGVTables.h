@@ -896,6 +896,22 @@ comment|/// Thunks - Contains all thunks that a given method decl will need.
 name|ThunksMapTy
 name|Thunks
 decl_stmt|;
+comment|// The layout entry and a bool indicating whether we've actually emitted
+comment|// the vtable.
+typedef|typedef
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
+name|uint64_t
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
+name|VTableLayoutData
+expr_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -905,8 +921,7 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 operator|,
-name|uint64_t
-operator|*
+name|VTableLayoutData
 operator|>
 name|VTableLayoutMapTy
 expr_stmt|;
@@ -1021,6 +1036,9 @@ name|lookup
 argument_list|(
 name|RD
 argument_list|)
+operator|.
+name|getPointer
+argument_list|()
 index|[
 literal|0
 index|]
@@ -1060,6 +1078,9 @@ name|lookup
 argument_list|(
 name|RD
 argument_list|)
+operator|.
+name|getPointer
+argument_list|()
 decl_stmt|;
 return|return
 operator|&
@@ -1156,6 +1177,9 @@ specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
+parameter_list|,
+name|bool
+name|VTableRequired
 parameter_list|)
 function_decl|;
 comment|/// CreateVTableInitializer - Create a vtable initializer for the given record
@@ -1230,7 +1254,7 @@ operator|&&
 operator|!
 name|KeyFunction
 operator|->
-name|getBody
+name|hasBody
 argument_list|()
 return|;
 block|}

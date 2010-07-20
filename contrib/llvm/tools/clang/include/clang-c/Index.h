@@ -360,15 +360,6 @@ name|CXSourceRange
 name|range
 parameter_list|)
 function_decl|;
-comment|/**   * \brief Determine if the source location occurs within the main file   * of the translation unit (as opposed to an included header).   */
-name|CINDEX_LINKAGE
-name|unsigned
-name|clang_isFromMainFile
-parameter_list|(
-name|CXSourceLocation
-name|loc
-parameter_list|)
-function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_DIAG Diagnostic reporting  *  * @{  */
 comment|/**  * \brief Describes the severity of a particular diagnostic.  */
@@ -1284,6 +1275,14 @@ block|,
 name|CXType_ObjCObjectPointer
 init|=
 literal|109
+block|,
+name|CXType_FunctionNoProto
+init|=
+literal|110
+block|,
+name|CXType_FunctionProto
+init|=
+literal|111
 block|}
 enum|;
 comment|/**  * \brief The type of an element in the abstract syntax tree.  *  */
@@ -1360,6 +1359,24 @@ parameter_list|(
 name|enum
 name|CXTypeKind
 name|K
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the result type associated with a function type.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getResultType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the result type associated with a given cursor.  This only  *  returns a valid type of the cursor refers to a function or method.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getCursorResultType
+parameter_list|(
+name|CXCursor
+name|C
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */

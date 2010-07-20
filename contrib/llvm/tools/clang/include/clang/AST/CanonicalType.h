@@ -922,6 +922,15 @@ name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
 argument|bool
 argument_list|,
+argument|isIntegralOrEnumerationType
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
 argument|isRealFloatingType
 argument_list|)
 end_macro
@@ -1120,6 +1129,15 @@ name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
 argument_list|(
 argument|bool
 argument_list|,
+argument|isArrayType
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
 argument|hasPointerRepresentation
 argument_list|)
 end_macro
@@ -1130,6 +1148,15 @@ argument_list|(
 argument|bool
 argument_list|,
 argument|hasObjCPointerRepresentation
+argument_list|)
+end_macro
+
+begin_macro
+name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
+argument_list|(
+argument|bool
+argument_list|,
+argument|hasFloatingRepresentation
 argument_list|)
 end_macro
 

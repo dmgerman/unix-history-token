@@ -283,6 +283,97 @@ decl_stmt|;
 name|class
 name|MangleBuffer
 decl_stmt|;
+struct|struct
+name|OrderGlobalInits
+block|{
+name|unsigned
+name|int
+name|priority
+decl_stmt|;
+name|unsigned
+name|int
+name|lex_order
+decl_stmt|;
+name|OrderGlobalInits
+argument_list|(
+argument|unsigned int p
+argument_list|,
+argument|unsigned int l
+argument_list|)
+block|:
+name|priority
+argument_list|(
+name|p
+argument_list|)
+operator|,
+name|lex_order
+argument_list|(
+argument|l
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|OrderGlobalInits
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|priority
+operator|==
+name|RHS
+operator|.
+name|priority
+operator|&&
+name|lex_order
+operator|==
+name|RHS
+operator|.
+name|lex_order
+return|;
+block|}
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|OrderGlobalInits
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+if|if
+condition|(
+name|priority
+operator|<
+name|RHS
+operator|.
+name|priority
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|priority
+operator|==
+name|RHS
+operator|.
+name|priority
+operator|&&
+name|lex_order
+operator|<
+name|RHS
+operator|.
+name|lex_order
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
 comment|/// while generating LLVM code.
 name|class
@@ -451,6 +542,24 @@ comment|/// priorities to be emitted when the translation unit is complete.
 name|CtorList
 name|GlobalDtors
 decl_stmt|;
+comment|/// MangledDeclNames - A map of canonical GlobalDecls to their mangled names.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|GlobalDecl
+operator|,
+name|llvm
+operator|::
+name|StringRef
+operator|>
+name|MangledDeclNames
+expr_stmt|;
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|MangledNamesAllocator
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -512,6 +621,28 @@ operator|*
 operator|>
 name|CXXGlobalInits
 expr_stmt|;
+comment|/// - Global variables with initializers whose order of initialization
+comment|/// is set by init_priority attribute.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|OrderGlobalInits
+operator|,
+name|llvm
+operator|::
+name|Function
+operator|*
+operator|>
+operator|,
+literal|8
+operator|>
+name|PrioritizedCXXGlobalInits
+expr_stmt|;
 comment|/// CXXGlobalDtors - Global destructor functions and arguments that need to
 comment|/// run on termination.
 name|std
@@ -524,8 +655,7 @@ name|pair
 operator|<
 name|llvm
 operator|::
-name|Constant
-operator|*
+name|WeakVH
 operator|,
 name|llvm
 operator|::
@@ -1237,6 +1367,20 @@ argument_list|,
 argument|CXXDtorType Type
 argument_list|)
 expr_stmt|;
+comment|// GetCXXMemberFunctionPointerValue - Given a method declaration, return the
+comment|// integer used in a member function pointer to refer to that value.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetCXXMemberFunctionPointerValue
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|MD
+argument_list|)
+expr_stmt|;
 comment|/// getBuiltinLibFunction - Given a builtin id for a function like
 comment|/// "__builtin_fabsf", return a Function* for "fabsf".
 name|llvm
@@ -1399,7 +1543,22 @@ name|Constant
 operator|*
 name|Object
 argument_list|)
-decl_stmt|;
+block|{
+name|CXXGlobalDtors
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|DtorFn
+argument_list|,
+name|Object
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// CreateRuntimeFunction - Create a new runtime function with the specified
 comment|/// type and name.
 name|llvm
@@ -1607,15 +1766,24 @@ operator|*
 name|F
 argument_list|)
 decl_stmt|;
-comment|/// ReturnTypeUsesSret - Return true iff the given type uses 'sret' when used
+comment|/// ReturnTypeUsesSRet - Return true iff the given type uses 'sret' when used
 comment|/// as a return type.
 name|bool
-name|ReturnTypeUsesSret
+name|ReturnTypeUsesSRet
 parameter_list|(
 specifier|const
 name|CGFunctionInfo
 modifier|&
 name|FI
+parameter_list|)
+function_decl|;
+comment|/// ReturnTypeUsesSret - Return true iff the given type uses 'fpret' when used
+comment|/// as a return type.
+name|bool
+name|ReturnTypeUsesFPRet
+parameter_list|(
+name|QualType
+name|ResultType
 parameter_list|)
 function_decl|;
 comment|/// ConstructAttributeList - Get the LLVM attributes and calling convention to
@@ -1649,33 +1817,20 @@ modifier|&
 name|CallingConv
 parameter_list|)
 function_decl|;
+name|llvm
+operator|::
+name|StringRef
+name|getMangledName
+argument_list|(
+argument|GlobalDecl GD
+argument_list|)
+expr_stmt|;
 name|void
 name|getMangledName
 parameter_list|(
-name|MangleBuffer
-modifier|&
-name|Buffer
-parameter_list|,
 name|GlobalDecl
-name|D
-parameter_list|)
-function_decl|;
-name|void
-name|getMangledName
-parameter_list|(
-name|MangleBuffer
-modifier|&
-name|Buffer
+name|GD
 parameter_list|,
-specifier|const
-name|NamedDecl
-modifier|*
-name|ND
-parameter_list|)
-function_decl|;
-name|void
-name|getMangledName
-parameter_list|(
 name|MangleBuffer
 modifier|&
 name|Buffer
@@ -1684,38 +1839,6 @@ specifier|const
 name|BlockDecl
 modifier|*
 name|BD
-parameter_list|)
-function_decl|;
-name|void
-name|getMangledCXXCtorName
-parameter_list|(
-name|MangleBuffer
-modifier|&
-name|Buffer
-parameter_list|,
-specifier|const
-name|CXXConstructorDecl
-modifier|*
-name|D
-parameter_list|,
-name|CXXCtorType
-name|Type
-parameter_list|)
-function_decl|;
-name|void
-name|getMangledCXXDtorName
-parameter_list|(
-name|MangleBuffer
-modifier|&
-name|Buffer
-parameter_list|,
-specifier|const
-name|CXXDestructorDecl
-modifier|*
-name|D
-parameter_list|,
-name|CXXDtorType
-name|Type
 parameter_list|)
 function_decl|;
 name|void
@@ -2172,6 +2295,10 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|void
+name|EmitDeclMetadata
+parameter_list|()
+function_decl|;
 comment|/// MayDeferGeneration - Determine if the given decl can be emitted
 comment|/// lazily; this is only relevant for definitions. The given decl
 comment|/// must be either a function or var decl.
@@ -2185,11 +2312,14 @@ name|D
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace CodeGen
 end_comment
 

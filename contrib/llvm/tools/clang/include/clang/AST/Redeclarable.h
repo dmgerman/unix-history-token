@@ -393,6 +393,25 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Returns true if this is the first declaration.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isFirstDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RedeclLink
+operator|.
+name|NextIsLatest
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns the most recent (re)declaration of this declaration.
 end_comment
 

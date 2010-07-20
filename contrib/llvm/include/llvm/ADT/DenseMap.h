@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 

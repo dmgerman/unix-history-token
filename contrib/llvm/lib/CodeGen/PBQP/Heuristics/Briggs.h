@@ -78,12 +78,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../HeuristicSolver.h"
 end_include
 
@@ -1308,13 +1302,17 @@ return|return;
 name|EdgeData
 modifier|&
 name|ed
-name|ATTRIBUTE_UNUSED
 init|=
 name|getHeuristicEdgeData
 argument_list|(
 name|eItr
 argument_list|)
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ed
+expr_stmt|;
 name|assert
 argument_list|(
 name|ed

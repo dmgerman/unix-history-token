@@ -194,6 +194,12 @@ name|LongDoubleAlign
 decl_stmt|;
 name|unsigned
 name|char
+name|LargeArrayMinWidth
+decl_stmt|,
+name|LargeArrayAlign
+decl_stmt|;
+name|unsigned
+name|char
 name|LongWidth
 decl_stmt|,
 name|LongAlign
@@ -233,10 +239,20 @@ name|RegParmMax
 decl_stmt|,
 name|SSERegParmMax
 decl_stmt|;
+name|std
+operator|::
+name|string
+name|CXXABI
+expr_stmt|;
 name|unsigned
 name|HasAlignMac68kSupport
 range|:
 literal|1
+decl_stmt|;
+name|unsigned
+name|RealTypeUsesObjCFPRet
+range|:
+literal|3
 decl_stmt|;
 comment|// TargetInfo Constructor.  Default initializes all fields.
 name|TargetInfo
@@ -298,6 +314,18 @@ block|,
 name|SignedLongLong
 block|,
 name|UnsignedLongLong
+block|}
+enum|;
+enum|enum
+name|RealType
+block|{
+name|Float
+init|=
+literal|0
+block|,
+name|Double
+block|,
+name|LongDouble
 block|}
 enum|;
 name|protected
@@ -834,6 +862,26 @@ operator|*
 name|LongDoubleFormat
 return|;
 block|}
+comment|// getLargeArrayMinWidth/Align - Return the minimum array size that is
+comment|// 'large' and its alignment.
+name|unsigned
+name|getLargeArrayMinWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LargeArrayMinWidth
+return|;
+block|}
+name|unsigned
+name|getLargeArrayAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LargeArrayAlign
+return|;
+block|}
 comment|/// getIntMaxTWidth - Return the size of intmax_t and uintmax_t for this
 comment|/// target, in bits.
 name|unsigned
@@ -907,6 +955,26 @@ name|IntType
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief Check whether the given real type should use the "fpret" flavor of
+comment|/// Obj-C message passing on this target.
+name|bool
+name|useObjCFPRetForRealType
+argument_list|(
+name|RealType
+name|T
+argument_list|)
+decl|const
+block|{
+return|return
+name|RealTypeUsesObjCFPRet
+operator|&
+operator|(
+literal|1
+operator|<<
+name|T
+operator|)
+return|;
+block|}
 comment|///===---- Other target property query methods --------------------------===//
 comment|/// getTargetDefines - Appends the target-specific #define values for this
 comment|/// target set to the specified buffer.
@@ -1510,6 +1578,19 @@ return|return
 literal|""
 return|;
 block|}
+comment|/// getCXXABI - Get the C++ ABI in use.
+name|virtual
+name|llvm
+operator|::
+name|StringRef
+name|getCXXABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CXXABI
+return|;
+block|}
 comment|/// setCPU - Target the specific CPU.
 comment|///
 comment|/// \return - False on error (invalid CPU name).
@@ -1548,6 +1629,42 @@ argument_list|)
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// setCXXABI - Use this specific C++ ABI.
+comment|///
+comment|/// \return - False on error (invalid ABI name).
+name|virtual
+name|bool
+name|setCXXABI
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+if|if
+condition|(
+name|Name
+operator|!=
+literal|"itanium"
+operator|&&
+name|Name
+operator|!=
+literal|"microsoft"
+condition|)
+return|return
+name|false
+return|;
+name|CXXABI
+operator|=
+name|Name
+expr_stmt|;
+return|return
+name|true
 return|;
 block|}
 comment|/// setFeatureEnabled - Enable or disable a specific target feature,
@@ -1653,6 +1770,20 @@ block|{
 return|return
 operator|-
 literal|1
+return|;
+block|}
+comment|/// getStaticInitSectionSpecifier - Return the section to use for C++ static
+comment|/// initialization functions.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getStaticInitSectionSpecifier
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
 return|;
 block|}
 name|protected

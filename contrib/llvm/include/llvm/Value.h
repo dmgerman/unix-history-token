@@ -272,15 +272,12 @@ comment|/// printing behavior.
 name|virtual
 name|void
 name|printCustom
-argument_list|(
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|O
-argument_list|)
-decl|const
-decl_stmt|;
-name|public
-label|:
+parameter_list|)
+function_decl|const;
 name|Value
 argument_list|(
 argument|const Type *Ty
@@ -288,6 +285,8 @@ argument_list|,
 argument|unsigned scid
 argument_list|)
 empty_stmt|;
+name|public
+label|:
 name|virtual
 operator|~
 name|Value
@@ -656,7 +655,7 @@ block|,
 comment|// This is an instance of ConstantExpr
 name|ConstantAggregateZeroVal
 block|,
-comment|// This is an instance of ConstantAggregateNull
+comment|// This is an instance of ConstantAggregateZero
 name|ConstantIntVal
 block|,
 comment|// This is an instance of ConstantInt
@@ -779,6 +778,17 @@ name|V
 operator|->
 name|SubclassOptionalData
 expr_stmt|;
+block|}
+comment|/// hasValueHandle - Return true if there is a value handle associated with
+comment|/// this value.
+name|bool
+name|hasValueHandle
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasValueHandle
+return|;
 block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

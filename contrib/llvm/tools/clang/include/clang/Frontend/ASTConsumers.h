@@ -108,6 +108,9 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
+name|PCHReader
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -165,65 +168,6 @@ modifier|*
 name|CreateDeclContextPrinter
 parameter_list|()
 function_decl|;
-comment|// ObjC rewriter: attempts tp rewrite ObjC constructs into pure C code.
-comment|// This is considered experimental, and only works with Apple's ObjC runtime.
-name|ASTConsumer
-modifier|*
-name|CreateObjCRewriter
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InFile
-argument_list|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|,
-name|Diagnostic
-operator|&
-name|Diags
-argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LOpts
-argument_list|,
-name|bool
-name|SilenceRewriteMacroWarning
-argument_list|)
-decl_stmt|;
-comment|/// CreateHTMLPrinter - Create an AST consumer which rewrites source code to
-comment|/// HTML with syntax highlighting suitable for viewing in a web-browser.
-name|ASTConsumer
-modifier|*
-name|CreateHTMLPrinter
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|,
-name|Preprocessor
-operator|&
-name|PP
-argument_list|,
-name|bool
-name|SyntaxHighlight
-operator|=
-name|true
-argument_list|,
-name|bool
-name|HighlightMacros
-operator|=
-name|true
-argument_list|)
-decl_stmt|;
 comment|// PCH generator: generates a precompiled header file; this file can be used
 comment|// later with the PCHReader (clang -cc1 option -include-pch) to speed up compile
 comment|// times.
@@ -241,6 +185,10 @@ operator|::
 name|raw_ostream
 operator|*
 name|OS
+argument_list|,
+name|PCHReader
+operator|*
+name|Chain
 argument_list|,
 specifier|const
 name|char

@@ -512,6 +512,14 @@ function_decl|;
 name|public
 label|:
 name|PATypeHolder
+argument_list|()
+operator|:
+name|Ty
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|PATypeHolder
 argument_list|(
 specifier|const
 name|Type
@@ -547,14 +555,9 @@ operator|~
 name|PATypeHolder
 argument_list|()
 block|{
-if|if
-condition|(
-name|Ty
-condition|)
 name|dropRef
 argument_list|()
-expr_stmt|;
-block|}
+block|; }
 name|operator
 name|Type
 operator|*

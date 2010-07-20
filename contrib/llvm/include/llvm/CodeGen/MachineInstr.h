@@ -790,20 +790,6 @@ name|INLINEASM
 return|;
 block|}
 name|bool
-name|isExtractSubreg
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|EXTRACT_SUBREG
-return|;
-block|}
-name|bool
 name|isInsertSubreg
 argument_list|()
 specifier|const
@@ -843,6 +829,78 @@ operator|==
 name|TargetOpcode
 operator|::
 name|REG_SEQUENCE
+return|;
+block|}
+name|bool
+name|isCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|COPY
+return|;
+block|}
+comment|/// isCopyLike - Return true if the instruction behaves like a copy.
+comment|/// This does not include native copy instructions.
+name|bool
+name|isCopyLike
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCopy
+argument_list|()
+operator|||
+name|isSubregToReg
+argument_list|()
+return|;
+block|}
+comment|/// isIdentityCopy - Return true is the instruction is an identity copy.
+name|bool
+name|isIdentityCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isCopy
+argument_list|()
+operator|&&
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getReg
+argument_list|()
+operator|&&
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+operator|.
+name|getSubReg
+argument_list|()
+operator|==
+name|getOperand
+argument_list|(
+literal|1
+argument_list|)
+operator|.
+name|getSubReg
+argument_list|()
 return|;
 block|}
 comment|/// readsRegister - Return true if the MachineInstr reads the specified
@@ -1280,6 +1338,26 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
+comment|/// substituteRegister - Replace all occurrences of FromReg with ToReg:SubIdx,
+comment|/// properly composing subreg indices where necessary.
+name|void
+name|substituteRegister
+parameter_list|(
+name|unsigned
+name|FromReg
+parameter_list|,
+name|unsigned
+name|ToReg
+parameter_list|,
+name|unsigned
+name|SubIdx
+parameter_list|,
+specifier|const
+name|TargetRegisterInfo
+modifier|&
+name|RegInfo
+parameter_list|)
+function_decl|;
 comment|/// addRegisterKilled - We have determined MI kills a register. Look for the
 comment|/// operand that uses it and mark it as IsKill. If AddIfNotFound is true,
 comment|/// add a implicit operand if it's not found. Returns true if the operand
@@ -1338,6 +1416,25 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as dead
+comment|/// except those in the UsedRegs list.
+name|void
+name|setPhysRegsDeadExcept
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|UsedRegs
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+decl_stmt|;
 comment|/// isSafeToMove - Return true if it is safe to move this instruction. If
 comment|/// SawStore is set to true, it means that there is a store (or call) between
 comment|/// the instruction's location and its intended destination.

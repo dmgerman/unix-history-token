@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -224,6 +230,21 @@ modifier|&
 name|Prog
 parameter_list|)
 function_decl|;
+comment|/// \brief Get an Entity associated with a name in the global namespace.
+specifier|static
+name|Entity
+name|get
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Name
+argument_list|,
+name|Program
+operator|&
+name|Prog
+argument_list|)
+decl_stmt|;
 comment|/// \brief true if the Entity is not visible outside the trasnlation unit.
 name|bool
 name|isInternalToTU

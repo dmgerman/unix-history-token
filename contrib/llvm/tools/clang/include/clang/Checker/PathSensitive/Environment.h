@@ -357,11 +357,6 @@ argument_list|(
 name|Environment
 name|Env
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|S
-argument_list|,
 name|SymbolReaper
 operator|&
 name|SymReaper

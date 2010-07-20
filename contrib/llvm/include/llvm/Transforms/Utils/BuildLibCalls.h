@@ -144,6 +144,35 @@ operator|*
 name|TD
 argument_list|)
 decl_stmt|;
+comment|/// EmitStrNCmp - Emit a call to the strncmp function to the builder.
+name|Value
+modifier|*
+name|EmitStrNCmp
+argument_list|(
+name|Value
+operator|*
+name|Ptr1
+argument_list|,
+name|Value
+operator|*
+name|Ptr2
+argument_list|,
+name|Value
+operator|*
+name|Len
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+argument_list|)
+decl_stmt|;
 comment|/// EmitStrCpy - Emit a call to the strcpy function to the builder, for the
 comment|/// specified pointer arguments.
 name|Value

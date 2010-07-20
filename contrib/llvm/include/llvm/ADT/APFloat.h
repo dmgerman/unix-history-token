@@ -255,9 +255,7 @@ specifier|const
 name|fltSemantics
 operator|&
 argument_list|,
-specifier|const
 name|StringRef
-operator|&
 argument_list|)
 expr_stmt|;
 name|APFloat
@@ -772,9 +770,7 @@ function_decl|;
 name|opStatus
 name|convertFromString
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)
@@ -1270,9 +1266,7 @@ function_decl|;
 name|opStatus
 name|convertFromHexadecimalString
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)
@@ -1280,9 +1274,7 @@ function_decl|;
 name|opStatus
 name|convertFromDecimalString
 parameter_list|(
-specifier|const
 name|StringRef
-modifier|&
 parameter_list|,
 name|roundingMode
 parameter_list|)

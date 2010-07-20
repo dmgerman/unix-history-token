@@ -215,22 +215,19 @@ modifier|*
 name|createDeadMachineInstructionElimPass
 parameter_list|()
 function_decl|;
-comment|/// Creates a register allocator as the user specified on the command line.
+comment|/// Creates a register allocator as the user specified on the command line, or
+comment|/// picks one that matches OptLevel.
 comment|///
 name|FunctionPass
 modifier|*
 name|createRegisterAllocator
-parameter_list|()
-function_decl|;
-comment|/// LocalRegisterAllocation Pass - This pass register allocates the input code
-comment|/// a basic block at a time, yielding code better than the simple register
-comment|/// allocator, but not as good as a global allocator.
-comment|///
-name|FunctionPass
-modifier|*
-name|createLocalRegisterAllocator
-parameter_list|()
-function_decl|;
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+argument_list|)
+decl_stmt|;
 comment|/// FastRegisterAllocation Pass - This pass register allocates as fast as
 comment|/// possible. It is best suited for debug code where live ranges are short.
 comment|///
@@ -328,17 +325,6 @@ name|FunctionPass
 modifier|*
 name|createCodePlacementOptPass
 parameter_list|()
-function_decl|;
-comment|/// getRegisterAllocator - This creates an instance of the register allocator
-comment|/// for the Sparc.
-name|FunctionPass
-modifier|*
-name|getRegisterAllocator
-parameter_list|(
-name|TargetMachine
-modifier|&
-name|T
-parameter_list|)
 function_decl|;
 comment|/// IntrinsicLowering Pass - Performs target-independent LLVM IR
 comment|/// transformations for highly portable strategies.

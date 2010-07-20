@@ -488,7 +488,8 @@ operator|=
 name|Addr
 expr_stmt|;
 block|}
-comment|/// getPCLabelAddr - Retrieve the address of the PC label of the specified id.
+comment|/// getPCLabelAddr - Retrieve the address of the PC label of the
+comment|/// specified id.
 name|intptr_t
 name|getPCLabelAddr
 argument_list|(

@@ -280,7 +280,8 @@ return|;
 block|}
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
-comment|/// translations this ToolChain may wish to perform.
+comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain
+comment|/// specific translations are needed.
 comment|///
 comment|/// \param BoundArch - The bound architecture name, or 0.
 name|virtual
@@ -288,7 +289,8 @@ name|DerivedArgList
 modifier|*
 name|TranslateArgs
 argument_list|(
-name|InputArgList
+specifier|const
+name|DerivedArgList
 operator|&
 name|Args
 argument_list|,
@@ -298,9 +300,11 @@ operator|*
 name|BoundArch
 argument_list|)
 decl|const
-init|=
+block|{
+return|return
 literal|0
-decl_stmt|;
+return|;
+block|}
 comment|/// SelectTool - Choose a tool to use to handle the action \arg JA.
 name|virtual
 name|Tool
@@ -327,8 +331,6 @@ operator|::
 name|string
 name|GetFilePath
 argument_list|(
-argument|const Compilation&C
-argument_list|,
 argument|const char *Name
 argument_list|)
 specifier|const
@@ -338,8 +340,6 @@ operator|::
 name|string
 name|GetProgramPath
 argument_list|(
-argument|const Compilation&C
-argument_list|,
 argument|const char *Name
 argument_list|,
 argument|bool WantFile = false

@@ -1055,7 +1055,9 @@ name|NamedMDNode
 modifier|*
 name|getNamedMetadata
 argument_list|(
-name|StringRef
+specifier|const
+name|Twine
+operator|&
 name|Name
 argument_list|)
 decl|const
@@ -1825,7 +1827,8 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// Determine how many NamedMDNodes are in the Module's list of named metadata.
+comment|/// Determine how many NamedMDNodes are in the Module's list of named
+comment|/// metadata.
 name|size_t
 name|named_metadata_size
 argument_list|()

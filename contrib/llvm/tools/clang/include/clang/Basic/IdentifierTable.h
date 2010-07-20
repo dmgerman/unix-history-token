@@ -329,9 +329,7 @@ comment|// of the PTH file format here.
 comment|// The 'this' pointer really points to a
 comment|// std::pair<IdentifierInfo, const char*>, where internal pointer
 comment|// points to the external string data.
-return|return
-operator|(
-operator|(
+typedef|typedef
 name|std
 operator|::
 name|pair
@@ -342,6 +340,13 @@ specifier|const
 name|char
 operator|*
 operator|>
+name|actualtype
+expr_stmt|;
+return|return
+operator|(
+operator|(
+specifier|const
+name|actualtype
 operator|*
 operator|)
 name|this
@@ -372,13 +377,7 @@ comment|// of the PTH file format here.
 comment|// The 'this' pointer really points to a
 comment|// std::pair<IdentifierInfo, const char*>, where internal pointer
 comment|// points to the external string data.
-specifier|const
-name|char
-operator|*
-name|p
-operator|=
-operator|(
-operator|(
+typedef|typedef
 name|std
 operator|::
 name|pair
@@ -389,6 +388,17 @@ specifier|const
 name|char
 operator|*
 operator|>
+name|actualtype
+expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|p
+init|=
+operator|(
+operator|(
+specifier|const
+name|actualtype
 operator|*
 operator|)
 name|this
@@ -397,7 +407,7 @@ operator|->
 name|second
 operator|-
 literal|2
-expr_stmt|;
+decl_stmt|;
 return|return
 operator|(
 operator|(

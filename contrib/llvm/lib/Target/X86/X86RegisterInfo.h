@@ -293,21 +293,6 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-comment|/// getCalleeSavedRegClasses - Return a null-terminated list of the preferred
-comment|/// register classes to spill each callee-saved register with.  The order and
-comment|/// length of this list match the getCalleeSavedRegs() list.
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF =
-literal|0
-argument_list|)
-specifier|const
-block|;
 comment|/// getReservedRegs - Returns a bitset indexed by physical register number
 comment|/// indicating if a register is a special register that has particular uses and
 comment|/// should be considered unavailable at all times, e.g. SP, RA. This is used by

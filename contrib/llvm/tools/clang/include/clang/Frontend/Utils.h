@@ -232,36 +232,6 @@ operator|&
 name|Opts
 argument_list|)
 decl_stmt|;
-comment|/// RewriteMacrosInInput - Implement -rewrite-macros mode.
-name|void
-name|RewriteMacrosInInput
-argument_list|(
-name|Preprocessor
-operator|&
-name|PP
-argument_list|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|)
-decl_stmt|;
-comment|/// RewriteMacrosInInput - A simple test for the TokenRewriter class.
-name|void
-name|DoRewriteTest
-argument_list|(
-name|Preprocessor
-operator|&
-name|PP
-argument_list|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|)
-decl_stmt|;
 comment|/// CreatePrintParserActionsAction - Return the actions implementation that
 comment|/// implements the -parse-print-callbacks option.
 name|MinimalAction

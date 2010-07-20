@@ -797,11 +797,9 @@ name|DirectoryEntry
 modifier|*
 name|getDirectory
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|StringRef
-operator|&
 name|Filename
 argument_list|)
 block|{
@@ -844,11 +842,9 @@ name|FileEntry
 modifier|*
 name|getFile
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|StringRef
-operator|&
 name|Filename
 argument_list|)
 block|{
@@ -891,11 +887,9 @@ name|FileEntry
 modifier|*
 name|getVirtualFile
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|StringRef
-operator|&
 name|Filename
 argument_list|,
 name|off_t

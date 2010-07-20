@@ -79,6 +79,9 @@ name|class
 name|CalleeSavedInfo
 decl_stmt|;
 name|class
+name|InstrItineraryData
+decl_stmt|;
+name|class
 name|LiveVariables
 decl_stmt|;
 name|class
@@ -95,6 +98,9 @@ name|MCInst
 decl_stmt|;
 name|class
 name|SDNode
+decl_stmt|;
+name|class
+name|ScheduleHazardRecognizer
 decl_stmt|;
 name|class
 name|SelectionDAG
@@ -419,40 +425,6 @@ name|true
 return|;
 if|if
 condition|(
-name|MI
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|EXTRACT_SUBREG
-operator|&&
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-operator|==
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-literal|1
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
 operator|(
 name|MI
 operator|.
@@ -657,6 +629,9 @@ return|;
 block|}
 comment|/// reMaterialize - Re-issue the specified 'original' instruction at the
 comment|/// specific location targeting a new destination register.
+comment|/// The register in Orig->getOperand(0).getReg() will be substituted by
+comment|/// DestReg:SubIdx. Any existing subreg index is preserved or composed with
+comment|/// SubIdx.
 name|virtual
 name|void
 name|reMaterialize
@@ -683,13 +658,36 @@ name|Orig
 argument_list|,
 specifier|const
 name|TargetRegisterInfo
-operator|*
+operator|&
 name|TRI
 argument_list|)
 decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// scheduleTwoAddrSource - Schedule the copy / re-mat of the source of the
+comment|/// two-addrss instruction inserted by two-address pass.
+name|virtual
+name|void
+name|scheduleTwoAddrSource
+argument_list|(
+name|MachineInstr
+operator|*
+name|SrcMI
+argument_list|,
+name|MachineInstr
+operator|*
+name|UseMI
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|TRI
+argument_list|)
+decl|const
+block|{
+comment|// Do nothing.
+block|}
 comment|/// duplicate - Create a duplicate of the Orig instruction in MF. This is like
 comment|/// MachineFunction::CloneMachineInstr(), but the target may update operands
 comment|/// that are required to be unique.
@@ -749,18 +747,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// commuteInstruction - If a target has any instructions that are commutable,
-comment|/// but require converting to a different instruction or making non-trivial
-comment|/// changes to commute them, this method can overloaded to do this.  The
-comment|/// default implementation of this method simply swaps the first two operands
-comment|/// of MI and returns it.
-comment|///
-comment|/// If a target wants to make more aggressive changes, they can construct and
-comment|/// return a new machine instruction.  If an instruction cannot commute, it
-comment|/// can also return null.
-comment|///
-comment|/// If NewMI is true, then a new machine instruction must be created.
-comment|///
+comment|/// commuteInstruction - If a target has any instructions that are
+comment|/// commutable but require converting to different instructions or making
+comment|/// non-trivial changes to commute them, this method can overloaded to do
+comment|/// that.  The default implementation simply swaps the commutable operands.
+comment|/// If NewMI is false, MI is modified in place and returned; otherwise, a
+comment|/// new machine instruction is created and returned.  Do not call this
+comment|/// method for a non-commutable instruction, but there may be some cases
+comment|/// where this method fails and returns null.
 name|virtual
 name|MachineInstr
 modifier|*
@@ -780,7 +774,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// findCommutedOpIndices - If specified MI is commutable, return the two
-comment|/// operand indices that would swap value. Return true if the instruction
+comment|/// operand indices that would swap value. Return false if the instruction
 comment|/// is not in a form which this routine understands.
 name|virtual
 name|bool
@@ -941,6 +935,9 @@ name|MachineOperand
 operator|>
 operator|&
 name|Cond
+argument_list|,
+name|DebugLoc
+name|DL
 argument_list|)
 decl|const
 block|{
@@ -955,12 +952,119 @@ return|return
 literal|0
 return|;
 block|}
-comment|/// copyRegToReg - Emit instructions to copy between a pair of registers. It
-comment|/// returns false if the target does not how to copy between the specified
-comment|/// registers.
+comment|/// ReplaceTailWithBranchTo - Delete the instruction OldInst and everything
+comment|/// after it, replacing it with an unconditional branch to NewDest. This is
+comment|/// used by the tail merging pass.
+name|virtual
+name|void
+name|ReplaceTailWithBranchTo
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|Tail
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|NewDest
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
+comment|/// block at the specified instruction (i.e. instruction would be the start
+comment|/// of a new basic block).
 name|virtual
 name|bool
-name|copyRegToReg
+name|isLegalToSplitMBBAt
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|MBBI
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// isProfitableToIfCvt - Return true if it's profitable to first "NumInstrs"
+comment|/// of the specified basic block.
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|unsigned
+name|NumInstrs
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isProfitableToIfCvt - Second variant of isProfitableToIfCvt, this one
+comment|/// checks for the case where two basic blocks from true and false path
+comment|/// of a if-then-else (diamond) are predicated on mutally exclusive
+comment|/// predicates.
+name|virtual
+name|bool
+name|isProfitableToIfCvt
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|TMBB
+argument_list|,
+name|unsigned
+name|NumTInstrs
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|FMBB
+argument_list|,
+name|unsigned
+name|NumFInstrs
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isProfitableToDupForIfCvt - Return true if it's profitable for
+comment|/// if-converter to duplicate a specific number of instructions in the
+comment|/// specified MBB to enable if-conversion.
+name|virtual
+name|bool
+name|isProfitableToDupForIfCvt
+argument_list|(
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|,
+name|unsigned
+name|NumInstrs
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// copyPhysReg - Emit instructions to copy a pair of physical registers.
+name|virtual
+name|void
+name|copyPhysReg
 argument_list|(
 name|MachineBasicBlock
 operator|&
@@ -971,24 +1075,17 @@ operator|::
 name|iterator
 name|MI
 argument_list|,
+name|DebugLoc
+name|DL
+argument_list|,
 name|unsigned
 name|DestReg
 argument_list|,
 name|unsigned
 name|SrcReg
 argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|DestRC
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|SrcRC
-argument_list|,
-name|DebugLoc
-name|DL
+name|bool
+name|KillSrc
 argument_list|)
 decl|const
 block|{
@@ -996,12 +1093,9 @@ name|assert
 argument_list|(
 literal|0
 operator|&&
-literal|"Target didn't implement TargetInstrInfo::copyRegToReg!"
+literal|"Target didn't implement TargetInstrInfo::copyPhysReg!"
 argument_list|)
 expr_stmt|;
-return|return
-name|false
-return|;
 block|}
 comment|/// storeRegToStackSlot - Store the specified register of the given register
 comment|/// class to the specified stack frame index. The store instruction is to be
@@ -1209,19 +1303,16 @@ block|}
 comment|/// foldMemoryOperand - Attempt to fold a load or store of the specified stack
 comment|/// slot into the specified machine instruction for the specified operand(s).
 comment|/// If this is possible, a new instruction is returned with the specified
-comment|/// operand folded, otherwise NULL is returned. The client is responsible for
-comment|/// removing the old instruction and adding the new one in the instruction
-comment|/// stream.
+comment|/// operand folded, otherwise NULL is returned.
+comment|/// The new instruction is inserted before MI, and the client is responsible
+comment|/// for removing the old instruction.
 name|MachineInstr
 modifier|*
 name|foldMemoryOperand
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineInstr
-operator|*
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|MI
 argument_list|,
 specifier|const
@@ -1244,12 +1335,9 @@ name|MachineInstr
 modifier|*
 name|foldMemoryOperand
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineInstr
-operator|*
+name|MachineBasicBlock
+operator|::
+name|iterator
 name|MI
 argument_list|,
 specifier|const
@@ -1357,11 +1445,9 @@ operator|&
 name|Ops
 argument_list|)
 decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
+init|=
+literal|0
+decl_stmt|;
 comment|/// unfoldMemoryOperand - Separate a single instruction which folded a load or
 comment|/// a store or a load and a store into two or more instruction. If this is
 comment|/// possible, returns true as well as the new instructions by reference.
@@ -1719,6 +1805,32 @@ return|return
 name|true
 return|;
 block|}
+comment|/// isSchedulingBoundary - Test if the given instruction should be
+comment|/// considered a scheduling boundary. This primarily includes labels and
+comment|/// terminators.
+name|virtual
+name|bool
+name|isSchedulingBoundary
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// GetInstSize - Returns the size of the specified Instruction.
 comment|///
 name|virtual
@@ -1777,6 +1889,22 @@ name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer
+comment|/// to use for this target when scheduling the machine instructions after
+comment|/// register allocation.
+name|virtual
+name|ScheduleHazardRecognizer
+modifier|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|&
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of
@@ -1808,6 +1936,16 @@ block|{}
 name|public
 operator|:
 name|virtual
+name|void
+name|ReplaceTailWithBranchTo
+argument_list|(
+argument|MachineBasicBlock::iterator OldInst
+argument_list|,
+argument|MachineBasicBlock *NewDest
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|MachineInstr
 operator|*
 name|commuteInstruction
@@ -1827,6 +1965,16 @@ argument_list|,
 argument|unsigned&SrcOpIdx1
 argument_list|,
 argument|unsigned&SrcOpIdx2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|canFoldMemoryOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
 block|;
@@ -1854,7 +2002,7 @@ argument|unsigned SubReg
 argument_list|,
 argument|const MachineInstr *Orig
 argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
 block|;
@@ -1880,10 +2028,31 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|bool
+name|isSchedulingBoundary
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|unsigned
 name|GetFunctionSizeInBytes
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData&
 argument_list|)
 specifier|const
 block|; }

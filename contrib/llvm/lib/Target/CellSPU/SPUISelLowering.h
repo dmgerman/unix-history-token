@@ -474,8 +474,6 @@ argument|SDValue Op
 argument_list|,
 argument|char ConstraintLetter
 argument_list|,
-argument|bool hasMemory
-argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
 argument|SelectionDAG&DAG
@@ -555,6 +553,8 @@ argument|bool&isTailCall
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
 argument|DebugLoc dl
@@ -576,6 +576,8 @@ argument_list|,
 argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|DebugLoc dl
 argument_list|,

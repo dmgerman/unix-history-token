@@ -200,24 +200,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-comment|//! Frame size required to spill all registers plus frame info
-specifier|static
-name|int
-name|fullSpillSize
-argument_list|()
-block|{
-return|return
-operator|(
-name|SPURegisterInfo
-operator|::
-name|getNumArgRegs
-argument_list|()
-operator|*
-name|stackSlotSize
-argument_list|()
-operator|)
-return|;
-block|}
 comment|//! Convert frame index to stack offset
 specifier|static
 name|int

@@ -228,6 +228,8 @@ block|,
 name|Win32
 block|,
 name|Haiku
+block|,
+name|Minix
 block|}
 enum|;
 name|private
@@ -801,11 +803,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getArchNameForAssembler - Get an architecture name that is understood by the
+comment|/// getArchNameForAssembler - Get an architecture name that is understood by
 end_comment
 
 begin_comment
-comment|/// target assembler.
+comment|/// the target assembler.
 end_comment
 
 begin_function_decl

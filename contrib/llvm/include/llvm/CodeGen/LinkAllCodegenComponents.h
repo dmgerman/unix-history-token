@@ -139,14 +139,6 @@ name|void
 operator|)
 name|llvm
 operator|::
-name|createLocalRegisterAllocator
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|llvm
-operator|::
 name|createFastRegisterAllocator
 argument_list|()
 expr_stmt|;

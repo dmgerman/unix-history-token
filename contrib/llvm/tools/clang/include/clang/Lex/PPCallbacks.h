@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -207,6 +213,22 @@ name|std
 operator|::
 name|string
 operator|&
+name|Str
+argument_list|)
+block|{   }
+comment|/// PragmaMessage - This callback is invoked when a #pragma message directive
+comment|/// is read.
+comment|///
+name|virtual
+name|void
+name|PragmaMessage
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
 name|Str
 argument_list|)
 block|{   }
@@ -447,6 +469,33 @@ argument_list|(
 name|Loc
 argument_list|,
 name|Kind
+argument_list|,
+name|Str
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaMessage
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Str
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaMessage
+argument_list|(
+name|Loc
+argument_list|,
+name|Str
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaMessage
+argument_list|(
+name|Loc
 argument_list|,
 name|Str
 argument_list|)

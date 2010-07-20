@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Pass
+decl_stmt|;
+name|class
 name|BasicBlock
 decl_stmt|;
 name|class
@@ -1150,6 +1153,17 @@ modifier|*
 name|fromMBB
 parameter_list|)
 function_decl|;
+comment|/// transferSuccessorsAndUpdatePHIs - Transfers all the successors, as
+comment|/// in transferSuccessors, and update PHI operands in the successor blocks
+comment|/// which refer to fromMBB to refer to this.
+name|void
+name|transferSuccessorsAndUpdatePHIs
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|fromMBB
+parameter_list|)
+function_decl|;
 comment|/// isSuccessor - Return true if the specified MBB is a successor of this
 comment|/// block.
 name|bool
@@ -1185,12 +1199,40 @@ name|bool
 name|canFallThrough
 parameter_list|()
 function_decl|;
+comment|/// Returns a pointer to the first instructon in this block that is not a
+comment|/// PHINode instruction. When adding instruction to the beginning of the
+comment|/// basic block, they should be added before the returned value, not before
+comment|/// the first instruction, which might be PHI.
+comment|/// Returns end() is there's no non-PHI instruction.
+name|iterator
+name|getFirstNonPHI
+parameter_list|()
+function_decl|;
 comment|/// getFirstTerminator - returns an iterator to the first terminator
 comment|/// instruction of this basic block. If a terminator does not exist,
 comment|/// it returns end()
 name|iterator
 name|getFirstTerminator
 parameter_list|()
+function_decl|;
+comment|/// SplitCriticalEdge - Split the critical edge from this block to the
+comment|/// given successor block, and return the newly created block, or null
+comment|/// if splitting is not possible.
+comment|///
+comment|/// This function updates LiveVariables, MachineDominatorTree, and
+comment|/// MachineLoopInfo, as applicable.
+name|MachineBasicBlock
+modifier|*
+name|SplitCriticalEdge
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|Succ
+parameter_list|,
+name|Pass
+modifier|*
+name|P
+parameter_list|)
 function_decl|;
 name|void
 name|pop_front

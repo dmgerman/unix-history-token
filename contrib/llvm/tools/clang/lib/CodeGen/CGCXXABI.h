@@ -108,6 +108,15 @@ modifier|&
 name|CGM
 parameter_list|)
 function_decl|;
+name|CXXABI
+modifier|*
+name|CreateMicrosoftCXXABI
+parameter_list|(
+name|CodeGenModule
+modifier|&
+name|CGM
+parameter_list|)
+function_decl|;
 block|}
 block|}
 end_decl_stmt

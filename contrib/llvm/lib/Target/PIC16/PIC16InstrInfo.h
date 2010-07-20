@@ -186,22 +186,20 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|copyRegToReg
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MBBI
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|DebugLoc DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
@@ -232,6 +230,8 @@ argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;

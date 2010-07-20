@@ -205,49 +205,6 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
-comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at the
-comment|/// instruction before ScanFrom) checking to see if we have the value at the
-comment|/// memory address *Ptr locally available within a small number of instructions.
-comment|/// If the value is available, return it.
-comment|///
-comment|/// If not, return the iterator for the last validated instruction that the
-comment|/// value would be live through.  If we scanned the entire block and didn't find
-comment|/// something that invalidates *Ptr or provides it, ScanFrom would be left at
-comment|/// begin() and this returns null.  ScanFrom could also be left
-comment|///
-comment|/// MaxInstsToScan specifies the maximum instructions to scan in the block.  If
-comment|/// it is set to 0, it will scan the whole block. You can also optionally
-comment|/// specify an alias analysis implementation, which makes this more precise.
-name|Value
-modifier|*
-name|FindAvailableLoadedValue
-argument_list|(
-name|Value
-operator|*
-name|Ptr
-argument_list|,
-name|BasicBlock
-operator|*
-name|ScanBB
-argument_list|,
-name|BasicBlock
-operator|::
-name|iterator
-operator|&
-name|ScanFrom
-argument_list|,
-name|unsigned
-name|MaxInstsToScan
-operator|=
-literal|6
-argument_list|,
-name|AliasAnalysis
-operator|*
-name|AA
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
 comment|/// FindFunctionBackedges - Analyze the specified function to find all of the
 comment|/// loop backedges in the function and return them.  This is a relatively cheap
 comment|/// (compared to computing dominators and loop info) analysis.

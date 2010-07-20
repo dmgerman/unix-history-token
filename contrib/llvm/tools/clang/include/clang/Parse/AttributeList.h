@@ -328,6 +328,8 @@ name|AT_weak_import
 block|,
 name|AT_reqd_wg_size
 block|,
+name|AT_init_priority
+block|,
 name|IgnoredAttribute
 block|,
 name|UnknownAttribute

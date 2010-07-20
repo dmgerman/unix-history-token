@@ -355,26 +355,26 @@ argument_list|,
 argument|MachineBasicBlock *FBB
 argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|copyRegToReg
+name|void
+name|copyPhysReg
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|DebugLoc DL
 argument_list|,
 argument|unsigned DestReg
 argument_list|,
 argument|unsigned SrcReg
 argument_list|,
-argument|const TargetRegisterClass *DestRC
-argument_list|,
-argument|const TargetRegisterClass *SrcRC
-argument_list|,
-argument|DebugLoc DL
+argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
@@ -430,52 +430,6 @@ argument_list|,
 argument|const MDNode *MDPtr
 argument_list|,
 argument|DebugLoc DL
-argument_list|)
-specifier|const
-block|;
-comment|/// foldMemoryOperand - PowerPC (like most RISC's) can only fold spills into
-comment|/// copy instructions, turning them into load/store instructions.
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|int FrameIndex
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|MachineInstr
-operator|*
-name|foldMemoryOperandImpl
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineInstr* MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
-argument_list|,
-argument|MachineInstr* LoadMI
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-argument|const MachineInstr *MI
-argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
 block|;

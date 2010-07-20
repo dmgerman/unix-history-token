@@ -439,28 +439,6 @@ comment|///
 name|ModRefResult
 name|ModRefInfo
 decl_stmt|;
-comment|/// AccessType - Specific fine-grained access information for the argument.
-comment|/// If none of these classifications is general enough, the
-comment|/// getModRefBehavior method should not return AccessesArguments*.  If a
-comment|/// record is not returned for a particular argument, the argument is never
-comment|/// dead and never dereferenced.
-enum|enum
-name|AccessType
-block|{
-comment|/// ScalarAccess - The pointer is dereferenced.
-comment|///
-name|ScalarAccess
-block|,
-comment|/// ArrayAccess - The pointer is indexed through as an array of elements.
-comment|///
-name|ArrayAccess
-block|,
-comment|/// ElementAccess ?? P->F only?
-comment|/// CallsThrough - Indirect calls are made through the specified function
-comment|/// pointer.
-name|CallsThrough
-block|}
-enum|;
 block|}
 struct|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.

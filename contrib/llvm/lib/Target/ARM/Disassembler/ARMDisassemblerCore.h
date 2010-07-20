@@ -379,7 +379,7 @@ specifier|inline
 name|bool
 name|isUnaryDP
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -400,7 +400,7 @@ specifier|inline
 name|unsigned
 name|getAddrMode
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -422,7 +422,7 @@ specifier|inline
 name|unsigned
 name|getIndexMode
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{
@@ -446,7 +446,7 @@ specifier|inline
 name|bool
 name|isPrePostLdSt
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|TSFlags
 parameter_list|)
 block|{

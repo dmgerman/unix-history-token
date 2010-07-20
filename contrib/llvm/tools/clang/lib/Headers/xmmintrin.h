@@ -3293,7 +3293,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* FIXME: We have to #define this because "sel" must be a constant integer, and     Sema doesn't do any form of constant propagation yet. */
+comment|/* FIXME: We have to #define this because "sel" must be a constant integer, and    Sema doesn't do any form of constant propagation yet. */
 end_comment
 
 begin_define
@@ -3305,7 +3305,7 @@ name|a
 parameter_list|,
 name|sel
 parameter_list|)
-value|(__builtin_prefetch((void *)a, 0, sel))
+value|(__builtin_prefetch((void *)(a), 0, sel))
 end_define
 
 begin_decl_stmt
@@ -3967,7 +3967,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|(__builtin_shufflevector((__v4sf)a, (__v4sf)b, \                                  (mask)& 0x3, ((mask)& 0xc)>> 2, \                                  (((mask)& 0x30)>> 4) + 4, \                                  (((mask)& 0xc0)>> 6) + 4))
+value|(__builtin_shufflevector((__v4sf)(a), (__v4sf)(b),                \                                  (mask)& 0x3, ((mask)& 0xc)>> 2, \                                  (((mask)& 0x30)>> 4) + 4, \                                  (((mask)& 0xc0)>> 6) + 4))
 end_define
 
 begin_decl_stmt
