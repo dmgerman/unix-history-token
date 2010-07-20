@@ -2683,7 +2683,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Privilege check interfaces, modeled after historic suser() interfacs, but  * with the addition of a specific privilege name.  No flags are currently  * defined for the API.  Historically, flags specified using the real uid  * instead of the effective uid, and whether or not the check should be  * allowed in jail.  */
+comment|/*  * Privilege check interfaces, modeled after historic suser() interfaces, but  * with the addition of a specific privilege name.  No flags are currently  * defined for the API.  Historically, flags specified using the real uid  * instead of the effective uid, and whether or not the check should be  * allowed in jail.  */
 end_comment
 
 begin_struct_decl
