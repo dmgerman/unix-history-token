@@ -4224,6 +4224,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|msi
+operator|=
+literal|0
+expr_stmt|;
 name|ctlr
 operator|->
 name|r_irq_rid
@@ -4264,6 +4268,15 @@ argument_list|,
 literal|"unable to map interrupt\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msi
+condition|)
+name|pci_release_msi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -4295,12 +4308,35 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* SOS XXX release r_irq */
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"unable to setup interrupt\n"
+argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+name|ctlr
+operator|->
+name|r_irq_rid
+argument_list|,
+name|ctlr
+operator|->
+name|r_irq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msi
+condition|)
+name|pci_release_msi
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
