@@ -2848,6 +2848,8 @@ literal|1024
 expr_stmt|;
 name|hirunningspace
 operator|=
+name|lmax
+argument_list|(
 name|lmin
 argument_list|(
 name|roundup
@@ -2865,20 +2867,11 @@ literal|1024
 operator|*
 literal|1024
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hirunningspace
-operator|<
+argument_list|,
 literal|1024
 operator|*
 literal|1024
-condition|)
-name|hirunningspace
-operator|=
-literal|1024
-operator|*
-literal|1024
+argument_list|)
 expr_stmt|;
 comment|/*  * Limit the amount of malloc memory since it is wired permanently into  * the kernel space.  Even though this is accounted for in the buffer  * allocation, we don't want the malloced region to grow uncontrolled.  * The malloc scheme improves memory utilization significantly on average  * (small) directories.  */
 name|maxbufmallocspace
