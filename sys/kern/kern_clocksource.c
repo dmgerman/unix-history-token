@@ -1341,6 +1341,8 @@ condition|)
 block|{
 name|div
 operator|=
+name|lmax
+argument_list|(
 operator|(
 name|et
 operator|->
@@ -1352,6 +1354,9 @@ literal|2
 operator|)
 operator|/
 name|freq
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1412,7 +1417,7 @@ if|if
 condition|(
 name|et
 operator|->
-name|et_max_period
+name|et_min_period
 operator|.
 name|frac
 operator|!=
@@ -1818,6 +1823,12 @@ literal|64
 argument_list|)
 expr_stmt|;
 block|}
+name|tick
+operator|=
+literal|1000000
+operator|/
+name|hz
+expr_stmt|;
 name|ET_LOCK
 argument_list|()
 expr_stmt|;

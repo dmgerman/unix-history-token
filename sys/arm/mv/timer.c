@@ -768,9 +768,9 @@ name|frac
 operator|=
 operator|(
 operator|(
-literal|0xfLL
+literal|0x00000002LLU
 operator|<<
-literal|60
+literal|32
 operator|)
 operator|/
 name|sc
@@ -780,7 +780,7 @@ operator|.
 name|et_frequency
 operator|)
 operator|<<
-literal|4
+literal|32
 expr_stmt|;
 name|sc
 operator|->
@@ -790,7 +790,7 @@ name|et_max_period
 operator|.
 name|sec
 operator|=
-literal|0xfffffff0
+literal|0xfffffff0U
 operator|/
 name|sc
 operator|->
@@ -808,7 +808,7 @@ name|frac
 operator|=
 operator|(
 operator|(
-literal|0xfffffff0LL
+literal|0xfffffffeLLU
 operator|<<
 literal|32
 operator|)

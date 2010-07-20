@@ -1100,7 +1100,7 @@ name|et_min_period
 operator|.
 name|frac
 operator|=
-literal|0x0008LL
+literal|0x0008LLU
 operator|<<
 literal|48
 expr_stmt|;
@@ -1122,7 +1122,7 @@ name|et_max_period
 operator|.
 name|frac
 operator|=
-literal|0x8000LL
+literal|0x8000LLU
 operator|<<
 literal|48
 expr_stmt|;

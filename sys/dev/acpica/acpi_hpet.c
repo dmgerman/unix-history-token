@@ -3497,7 +3497,7 @@ name|et_min_period
 operator|.
 name|frac
 operator|=
-literal|0x00004000LL
+literal|0x00004000LLU
 operator|<<
 literal|32
 expr_stmt|;
@@ -3509,7 +3509,7 @@ name|et_max_period
 operator|.
 name|sec
 operator|=
-literal|0xffffffff
+literal|0xfffffffeLLU
 operator|/
 name|sc
 operator|->
@@ -3525,7 +3525,7 @@ name|frac
 operator|=
 operator|(
 operator|(
-literal|0xffffffffLL
+literal|0xfffffffeLLU
 operator|<<
 literal|32
 operator|)

@@ -2835,15 +2835,15 @@ name|frac
 operator|=
 operator|(
 operator|(
-literal|1LL
+literal|0x0002LLU
 operator|<<
-literal|62
+literal|48
 operator|)
 operator|/
 name|i8254_freq
 operator|)
 operator|<<
-literal|2
+literal|16
 expr_stmt|;
 name|sc
 operator|->
@@ -2867,7 +2867,7 @@ name|frac
 operator|=
 operator|(
 operator|(
-literal|0xffffLL
+literal|0xfffeLLU
 operator|<<
 literal|48
 operator|)
