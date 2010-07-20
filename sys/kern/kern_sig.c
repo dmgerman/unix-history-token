@@ -10639,7 +10639,9 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"tdsignal(): invalid signal %d"
+literal|"%s(): invalid signal %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|sig
 argument_list|)
@@ -10657,7 +10659,9 @@ name|ksi
 argument_list|)
 argument_list|,
 operator|(
-literal|"tdsignal: ksi on queue"
+literal|"%s: ksi on queue"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
