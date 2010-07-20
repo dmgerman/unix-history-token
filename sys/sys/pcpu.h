@@ -332,10 +332,30 @@ directive|define
 name|DPCPU_SUM
 parameter_list|(
 name|n
+parameter_list|)
+value|__extension__					\ ({									\ 	u_int _i;							\ 	__typeof(*DPCPU_PTR(n)) sum;					\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += *DPCPU_ID_PTR(_i, n);				\ 	}								\ 	sum;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_VARSUM
+parameter_list|(
+name|n
 parameter_list|,
 name|var
 parameter_list|)
-value|__extension__					\ ({									\ 	u_int _i;							\ 	__typeof((DPCPU_PTR(n))->var) sum;				\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += (DPCPU_ID_PTR(_i, n))->var;			\ 	}								\ 	sum;								\ })
+value|__extension__				\ ({									\ 	u_int _i;							\ 	__typeof((DPCPU_PTR(n))->var) sum;				\ 									\ 	sum = 0;							\ 	CPU_FOREACH(_i) {						\ 		sum += (DPCPU_ID_PTR(_i, n))->var;			\ 	}								\ 	sum;								\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_ZERO
+parameter_list|(
+name|n
+parameter_list|)
+value|do {						\ 	u_int _i;							\ 									\ 	CPU_FOREACH(_i) {						\ 		bzero(DPCPU_ID_PTR(_i, n), sizeof(*DPCPU_PTR(n)));	\ 	}								\ } while(0)
 end_define
 
 begin_comment
