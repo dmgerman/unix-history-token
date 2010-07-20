@@ -172,6 +172,10 @@ define|#
 directive|define
 name|ET_FLAGS_C3STOP
 value|8
+define|#
+directive|define
+name|ET_FLAGS_POW2DIV
+value|16
 name|int
 name|et_quality
 decl_stmt|;
@@ -183,6 +187,14 @@ name|u_int64_t
 name|et_frequency
 decl_stmt|;
 comment|/* Base frequency in Hz. */
+name|struct
+name|bintime
+name|et_min_period
+decl_stmt|;
+name|struct
+name|bintime
+name|et_max_period
+decl_stmt|;
 name|et_start_t
 modifier|*
 name|et_start
