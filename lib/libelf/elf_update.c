@@ -3714,6 +3714,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|newfile
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -3721,10 +3726,6 @@ operator|)
 return|;
 name|error
 label|:
-if|if
-condition|(
-name|newfile
-condition|)
 name|free
 argument_list|(
 name|newfile
