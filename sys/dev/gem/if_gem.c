@@ -806,7 +806,7 @@ begin_define
 define|#
 directive|define
 name|KTR_GEM
-value|KTR_CT2
+value|KTR_SPARE2
 end_define
 
 begin_endif

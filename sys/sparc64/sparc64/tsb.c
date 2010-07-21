@@ -512,7 +512,7 @@ condition|)
 block|{
 name|CTR5
 argument_list|(
-name|KTR_CT2
+name|KTR_SPARE2
 argument_list|,
 literal|"tsb_tte_enter: off colour va=%#lx pa=%#lx o=%p ot=%d pi=%#lx"
 argument_list|,
