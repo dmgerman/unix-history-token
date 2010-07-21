@@ -243,7 +243,7 @@ argument_list|,
 literal|"Event timer capabilities"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_QUAD
 argument_list|(
 name|NULL
 argument_list|,
@@ -266,8 +266,6 @@ name|et
 operator|->
 name|et_frequency
 operator|)
-argument_list|,
-literal|0
 argument_list|,
 literal|"Event timer base frequency"
 argument_list|)
