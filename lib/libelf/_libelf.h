@@ -673,6 +673,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_libelf_load_scn
+parameter_list|(
+name|Elf
+modifier|*
+name|e
+parameter_list|,
+name|void
+modifier|*
+name|ehdr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_libelf_malign
 parameter_list|(
 name|Elf_Type
