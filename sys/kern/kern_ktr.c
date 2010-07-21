@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|KTR_MASK
-value|(KTR_GEN)
+value|(0)
 end_define
 
 begin_endif
