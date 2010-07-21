@@ -491,8 +491,14 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * we support 1 free list:  *  *	- DEFAULT for all systems  */
+comment|/*  * we support 2 free lists:  *  *	- DEFAULT for direct mapped (KSEG0) pages.  *	  Note: This usage of DEFAULT may be misleading because we use  *	  DEFAULT for allocating direct mapped pages. The normal page  *	  allocations use HIGHMEM if available, and then DEFAULT.   *	- HIGHMEM for other pages   */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
 
 begin_define
 define|#
@@ -507,6 +513,51 @@ directive|define
 name|VM_FREELIST_DEFAULT
 value|0
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_NFREELIST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DEFAULT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_HIGHMEM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DIRECT
+value|VM_FREELIST_DEFAULT
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_HIGHMEM_ADDRESS
+value|((vm_paddr_t)0x20000000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The largest allocation size is 1MB.  */
