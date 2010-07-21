@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ELF_T_LAST
-value|ELF_T_XWORD
+value|ELF_T_GNUHASH
 end_define
 
 begin_comment
