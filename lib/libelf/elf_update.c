@@ -1666,7 +1666,7 @@ name|EC
 parameter_list|,
 name|V
 parameter_list|)
-value|do {					\ 		(E)->e_ident[EI_MAG0] = ELFMAG0;			\ 		(E)->e_ident[EI_MAG1] = ELFMAG1;			\ 		(E)->e_ident[EI_MAG2] = ELFMAG2;			\ 		(E)->e_ident[EI_MAG3] = ELFMAG3;			\ 		(E)->e_ident[EI_CLASS] = (EC);				\ 		(E)->e_ident[EI_VERSION] = (V);				\ 		(E)->e_ehsize = _libelf_fsize(ELF_T_EHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_phentsize = _libelf_fsize(ELF_T_PHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_shentsize = _libelf_fsize(ELF_T_SHDR, (EC), (V),	\ 		    (size_t) 1);					\ 	} while (0)
+value|do {					\ 		(E)->e_ident[EI_MAG0] = ELFMAG0;			\ 		(E)->e_ident[EI_MAG1] = ELFMAG1;			\ 		(E)->e_ident[EI_MAG2] = ELFMAG2;			\ 		(E)->e_ident[EI_MAG3] = ELFMAG3;			\ 		(E)->e_ident[EI_CLASS] = (EC);				\ 		(E)->e_ident[EI_VERSION] = (V);				\ 		(E)->e_ehsize = _libelf_fsize(ELF_T_EHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_phentsize = (phnum == 0) ? 0 : _libelf_fsize(	\ 		    ELF_T_PHDR, (EC), (V), (size_t) 1);			\ 		(E)->e_shentsize = _libelf_fsize(ELF_T_SHDR, (EC), (V),	\ 		    (size_t) 1);					\ 	} while (0)
 if|if
 condition|(
 name|ec
