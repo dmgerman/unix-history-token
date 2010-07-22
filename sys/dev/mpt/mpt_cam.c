@@ -5770,11 +5770,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mpt
@@ -5791,11 +5786,6 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
-name|MPT_LOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|xpt_bus_deregister
 argument_list|(
 name|cam_sim_path
@@ -5804,11 +5794,6 @@ name|mpt
 operator|->
 name|sim
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
@@ -5843,11 +5828,6 @@ operator|->
 name|phydisk_path
 argument_list|)
 expr_stmt|;
-name|MPT_LOCK
-argument_list|(
-name|mpt
-argument_list|)
-expr_stmt|;
 name|xpt_bus_deregister
 argument_list|(
 name|cam_sim_path
@@ -5856,11 +5836,6 @@ name|mpt
 operator|->
 name|phydisk_sim
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|MPT_UNLOCK
-argument_list|(
-name|mpt
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
@@ -5879,6 +5854,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|MPT_UNLOCK
+argument_list|(
+name|mpt
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -16695,6 +16675,20 @@ name|MaxDevices
 operator|-
 literal|1
 expr_stmt|;
+name|cpi
+operator|->
+name|maxio
+operator|=
+operator|(
+name|mpt
+operator|->
+name|max_cam_seg_cnt
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
 comment|/* 		 * FC cards report MAX_DEVICES of 512, but 		 * the MSG_SCSI_IO_REQUEST target id field 		 * is only 8 bits. Until we fix the driver 		 * to support 'channels' for bus overflow, 		 * just limit it. 		 */
 if|if
 condition|(
@@ -19683,7 +19677,7 @@ operator||
 name|fc_els_handler_id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Okay, set up ELS buffer pointers. ELS buffer pointers 	 * consist of a TE SGL element (with details length of zero) 	 * followe by a SIMPLE SGL element which holds the address 	 * of the buffer. 	 */
+comment|/* 	 * Okay, set up ELS buffer pointers. ELS buffer pointers 	 * consist of a TE SGL element (with details length of zero) 	 * followed by a SIMPLE SGL element which holds the address 	 * of the buffer. 	 */
 name|tep
 operator|=
 operator|(

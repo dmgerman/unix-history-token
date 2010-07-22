@@ -2795,6 +2795,10 @@ name|uint32_t
 name|max_seg_cnt
 decl_stmt|;
 comment|/* calculated after IOC facts */
+name|uint32_t
+name|max_cam_seg_cnt
+decl_stmt|;
+comment|/* calculated from MAXPHYS*/
 comment|/* 	 * Hardware management 	 */
 name|u_int
 name|reset_cnt
@@ -4025,17 +4029,6 @@ define|#
 directive|define
 name|MPT_REPLY_SIZE
 value|256
-end_define
-
-begin_comment
-comment|/* Max i/o size, based on legacy MAXPHYS.  Can be increased. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPT_MAXPHYS
-value|(128 * 1024)
 end_define
 
 begin_comment
