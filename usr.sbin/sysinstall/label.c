@@ -5031,6 +5031,16 @@ operator|)
 name|dsize
 expr_stmt|;
 block|}
+else|else
+block|{
+name|size
+operator|=
+operator|(
+name|daddr_t
+operator|)
+name|dsize
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|size
