@@ -22,7 +22,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Each task includes a function which is called from  * taskqueue_run().  The first argument is taken from the 'ta_context'  * field of struct task and the second argument is a count of how many  * times the task was enqueued before the call to taskqueue_run().  */
+comment|/*  * Each task includes a function which is called from  * taskqueue_run().  The first argument is taken from the 'ta_context'  * field of struct task and the second argument is a count of how many  * times the task was enqueued before the call to taskqueue_run().  *  * List of locks	   * (c)	const after init	   * (q)	taskqueue lock  */
 end_comment
 
 begin_typedef
@@ -44,31 +44,38 @@ begin_struct
 struct|struct
 name|task
 block|{
+name|struct
+name|task
+modifier|*
+modifier|*
+name|ta_running
+decl_stmt|;
+comment|/* (q) queue's running task pointer */
 name|STAILQ_ENTRY
 argument_list|(
 argument|task
 argument_list|)
 name|ta_link
 expr_stmt|;
-comment|/* link for queue */
+comment|/* (q) link for queue */
 name|u_short
 name|ta_pending
 decl_stmt|;
-comment|/* count times queued */
+comment|/* (q) count times queued */
 name|u_short
 name|ta_priority
 decl_stmt|;
-comment|/* Priority */
+comment|/* (c) Priority */
 name|task_fn_t
 modifier|*
 name|ta_func
 decl_stmt|;
-comment|/* task handler */
+comment|/* (c) task handler */
 name|void
 modifier|*
 name|ta_context
 decl_stmt|;
-comment|/* argument for handler */
+comment|/* (c) argument for handler */
 block|}
 struct|;
 end_struct
