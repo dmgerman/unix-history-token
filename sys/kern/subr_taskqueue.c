@@ -978,9 +978,6 @@ name|struct
 name|task
 modifier|*
 name|task
-decl_stmt|,
-modifier|*
-name|running
 decl_stmt|;
 name|int
 name|pending
@@ -994,10 +991,6 @@ name|tq_mutex
 argument_list|,
 name|MA_OWNED
 argument_list|)
-expr_stmt|;
-name|running
-operator|=
-name|NULL
 expr_stmt|;
 while|while
 condition|(
