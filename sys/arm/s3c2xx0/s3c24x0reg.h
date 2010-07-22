@@ -34,7 +34,7 @@ file|<arm/s3c2xx0/s3c2xx0reg.h>
 end_include
 
 begin_comment
-comment|/*  * Map the device registers into kernel space  */
+comment|/*  * Map the device registers into kernel space.  *  * As most devices use less than 1 page of memory reduce  * the distance between allocations by right shifting  * S3C24X0_DEV_SHIFT bits. Because the UART takes 3*0x4000  * bytes the upper limit on S3C24X0_DEV_SHIFT is 4.  * TODO: Fix the UART code so we can increase this value.  */
 end_comment
 
 begin_define
@@ -55,14 +55,28 @@ begin_define
 define|#
 directive|define
 name|S3C24X0_DEV_VA_OFFSET
-value|0xD0000000
+value|0xD8000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_DEV_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_DEV_PA_SIZE
+value|(S3C24X0_DEV_STOP - S3C24X0_DEV_START)
 end_define
 
 begin_define
 define|#
 directive|define
 name|S3C24X0_DEV_VA_SIZE
-value|(S3C24X0_DEV_STOP - S3C24X0_DEV_START)
+value|(S3C24X0_DEV_PA_SIZE>> S3C24X0_DEV_SHIFT)
 end_define
 
 begin_define
@@ -72,7 +86,7 @@ name|S3C24X0_DEV_PA_TO_VA
 parameter_list|(
 name|x
 parameter_list|)
-value|(x - S3C24X0_DEV_START + S3C24X0_DEV_VA_OFFSET)
+value|((x>> S3C24X0_DEV_SHIFT) - S3C24X0_DEV_START + S3C24X0_DEV_VA_OFFSET)
 end_define
 
 begin_comment
@@ -253,7 +267,7 @@ name|S3C24X0_UART_BASE
 parameter_list|(
 name|n
 parameter_list|)
-value|S3C24X0_DEV_PA_TO_VA(S3C24X0_UART_PA_BASE(n))
+value|(S3C24X0_UART0_BASE+0x4000*(n))
 end_define
 
 begin_define

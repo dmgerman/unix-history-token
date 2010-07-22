@@ -60,33 +60,13 @@ name|bus_space_handle_t
 name|sc_intctl_ioh
 decl_stmt|;
 name|bus_space_handle_t
-name|sc_clkman_ioh
-decl_stmt|;
-comment|/* Clock manager */
-name|bus_space_handle_t
 name|sc_gpio_ioh
 decl_stmt|;
 comment|/* GPIO */
 name|bus_space_handle_t
-name|sc_lcd_ioh
+name|sc_clkman_ioh
 decl_stmt|;
-comment|/* LCD */
-name|bus_space_handle_t
-name|sc_rtc_ioh
-decl_stmt|;
-comment|/* real time clock */
-name|bus_space_handle_t
-name|sc_mci_ioh
-decl_stmt|;
-comment|/* MMC/SD */
-name|bus_space_handle_t
-name|sc_iic_ioh
-decl_stmt|;
-comment|/* IIC */
-name|bus_space_handle_t
-name|sc_ohci_ioh
-decl_stmt|;
-comment|/* USB/OHCI */
+comment|/* Clock manager */
 name|bus_space_handle_t
 name|sc_wdt_ioh
 decl_stmt|;
