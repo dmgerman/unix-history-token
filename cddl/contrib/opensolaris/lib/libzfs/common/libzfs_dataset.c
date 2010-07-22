@@ -7636,9 +7636,6 @@ case|case
 name|ZFS_PROP_DEVICES
 case|:
 case|case
-name|ZFS_PROP_ZONED
-case|:
-case|case
 name|ZFS_PROP_SHAREISCSI
 case|:
 case|case
