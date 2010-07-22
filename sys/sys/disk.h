@@ -84,7 +84,7 @@ value|_IOR('d', 128, u_int)
 end_define
 
 begin_comment
-comment|/*- 	 * Get the sectorsize of the device in bytes.  The sectorsize is the 	 * smallest unit of data which can be transfered from this device. 	 * Usually this is a power of two but it may not be. (ie: CDROM audio) 	 */
+comment|/* 	 * Get the sector size of the device in bytes.  The sector size is the 	 * smallest unit of data which can be transferred from this device. 	 * Usually this is a power of 2 but it might not be (i.e. CDROM audio). 	 */
 end_comment
 
 begin_define
@@ -99,7 +99,7 @@ comment|/* Get media size in bytes */
 end_comment
 
 begin_comment
-comment|/*- 	 * Get the size of the entire device in bytes.  This should be a 	 * multiple of the sectorsize. 	 */
+comment|/* 	 * Get the size of the entire device in bytes.  This should be a 	 * multiple of the sector size. 	 */
 end_comment
 
 begin_define
@@ -110,11 +110,11 @@ value|_IOR('d', 130, u_int)
 end_define
 
 begin_comment
-comment|/* Get firmware sectorcount */
+comment|/* Get firmware's sectorcount */
 end_comment
 
 begin_comment
-comment|/*- 	 * Get the firmwares notion of number of sectors per track.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
+comment|/* 	 * Get the firmware's notion of number of sectors per track.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
 end_comment
 
 begin_define
@@ -125,11 +125,11 @@ value|_IOR('d', 131, u_int)
 end_define
 
 begin_comment
-comment|/* Get firmware headcount */
+comment|/* Get firmware's headcount */
 end_comment
 
 begin_comment
-comment|/*- 	 * Get the firmwares notion of number of heads per cylinder.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
+comment|/* 	 * Get the firmwares notion of number of heads per cylinder.  This 	 * value is mostly used for compatibility with various ill designed 	 * disk label formats.  Don't use it unless you have to. 	 */
 end_comment
 
 begin_define
@@ -144,7 +144,7 @@ comment|/* Set/Clear kernel dumps */
 end_comment
 
 begin_comment
-comment|/*- 	 * Enable/Disable (the argument is boolean) the device for kernel 	 * core dumps. 	 */
+comment|/* 	 * Enable/Disable (the argument is boolean) the device for kernel 	 * core dumps. 	 */
 end_comment
 
 begin_define
@@ -155,7 +155,7 @@ value|_IOR('d', 134, off_t)
 end_define
 
 begin_comment
-comment|/*- 	 * Many disk formats have some amount of space reserved at the 	 * start of the disk to hold bootblocks, various disklabels and 	 * similar stuff.  This ioctl returns the number of such bytes 	 * which may apply to the device. 	 */
+comment|/* 	 * Many disk formats have some amount of space reserved at the 	 * start of the disk to hold bootblocks, various disklabels and 	 * similar stuff.  This ioctl returns the number of such bytes 	 * which may apply to the device. 	 */
 end_comment
 
 begin_define
@@ -170,7 +170,7 @@ comment|/* Flush write cache */
 end_comment
 
 begin_comment
-comment|/*- 	 * Flush write cache of the device. 	 */
+comment|/* 	 * Flush write cache of the device. 	 */
 end_comment
 
 begin_define
@@ -185,7 +185,7 @@ comment|/* Delete data */
 end_comment
 
 begin_comment
-comment|/*- 	 * Mark data on the device as unused. 	 */
+comment|/* 	 * Mark data on the device as unused. 	 */
 end_comment
 
 begin_define
@@ -214,7 +214,7 @@ value|_IOR('d', 138, char[MAXPATHLEN])
 end_define
 
 begin_comment
-comment|/*- 	 * Store the provider name, given a device path, in a buffer. The buffer 	 * must be at least MAXPATHLEN bytes long. 	 */
+comment|/* 	 * Store the provider name, given a device path, in a buffer. The buffer 	 * must be at least MAXPATHLEN bytes long. 	 */
 end_comment
 
 begin_define
@@ -229,7 +229,7 @@ comment|/* Get stripe size in bytes */
 end_comment
 
 begin_comment
-comment|/*- 	 * Get the size of the device's optimal access block in bytes. 	 * This should be a multiple of the sectorsize. 	 */
+comment|/* 	 * Get the size of the device's optimal access block in bytes. 	 * This should be a multiple of the sector size. 	 */
 end_comment
 
 begin_define
@@ -244,7 +244,7 @@ comment|/* Get stripe offset in bytes */
 end_comment
 
 begin_comment
-comment|/*- 	 * Get the offset of the first device's optimal access block in bytes. 	 * This should be a multiple of the sectorsize. 	 */
+comment|/* 	 * Get the offset of the first device's optimal access block in bytes. 	 * This should be a multiple of the sector size. 	 */
 end_comment
 
 begin_endif
