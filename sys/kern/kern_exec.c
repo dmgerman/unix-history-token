@@ -507,18 +507,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|exec_free_args
-parameter_list|(
-name|struct
-name|image_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* XXX This should be vm_size_t. */
 end_comment
@@ -5028,7 +5016,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|exec_free_args
 parameter_list|(
@@ -5043,6 +5030,8 @@ condition|(
 name|args
 operator|->
 name|buf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|kmem_free_wakeup
