@@ -17033,6 +17033,10 @@ operator|)
 name|cnt
 operator|.
 name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
 argument_list|)
 decl_stmt|;
 specifier|static
