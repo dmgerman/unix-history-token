@@ -933,6 +933,16 @@ begin_comment
 comment|/* hostname */
 end_comment
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|path_syslogpid
+init|=
+name|_PATH_SYSLOGPID
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|struct
@@ -3325,6 +3335,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|path_syslogpid
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'m'
 case|:
 comment|/* Used by OpenBSD for "monitor mode" */
@@ -3658,7 +3676,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: newsyslog [-CFNnrsv] [-a directory] [-d directory] [-f config-file]\n"
-literal|"                 [-t timefmt ] [ [-R requestor] filename ... ]\n"
+literal|"                 [-S pidfile] [-t timefmt ] [ [-R requestor] filename ... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6396,7 +6414,7 @@ name|pid_file
 operator|=
 name|strdup
 argument_list|(
-name|_PATH_SYSLOGPID
+name|path_syslogpid
 argument_list|)
 expr_stmt|;
 block|}
