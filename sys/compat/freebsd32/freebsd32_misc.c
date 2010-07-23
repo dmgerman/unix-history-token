@@ -1686,7 +1686,6 @@ comment|/*  * Custom version of exec_copyin_args() so that we can translate  * t
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|freebsd32_exec_copyin_args
 parameter_list|(
