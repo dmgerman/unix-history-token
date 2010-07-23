@@ -66,11 +66,35 @@ name|IPI_PREEMPT
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_HARDCLOCK
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_STATCLOCK
+value|0x0040
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_function_decl
+name|void
+name|ipi_all_but_self
+parameter_list|(
+name|int
+name|ipi
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

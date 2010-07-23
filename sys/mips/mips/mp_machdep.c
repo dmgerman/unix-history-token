@@ -243,6 +243,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ipi_all_but_self
+parameter_list|(
+name|int
+name|ipi
+parameter_list|)
+block|{
+name|ipi_selected
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Send an IPI to a set of cpus. */
 end_comment
@@ -530,6 +551,44 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|IPI_HARDCLOCK
+case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_HARDCLOCK"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|hardclockintr
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+empty_stmt|;
+break|break;
+case|case
+name|IPI_STATCLOCK
+case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_STATCLOCK"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|statclockintr
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+empty_stmt|;
 break|break;
 default|default:
 name|panic
@@ -1024,18 +1083,11 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
-comment|/* 	 * Bootstrap the compare register. 	 */
-name|mips_wr_compare
-argument_list|(
-name|mips_rd_count
-argument_list|()
-operator|+
-name|counter_freq
-operator|/
-name|hz
-argument_list|)
-expr_stmt|;
 name|intr_enable
+argument_list|()
+expr_stmt|;
+comment|/* Start per-CPU event timers. */
+name|cpu_initclocks_ap
 argument_list|()
 expr_stmt|;
 comment|/* enter the scheduler */

@@ -1163,6 +1163,9 @@ block|{
 name|platform_initclocks
 argument_list|()
 expr_stmt|;
+name|cpu_initclocks_bsp
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

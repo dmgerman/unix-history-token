@@ -170,28 +170,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|cpu_startprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* nothing to do */
-block|}
-end_function
-
-begin_function
-name|void
-name|cpu_stopprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-comment|/* nothing to do */
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|sysctl_machdep_counter_freq
