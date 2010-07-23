@@ -2840,12 +2840,7 @@ name|hibufspace
 operator|-
 name|MAXBSIZE
 expr_stmt|;
-name|lorunningspace
-operator|=
-literal|512
-operator|*
-literal|1024
-expr_stmt|;
+comment|/* 	 * Note: The 16 MB upper limit for hirunningspace was chosen 	 * arbitrarily and may need further tuning. The lower 1 MB 	 * limit is the historical upper limit for hirunningspace. 	 */
 name|hirunningspace
 operator|=
 name|lmax
@@ -2871,6 +2866,17 @@ argument_list|,
 literal|1024
 operator|*
 literal|1024
+argument_list|)
+expr_stmt|;
+name|lorunningspace
+operator|=
+name|roundup
+argument_list|(
+name|hirunningspace
+operator|/
+literal|2
+argument_list|,
+name|MAXBSIZE
 argument_list|)
 expr_stmt|;
 comment|/*  * Limit the amount of malloc memory since it is wired permanently into  * the kernel space.  Even though this is accounted for in the buffer  * allocation, we don't want the malloced region to grow uncontrolled.  * The malloc scheme improves memory utilization significantly on average  * (small) directories.  */
