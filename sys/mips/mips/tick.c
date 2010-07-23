@@ -952,6 +952,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+comment|/* In one-shot mode timer should be stopped after the event. */
 name|mips_wr_compare
 argument_list|(
 literal|0xffffffff
@@ -1395,6 +1396,7 @@ literal|0x00004000LLU
 operator|<<
 literal|32
 expr_stmt|;
+comment|/* To be safe. */
 name|sc
 operator|->
 name|et
