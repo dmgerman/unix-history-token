@@ -198,12 +198,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfs_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -217,6 +211,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_comment
@@ -258,7 +258,7 @@ name|vop_advlock_t
 modifier|*
 name|ncl_advlock_p
 init|=
-name|ncl_dolock
+name|nfs_dolock
 decl_stmt|;
 end_decl_stmt
 
