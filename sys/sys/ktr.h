@@ -1124,7 +1124,7 @@ parameter_list|,
 name|v3
 parameter_list|)
 define|\
-value|CTR6(m,KTR_EFMT(egroup, ident, etype) a0 ", " a1 ", " a2, ", ", a3,\ 	     ident, edat, (v0), (v1), (v2), (v3))
+value|CTR6(m,KTR_EFMT(egroup, ident, etype) a0 ", " a1 ", " a2 ", " a3,\ 	     ident, edat, (v0), (v1), (v2), (v3))
 end_define
 
 begin_comment
