@@ -919,11 +919,11 @@ if|if
 condition|(
 name|timeout
 operator|>
-literal|0xbf
+literal|0x3f
 condition|)
 name|timeout
 operator|=
-literal|0xbf
+literal|0x3f
 expr_stmt|;
 name|tmr_val8
 operator||=
