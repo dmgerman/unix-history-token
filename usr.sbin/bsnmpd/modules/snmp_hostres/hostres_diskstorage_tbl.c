@@ -1235,6 +1235,13 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+if|if
+condition|(
+name|md_fd
+operator|<=
+literal|0
+condition|)
+return|return;
 comment|/* Look for md devices */
 name|STAILQ_FOREACH
 argument_list|(
@@ -2095,17 +2102,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"open %s failed: %m"
+literal|"open %s failed - will not include md(4) "
+literal|"info: %m"
 argument_list|,
 name|mddev
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 name|refresh_disk_storage_tbl
 argument_list|(
