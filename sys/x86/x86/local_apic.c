@@ -3705,6 +3705,11 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|++
+expr_stmt|;
 name|oldframe
 operator|=
 name|td
@@ -3734,6 +3739,11 @@ operator|->
 name|td_intr_frame
 operator|=
 name|oldframe
+expr_stmt|;
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|--
 expr_stmt|;
 block|}
 name|critical_exit
