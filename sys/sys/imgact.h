@@ -15,12 +15,6 @@ directive|define
 name|_SYS_IMGACT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -208,6 +202,12 @@ struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
+
+begin_enum_decl
+enum_decl|enum
+name|uio_seg
+enum_decl|;
+end_enum_decl
 
 begin_define
 define|#
