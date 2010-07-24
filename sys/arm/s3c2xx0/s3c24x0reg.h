@@ -1221,16 +1221,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|S3C24X0_INT_EXT
-parameter_list|(
-name|n
-parameter_list|)
-value|(n)
+name|S3C24X0_INT_3
+value|3
 end_define
 
-begin_comment
-comment|/* External interrupt [3:0] for 24{1,4}0 */
-end_comment
+begin_define
+define|#
+directive|define
+name|S3C24X0_INT_2
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_INT_1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_INT_0
+value|0
+end_define
 
 begin_comment
 comment|/* 24{1,4}0 has more than 32 interrupt sources.  These are sub-sources  * that are OR-ed into main interrupt sources, and controlled via  * SUBSRCPND and  SUBSRCMSK registers */
@@ -1379,6 +1393,41 @@ end_define
 begin_comment
 comment|/* UART0 Rx */
 end_comment
+
+begin_comment
+comment|/*  * Support for external interrupts. We use values from 48  * to allow new CPU's to allocate new subirq's.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_EXTIRQ_MIN
+value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_EXTIRQ_COUNT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_EXTIRQ_MAX
+value|(S3C24X0_EXTIRQ_MIN + S3C24X0_EXTIRQ_COUNT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S3C24X0_INT_EXT
+parameter_list|(
+name|n
+parameter_list|)
+value|(S3C24X0_EXTIRQ_MIN + (n))
+end_define
 
 begin_comment
 comment|/* DMA controller */
