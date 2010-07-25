@@ -1993,6 +1993,22 @@ name|u_int
 name|maxio
 decl_stmt|;
 comment|/* Max supported I/O size, in bytes. */
+name|u_int16_t
+name|hba_vendor
+decl_stmt|;
+comment|/* HBA vendor ID */
+name|u_int16_t
+name|hba_device
+decl_stmt|;
+comment|/* HBA device ID */
+name|u_int16_t
+name|hba_subvendor
+decl_stmt|;
+comment|/* HBA subvendor ID */
+name|u_int16_t
+name|hba_subdevice
+decl_stmt|;
+comment|/* HBA subdevice ID */
 block|}
 struct|;
 end_struct

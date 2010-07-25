@@ -15380,6 +15380,58 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s HBA vendor ID: 0x%04x\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|hba_vendor
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s HBA device ID: 0x%04x\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|hba_device
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s HBA subvendor ID: 0x%04x\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|hba_subvendor
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s HBA subdevice ID: 0x%04x\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|hba_subdevice
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
 literal|"%s bus ID: %d\n"
 argument_list|,
 name|adapter_str
@@ -15441,6 +15493,19 @@ literal|1000
 operator|)
 operator|*
 literal|1000
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s maximum transfer size: %u bytes\n"
+argument_list|,
+name|adapter_str
+argument_list|,
+name|cpi
+operator|->
+name|maxio
 argument_list|)
 expr_stmt|;
 block|}
