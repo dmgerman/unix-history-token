@@ -514,6 +514,13 @@ name|VM_FREELIST_DEFAULT
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DIRECT
+value|VM_FREELIST_DEFAULT
+end_define
+
 begin_else
 else|#
 directive|else
