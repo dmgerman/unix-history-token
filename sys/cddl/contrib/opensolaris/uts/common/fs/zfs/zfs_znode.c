@@ -331,6 +331,16 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * Needed to close a small window in zfs_znode_move() that allows the zfsvfs to  * be freed before it can be safely accessed.  */
+end_comment
+
+begin_decl_stmt
+name|krwlock_t
+name|zfsvfs_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|kmem_cache_t
@@ -944,10 +954,13 @@ name|uint64_t
 name|zms_zfsvfs_invalid
 decl_stmt|;
 name|uint64_t
+name|zms_zfsvfs_recheck1
+decl_stmt|;
+name|uint64_t
 name|zms_zfsvfs_unmounted
 decl_stmt|;
 name|uint64_t
-name|zms_zfsvfs_recheck_invalid
+name|zms_zfsvfs_recheck2
 decl_stmt|;
 name|uint64_t
 name|zms_obj_held
@@ -1280,7 +1293,44 @@ name|KMEM_CBRC_DONT_KNOW
 operator|)
 return|;
 block|}
-comment|/* 	 * Ensure that the filesystem is not unmounted during the move. 	 * This is the equivalent to ZFS_ENTER(). 	 */
+comment|/* 	 * Close a small window in which it's possible that the filesystem could 	 * be unmounted and freed, and zfsvfs, though valid in the previous 	 * statement, could point to unrelated memory by the time we try to 	 * prevent the filesystem from being unmounted. 	 */
+name|rw_enter
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|,
+name|RW_WRITER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|zfsvfs
+operator|!=
+name|ozp
+operator|->
+name|z_zfsvfs
+condition|)
+block|{
+name|rw_exit
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|)
+expr_stmt|;
+name|ZNODE_STAT_ADD
+argument_list|(
+name|znode_move_stats
+operator|.
+name|zms_zfsvfs_recheck1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|KMEM_CBRC_DONT_KNOW
+operator|)
+return|;
+block|}
+comment|/* 	 * If the znode is still valid, then so is the file system. We know that 	 * no valid file system can be freed while we hold zfsvfs_lock, so we 	 * can safely ensure that the filesystem is not and will not be 	 * unmounted. The next statement is equivalent to ZFS_ENTER(). 	 */
 name|rrw_enter
 argument_list|(
 operator|&
@@ -1305,6 +1355,12 @@ argument_list|(
 name|zfsvfs
 argument_list|)
 expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|)
+expr_stmt|;
 name|ZNODE_STAT_ADD
 argument_list|(
 name|znode_move_stats
@@ -1318,6 +1374,12 @@ name|KMEM_CBRC_DONT_KNOW
 operator|)
 return|;
 block|}
+name|rw_exit
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|)
+expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&
@@ -1353,7 +1415,7 @@ name|ZNODE_STAT_ADD
 argument_list|(
 name|znode_move_stats
 operator|.
-name|zms_zfsvfs_recheck_invalid
+name|zms_zfsvfs_recheck2
 argument_list|)
 expr_stmt|;
 return|return
@@ -1593,6 +1655,18 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Initialize zcache 	 */
+name|rw_init
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|RW_DEFAULT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ASSERT
 argument_list|(
 name|znode_cache
@@ -1665,6 +1739,12 @@ expr_stmt|;
 name|znode_cache
 operator|=
 name|NULL
+expr_stmt|;
+name|rw_destroy
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|)
 expr_stmt|;
 block|}
 end_function

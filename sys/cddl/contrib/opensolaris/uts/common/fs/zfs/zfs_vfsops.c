@@ -4901,6 +4901,17 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|krwlock_t
+name|zfsvfs_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in zfs_znode.c */
+end_comment
+
 begin_function
 name|void
 name|zfsvfs_free
@@ -4913,6 +4924,21 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * This is a barrier to prevent the filesystem from going away in 	 * zfs_znode_move() until we can safely ensure that the filesystem is 	 * not unmounted. We consider the filesystem valid before the barrier 	 * and invalid after the barrier. 	 */
+name|rw_enter
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|,
+name|RW_READER
+argument_list|)
+expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|zfsvfs_lock
+argument_list|)
+expr_stmt|;
 name|zfs_fuid_destroy
 argument_list|(
 name|zfsvfs
