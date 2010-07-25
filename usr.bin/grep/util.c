@@ -1611,6 +1611,12 @@ name|cflag
 operator|&&
 operator|!
 name|qflag
+operator|&&
+operator|!
+name|lflag
+operator|&&
+operator|!
+name|Lflag
 condition|)
 block|{
 if|if
