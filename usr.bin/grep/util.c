@@ -992,6 +992,9 @@ if|if
 condition|(
 name|lflag
 operator|&&
+operator|!
+name|qflag
+operator|&&
 name|c
 operator|!=
 literal|0
@@ -1006,6 +1009,9 @@ expr_stmt|;
 if|if
 condition|(
 name|Lflag
+operator|&&
+operator|!
+name|qflag
 operator|&&
 name|c
 operator|==
@@ -1507,6 +1513,21 @@ operator|=
 name|pmatch
 expr_stmt|;
 comment|/* matches - skip further patterns */
+if|if
+condition|(
+operator|(
+name|color
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|oflag
+operator|)
+operator|||
+name|qflag
+operator|||
+name|lflag
+condition|)
 break|break;
 block|}
 block|}
@@ -1525,11 +1546,18 @@ block|}
 comment|/* One pass if we are not recording matches */
 if|if
 condition|(
-operator|!
-name|oflag
+operator|(
+name|color
+operator|!=
+name|NULL
 operator|&&
 operator|!
-name|color
+name|oflag
+operator|)
+operator|||
+name|qflag
+operator|||
+name|lflag
 condition|)
 break|break;
 if|if

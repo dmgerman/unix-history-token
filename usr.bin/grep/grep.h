@@ -179,7 +179,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIR_GREP
+name|DIR_READ
 value|0
 end_define
 
@@ -200,7 +200,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEV_GREP
+name|DEV_READ
 value|0
 end_define
 
@@ -214,7 +214,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINK_GREP
+name|LINK_READ
 value|0
 end_define
 
@@ -460,10 +460,16 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|color
-decl_stmt|,
-modifier|*
 name|label
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|color
 decl_stmt|;
 end_decl_stmt
 
