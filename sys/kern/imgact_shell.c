@@ -741,7 +741,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 argument_list|,
 name|length
 argument_list|)
@@ -752,7 +752,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|length
 operator|)
@@ -786,7 +786,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 argument_list|,
@@ -799,7 +799,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 operator|+
@@ -833,7 +833,7 @@ name|imgp
 operator|->
 name|args
 operator|->
-name|buf
+name|begin_argv
 operator|+
 name|offset
 argument_list|,
@@ -843,8 +843,7 @@ name|args
 operator|->
 name|stringspace
 argument_list|,
-operator|&
-name|length
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -869,8 +868,7 @@ name|interpreter_name
 argument_list|,
 name|MAXSHELLCMDLEN
 argument_list|,
-operator|&
-name|length
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

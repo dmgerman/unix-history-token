@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pipe.h>
 end_include
 
@@ -526,15 +532,14 @@ name|maxaddr
 argument_list|,
 name|exec_map_entries
 operator|*
-operator|(
+name|round_page
+argument_list|(
+name|PATH_MAX
+operator|+
 name|ARG_MAX
 operator|+
-operator|(
-name|PAGE_SIZE
-operator|*
-literal|3
-operator|)
-operator|)
+name|MAXSHELLCMDLEN
+argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
