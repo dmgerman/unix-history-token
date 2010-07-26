@@ -346,7 +346,7 @@ name|fnstsw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm __volatile("fnstsw %0" : "=m" (*(addr)))
+value|__asm __volatile("fnstsw %0" : "=am" (*(addr)))
 end_define
 
 begin_define
