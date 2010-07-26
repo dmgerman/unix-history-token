@@ -24003,7 +24003,7 @@ condition|(
 name|sc
 operator|->
 name|bce_flags
-operator|&&
+operator|&
 name|BCE_USING_TX_FLOW_CONTROL
 condition|)
 block|{
