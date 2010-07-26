@@ -185,9 +185,9 @@ define|#
 directive|define
 name|fldcw
 parameter_list|(
-name|addr
+name|cw
 parameter_list|)
-value|__asm __volatile("fldcw %0" : : "m" (*(addr)))
+value|__asm __volatile("fldcw %0" : : "m" (cw))
 end_define
 
 begin_define
@@ -285,8 +285,8 @@ begin_function_decl
 name|void
 name|fldcw
 parameter_list|(
-name|caddr_t
-name|addr
+name|u_short
+name|cw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -489,7 +489,6 @@ name|__INITIAL_FPUCW__
 expr_stmt|;
 name|fldcw
 argument_list|(
-operator|&
 name|control
 argument_list|)
 expr_stmt|;
@@ -1292,7 +1291,6 @@ name|__INITIAL_FPUCW__
 condition|)
 name|fldcw
 argument_list|(
-operator|&
 name|pcb
 operator|->
 name|pcb_initial_fpucw
