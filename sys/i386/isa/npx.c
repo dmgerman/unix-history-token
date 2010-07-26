@@ -300,7 +300,7 @@ name|fldcw
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fldcw %0" : : "m" (*(addr)))
+value|__asm __volatile("fldcw %0" : : "m" (*(addr)))
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ define|#
 directive|define
 name|fnclex
 parameter_list|()
-value|__asm("fnclex")
+value|__asm __volatile("fnclex")
 end_define
 
 begin_define
@@ -316,7 +316,7 @@ define|#
 directive|define
 name|fninit
 parameter_list|()
-value|__asm("fninit")
+value|__asm __volatile("fninit")
 end_define
 
 begin_define
@@ -354,7 +354,7 @@ define|#
 directive|define
 name|fp_divide_by_0
 parameter_list|()
-value|__asm("fldz; fld1; fdiv %st,%st(1); fnop")
+value|__asm __volatile( \ 				    "fldz; fld1; fdiv %st,%st(1); fnop")
 end_define
 
 begin_define
@@ -364,7 +364,7 @@ name|frstor
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("frstor %0" : : "m" (*(addr)))
+value|__asm __volatile("frstor %0" : : "m" (*(addr)))
 end_define
 
 begin_ifdef
@@ -380,7 +380,7 @@ name|fxrstor
 parameter_list|(
 name|addr
 parameter_list|)
-value|__asm("fxrstor %0" : : "m" (*(addr)))
+value|__asm __volatile("fxrstor %0" : : "m" (*(addr)))
 end_define
 
 begin_define
@@ -398,9 +398,9 @@ define|#
 directive|define
 name|ldmxcsr
 parameter_list|(
-name|__csr
+name|r
 parameter_list|)
-value|__asm __volatile("ldmxcsr %0" : : "m" (__csr))
+value|__asm __volatile("ldmxcsr %0" : : "m" (r))
 end_define
 
 begin_endif
@@ -440,7 +440,7 @@ define|#
 directive|define
 name|start_emulating
 parameter_list|()
-value|__asm("smsw %%ax; orb %0,%%al; lmsw %%ax" \ 				      : : "n" (CR0_TS) : "ax")
+value|__asm __volatile( \ 				    "smsw %%ax; orb %0,%%al; lmsw %%ax" \ 				    : : "n" (CR0_TS) : "ax")
 end_define
 
 begin_define
@@ -448,7 +448,7 @@ define|#
 directive|define
 name|stop_emulating
 parameter_list|()
-value|__asm("clts")
+value|__asm __volatile("clts")
 end_define
 
 begin_endif
