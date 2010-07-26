@@ -251,9 +251,9 @@ define|#
 directive|define
 name|ldmxcsr
 parameter_list|(
-name|r
+name|csr
 parameter_list|)
-value|__asm __volatile("ldmxcsr %0" : : "m" (r))
+value|__asm __volatile("ldmxcsr %0" : : "m" (csr))
 end_define
 
 begin_define
@@ -345,6 +345,16 @@ name|fxrstor
 parameter_list|(
 name|caddr_t
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ldmxcsr
+parameter_list|(
+name|u_int
+name|csr
 parameter_list|)
 function_decl|;
 end_function_decl
