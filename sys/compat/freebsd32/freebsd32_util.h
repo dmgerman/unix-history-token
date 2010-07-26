@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -303,12 +309,6 @@ name|s32
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_enum_decl
-enum_decl|enum
-name|uio_seg
-enum_decl|;
-end_enum_decl
 
 begin_struct_decl
 struct_decl|struct
