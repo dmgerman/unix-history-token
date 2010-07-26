@@ -640,6 +640,14 @@ argument_list|(
 name|NETFLOW_V5
 argument_list|)
 expr_stmt|;
+name|dgram
+operator|->
+name|header
+operator|.
+name|pad
+operator|=
+literal|0
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -3022,6 +3030,18 @@ operator|->
 name|f
 operator|.
 name|src_mask
+expr_stmt|;
+name|rec
+operator|->
+name|pad1
+operator|=
+literal|0
+expr_stmt|;
+name|rec
+operator|->
+name|pad2
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Not supported fields. */
 name|rec
