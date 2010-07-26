@@ -393,16 +393,6 @@ parameter_list|)
 value|__asm __volatile("fxsave %0" : "=m" (*(addr)))
 end_define
 
-begin_define
-define|#
-directive|define
-name|ldmxcsr
-parameter_list|(
-name|r
-parameter_list|)
-value|__asm __volatile("ldmxcsr %0" : : "m" (r))
-end_define
-
 begin_endif
 endif|#
 directive|endif
