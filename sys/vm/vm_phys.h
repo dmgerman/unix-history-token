@@ -25,6 +25,36 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* Domains must be dense (non-sparse) and zero-based. */
+end_comment
+
+begin_struct
+struct|struct
+name|mem_affinity
+block|{
+name|vm_paddr_t
+name|start
+decl_stmt|;
+name|vm_paddr_t
+name|end
+decl_stmt|;
+name|int
+name|domain
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mem_affinity
+modifier|*
+name|mem_affinity
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|vm_phys_add_page

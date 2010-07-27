@@ -481,6 +481,10 @@ name|int
 name|pc_dnweight
 decl_stmt|;
 comment|/* vm_page_dontneed() */
+name|int
+name|pc_domain
+decl_stmt|;
+comment|/* Memory domain. */
 comment|/* 	 * Stuff for read mostly lock 	 * 	 * XXXUPS remove as soon as we have per cpu variable 	 * linker sets. 	 */
 name|struct
 name|rm_queue
