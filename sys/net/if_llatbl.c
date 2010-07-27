@@ -1329,7 +1329,7 @@ expr_stmt|;
 if|if
 condition|(
 name|flags
-operator|&&
+operator|&
 name|LLE_CREATE
 condition|)
 name|flags
