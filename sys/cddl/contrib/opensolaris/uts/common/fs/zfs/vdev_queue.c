@@ -49,7 +49,7 @@ begin_decl_stmt
 name|int
 name|zfs_vdev_max_pending
 init|=
-literal|35
+literal|10
 decl_stmt|;
 end_decl_stmt
 
