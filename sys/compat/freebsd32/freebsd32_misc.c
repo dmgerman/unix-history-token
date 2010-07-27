@@ -362,12 +362,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_param.h>
 end_include
 
@@ -1752,37 +1746,23 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
-name|args
-operator|->
-name|buf
+comment|/* 	 * Allocate demand-paged memory for the file name, argument, and 	 * environment strings. 	 */
+name|error
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|kmem_alloc_wait
+name|exec_alloc_args
 argument_list|(
-name|exec_map
-argument_list|,
-name|PATH_MAX
-operator|+
-name|ARG_MAX
-operator|+
-name|MAXSHELLCMDLEN
+name|args
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|args
-operator|->
-name|buf
-operator|==
-name|NULL
+name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|error
 operator|)
 return|;
 comment|/* 	 * Copy the file name. 	 */
@@ -1800,8 +1780,6 @@ operator|=
 name|args
 operator|->
 name|buf
-operator|+
-name|MAXSHELLCMDLEN
 expr_stmt|;
 name|error
 operator|=
@@ -1861,8 +1839,6 @@ operator|=
 name|args
 operator|->
 name|buf
-operator|+
-name|MAXSHELLCMDLEN
 operator|+
 name|length
 expr_stmt|;

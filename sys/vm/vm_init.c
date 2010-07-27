@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/imgact.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/pipe.h>
 end_include
 
@@ -537,8 +531,6 @@ argument_list|(
 name|PATH_MAX
 operator|+
 name|ARG_MAX
-operator|+
-name|MAXSHELLCMDLEN
 argument_list|)
 argument_list|,
 name|FALSE
