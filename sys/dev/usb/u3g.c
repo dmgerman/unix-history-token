@@ -581,6 +581,18 @@ block|,
 name|U3GINIT_NONE
 block|}
 block|,
+block|{
+block|{
+name|USB_VENDOR_QUALCOMMINC
+block|,
+name|USB_PRODUCT_QUALCOMMINC_AC8700
+block|}
+block|,
+name|U3GSP_CDMA
+block|,
+name|U3GINIT_NONE
+block|}
+block|,
 comment|/* OEM: Huawei */
 block|{
 block|{
