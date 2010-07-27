@@ -1253,13 +1253,10 @@ expr_stmt|;
 comment|/* 	 * Note the time counter on CPU0 runs not at system clock speed, but 	 * at PIC time counter speed (which is returned by 	 * platform_get_frequency(). Thus we do not use 	 * xlr_boot1_info.cpu_frequency here. 	 */
 name|mips_timer_early_init
 argument_list|(
-name|platform_get_frequency
-argument_list|()
+name|xlr_boot1_info
+operator|.
+name|cpu_frequency
 argument_list|)
-expr_stmt|;
-comment|/* Init the time counter in the PIC and local putc routine*/
-name|rmi_early_counter_init
-argument_list|()
 expr_stmt|;
 comment|/* Init console please */
 name|cninit
@@ -1896,8 +1893,9 @@ argument_list|()
 expr_stmt|;
 name|mips_timer_init_params
 argument_list|(
-name|platform_get_frequency
-argument_list|()
+name|xlr_boot1_info
+operator|.
+name|cpu_frequency
 argument_list|,
 literal|0
 argument_list|)

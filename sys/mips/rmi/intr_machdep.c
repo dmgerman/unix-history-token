@@ -628,7 +628,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * No need to clear the EIRR here. the handler is gonna write to 	 * compare which clears eirr also 	 */
+comment|/* 	 * No need to clear the EIRR here as the handler writes to 	 * compare which ACKs the interrupt. 	 */
 if|if
 condition|(
 name|eirr
@@ -640,8 +640,13 @@ name|IRQ_TIMER
 operator|)
 condition|)
 block|{
-name|count_compare_clockhandler
+name|intr_event_handle
 argument_list|(
+name|mips_intr_events
+index|[
+name|IRQ_TIMER
+index|]
+argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
