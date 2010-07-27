@@ -3161,7 +3161,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_gsd
+name|pcb_fsd
 expr_stmt|;
 name|sf
 operator|.
@@ -3188,7 +3188,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_fsd
+name|pcb_gsd
 expr_stmt|;
 name|sf
 operator|.
@@ -12284,7 +12284,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_gsd
+name|pcb_fsd
 expr_stmt|;
 name|mcp
 operator|->
@@ -12307,7 +12307,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_fsd
+name|pcb_gsd
 expr_stmt|;
 name|mcp
 operator|->
