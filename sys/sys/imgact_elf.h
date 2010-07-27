@@ -124,8 +124,8 @@ define|#
 directive|define
 name|BN_TRANSLATE_OSREL
 value|0x0002
-comment|/* Use trans_osrel fetch osrel after */
-comment|/* checking ABI contraint if needed. */
+comment|/* Use trans_osrel to fetch osrel */
+comment|/* after checking the image ABI specification, if needed. */
 block|}
 name|Elf_Brandnote
 typedef|;
