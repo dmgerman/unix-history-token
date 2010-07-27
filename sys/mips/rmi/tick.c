@@ -402,9 +402,6 @@ name|t_lower_last
 operator|=
 name|ticktock
 expr_stmt|;
-name|critical_exit
-argument_list|()
-expr_stmt|;
 name|DPCPU_SET
 argument_list|(
 name|counter_upper
@@ -418,6 +415,9 @@ name|counter_lower_last
 argument_list|,
 name|t_lower_last
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|ret
 operator|=
