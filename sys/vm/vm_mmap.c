@@ -4296,7 +4296,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If wiring all pages in the process would cause it to exceed 	 * a hard resource limit, return ENOMEM. 	 */
-block|PROC_LOCK(td->td_proc); 	if (map->size - ptoa(pmap_wired_count(vm_map_pmap(map))> 		lim_cur(td->td_proc, RLIMIT_MEMLOCK))) { 		PROC_UNLOCK(td->td_proc); 		return (ENOMEM); 	} 	PROC_UNLOCK(td->td_proc);
+block|PROC_LOCK(td->td_proc); 	if (map->size> lim_cur(td->td_proc, RLIMIT_MEMLOCK)) { 		PROC_UNLOCK(td->td_proc); 		return (ENOMEM); 	} 	PROC_UNLOCK(td->td_proc);
 else|#
 directive|else
 name|error
