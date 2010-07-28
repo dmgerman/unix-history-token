@@ -57,6 +57,11 @@ modifier|*
 name|fname
 decl_stmt|;
 comment|/* pointer to filename of executable (system space) */
+name|char
+modifier|*
+name|fname_buf
+decl_stmt|;
+comment|/* pointer to optional malloc(M_TEMP) buffer */
 name|int
 name|stringspace
 decl_stmt|;
