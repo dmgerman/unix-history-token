@@ -1103,6 +1103,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|KBS
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|MX2_3
 argument_list|,
 literal|8U232AM
