@@ -152,6 +152,12 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|pflags
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -225,8 +231,6 @@ name|name
 index|[
 literal|4
 index|]
-decl_stmt|,
-name|sflag
 decl_stmt|;
 name|char
 modifier|*
@@ -258,7 +262,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|sflag
+name|pflags
 operator|=
 literal|0
 expr_stmt|;
@@ -277,7 +281,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:s"
+literal|"c:fs"
 argument_list|)
 operator|)
 operator|!=
@@ -299,11 +303,19 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|pflags
+operator||=
+name|PFLAGS_FULL
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
-name|sflag
-operator|=
-literal|1
+name|pflags
+operator||=
+name|PFLAGS_RESUME
 expr_stmt|;
 break|break;
 default|default:
@@ -592,7 +604,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sflag
+operator|(
+name|pflags
+operator|&
+name|PFLAGS_RESUME
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|signal
