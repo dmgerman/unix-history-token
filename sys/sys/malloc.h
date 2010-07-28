@@ -196,6 +196,9 @@ name|DTMALLOC_PROBE_MAX
 index|]
 decl_stmt|;
 comment|/* DTrace probe ID array. */
+name|u_char
+name|mti_zone
+decl_stmt|;
 name|struct
 name|malloc_type_stats
 name|mti_stats
