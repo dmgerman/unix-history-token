@@ -8615,6 +8615,8 @@ argument_list|,
 operator|&
 name|server_challenges
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|++
 name|n
@@ -8644,7 +8646,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
 operator|++
 name|n
 expr_stmt|;
