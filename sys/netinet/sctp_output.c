@@ -32515,6 +32515,23 @@ operator|->
 name|ctrl_queue_cnt
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|chk
+operator|->
+name|rec
+operator|.
+name|chunk_id
+operator|.
+name|id
+operator|==
+name|SCTP_FORWARD_CUM_TSN
+condition|)
+name|asoc
+operator|->
+name|fwd_tsn_cnt
+operator|--
+expr_stmt|;
 name|sctp_free_a_chunk
 argument_list|(
 name|stcb
@@ -38007,7 +38024,7 @@ operator|(
 name|chk
 operator|->
 name|send_size
-operator|<
+operator|<=
 call|(
 name|int
 call|)
@@ -46940,6 +46957,11 @@ condition|)
 block|{
 return|return;
 block|}
+name|asoc
+operator|->
+name|fwd_tsn_cnt
+operator|++
+expr_stmt|;
 name|chk
 operator|->
 name|copy_by_ref
@@ -47136,14 +47158,7 @@ name|sent
 operator|!=
 name|SCTP_FORWARD_TSN_SKIP
 operator|)
-operator|&&
-operator|(
-name|at
-operator|->
-name|sent
-operator|!=
-name|SCTP_DATAGRAM_ACKED
-operator|)
+comment|/*&& (at->sent != 			        SCTP_DATAGRAM_ACKED) */
 condition|)
 block|{
 comment|/* no more to look at */
