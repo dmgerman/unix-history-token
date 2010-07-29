@@ -463,7 +463,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|strlcpy
 argument_list|(
 name|fg
 operator|->
@@ -484,18 +484,9 @@ argument_list|,
 name|fg
 operator|->
 name|len
+operator|+
+literal|1
 argument_list|)
-expr_stmt|;
-name|fg
-operator|->
-name|pattern
-index|[
-name|fg
-operator|->
-name|len
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* Look for ways to cheat...er...avoid the full regex engine. */
 for|for

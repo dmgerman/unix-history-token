@@ -180,7 +180,7 @@ name|x
 operator|->
 name|off
 expr_stmt|;
-name|memcpy
+name|strcpy
 argument_list|(
 name|item
 operator|->
@@ -191,10 +191,6 @@ argument_list|,
 name|x
 operator|->
 name|dat
-argument_list|,
-name|x
-operator|->
-name|len
 argument_list|)
 expr_stmt|;
 name|item
