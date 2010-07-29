@@ -155,7 +155,7 @@ comment|/* 2*/
 literal|"cannot read bzip2 compressed file"
 block|,
 comment|/* 3*/
-literal|"unknown --color option"
+literal|"unknown %s option"
 block|,
 comment|/* 4*/
 literal|"usage: %s [-abcDEFGHhIiJLlmnOoPqRSsUVvwxZ] [-A num] [-B num] [-C[num]]\n"
@@ -170,12 +170,9 @@ comment|/* 7*/
 literal|"\t[--null] [pattern] [file ...]\n"
 block|,
 comment|/* 8*/
-literal|"unknown --binary-files option"
-block|,
-comment|/* 9*/
 literal|"Binary file %s matches\n"
 block|,
-comment|/*10*/
+comment|/* 9*/
 literal|"%s (BSD grep) %s\n"
 block|, }
 decl_stmt|;
@@ -2411,19 +2408,18 @@ operator|=
 name|DEV_READ
 expr_stmt|;
 else|else
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-name|err
+name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|NULL
+name|getstr
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"--devices"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'d'
@@ -2482,19 +2478,18 @@ operator|=
 name|DIR_READ
 expr_stmt|;
 else|else
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-name|err
+name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|NULL
+name|getstr
+argument_list|(
+literal|3
+argument_list|)
+argument_list|,
+literal|"--directories"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'E'
@@ -2804,7 +2799,7 @@ name|printf
 argument_list|(
 name|getstr
 argument_list|(
-literal|10
+literal|9
 argument_list|)
 argument_list|,
 name|__progname
@@ -2904,12 +2899,12 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s"
-argument_list|,
 name|getstr
 argument_list|(
-literal|8
+literal|3
 argument_list|)
+argument_list|,
+literal|"--binary-files"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3066,12 +3061,12 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"%s"
-argument_list|,
 name|getstr
 argument_list|(
 literal|3
 argument_list|)
+argument_list|,
+literal|"--color"
 argument_list|)
 expr_stmt|;
 break|break;

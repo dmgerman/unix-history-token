@@ -1176,7 +1176,7 @@ name|printf
 argument_list|(
 name|getstr
 argument_list|(
-literal|9
+literal|8
 argument_list|)
 argument_list|,
 name|fn
