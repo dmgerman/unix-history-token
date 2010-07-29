@@ -15,14 +15,11 @@ directive|define
 name|_MACHINE_RUNQ_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__mips_n64
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -109,6 +106,27 @@ parameter_list|)
 value|((pri)>> RQB_L2BPW)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RQB_FFS
+parameter_list|(
+name|word
+parameter_list|)
+value|(ffsl(word) - 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -119,18 +137,20 @@ parameter_list|)
 value|(ffs(word) - 1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Type of run queue status word.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__mips_n64
-argument_list|)
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
