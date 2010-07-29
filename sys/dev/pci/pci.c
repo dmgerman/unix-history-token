@@ -2291,11 +2291,15 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|cfg
 operator|->
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|!=
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 condition|)
 return|return;
 comment|/* PCI to PCI bridges use header type 1 */
@@ -2317,7 +2321,7 @@ name|cfg
 operator|->
 name|hdrtype
 operator|=
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 expr_stmt|;
 block|}
 end_function
@@ -2362,10 +2366,12 @@ condition|(
 name|cfg
 operator|->
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
 condition|)
 block|{
 case|case
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 case|:
 name|cfg
 operator|->
@@ -2397,7 +2403,7 @@ name|PCI_MAXMAPS_0
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 case|:
 name|cfg
 operator|->
@@ -2407,7 +2413,7 @@ name|PCI_MAXMAPS_1
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PCIM_HDRTYPE_CARDBUS
 case|:
 name|cfg
 operator|->
@@ -3036,10 +3042,10 @@ name|PCIM_HDRTYPE
 condition|)
 block|{
 case|case
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 case|:
 case|case
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 case|:
 name|ptrptr
 operator|=
@@ -3047,7 +3053,7 @@ name|PCIR_CAP_PTR
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PCIM_HDRTYPE_CARDBUS
 case|:
 name|ptrptr
 operator|=
@@ -3537,7 +3543,7 @@ operator|&
 name|PCIM_HDRTYPE
 operator|)
 operator|==
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 condition|)
 block|{
 name|val
@@ -3584,7 +3590,7 @@ operator|&
 name|PCIM_HDRTYPE
 operator|)
 operator|==
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 condition|)
 name|pcix_chipset
 operator|=
@@ -5882,10 +5888,10 @@ name|PCIM_HDRTYPE
 condition|)
 block|{
 case|case
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 case|:
 case|case
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 case|:
 name|ptr
 operator|=
@@ -5893,7 +5899,7 @@ name|PCIR_CAP_PTR
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PCIM_HDRTYPE_CARDBUS
 case|:
 name|ptr
 operator|=
@@ -14862,13 +14868,17 @@ argument_list|(
 name|child
 argument_list|)
 operator|&&
+operator|(
 name|dinfo
 operator|->
 name|cfg
 operator|.
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|==
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 condition|)
 block|{
 name|dstate
@@ -15025,13 +15035,17 @@ argument_list|(
 name|child
 argument_list|)
 operator|&&
+operator|(
 name|dinfo
 operator|->
 name|cfg
 operator|.
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|==
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 condition|)
 block|{
 name|ACPI_PWR_FOR_SLEEP
@@ -20261,13 +20275,17 @@ decl_stmt|;
 comment|/* 	 * Only do header type 0 devices.  Type 1 devices are bridges, 	 * which we know need special treatment.  Type 2 devices are 	 * cardbus bridges which also require special treatment. 	 * Other types are unknown, and we err on the side of safety 	 * by ignoring them. 	 */
 if|if
 condition|(
+operator|(
 name|dinfo
 operator|->
 name|cfg
 operator|.
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|!=
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 condition|)
 return|return;
 comment|/* 	 * Restore the device to full power mode.  We must do this 	 * before we restore the registers because moving from D3 to 	 * D0 will cause the chip's BARs and some other registers to 	 * be reset to some unknown power on reset values.  Cut down 	 * the noise on boot by doing nothing if we are already in 	 * state D0. 	 */
@@ -20543,13 +20561,17 @@ decl_stmt|;
 comment|/* 	 * Only do header type 0 devices.  Type 1 devices are bridges, which 	 * we know need special treatment.  Type 2 devices are cardbus bridges 	 * which also require special treatment.  Other types are unknown, and 	 * we err on the side of safety by ignoring them.  Powering down 	 * bridges should not be undertaken lightly. 	 */
 if|if
 condition|(
+operator|(
 name|dinfo
 operator|->
 name|cfg
 operator|.
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
 operator|!=
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 condition|)
 return|return;
 for|for
