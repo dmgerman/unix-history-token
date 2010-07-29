@@ -598,20 +598,16 @@ operator|||
 operator|*
 name|ep
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal process id: %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|errors
-operator|=
-literal|1
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
