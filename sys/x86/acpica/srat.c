@@ -721,6 +721,13 @@ index|[
 name|j
 index|]
 operator|.
+name|enabled
+operator|&&
+name|cpus
+index|[
+name|j
+index|]
+operator|.
 name|domain
 operator|==
 name|mem_info
