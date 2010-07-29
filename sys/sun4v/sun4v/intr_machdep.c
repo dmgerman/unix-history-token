@@ -270,10 +270,12 @@ comment|/* PIL_STOP */
 literal|"preempt"
 block|,
 comment|/* PIL_PREEMPT */
-literal|"stray"
+literal|"hardclock"
 block|,
-literal|"stray"
+comment|/* PIL_HARDCLOCK */
+literal|"statclock"
 block|,
+comment|/* PIL_STATCLOCK */
 literal|"stray"
 block|,
 literal|"stray"
@@ -1084,6 +1086,20 @@ name|PIL_PREEMPT
 index|]
 operator|=
 name|cpu_ipi_preempt
+expr_stmt|;
+name|intr_handlers
+index|[
+name|PIL_HARDCLOCK
+index|]
+operator|=
+name|cpu_ipi_hardclock
+expr_stmt|;
+name|intr_handlers
+index|[
+name|PIL_STATCLOCK
+index|]
+operator|=
+name|cpu_ipi_statclock
 expr_stmt|;
 endif|#
 directive|endif

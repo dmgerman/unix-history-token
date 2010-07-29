@@ -208,10 +208,12 @@ comment|/* PIL_STOP */
 literal|"preempt"
 block|,
 comment|/* PIL_PREEMPT */
-literal|"stray"
+literal|"hardclock"
 block|,
-literal|"stray"
+comment|/* PIL_HARDCLOCK */
+literal|"statclock"
 block|,
+comment|/* PIL_STATCLOCK */
 literal|"stray"
 block|,
 literal|"stray"

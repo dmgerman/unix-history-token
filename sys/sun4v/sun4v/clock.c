@@ -23,12 +23,6 @@ end_include
 
 begin_decl_stmt
 name|u_long
-name|tick_increment
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
 name|tick_freq
 decl_stmt|;
 end_decl_stmt
@@ -88,24 +82,6 @@ name|end
 condition|)
 empty_stmt|;
 block|}
-end_function
-
-begin_function
-name|void
-name|cpu_startprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|cpu_stopprofclock
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 end_unit

@@ -133,6 +133,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PIL_HARDCLOCK
+value|7
+end_define
+
+begin_comment
+comment|/* hardclock broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIL_STATCLOCK
+value|8
+end_define
+
+begin_comment
+comment|/* statclock broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIL_FILTER
 value|12
 end_define
