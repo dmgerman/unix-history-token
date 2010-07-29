@@ -275,6 +275,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|SEGSHIFT
+value|22
+end_define
+
+begin_comment
+comment|/* LOG2(NBSEG) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBSEG
+value|(1<< SEGSHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGMASK
+value|(NBSEG-1)
+end_define
+
+begin_comment
+comment|/* byte offset into segment */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXPAGESIZES
 value|1
 end_define

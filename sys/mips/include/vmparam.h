@@ -39,21 +39,6 @@ value|(1*PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/*  * USRSTACK needs to start a little below 0x8000000 because the R8000  * and some QED CPUs perform some virtual address checks before the  * offset is calculated.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRSTACK
-value|0x7ffff000
-end_define
-
-begin_comment
-comment|/* Start of user stack */
-end_comment
-
-begin_comment
 comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
 
@@ -249,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|(VM_MINUSER_ADDRESS + (NPDEPG * NPTEPG * PAGE_SIZE))
+value|(VM_MINUSER_ADDRESS + (NPDEPG * NBSEG))
 end_define
 
 begin_define
@@ -263,7 +248,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(VM_MIN_KERNEL_ADDRESS + (NPDEPG * NPTEPG * PAGE_SIZE))
+value|(VM_MIN_KERNEL_ADDRESS + (NPDEPG * NBSEG))
 end_define
 
 begin_else
@@ -297,24 +282,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|(VM_MIN_KERNEL_ADDRESS)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -322,10 +289,16 @@ name|KERNBASE
 value|((vm_offset_t)(intptr_t)(int32_t)0x80000000)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * USRSTACK needs to start a little below 0x8000000 because the R8000  * and some QED CPUs perform some virtual address checks before the  * offset is calculated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USRSTACK
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
 
 begin_comment
 comment|/*  * Only one memory domain.  */
@@ -598,39 +571,6 @@ directive|define
 name|VM_NFREEORDER
 value|9
 end_define
-
-begin_define
-define|#
-directive|define
-name|SEGSHIFT
-value|22
-end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBSEG
-value|(1<< SEGSHIFT)
-end_define
-
-begin_comment
-comment|/* bytes/segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGOFSET
-value|(NBSEG-1)
-end_define
-
-begin_comment
-comment|/* byte offset into segment */
-end_comment
 
 begin_endif
 endif|#

@@ -337,7 +337,7 @@ name|mips_segtrunc
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)& ~SEGOFSET)
+value|((va)& ~SEGMASK)
 end_define
 
 begin_define
@@ -11422,7 +11422,7 @@ name|superpage_offset
 operator|=
 name|offset
 operator|&
-name|SEGOFSET
+name|SEGMASK
 expr_stmt|;
 if|if
 condition|(
@@ -11435,7 +11435,7 @@ operator|-
 name|superpage_offset
 operator|)
 operator|&
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|<
 name|NBSEG
@@ -11444,7 +11444,7 @@ operator|(
 operator|*
 name|addr
 operator|&
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|==
 name|superpage_offset
@@ -11456,7 +11456,7 @@ operator|(
 operator|*
 name|addr
 operator|&
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|<
 name|superpage_offset
@@ -11469,7 +11469,7 @@ operator|*
 name|addr
 operator|&
 operator|~
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|+
 name|superpage_offset
@@ -11483,11 +11483,11 @@ operator|(
 operator|*
 name|addr
 operator|+
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|&
 operator|~
-name|SEGOFSET
+name|SEGMASK
 operator|)
 operator|+
 name|superpage_offset
