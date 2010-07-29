@@ -1053,7 +1053,7 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PCB_USER_FPU
+name|PCB_USERFPU
 argument_list|,
 name|offsetof
 argument_list|(
