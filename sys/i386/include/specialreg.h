@@ -1367,6 +1367,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_IA32_TEMPERATURE_TARGET
+value|0x1a2
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_DEBUGCTLMSR
 value|0x1d9
 end_define
