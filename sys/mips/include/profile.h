@@ -208,13 +208,35 @@ name|FUNCTION_ALIGNMENT
 value|4
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|u_long
 name|uintfptr_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|uintfptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -229,12 +251,35 @@ begin_comment
 comment|/*  * An unsigned integral type that can hold non-negative difference between  * function pointers.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|fptrdiff_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|u_int
 name|fptrdiff_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
