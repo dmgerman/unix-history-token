@@ -632,5 +632,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|MIPS_XKSEG_START
+argument_list|,
+name|MIPS_XKSEG_START
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
