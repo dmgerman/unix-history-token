@@ -7459,7 +7459,7 @@ name|AF_MAX
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|IF_ADDR_LOCK
