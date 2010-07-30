@@ -2578,7 +2578,16 @@ name|defined
 argument_list|(
 name|__mips_n32
 argument_list|)
-operator|||
+name|td
+operator|->
+name|td_frame
+operator|->
+name|sr
+operator||=
+name|MIPS_SR_PX
+expr_stmt|;
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__mips_n64
@@ -2590,6 +2599,8 @@ operator|->
 name|sr
 operator||=
 name|MIPS_SR_PX
+operator||
+name|MIPS_SR_UX
 expr_stmt|;
 endif|#
 directive|endif
