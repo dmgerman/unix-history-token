@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -451,13 +457,19 @@ block|{
 comment|/* 				 * Reporting does not bother with 				 * fractions of a second... 				 */
 name|warnx
 argument_list|(
-literal|"about %ld second(s) left"
-literal|" out of the original %ld"
+literal|"about %jd second(s) left"
+literal|" out of the original %jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time_to_sleep
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|original
 argument_list|)
 expr_stmt|;
