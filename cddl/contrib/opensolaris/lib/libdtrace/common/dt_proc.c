@@ -2465,7 +2465,7 @@ comment|/* check dpr_quit and continue waiting */
 else|#
 directive|else
 comment|/* Wait for the process to report status. */
-name|proc_wait
+name|proc_wstatus
 argument_list|(
 name|P
 argument_list|)
