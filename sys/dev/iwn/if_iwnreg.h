@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnreg.h,v 1.38 2010/04/10 08:37:36 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnreg.h,v 1.40 2010/05/05 19:41:57 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -4992,6 +4992,99 @@ name|__packed
 struct|;
 end_struct
 
+begin_comment
+comment|/* TLV firmware header. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_fw_tlv_hdr
+block|{
+name|uint32_t
+name|zero
+decl_stmt|;
+comment|/* Always 0, to differentiate from legacy. */
+name|uint32_t
+name|signature
+decl_stmt|;
+define|#
+directive|define
+name|IWN_FW_SIGNATURE
+value|0x0a4c5749
+comment|/* "IWL\n" */
+name|uint8_t
+name|descr
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|uint32_t
+name|rev
+decl_stmt|;
+define|#
+directive|define
+name|IWN_FW_API
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xff)
+name|uint32_t
+name|build
+decl_stmt|;
+name|uint64_t
+name|altmask
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/* TLV header. */
+end_comment
+
+begin_struct
+struct|struct
+name|iwn_fw_tlv
+block|{
+name|uint16_t
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|IWN_FW_TLV_MAIN_TEXT
+value|1
+define|#
+directive|define
+name|IWN_FW_TLV_MAIN_DATA
+value|2
+define|#
+directive|define
+name|IWN_FW_TLV_INIT_TEXT
+value|3
+define|#
+directive|define
+name|IWN_FW_TLV_INIT_DATA
+value|4
+define|#
+directive|define
+name|IWN_FW_TLV_BOOT_TEXT
+value|5
+define|#
+directive|define
+name|IWN_FW_TLV_PBREQ_MAXLEN
+value|6
+name|uint16_t
+name|alt
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -5039,16 +5132,6 @@ define|#
 directive|define
 name|IWN5000_FWSZ
 value|IWN5000_FW_TEXT_MAXSZ
-end_define
-
-begin_define
-define|#
-directive|define
-name|IWN_FW_API
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> 8)& 0xff)
 end_define
 
 begin_comment

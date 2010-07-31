@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnvar.h,v 1.17 2010/02/17 18:23:00 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnvar.h,v 1.18 2010/04/30 16:06:46 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -422,9 +422,13 @@ begin_struct
 struct|struct
 name|iwn_fw_info
 block|{
-name|u_char
+specifier|const
+name|uint8_t
 modifier|*
 name|data
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|struct
 name|iwn_fw_part
