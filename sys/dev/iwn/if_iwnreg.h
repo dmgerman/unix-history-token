@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: if_iwnreg.h,v 1.37 2010/02/17 18:23:00 damien Exp $	*/
+comment|/*	$OpenBSD: if_iwnreg.h,v 1.38 2010/04/10 08:37:36 damien Exp $	*/
 end_comment
 
 begin_comment
@@ -1109,6 +1109,13 @@ define|#
 directive|define
 name|IWN_HW_REV_TYPE_6050
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_HW_REV_TYPE_6005
+value|11
 end_define
 
 begin_comment

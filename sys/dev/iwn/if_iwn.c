@@ -2599,19 +2599,80 @@ block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0086
+literal|0x0087
 block|,
-literal|"Intel(R) PRO/Wireless 6050"
+literal|"Intel(R) PRO/Wireless 6250"
 block|}
 block|,
 block|{
 literal|0x8086
 block|,
-literal|0x0087
+literal|0x0089
 block|,
-literal|"Intel(R) PRO/Wireless 6050"
+literal|"Intel(R) PRO/Wireless 6250"
 block|}
 block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0082
+block|,
+literal|"Intel(R) PRO/Wireless 6205a"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0085
+block|,
+literal|"Intel(R) PRO/Wireless 6205a"
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|notyet
+block|{
+literal|0x8086
+block|,
+literal|0x008a
+block|,
+literal|"Intel(R) PRO/Wireless 6205b"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x008b
+block|,
+literal|"Intel(R) PRO/Wireless 6205b"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x008f
+block|,
+literal|"Intel(R) PRO/Wireless 6205b"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0090
+block|,
+literal|"Intel(R) PRO/Wireless 6205b"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0091
+block|,
+literal|"Intel(R) PRO/Wireless 6205b"
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
@@ -4295,7 +4356,43 @@ name|sc
 operator|->
 name|fwname
 operator|=
-literal|"iwn6000fw"
+literal|"iwn6050fw"
+expr_stmt|;
+name|sc
+operator|->
+name|txchainmask
+operator|=
+name|IWN_ANT_AB
+expr_stmt|;
+name|sc
+operator|->
+name|rxchainmask
+operator|=
+name|IWN_ANT_AB
+expr_stmt|;
+break|break;
+case|case
+name|IWN_HW_REV_TYPE_6005
+case|:
+name|sc
+operator|->
+name|sc_hal
+operator|=
+operator|&
+name|iwn5000_hal
+expr_stmt|;
+name|sc
+operator|->
+name|limits
+operator|=
+operator|&
+name|iwn6000_sensitivity_limits
+expr_stmt|;
+name|sc
+operator|->
+name|fwname
+operator|=
+literal|"iwn6005fw"
 expr_stmt|;
 name|sc
 operator|->
@@ -30595,14 +30692,8 @@ operator|&&
 name|sc
 operator|->
 name|hw_type
-operator|!=
-name|IWN_HW_REV_TYPE_6000
-operator|&&
-name|sc
-operator|->
-name|hw_type
-operator|!=
-name|IWN_HW_REV_TYPE_6050
+operator|<=
+name|IWN_HW_REV_TYPE_1000
 condition|)
 name|IWN_SETBITS
 argument_list|(
