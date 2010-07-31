@@ -3775,8 +3775,6 @@ operator|=
 name|KERNEL_VSID
 argument_list|(
 name|esid
-argument_list|,
-name|large
 argument_list|)
 operator|<<
 name|SLBV_VSID_SHIFT

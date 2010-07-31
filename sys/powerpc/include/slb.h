@@ -92,6 +92,10 @@ name|SLBV_VSID_SHIFT
 value|12
 end_define
 
+begin_comment
+comment|/*  * Make a predictable 1:1 map from ESIDs to VSIDs for the kernel. Hash table  * coverage is increased by swizzling the ESID and multiplying by a prime  * number (0x13bb).  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -103,20 +107,14 @@ begin_comment
 comment|/* Bit set in all kernel VSIDs */
 end_comment
 
-begin_comment
-comment|/*  * Shift large-page VSIDs one place left. At present, they are only used in the  * kernel direct map, and we already assume in the placement of KVA that the  * CPU cannot address more than 63 bits of memory.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|KERNEL_VSID
 parameter_list|(
 name|esid
-parameter_list|,
-name|large
 parameter_list|)
-value|(((uint64_t)(esid)<< (large ? 1 : 0)) | KERNEL_VSID_BIT)
+value|((((((uint64_t)esid<< 8) | ((uint64_t)esid>> 28)) \ 				* 0x13bbUL)& (KERNEL_VSID_BIT - 1)) | \ 				KERNEL_VSID_BIT)
 end_define
 
 begin_define

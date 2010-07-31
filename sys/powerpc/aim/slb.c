@@ -389,9 +389,6 @@ name|struct
 name|slb
 name|entry
 decl_stmt|;
-name|int
-name|large
-decl_stmt|;
 comment|/* Shortcut kernel case */
 if|if
 condition|(
@@ -399,32 +396,6 @@ name|pm
 operator|==
 name|kernel_pmap
 condition|)
-block|{
-name|large
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|hw_direct_map
-operator|&&
-name|va
-operator|<
-name|VM_MIN_KERNEL_ADDRESS
-operator|&&
-name|mem_valid
-argument_list|(
-name|va
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|large
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|KERNEL_VSID
@@ -435,12 +406,9 @@ operator|)
 name|va
 operator|>>
 name|ADDR_SR_SHFT
-argument_list|,
-name|large
 argument_list|)
 operator|)
 return|;
-block|}
 comment|/* 	 * If there is no vsid for this VA, we need to add a new entry 	 * to the PMAP's segment table. 	 */
 if|if
 condition|(
