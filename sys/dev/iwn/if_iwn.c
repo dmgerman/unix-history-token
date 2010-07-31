@@ -10419,21 +10419,37 @@ operator|->
 name|sc_timer_to
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|nstate
-operator|==
-name|IEEE80211_S_AUTH
-operator|&&
+condition|)
+block|{
+case|case
+name|IEEE80211_S_ASSOC
+case|:
+if|if
+condition|(
 name|vap
 operator|->
 name|iv_state
 operator|!=
+name|IEEE80211_S_RUN
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
+case|case
+name|IEEE80211_S_AUTH
+case|:
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
 name|IEEE80211_S_AUTH
 condition|)
-block|{
-comment|/* !AUTH -> AUTH requires adapter config */
-comment|/* Reset state to handle reassociations correctly. */
+break|break;
+comment|/* 		 * !AUTH -> AUTH transition requires state reset to handle 		 * reassociations correctly. 		 */
 name|sc
 operator|->
 name|rxon
@@ -10468,20 +10484,27 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
+case|case
+name|IEEE80211_S_RUN
+case|:
+comment|/* 		 * RUN -> RUN transition; Just restart the timers. 		 */
 if|if
 condition|(
-name|nstate
-operator|==
-name|IEEE80211_S_RUN
-operator|&&
 name|vap
 operator|->
 name|iv_state
-operator|!=
+operator|==
 name|IEEE80211_S_RUN
 condition|)
 block|{
+name|iwn_calib_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 		 * !RUN -> RUN requires setting the association id 		 * which is done with a firmware cmd.  We also defer 		 * starting the timers until that work is done. 		 */
 name|error
 operator|=
@@ -10492,20 +10515,9 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|nstate
-operator|==
-name|IEEE80211_S_RUN
-condition|)
-block|{
-comment|/* 		 * RUN -> RUN transition; just restart the timers. 		 */
-name|iwn_calib_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+break|break;
+default|default:
+break|break;
 block|}
 name|IWN_UNLOCK
 argument_list|(
