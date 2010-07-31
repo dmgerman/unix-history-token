@@ -2989,6 +2989,8 @@ argument_list|(
 name|dpr
 operator|->
 name|dpr_proc
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3591,6 +3593,8 @@ argument_list|(
 name|dpr
 operator|->
 name|dpr_proc
+argument_list|,
+name|rflag
 argument_list|)
 expr_stmt|;
 endif|#
