@@ -3464,7 +3464,7 @@ expr_stmt|;
 comment|/* read break instruction */
 name|instr
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|caddr_t
@@ -3624,7 +3624,7 @@ expr_stmt|;
 comment|/* read break instruction */
 name|instr
 operator|=
-name|fuword
+name|fuword32
 argument_list|(
 operator|(
 name|caddr_t
