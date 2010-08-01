@@ -3019,12 +3019,6 @@ comment|/* 	 * First, lock out the nfsd so that state won't change while the 	 *
 name|NFSLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|nfsv4_relref
-argument_list|(
-operator|&
-name|nfsv4rootfs_lock
-argument_list|)
-expr_stmt|;
 do|do
 block|{
 name|igotlock
