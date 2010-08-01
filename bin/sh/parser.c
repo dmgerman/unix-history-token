@@ -2594,6 +2594,9 @@ expr_stmt|;
 break|break;
 comment|/* Handle an empty command like other simple commands.  */
 case|case
+name|TBACKGND
+case|:
+case|case
 name|TSEMI
 case|:
 case|case
