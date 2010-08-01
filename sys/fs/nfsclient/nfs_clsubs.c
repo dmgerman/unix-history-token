@@ -871,9 +871,17 @@ operator|)
 operator|>=
 name|timeo
 operator|&&
+operator|(
 name|mustflush
 operator|!=
 literal|0
+operator|||
+name|np
+operator|->
+name|n_attrstamp
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|newnfsstats
