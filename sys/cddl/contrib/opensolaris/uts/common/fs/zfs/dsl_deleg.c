@@ -4,19 +4,12 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
 comment|/*  * DSL permissions are stored in a two level zap attribute  * mechanism.   The first level identifies the "class" of  * entry.  The class is identified by the first 2 letters of  * the attribute.  The second letter "l" or "d" identifies whether  * it is a local or descendent permission.  The first letter  * identifies the type of entry.  *  * ul$<id>    identifies permissions granted locally for this userid.  * ud$<id>    identifies permissions granted on descendent datasets for  *            this userid.  * Ul$<id>    identifies permission sets granted locally for this userid.  * Ud$<id>    identifies permission sets granted on descendent datasets for  *            this userid.  * gl$<id>    identifies permissions granted locally for this groupid.  * gd$<id>    identifies permissions granted on descendent datasets for  *            this groupid.  * Gl$<id>    identifies permission sets granted locally for this groupid.  * Gd$<id>    identifies permission sets granted on descendent datasets for  *            this groupid.  * el$        identifies permissions granted locally for everyone.  * ed$        identifies permissions granted on descendent datasets  *            for everyone.  * El$        identifies permission sets granted locally for everyone.  * Ed$        identifies permission sets granted to descendent datasets for  *            everyone.  * c-$        identifies permission to create at dataset creation time.  * C-$        identifies permission sets to grant locally at dataset creation  *            time.  * s-$@<name> permissions defined in specified set @<name>  * S-$@<name> Sets defined in named set @<name>  *  * Each of the above entities points to another zap attribute that contains one  * attribute for each allowed permission, such as create, destroy,...  * All of the "upper" case class types will specify permission set names  * rather than permissions.  *  * Basically it looks something like this:  * ul$12 -> ZAP OBJ -> permissions...  *  * The ZAP OBJ is referred to as the jump object.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -2434,8 +2427,6 @@ name|error
 decl_stmt|;
 name|char
 name|checkflag
-init|=
-name|ZFS_DELEG_LOCAL
 decl_stmt|;
 name|objset_t
 modifier|*
@@ -2533,6 +2524,27 @@ operator|(
 name|EPERM
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|dsl_dataset_is_snapshot
+argument_list|(
+name|ds
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Snapshots are treated as descendents only, 		 * local permissions do not apply. 		 */
+name|checkflag
+operator|=
+name|ZFS_DELEG_DESCENDENT
+expr_stmt|;
+block|}
+else|else
+block|{
+name|checkflag
+operator|=
+name|ZFS_DELEG_LOCAL
+expr_stmt|;
 block|}
 name|avl_create
 argument_list|(
