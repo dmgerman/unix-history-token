@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Create and parse buffers containing CTF data.  */
@@ -679,6 +672,27 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|nargs
+operator|>
+name|CTF_MAX_VLEN
+condition|)
+block|{
+name|terminate
+argument_list|(
+literal|"function %s has too many args: %d> %d\n"
+argument_list|,
+name|idp
+operator|->
+name|ii_name
+argument_list|,
+name|nargs
+argument_list|,
+name|CTF_MAX_VLEN
+argument_list|)
+expr_stmt|;
+block|}
 name|fdata
 index|[
 literal|0
@@ -1435,6 +1449,28 @@ expr_stmt|;
 comment|/* count up struct or union members */
 if|if
 condition|(
+name|i
+operator|>
+name|CTF_MAX_VLEN
+condition|)
+block|{
+name|terminate
+argument_list|(
+literal|"sou %s has too many members: %d> %d\n"
+argument_list|,
+name|tdesc_name
+argument_list|(
+name|tp
+argument_list|)
+argument_list|,
+name|i
+argument_list|,
+name|CTF_MAX_VLEN
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|tp
 operator|->
 name|t_type
@@ -1689,6 +1725,28 @@ name|i
 operator|++
 expr_stmt|;
 comment|/* count up enum members */
+if|if
+condition|(
+name|i
+operator|>
+name|CTF_MAX_VLEN
+condition|)
+block|{
+name|terminate
+argument_list|(
+literal|"enum %s has too many values: %d> %d\n"
+argument_list|,
+name|tdesc_name
+argument_list|(
+name|tp
+argument_list|)
+argument_list|,
+name|i
+argument_list|,
+name|CTF_MAX_VLEN
+argument_list|)
+expr_stmt|;
+block|}
 name|ctt
 operator|.
 name|ctt_info
@@ -1920,16 +1978,8 @@ break|break;
 case|case
 name|FUNCTION
 case|:
-name|ctt
-operator|.
-name|ctt_info
+name|i
 operator|=
-name|CTF_TYPE_INFO
-argument_list|(
-name|CTF_K_FUNCTION
-argument_list|,
-name|isroot
-argument_list|,
 name|tp
 operator|->
 name|t_fndef
@@ -1941,6 +1991,35 @@ operator|->
 name|t_fndef
 operator|->
 name|fn_vargs
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|CTF_MAX_VLEN
+condition|)
+block|{
+name|terminate
+argument_list|(
+literal|"function %s has too many args: %d> %d\n"
+argument_list|,
+name|i
+argument_list|,
+name|CTF_MAX_VLEN
+argument_list|)
+expr_stmt|;
+block|}
+name|ctt
+operator|.
+name|ctt_info
+operator|=
+name|CTF_TYPE_INFO
+argument_list|(
+name|CTF_K_FUNCTION
+argument_list|,
+name|isroot
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|ctt

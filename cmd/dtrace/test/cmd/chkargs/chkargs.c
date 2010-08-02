@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -64,6 +57,14 @@ begin_decl_stmt
 specifier|static
 name|int
 name|g_errexit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|g_progname
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +387,13 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|g_progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -414,10 +422,7 @@ name|stderr
 argument_list|,
 literal|"%s: failed to open dtrace: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|g_progname
 argument_list|,
 name|dtrace_errmsg
 argument_list|(
@@ -519,10 +524,7 @@ argument_list|,
 literal|"%s: failed to set "
 literal|"option -x %s: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|g_progname
 argument_list|,
 name|optarg
 argument_list|,
@@ -555,10 +557,7 @@ argument_list|,
 literal|"Usage: %s [-ev] "
 literal|"[-x opt[=arg]] [probedesc]\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|g_progname
 argument_list|)
 expr_stmt|;
 return|return
@@ -593,7 +592,7 @@ name|DTRACE_PROBESPEC_NAME
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 operator|&
@@ -611,14 +610,11 @@ argument_list|,
 literal|"%s: invalid probe description "
 literal|"%s: %s\n"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|g_progname
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|dtrace_errmsg

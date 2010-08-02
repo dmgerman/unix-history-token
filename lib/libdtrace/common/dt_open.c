@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -254,15 +247,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_6_2
+value|DT_VERSION_NUMBER(1, 6, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_6_3
+value|DT_VERSION_NUMBER(1, 6, 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_6_1
+value|DT_VERS_1_6_3
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.6.1"
+value|"Sun D 1.6.3"
 end_define
 
 begin_decl_stmt
@@ -305,6 +312,12 @@ comment|/* D API 1.6 */
 name|DT_VERS_1_6_1
 block|,
 comment|/* D API 1.6.1 */
+name|DT_VERS_1_6_2
+block|,
+comment|/* D API 1.6.2 */
+name|DT_VERS_1_6_3
+block|,
+comment|/* D API 1.6.3 */
 literal|0
 block|}
 decl_stmt|;
