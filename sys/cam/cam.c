@@ -195,7 +195,7 @@ block|,
 block|{
 name|CAM_BUSY
 block|,
-literal|"CAM subsytem is busy"
+literal|"CAM subsystem is busy"
 block|}
 block|,
 block|{
