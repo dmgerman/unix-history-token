@@ -142,7 +142,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -290,7 +290,7 @@ name|nbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -443,7 +443,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -597,7 +597,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -702,7 +702,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -961,7 +961,7 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -1450,7 +1450,7 @@ name|sym
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -1734,7 +1734,7 @@ argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr

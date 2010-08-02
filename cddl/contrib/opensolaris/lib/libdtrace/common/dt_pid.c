@@ -2110,7 +2110,17 @@ endif|#
 directive|endif
 argument|if ((pp->dpp_obj = strrchr(obj,
 literal|'/'
-argument|)) == NULL) 		pp->dpp_obj = obj; 	else 		pp->dpp_obj++;  	if (gmatch(pp->dpp_obj, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	(void) Plmid(pp->dpp_pr, pmp->pr_vaddr,&pp->dpp_lmid);  	dt_pid_objname(name, sizeof (name), pp->dpp_lmid, pp->dpp_obj);  	if (gmatch(name, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	return (
+argument|)) == NULL) 		pp->dpp_obj = obj; 	else 		pp->dpp_obj++;  	if (gmatch(pp->dpp_obj, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+argument|(void) Plmid(pp->dpp_pr, pmp->pr_vaddr,&pp->dpp_lmid);
+endif|#
+directive|endif
+argument|dt_pid_objname(name, sizeof (name), pp->dpp_lmid, pp->dpp_obj);  	if (gmatch(name, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	return (
 literal|0
 argument|); }  static const prmap_t * dt_pid_fix_mod(dtrace_probedesc_t *pdp, struct ps_prochandle *P) {
 ifdef|#
@@ -2452,7 +2462,7 @@ literal|0
 decl_stmt|;
 name|assert
 argument_list|(
-name|MUTEX_HELD
+name|DT_MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
