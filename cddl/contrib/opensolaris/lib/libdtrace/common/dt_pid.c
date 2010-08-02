@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -2117,7 +2110,7 @@ endif|#
 directive|endif
 argument|if ((pp->dpp_obj = strrchr(obj,
 literal|'/'
-argument|)) == NULL) 		pp->dpp_obj = obj; 	else 		pp->dpp_obj++;  	dt_pid_objname(name, sizeof (name), pp->dpp_lmid, obj);  	if (gmatch(name, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	return (
+argument|)) == NULL) 		pp->dpp_obj = obj; 	else 		pp->dpp_obj++;  	if (gmatch(pp->dpp_obj, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	(void) Plmid(pp->dpp_pr, pmp->pr_vaddr,&pp->dpp_lmid);  	dt_pid_objname(name, sizeof (name), pp->dpp_lmid, pp->dpp_obj);  	if (gmatch(name, pp->dpp_mod)) 		return (dt_pid_per_mod(pp, pmp, obj));  	return (
 literal|0
 argument|); }  static const prmap_t * dt_pid_fix_mod(dtrace_probedesc_t *pdp, struct ps_prochandle *P) {
 ifdef|#
@@ -2459,7 +2452,7 @@ literal|0
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr

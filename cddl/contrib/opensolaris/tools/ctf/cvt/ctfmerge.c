@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_pragma
@@ -2146,6 +2146,22 @@ argument_list|,
 name|nslots
 argument_list|)
 expr_stmt|;
+name|wq
+operator|->
+name|wq_thread
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|pthread_t
+argument_list|)
+operator|*
+name|wq
+operator|->
+name|wq_nthreads
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getenv
@@ -2385,9 +2401,6 @@ modifier|*
 name|wq
 parameter_list|)
 block|{
-name|pthread_t
-name|thrid
-decl_stmt|;
 name|sigset_t
 name|sets
 decl_stmt|;
@@ -2453,7 +2466,12 @@ block|{
 name|pthread_create
 argument_list|(
 operator|&
-name|thrid
+name|wq
+operator|->
+name|wq_thread
+index|[
+name|i
+index|]
 argument_list|,
 name|NULL
 argument_list|,
@@ -2541,6 +2559,51 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|join_threads
+parameter_list|(
+name|workqueue_t
+modifier|*
+name|wq
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|wq
+operator|->
+name|wq_nthreads
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|pthread_join
+argument_list|(
+name|wq
+operator|->
+name|wq_thread
+index|[
+name|i
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|strcompare
 parameter_list|(
@@ -2596,6 +2659,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Core work queue structure; passed to worker threads on thread creation  * as the main point of coordination.  Allocate as a static structure; we  * could have put this into a local variable in main, but passing a pointer  * into your stack to another thread is fragile at best and leads to some  * hard-to-debug failure modes.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|workqueue_t
+name|wq
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -2609,9 +2683,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|workqueue_t
-name|wq
-decl_stmt|;
 name|tdata_t
 modifier|*
 name|mstrtd
@@ -3393,6 +3464,12 @@ operator|&
 name|wq
 operator|.
 name|wq_queue_lock
+argument_list|)
+expr_stmt|;
+name|join_threads
+argument_list|(
+operator|&
+name|wq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * All requested files have been merged, with the resulting tree in 	 * mstrtd.  savetd is the tree that will be placed into the output file. 	 * 	 * Regardless of whether we're doing a normal uniquification or an 	 * additive merge, we need a type tree that has been uniquified 	 * against uniqfile or withfile, as appropriate. 	 * 	 * If we're doing a uniquification, we stuff the resulting tree into 	 * outfile.  Otherwise, we add the tree to the tree already in withfile. 	 */

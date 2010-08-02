@@ -1,18 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_if
 if|#
@@ -236,6 +229,8 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|vlen
+decl_stmt|,
+name|wlen
 decl_stmt|;
 specifier|const
 name|char
@@ -247,6 +242,9 @@ name|q
 decl_stmt|,
 modifier|*
 name|v
+decl_stmt|,
+modifier|*
+name|w
 decl_stmt|;
 name|char
 name|buf
@@ -330,6 +328,14 @@ name|vlen
 operator|=
 literal|0
 expr_stmt|;
+name|w
+operator|=
+name|NULL
+expr_stmt|;
+name|wlen
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -410,10 +416,6 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|end
-decl_stmt|;
 name|long
 name|i
 decl_stmt|;
@@ -429,11 +431,26 @@ name|v
 operator|+
 literal|1
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
-name|end
+name|w
 argument_list|,
 literal|10
 argument_list|)
+expr_stmt|;
+name|wlen
+operator|=
+name|vlen
+operator|-
+operator|(
+name|w
+operator|-
+name|v
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -448,12 +465,6 @@ operator|||
 name|errno
 operator|!=
 literal|0
-operator|||
-name|end
-operator|!=
-name|v
-operator|+
-name|vlen
 condition|)
 return|return
 operator|(
@@ -685,6 +696,25 @@ operator|+
 name|len
 argument_list|,
 name|vlen
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|w
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|pdp
+operator|+
+name|off
+operator|+
+name|len
+operator|+
+name|vlen
+argument_list|,
+name|wlen
 argument_list|)
 expr_stmt|;
 block|}

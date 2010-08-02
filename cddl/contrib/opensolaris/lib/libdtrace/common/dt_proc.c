@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * DTrace Process Control  *  * This file provides a set of routines that permit libdtrace and its clients  * to create and grab process handles using libproc, and to share these handles  * between library mechanisms that need libproc access, such as ustack(), and  * client mechanisms that need libproc access, such as dtrace(1M) -c and -p.  * The library provides several mechanisms in the libproc control layer:  *  * Reference Counting: The library code and client code can independently grab  * the same process handles without interfering with one another.  Only when  * the reference count drops to zero and the handle is not being cached (see  * below for more information on caching) will Prelease() be called on it.  *  * Handle Caching: If a handle is grabbed PGRAB_RDONLY (e.g. by ustack()) and  * the reference count drops to zero, the handle is not immediately released.  * Instead, libproc handles are maintained on dph_lrulist in order from most-  * recently accessed to least-recently accessed.  Idle handles are maintained  * until a pre-defined LRU cache limit is exceeded, permitting repeated calls  * to ustack() to avoid the overhead of releasing and re-grabbing processes.  *  * Process Control: For processes that are grabbed for control (~PGRAB_RDONLY)  * or created by dt_proc_create(), a control thread is created to provide  * callbacks on process exit and symbol table caching on dlopen()s.  *  * MT-Safety: Libproc is not MT-Safe, so dt_proc_lock() and dt_proc_unlock()  * are provided to synchronize access to the libproc handle between libdtrace  * code and client code and the control thread's use of the ps_prochandle.  *  * NOTE: MT-Safety is NOT provided for libdtrace itself, or for use of the  * dtrace_proc_grab/dtrace_proc_create mechanisms.  Like all exported libdtrace  * calls, these are assumed to be MT-Unsafe.  MT-Safety is ONLY provided for  * synchronization between libdtrace control threads and the client thread.  *  * The ps_prochandles themselves are maintained along with a dt_proc_t struct  * in a hash table indexed by PID.  This provides basic locking and reference  * counting.  The dt_proc_t is also maintained in LRU order on dph_lrulist.  * The dph_lrucnt and dph_lrulim count the number of cacheable processes and  * the current limit on the number of actively cached entries.  *  * The control thread for a process establishes breakpoints at the rtld_db  * locations of interest, updates mappings and symbol tables at these points,  * and handles exec and fork (by always following the parent).  The control  * thread automatically exits when the process dies or control is lost.  *  * A simple notification mechanism is provided for libdtrace clients using  * dtrace_handle_proc() for notification of PS_UNDEAD or PS_LOST events.  If  * such an event occurs, the dt_proc_t itself is enqueued on a notification  * list and the control thread broadcasts to dph_cv.  dtrace_sleep() will wake  * up using this condition and will then call the client handler as necessary.  */
@@ -93,7 +86,7 @@ name|IS_SYS_EXEC
 parameter_list|(
 name|w
 parameter_list|)
-value|(w == SYS_exec || w == SYS_execve)
+value|(w == SYS_execve)
 end_define
 
 begin_define
@@ -103,7 +96,7 @@ name|IS_SYS_FORK
 parameter_list|(
 name|w
 parameter_list|)
-value|(w == SYS_vfork || w == SYS_fork1 ||	\ 			w == SYS_forkall || w == SYS_forksys)
+value|(w == SYS_vfork || w == SYS_forksys)
 end_define
 
 begin_ifdef
@@ -149,7 +142,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -297,7 +290,7 @@ name|nbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -450,7 +443,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -604,7 +597,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -709,7 +702,7 @@ name|dbp
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -968,7 +961,7 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -1457,7 +1450,7 @@ name|sym
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -1741,7 +1734,7 @@ argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
-name|DT_MUTEX_HELD
+name|MUTEX_HELD
 argument_list|(
 operator|&
 name|dpr
@@ -2164,18 +2157,6 @@ name|Psysexit
 argument_list|(
 name|P
 argument_list|,
-name|SYS_exec
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Psysexit
-argument_list|(
-name|P
-argument_list|,
 name|SYS_execve
 argument_list|,
 name|B_TRUE
@@ -2202,54 +2183,6 @@ argument_list|(
 name|P
 argument_list|,
 name|SYS_vfork
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Psysentry
-argument_list|(
-name|P
-argument_list|,
-name|SYS_fork1
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Psysexit
-argument_list|(
-name|P
-argument_list|,
-name|SYS_fork1
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Psysentry
-argument_list|(
-name|P
-argument_list|,
-name|SYS_forkall
-argument_list|,
-name|B_TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Psysexit
-argument_list|(
-name|P
-argument_list|,
-name|SYS_forkall
 argument_list|,
 name|B_TRUE
 argument_list|)
@@ -3281,25 +3214,67 @@ operator|->
 name|dpr_pid
 argument_list|)
 expr_stmt|;
+name|rflag
+operator|=
+name|PRELEASE_HANG
+expr_stmt|;
 if|#
 directive|if
 name|defined
 argument_list|(
 name|sun
 argument_list|)
-name|rflag
-operator|=
-name|PRELEASE_HANG
-expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Pstatus
+argument_list|(
+name|dpr
+operator|->
+name|dpr_proc
+argument_list|)
+operator|->
+name|pr_flags
+operator|&
+name|PR_KLC
+condition|)
+block|{
 else|#
 directive|else
-name|rflag
-operator|=
-literal|0
-comment|/* XXX */
-expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|proc_getflags
+argument_list|(
+name|dpr
+operator|->
+name|dpr_proc
+argument_list|)
+operator|&
+name|PR_KLC
+condition|)
+block|{
 endif|#
 directive|endif
+name|dt_dprintf
+argument_list|(
+literal|"killing pid %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|dpr
+operator|->
+name|dpr_pid
+argument_list|)
+expr_stmt|;
+name|rflag
+operator|=
+name|PRELEASE_KILL
+expr_stmt|;
+comment|/* apply kill-on-last-close */
 block|}
 else|else
 block|{
@@ -3319,7 +3294,7 @@ name|rflag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* apply kill or run-on-last-close */
+comment|/* apply run-on-last-close */
 block|}
 if|if
 condition|(
