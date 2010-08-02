@@ -2795,7 +2795,7 @@ operator|)
 operator|*
 literal|8
 expr_stmt|;
-comment|/* 	 * XXXKIB: (temporary) hack to work around traps generated when 	 * CLFLUSHing APIC registers window. 	 */
+comment|/* 	 * XXXKIB: (temporary) hack to work around traps generated 	 * when CLFLUSHing APIC register window under virtualization 	 * environments.  These environments tend to disable the 	 * CPUID_SS feature even though the native CPU supports it. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"hw.clflush_disable"
@@ -2806,16 +2806,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_INTEL
-operator|&&
-operator|!
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_SS
-operator|)
+name|vm_guest
+operator|!=
+name|VM_GUEST_NO
 operator|&&
 name|hw_clflush_disable
 operator|==
@@ -2827,7 +2820,7 @@ operator|&=
 operator|~
 name|CPUID_CLFSH
 expr_stmt|;
-comment|/* 	 * Allow to disable CLFLUSH feature manually by 	 * hw.clflush_disable tunable.  This may help Xen guest on some AMD 	 * CPUs. 	 */
+comment|/* 	 * Allow to disable CLFLUSH feature manually by 	 * hw.clflush_disable tunable. 	 */
 if|if
 condition|(
 name|hw_clflush_disable
