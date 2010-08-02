@@ -1259,7 +1259,7 @@ value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
 end_define
 
 begin_comment
-comment|/*  * Initialize the vnode management data structures.  */
+comment|/*  * Initialize the vnode management data structures.  *  * Reevaluate the following cap on the number of vnodes after the physical  * memory size exceeds 512GB.  In the limit, as the physical memory size  * grows, the ratio of physical pages to vnodes approaches sixteen to one.  */
 end_comment
 
 begin_ifndef
@@ -1272,7 +1272,7 @@ begin_define
 define|#
 directive|define
 name|MAXVNODES_MAX
-value|100000
+value|(512 * (1024 * 1024 * 1024 / PAGE_SIZE / 16))
 end_define
 
 begin_endif
@@ -1291,25 +1291,43 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-comment|/* 	 * Desiredvnodes is a function of the physical memory size and 	 * the kernel's heap size.  Specifically, desiredvnodes scales 	 * in proportion to the physical memory size until two fifths 	 * of the kernel's heap size is consumed by vnodes and vm 	 * objects. 	 */
-name|desiredvnodes
+name|int
+name|physvnodes
+decl_stmt|,
+name|virtvnodes
+decl_stmt|;
+comment|/* 	 * Desiredvnodes is a function of the physical memory size and the 	 * kernel's heap size.  Generally speaking, it scales with the 	 * physical memory size.  The ratio of desiredvnodes to physical pages 	 * is one to four until desiredvnodes exceeds 98,304.  Thereafter, the 	 * marginal ratio of desiredvnodes to physical pages is one to 	 * sixteen.  However, desiredvnodes is limited by the kernel's heap 	 * size.  The memory required by desiredvnodes vnodes and vm objects 	 * may not exceed one seventh of the kernel's heap size. 	 */
+name|physvnodes
 operator|=
-name|min
-argument_list|(
 name|maxproc
 operator|+
 name|cnt
 operator|.
 name|v_page_count
 operator|/
+literal|16
+operator|+
+literal|3
+operator|*
+name|min
+argument_list|(
+literal|98304
+operator|*
 literal|4
 argument_list|,
-literal|2
-operator|*
+name|cnt
+operator|.
+name|v_page_count
+argument_list|)
+operator|/
+literal|16
+expr_stmt|;
+name|virtvnodes
+operator|=
 name|vm_kmem_size
 operator|/
 operator|(
-literal|5
+literal|7
 operator|*
 operator|(
 sizeof|sizeof
@@ -1325,6 +1343,14 @@ name|vnode
 argument_list|)
 operator|)
 operator|)
+expr_stmt|;
+name|desiredvnodes
+operator|=
+name|min
+argument_list|(
+name|physvnodes
+argument_list|,
+name|virtvnodes
 argument_list|)
 expr_stmt|;
 if|if
