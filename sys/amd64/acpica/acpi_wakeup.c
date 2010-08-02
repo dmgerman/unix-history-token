@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Takanori Watanabe<takawata@jp.freebsd.org>  * Copyright (c) 2001 Mitsuru IWASAKI<iwasaki@jp.freebsd.org>  * Copyright (c) 2003 Peter Wemm  * Copyright (c) 2008-2009 Jung-uk Kim<jkim@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001 Takanori Watanabe<takawata@jp.freebsd.org>  * Copyright (c) 2001 Mitsuru IWASAKI<iwasaki@jp.freebsd.org>  * Copyright (c) 2003 Peter Wemm  * Copyright (c) 2008-2010 Jung-uk Kim<jkim@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -190,10 +190,10 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|xpcb
+name|pcb
 modifier|*
 modifier|*
-name|stopxpcbs
+name|susppcbs
 decl_stmt|;
 end_decl_stmt
 
@@ -205,10 +205,10 @@ end_else
 begin_decl_stmt
 specifier|static
 name|struct
-name|xpcb
+name|pcb
 modifier|*
 modifier|*
-name|stopxpcbs
+name|susppcbs
 decl_stmt|;
 end_decl_stmt
 
@@ -222,21 +222,10 @@ name|int
 name|acpi_restorecpu
 parameter_list|(
 name|struct
-name|xpcb
+name|pcb
 modifier|*
 parameter_list|,
 name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acpi_savecpu
-parameter_list|(
-name|struct
-name|xpcb
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -413,13 +402,13 @@ name|ms
 decl_stmt|;
 name|WAKECODE_FIXUP
 argument_list|(
-name|wakeup_xpcb
+name|wakeup_pcb
 argument_list|,
 expr|struct
-name|xpcb
+name|pcb
 operator|*
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
@@ -431,12 +420,12 @@ name|wakeup_gdt
 argument_list|,
 name|uint16_t
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
 operator|->
-name|xpcb_gdt
+name|pcb_gdt
 operator|.
 name|rd_limit
 argument_list|)
@@ -449,12 +438,12 @@ literal|2
 argument_list|,
 name|uint64_t
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
 operator|->
-name|xpcb_gdt
+name|pcb_gdt
 operator|.
 name|rd_base
 argument_list|)
@@ -972,9 +961,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|acpi_savecpu
+name|savectx
 argument_list|(
-name|stopxpcbs
+name|susppcbs
 index|[
 literal|0
 index|]
@@ -1051,13 +1040,13 @@ argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
 argument_list|(
-name|wakeup_xpcb
+name|wakeup_pcb
 argument_list|,
 expr|struct
-name|xpcb
+name|pcb
 operator|*
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 literal|0
 index|]
@@ -1069,12 +1058,12 @@ name|wakeup_gdt
 argument_list|,
 name|uint16_t
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 literal|0
 index|]
 operator|->
-name|xpcb_gdt
+name|pcb_gdt
 operator|.
 name|rd_limit
 argument_list|)
@@ -1087,12 +1076,12 @@ literal|2
 argument_list|,
 name|uint64_t
 argument_list|,
-name|stopxpcbs
+name|susppcbs
 index|[
 literal|0
 index|]
 operator|->
-name|xpcb_gdt
+name|pcb_gdt
 operator|.
 name|rd_base
 argument_list|)
@@ -1345,7 +1334,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|stopxpcbs
+name|susppcbs
 operator|=
 name|malloc
 argument_list|(
@@ -1354,7 +1343,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
-name|stopxpcbs
+name|susppcbs
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1375,7 +1364,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|stopxpcbs
+name|susppcbs
 index|[
 name|i
 index|]
@@ -1386,7 +1375,7 @@ sizeof|sizeof
 argument_list|(
 operator|*
 operator|*
-name|stopxpcbs
+name|susppcbs
 argument_list|)
 argument_list|,
 name|M_DEVBUF

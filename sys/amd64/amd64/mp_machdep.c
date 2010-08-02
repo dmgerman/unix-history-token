@@ -410,10 +410,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|xpcb
+name|pcb
 modifier|*
 modifier|*
-name|stopxpcbs
+name|susppcbs
 init|=
 name|NULL
 decl_stmt|;
@@ -5659,9 +5659,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|savectx2
+name|savectx
 argument_list|(
-name|stopxpcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
