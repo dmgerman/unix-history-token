@@ -172,12 +172,12 @@ comment|/* Intel Core2/Atom, fixed function */
 value|\ 	__PMC_CLASS(IAP)
 comment|/* Intel Core...Atom, programmable */
 value|\ 	__PMC_CLASS(UCF)
-comment|/* Intel Uncore programmable */
+comment|/* Intel Uncore fixed function */
 value|\ 	__PMC_CLASS(UCP)
 end_define
 
 begin_comment
-comment|/* Intel Uncore fixed function */
+comment|/* Intel Uncore programmable */
 end_comment
 
 begin_enum
