@@ -1790,7 +1790,7 @@ name|preen
 operator|||
 name|reply
 argument_list|(
-literal|"USE JOURNAL?"
+literal|"USE JOURNAL"
 argument_list|)
 condition|)
 block|{
