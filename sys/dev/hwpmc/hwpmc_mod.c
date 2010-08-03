@@ -5136,7 +5136,7 @@ name|PMC_STATE_RUNNING
 condition|)
 continue|continue;
 comment|/* increment PMC runcount */
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -5627,7 +5627,7 @@ name|adjri
 argument_list|)
 expr_stmt|;
 comment|/* reduce this PMC's runcount */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -12333,11 +12333,6 @@ condition|)
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|error
-condition|)
-break|break;
 comment|/* 		 * Look for valid values for 'pm_flags' 		 */
 if|if
 condition|(
@@ -15144,7 +15139,7 @@ name|pm_runcount
 operator|)
 argument_list|)
 expr_stmt|;
-name|atomic_add_rel_32
+name|atomic_add_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -15895,7 +15890,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* mark entry as free */
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
@@ -16537,7 +16532,7 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_subtract_rel_32
+name|atomic_subtract_rel_int
 argument_list|(
 operator|&
 name|pm
