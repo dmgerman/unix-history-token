@@ -599,10 +599,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-unit|}         return
+unit|} else
 name|exitstatus
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_return
+return|return
+name|exitstatus
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -633,6 +641,9 @@ decl_stmt|;
 name|int
 name|flags_exit
 decl_stmt|;
+name|int
+name|any
+decl_stmt|;
 name|flags_exit
 operator|=
 name|flags
@@ -643,6 +654,10 @@ name|flags
 operator|&=
 operator|~
 name|EV_EXIT
+expr_stmt|;
+name|any
+operator|=
+literal|0
 expr_stmt|;
 name|setstackmark
 argument_list|(
@@ -702,6 +717,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|any
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|popstackmark
 argument_list|(
@@ -718,6 +737,15 @@ argument_list|(
 operator|&
 name|smark
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|any
+condition|)
+name|exitstatus
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
