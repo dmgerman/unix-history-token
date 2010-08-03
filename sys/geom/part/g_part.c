@@ -9166,6 +9166,10 @@ expr_stmt|;
 if|if
 condition|(
 name|table
+operator|!=
+name|NULL
+operator|&&
+name|table
 operator|->
 name|gpt_opened
 condition|)
