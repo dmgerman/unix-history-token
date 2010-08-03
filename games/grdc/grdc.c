@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<ncurses.h>
 end_include
 
 begin_include
@@ -24,31 +24,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ncurses.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<time.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NONPOSIX
-end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -78,20 +67,12 @@ name|YDEPTH
 value|7
 end_define
 
-begin_comment
-comment|/* it won't be */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|timespec
 name|now
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* yeah! */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -357,6 +338,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 name|n
 operator|=
 name|atoi
@@ -367,6 +349,24 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"number of seconds is out of range"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
 else|else
 name|n
 operator|=
@@ -1055,9 +1055,20 @@ argument_list|(
 name|CLOCK_REALTIME_FAST
 argument_list|,
 operator|&
-name|now
+name|delay
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|delay
+operator|.
+name|tv_sec
+operator|==
+name|now
+operator|.
+name|tv_sec
+condition|)
+block|{
 if|if
 condition|(
 name|delay
@@ -1079,7 +1090,7 @@ name|tv_nsec
 operator|=
 literal|1000000000
 operator|-
-name|now
+name|delay
 operator|.
 name|tv_nsec
 expr_stmt|;
@@ -1107,10 +1118,32 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|clock_gettime
+argument_list|(
+name|CLOCK_REALTIME_FAST
+argument_list|,
+operator|&
+name|delay
+argument_list|)
+expr_stmt|;
+block|}
+name|n
+operator|-=
+name|delay
+operator|.
+name|tv_sec
+operator|-
 name|now
 operator|.
 name|tv_sec
-operator|++
+expr_stmt|;
+name|now
+operator|.
+name|tv_sec
+operator|=
+name|delay
+operator|.
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -1145,7 +1178,6 @@ block|}
 block|}
 do|while
 condition|(
-operator|--
 name|n
 condition|)
 do|;
