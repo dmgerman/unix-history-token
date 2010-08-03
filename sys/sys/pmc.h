@@ -172,19 +172,21 @@ comment|/* Intel Core2/Atom, fixed function */
 value|\ 	__PMC_CLASS(IAP)
 comment|/* Intel Core...Atom, programmable */
 value|\ 	__PMC_CLASS(UCF)
-comment|/* Intel Uncore programmable */
-value|\ 	__PMC_CLASS(UCP)
 comment|/* Intel Uncore fixed function */
-value|\  enum pmc_class {
+value|\ 	__PMC_CLASS(UCP)
 end_define
 
-begin_undef
+begin_comment
+comment|/* Intel Uncore programmable */
+end_comment
+
+begin_enum
+enum|enum
+name|pmc_class
+block|{
 undef|#
 directive|undef
 name|__PMC_CLASS
-end_undef
-
-begin_define
 define|#
 directive|define
 name|__PMC_CLASS
@@ -192,15 +194,13 @@ parameter_list|(
 name|N
 parameter_list|)
 value|PMC_CLASS_##N ,
-end_define
-
-begin_macro
 name|__PMC_CLASSES
 argument_list|()
-end_macro
+block|}
+enum|;
+end_enum
 
 begin_define
-unit|};
 define|#
 directive|define
 name|PMC_CLASS_FIRST
