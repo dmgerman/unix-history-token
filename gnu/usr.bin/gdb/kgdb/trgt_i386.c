@@ -557,7 +557,7 @@ name|addr
 operator|=
 name|kgdb_lookup
 argument_list|(
-literal|"_gdt"
+literal|"gdt"
 argument_list|)
 expr_stmt|;
 if|if
@@ -674,7 +674,7 @@ name|addr
 operator|=
 name|kgdb_lookup
 argument_list|(
-literal|"_cpu0prvpage"
+literal|"cpu0prvpage"
 argument_list|)
 expr_stmt|;
 if|if
@@ -683,23 +683,11 @@ name|addr
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"kvm_nlist(_cpu0prvpage): %s"
-argument_list|,
-name|kvm_geterr
-argument_list|(
-name|kvm
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|kvm_read
