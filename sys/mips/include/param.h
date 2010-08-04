@@ -272,6 +272,60 @@ name|NPDEPG
 value|(PAGE_SIZE/(sizeof (pd_entry_t)))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SEGSHIFT
+value|31
+end_define
+
+begin_comment
+comment|/* LOG2(NBSEG) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBSEG
+value|(1ul<< SEGSHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|22
+end_define
+
+begin_comment
+comment|/* second level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRMASK
+value|((1<< PDRSHIFT) - 1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -292,6 +346,40 @@ end_define
 
 begin_comment
 comment|/* bytes/segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|SEGSHIFT
+end_define
+
+begin_comment
+comment|/* alias for SEG in 32 bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRMASK
+value|((1<< PDRSHIFT) - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NBPDR
+value|(1<< PDRSHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/pagedir */
 end_comment
 
 begin_define
@@ -350,7 +438,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* kernel stack*/
+comment|/* kernel stack */
 end_comment
 
 begin_define
