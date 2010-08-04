@@ -1576,10 +1576,9 @@ literal|"%s: created %s"
 argument_list|,
 name|__func__
 argument_list|,
-name|ithd_name
-index|[
-name|core
-index|]
+name|td
+operator|->
+name|td_name
 argument_list|)
 expr_stmt|;
 block|}
