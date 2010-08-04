@@ -9483,6 +9483,17 @@ argument_list|,
 name|st_gen
 argument_list|)
 expr_stmt|;
+name|TS_CP
+argument_list|(
+operator|*
+name|in
+argument_list|,
+operator|*
+name|out
+argument_list|,
+name|st_birthtim
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
