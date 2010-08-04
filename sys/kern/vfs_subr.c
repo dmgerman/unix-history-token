@@ -1272,7 +1272,7 @@ begin_define
 define|#
 directive|define
 name|MAXVNODES_MAX
-value|(512 * (1024 * 1024 * 1024 / PAGE_SIZE / 16))
+value|(512 * (1024 * 1024 * 1024 / (int)PAGE_SIZE / 16))
 end_define
 
 begin_endif
