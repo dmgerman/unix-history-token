@@ -8493,6 +8493,8 @@ if|if
 condition|(
 operator|!
 operator|(
+name|adapter
+operator|->
 name|ifp
 operator|->
 name|if_capenable
