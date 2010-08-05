@@ -418,6 +418,14 @@ name|vmf_es
 expr_stmt|;
 name|regs
 operator|->
+name|R_FLG
+operator|=
+name|vmf
+operator|->
+name|vmf_flags
+expr_stmt|;
+name|regs
+operator|->
 name|R_AX
 operator|=
 name|vmf
