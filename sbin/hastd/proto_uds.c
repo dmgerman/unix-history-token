@@ -1515,6 +1515,8 @@ name|proto_register
 argument_list|(
 operator|&
 name|uds_proto
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}

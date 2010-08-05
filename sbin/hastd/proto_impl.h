@@ -267,7 +267,7 @@ name|hp_close_t
 modifier|*
 name|hp_close
 decl_stmt|;
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|hast_proto
 argument_list|)
@@ -285,6 +285,9 @@ name|struct
 name|hast_proto
 modifier|*
 name|proto
+parameter_list|,
+name|bool
+name|isdefault
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2557,6 +2557,8 @@ name|proto_register
 argument_list|(
 operator|&
 name|tcp4_proto
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
