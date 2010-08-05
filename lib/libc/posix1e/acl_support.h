@@ -368,6 +368,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_acl_name_to_id
+parameter_list|(
+name|acl_tag_t
+name|tag
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uid_t
+modifier|*
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
