@@ -1237,5 +1237,74 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Log assertion and exit.  */
+end_comment
+
+begin_function
+name|void
+name|pjdlog_verify
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|func
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|failedexpr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|func
+operator|==
+name|NULL
+condition|)
+block|{
+name|pjdlog_critical
+argument_list|(
+literal|"Assertion failed: (%s), file %s, line %d."
+argument_list|,
+name|failedexpr
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pjdlog_critical
+argument_list|(
+literal|"Assertion failed: (%s), function %s, file %s, line %d."
+argument_list|,
+name|failedexpr
+argument_list|,
+name|func
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+end_function
+
 end_unit
 
