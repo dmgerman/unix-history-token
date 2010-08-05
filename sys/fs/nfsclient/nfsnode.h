@@ -105,27 +105,6 @@ name|ndm4_cookies
 value|ndm_un1.ndmu4_cookies
 end_define
 
-begin_define
-define|#
-directive|define
-name|n_ac_ts_tid
-value|n_ac_ts.nfs_ac_ts_tid
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_ac_ts_pid
-value|n_ac_ts.nfs_ac_ts_pid
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_ac_ts_syscalls
-value|n_ac_ts.nfs_ac_ts_syscalls
-end_define
-
 begin_struct
 struct|struct
 name|nfs_attrcache_timestamp
@@ -322,7 +301,7 @@ name|n_directio_asyncwr
 decl_stmt|;
 name|struct
 name|nfs_attrcache_timestamp
-name|n_ac_ts
+name|n_unused
 decl_stmt|;
 name|u_int64_t
 name|n_change
