@@ -35,6 +35,27 @@ name|hastd_config
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|hast_resource
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|control_set_role
+parameter_list|(
+name|struct
+name|hast_resource
+modifier|*
+name|res
+parameter_list|,
+name|uint8_t
+name|role
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|control_handle
