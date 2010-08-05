@@ -19,6 +19,14 @@ begin_comment
 comment|/*  * Export portions of generic PCI:PCI bridge support so that it can be  * used by subclasses.  */
 end_comment
 
+begin_expr_stmt
+name|DECLARE_CLASS
+argument_list|(
+name|pcib_driver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Bridge-specific data.  */
 end_comment

@@ -590,25 +590,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|acpi_pcib_resume
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|bus_generic_resume
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|prt_lookup_device
