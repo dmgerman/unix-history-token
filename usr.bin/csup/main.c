@@ -1253,13 +1253,6 @@ argument_list|,
 name|PROTO_MIN
 argument_list|)
 expr_stmt|;
-name|lprintf
-argument_list|(
-literal|0
-argument_list|,
-literal|"http://mu.org/~mux/csup.html\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
