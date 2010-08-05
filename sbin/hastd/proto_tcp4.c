@@ -481,36 +481,10 @@ name|addr
 operator|+=
 literal|6
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|addr
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
-operator|&&
-comment|/* If this is not path... */
-name|strstr
-argument_list|(
-name|addr
-argument_list|,
-literal|"://"
-argument_list|)
-operator|==
-name|NULL
-condition|)
-comment|/* ...and has no prefix... */
-empty_stmt|;
-comment|/* ...tcp4 is the default. */
 else|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+block|{
+comment|/* 		 * Because TCP4 is the default assume IP or host is given without 		 * prefix. 		 */
+block|}
 name|sinp
 operator|->
 name|sin_family
