@@ -710,6 +710,9 @@ name|IAP_EVSEL0
 operator|+
 name|n
 argument_list|)
+operator|&
+operator|~
+name|IAP_EVSEL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -718,9 +721,6 @@ operator|+
 name|n
 argument_list|,
 name|msr
-operator|&
-operator|~
-name|IAP_EVSEL_MASK
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,15 +737,15 @@ name|rdmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|,
 name|msr
-operator|&
-operator|~
-name|IAF_CTRL_MASK
 argument_list|)
 expr_stmt|;
 name|npmc
@@ -1915,6 +1915,9 @@ name|rdmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -1959,6 +1962,9 @@ name|rdmsr
 argument_list|(
 name|IA_GLOBAL_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_GLOBAL_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -2162,6 +2168,9 @@ name|rdmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -2207,6 +2216,9 @@ name|rdmsr
 argument_list|(
 name|IA_GLOBAL_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_GLOBAL_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -2392,21 +2404,22 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+comment|/* Turn off fixed counters */
 name|msr
 operator|=
 name|rdmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|,
 name|msr
-operator|&
-operator|~
-name|IAF_CTRL_MASK
 argument_list|)
 expr_stmt|;
 name|wrmsr
@@ -2428,12 +2441,16 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Turn on fixed counters */
 name|msr
 operator|=
 name|rdmsr
 argument_list|(
 name|IAF_CTRL
 argument_list|)
+operator|&
+operator|~
+name|IAF_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -13498,6 +13515,9 @@ name|IAP_EVSEL0
 operator|+
 name|ri
 argument_list|)
+operator|&
+operator|~
+name|IAP_EVSEL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -13506,8 +13526,6 @@ operator|+
 name|ri
 argument_list|,
 name|msr
-operator|&
-name|IAP_EVSEL_MASK
 argument_list|)
 expr_stmt|;
 comment|/* stop hw */
@@ -13522,6 +13540,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|msr
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 name|cc
@@ -13540,6 +13562,16 @@ literal|1ULL
 operator|<<
 name|ri
 operator|)
+expr_stmt|;
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|IA_GLOBAL_CTRL
+argument_list|)
+operator|&
+operator|~
+name|IA_GLOBAL_CTRL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -13950,8 +13982,6 @@ name|ri
 decl_stmt|;
 name|uint64_t
 name|msr
-init|=
-literal|0
 decl_stmt|;
 name|PMCDBG
 argument_list|(
@@ -14091,6 +14121,9 @@ name|IAP_EVSEL0
 operator|+
 name|ri
 argument_list|)
+operator|&
+operator|~
+name|IAP_EVSEL_MASK
 expr_stmt|;
 name|wrmsr
 argument_list|(
@@ -14099,9 +14132,6 @@ operator|+
 name|ri
 argument_list|,
 name|msr
-operator|&
-operator|~
-name|IAP_EVSEL_MASK
 argument_list|)
 expr_stmt|;
 name|wrmsr
@@ -14124,6 +14154,9 @@ name|IAP_EVSEL0
 operator|+
 name|ri
 argument_list|,
+name|msr
+operator||
+operator|(
 name|pm
 operator|->
 name|pm_md
@@ -14133,6 +14166,7 @@ operator|.
 name|pm_iap_evsel
 operator||
 name|IAP_EN
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -14195,6 +14229,8 @@ decl_stmt|,
 name|intrstatus
 decl_stmt|,
 name|intrenable
+decl_stmt|,
+name|msr
 decl_stmt|;
 name|struct
 name|pmc
@@ -14304,11 +14340,21 @@ literal|1
 expr_stmt|;
 comment|/* MSRs now potentially out of sync. */
 comment|/* 	 * Stop PMCs and clear overflow status bits. 	 */
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|IA_GLOBAL_CTRL
+argument_list|)
+operator|&
+operator|~
+name|IA_GLOBAL_CTRL_MASK
+expr_stmt|;
 name|wrmsr
 argument_list|(
 name|IA_GLOBAL_CTRL
 argument_list|,
-literal|0
+name|msr
 argument_list|)
 expr_stmt|;
 name|wrmsr
@@ -14647,6 +14693,8 @@ argument_list|,
 name|cc
 operator|->
 name|pc_globalctrl
+operator|&
+name|IA_GLOBAL_CTRL_MASK
 argument_list|)
 expr_stmt|;
 name|PMCDBG

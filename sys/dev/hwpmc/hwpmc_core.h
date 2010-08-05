@@ -296,6 +296,28 @@ name|IAF_GLOBAL_CTRL_MASK
 value|0x0000000700000000
 end_define
 
+begin_comment
+comment|/* The mask is only for the programmable porttion of the register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IAP_GLOBAL_CTRL_MASK
+value|0x00000000ffffffff
+end_define
+
+begin_comment
+comment|/* The mask is for both the fixed and programmable porttions of the register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA_GLOBAL_CTRL_MASK
+value|0x00000007ffffffff
+end_define
+
 begin_define
 define|#
 directive|define
