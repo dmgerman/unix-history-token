@@ -5635,7 +5635,7 @@ return|;
 case|case
 name|CAM_BUSY
 case|:
-comment|/* CAM subsytem is busy */
+comment|/* CAM subsystem is busy */
 case|case
 name|CAM_UA_ABORT
 case|:
