@@ -1404,18 +1404,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|set_cputicker
-argument_list|(
-name|sb_zbbus_cycle_count
-argument_list|,
-name|sb_cpu_speed
-argument_list|()
-operator|/
-literal|2
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
