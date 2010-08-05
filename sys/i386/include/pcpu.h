@@ -308,6 +308,7 @@ end_define
 begin_expr_stmt
 specifier|static
 name|__inline
+name|__pure2
 expr|struct
 name|thread
 operator|*
@@ -320,7 +321,7 @@ name|thread
 operator|*
 name|td
 block|;
-asm|__asm __volatile("movl %%fs:0,%0" : "=r" (td));
+asm|__asm("movl %%fs:0,%0" : "=r" (td));
 return|return
 operator|(
 name|td
