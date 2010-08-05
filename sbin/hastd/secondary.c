@@ -1323,6 +1323,20 @@ operator|->
 name|hr_name
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 comment|/* Error in setting timeout is not critical, but why should it fail? */
 if|if
 condition|(
