@@ -1101,6 +1101,7 @@ argument_list|(
 name|exitcode
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -1185,6 +1186,7 @@ argument_list|(
 name|exitcode
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
