@@ -1057,7 +1057,7 @@ name|rec
 operator|->
 name|mr_mcg_cap
 operator|&
-name|MCG_CAP_TES_P
+name|MCG_CAP_CMCI_P
 condition|)
 name|printf
 argument_list|(

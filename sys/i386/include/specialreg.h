@@ -2571,7 +2571,7 @@ value|0x001fffc000000000
 end_define
 
 begin_comment
-comment|/* If MCG_CAP_TES_P */
+comment|/* If MCG_CAP_CMCI_P */
 end_comment
 
 begin_define
@@ -2593,7 +2593,7 @@ value|0x0080000000000000
 end_define
 
 begin_comment
-comment|/* If MCG_CAP_CMCI_P */
+comment|/* If MCG_CAP_TES_P */
 end_comment
 
 begin_define
@@ -2604,7 +2604,7 @@ value|0x0100000000000000
 end_define
 
 begin_comment
-comment|/* If MCG_CAP_CMCI_P */
+comment|/* If MCG_CAP_TES_P */
 end_comment
 
 begin_define
