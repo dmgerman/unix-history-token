@@ -537,6 +537,9 @@ specifier|const
 name|char
 modifier|*
 name|config
+parameter_list|,
+name|bool
+name|exitonerror
 parameter_list|)
 function_decl|;
 end_function_decl

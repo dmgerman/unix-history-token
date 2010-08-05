@@ -2103,6 +2103,8 @@ operator|=
 name|yy_config_parse
 argument_list|(
 name|cfgpath
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|assert
