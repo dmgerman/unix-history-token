@@ -2662,12 +2662,6 @@ name|errstr
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* another ?paranoid? safety measure we do not have */
-else|#
-directive|else
 name|closefrom
 argument_list|(
 name|STDERR_FILENO
@@ -2675,8 +2669,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
