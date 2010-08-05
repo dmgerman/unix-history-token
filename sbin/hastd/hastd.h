@@ -41,8 +41,19 @@ end_include
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|char
+modifier|*
+name|cfgpath
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|bool
 name|sigexit_received
+decl_stmt|,
+name|sighup_received
 decl_stmt|;
 end_decl_stmt
 
