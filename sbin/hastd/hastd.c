@@ -2094,7 +2094,7 @@ name|pjdlog_errno
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"Cannot open or create pidfile"
+literal|"Unable to open or create pidfile"
 argument_list|)
 expr_stmt|;
 block|}

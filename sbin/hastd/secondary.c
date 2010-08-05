@@ -459,12 +459,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errx
+name|pjdlog_exitx
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"cannot allocate %zu bytes of memory "
-literal|"for hio request"
+literal|"Unable to allocate memory (%zu bytes) for hio request."
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -498,12 +497,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errx
+name|pjdlog_exitx
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"cannot allocate %zu bytes of memory "
-literal|"for gctl_data"
+literal|"Unable to allocate memory (%zu bytes) for gctl_data."
 argument_list|,
 operator|(
 name|size_t
