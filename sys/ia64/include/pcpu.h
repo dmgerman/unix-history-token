@@ -173,6 +173,7 @@ end_decl_stmt
 begin_expr_stmt
 specifier|static
 name|__inline
+name|__pure2
 expr|struct
 name|thread
 operator|*
@@ -185,7 +186,7 @@ name|thread
 operator|*
 name|td
 block|;
-asm|__asm __volatile("ld8.acq %0=[r13]" : "=r"(td));
+asm|__asm("ld8.acq %0=[r13]" : "=r"(td));
 return|return
 operator|(
 name|td
