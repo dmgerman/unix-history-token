@@ -1436,27 +1436,6 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsValidateInterface  *  * PARAMETERS:  Interface           - Requested interface to be validated  *  * RETURN:      AE_OK if interface is supported, AE_SUPPORT otherwise  *  * DESCRIPTION: Match an interface string to the interfaces supported by the  *              host. Strings originate from an AML call to the _OSI method.  *  *****************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiOsValidateInterface
-parameter_list|(
-name|char
-modifier|*
-name|Interface
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AE_SUPPORT
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               Seg/Bus/Dev  *              Register            Device Register  *              Value               Buffer where value is placed  *              Width               Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
 end_comment
 
@@ -1471,7 +1450,7 @@ parameter_list|,
 name|UINT32
 name|Register
 parameter_list|,
-name|void
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,

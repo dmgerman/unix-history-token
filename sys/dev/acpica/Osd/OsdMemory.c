@@ -182,23 +182,6 @@ block|}
 end_function
 
 begin_function
-name|ACPI_STATUS
-name|AcpiOsValidateInterface
-parameter_list|(
-name|char
-modifier|*
-name|Interface
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AE_SUPPORT
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|BOOLEAN
 name|AcpiOsReadable
 parameter_list|(

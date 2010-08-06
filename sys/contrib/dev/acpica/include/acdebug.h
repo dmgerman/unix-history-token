@@ -334,6 +334,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AcpiDbDisplayInterfaces
+parameter_list|(
+name|char
+modifier|*
+name|ActionArg
+parameter_list|,
+name|char
+modifier|*
+name|InterfaceNameArg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
 name|AcpiDbFindNameInNamespace
 parameter_list|(

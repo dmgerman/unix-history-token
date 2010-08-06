@@ -427,6 +427,17 @@ comment|/* For ACPI H/W except GPE registers */
 end_comment
 
 begin_comment
+comment|/* Mutex for _OSI support */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_MUTEX
+name|AcpiGbl_OsiMutex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Reader/Writer lock is used for namespace walk and dynamic table unload */
 end_comment
 
@@ -540,6 +551,13 @@ name|AcpiGbl_BreakpointWalk
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_INTERFACE_HANDLER
+name|AcpiGbl_InterfaceHandler
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Owner ID support */
 end_comment
@@ -646,6 +664,14 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|UINT8
 name|AcpiGbl_OsiData
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_INTERFACE_INFO
+modifier|*
+name|AcpiGbl_SupportedInterfaces
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,6 +1225,14 @@ name|ACPI_EXTERN
 name|ACPI_EXTERNAL_LIST
 modifier|*
 name|AcpiGbl_ExternalList
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_EXTERNAL_FILE
+modifier|*
+name|AcpiGbl_ExternalFileList
 decl_stmt|;
 end_decl_stmt
 

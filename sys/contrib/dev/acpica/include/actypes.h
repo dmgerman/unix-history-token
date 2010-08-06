@@ -3271,6 +3271,23 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+modifier|*
+name|ACPI_INTERFACE_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|,
+name|UINT32
+name|Supported
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* Interrupt handler return values */
 end_comment

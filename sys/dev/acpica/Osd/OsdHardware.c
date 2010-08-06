@@ -204,7 +204,7 @@ parameter_list|,
 name|UINT32
 name|Register
 parameter_list|,
-name|void
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,

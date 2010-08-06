@@ -3176,6 +3176,14 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+name|struct
+name|acpi_interface_info
+modifier|*
+name|Next
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
 name|UINT8
 name|Value
 decl_stmt|;
@@ -3183,6 +3191,20 @@ block|}
 name|ACPI_INTERFACE_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_INVALID
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_DYNAMIC
+value|0x02
+end_define
 
 begin_typedef
 typedef|typedef
@@ -3523,6 +3545,25 @@ directive|define
 name|ACPI_IPATH_ALLOCATED
 value|0x01
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_external_file
+block|{
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|struct
+name|acpi_external_file
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_EXTERNAL_FILE
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Debugger  *  ****************************************************************************/
