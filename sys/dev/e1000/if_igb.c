@@ -9291,6 +9291,15 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* Set MAC type early for PCI setup */
+name|e1000_set_mac_type
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
