@@ -3981,7 +3981,7 @@ case|case
 name|IFT_ISO88025
 case|:
 case|case
-name|IFI_L2VLAN
+name|IFT_L2VLAN
 case|:
 if|if
 condition|(
