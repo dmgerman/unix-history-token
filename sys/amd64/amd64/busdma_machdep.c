@@ -2604,13 +2604,10 @@ expr_stmt|;
 comment|/* 		 * Count the number of bounce pages 		 * needed in order to complete this transfer 		 */
 name|vaddr
 operator|=
-name|trunc_page
-argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|buf
-argument_list|)
 expr_stmt|;
 name|vendaddr
 operator|=
@@ -2653,7 +2650,18 @@ operator|++
 expr_stmt|;
 name|vaddr
 operator|+=
+operator|(
 name|PAGE_SIZE
+operator|-
+operator|(
+operator|(
+name|vm_offset_t
+operator|)
+name|vaddr
+operator|&
+name|PAGE_MASK
+operator|)
+operator|)
 expr_stmt|;
 block|}
 name|CTR1
@@ -3739,6 +3747,8 @@ parameter_list|)
 block|{
 name|bus_addr_t
 name|lastaddr
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|nsegs
