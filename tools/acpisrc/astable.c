@@ -706,6 +706,12 @@ name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{
+literal|"ACPI_EXTERNAL_FILE"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_FADT_INFO"
 block|,
 name|SRC_TYPE_STRUCT

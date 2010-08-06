@@ -169,6 +169,29 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Mutex for _OSI support */
+name|Status
+operator|=
+name|AcpiOsCreateMutex
+argument_list|(
+operator|&
+name|AcpiGbl_OsiMutex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Create the reader/writer lock for namespace access */
 name|Status
 operator|=
@@ -226,6 +249,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsDeleteMutex
+argument_list|(
+name|AcpiGbl_OsiMutex
+argument_list|)
+expr_stmt|;
 comment|/* Delete the spinlocks */
 name|AcpiOsDeleteLock
 argument_list|(

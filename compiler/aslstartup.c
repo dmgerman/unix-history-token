@@ -997,6 +997,9 @@ parameter_list|(
 name|char
 modifier|*
 name|Pathname
+parameter_list|,
+name|ASL_PATHNAME_CALLBACK
+name|PathCallback
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1109,7 +1112,10 @@ block|}
 comment|/* Save status from all compiles */
 name|Status
 operator||=
-name|AslDoOneFile
+call|(
+modifier|*
+name|PathCallback
+call|)
 argument_list|(
 name|FullPathname
 argument_list|)

@@ -2002,6 +2002,10 @@ name|AcpiGbl_TableHandler
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiGbl_InterfaceHandler
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Global Lock support */
 name|AcpiGbl_GlobalLockSemaphore
 operator|=
@@ -2083,6 +2087,10 @@ expr_stmt|;
 name|AcpiGbl_OsiData
 operator|=
 literal|0
+expr_stmt|;
+name|AcpiGbl_OsiMutex
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized

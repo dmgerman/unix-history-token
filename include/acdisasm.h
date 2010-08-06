@@ -1969,6 +1969,26 @@ comment|/*  * dmextern  */
 end_comment
 
 begin_function_decl
+name|ACPI_STATUS
+name|AcpiDmAddToExternalFileList
+parameter_list|(
+name|char
+modifier|*
+name|PathList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmClearExternalFileList
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AcpiDmAddToExternalList
 parameter_list|(

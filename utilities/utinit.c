@@ -199,6 +199,10 @@ comment|/* Close the AcpiEvent Handling */
 name|AcpiEvTerminate
 argument_list|()
 expr_stmt|;
+comment|/* Delete any dynamic _OSI interfaces */
+name|AcpiUtInterfaceTerminate
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Close the Namespace */

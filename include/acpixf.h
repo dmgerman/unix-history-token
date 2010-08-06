@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100702
+value|0x20100806
 end_define
 
 begin_include
@@ -281,8 +281,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInstallInterface
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiRemoveInterface
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * ACPI Memory managment  */
+comment|/*  * ACPI Memory management  */
 end_comment
 
 begin_function_decl
@@ -874,6 +894,16 @@ name|ACPI_STATUS
 name|AcpiInstallExceptionHandler
 parameter_list|(
 name|ACPI_EXCEPTION_HANDLER
+name|Handler
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInstallInterfaceHandler
+parameter_list|(
+name|ACPI_INTERFACE_HANDLER
 name|Handler
 parameter_list|)
 function_decl|;

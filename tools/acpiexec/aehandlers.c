@@ -142,6 +142,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|UINT32
+name|AeInterfaceHandler
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|,
+name|UINT32
+name|Supported
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|UINT32
 name|SigintCount
@@ -843,6 +856,53 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AeInterfaceHandler  *  * DESCRIPTION: Handler for _OSI invocations  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|AeInterfaceHandler
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|,
+name|UINT32
+name|Supported
+parameter_list|)
+block|{
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|AeInterfaceHandler
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Received _OSI (\"%s\"), is %ssupported\n"
+operator|,
+name|InterfaceName
+operator|,
+name|Supported
+operator|==
+literal|0
+condition|?
+literal|"not "
+else|:
+literal|""
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Supported
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AeRegionInit  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Opregion init function.  *  *****************************************************************************/
 end_comment
 
@@ -935,6 +995,32 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiInstallInterfaceHandler
+argument_list|(
+name|AeInterfaceHandler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not install interface handler, %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiInstallTableHandler

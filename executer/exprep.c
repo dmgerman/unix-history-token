@@ -713,7 +713,7 @@ name|AE_AML_OPERAND_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Setup width (access granularity) fields */
+comment|/* Setup width (access granularity) fields (values are: 1, 2, 4, 8) */
 name|ObjDesc
 operator|->
 name|CommonField
@@ -727,18 +727,6 @@ name|ACPI_DIV_8
 argument_list|(
 name|AccessBitWidth
 argument_list|)
-expr_stmt|;
-comment|/* 1,  2,  4,  8 */
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessBitWidth
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|AccessBitWidth
 expr_stmt|;
 comment|/*      * BaseByteOffset is the address of the start of the field within the      * region.  It is the byte address of the first *datum* (field-width data      * unit) of the field. (i.e., the first datum that contains at least the      * first *bit* of the field.)      *      * Note: ByteAlignment is always either equal to the AccessBitWidth or 8      * (Byte access), and it defines the addressing granularity of the parent      * region or buffer.      */
 name|NearestByteAddress
@@ -818,11 +806,14 @@ name|SecondDesc
 init|=
 name|NULL
 decl_stmt|;
-name|UINT32
-name|Type
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|UINT32
+name|AccessByteWidth
+decl_stmt|;
+name|UINT32
+name|Type
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1000,6 +991,66 @@ operator|->
 name|RegionNode
 argument_list|)
 expr_stmt|;
+comment|/* Allow full data read from EC address space */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_EC
+operator|)
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+operator|>
+literal|8
+operator|)
+condition|)
+block|{
+name|AccessByteWidth
+operator|=
+name|ACPI_ROUND_BITS_UP_TO_BYTES
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+argument_list|)
+expr_stmt|;
+comment|/* Maximum byte width supported is 255 */
+if|if
+condition|(
+name|AccessByteWidth
+operator|<
+literal|256
+condition|)
+block|{
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|AccessByteWidth
+expr_stmt|;
+block|}
+block|}
 comment|/* An additional reference for the container */
 name|AcpiUtAddReference
 argument_list|(
