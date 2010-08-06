@@ -686,7 +686,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"cfe_enummem: 0x%016jx/%llu.\n"
+literal|"cfe_enummem: 0x%016jx/%ju.\n"
 argument_list|,
 name|addr
 argument_list|,
@@ -709,7 +709,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ignoring %llu bytes of memory at 0x%jx "
+literal|"Ignoring %ju bytes of memory at 0x%jx "
 literal|"that is above maxmem %dMB\n"
 argument_list|,
 name|len
@@ -743,7 +743,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Ignoring %llu bytes of memory "
+literal|"Ignoring %ju bytes of memory "
 literal|"that is above maxmem %dMB\n"
 argument_list|,
 operator|(
