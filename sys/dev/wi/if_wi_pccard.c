@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_wi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -495,6 +489,13 @@ argument_list|(
 name|ELSA
 argument_list|,
 name|XI325_IEEE
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|ELSA
+argument_list|,
+name|APDL325_IEEE
 argument_list|)
 block|,
 name|PCMCIA_CARD
