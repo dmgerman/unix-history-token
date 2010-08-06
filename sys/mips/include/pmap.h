@@ -390,10 +390,6 @@ name|vm_page_t
 name|pv_ptem
 decl_stmt|;
 comment|/* VM page for pte */
-name|boolean_t
-name|pv_wired
-decl_stmt|;
-comment|/* whether this entry is wired */
 block|}
 typedef|*
 name|pv_entry_t
