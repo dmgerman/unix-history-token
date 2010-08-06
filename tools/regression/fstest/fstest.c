@@ -1102,7 +1102,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fstest [-u uid] [-g gid1[,gid2[...]]] syscall args ...\n"
+literal|"usage: fstest [-U umask] [-u uid] [-g gid1[,gid2[...]]] syscall args ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
