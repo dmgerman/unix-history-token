@@ -1624,6 +1624,34 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * send an IPI to a specific CPU.  */
+end_comment
+
+begin_function
+name|void
+name|ipi_cpu
+parameter_list|(
+name|int
+name|cpu
+parameter_list|,
+name|u_int
+name|ipi
+parameter_list|)
+block|{
+name|ipi_send
+argument_list|(
+name|cpuid_to_pcpu
+index|[
+name|cpu
+index|]
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * send an IPI to all CPUs EXCEPT myself.  */
 end_comment
 

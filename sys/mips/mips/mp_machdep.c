@@ -330,6 +330,47 @@ block|}
 end_function
 
 begin_comment
+comment|/* Send an IPI to a specific CPU. */
+end_comment
+
+begin_function
+name|void
+name|ipi_cpu
+parameter_list|(
+name|int
+name|cpu
+parameter_list|,
+name|u_int
+name|ipi
+parameter_list|)
+block|{
+name|CTR3
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: cpu: %d, ipi: %x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|cpu
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+name|ipi_send
+argument_list|(
+name|cpuid_to_pcpu
+index|[
+name|cpu
+index|]
+argument_list|,
+name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Handle an IPI sent to this processor.  */
 end_comment
 

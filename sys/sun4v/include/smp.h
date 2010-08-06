@@ -322,10 +322,20 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipi_selected
+name|ipi_all_but_self
 parameter_list|(
 name|u_int
-name|cpus
+name|ipi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipi_cpu
+parameter_list|(
+name|int
+name|cpu
 parameter_list|,
 name|u_int
 name|ipi
@@ -335,8 +345,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipi_all_but_self
+name|ipi_selected
 parameter_list|(
+name|u_int
+name|cpus
+parameter_list|,
 name|u_int
 name|ipi
 parameter_list|)
