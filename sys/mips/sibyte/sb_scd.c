@@ -78,7 +78,7 @@ name|addr
 parameter_list|,
 name|val
 parameter_list|)
-value|mips3_sd((uint64_t *)(addr), (val))
+value|mips3_sd((uint64_t *)(uintptr_t)(addr), (val))
 end_define
 
 begin_define
@@ -88,7 +88,7 @@ name|sb_load64
 parameter_list|(
 name|addr
 parameter_list|)
-value|mips3_ld((uint64_t *)(addr))
+value|mips3_ld((uint64_t *)(uintptr_t)(addr))
 end_define
 
 begin_comment
@@ -378,7 +378,7 @@ name|int
 name|src
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -425,7 +425,7 @@ name|int
 name|src
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -475,7 +475,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -503,7 +503,7 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|uint64_t
@@ -545,7 +545,7 @@ name|int
 name|intrnum
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -578,7 +578,7 @@ name|int
 name|intsrc
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -707,7 +707,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
@@ -738,7 +738,7 @@ name|uint64_t
 name|val
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|regaddr
 decl_stmt|;
 name|regaddr
