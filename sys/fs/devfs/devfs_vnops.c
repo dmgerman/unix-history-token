@@ -279,6 +279,10 @@ name|cdevsw
 modifier|*
 modifier|*
 name|dswp
+parameter_list|,
+name|int
+modifier|*
+name|ref
 parameter_list|)
 block|{
 operator|*
@@ -291,6 +295,8 @@ operator|->
 name|f_vnode
 argument_list|,
 name|devp
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -314,6 +320,9 @@ name|dev_relthread
 argument_list|(
 operator|*
 name|devp
+argument_list|,
+operator|*
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -1940,6 +1949,24 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dev
+operator|->
+name|si_flags
+operator|&
+name|SI_ETERNAL
+operator|)
+operator|!=
+literal|0
+condition|)
+name|vp
+operator|->
+name|v_vflag
+operator||=
+name|VV_ETERNALDEV
+expr_stmt|;
 name|vp
 operator|->
 name|v_op
@@ -2336,6 +2363,8 @@ name|int
 name|vp_locked
 decl_stmt|,
 name|error
+decl_stmt|,
+name|ref
 decl_stmt|;
 comment|/* 	 * XXX: Don't call d_close() if we were called because of 	 * XXX: insmntque1() failure. 	 */
 if|if
@@ -2474,6 +2503,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -2534,6 +2566,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -2604,6 +2638,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -3230,6 +3266,8 @@ name|int
 name|error
 decl_stmt|,
 name|i
+decl_stmt|,
+name|ref
 decl_stmt|;
 specifier|const
 name|char
@@ -3263,6 +3301,9 @@ name|dev
 argument_list|,
 operator|&
 name|dsw
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -3303,6 +3344,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -3374,6 +3417,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -3410,6 +3455,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -3584,6 +3631,8 @@ name|dsw
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ref
 decl_stmt|;
 name|struct
 name|file
@@ -3616,6 +3665,9 @@ name|dev
 argument_list|,
 operator|&
 name|dsw
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -3647,6 +3699,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -4946,6 +5000,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|ref
+decl_stmt|,
 name|vlocked
 decl_stmt|;
 name|struct
@@ -5002,6 +5058,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -5122,6 +5181,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -5288,6 +5349,8 @@ name|dsw
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ref
 decl_stmt|;
 name|struct
 name|file
@@ -5311,6 +5374,9 @@ name|dev
 argument_list|,
 operator|&
 name|dsw
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -5347,6 +5413,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -5437,6 +5505,8 @@ name|ioflag
 decl_stmt|,
 name|error
 decl_stmt|,
+name|ref
+decl_stmt|,
 name|resid
 decl_stmt|;
 name|struct
@@ -5466,6 +5536,9 @@ name|dev
 argument_list|,
 operator|&
 name|dsw
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -5571,6 +5644,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -7800,6 +7875,8 @@ name|error
 decl_stmt|,
 name|ioflag
 decl_stmt|,
+name|ref
+decl_stmt|,
 name|resid
 decl_stmt|;
 name|struct
@@ -7829,6 +7906,9 @@ name|dev
 argument_list|,
 operator|&
 name|dsw
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -7965,6 +8045,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if

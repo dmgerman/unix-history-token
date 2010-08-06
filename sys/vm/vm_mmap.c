@@ -5200,6 +5200,8 @@ name|int
 name|error
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|ref
 decl_stmt|;
 name|flags
 operator|=
@@ -5211,6 +5213,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|cdev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -5236,6 +5241,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|cdev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5278,6 +5285,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|cdev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -5300,6 +5309,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|cdev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -5339,6 +5350,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|cdev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -5373,6 +5386,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|cdev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
