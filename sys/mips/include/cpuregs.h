@@ -231,6 +231,10 @@ name|MIPS_XKPHYS_END
 value|0xbfffffffffffffff
 end_define
 
+begin_comment
+comment|/*  * Cache Coherency Attributes:  *	UC:	Uncached.  *	UA:	Uncached accelerated.  *	C:	Cacheable, coherency unspecified.  *	CNC:	Cacheable non-coherent.  *	CC:	Cacheable coherent.  *	CCE:	Cacheable coherent, exclusive read.  *	CCEW:	Cacheable coherent, exclusive write.  *	CCUOW:	Cacheable coherent, update on write.  *  * Note that some bits vary in meaning across implementations (and that the  * listing here is no doubt incomplete) and that the optimal cached mode varies  * between implementations.  0x02 is required to be UC and 0x03 is required to  * be a least C.  *  * We define the following logical bits:  * 	UNCACHED:  * 		The optimal uncached mode for the target CPU type.  This must  * 		be suitable for use in accessing memory-mapped devices.  * 	CACHED:	The optional cached mode for the target CPU type.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -239,8 +243,33 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Uncached.  */
+comment|/* Uncached. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_C
+value|0x03
+end_define
+
+begin_comment
+comment|/* Cacheable, coherency unspecified. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_R4000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_R10000
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -249,9 +278,159 @@ name|MIPS_CCA_CNC
 value|0x03
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCEW
+value|0x05
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_R4000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCUOW
+value|0x06
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_R10000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UA
+value|0x07
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_CCEW
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Cacheable non-coherent.  */
+comment|/* defined(CPU_R4000) || defined(CPU_R10000) */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CC
+value|0x05
+end_define
+
+begin_comment
+comment|/* Cacheable Coherent. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIPS_CCA_UNCACHED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UNCACHED
+value|MIPS_CCA_UC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If we don't know which cached mode to use and there is a cache coherent  * mode, use it.  If there is not a cache coherent mode, use the required  * cacheable mode.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIPS_CCA_CACHED
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MIPS_CCA_CC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_CC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_C
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -274,7 +453,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_CNC)<< 59) | (x))
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_CACHED)<< 59) | (x))
 end_define
 
 begin_define
@@ -285,7 +464,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_UC)<< 59) | (x))
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_UNCACHED)<< 59) | (x))
 end_define
 
 begin_define

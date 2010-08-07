@@ -319,45 +319,15 @@ begin_define
 define|#
 directive|define
 name|PTE_C_UNCACHED
-value|(PTE_C(0x02))
+value|(PTE_C(MIPS_CCA_UNCACHED))
 end_define
-
-begin_comment
-comment|/*  * The preferred cache attribute for cacheable pages, this can be   * implementation dependent. We will use the standard value 0x3 as   * default.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_SB1
-argument_list|)
-end_if
 
 begin_define
 define|#
 directive|define
 name|PTE_C_CACHE
-value|(PTE_C(0x05))
+value|(PTE_C(MIPS_CCA_CACHED))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PTE_C_CACHE
-value|(PTE_C(0x03))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
