@@ -2091,6 +2091,9 @@ name|uint16_t
 name|port
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2119,6 +2122,8 @@ operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|iodev_read_1
@@ -2147,6 +2152,9 @@ block|{
 name|uint16_t
 name|val
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2163,9 +2171,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 operator|(
@@ -2231,6 +2236,9 @@ block|{
 name|uint32_t
 name|val
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2247,9 +2255,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifndef|#
-directive|ifndef
-name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 operator|(
@@ -2357,6 +2362,9 @@ name|uint8_t
 name|val
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2377,6 +2385,8 @@ literal|0x88
 condition|)
 comment|/* POST status register */
 return|return;
+endif|#
+directive|endif
 name|iodev_write_1
 argument_list|(
 name|port
@@ -2404,6 +2414,9 @@ name|uint16_t
 name|val
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2416,9 +2429,6 @@ literal|0x88
 condition|)
 comment|/* POST status register */
 return|return;
-ifndef|#
-directive|ifndef
-name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 operator|(
@@ -2479,6 +2489,9 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 name|port
@@ -2491,9 +2504,6 @@ literal|0x88
 condition|)
 comment|/* POST status register */
 return|return;
-ifndef|#
-directive|ifndef
-name|X86BIOS_NATIVE_ARCH
 if|if
 condition|(
 operator|(
