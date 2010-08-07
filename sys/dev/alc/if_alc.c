@@ -16088,15 +16088,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Configure CMB. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|ALC_CMB_TD_THRESH
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -16109,6 +16100,16 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|ALC_CMB_TD_THRESH
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -16121,6 +16122,7 @@ literal|5000
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|CSR_WRITE_4
 argument_list|(
