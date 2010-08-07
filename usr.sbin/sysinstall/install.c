@@ -2660,8 +2660,7 @@ argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
 literal|"scroll through the debugging messages on VTY1 with the\n"
 literal|"scroll-lock feature.  You can also choose \"No\" at the next\n"
-literal|"prompt and go back into the installation menus to retry\n"
-literal|"whichever operations have failed."
+literal|"prompt and reboot and try the installation again."
 argument_list|)
 expr_stmt|;
 return|return
@@ -3315,6 +3314,15 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|FALSE
+condition|)
+return|return
+name|FALSE
+return|;
 comment|/* When running as init, *now* it's safe to grab the rc.foo vars */
 name|installEnvironment
 argument_list|()
