@@ -1015,7 +1015,7 @@ return|return
 operator|(
 name|readl
 argument_list|(
-name|x86bios_offset
+name|BIOS_PADDRTOVADDR
 argument_list|(
 name|intno
 operator|*
