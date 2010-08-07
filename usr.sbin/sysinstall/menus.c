@@ -5102,13 +5102,8 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"If you are using PPP over a serial device, as opposed to a direct\n"
-literal|"ethernet connection, then you may first need to dial your Internet\n"
-literal|"Service Provider using the ppp utility we provide for that purpose.\n"
-literal|"If you're using SLIP over a serial device then the expectation is\n"
-literal|"that you have a HARDWIRED connection.\n\n"
-literal|"You can also install over a parallel port using a special \"laplink\"\n"
-literal|"cable to another machine running FreeBSD."
+literal|"Please select the ethernet device to configure.\n\n"
+literal|""
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
