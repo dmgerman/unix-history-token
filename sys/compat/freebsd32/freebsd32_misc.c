@@ -14375,7 +14375,11 @@ expr|struct
 name|freebsd32_ps_strings
 operator|*
 operator|)
-name|FREEBSD32_PS_STRINGS
+name|curproc
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 expr_stmt|;
 name|szsigcode
 operator|=
