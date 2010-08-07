@@ -1847,6 +1847,14 @@ operator|.
 name|in_size
 operator|>
 name|VC_MAXDATASIZE
+operator|||
+name|iap
+operator|->
+name|vi
+operator|.
+name|out_size
+operator|>
+name|VC_MAXDATASIZE
 condition|)
 block|{
 name|NDFREE

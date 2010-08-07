@@ -19,6 +19,12 @@ directive|define
 name|_CODA_HEADER_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -28,6 +34,11 @@ end_include
 begin_comment
 comment|/* for CODA_COMPAT_5 option */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Avoid CODA_COMPAT_5 redefinition in coda5 module */
@@ -3077,14 +3088,16 @@ decl_stmt|,
 name|out
 decl_stmt|;
 comment|/* Data to be transferred in, or out */
+name|unsigned
 name|short
 name|in_size
 decl_stmt|;
-comment|/* Size of input buffer<= 2K */
+comment|/* Size of input buffer<= 8K */
+name|unsigned
 name|short
 name|out_size
 decl_stmt|;
-comment|/* Maximum size of output buffer,<= 2K */
+comment|/* Maximum size of output buffer,<= 8K */
 block|}
 struct|;
 end_struct
