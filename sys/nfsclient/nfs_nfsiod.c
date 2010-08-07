@@ -212,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfs_lock.h>
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_expr_stmt

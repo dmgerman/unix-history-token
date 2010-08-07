@@ -152,37 +152,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfs/nfsport.h>
+file|<nfs/nfsproto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsmount.h>
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfs.h>
+file|<nfsclient/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsnode.h>
+file|<nfsclient/nfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfs_lock.h>
+file|<nfsclient/nfsnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nlminfo.h>
+file|<nfsclient/nlminfo.h>
 end_include
 
 begin_function_decl
@@ -204,11 +204,11 @@ end_function_decl
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_NEWNFSLOCK
+name|M_NFSLOCK
 argument_list|,
-literal|"newnfsclient_lock"
+literal|"nfsclient_lock"
 argument_list|,
-literal|"NEWNFS lock request"
+literal|"NFS lock request"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -216,11 +216,11 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_NEWNLMINFO
+name|M_NLMINFO
 argument_list|,
-literal|"newnfsclient_nlminfo"
+literal|"nfsclient_nlminfo"
 argument_list|,
-literal|"NEWNFS lock process structure"
+literal|"NFS lock process structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -450,7 +450,7 @@ name|free
 argument_list|(
 name|lm
 argument_list|,
-name|M_NEWNFSLOCK
+name|M_NFSLOCK
 argument_list|)
 expr_stmt|;
 block|}
@@ -612,7 +612,7 @@ name|free
 argument_list|(
 name|lm
 argument_list|,
-name|M_NEWNFSLOCK
+name|M_NFSLOCK
 argument_list|)
 expr_stmt|;
 block|}
@@ -731,7 +731,7 @@ sizeof|sizeof
 expr|*
 name|lm2
 argument_list|,
-name|M_NEWNFSLOCK
+name|M_NFSLOCK
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -796,7 +796,7 @@ name|free
 argument_list|(
 name|lm2
 argument_list|,
-name|M_NEWNFSLOCK
+name|M_NFSLOCK
 argument_list|)
 expr_stmt|;
 return|return
@@ -850,7 +850,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|newnfslock_modevent
+name|nfslock_modevent
 parameter_list|(
 name|module_t
 name|mod
@@ -940,9 +940,9 @@ end_function
 begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
-name|newnfslock
+name|nfslock
 argument_list|,
-name|newnfslock_modevent
+name|nfslock_modevent
 argument_list|,
 name|NULL
 argument_list|)
@@ -952,7 +952,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|newnfslock
+name|nfslock
 argument_list|,
 literal|1
 argument_list|)
@@ -969,7 +969,7 @@ end_comment
 
 begin_function
 name|int
-name|ncl_dolock
+name|nfs_dolock
 parameter_list|(
 name|struct
 name|vop_advlock_args
@@ -1094,8 +1094,6 @@ name|vp
 argument_list|)
 operator|->
 name|n_fhp
-operator|->
-name|nfh_fh
 argument_list|,
 name|msg
 operator|.
@@ -1258,7 +1256,7 @@ expr|struct
 name|nlminfo
 argument_list|)
 argument_list|,
-name|M_NEWNLMINFO
+name|M_NLMINFO
 argument_list|,
 name|M_WAITOK
 operator||
@@ -1689,7 +1687,6 @@ comment|/*  * Free nlminfo attached to process.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|nlminfo_release
 parameter_list|(
@@ -1705,7 +1702,7 @@ name|p
 operator|->
 name|p_nlminfo
 argument_list|,
-name|M_NEWNLMINFO
+name|M_NLMINFO
 argument_list|)
 expr_stmt|;
 name|p
