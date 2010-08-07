@@ -350,7 +350,7 @@ name|MII_PHY_DESC
 argument_list|(
 name|MARVELL
 argument_list|,
-name|E1000_6
+name|E1101
 argument_list|)
 block|,
 name|MII_PHY_DESC
