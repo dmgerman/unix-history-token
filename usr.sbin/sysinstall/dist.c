@@ -3099,7 +3099,7 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Failed to retreive piece file %s.\n"
+literal|"Failed to retrieve piece file %s.\n"
 literal|"%s: Reinitializing media."
 argument_list|,
 name|fname
@@ -3618,6 +3618,11 @@ name|old
 decl_stmt|,
 name|new
 decl_stmt|;
+name|int
+name|canceled
+init|=
+literal|0
+decl_stmt|;
 name|status
 operator|=
 name|TRUE
@@ -3708,6 +3713,10 @@ name|i
 index|]
 operator|.
 name|my_name
+operator|&&
+name|canceled
+operator|==
+literal|0
 condition|;
 name|i
 operator|++
@@ -3919,11 +3928,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|status
+operator|==
+literal|0
 condition|)
 operator|--
 name|i
+expr_stmt|;
+else|else
+name|canceled
+operator|=
+literal|1
 expr_stmt|;
 name|status
 operator|=
@@ -4391,10 +4406,6 @@ name|old_dists
 decl_stmt|,
 name|old_kernel
 decl_stmt|,
-name|retries
-init|=
-literal|0
-decl_stmt|,
 name|status
 init|=
 name|DITEM_SUCCESS
@@ -4404,6 +4415,11 @@ name|buf
 index|[
 literal|512
 index|]
+decl_stmt|;
+name|int
+name|extract_status
+init|=
+name|TRUE
 decl_stmt|;
 name|WINDOW
 modifier|*
@@ -4473,16 +4489,8 @@ argument_list|(
 literal|"Attempting to install all selected distributions.."
 argument_list|)
 expr_stmt|;
-comment|/* Try for 3 times around the loop, then give up. */
-while|while
-condition|(
-name|Dists
-operator|&&
-operator|++
-name|retries
-operator|<
-literal|3
-condition|)
+name|extract_status
+operator|=
 name|distExtract
 argument_list|(
 name|NULL
@@ -4602,6 +4610,16 @@ name|restorescr
 argument_list|(
 name|w
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|extract_status
+operator|==
+name|FALSE
+condition|)
+name|status
+operator|=
+name|DITEM_FAILURE
 expr_stmt|;
 return|return
 name|status
