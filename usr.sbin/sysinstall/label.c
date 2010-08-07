@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|128
+value|280
 end_define
 
 begin_else
@@ -144,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_MIN_SIZE
-value|118
+value|180
 end_define
 
 begin_endif
@@ -206,7 +206,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|512
+value|1024
 end_define
 
 begin_define
@@ -220,14 +220,14 @@ begin_define
 define|#
 directive|define
 name|VAR_DEFAULT_SIZE
-value|1024
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|TMP_DEFAULT_SIZE
-value|512
+value|1024
 end_define
 
 begin_define
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_NOMINAL_SIZE
-value|256
+value|512
 end_define
 
 begin_define
@@ -259,7 +259,7 @@ begin_define
 define|#
 directive|define
 name|VAR_NOMINAL_SIZE
-value|128
+value|512
 end_define
 
 begin_define
