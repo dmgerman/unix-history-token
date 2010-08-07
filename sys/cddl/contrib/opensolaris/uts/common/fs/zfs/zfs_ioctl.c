@@ -1420,7 +1420,7 @@ name|dsl_prop_get_integer
 argument_list|(
 name|name
 argument_list|,
-literal|"zoned"
+literal|"jailed"
 argument_list|,
 operator|&
 name|zoned
