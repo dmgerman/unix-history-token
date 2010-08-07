@@ -58,7 +58,7 @@ comment|/* do not send a I2C start before message */
 name|uint16_t
 name|len
 decl_stmt|;
-comment|/* msg legnth */
+comment|/* msg length */
 name|uint8_t
 modifier|*
 name|buf
