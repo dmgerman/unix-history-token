@@ -125,7 +125,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == ntohl(0x0000ffff)))
+value|((*(const uint32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const uint32_t *)(const void *)(&(a)->s6_addr[8]) == ntohl(0x0000ffff)))
 end_define
 
 begin_endif
@@ -2790,19 +2790,19 @@ parameter_list|,
 name|socklen_t
 name|tolen
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ppid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|stream_no
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|timetolive
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|context
 parameter_list|)
 block|{
@@ -4272,19 +4272,19 @@ parameter_list|,
 name|int
 name|addrcnt
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ppid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|stream_no
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|timetolive
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|context
 parameter_list|)
 block|{
