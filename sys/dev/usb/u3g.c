@@ -1221,6 +1221,7 @@ block|}
 block|,
 comment|/* OEM: Longcheer */
 block|{
+block|{
 name|USB_VENDOR_LONGCHEER
 block|,
 name|USB_PRODUCT_LONGCHEER_WM66
@@ -1230,11 +1231,11 @@ name|U3GSP_HSDPA
 block|,
 name|U3GINIT_HUAWEI
 block|}
-decl_stmt|,
+block|, }
+decl_stmt|;
 end_decl_stmt
 
 begin_define
-unit|};
 define|#
 directive|define
 name|u3g_lookup
