@@ -2514,7 +2514,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chmod(%s): %m"
+literal|"chflags(%s): %m"
 argument_list|,
 name|ttyn
 argument_list|)
@@ -2551,7 +2551,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chmod(%s): %m"
+literal|"chown(%s): %m"
 argument_list|,
 name|ttyn
 argument_list|)
