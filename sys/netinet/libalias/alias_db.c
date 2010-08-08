@@ -8072,10 +8072,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 endif|#
 directive|endif
 name|LIBALIAS_LOCK_ASSERT
@@ -8100,8 +8096,7 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|la
@@ -9188,10 +9183,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 endif|#
 directive|endif
 if|if
@@ -9274,8 +9265,7 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|la
