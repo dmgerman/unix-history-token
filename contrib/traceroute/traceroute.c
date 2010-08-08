@@ -4086,10 +4086,6 @@ name|t1
 decl_stmt|,
 name|t2
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 specifier|register
 name|struct
 name|ip
@@ -4138,8 +4134,7 @@ argument_list|(
 operator|&
 name|t1
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -4216,8 +4211,7 @@ argument_list|(
 operator|&
 name|t2
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|i
@@ -4813,10 +4807,6 @@ name|now
 decl_stmt|,
 name|wait
 decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
 specifier|register
 name|int
 name|cc
@@ -4919,8 +4909,7 @@ argument_list|(
 operator|&
 name|now
 argument_list|,
-operator|&
-name|tz
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tvsub
