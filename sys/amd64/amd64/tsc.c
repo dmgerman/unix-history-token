@@ -862,10 +862,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u_int
-argument_list|)
+literal|0
 argument_list|,
 name|sysctl_machdep_tsc_freq
 argument_list|,
