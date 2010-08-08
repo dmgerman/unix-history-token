@@ -7441,6 +7441,14 @@ name|sc
 operator|->
 name|sc_naddrs6
 operator|)
+operator|&&
+name|sc
+operator|->
+name|sc_carpdev
+operator|->
+name|if_link_state
+operator|==
+name|LINK_STATE_UP
 condition|)
 name|SC2IFP
 argument_list|(
