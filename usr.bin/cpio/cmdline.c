@@ -1068,7 +1068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse the argument to the -R or --owner flag.  *  * The format is one of the following:  *<username|uid>    - Override user but not group  *<username>:   - Override both, group is user's default group  *<uid>:    - Override user but not group  *<username|uid>:<groupname|gid> - Override both  *   :<groupname|gid>  - Override group but not user  *  * Where uid/gid are decimal representations and groupname/username  * are names to be looked up in system database.  Note that we try  * to look up an argument as a name first, then try numeric parsing.  *  * A period can be used instead of the colon.  *  * Sets uid/gid return as appropriate, -1 indicates uid/gid not specified.  *  * Returns NULL if no error, otherwise returns error string for display.  *  */
+comment|/*  * Parse the argument to the -R or --owner flag.  *  * The format is one of the following:  *<username|uid>    - Override user but not group  *<username>:   - Override both, group is user's default group  *<uid>:    - Override user but not group  *<username|uid>:<groupname|gid> - Override both  *   :<groupname|gid>  - Override group but not user  *  * Where uid/gid are decimal representations and groupname/username  * are names to be looked up in system database.  Note that we try  * to look up an argument as a name first, then try numeric parsing.  *  * A period can be used instead of the colon.  *  * Sets uid/gid return as appropriate, -1 indicates uid/gid not specified.  * TODO: If the spec uses uname/gname, then return those to the caller  * as well.  If the spec provides uid/gid, just return names as NULL.  *  * Returns NULL if no error, otherwise returns error string for display.  *  */
 end_comment
 
 begin_function
