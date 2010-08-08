@@ -9277,12 +9277,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ifp
-operator|=
-name|sc
-operator|->
-name|alc_ifp
-expr_stmt|;
 if|if
 condition|(
 operator|(
