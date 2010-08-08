@@ -984,6 +984,12 @@ modifier|*
 name|geom
 decl_stmt|;
 comment|/* Pointer to our VINUM geom. */
+name|struct
+name|proc
+modifier|*
+name|worker
+decl_stmt|;
+comment|/* Worker process. */
 block|}
 struct|;
 end_struct
