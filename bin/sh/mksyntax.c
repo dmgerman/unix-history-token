@@ -1224,14 +1224,14 @@ argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"abcdefghijklmnopqrstucvwxyz"
+literal|"abcdefghijklmnopqrstuvwxyz"
 argument_list|,
 literal|"ISLOWER"
 argument_list|)
 expr_stmt|;
 name|add
 argument_list|(
-literal|"ABCDEFGHIJKLMNOPQRSTUCVWXYZ"
+literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 argument_list|,
 literal|"ISUPPER"
 argument_list|)
