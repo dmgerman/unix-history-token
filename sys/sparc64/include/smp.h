@@ -336,6 +336,30 @@ name|cpu_ipi_selected
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|void
+name|cpu_ipi_single_t
+parameter_list|(
+name|u_int
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|cpu_ipi_single_t
+modifier|*
+name|cpu_ipi_single
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|mp_init
@@ -538,11 +562,8 @@ name|u_int
 name|ipi
 parameter_list|)
 block|{
-comment|/* 	 * XXX: Not ideal, but would require more work to add a cpu_ipi_cpu 	 * function pointer. 	 */
-name|cpu_ipi_selected
+name|cpu_ipi_single
 argument_list|(
-literal|1
-operator|<<
 name|cpu
 argument_list|,
 literal|0
