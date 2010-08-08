@@ -305,10 +305,6 @@ name|time_t
 name|clock_sec
 decl_stmt|;
 name|struct
-name|timezone
-name|zone
-decl_stmt|;
-name|struct
 name|tm
 modifier|*
 name|localclock
@@ -370,8 +366,7 @@ argument_list|(
 operator|&
 name|now
 argument_list|,
-operator|&
-name|zone
+name|NULL
 argument_list|)
 expr_stmt|;
 name|clock_sec
