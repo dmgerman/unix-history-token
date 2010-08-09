@@ -1452,7 +1452,7 @@ name|sysctl_kern_consmute
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"State of the console muting"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1862,7 +1862,7 @@ name|consmsgbuf_size
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Console tty buffer size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2042,7 +2042,7 @@ name|constty_wakeups_per_second
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Times per second to check for pending console tty messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

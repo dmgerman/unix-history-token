@@ -981,7 +981,7 @@ name|sysctl_kern_ktrace_request_pool
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|""
+literal|"Pool buffer size for ktrace(1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

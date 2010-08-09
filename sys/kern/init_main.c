@@ -345,7 +345,7 @@ name|boothowto
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Boot control flags, passed from loader"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -372,7 +372,7 @@ name|bootverbose
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Control the output of verbose kernel messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2779,7 +2779,8 @@ name|init_shutdown_timeout
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Shutdown timeout of init(8). "
+literal|"Unused within kernel, but used to control init(8)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
