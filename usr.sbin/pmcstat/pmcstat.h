@@ -216,6 +216,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAGS_HAS_CPUMASK
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* -c */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_SAMPLE_COUNT
 value|65536
 end_define
