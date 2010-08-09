@@ -158,6 +158,20 @@ begin_comment
 comment|/* 1M */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|X86BIOS_TRACE
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|,
+name|r
+parameter_list|)
+value|do {					\ 	printf(__STRING(h)						\ 	    " (ax=0x%04x bx=0x%04x cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n",\ 	    (n), (r)->R_AX, (r)->R_BX, (r)->R_CX, (r)->R_DX,		\ 	    (r)->R_ES, (r)->R_DI);					\ } while (0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -863,10 +877,12 @@ if|if
 condition|(
 name|x86bios_trace_call
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Calling 0x%05x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+name|Calling
+literal|0x
+operator|%
+literal|06x
 argument_list|,
 operator|(
 name|seg
@@ -877,28 +893,6 @@ operator|+
 name|off
 argument_list|,
 name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -978,10 +972,12 @@ if|if
 condition|(
 name|x86bios_trace_call
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Exiting 0x%05x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+name|Exiting
+literal|0x
+operator|%
+literal|06x
 argument_list|,
 operator|(
 name|seg
@@ -992,28 +988,6 @@ operator|+
 name|off
 argument_list|,
 name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
 argument_list|)
 expr_stmt|;
 block|}
@@ -1064,38 +1038,18 @@ if|if
 condition|(
 name|x86bios_trace_int
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Calling int 0x%x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+argument|Calling INT
+literal|0x
+argument|%
+literal|02x
 argument_list|,
-name|intno
+argument|intno
 argument_list|,
-name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
+argument|regs
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -1160,38 +1114,18 @@ if|if
 condition|(
 name|x86bios_trace_int
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Exiting int 0x%x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+argument|Exiting INT
+literal|0x
+argument|%
+literal|02x
 argument_list|,
-name|intno
+argument|intno
 argument_list|,
-name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
+argument|regs
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 end_function
 
@@ -1369,7 +1303,7 @@ begin_define
 define|#
 directive|define
 name|X86BIOS_ROM_SIZE
-value|(X86BIOS_MEM_SIZE - (uint32_t)x86bios_rom_phys)
+value|(X86BIOS_MEM_SIZE - x86bios_rom_phys)
 end_define
 
 begin_define
@@ -3009,10 +2943,12 @@ if|if
 condition|(
 name|x86bios_trace_call
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Calling 0x%05x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+name|Calling
+literal|0x
+operator|%
+literal|06x
 argument_list|,
 operator|(
 name|seg
@@ -3023,28 +2959,6 @@ operator|+
 name|off
 argument_list|,
 name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -3110,10 +3024,12 @@ condition|(
 name|x86bios_trace_call
 condition|)
 block|{
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Exiting 0x%05x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+name|Exiting
+literal|0x
+operator|%
+literal|06x
 argument_list|,
 operator|(
 name|seg
@@ -3124,28 +3040,6 @@ operator|+
 name|off
 argument_list|,
 name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
 argument_list|)
 expr_stmt|;
 if|if
@@ -3154,7 +3048,7 @@ name|x86bios_fault
 condition|)
 name|printf
 argument_list|(
-literal|"Page fault at 0x%05x from 0x%04x:0x%04x.\n"
+literal|"Page fault at 0x%06x from 0x%04x:0x%04x.\n"
 argument_list|,
 name|x86bios_fault_addr
 argument_list|,
@@ -3243,38 +3137,18 @@ if|if
 condition|(
 name|x86bios_trace_int
 condition|)
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Calling int 0x%x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+argument|Calling INT
+literal|0x
+argument|%
+literal|02x
 argument_list|,
-name|intno
+argument|intno
 argument_list|,
-name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
+argument|regs
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3336,45 +3210,25 @@ condition|(
 name|x86bios_trace_int
 condition|)
 block|{
-name|printf
+name|X86BIOS_TRACE
 argument_list|(
-literal|"Exiting int 0x%x (ax=0x%04x bx=0x%04x "
-literal|"cx=0x%04x dx=0x%04x es=0x%04x di=0x%04x)\n"
+argument|Exiting INT
+literal|0x
+argument|%
+literal|02x
 argument_list|,
-name|intno
+argument|intno
 argument_list|,
-name|regs
-operator|->
-name|R_AX
-argument_list|,
-name|regs
-operator|->
-name|R_BX
-argument_list|,
-name|regs
-operator|->
-name|R_CX
-argument_list|,
-name|regs
-operator|->
-name|R_DX
-argument_list|,
-name|regs
-operator|->
-name|R_ES
-argument_list|,
-name|regs
-operator|->
-name|R_DI
+argument|regs
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|x86bios_fault
 condition|)
 name|printf
 argument_list|(
-literal|"Page fault at 0x%05x from 0x%04x:0x%04x.\n"
+literal|"Page fault at 0x%06x from 0x%04x:0x%04x.\n"
 argument_list|,
 name|x86bios_fault_addr
 argument_list|,
@@ -3657,10 +3511,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"x86bios:   IVT 0x%06x-0x%06x at %p\n"
+literal|"x86bios:  IVT 0x%06jx-0x%06jx at %p\n"
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_IVT_BASE
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_IVT_SIZE
 operator|+
 name|X86BIOS_IVT_BASE
@@ -3672,18 +3532,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"x86bios:  SSEG 0x%06x-0x%06x at %p\n"
+literal|"x86bios: SSEG 0x%06jx-0x%06jx at %p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|x86bios_seg_phys
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_SEG_SIZE
 operator|+
-operator|(
-name|uint32_t
-operator|)
 name|x86bios_seg_phys
 operator|-
 literal|1
@@ -3699,13 +3556,13 @@ name|X86BIOS_ROM_BASE
 condition|)
 name|printf
 argument_list|(
-literal|"x86bios:  EBDA 0x%06x-0x%06x at %p\n"
+literal|"x86bios: EBDA 0x%06jx-0x%06jx at %p\n"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|x86bios_rom_phys
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_ROM_BASE
 operator|-
 literal|1
@@ -3715,10 +3572,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"x86bios:   ROM 0x%06x-0x%06x at %p\n"
+literal|"x86bios:  ROM 0x%06jx-0x%06jx at %p\n"
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_ROM_BASE
 argument_list|,
+operator|(
+name|vm_paddr_t
+operator|)
 name|X86BIOS_MEM_SIZE
 operator|-
 name|X86BIOS_SEG_SIZE
@@ -3726,22 +3589,13 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-name|void
-operator|*
-operator|)
-operator|(
-operator|(
-name|vm_offset_t
+name|caddr_t
 operator|)
 name|x86bios_rom
 operator|+
 name|X86BIOS_ROM_BASE
 operator|-
-operator|(
-name|vm_offset_t
-operator|)
 name|x86bios_rom_phys
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
