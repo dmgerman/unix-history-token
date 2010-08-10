@@ -25188,6 +25188,12 @@ operator|.
 name|ast_per_cal
 operator|++
 expr_stmt|;
+name|sc
+operator|->
+name|sc_lastlongcal
+operator|=
+name|ticks
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_getrfgain
@@ -25353,12 +25359,6 @@ operator|=
 name|ath_longcalinterval
 operator|*
 name|hz
-expr_stmt|;
-name|sc
-operator|->
-name|sc_lastlongcal
-operator|=
-name|ticks
 expr_stmt|;
 if|if
 condition|(
