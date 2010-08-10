@@ -6106,6 +6106,13 @@ argument_list|,
 name|control
 argument_list|)
 expr_stmt|;
+else|else
+name|msg
+operator|.
+name|msg_controllen
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|error
