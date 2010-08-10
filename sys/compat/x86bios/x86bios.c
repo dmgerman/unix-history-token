@@ -2960,9 +2960,6 @@ operator|&
 name|x86bios_lock
 argument_list|)
 expr_stmt|;
-name|spinlock_enter
-argument_list|()
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -2983,6 +2980,9 @@ name|x86bios_fault
 operator|=
 literal|0
 expr_stmt|;
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 name|x86emu_exec_call
 argument_list|(
 operator|&
@@ -2992,6 +2992,9 @@ name|seg
 argument_list|,
 name|off
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3008,9 +3011,6 @@ operator|*
 name|regs
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|spinlock_exit
-argument_list|()
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -3147,9 +3147,6 @@ operator|&
 name|x86bios_lock
 argument_list|)
 expr_stmt|;
-name|spinlock_enter
-argument_list|()
-expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -3170,6 +3167,9 @@ name|x86bios_fault
 operator|=
 literal|0
 expr_stmt|;
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 name|x86emu_exec_intr
 argument_list|(
 operator|&
@@ -3177,6 +3177,9 @@ name|x86bios_emu
 argument_list|,
 name|intno
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -3193,9 +3196,6 @@ operator|*
 name|regs
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|spinlock_exit
-argument_list|()
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
