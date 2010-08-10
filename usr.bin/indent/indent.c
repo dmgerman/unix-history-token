@@ -826,7 +826,7 @@ if|if
 condition|(
 name|input
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* we must have the input file */
@@ -851,7 +851,7 @@ if|if
 condition|(
 name|input
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* check for open error */
 name|err
@@ -870,7 +870,7 @@ if|if
 condition|(
 name|output
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* we have the output file */
@@ -916,7 +916,7 @@ if|if
 condition|(
 name|output
 operator|==
-literal|0
+name|NULL
 condition|)
 comment|/* check for create error */
 name|err
@@ -958,7 +958,7 @@ if|if
 condition|(
 name|input
 operator|==
-literal|0
+name|NULL
 condition|)
 name|input
 operator|=
@@ -968,7 +968,7 @@ if|if
 condition|(
 name|output
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -5798,7 +5798,7 @@ if|if
 condition|(
 name|input
 operator|==
-literal|0
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -5823,7 +5823,7 @@ if|if
 condition|(
 name|output
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|unlink
