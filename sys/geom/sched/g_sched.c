@@ -7613,6 +7613,10 @@ block|}
 if|if
 condition|(
 name|gsp
+operator|!=
+name|NULL
+operator|&&
+name|gsp
 operator|->
 name|gs_dumpconf
 condition|)
