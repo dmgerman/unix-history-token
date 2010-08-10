@@ -6565,7 +6565,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|cpuset_t
+name|cpumask_t
 name|mask
 decl_stmt|;
 ifdef|#
