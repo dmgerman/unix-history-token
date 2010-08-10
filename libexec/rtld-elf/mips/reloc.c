@@ -192,7 +192,7 @@ name|__mips_n64
 end_ifdef
 
 begin_comment
-comment|/*  * ELF64 MIPS encodes the relocs uniquely.  The first 32-bits of info contain  * the symbol index.  The top 32-bits contain three relocation types encoded  * in big-endian integer with first relocation in LSB.  This means for little  * endian we have to byte swap that interger (r_type).  */
+comment|/*  * ELF64 MIPS encodes the relocs uniquely.  The first 32-bits of info contain  * the symbol index.  The top 32-bits contain three relocation types encoded  * in big-endian integer with first relocation in LSB.  This means for little  * endian we have to byte swap that integer (r_type).  */
 end_comment
 
 begin_define
@@ -249,7 +249,7 @@ name|ELF_R_TYPE
 parameter_list|(
 name|r_info
 parameter_list|)
-value|bswap32((r_info)>> 32)
+value|bswap32(((r_info)>> 32))
 end_define
 
 begin_endif
