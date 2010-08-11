@@ -12359,6 +12359,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
@@ -12698,6 +12704,8 @@ block|}
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
