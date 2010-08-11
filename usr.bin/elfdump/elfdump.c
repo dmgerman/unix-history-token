@@ -1906,6 +1906,12 @@ return|return
 literal|"XXX:VERSYM"
 return|;
 case|case
+literal|0x6ffffff4
+case|:
+return|return
+literal|"SHT_SUNW_dof"
+return|;
+case|case
 literal|0x6ffffff7
 case|:
 return|return
