@@ -426,7 +426,8 @@ begin_function_decl
 name|void
 name|carp_carpdev_state
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -489,7 +490,8 @@ begin_function_decl
 name|int
 name|carp_iamatch
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
@@ -513,7 +515,8 @@ name|ifaddr
 modifier|*
 name|carp_iamatch6
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
@@ -524,11 +527,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-modifier|*
+name|caddr_t
 name|carp_macmatch6
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|struct
@@ -549,10 +552,11 @@ name|ifnet
 modifier|*
 name|carp_forus
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
-name|void
+name|u_char
 modifier|*
 parameter_list|)
 function_decl|;

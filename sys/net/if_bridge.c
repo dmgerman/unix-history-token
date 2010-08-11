@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_carp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -294,22 +288,11 @@ name|INET6
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_carp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -10108,6 +10091,42 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|carp_forus_p
+function_decl|)
+parameter_list|(
+name|struct
+name|carp_if
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * bridge_input:  *  *	Receive input from a member interface.  Queue the packet for  *	bridging if it is not for us.  */
 end_comment
@@ -10574,11 +10593,6 @@ argument_list|(
 name|INET6
 argument_list|)
 operator|)
-operator|&&
-name|defined
-argument_list|(
-name|DEV_CARP
-argument_list|)
 define|#
 directive|define
 name|OR_CARP_CHECK_WE_ARE_DST
@@ -10586,7 +10600,7 @@ parameter_list|(
 name|iface
 parameter_list|)
 define|\
-value||| ((iface)->if_carp \&& carp_forus((iface)->if_carp, eh->ether_dhost))
+value||| ((iface)->if_carp \&& (*carp_forus_p)((iface)->if_carp, eh->ether_dhost))
 define|#
 directive|define
 name|OR_CARP_CHECK_WE_ARE_SRC
@@ -10594,7 +10608,7 @@ parameter_list|(
 name|iface
 parameter_list|)
 define|\
-value||| ((iface)->if_carp \&& carp_forus((iface)->if_carp, eh->ether_shost))
+value||| ((iface)->if_carp \&& (*carp_forus_p)((iface)->if_carp, eh->ether_shost))
 else|#
 directive|else
 define|#
