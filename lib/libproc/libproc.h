@@ -692,7 +692,7 @@ name|struct
 name|proc_handle
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|size_t

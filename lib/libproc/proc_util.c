@@ -485,12 +485,19 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|warn
+argument_list|(
+literal|"waitpid"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|WIFSTOPPED
@@ -530,6 +537,8 @@ name|status
 expr_stmt|;
 return|return
 operator|(
+name|phdl
+operator|->
 name|status
 operator|)
 return|;
@@ -613,7 +622,7 @@ name|proc_handle
 modifier|*
 name|phdl
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|buf
 parameter_list|,

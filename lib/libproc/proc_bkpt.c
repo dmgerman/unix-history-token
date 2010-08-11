@@ -656,9 +656,14 @@ literal|1
 operator|)
 return|;
 block|}
+name|proc_wstatus
+argument_list|(
+name|phdl
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
-name|proc_wstatus
+name|proc_getwstat
 argument_list|(
 name|phdl
 argument_list|)

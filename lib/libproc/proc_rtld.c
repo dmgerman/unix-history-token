@@ -75,11 +75,6 @@ name|phdl
 init|=
 name|arg
 decl_stmt|;
-name|phdl
-operator|->
-name|nobjs
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|phdl
@@ -145,9 +140,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
-name|phdl
-operator|->
-name|rdobjs
+name|lop
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -224,6 +217,12 @@ operator|*
 literal|64
 argument_list|)
 expr_stmt|;
+name|phdl
+operator|->
+name|rdobjsz
+operator|=
+literal|64
+expr_stmt|;
 if|if
 condition|(
 name|phdl
@@ -274,7 +273,6 @@ parameter_list|)
 block|{
 name|memset
 argument_list|(
-operator|&
 name|phdl
 operator|->
 name|rdobjs
