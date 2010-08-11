@@ -231,6 +231,14 @@ operator|(
 name|ELF_T_SYMINFO
 operator|)
 return|;
+case|case
+name|SHT_SUNW_dof
+case|:
+return|return
+operator|(
+name|ELF_T_BYTE
+operator|)
+return|;
 endif|#
 directive|endif
 case|case
