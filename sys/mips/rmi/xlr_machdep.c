@@ -1842,8 +1842,11 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Waking up CPUs 0x%llx.\n"
+literal|"Waking up CPUs 0x%jx.\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|xlr_boot1_info
 operator|.
 name|cpu_online_map
@@ -2132,8 +2135,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|platform_ipi_intrnum
-argument_list|()
+name|IRQ_IPI
 argument_list|)
 expr_stmt|;
 name|xlr_unmask_hard_irq
