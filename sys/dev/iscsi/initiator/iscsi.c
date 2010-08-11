@@ -1416,7 +1416,7 @@ name|i
 parameter_list|,
 name|pq
 parameter_list|)
-value|do {\ 	       sprintf(buf, "%03d] %06x %02x %06x %06x %zd\n",\ 		       i, ntohl(pq->pdu.ipdu.bhs.CmdSN),\ 		       pq->pdu.ipdu.bhs.opcode, ntohl(pq->pdu.ipdu.bhs.itt),\ 		       ntohl(pq->pdu.ipdu.bhs.ExpStSN),\ 		       pq->ts.sec);\ 	       } while(0)
+value|do {\ 	       sprintf(buf, "%03d] %06x %02x %06x %06x %jd\n",\ 		       i, ntohl(pq->pdu.ipdu.bhs.CmdSN),\ 		       pq->pdu.ipdu.bhs.opcode, ntohl(pq->pdu.ipdu.bhs.itt),\ 		       ntohl(pq->pdu.ipdu.bhs.ExpStSN),\ 		       (intmax_t)pq->ts.sec);\ 	       } while(0)
 name|sprintf
 argument_list|(
 name|buf
