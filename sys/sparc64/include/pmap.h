@@ -109,7 +109,7 @@ decl_stmt|;
 name|vm_object_t
 name|pm_tsb_obj
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 name|uint32_t

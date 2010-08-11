@@ -168,7 +168,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 name|uint32_t
@@ -445,7 +445,7 @@ name|MAXCPU
 index|]
 decl_stmt|;
 comment|/* TID to identify this pmap entries in TLB */
-name|u_int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

@@ -237,7 +237,7 @@ begin_struct
 struct|struct
 name|ipi_cache_args
 block|{
-name|u_int
+name|cpumask_t
 name|ica_mask
 decl_stmt|;
 name|vm_paddr_t
@@ -251,7 +251,7 @@ begin_struct
 struct|struct
 name|ipi_rd_args
 block|{
-name|u_int
+name|cpumask_t
 name|ira_mask
 decl_stmt|;
 name|register_t
@@ -266,7 +266,7 @@ begin_struct
 struct|struct
 name|ipi_tlb_args
 block|{
-name|u_int
+name|cpumask_t
 name|ita_mask
 decl_stmt|;
 name|struct
@@ -922,7 +922,7 @@ name|ipi_tlb_args
 modifier|*
 name|ita
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|cpus
 decl_stmt|;
 if|if
@@ -1045,7 +1045,7 @@ name|ipi_tlb_args
 modifier|*
 name|ita
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|cpus
 decl_stmt|;
 if|if
@@ -1177,7 +1177,7 @@ name|ipi_tlb_args
 modifier|*
 name|ita
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|cpus
 decl_stmt|;
 if|if
@@ -1303,7 +1303,7 @@ name|cookie
 parameter_list|)
 block|{
 specifier|volatile
-name|u_int
+name|cpumask_t
 modifier|*
 name|mask
 decl_stmt|;

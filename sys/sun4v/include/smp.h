@@ -148,7 +148,7 @@ begin_struct
 struct|struct
 name|ipi_cache_args
 block|{
-name|u_int
+name|cpumask_t
 name|ica_mask
 decl_stmt|;
 name|vm_paddr_t
@@ -162,7 +162,7 @@ begin_struct
 struct|struct
 name|ipi_tlb_args
 block|{
-name|u_int
+name|cpumask_t
 name|ita_mask
 decl_stmt|;
 name|struct

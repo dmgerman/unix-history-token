@@ -312,7 +312,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|volatile
-name|u_int
+name|cpumask_t
 name|shutdown_cpus
 decl_stmt|;
 end_decl_stmt

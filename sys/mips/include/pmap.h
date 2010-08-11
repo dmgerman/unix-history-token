@@ -160,7 +160,7 @@ comment|/* generation count (pmap lock dropped) */
 name|u_int
 name|pm_retries
 decl_stmt|;
-name|int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

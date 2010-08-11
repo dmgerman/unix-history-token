@@ -2198,10 +2198,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
+name|cpumask_t
+name|map
+decl_stmt|;
 name|u_int
 name|cnt
-decl_stmt|,
-name|map
 decl_stmt|;
 if|if
 condition|(

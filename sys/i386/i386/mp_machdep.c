@@ -6626,9 +6626,7 @@ endif|#
 directive|endif
 name|retval
 operator|=
-name|mask
-operator|&
-name|hlt_cpus_mask
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -6636,7 +6634,13 @@ name|mask
 operator|&
 name|hlt_cpus_mask
 condition|)
+block|{
+name|retval
+operator|=
+literal|1
+expr_stmt|;
 asm|__asm __volatile("sti; hlt" : : : "memory");
+block|}
 return|return
 operator|(
 name|retval
