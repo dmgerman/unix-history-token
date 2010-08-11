@@ -2420,7 +2420,7 @@ name|bail
 goto|;
 block|}
 block|}
-comment|/* NB: CIOGSESSION2 has the crid */
+comment|/* NB: CIOCGSESSION2 has the crid */
 if|if
 condition|(
 name|cmd
