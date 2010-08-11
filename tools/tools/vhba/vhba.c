@@ -441,7 +441,7 @@ name|cts
 operator|->
 name|protocol_version
 operator|=
-name|SCSI_REV_SPC2
+name|SCSI_REV_SPC3
 expr_stmt|;
 name|cts
 operator|->
@@ -570,7 +570,7 @@ name|cpi
 operator|->
 name|protocol_version
 operator|=
-name|SCSI_REV_SPC2
+name|SCSI_REV_SPC3
 expr_stmt|;
 name|strlcpy
 argument_list|(
@@ -1286,7 +1286,7 @@ literal|0x7f
 block|,
 literal|0x0
 block|,
-literal|0x5
+name|SCSI_REV_SPC3
 block|,
 literal|0x2
 block|,
@@ -1367,7 +1367,7 @@ literal|0
 block|,
 literal|0x0
 block|,
-literal|0x5
+name|SCSI_REV_SPC3
 block|,
 literal|0x2
 block|,
