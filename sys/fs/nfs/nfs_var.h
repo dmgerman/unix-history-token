@@ -4941,7 +4941,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|int
 name|nfscl_mustflush
 parameter_list|(
 name|vnode_t

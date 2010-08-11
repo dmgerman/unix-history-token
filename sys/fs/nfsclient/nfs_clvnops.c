@@ -2389,6 +2389,8 @@ name|fmode
 operator|&
 name|FREAD
 operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 operator|!
@@ -2401,6 +2403,8 @@ name|nfscl_mustflush
 argument_list|(
 name|vp
 argument_list|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -3190,6 +3194,8 @@ name|nfscl_mustflush
 argument_list|(
 name|vp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|int
@@ -3319,6 +3325,8 @@ name|nfscl_mustflush
 argument_list|(
 name|vp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|ret

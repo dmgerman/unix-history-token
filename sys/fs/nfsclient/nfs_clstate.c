@@ -18346,7 +18346,7 @@ end_comment
 
 begin_function
 name|APPLESTATIC
-name|boolean_t
+name|int
 name|nfscl_mustflush
 parameter_list|(
 name|vnode_t
@@ -18400,7 +18400,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|TRUE
+literal|1
 operator|)
 return|;
 name|NFSLOCKCLSTATE
@@ -18425,7 +18425,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+literal|1
 operator|)
 return|;
 block|}
@@ -18490,7 +18490,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|FALSE
+literal|0
 operator|)
 return|;
 block|}
@@ -18499,7 +18499,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+literal|1
 operator|)
 return|;
 block|}
