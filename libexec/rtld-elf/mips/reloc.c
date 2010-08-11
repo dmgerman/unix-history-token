@@ -249,7 +249,7 @@ name|ELF_R_TYPE
 parameter_list|(
 name|r_info
 parameter_list|)
-value|bswap32(((r_info)>> 32))
+value|bswap32((r_info)>> 32)
 end_define
 
 begin_endif
