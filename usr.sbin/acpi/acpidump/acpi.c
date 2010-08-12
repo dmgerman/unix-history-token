@@ -3075,7 +3075,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\tClass %d Base Address 0x%jx Length %lld\n\n"
+literal|"\tClass %d Base Address 0x%jx Length %llu\n\n"
 argument_list|,
 name|tcpa
 operator|->
