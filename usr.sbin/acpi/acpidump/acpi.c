@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpidump.h"
 end_include
 
@@ -3075,7 +3081,9 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\tClass %d Base Address 0x%jx Length %llu\n\n"
+literal|"\tClass %d Base Address 0x%jx Length %"
+name|PRIu64
+literal|"\n\n"
 argument_list|,
 name|tcpa
 operator|->
