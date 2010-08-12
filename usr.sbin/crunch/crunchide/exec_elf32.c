@@ -186,6 +186,26 @@ parameter_list|)
 value|((data == ELFDATA2MSB) ? htobe32(x) : htole32(x))
 end_define
 
+begin_define
+define|#
+directive|define
+name|wewtoh
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? be32toh(x) : le32toh(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|htowew
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? htobe32(x) : htole32(x))
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -220,6 +240,30 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((data == ELFDATA2MSB) ? htobe64(x) : htole64(x))
+end_define
+
+begin_comment
+comment|/* elf64 Elf64_Word are 32 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wewtoh
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? be32toh(x) : le32toh(x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|htowew
+parameter_list|(
+name|x
+parameter_list|)
+value|((data == ELFDATA2MSB) ? htobe32(x) : htole32(x))
 end_define
 
 begin_endif
@@ -1603,7 +1647,7 @@ name|sp
 operator|->
 name|st_name
 operator|=
-name|htoxew
+name|htowew
 argument_list|(
 name|nstrtab_nextoff
 argument_list|)
