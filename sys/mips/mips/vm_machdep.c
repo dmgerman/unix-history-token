@@ -1571,6 +1571,8 @@ operator||=
 name|MIPS_SR_PX
 operator||
 name|MIPS_SR_UX
+operator||
+name|MIPS_SR_KX
 expr_stmt|;
 endif|#
 directive|endif
