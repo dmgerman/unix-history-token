@@ -36,6 +36,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ar5212/ar5212.h"
+end_include
+
+begin_comment
+comment|/* for NF cal related declarations */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"ar5416/ar5416.h"
 end_include
 
@@ -691,6 +701,34 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Try to make sure the above NF cal completes, just so 	 * it doesn't clash with subsequent percals -adrian 	*/
+if|if
+condition|(
+operator|!
+name|ar5212WaitNFCalComplete
+argument_list|(
+name|ah
+argument_list|,
+literal|10000
+argument_list|)
+condition|)
+block|{
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANY
+argument_list|,
+literal|"%s: initial NF calibration did "
+literal|"not complete in time; noisy environment?\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|AH_FALSE
+return|;
+block|}
 comment|/* Initialize list pointers */
 name|cal
 operator|->
