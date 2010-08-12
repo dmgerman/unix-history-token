@@ -112,7 +112,7 @@ name|disable_rtc_set
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disallow adjusting time-of-day clock"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -147,7 +147,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -162,16 +161,12 @@ name|clock_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|clock_dev
@@ -187,8 +182,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
 name|clock_dev
 operator|=
 name|dev
@@ -201,7 +194,6 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -212,7 +204,6 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -234,8 +225,6 @@ parameter_list|)
 block|{
 name|struct
 name|timespec
-name|ref
-decl_stmt|,
 name|ts
 decl_stmt|;
 name|int
@@ -338,13 +327,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|ref
+name|ts
 operator|.
 name|tv_sec
 operator|=
 name|base
 expr_stmt|;
-name|ref
+name|ts
 operator|.
 name|tv_nsec
 operator|=
@@ -353,7 +342,7 @@ expr_stmt|;
 name|tc_setclock
 argument_list|(
 operator|&
-name|ref
+name|ts
 argument_list|)
 expr_stmt|;
 block|}
@@ -417,7 +406,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"warning: clock_settime failed (%d), time-of-day clock "
@@ -426,8 +414,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 block|}
 end_function
 
