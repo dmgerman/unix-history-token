@@ -85,6 +85,14 @@ name|clock_res
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|timespec
+name|clock_adj
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* XXX: should be kern. now, it's no longer machdep.  */
 end_comment
@@ -190,6 +198,28 @@ name|clock_res
 operator|=
 name|res
 expr_stmt|;
+name|clock_adj
+operator|.
+name|tv_sec
+operator|=
+name|res
+operator|/
+literal|2
+operator|/
+literal|1000000
+expr_stmt|;
+name|clock_adj
+operator|.
+name|tv_nsec
+operator|=
+name|res
+operator|/
+literal|2
+operator|%
+literal|1000000
+operator|*
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -199,9 +229,23 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"registered as a time-of-day clock "
-literal|"(resolution %ldus)\n"
+literal|"(resolution %ldus, adjustment %jd.%09jds)\n"
 argument_list|,
 name|res
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|clock_adj
+operator|.
+name|tv_sec
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|clock_adj
+operator|.
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 block|}
@@ -311,6 +355,15 @@ operator|+=
 name|utc_offset
 argument_list|()
 expr_stmt|;
+name|timespecadd
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|clock_adj
+argument_list|)
+expr_stmt|;
 name|tc_setclock
 argument_list|(
 operator|&
@@ -380,6 +433,15 @@ name|getnanotime
 argument_list|(
 operator|&
 name|ts
+argument_list|)
+expr_stmt|;
+name|timespecadd
+argument_list|(
+operator|&
+name|ts
+argument_list|,
+operator|&
+name|clock_adj
 argument_list|)
 expr_stmt|;
 name|ts
