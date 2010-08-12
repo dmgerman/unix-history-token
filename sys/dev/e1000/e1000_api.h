@@ -246,6 +246,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|e1000_init_mbx_params
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|e1000_get_bus_info
 parameter_list|(
 name|struct
