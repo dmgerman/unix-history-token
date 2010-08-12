@@ -2460,14 +2460,10 @@ name|nfThresh
 decl_stmt|;
 if|if
 condition|(
-name|OS_REG_READ
+name|ar5212IsNFCalInProgress
 argument_list|(
 name|ah
-argument_list|,
-name|AR_PHY_AGC_CONTROL
 argument_list|)
-operator|&
-name|AR_PHY_AGC_CONTROL_NF
 condition|)
 block|{
 name|HALDEBUG
