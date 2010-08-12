@@ -2070,6 +2070,7 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
+comment|/* Wait for load to complete, should be fast, a few 10s of us. */
 if|if
 condition|(
 operator|!
