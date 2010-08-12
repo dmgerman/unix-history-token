@@ -701,7 +701,7 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to make sure the above NF cal completes, just so 	 * it doesn't clash with subsequent percals -adrian 	*/
+comment|/* 	 * Try to make sure the above NF cal completes, just so 	 * it doesn't clash with subsequent percals -adrian 	 */
 if|if
 condition|(
 operator|!
