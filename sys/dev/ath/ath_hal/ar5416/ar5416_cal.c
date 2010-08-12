@@ -1911,8 +1911,6 @@ name|h
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|int32_t
 name|val
@@ -2072,42 +2070,36 @@ argument_list|,
 name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
-comment|/* Wait for load to complete, should be fast, a few 10s of us. */
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|1000
-condition|;
-name|j
-operator|++
-control|)
-block|{
 if|if
 condition|(
-operator|(
+operator|!
+name|ar5212WaitNFCalComplete
+argument_list|(
+name|ah
+argument_list|,
+literal|1000
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * We timed out waiting for the noisefloor to load, probably due to an 		 * in-progress rx. Simply return here and allow the load plenty of time 		 * to complete before the next calibration interval.  We need to avoid 		 * trying to load -50 (which happens below) while the previous load is 		 * still in progress as this can cause rx deafness. Instead by returning 		 * here, the baseband nf cal will just be capped by our present 		 * noisefloor until the next calibration timer. 		 */
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANY
+argument_list|,
+literal|"Timeout while waiting for nf "
+literal|"to load: AR_PHY_AGC_CONTROL=0x%x\n"
+argument_list|,
 name|OS_REG_READ
 argument_list|(
 name|ah
 argument_list|,
 name|AR_PHY_AGC_CONTROL
 argument_list|)
-operator|&
-name|AR_PHY_AGC_CONTROL_NF
-operator|)
-operator|==
-literal|0
-condition|)
-break|break;
-name|OS_DELAY
-argument_list|(
-literal|10
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * Restore maxCCAPower register parameter again so that we're not capped 	 * by the median we just loaded.  This will be initial (and max) value 	 * of next noise floor calibration the baseband does.   	 */
 for|for
