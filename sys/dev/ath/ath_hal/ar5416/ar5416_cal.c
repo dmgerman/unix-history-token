@@ -1458,6 +1458,16 @@ name|isCalDone
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* 	 * Since ath_hal calls the PerCal method with rxchainmask=0x1; 	 * override it with the current chainmask. The upper levels currently 	 * doesn't know about the chainmask. 	 */
+name|rxchainmask
+operator|=
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_rx_chainmask
+expr_stmt|;
 comment|/* Invalid channel check */
 name|ichan
 operator|=
