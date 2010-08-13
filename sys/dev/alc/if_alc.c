@@ -18497,9 +18497,11 @@ block|{
 name|reg
 operator|&=
 operator|~
+operator|(
 name|MAC_CFG_TX_ENB
 operator||
 name|MAC_CFG_RX_ENB
+operator|)
 expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
