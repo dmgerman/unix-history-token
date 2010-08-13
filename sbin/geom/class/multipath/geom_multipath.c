@@ -599,39 +599,6 @@ return|return;
 block|}
 block|}
 block|}
-comment|/* 	 * Allocate a sector to write as metadata. 	 */
-name|sector
-operator|=
-name|malloc
-argument_list|(
-name|secsize
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sector
-operator|==
-name|NULL
-condition|)
-block|{
-name|gctl_error
-argument_list|(
-name|req
-argument_list|,
-literal|"unable to allocate metadata buffer"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|memset
-argument_list|(
-name|sector
-argument_list|,
-literal|0
-argument_list|,
-name|secsize
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Generate metadata. 	 */
 name|strlcpy
 argument_list|(
@@ -808,6 +775,39 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Allocate a sector to write as metadata. 	 */
+name|sector
+operator|=
+name|malloc
+argument_list|(
+name|secsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sector
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"unable to allocate metadata buffer"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|memset
+argument_list|(
+name|sector
+argument_list|,
+literal|0
+argument_list|,
+name|secsize
+argument_list|)
+expr_stmt|;
 comment|/* 	 * encode the metadata 	 */
 name|multipath_metadata_encode
 argument_list|(
