@@ -2975,7 +2975,7 @@ name|TCPAevent
 modifier|*
 name|event
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|len
 decl_stmt|,
 name|paddr
