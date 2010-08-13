@@ -4268,7 +4268,7 @@ name|vp
 parameter_list|,
 name|fw_flg
 parameter_list|)
-name|u_long
+name|unsigned
 modifier|*
 name|types
 decl_stmt|;
