@@ -3355,7 +3355,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_XLR_XLS
+name|CPU_RMI
 end_ifdef
 
 begin_decl_stmt

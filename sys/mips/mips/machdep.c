@@ -1241,7 +1241,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|TARGET_XLR_XLS
+name|CPU_RMI
 argument_list|)
 comment|/* Fake, but sufficient, for the 32-bit with 64-bit hardware addresses  */
 name|bcopy
