@@ -2927,6 +2927,7 @@ decl_stmt|;
 name|int
 name|do_clearcmdentry
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
