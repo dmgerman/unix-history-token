@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpidump.h"
 end_include
 
@@ -2981,7 +2975,7 @@ name|TCPAevent
 modifier|*
 name|event
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|len
 decl_stmt|,
 name|paddr
@@ -3081,9 +3075,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\tClass %d Base Address 0x%jx Length %"
-name|PRIu64
-literal|"\n\n"
+literal|"\tClass %u Base Address 0x%jx Length %ju\n\n"
 argument_list|,
 name|tcpa
 operator|->
@@ -3158,6 +3150,10 @@ operator|=
 operator|(
 expr|struct
 name|TCPAevent
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|vaddr
