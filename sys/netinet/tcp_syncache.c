@@ -3779,12 +3779,14 @@ operator|->
 name|sc_peer_mss
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the SYN,ACK was retransmitted, reset cwnd to 1 segment. 	 */
+comment|/* 	 * If the SYN,ACK was retransmitted, reset cwnd to 1 segment. 	 * NB: sc_rxmits counts all SYN,ACK transmits, not just retransmits. 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|sc_rxmits
+operator|>
+literal|1
 condition|)
 name|tp
 operator|->
