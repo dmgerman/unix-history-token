@@ -4848,7 +4848,7 @@ comment|/*          * for last gain, pdGainBoundary == Pmax_t2, so will         
 if|if
 condition|(
 name|tgtIndex
-operator|>
+operator|>=
 name|maxIndex
 condition|)
 block|{
