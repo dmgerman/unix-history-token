@@ -471,7 +471,7 @@ name|char
 modifier|*
 name|_buf
 parameter_list|,
-name|int64_t
+name|uint64_t
 modifier|*
 name|_num
 parameter_list|)
