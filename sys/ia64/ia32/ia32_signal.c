@@ -543,6 +543,19 @@ name|td_proc
 operator|->
 name|p_vmspace
 decl_stmt|;
+name|struct
+name|sysentvec
+modifier|*
+name|sv
+decl_stmt|;
+name|sv
+operator|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_sysent
+expr_stmt|;
 name|exec_setregs
 argument_list|(
 name|td
@@ -628,7 +641,9 @@ operator|.
 name|bspstore
 operator|=
 operator|(
-name|FREEBSD32_PS_STRINGS
+name|sv
+operator|->
+name|sv_psstrings
 operator|-
 name|sz_ia32_sigcode
 operator|-
@@ -717,7 +732,9 @@ expr_stmt|;
 comment|/* 	 * Build the GDT and LDT. 	 */
 name|gdt
 operator|=
-name|FREEBSD32_USRSTACK
+name|sv
+operator|->
+name|sv_usrstack
 expr_stmt|;
 name|vm_map_find
 argument_list|(
@@ -840,7 +857,9 @@ name|sd_lolimit
 operator|=
 operator|(
 operator|(
-name|FREEBSD32_USRSTACK
+name|sv
+operator|->
+name|sv_usrstack
 operator|>>
 literal|12
 operator|)
@@ -880,7 +899,9 @@ name|sd_hilimit
 operator|=
 operator|(
 operator|(
-name|FREEBSD32_USRSTACK
+name|sv
+operator|->
+name|sv_usrstack
 operator|>>
 literal|12
 operator|)
@@ -962,7 +983,9 @@ operator|+
 operator|(
 operator|(
 operator|(
-name|FREEBSD32_USRSTACK
+name|sv
+operator|->
+name|sv_usrstack
 operator|>>
 literal|12
 operator|)
@@ -1021,7 +1044,9 @@ operator|+
 operator|(
 operator|(
 operator|(
-name|FREEBSD32_USRSTACK
+name|sv
+operator|->
+name|sv_usrstack
 operator|>>
 literal|12
 operator|)
@@ -1289,7 +1314,13 @@ name|tf_scratch
 operator|.
 name|gr11
 operator|=
-name|FREEBSD32_PS_STRINGS
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 expr_stmt|;
 comment|/* 	 * XXX - Linux emulator 	 * Make sure sure edx is 0x0 on entry. Linux binaries depend 	 * on it. 	 */
 name|td

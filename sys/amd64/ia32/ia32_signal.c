@@ -2144,7 +2144,11 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|FREEBSD32_PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 operator|-
 name|sz_freebsd4_ia32_sigcode
 expr_stmt|;
@@ -3052,7 +3056,11 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|FREEBSD32_PS_STRINGS
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_psstrings
 operator|-
 operator|*
 operator|(
