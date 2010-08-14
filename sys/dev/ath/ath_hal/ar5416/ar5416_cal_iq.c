@@ -502,6 +502,7 @@ literal|16
 condition|)
 name|qCoff
 operator|=
+operator|-
 literal|16
 expr_stmt|;
 name|HALDEBUG
