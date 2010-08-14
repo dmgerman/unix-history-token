@@ -1022,7 +1022,7 @@ argument_list|,
 name|tcp_inflight_enable
 argument_list|)
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 end_expr_stmt
 
