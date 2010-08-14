@@ -3905,6 +3905,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+name|ieee80211_ratectl_node_init
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 name|ieee80211_sta_join1
 argument_list|(
@@ -6424,6 +6429,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+name|ieee80211_ratectl_node_init
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ic
@@ -6828,6 +6838,11 @@ operator||=
 name|IEEE80211_NODE_ERP
 expr_stmt|;
 name|ieee80211_node_setuptxparms
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni
 argument_list|)
@@ -10286,6 +10301,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 name|ieee80211_node_setuptxparms
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni
 argument_list|)

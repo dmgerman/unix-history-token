@@ -175,6 +175,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ratectl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -6622,6 +6628,11 @@ name|htinfo
 argument_list|)
 expr_stmt|;
 name|ieee80211_node_setuptxparms
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni
 argument_list|)
