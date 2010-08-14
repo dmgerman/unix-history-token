@@ -3725,6 +3725,9 @@ directive|endif
 operator||
 name|IEEE80211_C_WME
 comment|/* WME */
+operator||
+name|IEEE80211_C_RATECTL
+comment|/* use ratectl */
 expr_stmt|;
 if|#
 directive|if

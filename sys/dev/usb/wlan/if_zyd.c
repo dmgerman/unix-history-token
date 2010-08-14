@@ -2584,6 +2584,9 @@ comment|/* capable of bg scanning */
 operator||
 name|IEEE80211_C_WPA
 comment|/* 802.11i */
+operator||
+name|IEEE80211_C_RATECTL
+comment|/* use ratectl */
 expr_stmt|;
 name|bands
 operator|=

@@ -6632,6 +6632,14 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_caps
+operator|&
+name|IEEE80211_C_RATECTL
+condition|)
 name|ieee80211_ratectl_node_init
 argument_list|(
 name|ni

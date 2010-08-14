@@ -4306,8 +4306,11 @@ name|IEEE80211_C_WME
 operator||
 comment|/* WME */
 name|IEEE80211_C_WPA
-expr_stmt|;
+operator||
 comment|/* WPA1|WPA2(RSN) */
+name|IEEE80211_C_RATECTL
+expr_stmt|;
+comment|/* use ratectl */
 name|ic
 operator|->
 name|ic_cryptocaps

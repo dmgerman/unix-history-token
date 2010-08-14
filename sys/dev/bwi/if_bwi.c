@@ -3051,6 +3051,8 @@ operator||
 name|IEEE80211_C_BGSCAN
 operator||
 name|IEEE80211_C_MONITOR
+operator||
+name|IEEE80211_C_RATECTL
 expr_stmt|;
 name|ic
 operator|->
