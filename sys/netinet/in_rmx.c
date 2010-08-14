@@ -1643,12 +1643,29 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * We need to disable the automatic prune that happens 		 * in this case in rtrequest() because it will blow 		 * away the pointers that rn_walktree() needs in order 		 * continue our descent.  We will end up deleting all 		 * the routes that rtrequest() would have in any case, 		 * so that behavior is not needed there. 		 */
+comment|/* 		 * Aquire a reference so that it can later be freed 		 * as the refcount would be 0 here in case of at least 		 * ap->del. 		 */
+name|RT_ADDREF
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Disconnect it from the tree and permit protocols 		 * to cleanup. 		 */
 name|rtexpunge
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+comment|/* 		 * At this point it is an rttrash node, and in case 		 * the above is the only reference we must free it. 		 * If we do not noone will have a pointer and the 		 * rtentry will be leaked forever. 		 * In case someone else holds a reference, we are 		 * fine as we only decrement the refcount. In that 		 * case if the other entity calls RT_REMREF, we 		 * will still be leaking but at least we tried. 		 */
+name|RTFREE_LOCKED
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|RT_UNLOCK
 argument_list|(
