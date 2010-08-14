@@ -1976,7 +1976,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|2
+literal|5
 operator|*
 name|hz
 condition|)
