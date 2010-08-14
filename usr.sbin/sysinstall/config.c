@@ -3801,7 +3801,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/home   -alldirs       janice jimmy frank'>> /etc/exports"
+literal|"echo '#/home   -alldirs       janis jimi frank'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
