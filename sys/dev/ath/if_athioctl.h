@@ -361,9 +361,13 @@ name|ast_tx_nofrag
 decl_stmt|;
 comment|/* tx dropped 'cuz no ath frag buffer */
 name|u_int32_t
+name|ast_be_missed
+decl_stmt|;
+comment|/* missed beacons */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|14
+literal|13
 index|]
 decl_stmt|;
 block|}

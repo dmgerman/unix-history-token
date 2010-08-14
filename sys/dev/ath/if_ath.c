@@ -13086,6 +13086,13 @@ operator|->
 name|sc_bmisscount
 operator|++
 expr_stmt|;
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_be_missed
+operator|++
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
