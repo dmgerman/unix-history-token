@@ -15570,7 +15570,7 @@ argument_list|)
 condition|)
 name|reset
 operator||=
-literal|0x04000000
+name|BGE_MISCCFG_GPHY_PD_OVERRIDE
 expr_stmt|;
 comment|/* Issue global reset */
 name|write_op
@@ -16167,40 +16167,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_flags
-operator|&
-name|BGE_FLAG_PCIE
-condition|)
-block|{
-name|reset
-operator|=
-name|bge_readmem_ind
-argument_list|(
-name|sc
-argument_list|,
-literal|0x7C00
-argument_list|)
-expr_stmt|;
-name|bge_writemem_ind
-argument_list|(
-name|sc
-argument_list|,
-literal|0x7C00
-argument_list|,
-name|reset
-operator||
-operator|(
-literal|1
-operator|<<
-literal|25
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Fix up byte swapping. */
 name|CSR_WRITE_4
 argument_list|(
@@ -16300,8 +16266,15 @@ operator|->
 name|bge_chipid
 operator|!=
 name|BGE_CHIPID_BCM5750_A0
+operator|&&
+name|sc
+operator|->
+name|bge_asicrev
+operator|!=
+name|BGE_ASICREV_BCM5785
 condition|)
 block|{
+comment|/* Enable Data FIFO protection. */
 name|val
 operator|=
 name|CSR_READ_4
