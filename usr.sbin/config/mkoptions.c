@@ -1753,20 +1753,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Compat option %s not listed in options file.\n"
-argument_list|,
-name|this
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Option not found, but that's OK, we just ignore it since it 	 * may be for another arch. 	 */
+return|return;
 block|}
 end_function
 
