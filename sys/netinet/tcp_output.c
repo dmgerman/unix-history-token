@@ -4640,10 +4640,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
-comment|/* 	 * If we do path MTU discovery, then we set DF on every packet. 	 * This might not be the best thing to do according to RFC3390 	 * Section 2. However the tcp hostcache migitates the problem 	 * so it affects only the first tcp connection with a host. 	 */
+comment|/* 	 * If we do path MTU discovery, then we set DF on every packet. 	 * This might not be the best thing to do according to RFC3390 	 * Section 2. However the tcp hostcache migitates the problem 	 * so it affects only the first tcp connection with a host. 	 * 	 * NB: Don't set DF on small MTU/MSS to have a safe fallback. 	 */
 if|if
 condition|(
 name|V_path_mtu_discovery
+operator|&&
+name|tp
+operator|->
+name|t_maxopd
+operator|>
+name|V_tcp_minmss
 condition|)
 name|ip
 operator|->
