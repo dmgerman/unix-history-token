@@ -7040,6 +7040,36 @@ operator|=
 name|LF_YES
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|uses_xaui
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|params
+operator|.
+name|rev
+operator|>=
+name|T3_REV_C
+condition|)
+name|t3c_pcs_force_los
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+else|else
+name|t3b_pcs_reset
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Don't report link up */
 name|link_ok
 operator|=
@@ -7168,6 +7198,27 @@ name|adapter
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|adapter
+operator|->
+name|params
+operator|.
+name|rev
+operator|>=
+name|T3_REV_C
+condition|)
+name|t3c_pcs_force_los
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+else|else
+name|t3b_pcs_reset
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
 name|t3_write_reg
 argument_list|(
 name|adapter
@@ -7184,6 +7235,7 @@ name|F_RXEN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* disable TX FIFO drain */
 name|t3_set_reg_field
 argument_list|(
 name|adapter
@@ -7299,12 +7351,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|link_fault
-condition|)
 name|t3_mac_disable
 argument_list|(
 name|mac
@@ -7312,7 +7358,7 @@ argument_list|,
 name|MAC_DIRECTION_RX
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Make sure Tx FIFO continues to drain, even as rxen is left 		 * high to help detect and indicate remote faults. 		 */
+comment|/* 			 * Make sure Tx FIFO continues to drain, even as rxen is 			 * left high to help detect and indicate remote faults. 			 */
 name|t3_set_reg_field
 argument_list|(
 name|adapter
@@ -7367,6 +7413,7 @@ argument_list|,
 name|F_RXEN
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|t3_os_link_changed
 argument_list|(

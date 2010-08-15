@@ -3708,6 +3708,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3c_pcs_force_los
+parameter_list|(
+name|struct
+name|cmac
+modifier|*
+name|mac
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_mac_disable_exact_filters
 parameter_list|(
 name|struct
