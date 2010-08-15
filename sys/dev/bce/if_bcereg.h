@@ -443,7 +443,7 @@ value|"\020"			\ 	"\20AnegCmpl"		\ 	"\17AnegCmplAck"	\ 	"\16AnegAckDet"		\ 	"\15
 end_define
 
 begin_comment
-comment|/*   * Remove before release:   *  * #define BCE_DEBUG  * #define BCE_NVRAM_WRITE_SUPPORT  * #define BCE_JUMBO_HDRSPLIT  */
+comment|/*  * Remove before release:  *  * #define BCE_DEBUG  * #define BCE_NVRAM_WRITE_SUPPORT  * #define BCE_JUMBO_HDRSPLIT  */
 end_comment
 
 begin_comment
@@ -35554,7 +35554,7 @@ begin_struct
 struct|struct
 name|bce_softc
 block|{
-comment|/* Interface info */
+comment|/* Interface info.  Must be first!! */
 name|struct
 name|ifnet
 modifier|*
@@ -35664,6 +35664,10 @@ define|#
 directive|define
 name|BCE_PCIE_FLAG
 value|0x00000200
+define|#
+directive|define
+name|BCE_USING_TX_FLOW_CONTROL
+value|0x00000400
 comment|/* Controller capability flags. */
 name|u32
 name|bce_cap_flags
@@ -35775,15 +35779,15 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/*  	 * Tracks the state of the firmware.  0 = Running while any 	 * other value indicates that the firmware is not responding. 	 */
+comment|/* 	 * Tracks the state of the firmware.  0 = Running while any 	 * other value indicates that the firmware is not responding. 	 */
 name|u16
 name|bce_fw_timed_out
 decl_stmt|;
-comment|/*  	 * An incrementing sequence used to coordinate messages passed 	 * from the driver to the firmware. 	 */
+comment|/* 	 * An incrementing sequence used to coordinate messages passed 	 * from the driver to the firmware. 	 */
 name|u16
 name|bce_fw_wr_seq
 decl_stmt|;
-comment|/*  	 * An incrementing sequence used to let the firmware know that 	 * the driver is still operating.  Without the pulse, management 	 * firmware such as IPMI or UMP will operate in OS absent state. 	 */
+comment|/* 	 * An incrementing sequence used to let the firmware know that 	 * the driver is still operating.  Without the pulse, management 	 * firmware such as IPMI or UMP will operate in OS absent state. 	 */
 name|u16
 name|bce_fw_drv_pulse_wr_seq
 decl_stmt|;
@@ -35798,7 +35802,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/*  	 * These setting are used by the host coalescing (HC) block to 	 * to control how often the status block, statistics block and 	 * interrupts are generated. 	 */
+comment|/* 	 * These setting are used by the host coalescing (HC) block to 	 * to control how often the status block, statistics block and 	 * interrupts are generated. 	 */
 name|u16
 name|bce_tx_quick_cons_trip_int
 decl_stmt|;
@@ -36334,7 +36338,7 @@ name|u32
 name|mbuf_alloc_failed_count
 decl_stmt|;
 name|u32
-name|fragmented_mbuf_count
+name|mbuf_frag_count
 decl_stmt|;
 name|u32
 name|unexpected_attention_count
@@ -36395,10 +36399,10 @@ name|u32
 name|interrupts_handled
 decl_stmt|;
 name|u32
-name|rx_interrupts
+name|interrupts_rx
 decl_stmt|;
 name|u32
-name|tx_interrupts
+name|interrupts_tx
 decl_stmt|;
 name|u32
 name|phy_interrupts
@@ -36439,9 +36443,33 @@ comment|/* Number of times the TX chain was full. */
 name|u32
 name|tx_full_count
 decl_stmt|;
-comment|/* Number of TSO frames enqueued. */
+comment|/* Number of TSO frames requested. */
 name|u32
-name|requested_tso_frames
+name|tso_frames_requested
+decl_stmt|;
+comment|/* Number of TSO frames completed. */
+name|u32
+name|tso_frames_completed
+decl_stmt|;
+comment|/* Number of TSO frames failed. */
+name|u32
+name|tso_frames_failed
+decl_stmt|;
+comment|/* Number of IP checksum offload frames.*/
+name|u32
+name|csum_offload_ip
+decl_stmt|;
+comment|/* Number of TCP/UDP checksum offload frames.*/
+name|u32
+name|csum_offload_tcp_udp
+decl_stmt|;
+comment|/* Number of VLAN tagged frames received. */
+name|u32
+name|vlan_tagged_frames_rcvd
+decl_stmt|;
+comment|/* Number of VLAN tagged frames stripped. */
+name|u32
+name|vlan_tagged_frames_stripped
 decl_stmt|;
 endif|#
 directive|endif
