@@ -2504,6 +2504,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|bge_stop_fw
+parameter_list|(
+name|struct
+name|bge_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|bge_reset
 parameter_list|(
@@ -6863,18 +6875,14 @@ specifier|static
 name|void
 name|bge_sig_pre_reset
 parameter_list|(
-name|sc
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Some chips don't like this so only do this if ASF is enabled 	 */
 if|if
@@ -6944,18 +6952,14 @@ specifier|static
 name|void
 name|bge_sig_post_reset
 parameter_list|(
-name|sc
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7008,18 +7012,14 @@ specifier|static
 name|void
 name|bge_sig_legacy
 parameter_list|(
-name|sc
-parameter_list|,
-name|type
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7066,28 +7066,16 @@ block|}
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|bge_stop_fw
-parameter_list|(
-name|struct
-name|bge_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
+specifier|static
 name|void
 name|bge_stop_fw
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|bge_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -13060,7 +13048,10 @@ argument_list|)
 expr_stmt|;
 name|rid
 operator|=
-name|BGE_PCI_BAR0
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -15258,7 +15249,10 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|BGE_PCI_BAR0
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -15473,9 +15467,7 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
 literal|"Disabling fastboot\n"
 argument_list|)
@@ -16062,9 +16054,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
 literal|"reset timed out\n"
 argument_list|)
@@ -16132,12 +16122,9 @@ name|BGE_TIMEOUT
 condition|)
 name|device_printf
 argument_list|(
-name|sc
-operator|->
-name|bge_dev
+name|dev
 argument_list|,
-literal|"firmware handshake timed out, "
-literal|"found 0x%08x\n"
+literal|"firmware handshake timed out, found 0x%08x\n"
 argument_list|,
 name|val
 argument_list|)
@@ -20909,7 +20896,7 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"no memory for std Rx buffers.\n"
+literal|"no memory for jumbo Rx buffers.\n"
 argument_list|)
 expr_stmt|;
 name|bge_stop
