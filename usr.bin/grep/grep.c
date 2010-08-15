@@ -605,7 +605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* --exclude amd --include */
+comment|/* --exclude-dir and --include-dir */
 end_comment
 
 begin_decl_stmt
@@ -617,7 +617,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* --exclude-dir and --include-dir */
+comment|/* --exclude and --include */
 end_comment
 
 begin_enum
@@ -1375,7 +1375,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|pattern
 index|[
@@ -1385,9 +1385,17 @@ argument_list|,
 name|pat
 argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
+expr_stmt|;
+name|pattern
+index|[
+name|patterns
+index|]
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 operator|++
 name|patterns
@@ -1858,9 +1866,10 @@ argument_list|(
 literal|"GREP_OPTIONS"
 argument_list|)
 expr_stmt|;
+comment|/* support for extra arguments in GREP_OPTIONS */
 name|eargc
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1873,27 +1882,30 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+comment|/* make an estimation of how many extra arguments we have */
 for|for
 control|(
-name|i
-operator|=
+name|unsigned
+name|int
+name|j
+init|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|strlen
 argument_list|(
 name|eopts
 argument_list|)
 condition|;
-name|i
+name|j
 operator|++
 control|)
 if|if
 condition|(
 name|eopts
 index|[
-name|i
+name|j
 index|]
 operator|==
 literal|' '
@@ -1923,87 +1935,37 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|str
-operator|=
-name|strtok
-argument_list|(
-name|eopts
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
 name|eargc
 operator|=
 literal|0
 expr_stmt|;
+comment|/* parse extra arguments */
 while|while
 condition|(
-name|str
-operator|!=
-name|NULL
-condition|)
-block|{
-name|eargv
-index|[
-operator|++
-name|eargc
-index|]
-operator|=
 operator|(
-name|char
-operator|*
-operator|)
-name|grep_malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
-operator|(
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-operator|+
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|eargv
-index|[
-name|eargc
-index|]
-argument_list|,
-name|str
-argument_list|,
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|str
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-name|NULL
+operator|&
+name|eopts
 argument_list|,
 literal|" "
 argument_list|)
-expr_stmt|;
-block|}
+operator|)
+operator|!=
+name|NULL
+condition|)
 name|eargv
 index|[
-operator|++
 name|eargc
+operator|++
 index|]
 operator|=
-name|NULL
+name|grep_strdup
+argument_list|(
+name|str
+argument_list|)
 expr_stmt|;
 name|aargv
 operator|=
@@ -2041,7 +2003,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -2053,6 +2015,8 @@ control|)
 name|aargv
 index|[
 name|i
+operator|+
+literal|1
 index|]
 operator|=
 name|eargv
@@ -2073,11 +2037,15 @@ name|argc
 condition|;
 name|j
 operator|++
+operator|,
+name|i
+operator|++
 control|)
 name|aargv
 index|[
 name|i
-operator|++
+operator|+
+literal|1
 index|]
 operator|=
 name|argv
@@ -2090,8 +2058,6 @@ operator|=
 name|eargc
 operator|+
 name|argc
-operator|-
-literal|1
 expr_stmt|;
 block|}
 else|else
@@ -3127,7 +3093,7 @@ break|break;
 case|case
 name|R_DINCLUDE_OPT
 case|:
-name|dexclude
+name|dinclude
 operator|=
 name|true
 expr_stmt|;
@@ -3142,7 +3108,7 @@ break|break;
 case|case
 name|R_DEXCLUDE_OPT
 case|:
-name|dinclude
+name|dexclude
 operator|=
 name|true
 expr_stmt|;
@@ -3459,6 +3425,17 @@ name|aargv
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|aargc
+operator|==
+literal|1
+condition|)
+name|hflag
+operator|=
+name|true
+expr_stmt|;
 for|for
 control|(
 name|c
@@ -3496,6 +3473,7 @@ operator|*
 name|aargv
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifndef|#
 directive|ifndef

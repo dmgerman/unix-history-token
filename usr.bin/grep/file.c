@@ -198,6 +198,8 @@ comment|/*  * Returns a single character according to the file type.  * Returns 
 end_comment
 
 begin_function
+specifier|static
+specifier|inline
 name|int
 name|grep_fgetc
 parameter_list|(
@@ -221,7 +223,7 @@ name|FILE_STDIO
 case|:
 return|return
 operator|(
-name|fgetc
+name|getc_unlocked
 argument_list|(
 name|f
 operator|->
@@ -315,6 +317,8 @@ comment|/*  * Returns true if the file position is a EOF, returns false  * other
 end_comment
 
 begin_function
+specifier|static
+specifier|inline
 name|int
 name|grep_feof
 parameter_list|(
@@ -334,7 +338,7 @@ name|FILE_STDIO
 case|:
 return|return
 operator|(
-name|feof
+name|feof_unlocked
 argument_list|(
 name|f
 operator|->
@@ -457,6 +461,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* no need to allocate buffer. */
+if|if
+condition|(
+name|st
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|bufsiz
 operator|=
 operator|(
@@ -522,6 +540,17 @@ index|]
 operator|=
 name|ch
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ch
+operator|==
+literal|'\n'
+operator|)
+operator|&&
+name|lbflag
+condition|)
+break|break;
 block|}
 name|f
 operator|->
@@ -729,6 +758,11 @@ name|file
 modifier|*
 name|f
 decl_stmt|;
+comment|/* Processing stdin implies --line-buffered for tail -f to work. */
+name|lbflag
+operator|=
+name|true
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|fname
@@ -753,6 +787,10 @@ expr|*
 name|f
 argument_list|)
 expr_stmt|;
+name|binbuf
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -771,6 +809,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|flockfile
+argument_list|(
+name|f
+operator|->
+name|f
+argument_list|)
+expr_stmt|;
 name|f
 operator|->
 name|stdin
@@ -838,6 +883,10 @@ expr|*
 name|f
 argument_list|)
 expr_stmt|;
+name|binbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|f
 operator|->
 name|stdin
@@ -869,11 +918,20 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|flockfile
+argument_list|(
+name|f
+operator|->
+name|f
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|f
 operator|)
 return|;
+block|}
 break|break;
 case|case
 name|FILE_GZIP
@@ -963,6 +1021,13 @@ block|{
 case|case
 name|FILE_STDIO
 case|:
+name|funlockfile
+argument_list|(
+name|f
+operator|->
+name|f
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|f
