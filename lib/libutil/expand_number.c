@@ -138,7 +138,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|do { if ((n<< b)< n) goto overflow; n<<= b; } while (0)
+value|do { if (((n<< b)>> b) != n) goto overflow; n<<= b; } while (0)
 switch|switch
 condition|(
 name|tolower
