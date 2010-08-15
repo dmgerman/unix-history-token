@@ -864,10 +864,16 @@ expr_stmt|;
 if|if
 condition|(
 name|evalskip
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|evalskip
 operator|==
 name|SKIPFILE
 condition|)
-block|{
 name|evalskip
 operator|=
 literal|0
