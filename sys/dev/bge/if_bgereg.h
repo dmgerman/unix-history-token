@@ -10545,6 +10545,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MISCCFG_GPHY_PD_OVERRIDE
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_32BITTIME_66MHZ
 value|(0x41<< 1)
 end_define
