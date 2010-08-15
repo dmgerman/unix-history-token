@@ -35318,6 +35318,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BCE_RX_BUF_ALIGN
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|BCE_MAX_CONTEXT
 value|4
 end_define

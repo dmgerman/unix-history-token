@@ -15243,7 +15243,7 @@ name|sc
 operator|->
 name|parent_tag
 argument_list|,
-literal|1
+name|BCE_RX_BUF_ALIGN
 argument_list|,
 name|BCE_DMA_BOUNDARY
 argument_list|,
