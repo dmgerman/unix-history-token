@@ -2638,8 +2638,6 @@ argument_list|,
 name|RxMacControl
 argument_list|,
 name|rxfilt
-operator||
-literal|0x02
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -5830,12 +5828,6 @@ argument_list|(
 name|RDC_OWN
 operator||
 name|RDC_INTR
-operator||
-name|RDC_IP_CSUM
-operator||
-name|RDC_TCP_CSUM
-operator||
-name|RDC_UDP_CSUM
 argument_list|)
 expr_stmt|;
 return|return
@@ -5921,12 +5913,6 @@ argument_list|(
 name|RDC_OWN
 operator||
 name|RDC_INTR
-operator||
-name|RDC_IP_CSUM
-operator||
-name|RDC_TCP_CSUM
-operator||
-name|RDC_UDP_CSUM
 argument_list|)
 expr_stmt|;
 block|}
@@ -8728,6 +8714,8 @@ operator|=
 name|RXMAC_STRIP_FCS
 operator||
 name|RXMAC_PAD_ENB
+operator||
+name|RXMAC_CSUM_ENB
 expr_stmt|;
 name|CSR_WRITE_2
 argument_list|(
