@@ -9022,6 +9022,10 @@ decl_stmt|,
 name|may_sleep
 init|=
 literal|0
+decl_stmt|,
+name|gave_up_lock
+init|=
+literal|0
 decl_stmt|;
 name|ADAPTER_LOCK_ASSERT_OWNED
 argument_list|(
@@ -9042,6 +9046,10 @@ name|sc
 argument_list|)
 condition|)
 block|{
+name|gave_up_lock
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|mtx_sleep
@@ -9126,6 +9134,10 @@ name|SET_BUSY
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|gave_up_lock
+operator|=
+literal|1
 expr_stmt|;
 name|ADAPTER_UNLOCK
 argument_list|(
@@ -9429,6 +9441,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|gave_up_lock
+condition|)
 name|wakeup_one
 argument_list|(
 operator|&
@@ -9437,7 +9454,6 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-block|}
 name|ADAPTER_UNLOCK
 argument_list|(
 name|sc
