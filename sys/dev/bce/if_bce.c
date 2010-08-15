@@ -3482,6 +3482,11 @@ argument_list|(
 name|BCE_VERBOSE_LOAD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|BCE_PRINTF
 argument_list|(
 literal|"ASIC (0x%08X); "
@@ -3763,6 +3768,7 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|DBEXIT
 argument_list|(
@@ -4286,7 +4292,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): MSI allocation failed! error = %d\n"
+literal|"%s(%d): MSI allocation failed! "
+literal|"error = %d\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -4315,7 +4322,8 @@ name|sc
 argument_list|,
 name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): Using MSI interrupt.\n"
+literal|"%s(): Using MSI "
+literal|"interrupt.\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -4521,7 +4529,8 @@ name|BCE_CHIP_ID_5709_B2
 case|:
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Unsupported controller revision (%c%d)!\n"
+literal|"%s(%d): Unsupported controller "
+literal|"revision (%c%d)!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -6721,6 +6730,22 @@ name|u32
 name|val
 parameter_list|)
 block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_FIRMWARE
+argument_list|,
+literal|"%s(): Writing 0x%08X  to  "
+literal|"0x%08X\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|val
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
 name|bce_reg_wr_ind
 argument_list|(
 name|sc
@@ -6783,8 +6808,9 @@ name|u32
 name|offset
 parameter_list|)
 block|{
-return|return
-operator|(
+name|u32
+name|val
+init|=
 name|bce_reg_rd_ind
 argument_list|(
 name|sc
@@ -6795,7 +6821,25 @@ name|bce_shmem_base
 operator|+
 name|offset
 argument_list|)
-operator|)
+decl_stmt|;
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_FIRMWARE
+argument_list|,
+literal|"%s(): Reading 0x%08X from "
+literal|"0x%08X\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|,
+name|val
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+return|return
+name|val
 return|;
 block|}
 end_function
@@ -6888,7 +6932,8 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(): Invalid CID address: 0x%08X.\n"
+literal|"%s(): Invalid CID "
+literal|"address: 0x%08X.\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -8074,7 +8119,7 @@ operator||
 name|BCE_EMAC_MODE_25G
 operator|)
 expr_stmt|;
-comment|/* Set MII or GMII interface based on the speed negotiated by the PHY. */
+comment|/* Set MII or GMII interface based on the PHY speed. */
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -8102,7 +8147,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Enabling 10Mb interface.\n"
 argument_list|)
@@ -8121,7 +8166,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Enabling MII interface.\n"
 argument_list|)
@@ -8138,7 +8183,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Enabling 2.5G MAC mode.\n"
 argument_list|)
@@ -8158,7 +8203,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Enabling GMII interface.\n"
 argument_list|)
@@ -8173,10 +8218,10 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
-literal|"Unknown speed, enabling default GMII "
-literal|"interface.\n"
+literal|"Unknown link speed, enabling "
+literal|"default GMII interface.\n"
 argument_list|)
 expr_stmt|;
 name|val
@@ -8184,7 +8229,7 @@ operator||=
 name|BCE_EMAC_MODE_PORT_GMII
 expr_stmt|;
 block|}
-comment|/* Set half or full duplex based on the duplicity negotiated by the PHY. */
+comment|/* Set half or full duplex based on PHY settings. */
 if|if
 condition|(
 operator|(
@@ -8202,7 +8247,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Setting Half-Duplex interface.\n"
 argument_list|)
@@ -8217,7 +8262,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_PHY
 argument_list|,
 literal|"Setting Full-Duplex interface.\n"
 argument_list|)
@@ -8231,14 +8276,127 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* ToDo: Enable flow control support in brgphy and bge. */
 comment|/* FLAG0 is set if RX is enabled and FLAG1 if TX is enabled */
-block|if (mii->mii_media_active& IFM_FLAG0) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_RX_MODE_FLOW_EN); 	if (mii->mii_media_active& IFM_FLAG1) 		BCE_SETBIT(sc, BCE_EMAC_RX_MODE, BCE_EMAC_TX_MODE_FLOW_EN);
-endif|#
-directive|endif
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FLAG0
+condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_PHY
+argument_list|,
+literal|"%s(): Enabling RX flow control.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|BCE_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_RX_MODE
+argument_list|,
+name|BCE_EMAC_RX_MODE_FLOW_EN
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_PHY
+argument_list|,
+literal|"%s(): Disabling RX flow control.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|BCE_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_RX_MODE
+argument_list|,
+name|BCE_EMAC_RX_MODE_FLOW_EN
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|mii
+operator|->
+name|mii_media_active
+operator|&
+name|IFM_FLAG1
+condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_PHY
+argument_list|,
+literal|"%s(): Enabling TX flow control.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|BCE_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_TX_MODE
+argument_list|,
+name|BCE_EMAC_TX_MODE_FLOW_EN
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bce_flags
+operator||=
+name|BCE_USING_TX_FLOW_CONTROL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_INFO_PHY
+argument_list|,
+literal|"%s(): Disabling TX flow control.\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+name|BCE_CLRBIT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_EMAC_TX_MODE
+argument_list|,
+name|BCE_EMAC_TX_MODE_FLOW_EN
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bce_flags
+operator|&=
+operator|~
+name|BCE_USING_TX_FLOW_CONTROL
+expr_stmt|;
+block|}
+comment|/* ToDo: Update watermarks in bce_init_rx_context(). */
 name|DBEXIT
 argument_list|(
 name|BCE_VERBOSE_PHY
@@ -9431,7 +9589,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Timeout error reading NVRAM at offset 0x%08X!\n"
+literal|"%s(%d): Timeout error reading NVRAM at "
+literal|"offset 0x%08X!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -9692,7 +9851,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Timeout error writing NVRAM at offset 0x%08X\n"
+literal|"%s(%d): Timeout error writing NVRAM at "
+literal|"offset 0x%08X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -11679,8 +11839,8 @@ name|ENODEV
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Invalid NVRAM magic value! Expected: 0x%08X, "
-literal|"Found: 0x%08X\n"
+literal|"%s(%d): Invalid NVRAM magic value! "
+literal|"Expected: 0x%08X, Found: 0x%08X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -11718,8 +11878,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Unable to read Manufacturing Information from "
-literal|"NVRAM!\n"
+literal|"%s(%d): Unable to read manufacturing "
+literal|"Information from  NVRAM!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -11752,8 +11912,8 @@ name|ENODEV
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Invalid Manufacturing Information NVRAM CRC! "
-literal|"Expected: 0x%08X, Found: 0x%08X\n"
+literal|"%s(%d): Invalid manufacturing information "
+literal|"NVRAM CRC!	Expected: 0x%08X, Found: 0x%08X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -11792,8 +11952,9 @@ name|ENODEV
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Invalid Feature Configuration Information "
-literal|"NVRAM CRC! Expected: 0x%08X, Found: 08%08X\n"
+literal|"%s(%d): Invalid feature configuration "
+literal|"information NVRAM CRC! Expected: 0x%08X, "
+literal|"Found: 08%08X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -11866,7 +12027,7 @@ name|val
 decl_stmt|;
 name|DBENTER
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 comment|/* Assume PHY address for copper controllers. */
@@ -12230,7 +12391,7 @@ argument_list|)
 expr_stmt|;
 name|DBEXIT
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 block|}
@@ -13544,6 +13705,7 @@ operator|=
 name|ENOMEM
 argument_list|)
 expr_stmt|;
+comment|/* ToDo: How to increment debug sim_count variable here? */
 comment|/* Check for an error and signal the caller that an error occurred. */
 if|if
 condition|(
@@ -13941,7 +14103,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
 literal|"%s(): status_block_paddr = 0x%jX\n"
 argument_list|,
@@ -14128,7 +14290,7 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
 literal|"%s(): stats_block_paddr = 0x%jX\n"
 argument_list|,
@@ -14254,7 +14416,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate CTX DMA tag!\n"
+literal|"%s(%d): Could not allocate CTX "
+literal|"DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -14416,9 +14579,10 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): ctx_paddr[%d] = 0x%jX\n"
+literal|"%s(): ctx_paddr[%d] "
+literal|"= 0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -14481,8 +14645,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Could not allocate TX descriptor chain "
-literal|"DMA tag!\n"
+literal|"%s(%d): Could not allocate TX descriptor "
+literal|"chain DMA tag!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -14626,9 +14790,10 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): tx_bd_chain_paddr[%d] = 0x%jX\n"
+literal|"%s(): tx_bd_chain_paddr[%d] = "
+literal|"0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -15000,9 +15165,10 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): rx_bd_chain_paddr[%d] = 0x%jX\n"
+literal|"%s(): rx_bd_chain_paddr[%d] = "
+literal|"0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -15062,10 +15228,11 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): Creating rx_mbuf_tag (max size = 0x%jX "
-literal|"max segments = %d, max segment size = 0x%jX)\n"
+literal|"%s(): Creating rx_mbuf_tag "
+literal|"(max size = 0x%jX max segments = %d, max segment "
+literal|"size = 0x%jX)\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -15402,9 +15569,10 @@ name|DBPRINT
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO
+name|BCE_INFO_LOAD
 argument_list|,
-literal|"%s(): pg_bd_chain_paddr[%d] = 0x%jX\n"
+literal|"%s(): pg_bd_chain_paddr[%d] = "
+literal|"0x%jX\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -15982,7 +16150,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we've timed out, tell the bootcode that we've stopped waiting. */
+comment|/* If we've timed out, tell bootcode that we've stopped waiting. */
 if|if
 condition|(
 operator|(
@@ -20213,7 +20381,8 @@ name|sc
 argument_list|,
 name|BCE_INFO_MISC
 argument_list|,
-literal|"Permanent Ethernet address = %6D\n"
+literal|"Permanent Ethernet "
+literal|"address = %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -20288,7 +20457,8 @@ name|sc
 argument_list|,
 name|BCE_INFO_MISC
 argument_list|,
-literal|"Setting Ethernet address = %6D\n"
+literal|"Setting Ethernet address = "
+literal|"%6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -20998,7 +21168,8 @@ name|rc
 condition|)
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Firmware did not complete initialization!\n"
+literal|"%s(%d): Firmware did not complete "
+literal|"initialization!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -22162,7 +22333,8 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): RX producer out of range: 0x%04X> 0x%04X\n"
+literal|"%s(%d): RX producer out of range: "
+literal|"0x%04X> 0x%04X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -22414,7 +22586,8 @@ condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): Error mapping mbuf into RX chain (%d)!\n"
+literal|"%s(%d): Error mapping mbuf into RX "
+literal|"chain (%d)!\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -22738,7 +22911,8 @@ operator|)
 argument_list|,
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): page producer out of range: 0x%04X> 0x%04X\n"
+literal|"%s(%d): page producer out of range: "
+literal|"0x%04X> 0x%04X\n"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -23918,16 +24092,57 @@ name|lo_water
 decl_stmt|,
 name|hi_water
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bce_flags
+operator|&&
+name|BCE_USING_TX_FLOW_CONTROL
+condition|)
+block|{
 name|lo_water
 operator|=
 name|BCE_L2CTX_RX_LO_WATER_MARK_DEFAULT
 expr_stmt|;
+block|}
+else|else
+block|{
+name|lo_water
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|lo_water
+operator|>=
+name|USABLE_RX_BD
+condition|)
+block|{
+name|lo_water
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|hi_water
 operator|=
 name|USABLE_RX_BD
 operator|/
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|hi_water
+operator|<=
+name|lo_water
+condition|)
+block|{
+name|lo_water
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|lo_water
 operator|/=
 name|BCE_L2CTX_RX_LO_WATER_MARK_SCALE
@@ -25709,7 +25924,7 @@ name|mii
 decl_stmt|;
 name|DBENTER
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 name|BCE_LOCK_ASSERT
@@ -25772,7 +25987,7 @@ expr_stmt|;
 block|}
 name|DBEXIT
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 block|}
@@ -25834,7 +26049,7 @@ name|mii
 decl_stmt|;
 name|DBENTER
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 name|BCE_LOCK
@@ -25879,7 +26094,7 @@ argument_list|)
 expr_stmt|;
 name|DBEXIT
 argument_list|(
-name|BCE_VERBOSE
+name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
 block|}
@@ -26225,7 +26440,7 @@ name|DBRUN
 argument_list|(
 name|sc
 operator|->
-name|rx_interrupts
+name|interrupts_rx
 operator|++
 argument_list|)
 expr_stmt|;
@@ -26503,7 +26718,7 @@ goto|goto
 name|bce_rx_int_next_rx
 goto|;
 block|}
-comment|/* 		 * Frames received on the NetXteme II are prepended	with an 		 * l2_fhdr structure which provides status information about 		 * the received frame (including VLAN tags and checksum info). 		 * The frames are also automatically adjusted to align the IP 		 * header (i.e. two null bytes are inserted before the Ethernet 		 * header).  As a result the data DMA'd by the controller into 		 * the mbuf is as follows: 		 *  		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 *  		 * The l2_fhdr needs to be checked and skipped and the FCS needs 		 * to be stripped before sending the packet up the stack. 		 */
+comment|/*  		 * Frames received on the NetXteme II are prepended  		 * with an l2_fhdr structure which provides status  		 * information about the received frame (including  		 * VLAN tags and checksum info).  The frames are 		 * also automatically adjusted to align the IP  		 * header (i.e. two null bytes are inserted before  		 * the Ethernet	header).  As a result the data  		 * DMA'd by the controller into	the mbuf looks 		 * like this: 		 * 		 * +---------+-----+---------------------+-----+ 		 * | l2_fhdr | pad | packet data         | FCS | 		 * +---------+-----+---------------------+-----+ 		 *  		 * The l2_fhdr needs to be checked and skipped and  		 * the FCS needs to be stripped before sending the 		 * packet up the stack. 		 */
 name|l2fhdr
 operator|=
 name|mtod
@@ -26813,9 +27028,7 @@ name|DBRUNIF
 argument_list|(
 argument|DB_RANDOMTRUE(l2fhdr_error_sim_control)
 argument_list|,
-argument|BCE_PRINTF(
-literal|"Simulating l2_fhdr status error.\n"
-argument|); 		    sc->l2fhdr_error_sim_count++; 		    status = status | L2_FHDR_ERRORS_PHY_DECODE
+argument|sc->l2fhdr_error_sim_count++; 		    status = status | L2_FHDR_ERRORS_PHY_DECODE
 argument_list|)
 empty_stmt|;
 comment|/* Check the received frame for errors. */
@@ -26913,6 +27126,14 @@ name|csum_flags
 operator||=
 name|CSUM_IP_CHECKED
 expr_stmt|;
+name|DBRUN
+argument_list|(
+name|sc
+operator|->
+name|csum_offload_ip
+operator|++
+argument_list|)
+expr_stmt|;
 comment|/* Check if the IP checksum is valid. */
 if|if
 condition|(
@@ -26963,6 +27184,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|DBRUN
+argument_list|(
+name|sc
+operator|->
+name|csum_offload_tcp_udp
+operator|++
+argument_list|)
+expr_stmt|;
 name|m0
 operator|->
 name|m_pkthdr
@@ -27222,10 +27451,10 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* No new packets to process.  Refill the RX and page chains and exit. */
 ifdef|#
 directive|ifdef
 name|BCE_JUMBO_HDRSPLIT
+comment|/* No new packets.  Refill the page chain. */
 name|sc
 operator|->
 name|pg_cons
@@ -27239,6 +27468,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* No new packets.  Refill the RX chain. */
 name|sc
 operator|->
 name|rx_cons
@@ -27485,7 +27715,7 @@ name|DBRUN
 argument_list|(
 name|sc
 operator|->
-name|tx_interrupts
+name|interrupts_tx
 operator|++
 argument_list|)
 expr_stmt|;
@@ -27536,7 +27766,7 @@ name|sc
 operator|->
 name|tx_cons
 expr_stmt|;
-comment|/* Prevent speculative reads from getting ahead of the status block. */
+comment|/* Prevent speculative reads of the status block. */
 name|bus_space_barrier
 argument_list|(
 name|sc
@@ -28629,6 +28859,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Modifies an mbuf for TSO on the hardware.                                */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   Pointer to a modified mbuf.                                            */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -28694,11 +28948,11 @@ name|DBRUN
 argument_list|(
 name|sc
 operator|->
-name|requested_tso_frames
+name|tso_frames_requested
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Controller requires to monify mbuf chains. */
+comment|/* Controller may modify mbuf chains. */
 if|if
 condition|(
 name|M_WRITABLE
@@ -29144,6 +29398,14 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+name|DBRUN
+argument_list|(
+name|sc
+operator|->
+name|tso_frames_completed
+operator|++
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|*
@@ -29271,36 +29533,20 @@ argument_list|(
 name|BCE_VERBOSE_SEND
 argument_list|)
 expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO_SEND
-argument_list|,
-literal|"%s(enter): tx_prod = 0x%04X, tx_chain_prod = %04X, "
-literal|"tx_prod_bseq = 0x%08X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
+comment|/* Make sure we have room in the TX chain. */
+if|if
+condition|(
 name|sc
 operator|->
-name|tx_prod
-argument_list|,
-operator|(
-name|u16
-operator|)
-name|TX_CHAIN_IDX
-argument_list|(
+name|used_tx_bd
+operator|>=
 name|sc
 operator|->
-name|tx_prod
-argument_list|)
-argument_list|,
-name|sc
-operator|->
-name|tx_prod_bseq
-argument_list|)
-expr_stmt|;
+name|max_tx_bd
+condition|)
+goto|goto
+name|bce_tx_encap_exit
+goto|;
 comment|/* Transfer any checksum offload flags to the bd. */
 name|m0
 operator|=
@@ -29345,9 +29591,19 @@ name|m0
 operator|==
 name|NULL
 condition|)
+block|{
+name|DBRUN
+argument_list|(
+name|sc
+operator|->
+name|tso_frames_failed
+operator|++
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bce_tx_encap_exit
 goto|;
+block|}
 name|mss
 operator|=
 name|htole16
@@ -29473,7 +29729,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|fragmented_mbuf_count
+name|mbuf_frag_count
 operator|++
 expr_stmt|;
 comment|/* Try to defrag the mbuf. */
@@ -29902,24 +30158,6 @@ name|nsegs
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_INFO_SEND
-argument_list|,
-literal|"%s( end ): prod = 0x%04X, chain_prod = 0x%04X, "
-literal|"prod_bseq = 0x%08X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|prod
-argument_list|,
-name|chain_prod
-argument_list|,
-name|prod_bseq
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Ensure that the mbuf pointer for this transmission 	 * is placed at the array index of the last 	 * descriptor in this chain.  This is done 	 * because a single map is used for all 	 * segments of the mbuf and we don't want to 	 * unload the map before all of the segments 	 * have been freed. 	 */
 name|sc
 operator|->
@@ -30011,30 +30249,33 @@ name|tx_prod_bseq
 operator|=
 name|prod_bseq
 expr_stmt|;
-name|DBPRINT
+comment|/* Tell the chip about the waiting TX frames. */
+name|REG_WR16
 argument_list|(
 name|sc
 argument_list|,
-name|BCE_INFO_SEND
-argument_list|,
-literal|"%s(exit): prod = 0x%04X, chain_prod = %04X, "
-literal|"prod_bseq = 0x%08X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|sc
-operator|->
-name|tx_prod
-argument_list|,
-operator|(
-name|u16
-operator|)
-name|TX_CHAIN_IDX
+name|MB_GET_CID_ADDR
 argument_list|(
+name|TX_CID
+argument_list|)
+operator|+
+name|BCE_L2MQ_TX_HOST_BIDX
+argument_list|,
 name|sc
 operator|->
 name|tx_prod
 argument_list|)
+expr_stmt|;
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|MB_GET_CID_ADDR
+argument_list|(
+name|TX_CID
+argument_list|)
+operator|+
+name|BCE_L2MQ_TX_HOST_BSEQ
 argument_list|,
 name|sc
 operator|->
@@ -30343,102 +30584,6 @@ argument_list|,
 name|__FUNCTION__
 argument_list|,
 name|count
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_MQ_COMMAND
-argument_list|,
-name|REG_RD
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_MQ_COMMAND
-argument_list|)
-operator||
-name|BCE_MQ_COMMAND_NO_MAP_ERROR
-argument_list|)
-expr_stmt|;
-comment|/* Write the mailbox and tell the chip about the waiting tx_bd's. */
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_SEND
-argument_list|,
-literal|"%s(): MB_GET_CID_ADDR(TX_CID) = "
-literal|"0x%08X; BCE_L2MQ_TX_HOST_BIDX = 0x%08X, sc->tx_prod = 0x%04X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|MB_GET_CID_ADDR
-argument_list|(
-name|TX_CID
-argument_list|)
-argument_list|,
-name|BCE_L2MQ_TX_HOST_BIDX
-argument_list|,
-name|sc
-operator|->
-name|tx_prod
-argument_list|)
-expr_stmt|;
-name|REG_WR16
-argument_list|(
-name|sc
-argument_list|,
-name|MB_GET_CID_ADDR
-argument_list|(
-name|TX_CID
-argument_list|)
-operator|+
-name|BCE_L2MQ_TX_HOST_BIDX
-argument_list|,
-name|sc
-operator|->
-name|tx_prod
-argument_list|)
-expr_stmt|;
-name|DBPRINT
-argument_list|(
-name|sc
-argument_list|,
-name|BCE_VERBOSE_SEND
-argument_list|,
-literal|"%s(): MB_GET_CID_ADDR(TX_CID) = "
-literal|"0x%08X; BCE_L2MQ_TX_HOST_BSEQ = 0x%08X, sc->tx_prod_bseq = "
-literal|"0x%04X\n"
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|MB_GET_CID_ADDR
-argument_list|(
-name|TX_CID
-argument_list|)
-argument_list|,
-name|BCE_L2MQ_TX_HOST_BSEQ
-argument_list|,
-name|sc
-operator|->
-name|tx_prod_bseq
-argument_list|)
-expr_stmt|;
-name|REG_WR
-argument_list|(
-name|sc
-argument_list|,
-name|MB_GET_CID_ADDR
-argument_list|(
-name|TX_CID
-argument_list|)
-operator|+
-name|BCE_L2MQ_TX_HOST_BSEQ
-argument_list|,
-name|sc
-operator|->
-name|tx_prod_bseq
 argument_list|)
 expr_stmt|;
 comment|/* Set the tx timeout. */
@@ -31654,7 +31799,7 @@ argument_list|,
 argument|BCE_PRINTF(
 literal|"Simulating unexpected status attention "
 literal|"bit set."
-argument|); 		    sc->unexpected_attention_sim_count++; 		    status_attn_bits = status_attn_bits |  		    STATUS_ATTN_BITS_PARITY_ERROR
+argument|); 		    sc->unexpected_attention_sim_count++; 		    status_attn_bits = status_attn_bits | 		    STATUS_ATTN_BITS_PARITY_ERROR
 argument_list|)
 empty_stmt|;
 comment|/* Was it a link change interrupt? */
@@ -33233,6 +33378,11 @@ expr_stmt|;
 comment|/* Report whether the bootcode still knows the driver is running. */
 if|if
 condition|(
+name|bootverbose
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|bce_drv_cardiac_arrest
@@ -33260,7 +33410,8 @@ name|TRUE
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(): Bootcode lost the driver pulse! "
+literal|"%s(): Warning: bootcode "
+literal|"thinks driver is absent! "
 literal|"(bc_state = 0x%08X)\n"
 argument_list|,
 name|__FUNCTION__
@@ -33274,7 +33425,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*  		 * Not supported by all bootcode versions.  		 * (v5.0.11+ and v5.2.1+)  Older bootcode  		 * will require the driver to reset the  		 * controller to clear this condition. 		 */
+comment|/* 			 * Not supported by all bootcode versions. 			 * (v5.0.11+ and v5.2.1+)  Older bootcode 			 * will require the driver to reset the 			 * controller to clear this condition. 			 */
 if|if
 condition|(
 name|sc
@@ -33292,8 +33443,8 @@ name|FALSE
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(): Bootcode found the driver pulse! "
-literal|"(bc_state = 0x%08X)\n"
+literal|"%s(): Bootcode found the "
+literal|"driver pulse! (bc_state = 0x%08X)\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
@@ -33302,6 +33453,7 @@ operator|->
 name|bc_state
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Schedule the next pulse. */
@@ -33998,6 +34150,232 @@ expr_stmt|;
 name|bce_dump_stats_block
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|error
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Allows the stat counters to be cleared without unloading/reloading the   */
+end_comment
+
+begin_comment
+comment|/* driver.                                                                  */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Returns:                                                                 */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive value for failure.                             */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|bce_sysctl_stats_clear
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|int
+name|result
+decl_stmt|;
+name|struct
+name|bce_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|req
+operator|->
+name|newptr
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|result
+operator|==
+literal|1
+condition|)
+block|{
+name|sc
+operator|=
+operator|(
+expr|struct
+name|bce_softc
+operator|*
+operator|)
+name|arg1
+expr_stmt|;
+comment|/* Clear the internal H/W statistics counters. */
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_HC_COMMAND
+argument_list|,
+name|BCE_HC_COMMAND_CLR_STAT_NOW
+argument_list|)
+expr_stmt|;
+comment|/* Reset the driver maintained statistics. */
+name|sc
+operator|->
+name|interrupts_rx
+operator|=
+name|sc
+operator|->
+name|interrupts_tx
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|tso_frames_requested
+operator|=
+name|sc
+operator|->
+name|tso_frames_completed
+operator|=
+name|sc
+operator|->
+name|tso_frames_failed
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|rx_empty_count
+operator|=
+name|sc
+operator|->
+name|tx_full_count
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|rx_low_watermark
+operator|=
+name|USABLE_RX_BD
+expr_stmt|;
+name|sc
+operator|->
+name|tx_hi_watermark
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|l2fhdr_error_count
+operator|=
+name|sc
+operator|->
+name|l2fhdr_error_sim_count
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|mbuf_alloc_failed_count
+operator|=
+name|sc
+operator|->
+name|mbuf_alloc_failed_sim_count
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|dma_map_addr_rx_failed_count
+operator|=
+name|sc
+operator|->
+name|dma_map_addr_tx_failed_count
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|mbuf_frag_count
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|csum_offload_tcp_udp
+operator|=
+name|sc
+operator|->
+name|csum_offload_ip
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|vlan_tagged_frames_rcvd
+operator|=
+name|sc
+operator|->
+name|vlan_tagged_frames_stripped
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Clear firmware maintained statistics. */
+name|REG_WR_IND
+argument_list|(
+name|sc
+argument_list|,
+literal|0x120084
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -35029,8 +35407,7 @@ name|sc
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|u16
+decl_stmt|,
 name|result
 decl_stmt|;
 name|result
@@ -35432,14 +35809,14 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"fragmented_mbuf_count"
+literal|"mbuf_frag_count"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|fragmented_mbuf_count
+name|mbuf_frag_count
 argument_list|,
 literal|0
 argument_list|,
@@ -35726,18 +36103,150 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"requested_tso_frames"
+literal|"tso_frames_requested"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|requested_tso_frames
+name|tso_frames_requested
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of TSO frames received"
+literal|"Number of TSO frames requested"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_frames_completed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tso_frames_completed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of TSO frames completed"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"tso_frames_failed"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|tso_frames_failed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of TSO frames failed"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"csum_offload_ip"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|csum_offload_ip
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of IP checksum offload frames"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"csum_offload_tcp_udp"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|csum_offload_tcp_udp
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of TCP/UDP checksum offload frames"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"vlan_tagged_frames_rcvd"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|vlan_tagged_frames_rcvd
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of VLAN tagged frames received"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"vlan_tagged_frames_stripped"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|vlan_tagged_frames_stripped
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of VLAN tagged frames stripped"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -35748,14 +36257,14 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"rx_interrupts"
+literal|"interrupts_rx"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|rx_interrupts
+name|interrupts_rx
 argument_list|,
 literal|0
 argument_list|,
@@ -35770,14 +36279,14 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"tx_interrupts"
+literal|"interrupts_tx"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|tx_interrupts
+name|interrupts_tx
 argument_list|,
 literal|0
 argument_list|,
@@ -37065,7 +37574,7 @@ name|bce_sysctl_status_block
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Status block"
+literal|"Dump status block"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -37094,7 +37603,36 @@ name|bce_sysctl_stats_block
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Stats block"
+literal|"Dump statistics block"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"stats_clear"
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|bce_sysctl_stats_clear
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Clear statistics block"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
@@ -37767,8 +38305,8 @@ operator|)
 expr_stmt|;
 name|BCE_PRINTF
 argument_list|(
-literal|"-tcp: dest = %d, src = %d, hlen = %d bytes, "
-literal|"flags = 0x%b, csum = 0x%04X\n"
+literal|"-tcp: dest = %d, src = %d, hlen = "
+literal|"%d bytes, flags = 0x%b, csum = 0x%04X\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -43017,22 +43555,22 @@ argument_list|)
 block|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->rx_interrupts) "
+literal|"         0x%08X - (sc->interrupts_rx) "
 literal|"rx interrupts handled\n"
 argument_list|,
 name|sc
 operator|->
-name|rx_interrupts
+name|interrupts_rx
 argument_list|)
 block|;
 name|BCE_PRINTF
 argument_list|(
-literal|"         0x%08X - (sc->tx_interrupts) "
+literal|"         0x%08X - (sc->interrupts_tx) "
 literal|"tx interrupts handled\n"
 argument_list|,
 name|sc
 operator|->
-name|tx_interrupts
+name|interrupts_tx
 argument_list|)
 block|;
 name|BCE_PRINTF
