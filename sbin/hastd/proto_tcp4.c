@@ -630,8 +630,9 @@ operator|(
 name|ENAMETOOLONG
 operator|)
 return|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|strlcpy
 argument_list|(
 name|iporhost
@@ -640,14 +641,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|)
-operator|>=
-name|size
-condition|)
-return|return
-operator|(
-name|ENAMETOOLONG
-operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* Convert string (IP address or host name) to in_addr_t. */
 name|ip
