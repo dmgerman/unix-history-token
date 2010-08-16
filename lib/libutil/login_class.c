@@ -2538,6 +2538,11 @@ block|}
 comment|/*      * Now, we repeat some of the above for the user's private entries      */
 if|if
 condition|(
+name|getuid
+argument_list|()
+operator|==
+name|uid
+operator|&&
 operator|(
 name|lc
 operator|=
