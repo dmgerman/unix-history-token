@@ -158,6 +158,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|fscript
@@ -165,6 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|master
 decl_stmt|,
@@ -173,12 +175,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|child
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -187,6 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qflg
 decl_stmt|,
@@ -195,6 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|tt
@@ -202,6 +208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|done
 argument_list|(
@@ -212,15 +219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
-name|dooutput
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|doshell
 parameter_list|(
@@ -232,6 +231,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fail
 parameter_list|(
@@ -241,6 +241,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|finish
 parameter_list|(
@@ -1053,6 +1054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|finish
 parameter_list|(
@@ -1124,6 +1126,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|doshell
 parameter_list|(
@@ -1237,6 +1240,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fail
 parameter_list|(
@@ -1262,6 +1266,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|done
 parameter_list|(
