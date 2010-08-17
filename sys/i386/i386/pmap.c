@@ -2330,6 +2330,17 @@ literal|10
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|sysenv
+argument_list|,
+literal|"iMac9,1"
+argument_list|,
+literal|7
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|pat_works
 operator|=
