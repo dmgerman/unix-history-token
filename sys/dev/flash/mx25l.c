@@ -419,6 +419,22 @@ literal|256
 block|,
 name|FL_NONE
 block|}
+block|,
+block|{
+literal|"s25sl064a"
+block|,
+literal|0x01
+block|,
+literal|0x0216
+block|,
+literal|64
+operator|*
+literal|1024
+block|,
+literal|128
+block|,
+name|FL_NONE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
