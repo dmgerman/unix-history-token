@@ -403,8 +403,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT_COUNT
+name|AT_CANARY
 value|14
+end_define
+
+begin_comment
+comment|/* Canary for SSP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_CANARYLEN
+value|15
+end_define
+
+begin_comment
+comment|/* Length of the canary. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_OSRELDATE
+value|16
+end_define
+
+begin_comment
+comment|/* OSRELDATE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NCPUS
+value|17
+end_define
+
+begin_comment
+comment|/* Number of CPUs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PAGESIZES
+value|18
+end_define
+
+begin_comment
+comment|/* Pagesizes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_PAGESIZESLEN
+value|19
+end_define
+
+begin_comment
+comment|/* Number of pagesizes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_COUNT
+value|20
 end_define
 
 begin_comment
