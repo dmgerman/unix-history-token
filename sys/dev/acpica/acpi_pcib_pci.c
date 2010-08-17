@@ -256,6 +256,13 @@ argument_list|,
 name|acpi_pcib_pci_route_interrupt
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_power_for_sleep
+argument_list|,
+name|acpi_pcib_power_for_sleep
+argument_list|)
+block|,
 block|{
 literal|0
 block|,

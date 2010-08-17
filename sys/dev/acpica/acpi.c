@@ -725,24 +725,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|acpi_device_pwr_for_sleep
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-modifier|*
-name|dstate
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|ACPI_STATUS
 name|acpi_device_scan_cb
 parameter_list|(
@@ -6840,7 +6822,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|acpi_device_pwr_for_sleep
 parameter_list|(
