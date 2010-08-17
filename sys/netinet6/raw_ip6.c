@@ -875,6 +875,11 @@ argument_list|(
 name|ip6s_notmember
 argument_list|)
 expr_stmt|;
+name|INP_RUNLOCK
+argument_list|(
+name|in6p
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 block|}
