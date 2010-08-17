@@ -966,10 +966,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|==
-literal|1
+name|RunningAsInit
 condition|)
 name|addstr
 argument_list|(

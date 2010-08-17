@@ -245,14 +245,6 @@ name|ColorDisplay
 operator|=
 name|FALSE
 expr_stmt|;
-name|Fake
-operator|=
-name|FALSE
-expr_stmt|;
-name|Restarting
-operator|=
-name|FALSE
-expr_stmt|;
 name|OnVTY
 operator|=
 name|FALSE
@@ -268,10 +260,6 @@ expr_stmt|;
 name|mediaDevice
 operator|=
 name|NULL
-expr_stmt|;
-name|RunningAsInit
-operator|=
-name|FALSE
 expr_stmt|;
 name|HomeChunk
 operator|=

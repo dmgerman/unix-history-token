@@ -5448,10 +5448,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|!=
-literal|1
+operator|!
+name|RunningAsInit
 condition|)
 name|variable_set2
 argument_list|(
