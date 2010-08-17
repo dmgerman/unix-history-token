@@ -3239,6 +3239,13 @@ argument_list|,
 name|env
 argument_list|)
 expr_stmt|;
+name|set_program_var
+argument_list|(
+literal|"__elf_aux_vector"
+argument_list|,
+name|aux
+argument_list|)
+expr_stmt|;
 name|dbg
 argument_list|(
 literal|"initializing thread locks"
