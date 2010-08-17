@@ -681,6 +681,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_elf_aux_info
+parameter_list|(
+name|int
+name|aux
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
