@@ -796,6 +796,7 @@ name|fastgrep_t
 modifier|*
 name|fg
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

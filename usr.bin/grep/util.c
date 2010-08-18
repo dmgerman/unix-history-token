@@ -724,8 +724,10 @@ argument_list|)
 expr_stmt|;
 name|f
 operator|=
-name|grep_stdin_open
-argument_list|()
+name|grep_open
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -937,6 +939,12 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+name|ln
+operator|.
+name|len
+operator|==
+literal|0
 condition|)
 block|{
 if|if
