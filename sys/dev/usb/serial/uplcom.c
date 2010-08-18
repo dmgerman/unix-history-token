@@ -1273,6 +1273,20 @@ literal|0xFFFF
 argument_list|,
 name|PL2303X
 argument_list|)
+block|,
+comment|/* Corega CG-USBRS232R */
+name|UPLCOM_DEV
+argument_list|(
+name|COREGA
+argument_list|,
+name|CGUSBRS232R
+argument_list|,
+literal|0
+argument_list|,
+literal|0xFFFF
+argument_list|,
+name|PL2303X
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
