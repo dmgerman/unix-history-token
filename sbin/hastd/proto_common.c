@@ -69,15 +69,11 @@ directive|ifndef
 name|MAX_SEND_SIZE
 end_ifndef
 
-begin_comment
-comment|//#define	MAX_SEND_SIZE	32768
-end_comment
-
 begin_define
 define|#
 directive|define
 name|MAX_SEND_SIZE
-value|131072
+value|32768
 end_define
 
 begin_endif
