@@ -22326,13 +22326,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|sc
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
