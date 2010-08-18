@@ -37,6 +37,13 @@ name|AR91XX_RESET_REG_RESET_MODULE
 value|AR71XX_RST_BLOCK_BASE + 0x1c
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR91XX_RST_RESET_MODULE_USBSUS_OVERRIDE
+value|(1<< 10)
+end_define
+
 begin_comment
 comment|/* PLL block */
 end_comment
