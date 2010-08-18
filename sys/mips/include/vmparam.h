@@ -221,14 +221,11 @@ name|VM_MAX_MMAP_ADDR
 value|VM_MAXUSER_ADDRESS
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__mips_n64
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -489,15 +486,11 @@ begin_comment
 comment|/*  * we support 2 free lists:  *  *	- DEFAULT for direct mapped (KSEG0) pages.  *	  Note: This usage of DEFAULT may be misleading because we use  *	  DEFAULT for allocating direct mapped pages. The normal page  *	  allocations use HIGHMEM if available, and then DEFAULT.   *	- HIGHMEM for other pages   */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Not yet, change n64 to use xkphys */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
 
 begin_define
 define|#

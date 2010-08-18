@@ -53,8 +53,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIPS_PHYS_MASK
+name|MIPS_KSEG0_PHYS_MASK
 value|(0x1fffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_LARGEST_PHYS
+value|(0x10000000000)
+end_define
+
+begin_comment
+comment|/* 40 bit PA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_PHYS_MASK
+value|(0x0ffffffffff)
 end_define
 
 begin_ifndef
@@ -172,7 +190,7 @@ name|MIPS_KSEG0_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(x)& MIPS_PHYS_MASK)
+value|((uintptr_t)(x)& MIPS_KSEG0_PHYS_MASK)
 end_define
 
 begin_define
@@ -182,7 +200,7 @@ name|MIPS_KSEG1_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((uintptr_t)(x)& MIPS_PHYS_MASK)
+value|((uintptr_t)(x)& MIPS_KSEG0_PHYS_MASK)
 end_define
 
 begin_define
@@ -215,20 +233,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(MIPS_IS_KSEG0_ADDR(x) || \ 					    MIPS_IS_KSEG1_ADDR(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_XKPHYS_START
-value|0x8000000000000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_XKPHYS_END
-value|0xbfffffffffffffff
 end_define
 
 begin_comment
@@ -474,7 +478,21 @@ name|MIPS_XKPHYS_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x07ffffffffffffffULL)
+value|((uintptr_t)(x)& MIPS_XKPHYS_PHYS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_START
+value|0x8000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_END
+value|0xbfffffffffffffff
 end_define
 
 begin_define
@@ -504,6 +522,102 @@ directive|define
 name|MIPS_XKSEG_END
 value|0xc00000ff80000000
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_MAPPABLE
+parameter_list|(
+name|pa
+parameter_list|)
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_XKPHYS_CACHED(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_XKPHYS_UNCACHED(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_TO_PHYS
+parameter_list|(
+name|va
+parameter_list|)
+value|MIPS_XKPHYS_TO_PHYS(va)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_MAPPABLE
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa)< MIPS_KSEG0_LARGEST_PHYS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_KSEG0(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_KSEG1(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_TO_PHYS
+parameter_list|(
+name|va
+parameter_list|)
+value|MIPS_KSEG0_TO_PHYS(va)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* CPU dependent mtc0 hazard hook */
@@ -536,6 +650,21 @@ define|#
 directive|define
 name|COP0_SYNC
 value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
 end_define
 
 begin_else
