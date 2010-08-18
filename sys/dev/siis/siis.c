@@ -8325,6 +8325,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|xpt_free_ccb
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
