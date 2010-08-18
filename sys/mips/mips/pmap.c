@@ -1124,7 +1124,9 @@ name|va
 parameter_list|)
 block|{
 return|return
+operator|(
 name|pdpe
+operator|)
 return|;
 block|}
 end_function
@@ -1144,12 +1146,14 @@ name|va
 parameter_list|)
 block|{
 return|return
+operator|(
 name|pmap_segmap
 argument_list|(
 name|pmap
 argument_list|,
 name|va
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1433,7 +1437,9 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|va
+operator|)
 return|;
 block|}
 end_function
@@ -3131,7 +3137,9 @@ name|pmap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -4046,6 +4054,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|pmap_unwire_pte_hold
 argument_list|(
 name|pmap
@@ -4054,6 +4063,7 @@ name|va
 argument_list|,
 name|mpte
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6380,6 +6390,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|pmap_unuse_pt
 argument_list|(
 name|pmap
@@ -6388,6 +6399,7 @@ name|va
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10548,7 +10560,9 @@ operator|&
 name|PG_FICTITIOUS
 condition|)
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 if|if
 condition|(
@@ -10565,7 +10579,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|rv
+operator|)
 return|;
 name|mtx_assert
 argument_list|(
@@ -11793,6 +11809,7 @@ name|MIPS_KSEG0_LARGEST_PHYS
 condition|)
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
@@ -11800,6 +11817,7 @@ name|MIPS_PHYS_TO_KSEG1
 argument_list|(
 name|pa
 argument_list|)
+operator|)
 return|;
 else|else
 block|{
@@ -13284,7 +13302,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -13303,11 +13323,15 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 specifier|static
