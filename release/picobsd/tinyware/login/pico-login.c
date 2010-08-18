@@ -1260,7 +1260,7 @@ name|login_getcapstr
 argument_list|(
 name|lc
 argument_list|,
-literal|"prompt"
+literal|"login_prompt"
 argument_list|,
 name|DEFAULT_PROMPT
 argument_list|,
@@ -2488,7 +2488,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chmod(%s): %m"
+literal|"chflags(%s): %m"
 argument_list|,
 name|ttyn
 argument_list|)
@@ -2525,7 +2525,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chmod(%s): %m"
+literal|"chown(%s): %m"
 argument_list|,
 name|ttyn
 argument_list|)
