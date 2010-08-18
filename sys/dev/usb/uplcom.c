@@ -1014,6 +1014,18 @@ block|,
 name|TYPE_PL2303X
 block|}
 block|,
+comment|/* Corega CG-USBRS232R */
+block|{
+name|USB_VENDOR_COREGA
+block|,
+name|USB_PRODUCT_COREGA_CGUSBRS232R
+block|,
+operator|-
+literal|1
+block|,
+name|TYPE_PL2303X
+block|}
+block|,
 block|{
 literal|0
 block|,
