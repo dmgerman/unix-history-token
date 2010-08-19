@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ktrace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -106,23 +100,6 @@ include|#
 directive|include
 file|<sys/signalvar.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KTRACE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ktrace.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
