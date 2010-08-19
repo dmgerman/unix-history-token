@@ -3425,17 +3425,6 @@ name|aargv
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-name|aargc
-operator|==
-literal|1
-condition|)
-name|hflag
-operator|=
-name|true
-expr_stmt|;
 for|for
 control|(
 name|c
@@ -3473,7 +3462,6 @@ operator|*
 name|aargv
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifndef|#
 directive|ifndef
