@@ -1001,6 +1001,17 @@ name|AR71XX_PLL_PCI_CLK
 value|0x1805001C
 end_define
 
+begin_comment
+comment|/* Reset block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR71XX_RST_BLOCK_BASE
+value|0x18060000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1340,6 +1351,45 @@ begin_define
 define|#
 directive|define
 name|AR71XX_REV_ID_REVISION_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* AR91XX chipset revision details */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR91XX_REV_ID_MINOR_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR91XX_REV_ID_MINOR_AR9130
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR91XX_REV_ID_MINOR_AR9132
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR91XX_REV_ID_REVISION_MASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR91XX_REV_ID_REVISION_SHIFT
 value|2
 end_define
 
