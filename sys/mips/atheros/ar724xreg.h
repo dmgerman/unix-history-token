@@ -117,6 +117,20 @@ name|AR724X_BASE_FREQ
 value|5000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_REG_RESET_MODULE
+value|AR71XX_RST_BLOCK_BASE + 0x1c
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR724X_RESET_MODULE_USB_OHCI_DLL
+value|(1<< 3)
+end_define
+
 begin_comment
 comment|/* XXX so USB requires different init code? -adrian */
 end_comment

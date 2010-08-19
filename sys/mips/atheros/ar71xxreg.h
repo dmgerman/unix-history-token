@@ -1355,6 +1355,17 @@ value|2
 end_define
 
 begin_comment
+comment|/* AR724X chipset revision details */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR724X_REV_ID_REVISION_MASK
+value|0x3
+end_define
+
+begin_comment
 comment|/* AR91XX chipset revision details */
 end_comment
 
