@@ -752,7 +752,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|cpumask_t
+name|u_int
 name|logical_cpus
 decl_stmt|;
 end_decl_stmt
@@ -951,14 +951,14 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|cpumask_t
+name|int
 name|hlt_logical_cpus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|cpumask_t
+name|u_int
 name|hyperthreading_cpus
 decl_stmt|;
 end_decl_stmt
