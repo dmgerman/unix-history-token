@@ -499,12 +499,6 @@ decl_stmt|;
 name|int
 name|arge_phymask
 decl_stmt|;
-name|uint32_t
-name|arge_pll_reg
-decl_stmt|;
-name|uint32_t
-name|arge_pll_reg_shift
-decl_stmt|;
 name|int
 name|arge_if_flags
 decl_stmt|;
