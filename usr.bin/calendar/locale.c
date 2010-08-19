@@ -307,7 +307,7 @@ argument_list|(
 operator|&
 name|tm
 argument_list|,
-literal|'\0'
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -564,7 +564,7 @@ argument_list|(
 operator|&
 name|tm
 argument_list|,
-literal|'\0'
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
