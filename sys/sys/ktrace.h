@@ -172,16 +172,6 @@ parameter_list|)
 value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktruserret(td);						\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|KTRPROCEXIT
-parameter_list|(
-name|td
-parameter_list|)
-value|do {						\ 	if (KTRCHECKDRAIN(td))						\ 		ktrprocexit(td);					\ } while (0)
-end_define
-
 begin_comment
 comment|/*  * ktrace record types  */
 end_comment
