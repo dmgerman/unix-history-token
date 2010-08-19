@@ -4133,6 +4133,17 @@ begin_comment
 comment|/* two uint16_t */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_ND_OUTGOING
+value|30
+end_define
+
+begin_comment
+comment|/* ND outgoing */
+end_comment
+
 begin_comment
 comment|/* Specific cookies and tags. */
 end_comment

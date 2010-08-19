@@ -1728,6 +1728,17 @@ begin_comment
 comment|/* divert pseudo-protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_SEND
+value|259
+end_define
+
+begin_comment
+comment|/* SeND pseudo-protocol */
+end_comment
+
 begin_comment
 comment|/*  * Defined to avoid confusion.  The master value is defined by  * PROTO_SPACER in sys/protosw.h.  */
 end_comment
