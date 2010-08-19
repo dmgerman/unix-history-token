@@ -1186,7 +1186,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|intmax_t
+name|uint64_t
 name|number
 decl_stmt|;
 if|if
