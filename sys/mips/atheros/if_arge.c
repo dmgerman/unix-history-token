@@ -1003,17 +1003,13 @@ name|arge_mac_unit
 operator|==
 literal|0
 condition|)
-block|{
 name|ar71xx_device_flush_ddr_ge0
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ar71xx_device_flush_ddr_ge1
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 
