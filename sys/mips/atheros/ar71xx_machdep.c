@@ -149,6 +149,18 @@ directive|include
 file|<mips/atheros/ar71xxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_setup.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -708,6 +720,13 @@ comment|/* 	 * ns8250 uart code uses DELAY so ticker should be inititalized  	 *
 name|init_param1
 argument_list|()
 expr_stmt|;
+comment|/* Detect the system type - this is needed for subsequent chipset-specific calls */
+name|ar71xx_detect_sys_type
+argument_list|()
+expr_stmt|;
+name|ar71xx_detect_sys_frequency
+argument_list|()
+expr_stmt|;
 name|platform_counter_freq
 operator|=
 name|ar71xx_cpu_freq
@@ -731,6 +750,41 @@ sizeof|sizeof
 argument_list|(
 name|boot1_env
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU platform: %s\n"
+argument_list|,
+name|ar71xx_get_system_type
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU Frequency=%d MHz\n"
+argument_list|,
+name|u_ar71xx_cpu_freq
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU DDR Frequency=%d MHz\n"
+argument_list|,
+name|u_ar71xx_ddr_freq
+operator|/
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CPU AHB Frequency=%d MHz\n"
+argument_list|,
+name|u_ar71xx_ahb_freq
+operator|/
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|printf

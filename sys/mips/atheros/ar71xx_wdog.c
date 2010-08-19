@@ -69,6 +69,12 @@ directive|include
 file|<mips/atheros/ar71xxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
 begin_struct
 struct|struct
 name|ar71xx_wdog_softc
