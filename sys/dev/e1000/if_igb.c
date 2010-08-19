@@ -11372,10 +11372,9 @@ name|queues
 operator|=
 literal|4
 expr_stmt|;
-comment|/* Limit the VF adapter to one queues */
+comment|/* Limit the VF adapter to one queue */
 if|if
 condition|(
-operator|(
 name|adapter
 operator|->
 name|hw
@@ -11385,13 +11384,6 @@ operator|.
 name|type
 operator|==
 name|e1000_vfadapt
-operator|)
-operator|&&
-operator|(
-name|queues
-operator|>
-literal|2
-operator|)
 condition|)
 name|queues
 operator|=
