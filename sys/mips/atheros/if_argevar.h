@@ -500,9 +500,6 @@ name|int
 name|arge_phymask
 decl_stmt|;
 name|uint32_t
-name|arge_ddr_flush_reg
-decl_stmt|;
-name|uint32_t
 name|arge_pll_reg
 decl_stmt|;
 name|uint32_t
