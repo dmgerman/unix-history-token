@@ -436,9 +436,6 @@ block|{
 name|uint64_t
 name|platform_counter_freq
 decl_stmt|;
-name|uint32_t
-name|reg
-decl_stmt|;
 name|int
 name|argc
 decl_stmt|,
