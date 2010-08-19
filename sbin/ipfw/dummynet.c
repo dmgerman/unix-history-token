@@ -5515,10 +5515,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|int64_t
-operator|*
-operator|)
 operator|&
 name|p
 operator|->
