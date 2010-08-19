@@ -1543,7 +1543,6 @@ operator|&
 name|local_queue
 argument_list|)
 expr_stmt|;
-comment|/* XXXRW: needed? */
 if|if
 condition|(
 operator|!
