@@ -233,6 +233,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Cancellation behavior:  *   if the thread is canceled, joinee is not recycled.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -404,9 +408,11 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
-name|_thr_cancel_enter
+name|_thr_cancel_enter_defer
 argument_list|(
 name|curthread
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|tid
@@ -424,6 +430,11 @@ operator|!=
 name|TID_TERMINATED
 condition|)
 block|{
+name|_thr_testcancel
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|abstime
@@ -498,9 +509,11 @@ name|ETIMEDOUT
 condition|)
 break|break;
 block|}
-name|_thr_cancel_leave
+name|_thr_cancel_leave_defer
 argument_list|(
 name|curthread
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|THR_CLEANUP_POP

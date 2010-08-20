@@ -2130,11 +2130,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|_thr_cancel_leave2
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|,
+name|int
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|_thr_cancel_enter_defer
 argument_list|(
 expr|struct
 name|pthread
 operator|*
+argument_list|,
+name|int
 argument_list|)
 name|__hidden
 decl_stmt|;
