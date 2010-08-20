@@ -1696,6 +1696,11 @@ name|ret
 operator|=
 name|EINTR
 expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
