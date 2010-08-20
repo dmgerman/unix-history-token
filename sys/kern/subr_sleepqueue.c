@@ -1672,6 +1672,34 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_WAKEUP
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_WAKEUP
+expr_stmt|;
+name|ret
+operator|=
+name|EINTR
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* 	 * See if there are any pending signals for this thread.  If not 	 * we can switch immediately.  Otherwise do the signal processing 	 * directly. 	 */
 name|thread_lock
 argument_list|(
@@ -1905,6 +1933,8 @@ literal|0
 operator|)
 return|;
 block|}
+name|out
+label|:
 comment|/* 	 * There were pending signals and this thread is still 	 * on the sleep queue, remove it from the sleep queue. 	 */
 if|if
 condition|(
