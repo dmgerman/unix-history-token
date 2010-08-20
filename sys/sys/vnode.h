@@ -1701,8 +1701,7 @@ name|VN_LOCK_AREC
 parameter_list|(
 name|vp
 parameter_list|)
-define|\
-value|((vp)->v_vnlock->lock_object.lo_flags |= LO_RECURSABLE)
+value|lockallowrecurse((vp)->v_vnlock)
 end_define
 
 begin_define
@@ -1712,8 +1711,7 @@ name|VN_LOCK_ASHARE
 parameter_list|(
 name|vp
 parameter_list|)
-define|\
-value|((vp)->v_vnlock->lock_object.lo_flags&= ~LK_NOSHARE)
+value|lockallowshare((vp)->v_vnlock)
 end_define
 
 begin_endif

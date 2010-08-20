@@ -1070,16 +1070,6 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * NFS supports recursive and shared locking. 	 */
-name|VN_LOCK_AREC
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|VN_LOCK_ASHARE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|lockmgr
 argument_list|(
 name|vp
@@ -1091,6 +1081,16 @@ operator||
 name|LK_NOWITNESS
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_AREC
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|error

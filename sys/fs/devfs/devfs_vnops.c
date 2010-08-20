@@ -2022,11 +2022,6 @@ operator|=
 name|VBAD
 expr_stmt|;
 block|}
-name|VN_LOCK_ASHARE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -2036,6 +2031,11 @@ operator||
 name|LK_RETRY
 operator||
 name|LK_NOWITNESS
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|mtx_lock

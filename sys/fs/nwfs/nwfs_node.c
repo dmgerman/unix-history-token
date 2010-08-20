@@ -861,11 +861,6 @@ operator|->
 name|n_fid
 expr_stmt|;
 block|}
-name|VN_LOCK_AREC
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -943,6 +938,11 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_AREC
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|sx_xunlock

@@ -7405,6 +7405,17 @@ operator|)
 return|;
 block|}
 comment|/* 	 * FFS supports recursive locking. 	 */
+name|lockmgr
+argument_list|(
+name|vp
+operator|->
+name|v_vnlock
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|VN_LOCK_AREC
 argument_list|(
 name|vp
@@ -7494,17 +7505,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|lockmgr
-argument_list|(
-name|vp
-operator|->
-name|v_vnlock
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ffs_flags

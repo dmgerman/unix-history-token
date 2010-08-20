@@ -4963,7 +4963,7 @@ name|BUF_AREC
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->b_lock.lock_object.lo_flags |= LO_RECURSABLE)
+value|lockallowrecurse(&(bp)->b_lock)
 end_define
 
 begin_define
@@ -4973,7 +4973,7 @@ name|BUF_NOREC
 parameter_list|(
 name|bp
 parameter_list|)
-value|((bp)->b_lock.lock_object.lo_flags&= ~LO_RECURSABLE)
+value|lockdisablerecurse(&(bp)->b_lock)
 end_define
 
 begin_comment

@@ -1435,11 +1435,6 @@ name|error
 operator|)
 return|;
 block|}
-name|VN_LOCK_AREC
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -1447,6 +1442,11 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_AREC
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|error
