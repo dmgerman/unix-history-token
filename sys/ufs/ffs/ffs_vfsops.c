@@ -7646,17 +7646,7 @@ name|VFIFO
 condition|)
 block|{
 comment|/* FFS supports shared locking for all files except fifos. */
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|VN_LOCK_ASHARE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
