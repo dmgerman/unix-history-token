@@ -407,6 +407,18 @@ name|PR_ABRTACPTDIS
 value|0
 end_define
 
+begin_comment
+comment|/* Spacer for loadable protocols. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP6PROTOSPACER
+define|\
+value|{						\ 	.pr_domain =&inet6domain,	\ 	.pr_protocol =		PROTO_SPACER,	\ 	.pr_usrreqs =&nousrreqs	\ }
+end_define
+
 begin_decl_stmt
 name|struct
 name|ip6protosw
@@ -1284,6 +1296,23 @@ block|,
 endif|#
 directive|endif
 comment|/* DEV_CARP */
+comment|/* Spacer n-times for loadable protocols. */
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
+name|IP6PROTOSPACER
+block|,
 comment|/* raw wildcard */
 block|{
 operator|.
