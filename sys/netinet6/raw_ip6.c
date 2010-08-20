@@ -1792,6 +1792,9 @@ if|if
 condition|(
 operator|!
 name|optp
+operator|||
+operator|!
+name|optp
 operator|->
 name|ip6po_pktinfo
 operator|||
