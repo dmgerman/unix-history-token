@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -4354,8 +4360,10 @@ name|opps
 operator|>
 name|icmplim
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"Limiting %s from %d to %d packets/sec\n"
 argument_list|,
 name|r
