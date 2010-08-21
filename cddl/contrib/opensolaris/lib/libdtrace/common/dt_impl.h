@@ -502,6 +502,10 @@ name|caddr_t
 name|dm_reloc_offset
 decl_stmt|;
 comment|/* Symbol relocation offset. */
+name|uintptr_t
+modifier|*
+name|dm_sec_offsets
+decl_stmt|;
 endif|#
 directive|endif
 block|}
