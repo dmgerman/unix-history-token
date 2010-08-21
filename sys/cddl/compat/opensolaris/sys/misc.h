@@ -92,6 +92,10 @@ name|char
 modifier|*
 name|nodename
 decl_stmt|;
+name|char
+modifier|*
+name|sysname
+decl_stmt|;
 block|}
 struct|;
 end_struct
