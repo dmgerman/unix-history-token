@@ -80,6 +80,11 @@ operator|.
 name|nodename
 operator|=
 literal|"unset"
+block|,
+operator|.
+name|sysname
+operator|=
+literal|"SunOS"
 block|}
 decl_stmt|;
 end_decl_stmt
