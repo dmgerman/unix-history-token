@@ -3742,6 +3742,18 @@ literal|"pmap_cache_remove: fake page"
 operator|)
 argument_list|)
 expr_stmt|;
+name|PMAP_STATS_INC
+argument_list|(
+name|pmap_ncache_remove
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dcache_color_ignore
+operator|!=
+literal|0
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|m
@@ -3775,18 +3787,6 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMAP_STATS_INC
-argument_list|(
-name|pmap_ncache_remove
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dcache_color_ignore
-operator|!=
-literal|0
-condition|)
-return|return;
 comment|/* 	 * Find the color for this virtual address and note the removal of 	 * the mapping. 	 */
 name|color
 operator|=
