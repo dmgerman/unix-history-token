@@ -1684,15 +1684,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"jstack"
@@ -1717,11 +1708,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3560,6 +3546,11 @@ begin_operator
 operator|,
 end_operator
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 literal|"ucaller"
@@ -3584,6 +3575,15 @@ end_block
 begin_operator
 operator|,
 end_operator
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_block
 block|{
@@ -3674,6 +3674,11 @@ begin_operator
 operator|,
 end_operator
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 literal|"uregs"
@@ -3748,6 +3753,15 @@ end_block
 begin_operator
 operator|,
 end_operator
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_block
 block|{
@@ -5790,15 +5804,6 @@ begin_comment
 comment|/* API version string */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|_dtrace_rdvers
@@ -5810,11 +5815,6 @@ end_decl_stmt
 begin_comment
 comment|/* rtld_db feature version */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -5899,12 +5899,6 @@ argument_list|)
 operator|!=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
 for|for
 control|(
 init|;
@@ -5927,8 +5921,6 @@ name|RD_OK
 condition|)
 break|break;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -7416,12 +7408,28 @@ name|dt_oflags
 operator|=
 name|flags
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|dtp
 operator|->
 name|dt_prcmode
 operator|=
 name|DT_PROC_STOP_PREINIT
 expr_stmt|;
+else|#
+directive|else
+name|dtp
+operator|->
+name|dt_prcmode
+operator|=
+name|DT_PROC_STOP_POSTINIT
+expr_stmt|;
+endif|#
+directive|endif
 name|dtp
 operator|->
 name|dt_linkmode
