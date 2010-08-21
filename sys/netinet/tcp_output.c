@@ -726,8 +726,6 @@ name|p
 decl_stmt|;
 name|int
 name|tso
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|tcpopt
@@ -935,6 +933,10 @@ name|tp
 argument_list|)
 expr_stmt|;
 name|sendalot
+operator|=
+literal|0
+expr_stmt|;
+name|tso
 operator|=
 literal|0
 expr_stmt|;
@@ -1762,10 +1764,6 @@ expr_stmt|;
 name|sendalot
 operator|=
 literal|1
-expr_stmt|;
-name|tso
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -4132,6 +4130,23 @@ condition|(
 name|tso
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|len
+operator|>
+name|tp
+operator|->
+name|t_maxopd
+operator|-
+name|optlen
+argument_list|,
+operator|(
+literal|"%s: len<= tso_segsz"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
