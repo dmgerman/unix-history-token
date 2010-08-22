@@ -56,6 +56,12 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 define|#
 directive|define
 name|FASTTRAPIOC
@@ -68,6 +74,18 @@ define|#
 directive|define
 name|FASTTRAPIOC_GETINSTR
 value|(FASTTRAPIOC | 2)
+else|#
+directive|else
+define|#
+directive|define
+name|FASTTRAPIOC_MAKEPROBE
+value|_IOW('f', 1, fasttrap_probe_spec_t)
+define|#
+directive|define
+name|FASTTRAPIOC_GETINSTR
+value|_IOWR('f', 2, uint8_t)
+endif|#
+directive|endif
 typedef|typedef
 enum|enum
 name|fasttrap_probe_type
