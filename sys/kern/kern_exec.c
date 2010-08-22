@@ -366,6 +366,8 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|exec
+argument_list|,
+name|exec
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -394,6 +396,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|exec_failure
+argument_list|,
+name|exec
+operator|-
+name|failure
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -422,6 +428,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|exec_success
+argument_list|,
+name|exec
+operator|-
+name|success
 argument_list|)
 expr_stmt|;
 end_expr_stmt

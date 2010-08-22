@@ -186,6 +186,8 @@ name|lookup
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"struct vnode *"
 argument_list|,
 literal|"char *"
@@ -203,6 +205,8 @@ argument_list|,
 argument|namei
 argument_list|,
 argument|lookup
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|,

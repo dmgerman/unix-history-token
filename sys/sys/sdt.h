@@ -15,17 +15,29 @@ directive|define
 name|_SYS_SDT_H
 end_define
 
-begin_comment
-comment|/* Stub these for the time being. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DTRACE_VERSION
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
 name|DTRACE_PROBE
 parameter_list|(
+name|prov
+parameter_list|,
 name|name
 parameter_list|)
+value|{				\ 	extern void __dtrace_##prov##___##name(void);		\ 	__dtrace_##prov##___##name();				\ }
 end_define
 
 begin_define
@@ -33,12 +45,13 @@ define|#
 directive|define
 name|DTRACE_PROBE1
 parameter_list|(
-name|name
+name|prov
 parameter_list|,
-name|type1
+name|name
 parameter_list|,
 name|arg1
 parameter_list|)
+value|{			\ 	extern void __dtrace_##prov##___##name(unsigned long);	\ 	__dtrace_##prov##___##name((unsigned long)arg1);	\ }
 end_define
 
 begin_define
@@ -46,16 +59,15 @@ define|#
 directive|define
 name|DTRACE_PROBE2
 parameter_list|(
-name|name
+name|prov
 parameter_list|,
-name|type1
+name|name
 parameter_list|,
 name|arg1
 parameter_list|,
-name|type2
-parameter_list|,
 name|arg2
 parameter_list|)
+value|{			\ 	extern void __dtrace_##prov##___##name(unsigned long,	\ 	    unsigned long);					\ 	__dtrace_##prov##___##name((unsigned long)arg1,		\ 	    (unsigned long)arg2);				\ }
 end_define
 
 begin_define
@@ -63,20 +75,17 @@ define|#
 directive|define
 name|DTRACE_PROBE3
 parameter_list|(
-name|name
+name|prov
 parameter_list|,
-name|type1
+name|name
 parameter_list|,
 name|arg1
 parameter_list|,
-name|type2
-parameter_list|,
 name|arg2
-parameter_list|,
-name|type3
 parameter_list|,
 name|arg3
 parameter_list|)
+value|{		\ 	extern void __dtrace_##prov##___##name(unsigned long,	\ 	    unsigned long, unsigned long);			\ 	__dtrace_##prov##___##name((unsigned long)arg1,		\ 	    (unsigned long)arg2, (unsigned long)arg3);		\ }
 end_define
 
 begin_define
@@ -84,40 +93,51 @@ define|#
 directive|define
 name|DTRACE_PROBE4
 parameter_list|(
-name|name
+name|prov
 parameter_list|,
-name|type1
+name|name
 parameter_list|,
 name|arg1
 parameter_list|,
-name|type2
-parameter_list|,
 name|arg2
-parameter_list|,
-name|type3
 parameter_list|,
 name|arg3
 parameter_list|,
-name|type4
-parameter_list|,
 name|arg4
 parameter_list|)
+value|{	\ 	extern void __dtrace_##prov##___##name(unsigned long,	\ 	    unsigned long, unsigned long, unsigned long);	\ 	__dtrace_##prov##___##name((unsigned long)arg1,		\ 	    (unsigned long)arg2, (unsigned long)arg3,		\ 	    (unsigned long)arg4);				\ }
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_comment
-comment|/* The promise of things to come. Worlds to explore. People to meet. Things to do. */
-end_comment
+begin_define
+define|#
+directive|define
+name|DTRACE_PROBE5
+parameter_list|(
+name|prov
+parameter_list|,
+name|name
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|,
+name|arg4
+parameter_list|,
+name|arg5
+parameter_list|)
+value|{	\ 	extern void __dtrace_##prov##___##name(unsigned long,		\ 	    unsigned long, unsigned long, unsigned long, unsigned long);\ 	__dtrace_##prov##___##name((unsigned long)arg1,			\ 	    (unsigned long)arg2, (unsigned long)arg3,			\ 	    (unsigned long)arg4, (unsigned long)arg5);			\ }
+end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -155,6 +175,8 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|)
 end_define
 
@@ -230,6 +252,8 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|)
 end_define
@@ -246,6 +270,8 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -265,6 +291,8 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -286,6 +314,8 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -309,6 +339,8 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|,
 name|arg0
 parameter_list|,
@@ -658,9 +690,11 @@ parameter_list|,
 name|func
 parameter_list|,
 name|name
+parameter_list|,
+name|sname
 parameter_list|)
 define|\
-value|struct sdt_probe sdt_##prov##_##mod##_##func##_##name[1] = {		\ 		{ sizeof(struct sdt_probe), 0, sdt_provider_##prov,		\ 		    { NULL, NULL }, { NULL, NULL }, #mod, #func, #name, 0, 0 }	\ 	};									\ 	SYSINIT(sdt_##prov##_##mod##_##func##_##name##_init, SI_SUB_KDTRACE, 	\ 	    SI_ORDER_SECOND + 1, sdt_probe_register, 				\ 	    sdt_##prov##_##mod##_##func##_##name );				\ 	SYSUNINIT(sdt_##prov##_##mod##_##func##_##name##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 1, sdt_probe_deregister, 		\ 	    sdt_##prov##_##mod##_##func##_##name )
+value|struct sdt_probe sdt_##prov##_##mod##_##func##_##name[1] = {		\ 		{ sizeof(struct sdt_probe), 0, sdt_provider_##prov,		\ 		    { NULL, NULL }, { NULL, NULL }, #mod, #func, #sname, 0, 0 }	\ 	};									\ 	SYSINIT(sdt_##prov##_##mod##_##func##_##name##_init, SI_SUB_KDTRACE, 	\ 	    SI_ORDER_SECOND + 1, sdt_probe_register, 				\ 	    sdt_##prov##_##mod##_##func##_##name );				\ 	SYSUNINIT(sdt_##prov##_##mod##_##func##_##name##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 1, sdt_probe_deregister, 		\ 	    sdt_##prov##_##mod##_##func##_##name )
 end_define
 
 begin_define
@@ -741,10 +775,12 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0)
 end_define
 
 begin_define
@@ -760,12 +796,14 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1)
 end_define
 
 begin_define
@@ -781,6 +819,8 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -788,7 +828,7 @@ parameter_list|,
 name|arg2
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2)
 end_define
 
 begin_define
@@ -804,6 +844,8 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -813,7 +855,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3)
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3)
 end_define
 
 begin_define
@@ -829,6 +871,8 @@ name|func
 parameter_list|,
 name|name
 parameter_list|,
+name|sname
+parameter_list|,
 name|arg0
 parameter_list|,
 name|arg1
@@ -840,7 +884,7 @@ parameter_list|,
 name|arg4
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE(prov, mod, func, name);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4)
+value|SDT_PROBE_DEFINE(prov, mod, func, name, sname);			\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 0, arg0);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 1, arg1);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 2, arg2);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 3, arg3);		\ 	SDT_PROBE_ARGTYPE(prov, mod, func, name, 4, arg4)
 end_define
 
 begin_define

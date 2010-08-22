@@ -121,7 +121,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1, arg2, arg3);				\ 	SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1, arg2, arg3);
+value|SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_err,	\ 	    mac-check-ok, "int", arg0, arg1, arg2, arg3);		\ 	SDT_PROBE_DEFINE5(mac_framework, kernel, name, mac_check_ok,	\ 	    mac-check-ok, "int", arg0, arg1, arg2, arg3);
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ parameter_list|,
 name|arg2
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1, arg2);					\ 	SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1, arg2);
+value|SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_err,	\ 	    mac-check-err, "int", arg0, arg1, arg2);			\ 	SDT_PROBE_DEFINE4(mac_framework, kernel, name, mac_check_ok,	\ 	    mac-check-ok, "int", arg0, arg1, arg2);
 end_define
 
 begin_define
@@ -153,7 +153,7 @@ parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0, arg1);						\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0, arg1);
+value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_err,	\ 	    mac-check-err, "int", arg0, arg1);				\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_check_ok,	\ 	    mac-check-ok, "int", arg0, arg1);
 end_define
 
 begin_define
@@ -166,7 +166,7 @@ parameter_list|,
 name|arg0
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_err,	\ 	    "int", arg0);						\ 	SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_ok,	\ 	    "int", arg0);
+value|SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_err,	\ 	    mac-check-err, "int", arg0);				\ 	SDT_PROBE_DEFINE2(mac_framework, kernel, name, mac_check_ok,	\ 	    mac-check-ok, "int", arg0);
 end_define
 
 begin_define
@@ -257,7 +257,7 @@ parameter_list|,
 name|arg1
 parameter_list|)
 define|\
-value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_err,	\ 	    "int", arg0, arg1);						\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_ok,	\ 	    "INT", arg0, arg1);
+value|SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_err,	\ 	    mac-grant-err, "int", arg0, arg1);				\ 	SDT_PROBE_DEFINE3(mac_framework, kernel, name, mac_grant_ok,	\ 	    mac-grant-ok, "INT", arg0, arg1);
 end_define
 
 begin_define

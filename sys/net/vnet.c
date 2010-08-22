@@ -459,6 +459,8 @@ name|vnet_alloc
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"int"
 argument_list|)
 expr_stmt|;
@@ -472,6 +474,8 @@ argument_list|,
 name|functions
 argument_list|,
 name|vnet_alloc
+argument_list|,
+name|alloc
 argument_list|,
 name|alloc
 argument_list|,
@@ -490,6 +494,8 @@ argument_list|,
 argument|functions
 argument_list|,
 argument|vnet_alloc
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|,
@@ -514,6 +520,8 @@ name|vnet_destroy
 argument_list|,
 name|entry
 argument_list|,
+name|entry
+argument_list|,
 literal|"int"
 argument_list|,
 literal|"struct vnet *"
@@ -531,6 +539,8 @@ argument_list|,
 argument|vnet_destroy
 argument_list|,
 argument|return
+argument_list|,
+argument|entry
 argument_list|,
 literal|"int"
 argument_list|)

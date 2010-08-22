@@ -317,6 +317,8 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|exit
+argument_list|,
+name|exit
 argument_list|)
 expr_stmt|;
 end_expr_stmt

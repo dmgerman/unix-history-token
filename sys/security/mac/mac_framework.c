@@ -148,6 +148,8 @@ name|policy
 argument_list|,
 name|modevent
 argument_list|,
+name|modevent
+argument_list|,
 literal|"int"
 argument_list|,
 literal|"struct mac_policy_conf *mpc"
@@ -166,6 +168,8 @@ name|policy
 argument_list|,
 specifier|register
 argument_list|,
+specifier|register
+argument_list|,
 literal|"struct mac_policy_conf *"
 argument_list|)
 expr_stmt|;
@@ -179,6 +183,8 @@ argument_list|,
 name|kernel
 argument_list|,
 name|policy
+argument_list|,
+name|unregister
 argument_list|,
 name|unregister
 argument_list|,
