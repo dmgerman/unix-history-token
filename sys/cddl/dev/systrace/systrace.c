@@ -687,6 +687,9 @@ parameter_list|,
 name|void
 modifier|*
 name|params
+parameter_list|,
+name|int
+name|ret
 parameter_list|)
 block|{
 name|int
@@ -700,15 +703,30 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|memset
+argument_list|(
+name|uargs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uargs
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check if this syscall has an argument conversion function 	 * registered. 	 */
 if|if
 condition|(
+name|params
+operator|&&
 name|sysent
 operator|->
 name|sy_systrace_args_func
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* 		 * Convert the syscall parameters using the registered 		 * function. 		 */
 call|(
 modifier|*
@@ -727,7 +745,13 @@ operator|&
 name|n_args
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+name|params
+condition|)
+block|{
 comment|/* 		 * Use the built-in system call argument conversion 		 * function to translate the syscall structure fields 		 * into the array of 64-bit values that DTrace  		 * expects. 		 */
 name|systrace_args
 argument_list|(
@@ -741,6 +765,23 @@ operator|&
 name|n_args
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Since params is NULL, this is a 'return' probe. 		 * Set arg0 and arg1 as the return value of this syscall. 		 */
+name|uargs
+index|[
+literal|0
+index|]
+operator|=
+name|uargs
+index|[
+literal|1
+index|]
+operator|=
+name|ret
+expr_stmt|;
+block|}
 comment|/* Process the probe using the converted argments. */
 name|dtrace_probe
 argument_list|(
