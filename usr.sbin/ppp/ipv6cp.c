@@ -623,6 +623,9 @@ case|:
 case|case
 name|IFT_FDDI
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 comment|/* XXX need more cases? */
 break|break;
 default|default:

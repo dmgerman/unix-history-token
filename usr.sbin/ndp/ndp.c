@@ -2027,6 +2027,12 @@ case|:
 case|case
 name|IFT_ISO88025
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
+case|case
+name|IFT_BRIDGE
+case|:
 goto|goto
 name|overwrite
 goto|;
