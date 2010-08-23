@@ -18415,6 +18415,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Overrides for libc_pic-provided functions.  */
+end_comment
+
 begin_function
 name|int
 name|__getosreldate
@@ -18518,6 +18522,22 @@ name|osreldate
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * No unresolved symbols for rtld.  */
+end_comment
+
+begin_function
+name|void
+name|__pthread_cxa_finalize
+parameter_list|(
+name|struct
+name|dl_phdr_info
+modifier|*
+name|a
+parameter_list|)
+block|{ }
 end_function
 
 end_unit
