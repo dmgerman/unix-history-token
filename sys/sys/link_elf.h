@@ -272,6 +272,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_rtld_addr_phdr
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|dl_phdr_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
