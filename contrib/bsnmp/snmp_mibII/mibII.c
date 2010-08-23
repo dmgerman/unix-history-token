@@ -3980,6 +3980,9 @@ case|:
 case|case
 name|IFT_ISO88025
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 if|if
 condition|(
 name|mib_find_rcvaddr
