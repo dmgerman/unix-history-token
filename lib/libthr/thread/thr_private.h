@@ -201,24 +201,6 @@ define|\
 value|WEAK_REF(func, SYM_FBP10(sym));			\ 	SYM_DEFAULT(sym, SYM_FBP10(sym), FBSDprivate_1.0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__hidden
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__hidden
-value|__attribute__((visibility("hidden")))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
