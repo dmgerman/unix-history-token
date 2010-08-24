@@ -2806,6 +2806,49 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* #include<sys/ucontext.h> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_UCONTEXT_H_
+end_ifdef
+
+begin_function_decl
+name|int
+name|__sys_setcontext
+parameter_list|(
+specifier|const
+name|ucontext_t
+modifier|*
+name|ucp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_swapcontext
+parameter_list|(
+name|ucontext_t
+modifier|*
+name|oucp
+parameter_list|,
+specifier|const
+name|ucontext_t
+modifier|*
+name|ucp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* #include<unistd.h> */
 end_comment
 
