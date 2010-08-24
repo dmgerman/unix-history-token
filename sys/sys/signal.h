@@ -1359,6 +1359,17 @@ begin_comment
 comment|/* Process trace trap.			*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TRAP_DTRACE
+value|3
+end_define
+
+begin_comment
+comment|/* DTrace induced trap.			*/
+end_comment
+
 begin_comment
 comment|/* codes for SIGCHLD */
 end_comment
