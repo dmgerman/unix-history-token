@@ -1420,7 +1420,7 @@ name|ksi
 operator|.
 name|ksi_code
 operator|=
-name|SI_USER
+name|SI_LWP
 expr_stmt|;
 name|ksi
 operator|.
@@ -1746,7 +1746,7 @@ name|ksi
 operator|.
 name|ksi_code
 operator|=
-name|SI_USER
+name|SI_LWP
 expr_stmt|;
 name|ksi
 operator|.

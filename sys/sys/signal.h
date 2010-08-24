@@ -1831,6 +1831,17 @@ name|SI_KERNEL
 value|0x10006
 end_define
 
+begin_define
+define|#
+directive|define
+name|SI_LWP
+value|0x10007
+end_define
+
+begin_comment
+comment|/* Signal sent by thr_kill */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
