@@ -917,9 +917,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|pksignal
+name|tdksignal
 argument_list|(
-name|p
+name|t
 argument_list|,
 name|SIGTRAP
 argument_list|,
