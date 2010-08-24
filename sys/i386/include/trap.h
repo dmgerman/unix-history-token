@@ -239,6 +239,28 @@ begin_comment
 comment|/* reserved (unknown) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_DTRACE_RET
+value|31
+end_define
+
+begin_comment
+comment|/* DTrace pid return */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_DTRACE_PROBE
+value|32
+end_define
+
+begin_comment
+comment|/* DTrace fasttrap probe */
+end_comment
+
 begin_comment
 comment|/* XXX most of the following codes aren't used, but could be. */
 end_comment
