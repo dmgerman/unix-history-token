@@ -1824,10 +1824,16 @@ argument_list|()
 operator|)
 argument_list|)
 expr_stmt|;
+name|lapic_timer_stop
+argument_list|()
+expr_stmt|;
 name|lapic_timer_set_divisor
 argument_list|(
 name|lapic_timer_divisor
 argument_list|)
+expr_stmt|;
+name|lapic_timer_enable_intr
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1851,9 +1857,6 @@ name|la
 operator|->
 name|la_timer_period
 argument_list|)
-expr_stmt|;
-name|lapic_timer_enable_intr
-argument_list|()
 expr_stmt|;
 block|}
 comment|/* Program error LVT and clear any existing errors. */
@@ -2363,6 +2366,17 @@ operator|<<
 literal|32
 expr_stmt|;
 block|}
+name|lapic_timer_stop
+argument_list|()
+expr_stmt|;
+name|lapic_timer_set_divisor
+argument_list|(
+name|lapic_timer_divisor
+argument_list|)
+expr_stmt|;
+name|lapic_timer_enable_intr
+argument_list|()
+expr_stmt|;
 name|la
 operator|=
 operator|&
@@ -2371,12 +2385,6 @@ index|[
 name|lapic_id
 argument_list|()
 index|]
-expr_stmt|;
-comment|/* 	 * Start up the timer on the BSP.  The APs will kick off their 	 * timer during lapic_setup(). 	 */
-name|lapic_timer_set_divisor
-argument_list|(
-name|lapic_timer_divisor
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2495,9 +2503,6 @@ name|la_timer_period
 argument_list|)
 expr_stmt|;
 block|}
-name|lapic_timer_enable_intr
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3923,8 +3928,7 @@ operator|~
 name|APIC_LVTT_TM
 expr_stmt|;
 name|value
-operator|&=
-operator|~
+operator||=
 name|APIC_LVT_M
 expr_stmt|;
 name|lapic
@@ -3932,6 +3936,12 @@ operator|->
 name|lvt_timer
 operator|=
 name|value
+expr_stmt|;
+name|lapic
+operator|->
+name|icr_timer
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
