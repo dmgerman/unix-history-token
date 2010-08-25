@@ -591,6 +591,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|x86bios_set_intr
+parameter_list|(
+name|int
+name|intno
+parameter_list|,
+name|uint32_t
+name|saddr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
