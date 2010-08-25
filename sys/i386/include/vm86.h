@@ -249,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|VM86_PMAPSIZE
-value|8
+value|24
 end_define
 
 begin_define
