@@ -149,6 +149,8 @@ name|CPUID_TO_FAMILY
 argument_list|(
 name|cpu_id
 argument_list|)
+operator|==
+literal|0x6
 operator|&&
 operator|(
 name|CPUID_TO_MODEL
