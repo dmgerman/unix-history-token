@@ -337,17 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|xlr_loader_info
-name|xlr_loader_info
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* FIXME : Unused */
-end_comment
-
-begin_decl_stmt
 name|int
 name|xlr_run_mode
 decl_stmt|;
@@ -2346,8 +2335,6 @@ index|]
 argument_list|,
 name|platform_ipi_intrnum
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

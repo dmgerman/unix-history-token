@@ -732,8 +732,6 @@ expr_stmt|;
 name|pic_ack
 argument_list|(
 name|i
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -782,8 +780,6 @@ block|}
 name|pic_delayed_ack
 argument_list|(
 name|i
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -21,13 +21,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|rmi_spin_mutex_safe
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -56,57 +49,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_IRT_TIMER_0_INDEX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_1_INDEX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_2_INDEX
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_3_INDEX
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_4_INDEX
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_5_INDEX
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_6_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_TIMER_7_INDEX
-value|8
+name|PIC_IRT_TIMER_INDEX
+parameter_list|(
+name|i
+parameter_list|)
+value|(1 + (i))
 end_define
 
 begin_define
@@ -333,34 +280,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_SYS_TIMER_MAXVAL_0_BASE
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_SYS_TIMER_MAXVAL_1_BASE
-value|0x110
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_SYS_TIMER_0_BASE
-value|0x120
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_SYS_TIMER_1_BASE
-value|0x130
-end_define
-
-begin_define
-define|#
-directive|define
 name|PIC_CLOCK_TIMER
 value|7
 end_define
@@ -445,309 +364,89 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_IRT_0_WD
-value|(PIC_IRT_0_BASE   + PIC_IRT_WD_INDEX)
+name|PIC_TIMER_MAXVAL_0_BASE
+value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_1_WD
-value|(PIC_IRT_1_BASE   + PIC_IRT_WD_INDEX)
+name|PIC_TIMER_MAXVAL_1_BASE
+value|0x110
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_0_TIMER_0
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_0_INDEX)
+name|PIC_TIMER_COUNT_0_BASE
+value|0x120
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_1_TIMER_0
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_0_INDEX)
+name|PIC_TIMER_COUNT_1_BASE
+value|0x130
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_0_TIMER_1
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_1_INDEX)
+name|PIC_IRT_0
+parameter_list|(
+name|picintr
+parameter_list|)
+value|(PIC_IRT_0_BASE + (picintr))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_1_TIMER_1
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_1_INDEX)
+name|PIC_IRT_1
+parameter_list|(
+name|picintr
+parameter_list|)
+value|(PIC_IRT_1_BASE + (picintr))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_0_TIMER_2
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_2_INDEX)
+name|PIC_TIMER_MAXVAL_0
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_TIMER_MAXVAL_0_BASE + (i))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_1_TIMER_2
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_2_INDEX)
+name|PIC_TIMER_MAXVAL_1
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_TIMER_MAXVAL_1_BASE + (i))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_0_TIMER_3
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_3_INDEX)
+name|PIC_TIMER_COUNT_0
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_TIMER_COUNT_0_BASE + (i))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PIC_IRT_1_TIMER_3
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_3_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_TIMER_4
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_4_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_TIMER_4
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_4_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_TIMER_5
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_5_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_TIMER_5
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_5_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_TIMER_6
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_6_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_TIMER_6
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_6_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_TIMER_7
-value|(PIC_IRT_0_BASE   + PIC_IRT_TIMER_7_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_TIMER_7
-value|(PIC_IRT_1_BASE   + PIC_IRT_TIMER_7_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_CLOCK
-value|(PIC_IRT_0_TIMER_7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_CLOCK
-value|(PIC_IRT_1_TIMER_7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_UART_0
-value|(PIC_IRT_0_BASE + PIC_IRT_UART_0_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_UART_0
-value|(PIC_IRT_1_BASE + PIC_IRT_UART_0_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_UART_1
-value|(PIC_IRT_0_BASE + PIC_IRT_UART_1_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_UART_1
-value|(PIC_IRT_1_BASE + PIC_IRT_UART_1_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_I2C_0
-value|(PIC_IRT_0_BASE + PIC_IRT_I2C_0_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_I2C_0
-value|(PIC_IRT_1_BASE + PIC_IRT_I2C_0_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_I2C_1
-value|(PIC_IRT_0_BASE + PIC_IRT_I2C_1_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_I2C_1
-value|(PIC_IRT_1_BASE + PIC_IRT_I2C_1_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_HYPER
-value|(PIC_IRT_0_BASE + PIC_IRT_HYPER_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_HYPER
-value|(PIC_IRT_1_BASE + PIC_IRT_HYPER_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_0_PCIX
-value|(PIC_IRT_0_BASE + PIC_IRT_PCIX_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_IRT_1_PCIX
-value|(PIC_IRT_1_BASE + PIC_IRT_PCIX_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_0_MAXVAL_0
-value|(PIC_SYS_TIMER_MAXVAL_0_BASE + 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_0_MAXVAL_1
-value|(PIC_SYS_TIMER_MAXVAL_1_BASE + 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_0_COUNTER_0
-value|(PIC_SYS_TIMER_0_BASE + 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_0_COUNTER_1
-value|(PIC_SYS_TIMER_1_BASE + 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_6_MAXVAL_0
-value|(PIC_SYS_TIMER_MAXVAL_0_BASE + 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_6_MAXVAL_1
-value|(PIC_SYS_TIMER_MAXVAL_1_BASE + 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_6_COUNTER_0
-value|(PIC_SYS_TIMER_0_BASE + 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_6_COUNTER_1
-value|(PIC_SYS_TIMER_1_BASE + 6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_7_MAXVAL_0
-value|(PIC_SYS_TIMER_MAXVAL_0_BASE + 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_7_MAXVAL_1
-value|(PIC_SYS_TIMER_MAXVAL_1_BASE + 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_7_COUNTER_0
-value|(PIC_SYS_TIMER_0_BASE + 7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_7_COUNTER_1
-value|(PIC_SYS_TIMER_1_BASE + 7)
+name|PIC_TIMER_COUNT_1
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_TIMER_COUNT_0_BASE + (i))
 end_define
 
 begin_define
@@ -774,64 +473,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_TIMER_0_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_0_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_1_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_1_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_2_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_2_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_3_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_3_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_4_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_4_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_5_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_5_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_6_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_6_INDEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_TIMER_7_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_TIMER_7_INDEX)
+name|PIC_TIMER_IRQ
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_IRQ_BASE + PIC_IRT_TIMER_INDEX(i))
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIC_CLOCK_IRQ
-value|(PIC_TIMER_7_IRQ)
+value|PIC_TIMER_IRQ(PIC_CLOCK_TIMER)
 end_define
 
 begin_define
@@ -1051,7 +704,7 @@ name|PIC_IRQ_IS_EDGE_TRIGGERED
 parameter_list|(
 name|irq
 parameter_list|)
-value|( ((irq)>=PIC_TIMER_0_IRQ)&& ((irq)<=PIC_TIMER_7_IRQ) )
+value|(((irq)>= PIC_TIMER_IRQ(0))&& ((irq)<= PIC_TIMER_IRQ(7)))
 end_define
 
 begin_define
@@ -1061,7 +714,7 @@ name|PIC_IRQ_IS_IRT
 parameter_list|(
 name|irq
 parameter_list|)
-value|( ((irq)>=PIC_IRT_FIRST_IRQ)&& ((irq)<=PIC_IRT_LAST_IRQ) )
+value|(((irq)>= PIC_IRT_FIRST_IRQ)&& ((irq)<= PIC_IRT_LAST_IRQ))
 end_define
 
 begin_decl_stmt
@@ -1074,12 +727,11 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|__inline__
-name|__uint32_t
+name|__inline
+name|uint32_t
 name|pic_read_control
 parameter_list|(
-name|int
-name|haslock
+name|void
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1091,21 +743,9 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
-name|__uint32_t
+name|uint32_t
 name|reg
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1119,18 +759,6 @@ argument_list|,
 name|PIC_CTRL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1138,22 +766,21 @@ name|xlr_pic_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|reg
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|pic_write_control
 parameter_list|(
-name|__uint32_t
+name|uint32_t
 name|control
-parameter_list|,
-name|int
-name|haslock
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1165,18 +792,6 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1192,18 +807,6 @@ argument_list|,
 name|control
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1215,15 +818,12 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|pic_update_control
 parameter_list|(
 name|__uint32_t
 name|control
-parameter_list|,
-name|int
-name|haslock
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1235,18 +835,6 @@ argument_list|(
 name|XLR_IO_PIC_OFFSET
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1271,18 +859,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1294,15 +870,12 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|pic_ack
 parameter_list|(
 name|int
 name|irq
-parameter_list|,
-name|int
-name|haslock
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1332,18 +905,6 @@ name|irq
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1367,25 +928,12 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|xlr_pic_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 return|return;
 block|}
@@ -1393,15 +941,12 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|pic_delayed_ack
 parameter_list|(
 name|int
 name|irq
-parameter_list|,
-name|int
-name|haslock
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1431,18 +976,6 @@ name|irq
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1466,32 +999,20 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rmi_spin_mutex_safe
-operator|)
-operator|&&
-operator|(
-name|haslock
-operator|==
-literal|0
-operator|)
-condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|xlr_pic_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+return|return;
 block|}
 end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|pic_send_ipi
 parameter_list|(
@@ -1500,9 +1021,6 @@ name|cpu
 parameter_list|,
 name|int
 name|ipi
-parameter_list|,
-name|int
-name|haslock
 parameter_list|)
 block|{
 name|xlr_reg_t
@@ -1554,6 +1072,100 @@ literal|16
 operator|)
 operator||
 name|ipi
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|pic_setup_intr
+parameter_list|(
+name|int
+name|picintr
+parameter_list|,
+name|int
+name|irq
+parameter_list|,
+name|uint32_t
+name|cpumask
+parameter_list|)
+block|{
+name|xlr_reg_t
+modifier|*
+name|mmio
+init|=
+name|xlr_io_mmio
+argument_list|(
+name|XLR_IO_PIC_OFFSET
+argument_list|)
+decl_stmt|;
+name|int
+name|level
+decl_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|xlr_pic_lock
+argument_list|)
+expr_stmt|;
+name|level
+operator|=
+name|PIC_IRQ_IS_EDGE_TRIGGERED
+argument_list|(
+name|irq
+argument_list|)
+expr_stmt|;
+name|xlr_write_reg
+argument_list|(
+name|mmio
+argument_list|,
+name|PIC_IRT_0
+argument_list|(
+name|picintr
+argument_list|)
+argument_list|,
+name|cpumask
+argument_list|)
+expr_stmt|;
+name|xlr_write_reg
+argument_list|(
+name|mmio
+argument_list|,
+name|PIC_IRT_1
+argument_list|(
+name|picintr
+argument_list|)
+argument_list|,
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|31
+operator|)
+operator||
+operator|(
+name|level
+operator|<<
+literal|30
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+operator||
+name|irq
+operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|xlr_pic_lock
 argument_list|)
 expr_stmt|;
 block|}
