@@ -3875,15 +3875,17 @@ name|printf
 argument_list|(
 literal|"VESA: INT 0x10 vector 0x%04x:0x%04x\n"
 argument_list|,
-name|X86BIOS_PHYSTOSEG
-argument_list|(
+operator|(
 name|offs
-argument_list|)
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xffff
 argument_list|,
-name|X86BIOS_PHYSTOOFF
-argument_list|(
 name|offs
-argument_list|)
+operator|&
+literal|0xffff
 argument_list|)
 expr_stmt|;
 name|x86bios_init_regs
