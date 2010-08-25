@@ -1069,6 +1069,30 @@ block|}
 end_function
 
 begin_function
+name|u_int
+name|platform_get_timecount
+parameter_list|(
+name|struct
+name|timecounter
+modifier|*
+name|tc
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0xffffffffU
+operator|-
+name|pic_timer_count32
+argument_list|(
+name|PIC_CLOCK_TIMER
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|xlr_pic_init
@@ -1076,6 +1100,32 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|timecounter
+name|pic_timecounter
+init|=
+block|{
+name|platform_get_timecount
+block|,
+comment|/* get_timecount */
+literal|0
+block|,
+comment|/* no poll_pps */
+operator|~
+literal|0U
+block|,
+comment|/* counter_mask */
+name|PIC_TIMER_HZ
+block|,
+comment|/* frequency */
+literal|"XLRPIC"
+block|,
+comment|/* name */
+literal|2000
+block|,
+comment|/* quality (adjusted in code) */
+block|}
+decl_stmt|;
 name|xlr_reg_t
 modifier|*
 name|mmio
@@ -1113,6 +1163,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Initialize all IRT entries */
 for|for
 control|(
 name|i
@@ -1180,6 +1231,28 @@ name|irq
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Setup timer 7 of PIC as a timestamp, no interrupts */
+name|pic_init_timer
+argument_list|(
+name|PIC_CLOCK_TIMER
+argument_list|)
+expr_stmt|;
+name|pic_set_timer
+argument_list|(
+name|PIC_CLOCK_TIMER
+argument_list|,
+operator|~
+name|UINT64_C
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|platform_timecounter
+operator|=
+operator|&
+name|pic_timecounter
+expr_stmt|;
 block|}
 end_function
 
