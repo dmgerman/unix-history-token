@@ -449,11 +449,25 @@ parameter_list|)
 value|(PIC_TIMER_COUNT_0_BASE + (i))
 end_define
 
+begin_comment
+comment|/*  * We use a simple mapping form PIC interrupts to CPU IRQs.  * The PIC interrupts 0-31 are mapped to CPU irq's 8-39.  * this leaves the lower 0-7 for the cpu interrupts (like   * count/compare, msgrng) and 40-63 for IPIs  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PIC_IRQ_BASE
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_INTR_TO_IRQ
+parameter_list|(
+name|i
+parameter_list|)
+value|(PIC_IRQ_BASE + (i))
 end_define
 
 begin_define

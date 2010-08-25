@@ -1089,6 +1089,8 @@ name|int
 name|i
 decl_stmt|,
 name|level
+decl_stmt|,
+name|irq
 decl_stmt|;
 name|mtx_init
 argument_list|(
@@ -1125,11 +1127,18 @@ name|i
 operator|++
 control|)
 block|{
+name|irq
+operator|=
+name|PIC_INTR_TO_IRQ
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 name|level
 operator|=
 name|PIC_IRQ_IS_EDGE_TRIGGERED
 argument_list|(
-name|i
+name|irq
 argument_list|)
 expr_stmt|;
 comment|/* Bind all PIC irqs to cpu 0 */
@@ -1137,9 +1146,10 @@ name|xlr_write_reg
 argument_list|(
 name|mmio
 argument_list|,
-name|PIC_IRT_0_BASE
-operator|+
+name|PIC_IRT_0
+argument_list|(
 name|i
+argument_list|)
 argument_list|,
 literal|0x01
 argument_list|)
@@ -1149,9 +1159,10 @@ name|xlr_write_reg
 argument_list|(
 name|mmio
 argument_list|,
-name|PIC_IRT_1_BASE
-operator|+
+name|PIC_IRT_1
+argument_list|(
 name|i
+argument_list|)
 argument_list|,
 operator|(
 name|level
@@ -1165,11 +1176,7 @@ operator|<<
 literal|6
 operator|)
 operator||
-operator|(
-name|PIC_IRQ_BASE
-operator|+
-name|i
-operator|)
+name|irq
 argument_list|)
 expr_stmt|;
 block|}
