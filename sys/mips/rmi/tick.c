@@ -171,6 +171,7 @@ begin_expr_stmt
 specifier|static
 name|DPCPU_DEFINE
 argument_list|(
+specifier|volatile
 name|uint32_t
 argument_list|,
 name|counter_upper
@@ -182,6 +183,7 @@ begin_expr_stmt
 specifier|static
 name|DPCPU_DEFINE
 argument_list|(
+specifier|volatile
 name|uint32_t
 argument_list|,
 name|counter_lower_last
@@ -366,14 +368,19 @@ name|t_lower_last
 decl_stmt|,
 name|t_upper
 decl_stmt|;
-comment|/* 	 * XXX: MIPS64 platforms can read 64-bits of counter directly. 	 * Also: the tc code is supposed to cope with things wrapping 	 * from the time counter, so I'm not sure why all these hoops 	 * are even necessary. 	 */
-name|ticktock
-operator|=
-name|mips_rd_count
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Disable preemption because we are working with cpu specific data. 	 */
 name|critical_enter
 argument_list|()
+expr_stmt|;
+comment|/* 	 * Note that even though preemption is disabled, interrupts are 	 * still enabled. In particular there is a race with clock_intr() 	 * reading the values of 'counter_upper' and 'counter_lower_last'. 	 * 	 * XXX this depends on clock_intr() being executed periodically 	 * so that 'counter_upper' and 'counter_lower_last' are not stale. 	 */
+do|do
+block|{
+name|t_upper
+operator|=
+name|DPCPU_GET
+argument_list|(
+name|counter_upper
+argument_list|)
 expr_stmt|;
 name|t_lower_last
 operator|=
@@ -382,13 +389,26 @@ argument_list|(
 name|counter_lower_last
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
 name|t_upper
-operator|=
+operator|!=
 name|DPCPU_GET
 argument_list|(
 name|counter_upper
 argument_list|)
+condition|)
+do|;
+name|ticktock
+operator|=
+name|mips_rd_count
+argument_list|()
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
+comment|/* COUNT register wrapped around */
 if|if
 condition|(
 name|ticktock
@@ -397,27 +417,6 @@ name|t_lower_last
 condition|)
 name|t_upper
 operator|++
-expr_stmt|;
-name|t_lower_last
-operator|=
-name|ticktock
-expr_stmt|;
-name|DPCPU_SET
-argument_list|(
-name|counter_upper
-argument_list|,
-name|t_upper
-argument_list|)
-expr_stmt|;
-name|DPCPU_SET
-argument_list|(
-name|counter_lower_last
-argument_list|,
-name|t_lower_last
-argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 name|ret
 operator|=
@@ -430,7 +429,7 @@ operator|<<
 literal|32
 operator|)
 operator||
-name|t_lower_last
+name|ticktock
 expr_stmt|;
 return|return
 operator|(
@@ -1007,9 +1006,7 @@ argument_list|(
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
-name|critical_enter
-argument_list|()
-expr_stmt|;
+comment|/* COUNT register wrapped around */
 if|if
 condition|(
 name|count
@@ -1032,6 +1029,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|DPCPU_SET
 argument_list|(
 name|counter_lower_last
@@ -1039,7 +1037,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cycles_per_tick
@@ -1145,9 +1142,6 @@ name|et
 operator|.
 name|et_arg
 argument_list|)
-expr_stmt|;
-name|critical_exit
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
