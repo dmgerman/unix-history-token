@@ -138,12 +138,23 @@ index|[]
 init|=
 block|{
 block|{
-name|ED_RTL8029_PCI_ID
+literal|0x140111f6
 block|,
-literal|"RealTek 8029"
+literal|"Compex RL2000"
 block|}
 block|,
-comment|/* Needs realtek full duplex */
+block|{
+literal|0x005812c3
+block|,
+literal|"Holtek HT80232"
+block|}
+block|,
+block|{
+literal|0x30008e2e
+block|,
+literal|"KTI ET32P2"
+block|}
+block|,
 block|{
 literal|0x50004a14
 block|,
@@ -157,23 +168,12 @@ literal|"ProLAN"
 block|}
 block|,
 block|{
-literal|0x140111f6
+name|ED_RTL8029_PCI_ID
 block|,
-literal|"Compex RL2000"
+literal|"RealTek 8029"
 block|}
 block|,
-block|{
-literal|0x30008e2e
-block|,
-literal|"KTI ET32P2"
-block|}
-block|,
-block|{
-literal|0x19808c4a
-block|,
-literal|"Winbond W89C940"
-block|}
-block|,
+comment|/* Needs realtek full duplex */
 block|{
 literal|0x0e3410bd
 block|,
@@ -186,7 +186,12 @@ block|,
 literal|"VIA VT86C926"
 block|}
 block|,
-comment|/* only do 16-bit */
+block|{
+literal|0x19808c4a
+block|,
+literal|"Winbond W89C940"
+block|}
+block|,
 block|{
 literal|0x5a5a1050
 block|,
@@ -196,9 +201,8 @@ block|,
 if|#
 directive|if
 literal|0
-comment|/* Holtek needs special lovin', disabled by default */
-block|{ 0x005812c3, "Holtek HT80232" },
-comment|/* Only 16-bit I/O, Holtek fdx */
+comment|/* some Holtek needs special lovin', disabled by default */
+comment|/* The Holtek can report/do full duplex, but that's unimplemented */
 block|{ 0x559812c3, "Holtek HT80229" },
 comment|/* Only 32-bit I/O, Holtek fdx, STOP_PG_60? */
 endif|#
@@ -321,11 +325,6 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|flags
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|error
 init|=
 name|ENXIO
@@ -351,7 +350,7 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|flags
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -369,7 +368,7 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|flags
+name|ED_FLAGS_FORCE_16BIT_MODE
 argument_list|)
 expr_stmt|;
 if|if
