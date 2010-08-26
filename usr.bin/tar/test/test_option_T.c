@@ -108,7 +108,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* Create a simple dir heirarchy; bail if anything fails. */
+comment|/* Create a simple dir hierarchy; bail if anything fails. */
 if|if
 condition|(
 operator|!

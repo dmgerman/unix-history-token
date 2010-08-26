@@ -137,7 +137,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* Create a sample file heirarchy. */
+comment|/* Create a sample file hierarchy. */
 name|assertEqualInt
 argument_list|(
 literal|0

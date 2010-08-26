@@ -4141,7 +4141,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* locking heirarchy: cq lock first, then qp lock. */
+comment|/* locking hierarchy: cq lock first, then qp lock. */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4234,7 +4234,7 @@ operator|.
 name|cq_context
 argument_list|)
 expr_stmt|;
-comment|/* locking heirarchy: cq lock first, then qp lock. */
+comment|/* locking hierarchy: cq lock first, then qp lock. */
 name|mtx_lock
 argument_list|(
 operator|&

@@ -4472,7 +4472,7 @@ name|dp
 operator|->
 name|de_fndcnt
 expr_stmt|;
-comment|/* 	 * If ".." must be changed (ie the directory gets a new 	 * parent) then the source directory must not be in the 	 * directory heirarchy above the target, as this would 	 * orphan everything below the source directory. Also 	 * the user must have write permission in the source so 	 * as to be able to change "..". We must repeat the call 	 * to namei, as the parent directory is unlocked by the 	 * call to doscheckpath(). 	 */
+comment|/* 	 * If ".." must be changed (ie the directory gets a new 	 * parent) then the source directory must not be in the 	 * directory hierarchy above the target, as this would 	 * orphan everything below the source directory. Also 	 * the user must have write permission in the source so 	 * as to be able to change "..". We must repeat the call 	 * to namei, as the parent directory is unlocked by the 	 * call to doscheckpath(). 	 */
 name|error
 operator|=
 name|VOP_ACCESS
