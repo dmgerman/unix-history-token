@@ -768,7 +768,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1782,7 +1782,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|aligned
 argument_list|(
@@ -1818,7 +1818,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1929,7 +1929,7 @@ index|[]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
@@ -1982,7 +1982,7 @@ index|]
 name|__attribute__
 argument_list|(
 operator|(
-name|unused
+name|used
 operator|,
 name|section
 argument_list|(
