@@ -112,19 +112,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Only called when a thread is cancelled.  It may be more useful  * to call it from pthread_exit() if other ways of asynchronous or  * abnormal thread termination can be found.  */
-end_comment
-
-begin_function
-name|void
-name|_thr_exit_cleanup
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 begin_function
 name|void
 name|_pthread_exit
@@ -196,9 +183,6 @@ operator|->
 name|cancel_async
 operator|=
 literal|0
-expr_stmt|;
-name|_thr_exit_cleanup
-argument_list|()
 expr_stmt|;
 comment|/* Save the return value: */
 name|curthread
