@@ -449,7 +449,6 @@ name|std_func
 operator|=
 name|func
 expr_stmt|;
-empty_stmt|;
 name|fn
 operator|.
 name|fn_arg
@@ -526,7 +525,6 @@ name|cxa_func
 operator|=
 name|func
 expr_stmt|;
-empty_stmt|;
 name|fn
 operator|.
 name|fn_arg
