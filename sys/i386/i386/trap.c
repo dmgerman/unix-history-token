@@ -362,6 +362,16 @@ name|systrace_probe_func
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * These hooks are necessary for the pid, usdt and fasttrap providers.  */
+end_comment
+
+begin_decl_stmt
+name|dtrace_fasttrap_probe_ptr_t
+name|dtrace_fasttrap_probe_ptr
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|dtrace_pid_probe_ptr_t
 name|dtrace_pid_probe_ptr
