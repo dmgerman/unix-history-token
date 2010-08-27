@@ -3209,7 +3209,9 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-literal|"/.zfs/snapshot/"
+literal|"/"
+name|ZFS_CTLDIR_NAME
+literal|"/snapshot/"
 argument_list|)
 operator|+
 name|strlen
@@ -3237,7 +3239,9 @@ name|mountpoint
 argument_list|,
 name|mountpoint_len
 argument_list|,
-literal|"%s/.zfs/snapshot/%s"
+literal|"%s/"
+name|ZFS_CTLDIR_NAME
+literal|"/snapshot/%s"
 argument_list|,
 name|dvp
 operator|->
