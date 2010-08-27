@@ -659,6 +659,11 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|out
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
