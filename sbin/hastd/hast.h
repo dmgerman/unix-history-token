@@ -75,11 +75,15 @@ directive|include
 file|"proto.h"
 end_include
 
+begin_comment
+comment|/*  * Version history:  * 0 - initial version  * 1 - HIO_KEEPALIVE added  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HAST_PROTO_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -220,6 +224,13 @@ define|#
 directive|define
 name|HIO_FLUSH
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIO_KEEPALIVE
+value|5
 end_define
 
 begin_define
