@@ -4390,7 +4390,11 @@ name|n
 operator|+=
 name|imax
 argument_list|(
+operator|(
+name|m
+operator|+
 name|n
+operator|)
 operator|/
 literal|8
 argument_list|,
