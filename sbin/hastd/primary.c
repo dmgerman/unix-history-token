@@ -7768,6 +7768,10 @@ goto|goto
 name|free_queue
 goto|;
 block|}
+name|synced
+operator|+=
+name|length
+expr_stmt|;
 name|free_queue
 label|:
 name|mtx_lock
@@ -7800,10 +7804,6 @@ argument_list|(
 operator|&
 name|range_lock
 argument_list|)
-expr_stmt|;
-name|synced
-operator|+=
-name|length
 expr_stmt|;
 name|pjdlog_debug
 argument_list|(
