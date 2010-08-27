@@ -6899,7 +6899,8 @@ name|true
 expr_stmt|;
 name|synced
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -6913,6 +6914,36 @@ operator|&
 name|sync_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|synced
+operator|==
+operator|-
+literal|1
+condition|)
+name|synced
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|sync_inprogress
+condition|)
+block|{
+name|pjdlog_info
+argument_list|(
+literal|"Synchronization interrupted. "
+literal|"%jd bytes synchronized so far."
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|synced
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|!
@@ -7181,26 +7212,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|metadata_lock
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|synced
-operator|>
-literal|0
-condition|)
-block|{
-name|pjdlog_info
-argument_list|(
-literal|"Synchronization interrupted. "
-literal|"%jd bytes synchronized so far."
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|synced
 argument_list|)
 expr_stmt|;
 block|}
