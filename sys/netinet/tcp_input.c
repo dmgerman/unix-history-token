@@ -558,7 +558,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|tcp_do_rfc3390
 init|=
