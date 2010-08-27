@@ -816,6 +816,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|has_phdr
+operator|&&
 operator|&
 name|__pthread_cxa_finalize
 operator|!=
