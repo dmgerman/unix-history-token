@@ -2155,6 +2155,16 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|tcp_do_rfc3390
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|tcp_do_newreno
 argument_list|)
 expr_stmt|;
@@ -2230,6 +2240,13 @@ define|#
 directive|define
 name|V_tcp_delack_enabled
 value|VNET(tcp_delack_enabled)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_rfc3390
+value|VNET(tcp_do_rfc3390)
 end_define
 
 begin_define
