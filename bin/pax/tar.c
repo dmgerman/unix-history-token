@@ -4817,8 +4817,6 @@ operator|+
 name|len
 operator|-
 name|TNMSZ
-operator|-
-literal|1
 expr_stmt|;
 while|while
 condition|(
