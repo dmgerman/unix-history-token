@@ -11038,8 +11038,6 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * If the physical address lies within a valid BAT table entry, 	 * return the 1:1 mapping. This currently doesn't work 	 * for regions that overlap 256M BAT segments. 	 */
 for|for
 control|(
