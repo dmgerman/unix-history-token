@@ -1073,7 +1073,7 @@ name|errno
 operator|)
 return|;
 block|}
-comment|/* 	 * We make socket non-blocking so we have decided about connection 	 * timeout. 	 */
+comment|/* 	 * We make socket non-blocking so we can handle connection timeout 	 * manually. 	 */
 name|flags
 operator||=
 name|O_NONBLOCK
