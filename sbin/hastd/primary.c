@@ -9101,9 +9101,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
+comment|/* Sleep only if a signal wasn't delivered in the meantime. */
+if|if
+condition|(
+operator|!
+name|sigexit_received
+operator|&&
+operator|!
+name|sighup_received
+operator|&&
+operator|!
+name|sigchld_received
+condition|)
 name|cv_timedwait
 argument_list|(
 operator|&
