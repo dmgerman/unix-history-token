@@ -47,12 +47,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|tlb
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * CPU identification, from PRID register.  */
 end_comment
