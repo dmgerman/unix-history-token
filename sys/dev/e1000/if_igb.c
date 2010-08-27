@@ -2762,6 +2762,30 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|stats
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not allocate stats memory\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|err_late
+goto|;
+block|}
 comment|/* 	** Start from a known state, this is 	** important in reading the nvm and 	** mac from that. 	*/
 name|e1000_reset_hw
 argument_list|(
@@ -22822,6 +22846,13 @@ name|adapter
 operator|->
 name|stats
 expr_stmt|;
+if|if
+condition|(
+name|stats
+operator|==
+name|NULL
+condition|)
+return|return;
 name|stats
 operator|->
 name|last_gprc
