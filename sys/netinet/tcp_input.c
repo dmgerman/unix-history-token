@@ -6107,13 +6107,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|TSTMP_GT
+argument_list|(
 name|to
 operator|.
 name|to_tsecr
-operator|>
+argument_list|,
 name|tp
 operator|->
 name|rfbuf_ts
+argument_list|)
 operator|&&
 name|to
 operator|.
