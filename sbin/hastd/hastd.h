@@ -51,6 +51,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool
+name|sigchld_received
+decl_stmt|,
 name|sigexit_received
 decl_stmt|,
 name|sighup_received

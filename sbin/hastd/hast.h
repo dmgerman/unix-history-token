@@ -408,6 +408,13 @@ comment|/* Maximum number of extents that are kept dirty. */
 name|int
 name|hr_keepdirty
 decl_stmt|;
+comment|/* Path to a program to execute on various events. */
+name|char
+name|hr_exec
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 comment|/* Path to local component. */
 name|char
 name|hr_localpath
