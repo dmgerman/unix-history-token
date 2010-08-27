@@ -1429,14 +1429,14 @@ begin_define
 define|#
 directive|define
 name|__hidden
-value|__attribute__((visibility("hidden")))
+value|__attribute__((__visibility__("hidden")))
 end_define
 
 begin_define
 define|#
 directive|define
 name|__exported
-value|__attribute__((visibility("default")))
+value|__attribute__((__visibility__("default")))
 end_define
 
 begin_else
