@@ -732,6 +732,9 @@ comment|/* Plex86 */
 literal|"Bochs"
 block|,
 comment|/* Bochs */
+literal|"Xen"
+block|,
+comment|/* Xen */
 name|NULL
 block|}
 decl_stmt|;
