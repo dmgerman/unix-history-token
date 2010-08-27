@@ -343,6 +343,14 @@ name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 name|struct
+name|callout
+name|link_check_ch
+decl_stmt|;
+name|struct
+name|task
+name|link_check_task
+decl_stmt|;
+name|struct
 name|task
 name|timer_reclaim_task
 decl_stmt|;
@@ -1263,10 +1271,6 @@ decl_stmt|;
 comment|/* Tasks */
 name|struct
 name|task
-name|ext_intr_task
-decl_stmt|;
-name|struct
-name|task
 name|slow_intr_task
 decl_stmt|;
 name|struct
@@ -2004,6 +2008,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t3_os_link_intr
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t3_os_link_changed
 parameter_list|(
 name|adapter_t
@@ -2068,17 +2083,6 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|t3_os_ext_intr_handler
-parameter_list|(
-name|adapter_t
-modifier|*
-name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2405,16 +2409,6 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|CXGB_TICKS
-parameter_list|(
-name|a
-parameter_list|)
-value|((a)->params.linkpoll_period ? \     (hz * (a)->params.linkpoll_period) / 10 : \     (a)->params.stats_update_period * hz)
-end_define
 
 begin_comment
 comment|/*  * XXX figure out how we can return this to being private to sge  */
