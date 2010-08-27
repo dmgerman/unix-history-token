@@ -2769,7 +2769,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|tcp_log_addrs
+name|tcp_log_vain
 argument_list|(
 name|NULL
 argument_list|,
