@@ -4091,7 +4091,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"Closing old incoming connection to %s."
+literal|"Closing incoming connection to %s."
 argument_list|,
 name|res
 operator|->
@@ -4115,7 +4115,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"Closing old outgoing connection to %s."
+literal|"Closing outgoing connection to %s."
 argument_list|,
 name|res
 operator|->
@@ -4142,6 +4142,15 @@ name|hio_remote_lock
 index|[
 name|ncomp
 index|]
+argument_list|)
+expr_stmt|;
+name|pjdlog_warning
+argument_list|(
+literal|"Disconnected from %s."
+argument_list|,
+name|res
+operator|->
+name|hr_remoteaddr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop synchronization if in-progress. 	 */
