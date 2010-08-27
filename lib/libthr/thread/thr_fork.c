@@ -318,6 +318,11 @@ operator|&
 name|_thr_atfork_lock
 argument_list|)
 expr_stmt|;
+name|_thr_tsd_unload
+argument_list|(
+name|phdr_info
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

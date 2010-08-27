@@ -2964,6 +2964,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|_thr_tsd_unload
+argument_list|(
+expr|struct
+name|dl_phdr_info
+operator|*
+name|phdr_info
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
