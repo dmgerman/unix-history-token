@@ -149,21 +149,24 @@ comment|/* ZIO_PRIORITY_SYNC_READ	*/
 literal|0
 block|,
 comment|/* ZIO_PRIORITY_SYNC_WRITE	*/
-literal|6
-block|,
-comment|/* ZIO_PRIORITY_ASYNC_READ	*/
-literal|4
-block|,
-comment|/* ZIO_PRIORITY_ASYNC_WRITE	*/
-literal|4
-block|,
-comment|/* ZIO_PRIORITY_FREE		*/
-literal|0
-block|,
-comment|/* ZIO_PRIORITY_CACHE_FILL	*/
 literal|0
 block|,
 comment|/* ZIO_PRIORITY_LOG_WRITE	*/
+literal|1
+block|,
+comment|/* ZIO_PRIORITY_CACHE_FILL	*/
+literal|1
+block|,
+comment|/* ZIO_PRIORITY_AGG		*/
+literal|4
+block|,
+comment|/* ZIO_PRIORITY_FREE		*/
+literal|4
+block|,
+comment|/* ZIO_PRIORITY_ASYNC_WRITE	*/
+literal|6
+block|,
+comment|/* ZIO_PRIORITY_ASYNC_READ	*/
 literal|10
 block|,
 comment|/* ZIO_PRIORITY_RESILVER	*/
@@ -187,17 +190,17 @@ name|ZIO_TYPES
 index|]
 init|=
 block|{
-literal|"null"
+literal|"zio_null"
 block|,
-literal|"read"
+literal|"zio_read"
 block|,
-literal|"write"
+literal|"zio_write"
 block|,
-literal|"free"
+literal|"zio_free"
 block|,
-literal|"claim"
+literal|"zio_claim"
 block|,
-literal|"ioctl"
+literal|"zio_ioctl"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4776,6 +4779,14 @@ name|zio_taskq_type
 name|q
 parameter_list|)
 block|{
+name|spa_t
+modifier|*
+name|spa
+init|=
+name|zio
+operator|->
+name|io_spa
+decl_stmt|;
 name|zio_type_t
 name|t
 init|=
@@ -4821,14 +4832,47 @@ name|t
 operator|=
 name|ZIO_TYPE_NULL
 expr_stmt|;
+comment|/* 	 * If this is a high priority I/O, then use the high priority taskq. 	 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_priority
+operator|==
+name|ZIO_PRIORITY_NOW
+operator|&&
+name|spa
+operator|->
+name|spa_zio_taskq
+index|[
+name|t
+index|]
+index|[
+name|q
+operator|+
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+name|q
+operator|++
+expr_stmt|;
+name|ASSERT3U
+argument_list|(
+name|q
+argument_list|,
+operator|<
+argument_list|,
+name|ZIO_TASKQ_TYPES
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|taskq_dispatch_safe
 argument_list|(
-name|zio
-operator|->
-name|io_spa
+name|spa
 operator|->
 name|spa_zio_taskq
 index|[

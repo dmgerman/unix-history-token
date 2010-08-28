@@ -132,6 +132,15 @@ name|uint64_t
 name|txg
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|metaslab_sync_reassess
+parameter_list|(
+name|metaslab_group_t
+modifier|*
+name|mg
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|METASLAB_HINTBP_FAVOR

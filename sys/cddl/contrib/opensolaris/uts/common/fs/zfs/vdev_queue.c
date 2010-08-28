@@ -1135,7 +1135,7 @@ name|fio
 operator|->
 name|io_type
 argument_list|,
-name|ZIO_PRIORITY_NOW
+name|ZIO_PRIORITY_AGG
 argument_list|,
 name|flags
 operator||
