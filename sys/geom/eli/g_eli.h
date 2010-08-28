@@ -136,14 +136,14 @@ value|".eli"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  *   - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  * 3 - Added 'configure' subcommand.  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_ELI_VERSION
-value|3
+value|4
 end_define
 
 begin_comment
@@ -2397,7 +2397,6 @@ return|;
 case|case
 name|CRYPTO_AES_CBC
 case|:
-comment|/* FALLTHROUGH */
 case|case
 name|CRYPTO_CAMELLIA_CBC
 case|:
