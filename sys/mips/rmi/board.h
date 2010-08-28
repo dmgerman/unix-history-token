@@ -449,6 +449,17 @@ block|}
 end_function
 
 begin_comment
+comment|/* SPI-4 --> 8 ports, 1G MAC --> 4 ports and 10G MAC --> 1 port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_NA_PORTS
+value|8
+end_define
+
+begin_comment
 comment|/* all our knowledge of chip and board that cannot be detected run-time goes here */
 end_comment
 
@@ -467,13 +478,17 @@ end_enum
 
 begin_enum
 enum|enum
-name|gmac_block_modes
+name|gmac_port_types
 block|{
 name|XLR_RGMII
 block|,
 name|XLR_SGMII
 block|,
 name|XLR_PORT0_RGMII
+block|,
+name|XLR_XGMII
+block|,
+name|XLR_XAUI
 block|}
 enum|;
 end_enum
@@ -495,11 +510,11 @@ comment|/* usb enabled ? */
 name|int
 name|cfi
 decl_stmt|;
-comment|/* NOR flash */
+comment|/* compact flash driver for NOR? */
 name|int
 name|ata
 decl_stmt|;
-comment|/* PCMCIA/compactflash driver */
+comment|/* ata driver */
 name|int
 name|pci_irq
 decl_stmt|;
@@ -515,7 +530,7 @@ name|bucket_size
 modifier|*
 name|bucket_sizes
 decl_stmt|;
-comment|/* pointer to Core station 						 * bucket */
+comment|/* pointer to Core station bucket */
 name|int
 modifier|*
 name|msgmap
@@ -528,6 +543,7 @@ comment|/* number of gmac ports on the board */
 struct|struct
 name|xlr_gmac_block_t
 block|{
+comment|/* refers to the set of GMACs controlled by a                                                    network accelarator */
 name|int
 name|type
 decl_stmt|;
@@ -543,6 +559,10 @@ modifier|*
 name|credit_config
 decl_stmt|;
 comment|/* credit configuration */
+name|int
+name|station_id
+decl_stmt|;
+comment|/* station id for sending msgs */
 name|int
 name|station_txbase
 decl_stmt|;
@@ -562,11 +582,55 @@ comment|/* IO base */
 name|int
 name|baseirq
 decl_stmt|;
-comment|/* first irq for this block, the rest are in 				 * sequence */
+comment|/* first irq for this block, the rest are in sequence */
 name|int
 name|baseinst
 decl_stmt|;
 comment|/* the first rge unit for this block */
+name|int
+name|num_ports
+decl_stmt|;
+struct|struct
+name|xlr_gmac_port
+block|{
+name|int
+name|valid
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+comment|/* see enum gmac_port_types */
+name|uint32_t
+name|instance
+decl_stmt|;
+comment|/* identifies the GMAC to which 						   this port is bound to. */
+name|uint32_t
+name|phy_addr
+decl_stmt|;
+name|uint32_t
+name|base_addr
+decl_stmt|;
+name|uint32_t
+name|mii_addr
+decl_stmt|;
+name|uint32_t
+name|pcs_addr
+decl_stmt|;
+name|uint32_t
+name|serdes_addr
+decl_stmt|;
+name|uint32_t
+name|tx_bucket_id
+decl_stmt|;
+name|uint32_t
+name|mdint_id
+decl_stmt|;
+block|}
+name|gmac_port
+index|[
+name|MAX_NA_PORTS
+index|]
+struct|;
 block|}
 name|gmac_block
 index|[
