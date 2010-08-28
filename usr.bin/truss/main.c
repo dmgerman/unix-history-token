@@ -311,6 +311,19 @@ block|,
 name|powerpc_syscall_exit
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+block|{
+literal|"FreeBSD ELF64"
+block|,
+name|powerpc64_syscall_entry
+block|,
+name|powerpc64_syscall_exit
+block|}
+block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

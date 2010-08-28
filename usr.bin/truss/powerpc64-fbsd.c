@@ -315,7 +315,7 @@ end_comment
 
 begin_function
 name|void
-name|powerpc_syscall_entry
+name|powerpc64_syscall_entry
 parameter_list|(
 name|struct
 name|trussinfo
@@ -1116,7 +1116,7 @@ end_comment
 
 begin_function
 name|long
-name|powerpc_syscall_exit
+name|powerpc64_syscall_exit
 parameter_list|(
 name|struct
 name|trussinfo

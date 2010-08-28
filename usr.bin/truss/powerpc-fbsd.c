@@ -145,11 +145,48 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_comment
+comment|/* 32-bit compatibility */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"freebsd32_syscalls.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|syscallnames
+value|freebsd32_syscallnames
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* native 32-bit */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"syscalls.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
