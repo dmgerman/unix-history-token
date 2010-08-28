@@ -4488,11 +4488,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"found tracepoint\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set the program counter to the address of the traced instruction 	 * so that it looks right in ustack() output. 	 */
 name|rp
 operator|->
