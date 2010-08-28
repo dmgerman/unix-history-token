@@ -634,6 +634,11 @@ directive|define
 name|V_RDDIR_ENTFLAGS
 value|0x01
 comment|/* request dirent flags */
+define|#
+directive|define
+name|V_RDDIR_ACCFILTER
+value|0x02
+comment|/* filter out inaccessible dirents */
 comment|/*  * Public vnode manipulation functions.  */
 ifdef|#
 directive|ifdef

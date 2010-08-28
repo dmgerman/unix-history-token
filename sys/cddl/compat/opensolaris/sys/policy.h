@@ -174,8 +174,8 @@ name|cred_t
 modifier|*
 name|cred
 parameter_list|,
-name|boolean_t
-name|check_self
+name|uid_t
+name|owner
 parameter_list|)
 function_decl|;
 end_function_decl
