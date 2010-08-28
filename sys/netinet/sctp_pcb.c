@@ -10498,6 +10498,15 @@ name|sctp_frag_point
 operator|=
 name|SCTP_DEFAULT_MAXSEGMENT
 expr_stmt|;
+name|inp
+operator|->
+name|sctp_cmt_on_off
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_cmt_on_off
+argument_list|)
+expr_stmt|;
 comment|/* init the small hash table we use to track asocid<-> tcb */
 name|inp
 operator|->
@@ -28899,13 +28908,6 @@ break|break;
 case|case
 name|SCTP_NR_SELECTIVE_ACK
 case|:
-if|if
-condition|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_nr_sack_on_off
-argument_list|)
-condition|)
 name|stcb
 operator|->
 name|asoc
@@ -28913,15 +28915,6 @@ operator|.
 name|peer_supports_nr_sack
 operator|=
 literal|1
-expr_stmt|;
-else|else
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_nr_sack
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
