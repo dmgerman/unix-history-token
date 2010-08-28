@@ -295,6 +295,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_CPT
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1c20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801F
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x2668)
 end_define
@@ -2244,6 +2251,14 @@ name|hdac_devices
 index|[]
 init|=
 block|{
+block|{
+name|HDA_INTEL_CPT
+block|,
+literal|"Intel Cougar Point"
+block|,
+literal|0
+block|}
+block|,
 block|{
 name|HDA_INTEL_82801F
 block|,
