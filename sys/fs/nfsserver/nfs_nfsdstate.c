@@ -21053,6 +21053,23 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * First, get a reference on the nfsv4rootfs_lock so that an 	 * exclusive lock cannot be acquired by another thread. 	 */
+name|NFSLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
+name|nfsv4_getref
+argument_list|(
+operator|&
+name|nfsv4rootfs_lock
+argument_list|,
+name|NULL
+argument_list|,
+name|NFSV4ROOTLOCKMUTEXPTR
+argument_list|)
+expr_stmt|;
+name|NFSUNLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Now, call nfsrv_checkremove() in a loop while it returns 	 * NFSERR_DELAY. Return upon any other error or when timed out. 	 */
 name|NFSGETNANOTIME
 argument_list|(
@@ -21123,7 +21140,7 @@ operator|)
 operator|<
 literal|100000
 condition|)
-return|return;
+break|break;
 comment|/* Sleep for a short period of time */
 operator|(
 name|void
@@ -21146,6 +21163,18 @@ operator|==
 name|NFSERR_DELAY
 condition|)
 do|;
+name|NFSLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
+name|nfsv4_relref
+argument_list|(
+operator|&
+name|nfsv4rootfs_lock
+argument_list|)
+expr_stmt|;
+name|NFSUNLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
