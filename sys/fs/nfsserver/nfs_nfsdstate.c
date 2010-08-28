@@ -1124,14 +1124,6 @@ do|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 comment|/* 	 * Search for a match in the client list. 	 */
 name|gotit
 operator|=
@@ -2471,14 +2463,6 @@ do|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 block|}
 elseif|else
 if|if
@@ -3045,14 +3029,6 @@ do|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 comment|/* 	 * Search for a match in the client list. 	 */
 name|gotit
 operator|=
@@ -4726,7 +4702,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Server timer routine. It can scan any linked list, so long  * as it holds the spin lock and there is no exclusive lock on  * nfsv4rootfs_lock.  * Must be called by a kernel thread and not a timer interrupt,  * so that it only runs when the nfsd threads are sleeping on a  * uniprocessor and uses the State spin lock for an SMP system.  * (For OpenBSD, a kthread is ok. For FreeBSD, I think it is ok  *  to do this from a callout, since the spin locks work. For  *  Darwin, I'm not sure what will work correctly yet.)  * Should be called once per second.  */
+comment|/*  * Server timer routine. It can scan any linked list, so long  * as it holds the spin/mutex lock and there is no exclusive lock on  * nfsv4rootfs_lock.  * (For OpenBSD, a kthread is ok. For FreeBSD, I think it is ok  *  to do this from a callout, since the spin locks work. For  *  Darwin, I'm not sure what will work correctly yet.)  * Should be called once per second.  */
 end_comment
 
 begin_function
@@ -4754,6 +4730,8 @@ modifier|*
 name|nstp
 decl_stmt|;
 name|int
+name|got_ref
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* 	 * Make sure nfsboottime is set. This is used by V3 as well 	 * as V4. Note that nfsboottime is not nfsrvboottime, which is 	 * only used by the V4 server for leases. 	 */
@@ -4832,14 +4810,26 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Return now if an nfsd thread has the exclusive lock on 	 * nfsv4rootfs_lock. The dirty trick here is that we have 	 * the spin lock already and the nfsd threads do a: 	 * NFSLOCKSTATE, NFSUNLOCKSTATE after getting the exclusive 	 * lock, so they won't race with code after this check. 	 */
+comment|/* 	 * Try and get a reference count on the nfsv4rootfs_lock so that 	 * no nfsd thread can acquire an exclusive lock on it before this 	 * call is done. If it is already exclusively locked, just return. 	 */
+name|NFSLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
+name|got_ref
+operator|=
+name|nfsv4_getref_nonblock
+argument_list|(
+operator|&
+name|nfsv4rootfs_lock
+argument_list|)
+expr_stmt|;
+name|NFSUNLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|nfsv4rootfs_lock
-operator|.
-name|nfslock_lock
-operator|&
-name|NFSV4LOCK_LOCK
+name|got_ref
+operator|==
+literal|0
 condition|)
 block|{
 name|NFSUNLOCKSTATE
@@ -5090,6 +5080,18 @@ expr_stmt|;
 block|}
 block|}
 name|NFSUNLOCKSTATE
+argument_list|()
+expr_stmt|;
+name|NFSLOCKV4ROOTMUTEX
+argument_list|()
+expr_stmt|;
+name|nfsv4_relref
+argument_list|(
+operator|&
+name|nfsv4rootfs_lock
+argument_list|)
+expr_stmt|;
+name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
 block|}
@@ -20004,14 +20006,6 @@ do|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 operator|*
 name|haslockp
 operator|=
@@ -20507,14 +20501,6 @@ do|;
 name|NFSUNLOCKV4ROOTMUTEX
 argument_list|()
 expr_stmt|;
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 operator|*
 name|haslockp
 operator|=

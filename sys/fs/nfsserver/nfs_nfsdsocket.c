@@ -5443,14 +5443,6 @@ condition|(
 name|igotlock
 condition|)
 block|{
-name|NFSLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* to avoid a race with */
-name|NFSUNLOCKSTATE
-argument_list|()
-expr_stmt|;
-comment|/* nfsrv_servertimer() */
 comment|/* 		 * If I got the lock, I can update the stable storage file. 		 * Done when the grace period is over or a client has long 		 * since expired. 		 */
 name|nfsrv_stablefirst
 operator|.
