@@ -611,16 +611,6 @@ operator|&=
 operator|~
 name|TQ_FLAGS_ACTIVE
 expr_stmt|;
-name|taskqueue_run
-argument_list|(
-name|queue
-argument_list|,
-operator|&
-name|queue
-operator|->
-name|tq_running
-argument_list|)
-expr_stmt|;
 name|taskqueue_terminate
 argument_list|(
 name|queue
@@ -1691,6 +1681,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|taskqueue_run
+argument_list|(
+name|tq
+argument_list|,
+operator|&
+name|running
+argument_list|)
+expr_stmt|;
 comment|/* rendezvous with thread that asked us to terminate */
 name|tq
 operator|->
