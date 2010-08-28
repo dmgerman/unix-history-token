@@ -1043,6 +1043,11 @@ decl_stmt|;
 name|bool
 name|has_amt
 decl_stmt|;
+comment|/* Multicast array memory */
+name|u8
+modifier|*
+name|mta
+decl_stmt|;
 comment|/* Info about the board itself */
 name|uint8_t
 name|link_active
