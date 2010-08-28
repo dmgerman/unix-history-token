@@ -495,7 +495,11 @@ comment|/* usb enabled ? */
 name|int
 name|cfi
 decl_stmt|;
-comment|/* compact flash driver for NOR? */
+comment|/* NOR flash */
+name|int
+name|ata
+decl_stmt|;
+comment|/* PCMCIA/compactflash driver */
 name|int
 name|pci_irq
 decl_stmt|;
