@@ -5163,8 +5163,6 @@ name|mnt_syncer
 operator|==
 name|NULL
 condition|)
-name|error
-operator|=
 name|vfs_allocate_syncvnode
 argument_list|(
 name|mp
@@ -5405,8 +5403,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|error
-operator|=
 name|vfs_allocate_syncvnode
 argument_list|(
 name|mp
@@ -5415,15 +5411,6 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-name|vrele
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6526,9 +6513,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vfs_allocate_syncvnode
 argument_list|(
 name|mp

@@ -15554,7 +15554,7 @@ comment|/*  * Create a new filesystem syncer vnode for the specified mount point
 end_comment
 
 begin_function
-name|int
+name|void
 name|vfs_allocate_syncvnode
 parameter_list|(
 name|struct
@@ -15585,9 +15585,6 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Allocate a new vnode */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|getnewvnode
@@ -15602,23 +15599,18 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|mp
-operator|->
-name|mnt_syncer
-operator|=
-name|NULL
+name|panic
+argument_list|(
+literal|"vfs_allocate_syncvnode: getnewvnode() failed"
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 name|vp
 operator|->
 name|v_type
@@ -15657,7 +15649,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vfs_allocate_syncvnode: insmntque failed"
+literal|"vfs_allocate_syncvnode: insmntque() failed"
 argument_list|)
 expr_stmt|;
 name|vp
@@ -15775,11 +15767,6 @@ name|mnt_syncer
 operator|=
 name|vp
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
