@@ -1149,6 +1149,17 @@ begin_comment
 comment|/* System Call Interrupt Vector */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDT_DTRACE_RET
+value|0x92
+end_define
+
+begin_comment
+comment|/* DTrace pid provider Interrupt Vector */
+end_comment
+
 begin_comment
 comment|/*  * Entries in the Global Descriptor Table (GDT)  */
 end_comment
