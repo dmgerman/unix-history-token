@@ -81,7 +81,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|B_FALSE
+name|NULL
 operator|)
 return|;
 for|for
