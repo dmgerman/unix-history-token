@@ -3156,8 +3156,19 @@ begin_comment
 comment|/* CAPABILITY: MBSS available */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_RATECTL
+value|0x00080000
+end_define
+
 begin_comment
-comment|/* 0x7c0000 available */
+comment|/* CAPABILITY: use ratectl */
+end_comment
+
+begin_comment
+comment|/* 0x700000 available */
 end_comment
 
 begin_define

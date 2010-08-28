@@ -11675,6 +11675,9 @@ comment|/* capable of bg scanning */
 operator||
 name|IEEE80211_C_TXPMGT
 comment|/* capable of txpow mgt */
+operator||
+name|IEEE80211_C_RATECTL
+comment|/* use ratectl */
 expr_stmt|;
 name|ic
 operator|->

@@ -1769,6 +1769,9 @@ name|IEEE80211_C_WME
 comment|/* 802.11e */
 endif|#
 directive|endif
+operator||
+name|IEEE80211_C_RATECTL
+comment|/* use ratectl */
 expr_stmt|;
 name|bands
 operator|=
