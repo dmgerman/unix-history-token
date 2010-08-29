@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"nv.h"
 end_include
 
@@ -146,6 +152,9 @@ name|int
 name|no
 parameter_list|)
 block|{
+name|int
+name|oldrole
+decl_stmt|;
 comment|/* Name is always needed. */
 if|if
 condition|(
@@ -291,6 +300,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Change role to the new one. */
+name|oldrole
+operator|=
+name|res
+operator|->
+name|hr_role
+expr_stmt|;
 name|res
 operator|->
 name|hr_role
@@ -430,6 +445,33 @@ argument_list|(
 literal|"%s"
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+name|hook_exec
+argument_list|(
+name|res
+operator|->
+name|hr_exec
+argument_list|,
+literal|"role"
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|oldrole
+argument_list|)
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
