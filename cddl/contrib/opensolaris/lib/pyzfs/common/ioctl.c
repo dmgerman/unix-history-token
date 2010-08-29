@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libzfs_impl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfs_prop.h"
 end_include
 
