@@ -7784,6 +7784,16 @@ argument_list|,
 name|pypath
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    install sysutils/py-zfs port to correct this\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -17222,6 +17232,16 @@ argument_list|,
 literal|"internal error: %s not found\n"
 argument_list|,
 name|pypath
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    install sysutils/py-zfs port to correct this\n"
 argument_list|)
 expr_stmt|;
 return|return
