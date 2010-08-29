@@ -4796,13 +4796,9 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
 name|TPFSZ
 operator|+
 name|TNMSZ
-operator|+
-literal|1
-operator|)
 condition|)
 return|return
 operator|(
