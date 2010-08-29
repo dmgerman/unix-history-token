@@ -279,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_AIO_LISTIO_MAX
-value|16
+value|2
 end_define
 
 begin_define
