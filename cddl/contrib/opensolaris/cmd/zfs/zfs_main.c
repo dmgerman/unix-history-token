@@ -7773,8 +7773,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"internal error: %s not found\n"
 literal|"falling back on built-in implementation, "
 literal|"some features will not work\n"
@@ -17213,8 +17215,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"internal error: %s not found\n"
 argument_list|,
 name|pypath
