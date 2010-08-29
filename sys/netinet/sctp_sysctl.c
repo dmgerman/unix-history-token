@@ -123,6 +123,13 @@ argument_list|)
 operator|=
 name|SCTPCTL_STRICT_SACKS_DEFAULT
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_no_csum_on_loopback
@@ -130,6 +137,8 @@ argument_list|)
 operator|=
 name|SCTPCTL_LOOPBACK_NOCSUM_DEFAULT
 expr_stmt|;
+endif|#
+directive|endif
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_strict_init
@@ -3156,6 +3165,13 @@ argument_list|,
 name|SCTPCTL_STRICT_SACKS_MAX
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
 name|RANGECHK
 argument_list|(
 name|SCTP_BASE_SYSCTL
@@ -3168,6 +3184,8 @@ argument_list|,
 name|SCTPCTL_LOOPBACK_NOCSUM_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|RANGECHK
 argument_list|(
 name|SCTP_BASE_SYSCTL
@@ -5291,6 +5309,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -5320,6 +5348,11 @@ name|SCTPCTL_LOOPBACK_NOCSUM_DESC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_PROC
