@@ -825,6 +825,13 @@ name|moea64_table_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|moea64_slb_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * PTEG data.  */
 end_comment
@@ -4926,6 +4933,18 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|,
+literal|"SLB table"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the TLBIE lock. TLBIE can only be executed by one CPU. 	 */
 name|mtx_init
 argument_list|(
@@ -8987,6 +9006,12 @@ operator|=
 literal|0
 expr_stmt|;
 asm|__asm __volatile("mftb %0" : "=r"(entropy));
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -9136,12 +9161,24 @@ index|]
 operator||=
 name|mask
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|hash
 operator|)
 return|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"%s: out of segments"
