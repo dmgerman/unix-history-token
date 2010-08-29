@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"subr.h"
 end_include
 
@@ -223,6 +229,17 @@ modifier|*
 name|pfh
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* How often check for hooks running for too long. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REPORT_INTERVAL
+value|10
+end_define
 
 begin_function
 specifier|static
@@ -504,7 +521,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * This can happen when new connection arrives and we 			 * cancel child responsible for the old one. 			 */
+comment|/* 			 * This can happen when new connection arrives and we 			 * cancel child responsible for the old one or if this 			 * was hook which we executed. 			 */
+name|hook_check_one
+argument_list|(
+name|pid
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|pjdlog_prefix_set
@@ -2849,6 +2873,22 @@ name|maxfd
 decl_stmt|,
 name|ret
 decl_stmt|;
+name|struct
+name|timeval
+name|timeout
+decl_stmt|;
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+name|REPORT_INTERVAL
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2988,9 +3028,22 @@ name|wfds
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+operator|&
+name|timeout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|hook_check
+argument_list|(
+name|false
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ret
@@ -3438,6 +3491,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|hook_init
+argument_list|()
+expr_stmt|;
 name|main_loop
 argument_list|()
 expr_stmt|;

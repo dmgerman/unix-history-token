@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"metadata.h"
 end_include
 
@@ -1337,6 +1343,9 @@ name|pidfile_close
 argument_list|(
 name|pfh
 argument_list|)
+expr_stmt|;
+name|hook_fini
+argument_list|()
 expr_stmt|;
 name|setproctitle
 argument_list|(

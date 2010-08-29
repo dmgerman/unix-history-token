@@ -3548,6 +3548,9 @@ argument_list|(
 name|pfh
 argument_list|)
 expr_stmt|;
+name|hook_fini
+argument_list|()
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"%s (primary)"
