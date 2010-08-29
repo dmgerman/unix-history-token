@@ -396,26 +396,6 @@ name|pv_entry_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PMAP_DIAGNOSTIC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * physmem_desc[] is a superset of phys_avail[] and describes all the  * memory present in the system.  *  * phys_avail[] is similar but does not include the memory stolen by  * pmap_steal_memory().  *  * Each memory region is described by a pair of elements in the array  * so we can describe up to (PHYS_AVAIL_ENTRIES / 2) distinct memory  * regions.  */
 end_comment
