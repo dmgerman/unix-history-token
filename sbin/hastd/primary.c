@@ -5644,13 +5644,6 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
-name|remote_close
-argument_list|(
-name|res
-argument_list|,
-name|ncomp
-argument_list|)
-expr_stmt|;
 name|pjdlog_debug
 argument_list|(
 literal|2
@@ -5679,6 +5672,13 @@ index|[
 name|ncomp
 index|]
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|remote_close
+argument_list|(
+name|res
+argument_list|,
+name|ncomp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Take request back from the receive queue and move 			 * it immediately to the done queue. 			 */
