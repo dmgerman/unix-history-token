@@ -3594,6 +3594,33 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Stop watchdog task. */
+name|callout_drain
+argument_list|(
+operator|&
+operator|(
+name|sc
+operator|->
+name|watchdog_callout
+index|[
+literal|0
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+operator|(
+name|sc
+operator|->
+name|watchdog_callout
+index|[
+literal|1
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Disconnect from the controller. */
 if|if
 condition|(
