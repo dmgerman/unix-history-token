@@ -3516,7 +3516,7 @@ name|pfh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|primary_exit
+name|pjdlog_exit
 argument_list|(
 name|EX_OSERR
 argument_list|,
@@ -3547,7 +3547,7 @@ name|pfh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|primary_exit
+name|pjdlog_exit
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
