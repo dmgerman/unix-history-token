@@ -351,12 +351,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/debug.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/rmi/pic.h>
 end_include
 
@@ -376,6 +370,12 @@ begin_include
 include|#
 directive|include
 file|<mips/rmi/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/dev/xlr/debug.h>
 end_include
 
 begin_include
