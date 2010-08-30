@@ -369,7 +369,7 @@ value|(0x02<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * PTE management functions for bits defined above.  *  * XXX Can make these atomics, but some users of them are using PTEs in local  * registers and such and don't need the overhead.  */
+comment|/*  * PTE management functions for bits defined above.  */
 end_comment
 
 begin_define
