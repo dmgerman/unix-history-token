@@ -315,6 +315,13 @@ name|MII_PHY_DESC
 argument_list|(
 name|ATHEROS
 argument_list|,
+name|F1_7
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|ATHEROS
+argument_list|,
 name|F2
 argument_list|)
 block|,
