@@ -5949,7 +5949,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * 1) Check if file execution is disabled for the filesystem that this 	 *	file resides on. 	 * 2) Insure that at least one execute bit is on - otherwise root 	 *	will always succeed, and we don't want to happen unless the 	 *	file really is executable. 	 * 3) Insure that the file is a regular file. 	 */
+comment|/* 	 * 1) Check if file execution is disabled for the filesystem that 	 *    this file resides on. 	 * 2) Ensure that at least one execute bit is on. Otherwise, a 	 *    privileged user will always succeed, and we don't want this 	 *    to happen unless the file really is executable. 	 * 3) Ensure that the file is a regular file. 	 */
 if|if
 condition|(
 operator|(
@@ -5963,16 +5963,20 @@ name|MNT_NOEXEC
 operator|)
 operator|||
 operator|(
-operator|(
 name|attr
 operator|->
 name|va_mode
 operator|&
-literal|0111
+operator|(
+name|S_IXUSR
+operator||
+name|S_IXGRP
+operator||
+name|S_IXOTH
+operator|)
 operator|)
 operator|==
 literal|0
-operator|)
 operator|||
 operator|(
 name|attr
