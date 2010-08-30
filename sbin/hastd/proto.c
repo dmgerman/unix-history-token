@@ -696,6 +696,7 @@ begin_function
 name|int
 name|proto_send
 parameter_list|(
+specifier|const
 name|struct
 name|proto_conn
 modifier|*
@@ -785,6 +786,7 @@ begin_function
 name|int
 name|proto_recv
 parameter_list|(
+specifier|const
 name|struct
 name|proto_conn
 modifier|*

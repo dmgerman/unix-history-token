@@ -122,6 +122,7 @@ typedef|typedef
 name|int
 name|hps_send_t
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -149,6 +150,7 @@ typedef|typedef
 name|int
 name|hps_recv_t
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -197,6 +199,7 @@ specifier|static
 name|int
 name|compression_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -228,6 +231,7 @@ specifier|static
 name|int
 name|compression_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -265,6 +269,7 @@ specifier|static
 name|int
 name|checksum_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -296,6 +301,7 @@ specifier|static
 name|int
 name|checksum_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -364,6 +370,7 @@ specifier|static
 name|int
 name|compression_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -563,6 +570,7 @@ specifier|static
 name|int
 name|compression_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -751,6 +759,7 @@ specifier|static
 name|int
 name|checksum_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -853,6 +862,7 @@ specifier|static
 name|int
 name|checksum_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -1100,6 +1110,7 @@ begin_function
 name|int
 name|hast_proto_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -1411,6 +1422,7 @@ begin_function
 name|int
 name|hast_proto_recv_hdr
 parameter_list|(
+specifier|const
 name|struct
 name|proto_conn
 modifier|*
@@ -1619,6 +1631,7 @@ begin_function
 name|int
 name|hast_proto_recv_data
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -1880,6 +1893,7 @@ begin_function
 name|int
 name|hast_proto_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
