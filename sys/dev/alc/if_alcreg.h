@@ -444,15 +444,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASTER_BERT_START
-value|0x00000010
+name|MASTER_TEST_MODE_MASK
+value|0x0000000C
 end_define
 
 begin_define
 define|#
 directive|define
-name|MASTER_TEST_MODE_MASK
-value|0x000000C0
+name|MASTER_BERT_START
+value|0x00000010
 end_define
 
 begin_define
@@ -650,11 +650,11 @@ begin_define
 define|#
 directive|define
 name|ALC_IM_TX_TIMER_DEFAULT
-value|50000
+value|1000
 end_define
 
 begin_comment
-comment|/* 50ms */
+comment|/* 1ms */
 end_comment
 
 begin_define
