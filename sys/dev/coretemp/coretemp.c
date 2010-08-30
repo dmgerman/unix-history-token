@@ -456,9 +456,13 @@ name|msr
 decl_stmt|;
 name|int
 name|cpu_model
+decl_stmt|,
+name|cpu_stepping
 decl_stmt|;
 name|int
-name|cpu_mask
+name|ret
+decl_stmt|,
+name|tjtarget
 decl_stmt|;
 name|sc
 operator|->
@@ -475,34 +479,16 @@ argument_list|)
 expr_stmt|;
 name|cpu_model
 operator|=
-operator|(
+name|CPUID_TO_MODEL
+argument_list|(
 name|cpu_id
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|15
+argument_list|)
 expr_stmt|;
-comment|/* extended model */
-name|cpu_model
-operator|+=
-operator|(
-operator|(
-name|cpu_id
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xf
-operator|)
-operator|<<
-literal|4
-expr_stmt|;
-name|cpu_mask
+name|cpu_stepping
 operator|=
 name|cpu_id
 operator|&
-literal|15
+name|CPUID_STEPPING
 expr_stmt|;
 comment|/* 	 * Some CPUs, namely the PIII, don't have thermal sensors, but 	 * report them when the CPUID check is performed in 	 * coretemp_identify(). This leads to a later GPF when the sensor 	 * is queried via a MSR, so we stop here. 	 */
 if|if
@@ -523,7 +509,7 @@ name|cpu_model
 operator|==
 literal|0xe
 operator|&&
-name|cpu_mask
+name|cpu_stepping
 operator|<
 literal|0xc
 condition|)
@@ -563,7 +549,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * On some Core 2 CPUs, there's an undocumented MSR that 	 * can tell us if Tj(max) is 100 or 85. 	 * 	 * The if-clause for CPUs having the MSR_IA32_EXT_CONFIG was adapted 	 * from the Linux coretemp driver. 	 */
+comment|/* 	 * Use 100C as the initial value. 	 */
 name|sc
 operator|->
 name|sc_tjmax
@@ -577,7 +563,7 @@ name|cpu_model
 operator|==
 literal|0xf
 operator|&&
-name|cpu_mask
+name|cpu_stepping
 operator|>=
 literal|2
 operator|)
@@ -587,6 +573,7 @@ operator|==
 literal|0xe
 condition|)
 block|{
+comment|/* 		 * On some Core 2 CPUs, there's an undocumented MSR that 		 * can tell us if Tj(max) is 100 or 85. 		 * 		 * The if-clause for CPUs having the MSR_IA32_EXT_CONFIG was adapted 		 * from the Linux coretemp driver. 		 */
 name|msr
 operator|=
 name|rdmsr
@@ -611,6 +598,119 @@ operator|=
 literal|85
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|cpu_model
+operator|==
+literal|0x17
+condition|)
+block|{
+switch|switch
+condition|(
+name|cpu_stepping
+condition|)
+block|{
+case|case
+literal|0x6
+case|:
+comment|/* Mobile Core 2 Duo */
+name|sc
+operator|->
+name|sc_tjmax
+operator|=
+literal|104
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Unknown stepping */
+break|break;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * Attempt to get Tj(max) from MSR IA32_TEMPERATURE_TARGET. 		 * 		 * This method is described in Intel white paper "CPU 		 * Monitoring With DTS/PECI". (#322683) 		 */
+name|ret
+operator|=
+name|rdmsr_safe
+argument_list|(
+name|MSR_IA32_TEMPERATURE_TARGET
+argument_list|,
+operator|&
+name|msr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|tjtarget
+operator|=
+operator|(
+name|msr
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+comment|/* 			 * On earlier generation of processors, the value 			 * obtained from IA32_TEMPERATURE_TARGET register is 			 * an offset that needs to be summed with a model 			 * specific base.  It is however not clear what 			 * these numbers are, with the publicly available 			 * documents from Intel. 			 * 			 * For now, we consider [70, 100]C range, as 			 * described in #322683, as "reasonable" and accept 			 * these values whenever the MSR is available for 			 * read, regardless the CPU model. 			 */
+if|if
+condition|(
+name|tjtarget
+operator|>=
+literal|70
+operator|&&
+name|tjtarget
+operator|<=
+literal|100
+condition|)
+name|sc
+operator|->
+name|sc_tjmax
+operator|=
+name|tjtarget
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Tj(target) value %d "
+literal|"does not seem right.\n"
+argument_list|,
+name|tjtarget
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not get Tj(target) "
+literal|"from your CPU, using 100C.\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Setting TjMax=%d\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_tjmax
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Add the "temperature" MIB to dev.cpu.N. 	 */
 name|sc
 operator|->
