@@ -482,6 +482,18 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Someone is just trying to decide about side. */
+if|if
+condition|(
+name|data
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|proto_common_send
@@ -625,6 +637,18 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Someone is just trying to decide about side. */
+if|if
+condition|(
+name|data
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|proto_common_recv
