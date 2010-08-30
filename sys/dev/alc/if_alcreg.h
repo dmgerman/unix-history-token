@@ -27,7 +27,7 @@ value|0x1969
 end_define
 
 begin_comment
-comment|/*  * Atheros AR8131/AR8132 device ID  */
+comment|/*  * Atheros AR813x/AR815x device ID  */
 end_comment
 
 begin_define
@@ -51,6 +51,64 @@ end_define
 begin_comment
 comment|/* L2C */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_AR8151
+value|0x1073
+end_define
+
+begin_comment
+comment|/* L1D V1.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_AR8151_V2
+value|0x1083
+end_define
+
+begin_comment
+comment|/* L1D V2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_AR8152_B
+value|0x2060
+end_define
+
+begin_comment
+comment|/* L2C V1.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_ATHEROS_AR8152_B2
+value|0x2062
+end_define
+
+begin_comment
+comment|/* L2C V2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATHEROS_AR8152_B_V10
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATHEROS_AR8152_B_V11
+value|0xC1
+end_define
 
 begin_comment
 comment|/* 0x0000 - 0x02FF : PCIe configuration space */
@@ -180,6 +238,41 @@ define|#
 directive|define
 name|PCIE_PHYMISC_FORCE_RCV_DET
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALC_PCIE_PHYMISC2
+value|0x1004
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_PHYMISC2_SERDES_CDR_MASK
+value|0x00030000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_PHYMISC2_SERDES_TH_MASK
+value|0x000C0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_PHYMISC2_SERDES_CDR_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_PHYMISC2_SERDES_TH_SHIFT
+value|18
 end_define
 
 begin_define
@@ -388,6 +481,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PM_CFG_EN_BUFS_RX_L0S
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM_CFG_SA_DLY_ENB
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PM_CFG_MAC_ASPM_CHK
 value|0x40000000
 end_define
@@ -430,6 +537,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|PM_CFG_L0S_ENTRY_TIMER_DEFAULT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM_CFG_L1_ENTRY_TIMER_DEFAULT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM_CFG_PM_REQ_TIMER_DEFAULT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALC_LTSSM_ID_CFG
+value|0x12FC
+end_define
+
+begin_define
+define|#
+directive|define
+name|LTSSM_ID_WRO_ENB
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALC_MASTER_CFG
 value|0x1400
 end_define
@@ -453,6 +595,20 @@ define|#
 directive|define
 name|MASTER_BERT_START
 value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASTER_OOB_DIS_OFF
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASTER_SA_TIMER_ENB
+value|0x00000080
 end_define
 
 begin_define
@@ -547,7 +703,7 @@ value|24
 end_define
 
 begin_comment
-comment|/* Number of ticks per usec for AR8131/AR8132. */
+comment|/* Number of ticks per usec for AR813x/AR815x. */
 end_comment
 
 begin_define
@@ -1121,6 +1277,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SERDES_MAC_CLK_SLOWDOWN
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SERDES_PHY_CLK_SLOWDOWN
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALC_MAC_CFG
 value|0x1480
 end_define
@@ -1312,6 +1482,20 @@ define|#
 directive|define
 name|MAC_CFG_SINGLE_PAUSE_ENB
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CFG_HASH_ALG_CRC32
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAC_CFG_SPEED_MODE_SW
+value|0x40000000
 end_define
 
 begin_define
@@ -3686,7 +3870,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* AR8131/AR8132 registers for MAC statistics */
+comment|/* AR813x/AR815x registers for MAC statistics */
 end_comment
 
 begin_define
