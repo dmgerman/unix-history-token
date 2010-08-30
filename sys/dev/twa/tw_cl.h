@@ -315,8 +315,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TW_CLI_Q_COUNT
+name|TW_CLI_RESET_Q
 value|4
+end_define
+
+begin_comment
+comment|/* q of reqs reset by timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TW_CLI_Q_COUNT
+value|5
 end_define
 
 begin_comment
@@ -463,6 +474,10 @@ name|TW_UINT8
 name|get_more_aens
 decl_stmt|;
 comment|/* More AEN's need to be retrieved. */
+name|TW_UINT8
+name|reset_needed
+decl_stmt|;
+comment|/* Controller needs a soft reset. */
 name|TW_UINT8
 name|reset_in_progress
 decl_stmt|;

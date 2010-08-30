@@ -152,7 +152,7 @@ begin_define
 define|#
 directive|define
 name|TW_OSL_DRIVER_VERSION_STRING
-value|"3.80.06.002"
+value|"3.80.06.003"
 end_define
 
 begin_define

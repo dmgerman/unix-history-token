@@ -221,6 +221,17 @@ begin_comment
 comment|/* owner sleeping on this cmd */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TW_OSLI_REQ_FLAGS_FAILED
+value|(1<<7)
+end_define
+
+begin_comment
+comment|/* bus_dmamap_load() failed */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -328,6 +339,10 @@ name|TW_UINT32
 name|length
 decl_stmt|;
 comment|/* length of buf being passed to CL */
+name|TW_UINT64
+name|deadline
+decl_stmt|;
+comment|/* request timeout (in absolute time) */
 comment|/* 	 * ptr to, and length of data passed to us from above, in case a buffer 	 * copy was done due to non-compliance to alignment requirements 	 */
 name|TW_VOID
 modifier|*
@@ -461,6 +476,17 @@ modifier|*
 name|sim_lock
 decl_stmt|;
 comment|/* ptr to sim lock */
+name|struct
+name|callout
+name|watchdog_callout
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* For command timout */
+name|TW_UINT32
+name|watchdog_index
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TW_OSL_DEBUG

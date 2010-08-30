@@ -627,18 +627,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TW_OSL_DEBUG */
-name|tw_cl_reset_ctlr
-argument_list|(
-name|ctlr
-operator|->
-name|ctlr_handle
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TW_OSL_EIO
-operator|)
-return|;
+continue|continue;
 block|}
 comment|/* 		 * Remove the request from the busy queue, mark it as complete, 		 * and enqueue it in the complete queue. 		 */
 name|tw_cli_req_q_remove_item
@@ -1056,22 +1045,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TW_OSL_DEBUG */
-name|tw_cl_reset_ctlr
-argument_list|(
-name|ctlr
-operator|->
-name|ctlr_handle
-argument_list|)
-expr_stmt|;
-name|req_pkt
-operator|->
-name|status
-operator|=
-name|TW_CL_ERR_REQ_BUS_RESET
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return;
 block|}
 if|if
 condition|(
@@ -1481,38 +1455,14 @@ literal|15
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Print the error. Firmware doesn't yet support 		 * the 'Mode Sense' cmd.  Don't print if the cmd 		 * is 'Mode Sense', and the error is 'Invalid field 		 * in CDB'. 		 */
-if|if
-condition|(
-operator|!
-operator|(
-operator|(
-name|cdb
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|==
-literal|0x1A
-operator|)
-operator|&&
-operator|(
-name|error
-operator|==
-literal|0x10D
-operator|)
-operator|)
-condition|)
-name|tw_cli_create_ctlr_event
-argument_list|(
-name|req
-operator|->
-name|ctlr
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR
-argument_list|,
-name|cmd_hdr
-argument_list|)
-expr_stmt|;
+comment|/*  		 * Print the error. Firmware doesn't yet support 		 * the 'Mode Sense' cmd.  Don't print if the cmd 		 * is 'Mode Sense', and the error is 'Invalid field 		 * in CDB'. 		 */
+block|if (! ((cdb[0] == 0x1A)&& (error == 0x10D))) 			tw_cli_create_ctlr_event(req->ctlr, 				TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR, 				cmd_hdr);
+endif|#
+directive|endif
+comment|// 0
 block|}
 if|if
 condition|(
@@ -1629,22 +1579,13 @@ operator|.
 name|status
 condition|)
 block|{
-name|tw_cli_create_ctlr_event
-argument_list|(
-name|ctlr
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR
-argument_list|,
-operator|&
-operator|(
-name|req
-operator|->
-name|cmd_pkt
-operator|->
-name|cmd_hdr
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|tw_cli_create_ctlr_event(ctlr, 				TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR,&(req->cmd_pkt->cmd_hdr));
+endif|#
+directive|endif
+comment|// 0
 name|tw_cl_create_event
 argument_list|(
 name|ctlr
@@ -1898,15 +1839,13 @@ name|cmd_hdr
 operator|)
 operator|)
 expr_stmt|;
-name|tw_cli_create_ctlr_event
-argument_list|(
-name|ctlr
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR
-argument_list|,
-name|cmd_hdr
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|tw_cli_create_ctlr_event(ctlr, 				TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR, 				cmd_hdr);
+endif|#
+directive|endif
+comment|// 0
 name|tw_cl_create_event
 argument_list|(
 name|ctlr
