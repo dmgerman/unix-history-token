@@ -670,6 +670,12 @@ name|uint32_t
 name|alc_rcb
 decl_stmt|;
 name|int
+name|alc_expcap
+decl_stmt|;
+name|int
+name|alc_pmcap
+decl_stmt|;
+name|int
 name|alc_flags
 decl_stmt|;
 define|#
@@ -688,6 +694,10 @@ define|#
 directive|define
 name|ALC_FLAG_MSIX
 value|0x0008
+define|#
+directive|define
+name|ALC_FLAG_PM
+value|0x0010
 define|#
 directive|define
 name|ALC_FLAG_FASTETHER
