@@ -3052,6 +3052,21 @@ operator|=
 name|out
 expr_stmt|;
 block|}
+name|hook_exec
+argument_list|(
+name|res
+operator|->
+name|hr_exec
+argument_list|,
+literal|"connect"
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|true
@@ -3474,10 +3489,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|gres
-operator|=
-name|res
-expr_stmt|;
 comment|/* 	 * Create communication channel between parent and child. 	 */
 if|if
 condition|(
@@ -3560,6 +3571,10 @@ name|pid
 expr_stmt|;
 return|return;
 block|}
+name|gres
+operator|=
+name|res
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4206,6 +4221,21 @@ expr_stmt|;
 comment|/* 	 * Stop synchronization if in-progress. 	 */
 name|sync_stop
 argument_list|()
+expr_stmt|;
+name|hook_exec
+argument_list|(
+name|res
+operator|->
+name|hr_exec
+argument_list|,
+literal|"disconnect"
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function
