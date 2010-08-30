@@ -1195,6 +1195,21 @@ name|hr_secondary_remotecnt
 condition|)
 block|{
 comment|/* Exit on split-brain. */
+name|hook_exec
+argument_list|(
+name|res
+operator|->
+name|hr_exec
+argument_list|,
+literal|"split-brain"
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_CONFIG
@@ -1412,6 +1427,9 @@ name|LOG_WARNING
 argument_list|,
 literal|"Unable to set connection timeout"
 argument_list|)
+expr_stmt|;
+name|hook_init
+argument_list|()
 expr_stmt|;
 name|init_local
 argument_list|(

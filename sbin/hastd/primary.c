@@ -2150,6 +2150,10 @@ name|out
 operator|=
 name|NULL
 expr_stmt|;
+name|errmsg
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Prepare outgoing connection with remote node. */
 if|if
 condition|(
@@ -3055,6 +3059,36 @@ operator|)
 return|;
 name|close
 label|:
+if|if
+condition|(
+name|errmsg
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|errmsg
+argument_list|,
+literal|"Split-brain condition!"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|hook_exec
+argument_list|(
+name|res
+operator|->
+name|hr_exec
+argument_list|,
+literal|"split-brain"
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|proto_close
 argument_list|(
 name|out
