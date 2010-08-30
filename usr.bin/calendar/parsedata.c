@@ -267,6 +267,14 @@ parameter_list|,
 name|char
 modifier|*
 name|specialday
+parameter_list|,
+name|char
+modifier|*
+name|year
+parameter_list|,
+name|int
+modifier|*
+name|iyear
 parameter_list|)
 block|{
 name|char
@@ -278,6 +286,9 @@ name|p1
 decl_stmt|,
 modifier|*
 name|p2
+decl_stmt|,
+modifier|*
+name|py
 decl_stmt|;
 specifier|const
 name|char
@@ -307,6 +318,16 @@ literal|'\0'
 expr_stmt|;
 operator|*
 name|imonth
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|year
+operator|=
+literal|'\0'
+expr_stmt|;
+operator|*
+name|iyear
 operator|=
 literal|0
 expr_stmt|;
@@ -827,6 +848,67 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* Now p2 points to the next field and p1 to the first field */
+if|if
+condition|(
+operator|(
+name|py
+operator|=
+name|strchr
+argument_list|(
+name|p2
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* We have a year in the string. Now this is getting tricky */
+name|strcpy
+argument_list|(
+name|year
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+operator|*
+name|iyear
+operator|=
+operator|(
+name|int
+operator|)
+name|strtol
+argument_list|(
+name|year
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|p1
+operator|=
+name|p2
+expr_stmt|;
+name|p2
+operator|=
+name|py
+operator|+
+literal|1
+expr_stmt|;
+operator|*
+name|py
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|flags
+operator||=
+name|F_YEAR
+expr_stmt|;
+block|}
+comment|/* 	printf("p1: %s\n", p1); 	printf("p2: %s\n", p2); 	printf("year: %s\n", year); 	*/
 comment|/* Check if there is a month-string in the date */
 if|if
 condition|(
@@ -1630,6 +1712,13 @@ parameter_list|,
 name|char
 modifier|*
 name|specialday
+parameter_list|,
+name|char
+modifier|*
+name|year
+parameter_list|,
+name|int
+name|iyear
 parameter_list|)
 block|{
 if|if
@@ -1696,6 +1785,24 @@ argument_list|(
 literal|"modifierindex: |%s|\n"
 argument_list|,
 name|modifierindex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|year
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"year: |%s| (%d)\n"
+argument_list|,
+name|year
+argument_list|,
+name|iyear
 argument_list|)
 expr_stmt|;
 if|if
@@ -1893,6 +2000,12 @@ literal|100
 index|]
 decl_stmt|;
 name|char
+name|syear
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|char
 name|modifierindex
 index|[
 literal|100
@@ -1919,6 +2032,12 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
+name|iyear
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
 name|year
 decl_stmt|,
 name|remindex
@@ -1990,6 +2109,10 @@ argument_list|,
 name|modifierindex
 argument_list|,
 name|specialday
+argument_list|,
+name|syear
+argument_list|,
+name|iyear
 argument_list|)
 expr_stmt|;
 if|if
@@ -2020,6 +2143,11 @@ argument_list|,
 name|modifierindex
 argument_list|,
 name|specialday
+argument_list|,
+name|syear
+argument_list|,
+operator|&
+name|iyear
 argument_list|)
 operator|==
 literal|0
@@ -2070,6 +2198,10 @@ argument_list|,
 name|modifierindex
 argument_list|,
 name|specialday
+argument_list|,
+name|syear
+argument_list|,
+name|iyear
 argument_list|)
 expr_stmt|;
 name|remindex
@@ -2090,6 +2222,35 @@ name|year
 operator|++
 control|)
 block|{
+name|int
+name|lflags
+init|=
+operator|*
+name|flags
+decl_stmt|;
+comment|/* If the year is specified, only do it if it is this year! */
+if|if
+condition|(
+operator|(
+name|lflags
+operator|&
+name|F_YEAR
+operator|)
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|iyear
+operator|!=
+name|year
+condition|)
+continue|continue;
+name|lflags
+operator|&=
+operator|~
+name|F_YEAR
+expr_stmt|;
 comment|/* Get important dates for this year */
 name|yearinfo
 operator|=
@@ -2310,8 +2471,7 @@ block|}
 comment|/* Same day every year */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_MONTH
@@ -2360,8 +2520,7 @@ block|}
 comment|/* XXX Same day every year, but variable */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_MONTH
@@ -2412,8 +2571,7 @@ block|}
 comment|/* Same day every month */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_ALLMONTH
@@ -2477,8 +2635,7 @@ block|}
 comment|/* Every day of a month */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_ALLDAY
@@ -2547,8 +2704,7 @@ block|}
 comment|/* One day of every month */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_ALLMONTH
@@ -2612,8 +2768,7 @@ block|}
 comment|/* Every dayofweek of the year */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_DAYOFWEEK
@@ -2695,8 +2850,7 @@ block|}
 comment|/* A certain dayofweek of a month */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_MONTH
@@ -2881,8 +3035,7 @@ block|}
 comment|/* Every dayofweek of the month */
 if|if
 condition|(
-operator|*
-name|flags
+name|lflags
 operator|==
 operator|(
 name|F_DAYOFWEEK
@@ -2970,8 +3123,7 @@ comment|/* Easter */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -2993,8 +3145,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3055,8 +3206,7 @@ comment|/* Paskha */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3078,8 +3228,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3140,8 +3289,7 @@ comment|/* Chinese New Year */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3163,8 +3311,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3225,8 +3372,7 @@ comment|/* FullMoon */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3251,8 +3397,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3353,8 +3498,7 @@ comment|/* NewMoon */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3379,8 +3523,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3481,8 +3624,7 @@ comment|/* (Mar|Sep)Equinox */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3504,8 +3646,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3582,8 +3723,7 @@ block|}
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3605,8 +3745,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3684,8 +3823,7 @@ comment|/* (Jun|Dec)Solstice */
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3707,8 +3845,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3785,8 +3922,7 @@ block|}
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 operator|~
 name|F_MODIFIEROFFSET
@@ -3808,8 +3944,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|*
-name|flags
+name|lflags
 operator|&
 name|F_MODIFIEROFFSET
 operator|)
@@ -3894,8 +4029,7 @@ literal|2
 argument_list|,
 name|date
 argument_list|,
-operator|*
-name|flags
+name|lflags
 argument_list|,
 name|month
 argument_list|,
@@ -3914,6 +4048,10 @@ argument_list|,
 name|modifierindex
 argument_list|,
 name|specialday
+argument_list|,
+name|syear
+argument_list|,
+name|iyear
 argument_list|)
 expr_stmt|;
 name|retvalsign
@@ -3969,6 +4107,23 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|F_YEAR
+operator|)
+operator|!=
+literal|0
+condition|)
+name|strcat
+argument_list|(
+name|s
+argument_list|,
+literal|"year "
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

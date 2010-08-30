@@ -338,6 +338,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|F_YEAR
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
 name|STRING_EASTER
 value|"Easter"
 end_define
