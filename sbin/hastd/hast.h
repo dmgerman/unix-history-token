@@ -524,6 +524,12 @@ name|proto_conn
 modifier|*
 name|hr_ctrl
 decl_stmt|;
+comment|/* Events from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_event
+decl_stmt|;
 comment|/* Activemap structure. */
 name|struct
 name|activemap
