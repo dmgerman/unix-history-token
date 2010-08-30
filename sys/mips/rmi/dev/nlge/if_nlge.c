@@ -333,18 +333,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/xlrconfig.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/rmi/shared_structs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/rmi/board.h>
 end_include
 
@@ -352,6 +340,12 @@ begin_include
 include|#
 directive|include
 file|<mips/rmi/rmi_mips_exts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/rmi_boot_info.h>
 end_include
 
 begin_include
@@ -1369,9 +1363,6 @@ name|struct
 name|msgrng_msg
 modifier|*
 name|msg
-parameter_list|,
-name|int
-name|rel_buf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3362,8 +3353,6 @@ condition|)
 name|release_tx_desc
 argument_list|(
 name|msg
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -3561,17 +3550,14 @@ argument_list|()
 expr_stmt|;
 name|fr_stid
 operator|=
-operator|(
 name|cpu
-operator|<<
-literal|3
-operator|)
+operator|*
+literal|8
 operator|+
 name|tid
 operator|+
 literal|4
 expr_stmt|;
-comment|/* Each CPU has 8 buckets. */
 if|if
 condition|(
 operator|!
@@ -9224,7 +9210,7 @@ name|uma_zalloc
 argument_list|(
 name|nl_tx_desc_zone
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -9624,9 +9610,6 @@ name|struct
 name|msgrng_msg
 modifier|*
 name|msg
-parameter_list|,
-name|int
-name|rel_buf
 parameter_list|)
 block|{
 name|vm_paddr_t
@@ -9679,11 +9662,6 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
-name|mips_wr_status
-argument_list|(
-name|sr
-argument_list|)
-expr_stmt|;
 name|tx_desc
 operator|=
 operator|(
@@ -9698,11 +9676,6 @@ operator|)
 name|temp
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|rel_buf
-condition|)
-block|{
 name|paddr
 operator|+=
 sizeof|sizeof
@@ -9710,11 +9683,6 @@ argument_list|(
 name|void
 operator|*
 argument_list|)
-expr_stmt|;
-name|sr
-operator|=
-name|xlr_enable_kx
-argument_list|()
 expr_stmt|;
 name|temp
 operator|=
@@ -9747,7 +9715,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 name|uma_zfree
 argument_list|(
 name|nl_tx_desc_zone

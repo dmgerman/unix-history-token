@@ -151,6 +151,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -309,6 +315,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mii/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/miivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/brgphyreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/rmi/interrupt.h>
 end_include
 
@@ -339,13 +363,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/xlrconfig.h>
+file|<mips/rmi/rmi_mips_exts.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/rmi/shared_structs.h>
+file|<mips/rmi/rmi_boot_info.h>
 end_include
 
 begin_include
@@ -369,36 +393,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/mii.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/miivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/brgphyreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/rmi/dev/xlr/rge.h>
 end_include
-
-begin_comment
-comment|/* #include "opt_rge.h" */
-end_comment
 
 begin_include
 include|#

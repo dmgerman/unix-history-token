@@ -104,19 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/xlrconfig.h>
+file|<mips/rmi/rmi_mips_exts.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<mips/rmi/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/rmi/clock.h>
 end_include
 
 begin_include

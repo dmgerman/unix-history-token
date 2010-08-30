@@ -228,31 +228,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/rmi_mips_exts.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/rmi/iomap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/rmi/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/rmi/msgring.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/rmi/xlrconfig.h>
 end_include
 
 begin_include
@@ -271,6 +253,18 @@ begin_include
 include|#
 directive|include
 file|<mips/rmi/board.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/rmi_mips_exts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/rmi/rmi_boot_info.h>
 end_include
 
 begin_function_decl

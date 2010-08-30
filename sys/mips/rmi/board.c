@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/rmi/rmi_boot_info.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/rmi/board.h>
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<mips/rmi/pic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/rmi/shared_structs.h>
 end_include
 
 begin_decl_stmt
