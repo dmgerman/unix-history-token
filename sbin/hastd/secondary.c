@@ -2525,7 +2525,7 @@ name|secondary_exit
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"Unable to receive reply data"
+literal|"Unable to receive request data"
 argument_list|)
 expr_stmt|;
 block|}
