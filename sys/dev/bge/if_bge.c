@@ -16873,8 +16873,6 @@ name|struct
 name|bge_tx_bd
 modifier|*
 name|cur_tx
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -16931,8 +16929,6 @@ condition|)
 block|{
 name|uint32_t
 name|idx
-init|=
-literal|0
 decl_stmt|;
 name|idx
 operator|=
@@ -17056,12 +17052,6 @@ name|BGE_TX_RING_CNT
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cur_tx
-operator|!=
-name|NULL
-condition|)
 name|ifp
 operator|->
 name|if_drv_flags
