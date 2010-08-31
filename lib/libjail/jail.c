@@ -5908,7 +5908,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Look for types we understand */
+comment|/* Look for types we understand. */
 name|jp
 operator|->
 name|jp_ctltype
