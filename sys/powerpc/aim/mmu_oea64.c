@@ -9749,6 +9749,12 @@ name|idx
 decl_stmt|,
 name|mask
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 name|idx
 operator|=
 name|vsid
@@ -9780,6 +9786,12 @@ index|]
 operator|&=
 operator|~
 name|mask
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -9826,7 +9838,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"moea64_release"
+literal|"moea64_release: pm_sr[0] = 0"
 argument_list|)
 expr_stmt|;
 name|moea64_release_vsid
