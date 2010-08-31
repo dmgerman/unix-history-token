@@ -644,36 +644,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|powerpc_ofw_shutdown
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|,
-name|int
-name|howto
-parameter_list|)
-block|{
-if|if
-condition|(
-name|howto
-operator|&
-name|RB_HALT
-condition|)
-block|{
-name|OF_halt
-argument_list|()
-expr_stmt|;
-block|}
-name|OF_reboot
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|cpu_startup
 parameter_list|(
 name|void
@@ -817,9 +787,7 @@ argument|, ptoa(cnt.v_free_count), 	    ptoa(cnt.v_free_count) /
 literal|1048576
 argument|);
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
-argument|bufinit(); 	vm_pager_bufferinit();  	EVENTHANDLER_REGISTER(shutdown_final, powerpc_ofw_shutdown,
-literal|0
-argument|, 	    SHUTDOWN_PRI_LAST); }  extern char	kernel_text[]
+argument|bufinit(); 	vm_pager_bufferinit(); }  extern char	kernel_text[]
 argument_list|,
 argument|_end[];
 ifndef|#

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/platform.h>
 end_include
 
@@ -340,6 +346,23 @@ name|cpu
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reset back to firmware.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_reset
+parameter_list|()
+block|{
+name|PLATFORM_RESET
+argument_list|(
+name|plat_obj
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
