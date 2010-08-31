@@ -4569,6 +4569,10 @@ modifier|*
 name|jp
 parameter_list|)
 block|{
+name|size_t
+modifier|*
+name|valuelens
+decl_stmt|;
 name|char
 modifier|*
 name|value
@@ -4719,6 +4723,18 @@ sizeof|sizeof
 argument_list|(
 name|char
 operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|valuelens
+operator|=
+name|alloca
+argument_list|(
+name|nval
+operator|*
+sizeof|sizeof
+argument_list|(
+name|size_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5131,14 +5147,24 @@ name|NULL
 operator|)
 return|;
 block|}
-name|valuelen
-operator|+=
+name|valuelens
+index|[
+name|i
+index|]
+operator|=
 name|strlen
 argument_list|(
 name|valbuf
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|valuelen
+operator|+=
+name|valuelens
+index|[
+name|i
+index|]
 expr_stmt|;
 name|values
 index|[
@@ -5147,7 +5173,10 @@ index|]
 operator|=
 name|alloca
 argument_list|(
-name|valuelen
+name|valuelens
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -5166,8 +5195,6 @@ operator|=
 name|malloc
 argument_list|(
 name|valuelen
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5226,17 +5253,16 @@ condition|)
 block|{
 name|tvalue
 operator|+=
-name|strlen
-argument_list|(
-name|values
+name|valuelens
 index|[
 name|i
 index|]
-argument_list|)
 expr_stmt|;
-operator|*
 name|tvalue
-operator|++
+index|[
+operator|-
+literal|1
+index|]
 operator|=
 literal|','
 expr_stmt|;
@@ -5252,7 +5278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free the contents of a jail parameter list (but not thst list itself).  */
+comment|/*  * Free the contents of a jail parameter list (but not the list itself).  */
 end_comment
 
 begin_function
