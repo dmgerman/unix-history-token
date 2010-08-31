@@ -2372,19 +2372,20 @@ argument_list|(
 name|addr
 argument_list|)
 condition|)
-block|{
-name|slab
-operator|=
-name|NULL
-expr_stmt|;
-name|alloc
-operator|=
+return|return
+operator|(
+name|memguard_realloc
+argument_list|(
+name|addr
+argument_list|,
 name|size
-expr_stmt|;
-goto|goto
-name|remalloc
-goto|;
-block|}
+argument_list|,
+name|mtp
+argument_list|,
+name|flags
+argument_list|)
+operator|)
+return|;
 endif|#
 directive|endif
 ifdef|#
@@ -2492,13 +2493,6 @@ return|;
 endif|#
 directive|endif
 comment|/* !DEBUG_REDZONE */
-ifdef|#
-directive|ifdef
-name|DEBUG_MEMGUARD
-name|remalloc
-label|:
-endif|#
-directive|endif
 comment|/* Allocate a new, bigger (or smaller) block */
 if|if
 condition|(
