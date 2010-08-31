@@ -1999,8 +1999,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
