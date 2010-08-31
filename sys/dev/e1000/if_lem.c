@@ -1184,7 +1184,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|bool
 name|lem_rxeof
 parameter_list|(
 name|struct
@@ -1192,6 +1192,9 @@ name|adapter
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5766,7 +5769,7 @@ directive|ifdef
 name|DEVICE_POLLING
 comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
 specifier|static
-name|void
+name|int
 name|lem_poll
 parameter_list|(
 name|struct
@@ -5821,7 +5824,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_done
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -5897,13 +5904,14 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|rx_done
-operator|=
 name|lem_rxeof
 argument_list|(
 name|adapter
 argument_list|,
 name|count
+argument_list|,
+operator|&
+name|rx_done
 argument_list|)
 expr_stmt|;
 name|EM_TX_LOCK
@@ -5937,7 +5945,11 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rx_done
+operator|)
+return|;
 block|}
 endif|#
 directive|endif
@@ -6117,6 +6129,8 @@ name|adapter
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|lem_txeof
@@ -6294,6 +6308,8 @@ argument_list|,
 name|adapter
 operator|->
 name|rx_process_limit
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -7100,6 +7116,66 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+block|}
+comment|/* 	** When doing checksum offload, it is critical to 	** make sure the first mbuf has more than header, 	** because that routine expects data to be present. 	*/
+if|if
+condition|(
+operator|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_OFFLOAD
+operator|)
+operator|&&
+operator|(
+name|m_head
+operator|->
+name|m_len
+operator|<
+name|ETHER_HDR_LEN
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|)
+condition|)
+block|{
+name|m_head
+operator|=
+name|m_pullup
+argument_list|(
+name|m_head
+argument_list|,
+name|ETHER_HDR_LEN
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|m_headp
+operator|=
+name|m_head
+expr_stmt|;
+if|if
+condition|(
+name|m_head
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 block|}
 comment|/* 	 * Map the packet for DMA 	 * 	 * Capture the first descriptor index, 	 * this descriptor will have the index 	 * of the EOP which is the only one that 	 * now gets a DONE bit writeback. 	 */
 name|first
@@ -10699,6 +10775,8 @@ argument|}
 comment|/*********************************************************************  *  *  The offload context needs to be set when we transfer the first  *  packet of a particular protocol (TCP/UDP). This routine has been  *  enhanced to deal with inserted VLAN headers, and IPV6 (not complete)  *  *  Added back the old method of keeping the current context type  *  and not setting if unnecessary, as this is reported to be a  *  big performance win.  -jfv  **********************************************************************/
 argument|static void lem_transmit_checksum_setup(struct adapter *adapter, struct mbuf *mp,     u32 *txd_upper, u32 *txd_lower) { 	struct e1000_context_desc *TXD = NULL; 	struct em_buffer *tx_buffer; 	struct ether_vlan_header *eh; 	struct ip *ip = NULL; 	struct ip6_hdr *ip6; 	int curr_txd, ehdrlen; 	u32 cmd, hdr_len, ip_hlen; 	u16 etype; 	u8 ipproto;   	cmd = hdr_len = ipproto =
 literal|0
+argument|; 	*txd_upper = *txd_lower =
+literal|0
 argument|; 	curr_txd = adapter->next_avail_tx_desc;
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 argument|eh = mtod(mp, struct ether_vlan_header *); 	if (eh->evl_encap_proto == htons(ETHERTYPE_VLAN)) { 		etype = ntohs(eh->evl_proto); 		ehdrlen = ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN; 	} else { 		etype = ntohs(eh->evl_encap_proto); 		ehdrlen = ETHER_HDR_LEN; 	}
@@ -10711,18 +10789,10 @@ argument|if (mp->m_pkthdr.csum_flags& CSUM_IP) {
 comment|/* 			 * Start offset for header checksum calculation. 			 * End offset for header checksum calculation. 			 * Offset of place to put the checksum. 			 */
 argument|TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd]; 			TXD->lower_setup.ip_fields.ipcss = ehdrlen; 			TXD->lower_setup.ip_fields.ipcse = 			    htole16(ehdrlen + ip_hlen); 			TXD->lower_setup.ip_fields.ipcso = 			    ehdrlen + offsetof(struct ip, ip_sum); 			cmd |= E1000_TXD_CMD_IP; 			*txd_upper |= E1000_TXD_POPTS_IXSM<<
 literal|8
-argument|; 		}  		if (mp->m_len< ehdrlen + ip_hlen) 			return;
-comment|/* failure */
-argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip->ip_p;  		break; 	case ETHERTYPE_IPV6: 		ip6 = (struct ip6_hdr *)(mp->m_data + ehdrlen); 		ip_hlen = sizeof(struct ip6_hdr);
+argument|; 		}  		hdr_len = ehdrlen + ip_hlen; 		ipproto = ip->ip_p;  		break; 	case ETHERTYPE_IPV6: 		ip6 = (struct ip6_hdr *)(mp->m_data + ehdrlen); 		ip_hlen = sizeof(struct ip6_hdr);
 comment|/* XXX: No header stacking. */
-argument|if (mp->m_len< ehdrlen + ip_hlen) 			return;
-comment|/* failure */
 comment|/* IPv6 doesn't have a header checksum. */
-argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt;  		break; 	default: 		*txd_upper =
-literal|0
-argument|; 		*txd_lower =
-literal|0
-argument|; 		return; 	}  	switch (ipproto) { 	case IPPROTO_TCP: 		if (mp->m_pkthdr.csum_flags& CSUM_TCP) { 			*txd_lower = E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
+argument|hdr_len = ehdrlen + ip_hlen; 		ipproto = ip6->ip6_nxt; 		break;  	default: 		return; 	}  	switch (ipproto) { 	case IPPROTO_TCP: 		if (mp->m_pkthdr.csum_flags& CSUM_TCP) { 			*txd_lower = E1000_TXD_CMD_DEXT | E1000_TXD_DTYP_D; 			*txd_upper |= E1000_TXD_POPTS_TXSM<<
 literal|8
 argument|;
 comment|/* no need for context if already set */
@@ -10740,7 +10810,7 @@ argument|TXD = (struct e1000_context_desc *)&adapter->tx_desc_base[curr_txd]; 		
 literal|0
 argument|); 			TXD->upper_setup.tcp_fields.tucso = 			    hdr_len + offsetof(struct udphdr, uh_sum); 		}
 comment|/* Fall Thru */
-argument|} 	default: 		break; 	}  	TXD->tcp_seg_setup.data = htole32(
+argument|} 	default: 		break; 	}  	if (TXD == NULL) 		return; 	TXD->tcp_seg_setup.data = htole32(
 literal|0
 argument|); 	TXD->cmd_and_length = 	    htole32(adapter->txd_cmd | E1000_TXD_CMD_DEXT | cmd); 	tx_buffer =&adapter->tx_buffer_area[curr_txd]; 	tx_buffer->m_head = NULL; 	tx_buffer->next_eop = -
 literal|1
@@ -10941,13 +11011,13 @@ argument|if (adapter->rx_buffer_area != NULL) { 		rx_buffer = adapter->rx_buffer
 literal|0
 argument|; i< adapter->num_rx_desc; i++, rx_buffer++) { 			if (rx_buffer->m_head != NULL) { 				bus_dmamap_sync(adapter->rxtag, rx_buffer->map, 				    BUS_DMASYNC_POSTREAD); 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 				m_freem(rx_buffer->m_head); 				rx_buffer->m_head = NULL; 			} else if (rx_buffer->map != NULL) 				bus_dmamap_unload(adapter->rxtag, 				    rx_buffer->map); 			if (rx_buffer->map != NULL) { 				bus_dmamap_destroy(adapter->rxtag, 				    rx_buffer->map); 				rx_buffer->map = NULL; 			} 		} 	}  	if (adapter->rx_buffer_area != NULL) { 		free(adapter->rx_buffer_area, M_DEVBUF); 		adapter->rx_buffer_area = NULL; 	}  	if (adapter->rxtag != NULL) { 		bus_dma_tag_destroy(adapter->rxtag); 		adapter->rxtag = NULL; 	} }
 comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *    *  For polling we also now return the number of cleaned packets  *********************************************************************/
-argument|static int lem_rxeof(struct adapter *adapter, int count) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
+argument|static bool lem_rxeof(struct adapter *adapter, int count, int *done) { 	struct ifnet	*ifp = adapter->ifp;; 	struct mbuf	*mp; 	u8		status, accept_frame =
 literal|0
 argument|, eop =
 literal|0
 argument|; 	u16 		len, desc_len, prev_len_adj; 	int		i, rx_sent =
 literal|0
-argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		EM_RX_UNLOCK(adapter); 		return (rx_sent); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
+argument|; 	struct e1000_rx_desc   *current_desc;  	EM_RX_LOCK(adapter); 	i = adapter->next_rx_desc_to_check; 	current_desc =&adapter->rx_desc_base[i]; 	bus_dmamap_sync(adapter->rxdma.dma_tag, adapter->rxdma.dma_map, 	    BUS_DMASYNC_POSTREAD);  	if (!((current_desc->status)& E1000_RXD_STAT_DD)) { 		if (done != NULL) 			*done = rx_sent; 		EM_RX_UNLOCK(adapter); 		return (FALSE); 	}  	while ((current_desc->status& E1000_RXD_STAT_DD)&& 	    (count !=
 literal|0
 argument|)&& 	    (ifp->if_drv_flags& IFF_DRV_RUNNING)) { 		struct mbuf *m = NULL;  		mp = adapter->rx_buffer_area[i].m_head;
 comment|/* 		 * Can't defer bus_dmamap_sync(9) because TBI_ACCEPT 		 * needs to access the last received byte in the mbuf. 		 */
@@ -11027,7 +11097,7 @@ argument|) 		i = adapter->num_rx_desc -
 literal|1
 argument|; 	E1000_WRITE_REG(&adapter->hw, E1000_RDT(
 literal|0
-argument|), i); 	EM_RX_UNLOCK(adapter); 	return (rx_sent); }
+argument|), i); 	if (done != NULL) 		*done = rx_sent; 	EM_RX_UNLOCK(adapter); 	return (current_desc->status& E1000_RXD_STAT_DD); }
 ifndef|#
 directive|ifndef
 name|__NO_STRICT_ALIGNMENT
