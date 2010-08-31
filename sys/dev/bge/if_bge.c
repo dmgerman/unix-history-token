@@ -17201,9 +17201,6 @@ name|bge_tx_cons_idx
 expr_stmt|;
 name|statusword
 operator|=
-name|atomic_readandclear_32
-argument_list|(
-operator|&
 name|sc
 operator|->
 name|bge_ldata
@@ -17211,7 +17208,16 @@ operator|.
 name|bge_status_block
 operator|->
 name|bge_status
-argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bge_ldata
+operator|.
+name|bge_status_block
+operator|->
+name|bge_status
+operator|=
+literal|0
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
