@@ -120,6 +120,21 @@ name|pjdlog_mode
 operator|=
 name|mode
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|PJDLOG_MODE_SYSLOG
+condition|)
+name|openlog
+argument_list|(
+name|NULL
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
