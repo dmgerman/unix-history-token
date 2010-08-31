@@ -11722,7 +11722,7 @@ literal|0
 condition|)
 name|boundary
 operator|=
-name|BGE_DMA_4G_BNDRY
+name|BGE_DMA_BNDRY
 expr_stmt|;
 name|error
 operator|=

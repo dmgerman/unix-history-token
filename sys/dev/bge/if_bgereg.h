@@ -13229,6 +13229,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BGE_DMA_BNDRY
+value|0x80000000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_if
 if|#
 directive|if
@@ -13242,7 +13260,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|BGE_DMA_4G_BNDRY
+name|BGE_DMA_BNDRY
 value|0x100000000
 end_define
 
@@ -13254,9 +13272,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|BGE_DMA_4G_BNDRY
+name|BGE_DMA_BNDRY
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
