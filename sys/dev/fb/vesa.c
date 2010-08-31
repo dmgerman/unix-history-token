@@ -3774,10 +3774,7 @@ block|}
 comment|/* 	 * Shadow video ROM. 	 */
 name|offs
 operator|=
-name|BIOS_SADDRTOLADDR
-argument_list|(
 name|vesa_bios_int10
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3807,6 +3804,26 @@ index|]
 operator|*
 literal|512
 expr_stmt|;
+name|offs
+operator|=
+name|BIOS_SADDRTOLADDR
+argument_list|(
+name|vesa_bios_int10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|offs
+operator|>
+name|vesa_bios_offs
+operator|&&
+name|offs
+operator|<
+name|vesa_bios_offs
+operator|+
+name|vesa_bios_size
+condition|)
+block|{
 name|vesa_bios
 operator|=
 name|x86bios_alloc
@@ -3861,6 +3878,17 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+name|offs
+operator|=
+name|vesa_bios_int10
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|vesa_bios
+operator|==
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"VESA: failed to shadow video ROM\n"
