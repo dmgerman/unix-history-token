@@ -27636,11 +27636,14 @@ if|if
 condition|(
 name|IN_MULTICAST
 argument_list|(
+name|ntohl
+argument_list|(
 name|sin
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 block|{
