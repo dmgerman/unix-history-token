@@ -179,7 +179,12 @@ name|child
 operator|=
 name|child
 expr_stmt|;
-name|_thr_rwl_rdlock
+name|THR_CRITICAL_ENTER
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|_thr_rwl_wrlock
 argument_list|(
 operator|&
 name|_thr_atfork_lock
@@ -199,6 +204,11 @@ name|_thr_rwl_unlock
 argument_list|(
 operator|&
 name|_thr_atfork_lock
+argument_list|)
+expr_stmt|;
+name|THR_CRITICAL_LEAVE
+argument_list|(
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
