@@ -903,7 +903,7 @@ name|mmio
 argument_list|,
 name|PIC_INT_ACK
 argument_list|,
-literal|1
+literal|1U
 operator|<<
 name|picintr
 argument_list|)

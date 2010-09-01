@@ -182,10 +182,17 @@ name|int
 name|irq
 parameter_list|)
 block|{
-name|write_c0_eimr64
-argument_list|(
+name|uint64_t
+name|eimr
+decl_stmt|;
+name|eimr
+operator|=
 name|read_c0_eimr64
 argument_list|()
+expr_stmt|;
+name|write_c0_eimr64
+argument_list|(
+name|eimr
 operator||
 operator|(
 literal|1ULL
@@ -491,23 +498,6 @@ name|irq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * FIXME locking - not needed now, because we do this only on 	 * startup from CPU0 	 */
-name|printf
-argument_list|(
-literal|"[%s] Setup intr %d called on cpu %d (%d)\n"
-argument_list|,
-name|name
-argument_list|,
-name|irq
-argument_list|,
-name|xlr_cpu_id
-argument_list|()
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|src
 operator|=
 operator|&

@@ -1027,6 +1027,12 @@ expr_stmt|;
 name|mips_cpu_init
 argument_list|()
 expr_stmt|;
+name|cpuinfo
+operator|.
+name|cache_coherent_dma
+operator|=
+name|TRUE
+expr_stmt|;
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
@@ -1136,6 +1142,11 @@ name|level
 decl_stmt|,
 name|irq
 decl_stmt|;
+name|write_c0_eimr64
+argument_list|(
+literal|0ULL
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2332,6 +2343,11 @@ expr_stmt|;
 name|mips_wr_status
 argument_list|(
 name|stat
+argument_list|)
+expr_stmt|;
+name|write_c0_eimr64
+argument_list|(
+literal|0ULL
 argument_list|)
 expr_stmt|;
 name|xlr_enable_irq
