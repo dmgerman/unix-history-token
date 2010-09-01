@@ -5314,11 +5314,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|sis_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sis_stop
 argument_list|(
 name|sc
@@ -8080,11 +8075,6 @@ operator|&
 name|SIS_ISR_SYSERR
 condition|)
 block|{
-name|sis_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -8304,11 +8294,6 @@ operator|&
 name|SIS_ISR_SYSERR
 condition|)
 block|{
-name|sis_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -9137,6 +9122,12 @@ condition|)
 return|return;
 comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|sis_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Reset the chip to a known state. 	 */
+name|sis_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -10411,15 +10402,14 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|sis_stop
-argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|sis_reset
-argument_list|(
-name|sc
-argument_list|)
+operator|->
+name|sis_ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sis_initl
 argument_list|(
@@ -10759,11 +10749,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 name|SIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|sis_reset
 argument_list|(
 name|sc
 argument_list|)
