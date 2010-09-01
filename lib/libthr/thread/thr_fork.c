@@ -323,6 +323,11 @@ argument_list|(
 name|phdr_info
 argument_list|)
 expr_stmt|;
+name|_thr_sigact_unload
+argument_list|(
+name|phdr_info
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -463,6 +468,9 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|_thr_signal_prefork
+argument_list|()
+expr_stmt|;
 comment|/* Fork a new process: */
 if|if
 condition|(
@@ -529,6 +537,9 @@ argument_list|(
 operator|&
 name|_thr_atfork_lock
 argument_list|)
+expr_stmt|;
+name|_thr_signal_postfork_child
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -613,6 +624,9 @@ comment|/* Parent process */
 name|errsave
 operator|=
 name|errno
+expr_stmt|;
+name|_thr_signal_postfork
+argument_list|()
 expr_stmt|;
 comment|/* Ready to continue, unblock signals. */
 name|_thr_signal_unblock

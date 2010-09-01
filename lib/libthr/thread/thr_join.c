@@ -408,11 +408,9 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
-name|_thr_cancel_enter_defer
+name|_thr_cancel_enter
 argument_list|(
 name|curthread
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|tid
@@ -509,7 +507,7 @@ name|ETIMEDOUT
 condition|)
 break|break;
 block|}
-name|_thr_cancel_leave_defer
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
 argument_list|,

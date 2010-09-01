@@ -820,7 +820,7 @@ operator|&
 name|info
 argument_list|)
 expr_stmt|;
-name|_thr_cancel_enter_defer
+name|_thr_cancel_enter2
 argument_list|(
 name|curthread
 argument_list|,
@@ -852,7 +852,7 @@ name|cond
 operator|=
 name|NULL
 expr_stmt|;
-name|_thr_cancel_leave_defer
+name|_thr_cancel_leave
 argument_list|(
 name|curthread
 argument_list|,

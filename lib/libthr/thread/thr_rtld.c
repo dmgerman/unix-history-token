@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rtld_lock.h"
 end_include
 
@@ -481,7 +487,7 @@ operator|*
 operator|)
 name|lock
 expr_stmt|;
-name|_thr_signal_block
+name|THR_CRITICAL_ENTER
 argument_list|(
 name|curthread
 argument_list|)
@@ -581,7 +587,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|curthread
 operator|->
 name|rdlock_count
@@ -592,15 +597,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|_thr_signal_unblock
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|RESTORE_ERRNO
 argument_list|()
@@ -695,6 +691,21 @@ expr_stmt|;
 comment|/* force to resolve errno() PLT */
 name|__error
 argument_list|()
+expr_stmt|;
+comment|/* force to resolve memcpy PLT */
+name|memcpy
+argument_list|(
+operator|&
+name|dummy
+argument_list|,
+operator|&
+name|dummy
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dummy
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|li
 operator|.
