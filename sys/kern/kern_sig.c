@@ -11155,6 +11155,7 @@ operator|==
 name|SIGKILL
 condition|)
 block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
 if|if
 condition|(
 name|p
@@ -11185,6 +11186,7 @@ operator|&
 name|SA_CONT
 condition|)
 block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
 if|if
 condition|(
 name|p
@@ -11329,6 +11331,7 @@ operator|&
 name|SA_STOP
 condition|)
 block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
 if|if
 condition|(
 name|p
