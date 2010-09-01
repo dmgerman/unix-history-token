@@ -10016,9 +10016,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|vprint
 argument_list|(
 literal|"vputx: negative ref count"
@@ -10026,8 +10023,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"vputx: negative ref cnt"
