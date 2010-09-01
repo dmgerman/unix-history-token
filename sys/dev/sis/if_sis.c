@@ -8595,7 +8595,7 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* 		 * Short Cable Receive Errors (MP21.E)  		 */
+comment|/* 		 * Short Cable Receive Errors (MP21.E) 		 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
