@@ -31,7 +31,14 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_UMUTEX
-value|{0,0, {0,0},{0,0,0,0}}
+value|{0,0,{0,0},{0,0,0,0}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_URWLOCK
+value|{0,0,0,0,{0,0,0,0}}
 end_define
 
 begin_decl_stmt
@@ -129,6 +136,19 @@ expr|struct
 name|umutex
 operator|*
 name|mtx
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_urwlock_init
+argument_list|(
+expr|struct
+name|urwlock
+operator|*
+name|rwl
 argument_list|)
 name|__hidden
 decl_stmt|;

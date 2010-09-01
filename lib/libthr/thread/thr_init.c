@@ -207,10 +207,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|umutex
+name|urwlock
 name|_thr_atfork_lock
 init|=
-name|DEFAULT_UMUTEX
+name|DEFAULT_URWLOCK
 decl_stmt|;
 end_decl_stmt
 
@@ -1967,7 +1967,7 @@ operator|&
 name|_keytable_lock
 argument_list|)
 expr_stmt|;
-name|_thr_umutex_init
+name|_thr_urwlock_init
 argument_list|(
 operator|&
 name|_thr_atfork_lock

@@ -438,6 +438,9 @@ decl_stmt|;
 name|int
 name|m_yieldloops
 decl_stmt|;
+name|int
+name|m_private
+decl_stmt|;
 comment|/* 	 * Link for all mutexes a thread currently owns. 	 */
 name|TAILQ_ENTRY
 argument_list|(
@@ -1605,7 +1608,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|umutex
+name|urwlock
 name|_thr_atfork_lock
 name|__hidden
 decl_stmt|;

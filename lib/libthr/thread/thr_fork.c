@@ -179,10 +179,8 @@ name|child
 operator|=
 name|child
 expr_stmt|;
-name|THR_UMUTEX_LOCK
+name|_thr_rwl_rdlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
@@ -197,10 +195,8 @@ argument_list|,
 name|qe
 argument_list|)
 expr_stmt|;
-name|THR_UMUTEX_UNLOCK
+name|_thr_rwl_unlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
@@ -244,10 +240,8 @@ operator|=
 name|_get_curthread
 argument_list|()
 expr_stmt|;
-name|THR_UMUTEX_LOCK
+name|_thr_rwl_wrlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
@@ -310,10 +304,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|THR_UMUTEX_UNLOCK
+name|_thr_rwl_unlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
@@ -399,10 +391,8 @@ operator|=
 name|_get_curthread
 argument_list|()
 expr_stmt|;
-name|THR_UMUTEX_LOCK
+name|_thr_rwl_rdlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
@@ -433,6 +423,15 @@ name|prepare
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * Block all signals until we reach a safe point. 	 */
+name|_thr_signal_block
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|_thr_signal_prefork
+argument_list|()
+expr_stmt|;
 comment|/* 	 * All bets are off as to what should happen soon if the parent 	 * process was not so kindly as to set up pthread fork hooks to 	 * relinquish all running threads. 	 */
 if|if
 condition|(
@@ -462,15 +461,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Block all signals until we reach a safe point. 	 */
-name|_thr_signal_block
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|_thr_signal_prefork
-argument_list|()
-expr_stmt|;
 comment|/* Fork a new process: */
 if|if
 condition|(
@@ -532,10 +522,9 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|_thr_umutex_init
+name|_mutex_fork
 argument_list|(
-operator|&
-name|_thr_atfork_lock
+name|curthread
 argument_list|)
 expr_stmt|;
 name|_thr_signal_postfork_child
@@ -559,21 +548,17 @@ comment|/* reinitialize libc spinlocks. */
 name|_thr_spinlock_init
 argument_list|()
 expr_stmt|;
-name|_mutex_fork
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* reinitalize library. */
 name|_libpthread_init
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* Ready to continue, unblock signals. */
-name|_thr_signal_unblock
+comment|/* atfork is reinitializeded by _libpthread_init()! */
+name|_thr_rwl_rdlock
 argument_list|(
-name|curthread
+operator|&
+name|_thr_atfork_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -593,6 +578,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Ready to continue, unblock signals. */
+name|_thr_signal_unblock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Run down atfork child handlers. */
 name|TAILQ_FOREACH
 argument_list|(
@@ -617,6 +608,12 @@ name|child
 argument_list|()
 expr_stmt|;
 block|}
+name|_thr_rwlock_unlock
+argument_list|(
+operator|&
+name|_thr_atfork_lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -627,12 +624,6 @@ name|errno
 expr_stmt|;
 name|_thr_signal_postfork
 argument_list|()
-expr_stmt|;
-comment|/* Ready to continue, unblock signals. */
-name|_thr_signal_unblock
-argument_list|(
-name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -648,6 +639,12 @@ name|_malloc_postfork
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Ready to continue, unblock signals. */
+name|_thr_signal_unblock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Run down atfork parent handlers. */
 name|TAILQ_FOREACH
 argument_list|(
@@ -672,10 +669,8 @@ name|parent
 argument_list|()
 expr_stmt|;
 block|}
-name|THR_UMUTEX_UNLOCK
+name|_thr_rwlock_unlock
 argument_list|(
-name|curthread
-argument_list|,
 operator|&
 name|_thr_atfork_lock
 argument_list|)
