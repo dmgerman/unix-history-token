@@ -5769,7 +5769,7 @@ directive|ifdef
 name|DEVICE_POLLING
 comment|/*********************************************************************  *  *  Legacy polling routine    *  *********************************************************************/
 specifier|static
-name|int
+name|void
 name|lem_poll
 parameter_list|(
 name|struct
@@ -5824,11 +5824,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rx_done
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -5945,11 +5941,6 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rx_done
-operator|)
-return|;
 block|}
 endif|#
 directive|endif
