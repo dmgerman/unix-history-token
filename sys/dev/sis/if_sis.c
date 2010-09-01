@@ -1143,7 +1143,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1287,7 +1287,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -1324,7 +1324,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -1593,7 +1593,7 @@ block|{
 name|device_t
 name|bridge
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|reg
 decl_stmt|;
 name|int
@@ -1741,7 +1741,7 @@ name|caddr_t
 name|dest
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|filtsave
 decl_stmt|,
 name|csrsave
@@ -1807,7 +1807,7 @@ argument_list|)
 expr_stmt|;
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|dest
@@ -1834,7 +1834,7 @@ argument_list|)
 expr_stmt|;
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|dest
@@ -1861,7 +1861,7 @@ argument_list|)
 expr_stmt|;
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|dest
@@ -3178,7 +3178,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 init|=
 literal|0
@@ -3430,7 +3430,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 decl_stmt|,
 name|i
@@ -3439,7 +3439,7 @@ name|n
 decl_stmt|,
 name|ctl
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|hashes
 index|[
 literal|16
@@ -4229,7 +4229,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * Reading the MAC address out of the EEPROM on 		 * the NatSemi chip takes a bit more work than 		 * you'd expect. The address spans 4 16-bit words, 		 * with the first word containing only a single bit. 		 * You have to shift everything over one bit to 		 * get it aligned properly. Also, the bits are 		 * stored backwards (the LSB is really the MSB, 		 * and so on) so you have to reverse them in order 		 * to get the MAC address into the form we want. 		 * Why? Who the hell knows. 		 */
 block|{
-name|u_int16_t
+name|uint16_t
 name|tmp
 index|[
 literal|4
@@ -7696,7 +7696,7 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 comment|/* Reading the ISR register clears all interrupts. */
@@ -7802,7 +7802,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 name|sc
@@ -8841,7 +8841,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -8873,7 +8873,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -8905,7 +8905,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -8940,7 +8940,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -8972,7 +8972,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
@@ -9004,7 +9004,7 @@ name|SIS_RXFILT_DATA
 argument_list|,
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|IF_LLADDR
