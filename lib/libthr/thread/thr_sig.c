@@ -1781,10 +1781,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * called from rtld with rtld_lock locked, because rtld_lock is  * a critical region, so all signals have already beeen masked.  */
-end_comment
-
 begin_function
 name|void
 name|_thr_sigact_unload
@@ -1795,6 +1791,14 @@ modifier|*
 name|phdr_info
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|struct
 name|urwlock
 modifier|*
@@ -1821,6 +1825,11 @@ function_decl|;
 name|int
 name|sig
 decl_stmt|;
+name|_thr_signal_block
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|sig
@@ -1965,6 +1974,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|_thr_signal_unblock
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
