@@ -570,7 +570,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0600
+literal|0660
 argument_list|,
 literal|"dtrace/helper"
 argument_list|)
