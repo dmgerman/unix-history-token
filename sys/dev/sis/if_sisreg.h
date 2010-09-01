@@ -2244,6 +2244,9 @@ decl_stmt|;
 name|int
 name|sis_watchdog_timer
 decl_stmt|;
+name|int
+name|sis_if_flags
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
