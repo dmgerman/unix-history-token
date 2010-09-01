@@ -4900,7 +4900,7 @@ name|ata_ahci_wait_ready
 argument_list|(
 name|dev
 argument_list|,
-literal|10000
+literal|15000
 argument_list|)
 condition|)
 block|{
