@@ -154,6 +154,10 @@ name|last_dest
 operator|+
 name|last_len
 operator|)
+operator|&&
+name|dest
+operator|>=
+name|last_dest
 condition|)
 block|{
 name|nlen
