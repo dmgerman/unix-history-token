@@ -7767,6 +7767,9 @@ name|SRQ_OURSELF
 operator||
 name|SRQ_YIELDING
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 if|if
 condition|(
 name|THREAD_CAN_MIGRATE
@@ -7795,6 +7798,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ts
