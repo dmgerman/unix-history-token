@@ -346,6 +346,23 @@ name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Optional fixed power mode support */
+name|void
+function_decl|(
+modifier|*
+name|get_power_mode
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|int8_t
+modifier|*
+name|pmode
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
