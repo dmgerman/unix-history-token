@@ -3745,7 +3745,7 @@ default|default:
 comment|/* Error */
 name|DPRINTFN
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"error=%s\n"
 argument_list|,
