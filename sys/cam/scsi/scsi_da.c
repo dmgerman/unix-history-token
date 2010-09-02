@@ -5201,6 +5201,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|bp
+operator|->
+name|bio_flags
+operator|&
+name|BIO_ORDERED
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
 name|softc
 operator|->
 name|flags
@@ -5307,7 +5317,6 @@ argument_list|,
 comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 name|da_default_timeout
 operator|*
 literal|1000
@@ -5317,6 +5326,7 @@ break|break;
 case|case
 name|BIO_FLUSH
 case|:
+comment|/* 				 * BIO_FLUSH doesn't currently communicate 				 * range data, so we synchronize the cache 				 * over the whole disk.  We also force 				 * ordered tag semantics the flush applies 				 * to all previously queued I/O. 				 */
 name|scsi_synchronize_cache
 argument_list|(
 operator|&
@@ -5330,18 +5340,16 @@ argument_list|,
 comment|/*cbfcnp*/
 name|dadone
 argument_list|,
-name|MSG_SIMPLE_Q_TAG
+name|MSG_ORDERED_Q_TAG
 argument_list|,
 comment|/*begin_lba*/
 literal|0
 argument_list|,
-comment|/* Cover the whole disk */
 comment|/*lb_count*/
 literal|0
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 name|da_default_timeout
 operator|*
 literal|1000

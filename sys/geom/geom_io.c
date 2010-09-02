@@ -1095,6 +1095,12 @@ name|BIO_FLUSH
 expr_stmt|;
 name|bp
 operator|->
+name|bio_flags
+operator||=
+name|BIO_ORDERED
+expr_stmt|;
+name|bp
+operator|->
 name|bio_done
 operator|=
 name|NULL
