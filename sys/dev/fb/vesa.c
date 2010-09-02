@@ -368,7 +368,7 @@ specifier|static
 name|int
 name|vesa_shadow_rom
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +397,7 @@ argument_list|,
 operator|&
 name|vesa_shadow_rom
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Enable video BIOS shadow"
 argument_list|)
