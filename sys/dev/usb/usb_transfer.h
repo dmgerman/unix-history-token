@@ -476,9 +476,9 @@ name|usb_timeout_t
 name|usbd_get_dma_delay
 parameter_list|(
 name|struct
-name|usb_bus
+name|usb_device
 modifier|*
-name|bus
+name|udev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -17090,9 +17090,9 @@ name|void
 name|ehci_get_dma_delay
 parameter_list|(
 name|struct
-name|usb_bus
+name|usb_device
 modifier|*
-name|bus
+name|udev
 parameter_list|,
 name|uint32_t
 modifier|*

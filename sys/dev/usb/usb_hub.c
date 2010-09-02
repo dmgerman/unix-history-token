@@ -7756,10 +7756,14 @@ operator|=
 name|usbd_get_dma_delay
 argument_list|(
 name|udev
-operator|->
-name|bus
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|!=
+literal|0
+condition|)
 name|usb_pause_mtx
 argument_list|(
 name|NULL
