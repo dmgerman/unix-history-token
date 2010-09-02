@@ -8780,7 +8780,7 @@ name|sc
 operator|->
 name|sis_txdesc
 index|[
-name|frag
+name|prod
 index|]
 operator|.
 name|tx_dmamap
@@ -8789,7 +8789,7 @@ name|sc
 operator|->
 name|sis_txdesc
 index|[
-name|frag
+name|prod
 index|]
 operator|.
 name|tx_dmamap
