@@ -2389,7 +2389,7 @@ init|;
 operator|(
 name|i
 operator|<
-name|UMS_BUTTONS_MAX
+name|UMS_BUTTON_MAX
 operator|)
 operator|&&
 operator|(
