@@ -3029,6 +3029,10 @@ define|#
 directive|define
 name|ATA_DMA_BEFORE_CMD
 value|0x100
+define|#
+directive|define
+name|ATA_KNOWN_PRESENCE
+value|0x200
 name|int
 name|pm_level
 decl_stmt|;
