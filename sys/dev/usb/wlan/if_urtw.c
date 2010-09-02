@@ -13203,15 +13203,6 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-init|=
-name|vap
-operator|->
-name|iv_bss
-decl_stmt|;
-name|struct
 name|ieee80211com
 modifier|*
 name|ic
@@ -13322,6 +13313,20 @@ break|break;
 case|case
 name|IEEE80211_S_RUN
 case|:
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
+name|ni
+operator|=
+name|ieee80211_ref_node
+argument_list|(
+name|vap
+operator|->
+name|iv_bss
+argument_list|)
+expr_stmt|;
 comment|/* setting bssid.  */
 name|urtw_write32_m
 argument_list|(
@@ -13431,6 +13436,11 @@ argument_list|,
 literal|"could not control LED (%d)\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
 break|break;
