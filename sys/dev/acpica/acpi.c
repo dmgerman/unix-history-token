@@ -7882,7 +7882,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
-comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      * 3. PCI Link Devices      * 100000. CPUs      */
+comment|/*      * 1. CPUs      * 2. I/O port and memory system resource holders      * 3. Embedded controllers (to handle early accesses)      * 4. PCI Link Devices      */
 name|AcpiGetType
 argument_list|(
 name|handle
@@ -8138,7 +8138,7 @@ operator|!=
 name|NULL
 condition|)
 break|break;
-comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources).  CPU devices have a very high order to 	     * ensure they are probed after other devices. 	     */
+comment|/*  	     * Create a placeholder device for this node.  Sort the 	     * placeholder so that the probe/attach passes will run 	     * breadth-first.  Orders less than ACPI_DEV_BASE_ORDER 	     * are reserved for special objects (i.e., system 	     * resources). 	     */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
