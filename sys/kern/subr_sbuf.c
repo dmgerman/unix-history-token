@@ -545,6 +545,12 @@ begin_comment
 comment|/* _KERNEL&& INVARIANTS */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -566,6 +572,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
