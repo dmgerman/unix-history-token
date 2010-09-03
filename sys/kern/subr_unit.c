@@ -373,6 +373,22 @@ name|foo
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WITNESS_WARN
+parameter_list|(
+name|flags
+parameter_list|,
+name|lock
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|(void)0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1035,7 +1051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as paramters.  */
+comment|/*  * Allocate a new unrheader set.  *  * Highest and lowest valid values given as parameters.  */
 end_comment
 
 begin_function
@@ -1064,11 +1080,15 @@ decl_stmt|;
 name|KASSERT
 argument_list|(
 name|low
+operator|>=
+literal|0
+operator|&&
+name|low
 operator|<=
 name|high
 argument_list|,
 operator|(
-literal|"UNR: use error: new_unrhdr(%u, %u)"
+literal|"UNR: use error: new_unrhdr(%d, %d)"
 operator|,
 name|low
 operator|,
@@ -3727,7 +3747,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unr) %d\n"
+literal|"sizeof(struct unr) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3740,7 +3760,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unrb) %d\n"
+literal|"sizeof(struct unrb) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3753,7 +3773,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sizeof(struct unrhdr) %d\n"
+literal|"sizeof(struct unrhdr) %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
