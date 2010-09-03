@@ -360,6 +360,10 @@ name|ps_samples_indeterminable
 decl_stmt|;
 comment|/* #samples in indeterminable images */
 name|int
+name|ps_samples_unknown_function
+decl_stmt|;
+comment|/* #samples with unknown function at offset */
+name|int
 name|ps_callchain_dubious_frames
 decl_stmt|;
 comment|/* #dubious frame pointers seen */
