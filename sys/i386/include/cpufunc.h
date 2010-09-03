@@ -1373,16 +1373,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rfs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%fs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%fs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1415,16 +1415,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rgs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%gs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%gs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1478,16 +1478,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rss
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%ss,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%ss,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1523,11 +1523,11 @@ name|__inline
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%fs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%fs" : : "rm" (sel));
 block|}
 end_function
 
@@ -1537,11 +1537,11 @@ name|__inline
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%gs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
@@ -2323,7 +2323,7 @@ begin_function_decl
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;
@@ -2333,7 +2333,7 @@ begin_function_decl
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;

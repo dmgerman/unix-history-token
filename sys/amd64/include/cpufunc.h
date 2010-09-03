@@ -1306,16 +1306,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rfs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%fs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%fs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1327,16 +1327,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rgs
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%gs,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%gs,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1348,16 +1348,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
+name|u_short
 name|rss
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|u_short
 name|sel
 decl_stmt|;
-asm|__asm __volatile("mov %%ss,%0" : "=rm" (sel));
+asm|__asm __volatile("movw %%ss,%0" : "=rm" (sel));
 return|return
 operator|(
 name|sel
@@ -1372,11 +1372,11 @@ name|__inline
 name|void
 name|load_ds
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%ds" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%ds" : : "rm" (sel));
 block|}
 end_function
 
@@ -1386,11 +1386,11 @@ name|__inline
 name|void
 name|load_es
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%es" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%es" : : "rm" (sel));
 block|}
 end_function
 
@@ -1483,12 +1483,12 @@ name|__inline
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
 comment|/* Preserve the fsbase value across the selector load */
-asm|__asm __volatile("rdmsr; mov %0,%%fs; wrmsr"
+asm|__asm __volatile("rdmsr; movw %0,%%fs; wrmsr"
 block|: :
 literal|"rm"
 operator|(
@@ -1532,12 +1532,12 @@ name|__inline
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
 comment|/* 	 * Preserve the gsbase value across the selector load. 	 * Note that we have to disable interrupts because the gsbase 	 * being trashed happens to be the kernel gsbase at the time. 	 */
-asm|__asm __volatile("pushfq; cli; rdmsr; mov %0,%%gs; wrmsr; popfq"
+asm|__asm __volatile("pushfq; cli; rdmsr; movw %0,%%gs; wrmsr; popfq"
 block|: :
 literal|"rm"
 operator|(
@@ -1572,11 +1572,11 @@ name|__inline
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%fs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%fs" : : "rm" (sel));
 block|}
 end_function
 
@@ -1586,11 +1586,11 @@ name|__inline
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 block|{
-asm|__asm __volatile("mov %0,%%gs" : : "rm" (sel));
+asm|__asm __volatile("movw %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
@@ -2321,7 +2321,7 @@ begin_function_decl
 name|void
 name|load_fs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;
@@ -2331,7 +2331,7 @@ begin_function_decl
 name|void
 name|load_gs
 parameter_list|(
-name|u_int
+name|u_short
 name|sel
 parameter_list|)
 function_decl|;
