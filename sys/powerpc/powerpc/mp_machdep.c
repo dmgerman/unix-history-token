@@ -50,6 +50,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -202,6 +214,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ap_boot_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|machdep_ap_bootstrap
@@ -249,13 +269,15 @@ name|ap_timebase
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("mtdec %0" :: "r"(ap_decr));
-name|atomic_add_int
+comment|/* Serialize console output and AP count increment */
+name|mtx_lock_spin
 argument_list|(
 operator|&
-name|ap_awake
-argument_list|,
-literal|1
+name|ap_boot_mtx
 argument_list|)
+expr_stmt|;
+name|ap_awake
+operator|++
 expr_stmt|;
 name|printf
 argument_list|(
@@ -265,6 +287,12 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Initialize curthread */
@@ -754,6 +782,18 @@ operator|<=
 literal|1
 condition|)
 return|return;
+name|mtx_init
+argument_list|(
+operator|&
+name|ap_boot_mtx
+argument_list|,
+literal|"ap boot"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|cpus
 operator|=
 literal|0
