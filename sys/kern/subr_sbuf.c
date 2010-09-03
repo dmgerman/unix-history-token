@@ -619,7 +619,7 @@ block|}
 name|KASSERT
 argument_list|(
 name|newsize
-operator|<
+operator|>=
 name|size
 argument_list|,
 operator|(
