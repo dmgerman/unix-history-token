@@ -9190,8 +9190,13 @@ name|tx_dmamap
 operator|=
 name|map
 expr_stmt|;
-name|txd
+name|sc
 operator|->
+name|sis_txdesc
+index|[
+name|prod
+index|]
+operator|.
 name|tx_m
 operator|=
 operator|*
