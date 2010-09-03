@@ -536,7 +536,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|CTASSERT
 end_ifdef
 
 begin_expr_stmt
