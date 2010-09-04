@@ -4834,7 +4834,7 @@ if|if
 condition|(
 name|mode
 operator|==
-literal|0
+name|FORK_FG
 condition|)
 block|{
 comment|/* argument to fork */
@@ -4881,7 +4881,7 @@ if|if
 condition|(
 name|mode
 operator|==
-literal|2
+name|FORK_NOJOB
 condition|)
 block|{
 name|backcmd
