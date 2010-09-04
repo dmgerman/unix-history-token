@@ -58,7 +58,6 @@ comment|/*  * Load an ELF section table and create a list of Elf_Scn structures.
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|_libelf_load_scn
 parameter_list|(
