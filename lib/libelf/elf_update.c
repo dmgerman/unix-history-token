@@ -1666,7 +1666,7 @@ name|EC
 parameter_list|,
 name|V
 parameter_list|)
-value|do {					\ 		(E)->e_ident[EI_MAG0] = ELFMAG0;			\ 		(E)->e_ident[EI_MAG1] = ELFMAG1;			\ 		(E)->e_ident[EI_MAG2] = ELFMAG2;			\ 		(E)->e_ident[EI_MAG3] = ELFMAG3;			\ 		(E)->e_ident[EI_CLASS] = (EC);				\ 		(E)->e_ident[EI_VERSION] = (V);				\ 		(E)->e_ehsize = _libelf_fsize(ELF_T_EHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_phentsize = _libelf_fsize(ELF_T_PHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_shentsize = _libelf_fsize(ELF_T_SHDR, (EC), (V),	\ 		    (size_t) 1);					\ 	} while (0)
+value|do {					\ 		(E)->e_ident[EI_MAG0] = ELFMAG0;			\ 		(E)->e_ident[EI_MAG1] = ELFMAG1;			\ 		(E)->e_ident[EI_MAG2] = ELFMAG2;			\ 		(E)->e_ident[EI_MAG3] = ELFMAG3;			\ 		(E)->e_ident[EI_CLASS] = (EC);				\ 		(E)->e_ident[EI_VERSION] = (V);				\ 		(E)->e_ehsize = _libelf_fsize(ELF_T_EHDR, (EC), (V),	\ 		    (size_t) 1);					\ 		(E)->e_phentsize = (phnum == 0) ? 0 : _libelf_fsize(	\ 		    ELF_T_PHDR, (EC), (V), (size_t) 1);			\ 		(E)->e_shentsize = _libelf_fsize(ELF_T_SHDR, (EC), (V),	\ 		    (size_t) 1);					\ 	} while (0)
 if|if
 condition|(
 name|ec
@@ -2089,6 +2089,8 @@ name|sh_type
 decl_stmt|;
 name|uint64_t
 name|sh_off
+decl_stmt|,
+name|sh_size
 decl_stmt|;
 name|int
 name|elftype
@@ -2111,6 +2113,7 @@ operator|)
 operator|==
 name|ELFCLASS32
 condition|)
+block|{
 name|sh_type
 operator|=
 name|s
@@ -2121,7 +2124,22 @@ name|s_shdr32
 operator|.
 name|sh_type
 expr_stmt|;
+name|sh_size
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|s
+operator|->
+name|s_shdr
+operator|.
+name|s_shdr32
+operator|.
+name|sh_size
+expr_stmt|;
+block|}
 else|else
+block|{
 name|sh_type
 operator|=
 name|s
@@ -2132,6 +2150,17 @@ name|s_shdr64
 operator|.
 name|sh_type
 expr_stmt|;
+name|sh_size
+operator|=
+name|s
+operator|->
+name|s_shdr
+operator|.
+name|s_shdr64
+operator|.
+name|sh_size
+expr_stmt|;
+block|}
 comment|/* 	 * Ignore sections that do not allocate space in the file. 	 */
 if|if
 condition|(
@@ -2142,6 +2171,10 @@ operator|||
 name|sh_type
 operator|==
 name|SHT_NULL
+operator|||
+name|sh_size
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
