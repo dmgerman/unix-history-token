@@ -1238,7 +1238,7 @@ literal|"ICH10"
 block|}
 block|,
 block|{
-literal|0x3b208086
+name|ATA_5Series_S1
 block|,
 literal|0
 block|,
@@ -1248,11 +1248,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b218086
+name|ATA_5Series_S2
 block|,
 literal|0
 block|,
@@ -1262,11 +1262,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b228086
+name|ATA_5Series_AH1
 block|,
 literal|0
 block|,
@@ -1276,11 +1276,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b238086
+name|ATA_5Series_AH2
 block|,
 literal|0
 block|,
@@ -1290,11 +1290,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b248086
+name|ATA_5Series_R1
 block|,
 literal|0
 block|,
@@ -1304,11 +1304,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b258086
+name|ATA_5Series_S3
 block|,
 literal|0
 block|,
@@ -1318,11 +1318,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b268086
+name|ATA_5Series_S4
 block|,
 literal|0
 block|,
@@ -1332,11 +1332,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b278086
+name|ATA_5Series_AH3
 block|,
 literal|0
 block|,
@@ -1346,11 +1346,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b288086
+name|ATA_5Series_R2
 block|,
 literal|0
 block|,
@@ -1360,11 +1360,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b298086
+name|ATA_5Series_S5
 block|,
 literal|0
 block|,
@@ -1374,11 +1374,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b2a8086
+name|ATA_5Series_S6
 block|,
 literal|0
 block|,
@@ -1388,11 +1388,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b2b8086
+name|ATA_5Series_AH4
 block|,
 literal|0
 block|,
@@ -1402,11 +1402,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"5 Series/3400 Series PCH"
 block|}
 block|,
 block|{
-literal|0x3b2c8086
+name|ATA_CPT_S1
 block|,
 literal|0
 block|,
@@ -1416,11 +1416,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"Cougar Point"
 block|}
 block|,
 block|{
-literal|0x3b2d8086
+name|ATA_CPT_S2
 block|,
 literal|0
 block|,
@@ -1430,11 +1430,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"Cougar Point"
 block|}
 block|,
 block|{
-literal|0x3b2e8086
+name|ATA_CPT_AH1
 block|,
 literal|0
 block|,
@@ -1444,11 +1444,11 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"Cougar Point"
 block|}
 block|,
 block|{
-literal|0x3b2f8086
+name|ATA_CPT_AH2
 block|,
 literal|0
 block|,
@@ -1458,7 +1458,63 @@ literal|0
 block|,
 name|ATA_SA300
 block|,
-literal|"PCH"
+literal|"Cougar Point"
+block|}
+block|,
+block|{
+name|ATA_CPT_R1
+block|,
+literal|0
+block|,
+name|INTEL_AHCI
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"Cougar Point"
+block|}
+block|,
+block|{
+name|ATA_CPT_R2
+block|,
+literal|0
+block|,
+name|INTEL_AHCI
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"Cougar Point"
+block|}
+block|,
+block|{
+name|ATA_CPT_S3
+block|,
+literal|0
+block|,
+name|INTEL_AHCI
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"Cougar Point"
+block|}
+block|,
+block|{
+name|ATA_CPT_S4
+block|,
+literal|0
+block|,
+name|INTEL_AHCI
+block|,
+literal|0
+block|,
+name|ATA_SA300
+block|,
+literal|"Cougar Point"
 block|}
 block|,
 block|{
