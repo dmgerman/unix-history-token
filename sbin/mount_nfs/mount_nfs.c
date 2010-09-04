@@ -5086,6 +5086,10 @@ name|enum
 name|mountmode
 name|trymntmode
 decl_stmt|;
+name|sotype
+operator|=
+literal|0
+expr_stmt|;
 name|trymntmode
 operator|=
 name|mountmode
