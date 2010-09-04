@@ -1896,22 +1896,14 @@ operator|)
 operator|->
 name|bus_dev
 argument_list|,
-literal|"Request %d timed out! d = %p, c = %p\n"
+literal|"Request %d timed out! d = %llu, c = %llu\n"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|my_req
 operator|->
 name|deadline
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|current_time
 argument_list|)
 expr_stmt|;
