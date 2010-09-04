@@ -101,7 +101,7 @@ name|Elf_Scn
 modifier|*
 name|scn
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|xlator
@@ -110,6 +110,9 @@ parameter_list|(
 name|char
 modifier|*
 name|_d
+parameter_list|,
+name|size_t
+name|_dsz
 parameter_list|,
 name|char
 modifier|*
@@ -394,6 +397,13 @@ operator|&
 name|scn
 operator|->
 name|s_shdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|scn
+operator|->
+name|s_shdr
+argument_list|)
 argument_list|,
 name|src
 argument_list|,

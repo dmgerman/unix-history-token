@@ -154,6 +154,9 @@ name|ELF_T_WORD
 block|,
 name|ELF_T_XWORD
 block|,
+name|ELF_T_GNUHASH
+block|,
+comment|/* GNU style hash tables. */
 name|ELF_T_NUM
 block|}
 name|Elf_Type
@@ -171,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|ELF_T_LAST
-value|ELF_T_XWORD
+value|ELF_T_GNUHASH
 end_define
 
 begin_comment

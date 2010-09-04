@@ -88,7 +88,7 @@ decl_stmt|,
 modifier|*
 name|phdr
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|xlator
@@ -97,6 +97,9 @@ parameter_list|(
 name|char
 modifier|*
 name|_d
+parameter_list|,
+name|size_t
+name|_dsz
 parameter_list|,
 name|char
 modifier|*
@@ -423,6 +426,10 @@ name|xlator
 call|)
 argument_list|(
 name|phdr
+argument_list|,
+name|phnum
+operator|*
+name|msz
 argument_list|,
 name|e
 operator|->

@@ -93,6 +93,14 @@ parameter_list|)
 value|{					\ 		.a32 = 0,					\ 		.a64 = __alignof__(Elf64_##V)			\ 	}
 end_define
 
+begin_define
+define|#
+directive|define
+name|MALIGN_WORD
+parameter_list|()
+value|{					\ 		.a32 = __alignof__(int32_t),			\ 		.a64 = __alignof__(int64_t)			\ 	    }
+end_define
+
 begin_else
 else|#
 directive|else
@@ -371,8 +379,22 @@ index|]
 operator|=
 name|MALIGN64
 argument_list|(
-argument|Xword
+name|Xword
 argument_list|)
+block|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800062
+index|[
+name|ELF_T_GNUHASH
+index|]
+operator|=
+name|MALIGN_WORD
+argument_list|()
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -735,6 +757,24 @@ literal|0
 argument_list|,
 literal|8
 argument_list|)
+block|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800062
+index|[
+name|ELF_T_GNUHASH
+index|]
+operator|=
+name|FALIGN
+argument_list|(
+literal|4
+argument_list|,
+literal|8
+argument_list|)
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -682,7 +682,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|void
+name|int
 argument_list|(
 argument|*_libelf_get_translator(Elf_Type _t, int _direction, int _elfclass)
 argument_list|)
@@ -693,6 +693,9 @@ operator|(
 name|char
 operator|*
 name|_dst
+operator|,
+name|size_t
+name|dsz
 operator|,
 name|char
 operator|*
