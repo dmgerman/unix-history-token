@@ -1082,7 +1082,6 @@ name|s_shdr64
 operator|.
 name|sh_type
 expr_stmt|;
-comment|/* XXX Do we need the 'size' field of an SHT_NOBITS section */
 if|if
 condition|(
 name|sh_type
