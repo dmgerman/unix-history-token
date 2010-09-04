@@ -5024,11 +5024,16 @@ name|sin_addr
 operator|.
 name|s_addr
 condition|)
+block|{
+name|IN_IFADDR_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EEXIST
 operator|)
 return|;
+block|}
 else|else
 break|break;
 endif|#
