@@ -2740,6 +2740,12 @@ operator|->
 name|d_buf
 operator|==
 name|NULL
+operator|&&
+name|sdata
+operator|->
+name|d_buf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ddata
