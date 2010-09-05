@@ -1125,6 +1125,13 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|off
 operator|=
 literal|0
