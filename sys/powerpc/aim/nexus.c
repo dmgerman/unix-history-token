@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus_subr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -588,6 +594,13 @@ argument_list|(
 name|bus_print_child
 argument_list|,
 name|bus_generic_print_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_pnpinfo_str
+argument_list|,
+name|ofw_bus_gen_child_pnpinfo_str
 argument_list|)
 block|,
 name|DEVMETHOD
