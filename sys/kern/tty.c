@@ -8105,6 +8105,8 @@ name|fdp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ref
 decl_stmt|;
 comment|/* Validate the file descriptor. */
 if|if
@@ -8199,6 +8201,9 @@ name|f_vnode
 argument_list|,
 operator|&
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -8368,6 +8373,8 @@ label|:
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|done1

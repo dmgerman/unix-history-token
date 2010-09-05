@@ -487,6 +487,9 @@ name|cdevsw
 modifier|*
 name|csw
 decl_stmt|;
+name|int
+name|ref
+decl_stmt|;
 comment|/* 	 * Offset should be page aligned. 	 */
 if|if
 condition|(
@@ -525,6 +528,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -587,6 +593,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -766,6 +774,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
@@ -923,6 +933,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|ref
+decl_stmt|,
 name|ret
 decl_stmt|;
 name|struct
@@ -982,6 +994,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -1055,6 +1070,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 comment|/* If "paddr" is a real page, perform a sanity check on "memattr". */

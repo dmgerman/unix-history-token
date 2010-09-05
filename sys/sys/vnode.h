@@ -692,6 +692,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VV_ETERNALDEV
+value|0x0008
+end_define
+
+begin_comment
+comment|/* device that is never destroyed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VV_CACHEDLABEL
 value|0x0010
 end_define

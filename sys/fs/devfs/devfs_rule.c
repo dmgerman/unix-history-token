@@ -2116,6 +2116,9 @@ name|cdevsw
 modifier|*
 name|dsw
 decl_stmt|;
+name|int
+name|ref
+decl_stmt|;
 name|dev
 operator|=
 name|devfs_rule_getdev
@@ -2149,6 +2152,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -2180,6 +2186,8 @@ block|{
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 return|return
@@ -2191,6 +2199,8 @@ block|}
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 block|}

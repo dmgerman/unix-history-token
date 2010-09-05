@@ -80,6 +80,11 @@ name|si_flags
 decl_stmt|;
 define|#
 directive|define
+name|SI_ETERNAL
+value|0x0001
+comment|/* never destroyed */
+define|#
+directive|define
 name|SI_ALIAS
 value|0x0002
 comment|/* carrier of alias name */
@@ -1182,6 +1187,10 @@ name|struct
 name|cdev
 modifier|*
 name|_dev
+parameter_list|,
+name|int
+modifier|*
+name|_ref
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1202,6 +1211,10 @@ name|cdev
 modifier|*
 modifier|*
 name|devp
+parameter_list|,
+name|int
+modifier|*
+name|_ref
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1214,6 +1227,9 @@ name|struct
 name|cdev
 modifier|*
 name|_dev
+parameter_list|,
+name|int
+name|_ref
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1381,28 +1397,35 @@ begin_define
 define|#
 directive|define
 name|MAKEDEV_REF
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAKEDEV_WHTOUT
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAKEDEV_NOWAIT
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAKEDEV_WAITOK
-value|0x8
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKEDEV_ETERNAL
+value|0x10
 end_define
 
 begin_function_decl
@@ -1562,6 +1585,36 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAKEDEV_ETERNAL_KLD
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAKEDEV_ETERNAL_KLD
+value|MAKEDEV_ETERNAL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

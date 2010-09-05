@@ -12406,6 +12406,9 @@ name|bio
 modifier|*
 name|bip
 decl_stmt|;
+name|int
+name|ref
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -12550,6 +12553,9 @@ operator|=
 name|dev_refthread
 argument_list|(
 name|dev
+argument_list|,
+operator|&
+name|ref
 argument_list|)
 expr_stmt|;
 if|if
@@ -12596,6 +12602,8 @@ expr_stmt|;
 name|dev_relthread
 argument_list|(
 name|dev
+argument_list|,
+name|ref
 argument_list|)
 expr_stmt|;
 block|}
