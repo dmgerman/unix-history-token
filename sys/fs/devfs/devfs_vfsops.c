@@ -605,6 +605,8 @@ name|dm_rootdir
 argument_list|,
 name|mp
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|)

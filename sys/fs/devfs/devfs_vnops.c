@@ -1532,6 +1532,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|int
+name|lockmode
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -1646,7 +1649,7 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|lockmode
 operator||
 name|LK_INTERLOCK
 argument_list|,
@@ -1992,6 +1995,11 @@ operator|=
 name|VBAD
 expr_stmt|;
 block|}
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp
@@ -3765,6 +3773,8 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|nameiop
+decl_stmt|,
+name|dvplocked
 decl_stmt|;
 name|char
 name|specname
@@ -4003,6 +4013,13 @@ operator|(
 name|ENOENT
 operator|)
 return|;
+name|dvplocked
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
@@ -4020,6 +4037,12 @@ name|dvp
 operator|->
 name|v_mount
 argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
+operator|&
+name|LK_TYPE_MASK
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
@@ -4032,7 +4055,7 @@ name|vn_lock
 argument_list|(
 name|dvp
 argument_list|,
-name|LK_EXCLUSIVE
+name|dvplocked
 operator||
 name|LK_RETRY
 argument_list|)
@@ -4493,6 +4516,12 @@ name|dvp
 operator|->
 name|v_mount
 argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
+operator|&
+name|LK_TYPE_MASK
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
@@ -4773,6 +4802,8 @@ name|dvp
 operator|->
 name|v_mount
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
@@ -4852,6 +4883,8 @@ name|a_fp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|vlocked
 decl_stmt|;
 name|struct
 name|cdevsw
@@ -4920,6 +4953,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|vlocked
+operator|=
+name|VOP_ISLOCKED
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -5012,7 +5052,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|vlocked
 operator||
 name|LK_RETRY
 argument_list|)
@@ -5035,7 +5075,7 @@ if|#
 directive|if
 literal|0
 comment|/* /dev/console */
-block|KASSERT(fp != NULL, 	     ("Could not vnode bypass device on NULL fp"));
+block|KASSERT(fp != NULL, ("Could not vnode bypass device on NULL fp"));
 else|#
 directive|else
 if|if
@@ -7600,6 +7640,8 @@ operator|->
 name|a_dvp
 operator|->
 name|v_mount
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 name|ap
 operator|->
