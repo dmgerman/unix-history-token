@@ -199,8 +199,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|A_K_NKEYS
+name|A_K_DE
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|A_K_NKEYS
+value|7
 end_define
 
 begin_function_decl
