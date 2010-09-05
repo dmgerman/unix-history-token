@@ -126,20 +126,6 @@ name|zero_read
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NULL_MINOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZERO_MINOR
-value|12
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -467,7 +453,7 @@ argument_list|(
 operator|&
 name|null_cdevsw
 argument_list|,
-name|NULL_MINOR
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -485,7 +471,7 @@ argument_list|(
 operator|&
 name|zero_cdevsw
 argument_list|,
-name|ZERO_MINOR
+literal|0
 argument_list|,
 name|UID_ROOT
 argument_list|,
