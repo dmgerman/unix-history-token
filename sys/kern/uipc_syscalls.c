@@ -11133,11 +11133,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|use_rcvinfo
-init|=
-literal|1
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -11453,8 +11448,6 @@ name|uap
 operator|->
 name|flags
 argument_list|,
-name|use_rcvinfo
-argument_list|,
 name|u_sinfo
 argument_list|,
 name|td
@@ -11703,11 +11696,6 @@ modifier|*
 name|fp
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|use_rcvinfo
-init|=
-literal|1
 decl_stmt|;
 name|int
 name|error
@@ -12111,8 +12099,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|use_rcvinfo
 argument_list|,
 name|u_sinfo
 argument_list|,
