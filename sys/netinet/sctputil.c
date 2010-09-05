@@ -1976,8 +1976,12 @@ expr_stmt|;
 if|if
 condition|(
 name|inp
+operator|&&
+operator|(
+name|inp
 operator|->
 name|sctp_socket
+operator|)
 condition|)
 block|{
 name|sctp_clog
@@ -28926,6 +28930,14 @@ operator|->
 name|do_not_ref_stcb
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|control
+operator|->
+name|stcb
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
