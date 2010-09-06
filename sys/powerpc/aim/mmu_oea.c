@@ -518,6 +518,13 @@ name|moea_table_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|moea_vsid_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* tlbie instruction synchronization */
 end_comment
@@ -3929,6 +3936,21 @@ argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mtx_init
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|,
+literal|"VSID table"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7520,6 +7542,12 @@ operator|=
 name|pmap
 expr_stmt|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate some segment registers for this pmap. 	 */
 for|for
 control|(
@@ -7699,8 +7727,20 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"moea_pinit: out of segments"
@@ -8103,6 +8143,12 @@ argument_list|(
 literal|"moea_release"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|)
+expr_stmt|;
 name|idx
 operator|=
 name|VSID_TO_HASH
@@ -8142,6 +8188,12 @@ index|]
 operator|&=
 operator|~
 name|mask
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea_vsid_mutex
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
