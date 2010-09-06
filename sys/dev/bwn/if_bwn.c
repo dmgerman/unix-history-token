@@ -84228,7 +84228,7 @@ name|_y
 parameter_list|,
 name|_z
 parameter_list|)
-value|do {				\ 	int _t;								\ 	_t = _x - 11;							\ 	if (_t>= 0)							\ 		tmp[3] = (_y<< (31 - _x)) / (_z>> _t);		\ 	else								\ 		tmp[3] = (_y<< (31 - _x)) / (_z<< -_t);		\ } while (0)
+value|do {				\ 	int _t;								\ 	_t = _x - 11;							\ 	if (_t>= 0)							\ 		_v = (_y<< (31 - _x)) / (_z>> _t);			\ 	else								\ 		_v = (_y<< (31 - _x)) / (_z<< -_t);			\ } while (0)
 name|struct
 name|bwn_phy_lp_iq_est
 name|ie
