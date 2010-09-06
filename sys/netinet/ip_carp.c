@@ -12720,7 +12720,7 @@ name|carp
 argument_list|,
 name|carp_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_PROTO_DOMAIN
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
