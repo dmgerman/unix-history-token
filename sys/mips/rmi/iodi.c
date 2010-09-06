@@ -405,7 +405,7 @@ name|PIC_UART_0_IRQ
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -471,7 +471,7 @@ name|irq
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -515,7 +515,7 @@ name|PIC_USB_IRQ
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -561,7 +561,7 @@ name|PIC_PCMCIA_IRQ
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

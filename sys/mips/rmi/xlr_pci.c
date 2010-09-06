@@ -2069,7 +2069,7 @@ name|PIC_PCIX_IRQ
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2107,7 +2107,7 @@ name|xlrirq
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
