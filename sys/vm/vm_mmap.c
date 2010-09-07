@@ -2407,7 +2407,7 @@ operator|.
 name|pm_address
 operator|!=
 operator|(
-name|uintptr
+name|uintptr_t
 operator|)
 name|NULL
 condition|)
