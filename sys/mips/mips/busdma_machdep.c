@@ -1673,7 +1673,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*                          * Short circuit looking at our parent directly                          * since we have encapsulated all of its information                          */
+comment|/* 			* Short circuit looking at our parent directly 			* since we have encapsulated all of its information 			*/
 name|newtag
 operator|->
 name|filter
@@ -1995,7 +1995,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/*                                  * Last reference count, so                                  * release our reference                                  * count on our parent.                                  */
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
@@ -2630,7 +2630,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * XXX Use Contigmalloc until it is merged into this facility                  *     and handles multi-seg allocations.  Nobody is doing                  *     multi-seg allocations yet though.                  */
+comment|/* 		 * XXX Use Contigmalloc until it is merged into this facility 		 *     and handles multi-seg allocations.  Nobody is doing 		 *     multi-seg allocations yet though. 		 */
 operator|*
 name|vaddr
 operator|=
