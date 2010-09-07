@@ -17312,7 +17312,9 @@ name|m_head
 operator|!=
 name|NULL
 condition|)
-continue|continue;
+goto|goto
+name|reuse
+goto|;
 name|m
 operator|=
 name|m_getcl
@@ -17454,6 +17456,8 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
+name|reuse
+label|:
 name|cleaned
 operator|=
 name|i
