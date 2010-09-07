@@ -867,13 +867,17 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
 decl_stmt|;
-name|bus_dmamap_t
-name|rx_sparemap
+name|bool
+name|discard
 decl_stmt|;
 comment|/* Soft stats */
 name|unsigned
 name|long
 name|rx_irq
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_discarded
 decl_stmt|;
 name|unsigned
 name|long
