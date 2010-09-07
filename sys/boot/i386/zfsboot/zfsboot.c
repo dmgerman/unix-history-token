@@ -3506,7 +3506,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\nFreeBSD/i386 boot\n"
+literal|"\nFreeBSD/x86 boot\n"
 literal|"Default: %s:%s\n"
 literal|"boot: "
 argument_list|,
