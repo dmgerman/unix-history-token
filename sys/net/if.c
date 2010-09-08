@@ -4109,11 +4109,37 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
+name|IFNET_WUNLOCK
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Perform interface-specific reassignment tasks, if provided by 	 * the driver. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_reassign
+operator|!=
+name|NULL
+condition|)
+name|ifp
+operator|->
+name|if_reassign
+argument_list|(
+name|ifp
+argument_list|,
+name|new_vnet
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Switch to the context of the target vnet. 	 */
 name|CURVNET_SET_QUIET
 argument_list|(
 name|new_vnet
 argument_list|)
+expr_stmt|;
+name|IFNET_WLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
