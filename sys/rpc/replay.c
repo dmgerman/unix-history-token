@@ -646,12 +646,12 @@ operator|->
 name|rc_maxsize
 condition|)
 block|{
+do|do
+block|{
 name|freed_one
 operator|=
 name|FALSE
 expr_stmt|;
-do|do
-block|{
 comment|/* 			 * Try to free an entry. Don't free in-progress entries 			 */
 name|TAILQ_FOREACH_REVERSE
 argument_list|(
