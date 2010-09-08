@@ -574,6 +574,10 @@ name|backslash
 operator|=
 literal|0
 expr_stmt|;
+name|startword
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|c
