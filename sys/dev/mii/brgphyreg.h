@@ -2625,7 +2625,7 @@ begin_define
 define|#
 directive|define
 name|BRGPHY_MRBE_MSG_PG5_NP_T2
-value|0x0001
+value|0x0002
 end_define
 
 begin_comment
