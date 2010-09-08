@@ -678,7 +678,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|mrtstat.name += (val)
+value|V_mrtstat.name += (val)
 end_define
 
 begin_define
