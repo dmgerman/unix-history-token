@@ -9167,7 +9167,7 @@ name|mask
 operator|)
 argument_list|,
 operator|(
-literal|"Allocating in-use VSID %#x\n"
+literal|"Allocating in-use VSID %#zx\n"
 operator|,
 name|hash
 operator|)
