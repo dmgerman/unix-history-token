@@ -11044,7 +11044,14 @@ name|p
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The process is in stopped mode. All the threads should be 		 * either winding down or already on the suspended queue. 		 */
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGKILL
+condition|)
+block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
 if|if
 condition|(
 name|p
@@ -11053,19 +11060,9 @@ name|p_flag
 operator|&
 name|P_TRACED
 condition|)
-block|{
-comment|/* 			 * The traced process is already stopped, 			 * so no further action is necessary. 			 * No signal can restart us. 			 */
 goto|goto
 name|out
 goto|;
-block|}
-if|if
-condition|(
-name|sig
-operator|==
-name|SIGKILL
-condition|)
-block|{
 comment|/* 			 * SIGKILL sets process running. 			 * It will die elsewhere. 			 * All threads must be restarted. 			 */
 name|p
 operator|->
@@ -11085,6 +11082,18 @@ operator|&
 name|SA_CONT
 condition|)
 block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 			 * If SIGCONT is default (or ignored), we continue the 			 * process but don't leave the signal in sigqueue as 			 * it has no further action.  If SIGCONT is held, we 			 * continue the process and leave the signal in 			 * sigqueue.  If the process catches SIGCONT, let it 			 * handle the signal itself.  If it isn't waiting on 			 * an event, it goes back to run state. 			 * Otherwise, process goes back to sleep state. 			 */
 name|p
 operator|->
@@ -11218,6 +11227,18 @@ operator|&
 name|SA_STOP
 condition|)
 block|{
+comment|/* 			 * If traced process is already stopped, 			 * then no further action is necessary. 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 			 * Already stopped, don't need to stop again 			 * (If we did the shell could get confused). 			 * Just make sure the signal STOP bit set. 			 */
 name|p
 operator|->
