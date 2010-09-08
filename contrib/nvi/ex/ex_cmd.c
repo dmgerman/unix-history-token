@@ -143,7 +143,7 @@ literal|"s"
 block|,
 literal|"[line [,line]]& [cgr] [count] [#lp]"
 block|,
-literal|"repeat the last subsitution"
+literal|"repeat the last substitution"
 block|}
 block|,
 comment|/* C_STAR */
