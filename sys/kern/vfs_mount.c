@@ -7467,9 +7467,6 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -7482,6 +7479,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* Remove our devfs mount from the mountlist and purge the cache */
 name|mtx_lock
@@ -7611,6 +7611,16 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|vput
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|NDFREE
@@ -7636,11 +7646,27 @@ operator|!=
 name|VDIR
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"/dev is not a directory\n"
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|error
 operator|=
@@ -7660,11 +7686,29 @@ condition|(
 name|error
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"vinvalbuf() of /dev failed, error: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|cache_purge
 argument_list|(
@@ -7723,6 +7767,8 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* Unlink the no longer needed /dev/dev -> / symlink */
+name|error
+operator|=
 name|kern_unlink
 argument_list|(
 name|td
@@ -7730,6 +7776,17 @@ argument_list|,
 literal|"/dev/dev"
 argument_list|,
 name|UIO_SYSSPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"kern_unlink of /dev/dev failed, error: %d\n"
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
