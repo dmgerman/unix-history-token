@@ -184,7 +184,9 @@ if|if
 condition|(
 name|pthread
 operator|->
-name|cancel_enable
+name|state
+operator|!=
+name|PS_DEAD
 condition|)
 name|_thr_send_sig
 argument_list|(
