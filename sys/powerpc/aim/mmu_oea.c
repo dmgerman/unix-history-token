@@ -7665,7 +7665,7 @@ argument_list|(
 operator|~
 name|moea_vsid_bitmap
 index|[
-name|i
+name|n
 index|]
 argument_list|)
 operator|-
