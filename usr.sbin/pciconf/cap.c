@@ -2271,7 +2271,7 @@ name|p
 parameter_list|)
 block|{
 name|uint16_t
-name|cmd
+name|sta
 decl_stmt|;
 name|uint8_t
 name|ptr
@@ -2279,7 +2279,7 @@ decl_stmt|,
 name|cap
 decl_stmt|;
 comment|/* Are capabilities present for this device? */
-name|cmd
+name|sta
 operator|=
 name|read_config
 argument_list|(
@@ -2299,7 +2299,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|cmd
+name|sta
 operator|&
 name|PCIM_STATUS_CAPPRESENT
 operator|)
@@ -2315,10 +2315,10 @@ name|PCIM_HDRTYPE
 condition|)
 block|{
 case|case
-literal|0
+name|PCIM_HDRTYPE_NORMAL
 case|:
 case|case
-literal|1
+name|PCIM_HDRTYPE_BRIDGE
 case|:
 name|ptr
 operator|=
@@ -2326,7 +2326,7 @@ name|PCIR_CAP_PTR
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|PCIM_HDRTYPE_CARDBUS
 case|:
 name|ptr
 operator|=
