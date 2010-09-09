@@ -377,42 +377,6 @@ value|(((b[0]& 0x30)>> 2) | ((b[1]& 0x30)>> 4))
 end_define
 
 begin_comment
-comment|/* some macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSM_UNIT
-parameter_list|(
-name|dev
-parameter_list|)
-value|(dev2unit(dev)>> 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSM_NBLOCKIO
-parameter_list|(
-name|dev
-parameter_list|)
-value|(dev2unit(dev)& 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSM_MKMINOR
-parameter_list|(
-name|unit
-parameter_list|,
-name|block
-parameter_list|)
-value|(((unit)<< 1) | ((block) ? 0:1))
-end_define
-
-begin_comment
 comment|/* ring buffer */
 end_comment
 
@@ -946,17 +910,6 @@ name|devclass_t
 name|psm_devclass
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PSM_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-define|\
-value|((struct psm_softc*)devclass_get_softc(psm_devclass, unit))
-end_define
 
 begin_comment
 comment|/* driver state flags (state) */
@@ -6091,12 +6044,7 @@ argument_list|(
 operator|&
 name|psm_cdevsw
 argument_list|,
-name|PSM_MKMINOR
-argument_list|(
-name|unit
-argument_list|,
-name|FALSE
-argument_list|)
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -6111,6 +6059,14 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|dev
+operator|->
+name|si_drv1
+operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
 name|bdev
 operator|=
 name|make_dev
@@ -6118,12 +6074,7 @@ argument_list|(
 operator|&
 name|psm_cdevsw
 argument_list|,
-name|PSM_MKMINOR
-argument_list|(
-name|unit
-argument_list|,
-name|TRUE
-argument_list|)
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -6135,6 +6086,14 @@ literal|"bpsm%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bdev
+operator|->
+name|si_drv1
+operator|=
+name|sc
 expr_stmt|;
 if|if
 condition|(
@@ -6378,14 +6337,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|PSM_UNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|psm_softc
 modifier|*
@@ -6403,10 +6354,9 @@ decl_stmt|;
 comment|/* Get device data */
 name|sc
 operator|=
-name|PSM_SOFTC
-argument_list|(
-name|unit
-argument_list|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -6454,6 +6404,8 @@ name|devclass_get_device
 argument_list|(
 name|psm_devclass
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -6690,6 +6642,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: unable to set the command byte (psmopen).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6767,23 +6721,14 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|PSM_UNIT
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|unit
-argument_list|)
+name|dev
+operator|->
+name|si_drv1
 decl_stmt|;
 name|int
 name|stat
@@ -6891,6 +6836,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the aux int (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6966,6 +6913,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the device (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6993,6 +6942,8 @@ name|LOG_DEBUG
 argument_list|,
 literal|"psm%d: failed to get status (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7032,6 +6983,8 @@ name|LOG_ERR
 argument_list|,
 literal|"psm%d: failed to disable the aux port (psmclose).\n"
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7094,6 +7047,8 @@ name|devclass_get_device
 argument_list|(
 name|psm_devclass
 argument_list|,
+name|sc
+operator|->
 name|unit
 argument_list|)
 argument_list|)
@@ -7539,19 +7494,14 @@ name|int
 name|flag
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|u_char
 name|buf
@@ -7606,10 +7556,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|PSM_NBLOCKIO
-argument_list|(
 name|dev
-argument_list|)
+operator|!=
+name|sc
+operator|->
+name|bdev
 condition|)
 block|{
 name|splx
@@ -8315,19 +8266,14 @@ name|int
 name|flag
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|u_char
 name|buf
@@ -8526,13 +8472,9 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|mousemode_t
 name|mode
@@ -15155,7 +15097,6 @@ operator||
 name|MOUSE_BUTTON3DOWN
 block|}
 decl_stmt|;
-specifier|register
 name|struct
 name|psm_softc
 modifier|*
@@ -16444,13 +16385,9 @@ name|psm_softc
 modifier|*
 name|sc
 init|=
-name|PSM_SOFTC
-argument_list|(
-name|PSM_UNIT
-argument_list|(
 name|dev
-argument_list|)
-argument_list|)
+operator|->
+name|si_drv1
 decl_stmt|;
 name|int
 name|s
