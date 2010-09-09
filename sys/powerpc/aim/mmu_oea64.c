@@ -10545,9 +10545,6 @@ name|int
 name|bootstrap
 decl_stmt|;
 comment|/* 	 * One nasty thing that can happen here is that the UMA calls to 	 * allocate new PVOs need to map more memory, which calls pvo_enter(), 	 * which calls UMA... 	 * 	 * We break the loop by detecting recursion and allocating out of 	 * the bootstrap pool. 	 */
-name|moea64_pvo_enter_calls
-operator|++
-expr_stmt|;
 name|first
 operator|=
 literal|0
@@ -10600,6 +10597,9 @@ expr_stmt|;
 comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry if 	 * there is a mapping. 	 */
 name|LOCK_TABLE
 argument_list|()
+expr_stmt|;
+name|moea64_pvo_enter_calls
+operator|++
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -11276,6 +11276,12 @@ argument_list|,
 name|pvo_olink
 argument_list|)
 expr_stmt|;
+name|moea64_pvo_entries
+operator|--
+expr_stmt|;
+name|moea64_pvo_remove_calls
+operator|++
+expr_stmt|;
 name|UNLOCK_TABLE
 argument_list|()
 expr_stmt|;
@@ -11306,12 +11312,6 @@ name|moea64_upvo_zone
 argument_list|,
 name|pvo
 argument_list|)
-expr_stmt|;
-name|moea64_pvo_entries
-operator|--
-expr_stmt|;
-name|moea64_pvo_remove_calls
-operator|++
 expr_stmt|;
 block|}
 end_function
