@@ -7027,7 +7027,7 @@ name|PCIM_STATUS_RMABORT
 operator||
 name|PCIM_STATUS_RTABORT
 operator||
-name|PCIM_STATUS_PERRREPORT
+name|PCIM_STATUS_MDPERR
 argument_list|,
 literal|2
 argument_list|)
@@ -17543,7 +17543,7 @@ name|PCIM_STATUS_RMABORT
 operator||
 name|PCIM_STATUS_RTABORT
 operator||
-name|PCIM_STATUS_PERRREPORT
+name|PCIM_STATUS_MDPERR
 argument_list|,
 literal|2
 argument_list|)
