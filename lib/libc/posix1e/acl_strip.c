@@ -654,6 +654,29 @@ return|;
 case|case
 name|ACL_BRAND_NFS4
 case|:
+comment|/* 		 * If the ACL has more than canonical six entries, 		 * it's non trivial by definition. 		 */
+if|if
+condition|(
+name|aclp
+operator|->
+name|ats_acl
+operator|.
+name|acl_cnt
+operator|>
+literal|6
+condition|)
+block|{
+operator|*
+name|trivialp
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 		 * Calculate trivial ACL - using acl_strip_np - and compare 		 * with the original. 		 */
 name|tmpacl
 operator|=
