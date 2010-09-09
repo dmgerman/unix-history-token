@@ -3033,6 +3033,10 @@ define|#
 directive|define
 name|ATA_KNOWN_PRESENCE
 value|0x200
+define|#
+directive|define
+name|ATA_STATUS_IS_LONG
+value|0x400
 name|int
 name|pm_level
 decl_stmt|;
