@@ -4668,7 +4668,7 @@ begin_function
 name|int
 name|ipproto_register
 parameter_list|(
-name|u_char
+name|short
 name|ipproto
 parameter_list|)
 block|{
@@ -4681,8 +4681,12 @@ comment|/* Sanity checks. */
 if|if
 condition|(
 name|ipproto
-operator|==
+operator|<=
 literal|0
+operator|||
+name|ipproto
+operator|>=
+name|IPPROTO_MAX
 condition|)
 return|return
 operator|(
@@ -4769,16 +4773,6 @@ operator|==
 name|ipproto
 condition|)
 block|{
-comment|/* Be careful to only index valid IP protocols. */
-if|if
-condition|(
-name|pr
-operator|->
-name|pr_protocol
-operator|<
-name|IPPROTO_MAX
-condition|)
-block|{
 name|ip_protox
 index|[
 name|pr
@@ -4796,13 +4790,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 block|}
 return|return
 operator|(
@@ -4816,7 +4803,7 @@ begin_function
 name|int
 name|ipproto_unregister
 parameter_list|(
-name|u_char
+name|short
 name|ipproto
 parameter_list|)
 block|{
@@ -4829,8 +4816,12 @@ comment|/* Sanity checks. */
 if|if
 condition|(
 name|ipproto
-operator|==
+operator|<=
 literal|0
+operator|||
+name|ipproto
+operator|>=
+name|IPPROTO_MAX
 condition|)
 return|return
 operator|(
