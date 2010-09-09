@@ -64,12 +64,25 @@ name|LSU_CERRLOG_REGID
 value|9
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
 begin_function
 specifier|static
-name|__inline__
-name|unsigned
-name|int
-name|read_32bit_phnx_ctrl_reg
+name|__inline
+name|uint64_t
+name|read_xlr_ctrl_register
 parameter_list|(
 name|int
 name|block
@@ -78,26 +91,27 @@ name|int
 name|reg
 parameter_list|)
 block|{
-name|unsigned
-name|int
-name|__res
+name|uint64_t
+name|res
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(                                    			".set\tpush\n\t"                             			".set\tnoreorder\n\t"  			"move $9, %1\n"
-comment|/* "mfcr\t$8, $9\n\t"          */
-asm|".word 0x71280018\n" 			"move %0, $8\n" 			".set\tpop"        			: "=r" (__res) : "r"((block<<8)|reg) 			: "$8", "$9" 			);
+asm|( 	    ".set	push\n\t" 	    ".set	noreorder\n\t" 	    "move	$9, %1\n\t" 	    ".word	0x71280018\n\t"
+comment|/* mfcr $8, $9 */
+asm|"move	%0, $8\n\t" 	    ".set	pop\n" 	    : "=r" (res) : "r"((block<< 8) | reg) 	    : "$8", "$9" 	);
 return|return
-name|__res
+operator|(
+name|res
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
-name|write_32bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 parameter_list|(
 name|int
 name|block
@@ -105,26 +119,32 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|unsigned
-name|int
+name|uint64_t
 name|value
 parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|(             			".set\tpush\n\t" 			".set\tnoreorder\n\t" 			"move $8, %0\n" 			"move $9, %1\n"
-comment|/* "mtcr\t$8, $9\n\t"  */
-asm|".word 0x71280019\n" 			".set\tpop" 			: 			: "r" (value), "r"((block<<8)|reg) 			: "$8", "$9" 			);
+asm|( 	    ".set	push\n\t" 	    ".set	noreorder\n\t" 	    "move	$8, %0\n" 	    "move	$9, %1\n" 	    ".word	0x71280019\n"
+comment|/* mtcr $8, $9  */
+asm|".set	pop\n" 	    : 	    : "r" (value), "r" ((block<< 8) | reg) 	    : "$8", "$9" 	);
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(defined(__mips_n64) || defined(__mips_n32)) */
+end_comment
+
 begin_function
 specifier|static
-name|__inline__
-name|unsigned
-name|long
-name|long
-name|read_64bit_phnx_ctrl_reg
+name|__inline
+name|uint64_t
+name|read_xlr_ctrl_register
 parameter_list|(
 name|int
 name|block
@@ -133,25 +153,22 @@ name|int
 name|reg
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|uint32_t
 name|high
 decl_stmt|,
 name|low
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(					 		".set\tmips64\n\t"				 		"move    $9, %2\n"
+asm|( 	    ".set	push\n\t" 	    ".set	noreorder\n\t" 	    ".set	mips64\n\t" 	    "move	$9, %2\n" 	    ".word 	0x71280018\n"
 comment|/* "mfcr    $8, $9\n" */
-asm|".word   0x71280018\n" 		"dsrl32  %0, $8, 0\n\t"			         		"dsll32  $8, $8, 0\n\t"                          		"dsrl32  %1, $8, 0\n\t"                          		".set mips0"					 		: "=r" (high), "=r"(low) 		: "r"((block<<8)|reg) 		: "$8", "$9" 		);
+asm|"dsra32	%0, $8, 0\n\t" 	    "sll	%1, $8, 0\n\t" 	    ".set	pop"					 	    : "=r" (high), "=r"(low) 	    : "r" ((block<< 8) | reg) 	    : "$8", "$9");
 return|return
 operator|(
 operator|(
 operator|(
 operator|(
-name|unsigned
-name|long
-name|long
+name|uint64_t
 operator|)
 name|high
 operator|)
@@ -167,9 +184,9 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 parameter_list|(
 name|int
 name|block
@@ -177,13 +194,11 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|unsigned
-name|long
-name|long
+name|uint64_t
 name|value
 parameter_list|)
 block|{
-name|__uint32_t
+name|uint32_t
 name|low
 decl_stmt|,
 name|high
@@ -202,17 +217,26 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 		".set push\n" 		".set noreorder\n" 		".set mips4\n\t"
-comment|/* Set up "rs" */
-asm|"move $9, %0\n"
-comment|/* Store 64 bit value in "rt" */
-asm|"dsll32 $10, %1, 0  \n\t" 		"dsll32 $8, %2, 0  \n\t" 		"dsrl32 $8, $8, 0  \n\t" 		"or     $10, $8, $8 \n\t"  		".word 0x71280019\n"
+asm|( 	   ".set	push\n\t" 	   ".set	noreorder\n\t" 	   ".set	mips64\n\t" 	   "dsll32	$9, %0, 0\n\t" 	   "dsll32	$8, %1, 0\n\t" 	   "dsrl32	$8, $8, 0\n\t" 	   "or		$8, $9, $8\n\t" 	   "move	$9, %2\n\t" 	   ".word	0x71280019\n\t"
 comment|/* mtcr $8, $9 */
-asm|".set pop\n"  		:
+asm|".set	pop\n" 	   :
 comment|/* No outputs */
-asm|: "r"((block<<8)|reg), "r" (high), "r" (low) 		: "$8", "$9", "$10" 		);
+asm|: "r" (high), "r" (low), "r"((block<< 8) | reg) 	   : "$8", "$9");
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__mips_n64) || defined(__mips_n32) */
+end_comment
+
+begin_comment
+comment|/*  * 32 bit read write for c0  */
+end_comment
 
 begin_define
 define|#
@@ -224,7 +248,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|({ unsigned int __rv;                                           \         __asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips32\n\t"                                       \         "mfc0\t%0,$%1,%2\n\t"                                   \         ".set\tpop"                                             \         : "=r" (__rv) : "i" (reg), "i" (sel) );                 \         __rv;})
+value|({								\ 	 uint32_t __rv;						\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips32\n\t"				\ 	    "mfc0	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	    : "=r" (__rv) : "i" (reg), "i" (sel) );		\ 	__rv;							\  })
 end_define
 
 begin_define
@@ -239,35 +263,7 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|__asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips32\n\t"                                       \         "mtc0\t%0,$%1,%2\n\t"                                   \         ".set\tpop"                                             \         : : "r" (value), "i" (reg), "i" (sel) );
-end_define
-
-begin_define
-define|#
-directive|define
-name|read_c0_register64
-parameter_list|(
-name|reg
-parameter_list|,
-name|sel
-parameter_list|)
-define|\
-value|({ unsigned int __high, __low;                               \         __asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips64\n\t"                                       \         "dmfc0\t $8, $%2, %3\n\t"                               \         "dsrl32\t%0, $8, 0\n\t"                                 \         "dsll32\t$8, $8, 0\n\t"                                 \         "dsrl32\t%1, $8, 0\n\t"                                 \         ".set\tpop"                                             \         : "=r"(__high), "=r"(__low): "i"(reg), "i"(sel): "$8" );\         (((unsigned long long)__high<< 32) | __low);})
-end_define
-
-begin_define
-define|#
-directive|define
-name|write_c0_register64
-parameter_list|(
-name|reg
-parameter_list|,
-name|sel
-parameter_list|,
-name|value
-parameter_list|)
-define|\
-value|do{                                                            \        unsigned int __high = val>>32;                           \        unsigned int __low = val& 0xffffffff;                   \         __asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips64\n\t"                                       \         "dsll32\t$8, %1, 0\n\t"                                 \         "dsll32\t$9, %0, 0\n\t"                                 \         "or\t    $8, $8, $9\n\t"                                \         "dmtc0\t $8, $%2, %3\n\t"                               \         ".set\tpop"                                             \         :: "r"(high), "r"(low),  "i"(reg), "i"(sel):"$8", "$9");\    } while(0)
+value|__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips32\n\t"				\ 	    "mtc0	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	: : "r" (value), "i" (reg), "i" (sel) );
 end_define
 
 begin_define
@@ -280,7 +276,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|({ unsigned int __rv;                                           \         __asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips32\n\t"                                       \         "mfc2\t%0,$%1,%2\n\t"                                   \         ".set\tpop"                                             \         : "=r" (__rv) : "i" (reg), "i" (sel) );                 \         __rv;})
+value|({								\ 	uint32_t __rv;						\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips32\n\t"				\ 	    "mfc2	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	    : "=r" (__rv) : "i" (reg), "i" (sel) );		\ 	__rv;							\  })
 end_define
 
 begin_define
@@ -295,7 +291,53 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|__asm__ __volatile__(                                   \         ".set\tpush\n\t"                                        \         ".set mips32\n\t"                                       \         "mtc2\t%0,$%1,%2\n\t"                                   \         ".set\tpop"                                             \         : : "r" (value), "i" (reg), "i" (sel) );
+value|__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips32\n\t"				\ 	    "mtc2	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	: : "r" (value), "i" (reg), "i" (sel) );
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * On 64 bit compilation, the operations are simple  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|read_c0_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|)
+define|\
+value|({								\ 	uint64_t __rv;						\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmfc0	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	    : "=r" (__rv) : "i" (reg), "i" (sel) );		\ 	__rv;							\  })
+end_define
+
+begin_define
+define|#
+directive|define
+name|write_c0_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmtc0	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	: : "r" (value), "i" (reg), "i" (sel) );
 end_define
 
 begin_define
@@ -308,7 +350,7 @@ parameter_list|,
 name|sel
 parameter_list|)
 define|\
-value|({ unsigned int __high, __low;                               \         __asm__ __volatile__(                                   \         ".set mips64\n\t"                                       \         "dmfc2\t $8, $%2, %3\n\t"                               \         "dsrl32\t%0, $8, 0\n\t"                                 \         "dsll32\t$8, $8, 0\n\t"                                 \         "dsrl32\t%1, $8, 0\n\t"                                 \         ".set\tmips0"                                           \         : "=r"(__high), "=r"(__low): "i"(reg), "i"(sel): "$8" );\         (((unsigned long long)__high<< 32) | __low);})
+value|({								\ 	uint64_t __rv;						\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmfc2	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	    : "=r" (__rv) : "i" (reg), "i" (sel) );		\ 	__rv;							\  })
 end_define
 
 begin_define
@@ -323,35 +365,154 @@ parameter_list|,
 name|value
 parameter_list|)
 define|\
-value|do{                                                            \        unsigned int __high = value>>32;                         \        unsigned int __low = value& 0xffffffff;                 \         __asm__ __volatile__(                                   \         ".set mips64\n\t"                                       \         "dsll32\t$8, %1, 0\n\t"                                 \         "dsll32\t$9, %0, 0\n\t"                                 \         "dsrl32\t$8, $8, 0\n\t"                                 \         "or\t    $8, $8, $9\n\t"                                \         "dmtc2\t $8, $%2, %3\n\t"                               \         ".set\tmips0"                                           \         :: "r"(__high), "r"(__low),                             \            "i"(reg), "i"(sel)                                   \         :"$8", "$9");                                           \    } while(0)
+value|__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmtc2	%0, $%1, %2\n\t"			\ 	    ".set	pop\n"					\ 	: : "r" (value), "i" (reg), "i" (sel) );
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! (defined(__mips_n64) || defined(__mips_n32)) */
+end_comment
+
+begin_comment
+comment|/*  * 32 bit compilation, 64 bit values has to split   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|read_c0_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|)
+define|\
+value|({								\ 	uint32_t __high, __low;					\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	noreorder\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmfc0	$8, $%2, %3\n\t"			\ 	    "dsra32	%0, $8, 0\n\t"				\ 	    "sll	%1, $8, 0\n\t"				\ 	    ".set	pop\n"					\ 	    : "=r"(__high), "=r"(__low): "i"(reg), "i"(sel)	\ 	    : "$8");						\ 	((uint64_t)__high<< 32) | __low;			\ })
 end_define
 
 begin_define
 define|#
 directive|define
+name|write_c0_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|do {								\        uint32_t __high = value>> 32;				\        uint32_t __low = value& 0xffffffff;			\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	noreorder\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dsll32	$8, %1, 0\n\t"				\ 	    "dsll32	$9, %0, 0\n\t"				\ 	    "dsrl32	$8, $8, 0\n\t"				\ 	    "or		$8, $8, $9\n\t"				\ 	    "dmtc0	$8, $%2, %3\n\t"			\ 	    ".set	pop"					\ 	    :: "r"(__high), "r"(__low),	 "i"(reg), "i"(sel)	\ 	    :"$8", "$9");					\ } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|read_c2_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|)
+define|\
+value|({								\ 	uint32_t __high, __low;					\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	noreorder\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dmfc2	$8, $%2, %3\n\t"			\ 	    "dsra32	%0, $8, 0\n\t"				\ 	    "sll	%1, $8, 0\n\t"				\ 	    ".set	pop\n"					\ 	    : "=r"(__high), "=r"(__low): "i"(reg), "i"(sel)	\ 	    : "$8");						\ 	((uint64_t)__high<< 32) | __low;			\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|write_c2_register64
+parameter_list|(
+name|reg
+parameter_list|,
+name|sel
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|do {								\        uint32_t __high = value>> 32;				\        uint32_t __low = value& 0xffffffff;			\ 	__asm__ __volatile__(					\ 	    ".set	push\n\t"				\ 	    ".set	noreorder\n\t"				\ 	    ".set	mips64\n\t"				\ 	    "dsll32	$8, %1, 0\n\t"				\ 	    "dsll32	$9, %0, 0\n\t"				\ 	    "dsrl32	$8, $8, 0\n\t"				\ 	    "or		$8, $8, $9\n\t"				\ 	    "dmtc2	$8, $%2, %3\n\t"			\ 	    ".set	pop"					\ 	    :: "r"(__high), "r"(__low),	 "i"(reg), "i"(sel)	\ 	    :"$8", "$9");					\ } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__mips_n64) || defined(__mips_n32) */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
 name|xlr_cpu_id
-parameter_list|()
-define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x1f\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|read_c0_register32
+argument_list|(
+literal|15
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0x1f
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|xlr_core_id
-parameter_list|()
-define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x1f\n"                                \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id/4;})
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|xlr_cpu_id
+argument_list|()
+operator|/
+literal|4
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|xlr_thr_id
-parameter_list|()
-define|\
-value|({int __id;                                                     \  __asm__ __volatile__ (                                         \            ".set push\n"                                        \            ".set noreorder\n"                                   \            "mfc0 $8, $15, 1\n"                                  \            "andi %0, $8, 0x3\n"                                 \            ".set pop\n"                                         \            : "=r" (__id) : : "$8");                             \  __id;})
-end_define
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|read_c0_register32
+argument_list|(
+literal|15
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0x3
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Additional registers on the XLR */
@@ -384,135 +545,89 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|uint64_t
 name|read_c0_eirr64
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|__uint32_t
-name|high
-decl_stmt|,
-name|low
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n"  	            ".word 0x40214806  \n\t" 	            "nop               \n\t" 	            "dsra32 %0, $1, 0  \n\t" 	            "sll    %1, $1, 0  \n\t"  	            ".set pop\n"  	    :       "=r"(high), "=r"(low) 	);
 return|return
 operator|(
-operator|(
-operator|(
-name|__uint64_t
+name|read_c0_register64
+argument_list|(
+literal|9
+argument_list|,
+literal|6
+argument_list|)
 operator|)
-name|high
-operator|)
-operator|<<
-literal|32
-operator|)
-operator||
-name|low
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-specifier|inline
-name|__uint64_t
+name|__inline
+name|void
+name|write_c0_eirr64
+parameter_list|(
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|write_c0_register64
+argument_list|(
+literal|9
+argument_list|,
+literal|6
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
 name|read_c0_eimr64
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|__uint32_t
-name|high
-decl_stmt|,
-name|low
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n"  	            ".word 0x40214807  \n\t" 	            "nop               \n\t" 	            "dsra32 %0, $1, 0  \n\t" 	            "sll    %1, $1, 0  \n\t"  	            ".set pop\n"  	    :       "=r"(high), "=r"(low) 	);
 return|return
 operator|(
-operator|(
-operator|(
-name|__uint64_t
+name|read_c0_register64
+argument_list|(
+literal|9
+argument_list|,
+literal|7
+argument_list|)
 operator|)
-name|high
-operator|)
-operator|<<
-literal|32
-operator|)
-operator||
-name|low
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-specifier|inline
-name|void
-name|write_c0_eirr64
-parameter_list|(
-name|__uint64_t
-name|value
-parameter_list|)
-block|{
-name|__uint32_t
-name|low
-decl_stmt|,
-name|high
-decl_stmt|;
-name|high
-operator|=
-name|value
-operator|>>
-literal|32
-expr_stmt|;
-name|low
-operator|=
-name|value
-operator|&
-literal|0xffffffff
-expr_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n\t"  	            "dsll32 $2, %1, 0  \n\t" 	            "dsll32 $1, %0, 0  \n\t" 	            "dsrl32 $2, $2, 0  \n\t" 	            "or     $1, $1, $2 \n\t" 	            ".word  0x40a14806 \n\t" 	            "nop               \n\t"  	            ".set pop\n"  	    : 	    :       "r"(high), "r"(low) 	    :       "$1", "$2");
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
+name|__inline
 name|void
 name|write_c0_eimr64
 parameter_list|(
-name|__uint64_t
-name|value
+name|uint64_t
+name|val
 parameter_list|)
 block|{
-name|__uint32_t
-name|low
-decl_stmt|,
-name|high
-decl_stmt|;
-name|high
-operator|=
-name|value
-operator|>>
-literal|32
+name|write_c0_register64
+argument_list|(
+literal|9
+argument_list|,
+literal|7
+argument_list|,
+name|val
+argument_list|)
 expr_stmt|;
-name|low
-operator|=
-name|value
-operator|&
-literal|0xffffffff
-expr_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|( 	            ".set push\n" 	            ".set noreorder\n" 	            ".set noat\n" 	            ".set mips4\n\t"  	            "dsll32 $2, %1, 0  \n\t" 	            "dsll32 $1, %0, 0  \n\t" 	            "dsrl32 $2, $2, 0  \n\t" 	            "or     $1, $1, $2 \n\t" 	            ".word  0x40a14807 \n\t" 	            "nop               \n\t"  	            ".set pop\n"  	    : 	    :       "r"(high), "r"(low) 	    :       "$1", "$2");
 block|}
 end_function
 
@@ -534,9 +649,9 @@ literal|0
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(".set push\n" 	            ".set noreorder\n" 	            "move $9, %2\n" 	            "li $8, 1\n"
+asm|( 	    ".set push\n" 	    ".set noreorder\n" 	    "move $9, %2\n" 	    "li $8, 1\n"
 comment|//      "swapw $8, $9\n"
-asm|".word 0x71280014\n" 	            "move %1, $8\n" 	            ".set pop\n" 	    :       "+m"(*lock), "=r"(oldval) 	    :       "r"((unsigned long)lock) 	    :       "$8", "$9" 	);
+asm|".word 0x71280014\n" 	    "move %1, $8\n" 	    ".set pop\n" 	    : "+m"(*lock), "=r"(oldval) 	    : "r"((unsigned long)lock) 	    : "$8", "$9" 	);
 return|return
 operator|(
 name|oldval
@@ -568,7 +683,7 @@ name|val
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	            "move   $8, %1\n" 	            ".word  0x71090018\n" 	            "move   %0, $9\n" 	    :       "=r"(val) 	    :       "r"(reg):"$8", "$9");
+asm|( 	    "move   $8, %1\n" 	    ".word  0x71090018\n" 	    "move   %0, $9\n" 	    : "=r"(val) 	    : "r"(reg):"$8", "$9");
 return|return
 name|val
 return|;
@@ -590,9 +705,90 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|( 	            "move   $8, %1\n" 	            "move   $9, %0\n" 	            ".word  0x71090019\n" 	    ::      "r"(val), "r"(reg) 	    :       "$8", "$9");
+asm|( 	    "move   $8, %1\n" 	    "move   $9, %0\n" 	    ".word  0x71090019\n" 	    :: "r"(val), "r"(reg) 	    : "$8", "$9");
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline__
+name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint64_t
+name|paddr
+parameter_list|)
+block|{
+name|paddr
+operator||=
+literal|0x9800000000000000ULL
+expr_stmt|;
+return|return
+operator|(
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|paddr
+operator|)
+return|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_elif
+
+begin_function
+specifier|static
+name|__inline__
+name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint64_t
+name|paddr
+parameter_list|)
+block|{
+name|uint32_t
+name|val
+decl_stmt|;
+name|paddr
+operator||=
+literal|0x9800000000000000ULL
+expr_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "lw		%0, 0(%1)	\n\t" 	    ".set	pop		\n" 	    : "=r"(val) 	    : "r"(paddr));
+return|return
+operator|(
+name|val
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function
 specifier|static
@@ -629,16 +825,21 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|(                     ".set push         \n\t"                     ".set mips64       \n\t"                     "dsll32 %1, %1, 0  \n\t"                     "dsll32 %2, %2, 0  \n\t"
+asm|( 	    ".set push         \n\t" 	    ".set mips64       \n\t" 	    "dsll32 %1, %1, 0  \n\t" 	    "dsll32 %2, %2, 0  \n\t"
 comment|/* get rid of the */
 asm|"dsrl32 %2, %2, 0  \n\t"
 comment|/* sign extend */
-asm|"or     %1, %1, %2 \n\t"                     "lw     %0, 0(%1)  \n\t"                     ".set pop           \n"             :       "=r"(tmp)             :       "r"(high), "r"(low));
+asm|"or     %1, %1, %2 \n\t" 	    "lw     %0, 0(%1)  \n\t" 	    ".set pop           \n" 	    :       "=r"(tmp) 	    :       "r"(high), "r"(low));
 return|return
 name|tmp
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* for cpuid to hardware thread id mapping */

@@ -426,7 +426,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|uint64_t
 name|mmu_setup
 decl_stmt|;
 name|int
@@ -478,7 +478,7 @@ break|break;
 block|}
 name|mmu_setup
 operator|=
-name|read_32bit_phnx_ctrl_reg
+name|read_xlr_ctrl_register
 argument_list|(
 literal|4
 argument_list|,
@@ -509,7 +509,7 @@ name|mmu_setup
 operator||=
 literal|0x01
 expr_stmt|;
-name|write_32bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 literal|4
 argument_list|,

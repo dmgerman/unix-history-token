@@ -824,7 +824,7 @@ name|lsu_cfg0
 decl_stmt|;
 name|lsu_cfg0
 operator|=
-name|read_64bit_phnx_ctrl_reg
+name|read_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -838,7 +838,7 @@ operator|&
 operator|~
 literal|0x2e
 expr_stmt|;
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -848,7 +848,7 @@ name|lsu_cfg0
 argument_list|)
 expr_stmt|;
 comment|/* Clear cache error log */
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -875,7 +875,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* first clear the cache error logging register */
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -884,7 +884,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -893,7 +893,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -904,7 +904,7 @@ argument_list|)
 expr_stmt|;
 name|lsu_cfg0
 operator|=
-name|read_64bit_phnx_ctrl_reg
+name|read_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -917,7 +917,7 @@ name|lsu_cfg0
 operator||
 literal|0x2e
 expr_stmt|;
-name|write_64bit_phnx_ctrl_reg
+name|write_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
@@ -979,7 +979,7 @@ expr_stmt|;
 comment|/* Read cache err log */
 name|cerr_cpu_log
 operator|=
-name|read_64bit_phnx_ctrl_reg
+name|read_xlr_ctrl_register
 argument_list|(
 name|CPU_BLOCKID_LSU
 argument_list|,
