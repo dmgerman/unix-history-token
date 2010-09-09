@@ -669,7 +669,7 @@ block|{
 operator|*
 name|trivialp
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 return|return
 operator|(
