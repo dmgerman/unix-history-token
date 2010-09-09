@@ -210,7 +210,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIM_STATUS_PERRREPORT
+name|PCIM_STATUS_MDPERR
 value|0x0100
 end_define
 
@@ -4260,84 +4260,84 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_TRAINING_ERROR
+name|PCIM_AER_UC_TRAINING_ERROR
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_DL_PROTOCOL_ERROR
+name|PCIM_AER_UC_DL_PROTOCOL_ERROR
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_POISONED_TLP
+name|PCIM_AER_UC_POISONED_TLP
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_FC_PROTOCOL_ERROR
+name|PCIM_AER_UC_FC_PROTOCOL_ERROR
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_COMPLETION_TIMEOUT
+name|PCIM_AER_UC_COMPLETION_TIMEOUT
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_COMPLETER_ABORT
+name|PCIM_AER_UC_COMPLETER_ABORT
 value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_UNEXPECTED_COMPLETION
+name|PCIM_AER_UC_UNEXPECTED_COMPLETION
 value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_RECEIVER_OVERFLOW
+name|PCIM_AER_UC_RECEIVER_OVERFLOW
 value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_MALFORMED_TLP
+name|PCIM_AER_UC_MALFORMED_TLP
 value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_ECRC_ERROR
+name|PCIM_AER_UC_ECRC_ERROR
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_UNSUPPORTED_REQUEST
+name|PCIM_AER_UC_UNSUPPORTED_REQUEST
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_UC_ACS_VIOLATION
+name|PCIM_AER_UC_ACS_VIOLATION
 value|0x00200000
 end_define
 
@@ -4479,21 +4479,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_COR_ENABLE
+name|PCIM_AER_ROOTERR_COR_ENABLE
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_NF_ENABLE
+name|PCIM_AER_ROOTERR_NF_ENABLE
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_F_ENABLE
+name|PCIM_AER_ROOTERR_F_ENABLE
 value|0x00000004
 end_define
 
@@ -4511,56 +4511,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_COR_ERR
+name|PCIM_AER_ROOTERR_COR_ERR
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_MULTI_COR_ERR
+name|PCIM_AER_ROOTERR_MULTI_COR_ERR
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_UC_ERR
+name|PCIM_AER_ROOTERR_UC_ERR
 value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_MULTI_UC_ERR
+name|PCIM_AER_ROOTERR_MULTI_UC_ERR
 value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_FIRST_UC_FATAL
+name|PCIM_AER_ROOTERR_FIRST_UC_FATAL
 value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_NF_ERR
+name|PCIM_AER_ROOTERR_NF_ERR
 value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_F_ERR
+name|PCIM_AER_ROOTERR_F_ERR
 value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIR_AER_ROOTERR_INT_MESSAGE
+name|PCIM_AER_ROOTERR_INT_MESSAGE
 value|0xf8000000
 end_define
 
