@@ -8401,6 +8401,37 @@ name|defined
 argument_list|(
 name|sun
 argument_list|)
+if|if
+condition|(
+name|access
+argument_list|(
+name|file
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"dtrace: target object (%s) already exists. "
+literal|"Please remove the target\ndtrace: object and rebuild all "
+literal|"the source objects if you wish to run the DTrace\n"
+literal|"dtrace: linking process again\n"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Several build infrastructures run DTrace twice (e.g. 		 * postgres) and we don't want the build to fail. Return 		 * 0 here since this isn't really a fatal error. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* XXX Should get a temp file name here. */
 name|snprintf
 argument_list|(
