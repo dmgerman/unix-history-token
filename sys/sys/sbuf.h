@@ -21,6 +21,31 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|sbuf_drain_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Structure definition  */
 end_comment
@@ -34,11 +59,20 @@ modifier|*
 name|s_buf
 decl_stmt|;
 comment|/* storage buffer */
+name|sbuf_drain_func
+modifier|*
+name|s_drain_func
+decl_stmt|;
+comment|/* drain function */
 name|void
 modifier|*
-name|s_unused
+name|s_drain_arg
 decl_stmt|;
-comment|/* binary compatibility. */
+comment|/* user-supplied drain argument */
+name|int
+name|s_error
+decl_stmt|;
+comment|/* current error code */
 name|int
 name|s_size
 decl_stmt|;
@@ -275,6 +309,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sbuf_set_drain
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+name|sbuf_drain_func
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sbuf_trim
 parameter_list|(
@@ -297,7 +348,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sbuf_finish
 parameter_list|(
 name|struct
