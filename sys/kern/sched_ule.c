@@ -660,7 +660,7 @@ specifier|static
 name|int
 name|sched_idlespinthresh
 init|=
-literal|4
+literal|64
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +689,11 @@ name|int
 name|tdq_load
 decl_stmt|;
 comment|/* Aggregate load. */
+specifier|volatile
+name|int
+name|tdq_cpu_idle
+decl_stmt|;
+comment|/* cpu_idle() is active. */
 name|int
 name|tdq_sysload
 decl_stmt|;
@@ -4456,6 +4461,11 @@ block|{
 comment|/* 		 * If the MD code has an idle wakeup routine try that before 		 * falling back to IPI. 		 */
 if|if
 condition|(
+operator|!
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|||
 name|cpu_idle_wakeup
 argument_list|(
 name|cpu
@@ -10671,13 +10681,42 @@ name|tdq_load
 operator|==
 literal|0
 condition|)
+block|{
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|tdq
+operator|->
+name|tdq_load
+operator|==
+literal|0
+condition|)
+block|{
 name|cpu_idle
 argument_list|(
 name|switchcnt
 operator|>
-literal|1
+name|sched_idlespinthresh
 argument_list|)
 expr_stmt|;
+name|tdq
+operator|->
+name|tdq_switchcnt
+operator|++
+expr_stmt|;
+block|}
+name|tdq
+operator|->
+name|tdq_cpu_idle
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tdq
