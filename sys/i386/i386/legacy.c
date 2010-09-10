@@ -196,7 +196,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -698,7 +698,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -969,7 +969,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -1277,7 +1277,7 @@ parameter_list|(
 name|device_t
 name|bus
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
