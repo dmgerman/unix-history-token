@@ -5703,7 +5703,16 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The nfslockfile is freed here if there are no locks 	 * associated with the open. 	 * If there are locks associated with the open, the 	 * nfslockfile structure can be freed via nfsrv_freelockowner(). 	 * (That is why the call must be here instead of after the loop.) 	 */
+comment|/* 	 * The nfslockfile is freed here if there are no locks 	 * associated with the open. 	 * If there are locks associated with the open, the 	 * nfslockfile structure can be freed via nfsrv_freelockowner(). 	 * Acquire the state mutex to avoid races with calls to 	 * nfsrv_getlockfile(). 	 */
+if|if
+condition|(
+name|cansleep
+operator|!=
+literal|0
+condition|)
+name|NFSLOCKSTATE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|lfp
@@ -5787,6 +5796,15 @@ else|else
 name|ret
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|cansleep
+operator|!=
+literal|0
+condition|)
+name|NFSUNLOCKSTATE
+argument_list|()
 expr_stmt|;
 name|FREE
 argument_list|(
