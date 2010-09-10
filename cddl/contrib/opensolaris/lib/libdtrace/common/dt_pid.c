@@ -3399,8 +3399,6 @@ argument_list|(
 name|P
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|Pobject_iter
@@ -3479,6 +3477,23 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* 	 * Put the module name in its canonical form. 	 */
