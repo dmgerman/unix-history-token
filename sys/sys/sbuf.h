@@ -108,11 +108,6 @@ value|0x00020000
 comment|/* set by sbuf_finish() */
 define|#
 directive|define
-name|SBUF_OVERFLOWED
-value|0x00040000
-comment|/* sbuf overflowed */
-define|#
-directive|define
 name|SBUF_DYNSTRUCT
 value|0x00080000
 comment|/* sbuf must be freed */
@@ -338,7 +333,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sbuf_overflowed
+name|sbuf_error
 parameter_list|(
 name|struct
 name|sbuf

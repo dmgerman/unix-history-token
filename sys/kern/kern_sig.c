@@ -15054,11 +15054,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|sbuf_overflowed
+name|sbuf_error
 argument_list|(
 operator|&
 name|sb
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|log

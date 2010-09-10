@@ -1971,7 +1971,7 @@ expr_stmt|;
 comment|/* 	 * One or more of the previous sbuf operations could have resulted in 	 * the supplied buffer being overflowed.  Check to see if this is the 	 * case. 	 */
 if|if
 condition|(
-name|sbuf_overflowed
+name|sbuf_error
 argument_list|(
 operator|&
 name|sbf

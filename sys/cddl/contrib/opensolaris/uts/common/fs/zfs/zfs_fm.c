@@ -147,6 +147,9 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * If we are doing a spa_tryimport(), ignore errors. 	 */
 if|if
 condition|(
@@ -850,6 +853,8 @@ operator|->
 name|spa_errlist_lock
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|sbuf_finish
 argument_list|(
 operator|&
@@ -875,11 +880,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sbuf_overflowed
-argument_list|(
-operator|&
-name|sb
-argument_list|)
+name|error
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -938,6 +941,9 @@ decl_stmt|;
 name|struct
 name|timespec
 name|ts
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|nanotime
 argument_list|(
@@ -1054,6 +1060,8 @@ operator|->
 name|vdev_guid
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|sbuf_finish
 argument_list|(
 operator|&
@@ -1092,11 +1100,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sbuf_overflowed
-argument_list|(
-operator|&
-name|sb
-argument_list|)
+name|error
+operator|!=
+literal|0
 condition|)
 name|printf
 argument_list|(
