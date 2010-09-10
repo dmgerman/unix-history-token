@@ -4006,10 +4006,6 @@ operator|->
 name|rfrbucket
 decl_stmt|;
 name|int
-name|i
-init|=
-literal|0
-decl_stmt|,
 name|code
 decl_stmt|,
 name|ret
@@ -4017,6 +4013,16 @@ decl_stmt|;
 name|uint32_t
 name|msgrng_flags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|mac_make_desc_rfr
 argument_list|(
 operator|&

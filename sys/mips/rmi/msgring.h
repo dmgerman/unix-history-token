@@ -1284,11 +1284,16 @@ name|status
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|int
 name|i
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|msgrng_load_tx_msg0
 argument_list|(
 name|msg
