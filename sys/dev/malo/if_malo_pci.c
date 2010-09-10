@@ -1624,7 +1624,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|malo
 argument_list|,
-name|malofw_fw
+name|firmware
 argument_list|,
 literal|1
 argument_list|,
