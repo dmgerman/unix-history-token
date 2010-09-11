@@ -2042,6 +2042,7 @@ name|sbuf_put_byte
 argument_list|(
 operator|*
 name|str
+operator|++
 argument_list|,
 name|s
 argument_list|)
