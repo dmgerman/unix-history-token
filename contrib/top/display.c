@@ -4425,10 +4425,6 @@ name|bt
 operator|->
 name|tv_sec
 expr_stmt|;
-name|uptime
-operator|+=
-literal|30
-expr_stmt|;
 name|days
 operator|=
 name|uptime
