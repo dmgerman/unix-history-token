@@ -4352,7 +4352,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
