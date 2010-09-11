@@ -173,7 +173,7 @@ specifier|static
 name|boolean_t
 name|dof_init_debug
 init|=
-name|B_TRUE
+name|B_FALSE
 decl_stmt|;
 end_decl_stmt
 
