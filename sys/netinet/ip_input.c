@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_carp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -251,22 +245,11 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_carp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2712,16 +2695,12 @@ operator|==
 literal|0
 operator|)
 operator|&&
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-operator|!
 name|ifp
 operator|->
 name|if_carp
+operator|==
+name|NULL
 operator|&&
-endif|#
-directive|endif
 operator|(
 name|dchg
 operator|==

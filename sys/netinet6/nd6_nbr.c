@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_carp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mpath.h"
 end_include
 
@@ -248,22 +242,11 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet/ip_carp.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -985,9 +968,6 @@ literal|1
 expr_stmt|;
 comment|/* 	 * Target address (taddr6) must be either: 	 * (1) Valid unicast/anycast address for my receiving interface, 	 * (2) Unicast address for which I'm offering proxy service, or 	 * (3) "tentative" address on which DAD is being performed. 	 */
 comment|/* (1) and (3) check. */
-ifdef|#
-directive|ifdef
-name|DEV_CARP
 if|if
 condition|(
 name|ifp
@@ -996,11 +976,12 @@ name|if_carp
 condition|)
 name|ifa
 operator|=
-name|carp_iamatch6
+call|(
+modifier|*
+name|carp_iamatch6_p
+call|)
 argument_list|(
 name|ifp
-operator|->
-name|if_carp
 argument_list|,
 operator|&
 name|taddr6
@@ -1027,25 +1008,6 @@ operator|&
 name|taddr6
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ifa
-operator|=
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|in6ifa_ifpwithaddr
-argument_list|(
-name|ifp
-argument_list|,
-operator|&
-name|taddr6
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* (2) check. */
 if|if
 condition|(
@@ -4459,9 +4421,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEV_CARP
 if|if
 condition|(
 name|ifp
@@ -4470,11 +4429,12 @@ name|if_carp
 condition|)
 name|mac
 operator|=
-name|carp_macmatch6
+call|(
+modifier|*
+name|carp_macmatch6_p
+call|)
 argument_list|(
 name|ifp
-operator|->
-name|if_carp
 argument_list|,
 name|m
 argument_list|,
@@ -4494,17 +4454,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|mac
-operator|=
-name|nd6_ifptomac
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if

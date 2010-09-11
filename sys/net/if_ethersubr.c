@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_carp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mbuf_profiling.h"
 end_include
 
@@ -236,6 +230,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/ip_carp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -267,42 +267,6 @@ include|#
 directive|include
 file|<netinet6/nd6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_CARP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip_carp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2211,9 +2175,6 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-ifdef|#
-directive|ifdef
-name|DEV_CARP
 if|if
 condition|(
 name|ifp
@@ -2223,7 +2184,10 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|carp_output
+call|(
+modifier|*
+name|carp_output_p
+call|)
 argument_list|(
 name|ifp
 argument_list|,
@@ -2238,8 +2202,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* Handle ng_ether(4) processing, if any */
@@ -3536,9 +3498,6 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-ifdef|#
-directive|ifdef
-name|DEV_CARP
 comment|/* 	 * Clear M_PROMISC on frame so that carp(4) will see it when the 	 * mbuf flows up to Layer 3. 	 * FreeBSD's implementation of carp(4) uses the inprotosw 	 * to dispatch IPPROTO_CARP. carp(4) also allocates its own 	 * Ethernet addresses of the form 00:00:5e:00:01:xx, which 	 * is outside the scope of the M_PROMISC test below. 	 * TODO: Maintain a hash table of ethernet addresses other than 	 * ether_dhost which may be active on this ifp. 	 */
 if|if
 condition|(
@@ -3546,11 +3505,12 @@ name|ifp
 operator|->
 name|if_carp
 operator|&&
-name|carp_forus
+call|(
+modifier|*
+name|carp_forus_p
+call|)
 argument_list|(
 name|ifp
-operator|->
-name|if_carp
 argument_list|,
 name|eh
 operator|->
@@ -3567,8 +3527,6 @@ name|M_PROMISC
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|{
