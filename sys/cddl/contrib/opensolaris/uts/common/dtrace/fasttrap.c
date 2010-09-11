@@ -1947,11 +1947,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Before we make any modifications, make sure we've imposed a barrier 	 * on the generation in which this probe was last modified. 	 */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|fasttrap_mod_barrier
 argument_list|(
 name|probe
 operator|->
 name|ftp_gen
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|bucket
