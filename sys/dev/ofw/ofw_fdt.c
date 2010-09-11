@@ -339,8 +339,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2084,8 +2083,7 @@ parameter_list|,
 name|int
 name|nret
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|retvals
 parameter_list|)

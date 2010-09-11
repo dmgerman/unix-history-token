@@ -441,8 +441,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|unsigned
-name|long
+name|cell_t
 name|slots
 index|[
 literal|16

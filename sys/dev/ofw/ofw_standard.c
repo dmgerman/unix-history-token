@@ -120,8 +120,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|returns
 parameter_list|)
@@ -914,8 +913,7 @@ parameter_list|,
 name|int
 name|nreturns
 parameter_list|,
-name|unsigned
-name|long
+name|cell_t
 modifier|*
 name|returns
 parameter_list|)
@@ -2314,10 +2312,10 @@ block|, 	}
 struct|;
 name|cell_t
 modifier|*
-name|cp
+name|ap
 decl_stmt|,
 modifier|*
-name|ap
+name|cp
 decl_stmt|;
 name|int
 name|n
