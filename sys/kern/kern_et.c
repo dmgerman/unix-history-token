@@ -167,9 +167,35 @@ operator|||
 name|bootverbose
 condition|)
 block|{
+if|if
+condition|(
+name|et
+operator|->
+name|et_frequency
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"Event timer \"%s\" frequency %ju Hz quality %d\n"
+literal|"Event timer \"%s\" quality %d\n"
+argument_list|,
+name|et
+operator|->
+name|et_name
+argument_list|,
+name|et
+operator|->
+name|et_quality
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Event timer \"%s\" "
+literal|"frequency %ju Hz quality %d\n"
 argument_list|,
 name|et
 operator|->
@@ -187,6 +213,7 @@ operator|->
 name|et_quality
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|et
 operator|->
