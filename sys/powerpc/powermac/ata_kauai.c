@@ -844,12 +844,20 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_NO_ATAPI_DMA
+expr_stmt|;
 name|sc
 operator|->
 name|shasta
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* Pre-K2 controllers apparently need this hack */
 if|if
 condition|(
