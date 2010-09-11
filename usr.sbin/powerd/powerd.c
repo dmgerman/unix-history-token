@@ -2337,8 +2337,6 @@ decl_stmt|,
 name|mode_battery
 decl_stmt|,
 name|mode_none
-decl_stmt|,
-name|idle
 decl_stmt|;
 name|int
 name|minfreq
@@ -3120,10 +3118,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|idle
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Main loop. */
 for|for
 control|(
