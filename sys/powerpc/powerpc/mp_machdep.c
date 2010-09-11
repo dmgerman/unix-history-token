@@ -191,14 +191,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|volatile
 specifier|static
-name|uint32_t
-name|ap_decr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|volatile
-specifier|static
 name|u_quad_t
 name|ap_timebase
 decl_stmt|;
@@ -260,15 +252,14 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* Initialize DEC and TB, sync with the BSP values */
-name|decr_ap_init
-argument_list|()
-expr_stmt|;
 name|mttb
 argument_list|(
 name|ap_timebase
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mtdec %0" :: "r"(ap_decr));
+name|decr_ap_init
+argument_list|()
+expr_stmt|;
 comment|/* Serialize console output and AP count increment */
 name|mtx_lock_spin
 argument_list|(
@@ -323,6 +314,10 @@ argument_list|()
 operator||
 name|PSL_EE
 argument_list|)
+expr_stmt|;
+comment|/* Start per-CPU event timers. */
+name|cpu_initclocks_ap
+argument_list|()
 expr_stmt|;
 comment|/* Announce ourselves awake, and enter the scheduler */
 name|sched_throw
@@ -949,7 +944,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Provide our current DEC and TB values for APs */
-asm|__asm __volatile("mfdec %0" : "=r"(ap_decr));
 name|ap_timebase
 operator|=
 name|mftb
@@ -1244,6 +1238,26 @@ argument_list|,
 literal|"%s: IPI_STOP (restart)"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPI_HARDCLOCK
+case|:
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"%s: IPI_HARDCLOCK"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|hardclockintr
+argument_list|(
+name|curthread
+operator|->
+name|td_intr_frame
 argument_list|)
 expr_stmt|;
 break|break;

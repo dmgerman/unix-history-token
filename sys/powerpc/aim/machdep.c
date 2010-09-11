@@ -2029,13 +2029,8 @@ block|{
 name|decr_tc_init
 argument_list|()
 expr_stmt|;
-name|stathz
-operator|=
-name|hz
-expr_stmt|;
-name|profhz
-operator|=
-name|hz
+name|cpu_initclocks_bsp
+argument_list|()
 expr_stmt|;
 block|}
 comment|/*  * Shutdown the CPU as much as possible.  */
