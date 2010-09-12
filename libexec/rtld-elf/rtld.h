@@ -1101,6 +1101,17 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|Elf_Sym
+name|sym_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For resolving undefined weak refs. */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void

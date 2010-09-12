@@ -1457,7 +1457,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|Elf_Sym
 name|sym_zero
 decl_stmt|;

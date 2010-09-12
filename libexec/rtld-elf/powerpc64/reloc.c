@@ -1653,6 +1653,29 @@ comment|/* PG XXX */
 block|dbg("\"%s\" in \"%s\" --> %p in \"%s\"", 		    defobj->strtab + def->st_name, basename(obj->path), 		    (void *)target, basename(defobj->path));
 endif|#
 directive|endif
+if|if
+condition|(
+name|def
+operator|==
+operator|&
+name|sym_zero
+condition|)
+block|{
+comment|/* Zero undefined weak symbols */
+name|bzero
+argument_list|(
+name|where
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|funcdesc
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|reloc_jmpslot
 argument_list|(
 name|where
@@ -1671,6 +1694,7 @@ operator|)
 name|rela
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|obj
 operator|->
