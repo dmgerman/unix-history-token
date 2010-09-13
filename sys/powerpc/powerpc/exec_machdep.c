@@ -1055,6 +1055,7 @@ operator|)
 name|usfp
 operator|+
 operator|(
+operator|(
 name|p
 operator|->
 name|p_sysent
@@ -1079,6 +1080,7 @@ name|sigframe
 argument_list|,
 name|sf_uc
 argument_list|)
+operator|)
 expr_stmt|;
 else|#
 directive|else
