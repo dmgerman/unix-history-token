@@ -923,9 +923,9 @@ define|#
 directive|define
 name|msgrng_write_config
 parameter_list|(
-name|value
+name|v
 parameter_list|)
-value|write_c2_register32(MSGRNG_MSG_CONFIG_REG, 0, value)
+value|write_c2_register32(MSGRNG_MSG_CONFIG_REG, 0, v)
 end_define
 
 begin_define
@@ -933,9 +933,9 @@ define|#
 directive|define
 name|msgrng_read_bucksize
 parameter_list|(
-name|bucket
+name|b
 parameter_list|)
-value|read_c2_register32(MSGRNG_MSG_BUCKSIZE_REG, bucket)
+value|read_c2_register32(MSGRNG_MSG_BUCKSIZE_REG, b)
 end_define
 
 begin_define
@@ -943,11 +943,11 @@ define|#
 directive|define
 name|msgrng_write_bucksize
 parameter_list|(
-name|bucket
+name|b
 parameter_list|,
-name|value
+name|v
 parameter_list|)
-value|write_c2_register32(MSGRNG_MSG_BUCKSIZE_REG, bucket, value)
+value|write_c2_register32(MSGRNG_MSG_BUCKSIZE_REG, b, v)
 end_define
 
 begin_define
@@ -955,11 +955,11 @@ define|#
 directive|define
 name|msgrng_read_cc
 parameter_list|(
-name|reg
+name|r
 parameter_list|,
-name|pri
+name|s
 parameter_list|)
-value|read_c2_register32(reg, pri)
+value|read_c2_register32(r, s)
 end_define
 
 begin_define
@@ -967,13 +967,13 @@ define|#
 directive|define
 name|msgrng_write_cc
 parameter_list|(
-name|reg
+name|r
 parameter_list|,
-name|value
+name|v
 parameter_list|,
-name|pri
+name|s
 parameter_list|)
-value|write_c2_register32(reg, pri, value)
+value|write_c2_register32(r, s, v)
 end_define
 
 begin_define
@@ -1013,9 +1013,9 @@ define|#
 directive|define
 name|msgrng_load_tx_msg0
 parameter_list|(
-name|value
+name|v
 parameter_list|)
-value|write_c2_register64(MSGRNG_TX_BUF_REG, 0, value)
+value|write_c2_register64(MSGRNG_TX_BUF_REG, 0, v)
 end_define
 
 begin_define
@@ -1023,9 +1023,9 @@ define|#
 directive|define
 name|msgrng_load_tx_msg1
 parameter_list|(
-name|value
+name|v
 parameter_list|)
-value|write_c2_register64(MSGRNG_TX_BUF_REG, 1, value)
+value|write_c2_register64(MSGRNG_TX_BUF_REG, 1, v)
 end_define
 
 begin_define
@@ -1033,9 +1033,9 @@ define|#
 directive|define
 name|msgrng_load_tx_msg2
 parameter_list|(
-name|value
+name|v
 parameter_list|)
-value|write_c2_register64(MSGRNG_TX_BUF_REG, 2, value)
+value|write_c2_register64(MSGRNG_TX_BUF_REG, 2, v)
 end_define
 
 begin_define
@@ -1043,14 +1043,14 @@ define|#
 directive|define
 name|msgrng_load_tx_msg3
 parameter_list|(
-name|value
+name|v
 parameter_list|)
-value|write_c2_register64(MSGRNG_TX_BUF_REG, 3, value)
+value|write_c2_register64(MSGRNG_TX_BUF_REG, 3, v)
 end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|msgrng_send
 parameter_list|(
@@ -1061,15 +1061,15 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 	             ".set push\n" 	             ".set noreorder\n" 	             "sync\n"
-comment|//       "msgsnd %0\n"
-asm|"move  $8, %0\n" 	             "c2    0x80001\n" 	             ".set pop\n" 	    ::       "r" (stid):"$8" 	);
+asm|( 	    ".set	push\n" 	    ".set	noreorder\n" 	    "move	$8, %0\n" 	    "c2		0x80001\n"
+comment|/* msgsnd $8 */
+asm|".set	pop\n" 	    :: "r" (stid): "$8" 	);
 block|}
 end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|msgrng_receive
 parameter_list|(
@@ -1080,15 +1080,15 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 	             ".set push\n" 	             ".set noreorder\n"
-comment|//       "msgld %0\n"
-asm|"move $8, %0\n" 	             "c2   0x80002\n" 	             ".set pop\n" 	    ::       "r" (pri):"$8" 	);
+asm|( 	    ".set	push\n" 	    ".set	noreorder\n" 	    "move	$8, %0\n" 	    "c2		0x80002\n"
+comment|/* msgld $8 */
+asm|".set	pop\n" 	    :: "r" (pri): "$8" 	);
 block|}
 end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|msgrng_wait
 parameter_list|(
@@ -1099,9 +1099,9 @@ parameter_list|)
 block|{
 asm|__asm__
 specifier|volatile
-asm|( 	             ".set push\n" 	             ".set noreorder\n"
-comment|//       "msgwait %0\n"
-asm|"move $8, %0\n" 	             "c2   0x80003\n" 	             ".set pop\n" 	    ::       "r" (mask):"$8" 	);
+asm|( 	    ".set	push\n" 	    ".set	noreorder\n" 	    "move	$8, %0\n" 	    "c2		0x80003\n"
+comment|/* msgwait $8 */
+asm|".set	pop\n" 	    :: "r" (mask): "$8" 	);
 block|}
 end_function
 
@@ -1162,90 +1162,21 @@ begin_struct
 struct|struct
 name|msgrng_msg
 block|{
-name|__uint64_t
+name|uint64_t
 name|msg0
 decl_stmt|;
-name|__uint64_t
+name|uint64_t
 name|msg1
 decl_stmt|;
-name|__uint64_t
+name|uint64_t
 name|msg2
 decl_stmt|;
-name|__uint64_t
+name|uint64_t
 name|msg3
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|message_send_block_fast
-parameter_list|(
-name|int
-name|size
-parameter_list|,
-name|unsigned
-name|int
-name|code
-parameter_list|,
-name|unsigned
-name|int
-name|stid
-parameter_list|,
-name|unsigned
-name|long
-name|long
-name|msg0
-parameter_list|,
-name|unsigned
-name|long
-name|long
-name|msg1
-parameter_list|,
-name|unsigned
-name|long
-name|long
-name|msg2
-parameter_list|,
-name|unsigned
-name|long
-name|long
-name|msg3
-parameter_list|)
-block|{
-asm|__asm__
-specifier|__volatile__
-asm|(".set push\n" 	            ".set noreorder\n" 	            ".set mips64\n" 	            "dmtc2 %1, $0, 0\n" 	            "dmtc2 %2, $0, 1\n" 	            "dmtc2 %3, $0, 2\n" 	            "dmtc2 %4, $0, 3\n" 	            "move $8, %0\n" 	            "1: c2 0x80001\n" 	            "mfc2 $8, $2\n" 	            "andi $8, $8, 0x6\n" 	            "bnez $8, 1b\n" 	            "move $8, %0\n" 	            ".set pop\n" 	    : 	    :       "r"(((size - 1)<< 16) | (code<< 8) | stid), "r"(msg0), "r"(msg1), "r"(msg2), "r"(msg3) 	    :       "$8" 	);
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|message_receive_fast
-parameter_list|(
-name|bucket
-parameter_list|,
-name|size
-parameter_list|,
-name|code
-parameter_list|,
-name|stid
-parameter_list|,
-name|msg0
-parameter_list|,
-name|msg1
-parameter_list|,
-name|msg2
-parameter_list|,
-name|msg3
-parameter_list|)
-define|\
-value|( { unsigned int _status=0, _tmp=0;                     \            msgrng_receive(bucket);                              \            while ( (_status=msgrng_read_status())& 0x08) ;     \            _tmp = _status& 0x30;                               \            if (__builtin_expect((!_tmp), 1)) {                  \                  (size)=((_status& 0xc0)>>6)+1;                \                  (code)=(_status& 0xff00)>>8;                  \                  (stid)=(_status& 0x7f0000)>>16;               \                  (msg0)=msgrng_load_rx_msg0();                  \                  (msg1)=msgrng_load_rx_msg1();                  \                  (msg2)=msgrng_load_rx_msg2();                  \                  (msg3)=msgrng_load_rx_msg3();                  \                  _tmp=0;                                        \                 }                                               \            _tmp;                                                \         } )
-end_define
 
 begin_function
 specifier|static
@@ -1284,16 +1215,14 @@ name|status
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|int
 name|i
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
+comment|/*  	 * Make sure that all the writes pending at the cpu are flushed. 	 * Any writes pending on CPU will not be see by devices. L1/L2 	 * caches are coherent with IO, so no cache flush needed. 	 */
+asm|__asm __volatile ("sync");
+comment|/* Load TX message buffers */
 name|msgrng_load_tx_msg0
 argument_list|(
 name|msg
@@ -1340,86 +1269,9 @@ operator|<<
 literal|8
 operator|)
 operator||
-operator|(
 name|stid
-operator|)
 expr_stmt|;
-name|msgrng_send
-argument_list|(
-name|dest
-argument_list|)
-expr_stmt|;
-comment|/* Wait for the thread pending to clear */
-do|do
-block|{
-name|status
-operator|=
-name|msgrng_read_status
-argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|i
-operator|++
-operator|<
-literal|10000
-argument_list|,
-operator|(
-literal|"Too many fails\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|(
-name|status
-operator|&
-literal|0x2
-operator|)
-operator|!=
-literal|0
-condition|)
-do|;
-comment|/* If there is a credit failure, return error */
-return|return
-name|status
-operator|&
-literal|0x06
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|message_send_retry
-parameter_list|(
-name|unsigned
-name|int
-name|size
-parameter_list|,
-name|unsigned
-name|int
-name|code
-parameter_list|,
-name|unsigned
-name|int
-name|stid
-parameter_list|,
-name|struct
-name|msgrng_msg
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|ret
-decl_stmt|;
-comment|/* 	 * we are in with interrupt disabled, retrying too many  	 * times is not good 	 */
+comment|/* 	 * Retry a few times on credit fail, this should be a  	 * transient condition, unless there is a configuration 	 * failure, or the receiver is stuck. 	 */
 for|for
 control|(
 name|i
@@ -1428,28 +1280,44 @@ literal|0
 init|;
 name|i
 operator|<
-literal|16
+literal|8
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|ret
-operator|=
-name|message_send
+name|msgrng_send
 argument_list|(
-name|size
+name|dest
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|msgrng_read_status
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|status
+operator|&
+literal|0x2
+operator|)
+operator|==
+literal|0
 argument_list|,
-name|code
-argument_list|,
-name|stid
-argument_list|,
-name|msg
+operator|(
+literal|"Send pending fail!"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+operator|(
+name|status
+operator|&
+literal|0x4
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1459,9 +1327,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* If there is a credit failure, return error */
 return|return
 operator|(
-literal|1
+name|status
+operator|&
+literal|0x06
 operator|)
 return|;
 block|}
@@ -1469,12 +1340,12 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|message_receive
 parameter_list|(
 name|int
-name|pri
+name|bucket
 parameter_list|,
 name|int
 modifier|*
@@ -1486,7 +1357,7 @@ name|code
 parameter_list|,
 name|int
 modifier|*
-name|src_id
+name|stid
 parameter_list|,
 name|struct
 name|msgrng_msg
@@ -1494,43 +1365,127 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|int
-name|res
+name|uint32_t
+name|status
+init|=
+literal|0
+decl_stmt|,
+name|tmp
+init|=
+literal|0
 decl_stmt|;
-name|res
-operator|=
-name|message_receive_fast
+name|msgrng_receive
 argument_list|(
-name|pri
-argument_list|,
+name|bucket
+argument_list|)
+expr_stmt|;
+comment|/* wait for load pending to clear */
+do|do
+block|{
+name|status
+operator|=
+name|msgrng_read_status
+argument_list|()
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|status
+operator|&
+literal|0x08
+operator|)
+operator|!=
+literal|0
+condition|)
+do|;
+comment|/* receive error bits */
+name|tmp
+operator|=
+name|status
+operator|&
+literal|0x30
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|tmp
+operator|)
+return|;
 operator|*
 name|size
-argument_list|,
+operator|=
+operator|(
+operator|(
+name|status
+operator|&
+literal|0xc0
+operator|)
+operator|>>
+literal|6
+operator|)
+operator|+
+literal|1
+expr_stmt|;
 operator|*
 name|code
-argument_list|,
+operator|=
+operator|(
+name|status
+operator|&
+literal|0xff00
+operator|)
+operator|>>
+literal|8
+expr_stmt|;
 operator|*
-name|src_id
-argument_list|,
+name|stid
+operator|=
+operator|(
+name|status
+operator|&
+literal|0x7f0000
+operator|)
+operator|>>
+literal|16
+expr_stmt|;
 name|msg
 operator|->
 name|msg0
-argument_list|,
+operator|=
+name|msgrng_load_rx_msg0
+argument_list|()
+expr_stmt|;
 name|msg
 operator|->
 name|msg1
-argument_list|,
+operator|=
+name|msgrng_load_rx_msg1
+argument_list|()
+expr_stmt|;
 name|msg
 operator|->
 name|msg2
-argument_list|,
+operator|=
+name|msgrng_load_rx_msg2
+argument_list|()
+expr_stmt|;
 name|msg
 operator|->
 name|msg3
-argument_list|)
+operator|=
+name|msgrng_load_rx_msg3
+argument_list|()
 expr_stmt|;
 return|return
-name|res
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function

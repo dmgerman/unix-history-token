@@ -4903,7 +4903,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|message_send_retry
+name|message_send
 argument_list|(
 literal|1
 argument_list|,
@@ -9453,7 +9453,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|message_send_retry
+name|message_send
 argument_list|(
 name|n_entries
 argument_list|,
