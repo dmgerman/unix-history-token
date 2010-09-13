@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ilp32.h"
+file|"lp64.h"
 end_include
 
 begin_comment
@@ -25,14 +25,14 @@ begin_define
 define|#
 directive|define
 name|PTRDIFF_IS_LONG
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIZEOF_IS_ULONG
-value|0
+value|1
 end_define
 
 begin_define
