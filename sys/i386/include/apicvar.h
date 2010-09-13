@@ -216,15 +216,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_STATCLOCK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_STATCLOCK
+value|IPI_HARDCLOCK
 end_define
 
 begin_define
@@ -404,15 +397,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_STATCLOCK
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_BITMAP_LAST
-value|IPI_STATCLOCK
+value|IPI_HARDCLOCK
 end_define
 
 begin_define

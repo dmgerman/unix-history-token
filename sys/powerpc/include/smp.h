@@ -63,13 +63,6 @@ name|IPI_HARDCLOCK
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPI_STATCLOCK
-value|5
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef

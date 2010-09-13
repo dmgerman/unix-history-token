@@ -1254,11 +1254,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 name|hardclockintr
-argument_list|(
-name|curthread
-operator|->
-name|td_intr_frame
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}

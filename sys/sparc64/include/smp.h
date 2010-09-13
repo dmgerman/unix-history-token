@@ -172,13 +172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_STATCLOCK
-value|PIL_STATCLOCK
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPI_STOP
 value|PIL_STOP
 end_define

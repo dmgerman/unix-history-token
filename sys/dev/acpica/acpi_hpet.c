@@ -4047,24 +4047,10 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|hpet_softc
-modifier|*
-name|sc
-decl_stmt|;
+comment|//	struct hpet_softc *sc;
 comment|/* 	 * Disable the timer during suspend.  The timer will not lose 	 * its state in S1 or S2, but we are required to disable 	 * it. 	 */
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|hpet_disable
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|//	sc = device_get_softc(dev);
+comment|//	hpet_disable(sc);
 return|return
 operator|(
 literal|0

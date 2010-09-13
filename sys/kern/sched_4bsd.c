@@ -6066,7 +6066,8 @@ begin_function
 name|void
 name|sched_tick
 parameter_list|(
-name|void
+name|int
+name|cnt
 parameter_list|)
 block|{ }
 end_function

@@ -273,9 +273,8 @@ comment|/* PIL_PREEMPT */
 literal|"hardclock"
 block|,
 comment|/* PIL_HARDCLOCK */
-literal|"statclock"
+literal|"stray"
 block|,
-comment|/* PIL_STATCLOCK */
 literal|"stray"
 block|,
 literal|"stray"
@@ -1093,13 +1092,6 @@ name|PIL_HARDCLOCK
 index|]
 operator|=
 name|cpu_ipi_hardclock
-expr_stmt|;
-name|intr_handlers
-index|[
-name|PIL_STATCLOCK
-index|]
-operator|=
-name|cpu_ipi_statclock
 expr_stmt|;
 endif|#
 directive|endif

@@ -211,9 +211,8 @@ comment|/* PIL_PREEMPT */
 literal|"hardclock"
 block|,
 comment|/* PIL_HARDCLOCK */
-literal|"statclock"
+literal|"stray"
 block|,
-comment|/* PIL_STATCLOCK */
 literal|"stray"
 block|,
 literal|"stray"

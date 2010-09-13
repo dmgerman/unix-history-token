@@ -660,7 +660,7 @@ specifier|static
 name|int
 name|sched_idlespinthresh
 init|=
-literal|64
+literal|16
 decl_stmt|;
 end_decl_stmt
 
@@ -9170,7 +9170,8 @@ begin_function
 name|void
 name|sched_tick
 parameter_list|(
-name|void
+name|int
+name|cnt
 parameter_list|)
 block|{
 name|struct
@@ -9199,7 +9200,7 @@ name|ts
 operator|->
 name|ts_ticks
 operator|+=
-literal|1
+name|cnt
 operator|<<
 name|SCHED_TICK_SHIFT
 expr_stmt|;
@@ -10702,6 +10703,8 @@ argument_list|(
 name|switchcnt
 operator|>
 name|sched_idlespinthresh
+operator|*
+literal|4
 argument_list|)
 expr_stmt|;
 name|tdq

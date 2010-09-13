@@ -73,13 +73,6 @@ name|IPI_HARDCLOCK
 value|0x0020
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPI_STATCLOCK
-value|0x0040
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef

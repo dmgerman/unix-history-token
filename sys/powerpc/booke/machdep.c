@@ -1939,6 +1939,30 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|busy
+condition|)
+block|{
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|cpu_idleclock
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* Freescale E500 core RM section 6.4.1. */
 name|msr
 operator|=
@@ -1947,6 +1971,30 @@ operator||
 name|PSL_WE
 expr_stmt|;
 asm|__asm __volatile("msync; mtmsr %0; isync" :: "r" (msr));
+if|if
+condition|(
+operator|!
+name|busy
+condition|)
+block|{
+name|cpu_activeclock
+argument_list|()
+expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
+block|}
+name|CTR2
+argument_list|(
+name|KTR_SPARE2
+argument_list|,
+literal|"cpu_idle(%d) at %d done"
+argument_list|,
+name|busy
+argument_list|,
+name|curcpu
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

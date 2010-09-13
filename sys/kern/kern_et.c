@@ -93,7 +93,7 @@ name|et_eventtimers_mtx
 argument_list|,
 literal|"et_mtx"
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt

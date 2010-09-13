@@ -242,7 +242,7 @@ define|#
 directive|define
 name|ET_LOCK
 parameter_list|()
-value|mtx_lock_spin(&et_eventtimers_mtx)
+value|mtx_lock(&et_eventtimers_mtx)
 end_define
 
 begin_define
@@ -250,7 +250,7 @@ define|#
 directive|define
 name|ET_UNLOCK
 parameter_list|()
-value|mtx_unlock_spin(&et_eventtimers_mtx)
+value|mtx_unlock(&et_eventtimers_mtx)
 end_define
 
 begin_comment

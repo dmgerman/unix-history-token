@@ -406,7 +406,8 @@ begin_function_decl
 name|void
 name|sched_tick
 parameter_list|(
-name|void
+name|int
+name|cnt
 parameter_list|)
 function_decl|;
 end_function_decl

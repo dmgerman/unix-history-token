@@ -1264,7 +1264,7 @@ name|lapic_et
 operator|.
 name|et_quality
 operator|-=
-literal|100
+literal|200
 expr_stmt|;
 block|}
 name|lapic_et
