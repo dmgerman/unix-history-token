@@ -107,21 +107,39 @@ begin_if
 if|#
 directive|if
 name|G_LIB_VERSION
-operator|==
+operator|<=
 literal|1
 end_if
 
 begin_define
 define|#
 directive|define
-name|G_ARGNAME
+name|G_TYPE_BOOL
+value|G_TYPE_NUMBER
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|G_LIB_VERSION
+operator|>=
+literal|3
+operator|&&
+name|G_LIB_VERSION
+operator|<=
+literal|4
+end_if
 
 begin_define
 define|#
 directive|define
-name|G_TYPE_BOOL
-value|G_TYPE_NUMBER
+name|G_ARGNAME
+value|NULL,
 end_define
 
 begin_else
@@ -133,7 +151,6 @@ begin_define
 define|#
 directive|define
 name|G_ARGNAME
-value|NULL,
 end_define
 
 begin_endif

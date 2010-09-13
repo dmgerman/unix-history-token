@@ -192,26 +192,6 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|char
-name|autofill
-index|[]
-init|=
-literal|"*"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|flags
-index|[]
-init|=
-literal|"C"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|sstart
 index|[
 literal|32
@@ -229,41 +209,40 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-specifier|const
-name|bootcode_param
-index|[]
-init|=
-literal|"bootcode"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GPART_AUTOFILL
+value|"*"
+end_define
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-specifier|const
-name|index_param
-index|[]
-init|=
-literal|"index"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GPART_FLAGS
+value|"C"
+end_define
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-specifier|const
-name|partcode_param
-index|[]
-init|=
-literal|"partcode"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GPART_PARAM_BOOTCODE
+value|"bootcode"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPART_PARAM_INDEX
+value|"index"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GPART_PARAM_PARTCODE
+value|"partcode"
+end_define
 
 begin_function_decl
 specifier|static
@@ -545,7 +524,7 @@ literal|'b'
 block|,
 literal|"start"
 block|,
-name|autofill
+name|GPART_AUTOFILL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -555,7 +534,7 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-name|autofill
+name|GPART_AUTOFILL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -573,7 +552,7 @@ block|,
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 literal|""
 block|,
@@ -595,7 +574,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -603,9 +582,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"[-b start] [-s size] -t type [-i index] [-l label] [-f flags] geom"
 block|}
 block|,
 block|{
@@ -619,7 +596,7 @@ block|{
 block|{
 literal|'b'
 block|,
-name|bootcode_param
+name|GPART_PARAM_BOOTCODE
 block|,
 literal|""
 block|,
@@ -629,7 +606,7 @@ block|,
 block|{
 literal|'p'
 block|,
-name|partcode_param
+name|GPART_PARAM_PARTCODE
 block|,
 literal|""
 block|,
@@ -639,7 +616,7 @@ block|,
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 literal|""
 block|,
@@ -651,7 +628,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -659,9 +636,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"bootcode [-b bootcode] [-p partcode] [-i index] [-f flags] geom"
 block|}
 block|,
 block|{
@@ -674,8 +649,6 @@ block|,
 name|G_NULL_OPTS
 block|,
 literal|"geom"
-block|,
-name|NULL
 block|}
 block|,
 block|{
@@ -711,7 +684,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -719,9 +692,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"provider"
-block|,
-name|NULL
+literal|"-s scheme [-n entries] [-f flags] provider"
 block|}
 block|,
 block|{
@@ -735,7 +706,7 @@ block|{
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
@@ -747,7 +718,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -755,9 +726,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"-i index [-f flags] geom"
 block|}
 block|,
 block|{
@@ -773,7 +742,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -781,9 +750,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"[-f flags] geom"
 block|}
 block|,
 block|{
@@ -797,7 +764,7 @@ block|{
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
@@ -829,7 +796,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -837,9 +804,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"-i index [-l label] [-t type] [-f flags] geom"
 block|}
 block|,
 block|{
@@ -863,7 +828,7 @@ block|,
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
@@ -875,7 +840,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -883,9 +848,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"-a attrib -i index [-f flags] geom"
 block|}
 block|,
 block|{
@@ -919,8 +882,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-lr] [geom ...]"
 block|}
 block|,
@@ -934,8 +895,6 @@ block|,
 name|G_NULL_OPTS
 block|,
 literal|"geom"
-block|,
-name|NULL
 block|}
 block|,
 block|{
@@ -959,7 +918,7 @@ block|,
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
@@ -971,7 +930,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -979,9 +938,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"-a attrib -i index [-f flags] geom"
 block|}
 block|,
 block|{
@@ -997,7 +954,7 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-name|autofill
+name|GPART_AUTOFILL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -1005,7 +962,7 @@ block|,
 block|{
 literal|'i'
 block|,
-name|index_param
+name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
@@ -1017,7 +974,7 @@ literal|'f'
 block|,
 literal|"flags"
 block|,
-name|flags
+name|GPART_FLAGS
 block|,
 name|G_TYPE_STRING
 block|}
@@ -1025,9 +982,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"geom"
-block|,
-name|NULL
+literal|"[-s size] -i index [-f flags] geom"
 block|}
 block|,
 name|G_CMD_SENTINEL
@@ -1655,7 +1610,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-name|index_param
+name|GPART_PARAM_INDEX
 argument_list|)
 expr_stmt|;
 name|idx
@@ -4738,7 +4693,7 @@ name|gctl_has_param
 argument_list|(
 name|req
 argument_list|,
-name|bootcode_param
+name|GPART_PARAM_BOOTCODE
 argument_list|)
 condition|)
 block|{
@@ -4748,7 +4703,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-name|bootcode_param
+name|GPART_PARAM_BOOTCODE
 argument_list|)
 expr_stmt|;
 name|bootsize
@@ -4774,7 +4729,7 @@ name|gctl_change_param
 argument_list|(
 name|req
 argument_list|,
-name|bootcode_param
+name|GPART_PARAM_BOOTCODE
 argument_list|,
 name|bootsize
 argument_list|,
@@ -4886,7 +4841,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-literal|"geom"
+literal|"arg0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4956,7 +4911,7 @@ name|gctl_has_param
 argument_list|(
 name|req
 argument_list|,
-name|partcode_param
+name|GPART_PARAM_PARTCODE
 argument_list|)
 condition|)
 block|{
@@ -4966,7 +4921,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-name|partcode_param
+name|GPART_PARAM_PARTCODE
 argument_list|)
 expr_stmt|;
 name|partsize
@@ -4997,7 +4952,7 @@ name|gctl_delete_param
 argument_list|(
 name|req
 argument_list|,
-name|partcode_param
+name|GPART_PARAM_PARTCODE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5031,7 +4986,7 @@ name|gctl_has_param
 argument_list|(
 name|req
 argument_list|,
-name|index_param
+name|GPART_PARAM_INDEX
 argument_list|)
 condition|)
 block|{
@@ -5054,7 +5009,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-name|index_param
+name|GPART_PARAM_INDEX
 argument_list|)
 expr_stmt|;
 name|idx
@@ -5098,7 +5053,7 @@ name|gctl_delete_param
 argument_list|(
 name|req
 argument_list|,
-name|index_param
+name|GPART_PARAM_INDEX
 argument_list|)
 expr_stmt|;
 if|if
@@ -5242,6 +5197,34 @@ name|error
 decl_stmt|,
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|gctl_get_int
+argument_list|(
+name|req
+argument_list|,
+literal|"nargs"
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid number of arguments."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|gctl_delete_param
+argument_list|(
+name|req
+argument_list|,
+literal|"nargs"
+argument_list|)
+expr_stmt|;
 comment|/* autofill parameters (if applicable). */
 name|error
 operator|=

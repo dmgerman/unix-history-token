@@ -111,15 +111,6 @@ name|G_RAID3_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|default_blocksize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -190,8 +181,6 @@ block|,
 name|raid3_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}
@@ -307,8 +296,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-adfFhnrRvwW] name"
 block|}
 block|,
@@ -320,8 +307,6 @@ block|,
 name|raid3_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -356,8 +341,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-hv]<-n number> name prov"
 block|}
@@ -413,10 +396,9 @@ block|,
 block|{
 literal|'s'
 block|,
-literal|"blocksize"
+literal|"sectorsize"
 block|,
-operator|&
-name|default_blocksize
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -434,8 +416,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-hFnrvw] [-s blocksize] name prov prov prov ..."
 block|}
 block|,
@@ -447,8 +427,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] name prov"
 block|}
@@ -474,8 +452,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-v]<-n number> name"
 block|}
 block|,
@@ -499,8 +475,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}
@@ -938,7 +912,7 @@ name|gctl_get_intmax
 argument_list|(
 name|req
 argument_list|,
-literal|"blocksize"
+literal|"sectorsize"
 argument_list|)
 expr_stmt|;
 for|for

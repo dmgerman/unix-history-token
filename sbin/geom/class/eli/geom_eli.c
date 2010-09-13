@@ -167,44 +167,6 @@ name|GELI_ENC_ALGO
 value|"aes"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|keylen
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|keyno
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|iterations
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|sectorsize
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -438,8 +400,7 @@ literal|'i'
 block|,
 literal|"iterations"
 block|,
-operator|&
-name|iterations
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -459,8 +420,7 @@ literal|'l'
 block|,
 literal|"keylen"
 block|,
-operator|&
-name|keylen
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -480,16 +440,13 @@ literal|'s'
 block|,
 literal|"sectorsize"
 block|,
-operator|&
-name|sectorsize
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-bPv] [-a aalgo] [-B backupfile] [-e ealgo] [-i iterations] [-l keylen] [-K newkeyfile] [-s sectorsize] prov"
 block|}
@@ -547,8 +504,7 @@ literal|'i'
 block|,
 literal|"iterations"
 block|,
-operator|&
-name|iterations
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -568,8 +524,7 @@ literal|'l'
 block|,
 literal|"keylen"
 block|,
-operator|&
-name|keylen
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -589,16 +544,13 @@ literal|'s'
 block|,
 literal|"sectorsize"
 block|,
-operator|&
-name|sectorsize
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"- an alias for 'init'"
 block|}
@@ -656,8 +608,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-dprv] [-k keyfile] prov"
 block|}
 block|,
@@ -692,8 +642,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fl] prov ..."
 block|}
 block|,
@@ -727,8 +675,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"- an alias for 'detach'"
 block|}
@@ -778,8 +724,7 @@ literal|'l'
 block|,
 literal|"keylen"
 block|,
-operator|&
-name|keylen
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -789,16 +734,13 @@ literal|'s'
 block|,
 literal|"sectorsize"
 block|,
-operator|&
-name|sectorsize
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-d] [-a aalgo] [-e ealgo] [-l keylen] [-s sectorsize] prov"
 block|}
@@ -834,8 +776,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-bB] prov ..."
 block|}
 block|,
@@ -852,8 +792,7 @@ literal|'i'
 block|,
 literal|"iterations"
 block|,
-operator|&
-name|iterations
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -883,8 +822,7 @@ literal|'n'
 block|,
 literal|"keyno"
 block|,
-operator|&
-name|keyno
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -911,8 +849,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-pPv] [-n keyno] [-i iterations] [-k keyfile] [-K newkeyfile] prov"
 block|}
@@ -950,16 +886,13 @@ literal|'n'
 block|,
 literal|"keyno"
 block|,
-operator|&
-name|keyno
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-afv] [-n keyno] prov"
 block|}
@@ -985,8 +918,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-av] [prov ...]"
 block|}
 block|,
@@ -998,8 +929,6 @@ block|,
 name|eli_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov file"
 block|}
@@ -1013,8 +942,6 @@ name|eli_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] file prov"
 block|}
 block|,
@@ -1027,8 +954,6 @@ name|eli_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -1040,8 +965,6 @@ block|,
 name|eli_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}

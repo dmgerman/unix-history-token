@@ -186,8 +186,6 @@ name|mp_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -202,8 +200,6 @@ name|mp_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -215,8 +211,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}
@@ -230,8 +224,6 @@ name|mp_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -244,8 +236,6 @@ name|NULL
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -257,8 +247,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}

@@ -87,41 +87,19 @@ name|G_CACHE_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|blocksize_label
-init|=
-literal|65536
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GCACHE_BLOCKSIZE
+value|"65536"
+end_define
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|size_label
-init|=
-literal|100
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|blocksize_configure
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|size_configure
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GCACHE_SIZE
+value|"100"
+end_define
 
 begin_function_decl
 specifier|static
@@ -194,8 +172,6 @@ name|cache_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] prov ..."
 block|}
 block|,
@@ -212,8 +188,7 @@ literal|'b'
 block|,
 literal|"blocksize"
 block|,
-operator|&
-name|blocksize_configure
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -223,16 +198,13 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-operator|&
-name|size_configure
+literal|"0"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-v] [-b blocksize] [-s size] name"
 block|}
@@ -252,8 +224,7 @@ literal|'b'
 block|,
 literal|"blocksize"
 block|,
-operator|&
-name|blocksize_label
+name|GCACHE_BLOCKSIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -263,16 +234,13 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-operator|&
-name|size_label
+name|GCACHE_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-v] [-b blocksize] [-s size] name prov"
 block|}
@@ -298,8 +266,6 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-name|NULL
-block|,
 literal|"[-fv] name ..."
 block|}
 block|,
@@ -311,8 +277,6 @@ block|,
 name|cache_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"prov ..."
 block|}
@@ -332,8 +296,7 @@ literal|'b'
 block|,
 literal|"blocksize"
 block|,
-operator|&
-name|blocksize_label
+name|GCACHE_BLOCKSIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -343,16 +306,13 @@ literal|'s'
 block|,
 literal|"size"
 block|,
-operator|&
-name|size_label
+name|GCACHE_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-v] [-b blocksize] [-s size] name prov"
 block|}
@@ -365,8 +325,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] name ..."
 block|}
@@ -391,8 +349,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}

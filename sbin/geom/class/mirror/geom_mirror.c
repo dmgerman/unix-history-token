@@ -118,33 +118,19 @@ name|GMIRROR_BALANCE
 value|"load"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|label_slice
-init|=
-literal|4096
-decl_stmt|,
-name|configure_slice
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GMIRROR_SLICE
+value|"4096"
+end_define
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|insert_priority
-init|=
-literal|0
-decl_stmt|,
-name|configure_priority
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GMIRROR_PRIORITY
+value|"0"
+end_define
 
 begin_function_decl
 specifier|static
@@ -230,8 +216,6 @@ name|mirror_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -243,8 +227,6 @@ block|,
 name|mirror_main
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] prov ..."
 block|}
@@ -332,8 +314,7 @@ literal|'p'
 block|,
 literal|"priority"
 block|,
-operator|&
-name|configure_priority
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -343,16 +324,13 @@ literal|'s'
 block|,
 literal|"slice"
 block|,
-operator|&
-name|configure_slice
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-adfFhnv] [-b balance] [-s slice] name\n"
 literal|"[-v] -p priority name prov"
@@ -367,8 +345,6 @@ name|NULL
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -381,8 +357,6 @@ name|mirror_main
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"prov ..."
 block|}
 block|,
@@ -394,8 +368,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"name ..."
 block|}
@@ -453,16 +425,13 @@ literal|'s'
 block|,
 literal|"slice"
 block|,
-operator|&
-name|label_slice
+name|GMIRROR_SLICE
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-Fhnv] [-b balance] [-s slice] name prov ..."
 block|}
@@ -500,16 +469,13 @@ literal|'p'
 block|,
 literal|"priority"
 block|,
-operator|&
-name|insert_priority
+name|GMIRROR_PRIORITY
 block|,
 name|G_TYPE_NUMBER
 block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-hiv] [-p priority] name prov ..."
 block|}
@@ -523,8 +489,6 @@ name|NULL
 block|,
 name|G_NULL_OPTS
 block|,
-name|NULL
-block|,
 literal|"[-v] name prov ..."
 block|}
 block|,
@@ -536,8 +500,6 @@ block|,
 name|NULL
 block|,
 name|G_NULL_OPTS
-block|,
-name|NULL
 block|,
 literal|"[-v] name prov ..."
 block|}
@@ -562,8 +524,6 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
-block|,
-name|NULL
 block|,
 literal|"[-fv] name ..."
 block|}
