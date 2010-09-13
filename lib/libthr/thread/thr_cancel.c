@@ -140,13 +140,13 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-comment|/* 	 * POSIX says _pthread_cancel should be async cancellation safe. 	 * _thr_ref_add and _thr_ref_delete will enter and leave critical 	 * region automatically. 	 */
+comment|/* 	 * POSIX says _pthread_cancel should be async cancellation safe. 	 * _thr_find_thread and THR_THREAD_UNLOCK will enter and leave critical 	 * region automatically. 	 */
 if|if
 condition|(
 operator|(
 name|ret
 operator|=
-name|_thr_ref_add
+name|_thr_find_thread
 argument_list|(
 name|curthread
 argument_list|,
@@ -159,13 +159,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|THR_THREAD_LOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -197,13 +190,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|THR_THREAD_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|pthread
-argument_list|)
-expr_stmt|;
-name|_thr_ref_delete
 argument_list|(
 name|curthread
 argument_list|,

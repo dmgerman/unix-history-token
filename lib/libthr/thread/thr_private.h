@@ -1140,6 +1140,16 @@ directive|define
 name|THR_FLAGS_SUSPENDED
 value|0x0004
 comment|/* thread is suspended */
+define|#
+directive|define
+name|THR_FLAGS_IN_GCLIST
+value|0x0004
+comment|/* thread in gc list */
+define|#
+directive|define
+name|THR_FLAGS_DETACHED
+value|0x0008
+comment|/* thread is detached */
 comment|/* Thread list flags; only set with thread list lock held. */
 name|int
 name|tlflags
@@ -1154,16 +1164,6 @@ directive|define
 name|TLFLAGS_IN_TDLIST
 value|0x0002
 comment|/* thread in all thread list */
-define|#
-directive|define
-name|TLFLAGS_IN_GCLIST
-value|0x0004
-comment|/* thread in gc list */
-define|#
-directive|define
-name|TLFLAGS_DETACHED
-value|0x0008
-comment|/* thread is detached */
 comment|/* Queue of currently owned NORMAL or PRIO_INHERIT type mutexes. */
 name|struct
 name|mutex_queue
@@ -1229,6 +1229,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|THR_SHOULD_GC
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|((thrd)->refcount == 0&& (thrd)->state == PS_DEAD&&		\ 	 ((thrd)->flags& THR_FLAGS_DETACHED) != 0)
+end_define
 
 begin_define
 define|#
@@ -1426,12 +1437,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|THREAD_LIST_LOCK
+name|THREAD_LIST_RDLOCK
 parameter_list|(
 name|curthrd
 parameter_list|)
 define|\
-value|do {								\ 	THR_LOCK_ACQUIRE((curthrd),&_thr_list_lock);		\ } while (0)
+value|do {								\ 	(curthrd)->locklevel++;					\ 	_thr_rwl_rdlock(&_thr_list_lock);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_LIST_WRLOCK
+parameter_list|(
+name|curthrd
+parameter_list|)
+define|\
+value|do {								\ 	(curthrd)->locklevel++;					\ 	_thr_rwl_wrlock(&_thr_list_lock);			\ } while (0)
 end_define
 
 begin_define
@@ -1442,7 +1464,7 @@ parameter_list|(
 name|curthrd
 parameter_list|)
 define|\
-value|do {								\ 	THR_LOCK_RELEASE((curthrd),&_thr_list_lock);		\ } while (0)
+value|do {								\ 	_thr_rwl_unlock(&_thr_list_lock);			\ 	(curthrd)->locklevel--;					\ 	_thr_ast(curthrd);					\ } while (0)
 end_define
 
 begin_comment
@@ -1476,7 +1498,7 @@ name|THR_GCLIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->tlflags |= TLFLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->flags |= THR_FLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1486,7 +1508,31 @@ name|THR_GCLIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->tlflags&= ~TLFLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->flags&= ~THR_FLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_REF_ADD
+parameter_list|(
+name|curthread
+parameter_list|,
+name|pthread
+parameter_list|)
+value|{			\ 	THR_CRITICAL_ENTER(curthread);				\ 	pthread->refcount++;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_REF_DEL
+parameter_list|(
+name|curthread
+parameter_list|,
+name|pthread
+parameter_list|)
+value|{			\ 	pthread->refcount--;					\ 	THR_CRITICAL_LEAVE(curthread);				\ } while (0)
 end_define
 
 begin_define
@@ -1778,7 +1824,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|umutex
+name|urwlock
 name|_thr_list_lock
 name|__hidden
 decl_stmt|;
@@ -2406,6 +2452,22 @@ name|void
 name|_thr_signal_postfork_child
 argument_list|(
 name|void
+argument_list|)
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_thr_try_gc
+argument_list|(
+expr|struct
+name|pthread
+operator|*
+argument_list|,
+expr|struct
+name|pthread
+operator|*
 argument_list|)
 name|__hidden
 decl_stmt|;

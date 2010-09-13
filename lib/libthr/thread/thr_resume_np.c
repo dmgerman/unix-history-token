@@ -101,7 +101,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thr_ref_add
+name|_thr_find_thread
 argument_list|(
 name|curthread
 argument_list|,
@@ -116,26 +116,12 @@ literal|0
 condition|)
 block|{
 comment|/* Lock the threads scheduling queue: */
-name|THR_THREAD_LOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|thread
-argument_list|)
-expr_stmt|;
 name|resume_common
 argument_list|(
 name|thread
 argument_list|)
 expr_stmt|;
 name|THR_THREAD_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|thread
-argument_list|)
-expr_stmt|;
-name|_thr_ref_delete
 argument_list|(
 name|curthread
 argument_list|,
@@ -172,7 +158,7 @@ modifier|*
 name|thread
 decl_stmt|;
 comment|/* Take the thread list lock: */
-name|THREAD_LIST_LOCK
+name|THREAD_LIST_RDLOCK
 argument_list|(
 name|curthread
 argument_list|)

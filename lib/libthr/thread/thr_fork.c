@@ -554,7 +554,11 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|THR_FLAGS_NEED_SUSPEND
+operator||
+name|THR_FLAGS_DETACHED
+operator|)
 expr_stmt|;
 comment|/* 		 * Thread list will be reinitialized, and later we call 		 * _libpthread_init(), it will add us back to list. 		 */
 name|curthread
@@ -562,11 +566,7 @@ operator|->
 name|tlflags
 operator|&=
 operator|~
-operator|(
 name|TLFLAGS_IN_TDLIST
-operator||
-name|TLFLAGS_DETACHED
-operator|)
 expr_stmt|;
 comment|/* child is a new kernel thread. */
 name|thr_self

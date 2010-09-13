@@ -233,7 +233,7 @@ operator|~
 name|THR_STACK_USER
 expr_stmt|;
 comment|/* 	 * Use the garbage collector lock for synchronization of the 	 * spare stack lists and allocations from usrstack. 	 */
-name|THREAD_LIST_LOCK
+name|THREAD_LIST_WRLOCK
 argument_list|(
 name|curthread
 argument_list|)

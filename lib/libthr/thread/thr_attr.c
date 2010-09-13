@@ -147,7 +147,7 @@ name|int
 name|_pthread_attr_get_np
 parameter_list|(
 name|pthread_t
-name|pid
+name|pthread
 parameter_list|,
 name|pthread_attr_t
 modifier|*
@@ -168,7 +168,7 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-name|pid
+name|pthread
 operator|==
 name|NULL
 operator|||
@@ -196,11 +196,11 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thr_ref_add
+name|_thr_find_thread
 argument_list|(
 name|curthread
 argument_list|,
-name|pid
+name|pthread
 argument_list|,
 comment|/*include dead*/
 literal|0
@@ -216,17 +216,17 @@ operator|)
 return|;
 name|attr
 operator|=
-name|pid
+name|pthread
 operator|->
 name|attr
 expr_stmt|;
 if|if
 condition|(
-name|pid
+name|pthread
 operator|->
-name|tlflags
+name|flags
 operator|&
-name|TLFLAGS_DETACHED
+name|THR_FLAGS_DETACHED
 condition|)
 name|attr
 operator|.
@@ -234,11 +234,11 @@ name|flags
 operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
-name|_thr_ref_delete
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
-name|pid
+name|pthread
 argument_list|)
 expr_stmt|;
 name|memcpy
