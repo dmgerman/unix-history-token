@@ -1458,19 +1458,9 @@ argument_list|(
 name|len
 operator|>
 literal|0
-operator|&&
-name|len
-operator|<=
-name|s
-operator|->
-name|s_len
 argument_list|,
 operator|(
-literal|"Bad drain amount %d for sbuf %p"
-operator|,
-name|len
-operator|,
-name|s
+literal|"Drain must either error or work!"
 operator|)
 argument_list|)
 expr_stmt|;
