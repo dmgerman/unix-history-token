@@ -160,25 +160,12 @@ name|GELI_BACKUP_DIR
 value|"/var/backups/"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-name|aalgo
-index|[]
-init|=
-literal|"none"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|ealgo
-index|[]
-init|=
-literal|"aes"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GELI_ENC_ALGO
+value|"aes"
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -215,31 +202,6 @@ name|intmax_t
 name|sectorsize
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|keyfile
-index|[]
-init|=
-literal|""
-decl_stmt|,
-name|newkeyfile
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|backupfile
-index|[]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -436,7 +398,7 @@ literal|'a'
 block|,
 literal|"aalgo"
 block|,
-name|aalgo
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -456,7 +418,7 @@ literal|'B'
 block|,
 literal|"backupfile"
 block|,
-name|backupfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -466,7 +428,7 @@ literal|'e'
 block|,
 literal|"ealgo"
 block|,
-name|ealgo
+name|GELI_ENC_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
@@ -487,7 +449,7 @@ literal|'K'
 block|,
 literal|"newkeyfile"
 block|,
-name|newkeyfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -545,7 +507,7 @@ literal|'a'
 block|,
 literal|"aalgo"
 block|,
-name|aalgo
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -565,7 +527,7 @@ literal|'B'
 block|,
 literal|"backupfile"
 block|,
-name|backupfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -575,7 +537,7 @@ literal|'e'
 block|,
 literal|"ealgo"
 block|,
-name|ealgo
+name|GELI_ENC_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
@@ -596,7 +558,7 @@ literal|'K'
 block|,
 literal|"newkeyfile"
 block|,
-name|newkeyfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -666,7 +628,7 @@ literal|'k'
 block|,
 literal|"keyfile"
 block|,
-name|keyfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -786,7 +748,7 @@ literal|'a'
 block|,
 literal|"aalgo"
 block|,
-name|aalgo
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -806,7 +768,7 @@ literal|'e'
 block|,
 literal|"ealgo"
 block|,
-name|ealgo
+name|GELI_ENC_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
@@ -901,7 +863,7 @@ literal|'k'
 block|,
 literal|"keyfile"
 block|,
-name|keyfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -911,7 +873,7 @@ literal|'K'
 block|,
 literal|"newkeyfile"
 block|,
-name|newkeyfile
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -2951,14 +2913,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
+operator|*
 name|str
-argument_list|,
-literal|"none"
-argument_list|)
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|md

@@ -111,20 +111,12 @@ name|G_MIRROR_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|label_balance
-index|[]
-init|=
-literal|"load"
-decl_stmt|,
-name|configure_balance
-index|[]
-init|=
-literal|"none"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GMIRROR_BALANCE
+value|"load"
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -280,7 +272,7 @@ literal|'b'
 block|,
 literal|"balance"
 block|,
-name|configure_balance
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -421,7 +413,7 @@ literal|'b'
 block|,
 literal|"balance"
 block|,
-name|label_balance
+name|GMIRROR_BALANCE
 block|,
 name|G_TYPE_STRING
 block|}

@@ -1372,14 +1372,10 @@ return|return;
 block|}
 if|if
 condition|(
-name|strcmp
-argument_list|(
+operator|*
 name|name
-argument_list|,
-literal|"none"
-argument_list|)
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|md

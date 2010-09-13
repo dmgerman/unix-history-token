@@ -202,16 +202,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-name|optional
-index|[]
-init|=
-literal|""
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|flags
 index|[]
 init|=
@@ -585,7 +575,7 @@ literal|'i'
 block|,
 name|index_param
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -595,7 +585,7 @@ literal|'l'
 block|,
 literal|"label"
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -631,7 +621,7 @@ literal|'b'
 block|,
 name|bootcode_param
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -641,7 +631,7 @@ literal|'p'
 block|,
 name|partcode_param
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -651,7 +641,7 @@ literal|'i'
 block|,
 name|index_param
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -711,7 +701,7 @@ literal|'n'
 block|,
 literal|"entries"
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -819,7 +809,7 @@ literal|'l'
 block|,
 literal|"label"
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}
@@ -829,7 +819,7 @@ literal|'t'
 block|,
 literal|"type"
 block|,
-name|optional
+literal|""
 block|,
 name|G_TYPE_STRING
 block|}

@@ -162,6 +162,7 @@ name|char
 modifier|*
 name|go_name
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|go_val
