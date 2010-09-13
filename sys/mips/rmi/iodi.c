@@ -1576,6 +1576,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_setup_intr
 argument_list|,
 name|iodi_setup_intr
