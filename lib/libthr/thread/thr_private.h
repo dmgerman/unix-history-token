@@ -1143,12 +1143,12 @@ comment|/* thread is suspended */
 define|#
 directive|define
 name|THR_FLAGS_IN_GCLIST
-value|0x0004
+value|0x0008
 comment|/* thread in gc list */
 define|#
 directive|define
 name|THR_FLAGS_DETACHED
-value|0x0008
+value|0x0010
 comment|/* thread is detached */
 comment|/* Thread list flags; only set with thread list lock held. */
 name|int
