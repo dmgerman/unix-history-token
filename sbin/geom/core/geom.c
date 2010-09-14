@@ -1277,13 +1277,6 @@ name|opt
 argument_list|)
 operator|==
 name|G_TYPE_NUMBER
-operator|||
-name|G_OPT_TYPE
-argument_list|(
-name|opt
-argument_list|)
-operator|==
-name|G_TYPE_ASCNUM
 condition|)
 block|{
 if|if

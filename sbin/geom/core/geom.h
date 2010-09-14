@@ -74,13 +74,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_TYPE_ASCNUM
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_TYPE_MASK
 value|0x0f
 end_define
