@@ -2660,6 +2660,10 @@ name|cc_firsttick
 operator|)
 operator|<
 literal|0
+operator|&&
+name|callout_new_inserted
+operator|!=
+name|NULL
 condition|)
 block|{
 name|cc
