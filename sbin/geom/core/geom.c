@@ -1304,7 +1304,7 @@ name|err
 argument_list|(
 name|EXIT_FAILURE
 argument_list|,
-literal|"Invalid value for '%c' argument."
+literal|"Invalid value for '%c' argument"
 argument_list|,
 name|opt
 operator|->
