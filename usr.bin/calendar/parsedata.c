@@ -5565,7 +5565,6 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-empty_stmt|;
 name|m
 operator|=
 operator|--
