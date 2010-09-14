@@ -556,7 +556,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|G_VAL_OPTIONAL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -620,7 +620,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|G_VAL_OPTIONAL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -676,7 +676,7 @@ literal|"entries"
 block|,
 name|G_VAL_OPTIONAL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -710,7 +710,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -768,7 +768,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -832,7 +832,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -922,7 +922,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
@@ -966,7 +966,7 @@ name|GPART_PARAM_INDEX
 block|,
 name|NULL
 block|,
-name|G_TYPE_ASCNUM
+name|G_TYPE_NUMBER
 block|}
 block|,
 block|{
