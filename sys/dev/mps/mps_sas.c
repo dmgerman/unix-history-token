@@ -5598,7 +5598,7 @@ break|break;
 case|case
 name|MPI2_IOCSTATUS_SCSI_DATA_OVERRUN
 case|:
-comment|/* 		 * XXX any way to report this? 		 */
+comment|/* resid is ignored for this condition */
 name|ccb
 operator|->
 name|csio
@@ -5613,7 +5613,7 @@ name|ccb_h
 operator|.
 name|status
 operator|=
-name|CAM_REQ_CMP
+name|CAM_DATA_RUN_ERR
 expr_stmt|;
 break|break;
 case|case
