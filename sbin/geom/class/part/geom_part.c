@@ -554,7 +554,7 @@ literal|'i'
 block|,
 name|GPART_PARAM_INDEX
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -564,7 +564,7 @@ literal|'l'
 block|,
 literal|"label"
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -598,7 +598,7 @@ literal|'b'
 block|,
 name|GPART_PARAM_BOOTCODE
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -608,7 +608,7 @@ literal|'p'
 block|,
 name|GPART_PARAM_PARTCODE
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -618,7 +618,7 @@ literal|'i'
 block|,
 name|GPART_PARAM_INDEX
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -674,7 +674,7 @@ literal|'n'
 block|,
 literal|"entries"
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_ASCNUM
 block|}
@@ -776,7 +776,7 @@ literal|'l'
 block|,
 literal|"label"
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_STRING
 block|}
@@ -786,7 +786,7 @@ literal|'t'
 block|,
 literal|"type"
 block|,
-literal|""
+name|G_VAL_OPTIONAL
 block|,
 name|G_TYPE_STRING
 block|}

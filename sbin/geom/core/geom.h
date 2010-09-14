@@ -183,6 +183,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_VAL_OPTIONAL
+value|((void *)-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_OPT_SENTINEL
 value|{ '\0', NULL, NULL, G_TYPE_NONE }
 end_define
