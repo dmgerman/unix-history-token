@@ -827,7 +827,7 @@ argument|*extsize; extern void	*dblow
 argument_list|,
 argument|*dbsize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	end; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
-argument|scratch; 	uint8_t		*cache_check;
+argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -837,6 +837,8 @@ directive|endif
 argument|end =
 literal|0
 argument|; 	kmdp = NULL; 	trap_offset =
+literal|0
+argument|; 	cacheline_warn =
 literal|0
 argument|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
@@ -878,7 +880,7 @@ argument|switch (mfpvr()>>
 literal|16
 argument|) { 		case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scratch = mfspr(SPR_HID5); 			scratch&= ~HID5_970_DCBZ_SIZE_HI; 			mtspr(SPR_HID5, scratch); 			break; 	}
 comment|/* 	 * Initialize the interrupt tables and figure out our cache line 	 * size and whether or not we need the 64-bit bridge code. 	 */
-comment|/* 	 * Disable translation in case the vector area hasn't been 	 * mapped (G5). 	 */
+comment|/* 	 * Disable translation in case the vector area hasn't been 	 * mapped (G5). Note that no OFW calls can be made until 	 * translation is re-enabled. 	 */
 argument|msr = mfmsr(); 	mtmsr((msr& ~(PSL_IR | PSL_DR)) | PSL_RI); 	isync();
 comment|/* 	 * Measure the cacheline size using dcbz 	 * 	 * Use EXC_PGM as a playground. We are about to overwrite it 	 * anyway, we know it exists, and we know it is cache-aligned. 	 */
 argument|cache_check = (void *)EXC_PGM;  	for (cacheline_size =
@@ -900,9 +902,9 @@ argument|; cacheline_size++);
 comment|/* Work around psim bug */
 argument|if (cacheline_size ==
 literal|0
-argument|) { 		printf(
-literal|"WARNING: cacheline size undetermined, setting to 32\n"
-argument|); 		cacheline_size =
+argument|) { 		cacheline_warn =
+literal|1
+argument|; 		cacheline_size =
 literal|32
 argument|; 	}
 ifndef|#
@@ -1565,6 +1567,20 @@ expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
+comment|/* Warn if cachline size was not determined */
+if|if
+condition|(
+name|cacheline_warn
+operator|==
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: cacheline size undetermined, setting to 32\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Choose a platform module so we can get the physical memory map. 	 */
 name|platform_probe_and_attach
 argument_list|()
