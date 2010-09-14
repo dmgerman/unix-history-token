@@ -1429,6 +1429,10 @@ operator|(
 name|align
 operator|==
 literal|1
+operator|&&
+name|size
+operator|>
+literal|1
 operator|)
 condition|?
 operator|(
@@ -1448,6 +1452,10 @@ operator|(
 name|align
 operator|==
 literal|1
+operator|&&
+name|size
+operator|>
+name|USB_PAGE_SIZE
 operator|)
 condition|?
 name|USB_PAGE_SIZE
