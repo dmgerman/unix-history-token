@@ -1482,26 +1482,12 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|mtx
-name|global_hardclock_mtx
+name|int
+name|global_hardclock_run
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|global_hardclock_mtx
-argument_list|,
-operator|&
-name|global_hardclock_mtx
-argument_list|,
-literal|"ghc_mtx"
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Initialize clock frequencies and start both clocks running.  */
@@ -1923,12 +1909,20 @@ argument_list|)
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
 name|global
 decl_stmt|,
 name|newticks
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* SW_WATCHDOG */
 comment|/* 	 * Update per-CPU and possibly global ticks values. 	 */
 operator|*
 name|t
@@ -2164,25 +2158,42 @@ operator|>
 literal|0
 condition|)
 block|{
-name|mtx_lock_spin
+comment|/* Dangerous and no need to call these things concurrently. */
+if|if
+condition|(
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
-name|global_hardclock_mtx
+name|global_hardclock_run
+argument_list|,
+literal|0
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|tc_ticktock
 argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
+comment|/* This is very short and quick. */
 name|hardclock_device_poll
 argument_list|()
 expr_stmt|;
-comment|/* This is very short and quick. */
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|global_hardclock_run
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SW_WATCHDOG
@@ -2193,15 +2204,26 @@ operator|>
 literal|0
 condition|)
 block|{
+name|i
+operator|=
+name|atomic_fetchadd_int
+argument_list|(
+operator|&
 name|watchdog_ticks
-operator|-=
+argument_list|,
+operator|-
 name|newticks
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|watchdog_ticks
-operator|<=
+name|i
+operator|>
 literal|0
+operator|&&
+name|i
+operator|<=
+name|newticks
 condition|)
 name|watchdog_fire
 argument_list|()
@@ -2210,12 +2232,6 @@ block|}
 endif|#
 directive|endif
 comment|/* SW_WATCHDOG */
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|global_hardclock_mtx
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
