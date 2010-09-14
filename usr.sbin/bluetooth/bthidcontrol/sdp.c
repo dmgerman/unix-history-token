@@ -159,10 +159,17 @@ argument_list|(
 literal|0x0205
 argument_list|,
 comment|/* HIDReconnectInitiate */
+literal|0x0205
+argument_list|)
+block|,
+name|SDP_ATTR_RANGE
+argument_list|(
+literal|0x0206
+argument_list|,
+comment|/* HIDDescriptorList */
 literal|0x0206
 argument_list|)
 block|,
-comment|/* HIDDescriptorList */
 name|SDP_ATTR_RANGE
 argument_list|(
 literal|0x0209
@@ -629,11 +636,6 @@ operator|-
 literal|1
 operator|||
 name|reconnect_initiate
-operator|==
-operator|-
-literal|1
-operator|||
-name|normally_connectable
 operator|==
 operator|-
 literal|1
