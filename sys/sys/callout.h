@@ -437,7 +437,8 @@ begin_function_decl
 name|int
 name|callout_tickstofirst
 parameter_list|(
-name|void
+name|int
+name|limit
 parameter_list|)
 function_decl|;
 end_function_decl

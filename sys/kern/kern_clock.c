@@ -1807,7 +1807,9 @@ name|usermode
 argument_list|)
 expr_stmt|;
 name|tc_ticktock
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|cpu_tick_calibration
 argument_list|()
@@ -2173,7 +2175,9 @@ argument_list|)
 condition|)
 block|{
 name|tc_ticktock
-argument_list|()
+argument_list|(
+name|newticks
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

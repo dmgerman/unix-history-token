@@ -1082,7 +1082,8 @@ begin_function
 name|int
 name|callout_tickstofirst
 parameter_list|(
-name|void
+name|int
+name|limit
 parameter_list|)
 block|{
 name|struct
@@ -1137,9 +1138,7 @@ name|ncallout
 operator|&&
 name|skip
 operator|<
-name|hz
-operator|/
-literal|8
+name|limit
 condition|)
 block|{
 name|sc

@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -1192,8 +1198,31 @@ block|{
 comment|/* If CPU is idle - ask callouts for how long. */
 name|skip
 operator|=
-name|callout_tickstofirst
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|curcpu
+operator|==
+name|CPU_FIRST
 argument_list|()
+operator|&&
+name|tc_min_ticktock_freq
+operator|>
+name|skip
+condition|)
+name|skip
+operator|=
+name|tc_min_ticktock_freq
+expr_stmt|;
+name|skip
+operator|=
+name|callout_tickstofirst
+argument_list|(
+name|hz
+operator|/
+name|skip
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
