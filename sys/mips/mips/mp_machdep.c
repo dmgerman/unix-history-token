@@ -1103,9 +1103,6 @@ literal|0
 condition|)
 empty_stmt|;
 comment|/* nothing */
-name|intr_enable
-argument_list|()
-expr_stmt|;
 comment|/* Start per-CPU event timers. */
 name|cpu_initclocks_ap
 argument_list|()
