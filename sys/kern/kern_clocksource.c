@@ -468,7 +468,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|int
 name|singlemul
 init|=
 literal|0
@@ -2102,6 +2102,20 @@ name|periodic
 operator|=
 literal|1
 expr_stmt|;
+name|singlemul
+operator|=
+name|MIN
+argument_list|(
+name|MAX
+argument_list|(
+name|singlemul
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
 name|freq
 operator|=
 name|hz
@@ -3026,8 +3040,12 @@ comment|/* 	 * We honor the requested 'hz' value. 	 * We want to run stathz in t
 if|if
 condition|(
 name|singlemul
-operator|==
+operator|<=
 literal|0
+operator|||
+name|singlemul
+operator|>
+literal|20
 condition|)
 block|{
 if|if
@@ -4082,7 +4100,7 @@ name|sysctl_kern_eventtimer_timer
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"Kernel event timer"
+literal|"Chosen event timer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4190,7 +4208,7 @@ name|sysctl_kern_eventtimer_periodic
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"Kernel event timer periodic"
+literal|"Enable event timer periodic mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
