@@ -1737,7 +1737,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-literal|"geom"
+literal|"arg0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2394,7 +2394,7 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
-literal|"geom"
+literal|"arg0"
 argument_list|)
 expr_stmt|;
 if|if
