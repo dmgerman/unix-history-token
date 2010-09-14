@@ -2124,7 +2124,7 @@ comment|/* Journal file name */
 end_comment
 
 begin_comment
-comment|/*  * Size of the segment record header.  There is at most one for each disk  * block n the journal.  The segment header is followed by an array of  * records.  fsck depends on the first element in each record being 'op'  * and the second being 'ino'.  Segments may span multiple disk blocks but  * the header is present on each.  */
+comment|/*  * Size of the segment record header.  There is at most one for each disk  * block in the journal.  The segment header is followed by an array of  * records.  fsck depends on the first element in each record being 'op'  * and the second being 'ino'.  Segments may span multiple disk blocks but  * the header is present on each.  */
 end_comment
 
 begin_struct

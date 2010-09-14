@@ -12123,7 +12123,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * We emulate a TAILQ to save space in most structures which do not 	 * require TAILQ semantics.  Here we must update the tail position 	 * when removing the tail which is not the final entry. 	 */
+comment|/* 	 * We emulate a TAILQ to save space in most structures which do not 	 * require TAILQ semantics.  Here we must update the tail position 	 * when removing the tail which is not the final entry. This works 	 * only if the worklist linkage are at the beginning of the structure. 	 */
 if|if
 condition|(
 name|ump
@@ -14495,6 +14495,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|i
+operator|++
 operator|<
 name|jseg
 operator|->
@@ -14504,6 +14505,8 @@ operator|(
 literal|"handle_written_jseg: overflow %d>= %d"
 operator|,
 name|i
+operator|-
+literal|1
 operator|,
 name|jseg
 operator|->
@@ -35451,7 +35454,7 @@ argument_list|(
 literal|"handle_written_sbdep: lost inodedep"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now that we have a record of this indode in stable store allow it 	 * to be written to free up pending work.  Inodes may see a lot of 	 * write activity after they are unlinked which we must not hold up. 	 */
+comment|/* 	 * Now that we have a record of this inode in stable store allow it 	 * to be written to free up pending work.  Inodes may see a lot of 	 * write activity after they are unlinked which we must not hold up. 	 */
 for|for
 control|(
 init|;
@@ -35519,7 +35522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an inodedep has unlinked and insert it into the in-memory unlinked  * list.  */
+comment|/*  * Mark an inodedep as unlinked and insert it into the in-memory unlinked list.  */
 end_comment
 
 begin_function
@@ -35741,7 +35744,7 @@ name|UNLINKPREV
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Here we have an inodedep which is actually linked into 		 * the list.  We must remove it by forcing a write to the 		 * link before us, whether it be the superblock or an inode. 		 * Unfortunately the list may change while we're waiting 		 * on the buf lock for either resource so we must loop until 		 * we lock. the right one.  If both the superblock and an 		 * inode point to this inode we must clear the inode first 		 * followed by the superblock. 		 */
+comment|/* 		 * Here we have an inodedep which is actually linked into 		 * the list.  We must remove it by forcing a write to the 		 * link before us, whether it be the superblock or an inode. 		 * Unfortunately the list may change while we're waiting 		 * on the buf lock for either resource so we must loop until 		 * we lock the right one.  If both the superblock and an 		 * inode point to this inode we must clear the inode first 		 * followed by the superblock. 		 */
 name|idp
 operator|=
 name|TAILQ_PREV
@@ -42613,7 +42616,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle the bufwait list on an inode when it is safe to release items  * held there.  This normally happens after an inode block is written but  * may be delayed and handle later if there are pending journal items that  * are not yet safe to be released.  */
+comment|/*  * Handle the bufwait list on an inode when it is safe to release items  * held there.  This normally happens after an inode block is written but  * may be delayed and handled later if there are pending journal items that  * are not yet safe to be released.  */
 end_comment
 
 begin_function
