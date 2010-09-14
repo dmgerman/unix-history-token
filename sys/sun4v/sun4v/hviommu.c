@@ -2116,28 +2116,6 @@ name|dt_maxsize
 operator|/
 name|maxpre
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|presz
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"hviommu_dvmamap_create: bogus preallocation size "
-literal|", nsegments = %d, maxpre = %d, maxsize = %lu"
-operator|,
-name|dt
-operator|->
-name|dt_nsegments
-operator|,
-name|maxpre
-operator|,
-name|dt
-operator|->
-name|dt_maxsize
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

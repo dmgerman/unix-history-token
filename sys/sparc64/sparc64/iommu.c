@@ -3637,30 +3637,6 @@ name|dt_maxsize
 operator|/
 name|maxpre
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|presz
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"%s: bogus preallocation size , nsegments = %d, "
-literal|"maxpre = %d, maxsize = %lu"
-operator|,
-name|__func__
-operator|,
-name|dt
-operator|->
-name|dt_nsegments
-operator|,
-name|maxpre
-operator|,
-name|dt
-operator|->
-name|dt_maxsize
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
