@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -13824,6 +13824,11 @@ operator|!=
 name|sdvp
 operator|->
 name|v_vfsp
+operator|||
+name|zfsctl_is_node
+argument_list|(
+name|tdvp
+argument_list|)
 condition|)
 block|{
 name|ZFS_EXIT
@@ -16015,6 +16020,9 @@ name|zf
 init|=
 name|ZNEW
 decl_stmt|;
+name|uint64_t
+name|parent
+decl_stmt|;
 name|uid_t
 name|owner
 decl_stmt|;
@@ -16061,6 +16069,27 @@ name|svp
 operator|=
 name|realvp
 expr_stmt|;
+comment|/* 	 * POSIX dictates that we return EPERM here. 	 * Better choices include ENOTSUP or EISDIR. 	 */
+if|if
+condition|(
+name|svp
+operator|->
+name|v_type
+operator|==
+name|VDIR
+condition|)
+block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|svp
@@ -16070,6 +16099,11 @@ operator|!=
 name|tdvp
 operator|->
 name|v_vfsp
+operator|||
+name|zfsctl_is_node
+argument_list|(
+name|svp
+argument_list|)
 condition|)
 block|{
 name|ZFS_EXIT
@@ -16095,6 +16129,31 @@ argument_list|(
 name|szp
 argument_list|)
 expr_stmt|;
+comment|/* Prevent links to .zfs/shares files */
+if|if
+condition|(
+name|szp
+operator|->
+name|z_phys
+operator|->
+name|zp_parent
+operator|==
+name|zfsvfs
+operator|->
+name|z_shares_dir
+condition|)
+block|{
+name|ZFS_EXIT
+argument_list|(
+name|zfsvfs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|zfsvfs
@@ -16142,8 +16201,6 @@ name|zf
 operator||=
 name|ZCILOOK
 expr_stmt|;
-name|top
-label|:
 comment|/* 	 * We do not support links between attributes and non-attributes 	 * because of the potential security risk of creating links 	 * into "normal" file space in order to circumvent restrictions 	 * imposed in attribute space. 	 */
 if|if
 condition|(
@@ -16176,27 +16233,6 @@ expr_stmt|;
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-block|}
-comment|/* 	 * POSIX dictates that we return EPERM here. 	 * Better choices include ENOTSUP or EISDIR. 	 */
-if|if
-condition|(
-name|svp
-operator|->
-name|v_type
-operator|==
-name|VDIR
-condition|)
-block|{
-name|ZFS_EXIT
-argument_list|(
-name|zfsvfs
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EPERM
 operator|)
 return|;
 block|}
@@ -16276,6 +16312,8 @@ name|error
 operator|)
 return|;
 block|}
+name|top
+label|:
 comment|/* 	 * Attempt to lock directory; fail if entry already exists. 	 */
 name|error
 operator|=

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,13 @@ name|void
 name|zfsctl_fini
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfsctl_is_node
+parameter_list|(
+name|vnode_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|int

@@ -5893,8 +5893,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|error
-operator|=
+if|if
+condition|(
 name|dsl_deleg_access
 argument_list|(
 name|osname
@@ -5903,10 +5903,6 @@ name|ZFS_DELEG_PERM_MOUNT
 argument_list|,
 name|cr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 condition|)
@@ -5946,8 +5942,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|=
 name|VOP_GETATTR
 argument_list|(
 name|mvp
@@ -6873,8 +6867,8 @@ condition|(
 name|ret
 condition|)
 block|{
-name|ret
-operator|=
+if|if
+condition|(
 name|dsl_deleg_access
 argument_list|(
 operator|(
@@ -6892,10 +6886,6 @@ name|ZFS_DELEG_PERM_MOUNT
 argument_list|,
 name|cr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
 condition|)
 return|return
 operator|(
