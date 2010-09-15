@@ -1918,6 +1918,17 @@ name|sched_param
 operator|.
 name|sched_priority
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|thread
+operator|->
+name|unwind_stackend
+operator|=
+name|_usrstack
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Others cleared to zero by thr_alloc() */
 block|}
 end_function

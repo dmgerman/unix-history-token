@@ -219,6 +219,23 @@ directive|include
 file|"thread_db.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unwind-generic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|TAILQ_HEAD
@@ -1206,6 +1223,19 @@ name|pthread_cleanup
 modifier|*
 name|cleanup
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|struct
+name|_Unwind_Exception
+name|ex
+decl_stmt|;
+name|void
+modifier|*
+name|unwind_stackend
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
 define|#
 directive|define

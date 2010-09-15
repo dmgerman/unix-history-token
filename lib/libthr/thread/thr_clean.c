@@ -250,6 +250,16 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|PANIC
+argument_list|(
+literal|"_pthread_cleanup_push is not supported while stack unwinding is enabled."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|pthread
 modifier|*
@@ -319,6 +329,8 @@ operator|=
 name|newbuf
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -330,11 +342,23 @@ name|int
 name|execute
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|_PTHREAD_FORCED_UNWIND
+name|PANIC
+argument_list|(
+literal|"_pthread_cleanup_pop is not supported while stack unwinding is enabled."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|__pthread_cleanup_pop_imp
 argument_list|(
 name|execute
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
