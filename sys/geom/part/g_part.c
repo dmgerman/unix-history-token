@@ -6273,6 +6273,25 @@ operator|=
 name|sbuf_new_auto
 argument_list|()
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s %sset on "
+argument_list|,
+name|gpp
+operator|->
+name|gpp_attrib
+argument_list|,
+operator|(
+name|set
+operator|)
+condition|?
+literal|""
+else|:
+literal|"un"
+argument_list|)
+expr_stmt|;
 name|G_PART_FULLNAME
 argument_list|(
 name|table
@@ -6290,19 +6309,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|" has %s %sset\n"
-argument_list|,
-name|gpp
-operator|->
-name|gpp_attrib
-argument_list|,
-operator|(
-name|set
-operator|)
-condition|?
-literal|""
-else|:
-literal|"un"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_finish
