@@ -278,6 +278,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ipi_rd_args
+name|ipi_rd_args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|ipi_tlb_args
 name|ipi_tlb_args
 decl_stmt|;
