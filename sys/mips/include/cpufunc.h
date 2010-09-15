@@ -749,7 +749,6 @@ name|MIPS_SR_INT_MASK
 operator|)
 operator||
 operator|(
-operator|~
 name|mask
 operator|&
 name|MIPS_SR_INT_MASK

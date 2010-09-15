@@ -1071,14 +1071,11 @@ condition|)
 block|{
 name|set_intr_mask
 argument_list|(
-operator|~
-operator|(
 name|trapframe
 operator|->
 name|sr
 operator|&
 name|MIPS_SR_INT_MASK
-operator|)
 argument_list|)
 expr_stmt|;
 name|intr_enable

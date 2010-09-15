@@ -1301,7 +1301,7 @@ expr_stmt|;
 comment|/*  	 * Mask all interrupts. Each interrupt will be enabled 	 * when handler is installed for it 	 */
 name|set_intr_mask
 argument_list|(
-name|MIPS_SR_INT_MASK
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Clear BEV in SR so we start handling our own exceptions */

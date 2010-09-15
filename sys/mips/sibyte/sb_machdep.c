@@ -1153,14 +1153,9 @@ argument_list|)
 expr_stmt|;
 name|set_intr_mask
 argument_list|(
-name|MIPS_SR_INT_MASK
-operator|&
-operator|~
-operator|(
 name|ipi_int_mask
 operator||
 name|clock_int_mask
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
