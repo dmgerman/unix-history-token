@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_FS_ZFS_VFSOPS_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -104,10 +97,6 @@ name|z_max_blksz
 decl_stmt|;
 comment|/* maximum block size for files */
 name|uint64_t
-name|z_assign
-decl_stmt|;
-comment|/* TXG_NOWAIT or set by zil_replay() */
-name|uint64_t
 name|z_fuid_obj
 decl_stmt|;
 comment|/* fuid table object number */
@@ -131,6 +120,10 @@ name|boolean_t
 name|z_fuid_loaded
 decl_stmt|;
 comment|/* fuid tables are loaded */
+name|boolean_t
+name|z_fuid_dirty
+decl_stmt|;
+comment|/* need to sync fuid table ? */
 name|struct
 name|zfs_fuid_info
 modifier|*
@@ -205,14 +198,31 @@ name|boolean_t
 name|z_use_fuids
 decl_stmt|;
 comment|/* version allows fuids */
+name|boolean_t
+name|z_replay
+decl_stmt|;
+comment|/* set during ZIL replay */
 name|kmutex_t
 name|z_online_recv_lock
 decl_stmt|;
-comment|/* recv in prog grabs as WRITER */
+comment|/* held while recv in progress */
 name|uint64_t
 name|z_version
 decl_stmt|;
 comment|/* ZPL version */
+name|uint64_t
+name|z_shares_dir
+decl_stmt|;
+comment|/* hidden shares dir */
+name|kmutex_t
+name|z_lock
+decl_stmt|;
+name|uint64_t
+name|z_userquota_obj
+decl_stmt|;
+name|uint64_t
+name|z_groupquota_obj
+decl_stmt|;
 define|#
 directive|define
 name|ZFS_OBJ_MTX_SZ
@@ -324,6 +334,131 @@ name|osname
 parameter_list|,
 name|int
 name|mode
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_userspace_one
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|zfs_userquota_prop_t
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|domain
+parameter_list|,
+name|uint64_t
+name|rid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|valuep
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_userspace_many
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|zfs_userquota_prop_t
+name|type
+parameter_list|,
+name|uint64_t
+modifier|*
+name|cookiep
+parameter_list|,
+name|void
+modifier|*
+name|vbuf
+parameter_list|,
+name|uint64_t
+modifier|*
+name|bufsizep
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_set_userquota
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|zfs_userquota_prop_t
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|domain
+parameter_list|,
+name|uint64_t
+name|rid
+parameter_list|,
+name|uint64_t
+name|quota
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|zfs_usergroup_overquota
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|boolean_t
+name|isgroup
+parameter_list|,
+name|uint64_t
+name|fuid
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_set_version
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|uint64_t
+name|newvers
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfsvfs_create
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|zfsvfs_t
+modifier|*
+modifier|*
+name|zvp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfsvfs_free
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
 parameter_list|)
 function_decl|;
 ifdef|#

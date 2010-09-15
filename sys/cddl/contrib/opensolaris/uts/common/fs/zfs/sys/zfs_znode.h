@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -235,6 +235,10 @@ name|ZFS_FUID_TABLES
 value|"FUID"
 define|#
 directive|define
+name|ZFS_SHARES_DIR
+value|"SHARES"
+define|#
+directive|define
 name|ZFS_MAX_BLOCKSIZE
 value|(SPA_MAXBLOCKSIZE)
 comment|/* Path component length */
@@ -428,10 +432,6 @@ name|kmutex_t
 name|z_lock
 decl_stmt|;
 comment|/* znode modification lock */
-name|krwlock_t
-name|z_map_lock
-decl_stmt|;
-comment|/* page map lock */
 name|krwlock_t
 name|z_parent_lock
 decl_stmt|;
@@ -949,19 +949,6 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|zfs_set_version
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|uint64_t
-name|newvers
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
 name|zfs_get_stats
 parameter_list|(
 name|objset_t
@@ -1286,6 +1273,19 @@ function_decl|;
 specifier|extern
 name|void
 name|zfs_upgrade
+parameter_list|(
+name|zfsvfs_t
+modifier|*
+name|zfsvfs
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_create_share_dir
 parameter_list|(
 name|zfsvfs_t
 modifier|*

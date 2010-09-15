@@ -753,6 +753,20 @@ name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rootdir
+operator|==
+name|NULL
+operator|||
+operator|!
+operator|(
+name|spa_mode_global
+operator|&
+name|FWRITE
+operator|)
+condition|)
+return|return;
 comment|/* 	 * Iterate over all cachefiles for the pool, past or present.  When the 	 * cachefile is changed, the new one is pushed onto this list, allowing 	 * us to update previous cachefiles that no longer contain this pool. 	 */
 for|for
 control|(
@@ -1636,7 +1650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For a pool that's not currently a booting rootpool, update all disk labels,  * generate a fresh config based on the current in-core state, and sync the  * global config cache.  */
+comment|/*  * Update all disk labels, generate a fresh config based on the current  * in-core state, and sync the global config cache (do not sync the config  * cache if this is a booting rootpool).  */
 end_comment
 
 begin_function
@@ -1649,37 +1663,6 @@ name|spa
 parameter_list|,
 name|int
 name|what
-parameter_list|)
-block|{
-name|spa_config_update_common
-argument_list|(
-name|spa
-argument_list|,
-name|what
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Update all disk labels, generate a fresh config based on the current  * in-core state, and sync the global config cache (do not sync the config  * cache if this is a booting rootpool).  */
-end_comment
-
-begin_function
-name|void
-name|spa_config_update_common
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|boolean_t
-name|isroot
 parameter_list|)
 block|{
 name|vdev_t
@@ -1815,7 +1798,9 @@ comment|/* 	 * Update the global config cache to reflect the new mosconfig. 	 */
 if|if
 condition|(
 operator|!
-name|isroot
+name|spa
+operator|->
+name|spa_is_root
 condition|)
 name|spa_config_sync
 argument_list|(
@@ -1834,13 +1819,11 @@ name|what
 operator|==
 name|SPA_CONFIG_UPDATE_POOL
 condition|)
-name|spa_config_update_common
+name|spa_config_update
 argument_list|(
 name|spa
 argument_list|,
 name|SPA_CONFIG_UPDATE_VDEVS
-argument_list|,
-name|isroot
 argument_list|)
 expr_stmt|;
 block|}

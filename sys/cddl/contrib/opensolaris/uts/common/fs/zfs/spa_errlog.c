@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * Routines to manage the on-disk persistent error log.  *  * Each pool stores a log of all logical data errors seen during normal  * operation.  This is actually the union of two distinct logs: the last log,  * and the current log.  All errors seen are logged to the current log.  When a  * scrub completes, the current log becomes the last log, the last log is thrown  * out, and the current log is reinitialized.  This way, if an error is somehow  * corrected, a new scrub will show that that it no longer exists, and will be  * deleted from the log when the scrub completes.  *  * The log is stored using a ZAP object whose key is a string form of the  * zbookmark tuple (objset, object, level, blkid), and whose contents is an  * optional 'objset:object' human-readable string describing the data.  When an  * error is first logged, this string will be empty, indicating that no name is  * known.  This prevents us from having to issue a potentially large amount of  * I/O to discover the object name during an error path.  Instead, we do the  * calculation when the data is requested, storing the result so future queries  * will be faster.  *  * This log is then shipped into an nvlist where the key is the dataset name and  * the value is the object name.  Userland is then responsible for uniquifying  * this list and displaying it to the user.  */
@@ -59,10 +52,10 @@ name|_KERNEL
 end_ifdef
 
 begin_function
-specifier|static
 name|uint64_t
 name|_strtonum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -145,9 +138,17 @@ name|str
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nptr
+condition|)
 operator|*
 name|nptr
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|str
 expr_stmt|;
 return|return

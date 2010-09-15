@@ -8,7 +8,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -962,15 +962,19 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|VDEV_SKIP_SIZE
+name|VDEV_PAD_SIZE
 value|(8<< 10)
 end_define
+
+begin_comment
+comment|/* 2 padding areas (vl_pad1 and vl_pad2) to skip */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|VDEV_BOOT_HEADER_SIZE
-value|(8<< 10)
+name|VDEV_SKIP_SIZE
+value|VDEV_PAD_SIZE * 2
 end_define
 
 begin_define
@@ -1032,67 +1036,6 @@ parameter_list|)
 value|(1ULL<< VDEV_UBERBLOCK_SHIFT(vd))
 end_define
 
-begin_comment
-comment|/* ZFS boot block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VDEV_BOOT_MAGIC
-value|0x2f5b007b10cULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|VDEV_BOOT_VERSION
-value|1
-end_define
-
-begin_comment
-comment|/* version number	*/
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|vdev_boot_header
-block|{
-name|uint64_t
-name|vb_magic
-decl_stmt|;
-comment|/* VDEV_BOOT_MAGIC	*/
-name|uint64_t
-name|vb_version
-decl_stmt|;
-comment|/* VDEV_BOOT_VERSION	*/
-name|uint64_t
-name|vb_offset
-decl_stmt|;
-comment|/* start offset	(bytes) */
-name|uint64_t
-name|vb_size
-decl_stmt|;
-comment|/* size (bytes)		*/
-name|char
-name|vb_pad
-index|[
-name|VDEV_BOOT_HEADER_SIZE
-operator|-
-literal|4
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-name|vdev_boot_header_t
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1123,16 +1066,19 @@ struct|struct
 name|vdev_label
 block|{
 name|char
-name|vl_pad
+name|vl_pad1
 index|[
-name|VDEV_SKIP_SIZE
+name|VDEV_PAD_SIZE
 index|]
 decl_stmt|;
-comment|/*   8K	*/
-name|vdev_boot_header_t
-name|vl_boot_header
+comment|/*  8K  */
+name|char
+name|vl_pad2
+index|[
+name|VDEV_PAD_SIZE
+index|]
 decl_stmt|;
-comment|/*   8K	*/
+comment|/*  8K  */
 name|vdev_phys_t
 name|vl_vdev_phys
 decl_stmt|;
@@ -1548,6 +1494,13 @@ name|SPA_VERSION_14
 value|14ULL
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_15
+value|15ULL
+end_define
+
 begin_comment
 comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understand the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
 end_comment
@@ -1556,14 +1509,14 @@ begin_define
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_14
+value|SPA_VERSION_15
 end_define
 
 begin_define
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"14"
+value|"15"
 end_define
 
 begin_comment
@@ -1729,6 +1682,13 @@ define|#
 directive|define
 name|SPA_VERSION_PASSTHROUGH_X
 value|SPA_VERSION_14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPA_VERSION_USERSPACE
+value|SPA_VERSION_15
 end_define
 
 begin_comment
@@ -2728,15 +2688,20 @@ decl_stmt|;
 name|uint64_t
 name|os_type
 decl_stmt|;
+name|uint64_t
+name|os_flags
+decl_stmt|;
 name|char
 name|os_pad
 index|[
-literal|1024
+literal|2048
 operator|-
 sizeof|sizeof
 argument_list|(
 name|dnode_phys_t
 argument_list|)
+operator|*
+literal|3
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -2747,7 +2712,15 @@ sizeof|sizeof
 argument_list|(
 name|uint64_t
 argument_list|)
+operator|*
+literal|2
 index|]
+decl_stmt|;
+name|dnode_phys_t
+name|os_userused_dnode
+decl_stmt|;
+name|dnode_phys_t
+name|os_groupused_dnode
 decl_stmt|;
 block|}
 name|objset_phys_t

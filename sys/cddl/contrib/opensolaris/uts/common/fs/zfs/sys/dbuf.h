@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -607,6 +607,22 @@ parameter_list|(
 name|dmu_buf_t
 modifier|*
 name|db
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dbuf_assign_arcbuf
+parameter_list|(
+name|dmu_buf_impl_t
+modifier|*
+name|db
+parameter_list|,
+name|arc_buf_t
+modifier|*
+name|buf
 parameter_list|,
 name|dmu_tx_t
 modifier|*

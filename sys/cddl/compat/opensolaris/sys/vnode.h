@@ -125,6 +125,13 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|VOP_FID
+value|VOP_VPTOFH
+end_define
+
+begin_define
+define|#
+directive|define
 name|vop_fid
 value|vop_vptofh
 end_define

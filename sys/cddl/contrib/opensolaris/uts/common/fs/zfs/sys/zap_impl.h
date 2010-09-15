@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_ZAP_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -534,6 +527,25 @@ parameter_list|,
 name|boolean_t
 modifier|*
 name|normalization_conflictp
+parameter_list|)
+function_decl|;
+name|int
+name|fzap_count_write
+parameter_list|(
+name|zap_name_t
+modifier|*
+name|zn
+parameter_list|,
+name|int
+name|add
+parameter_list|,
+name|uint64_t
+modifier|*
+name|towrite
+parameter_list|,
+name|uint64_t
+modifier|*
+name|tooverwrite
 parameter_list|)
 function_decl|;
 name|int

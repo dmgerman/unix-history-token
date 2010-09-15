@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DSL_PROP_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -42,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/zfs_context.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dsl_synctask.h>
 end_include
 
 begin_ifdef
@@ -281,6 +280,9 @@ modifier|*
 name|setpoint
 parameter_list|)
 function_decl|;
+name|dsl_syncfunc_t
+name|dsl_props_set_sync
+decl_stmt|;
 name|int
 name|dsl_prop_set
 parameter_list|(
@@ -304,6 +306,19 @@ specifier|const
 name|void
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_props_set
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dsname
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|nvl
 parameter_list|)
 function_decl|;
 name|void

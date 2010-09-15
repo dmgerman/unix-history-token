@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_if
 if|#
@@ -195,6 +188,30 @@ block|{
 name|ZFS_DELEG_PERM_USERPROP
 block|,
 name|ZFS_DELEG_NOTE_USERPROP
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_USERQUOTA
+block|,
+name|ZFS_DELEG_NOTE_USERQUOTA
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_GROUPQUOTA
+block|,
+name|ZFS_DELEG_NOTE_GROUPQUOTA
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_USERUSED
+block|,
+name|ZFS_DELEG_NOTE_USERUSED
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_GROUPUSED
+block|,
+name|ZFS_DELEG_NOTE_GROUPUSED
 block|}
 block|,
 block|{

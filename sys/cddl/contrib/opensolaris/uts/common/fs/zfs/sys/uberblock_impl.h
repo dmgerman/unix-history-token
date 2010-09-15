@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_UBERBLOCK_IMPL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -44,6 +37,11 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * For zdb use and debugging purposes only  */
+specifier|extern
+name|uint64_t
+name|ub_max_txg
+decl_stmt|;
 comment|/*  * The uberblock version is incremented whenever an incompatible on-disk  * format change is made to the SPA, DMU, or ZAP.  *  * Note: the first two fields should never be moved.  When a storage pool  * is opened, the uberblock must be read off the disk before the version  * can be checked.  If the ub_version field is moved, we may not detect  * version mismatch.  If the ub_magic field is moved, applications that  * expect the magic number in the first word won't work.  */
 define|#
 directive|define

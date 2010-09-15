@@ -108,11 +108,6 @@ directive|define
 name|IS_XATTR
 value|0x02
 comment|/* create an extended attribute node */
-define|#
-directive|define
-name|IS_REPLAY
-value|0x04
-comment|/* we are replaying intent log */
 specifier|extern
 name|int
 name|zfs_dirent_lock
@@ -230,11 +225,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|zfs_acl_t
-modifier|*
-parameter_list|,
-name|zfs_fuid_info_t
-modifier|*
+name|zfs_acl_ids_t
 modifier|*
 parameter_list|)
 function_decl|;

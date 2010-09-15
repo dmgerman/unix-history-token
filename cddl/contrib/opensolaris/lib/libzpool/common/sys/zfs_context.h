@@ -1252,6 +1252,11 @@ value|0x0004
 comment|/* Use dynamic thread scheduling */
 define|#
 directive|define
+name|TASKQ_THREADS_CPU_PCT
+value|0x0008
+comment|/* Use dynamic thread scheduling */
+define|#
+directive|define
 name|TQ_SLEEP
 value|KM_SLEEP
 comment|/* Can block for memory */
@@ -2374,6 +2379,10 @@ name|ksiddomain_t
 modifier|*
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|uint32_t
+name|idmap_rid_t
+typedef|;
 define|#
 directive|define
 name|SX_SYSINIT

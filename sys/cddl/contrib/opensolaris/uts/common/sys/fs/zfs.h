@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -185,10 +185,37 @@ name|ZFS_PROP_USEDCHILD
 block|,
 name|ZFS_PROP_USEDREFRESERV
 block|,
+name|ZFS_PROP_USERACCOUNTING
+block|,
+comment|/* not exposed to the user */
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
 typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_PROP_USERUSED
+block|,
+name|ZFS_PROP_USERQUOTA
+block|,
+name|ZFS_PROP_GROUPUSED
+block|,
+name|ZFS_PROP_GROUPQUOTA
+block|,
+name|ZFS_NUM_USERQUOTA_PROPS
+block|}
+name|zfs_userquota_prop_t
+typedef|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|zfs_userquota_prop_prefixes
+index|[
+name|ZFS_NUM_USERQUOTA_PROPS
+index|]
+decl_stmt|;
 comment|/*  * Pool properties are identified by these constants and must be added to the  * end of this list to ensure that external consumers are not affected  * by the change. If you make any changes to this list, be sure to update  * the property table in usr/src/common/zfs/zpool_prop.c.  */
 typedef|typedef
 enum|enum
@@ -345,6 +372,15 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfs_prop_userquota
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 name|int
@@ -531,6 +567,14 @@ define|#
 directive|define
 name|ZFS_DELEG_PERM_GROUPS
 value|"groups"
+define|#
+directive|define
+name|ZFS_SMB_ACL_SRC
+value|"src"
+define|#
+directive|define
+name|ZFS_SMB_ACL_TARGET
+value|"target"
 typedef|typedef
 enum|enum
 block|{
@@ -569,6 +613,20 @@ init|=
 literal|3
 block|}
 name|zfs_share_op_t
+typedef|;
+typedef|typedef
+enum|enum
+name|zfs_smb_acl_op
+block|{
+name|ZFS_SMB_ACL_ADD
+block|,
+name|ZFS_SMB_ACL_REMOVE
+block|,
+name|ZFS_SMB_ACL_RENAME
+block|,
+name|ZFS_SMB_ACL_PURGE
+block|}
+name|zfs_smb_acl_op_t
 typedef|;
 typedef|typedef
 enum|enum
@@ -645,15 +703,19 @@ define|#
 directive|define
 name|SPA_VERSION_14
 value|14ULL
-comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  */
+define|#
+directive|define
+name|SPA_VERSION_15
+value|15ULL
+comment|/*  * When bumping up SPA_VERSION, make sure GRUB ZFS understands the on-disk  * format change. Go to usr/src/grub/grub-0.95/stage2/{zfs-include/, fsys_zfs*},  * and do the appropriate changes.  Also bump the version number in  * usr/src/grub/capability.  */
 define|#
 directive|define
 name|SPA_VERSION
-value|SPA_VERSION_14
+value|SPA_VERSION_15
 define|#
 directive|define
 name|SPA_VERSION_STRING
-value|"14"
+value|"15"
 comment|/*  * Symbolic names for the changes that caused a SPA_VERSION switch.  * Used in the code when checking for presence or absence of a feature.  * Feel free to define multiple symbolic names for each version if there  * were multiple changes to on-disk structures during that version.  *  * NOTE: When checking the current SPA_VERSION in your code, be sure  *       to use spa_version() since it reports the version of the  *       last synced uberblock.  Checking the in-flight version can  *       be dangerous in some cases.  */
 define|#
 directive|define
@@ -747,6 +809,10 @@ define|#
 directive|define
 name|SPA_VERSION_PASSTHROUGH_X
 value|SPA_VERSION_14
+define|#
+directive|define
+name|SPA_VERSION_USERSPACE
+value|SPA_VERSION_15
 comment|/*  * ZPL version - rev'd whenever an incompatible on-disk format change  * occurs.  This is independent of SPA/DMU/ZAP versioning.  You must  * also update the version_table[] and help message in zfs_prop.c.  *  * When changing, be sure to teach GRUB how to read the new format!  * See usr/src/grub/grub-0.95/stage2/{zfs-include/,fsys_zfs*}  */
 define|#
 directive|define
@@ -762,12 +828,16 @@ name|ZPL_VERSION_3
 value|3ULL
 define|#
 directive|define
+name|ZPL_VERSION_4
+value|4ULL
+define|#
+directive|define
 name|ZPL_VERSION
-value|ZPL_VERSION_3
+value|ZPL_VERSION_4
 define|#
 directive|define
 name|ZPL_VERSION_STRING
-value|"3"
+value|"4"
 define|#
 directive|define
 name|ZPL_VERSION_INITIAL
@@ -788,6 +858,10 @@ define|#
 directive|define
 name|ZPL_VERSION_SYSATTR
 value|ZPL_VERSION_3
+define|#
+directive|define
+name|ZPL_VERSION_USERSPACE
+value|ZPL_VERSION_4
 comment|/*  * The following are configuration names used in the nvlist describing a pool's  * configuration.  */
 define|#
 directive|define
@@ -949,6 +1023,10 @@ define|#
 directive|define
 name|ZPOOL_CONFIG_REMOVED
 value|"removed"
+define|#
+directive|define
+name|ZPOOL_CONFIG_FRU
+value|"fru"
 define|#
 directive|define
 name|VDEV_TYPE_ROOT
@@ -1490,6 +1568,26 @@ define|#
 directive|define
 name|ZFS_IOC_UNJAIL
 value|_IOWR('Z', 48, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_SMB_ACL
+value|_IOWR('Z', 49, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_USERSPACE_ONE
+value|_IOWR('Z', 50, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_USERSPACE_MANY
+value|_IOWR('Z', 51, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_USERSPACE_UPGRADE
+value|_IOWR('Z', 52, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_SETFRU
+value|_IOWR('Z', 53, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum

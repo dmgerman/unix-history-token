@@ -204,6 +204,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zil_impl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -348,10 +354,6 @@ name|list_t
 name|zv_extents
 decl_stmt|;
 comment|/* List of extents for dump */
-name|uint64_t
-name|zv_txg_assign
-decl_stmt|;
-comment|/* txg to assign during ZIL replay */
 name|znode_t
 name|zv_znode
 decl_stmt|;
@@ -1073,10 +1075,55 @@ name|zv
 operator|->
 name|zv_volblocksize
 decl_stmt|;
+name|zilog_t
+modifier|*
+name|zilog
+init|=
+name|zv
+operator|->
+name|zv_zilog
+decl_stmt|;
 name|lr_write_t
 modifier|*
 name|lr
 decl_stmt|;
+if|if
+condition|(
+name|zilog
+operator|->
+name|zl_replay
+condition|)
+block|{
+name|dsl_dataset_dirty
+argument_list|(
+name|dmu_objset_ds
+argument_list|(
+name|zilog
+operator|->
+name|zl_os
+argument_list|)
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+name|zilog
+operator|->
+name|zl_replayed_seq
+index|[
+name|dmu_tx_get_txg
+argument_list|(
+name|tx
+argument_list|)
+operator|&
+name|TXG_MASK
+index|]
+operator|=
+name|zilog
+operator|->
+name|zl_replaying_seq
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 name|len
@@ -1189,9 +1236,7 @@ name|void
 operator|)
 name|zil_itx_assign
 argument_list|(
-name|zv
-operator|->
-name|zv_zilog
+name|zilog
 argument_list|,
 name|itx
 argument_list|,
@@ -1491,6 +1536,8 @@ argument_list|,
 name|size
 argument_list|,
 name|addr
+argument_list|,
+name|DMU_READ_PREFETCH
 argument_list|)
 expr_stmt|;
 block|}
@@ -2522,6 +2569,30 @@ name|lr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If it's a dmu_sync() block get the data and write the whole block */
+if|if
+condition|(
+name|lr
+operator|->
+name|lr_common
+operator|.
+name|lrc_reclen
+operator|==
+sizeof|sizeof
+argument_list|(
+name|lr_write_t
+argument_list|)
+condition|)
+name|zil_get_replay_data
+argument_list|(
+name|dmu_objset_zil
+argument_list|(
+name|os
+argument_list|)
+argument_list|,
+name|lr
+argument_list|)
+expr_stmt|;
 name|tx
 operator|=
 name|dmu_tx_create
@@ -2546,9 +2617,7 @@ name|dmu_tx_assign
 argument_list|(
 name|tx
 argument_list|,
-name|zv
-operator|->
-name|zv_txg_assign
+name|TXG_WAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2674,6 +2743,27 @@ comment|/* TX_SETATTR */
 name|zvol_replay_err
 block|,
 comment|/* TX_ACL */
+name|zvol_replay_err
+block|,
+comment|/* TX_CREATE_ACL */
+name|zvol_replay_err
+block|,
+comment|/* TX_CREATE_ATTR */
+name|zvol_replay_err
+block|,
+comment|/* TX_CREATE_ACL_ATTR */
+name|zvol_replay_err
+block|,
+comment|/* TX_MKDIR_ACL */
+name|zvol_replay_err
+block|,
+comment|/* TX_MKDIR_ATTR */
+name|zvol_replay_err
+block|,
+comment|/* TX_MKDIR_ACL_ATTR */
+name|zvol_replay_err
+block|,
+comment|/* TX_WRITE2 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3040,14 +3130,7 @@ name|os
 argument_list|,
 name|zv
 argument_list|,
-operator|&
-name|zv
-operator|->
-name|zv_txg_assign
-argument_list|,
 name|zvol_replay_vector
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* XXX this should handle the possible i/o error */
@@ -4401,6 +4484,8 @@ argument_list|,
 name|dlen
 argument_list|,
 name|buf
+argument_list|,
+name|DMU_READ_NO_PREFETCH
 argument_list|)
 operator|)
 return|;
@@ -4528,6 +4613,20 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 		 * dmu_sync() can compress a block of zeros to a null blkptr 		 * but the block size still needs to be passed through to 		 * replay. 		 */
+name|BP_SET_LSIZE
+argument_list|(
+operator|&
+name|lr
+operator|->
+name|lr_blkptr
+argument_list|,
+name|db
+operator|->
+name|db_size
+argument_list|)
+expr_stmt|;
 name|zil_add_block
 argument_list|(
 name|zv
@@ -4540,6 +4639,7 @@ operator|->
 name|lr_blkptr
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If we get EINPROGRESS, then we need to wait for a 	 * write IO initiated by dmu_sync() to complete before 	 * we can release this dbuf.  We will finish everything 	 * up in the zvol_get_done() callback. 	 */
 if|if
 condition|(

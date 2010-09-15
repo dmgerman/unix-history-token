@@ -278,8 +278,13 @@ value|19
 comment|/* mkdir with ACL + attrs */
 define|#
 directive|define
-name|TX_MAX_TYPE
+name|TX_WRITE2
 value|20
+comment|/* dmu_sync EALREADY write */
+define|#
+directive|define
+name|TX_MAX_TYPE
+value|21
 comment|/* Max transaction type */
 comment|/*  * The transactions for mkdir, symlink, remove, rmdir, link, and rename  * may have the following bit set, indicating the original request  * specified case-insensitive handling of names.  */
 define|#
@@ -744,11 +749,6 @@ name|zil_replay_func_t
 parameter_list|()
 function_decl|;
 typedef|typedef
-name|void
-name|zil_replay_cleaner_t
-parameter_list|()
-function_decl|;
-typedef|typedef
 name|int
 name|zil_get_data_t
 parameter_list|(
@@ -865,20 +865,12 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|uint64_t
-modifier|*
-name|txgp
-parameter_list|,
 name|zil_replay_func_t
 modifier|*
 name|replay_func
 index|[
 name|TX_MAX_TYPE
 index|]
-parameter_list|,
-name|zil_replay_cleaner_t
-modifier|*
-name|replay_cleaner
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1049,6 +1041,19 @@ parameter_list|,
 name|blkptr_t
 modifier|*
 name|bp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zil_get_replay_data
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+name|lr_write_t
+modifier|*
+name|lr
 parameter_list|)
 function_decl|;
 specifier|extern
