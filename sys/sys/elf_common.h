@@ -3030,7 +3030,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', even == 'd_val' 				   or none */
+comment|/* Values greater than or equal to DT_ENCODING 				   and less than DT_LOOS follow the rules for 				   the interpretation of the d_un union 				   as follows: even == 'd_ptr', odd == 'd_val' 				   or none */
 end_comment
 
 begin_define
