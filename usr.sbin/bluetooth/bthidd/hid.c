@@ -662,6 +662,14 @@ name|report_ID
 operator|!=
 name|report_id
 operator|)
+operator|||
+operator|(
+name|h
+operator|.
+name|kind
+operator|!=
+name|hid_input
+operator|)
 condition|)
 continue|continue;
 name|page
