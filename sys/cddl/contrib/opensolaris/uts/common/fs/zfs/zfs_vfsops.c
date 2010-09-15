@@ -5083,6 +5083,15 @@ argument_list|,
 name|VFSFT_ACLONCREATE
 argument_list|)
 expr_stmt|;
+name|vfs_set_feature
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_vfs
+argument_list|,
+name|VFSFT_ACCESS_FILTER
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

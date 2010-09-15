@@ -176,6 +176,11 @@ directive|define
 name|ZFS_BONUS_SCANSTAMP
 value|0x80
 comment|/* Scanstamp in bonus area */
+define|#
+directive|define
+name|ZFS_NO_EXECS_DENIED
+value|0x100
+comment|/* exec was given to everyone */
 comment|/*  * Is ID ephemeral?  */
 ifdef|#
 directive|ifdef
@@ -493,6 +498,11 @@ name|kmutex_t
 name|z_acl_lock
 decl_stmt|;
 comment|/* acl data lock */
+name|zfs_acl_t
+modifier|*
+name|z_acl_cached
+decl_stmt|;
+comment|/* cached acl */
 name|list_node_t
 name|z_link_node
 decl_stmt|;
