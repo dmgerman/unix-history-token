@@ -805,6 +805,13 @@ argument_list|,
 name|TW_CLI_COMPLETE_Q
 argument_list|)
 expr_stmt|;
+name|tw_cli_req_q_init
+argument_list|(
+name|ctlr
+argument_list|,
+name|TW_CLI_RESET_Q
+argument_list|)
+expr_stmt|;
 comment|/* Initialize all locks used by CL. */
 name|ctlr
 operator|->
@@ -2103,18 +2110,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-name|TW_OSL_ETIMEDOUT
-condition|)
-comment|/* Clean-up done by tw_cli_submit_and_poll_request. */
-return|return
-operator|(
-name|error
-operator|)
-return|;
-if|if
-condition|(
-name|error
 condition|)
 goto|goto
 name|out
@@ -2130,22 +2125,13 @@ name|status
 operator|)
 condition|)
 block|{
-name|tw_cli_create_ctlr_event
-argument_list|(
-name|ctlr
-argument_list|,
-name|TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR
-argument_list|,
-operator|&
-operator|(
-name|req
-operator|->
-name|cmd_pkt
-operator|->
-name|cmd_hdr
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|tw_cli_create_ctlr_event(ctlr, 			TW_CL_MESSAGE_SOURCE_CONTROLLER_ERROR,&(req->cmd_pkt->cmd_hdr));
+endif|#
+directive|endif
+comment|// 0
 goto|goto
 name|out
 goto|;

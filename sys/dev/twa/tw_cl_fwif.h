@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|TWA_STATUS_UNEXPECTED_BITS
-value|0x00F00000
+value|0x00D00000
 end_define
 
 begin_comment
