@@ -3433,7 +3433,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s has bootcode\n"
+literal|"bootcode written to %s\n"
 argument_list|,
 name|gp
 operator|->
