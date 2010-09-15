@@ -2176,7 +2176,7 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-comment|/* 	 * Nothing to do here yet - busdma bounce buffers are not yet 	 * implemented. 	 */
+comment|/* Nothing to do here - busdma bounce buffers are not implemented. */
 block|}
 end_function
 
@@ -2413,7 +2413,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bzero
+name|cpu_block_zero
 argument_list|(
 name|va
 argument_list|,
