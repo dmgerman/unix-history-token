@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * Support for double-precision integer divide.  This code is included here  * in order to support kernel environments where the double-precision math  * library is not available.  */
+comment|/*  * Optional support for 64-bit double-precision integer divide. This code  * is configurable and is implemented in order to support 32-bit kernel  * environments where a 64-bit double-precision math library is not available.  *  * Support for a more normal 64-bit divide/modulo (with check for a divide-  * by-zero) appears after this optional section of code.  */
 end_comment
 
 begin_ifndef
@@ -48,6 +48,42 @@ ifndef|#
 directive|ifndef
 name|ACPI_USE_NATIVE_DIVIDE
 end_ifndef
+
+begin_comment
+comment|/* Structures used only for 64-bit divide */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|uint64_struct
+block|{
+name|UINT32
+name|Lo
+decl_stmt|;
+name|UINT32
+name|Hi
+decl_stmt|;
+block|}
+name|UINT64_STRUCT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+name|uint64_overlay
+block|{
+name|UINT64
+name|Full
+decl_stmt|;
+name|UINT64_STRUCT
+name|Part
+decl_stmt|;
+block|}
+name|UINT64_OVERLAY
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtShortDivide  *  * PARAMETERS:  Dividend            - 64-bit dividend  *              Divisor             - 32-bit divisor  *              OutQuotient         - Pointer to where the quotient is returned  *              OutRemainder        - Pointer to where the remainder is returned  *  * RETURN:      Status (Checks for divide-by-zero)  *  * DESCRIPTION: Perform a short (maximum 64 bits divided by 32 bits)  *              divide and modulo.  The result is a 64-bit quotient and a  *              32-bit remainder.  *  ******************************************************************************/

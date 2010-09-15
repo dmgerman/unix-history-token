@@ -703,28 +703,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Interim function needed for PCI IRQ routing  */
-end_comment
-
-begin_function_decl
-name|void
-name|AcpiOsDerivePciId
-parameter_list|(
-name|ACPI_HANDLE
-name|Device
-parameter_list|,
-name|ACPI_HANDLE
-name|Region
-parameter_list|,
-name|ACPI_PCI_ID
-modifier|*
-modifier|*
-name|PciId
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Miscellaneous  */
 end_comment
 

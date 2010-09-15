@@ -61,7 +61,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|ACPI_STATUS
 name|DtInitialize
 parameter_list|(
 name|void
@@ -116,9 +116,32 @@ modifier|*
 name|FieldList
 decl_stmt|;
 comment|/* Initialize globals */
+name|Status
+operator|=
 name|DtInitialize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Error during compiler initialization, 0x%X\n"
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/*      * Scan the input file (file is already open) and      * build the parse tree      */
 name|Event
 operator|=
@@ -271,23 +294,58 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtInitialize  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Initialize data table compiler globals. Enables multiple  *              compiles per invocation.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize data table compiler globals. Enables multiple  *              compiles per invocation.  *  *****************************************************************************/
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|ACPI_STATUS
 name|DtInitialize
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
 name|AcpiOsInitialize
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
 name|AcpiUtInitGlobals
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|Gbl_FieldList
 operator|=
 name|NULL
@@ -312,6 +370,11 @@ operator|)
 name|ACPI_CA_VERSION
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 

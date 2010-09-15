@@ -373,6 +373,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * hwpci - PCI configuration support  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiHwDerivePciId
+parameter_list|(
+name|ACPI_PCI_ID
+modifier|*
+name|PciId
+parameter_list|,
+name|ACPI_HANDLE
+name|RootPciDevice
+parameter_list|,
+name|ACPI_HANDLE
+name|PciRegion
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * hwtimer - ACPI Timer prototypes  */
 end_comment
 

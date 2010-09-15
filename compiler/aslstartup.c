@@ -47,6 +47,7 @@ value|256
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|FileList
@@ -57,12 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|FileCount
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|BOOLEAN
 name|AslToFile
 init|=
@@ -93,6 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|UINT8
 name|AslDetectSourceFileType
 parameter_list|(
@@ -253,6 +250,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|int
+name|FileCount
 decl_stmt|;
 name|FileCount
 operator|=
@@ -433,6 +433,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT8
 name|AslDetectSourceFileType
 parameter_list|(
@@ -714,6 +715,9 @@ comment|/* Shutdown compiler and ACPICA subsystem */
 name|AeClearErrorLog
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
@@ -921,6 +925,9 @@ operator|=
 name|CmDoCompile
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiTerminate
 argument_list|()
 expr_stmt|;
@@ -1010,7 +1017,7 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|FileList
+name|WildcardList
 decl_stmt|;
 name|char
 modifier|*
@@ -1049,7 +1056,7 @@ operator|)
 return|;
 block|}
 comment|/* Expand possible wildcard into a file list (Windows/DOS only) */
-name|FileList
+name|WildcardList
 operator|=
 name|AsDoWildcard
 argument_list|(
@@ -1061,7 +1068,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|*
-name|FileList
+name|WildcardList
 condition|)
 block|{
 name|FullPathname
@@ -1076,7 +1083,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 operator|+
 literal|1
@@ -1095,7 +1102,7 @@ argument_list|(
 name|FullPathname
 argument_list|,
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 comment|/*          * If -p not specified, we will use the input filename as the          * output filename prefix          */
@@ -1128,15 +1135,15 @@ expr_stmt|;
 name|ACPI_FREE
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 operator|*
-name|FileList
+name|WildcardList
 operator|=
 name|NULL
 expr_stmt|;
-name|FileList
+name|WildcardList
 operator|++
 expr_stmt|;
 block|}

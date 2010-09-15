@@ -65,6 +65,7 @@ comment|/* Default DSDT. This will be replaced with the input DSDT */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|DsdtCode
@@ -151,6 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|LocalDsdtCode
@@ -241,6 +243,7 @@ comment|/* Several example SSDTs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|Ssdt1Code
@@ -355,6 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|Ssdt2Code
@@ -587,6 +591,7 @@ comment|/* Example OEM table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|Oem1Code
@@ -721,6 +726,7 @@ comment|/* ASL source for this table is at the end of this file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|OemxCode
@@ -1109,6 +1115,7 @@ comment|/*  * Example installable control method  *  * DefinitionBlock ("", "DSD
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|MethodCode
@@ -1299,6 +1306,7 @@ comment|/*  * We need a local FADT so that the hardware subcomponent will functi
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_HEADER
 modifier|*
 name|DsdtToInstallOverride
@@ -1306,36 +1314,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_RSDP
 name|LocalRSDP
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_FADT
 name|LocalFADT
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_FACS
 name|LocalFACS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_HEADER
 name|LocalTEST
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_HEADER
 name|LocalBADTABLE
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ACPI_TABLE_RSDT
 modifier|*
 name|LocalRSDT
@@ -1549,7 +1563,9 @@ name|LocalRSDT
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|ACPI_MEMSET
@@ -1716,7 +1732,9 @@ literal|"Already found a DSDT, only one allowed\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_ALREADY_EXISTS
+operator|)
 return|;
 block|}
 comment|/* The incoming user table is a DSDT */
@@ -2117,9 +2135,21 @@ literal|16
 expr_stmt|;
 name|LocalFADT
 operator|.
+name|Gpe0Block
+operator|=
+literal|0x00001234
+expr_stmt|;
+name|LocalFADT
+operator|.
 name|Gpe1BlockLength
 operator|=
 literal|6
+expr_stmt|;
+name|LocalFADT
+operator|.
+name|Gpe1Block
+operator|=
+literal|0x00005678
 expr_stmt|;
 name|LocalFADT
 operator|.
@@ -2135,30 +2165,6 @@ literal|4
 expr_stmt|;
 name|LocalFADT
 operator|.
-name|Pm1ControlLength
-operator|=
-literal|2
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|PmTimerLength
-operator|=
-literal|4
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|Gpe0Block
-operator|=
-literal|0x00001234
-expr_stmt|;
-name|LocalFADT
-operator|.
-name|Gpe1Block
-operator|=
-literal|0x00005678
-expr_stmt|;
-name|LocalFADT
-operator|.
 name|Pm1aEventBlock
 operator|=
 literal|0x00001aaa
@@ -2171,15 +2177,39 @@ literal|0x00001bbb
 expr_stmt|;
 name|LocalFADT
 operator|.
-name|PmTimerBlock
+name|Pm1ControlLength
 operator|=
-literal|0xA0
+literal|2
 expr_stmt|;
 name|LocalFADT
 operator|.
 name|Pm1aControlBlock
 operator|=
 literal|0xB0
+expr_stmt|;
+name|LocalFADT
+operator|.
+name|PmTimerLength
+operator|=
+literal|4
+expr_stmt|;
+name|LocalFADT
+operator|.
+name|PmTimerBlock
+operator|=
+literal|0xA0
+expr_stmt|;
+name|LocalFADT
+operator|.
+name|Pm2ControlBlock
+operator|=
+literal|0xC0
+expr_stmt|;
+name|LocalFADT
+operator|.
+name|Pm2ControlLength
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Setup one example X-64 field */
 name|LocalFADT
@@ -2449,15 +2479,36 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiInitializeTables
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiReallocateRootTable
 argument_list|()
 expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiReallocateRootTable
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiLoadTables
 argument_list|()
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiLoadTables
+argument_list|,
+name|Status
+argument_list|)
 expr_stmt|;
 comment|/*      * Test run-time control method installation. Do it twice to test code      * for an existing name.      */
 name|Status

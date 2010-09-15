@@ -169,13 +169,6 @@ name|ACPI_CPU_FLAGS
 value|unsigned long
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_THREAD_ID
-value|struct task_struct *
-end_define
-
 begin_else
 else|#
 directive|else
@@ -229,8 +222,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_THREAD_ID
-value|pthread_t
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) (pthread))
 end_define
 
 begin_if

@@ -38,13 +38,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_THREAD_ID
-value|pthread_t
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
@@ -178,23 +171,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_ANSI
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -217,6 +193,20 @@ parameter_list|,
 name|Pending
 parameter_list|)
 value|Pending = 1
+end_define
+
+begin_comment
+comment|/* On Cygwin, pthread_t is a pointer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) ACPI_TO_INTEGER (pthread))
 end_define
 
 begin_comment

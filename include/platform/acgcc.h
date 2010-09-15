@@ -19,6 +19,13 @@ directive|define
 name|__ACGCC_H__
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_INLINE
+value|__inline__
+end_define
+
 begin_comment
 comment|/* Function name is used for debug output. Non-ANSI, compiler-dependent */
 end_comment

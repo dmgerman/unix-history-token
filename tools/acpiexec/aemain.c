@@ -46,14 +46,6 @@ end_macro
 
 begin_decl_stmt
 name|UINT8
-name|AcpiGbl_BatchMode
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT8
 name|AcpiGbl_RegionFillValue
 init|=
 literal|0
@@ -85,6 +77,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|UINT8
+name|AcpiGbl_BatchMode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|BatchBuffer
 index|[
@@ -94,6 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|AE_TABLE_DESC
 modifier|*
 name|AeTableListHead
@@ -110,18 +113,13 @@ value|256
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|FileList
 index|[
 name|ASL_MAX_FILES
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|FileCount
 decl_stmt|;
 end_decl_stmt
 
@@ -651,6 +649,9 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
+name|int
+name|FileCount
+decl_stmt|;
 name|FileCount
 operator|=
 literal|0
@@ -875,7 +876,7 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|FileList
+name|WildcardList
 decl_stmt|;
 name|char
 modifier|*
@@ -941,7 +942,9 @@ name|usage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|signal
@@ -961,8 +964,17 @@ operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
 comment|/* Init ACPI and start debugger thread */
+name|Status
+operator|=
 name|AcpiInitializeSubsystem
 argument_list|()
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiInitializeSubsystem
+argument_list|,
+name|Status
+argument_list|)
 expr_stmt|;
 comment|/* Get the command line options */
 while|while
@@ -1014,8 +1026,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|AcpiGbl_BatchMode
@@ -1292,8 +1306,10 @@ name|usage
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|InitFlags
@@ -1377,7 +1393,7 @@ operator|)
 return|;
 block|}
 comment|/* Expand wildcards (Windows only) */
-name|FileList
+name|WildcardList
 operator|=
 name|AsDoWildcard
 argument_list|(
@@ -1389,18 +1405,20 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|FileList
+name|WildcardList
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 while|while
 condition|(
 operator|*
-name|FileList
+name|WildcardList
 condition|)
 block|{
 name|FullPathname
@@ -1415,7 +1433,7 @@ operator|+
 name|strlen
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 operator|+
 literal|1
@@ -1434,7 +1452,7 @@ argument_list|(
 name|FullPathname
 argument_list|,
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 comment|/* Get one table */
@@ -1480,15 +1498,15 @@ expr_stmt|;
 name|AcpiOsFree
 argument_list|(
 operator|*
-name|FileList
+name|WildcardList
 argument_list|)
 expr_stmt|;
 operator|*
-name|FileList
+name|WildcardList
 operator|=
 name|NULL
 expr_stmt|;
-name|FileList
+name|WildcardList
 operator|++
 expr_stmt|;
 comment|/*                  * Ignore an FACS or RSDT, we can't use them.                  */
@@ -1574,8 +1592,10 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|Status
@@ -1728,7 +1748,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

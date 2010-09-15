@@ -1916,9 +1916,14 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
+call|(
+name|ACPI_THREAD_ID
+call|)
+argument_list|(
 name|ThreadId
 operator|+
 literal|1
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2081,30 +2086,6 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* TEMPORARY STUB FUNCTION */
-end_comment
-
-begin_function
-name|void
-name|AcpiOsDerivePciId
-parameter_list|(
-name|ACPI_HANDLE
-name|Device
-parameter_list|,
-name|ACPI_HANDLE
-name|Region
-parameter_list|,
-name|ACPI_PCI_ID
-modifier|*
-modifier|*
-name|PciId
-parameter_list|)
-block|{
-return|return;
 block|}
 end_function
 

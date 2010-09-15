@@ -34,12 +34,6 @@ directive|include
 file|<windows.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<winbase.h>
-end_include
-
 begin_elif
 elif|#
 directive|elif
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"accommon.h"
 end_include
 
 begin_define

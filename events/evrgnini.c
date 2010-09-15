@@ -631,7 +631,7 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the PCI device and function numbers from the _ADR object contained      * in the parent's scope.      */
+comment|/*      * Get the PCI device and function numbers from the _ADR object      * contained in the parent's scope.      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -740,9 +740,13 @@ name|PciValue
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Complete this device's PciId */
-name|AcpiOsDerivePciId
+comment|/* Complete/update the PCI ID for this device */
+name|Status
+operator|=
+name|AcpiHwDerivePciId
 argument_list|(
+name|PciId
+argument_list|,
 name|PciRootNode
 argument_list|,
 name|RegionObj
@@ -750,11 +754,27 @@ operator|->
 name|Region
 operator|.
 name|Node
-argument_list|,
-operator|&
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
 name|PciId
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|RegionContext
 operator|=

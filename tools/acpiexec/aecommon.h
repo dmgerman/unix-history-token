@@ -149,6 +149,41 @@ name|AcpiGbl_RegionFillValue
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Check for unexpected exceptions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AE_CHECK_STATUS
+parameter_list|(
+name|Name
+parameter_list|,
+name|Status
+parameter_list|,
+name|Expected
+parameter_list|)
+define|\
+value|if (Status != Expected) \     { \         AcpiOsPrintf ("Unexpected %s from %s (%s-%d)\n", \             AcpiFormatException (Status), #Name, _AcpiModuleName, __LINE__); \     }
+end_define
+
+begin_comment
+comment|/* Check for unexpected non-AE_OK errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AE_CHECK_OK
+parameter_list|(
+name|Name
+parameter_list|,
+name|Status
+parameter_list|)
+value|AE_CHECK_STATUS (Name, Status, AE_OK);
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -240,7 +275,7 @@ end_define
 
 begin_function_decl
 name|void
-name|__cdecl
+name|ACPI_SYSTEM_XFACE
 name|AeCtrlCHandler
 parameter_list|(
 name|int

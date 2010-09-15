@@ -1276,6 +1276,12 @@ name|SRC_TYPE_UNION
 block|}
 block|,
 block|{
+literal|"ACPI_PCI_DEVICE"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_PCI_ID"
 block|,
 name|SRC_TYPE_STRUCT

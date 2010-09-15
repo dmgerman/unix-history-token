@@ -58,13 +58,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|inline
-value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_USE_STANDARD_HEADERS
 end_define
 

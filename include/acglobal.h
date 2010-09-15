@@ -238,6 +238,12 @@ name|AcpiGbl_TraceMethodName
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -650,13 +656,6 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_EventsInitialized
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|BOOLEAN
-name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
 

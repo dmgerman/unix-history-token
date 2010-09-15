@@ -68,6 +68,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|CheckAscii
 parameter_list|(
@@ -82,6 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|NormalizeSignature
 parameter_list|(
@@ -93,6 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|unsigned
 name|int
 name|GetNextInstance
@@ -109,6 +112,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ExtractTables
 parameter_list|(
@@ -128,6 +132,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|GetTableHeader
 parameter_list|(
@@ -144,6 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|unsigned
 name|int
 name|CountTableInstances
@@ -160,6 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ListTables
 parameter_list|(
@@ -171,6 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|ConvertLine
 parameter_list|(
@@ -187,6 +195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DisplayUsage
 parameter_list|(
@@ -272,6 +281,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|TableInfo
 modifier|*
@@ -282,6 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|Filename
 index|[
@@ -291,6 +302,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|Data
@@ -305,6 +317,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|DisplayUsage
 parameter_list|(
@@ -366,6 +379,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|CheckAscii
 parameter_list|(
@@ -432,6 +446,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|NormalizeSignature
 parameter_list|(
@@ -469,6 +484,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|size_t
 name|ConvertLine
 parameter_list|(
@@ -680,6 +696,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|size_t
 name|GetTableHeader
 parameter_list|(
@@ -788,6 +805,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|int
 name|CountTableInstances
@@ -923,6 +941,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|int
 name|GetNextInstance
@@ -1080,6 +1099,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ExtractTables
 parameter_list|(
@@ -1449,10 +1469,14 @@ name|FIND_HEADER
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Acpi table [%4.4s] - % 7d bytes written to %s\n"
+literal|"Acpi table [%4.4s] - %u bytes written to %s\n"
 argument_list|,
 name|ThisSignature
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|TotalBytesWritten
 argument_list|,
 name|Filename
@@ -1570,10 +1594,14 @@ block|{
 comment|/* Received an EOF while extracting data */
 name|printf
 argument_list|(
-literal|"Acpi table [%4.4s] - % 7d bytes written to %s\n"
+literal|"Acpi table [%4.4s] - %u bytes written to %s\n"
 argument_list|,
 name|ThisSignature
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|TotalBytesWritten
 argument_list|,
 name|Filename
@@ -1599,6 +1627,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ListTables
 parameter_list|(

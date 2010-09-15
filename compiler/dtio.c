@@ -165,6 +165,7 @@ value|5
 end_define
 
 begin_decl_stmt
+specifier|static
 name|UINT32
 name|Gbl_NextLineOffset
 decl_stmt|;

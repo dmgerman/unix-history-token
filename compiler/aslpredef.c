@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpredef.h"
 end_include
 

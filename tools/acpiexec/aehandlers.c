@@ -32,6 +32,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|AeNotifyHandler
 parameter_list|(
@@ -49,6 +50,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|AeDeviceNotifyHandler
 parameter_list|(
@@ -66,6 +68,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|AeExceptionHandler
 parameter_list|(
@@ -89,6 +92,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|AeTableHandler
 parameter_list|(
@@ -107,6 +111,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|AeRegionInit
 parameter_list|(
@@ -129,6 +134,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|AeAttachedDataHandler
 parameter_list|(
@@ -143,6 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|UINT32
 name|AeInterfaceHandler
 parameter_list|(
@@ -156,6 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|UINT32
 name|SigintCount
 init|=
@@ -164,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|AE_DEBUG_REGIONS
 name|AeRegions
 decl_stmt|;
@@ -175,7 +184,7 @@ end_comment
 
 begin_function
 name|void
-name|__cdecl
+name|ACPI_SYSTEM_XFACE
 name|AeCtrlCHandler
 parameter_list|(
 name|int
@@ -238,6 +247,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AeNotifyHandler
 parameter_list|(
@@ -320,6 +330,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AeDeviceNotifyHandler
 parameter_list|(
@@ -388,6 +399,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AeExceptionHandler
 parameter_list|(
@@ -575,11 +587,8 @@ name|Integer
 operator|.
 name|Value
 operator|=
-name|ACPI_TO_INTEGER
-argument_list|(
 name|AcpiOsGetThreadId
 argument_list|()
-argument_list|)
 expr_stmt|;
 comment|/* Setup return buffer */
 name|ReturnObj
@@ -714,6 +723,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|TableEvents
@@ -730,6 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AeTableHandler
 parameter_list|(
@@ -819,6 +830,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AeAttachedDataHandler
 parameter_list|(
@@ -860,6 +872,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AeInterfaceHandler
 parameter_list|(
@@ -907,6 +920,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AeRegionInit
 parameter_list|(
@@ -933,26 +947,27 @@ operator|=
 name|RegionHandle
 expr_stmt|;
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeInstallHandlers  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install handlers for the AcpiExec utility.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AeInstallHandlers  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Install handlers for the AcpiExec utility.  *  * Notes:       Don't install handler for PCI_Config, we want to use the  *              default handler to exercise that code.  *  *****************************************************************************/
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ACPI_ADR_SPACE_TYPE
-name|SpaceId
+name|SpaceIdList
 index|[]
 init|=
 block|{
 literal|0
 block|,
 literal|1
-block|,
-literal|2
 block|,
 literal|3
 block|,
@@ -973,7 +988,7 @@ begin_define
 define|#
 directive|define
 name|AEXEC_NUM_REGIONS
-value|9
+value|8
 end_define
 
 begin_function
@@ -1235,6 +1250,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiInstallNotifyHandler
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiRemoveNotifyHandler
@@ -1244,6 +1266,13 @@ argument_list|,
 name|ACPI_ALL_NOTIFY
 argument_list|,
 name|AeNotifyHandler
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiRemoveNotifyHandler
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1289,6 +1318,13 @@ argument_list|,
 name|Handle
 argument_list|)
 expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiAttachData
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiDetachData
@@ -1296,6 +1332,13 @@ argument_list|(
 name|Handle
 argument_list|,
 name|AeAttachedDataHandler
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiDetachData
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1307,6 +1350,13 @@ argument_list|,
 name|AeAttachedDataHandler
 argument_list|,
 name|Handle
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiAttachData
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1338,13 +1388,15 @@ name|i
 operator|++
 control|)
 block|{
-name|Status
-operator|=
+comment|/* Remove any existing handler */
+operator|(
+name|void
+operator|)
 name|AcpiRemoveAddressSpaceHandler
 argument_list|(
 name|AcpiGbl_RootNode
 argument_list|,
-name|SpaceId
+name|SpaceIdList
 index|[
 name|i
 index|]
@@ -1359,7 +1411,7 @@ name|AcpiInstallAddressSpaceHandler
 argument_list|(
 name|AcpiGbl_RootNode
 argument_list|,
-name|SpaceId
+name|SpaceIdList
 index|[
 name|i
 index|]
@@ -1393,13 +1445,13 @@ argument_list|(
 operator|(
 name|UINT8
 operator|)
-name|SpaceId
+name|SpaceIdList
 index|[
 name|i
 index|]
 argument_list|)
 operator|,
-name|SpaceId
+name|SpaceIdList
 index|[
 name|i
 index|]
@@ -1427,7 +1479,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|Status
+operator|)
 return|;
 block|}
 end_function
@@ -1531,7 +1585,9 @@ name|ACPI_TYPE_REGION
 condition|)
 block|{
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 comment|/*      * Region support can be disabled with the -r option.      * We use this to support dynamically loaded tables where we pass a valid      * address to the AML.      */
@@ -1656,6 +1712,13 @@ argument_list|,
 name|BitWidth
 argument_list|)
 expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiHwReadPort
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_WRITE
@@ -1673,6 +1736,13 @@ operator|*
 name|Value
 argument_list|,
 name|BitWidth
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiHwWritePort
+argument_list|,
+name|Status
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2043,7 +2113,9 @@ name|RegionElement
 condition|)
 block|{
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|RegionElement
@@ -2069,7 +2141,9 @@ name|RegionElement
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 comment|/* Initialize the region with the default fill value */
@@ -2229,7 +2303,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AE_AML_REGION_LIMIT
+operator|)
 return|;
 block|}
 comment|/*      * Get BufferValue to point to the "address" in the buffer      */
@@ -2297,11 +2373,15 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|AE_BAD_PARAMETER
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|AE_OK
+operator|)
 return|;
 block|}
 end_function

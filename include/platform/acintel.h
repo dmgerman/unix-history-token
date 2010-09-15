@@ -19,6 +19,10 @@ directive|define
 name|__ACINTEL_H__
 end_define
 
+begin_comment
+comment|/* Configuration specific to Intel 64-bit C compiler */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -36,7 +40,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|inline
+name|ACPI_INLINE
 value|__inline
 end_define
 
@@ -66,46 +70,6 @@ begin_define
 define|#
 directive|define
 name|ACPI_INTERNAL_VAR_XFACE
-end_define
-
-begin_comment
-comment|/*  * Math helper functions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DIV_64_BY_32
-parameter_list|(
-name|n
-parameter_list|,
-name|n_hi
-parameter_list|,
-name|n_lo
-parameter_list|,
-name|d32
-parameter_list|,
-name|q32
-parameter_list|,
-name|r32
-parameter_list|)
-define|\
-value|{ \     q32 = n / d32; \     r32 = n % d32; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SHIFT_RIGHT_64
-parameter_list|(
-name|n
-parameter_list|,
-name|n_hi
-parameter_list|,
-name|n_lo
-parameter_list|)
-define|\
-value|{ \     n<<= 1; \ }
 end_define
 
 begin_comment

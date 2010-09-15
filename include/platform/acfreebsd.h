@@ -111,13 +111,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|ACPI_THREAD_ID
-value|lwpid_t
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_MUTEX_TYPE
 value|ACPI_OSL_MUTEX
 end_define
@@ -248,13 +241,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|ACPI_THREAD_ID
-value|pthread_t
-end_define
 
 begin_define
 define|#

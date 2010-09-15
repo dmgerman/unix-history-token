@@ -51,7 +51,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|ACPI_INLINE
 name|void
 name|AcpiTbInitGenericAddress
 parameter_list|(
@@ -452,7 +452,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|ACPI_INLINE
 name|void
 name|AcpiTbInitGenericAddress
 parameter_list|(

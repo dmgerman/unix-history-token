@@ -184,29 +184,6 @@ define|\
 value|{ \     unsigned long long val = 0LL; \     val = n_lo | ( ((unsigned long long)h_hi)<< 32 ); \     __llrotr (val,1); \     n_hi = (unsigned long)((val>> 32 )& 0xffffffff ); \     n_lo = (unsigned long)(val& 0xffffffff); \ }
 end_define
 
-begin_comment
-comment|/* IBM VAC does not have inline */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__IBMC__
-operator|||
-name|__IBMCPP__
-end_if
-
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef

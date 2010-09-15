@@ -1497,28 +1497,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* TEMPORARY STUB FUNCTION */
-end_comment
-
-begin_function
-name|void
-name|AcpiOsDerivePciId
-parameter_list|(
-name|ACPI_HANDLE
-name|Device
-parameter_list|,
-name|ACPI_HANDLE
-name|Region
-parameter_list|,
-name|ACPI_PCI_ID
-modifier|*
-modifier|*
-name|PciId
-parameter_list|)
-block|{  }
-end_function
-
-begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPort  *  * PARAMETERS:  Address             Address of I/O port/register to read  *              Value               Where value is placed  *              Width               Number of bits  *  * RETURN:      Value read from port  *  * DESCRIPTION: Read data from an I/O port or register  *  *****************************************************************************/
 end_comment
 
@@ -1739,7 +1717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetThreadId  *  * PARAMETERS:  None  *  * RETURN:      Id of the running thread  *  * DESCRIPTION: Get the Id of the current (running) thread  *  * NOTE:        The environment header should contain this line:  *                  #define ACPI_THREAD_ID pthread_t  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetThreadId  *  * PARAMETERS:  None  *  * RETURN:      Id of the running thread  *  * DESCRIPTION: Get the Id of the current (running) thread  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1751,8 +1729,11 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|ACPI_CAST_PTHREAD_T
+argument_list|(
 name|pthread_self
 argument_list|()
+argument_list|)
 operator|)
 return|;
 block|}

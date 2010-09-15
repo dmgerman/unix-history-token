@@ -2168,6 +2168,9 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
+operator|(
+name|UINT64
+operator|)
 name|AcpiGbl_NextResourceId
 argument_list|,
 literal|4
@@ -2180,6 +2183,9 @@ index|]
 operator|=
 name|AcpiUtHexToAsciiChar
 argument_list|(
+operator|(
+name|UINT64
+operator|)
 name|AcpiGbl_NextResourceId
 argument_list|,
 literal|0

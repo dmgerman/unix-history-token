@@ -33,6 +33,13 @@ name|COMPILER_DEPENDENT_UINT64
 value|unsigned __int64
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_INLINE
+value|__inline
+end_define
+
 begin_comment
 comment|/*  * Calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces  * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
 end_comment

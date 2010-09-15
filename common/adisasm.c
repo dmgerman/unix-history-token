@@ -125,6 +125,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|AdCreateTableHeader
 parameter_list|(
@@ -140,6 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|AdDeferredParse
 parameter_list|(
@@ -158,6 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|AdParseDeferredOps
 parameter_list|(
@@ -1340,6 +1343,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AdCreateTableHeader
 parameter_list|(
@@ -1763,6 +1767,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AdDeferredParse
 parameter_list|(
@@ -2157,6 +2162,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AdParseDeferredOps
 parameter_list|(

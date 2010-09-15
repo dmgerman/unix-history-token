@@ -63,7 +63,7 @@ end_function_decl
 
 begin_function
 specifier|static
-specifier|inline
+name|ACPI_INLINE
 name|int
 name|AsMaxInt
 parameter_list|(
@@ -804,6 +804,10 @@ argument_list|(
 operator|(
 literal|"Processing %u bytes\n"
 operator|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|FileBuffer
