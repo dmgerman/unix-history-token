@@ -315,23 +315,11 @@ name|bus_dma_lock_op_t
 name|op
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|panic
 argument_list|(
 literal|"driver error: busdma dflt_lock called"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"DRIVER_ERROR: busdma dflt_lock called\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2344,17 +2332,23 @@ name|mflags
 operator||=
 name|M_ZERO
 expr_stmt|;
+comment|/* 	 * XXX: 	 * (dmat->dt_alignment< dmat->dt_maxsize) is just a quick hack; the 	 * exact alignment guarantees of malloc need to be nailed down, and 	 * the code below should be rewritten to take that into account. 	 * 	 * In the meantime, we'll warn the user if malloc gets it wrong. 	 */
 if|if
 condition|(
-operator|(
 name|dmat
 operator|->
 name|dt_maxsize
 operator|<=
 name|PAGE_SIZE
-operator|)
+operator|&&
+name|dmat
+operator|->
+name|dt_alignment
+operator|<
+name|dmat
+operator|->
+name|dt_maxsize
 condition|)
-block|{
 operator|*
 name|vaddr
 operator|=
@@ -2369,7 +2363,6 @@ argument_list|,
 name|mflags
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* 		 * XXX use contigmalloc until it is merged into this 		 * facility and handles multi-seg allocations.  Nobody 		 * is doing multi-seg allocations yet though. 		 */
@@ -2420,6 +2413,25 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|uintptr_t
+operator|)
+operator|*
+name|vaddr
+operator|%
+name|dmat
+operator|->
+name|dt_alignment
+condition|)
+name|printf
+argument_list|(
+literal|"%s: failed to align memory properly.\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2450,13 +2462,19 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|dmat
 operator|->
 name|dt_maxsize
 operator|<=
 name|PAGE_SIZE
-operator|)
+operator|&&
+name|dmat
+operator|->
+name|dt_alignment
+operator|<
+name|dmat
+operator|->
+name|dt_maxsize
 condition|)
 name|free
 argument_list|(
@@ -2466,7 +2484,6 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|contigfree
 argument_list|(
 name|vaddr
@@ -2478,7 +2495,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
