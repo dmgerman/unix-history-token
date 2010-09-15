@@ -3590,6 +3590,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF_1_LOADFLTR
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Immediate loading of filtees */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DF_1_NOOPEN
 value|0x00000040
 end_define
