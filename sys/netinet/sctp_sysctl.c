@@ -933,10 +933,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* neither Mac OS X nor FreeBSD support mulitple routing functions */
 if|if
 condition|(
