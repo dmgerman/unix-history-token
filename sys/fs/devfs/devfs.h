@@ -471,6 +471,20 @@ parameter_list|)
 value|(--(dmp)->dm_holdcnt == 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVFS_DEL_VNLOCKED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVFS_DEL_NORECURSE
+value|0x02
+end_define
+
 begin_function_decl
 name|void
 name|devfs_rules_apply
@@ -564,7 +578,7 @@ modifier|*
 name|de
 parameter_list|,
 name|int
-name|vp_locked
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
