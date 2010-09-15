@@ -5444,9 +5444,6 @@ case|:
 case|case
 name|ZFS_PROP_NBMAND
 case|:
-case|case
-name|ZFS_PROP_SHARESMB
-case|:
 operator|(
 name|void
 operator|)

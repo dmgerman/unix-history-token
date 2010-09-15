@@ -1940,7 +1940,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TODO
+name|sun
 if|if
 condition|(
 name|type
@@ -2000,13 +2000,14 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|panic
-argument_list|(
-name|__func__
-argument_list|)
+comment|/* sun */
+name|id
+operator|=
+name|UID_NOBODY
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* sun */
 return|return
 operator|(
 name|id
@@ -2393,7 +2394,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|TODO
+name|sun
 name|ksid
 operator|=
 name|crgetsid
@@ -2432,6 +2433,20 @@ argument_list|(
 name|ksid
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* sun */
+name|rid
+operator|=
+name|UID_NOBODY
+expr_stmt|;
+name|domain
+operator|=
+name|nulldomain
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* sun */
 name|idx
 operator|=
 name|zfs_fuid_find_by_domain
@@ -2471,15 +2486,6 @@ name|rid
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-name|panic
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2697,7 +2703,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|TODO
+name|sun
 if|if
 condition|(
 name|type
@@ -2752,6 +2758,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* sun */
 comment|/* 			 * When returning nobody we will need to 			 * make a dummy fuid table entry for logging 			 * purposes. 			 */
 name|rid
 operator|=
@@ -2761,16 +2770,13 @@ name|domain
 operator|=
 name|nulldomain
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
 block|}
-else|#
-directive|else
-name|panic
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
+comment|/* sun */
 block|}
 name|idx
 operator|=
