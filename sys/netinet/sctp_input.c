@@ -942,6 +942,13 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|net
+condition|)
+block|{
 name|sctp_free_remote_addr
 argument_list|(
 name|sp
@@ -949,6 +956,13 @@ operator|->
 name|net
 argument_list|)
 expr_stmt|;
+name|sp
+operator|->
+name|net
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -1082,7 +1096,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_FIRST
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|asoc
@@ -1423,6 +1438,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|net
+condition|)
+block|{
 name|sctp_free_remote_addr
 argument_list|(
 name|sp
@@ -1436,6 +1458,7 @@ name|net
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 comment|/* Free the chunk */
 name|sctp_free_a_strmoq
 argument_list|(
@@ -3257,7 +3280,7 @@ name|SCTP_MOBILITY_BASE
 argument_list|)
 condition|)
 block|{
-name|sctp_move_chunks_from_deleted_prim
+name|sctp_move_chunks_from_net
 argument_list|(
 name|stcb
 argument_list|,
@@ -3265,7 +3288,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|primary_destination
+name|deleted_primary
 argument_list|)
 expr_stmt|;
 block|}
