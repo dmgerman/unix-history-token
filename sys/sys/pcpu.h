@@ -57,7 +57,7 @@ file|<machine/pcpu.h>
 end_include
 
 begin_comment
-comment|/*  * Define a set for pcpu data.  *   * We don't use SET_DECLARE because it defines the set as 'a' when we  * want 'aw'.  gcc considers uninitialized data in a separate section  * writable, and there is no generic zero initializer that works for  * structs and scalars.  */
+comment|/*  * Define a set for pcpu data.  */
 end_comment
 
 begin_decl_stmt
@@ -75,20 +75,6 @@ modifier|*
 name|__stop_set_pcpu
 decl_stmt|;
 end_decl_stmt
-
-begin_asm
-asm|__asm__(
-ifdef|#
-directive|ifdef
-name|__arm__
-asm|".section set_pcpu, \"aw\", %progbits\n"
-else|#
-directive|else
-asm|".section set_pcpu, \"aw\", @progbits\n"
-endif|#
-directive|endif
-asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
-end_asm
 
 begin_comment
 comment|/*  * Array of dynamic pcpu base offsets.  Indexed by id.  */
