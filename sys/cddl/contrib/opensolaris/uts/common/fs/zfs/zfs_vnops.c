@@ -3466,25 +3466,15 @@ name|tx_bytes
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXXPJD: There are some cases (triggered by fsx) where 		 *         vn_has_cached_data(vp) returns false when it should 		 *         return true. This should be investigated. 		 */
-if|#
-directive|if
-literal|0
-block|if (tx_bytes&& vn_has_cached_data(vp))
-else|#
-directive|else
 if|if
 condition|(
 name|tx_bytes
 operator|&&
+name|vn_has_cached_data
+argument_list|(
 name|vp
-operator|->
-name|v_object
-operator|!=
-name|NULL
+argument_list|)
 condition|)
-endif|#
-directive|endif
 block|{
 name|update_pages
 argument_list|(

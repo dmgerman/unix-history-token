@@ -246,7 +246,8 @@ name|vn_has_cached_data
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_object != NULL&& (vp)->v_object->resident_page_count> 0)
+define|\
+value|((vp)->v_object != NULL&& ((vp)->v_object->resident_page_count> 0 \ 				    || (vp)->v_object->cache != NULL))
 end_define
 
 begin_define
