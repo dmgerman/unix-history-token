@@ -26232,11 +26232,6 @@ modifier|*
 name|m
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|embuf
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|sctp_tcb
@@ -29106,10 +29101,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|embuf
-operator|=
-name|m
-expr_stmt|;
 name|copied_so_far
 operator|+=
 name|cp_len
@@ -29358,10 +29349,6 @@ block|}
 name|copied_so_far
 operator|+=
 name|cp_len
-expr_stmt|;
-name|embuf
-operator|=
-name|m
 expr_stmt|;
 name|freed_so_far
 operator|+=
