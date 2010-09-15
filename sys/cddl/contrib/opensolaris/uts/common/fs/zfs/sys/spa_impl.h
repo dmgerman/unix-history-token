@@ -238,7 +238,11 @@ name|ZIO_TASKQ_ISSUE
 init|=
 literal|0
 block|,
+name|ZIO_TASKQ_ISSUE_HIGH
+block|,
 name|ZIO_TASKQ_INTERRUPT
+block|,
+name|ZIO_TASKQ_INTERRUPT_HIGH
 block|,
 name|ZIO_TASKQ_TYPES
 block|}

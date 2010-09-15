@@ -259,6 +259,17 @@ modifier|*
 name|sm
 parameter_list|)
 function_decl|;
+name|boolean_t
+function_decl|(
+modifier|*
+name|smop_fragmented
+function_decl|)
+parameter_list|(
+name|space_map_t
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 comment|/*  * debug entry  *  *    1      3         10                     50  *  ,---+--------+------------+---------------------------------.  *  | 1 | action |  syncpass  |        txg (lower bits)         |  *  `---+--------+------------+---------------------------------'  *   63  62    60 59        50 49                               0  *  *  *  * non-debug entry  *  *    1               47                   1           15  *  ,-----------------------------------------------------------.  *  | 0 |   offset (sm_shift units)    | type |       run       |  *  `-----------------------------------------------------------'  *   63  62                          17   16   15               0  */

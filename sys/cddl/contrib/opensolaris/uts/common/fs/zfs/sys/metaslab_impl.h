@@ -89,6 +89,9 @@ decl_stmt|;
 name|uint64_t
 name|mg_aliquot
 decl_stmt|;
+name|uint64_t
+name|mg_bonus_area
+decl_stmt|;
 name|int64_t
 name|mg_bias
 decl_stmt|;
