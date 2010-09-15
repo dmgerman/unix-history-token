@@ -2317,6 +2317,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dcache_color_ignore
+operator|==
+literal|0
+operator|&&
 name|m
 operator|->
 name|md

@@ -91,6 +91,12 @@ name|icache_page_inval
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|dcache_color_ignore
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -171,6 +177,25 @@ decl_stmt|;
 name|u_int
 name|use_new_prop
 decl_stmt|;
+comment|/* 	 * For CPUs which ignore TD_CV and support hardware unaliasing don't 	 * bother doing page coloring.  This is equal across all CPUs. 	 */
+if|if
+condition|(
+name|pcpu
+operator|->
+name|pc_cpuid
+operator|==
+literal|0
+operator|&&
+name|pcpu
+operator|->
+name|pc_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+condition|)
+name|dcache_color_ignore
+operator|=
+literal|1
+expr_stmt|;
 name|use_new_prop
 operator|=
 name|cache_new_prop
@@ -473,11 +498,9 @@ expr_stmt|;
 comment|/* 	 * For CPUs which don't support unaliasing in hardware ensure that 	 * the data cache doesn't have too many virtual colors. 	 */
 if|if
 condition|(
-name|pcpu
-operator|->
-name|pc_impl
-operator|!=
-name|CPU_IMPL_SPARC64V
+name|dcache_color_ignore
+operator|==
+literal|0
 operator|&&
 operator|(
 operator|(
