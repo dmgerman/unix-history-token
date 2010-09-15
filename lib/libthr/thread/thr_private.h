@@ -1142,13 +1142,8 @@ value|0x0004
 comment|/* thread is suspended */
 define|#
 directive|define
-name|THR_FLAGS_IN_GCLIST
-value|0x0008
-comment|/* thread in gc list */
-define|#
-directive|define
 name|THR_FLAGS_DETACHED
-value|0x0010
+value|0x0008
 comment|/* thread is detached */
 comment|/* Thread list flags; only set with thread list lock held. */
 name|int
@@ -1164,6 +1159,11 @@ directive|define
 name|TLFLAGS_IN_TDLIST
 value|0x0002
 comment|/* thread in all thread list */
+define|#
+directive|define
+name|TLFLAGS_IN_GCLIST
+value|0x0004
+comment|/* thread in gc list */
 comment|/* Queue of currently owned NORMAL or PRIO_INHERIT type mutexes. */
 name|struct
 name|mutex_queue
@@ -1498,7 +1498,7 @@ name|THR_GCLIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->flags |= THR_FLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_gc_list, thrd, gcle);\ 		(thrd)->tlflags |= TLFLAGS_IN_GCLIST;		\ 		_gc_count++;					\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -1508,7 +1508,7 @@ name|THR_GCLIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->flags&= ~THR_FLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->tlflags& TLFLAGS_IN_GCLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_gc_list, thrd, gcle);	\ 		(thrd)->tlflags&= ~TLFLAGS_IN_GCLIST;		\ 		_gc_count--;					\ 	}							\ } while (0)
 end_define
 
 begin_define
