@@ -807,6 +807,13 @@ name|moea64_table_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|moea64_slb_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * PTEG data.  */
 end_comment
@@ -3874,6 +3881,18 @@ argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_RECURSE
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|,
+literal|"SLB table"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the TLBIE lock. TLBIE can only be executed by one CPU. 	 */
@@ -7482,6 +7501,12 @@ operator|=
 name|pmap
 expr_stmt|;
 comment|/* 	 * Allocate some segment registers for this pmap. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7598,7 +7623,7 @@ argument_list|(
 operator|~
 name|moea64_vsid_bitmap
 index|[
-name|i
+name|n
 index|]
 argument_list|)
 operator|-
@@ -7626,12 +7651,37 @@ operator||=
 name|i
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|moea64_vsid_bitmap
+index|[
+name|n
+index|]
+operator|&
+name|mask
+operator|)
+argument_list|,
+operator|(
+literal|"Allocating in-use VSID %#zx\n"
+operator|,
+name|hash
+operator|)
+argument_list|)
+expr_stmt|;
 name|moea64_vsid_bitmap
 index|[
 name|n
 index|]
 operator||=
 name|mask
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -7664,9 +7714,17 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
-literal|"moea64_pinit: out of segments"
+literal|"%s: out of segments"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -8126,7 +8184,13 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"moea64_release"
+literal|"moea64_release: pm_sr[0] = 0"
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
 argument_list|)
 expr_stmt|;
 name|idx
@@ -8168,6 +8232,12 @@ index|]
 operator|&=
 operator|~
 name|mask
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|moea64_slb_mutex
+argument_list|)
 expr_stmt|;
 name|PMAP_LOCK_DESTROY
 argument_list|(
