@@ -2223,6 +2223,12 @@ name|flags
 operator||=
 name|ATA_SATA
 expr_stmt|;
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_KNOWN_PRESENCE
+expr_stmt|;
 comment|/* enable PHY state change interrupt */
 name|ATA_OUTL
 argument_list|(
