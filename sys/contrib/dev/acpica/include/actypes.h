@@ -104,7 +104,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  *  */
+comment|/*  * Architecture-specific ACPICA Subsystem Data Types  *  * The goal of these types is to provide source code portability across  * 16-bit, 32-bit, and 64-bit targets.  *  * 1) The following types are of fixed size for all targets (16/32/64):  *  * BOOLEAN      Logical boolean  *  * UINT8        8-bit  (1 byte) unsigned value  * UINT16       16-bit (2 byte) unsigned value  * UINT32       32-bit (4 byte) unsigned value  * UINT64       64-bit (8 byte) unsigned value  *  * INT16        16-bit (2 byte) signed value  * INT32        32-bit (4 byte) signed value  * INT64        64-bit (8 byte) signed value  *  * COMPILER_DEPENDENT_UINT64/INT64 - These types are defined in the  * compiler-dependent header(s) and were introduced because there is no common  * 64-bit integer type across the various compilation models, as shown in  * the table below.  *  * Datatype  LP64 ILP64 LLP64 ILP32 LP32 16bit  * char      8    8     8     8     8    8  * short     16   16    16    16    16   16  * _int32         32  * int       32   64    32    32    16   16  * long      64   64    32    32    32   32  * long long            64    64  * pointer   64   64    64    32    32   32  *  * Note: ILP64 and LP32 are currently not supported.  *  *  * 2) These types represent the native word size of the target mode of the  * processor, and may be 16-bit, 32-bit, or 64-bit as required. They are  * usually used for memory allocation, efficient loop counters, and array  * indexes. The types are similar to the size_t type in the C library and are  * required because there is no C type that consistently represents the native  * data width. ACPI_SIZE is needed because there is no guarantee that a  * kernel-level C library is present.  *  * ACPI_SIZE        16/32/64-bit unsigned value  * ACPI_NATIVE_INT  16/32/64-bit signed value  */
 end_comment
 
 begin_comment
@@ -152,6 +152,17 @@ end_typedef
 begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
+
+begin_comment
+comment|/*  * Value returned by AcpiOsGetThreadId. There is no standard "thread_id"  * across operating systems or even the various UNIX systems. Since ACPICA  * only needs the thread ID as a unique thread identifier, we use a UINT64  * as the only common data type - it will accommodate any type of pointer or  * any type of integer. It is up to the host-dependent OSL to cast the  * native thread ID type to a UINT64 (in AcpiOsGetThreadId).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_THREAD_ID
+value|UINT64
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * Types specific to 64-bit targets  *  ******************************************************************************/
@@ -369,28 +380,6 @@ end_endif
 begin_comment
 comment|/*******************************************************************************  *  * OS-dependent types  *  * If the defaults below are not appropriate for the host system, they can  * be defined in the OS-specific header, and this will take precedence.  *  ******************************************************************************/
 end_comment
-
-begin_comment
-comment|/* Value returned by AcpiOsGetThreadId */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_THREAD_ID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ACPI_THREAD_ID
-value|ACPI_SIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Flags for AcpiOsAcquireLock/AcpiOsReleaseLock */
@@ -948,38 +937,6 @@ directive|define
 name|ACPI_OWNER_ID_MAX
 value|0xFF
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|uint64_struct
-block|{
-name|UINT32
-name|Lo
-decl_stmt|;
-name|UINT32
-name|Hi
-decl_stmt|;
-block|}
-name|UINT64_STRUCT
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-union|union
-name|uint64_overlay
-block|{
-name|UINT64
-name|Full
-decl_stmt|;
-name|UINT64_STRUCT
-name|Part
-decl_stmt|;
-block|}
-name|UINT64_OVERLAY
-typedef|;
-end_typedef
 
 begin_define
 define|#

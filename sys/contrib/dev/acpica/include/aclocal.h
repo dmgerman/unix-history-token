@@ -3583,7 +3583,7 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|InfoGate
 decl_stmt|;
-name|UINT32
+name|ACPI_THREAD_ID
 modifier|*
 name|Threads
 decl_stmt|;

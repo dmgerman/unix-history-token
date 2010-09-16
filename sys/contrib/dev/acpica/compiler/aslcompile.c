@@ -54,6 +54,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
@@ -69,6 +70,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(
@@ -459,6 +461,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|FlConsumeAnsiComment
 parameter_list|(
@@ -562,6 +565,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FlConsumeNewComment
 parameter_list|(

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100806
+value|0x20100915
 end_define
 
 begin_include
@@ -57,6 +57,13 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_TABLE_FADT
 name|AcpiGbl_FADT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
 

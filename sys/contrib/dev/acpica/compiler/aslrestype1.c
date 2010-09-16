@@ -206,12 +206,6 @@ name|LengthOp
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|AlignOp
-init|=
-name|NULL
-decl_stmt|;
 name|ASL_RESOURCE_NODE
 modifier|*
 name|Rnode
@@ -436,10 +430,6 @@ operator|.
 name|Alignment
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|AlignOp
-operator|=
-name|InitializerOp
 expr_stmt|;
 break|break;
 case|case

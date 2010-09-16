@@ -50,6 +50,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|INT32
 name|AdWriteBuffer
 parameter_list|(
@@ -68,6 +69,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 name|FilenameBuf
 index|[
@@ -207,6 +209,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|INT32
 name|AdWriteBuffer
 parameter_list|(

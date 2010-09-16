@@ -228,17 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|LsSetupNsList
-parameter_list|(
-name|void
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|LkGetNameOp
@@ -1390,6 +1380,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|LkGetNameOp

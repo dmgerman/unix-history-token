@@ -595,6 +595,27 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* "inline" keywords - configurable since inline is not standardized */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_INLINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INLINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Configurable calling conventions:  *  * ACPI_SYSTEM_XFACE        - Interfaces to host OS (handlers, threads)  * ACPI_EXTERNAL_XFACE      - External ACPI interfaces  * ACPI_INTERNAL_XFACE      - Internal ACPI interfaces  * ACPI_INTERNAL_VAR_XFACE  - Internal variable-parameter list interfaces  */
 end_comment
 

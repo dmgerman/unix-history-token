@@ -272,6 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|LsTreeWriteWalk
 parameter_list|(
@@ -294,6 +295,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|LsTreeWriteWalk
 parameter_list|(

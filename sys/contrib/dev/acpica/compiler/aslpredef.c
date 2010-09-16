@@ -28,18 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/amlcode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acparser.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/dev/acpica/include/acpredef.h>
 end_include
 

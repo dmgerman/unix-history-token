@@ -1495,6 +1495,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|LsSetupNsList
+parameter_list|(
+name|void
+modifier|*
+name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslutils - common compiler utilites  */
 end_comment

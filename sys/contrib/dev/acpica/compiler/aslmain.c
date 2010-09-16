@@ -307,7 +307,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nListings:\n"
+literal|"\nASL Listing Files:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -879,6 +879,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Get the command line options */
 while|while
 condition|(
@@ -1090,11 +1093,35 @@ break|break;
 case|case
 literal|'e'
 case|:
+name|Status
+operator|=
 name|AcpiDmAddToExternalFileList
 argument_list|(
 name|AcpiGbl_Optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not add %s to external list\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
@@ -1189,7 +1216,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
 case|case
 literal|'I'
 case|:
@@ -1719,6 +1745,9 @@ name|BadCommandLine
 init|=
 literal|0
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Minimum command line contains at least the command and an input file */
 if|if
 condition|(
@@ -1758,11 +1787,28 @@ condition|(
 name|Gbl_DoTemplates
 condition|)
 block|{
+name|Status
+operator|=
 name|DtCreateTemplates
 argument_list|(
 name|Gbl_TemplateSignature
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1

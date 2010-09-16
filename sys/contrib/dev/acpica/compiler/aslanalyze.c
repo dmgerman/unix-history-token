@@ -174,6 +174,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BOOLEAN
 name|AnIsResultUsed
 parameter_list|(
@@ -4152,6 +4153,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|BOOLEAN
 name|AnIsResultUsed
 parameter_list|(
@@ -4398,6 +4400,10 @@ operator|.
 name|ParseOpcode
 operator|==
 name|PARSEOP_ZERO
+operator|)
+operator|&&
+operator|(
+name|PrevArgNode
 operator|)
 operator|&&
 operator|(

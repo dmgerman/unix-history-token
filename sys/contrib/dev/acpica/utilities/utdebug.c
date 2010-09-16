@@ -319,21 +319,17 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Context Switch from TID %p to TID %p ****\n\n"
+literal|"\n**** Context Switch from TID %u to TID %u ****\n\n"
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|AcpiGbl_PrevThreadId
-argument_list|)
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThreadId
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -361,14 +357,12 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%p] "
+literal|"[%u] "
 argument_list|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThreadId
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
