@@ -1979,7 +1979,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Virtual Memory:\t\t(Total: %dK, Active %dK)\n"
+literal|"Virtual Memory:\t\t(Total: %dK Active: %dK)\n"
 argument_list|,
 name|v
 operator|->
@@ -1996,7 +1996,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Real Memory:\t\t(Total: %dK Active %dK)\n"
+literal|"Real Memory:\t\t(Total: %dK Active: %dK)\n"
 argument_list|,
 name|v
 operator|->
