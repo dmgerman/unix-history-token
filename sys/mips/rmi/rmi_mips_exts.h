@@ -633,7 +633,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|xlr_test_and_set
 parameter_list|(
@@ -670,7 +670,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|uint32_t
 name|xlr_mfcr
 parameter_list|(
@@ -692,7 +692,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|void
 name|xlr_mtcr
 parameter_list|(
@@ -709,6 +709,40 @@ asm|( 	    "move   $8, %1\n" 	    "move   $9, %0\n" 	    ".word  0x71090019\n" 	
 block|}
 end_function
 
+begin_comment
+comment|/*  * Atomic increment a unsigned  int  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|int
+name|xlr_ldaddwu
+parameter_list|(
+name|unsigned
+name|int
+name|value
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|addr
+parameter_list|)
+block|{
+asm|__asm__
+specifier|__volatile__
+asm|( 	    ".set	push\n" 	    ".set	noreorder\n" 	    "move	$8, %2\n" 	    "move	$9, %3\n" 	    ".word	0x71280011\n"
+comment|/* ldaddwu $8, $9 */
+asm|"move	%0, $8\n" 	    ".set	pop\n" 	    : "=&r"(value), "+m"(*addr) 	    : "0"(value), "r" ((unsigned long)addr) 	    :  "$8", "$9");
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -720,9 +754,9 @@ end_if
 
 begin_function
 specifier|static
-name|__inline__
-name|uint32_t
-name|xlr_paddr_lw
+name|__inline
+name|uint64_t
+name|xlr_paddr_ld
 parameter_list|(
 name|uint64_t
 name|paddr
@@ -736,7 +770,7 @@ return|return
 operator|(
 operator|*
 operator|(
-name|uint32_t
+name|uint64_t
 operator|*
 operator|)
 operator|(
@@ -759,15 +793,15 @@ end_elif
 
 begin_function
 specifier|static
-name|__inline__
-name|uint32_t
-name|xlr_paddr_lw
+name|__inline
+name|uint64_t
+name|xlr_paddr_ld
 parameter_list|(
 name|uint64_t
 name|paddr
 parameter_list|)
 block|{
-name|uint32_t
+name|uint64_t
 name|val
 decl_stmt|;
 name|paddr
@@ -776,7 +810,7 @@ literal|0x9800000000000000ULL
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "lw		%0, 0(%1)	\n\t" 	    ".set	pop		\n" 	    : "=r"(val) 	    : "r"(paddr));
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "ld		%0, 0(%1)	\n\t" 	    ".set	pop		\n" 	    : "=r"(val) 	    : "r"(paddr));
 return|return
 operator|(
 name|val
@@ -792,22 +826,25 @@ end_else
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|uint32_t
-name|xlr_paddr_lw
+name|xlr_paddr_ld
 parameter_list|(
 name|uint64_t
 name|paddr
 parameter_list|)
 block|{
 name|uint32_t
-name|high
+name|addrh
 decl_stmt|,
-name|low
-decl_stmt|,
-name|tmp
+name|addrl
 decl_stmt|;
-name|high
+name|uint32_t
+name|valh
+decl_stmt|,
+name|vall
+decl_stmt|;
+name|addrh
 operator|=
 literal|0x98000000
 operator||
@@ -817,7 +854,7 @@ operator|>>
 literal|32
 operator|)
 expr_stmt|;
-name|low
+name|addrl
 operator|=
 name|paddr
 operator|&
@@ -825,14 +862,135 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set push         \n\t" 	    ".set mips64       \n\t" 	    "dsll32 %1, %1, 0  \n\t" 	    "dsll32 %2, %2, 0  \n\t"
+asm|( 	    ".set push         \n\t" 	    ".set mips64       \n\t" 	    "dsll32 %2, %2, 0  \n\t" 	    "dsll32 %3, %3, 0  \n\t"
 comment|/* get rid of the */
-asm|"dsrl32 %2, %2, 0  \n\t"
+asm|"dsrl32 %3, %3, 0  \n\t"
 comment|/* sign extend */
-asm|"or     %1, %1, %2 \n\t" 	    "lw     %0, 0(%1)  \n\t" 	    ".set pop           \n" 	    :       "=r"(tmp) 	    :       "r"(high), "r"(low));
+asm|"or     %2, %2, %3 \n\t" 	    "lw     %0, 0(%2)  \n\t" 	    "lw     %1, 4(%2)  \n\t" 	    ".set pop           \n" 	    :       "=&r"(valh), "=r"(vall) 	    :       "r"(addrh), "r"(addrl));
 return|return
-name|tmp
+operator|(
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|valh
+operator|<<
+literal|32
+operator|)
+operator||
+name|vall
+operator|)
 return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX: Not really needed in n32 or n64, retain for now  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|xlr_enable_kx
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|xlr_restore_kx
+parameter_list|(
+name|uint32_t
+name|sr
+parameter_list|)
+block|{ }
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|xlr_enable_kx
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|sr
+init|=
+name|mips_rd_status
+argument_list|()
+decl_stmt|;
+name|mips_wr_status
+argument_list|(
+operator|(
+name|sr
+operator|&
+operator|~
+name|MIPS_SR_INT_IE
+operator|)
+operator||
+name|MIPS_SR_KX
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|xlr_restore_kx
+parameter_list|(
+name|uint32_t
+name|sr
+parameter_list|)
+block|{
+name|mips_wr_status
+argument_list|(
+name|sr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
