@@ -2204,14 +2204,6 @@ name|cpu_block_zero
 operator|=
 name|zeus_block_zero
 expr_stmt|;
-name|cpu_block_copy
-operator|=
-name|spitfire_block_copy
-expr_stmt|;
-name|cpu_block_zero
-operator|=
-name|spitfire_block_zero
-expr_stmt|;
 break|break;
 block|}
 block|}
