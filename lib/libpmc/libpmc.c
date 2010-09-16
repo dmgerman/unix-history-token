@@ -12964,6 +12964,17 @@ operator|.
 name|pm_class
 operator|==
 name|PMC_CLASS_IAF
+operator|&&
+name|cpu_info
+operator|.
+name|pm_classes
+index|[
+name|t
+index|]
+operator|.
+name|pm_num
+operator|>
+literal|0
 condition|)
 name|cpu_has_iaf_counters
 operator|=
@@ -12984,7 +12995,7 @@ name|PMC_MDEP_INIT_INTEL_V2
 parameter_list|(
 name|C
 parameter_list|)
-value|do {					\ 		PMC_MDEP_INIT(C);					\ 		if (cpu_has_iaf_counters) 				\ 			pmc_class_table[n++] =&iaf_class_table_descr;	\ 		else							\ 			pmc_mdep_event_aliases =			\ 				C##_aliases_without_iaf;		\ 		pmc_class_table[n] =&C##_class_table_descr;		\ 	} while (0)
+value|do {					\ 		PMC_MDEP_INIT(C);					\ 		pmc_class_table[n++] =&iaf_class_table_descr;		\ 		if (!cpu_has_iaf_counters) 				\ 			pmc_mdep_event_aliases =			\ 				C##_aliases_without_iaf;		\ 		pmc_class_table[n] =&C##_class_table_descr;		\ 	} while (0)
 comment|/* Configure the event name parser. */
 switch|switch
 condition|(
