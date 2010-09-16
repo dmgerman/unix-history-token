@@ -2703,6 +2703,12 @@ name|sym
 operator|->
 name|ps_start
 expr_stmt|;
+else|else
+name|pmcstat_stats
+operator|.
+name|ps_samples_unknown_function
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|hash
