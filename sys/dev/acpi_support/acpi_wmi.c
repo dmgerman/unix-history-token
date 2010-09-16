@@ -894,8 +894,6 @@ init|=
 block|{
 literal|"PNP0C14"
 block|,
-literal|"PNP0c14"
-block|,
 name|NULL
 block|}
 decl_stmt|;
