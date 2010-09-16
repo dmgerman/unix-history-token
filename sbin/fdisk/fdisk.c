@@ -7190,7 +7190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  * A ".eli" part is removed if it exists (see geli(8)).  */
+comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  * A ".eli" part is removed if it exists (see geli(8)).  * A ".journal" ending is removed if it exists (see gjournal(8)).  */
 end_comment
 
 begin_function
@@ -7261,7 +7261,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-literal|"^(/dev/[a-z/]+[0-9]+)([sp][0-9]+)?[a-h]?$"
+literal|"^(/dev/[a-z/]+[0-9]*)([sp][0-9]+)?[a-h]?(\\.journal)?$"
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
