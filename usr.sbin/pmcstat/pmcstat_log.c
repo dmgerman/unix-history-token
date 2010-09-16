@@ -8902,6 +8902,13 @@ argument_list|)
 expr_stmt|;
 name|PRINT
 argument_list|(
+literal|"#samples/unknown-function"
+argument_list|,
+name|samples_unknown_function
+argument_list|)
+expr_stmt|;
+name|PRINT
+argument_list|(
 literal|"#callchain/dubious-frames"
 argument_list|,
 name|callchain_dubious_frames
