@@ -139,6 +139,10 @@ union|union
 block|{
 struct|struct
 block|{
+name|vm_offset_t
+name|usr_segm
+decl_stmt|;
+comment|/* Base address */
 name|register_t
 name|usr_esid
 decl_stmt|;
