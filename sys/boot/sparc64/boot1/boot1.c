@@ -55,19 +55,12 @@ name|_PATH_KERNEL
 value|"/boot/kernel/kernel"
 end_define
 
-begin_define
-define|#
-directive|define
-name|BSIZEMAX
-value|16384
-end_define
-
 begin_typedef
 typedef|typedef
 name|int
 name|putc_func_t
 parameter_list|(
-name|int
+name|char
 name|c
 parameter_list|,
 name|void
@@ -137,39 +130,6 @@ begin_decl_stmt
 specifier|static
 name|ofwh_t
 name|bootdev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|fs
-name|fs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ino_t
-name|inomap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|blkbuf
-index|[
-name|BSIZEMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|fsblks
 decl_stmt|;
 end_decl_stmt
 
@@ -327,7 +287,7 @@ specifier|static
 name|int
 name|putchar
 parameter_list|(
-name|int
+name|char
 name|c
 parameter_list|,
 name|void
@@ -403,21 +363,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|__putc
-parameter_list|(
-name|int
-name|c
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|__puts
 parameter_list|(
 specifier|const
@@ -441,7 +386,7 @@ specifier|static
 name|int
 name|__sputc
 parameter_list|(
-name|int
+name|char
 name|c
 parameter_list|,
 name|void
@@ -522,13 +467,14 @@ function_decl|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|ofwfp_t
 name|ofw
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the prom Open Firmware entry */
+comment|/* the PROM Open Firmware entry */
 end_comment
 
 begin_function_decl
@@ -549,6 +495,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ofwh_t
 name|ofw_finddevice
 parameter_list|(
@@ -560,6 +507,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|ofwh_t
 name|ofw_open
 parameter_list|(
@@ -571,6 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ofw_getprop
 parameter_list|(
@@ -589,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ofw_read
 parameter_list|(
@@ -603,6 +553,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ofw_write
 parameter_list|(
@@ -618,6 +569,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ofw_seek
 parameter_list|(
@@ -629,6 +581,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ofw_exit
 argument_list|(
@@ -639,12 +592,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ofwh_t
-name|bootdevh
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|ofwh_t
 name|stdinh
 decl_stmt|,
@@ -878,6 +826,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ofwh_t
 name|ofw_finddevice
 parameter_list|(
@@ -945,6 +894,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ofw_getprop
 parameter_list|(
@@ -1035,6 +985,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|ofwh_t
 name|ofw_open
 parameter_list|(
@@ -1103,6 +1054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ofw_close
 parameter_list|(
@@ -1163,6 +1115,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ofw_read
 parameter_list|(
@@ -1187,7 +1140,7 @@ name|ofwcell_t
 operator|)
 literal|"read"
 block|,
-literal|4
+literal|3
 block|,
 literal|1
 block|,
@@ -1243,6 +1196,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ofw_write
 parameter_list|(
@@ -1324,6 +1278,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ofw_seek
 parameter_list|(
@@ -1344,7 +1299,7 @@ name|ofwcell_t
 operator|)
 literal|"seek"
 block|,
-literal|4
+literal|3
 block|,
 literal|1
 block|,
@@ -1397,6 +1352,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ofw_exit
 parameter_list|(
@@ -2293,7 +2249,7 @@ specifier|static
 name|int
 name|putchar
 parameter_list|(
-name|int
+name|char
 name|c
 parameter_list|,
 name|void
@@ -3122,7 +3078,7 @@ specifier|static
 name|int
 name|__sputc
 parameter_list|(
-name|int
+name|char
 name|c
 parameter_list|,
 name|void
