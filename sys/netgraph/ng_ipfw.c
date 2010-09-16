@@ -1171,7 +1171,14 @@ expr_stmt|;
 name|r
 operator|->
 name|info
-operator|=
+operator|&=
+name|IPFW_ONEPASS
+expr_stmt|;
+comment|/* keep this info */
+name|r
+operator|->
+name|info
+operator||=
 name|dir
 condition|?
 name|IPFW_INFO_IN
