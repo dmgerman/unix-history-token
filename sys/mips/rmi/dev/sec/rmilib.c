@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mips-exts.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpuregs.h>
 end_include
 
@@ -104,37 +98,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/rmi_mips_exts.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/pic.h>
+file|<mips/rmi/iomap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/shared_structs.h>
+file|<mips/rmi/pic.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/iomap.h>
+file|<mips/rmi/rmi_boot_info.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/msgring.h>
+file|<mips/rmi/msgring.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/xlr/board.h>
+file|<mips/rmi/board.h>
 end_include
 
 begin_include
@@ -150,11 +144,11 @@ file|<mips/rmi/dev/sec/desc.h>
 end_include
 
 begin_comment
-comment|// static int msgrng_stnid_pk0 = MSGRNG_STNID_PK0;
+comment|/* static int msgrng_stnid_pk0 = MSGRNG_STNID_PK0; */
 end_comment
 
 begin_comment
-comment|/*#define RMI_SEC_DEBUG */
+comment|/* #define RMI_SEC_DEBUG */
 end_comment
 
 begin_define
@@ -225,24 +219,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|void
-name|print_buf
-parameter_list|(
-name|char
-modifier|*
-name|desc
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -413,8 +389,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|xlr_sec_error_t
-name|xlr_sec_submit_op
+specifier|static
+name|void
+name|xlr_sec_free_desc
 parameter_list|(
 name|symkey_desc_pt
 name|desc
@@ -423,9 +400,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
-name|xlr_sec_free_desc
+name|print_buf
+parameter_list|(
+name|char
+modifier|*
+name|desc
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|xlr_sec_error_t
+name|xlr_sec_submit_op
 parameter_list|(
 name|symkey_desc_pt
 name|desc
@@ -1090,8 +1084,7 @@ name|uint8_t
 operator|*
 operator|)
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
 operator|)
 name|op
 operator|->
@@ -1989,15 +1982,12 @@ operator|(
 name|void
 operator|*
 operator|)
-call|(
-name|unsigned
-name|long
-call|)
-argument_list|(
+operator|(
+name|uintptr_t
+operator|)
 name|desc
 operator|->
 name|next_src_buf
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|next_seg_addr
@@ -9555,14 +9545,14 @@ name|retries
 operator|--
 condition|)
 block|{
-name|msgrng_flags_save
-argument_list|(
 name|msgrng_flags
-argument_list|)
+operator|=
+name|msgrng_access_enable
+argument_list|()
 expr_stmt|;
 name|code
 operator|=
-name|message_send_retry
+name|message_send
 argument_list|(
 name|SEC_MSGRING_WORDSIZE
 argument_list|,
@@ -9578,7 +9568,7 @@ operator|&
 name|send_msg
 argument_list|)
 expr_stmt|;
-name|msgrng_flags_restore
+name|msgrng_restore
 argument_list|(
 name|msgrng_flags
 argument_list|)
@@ -9930,6 +9920,17 @@ operator|.
 name|stn_id
 operator|=
 name|MSGRNG_STNID_SEC0
+expr_stmt|;
+name|aligned
+operator|->
+name|op_ctl
+operator|.
+name|vaddr
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|aligned
 expr_stmt|;
 return|return
 operator|(
@@ -13652,12 +13653,9 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|=
-name|desc
-operator|->
-name|pkt_desc
-operator|.
-name|srcLengthIVOffUseIVNext
+literal|0
 expr_stmt|;
+comment|//desc->pkt_desc.srcLengthIVOffUseIVNext;
 name|DPRINT
 argument_list|(
 literal|"\tSrcLengthIVOffsetIVNext:   %llx\n"
@@ -13829,12 +13827,9 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|=
-name|desc
-operator|->
-name|pkt_desc
-operator|.
-name|dstDataSettings
+literal|0
 expr_stmt|;
+comment|//desc->pkt_desc.dstDataSettings;
 name|DPRINT
 argument_list|(
 literal|"\tdstDataSettings:  %llx \n"
@@ -13964,12 +13959,9 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|=
-name|desc
-operator|->
-name|pkt_desc
-operator|.
-name|authDstNonceLow
+literal|0
 expr_stmt|;
+comment|//desc->pkt_desc.authDstNonceLow;
 name|DPRINT
 argument_list|(
 literal|"\tauthDstNonceLow:  %llx \n"
@@ -14015,12 +14007,9 @@ argument_list|)
 expr_stmt|;
 name|word
 operator|=
-name|desc
-operator|->
-name|pkt_desc
-operator|.
-name|ckSumDstNonceHiCFBMaskLLWMask
+literal|0
 expr_stmt|;
+comment|//desc->pkt_desc.ckSumDstNonceHiCFBMaskLLWMask;
 name|DPRINT
 argument_list|(
 literal|"\tckSumDstNonceHiCFBMaskLLWMask:  %llx \n"
@@ -14171,6 +14160,9 @@ modifier|*
 name|cmd
 init|=
 name|NULL
+decl_stmt|;
+name|uint32_t
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -14352,14 +14344,34 @@ argument_list|(
 name|OperationDescriptor_t
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|xlr_enable_kx
+argument_list|()
+expr_stmt|;
 name|desc
 operator|=
 operator|(
 name|symkey_desc_pt
 operator|)
-name|MIPS_PHYS_TO_KSEG0
+operator|(
+name|uintptr_t
+operator|)
+name|xlr_paddr_ld
 argument_list|(
 name|addr
+operator|+
+name|offsetof
+argument_list|(
+name|OperationDescriptor_t
+argument_list|,
+name|vaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xlr_restore_kx
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
