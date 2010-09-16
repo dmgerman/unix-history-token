@@ -5183,7 +5183,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/* 	 * Set packet timestamp format and resolution. 	 */
+comment|/* 	 * Get packet timestamp format and resolution. 	 */
 case|case
 name|BIOCGTSTAMP
 case|:
