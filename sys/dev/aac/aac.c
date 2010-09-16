@@ -2270,8 +2270,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
 literal|"Error probing container %d\n"
 argument_list|,
 name|cid

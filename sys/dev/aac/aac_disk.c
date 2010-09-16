@@ -333,8 +333,14 @@ operator|&
 name|AAC_STATE_SUSPEND
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|ad_controller
+operator|->
+name|aac_dev
+argument_list|,
 literal|"Controller Suspended controller state = 0x%x\n"
 argument_list|,
 name|sc
@@ -993,8 +999,12 @@ name|dump_datamap
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
 literal|"bus_dmamap_create failed\n"
 argument_list|)
 expr_stmt|;
@@ -1280,8 +1290,12 @@ name|size
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
 literal|"Error dumping block 0x%jx\n"
 argument_list|,
 operator|(
