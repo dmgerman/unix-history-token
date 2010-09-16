@@ -245,6 +245,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) ACPI_TO_INTEGER (pthread))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_USE_STANDARD_HEADERS
 end_define
 
