@@ -147,7 +147,11 @@ decl_stmt|;
 name|struct
 name|slb
 modifier|*
+modifier|*
 name|pm_slb
+decl_stmt|;
+name|int
+name|pm_slb_len
 decl_stmt|;
 else|#
 directive|else
@@ -345,7 +349,7 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
-name|allocate_vsid
+name|allocate_user_vsid
 parameter_list|(
 name|pmap_t
 name|pm
@@ -377,7 +381,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|slb_insert
+name|slb_insert_user
 parameter_list|(
 name|pmap_t
 name|pm
@@ -385,11 +389,20 @@ parameter_list|,
 name|struct
 name|slb
 modifier|*
-name|dst
-parameter_list|,
-name|struct
 name|slb
-modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|slb_insert_kernel
+parameter_list|(
+name|uint64_t
+name|slbe
+parameter_list|,
+name|uint64_t
+name|slbv
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,6 +432,7 @@ begin_function_decl
 name|struct
 name|slb
 modifier|*
+modifier|*
 name|slb_alloc_user_cache
 parameter_list|(
 name|void
@@ -432,6 +446,7 @@ name|slb_free_user_cache
 parameter_list|(
 name|struct
 name|slb
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

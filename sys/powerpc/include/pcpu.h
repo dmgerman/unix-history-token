@@ -71,7 +71,7 @@ define|#
 directive|define
 name|PCPU_MD_AIM64_FIELDS
 define|\
-value|struct slb	pc_slb[64];					\ 	struct slb	*pc_userslb;
+value|struct slb	pc_slb[64];					\ 	struct slb	**pc_userslb;
 end_define
 
 begin_ifdef
