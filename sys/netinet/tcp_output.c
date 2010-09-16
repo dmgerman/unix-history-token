@@ -1007,17 +1007,6 @@ operator|->
 name|snd_cwnd
 argument_list|)
 expr_stmt|;
-name|sendwin
-operator|=
-name|min
-argument_list|(
-name|sendwin
-argument_list|,
-name|tp
-operator|->
-name|snd_bwnd
-argument_list|)
-expr_stmt|;
 name|flags
 operator|=
 name|tcp_outflags

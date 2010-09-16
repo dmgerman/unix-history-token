@@ -609,7 +609,7 @@ comment|/* Receive Window (bytes). */
 name|u_long
 name|rcv_wnd
 decl_stmt|;
-comment|/* Bandwidth Controlled Window (bytes). */
+comment|/* Unused (was: Bandwidth Controlled Window (bytes)). */
 name|u_long
 name|snd_bwnd
 decl_stmt|;
@@ -3191,10 +3191,9 @@ name|pn
 operator|->
 name|snd_bwnd
 operator|=
-name|tp
-operator|->
-name|snd_bwnd
+literal|0
 expr_stmt|;
+comment|/* Unused, kept for compat. */
 name|pn
 operator|->
 name|snd_ssthresh

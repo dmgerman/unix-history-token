@@ -394,17 +394,17 @@ name|snd_cwnd
 decl_stmt|;
 comment|/* congestion-controlled window */
 name|u_long
-name|snd_bwnd
+name|snd_spare1
 decl_stmt|;
-comment|/* bandwidth-controlled window */
+comment|/* unused */
 name|u_long
 name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshold for 					 * for slow start exponential to 					 * linear switch 					 */
 name|u_long
-name|snd_bandwidth
+name|snd_spare2
 decl_stmt|;
-comment|/* calculated bandwidth or 0 */
+comment|/* unused */
 name|tcp_seq
 name|snd_recover
 decl_stmt|;
@@ -430,13 +430,13 @@ name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
 name|u_int
-name|t_bw_rtttime
+name|t_bw_spare1
 decl_stmt|;
-comment|/* used for bandwidth calculation */
+comment|/* unused */
 name|tcp_seq
-name|t_bw_rtseq
+name|t_bw_spare2
 decl_stmt|;
-comment|/* used for bandwidth calculation */
+comment|/* unused */
 name|int
 name|t_rxtcur
 decl_stmt|;
@@ -3034,21 +3034,6 @@ name|tcphdr
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|tcp_xmit_bandwidth_limit
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-parameter_list|,
-name|tcp_seq
-name|ack_seq
 parameter_list|)
 function_decl|;
 end_function_decl

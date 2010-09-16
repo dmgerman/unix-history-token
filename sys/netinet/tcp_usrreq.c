@@ -4870,14 +4870,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_bw_rtseq
-operator|=
-name|tp
-operator|->
-name|iss
-expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(
 name|tp
@@ -5196,14 +5188,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_bw_rtseq
-operator|=
-name|tp
-operator|->
-name|iss
-expr_stmt|;
 name|tcp_sendseqinit
 argument_list|(
 name|tp
@@ -5459,10 +5443,9 @@ name|ti
 operator|->
 name|tcpi_snd_bwnd
 operator|=
-name|tp
-operator|->
-name|snd_bwnd
+literal|0
 expr_stmt|;
+comment|/* Unused, kept for compat. */
 name|ti
 operator|->
 name|tcpi_snd_nxt
@@ -7928,7 +7911,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_wnd: %lu   snd_cwnd: %lu   snd_bwnd: %lu\n"
+literal|"snd_wnd: %lu   snd_cwnd: %lu\n"
 argument_list|,
 name|tp
 operator|->
@@ -7937,10 +7920,6 @@ argument_list|,
 name|tp
 operator|->
 name|snd_cwnd
-argument_list|,
-name|tp
-operator|->
-name|snd_bwnd
 argument_list|)
 expr_stmt|;
 name|db_print_indent
@@ -7950,16 +7929,12 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"snd_ssthresh: %lu   snd_bandwidth: %lu   snd_recover: "
+literal|"snd_ssthresh: %lu   snd_recover: "
 literal|"0x%08x\n"
 argument_list|,
 name|tp
 operator|->
 name|snd_ssthresh
-argument_list|,
-name|tp
-operator|->
-name|snd_bandwidth
 argument_list|,
 name|tp
 operator|->
@@ -7995,7 +7970,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_rttime: %u   t_rtsq: 0x%08x   t_bw_rtttime: %u\n"
+literal|"t_rttime: %u   t_rtsq: 0x%08x\n"
 argument_list|,
 name|tp
 operator|->
@@ -8004,10 +7979,6 @@ argument_list|,
 name|tp
 operator|->
 name|t_rtseq
-argument_list|,
-name|tp
-operator|->
-name|t_bw_rtttime
 argument_list|)
 expr_stmt|;
 name|db_print_indent
@@ -8017,12 +7988,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"t_bw_rtseq: 0x%08x   t_rxtcur: %d   t_maxseg: %u   "
-literal|"t_srtt: %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_bw_rtseq
+literal|"t_rxtcur: %d   t_maxseg: %u   t_srtt: %d\n"
 argument_list|,
 name|tp
 operator|->

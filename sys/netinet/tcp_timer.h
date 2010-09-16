@@ -136,17 +136,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPTV_INFLIGHT_RTTTHRESH
-value|(10*hz/1000)
-end_define
-
-begin_comment
-comment|/* below which inflight 						   disengages, in msec */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPTV_FINWAIT2_TIMEOUT
 value|(60*hz)
 end_define

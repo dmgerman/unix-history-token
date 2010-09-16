@@ -5706,15 +5706,6 @@ name|t_rtttime
 argument_list|)
 expr_stmt|;
 block|}
-name|tcp_xmit_bandwidth_limit
-argument_list|(
-name|tp
-argument_list|,
-name|th
-operator|->
-name|th_ack
-argument_list|)
-expr_stmt|;
 name|acked
 operator|=
 name|th
@@ -9066,15 +9057,6 @@ name|t_rtttime
 argument_list|)
 expr_stmt|;
 block|}
-name|tcp_xmit_bandwidth_limit
-argument_list|(
-name|tp
-argument_list|,
-name|th
-operator|->
-name|th_ack
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If all outstanding data is acked, stop retransmit 		 * timer and remember to restart (more output or persist). 		 * If there is more data to be acked, restart retransmit 		 * timer, using current (possibly backed-off) value. 		 */
 if|if
 condition|(
@@ -13062,20 +13044,6 @@ name|tcps_usedssthresh
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|metrics
-operator|.
-name|rmx_bandwidth
-condition|)
-name|tp
-operator|->
-name|snd_bandwidth
-operator|=
-name|metrics
-operator|.
-name|rmx_bandwidth
-expr_stmt|;
 comment|/* 	 * Set the slow-start flight size depending on whether this 	 * is a local network or not. 	 * 	 * Extend this so we cache the cwnd too and retrieve it here. 	 * Make cwnd even bigger than RFC3390 suggests but only if we 	 * have previous experience with the remote host. Be careful 	 * not make cwnd bigger than remote receive window or our own 	 * send socket buffer. Maybe put some additional upper bound 	 * on the retrieved cwnd. Should do incremental updates to 	 * hostcache when cwnd collapses so next connection doesn't 	 * overloads the path again. 	 * 	 * RFC3390 says only do this if SYN or SYN/ACK didn't got lost. 	 * We currently check only in syncache_socket for that. 	 */
 define|#
 directive|define

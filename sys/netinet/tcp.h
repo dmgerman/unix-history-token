@@ -722,7 +722,7 @@ comment|/* Advertised send window. */
 name|u_int32_t
 name|tcpi_snd_bwnd
 decl_stmt|;
-comment|/* Bandwidth send window. */
+comment|/* No longer used. */
 name|u_int32_t
 name|tcpi_snd_nxt
 decl_stmt|;
