@@ -2270,6 +2270,9 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|int
+name|express
+decl_stmt|;
 name|uint16_t
 name|sta
 decl_stmt|;
@@ -2343,6 +2346,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Walk the capability list. */
+name|express
+operator|=
+literal|0
+expr_stmt|;
 name|ptr
 operator|=
 name|read_config
@@ -2522,6 +2529,10 @@ break|break;
 case|case
 name|PCIY_EXPRESS
 case|:
+name|express
+operator|=
+literal|1
+expr_stmt|;
 name|cap_express
 argument_list|(
 name|fd
@@ -2603,6 +2614,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|express
+condition|)
 name|list_ecaps
 argument_list|(
 name|fd
