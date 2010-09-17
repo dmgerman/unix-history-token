@@ -10340,18 +10340,11 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If pages are needed or we're within 2048 pages 	 * of needing to page need to reclaim 	 */
+comment|/* 	 * Cooperate with pagedaemon when it's time for it to scan 	 * and reclaim some pages. 	 */
 if|if
 condition|(
-name|vm_pages_needed
-operator|||
-operator|(
-name|vm_paging_target
+name|vm_paging_need
 argument_list|()
-operator|>
-operator|-
-literal|2048
-operator|)
 condition|)
 return|return
 operator|(
