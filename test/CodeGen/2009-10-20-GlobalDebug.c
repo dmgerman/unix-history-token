@@ -10,11 +10,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: asciz   "global" ## External Name
+comment|// CHECK: ascii   "localstatic"          ## DW_AT_name
 end_comment
 
 begin_comment
-comment|// CHECK: asciz   "localstatic"          ## External Name
+comment|// CHECK: asciz   "global" ## External Name
 end_comment
 
 begin_function

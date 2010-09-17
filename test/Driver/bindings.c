@@ -56,26 +56,6 @@ comment|// RUN: grep '"gcc::Link", inputs: \[".*\.o"\], output: "a.out"' %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -ccc-print-bindings -ccc-no-clang -no-integrated-cpp -pipe %s 2> %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Preprocess", inputs: \[".*bindings.c"\], output: (pipe)' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Compile", inputs: \[(pipe)\], output: (pipe)' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Assemble", inputs: \[(pipe)\], output: ".*\.o"' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep '"gcc::Link", inputs: \[".*\.o"\], output: "a.out"' %t
-end_comment
-
-begin_comment
 comment|// RUN: %clang -ccc-host-triple i386-unknown-unknown -ccc-print-bindings -ccc-no-clang -x c-header %s 2> %t
 end_comment
 

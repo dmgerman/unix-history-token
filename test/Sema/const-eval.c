@@ -746,12 +746,12 @@ argument|,
 literal|2.0
 argument|) ==
 literal|2.0
+argument|?
+literal|1
+argument|: -
+literal|1
 argument_list|)
 end_macro
-
-begin_comment
-comment|// expected-warning {{expression result unused}}
-end_comment
 
 begin_macro
 name|EVAL_EXPR
@@ -763,6 +763,46 @@ literal|1
 argument|,
 literal|1
 argument|) ==
+literal|1
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_comment
+comment|// PR7884
+end_comment
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|39
+argument_list|,
+argument|__real__(
+literal|1.f
+argument|) ==
+literal|1
+argument|?
+literal|1
+argument|: -
+literal|1
+argument_list|)
+end_macro
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|40
+argument_list|,
+argument|__imag__(
+literal|1.f
+argument|) ==
+literal|0
+argument|?
+literal|1
+argument|: -
 literal|1
 argument_list|)
 end_macro

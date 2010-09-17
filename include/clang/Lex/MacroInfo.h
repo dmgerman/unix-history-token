@@ -164,6 +164,12 @@ name|IsBuiltinMacro
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsFromAST - True if this macro was loaded from an AST file.
+name|bool
+name|IsFromAST
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -181,6 +187,13 @@ comment|/// been used, or if it is not defined in the main file.  This is used t
 comment|/// emit -Wunused-macros diagnostics.
 name|bool
 name|IsUsed
+range|:
+literal|1
+decl_stmt|;
+comment|/// AllowRedefinitionsWithoutWarning - True if this macro can be redefined
+comment|/// without emitting a warning.
+name|bool
+name|IsAllowRedefinitionsWithoutWarning
 range|:
 literal|1
 decl_stmt|;
@@ -204,25 +217,26 @@ argument_list|(
 argument|SourceLocation DefLoc
 argument_list|)
 expr_stmt|;
-comment|/// FreeArgumentList - Free the argument list of the macro, restoring it to a
-comment|/// state where it can be reused for other devious purposes.
-name|void
-name|FreeArgumentList
+name|MacroInfo
 argument_list|(
+specifier|const
+name|MacroInfo
+operator|&
+name|MI
+argument_list|,
 name|llvm
 operator|::
 name|BumpPtrAllocator
 operator|&
 name|PPAllocator
 argument_list|)
-block|{
-name|PPAllocator
-operator|.
-name|Deallocate
-argument_list|(
-name|ArgumentList
-argument_list|)
 expr_stmt|;
+comment|/// FreeArgumentList - Free the argument list of the macro, restoring it to a
+comment|/// state where it can be reused for other devious purposes.
+name|void
+name|FreeArgumentList
+parameter_list|()
+block|{
 name|ArgumentList
 operator|=
 literal|0
@@ -235,18 +249,10 @@ block|}
 comment|/// Destroy - destroy this MacroInfo object.
 name|void
 name|Destroy
-argument_list|(
-name|llvm
-operator|::
-name|BumpPtrAllocator
-operator|&
-name|PPAllocator
-argument_list|)
+parameter_list|()
 block|{
 name|FreeArgumentList
-argument_list|(
-name|PPAllocator
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|this
 operator|->
@@ -334,6 +340,20 @@ name|Val
 parameter_list|)
 block|{
 name|IsUsed
+operator|=
+name|Val
+expr_stmt|;
+block|}
+comment|/// setIsAllowRedefinitionsWithoutWarning - Set the value of the
+comment|/// IsAllowRedefinitionsWithoutWarning flag.
+name|void
+name|setIsAllowRedefinitionsWithoutWarning
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|IsAllowRedefinitionsWithoutWarning
 operator|=
 name|Val
 expr_stmt|;
@@ -608,6 +628,31 @@ return|return
 name|IsBuiltinMacro
 return|;
 block|}
+comment|/// isFromAST - Return true if this macro was loaded from an AST file.
+name|bool
+name|isFromAST
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFromAST
+return|;
+block|}
+comment|/// setIsFromAST - Set whether this macro was loaded from an AST file.
+name|void
+name|setIsFromAST
+parameter_list|(
+name|bool
+name|FromAST
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsFromAST
+operator|=
+name|FromAST
+expr_stmt|;
+block|}
 comment|/// isUsed - Return false if this macro is defined in the main file and has
 comment|/// not yet been used.
 name|bool
@@ -617,6 +662,17 @@ specifier|const
 block|{
 return|return
 name|IsUsed
+return|;
+block|}
+comment|/// isAllowRedefinitionsWithoutWarning - Return true if this macro can be
+comment|/// redefined without warning.
+name|bool
+name|isAllowRedefinitionsWithoutWarning
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAllowRedefinitionsWithoutWarning
 return|;
 block|}
 comment|/// getNumTokens - Return the number of tokens that this macro expands to.

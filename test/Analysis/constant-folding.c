@@ -44,6 +44,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|!
@@ -55,6 +56,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|!
@@ -66,6 +68,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -74,6 +77,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -82,6 +86,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -90,6 +95,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 
@@ -113,6 +119,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -125,6 +132,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -137,6 +145,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -149,6 +158,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 
@@ -172,6 +182,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -184,6 +195,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -196,6 +208,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -208,6 +221,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -220,6 +234,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -232,6 +247,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -244,6 +260,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -259,6 +276,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -271,6 +289,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 
@@ -294,6 +313,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -306,6 +326,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -324,6 +345,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 
@@ -351,6 +373,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -367,6 +390,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -383,6 +407,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -399,6 +424,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -415,6 +441,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 
@@ -444,6 +471,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -456,6 +484,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|(
@@ -468,6 +497,7 @@ literal|0
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 comment|// Unsigned right shift shifts in zeroes.
 if|if
 condition|(
@@ -532,6 +562,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|!
@@ -543,6 +574,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 operator|!
@@ -554,6 +586,7 @@ operator|)
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -562,6 +595,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -570,6 +604,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -578,6 +613,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 if|if
 condition|(
 name|b
@@ -586,6 +622,7 @@ name|a
 condition|)
 name|WARN
 expr_stmt|;
+comment|// expected-warning{{never executed}}
 block|}
 end_function
 

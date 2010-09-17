@@ -147,5 +147,46 @@ begin_comment
 comment|// okay
 end_comment
 
+begin_comment
+comment|//<rdar://problem/8193107>
+end_comment
+
+begin_function
+name|void
+name|f4
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|rindex
+parameter_list|()
+function_decl|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|rindex
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|s
+decl_stmt|,
+name|c
+decl_stmt|;
+comment|// expected-warning{{promoted type 'char *' of K&R function parameter is not compatible with the parameter type 'char const *' declared in a previous prototype}}
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

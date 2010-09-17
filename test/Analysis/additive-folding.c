@@ -105,7 +105,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|// no-warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|buf
@@ -157,7 +157,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|// no-warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|buf
@@ -208,7 +208,7 @@ literal|0
 condition|)
 comment|// not crash
 return|return;
-comment|// no warning
+comment|// expected-warning{{never executed}}
 name|int
 name|c
 init|=
@@ -232,7 +232,7 @@ literal|0
 condition|)
 comment|// not crash
 return|return;
-comment|// no warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|buf
@@ -425,7 +425,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|// no-warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|b
@@ -480,7 +480,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|// no-warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|b
@@ -925,7 +925,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-comment|// no-warning
+comment|// expected-warning{{never executed}}
 name|free
 argument_list|(
 name|b

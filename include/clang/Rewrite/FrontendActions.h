@@ -69,7 +69,7 @@ name|class
 name|FixItRewriter
 decl_stmt|;
 name|class
-name|FixItPathRewriter
+name|FixItOptions
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// AST Consumer Actions
@@ -113,9 +113,9 @@ name|llvm
 operator|::
 name|OwningPtr
 operator|<
-name|FixItPathRewriter
+name|FixItOptions
 operator|>
-name|PathRewriter
+name|FixItOpts
 block|;
 name|virtual
 name|ASTConsumer

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -parse-noop -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_function
@@ -18,7 +18,7 @@ block|{
 literal|1
 block|}
 block|)
-function|;
+block|{}
 end_function
 
 begin_comment
@@ -33,7 +33,7 @@ argument_list|(
 name|int
 argument_list|)
 condition|)
-empty_stmt|;
+block|{}
 end_if
 
 begin_comment
@@ -41,9 +41,12 @@ comment|// sizeof type
 end_comment
 
 begin_expr_stmt
-operator|(
+call|(
+name|void
+call|)
+argument_list|(
 name|int
-operator|)
+argument_list|)
 literal|4
 expr_stmt|;
 end_expr_stmt
@@ -53,6 +56,9 @@ comment|// cast.
 end_comment
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 operator|(
 name|int
 operator|)
@@ -66,20 +72,16 @@ begin_comment
 comment|// compound literal.
 end_comment
 
-begin_comment
-comment|// FIXME: change this to the struct version when we can.
-end_comment
-
-begin_comment
-comment|//int A = (struct{ int a;}){ 1}.a;
-end_comment
-
 begin_decl_stmt
 name|int
 name|A
 init|=
 operator|(
+expr|struct
+block|{
 name|int
+name|a
+block|;}
 operator|)
 block|{
 literal|1
@@ -104,6 +106,9 @@ block|{
 return|return
 name|a
 condition|?
+operator|(
+name|void
+operator|)
 name|a
 operator|,
 name|b
@@ -145,18 +150,51 @@ block|{
 name|test4
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
+
+begin_struct
+struct|struct
+name|X0
+block|{
+struct|struct
+block|{
+struct|struct
+block|{
+name|int
+name|c
+index|[
+literal|10
+index|]
+index|[
+literal|9
+index|]
+decl_stmt|;
+block|}
+name|b
+struct|;
+block|}
+name|a
+struct|;
+block|}
+struct|;
+end_struct
 
 begin_function
 name|int
 name|test_offsetof
 parameter_list|()
 block|{
-comment|// FIXME: change into something that is semantically correct.
+operator|(
+name|void
+operator|)
 name|__builtin_offsetof
 argument_list|(
-name|int
+expr|struct
+name|X0
 argument_list|,
 name|a
 operator|.
@@ -171,6 +209,9 @@ literal|5
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -185,12 +226,18 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 sizeof|sizeof
 name|arr
 index|[
 literal|0
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 sizeof|sizeof
 argument_list|(
 name|arr
@@ -199,6 +246,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 sizeof|sizeof
 argument_list|(
 name|arr
@@ -231,6 +281,9 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

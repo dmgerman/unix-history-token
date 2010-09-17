@@ -625,7 +625,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/* desired global flags: 1879048192 desired stack flags: 1610612736 should be non-zero: 0 should be non-zero: 0 should be non-zero: 1 should be zero: 0  */
+comment|/* desired global flags: 1879048192 desired stack flags: 1610612736 should be non-zero: 1 should be non-zero: 1 should be non-zero: 1 should be zero: 0  */
 end_comment
 
 end_unit

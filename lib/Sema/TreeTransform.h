@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Sema.h"
+file|"clang/Sema/SemaInternal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"Lookup.h"
+file|"clang/Sema/Lookup.h"
 end_include
 
 begin_include
@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/ScopeInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/DeclObjC.h"
 end_include
 
 begin_include
@@ -128,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Parse/Ownership.h"
+file|"clang/Sema/Ownership.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Parse/Designator.h"
+file|"clang/Sema/Designator.h"
 end_include
 
 begin_include
@@ -159,6 +171,10 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|using
+name|namespace
+name|sema
+decl_stmt|;
 comment|/// \brief A semantic tree transformation that allows one to transform one
 comment|/// abstract syntax tree into another.
 comment|///
@@ -226,48 +242,6 @@ name|SemaRef
 block|;
 name|public
 operator|:
-typedef|typedef
-name|Sema
-operator|::
-name|OwningStmtResult
-name|OwningStmtResult
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|OwningExprResult
-name|OwningExprResult
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|StmtArg
-name|StmtArg
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|ExprArg
-name|ExprArg
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|MultiExprArg
-name|MultiExprArg
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|MultiStmtArg
-name|MultiStmtArg
-expr_stmt|;
-typedef|typedef
-name|Sema
-operator|::
-name|DeclPtrTy
-name|DeclPtrTy
-expr_stmt|;
 comment|/// \brief Initializes a new tree transformer.
 name|TreeTransform
 argument_list|(
@@ -320,6 +294,30 @@ name|this
 operator|)
 return|;
 block|}
+specifier|static
+specifier|inline
+name|ExprResult
+name|Owned
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+return|return
+name|E
+return|;
+block|}
+specifier|static
+specifier|inline
+name|StmtResult
+name|Owned
+argument_list|(
+argument|Stmt *S
+argument_list|)
+block|{
+return|return
+name|S
+return|;
+block|}
 comment|/// \brief Retrieves a reference to the semantic analysis object used for
 comment|/// this tree transform.
 name|Sema
@@ -339,7 +337,7 @@ comment|/// Subclasses may override this function to specify when the transforma
 comment|/// should rebuild all AST nodes.
 name|bool
 name|AlwaysRebuild
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|false
@@ -353,7 +351,7 @@ comment|/// provide an alternative implementation that provides better location
 comment|/// information.
 name|SourceLocation
 name|getBaseLocation
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|SourceLocation
@@ -367,7 +365,7 @@ comment|/// By default, returns an empty name. Subclasses can provide an alterna
 comment|/// implementation with a more precise name.
 name|DeclarationName
 name|getBaseEntity
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DeclarationName
@@ -381,13 +379,11 @@ comment|/// By default, the source location and entity are ignored. Subclasses c
 comment|/// override this function to provide a customized implementation.
 name|void
 name|setBase
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|DeclarationName
-name|Entity
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|DeclarationName Entity
+argument_list|)
 block|{ }
 comment|/// \brief RAII object that temporarily sets the base location and entity
 comment|/// used for reporting diagnostics in types.
@@ -395,17 +391,17 @@ name|class
 name|TemporaryBase
 block|{
 name|TreeTransform
-modifier|&
+operator|&
 name|Self
-decl_stmt|;
+block|;
 name|SourceLocation
 name|OldLocation
-decl_stmt|;
+block|;
 name|DeclarationName
 name|OldEntity
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|TemporaryBase
 argument_list|(
 argument|TreeTransform&Self
@@ -414,7 +410,7 @@ argument|SourceLocation Location
 argument_list|,
 argument|DeclarationName Entity
 argument_list|)
-block|:
+operator|:
 name|Self
 argument_list|(
 argument|Self
@@ -429,7 +425,7 @@ argument_list|()
 operator|.
 name|getBaseLocation
 argument_list|()
-expr_stmt|;
+block|;
 name|OldEntity
 operator|=
 name|Self
@@ -439,7 +435,7 @@ argument_list|()
 operator|.
 name|getBaseEntity
 argument_list|()
-expr_stmt|;
+block|;
 name|Self
 operator|.
 name|getDerived
@@ -451,8 +447,7 @@ name|Location
 argument_list|,
 name|Entity
 argument_list|)
-expr_stmt|;
-block|}
+block|;     }
 operator|~
 name|TemporaryBase
 argument_list|()
@@ -470,7 +465,7 @@ name|OldEntity
 argument_list|)
 block|;     }
 block|}
-empty_stmt|;
+block|;
 comment|/// \brief Determine whether the given type \p T has already been
 comment|/// transformed.
 comment|///
@@ -480,10 +475,9 @@ comment|/// not change. For example, template instantiation need not traverse
 comment|/// non-dependent types.
 name|bool
 name|AlreadyTransformed
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
+argument_list|(
+argument|QualType T
+argument_list|)
 block|{
 return|return
 name|T
@@ -500,11 +494,9 @@ comment|/// determine which kinds of call arguments get dropped. By default,
 comment|/// CXXDefaultArgument nodes are dropped (prior to transformation).
 name|bool
 name|DropCallArgument
-parameter_list|(
-name|Expr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|Expr *E
+argument_list|)
 block|{
 return|return
 name|E
@@ -524,17 +516,12 @@ comment|///
 comment|/// \returns the transformed type.
 name|QualType
 name|TransformType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|)
+block|;
 comment|/// \brief Transforms the given type-with-location into a new
 comment|/// type-with-location.
 comment|///
@@ -544,41 +531,28 @@ comment|/// may override this function (to take over all type
 comment|/// transformations) or some set of the TransformXXXType functions
 comment|/// to alter the transformation.
 name|TypeSourceInfo
-modifier|*
+operator|*
 name|TransformType
-parameter_list|(
-name|TypeSourceInfo
-modifier|*
-name|DI
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeSourceInfo *DI
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|)
+block|;
 comment|/// \brief Transform the given type-with-location into a new
 comment|/// type, collecting location information in the given builder
 comment|/// as necessary.
 comment|///
 name|QualType
 name|TransformType
-parameter_list|(
-name|TypeLocBuilder
-modifier|&
-name|TLB
-parameter_list|,
-name|TypeLoc
-name|TL
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|TypeLoc TL
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|)
+block|;
 comment|/// \brief Transform the given statement.
 comment|///
 comment|/// By default, this routine transforms a statement by delegating to the
@@ -588,14 +562,14 @@ comment|/// Subclasses may override this function to transform statements using 
 comment|/// other mechanism.
 comment|///
 comment|/// \returns the transformed statement.
-name|OwningStmtResult
+name|StmtResult
 name|TransformStmt
-parameter_list|(
+argument_list|(
 name|Stmt
-modifier|*
+operator|*
 name|S
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Transform the given expression.
 comment|///
 comment|/// By default, this routine transforms an expression by delegating to the
@@ -604,30 +578,27 @@ comment|/// Subclasses may override this function to transform expressions using
 comment|/// other mechanism.
 comment|///
 comment|/// \returns the transformed expression.
-name|OwningExprResult
+name|ExprResult
 name|TransformExpr
-parameter_list|(
+argument_list|(
 name|Expr
-modifier|*
+operator|*
 name|E
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Transform the given declaration, which is referenced from a type
 comment|/// or expression.
 comment|///
 comment|/// By default, acts as the identity function on declarations. Subclasses
 comment|/// may override this function to provide alternate behavior.
 name|Decl
-modifier|*
+operator|*
 name|TransformDecl
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|Decl *D
+argument_list|)
 block|{
 return|return
 name|D
@@ -638,16 +609,13 @@ comment|///
 comment|/// By default, invokes TransformDecl() to transform the declaration.
 comment|/// Subclasses may override this function to provide alternate behavior.
 name|Decl
-modifier|*
+operator|*
 name|TransformDefinition
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|Decl *D
+argument_list|)
 block|{
 return|return
 name|getDerived
@@ -671,16 +639,13 @@ comment|///
 comment|/// By default, invokes TransformDecl() to transform the declaration.
 comment|/// Subclasses may override this function to provide alternate behavior.
 name|NamedDecl
-modifier|*
+operator|*
 name|TransformFirstQualifierInScope
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|D
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|)
+argument_list|(
+argument|NamedDecl *D
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
 block|{
 return|return
 name|cast_or_null
@@ -706,51 +671,33 @@ comment|/// By default, transforms all of the types and declarations within the
 comment|/// nested-name-specifier. Subclasses may override this function to provide
 comment|/// alternate behavior.
 name|NestedNameSpecifier
-modifier|*
+operator|*
 name|TransformNestedNameSpecifier
-parameter_list|(
-name|NestedNameSpecifier
-modifier|*
-name|NNS
-parameter_list|,
-name|SourceRange
-name|Range
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|FirstQualifierInScope
-init|=
+argument_list|(
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|SourceRange Range
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|,
+argument|NamedDecl *FirstQualifierInScope =
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Transform the given declaration name.
 comment|///
 comment|/// By default, transforms the types of conversion function, constructor,
 comment|/// and destructor names and then (if needed) rebuilds the declaration name.
 comment|/// Identifiers and selectors are returned unmodified. Sublcasses may
 comment|/// override this function to provide alternate behavior.
-name|DeclarationName
-name|TransformDeclarationName
-parameter_list|(
-name|DeclarationName
-name|Name
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|)
-function_decl|;
+name|DeclarationNameInfo
+name|TransformDeclarationNameInfo
+argument_list|(
+argument|const DeclarationNameInfo&NameInfo
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|)
+block|;
 comment|/// \brief Transform the given template name.
 comment|///
 comment|/// By default, transforms the template name by transforming the declarations
@@ -758,17 +705,12 @@ comment|/// and nested-name-specifiers that occur within the template name.
 comment|/// Subclasses may override this function to provide alternate behavior.
 name|TemplateName
 name|TransformTemplateName
-parameter_list|(
-name|TemplateName
-name|Name
-parameter_list|,
-name|QualType
-name|ObjectType
-init|=
-name|QualType
-argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TemplateName Name
+argument_list|,
+argument|QualType ObjectType = QualType()
+argument_list|)
+block|;
 comment|/// \brief Transform the given template argument.
 comment|///
 comment|/// By default, this operation transforms the type, expression, or
@@ -779,39 +721,38 @@ comment|///
 comment|/// Returns true if there was an error.
 name|bool
 name|TransformTemplateArgument
-parameter_list|(
+argument_list|(
 specifier|const
 name|TemplateArgumentLoc
-modifier|&
+operator|&
 name|Input
-parameter_list|,
+argument_list|,
 name|TemplateArgumentLoc
-modifier|&
+operator|&
 name|Output
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Fakes up a TemplateArgumentLoc for a given TemplateArgument.
 name|void
 name|InventTemplateArgumentLoc
-parameter_list|(
+argument_list|(
 specifier|const
 name|TemplateArgument
-modifier|&
+operator|&
 name|Arg
-parameter_list|,
+argument_list|,
 name|TemplateArgumentLoc
-modifier|&
+operator|&
 name|ArgLoc
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Fakes up a TypeSourceInfo for a type.
 name|TypeSourceInfo
-modifier|*
+operator|*
 name|InventTypeSourceInfo
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
+argument_list|(
+argument|QualType T
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -861,85 +802,58 @@ comment|/// Return true on error.
 name|bool
 name|TransformFunctionTypeParams
 argument_list|(
-name|FunctionProtoTypeLoc
-name|TL
+argument|FunctionProtoTypeLoc TL
 argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|QualType
-operator|>
-operator|&
-name|PTypes
+argument|llvm::SmallVectorImpl<QualType>&PTypes
 argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|ParmVarDecl
-operator|*
-operator|>
-operator|&
-name|PVars
+argument|llvm::SmallVectorImpl<ParmVarDecl*>&PVars
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Transforms a single function-type parameter.  Return null
 comment|/// on error.
 name|ParmVarDecl
-modifier|*
+operator|*
 name|TransformFunctionTypeParam
-parameter_list|(
+argument_list|(
 name|ParmVarDecl
-modifier|*
+operator|*
 name|OldParm
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|QualType
 name|TransformReferenceType
-parameter_list|(
-name|TypeLocBuilder
-modifier|&
-name|TLB
-parameter_list|,
-name|ReferenceTypeLoc
-name|TL
-parameter_list|,
-name|QualType
-name|ObjectType
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TypeLocBuilder&TLB
+argument_list|,
+argument|ReferenceTypeLoc TL
+argument_list|,
+argument|QualType ObjectType
+argument_list|)
+block|;
 name|QualType
 name|TransformTemplateSpecializationType
-parameter_list|(
-specifier|const
-name|TemplateSpecializationType
-modifier|*
-name|T
-parameter_list|,
-name|QualType
-name|ObjectType
-parameter_list|)
-function_decl|;
-name|OwningStmtResult
+argument_list|(
+argument|const TemplateSpecializationType *T
+argument_list|,
+argument|QualType ObjectType
+argument_list|)
+block|;
+name|StmtResult
 name|TransformCompoundStmt
-parameter_list|(
-name|CompoundStmt
-modifier|*
-name|S
-parameter_list|,
-name|bool
-name|IsStmtExpr
-parameter_list|)
-function_decl|;
-name|OwningExprResult
+argument_list|(
+argument|CompoundStmt *S
+argument_list|,
+argument|bool IsStmtExpr
+argument_list|)
+block|;
+name|ExprResult
 name|TransformCXXNamedCastExpr
-parameter_list|(
+argument_list|(
 name|CXXNamedCastExpr
-modifier|*
+operator|*
 name|E
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 define|#
 directive|define
 name|STMT
@@ -949,7 +863,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|OwningStmtResult Transform##Node(Node *S);
+value|StmtResult Transform##Node(Node *S);
 define|#
 directive|define
 name|EXPR
@@ -959,7 +873,7 @@ parameter_list|,
 name|Parent
 parameter_list|)
 define|\
-value|OwningExprResult Transform##Node(Node *E);
+value|ExprResult Transform##Node(Node *E);
 define|#
 directive|define
 name|ABSTRACT_STMT
@@ -975,28 +889,24 @@ comment|/// By default, performs semantic analysis when building the pointer typ
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildPointerType
-parameter_list|(
-name|QualType
-name|PointeeType
-parameter_list|,
-name|SourceLocation
-name|Sigil
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType PointeeType
+argument_list|,
+argument|SourceLocation Sigil
+argument_list|)
+block|;
 comment|/// \brief Build a new block pointer type given its pointee type.
 comment|///
 comment|/// By default, performs semantic analysis when building the block pointer
 comment|/// type. Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildBlockPointerType
-parameter_list|(
-name|QualType
-name|PointeeType
-parameter_list|,
-name|SourceLocation
-name|Sigil
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType PointeeType
+argument_list|,
+argument|SourceLocation Sigil
+argument_list|)
+block|;
 comment|/// \brief Build a new reference type given the type it references.
 comment|///
 comment|/// By default, performs semantic analysis when building the
@@ -1007,17 +917,14 @@ comment|/// \param LValue whether the type was written with an lvalue sigil
 comment|/// or an rvalue sigil.
 name|QualType
 name|RebuildReferenceType
-parameter_list|(
-name|QualType
-name|ReferentType
-parameter_list|,
-name|bool
-name|LValue
-parameter_list|,
-name|SourceLocation
-name|Sigil
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType ReferentType
+argument_list|,
+argument|bool LValue
+argument_list|,
+argument|SourceLocation Sigil
+argument_list|)
+block|;
 comment|/// \brief Build a new member pointer type given the pointee type and the
 comment|/// class type it refers into.
 comment|///
@@ -1025,17 +932,14 @@ comment|/// By default, performs semantic analysis when building the member poin
 comment|/// type. Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildMemberPointerType
-parameter_list|(
-name|QualType
-name|PointeeType
-parameter_list|,
-name|QualType
-name|ClassType
-parameter_list|,
-name|SourceLocation
-name|Sigil
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType PointeeType
+argument_list|,
+argument|QualType ClassType
+argument_list|,
+argument|SourceLocation Sigil
+argument_list|)
+block|;
 comment|/// \brief Build a new array type given the element type, size
 comment|/// modifier, size of the array (if known), size expression, and index type
 comment|/// qualifiers.
@@ -1046,32 +950,19 @@ comment|/// Also by default, all of the other Rebuild*Array
 name|QualType
 name|RebuildArrayType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|SizeMod
+argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APInt
-operator|*
-name|Size
+argument|const llvm::APInt *Size
 argument_list|,
-name|Expr
-operator|*
-name|SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
-name|unsigned
-name|IndexTypeQuals
+argument|unsigned IndexTypeQuals
 argument_list|,
-name|SourceRange
-name|BracketsRange
+argument|SourceRange BracketsRange
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new constant array type given the element type, size
 comment|/// modifier, (known) size of the array, and index type qualifiers.
 comment|///
@@ -1080,28 +971,17 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildConstantArrayType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|SizeMod
+argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|APInt
-operator|&
-name|Size
+argument|const llvm::APInt&Size
 argument_list|,
-name|unsigned
-name|IndexTypeQuals
+argument|unsigned IndexTypeQuals
 argument_list|,
-name|SourceRange
-name|BracketsRange
+argument|SourceRange BracketsRange
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new incomplete array type given the element type, size
 comment|/// modifier, and index type qualifiers.
 comment|///
@@ -1110,21 +990,15 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildIncompleteArrayType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|SizeMod
+argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-name|unsigned
-name|IndexTypeQuals
+argument|unsigned IndexTypeQuals
 argument_list|,
-name|SourceRange
-name|BracketsRange
+argument|SourceRange BracketsRange
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new variable-length array type given the element type,
 comment|/// size modifier, size expression, and index type qualifiers.
 comment|///
@@ -1133,24 +1007,17 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildVariableArrayType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|SizeMod
+argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-name|ExprArg
-name|SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
-name|unsigned
-name|IndexTypeQuals
+argument|unsigned IndexTypeQuals
 argument_list|,
-name|SourceRange
-name|BracketsRange
+argument|SourceRange BracketsRange
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new dependent-sized array type given the element type,
 comment|/// size modifier, size expression, and index type qualifiers.
 comment|///
@@ -1159,24 +1026,17 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDependentSizedArrayType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|ArrayType
-operator|::
-name|ArraySizeModifier
-name|SizeMod
+argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-name|ExprArg
-name|SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
-name|unsigned
-name|IndexTypeQuals
+argument|unsigned IndexTypeQuals
 argument_list|,
-name|SourceRange
-name|BracketsRange
+argument|SourceRange BracketsRange
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new vector type given the element type and
 comment|/// number of elements.
 comment|///
@@ -1185,18 +1045,13 @@ comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildVectorType
 argument_list|(
-name|QualType
-name|ElementType
+argument|QualType ElementType
 argument_list|,
-name|unsigned
-name|NumElements
+argument|unsigned NumElements
 argument_list|,
-name|VectorType
-operator|::
-name|AltiVecSpecific
-name|AltiVecSpec
+argument|VectorType::AltiVecSpecific AltiVecSpec
 argument_list|)
-decl_stmt|;
+block|;
 comment|/// \brief Build a new extended vector type given the element type and
 comment|/// number of elements.
 comment|///
@@ -1204,17 +1059,14 @@ comment|/// By default, performs semantic analysis when building the vector type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildExtVectorType
-parameter_list|(
-name|QualType
-name|ElementType
-parameter_list|,
-name|unsigned
-name|NumElements
-parameter_list|,
-name|SourceLocation
-name|AttributeLoc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType ElementType
+argument_list|,
+argument|unsigned NumElements
+argument_list|,
+argument|SourceLocation AttributeLoc
+argument_list|)
+block|;
 comment|/// \brief Build a new potentially dependently-sized extended vector type
 comment|/// given the element type and number of elements.
 comment|///
@@ -1222,67 +1074,57 @@ comment|/// By default, performs semantic analysis when building the vector type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDependentSizedExtVectorType
-parameter_list|(
-name|QualType
-name|ElementType
-parameter_list|,
-name|ExprArg
-name|SizeExpr
-parameter_list|,
-name|SourceLocation
-name|AttributeLoc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType ElementType
+argument_list|,
+argument|Expr *SizeExpr
+argument_list|,
+argument|SourceLocation AttributeLoc
+argument_list|)
+block|;
 comment|/// \brief Build a new function type.
 comment|///
 comment|/// By default, performs semantic analysis when building the function type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildFunctionProtoType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|,
-name|QualType
-modifier|*
-name|ParamTypes
-parameter_list|,
-name|unsigned
-name|NumParamTypes
-parameter_list|,
-name|bool
-name|Variadic
-parameter_list|,
-name|unsigned
-name|Quals
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType T
+argument_list|,
+argument|QualType *ParamTypes
+argument_list|,
+argument|unsigned NumParamTypes
+argument_list|,
+argument|bool Variadic
+argument_list|,
+argument|unsigned Quals
+argument_list|,
+argument|const FunctionType::ExtInfo&Info
+argument_list|)
+block|;
 comment|/// \brief Build a new unprototyped function type.
 name|QualType
 name|RebuildFunctionNoProtoType
-parameter_list|(
-name|QualType
-name|ResultType
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType ResultType
+argument_list|)
+block|;
 comment|/// \brief Rebuild an unresolved typename type, given the decl that
 comment|/// the UnresolvedUsingTypenameDecl was transformed to.
 name|QualType
 name|RebuildUnresolvedUsingType
-parameter_list|(
+argument_list|(
 name|Decl
-modifier|*
+operator|*
 name|D
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Build a new typedef type.
 name|QualType
 name|RebuildTypedefType
-parameter_list|(
-name|TypedefDecl
-modifier|*
-name|Typedef
-parameter_list|)
+argument_list|(
+argument|TypedefDecl *Typedef
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -1298,11 +1140,9 @@ block|}
 comment|/// \brief Build a new class/struct/union type.
 name|QualType
 name|RebuildRecordType
-parameter_list|(
-name|RecordDecl
-modifier|*
-name|Record
-parameter_list|)
+argument_list|(
+argument|RecordDecl *Record
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -1318,11 +1158,9 @@ block|}
 comment|/// \brief Build a new Enum type.
 name|QualType
 name|RebuildEnumType
-parameter_list|(
-name|EnumDecl
-modifier|*
-name|Enum
-parameter_list|)
+argument_list|(
+argument|EnumDecl *Enum
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -1341,32 +1179,33 @@ comment|/// By default, performs semantic analysis when building the typeof type
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildTypeOfExprType
-parameter_list|(
-name|ExprArg
+argument_list|(
+name|Expr
+operator|*
 name|Underlying
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Build a new typeof(type) type.
 comment|///
 comment|/// By default, builds a new TypeOfType with the given underlying type.
 name|QualType
 name|RebuildTypeOfType
-parameter_list|(
-name|QualType
-name|Underlying
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|QualType Underlying
+argument_list|)
+block|;
 comment|/// \brief Build a new C++0x decltype type.
 comment|///
 comment|/// By default, performs semantic analysis when building the decltype type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildDecltypeType
-parameter_list|(
-name|ExprArg
+argument_list|(
+name|Expr
+operator|*
 name|Underlying
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Build a new template specialization type.
 comment|///
 comment|/// By default, performs semantic analysis when building the template
@@ -1374,19 +1213,14 @@ comment|/// specialization type. Subclasses may override this routine to provide
 comment|/// different behavior.
 name|QualType
 name|RebuildTemplateSpecializationType
-parameter_list|(
-name|TemplateName
-name|Template
-parameter_list|,
-name|SourceLocation
-name|TemplateLoc
-parameter_list|,
-specifier|const
-name|TemplateArgumentListInfo
-modifier|&
-name|Args
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|TemplateName Template
+argument_list|,
+argument|SourceLocation TemplateLoc
+argument_list|,
+argument|const TemplateArgumentListInfo&Args
+argument_list|)
+block|;
 comment|/// \brief Build a new qualified name type.
 comment|///
 comment|/// By default, builds a new ElaboratedType type from the keyword,
@@ -1394,17 +1228,13 @@ comment|/// the nested-name-specifier and the named type.
 comment|/// Subclasses may override this routine to provide different behavior.
 name|QualType
 name|RebuildElaboratedType
-parameter_list|(
-name|ElaboratedTypeKeyword
-name|Keyword
-parameter_list|,
-name|NestedNameSpecifier
-modifier|*
-name|NNS
-parameter_list|,
-name|QualType
-name|Named
-parameter_list|)
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|QualType Named
+argument_list|)
 block|{
 return|return
 name|SemaRef
@@ -1428,33 +1258,23 @@ comment|/// nested-name-specifier and the given type. Subclasses may override
 comment|/// this routine to provide different behavior.
 name|QualType
 name|RebuildDependentTemplateSpecializationType
-parameter_list|(
-name|ElaboratedTypeKeyword
-name|Keyword
-parameter_list|,
-name|NestedNameSpecifier
-modifier|*
-name|NNS
-parameter_list|,
-specifier|const
-name|IdentifierInfo
-modifier|*
-name|Name
-parameter_list|,
-name|SourceLocation
-name|NameLoc
-parameter_list|,
-specifier|const
-name|TemplateArgumentListInfo
-modifier|&
-name|Args
-parameter_list|)
+argument_list|(
+argument|ElaboratedTypeKeyword Keyword
+argument_list|,
+argument|NestedNameSpecifier *NNS
+argument_list|,
+argument|const IdentifierInfo *Name
+argument_list|,
+argument|SourceLocation NameLoc
+argument_list|,
+argument|const TemplateArgumentListInfo&Args
+argument_list|)
 block|{
 comment|// Rebuild the template name.
 comment|// TODO: avoid TemplateName abstraction
 name|TemplateName
 name|InstName
-init|=
+operator|=
 name|getDerived
 argument_list|()
 operator|.
@@ -1468,7 +1288,7 @@ argument_list|,
 name|QualType
 argument_list|()
 argument_list|)
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|InstName
@@ -1508,7 +1328,7 @@ comment|// Otherwise, make an elaborated type wrapping a non-dependent
 comment|// specialization.
 name|QualType
 name|T
-init|=
+operator|=
 name|getDerived
 argument_list|()
 operator|.
@@ -1520,7 +1340,7 @@ name|NameLoc
 argument_list|,
 name|Args
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|T
@@ -1532,6 +1352,7 @@ return|return
 name|QualType
 argument_list|()
 return|;
+comment|// NOTE: NNS is already recorded in template specialization type T.
 return|return
 name|SemaRef
 operator|.
@@ -1541,17 +1362,36 @@ name|getElaboratedType
 argument_list|(
 name|Keyword
 argument_list|,
-name|NNS
+comment|/*NNS=*/
+literal|0
 argument_list|,
 name|T
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new typename type that refers to an identifier.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis when building the typename type
+end_comment
+
+begin_comment
 comment|/// (or elaborated type). Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
+end_comment
+
+begin_function
 name|QualType
 name|RebuildDependentNameType
 parameter_list|(
@@ -1909,12 +1749,33 @@ name|T
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new nested-name-specifier given the prefix and an
+end_comment
+
+begin_comment
 comment|/// identifier that names the next step in the nested-name-specifier.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis when building the new
+end_comment
+
+begin_comment
 comment|/// nested-name-specifier. Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
+end_comment
+
+begin_function_decl
 name|NestedNameSpecifier
 modifier|*
 name|RebuildNestedNameSpecifier
@@ -1938,12 +1799,33 @@ modifier|*
 name|FirstQualifierInScope
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new nested-name-specifier given the prefix and the
+end_comment
+
+begin_comment
 comment|/// namespace named in the next step in the nested-name-specifier.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis when building the new
+end_comment
+
+begin_comment
 comment|/// nested-name-specifier. Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
+end_comment
+
+begin_function_decl
 name|NestedNameSpecifier
 modifier|*
 name|RebuildNestedNameSpecifier
@@ -1960,12 +1842,33 @@ modifier|*
 name|NS
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new nested-name-specifier given the prefix and the
+end_comment
+
+begin_comment
 comment|/// type named in the next step in the nested-name-specifier.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis when building the new
+end_comment
+
+begin_comment
 comment|/// nested-name-specifier. Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
+end_comment
+
+begin_function_decl
 name|NestedNameSpecifier
 modifier|*
 name|RebuildNestedNameSpecifier
@@ -1984,12 +1887,33 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new template name given a nested name specifier, a flag
+end_comment
+
+begin_comment
 comment|/// indicating whether the "template" keyword was provided, and the template
+end_comment
+
+begin_comment
 comment|/// that the template name refers to.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, builds the new template name directly. Subclasses may override
+end_comment
+
+begin_comment
 comment|/// this routine to provide different behavior.
+end_comment
+
+begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2005,13 +1929,37 @@ modifier|*
 name|Template
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new template name given a nested name specifier and the
+end_comment
+
+begin_comment
 comment|/// name that is referred to as a template.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to determine whether the name can
+end_comment
+
+begin_comment
 comment|/// be resolved to a specific template, then builds the appropriate kind of
+end_comment
+
+begin_comment
 comment|/// template name. Subclasses may override this routine to provide different
+end_comment
+
+begin_comment
 comment|/// behavior.
+end_comment
+
+begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2028,13 +1976,37 @@ name|QualType
 name|ObjectType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new template name given a nested name specifier and the
+end_comment
+
+begin_comment
 comment|/// overloaded operator name that is referred to as a template.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to determine whether the name can
+end_comment
+
+begin_comment
 comment|/// be resolved to a specific template, then builds the appropriate kind of
+end_comment
+
+begin_comment
 comment|/// template name. Subclasses may override this routine to provide different
+end_comment
+
+begin_comment
 comment|/// behavior.
+end_comment
+
+begin_function_decl
 name|TemplateName
 name|RebuildTemplateName
 parameter_list|(
@@ -2049,11 +2021,26 @@ name|QualType
 name|ObjectType
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new compound statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildCompoundStmt
 parameter_list|(
 name|SourceLocation
@@ -2079,32 +2066,46 @@ name|LBraceLoc
 argument_list|,
 name|RBraceLoc
 argument_list|,
-name|move
-argument_list|(
 name|Statements
-argument_list|)
 argument_list|,
 name|IsStmtExpr
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new case statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildCaseStmt
 parameter_list|(
 name|SourceLocation
 name|CaseLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|LHS
 parameter_list|,
 name|SourceLocation
 name|EllipsisLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|RHS
 parameter_list|,
 name|SourceLocation
@@ -2119,33 +2120,44 @@ name|ActOnCaseStmt
 argument_list|(
 name|CaseLoc
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
 argument_list|,
 name|EllipsisLoc
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
 argument_list|,
 name|ColonLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Attach the body to a new case statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildCaseStmtBody
 parameter_list|(
-name|StmtArg
+name|Stmt
+modifier|*
 name|S
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -2155,28 +2167,34 @@ operator|.
 name|ActOnCaseStmtBody
 argument_list|(
 name|S
-operator|.
-name|get
-argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|move
-argument_list|(
 name|S
-argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new default statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildDefaultStmt
 parameter_list|(
 name|SourceLocation
@@ -2185,7 +2203,8 @@ parameter_list|,
 name|SourceLocation
 name|ColonLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|SubStmt
 parameter_list|)
 block|{
@@ -2199,21 +2218,33 @@ name|DefaultLoc
 argument_list|,
 name|ColonLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
 argument_list|,
 comment|/*CurScope=*/
 literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new label statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildLabelStmt
 parameter_list|(
 name|SourceLocation
@@ -2226,7 +2257,8 @@ parameter_list|,
 name|SourceLocation
 name|ColonLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|SubStmt
 parameter_list|)
 block|{
@@ -2241,18 +2273,30 @@ name|Id
 argument_list|,
 name|ColonLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new "if" statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_decl_stmt
+name|StmtResult
 name|RebuildIfStmt
 argument_list|(
 name|SourceLocation
@@ -2267,13 +2311,15 @@ name|VarDecl
 operator|*
 name|CondVar
 argument_list|,
-name|StmtArg
+name|Stmt
+operator|*
 name|Then
 argument_list|,
 name|SourceLocation
 name|ElseLoc
 argument_list|,
-name|StmtArg
+name|Stmt
+operator|*
 name|Else
 argument_list|)
 block|{
@@ -2287,46 +2333,49 @@ name|IfLoc
 argument_list|,
 name|Cond
 argument_list|,
-name|DeclPtrTy
-operator|::
-name|make
-argument_list|(
 name|CondVar
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Then
-argument_list|)
 argument_list|,
 name|ElseLoc
 argument_list|,
-name|move
-argument_list|(
 name|Else
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Start building a new switch statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildSwitchStmtStart
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|SwitchLoc
-argument_list|,
-name|Sema
-operator|::
-name|ExprArg
+parameter_list|,
+name|Expr
+modifier|*
 name|Cond
-argument_list|,
+parameter_list|,
 name|VarDecl
-operator|*
+modifier|*
 name|CondVar
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getSema
@@ -2336,34 +2385,43 @@ name|ActOnStartOfSwitchStmt
 argument_list|(
 name|SwitchLoc
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
 argument_list|,
-name|DeclPtrTy
-operator|::
-name|make
-argument_list|(
 name|CondVar
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Attach the body to the switch statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildSwitchStmtBody
 parameter_list|(
 name|SourceLocation
 name|SwitchLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Switch
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -2375,23 +2433,32 @@ name|ActOnFinishSwitchStmt
 argument_list|(
 name|SwitchLoc
 argument_list|,
-name|move
-argument_list|(
 name|Switch
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new while statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_decl_stmt
+name|StmtResult
 name|RebuildWhileStmt
 argument_list|(
 name|SourceLocation
@@ -2406,7 +2473,8 @@ name|VarDecl
 operator|*
 name|CondVar
 argument_list|,
-name|StmtArg
+name|Stmt
+operator|*
 name|Body
 argument_list|)
 block|{
@@ -2420,31 +2488,39 @@ name|WhileLoc
 argument_list|,
 name|Cond
 argument_list|,
-name|DeclPtrTy
-operator|::
-name|make
-argument_list|(
 name|CondVar
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new do-while statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildDoStmt
 parameter_list|(
 name|SourceLocation
 name|DoLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|,
 name|SourceLocation
@@ -2453,7 +2529,8 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Cond
 parameter_list|,
 name|SourceLocation
@@ -2468,29 +2545,38 @@ name|ActOnDoStmt
 argument_list|(
 name|DoLoc
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|,
 name|WhileLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new for statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_decl_stmt
+name|StmtResult
 name|RebuildForStmt
 argument_list|(
 name|SourceLocation
@@ -2499,7 +2585,8 @@ argument_list|,
 name|SourceLocation
 name|LParenLoc
 argument_list|,
-name|StmtArg
+name|Stmt
+operator|*
 name|Init
 argument_list|,
 name|Sema
@@ -2519,7 +2606,8 @@ argument_list|,
 name|SourceLocation
 name|RParenLoc
 argument_list|,
-name|StmtArg
+name|Stmt
+operator|*
 name|Body
 argument_list|)
 block|{
@@ -2533,36 +2621,40 @@ name|ForLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
 argument_list|,
 name|Cond
 argument_list|,
-name|DeclPtrTy
-operator|::
-name|make
-argument_list|(
 name|CondVar
-argument_list|)
 argument_list|,
 name|Inc
 argument_list|,
 name|RParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new goto statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildGotoStmt
 parameter_list|(
 name|SourceLocation
@@ -2593,11 +2685,26 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new indirect goto statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildIndirectGotoStmt
 parameter_list|(
 name|SourceLocation
@@ -2606,7 +2713,8 @@ parameter_list|,
 name|SourceLocation
 name|StarLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Target
 parameter_list|)
 block|{
@@ -2620,24 +2728,37 @@ name|GotoLoc
 argument_list|,
 name|StarLoc
 argument_list|,
-name|move
-argument_list|(
 name|Target
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new return statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildReturnStmt
 parameter_list|(
 name|SourceLocation
 name|ReturnLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Result
 parameter_list|)
 block|{
@@ -2649,18 +2770,30 @@ name|ActOnReturnStmt
 argument_list|(
 name|ReturnLoc
 argument_list|,
-name|move
-argument_list|(
 name|Result
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new declaration statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildDeclStmt
 parameter_list|(
 name|Decl
@@ -2711,11 +2844,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new inline asm statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildAsmStmt
 parameter_list|(
 name|SourceLocation
@@ -2744,7 +2892,8 @@ parameter_list|,
 name|MultiExprArg
 name|Exprs
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|AsmString
 parameter_list|,
 name|MultiExprArg
@@ -2780,20 +2929,11 @@ argument_list|(
 name|Constraints
 argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Exprs
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|AsmString
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Clobbers
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|,
@@ -2801,23 +2941,40 @@ name|MSAsm
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @try statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCAtTryStmt
 parameter_list|(
 name|SourceLocation
 name|AtLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|TryBody
 parameter_list|,
 name|MultiStmtArg
 name|CatchStmts
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Finally
 parameter_list|)
 block|{
@@ -2829,27 +2986,36 @@ name|ActOnObjCAtTryStmt
 argument_list|(
 name|AtLoc
 argument_list|,
-name|move
-argument_list|(
 name|TryBody
-argument_list|)
 argument_list|,
 name|move
 argument_list|(
 name|CatchStmts
 argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Finally
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Rebuild an Objective-C exception declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new declaration.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
+end_comment
+
+begin_function
 name|VarDecl
 modifier|*
 name|RebuildObjCExceptionDecl
@@ -2888,11 +3054,26 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @catch statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCAtCatchStmt
 parameter_list|(
 name|SourceLocation
@@ -2905,7 +3086,8 @@ name|VarDecl
 modifier|*
 name|Var
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -2919,33 +3101,39 @@ name|AtLoc
 argument_list|,
 name|RParenLoc
 argument_list|,
-name|Sema
-operator|::
-name|DeclPtrTy
-operator|::
-name|make
-argument_list|(
 name|Var
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @finally statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCAtFinallyStmt
 parameter_list|(
 name|SourceLocation
 name|AtLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -2957,24 +3145,37 @@ name|ActOnObjCAtFinallyStmt
 argument_list|(
 name|AtLoc
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @throw statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCAtThrowStmt
 parameter_list|(
 name|SourceLocation
 name|AtLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Operand
 parameter_list|)
 block|{
@@ -2986,27 +3187,41 @@ name|BuildObjCAtThrowStmt
 argument_list|(
 name|AtLoc
 argument_list|,
-name|move
-argument_list|(
 name|Operand
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @synchronized statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCAtSynchronizedStmt
 parameter_list|(
 name|SourceLocation
 name|AtLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Object
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -3018,23 +3233,32 @@ name|ActOnObjCAtSynchronizedStmt
 argument_list|(
 name|AtLoc
 argument_list|,
-name|move
-argument_list|(
 name|Object
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C fast enumeration statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildObjCForCollectionStmt
 parameter_list|(
 name|SourceLocation
@@ -3043,16 +3267,19 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Element
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Collection
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Body
 parameter_list|)
 block|{
@@ -3066,29 +3293,35 @@ name|ForLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Element
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Collection
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ exception declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new decaration.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
+end_comment
+
+begin_function
 name|VarDecl
 modifier|*
 name|RebuildExceptionDecl
@@ -3135,11 +3368,26 @@ name|TypeRange
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ catch statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildCXXCatchStmt
 parameter_list|(
 name|SourceLocation
@@ -3149,14 +3397,12 @@ name|VarDecl
 modifier|*
 name|ExceptionDecl
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|Handler
 parameter_list|)
 block|{
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|Owned
 argument_list|(
 name|new
@@ -3170,28 +3416,37 @@ argument_list|,
 name|ExceptionDecl
 argument_list|,
 name|Handler
-operator|.
-name|takeAs
-operator|<
-name|Stmt
-operator|>
-operator|(
-operator|)
 argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ try statement.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new statement.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningStmtResult
+end_comment
+
+begin_function
+name|StmtResult
 name|RebuildCXXTryStmt
 parameter_list|(
 name|SourceLocation
 name|TryLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|TryBlock
 parameter_list|,
 name|MultiStmtArg
@@ -3206,10 +3461,7 @@ name|ActOnCXXTryBlock
 argument_list|(
 name|TryLoc
 argument_list|,
-name|move
-argument_list|(
 name|TryBlock
-argument_list|)
 argument_list|,
 name|move
 argument_list|(
@@ -3218,11 +3470,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new expression that references a declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildDeclarationNameExpr
 parameter_list|(
 specifier|const
@@ -3252,11 +3519,26 @@ name|RequiresADL
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new expression that references a declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildDeclRefExpr
 parameter_list|(
 name|NestedNameSpecifier
@@ -3270,8 +3552,10 @@ name|ValueDecl
 modifier|*
 name|VD
 parameter_list|,
-name|SourceLocation
-name|Loc
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
 parameter_list|,
 name|TemplateArgumentListInfo
 modifier|*
@@ -3304,20 +3588,36 @@ name|BuildDeclarationNameExpr
 argument_list|(
 name|SS
 argument_list|,
-name|Loc
+name|NameInfo
 argument_list|,
 name|VD
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new expression in parentheses.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildParenExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -3337,21 +3637,34 @@ name|LParen
 argument_list|,
 name|RParen
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new pseudo-destructor expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function_decl
+name|ExprResult
 name|RebuildCXXPseudoDestructorExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Base
 parameter_list|,
 name|SourceLocation
@@ -3381,24 +3694,38 @@ name|PseudoDestructorTypeStorage
 name|Destroyed
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new unary operator expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildUnaryOperator
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|OpLoc
-argument_list|,
-name|UnaryOperator
-operator|::
-name|Opcode
+parameter_list|,
+name|UnaryOperatorKind
 name|Opc
-argument_list|,
-name|ExprArg
+parameter_list|,
+name|Expr
+modifier|*
 name|SubExpr
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getSema
@@ -3413,18 +3740,30 @@ name|OpLoc
 argument_list|,
 name|Opc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new builtin offsetof expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_decl_stmt
+name|ExprResult
 name|RebuildOffsetOfExpr
 argument_list|(
 name|SourceLocation
@@ -3434,7 +3773,7 @@ name|TypeSourceInfo
 operator|*
 name|Type
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|OffsetOfComponent
 operator|*
@@ -3465,11 +3804,26 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new sizeof or alignof expression with a type argument.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildSizeOfAlignOf
 parameter_list|(
 name|TypeSourceInfo
@@ -3502,15 +3856,34 @@ name|R
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new sizeof or alignof expression with an expression
+end_comment
+
+begin_comment
 comment|/// argument.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildSizeOfAlignOf
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -3523,7 +3896,7 @@ name|SourceRange
 name|R
 parameter_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getSema
@@ -3531,14 +3904,7 @@ argument_list|()
 operator|.
 name|CreateSizeOfAlignOfExpr
 argument_list|(
-operator|(
-name|Expr
-operator|*
-operator|)
 name|SubExpr
-operator|.
-name|get
-argument_list|()
 argument_list|,
 name|OpLoc
 argument_list|,
@@ -3555,17 +3921,9 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|SubExpr
-operator|.
-name|release
-argument_list|()
-expr_stmt|;
 return|return
 name|move
 argument_list|(
@@ -3573,20 +3931,37 @@ name|Result
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new array subscript expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildArraySubscriptExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|LHS
 parameter_list|,
 name|SourceLocation
 name|LBracketLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|RHS
 parameter_list|,
 name|SourceLocation
@@ -3602,30 +3977,40 @@ argument_list|(
 comment|/*Scope=*/
 literal|0
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
 argument_list|,
 name|LBracketLoc
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
 argument_list|,
 name|RBracketLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new call expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCallExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Callee
 parameter_list|,
 name|SourceLocation
@@ -3651,10 +4036,7 @@ argument_list|(
 comment|/*Scope=*/
 literal|0
 argument_list|,
-name|move
-argument_list|(
 name|Callee
-argument_list|)
 argument_list|,
 name|LParenLoc
 argument_list|,
@@ -3669,14 +4051,30 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new member access expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildMemberExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Base
 parameter_list|,
 name|SourceLocation
@@ -3692,8 +4090,10 @@ parameter_list|,
 name|SourceRange
 name|QualifierRange
 parameter_list|,
-name|SourceLocation
-name|MemberLoc
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|MemberNameInfo
 parameter_list|,
 name|ValueDecl
 modifier|*
@@ -3731,19 +4131,6 @@ operator|&&
 literal|"Can't have an unnamed field with a qualifier!"
 argument_list|)
 expr_stmt|;
-name|Expr
-modifier|*
-name|BaseExpr
-init|=
-name|Base
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-decl_stmt|;
 if|if
 condition|(
 name|getSema
@@ -3751,7 +4138,7 @@ argument_list|()
 operator|.
 name|PerformObjectMemberConversion
 argument_list|(
-name|BaseExpr
+name|Base
 argument_list|,
 name|Qualifier
 argument_list|,
@@ -3761,9 +4148,6 @@ name|Member
 argument_list|)
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -3777,13 +4161,13 @@ argument|getSema().Context
 argument_list|)
 name|MemberExpr
 argument_list|(
-name|BaseExpr
+name|Base
 argument_list|,
 name|isArrow
 argument_list|,
 name|Member
 argument_list|,
-name|MemberLoc
+name|MemberNameInfo
 argument_list|,
 name|cast
 operator|<
@@ -3830,31 +4214,18 @@ name|Qualifier
 argument_list|)
 expr_stmt|;
 block|}
-name|Expr
-modifier|*
-name|BaseExpr
-init|=
-name|Base
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-decl_stmt|;
 name|getSema
 argument_list|()
 operator|.
 name|DefaultFunctionArrayConversion
 argument_list|(
-name|BaseExpr
+name|Base
 argument_list|)
 expr_stmt|;
 name|QualType
 name|BaseType
 init|=
-name|BaseExpr
+name|Base
 operator|->
 name|getType
 argument_list|()
@@ -3867,12 +4238,7 @@ argument_list|(
 name|getSema
 argument_list|()
 argument_list|,
-name|Member
-operator|->
-name|getDeclName
-argument_list|()
-argument_list|,
-name|MemberLoc
+name|MemberNameInfo
 argument_list|,
 name|Sema
 operator|::
@@ -3897,13 +4263,7 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Owned
-argument_list|(
-name|BaseExpr
-argument_list|)
+name|Base
 argument_list|,
 name|BaseType
 argument_list|,
@@ -3921,27 +4281,42 @@ name|ExplicitTemplateArgs
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new binary operator expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildBinaryOperator
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|OpLoc
-argument_list|,
-name|BinaryOperator
-operator|::
-name|Opcode
+parameter_list|,
+name|BinaryOperatorKind
 name|Opc
-argument_list|,
-name|ExprArg
+parameter_list|,
+name|Expr
+modifier|*
 name|LHS
-argument_list|,
-name|ExprArg
+parameter_list|,
+name|Expr
+modifier|*
 name|RHS
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getSema
@@ -3957,45 +4332,49 @@ argument_list|,
 name|Opc
 argument_list|,
 name|LHS
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|,
 name|RHS
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new conditional operator expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildConditionalOperator
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Cond
 parameter_list|,
 name|SourceLocation
 name|QuestionLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|LHS
 parameter_list|,
 name|SourceLocation
 name|ColonLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|RHS
 parameter_list|)
 block|{
@@ -4009,28 +4388,34 @@ name|QuestionLoc
 argument_list|,
 name|ColonLoc
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C-style cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCStyleCastExpr
 parameter_list|(
 name|SourceLocation
@@ -4043,7 +4428,8 @@ parameter_list|,
 name|SourceLocation
 name|RParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|)
 block|{
@@ -4059,18 +4445,30 @@ name|TInfo
 argument_list|,
 name|RParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new compound literal expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCompoundLiteralExpr
 parameter_list|(
 name|SourceLocation
@@ -4083,7 +4481,8 @@ parameter_list|,
 name|SourceLocation
 name|RParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Init
 parameter_list|)
 block|{
@@ -4099,21 +4498,34 @@ name|TInfo
 argument_list|,
 name|RParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new extended vector element access expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildExtVectorElementExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Base
 parameter_list|,
 name|SourceLocation
@@ -4130,22 +4542,14 @@ block|{
 name|CXXScopeSpec
 name|SS
 decl_stmt|;
-name|QualType
-name|BaseType
-init|=
-operator|(
-operator|(
-name|Expr
-operator|*
-operator|)
-name|Base
-operator|.
-name|get
-argument_list|()
-operator|)
-operator|->
-name|getType
-argument_list|()
+name|DeclarationNameInfo
+name|NameInfo
+argument_list|(
+operator|&
+name|Accessor
+argument_list|,
+name|AccessorLoc
+argument_list|)
 decl_stmt|;
 return|return
 name|getSema
@@ -4153,12 +4557,12 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
-name|BaseType
+name|Base
+operator|->
+name|getType
+argument_list|()
 argument_list|,
 name|OpLoc
 argument_list|,
@@ -4170,24 +4574,33 @@ argument_list|,
 comment|/*FirstQualifierInScope*/
 literal|0
 argument_list|,
-name|DeclarationName
-argument_list|(
-operator|&
-name|Accessor
-argument_list|)
-argument_list|,
-name|AccessorLoc
+name|NameInfo
 argument_list|,
 comment|/* TemplateArgs */
 literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new initializer list expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildInitList
 parameter_list|(
 name|SourceLocation
@@ -4203,7 +4616,7 @@ name|QualType
 name|ResultTy
 parameter_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|SemaRef
@@ -4273,11 +4686,26 @@ name|Result
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new designated initializer expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildDesignatedInitExpr
 parameter_list|(
 name|Designation
@@ -4293,11 +4721,12 @@ parameter_list|,
 name|bool
 name|GNUSyntax
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Init
 parameter_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|SemaRef
@@ -4310,10 +4739,7 @@ name|EqualOrColonLoc
 argument_list|,
 name|GNUSyntax
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -4324,8 +4750,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -4341,12 +4765,30 @@ name|Result
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new value-initialized expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, builds the implicit value initialization without performing
+end_comment
+
+begin_comment
 comment|/// any semantic analysis. Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildImplicitValueInitExpr
 parameter_list|(
 name|QualType
@@ -4369,21 +4811,38 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new \c va_arg expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildVAArgExpr
 parameter_list|(
 name|SourceLocation
 name|BuiltinLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
-name|QualType
-name|T
+name|TypeSourceInfo
+modifier|*
+name|TInfo
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
@@ -4393,29 +4852,38 @@ return|return
 name|getSema
 argument_list|()
 operator|.
-name|ActOnVAArg
+name|BuildVAArgExpr
 argument_list|(
 name|BuiltinLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
-name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+name|TInfo
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new expression list in parentheses.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildParenListExpr
 parameter_list|(
 name|SourceLocation
@@ -4445,12 +4913,30 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new address-of-label expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis, using the name of the label
+end_comment
+
+begin_comment
 comment|/// rather than attempting to map the label statement itself.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildAddrLabelExpr
 parameter_list|(
 name|SourceLocation
@@ -4481,17 +4967,33 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new GNU statement expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildStmtExpr
 parameter_list|(
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|StmtArg
+name|Stmt
+modifier|*
 name|SubStmt
 parameter_list|,
 name|SourceLocation
@@ -4506,30 +5008,44 @@ name|ActOnStmtExpr
 argument_list|(
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new __builtin_types_compatible_p expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildTypesCompatibleExpr
 parameter_list|(
 name|SourceLocation
 name|BuiltinLoc
 parameter_list|,
-name|QualType
-name|T1
+name|TypeSourceInfo
+modifier|*
+name|TInfo1
 parameter_list|,
-name|QualType
-name|T2
+name|TypeSourceInfo
+modifier|*
+name|TInfo2
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
@@ -4539,41 +5055,53 @@ return|return
 name|getSema
 argument_list|()
 operator|.
-name|ActOnTypesCompatibleExpr
+name|BuildTypesCompatibleExpr
 argument_list|(
 name|BuiltinLoc
 argument_list|,
-name|T1
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+name|TInfo1
 argument_list|,
-name|T2
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+name|TInfo2
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new __builtin_choose_expr expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildChooseExpr
 parameter_list|(
 name|SourceLocation
 name|BuiltinLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Cond
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|LHS
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|RHS
 parameter_list|,
 name|SourceLocation
@@ -4587,34 +5115,52 @@ name|ActOnChooseExpr
 argument_list|(
 name|BuiltinLoc
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new overloaded operator call expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// The semantic analysis provides the behavior of template instantiation,
+end_comment
+
+begin_comment
 comment|/// copying with transformations that turn what looks like an overloaded
+end_comment
+
+begin_comment
 comment|/// operator call into a use of a builtin operator, performing
+end_comment
+
+begin_comment
 comment|/// argument-dependent lookup, etc. Subclasses may override this routine to
+end_comment
+
+begin_comment
 comment|/// provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function_decl
+name|ExprResult
 name|RebuildCXXOperatorCallExpr
 parameter_list|(
 name|OverloadedOperatorKind
@@ -4623,23 +5169,47 @@ parameter_list|,
 name|SourceLocation
 name|OpLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Callee
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|First
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Second
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Build a new C++ "named" cast expression, such as static_cast or
+end_comment
+
+begin_comment
 comment|/// reinterpret_cast.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, this routine dispatches to one of the more-specific routines
+end_comment
+
+begin_comment
 comment|/// for a particular named case, e.g., RebuildCXXStaticCastExpr().
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_decl_stmt
+name|ExprResult
 name|RebuildCXXNamedCastExpr
 argument_list|(
 name|SourceLocation
@@ -4663,7 +5233,8 @@ argument_list|,
 name|SourceLocation
 name|LParenLoc
 argument_list|,
-name|ExprArg
+name|Expr
+operator|*
 name|SubExpr
 argument_list|,
 name|SourceLocation
@@ -4696,10 +5267,7 @@ name|RAngleLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
@@ -4725,10 +5293,7 @@ name|RAngleLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
@@ -4754,10 +5319,7 @@ name|RAngleLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
@@ -4783,10 +5345,7 @@ name|RAngleLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
@@ -4802,18 +5361,30 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new C++ static_cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXStaticCastExpr
 parameter_list|(
 name|SourceLocation
@@ -4832,7 +5403,8 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -4853,10 +5425,7 @@ name|kw_static_cast
 argument_list|,
 name|TInfo
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|SourceRange
 argument_list|(
@@ -4874,11 +5443,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ dynamic_cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXDynamicCastExpr
 parameter_list|(
 name|SourceLocation
@@ -4897,7 +5481,8 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -4918,10 +5503,7 @@ name|kw_dynamic_cast
 argument_list|,
 name|TInfo
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|SourceRange
 argument_list|(
@@ -4939,11 +5521,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ reinterpret_cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXReinterpretCastExpr
 parameter_list|(
 name|SourceLocation
@@ -4962,7 +5559,8 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -4983,10 +5581,7 @@ name|kw_reinterpret_cast
 argument_list|,
 name|TInfo
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|SourceRange
 argument_list|(
@@ -5004,11 +5599,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ const_cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXConstCastExpr
 parameter_list|(
 name|SourceLocation
@@ -5027,7 +5637,8 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|SubExpr
 parameter_list|,
 name|SourceLocation
@@ -5048,10 +5659,7 @@ name|kw_const_cast
 argument_list|,
 name|TInfo
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
 argument_list|,
 name|SourceRange
 argument_list|(
@@ -5069,11 +5677,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ functional-style cast expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXFunctionalCastExpr
 parameter_list|(
 name|SourceRange
@@ -5086,26 +5709,14 @@ parameter_list|,
 name|SourceLocation
 name|LParenLoc
 parameter_list|,
-name|ExprArg
-name|SubExpr
+name|Expr
+modifier|*
+name|Sub
 parameter_list|,
 name|SourceLocation
 name|RParenLoc
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|Sub
-init|=
-name|SubExpr
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-decl_stmt|;
 return|return
 name|getSema
 argument_list|()
@@ -5114,23 +5725,20 @@ name|ActOnCXXTypeConstructExpr
 argument_list|(
 name|TypeRange
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|TInfo
 operator|->
 name|getType
 argument_list|()
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 name|LParenLoc
 argument_list|,
-name|Sema
-operator|::
 name|MultiExprArg
 argument_list|(
-name|getSema
-argument_list|()
-argument_list|,
 operator|&
 name|Sub
 argument_list|,
@@ -5144,11 +5752,26 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ typeid(type) expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXTypeidExpr
 parameter_list|(
 name|QualType
@@ -5181,11 +5804,26 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ typeid(expr) expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXTypeidExpr
 parameter_list|(
 name|QualType
@@ -5194,7 +5832,8 @@ parameter_list|,
 name|SourceLocation
 name|TypeidLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Operand
 parameter_list|,
 name|SourceLocation
@@ -5211,21 +5850,36 @@ name|TypeInfoType
 argument_list|,
 name|TypeidLoc
 argument_list|,
-name|move
-argument_list|(
 name|Operand
-argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ "this" expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, builds a new "this" expression without performing any
+end_comment
+
+begin_comment
 comment|/// semantic analysis. Subclasses may override this routine to provide
+end_comment
+
+begin_comment
 comment|/// different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXThisExpr
 parameter_list|(
 name|SourceLocation
@@ -5259,17 +5913,33 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ throw expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXThrowExpr
 parameter_list|(
 name|SourceLocation
 name|ThrowLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Sub
 parameter_list|)
 block|{
@@ -5281,19 +5951,34 @@ name|ActOnCXXThrow
 argument_list|(
 name|ThrowLoc
 argument_list|,
-name|move
-argument_list|(
 name|Sub
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ default-argument expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, builds a new default-argument expression, which does not
+end_comment
+
+begin_comment
 comment|/// require any semantic analysis. Subclasses may override this routine to
+end_comment
+
+begin_comment
 comment|/// provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXDefaultArgExpr
 parameter_list|(
 name|SourceLocation
@@ -5326,11 +6011,26 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ zero-initialization expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXScalarValueInitExpr
 parameter_list|(
 name|SourceLocation
@@ -5357,10 +6057,12 @@ argument_list|(
 name|TypeStartLoc
 argument_list|)
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 name|LParenLoc
 argument_list|,
@@ -5380,11 +6082,26 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ "new" expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXNewExpr
 parameter_list|(
 name|SourceLocation
@@ -5414,7 +6131,8 @@ parameter_list|,
 name|SourceRange
 name|TypeRange
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|ArraySize
 parameter_list|,
 name|SourceLocation
@@ -5454,10 +6172,7 @@ name|TypeLoc
 argument_list|,
 name|TypeRange
 argument_list|,
-name|move
-argument_list|(
 name|ArraySize
-argument_list|)
 argument_list|,
 name|ConstructorLParen
 argument_list|,
@@ -5470,11 +6185,26 @@ name|ConstructorRParen
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new C++ "delete" expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXDeleteExpr
 parameter_list|(
 name|SourceLocation
@@ -5486,7 +6216,8 @@ parameter_list|,
 name|bool
 name|IsArrayForm
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Operand
 parameter_list|)
 block|{
@@ -5502,18 +6233,30 @@ name|IsGlobalDelete
 argument_list|,
 name|IsArrayForm
 argument_list|,
-name|move
-argument_list|(
 name|Operand
-argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new unary type trait expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildUnaryTypeTrait
 parameter_list|(
 name|UnaryTypeTrait
@@ -5544,21 +6287,41 @@ name|StartLoc
 argument_list|,
 name|LParenLoc
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new (previously unresolved) declaration reference
+end_comment
+
+begin_comment
 comment|/// expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildDependentScopeDeclRefExpr
 parameter_list|(
 name|NestedNameSpecifier
@@ -5568,11 +6331,10 @@ parameter_list|,
 name|SourceRange
 name|QualifierRange
 parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|SourceLocation
-name|Location
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
 parameter_list|,
 specifier|const
 name|TemplateArgumentListInfo
@@ -5609,9 +6371,7 @@ name|BuildQualifiedTemplateIdExpr
 argument_list|(
 name|SS
 argument_list|,
-name|Name
-argument_list|,
-name|Location
+name|NameInfo
 argument_list|,
 operator|*
 name|TemplateArgs
@@ -5625,17 +6385,30 @@ name|BuildQualifiedDeclarationNameExpr
 argument_list|(
 name|SS
 argument_list|,
-name|Name
-argument_list|,
-name|Location
+name|NameInfo
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new template-id expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildTemplateIdExpr
 parameter_list|(
 specifier|const
@@ -5672,36 +6445,57 @@ name|TemplateArgs
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new object-construction expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_decl_stmt
+name|ExprResult
 name|RebuildCXXConstructExpr
-parameter_list|(
+argument_list|(
 name|QualType
 name|T
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|Loc
-parameter_list|,
+argument_list|,
 name|CXXConstructorDecl
-modifier|*
+operator|*
 name|Constructor
-parameter_list|,
+argument_list|,
 name|bool
 name|IsElidable
-parameter_list|,
+argument_list|,
 name|MultiExprArg
 name|Args
-parameter_list|)
+argument_list|,
+name|bool
+name|RequiresZeroInit
+argument_list|,
+name|CXXConstructExpr
+operator|::
+name|ConstructionKind
+name|ConstructKind
+argument_list|)
 block|{
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|ConvertedArgs
 argument_list|(
@@ -5728,9 +6522,6 @@ name|ConvertedArgs
 argument_list|)
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -5752,14 +6543,33 @@ name|move_arg
 argument_list|(
 name|ConvertedArgs
 argument_list|)
+argument_list|,
+name|RequiresZeroInit
+argument_list|,
+name|ConstructKind
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Build a new object-construction expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXTemporaryObjectExpr
 parameter_list|(
 name|SourceLocation
@@ -5793,10 +6603,12 @@ argument_list|(
 name|TypeBeginLoc
 argument_list|)
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 name|LParenLoc
 argument_list|,
@@ -5811,11 +6623,26 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new object-construction expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXUnresolvedConstructExpr
 parameter_list|(
 name|SourceLocation
@@ -5852,10 +6679,12 @@ comment|/*FIXME*/
 name|LParenLoc
 argument_list|)
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|T
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 name|LParenLoc
 argument_list|,
@@ -5870,14 +6699,30 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new member reference expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildCXXDependentScopeMemberExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|BaseE
 parameter_list|,
 name|QualType
@@ -5900,11 +6745,10 @@ name|NamedDecl
 modifier|*
 name|FirstQualifierInScope
 parameter_list|,
-name|DeclarationName
-name|Name
-parameter_list|,
-name|SourceLocation
-name|MemberLoc
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|MemberNameInfo
 parameter_list|,
 specifier|const
 name|TemplateArgumentListInfo
@@ -5934,10 +6778,7 @@ name|SemaRef
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|move
-argument_list|(
 name|BaseE
-argument_list|)
 argument_list|,
 name|BaseType
 argument_list|,
@@ -5949,22 +6790,36 @@ name|SS
 argument_list|,
 name|FirstQualifierInScope
 argument_list|,
-name|Name
-argument_list|,
-name|MemberLoc
+name|MemberNameInfo
 argument_list|,
 name|TemplateArgs
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new member reference expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildUnresolvedMemberExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|BaseE
 parameter_list|,
 name|QualType
@@ -6019,10 +6874,7 @@ name|SemaRef
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|move
-argument_list|(
 name|BaseE
-argument_list|)
 argument_list|,
 name|BaseType
 argument_list|,
@@ -6040,11 +6892,26 @@ name|TemplateArgs
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C @encode expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCEncodeExpr
 parameter_list|(
 name|SourceLocation
@@ -6076,8 +6943,14 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C class message.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCMessageExpr
 parameter_list|(
 name|TypeSourceInfo
@@ -6132,11 +7005,18 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C instance message.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCMessageExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|Receiver
 parameter_list|,
 name|Selector
@@ -6156,35 +7036,17 @@ name|SourceLocation
 name|RBracLoc
 parameter_list|)
 block|{
-name|QualType
-name|ReceiverType
-init|=
-name|static_cast
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
-name|Receiver
-operator|.
-name|get
-argument_list|()
-operator|)
-operator|->
-name|getType
-argument_list|()
-decl_stmt|;
 return|return
 name|SemaRef
 operator|.
 name|BuildInstanceMessage
 argument_list|(
-name|move
-argument_list|(
 name|Receiver
-argument_list|)
 argument_list|,
-name|ReceiverType
+name|Receiver
+operator|->
+name|getType
+argument_list|()
 argument_list|,
 comment|/*SuperLoc=*/
 name|SourceLocation
@@ -6205,14 +7067,30 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C ivar reference expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCIvarRefExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|BaseArg
 parameter_list|,
 name|ObjCIvarDecl
@@ -6238,13 +7116,6 @@ modifier|*
 name|Base
 init|=
 name|BaseArg
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 decl_stmt|;
 name|LookupResult
 name|R
@@ -6264,7 +7135,7 @@ operator|::
 name|LookupMemberName
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getSema
@@ -6283,8 +7154,7 @@ name|IvarLoc
 argument_list|,
 name|SS
 argument_list|,
-name|DeclPtrTy
-argument_list|()
+literal|0
 argument_list|,
 name|false
 argument_list|)
@@ -6297,9 +7167,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -6322,13 +7189,7 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Owned
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
 name|Base
 operator|->
@@ -6352,14 +7213,30 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C property reference expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCPropertyRefExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|BaseArg
 parameter_list|,
 name|ObjCPropertyDecl
@@ -6378,13 +7255,6 @@ modifier|*
 name|Base
 init|=
 name|BaseArg
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 decl_stmt|;
 name|LookupResult
 name|R
@@ -6409,7 +7279,7 @@ name|IsArrow
 init|=
 name|false
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getSema
@@ -6428,8 +7298,7 @@ name|PropertyLoc
 argument_list|,
 name|SS
 argument_list|,
-name|DeclPtrTy
-argument_list|()
+literal|0
 argument_list|,
 name|false
 argument_list|)
@@ -6442,9 +7311,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -6467,13 +7333,7 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Owned
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
 name|Base
 operator|->
@@ -6497,12 +7357,30 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C implicit setter/getter reference
+end_comment
+
+begin_comment
 comment|/// expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCImplicitSetterGetterRefExpr
 parameter_list|(
 name|ObjCMethodDecl
@@ -6519,16 +7397,14 @@ parameter_list|,
 name|SourceLocation
 name|NameLoc
 parameter_list|,
-name|ExprArg
+name|Expr
+modifier|*
 name|Base
 parameter_list|)
 block|{
 comment|// Since these expressions can only be value-dependent, we do not need to
 comment|// perform semantic analysis again.
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|Owned
 argument_list|(
 name|new
@@ -6546,25 +7422,34 @@ argument_list|,
 name|NameLoc
 argument_list|,
 name|Base
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|)
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new Objective-C "isa" expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildObjCIsaExpr
 parameter_list|(
-name|ExprArg
+name|Expr
+modifier|*
 name|BaseArg
 parameter_list|,
 name|SourceLocation
@@ -6582,13 +7467,6 @@ modifier|*
 name|Base
 init|=
 name|BaseArg
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 decl_stmt|;
 name|LookupResult
 name|R
@@ -6616,7 +7494,7 @@ operator|::
 name|LookupMemberName
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getSema
@@ -6635,8 +7513,7 @@ name|IsaLoc
 argument_list|,
 name|SS
 argument_list|,
-name|DeclPtrTy
-argument_list|()
+literal|0
 argument_list|,
 name|false
 argument_list|)
@@ -6649,9 +7526,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -6674,13 +7548,7 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|getSema
-argument_list|()
-operator|.
-name|Owned
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
 name|Base
 operator|->
@@ -6704,11 +7572,26 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Build a new shuffle vector expression.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// By default, performs semantic analysis to build the new expression.
+end_comment
+
+begin_comment
 comment|/// Subclasses may override this routine to provide different behavior.
-name|OwningExprResult
+end_comment
+
+begin_function
+name|ExprResult
 name|RebuildShuffleVectorExpr
 parameter_list|(
 name|SourceLocation
@@ -6873,7 +7756,7 @@ argument_list|,
 name|RParenLoc
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|OwnedCall
 argument_list|(
 name|SemaRef
@@ -6885,7 +7768,7 @@ argument_list|)
 argument_list|)
 decl_stmt|;
 comment|// Type-check the __builtin_shufflevector expression.
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|SemaRef
@@ -6903,8 +7786,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -6920,22 +7801,16 @@ name|Result
 argument_list|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -7026,11 +7901,9 @@ include|#
 directive|include
 file|"clang/AST/StmtNodes.inc"
 block|{
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|E
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -7044,7 +7917,7 @@ operator|(
 name|S
 operator|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|E
@@ -7053,9 +7926,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -7071,6 +7941,9 @@ operator|.
 name|MakeFullExpr
 argument_list|(
 name|E
+operator|.
+name|take
+argument_list|()
 argument_list|)
 argument_list|)
 return|;
@@ -7098,9 +7971,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -7560,28 +8431,35 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|DeclarationName
+name|DeclarationNameInfo
 name|TreeTransform
 operator|<
 name|Derived
 operator|>
 operator|::
-name|TransformDeclarationName
+name|TransformDeclarationNameInfo
 argument_list|(
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation Loc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType ObjectType
 argument_list|)
 block|{
+name|DeclarationName
+name|Name
+operator|=
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+block|;
 if|if
 condition|(
 operator|!
 name|Name
 condition|)
 return|return
-name|Name
+name|DeclarationNameInfo
+argument_list|()
 return|;
 end_expr_stmt
 
@@ -7630,7 +8508,7 @@ operator|::
 name|CXXUsingDirective
 case|:
 return|return
-name|Name
+name|NameInfo
 return|;
 case|case
 name|DeclarationName
@@ -7648,19 +8526,83 @@ operator|::
 name|CXXConversionFunctionName
 case|:
 block|{
+name|TypeSourceInfo
+modifier|*
+name|NewTInfo
+decl_stmt|;
+name|CanQualType
+name|NewCanTy
+decl_stmt|;
+if|if
+condition|(
+name|TypeSourceInfo
+modifier|*
+name|OldTInfo
+init|=
+name|NameInfo
+operator|.
+name|getNamedTypeInfo
+argument_list|()
+condition|)
+block|{
+name|NewTInfo
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformType
+argument_list|(
+name|OldTInfo
+argument_list|,
+name|ObjectType
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NewTInfo
+condition|)
+return|return
+name|DeclarationNameInfo
+argument_list|()
+return|;
+name|NewCanTy
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getCanonicalType
+argument_list|(
+name|NewTInfo
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|NewTInfo
+operator|=
+literal|0
+expr_stmt|;
 name|TemporaryBase
 name|Rebase
 argument_list|(
 operator|*
 name|this
 argument_list|,
-name|Loc
+name|NameInfo
+operator|.
+name|getLoc
+argument_list|()
 argument_list|,
 name|Name
 argument_list|)
 decl_stmt|;
 name|QualType
-name|T
+name|NewT
 init|=
 name|getDerived
 argument_list|()
@@ -7677,16 +8619,30 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|T
+name|NewT
 operator|.
 name|isNull
 argument_list|()
 condition|)
 return|return
-name|DeclarationName
+name|DeclarationNameInfo
 argument_list|()
 return|;
-return|return
+name|NewCanTy
+operator|=
+name|SemaRef
+operator|.
+name|Context
+operator|.
+name|getCanonicalType
+argument_list|(
+name|NewT
+argument_list|)
+expr_stmt|;
+block|}
+name|DeclarationName
+name|NewName
+init|=
 name|SemaRef
 operator|.
 name|Context
@@ -7700,23 +8656,49 @@ operator|.
 name|getNameKind
 argument_list|()
 argument_list|,
-name|SemaRef
+name|NewCanTy
+argument_list|)
+decl_stmt|;
+name|DeclarationNameInfo
+name|NewNameInfo
+parameter_list|(
+name|NameInfo
+parameter_list|)
+function_decl|;
+name|NewNameInfo
 operator|.
-name|Context
-operator|.
-name|getCanonicalType
+name|setName
 argument_list|(
-name|T
+name|NewName
 argument_list|)
+expr_stmt|;
+name|NewNameInfo
+operator|.
+name|setNamedTypeInfo
+argument_list|(
+name|NewTInfo
 argument_list|)
+expr_stmt|;
+return|return
+name|NewNameInfo
 return|;
 block|}
 block|}
 end_switch
 
+begin_expr_stmt
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"Unknown name kind."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
-name|DeclarationName
+name|DeclarationNameInfo
 argument_list|()
 return|;
 end_return
@@ -8477,16 +9459,14 @@ argument_list|(
 name|getSema
 argument_list|()
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 decl_stmt|;
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|E
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -8494,37 +9474,23 @@ name|TransformExpr
 argument_list|(
 name|SourceExpr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+decl_stmt|;
+name|SourceExpr
+operator|=
+operator|(
 name|E
 operator|.
 name|isInvalid
 argument_list|()
-condition|)
-name|SourceExpr
-operator|=
-name|NULL
-expr_stmt|;
-else|else
-block|{
-name|SourceExpr
-operator|=
+condition|?
+literal|0
+else|:
 name|E
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
+name|take
+argument_list|()
 operator|)
 expr_stmt|;
-name|SourceExpr
-operator|->
-name|Retain
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 name|Output
 operator|=
@@ -8636,7 +9602,7 @@ argument_list|(
 name|getSema
 argument_list|()
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
@@ -8665,11 +9631,9 @@ operator|.
 name|getAsExpr
 argument_list|()
 expr_stmt|;
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|E
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -8677,7 +9641,7 @@ name|TransformExpr
 argument_list|(
 name|InputExpr
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|E
@@ -8688,34 +9652,22 @@ condition|)
 return|return
 name|true
 return|;
-name|Expr
-modifier|*
-name|ETaken
-init|=
-name|E
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
-decl_stmt|;
-name|ETaken
-operator|->
-name|Retain
-argument_list|()
-expr_stmt|;
 name|Output
 operator|=
 name|TemplateArgumentLoc
 argument_list|(
 name|TemplateArgument
 argument_list|(
-name|ETaken
+name|E
+operator|.
+name|take
+argument_list|()
 argument_list|)
 argument_list|,
-name|ETaken
+name|E
+operator|.
+name|take
+argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
@@ -10493,7 +11445,7 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
@@ -10779,19 +11731,17 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|Sema
-operator|::
-name|OwningExprResult
+begin_decl_stmt
+name|ExprResult
 name|SizeResult
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -10802,8 +11752,8 @@ operator|->
 name|getSizeExpr
 argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -10824,17 +11774,10 @@ name|Expr
 modifier|*
 name|Size
 init|=
-name|static_cast
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
 name|SizeResult
 operator|.
-name|get
+name|take
 argument_list|()
-operator|)
 decl_stmt|;
 end_decl_stmt
 
@@ -10887,10 +11830,7 @@ operator|->
 name|getSizeModifier
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
-name|SizeResult
-argument_list|)
+name|Size
 argument_list|,
 name|T
 operator|->
@@ -10915,12 +11855,6 @@ name|QualType
 argument_list|()
 return|;
 block|}
-else|else
-name|SizeResult
-operator|.
-name|take
-argument_list|()
-expr_stmt|;
 end_if
 
 begin_decl_stmt
@@ -11044,19 +11978,17 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|Sema
-operator|::
-name|OwningExprResult
+begin_decl_stmt
+name|ExprResult
 name|SizeResult
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -11067,8 +11999,8 @@ operator|->
 name|getSizeExpr
 argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -11152,10 +12084,7 @@ operator|->
 name|getSizeModifier
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
-name|SizeResult
-argument_list|)
+name|Size
 argument_list|,
 name|T
 operator|->
@@ -11316,19 +12245,17 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|Sema
-operator|::
-name|OwningExprResult
+begin_decl_stmt
+name|ExprResult
 name|Size
-operator|=
+init|=
 name|getDerived
 argument_list|()
 operator|.
@@ -11339,8 +12266,8 @@ operator|->
 name|getSizeExpr
 argument_list|()
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -11403,10 +12330,10 @@ name|RebuildDependentSizedExtVectorType
 argument_list|(
 name|ElementType
 argument_list|,
-name|move
-argument_list|(
 name|Size
-argument_list|)
+operator|.
+name|take
+argument_list|()
 argument_list|,
 name|T
 operator|->
@@ -11426,12 +12353,6 @@ name|QualType
 argument_list|()
 return|;
 block|}
-else|else
-name|Size
-operator|.
-name|take
-argument_list|()
-expr_stmt|;
 end_if
 
 begin_comment
@@ -12108,9 +13029,16 @@ argument_list|,
 argument|QualType ObjectType
 argument_list|)
 block|{
-comment|// Transform the parameters. We do this first for the benefit of template
-comment|// instantiations, so that the ParmVarDecls get/ placed into the template
-comment|// instantiation scope before we transform the function type.
+comment|// Transform the parameters and return type.
+comment|//
+comment|// We instantiate in source order, with the return type first followed by
+comment|// the parameters, because users tend to expect this (even if they shouldn't
+comment|// rely on it!).
+comment|//
+comment|// FIXME: When we implement late-specified return types, we'll need to
+comment|// instantiate the return tpe *after* the parameter types in that case,
+comment|// since the return type can then refer to the parameters themselves (via
+comment|// decltype, sizeof, etc.).
 name|llvm
 operator|::
 name|SmallVector
@@ -12132,6 +13060,45 @@ literal|4
 operator|>
 name|ParamDecls
 block|;
+name|FunctionProtoType
+operator|*
+name|T
+operator|=
+name|TL
+operator|.
+name|getTypePtr
+argument_list|()
+block|;
+name|QualType
+name|ResultType
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformType
+argument_list|(
+name|TLB
+argument_list|,
+name|TL
+operator|.
+name|getResultLoc
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|ResultType
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|QualType
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|getDerived
@@ -12145,48 +13112,6 @@ name|ParamTypes
 argument_list|,
 name|ParamDecls
 argument_list|)
-condition|)
-return|return
-name|QualType
-argument_list|()
-return|;
-name|FunctionProtoType
-operator|*
-name|T
-operator|=
-name|TL
-operator|.
-name|getTypePtr
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|QualType
-name|ResultType
-init|=
-name|getDerived
-argument_list|()
-operator|.
-name|TransformType
-argument_list|(
-name|TLB
-argument_list|,
-name|TL
-operator|.
-name|getResultLoc
-argument_list|()
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|if
-condition|(
-name|ResultType
-operator|.
-name|isNull
-argument_list|()
 condition|)
 return|return
 name|QualType
@@ -12270,6 +13195,11 @@ argument_list|,
 name|T
 operator|->
 name|getTypeQuals
+argument_list|()
+argument_list|,
+name|T
+operator|->
+name|getExtInfo
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -12842,14 +13772,12 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 block|;
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|E
 operator|=
 name|getDerived
@@ -12911,10 +13839,10 @@ argument_list|()
 operator|.
 name|RebuildTypeOfExprType
 argument_list|(
-name|move
-argument_list|(
 name|E
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -13207,14 +14135,12 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
 block|;
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|E
 operator|=
 name|getDerived
@@ -13276,10 +14202,10 @@ argument_list|()
 operator|.
 name|RebuildDecltypeType
 argument_list|(
-name|move
-argument_list|(
 name|E
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -15269,9 +16195,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15302,9 +16226,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15335,9 +16257,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15351,16 +16271,19 @@ argument|bool IsStmtExpr
 argument_list|)
 block|{
 name|bool
+name|SubStmtInvalid
+operator|=
+name|false
+block|;
+name|bool
 name|SubStmtChanged
 operator|=
 name|false
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteStmt
+name|Stmt
+operator|*
 operator|>
 name|Statements
 argument_list|(
@@ -15395,7 +16318,7 @@ operator|++
 name|B
 control|)
 block|{
-name|OwningStmtResult
+name|StmtResult
 name|Result
 init|=
 name|getDerived
@@ -15414,13 +16337,31 @@ operator|.
 name|isInvalid
 argument_list|()
 condition|)
+block|{
+comment|// Immediately fail if this was a DeclStmt, since it's very
+comment|// likely that this will cause problems for future statements.
+if|if
+condition|(
+name|isa
+operator|<
+name|DeclStmt
+operator|>
+operator|(
+operator|*
+name|B
+operator|)
+condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
+comment|// Otherwise, just keep processing substatements and fail later.
+name|SubStmtInvalid
+operator|=
+name|true
+expr_stmt|;
+continue|continue;
+block|}
 name|SubStmtChanged
 operator|=
 name|SubStmtChanged
@@ -15433,6 +16374,9 @@ operator|!=
 operator|*
 name|B
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|Statements
 operator|.
 name|push_back
@@ -15447,8 +16391,21 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 end_expr_stmt
+
+begin_expr_stmt
+unit|}    if
+operator|(
+name|SubStmtInvalid
+operator|)
+end_expr_stmt
+
+begin_return
+return|return
+name|StmtError
+argument_list|()
+return|;
+end_return
 
 begin_if
 if|if
@@ -15509,9 +16466,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15522,16 +16477,10 @@ argument_list|(
 argument|CaseStmt *S
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|LHS
-argument_list|(
-name|SemaRef
-argument_list|)
 block|,
 name|RHS
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 block|{
 comment|// The case value expressions are not potentially evaluated.
@@ -15540,7 +16489,7 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
@@ -15567,8 +16516,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15594,8 +16541,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15615,7 +16560,7 @@ comment|// transformed switch statement.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Case
 init|=
 name|getDerived
@@ -15628,20 +16573,20 @@ operator|->
 name|getCaseLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
 name|getEllipsisLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
@@ -15660,8 +16605,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15672,7 +16615,7 @@ comment|// Transform the statement following the case
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|SubStmt
 init|=
 name|getDerived
@@ -15697,8 +16640,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15715,15 +16656,15 @@ argument_list|()
 operator|.
 name|RebuildCaseStmtBody
 argument_list|(
-name|move
-argument_list|(
 name|Case
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -15734,9 +16675,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15748,7 +16687,7 @@ argument|DefaultStmt *S
 argument_list|)
 block|{
 comment|// Transform the statement following the default case
-name|OwningStmtResult
+name|StmtResult
 name|SubStmt
 operator|=
 name|getDerived
@@ -15770,8 +16709,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15798,10 +16735,10 @@ operator|->
 name|getColonLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -15812,9 +16749,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15825,7 +16760,7 @@ argument_list|(
 argument|LabelStmt *S
 argument_list|)
 block|{
-name|OwningStmtResult
+name|StmtResult
 name|SubStmt
 operator|=
 name|getDerived
@@ -15847,8 +16782,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -15889,10 +16822,10 @@ argument_list|()
 argument_list|,
 name|ColonLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -15903,9 +16836,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -15917,11 +16848,8 @@ argument|IfStmt *S
 argument_list|)
 block|{
 comment|// Transform the condition
-name|OwningExprResult
+name|ExprResult
 name|Cond
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 name|VarDecl
 operator|*
@@ -15970,8 +16898,6 @@ operator|!
 name|ConditionVar
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16002,8 +16928,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16016,7 +16940,7 @@ name|getCond
 argument_list|()
 condition|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|CondE
 init|=
 name|getSema
@@ -16031,10 +16955,10 @@ operator|->
 name|getIfLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 decl_stmt|;
 if|if
@@ -16045,18 +16969,15 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
 name|Cond
 operator|=
-name|move
-argument_list|(
 name|CondE
-argument_list|)
+operator|.
+name|get
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -16074,6 +16995,9 @@ operator|.
 name|MakeFullExpr
 argument_list|(
 name|Cond
+operator|.
+name|take
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16095,13 +17019,11 @@ argument_list|()
 operator|&&
 operator|!
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16112,7 +17034,7 @@ comment|// Transform the "then" branch.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Then
 init|=
 name|getDerived
@@ -16137,8 +17059,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16149,7 +17069,7 @@ comment|// Transform the "else" branch.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Else
 init|=
 name|getDerived
@@ -16174,8 +17094,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16192,7 +17110,7 @@ name|AlwaysRebuild
 argument_list|()
 operator|&&
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 operator|==
@@ -16257,20 +17175,20 @@ name|FullCond
 argument_list|,
 name|ConditionVar
 argument_list|,
-name|move
-argument_list|(
 name|Then
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
 name|getElseLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Else
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -16281,9 +17199,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -16295,11 +17211,8 @@ argument|SwitchStmt *S
 argument_list|)
 block|{
 comment|// Transform the condition.
-name|OwningExprResult
+name|ExprResult
 name|Cond
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 name|VarDecl
 operator|*
@@ -16348,8 +17261,6 @@ operator|!
 name|ConditionVar
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16380,8 +17291,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16393,7 +17302,7 @@ comment|// Rebuild the switch statement.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Switch
 init|=
 name|getDerived
@@ -16406,10 +17315,10 @@ operator|->
 name|getSwitchLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|ConditionVar
 argument_list|)
@@ -16425,8 +17334,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16437,7 +17344,7 @@ comment|// Transform the body of the switch statement.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Body
 init|=
 name|getDerived
@@ -16462,8 +17369,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16485,15 +17390,15 @@ operator|->
 name|getSwitchLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Switch
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -16504,9 +17409,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -16518,11 +17421,8 @@ argument|WhileStmt *S
 argument_list|)
 block|{
 comment|// Transform the condition
-name|OwningExprResult
+name|ExprResult
 name|Cond
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 name|VarDecl
 operator|*
@@ -16571,8 +17471,6 @@ operator|!
 name|ConditionVar
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16603,8 +17501,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16617,7 +17513,7 @@ argument_list|()
 condition|)
 block|{
 comment|// Convert the condition to a boolean value.
-name|OwningExprResult
+name|ExprResult
 name|CondE
 init|=
 name|getSema
@@ -16632,10 +17528,10 @@ operator|->
 name|getWhileLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 decl_stmt|;
 if|if
@@ -16646,18 +17542,12 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
 name|Cond
 operator|=
-name|move
-argument_list|(
 name|CondE
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -16675,6 +17565,9 @@ operator|.
 name|MakeFullExpr
 argument_list|(
 name|Cond
+operator|.
+name|take
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16696,13 +17589,11 @@ argument_list|()
 operator|&&
 operator|!
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16713,7 +17604,7 @@ comment|// Transform the body
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Body
 init|=
 name|getDerived
@@ -16738,8 +17629,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16756,7 +17645,7 @@ name|AlwaysRebuild
 argument_list|()
 operator|&&
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 operator|==
@@ -16783,14 +17672,9 @@ name|getBody
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|Owned
 argument_list|(
 name|S
-operator|->
-name|Retain
-argument_list|()
 argument_list|)
 return|;
 end_if
@@ -16811,10 +17695,10 @@ name|FullCond
 argument_list|,
 name|ConditionVar
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -16825,9 +17709,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -16839,7 +17721,7 @@ argument|DoStmt *S
 argument_list|)
 block|{
 comment|// Transform the body
-name|OwningStmtResult
+name|StmtResult
 name|Body
 operator|=
 name|getDerived
@@ -16861,13 +17743,11 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 comment|// Transform the condition
-name|OwningExprResult
+name|ExprResult
 name|Cond
 operator|=
 name|getDerived
@@ -16892,8 +17772,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -16954,10 +17832,10 @@ operator|->
 name|getDoLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
@@ -16970,10 +17848,10 @@ operator|->
 name|getWhileLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
@@ -16989,9 +17867,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17003,7 +17879,7 @@ argument|ForStmt *S
 argument_list|)
 block|{
 comment|// Transform the initialization statement
-name|OwningStmtResult
+name|StmtResult
 name|Init
 operator|=
 name|getDerived
@@ -17025,17 +17901,12 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 comment|// Transform the condition
-name|OwningExprResult
+name|ExprResult
 name|Cond
-argument_list|(
-name|SemaRef
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -17090,8 +17961,6 @@ operator|!
 name|ConditionVar
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17119,8 +17988,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17133,7 +18000,7 @@ argument_list|()
 condition|)
 block|{
 comment|// Convert the condition to a boolean value.
-name|OwningExprResult
+name|ExprResult
 name|CondE
 init|=
 name|getSema
@@ -17148,10 +18015,10 @@ operator|->
 name|getForLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 decl_stmt|;
 if|if
@@ -17162,18 +18029,15 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
 name|Cond
 operator|=
-name|move
-argument_list|(
 name|CondE
-argument_list|)
+operator|.
+name|get
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -17191,6 +18055,9 @@ operator|.
 name|MakeFullExpr
 argument_list|(
 name|Cond
+operator|.
+name|take
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17212,13 +18079,11 @@ argument_list|()
 operator|&&
 operator|!
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17229,7 +18094,7 @@ comment|// Transform the increment
 end_comment
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|Inc
 init|=
 name|getDerived
@@ -17254,8 +18119,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17273,6 +18136,9 @@ operator|.
 name|MakeFullExpr
 argument_list|(
 name|Inc
+operator|.
+name|get
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17288,13 +18154,11 @@ argument_list|()
 operator|&&
 operator|!
 name|FullInc
-operator|->
+operator|.
 name|get
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17305,7 +18169,7 @@ comment|// Transform the body
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Body
 init|=
 name|getDerived
@@ -17330,8 +18194,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17358,7 +18220,7 @@ name|getInit
 argument_list|()
 operator|&&
 name|FullCond
-operator|->
+operator|.
 name|get
 argument_list|()
 operator|==
@@ -17417,10 +18279,10 @@ operator|->
 name|getLParenLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FullCond
 argument_list|,
@@ -17433,10 +18295,10 @@ operator|->
 name|getRParenLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -17447,9 +18309,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17492,9 +18352,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17505,7 +18363,7 @@ argument_list|(
 argument|IndirectGotoStmt *S
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Target
 operator|=
 name|getDerived
@@ -17527,8 +18385,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17584,10 +18440,10 @@ operator|->
 name|getStarLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Target
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -17598,9 +18454,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17631,9 +18485,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17664,9 +18516,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17677,9 +18527,7 @@ argument_list|(
 argument|ReturnStmt *S
 argument_list|)
 block|{
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|Result
 operator|=
 name|getDerived
@@ -17701,8 +18549,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17728,10 +18574,10 @@ operator|->
 name|getReturnLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Result
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -17742,9 +18588,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17825,8 +18669,6 @@ operator|!
 name|Transformed
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -17913,9 +18755,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17953,9 +18793,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -17968,10 +18806,8 @@ argument_list|)
 block|{
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Constraints
 argument_list|(
@@ -17981,10 +18817,8 @@ argument_list|)
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Exprs
 argument_list|(
@@ -18003,18 +18837,13 @@ literal|4
 operator|>
 name|Names
 block|;
-name|OwningExprResult
+name|ExprResult
 name|AsmString
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Clobbers
 argument_list|(
@@ -18090,7 +18919,7 @@ argument_list|(
 name|I
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getDerived
@@ -18109,8 +18938,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18129,12 +18956,8 @@ name|push_back
 argument_list|(
 name|Result
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -18207,7 +19030,7 @@ argument_list|(
 name|I
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|getDerived
@@ -18226,8 +19049,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18246,12 +19067,8 @@ name|push_back
 argument_list|(
 name|Result
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -18392,10 +19209,10 @@ argument_list|(
 name|Exprs
 argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|AsmString
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|move_arg
 argument_list|(
@@ -18421,9 +19238,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -18435,7 +19250,7 @@ argument|ObjCAtTryStmt *S
 argument_list|)
 block|{
 comment|// Transform the body of the @try.
-name|OwningStmtResult
+name|StmtResult
 name|TryBody
 operator|=
 name|getDerived
@@ -18457,8 +19272,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18473,10 +19286,8 @@ end_expr_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteStmt
+name|Stmt
+operator|*
 operator|>
 name|CatchStmts
 argument_list|(
@@ -18508,7 +19319,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningStmtResult
+name|StmtResult
 name|Catch
 init|=
 name|getDerived
@@ -18532,8 +19343,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18572,14 +19381,11 @@ begin_comment
 comment|// Transform the @finally statement (if present).
 end_comment
 
-begin_function_decl
-name|OwningStmtResult
+begin_decl_stmt
+name|StmtResult
 name|Finally
-parameter_list|(
-name|SemaRef
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -18611,8 +19417,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18685,20 +19489,20 @@ operator|->
 name|getAtTryLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|TryBody
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|move_arg
 argument_list|(
 name|CatchStmts
 argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Finally
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -18709,9 +19513,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -18774,8 +19576,6 @@ operator|!
 name|TSInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18820,8 +19620,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18852,15 +19650,13 @@ operator|!
 name|Var
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 end_if
 
 begin_expr_stmt
-unit|}      OwningStmtResult
+unit|}      StmtResult
 name|Body
 operator|=
 name|getDerived
@@ -18885,8 +19681,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -18911,10 +19705,10 @@ argument_list|()
 argument_list|,
 name|Var
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -18925,9 +19719,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -18939,7 +19731,7 @@ argument|ObjCAtFinallyStmt *S
 argument_list|)
 block|{
 comment|// Transform the body.
-name|OwningStmtResult
+name|StmtResult
 name|Body
 operator|=
 name|getDerived
@@ -18961,8 +19753,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19021,10 +19811,10 @@ operator|->
 name|getAtFinallyLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -19035,9 +19825,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -19048,11 +19836,8 @@ argument_list|(
 argument|ObjCAtThrowStmt *S
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Operand
-argument_list|(
-name|SemaRef
-argument_list|)
 block|;
 if|if
 condition|(
@@ -19083,9 +19868,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19138,10 +19920,10 @@ operator|->
 name|getThrowLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Operand
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -19152,9 +19934,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -19166,7 +19946,7 @@ argument|ObjCAtSynchronizedStmt *S
 argument_list|)
 block|{
 comment|// Transform the object we are locking.
-name|OwningExprResult
+name|ExprResult
 name|Object
 operator|=
 name|getDerived
@@ -19188,13 +19968,11 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 comment|// Transform the body.
-name|OwningStmtResult
+name|StmtResult
 name|Body
 operator|=
 name|getDerived
@@ -19219,8 +19997,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19289,15 +20065,15 @@ operator|->
 name|getAtSynchronizedLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Object
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -19308,9 +20084,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -19322,7 +20096,7 @@ argument|ObjCForCollectionStmt *S
 argument_list|)
 block|{
 comment|// Transform the element statement.
-name|OwningStmtResult
+name|StmtResult
 name|Element
 operator|=
 name|getDerived
@@ -19344,13 +20118,11 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 comment|// Transform the collection expression.
-name|OwningExprResult
+name|ExprResult
 name|Collection
 operator|=
 name|getDerived
@@ -19375,8 +20147,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19387,7 +20157,7 @@ comment|// Transform the body.
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Body
 init|=
 name|getDerived
@@ -19412,8 +20182,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19498,25 +20266,25 @@ operator|->
 name|getForLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Element
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Collection
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|S
 operator|->
 name|getRParenLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -19527,9 +20295,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -19603,8 +20369,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19654,36 +20418,13 @@ operator|->
 name|isInvalidDecl
 argument_list|()
 condition|)
-block|{
-if|if
-condition|(
-name|Var
-condition|)
-name|Var
-operator|->
-name|Destroy
-argument_list|(
-name|SemaRef
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|}
 comment|// Transform the actual exception handler.
-end_comment
-
-begin_expr_stmt
-unit|OwningStmtResult
+name|StmtResult
 name|Handler
 operator|=
 name|getDerived
@@ -19707,27 +20448,10 @@ operator|.
 name|isInvalid
 argument_list|()
 condition|)
-block|{
-if|if
-condition|(
-name|Var
-condition|)
-name|Var
-operator|->
-name|Destroy
-argument_list|(
-name|SemaRef
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
-block|}
 end_if
 
 begin_if
@@ -19780,10 +20504,10 @@ argument_list|()
 argument_list|,
 name|Var
 argument_list|,
-name|move
-argument_list|(
 name|Handler
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -19794,9 +20518,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningStmtResult
+name|StmtResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -19808,7 +20530,7 @@ argument|CXXTryStmt *S
 argument_list|)
 block|{
 comment|// Transform the try block itself.
-name|OwningStmtResult
+name|StmtResult
 name|TryBlock
 operator|=
 name|getDerived
@@ -19830,8 +20552,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19846,10 +20566,8 @@ end_expr_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteStmt
+name|Stmt
+operator|*
 operator|>
 name|Handlers
 argument_list|(
@@ -19881,7 +20599,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningStmtResult
+name|StmtResult
 name|Handler
 init|=
 name|getDerived
@@ -19905,8 +20623,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|StmtError
 argument_list|()
 return|;
@@ -19991,10 +20707,10 @@ operator|->
 name|getTryLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|TryBlock
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|move_arg
 argument_list|(
@@ -20023,9 +20739,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20056,9 +20770,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20107,8 +20819,6 @@ operator|!
 name|Qualifier
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20148,11 +20858,54 @@ operator|!
 name|ND
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
+end_if
+
+begin_decl_stmt
+name|DeclarationNameInfo
+name|NameInfo
+init|=
+name|E
+operator|->
+name|getNameInfo
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+condition|)
+block|{
+name|NameInfo
+operator|=
+name|getDerived
+argument_list|()
+operator|.
+name|TransformDeclarationNameInfo
+argument_list|(
+name|NameInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+block|}
 end_if
 
 begin_if
@@ -20179,10 +20932,23 @@ operator|->
 name|getDecl
 argument_list|()
 operator|&&
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
+operator|==
+name|E
+operator|->
+name|getDecl
+argument_list|()
+operator|->
+name|getDeclName
+argument_list|()
+operator|&&
 operator|!
 name|E
 operator|->
-name|hasExplicitTemplateArgumentList
+name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 block|{
@@ -20230,7 +20996,7 @@ if|if
 condition|(
 name|E
 operator|->
-name|hasExplicitTemplateArgumentList
+name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 block|{
@@ -20303,8 +21069,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20335,10 +21099,7 @@ argument_list|()
 argument_list|,
 name|ND
 argument_list|,
-name|E
-operator|->
-name|getLocation
-argument_list|()
+name|NameInfo
 argument_list|,
 name|TemplateArgs
 argument_list|)
@@ -20351,9 +21112,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20384,9 +21143,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20417,9 +21174,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20450,9 +21205,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20483,9 +21236,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20516,9 +21267,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20529,7 +21278,7 @@ argument_list|(
 argument|ParenExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -20551,8 +21300,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20598,10 +21345,10 @@ argument_list|()
 operator|.
 name|RebuildParenExpr
 argument_list|(
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -20622,9 +21369,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20635,7 +21380,7 @@ argument_list|(
 argument|UnaryOperator *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -20657,8 +21402,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20714,10 +21457,10 @@ operator|->
 name|getOpcode
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -20728,9 +21471,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -20763,9 +21504,6 @@ operator|!
 name|Type
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20784,7 +21522,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|Action
+name|Sema
 operator|::
 name|OffsetOfComponent
 name|Component
@@ -20909,7 +21647,7 @@ name|getArrayExprIndex
 argument_list|()
 argument_list|)
 decl_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Index
 init|=
 name|getDerived
@@ -20928,9 +21666,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|getSema
-argument_list|()
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -20959,14 +21694,9 @@ name|E
 operator|=
 name|Index
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 expr_stmt|;
-comment|// FIXME: leaked
 break|break;
 block|}
 case|case
@@ -21104,9 +21834,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -21152,8 +21880,6 @@ operator|!
 name|NewT
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21206,13 +21932,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
-argument_list|(
-name|SemaRef
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -21226,7 +21947,7 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|Unevaluated
 argument_list|)
@@ -21252,8 +21973,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21297,10 +22016,10 @@ argument_list|()
 operator|.
 name|RebuildSizeOfAlignOf
 argument_list|(
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -21326,9 +22045,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -21339,7 +22056,7 @@ argument_list|(
 argument|ArraySubscriptExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|LHS
 operator|=
 name|getDerived
@@ -21361,12 +22078,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|RHS
 operator|=
 name|getDerived
@@ -21391,8 +22106,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21448,10 +22161,10 @@ argument_list|()
 operator|.
 name|RebuildArraySubscriptExpr
 argument_list|(
-name|move
-argument_list|(
 name|LHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 comment|/*FIXME:*/
 name|E
@@ -21462,10 +22175,10 @@ operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -21481,9 +22194,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -21495,7 +22206,7 @@ argument|CallExpr *E
 argument_list|)
 block|{
 comment|// Transform the callee.
-name|OwningExprResult
+name|ExprResult
 name|Callee
 operator|=
 name|getDerived
@@ -21517,8 +22228,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21533,10 +22242,8 @@ end_expr_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -21581,7 +22288,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Arg
 init|=
 name|getDerived
@@ -21605,8 +22312,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21658,12 +22363,8 @@ name|push_back
 argument_list|(
 name|Arg
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -21739,10 +22440,10 @@ argument_list|()
 operator|.
 name|RebuildCallExpr
 argument_list|(
-name|move
-argument_list|(
 name|Callee
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FakeLParenLoc
 argument_list|,
@@ -21770,9 +22471,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -21783,7 +22482,7 @@ argument_list|(
 argument|MemberExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -21805,8 +22504,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21852,8 +22549,6 @@ operator|==
 literal|0
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21896,8 +22591,6 @@ operator|!
 name|Member
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -21960,8 +22653,6 @@ operator|!
 name|FoundDecl
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22012,7 +22703,7 @@ operator|&&
 operator|!
 name|E
 operator|->
-name|hasExplicitTemplateArgumentList
+name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 block|{
@@ -22055,7 +22746,7 @@ if|if
 condition|(
 name|E
 operator|->
-name|hasExplicitTemplateArgumentList
+name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
 block|{
@@ -22123,8 +22814,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22199,10 +22888,10 @@ argument_list|()
 operator|.
 name|RebuildMemberExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FakeOperatorLoc
 argument_list|,
@@ -22220,7 +22909,7 @@ argument_list|()
 argument_list|,
 name|E
 operator|->
-name|getMemberLoc
+name|getMemberNameInfo
 argument_list|()
 argument_list|,
 name|Member
@@ -22230,7 +22919,7 @@ argument_list|,
 operator|(
 name|E
 operator|->
-name|hasExplicitTemplateArgumentList
+name|hasExplicitTemplateArgs
 argument_list|()
 condition|?
 operator|&
@@ -22250,9 +22939,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22263,7 +22950,7 @@ argument_list|(
 argument|BinaryOperator *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|LHS
 operator|=
 name|getDerived
@@ -22285,12 +22972,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|RHS
 operator|=
 name|getDerived
@@ -22315,8 +23000,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22382,15 +23065,15 @@ operator|->
 name|getOpcode
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -22401,9 +23084,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22432,9 +23113,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22445,7 +23124,7 @@ argument_list|(
 argument|ConditionalOperator *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Cond
 operator|=
 name|getDerived
@@ -22467,12 +23146,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|LHS
 operator|=
 name|getDerived
@@ -22497,15 +23174,13 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_if
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|RHS
 init|=
 name|getDerived
@@ -22530,8 +23205,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22597,30 +23270,30 @@ argument_list|()
 operator|.
 name|RebuildConditionalOperator
 argument_list|(
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
 name|getQuestionLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
 name|getColonLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -22631,9 +23304,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22667,9 +23338,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22740,13 +23409,11 @@ operator|!
 name|NewT
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 block|}
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -22771,8 +23438,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22834,10 +23499,10 @@ operator|->
 name|getRParenLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -22848,9 +23513,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -22888,12 +23551,10 @@ operator|!
 name|NewT
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|Init
 operator|=
 name|getDerived
@@ -22918,8 +23579,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -22997,10 +23656,10 @@ operator|->
 name|getLocEnd
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -23011,9 +23670,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -23024,7 +23681,7 @@ argument_list|(
 argument|ExtVectorElementExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -23046,8 +23703,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23118,10 +23773,10 @@ argument_list|()
 operator|.
 name|RebuildExtVectorElementExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FakeOperatorLoc
 argument_list|,
@@ -23144,9 +23799,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -23164,10 +23817,8 @@ name|false
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 block|,
 literal|4
 operator|>
@@ -23198,7 +23849,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Init
 init|=
 name|getDerived
@@ -23222,8 +23873,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23249,12 +23898,8 @@ name|push_back
 argument_list|(
 name|Init
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -23322,9 +23967,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -23339,7 +23982,7 @@ name|Designation
 name|Desig
 block|;
 comment|// transform the initializer value
-name|OwningExprResult
+name|ExprResult
 name|Init
 operator|=
 name|getDerived
@@ -23361,18 +24004,14 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 comment|// transform the designators.
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|,
 literal|4
 operator|>
@@ -23462,7 +24101,7 @@ name|isArrayDesignator
 argument_list|()
 condition|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Index
 init|=
 name|getDerived
@@ -23487,8 +24126,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23551,7 +24188,7 @@ operator|&&
 literal|"New kind of designator?"
 argument_list|)
 expr_stmt|;
-name|OwningExprResult
+name|ExprResult
 name|Start
 init|=
 name|getDerived
@@ -23576,12 +24213,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|End
 init|=
 name|getDerived
@@ -23606,8 +24241,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23754,10 +24387,10 @@ operator|->
 name|usesGNUSyntax
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Init
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -23768,9 +24401,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -23820,8 +24451,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23875,9 +24504,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -23888,28 +24515,9 @@ argument_list|(
 argument|VAArgExpr *E
 argument_list|)
 block|{
-comment|// FIXME: Do we want the type as written?
-name|QualType
-name|T
-block|;
-block|{
-comment|// FIXME: Source location isn't quite accurate.
-name|TemporaryBase
-name|Rebase
-argument_list|(
+name|TypeSourceInfo
 operator|*
-name|this
-argument_list|,
-name|E
-operator|->
-name|getBuiltinLoc
-argument_list|()
-argument_list|,
-name|DeclarationName
-argument_list|()
-argument_list|)
-block|;
-name|T
+name|TInfo
 operator|=
 name|getDerived
 argument_list|()
@@ -23918,25 +24526,20 @@ name|TransformType
 argument_list|(
 name|E
 operator|->
-name|getType
+name|getWrittenTypeInfo
 argument_list|()
 argument_list|)
 block|;
 if|if
 condition|(
-name|T
-operator|.
-name|isNull
-argument_list|()
+operator|!
+name|TInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-block|}
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -23961,8 +24564,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -23978,11 +24579,11 @@ operator|.
 name|AlwaysRebuild
 argument_list|()
 operator|&&
-name|T
+name|TInfo
 operator|==
 name|E
 operator|->
-name|getType
+name|getWrittenTypeInfo
 argument_list|()
 operator|&&
 name|SubExpr
@@ -24020,12 +24621,12 @@ operator|->
 name|getBuiltinLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|T
+name|TInfo
 argument_list|,
 name|E
 operator|->
@@ -24041,9 +24642,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24061,10 +24660,8 @@ name|false
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 block|,
 literal|4
 operator|>
@@ -24095,7 +24692,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Init
 init|=
 name|getDerived
@@ -24119,8 +24716,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -24146,12 +24741,8 @@ name|push_back
 argument_list|(
 name|Init
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -24209,9 +24800,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24253,9 +24842,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24266,7 +24853,7 @@ argument_list|(
 argument|StmtExpr *E
 argument_list|)
 block|{
-name|OwningStmtResult
+name|StmtResult
 name|SubStmt
 operator|=
 name|getDerived
@@ -24290,8 +24877,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -24342,10 +24927,10 @@ operator|->
 name|getLParenLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubStmt
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -24361,9 +24946,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24374,29 +24957,15 @@ argument_list|(
 argument|TypesCompatibleExpr *E
 argument_list|)
 block|{
-name|QualType
-name|T1
-block|,
-name|T2
-block|;
-block|{
-comment|// FIXME: Source location isn't quite accurate.
-name|TemporaryBase
-name|Rebase
-argument_list|(
+name|TypeSourceInfo
 operator|*
-name|this
-argument_list|,
-name|E
-operator|->
-name|getBuiltinLoc
-argument_list|()
-argument_list|,
-name|DeclarationName
-argument_list|()
-argument_list|)
+name|TInfo1
 block|;
-name|T1
+name|TypeSourceInfo
+operator|*
+name|TInfo2
+block|;
+name|TInfo1
 operator|=
 name|getDerived
 argument_list|()
@@ -24405,24 +24974,20 @@ name|TransformType
 argument_list|(
 name|E
 operator|->
-name|getArgType1
+name|getArgTInfo1
 argument_list|()
 argument_list|)
 block|;
 if|if
 condition|(
-name|T1
-operator|.
-name|isNull
-argument_list|()
+operator|!
+name|TInfo1
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|T2
+name|TInfo2
 operator|=
 name|getDerived
 argument_list|()
@@ -24431,25 +24996,23 @@ name|TransformType
 argument_list|(
 name|E
 operator|->
-name|getArgType2
+name|getArgTInfo2
 argument_list|()
 argument_list|)
-block|;
-if|if
-condition|(
-name|T2
-operator|.
-name|isNull
-argument_list|()
-condition|)
-return|return
-name|SemaRef
-operator|.
-name|ExprError
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|!
+name|TInfo2
+condition|)
+return|return
+name|ExprError
+argument_list|()
+return|;
+end_if
 
 begin_if
 if|if
@@ -24461,18 +25024,18 @@ operator|.
 name|AlwaysRebuild
 argument_list|()
 operator|&&
-name|T1
+name|TInfo1
 operator|==
 name|E
 operator|->
-name|getArgType1
+name|getArgTInfo1
 argument_list|()
 operator|&&
-name|T2
+name|TInfo2
 operator|==
 name|E
 operator|->
-name|getArgType2
+name|getArgTInfo2
 argument_list|()
 condition|)
 return|return
@@ -24500,9 +25063,9 @@ operator|->
 name|getBuiltinLoc
 argument_list|()
 argument_list|,
-name|T1
+name|TInfo1
 argument_list|,
-name|T2
+name|TInfo2
 argument_list|,
 name|E
 operator|->
@@ -24518,9 +25081,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24531,7 +25092,7 @@ argument_list|(
 argument|ChooseExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Cond
 operator|=
 name|getDerived
@@ -24553,12 +25114,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|OwningExprResult
+name|ExprResult
 name|LHS
 operator|=
 name|getDerived
@@ -24583,15 +25142,13 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_if
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|RHS
 init|=
 name|getDerived
@@ -24616,8 +25173,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -24688,20 +25243,20 @@ operator|->
 name|getBuiltinLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Cond
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|LHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|RHS
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -24717,9 +25272,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24750,9 +25303,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -24789,8 +25340,6 @@ literal|"new and delete operators cannot use CXXOperatorCallExpr"
 argument_list|)
 expr_stmt|;
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -24812,7 +25361,7 @@ literal|"Object call is missing arguments"
 argument_list|)
 expr_stmt|;
 comment|// Transform the object itself.
-name|OwningExprResult
+name|ExprResult
 name|Object
 init|=
 name|getDerived
@@ -24836,8 +25385,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -24870,10 +25417,8 @@ decl_stmt|;
 comment|// Transform the call arguments.
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -24928,7 +25473,7 @@ argument_list|)
 argument_list|)
 condition|)
 break|break;
-name|OwningExprResult
+name|ExprResult
 name|Arg
 init|=
 name|getDerived
@@ -24952,8 +25497,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -25010,10 +25553,10 @@ argument_list|()
 operator|.
 name|RebuildCallExpr
 argument_list|(
-name|move
-argument_list|(
 name|Object
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FakeLParenLoc
 argument_list|,
@@ -25110,8 +25653,6 @@ end_expr_stmt
 
 begin_return
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -25139,15 +25680,13 @@ end_expr_stmt
 
 begin_return
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_return
 
 begin_expr_stmt
-unit|}    OwningExprResult
+unit|}    ExprResult
 name|Callee
 operator|=
 name|getDerived
@@ -25172,15 +25711,13 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_if
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|First
 init|=
 name|getDerived
@@ -25207,21 +25744,16 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_if
 
-begin_function_decl
-name|OwningExprResult
+begin_decl_stmt
+name|ExprResult
 name|Second
-parameter_list|(
-name|SemaRef
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
@@ -25257,8 +25789,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -25348,20 +25878,20 @@ operator|->
 name|getOperatorLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Callee
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|First
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Second
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -25372,9 +25902,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25403,9 +25931,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25476,13 +26002,11 @@ operator|!
 name|NewT
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 block|}
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -25507,8 +26031,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -25639,10 +26161,10 @@ name|FakeRAngleLoc
 argument_list|,
 name|FakeRAngleLoc
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|FakeRParenLoc
 argument_list|)
@@ -25655,9 +26177,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25686,9 +26206,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25717,9 +26235,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25748,9 +26264,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25779,9 +26293,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -25839,13 +26351,11 @@ operator|!
 name|NewT
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 block|}
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -25870,8 +26380,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -25945,10 +26453,10 @@ operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -25964,9 +26472,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26006,8 +26512,6 @@ operator|!
 name|TInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26071,7 +26575,7 @@ name|Unevaluated
 argument_list|(
 name|SemaRef
 argument_list|,
-name|Action
+name|Sema
 operator|::
 name|PotentiallyPotentiallyEvaluated
 argument_list|)
@@ -26079,7 +26583,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 init|=
 name|getDerived
@@ -26104,8 +26608,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26161,10 +26663,10 @@ operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -26180,9 +26682,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26213,9 +26713,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26246,9 +26744,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26296,8 +26792,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26361,9 +26855,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26374,7 +26866,7 @@ argument_list|(
 argument|CXXThrowExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 operator|=
 name|getDerived
@@ -26396,8 +26888,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26448,10 +26938,10 @@ operator|->
 name|getThrowLoc
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|SubExpr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -26462,9 +26952,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26507,8 +26995,6 @@ operator|!
 name|Param
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26567,9 +27053,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26617,8 +27101,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26688,9 +27170,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -26739,13 +27219,11 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 comment|// Transform the size of the array we're allocating (if any).
-name|OwningExprResult
+name|ExprResult
 name|ArraySize
 operator|=
 name|getDerived
@@ -26770,8 +27248,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26792,10 +27268,8 @@ end_decl_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|PlacementArgs
 argument_list|(
@@ -26827,7 +27301,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Arg
 init|=
 name|getDerived
@@ -26851,8 +27325,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -26892,10 +27364,8 @@ end_comment
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|ConstructorArgs
 argument_list|(
@@ -26943,7 +27413,7 @@ argument_list|)
 argument_list|)
 condition|)
 break|break;
-name|OwningExprResult
+name|ExprResult
 name|Arg
 init|=
 name|getDerived
@@ -26967,8 +27437,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27053,8 +27521,6 @@ operator|!
 name|Constructor
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27109,8 +27575,6 @@ operator|!
 name|OperatorNew
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27165,8 +27629,6 @@ operator|!
 name|OperatorDelete
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27349,12 +27811,14 @@ name|SemaRef
 operator|.
 name|Owned
 argument_list|(
-name|new
-argument_list|(
-argument|SemaRef.Context
-argument_list|)
 name|IntegerLiteral
+operator|::
+name|Create
 argument_list|(
+name|SemaRef
+operator|.
+name|Context
+argument_list|,
 name|ConsArrayT
 operator|->
 name|getSize
@@ -27486,10 +27950,10 @@ comment|/*FIXME:*/
 name|SourceRange
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|ArraySize
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 comment|/*FIXME:*/
 name|E
@@ -27516,9 +27980,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -27529,7 +27991,7 @@ argument_list|(
 argument|CXXDeleteExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Operand
 operator|=
 name|getDerived
@@ -27551,8 +28013,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27604,8 +28064,6 @@ operator|!
 name|OperatorDelete
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27694,10 +28152,10 @@ operator|->
 name|isArrayForm
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Operand
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -27708,9 +28166,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -27721,7 +28177,7 @@ argument_list|(
 argument|CXXPseudoDestructorExpr *E
 argument_list|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -27743,18 +28199,11 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|Sema
-operator|::
-name|TypeTy
-operator|*
+name|ParsedType
 name|ObjectTypePtr
-operator|=
-literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -27775,10 +28224,10 @@ name|ActOnStartCXXMemberReference
 argument_list|(
 literal|0
 argument_list|,
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -27814,8 +28263,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27825,12 +28272,10 @@ begin_decl_stmt
 name|QualType
 name|ObjectType
 init|=
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
 name|ObjectTypePtr
-argument_list|)
+operator|.
+name|get
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -27871,8 +28316,6 @@ operator|!
 name|Qualifier
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27916,8 +28359,6 @@ operator|!
 name|DestroyedTypeInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -27982,12 +28423,9 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-name|Sema
-operator|::
-name|TypeTy
-operator|*
+name|ParsedType
 name|T
-operator|=
+init|=
 name|SemaRef
 operator|.
 name|getDestructorName
@@ -28017,15 +28455,13 @@ name|ObjectTypePtr
 argument_list|,
 name|false
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|T
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28092,8 +28528,6 @@ operator|!
 name|ScopeTypeInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28107,10 +28541,10 @@ argument_list|()
 operator|.
 name|RebuildCXXPseudoDestructorExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -28152,9 +28586,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -28275,8 +28707,6 @@ condition|)
 continue|continue;
 else|else
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28428,8 +28858,6 @@ operator|!
 name|Qualifier
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28494,8 +28922,6 @@ operator|!
 name|NamingClass
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28610,8 +29036,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28652,9 +29076,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -28703,8 +29125,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28798,9 +29218,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -28837,27 +29255,20 @@ operator|!
 name|NNS
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|DeclarationName
-name|Name
+name|DeclarationNameInfo
+name|NameInfo
 operator|=
 name|getDerived
 argument_list|()
 operator|.
-name|TransformDeclarationName
+name|TransformDeclarationNameInfo
 argument_list|(
 name|E
 operator|->
-name|getDeclName
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getLocation
+name|getNameInfo
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -28867,11 +29278,12 @@ begin_if
 if|if
 condition|(
 operator|!
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -28903,7 +29315,12 @@ operator|->
 name|getQualifier
 argument_list|()
 operator|&&
-name|Name
+comment|// Note: it is sufficient to compare the Name component of NameInfo:
+comment|// if name has not changed, DNLoc has not changed either.
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 operator|==
 name|E
 operator|->
@@ -28934,12 +29351,7 @@ operator|->
 name|getQualifierRange
 argument_list|()
 argument_list|,
-name|Name
-argument_list|,
-name|E
-operator|->
-name|getLocation
-argument_list|()
+name|NameInfo
 argument_list|,
 comment|/*TemplateArgs*/
 literal|0
@@ -29010,8 +29422,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29039,12 +29449,7 @@ operator|->
 name|getQualifierRange
 argument_list|()
 argument_list|,
-name|Name
-argument_list|,
-name|E
-operator|->
-name|getLocation
-argument_list|()
+name|NameInfo
 argument_list|,
 operator|&
 name|TransArgs
@@ -29058,9 +29463,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -29162,8 +29565,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29205,8 +29606,6 @@ operator|!
 name|Constructor
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29223,10 +29622,8 @@ end_decl_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -29281,7 +29678,7 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-name|OwningExprResult
+name|ExprResult
 name|TransArg
 init|=
 name|getDerived
@@ -29301,8 +29698,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29324,12 +29719,8 @@ name|push_back
 argument_list|(
 name|TransArg
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -29417,6 +29808,16 @@ name|move_arg
 argument_list|(
 name|Args
 argument_list|)
+argument_list|,
+name|E
+operator|->
+name|requiresZeroInitialization
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|getConstructionKind
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -29444,9 +29845,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -29455,56 +29854,6 @@ operator|::
 name|TransformCXXBindTemporaryExpr
 argument_list|(
 argument|CXXBindTemporaryExpr *E
-argument_list|)
-block|{
-return|return
-name|getDerived
-argument_list|()
-operator|.
-name|TransformExpr
-argument_list|(
-name|E
-operator|->
-name|getSubExpr
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Transform a C++ reference-binding expression.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Since CXXBindReferenceExpr nodes are implicitly generated, we just
-end_comment
-
-begin_comment
-comment|/// transform the subexpression and return that.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Derived
-operator|>
-name|Sema
-operator|::
-name|OwningExprResult
-name|TreeTransform
-operator|<
-name|Derived
-operator|>
-operator|::
-name|TransformCXXBindReferenceExpr
-argument_list|(
-argument|CXXBindReferenceExpr *E
 argument_list|)
 block|{
 return|return
@@ -29548,9 +29897,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -29582,9 +29929,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -29632,8 +29977,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29672,8 +30015,6 @@ operator|!
 name|Constructor
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29690,10 +30031,8 @@ end_decl_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -29761,7 +30100,7 @@ name|true
 expr_stmt|;
 break|break;
 block|}
-name|OwningExprResult
+name|ExprResult
 name|TransArg
 init|=
 name|getDerived
@@ -29781,8 +30120,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -29966,9 +30303,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -30016,8 +30351,6 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30031,10 +30364,8 @@ end_expr_stmt
 begin_expr_stmt
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -30084,7 +30415,7 @@ operator|++
 name|Arg
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|TransArg
 init|=
 name|getDerived
@@ -30104,8 +30435,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30147,12 +30476,8 @@ name|push_back
 argument_list|(
 name|TransArg
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -30238,9 +30563,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -30252,11 +30575,9 @@ argument|CXXDependentScopeMemberExpr *E
 argument_list|)
 block|{
 comment|// Transform the base of the expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 argument_list|(
-name|SemaRef
-argument_list|,
 operator|(
 name|Expr
 operator|*
@@ -30308,20 +30629,13 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 comment|// Start the member reference and compute the object's type.
-name|Sema
-operator|::
-name|TypeTy
-operator|*
+name|ParsedType
 name|ObjectTy
-operator|=
-literal|0
-expr_stmt|;
+decl_stmt|;
 name|bool
 name|MayBePseudoDestructor
 init|=
@@ -30335,10 +30649,10 @@ name|ActOnStartCXXMemberReference
 argument_list|(
 literal|0
 argument_list|,
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -30371,19 +30685,15 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 name|ObjectType
 operator|=
-name|QualType
-operator|::
-name|getFromOpaquePtr
-argument_list|(
 name|ObjectTy
-argument_list|)
+operator|.
+name|get
+argument_list|()
 expr_stmt|;
 name|BaseType
 operator|=
@@ -30521,8 +30831,6 @@ operator|!
 name|Qualifier
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30530,22 +30838,17 @@ block|}
 end_if
 
 begin_decl_stmt
-name|DeclarationName
-name|Name
+name|DeclarationNameInfo
+name|NameInfo
 init|=
 name|getDerived
 argument_list|()
 operator|.
-name|TransformDeclarationName
+name|TransformDeclarationNameInfo
 argument_list|(
 name|E
 operator|->
-name|getMember
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|getMemberLoc
+name|getMemberNameInfo
 argument_list|()
 argument_list|,
 name|ObjectType
@@ -30557,11 +30860,12 @@ begin_if
 if|if
 condition|(
 operator|!
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30609,7 +30913,10 @@ operator|->
 name|getQualifier
 argument_list|()
 operator|&&
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 operator|==
 name|E
 operator|->
@@ -30640,10 +30947,10 @@ argument_list|()
 operator|.
 name|RebuildCXXDependentScopeMemberExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|BaseType
 argument_list|,
@@ -30666,12 +30973,7 @@ argument_list|()
 argument_list|,
 name|FirstQualifierInScope
 argument_list|,
-name|Name
-argument_list|,
-name|E
-operator|->
-name|getMemberLoc
-argument_list|()
+name|NameInfo
 argument_list|,
 comment|/*TemplateArgs*/
 literal|0
@@ -30742,8 +31044,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30764,10 +31064,10 @@ argument_list|()
 operator|.
 name|RebuildCXXDependentScopeMemberExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|BaseType
 argument_list|,
@@ -30790,12 +31090,7 @@ argument_list|()
 argument_list|,
 name|FirstQualifierInScope
 argument_list|,
-name|Name
-argument_list|,
-name|E
-operator|->
-name|getMemberLoc
-argument_list|()
+name|NameInfo
 argument_list|,
 operator|&
 name|TransArgs
@@ -30809,9 +31104,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -30823,11 +31116,9 @@ argument|UnresolvedMemberExpr *Old
 argument_list|)
 block|{
 comment|// Transform the base of the expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 argument_list|(
-name|SemaRef
-argument_list|,
 operator|(
 name|Expr
 operator|*
@@ -30868,8 +31159,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30954,8 +31243,6 @@ operator|==
 literal|0
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -30970,12 +31257,7 @@ name|SemaRef
 argument_list|,
 name|Old
 operator|->
-name|getMemberName
-argument_list|()
-argument_list|,
-name|Old
-operator|->
-name|getMemberLoc
+name|getMemberNameInfo
 argument_list|()
 argument_list|,
 name|Sema
@@ -31064,8 +31346,6 @@ condition|)
 continue|continue;
 else|else
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31193,8 +31473,6 @@ operator|!
 name|NamingClass
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31287,8 +31565,6 @@ name|Loc
 argument_list|)
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31335,10 +31611,10 @@ argument_list|()
 operator|.
 name|RebuildUnresolvedMemberExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|BaseType
 argument_list|,
@@ -31384,9 +31660,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31417,9 +31691,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31451,8 +31723,6 @@ operator|!
 name|EncodedTypeInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31516,9 +31786,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31537,10 +31805,8 @@ name|false
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|Args
 argument_list|(
@@ -31569,7 +31835,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|Arg
 init|=
 name|getDerived
@@ -31593,8 +31859,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31620,12 +31884,8 @@ name|push_back
 argument_list|(
 name|Arg
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -31666,8 +31926,6 @@ operator|!
 name|ReceiverTypeInfo
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31762,7 +32020,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|Receiver
 init|=
 name|getDerived
@@ -31787,8 +32045,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -31845,10 +32101,10 @@ argument_list|()
 operator|.
 name|RebuildObjCMessageExpr
 argument_list|(
-name|move
-argument_list|(
 name|Receiver
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -31884,9 +32140,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31917,9 +32171,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31950,9 +32202,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -31964,7 +32214,7 @@ argument|ObjCIvarRefExpr *E
 argument_list|)
 block|{
 comment|// Transform the base expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -31986,8 +32236,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32041,10 +32289,10 @@ argument_list|()
 operator|.
 name|RebuildObjCIvarRefExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -32075,9 +32323,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32089,7 +32335,7 @@ argument|ObjCPropertyRefExpr *E
 argument_list|)
 block|{
 comment|// Transform the base expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -32111,8 +32357,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32166,10 +32410,10 @@ argument_list|()
 operator|.
 name|RebuildObjCPropertyRefExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -32190,9 +32434,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32224,7 +32466,7 @@ argument_list|()
 argument_list|)
 return|;
 comment|// Transform the base expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -32249,8 +32491,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32324,10 +32564,10 @@ operator|->
 name|getLocation
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 end_return
@@ -32338,9 +32578,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32372,9 +32610,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32386,7 +32622,7 @@ argument|ObjCIsaExpr *E
 argument_list|)
 block|{
 comment|// Transform the base expression.
-name|OwningExprResult
+name|ExprResult
 name|Base
 operator|=
 name|getDerived
@@ -32408,8 +32644,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32459,10 +32693,10 @@ argument_list|()
 operator|.
 name|RebuildObjCIsaExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|E
 operator|->
@@ -32483,9 +32717,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32503,10 +32735,8 @@ name|false
 block|;
 name|ASTOwningVector
 operator|<
-operator|&
-name|ActionBase
-operator|::
-name|DeleteExpr
+name|Expr
+operator|*
 operator|>
 name|SubExprs
 argument_list|(
@@ -32535,7 +32765,7 @@ operator|++
 name|I
 control|)
 block|{
-name|OwningExprResult
+name|ExprResult
 name|SubExpr
 init|=
 name|getDerived
@@ -32559,8 +32789,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32586,12 +32814,8 @@ name|push_back
 argument_list|(
 name|SubExpr
 operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
+name|get
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -32654,9 +32878,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -32894,7 +33116,7 @@ comment|// Transform the body
 end_comment
 
 begin_decl_stmt
-name|OwningStmtResult
+name|StmtResult
 name|Body
 init|=
 name|getDerived
@@ -32919,8 +33141,6 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -32987,6 +33207,11 @@ name|isVariadic
 argument_list|()
 argument_list|,
 literal|0
+argument_list|,
+name|BExprFunctionType
+operator|->
+name|getExtInfo
+argument_list|()
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -33008,10 +33233,10 @@ name|ActOnBlockStmtExpr
 argument_list|(
 name|CaretLoc
 argument_list|,
-name|move
-argument_list|(
 name|Body
-argument_list|)
+operator|.
+name|get
+argument_list|()
 argument_list|,
 comment|/*Scope=*/
 literal|0
@@ -33025,9 +33250,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -33076,8 +33299,6 @@ operator|!
 name|ND
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
@@ -33129,6 +33350,26 @@ return|;
 block|}
 end_if
 
+begin_decl_stmt
+name|DeclarationNameInfo
+name|NameInfo
+argument_list|(
+name|E
+operator|->
+name|getDecl
+argument_list|()
+operator|->
+name|getDeclName
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|getLocation
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_return
 return|return
 name|getDerived
@@ -33143,10 +33384,7 @@ argument_list|()
 argument_list|,
 name|ND
 argument_list|,
-name|E
-operator|->
-name|getLocation
-argument_list|()
+name|NameInfo
 argument_list|,
 literal|0
 argument_list|)
@@ -33499,6 +33737,10 @@ begin_decl_stmt
 name|IntegerLiteral
 name|ArraySize
 argument_list|(
+name|SemaRef
+operator|.
+name|Context
+argument_list|,
 operator|*
 name|Size
 argument_list|,
@@ -33650,7 +33892,7 @@ argument|QualType ElementType
 argument_list|,
 argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-argument|ExprArg SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
 argument|unsigned IndexTypeQuals
 argument_list|,
@@ -33670,13 +33912,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|SizeExpr
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|,
 name|IndexTypeQuals
 argument_list|,
@@ -33704,7 +33939,7 @@ argument|QualType ElementType
 argument_list|,
 argument|ArrayType::ArraySizeModifier SizeMod
 argument_list|,
-argument|ExprArg SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
 argument|unsigned IndexTypeQuals
 argument_list|,
@@ -33724,13 +33959,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|SizeExpr
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|,
 name|IndexTypeQuals
 argument_list|,
@@ -33827,12 +34055,14 @@ name|IntegerLiteral
 operator|*
 name|VectorSize
 operator|=
-name|new
-argument_list|(
-argument|SemaRef.Context
-argument_list|)
 name|IntegerLiteral
+operator|::
+name|Create
 argument_list|(
+name|SemaRef
+operator|.
+name|Context
+argument_list|,
 name|numElements
 argument_list|,
 name|SemaRef
@@ -33851,12 +34081,7 @@ name|BuildExtVectorType
 argument_list|(
 name|ElementType
 argument_list|,
-name|SemaRef
-operator|.
-name|Owned
-argument_list|(
 name|VectorSize
-argument_list|)
 argument_list|,
 name|AttributeLoc
 argument_list|)
@@ -33880,7 +34105,7 @@ name|RebuildDependentSizedExtVectorType
 argument_list|(
 argument|QualType ElementType
 argument_list|,
-argument|ExprArg SizeExpr
+argument|Expr *SizeExpr
 argument_list|,
 argument|SourceLocation AttributeLoc
 argument_list|)
@@ -33892,10 +34117,7 @@ name|BuildExtVectorType
 argument_list|(
 name|ElementType
 argument_list|,
-name|move
-argument_list|(
 name|SizeExpr
-argument_list|)
 argument_list|,
 name|AttributeLoc
 argument_list|)
@@ -33926,6 +34148,8 @@ argument_list|,
 argument|bool Variadic
 argument_list|,
 argument|unsigned Quals
+argument_list|,
+argument|const FunctionType::ExtInfo&Info
 argument_list|)
 block|{
 return|return
@@ -33954,6 +34178,8 @@ argument_list|()
 operator|.
 name|getBaseEntity
 argument_list|()
+argument_list|,
+name|Info
 argument_list|)
 return|;
 block|}
@@ -34155,7 +34381,7 @@ operator|>
 operator|::
 name|RebuildTypeOfExprType
 argument_list|(
-argument|ExprArg E
+argument|Expr *E
 argument_list|)
 block|{
 return|return
@@ -34164,13 +34390,6 @@ operator|.
 name|BuildTypeofExprType
 argument_list|(
 name|E
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|)
 return|;
 block|}
@@ -34220,7 +34439,7 @@ operator|>
 operator|::
 name|RebuildDecltypeType
 argument_list|(
-argument|ExprArg E
+argument|Expr *E
 argument_list|)
 block|{
 return|return
@@ -34229,13 +34448,6 @@ operator|.
 name|BuildDecltypeType
 argument_list|(
 name|E
-operator|.
-name|takeAs
-operator|<
-name|Expr
-operator|>
-operator|(
-operator|)
 argument_list|)
 return|;
 block|}
@@ -34631,10 +34843,12 @@ name|SS
 argument_list|,
 name|Name
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|ObjectType
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 comment|/*EnteringContext=*/
 name|false
@@ -34751,10 +34965,12 @@ name|SS
 argument_list|,
 name|Name
 argument_list|,
+name|ParsedType
+operator|::
+name|make
+argument_list|(
 name|ObjectType
-operator|.
-name|getAsOpaquePtr
-argument_list|()
+argument_list|)
 argument_list|,
 comment|/*EnteringContext=*/
 name|false
@@ -34782,9 +34998,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -34796,53 +35010,18 @@ argument|OverloadedOperatorKind Op
 argument_list|,
 argument|SourceLocation OpLoc
 argument_list|,
-argument|ExprArg Callee
+argument|Expr *OrigCallee
 argument_list|,
-argument|ExprArg First
+argument|Expr *First
 argument_list|,
-argument|ExprArg Second
+argument|Expr *Second
 argument_list|)
 block|{
 name|Expr
 operator|*
-name|FirstExpr
-operator|=
-operator|(
-name|Expr
-operator|*
-operator|)
-name|First
-operator|.
-name|get
-argument_list|()
-block|;
-name|Expr
-operator|*
-name|SecondExpr
-operator|=
-operator|(
-name|Expr
-operator|*
-operator|)
-name|Second
-operator|.
-name|get
-argument_list|()
-block|;
-name|Expr
-operator|*
-name|CalleeExpr
-operator|=
-operator|(
-operator|(
-name|Expr
-operator|*
-operator|)
 name|Callee
-operator|.
-name|get
-argument_list|()
-operator|)
+operator|=
+name|OrigCallee
 operator|->
 name|IgnoreParenCasts
 argument_list|()
@@ -34850,7 +35029,7 @@ block|;
 name|bool
 name|isPostIncDec
 operator|=
-name|SecondExpr
+name|Second
 operator|&&
 operator|(
 name|Op
@@ -34873,7 +35052,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|FirstExpr
+name|First
 operator|->
 name|getType
 argument_list|()
@@ -34882,7 +35061,7 @@ name|isOverloadableType
 argument_list|()
 operator|&&
 operator|!
-name|SecondExpr
+name|Second
 operator|->
 name|getType
 argument_list|()
@@ -34896,20 +35075,14 @@ argument_list|()
 operator|.
 name|CreateBuiltinArraySubscriptExpr
 argument_list|(
-name|move
-argument_list|(
 name|First
-argument_list|)
 argument_list|,
-name|CalleeExpr
+name|Callee
 operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
-name|move
-argument_list|(
 name|Second
-argument_list|)
 argument_list|,
 name|OpLoc
 argument_list|)
@@ -34934,10 +35107,7 @@ name|BuildOverloadedArrowExpr
 argument_list|(
 literal|0
 argument_list|,
-name|move
-argument_list|(
 name|First
-argument_list|)
 argument_list|,
 name|OpLoc
 argument_list|)
@@ -34949,7 +35119,7 @@ begin_elseif
 elseif|else
 if|if
 condition|(
-name|SecondExpr
+name|Second
 operator|==
 literal|0
 operator|||
@@ -34959,7 +35129,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|FirstExpr
+name|First
 operator|->
 name|getType
 argument_list|()
@@ -34970,11 +35140,9 @@ condition|)
 block|{
 comment|// The argument is not of overloadable type, so try to create a
 comment|// built-in unary operation.
-name|UnaryOperator
-operator|::
-name|Opcode
+name|UnaryOperatorKind
 name|Opc
-operator|=
+init|=
 name|UnaryOperator
 operator|::
 name|getOverloadedOpcode
@@ -34983,7 +35151,7 @@ name|Op
 argument_list|,
 name|isPostIncDec
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 name|getSema
 argument_list|()
@@ -34994,10 +35162,7 @@ name|OpLoc
 argument_list|,
 name|Opc
 argument_list|,
-name|move
-argument_list|(
 name|First
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -35010,7 +35175,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|FirstExpr
+name|First
 operator|->
 name|getType
 argument_list|()
@@ -35019,7 +35184,7 @@ name|isOverloadableType
 argument_list|()
 operator|&&
 operator|!
-name|SecondExpr
+name|Second
 operator|->
 name|getType
 argument_list|()
@@ -35030,19 +35195,17 @@ condition|)
 block|{
 comment|// Neither of the arguments is an overloadable type, so try to
 comment|// create a built-in binary operation.
-name|BinaryOperator
-operator|::
-name|Opcode
+name|BinaryOperatorKind
 name|Opc
-operator|=
+init|=
 name|BinaryOperator
 operator|::
 name|getOverloadedOpcode
 argument_list|(
 name|Op
 argument_list|)
-expr_stmt|;
-name|OwningExprResult
+decl_stmt|;
+name|ExprResult
 name|Result
 init|=
 name|SemaRef
@@ -35053,9 +35216,9 @@ name|OpLoc
 argument_list|,
 name|Opc
 argument_list|,
-name|FirstExpr
+name|First
 argument_list|,
-name|SecondExpr
+name|Second
 argument_list|)
 decl_stmt|;
 if|if
@@ -35066,21 +35229,9 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
-name|First
-operator|.
-name|release
-argument_list|()
-expr_stmt|;
-name|Second
-operator|.
-name|release
-argument_list|()
-expr_stmt|;
 return|return
 name|move
 argument_list|(
@@ -35120,7 +35271,7 @@ operator|<
 name|UnresolvedLookupExpr
 operator|>
 operator|(
-name|CalleeExpr
+name|Callee
 operator|)
 condition|)
 block|{
@@ -35161,7 +35312,7 @@ operator|<
 name|DeclRefExpr
 operator|>
 operator|(
-name|CalleeExpr
+name|Callee
 operator|)
 operator|->
 name|getDecl
@@ -35184,9 +35335,9 @@ literal|2
 index|]
 init|=
 block|{
-name|FirstExpr
+name|First
 block|,
-name|SecondExpr
+name|Second
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -35198,7 +35349,7 @@ init|=
 literal|1
 operator|+
 operator|(
-name|SecondExpr
+name|Second
 operator|!=
 literal|0
 operator|)
@@ -35219,11 +35370,9 @@ operator|||
 name|isPostIncDec
 condition|)
 block|{
-name|UnaryOperator
-operator|::
-name|Opcode
+name|UnaryOperatorKind
 name|Opc
-operator|=
+init|=
 name|UnaryOperator
 operator|::
 name|getOverloadedOpcode
@@ -35232,7 +35381,7 @@ name|Op
 argument_list|,
 name|isPostIncDec
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 name|SemaRef
 operator|.
@@ -35244,10 +35393,7 @@ name|Opc
 argument_list|,
 name|Functions
 argument_list|,
-name|move
-argument_list|(
 name|First
-argument_list|)
 argument_list|)
 return|;
 block|}
@@ -35265,22 +35411,16 @@ name|SemaRef
 operator|.
 name|CreateOverloadedArraySubscriptExpr
 argument_list|(
-name|CalleeExpr
+name|Callee
 operator|->
 name|getLocStart
 argument_list|()
 argument_list|,
 name|OpLoc
 argument_list|,
-name|move
-argument_list|(
 name|First
-argument_list|)
 argument_list|,
-name|move
-argument_list|(
 name|Second
-argument_list|)
 argument_list|)
 return|;
 end_if
@@ -35289,23 +35429,21 @@ begin_comment
 comment|// Create the overloaded operator invocation for binary operators.
 end_comment
 
-begin_expr_stmt
-name|BinaryOperator
-operator|::
-name|Opcode
+begin_decl_stmt
+name|BinaryOperatorKind
 name|Opc
-operator|=
+init|=
 name|BinaryOperator
 operator|::
 name|getOverloadedOpcode
 argument_list|(
 name|Op
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|OwningExprResult
+name|ExprResult
 name|Result
 init|=
 name|SemaRef
@@ -35340,28 +35478,10 @@ name|isInvalid
 argument_list|()
 condition|)
 return|return
-name|SemaRef
-operator|.
 name|ExprError
 argument_list|()
 return|;
 end_if
-
-begin_expr_stmt
-name|First
-operator|.
-name|release
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Second
-operator|.
-name|release
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_return
 return|return
@@ -35378,9 +35498,7 @@ operator|<
 name|typename
 name|Derived
 operator|>
-name|Sema
-operator|::
-name|OwningExprResult
+name|ExprResult
 name|TreeTransform
 operator|<
 name|Derived
@@ -35388,7 +35506,7 @@ operator|>
 operator|::
 name|RebuildCXXPseudoDestructorExpr
 argument_list|(
-argument|ExprArg Base
+argument|Expr *Base
 argument_list|,
 argument|SourceLocation OperatorLoc
 argument_list|,
@@ -35430,36 +35548,20 @@ name|Qualifier
 argument_list|)
 expr_stmt|;
 block|}
-name|Expr
-operator|*
-name|BaseE
+name|QualType
+name|BaseType
 operator|=
-operator|(
-name|Expr
-operator|*
-operator|)
 name|Base
-operator|.
-name|get
+operator|->
+name|getType
 argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|QualType
-name|BaseType
-init|=
-name|BaseE
-operator|->
-name|getType
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|if
 condition|(
-name|BaseE
+name|Base
 operator|->
 name|isTypeDependent
 argument_list|()
@@ -35525,10 +35627,7 @@ name|SemaRef
 operator|.
 name|BuildPseudoDestructorExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
 name|OperatorLoc
 argument_list|,
@@ -35574,7 +35673,7 @@ end_decl_stmt
 begin_decl_stmt
 name|DeclarationName
 name|Name
-init|=
+argument_list|(
 name|SemaRef
 operator|.
 name|Context
@@ -35595,8 +35694,33 @@ name|getType
 argument_list|()
 argument_list|)
 argument_list|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|DeclarationNameInfo
+name|NameInfo
+argument_list|(
+name|Name
+argument_list|,
+name|Destroyed
+operator|.
+name|getLocation
+argument_list|()
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|NameInfo
+operator|.
+name|setNamedTypeInfo
+argument_list|(
+name|DestroyedType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|// FIXME: the ScopeType should be tacked onto SS.
@@ -35609,10 +35733,7 @@ argument_list|()
 operator|.
 name|BuildMemberReferenceExpr
 argument_list|(
-name|move
-argument_list|(
 name|Base
-argument_list|)
 argument_list|,
 name|BaseType
 argument_list|,
@@ -35625,12 +35746,7 @@ argument_list|,
 comment|/*FIXME: FirstQualifier*/
 literal|0
 argument_list|,
-name|Name
-argument_list|,
-name|Destroyed
-operator|.
-name|getLocation
-argument_list|()
+name|NameInfo
 argument_list|,
 comment|/*TemplateArgs*/
 literal|0

@@ -364,9 +364,7 @@ operator|->
 name|getOpcode
 argument_list|()
 operator|==
-name|BinaryOperator
-operator|::
-name|Comma
+name|BO_Comma
 condition|)
 return|return
 name|static_cast
@@ -668,9 +666,7 @@ operator|->
 name|getOpcode
 argument_list|()
 operator|!=
-name|BinaryOperator
-operator|::
-name|Comma
+name|BO_Comma
 condition|)
 break|break;
 name|static_cast

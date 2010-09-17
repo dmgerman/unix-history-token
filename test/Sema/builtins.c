@@ -264,6 +264,21 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+comment|// Ensure the return type is correct even when implicit casts are stripped
+comment|// away. This triggers an assertion while checking the comparison otherwise.
+if|if
+condition|(
+name|__sync_fetch_and_add
+argument_list|(
+operator|&
+name|old
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{   }
 block|}
 end_function
 
@@ -386,6 +401,76 @@ name|b
 argument_list|)
 expr_stmt|;
 comment|// expected-error{{use of unknown builtin}}
+block|}
+end_function
+
+begin_function
+name|int
+name|test13
+parameter_list|()
+block|{
+name|__builtin_eh_return
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no warning, eh_return never returns.
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/8228293>
+end_comment
+
+begin_function
+name|void
+name|test14
+parameter_list|()
+block|{
+name|int
+name|old
+decl_stmt|;
+name|old
+operator|=
+name|__sync_fetch_and_min
+argument_list|(
+operator|(
+specifier|volatile
+name|int
+operator|*
+operator|)
+operator|&
+name|old
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/8336581>
+end_comment
+
+begin_function
+name|void
+name|test15
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|__builtin_printf
+argument_list|(
+literal|"string is %s\n"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

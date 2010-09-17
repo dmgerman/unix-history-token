@@ -396,8 +396,8 @@ comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{
 comment|/// usesPreprocessorOnly - Does this action only use the preprocessor? If so
-comment|/// no AST context will be created and this action will be invalid with PCH
-comment|/// inputs.
+comment|/// no AST context will be created and this action will be invalid with AST
+comment|/// file inputs.
 name|virtual
 name|bool
 name|usesPreprocessorOnly
@@ -576,10 +576,21 @@ literal|0
 block|;
 name|public
 operator|:
+comment|/// ParseArgs - Parse the given plugin command line arguments.
+comment|///
+comment|/// \param CI - The compiler instance, for use in reporting diagnostics.
+comment|/// \return True if the parsing succeeded; otherwise the plugin will be
+comment|/// destroyed and no action run. The plugin is responsible for using the
+comment|/// CompilerInstance's Diagnostic object to report errors.
 name|virtual
 name|bool
 name|ParseArgs
 argument_list|(
+specifier|const
+name|CompilerInstance
+operator|&
+name|CI
+argument_list|,
 specifier|const
 name|std
 operator|::
@@ -591,18 +602,6 @@ name|string
 operator|>
 operator|&
 name|arg
-argument_list|)
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|PrintHelp
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
 argument_list|)
 operator|=
 literal|0

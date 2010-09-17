@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s | F
 end_comment
 
 begin_comment
-comment|// CHECK: @g1 = global [2 x i8*] [i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -2), i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -46)], align 16 ;<[2 x i8*]*> [#uses=0]
+comment|// CHECK: @g1 = global [2 x i8*] [i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -2), i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -46)], align 16
 end_comment
 
 begin_comment
-comment|// CHECK: @g2 = global [2 x i8*] [i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -2), i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -46)], align 16 ;<[2 x i8*]*> [#uses=0]
+comment|// CHECK: @g2 = global [2 x i8*] [i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -2), i8* getelementptr (i8* getelementptr inbounds ([0 x %struct.anon]* @g0, i32 0, i32 0, i32 0), i64 -46)], align 16
 end_comment
 
 begin_struct

@@ -86,5 +86,63 @@ asm|(                     "vld1.32 {d8[],d9[]}, [%1,:32] \n\t"                  
 block|}
 end_function
 
+begin_comment
+comment|// {sp, lr, pc} are the canonical names for {r13, r14, r15}.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: @test5
+end_comment
+
+begin_comment
+comment|// CHECK: call void asm sideeffect "", "~{sp},~{lr},~{pc},~{sp},~{lr},~{pc}"()
+end_comment
+
+begin_function
+name|void
+name|test5
+parameter_list|()
+block|{
+asm|__asm__("" : : : "r13", "r14", "r15", "sp", "lr", "pc");
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test6
+end_comment
+
+begin_comment
+comment|// CHECK: call void asm sideeffect "", "
+end_comment
+
+begin_comment
+comment|// CHECK: ~{s0},~{s1},~{s2},~{s3},~{s4},~{s5},~{s6},~{s7},
+end_comment
+
+begin_comment
+comment|// CHECK: ~{s8},~{s9},~{s10},~{s11},~{s12},~{s13},~{s14},~{s15},
+end_comment
+
+begin_comment
+comment|// CHECK: ~{s16},~{s17},~{s18},~{s19},~{s20},~{s21},~{s22},~{s23},
+end_comment
+
+begin_comment
+comment|// CHECK: ~{s24},~{s25},~{s26},~{s27},~{s28},~{s29},~{s30},~{s31}"()
+end_comment
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+asm|__asm__("" : : :           "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",           "s8", "s9", "s10", "s11", "s12", "s13", "s14", "s15",           "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23",           "s24", "s25", "s26", "s27", "s28", "s29", "s30", "s31");
+block|}
+end_function
+
 end_unit
 

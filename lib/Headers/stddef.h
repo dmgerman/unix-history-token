@@ -76,13 +76,9 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|__typeof__
-argument_list|(
-argument|*
-literal|L""
-argument_list|)
+name|__WCHAR_TYPE__
 name|wchar_t
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_endif
@@ -106,6 +102,16 @@ ifdef|#
 directive|ifdef
 name|__cplusplus
 end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__null
+end_undef
+
+begin_comment
+comment|// VC++ hack.
+end_comment
 
 begin_define
 define|#

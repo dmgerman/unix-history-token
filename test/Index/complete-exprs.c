@@ -13,8 +13,15 @@ name|f
 parameter_list|(
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(unavailable
 end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 name|int
@@ -48,6 +55,12 @@ end_function
 begin_decl_stmt
 name|struct
 name|X
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
 name|f1
 init|=
 block|{
@@ -79,8 +92,65 @@ literal|"Hello, \nWorld"
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|f3
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(sentinel
+parameter_list|(
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|__null
+end_define
+
+begin_function
+name|void
+name|f4
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|f3
+argument_list|(
+name|str
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// RUN: c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC1: NotImplemented:{TypedText __PRETTY_FUNCTION__} (60)
 end_comment
 
 begin_comment
@@ -88,11 +158,11 @@ comment|// CHECK-CC1: macro definition:{TypedText __VERSION__} (70)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Placeholder int}{RightParen )} (12)
+comment|// CHECK-CC1: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Placeholder int}{RightParen )} (12) (unavailable)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1-NOT: NotImplemented:{TypedText float} (40)
+comment|// CHECK-CC1-NOT: NotImplemented:{TypedText float} (65)
 end_comment
 
 begin_comment
@@ -104,7 +174,15 @@ comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder
 end_comment
 
 begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
 comment|// RUN: c-index-test -code-completion-at=%s:7:14 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC3 %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:7:14 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC3 %s
 end_comment
 
 begin_comment
@@ -116,7 +194,7 @@ comment|// CHECK-CC3: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Pl
 end_comment
 
 begin_comment
-comment|// CHECK-CC3-NOT: NotImplemented:{TypedText float} (40)
+comment|// CHECK-CC3-NOT: NotImplemented:{TypedText float} (65)
 end_comment
 
 begin_comment
@@ -148,7 +226,7 @@ comment|// CHECK-CC2: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Pl
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: NotImplemented:{TypedText float} (40)
+comment|// CHECK-CC2: NotImplemented:{TypedText float} (65)
 end_comment
 
 begin_comment
@@ -168,19 +246,23 @@ comment|// CHECK-CC4: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Pl
 end_comment
 
 begin_comment
-comment|// CHECK-CC4: VarDecl:{ResultType struct X}{TypedText f1} (50)
+comment|// CHECK-CC4: VarDecl:{ResultType struct X}{TypedText f1} (50) (deprecated)
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:13:28 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC5 %s
+comment|// RUN: c-index-test -code-completion-at=%s:19:3 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC6 %s
 end_comment
 
 begin_comment
-comment|// CHECK-CC5: NotImplemented:{TypedText void} (40)
+comment|// CHECK-CC6: FunctionDecl:{ResultType void}{TypedText f3}{LeftParen (}{Placeholder char const *, ...}{Text , NULL}{RightParen )} (45)
 end_comment
 
 begin_comment
-comment|// CHECK-CC5: NotImplemented:{TypedText volatile} (40)
+comment|// CHECK-CC6: NotImplemented:{TypedText void} (65)
+end_comment
+
+begin_comment
+comment|// CHECK-CC6: NotImplemented:{TypedText volatile} (65)
 end_comment
 
 end_unit

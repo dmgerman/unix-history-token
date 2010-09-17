@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -w -fblocks -triple i386-apple-darwin9 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
@@ -1388,6 +1388,75 @@ name|s53
 name|x
 parameter_list|)
 block|{}
+end_function
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|v2i16
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(4)));
+end_typedef
+
+begin_comment
+comment|// CHECK: define i32 @f54(i32 %arg.coerce)
+end_comment
+
+begin_comment
+comment|// rdar://8359483
+end_comment
+
+begin_function
+name|v2i16
+name|f54
+parameter_list|(
+name|v2i16
+name|arg
+parameter_list|)
+block|{
+return|return
+name|arg
+operator|+
+name|arg
+return|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|int
+name|v4i32
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(16)));
+end_typedef
+
+begin_comment
+comment|// CHECK: define<2 x i64> @f55(<4 x i32> %arg)
+end_comment
+
+begin_comment
+comment|// PR8029
+end_comment
+
+begin_function
+name|v4i32
+name|f55
+parameter_list|(
+name|v4i32
+name|arg
+parameter_list|)
+block|{
+return|return
+name|arg
+operator|+
+name|arg
+return|;
+block|}
 end_function
 
 end_unit

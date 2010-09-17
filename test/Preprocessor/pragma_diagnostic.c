@@ -112,7 +112,7 @@ literal|"-Wundef"
 end_pragma
 
 begin_comment
-comment|// expected-warning {{pragma diagnostic expected 'error', 'warning', 'ignored', or 'fatal'}}
+comment|// expected-warning {{pragma diagnostic expected 'error', 'warning', 'ignored', 'fatal', 'push', or 'pop'}}
 end_comment
 
 begin_pragma

@@ -85,9 +85,6 @@ name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
-name|AttributeList
-decl_stmt|;
-name|class
 name|RecordDecl
 decl_stmt|;
 name|class
@@ -158,27 +155,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-operator|~
-name|ObjCListBase
-argument_list|()
-block|{
-name|assert
-argument_list|(
-name|List
-operator|==
-literal|0
-operator|&&
-literal|"Destroy should have been called before dtor"
-argument_list|)
-block|;   }
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
-expr_stmt|;
 name|unsigned
 name|size
 argument_list|()
@@ -411,14 +387,6 @@ argument_list|,
 argument|ASTContext&Ctx
 argument_list|)
 decl_stmt|;
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 
@@ -549,6 +517,12 @@ name|IsSynthesized
 range|:
 literal|1
 decl_stmt|;
+comment|// Method has a definition.
+name|bool
+name|IsDefined
+range|:
+literal|1
+decl_stmt|;
 comment|// NOTE: VC++ treats enums as signed, avoid using ImplementationControl enum
 comment|/// @required/@optional
 name|unsigned
@@ -627,6 +601,8 @@ argument|bool isVariadic = false
 argument_list|,
 argument|bool isSynthesized = false
 argument_list|,
+argument|bool isDefined = false
+argument_list|,
 argument|ImplementationControl impControl = None
 argument_list|,
 argument|unsigned numSelectorArgs =
@@ -662,6 +638,11 @@ operator|,
 name|IsSynthesized
 argument_list|(
 name|isSynthesized
+argument_list|)
+operator|,
+name|IsDefined
+argument_list|(
+name|isDefined
 argument_list|)
 operator|,
 name|DeclImplementation
@@ -709,11 +690,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-name|virtual
-operator|~
-name|ObjCMethodDecl
-argument_list|()
-block|{}
 comment|/// \brief A definition will return its interface declaration.
 comment|/// An interface declaration will return its definition.
 comment|/// Otherwise it will return itself.
@@ -725,16 +701,6 @@ argument_list|()
 expr_stmt|;
 name|public
 label|:
-comment|/// Destroy - Call destructors and release memory.
-name|virtual
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|)
-function_decl|;
 specifier|static
 name|ObjCMethodDecl
 modifier|*
@@ -776,6 +742,11 @@ name|false
 parameter_list|,
 name|bool
 name|isSynthesized
+init|=
+name|false
+parameter_list|,
+name|bool
+name|isDefined
 init|=
 name|false
 parameter_list|,
@@ -1314,6 +1285,27 @@ operator|=
 name|isSynth
 expr_stmt|;
 block|}
+name|bool
+name|isDefined
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDefined
+return|;
+block|}
+name|void
+name|setDefined
+parameter_list|(
+name|bool
+name|isDefined
+parameter_list|)
+block|{
+name|IsDefined
+operator|=
+name|isDefined
+expr_stmt|;
+block|}
 comment|// Related to protocols declared in  @protocol
 name|void
 name|setDeclImplementation
@@ -1505,54 +1497,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// ObjCMethodList - a linked list of methods with different signatures.
-end_comment
-
-begin_struct
-struct|struct
-name|ObjCMethodList
-block|{
-name|ObjCMethodDecl
-modifier|*
-name|Method
-decl_stmt|;
-name|ObjCMethodList
-modifier|*
-name|Next
-decl_stmt|;
-name|ObjCMethodList
-argument_list|()
-block|{
-name|Method
-operator|=
-literal|0
-expr_stmt|;
-name|Next
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|ObjCMethodList
-argument_list|(
-argument|ObjCMethodDecl *M
-argument_list|,
-argument|ObjCMethodList *C
-argument_list|)
-block|{
-name|Method
-operator|=
-name|M
-expr_stmt|;
-name|Next
-operator|=
-name|C
-expr_stmt|;
-block|}
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/// ObjCContainerDecl - Represents a container for method declarations.
 end_comment
 
@@ -1611,11 +1555,6 @@ name|DeclContext
 argument_list|(
 argument|DK
 argument_list|)
-block|{}
-name|virtual
-operator|~
-name|ObjCContainerDecl
-argument_list|()
 block|{}
 comment|// Iterator access to properties.
 typedef|typedef
@@ -2099,15 +2038,28 @@ name|ObjCInterfaceDecl
 operator|*
 name|SuperClass
 block|;
-comment|/// Protocols referenced in interface header declaration
+comment|/// Protocols referenced in the @interface  declaration
 name|ObjCProtocolList
 name|ReferencedProtocols
+block|;
+comment|/// Protocols reference in both the @interface and class extensions.
+name|ObjCList
+operator|<
+name|ObjCProtocolDecl
+operator|>
+name|AllReferencedProtocols
 block|;
 comment|/// List of categories defined for this class.
 comment|/// FIXME: Why is this a linked list??
 name|ObjCCategoryDecl
 operator|*
 name|CategoryList
+block|;
+comment|/// IvarList - List of all ivars defined by this class; including class
+comment|/// extensions and implementation. This list is built lazily.
+name|ObjCIvarDecl
+operator|*
+name|IvarList
 block|;
 name|bool
 name|ForwardDecl
@@ -2148,23 +2100,8 @@ argument_list|,
 argument|bool isInternal
 argument_list|)
 block|;
-name|virtual
-operator|~
-name|ObjCInterfaceDecl
-argument_list|()
-block|{}
 name|public
 operator|:
-comment|/// Destroy - Call destructors and release memory.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 specifier|static
 name|ObjCInterfaceDecl
 operator|*
@@ -2330,16 +2267,59 @@ return|;
 block|}
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|ObjCList
+operator|<
+name|ObjCProtocolDecl
+operator|>
+operator|::
+name|iterator
+name|all_protocol_iterator
+expr_stmt|;
+end_typedef
+
 begin_expr_stmt
-name|unsigned
-name|protocol_size
+name|all_protocol_iterator
+name|all_referenced_protocol_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ReferencedProtocols
+name|AllReferencedProtocols
 operator|.
-name|size
+name|empty
+argument_list|()
+operator|?
+name|protocol_begin
+argument_list|()
+operator|:
+name|AllReferencedProtocols
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|all_protocol_iterator
+name|all_referenced_protocol_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllReferencedProtocols
+operator|.
+name|empty
+argument_list|()
+operator|?
+name|protocol_end
+argument_list|()
+operator|:
+name|AllReferencedProtocols
+operator|.
+name|end
 argument_list|()
 return|;
 block|}
@@ -2424,6 +2404,30 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function_decl
+name|ObjCIvarDecl
+modifier|*
+name|all_declared_ivar_begin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|setIvarList
+parameter_list|(
+name|ObjCIvarDecl
+modifier|*
+name|ivar
+parameter_list|)
+block|{
+name|IvarList
+operator|=
+name|ivar
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/// setProtocolList - Set the list of protocols that this interface
 end_comment
@@ -2491,11 +2495,6 @@ name|List
 parameter_list|,
 name|unsigned
 name|Num
-parameter_list|,
-specifier|const
-name|SourceLocation
-modifier|*
-name|Locs
 parameter_list|,
 name|ASTContext
 modifier|&
@@ -3063,6 +3062,20 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 unit|};
 comment|/// ObjCIvarDecl - Represents an ObjC instance variable. In general, ObjC
@@ -3164,6 +3177,8 @@ argument_list|,
 argument|AccessControl ac
 argument_list|,
 argument|Expr *BW
+argument_list|,
+argument|bool synthesized
 argument_list|)
 operator|:
 name|FieldDecl
@@ -3186,9 +3201,19 @@ comment|/*Mutable=*/
 name|false
 argument_list|)
 block|,
+name|NextIvar
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|DeclAccess
 argument_list|(
-argument|ac
+name|ac
+argument_list|)
+block|,
+name|Synthesized
+argument_list|(
+argument|synthesized
 argument_list|)
 block|{}
 name|public
@@ -3213,6 +3238,8 @@ argument_list|,
 argument|AccessControl ac
 argument_list|,
 argument|Expr *BW = NULL
+argument_list|,
+argument|bool synthesized=false
 argument_list|)
 block|;
 comment|/// \brief Return the class interface that this ivar is logically contained
@@ -3226,6 +3253,25 @@ name|getContainingInterface
 argument_list|()
 specifier|const
 block|;
+name|ObjCIvarDecl
+operator|*
+name|getNextIvar
+argument_list|()
+block|{
+return|return
+name|NextIvar
+return|;
+block|}
+name|void
+name|setNextIvar
+argument_list|(
+argument|ObjCIvarDecl *ivar
+argument_list|)
+block|{
+name|NextIvar
+operator|=
+name|ivar
+block|; }
 name|void
 name|setAccessControl
 argument_list|(
@@ -3264,6 +3310,25 @@ name|AccessControl
 argument_list|(
 name|DeclAccess
 argument_list|)
+return|;
+block|}
+name|void
+name|setSynthesize
+argument_list|(
+argument|bool synth
+argument_list|)
+block|{
+name|Synthesized
+operator|=
+name|synth
+block|; }
+name|bool
+name|getSynthesize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Synthesized
 return|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
@@ -3310,11 +3375,22 @@ return|;
 block|}
 name|private
 operator|:
+comment|/// NextIvar - Next Ivar in the list of ivars declared in class; class's
+comment|/// extensions and class's implementation
+name|ObjCIvarDecl
+operator|*
+name|NextIvar
+block|;
 comment|// NOTE: VC++ treats enums as signed, avoid using the AccessControl enum
 name|unsigned
 name|DeclAccess
 operator|:
 literal|3
+block|;
+name|unsigned
+name|Synthesized
+operator|:
+literal|1
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -3389,15 +3465,6 @@ argument_list|,
 argument|QualType T
 argument_list|,
 argument|Expr *BW
-argument_list|)
-block|;
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
 argument_list|)
 block|;
 comment|// Implement isa/cast/dyncast/etc.
@@ -3511,11 +3578,6 @@ argument_list|(
 argument|true
 argument_list|)
 block|{   }
-name|virtual
-operator|~
-name|ObjCProtocolDecl
-argument_list|()
-block|{}
 name|public
 operator|:
 specifier|static
@@ -3530,16 +3592,6 @@ argument_list|,
 argument|SourceLocation L
 argument_list|,
 argument|IdentifierInfo *Id
-argument_list|)
-block|;
-comment|/// Destroy - Call destructors and release memory.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
 argument_list|)
 block|;
 specifier|const
@@ -3962,23 +4014,8 @@ argument_list|,
 argument|ASTContext&C
 argument_list|)
 block|;
-name|virtual
-operator|~
-name|ObjCClassDecl
-argument_list|()
-block|{}
 name|public
 operator|:
-comment|/// Destroy - Call destructors and release memory.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 specifier|static
 name|ObjCClassDecl
 operator|*
@@ -4126,11 +4163,6 @@ argument_list|,
 argument|ASTContext&C
 argument_list|)
 block|;
-name|virtual
-operator|~
-name|ObjCForwardProtocolDecl
-argument_list|()
-block|{}
 name|public
 operator|:
 specifier|static
@@ -4180,16 +4212,6 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// Destroy - Call destructors and release memory.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 typedef|typedef
 name|ObjCProtocolList
 operator|::
@@ -4432,6 +4454,12 @@ name|ObjCCategoryDecl
 operator|*
 name|NextClassCategory
 block|;
+comment|/// true of class extension has at least one bitfield ivar.
+name|bool
+name|HasSynthBitfield
+operator|:
+literal|1
+block|;
 comment|/// \brief The location of the '@' in '@interface'
 name|SourceLocation
 name|AtLoc
@@ -4472,6 +4500,11 @@ block|,
 name|NextClassCategory
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HasSynthBitfield
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|AtLoc
@@ -4745,6 +4778,33 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|bool
+name|hasSynthBitfield
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSynthBitfield
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHasSynthBitfield
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|HasSynthBitfield
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
+
 begin_typedef
 typedef|typedef
 name|specific_decl_iterator
@@ -5008,11 +5068,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|virtual
-operator|~
-name|ObjCImplDecl
-argument_list|()
-block|{}
 specifier|const
 name|ObjCInterfaceDecl
 operator|*
@@ -5490,6 +5545,12 @@ block|;
 name|unsigned
 name|NumIvarInitializers
 block|;
+comment|/// true of class extension has at least one bitfield ivar.
+name|bool
+name|HasSynthBitfield
+operator|:
+literal|1
+block|;
 name|ObjCImplementationDecl
 argument_list|(
 argument|DeclContext *DC
@@ -5525,6 +5586,11 @@ block|,
 name|NumIvarInitializers
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HasSynthBitfield
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|public
@@ -5633,6 +5699,33 @@ argument|unsigned numInitializers
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|hasSynthBitfield
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSynthBitfield
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHasSynthBitfield
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|HasSynthBitfield
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// getIdentifier - Get the identifier that names the class
@@ -5947,6 +6040,20 @@ name|ObjCImplementation
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 unit|};

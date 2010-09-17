@@ -189,21 +189,7 @@ argument_list|()
 operator|&&
 literal|0
 case|:
-comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}} \
-name|expected
-operator|-
-name|warning
-block|{
-block|{
-name|use
-name|of
-name|logical
-operator|&&
-name|with
-name|constant
-name|operand
-block|}
-block|}
+comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}}
 break|break;
 block|}
 switch|switch
@@ -219,21 +205,7 @@ argument_list|()
 operator|||
 literal|1
 case|:
-comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}} \\
-name|expected
-operator|-
-name|warning
-block|{
-block|{
-name|use
-name|of
-name|logical
-operator|||
-name|with
-name|constant
-name|operand
-block|}
-block|}
+comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}}
 break|break;
 block|}
 block|}

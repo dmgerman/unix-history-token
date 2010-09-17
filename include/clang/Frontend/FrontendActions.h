@@ -240,7 +240,27 @@ return|return
 name|false
 return|;
 block|}
-expr|}
+name|public
+operator|:
+comment|/// \brief Compute the AST consumer arguments that will be used to
+comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
+comment|///
+comment|/// \returns true if an error occurred, false otherwise.
+specifier|static
+name|bool
+name|ComputeASTConsumerArguments
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|,
+argument|std::string&Sysroot
+argument_list|,
+argument|llvm::raw_ostream *&OS
+argument_list|,
+argument|bool&Chaining
+argument_list|)
+block|; }
 block|;
 name|class
 name|InheritanceViewAction
@@ -412,6 +432,44 @@ argument_list|()
 specifier|const
 block|; }
 block|;
+name|class
+name|PrintPreambleAction
+operator|:
+name|public
+name|FrontendAction
+block|{
+name|protected
+operator|:
+name|void
+name|ExecuteAction
+argument_list|()
+block|;
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&
+argument_list|,
+argument|llvm::StringRef
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|bool
+name|usesPreprocessorOnly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Preprocessor Actions
 comment|//===----------------------------------------------------------------------===//
@@ -455,33 +513,7 @@ argument_list|()
 block|; }
 block|;
 name|class
-name|ParseOnlyAction
-operator|:
-name|public
-name|PreprocessorFrontendAction
-block|{
-name|protected
-operator|:
-name|void
-name|ExecuteAction
-argument_list|()
-block|; }
-block|;
-name|class
 name|PreprocessOnlyAction
-operator|:
-name|public
-name|PreprocessorFrontendAction
-block|{
-name|protected
-operator|:
-name|void
-name|ExecuteAction
-argument_list|()
-block|; }
-block|;
-name|class
-name|PrintParseAction
 operator|:
 name|public
 name|PreprocessorFrontendAction
@@ -516,7 +548,7 @@ name|true
 return|;
 block|}
 expr|}
-block|;  }
+block|;    }
 end_decl_stmt
 
 begin_comment

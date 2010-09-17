@@ -333,8 +333,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Bind the value 'V' to the statement 'S'.
 name|Environment
-name|BindExpr
+name|bindExpr
 parameter_list|(
 name|Environment
 name|Env
@@ -349,6 +350,26 @@ name|V
 parameter_list|,
 name|bool
 name|Invalidate
+parameter_list|)
+function_decl|;
+comment|/// Bind the location 'location' and value 'V' to the statement 'S'.  This
+comment|/// is used when simulating loads/stores.
+name|Environment
+name|bindExprAndLocation
+parameter_list|(
+name|Environment
+name|Env
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+name|SVal
+name|location
+parameter_list|,
+name|SVal
+name|V
 parameter_list|)
 function_decl|;
 name|Environment

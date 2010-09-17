@@ -62,6 +62,30 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Index/ASTLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Serialization/ASTBitCodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/Sema.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/CodeCompleteConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/PreprocessingRecord.h"
 end_include
 
@@ -69,6 +93,18 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/FileManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang-c/Index.h"
 end_include
 
 begin_include
@@ -86,25 +122,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/FileManager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Index/ASTLocation.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Timer.h"
 end_include
 
 begin_include
@@ -137,6 +173,12 @@ directive|include
 file|<utility>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -153,6 +195,9 @@ name|clang
 block|{
 name|class
 name|ASTContext
+decl_stmt|;
+name|class
+name|CodeCompleteConsumer
 decl_stmt|;
 name|class
 name|CompilerInvocation
@@ -185,7 +230,7 @@ name|using
 name|namespace
 name|idx
 decl_stmt|;
-comment|/// \brief Utility class for loading a ASTContext from a PCH file.
+comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
 name|class
 name|ASTUnit
@@ -267,6 +312,26 @@ name|ASTContext
 operator|>
 name|Ctx
 expr_stmt|;
+comment|/// \brief The AST consumer that received information about the translation
+comment|/// unit as it was parsed or loaded.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|ASTConsumer
+operator|>
+name|Consumer
+expr_stmt|;
+comment|/// \brief The semantic analysis object used to type-check the translation
+comment|/// unit.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|Sema
+operator|>
+name|TheSema
+expr_stmt|;
 comment|/// Optional owned invocation, just used to make the invocation used in
 comment|/// LoadFromCommandLine available.
 name|llvm
@@ -283,9 +348,17 @@ comment|// FIXME: This is temporary; eventually, CIndex will always do this.
 name|bool
 name|OnlyLocalDecls
 decl_stmt|;
-comment|/// Track whether the main file was loaded from an AST or not.
+comment|/// \brief Whether to capture any diagnostics produced.
+name|bool
+name|CaptureDiagnostics
+decl_stmt|;
+comment|/// \brief Track whether the main file was loaded from an AST or not.
 name|bool
 name|MainFileIsAST
+decl_stmt|;
+comment|/// \brief Whether this AST represents a complete translation unit.
+name|bool
+name|CompleteTranslationUnit
 decl_stmt|;
 comment|/// Track the top-level decls which appeared in an ASTUnit which was loaded
 comment|/// from a source file.
@@ -377,6 +450,273 @@ name|CheckUnlocked
 init|=
 literal|9803453
 decl_stmt|;
+comment|/// \brief Counter that determines when we want to try building a
+comment|/// precompiled preamble.
+comment|///
+comment|/// If zero, we will never build a precompiled preamble. Otherwise,
+comment|/// it's treated as a counter that decrements each time we reparse
+comment|/// without the benefit of a precompiled preamble. When it hits 1,
+comment|/// we'll attempt to rebuild the precompiled header. This way, if
+comment|/// building the precompiled preamble fails, we won't try again for
+comment|/// some number of calls.
+name|unsigned
+name|PreambleRebuildCounter
+decl_stmt|;
+comment|/// \brief The file in which the precompiled preamble is stored.
+name|std
+operator|::
+name|string
+name|PreambleFile
+expr_stmt|;
+comment|/// \brief The contents of the preamble that has been precompiled to
+comment|/// \c PreambleFile.
+name|std
+operator|::
+name|vector
+operator|<
+name|char
+operator|>
+name|Preamble
+expr_stmt|;
+comment|/// \brief Whether the preamble ends at the start of a new line.
+comment|///
+comment|/// Used to inform the lexer as to whether it's starting at the beginning of
+comment|/// a line after skipping the preamble.
+name|bool
+name|PreambleEndsAtStartOfLine
+decl_stmt|;
+comment|/// \brief The size of the source buffer that we've reserved for the main
+comment|/// file within the precompiled preamble.
+name|unsigned
+name|PreambleReservedSize
+decl_stmt|;
+comment|/// \brief Keeps track of the files that were used when computing the
+comment|/// preamble, with both their buffer size and their modification time.
+comment|///
+comment|/// If any of the files have changed from one compile to the next,
+comment|/// the preamble must be thrown away.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|off_t
+operator|,
+name|time_t
+operator|>
+expr|>
+name|FilesInPreamble
+expr_stmt|;
+comment|/// \brief When non-NULL, this is the buffer used to store the contents of
+comment|/// the main file when it has been padded for use with the precompiled
+comment|/// preamble.
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|SavedMainFileBuffer
+expr_stmt|;
+comment|/// \brief When non-NULL, this is the buffer used to store the
+comment|/// contents of the preamble when it has been padded to build the
+comment|/// precompiled preamble.
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|PreambleBuffer
+expr_stmt|;
+comment|/// \brief The number of warnings that occurred while parsing the preamble.
+comment|///
+comment|/// This value will be used to restore the state of the \c Diagnostic object
+comment|/// when re-using the precompiled preamble. Note that only the
+comment|/// number of warnings matters, since we will not save the preamble
+comment|/// when any errors are present.
+name|unsigned
+name|NumWarningsInPreamble
+decl_stmt|;
+comment|/// \brief The number of diagnostics that were stored when parsing
+comment|/// the precompiled preamble.
+comment|///
+comment|/// This value is used to determine how many of the stored
+comment|/// diagnostics should be retained when reparsing in the presence of
+comment|/// a precompiled preamble.
+name|unsigned
+name|NumStoredDiagnosticsInPreamble
+decl_stmt|;
+comment|/// \brief The group of timers associated with this translation unit.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|llvm
+operator|::
+name|TimerGroup
+operator|>
+name|TimerGroup
+expr_stmt|;
+comment|/// \brief A list of the serialization ID numbers for each of the top-level
+comment|/// declarations parsed within the precompiled preamble.
+name|std
+operator|::
+name|vector
+operator|<
+name|serialization
+operator|::
+name|DeclID
+operator|>
+name|TopLevelDeclsInPreamble
+expr_stmt|;
+comment|///
+comment|/// \defgroup CodeCompleteCaching Code-completion caching
+comment|///
+comment|/// \{
+comment|///
+comment|/// \brief Whether we should be caching code-completion results.
+name|bool
+name|ShouldCacheCodeCompletionResults
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief A cached code-completion result, which may be introduced in one of
+comment|/// many different contexts.
+struct|struct
+name|CachedCodeCompletionResult
+block|{
+comment|/// \brief The code-completion string corresponding to this completion
+comment|/// result.
+name|CodeCompletionString
+modifier|*
+name|Completion
+decl_stmt|;
+comment|/// \brief A bitmask that indicates which code-completion contexts should
+comment|/// contain this completion result.
+comment|///
+comment|/// The bits in the bitmask correspond to the values of
+comment|/// CodeCompleteContext::Kind. To map from a completion context kind to a
+comment|/// bit, subtract one from the completion context kind and shift 1 by that
+comment|/// number of bits. Many completions can occur in several different
+comment|/// contexts.
+name|unsigned
+name|ShowInContexts
+decl_stmt|;
+comment|/// \brief The priority given to this code-completion result.
+name|unsigned
+name|Priority
+decl_stmt|;
+comment|/// \brief The libclang cursor kind corresponding to this code-completion
+comment|/// result.
+name|CXCursorKind
+name|Kind
+decl_stmt|;
+comment|/// \brief The availability of this code-completion result.
+name|CXAvailabilityKind
+name|Availability
+decl_stmt|;
+comment|/// \brief The simplified type class for a non-macro completion result.
+name|SimplifiedTypeClass
+name|TypeClass
+decl_stmt|;
+comment|/// \brief The type of a non-macro completion result, stored as a unique
+comment|/// integer used by the string map of cached completion types.
+comment|///
+comment|/// This value will be zero if the type is not known, or a unique value
+comment|/// determined by the formatted type string. Se \c CachedCompletionTypes
+comment|/// for more information.
+name|unsigned
+name|Type
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Retrieve the mapping from formatted type names to unique type
+comment|/// identifiers.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|getCachedCompletionTypes
+argument_list|()
+block|{
+return|return
+name|CachedCompletionTypes
+return|;
+block|}
+name|private
+label|:
+comment|/// \brief The set of cached code-completion results.
+name|std
+operator|::
+name|vector
+operator|<
+name|CachedCodeCompletionResult
+operator|>
+name|CachedCompletionResults
+expr_stmt|;
+comment|/// \brief A mapping from the formatted type name to a unique number for that
+comment|/// type, which is used for type equality comparisons.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|unsigned
+operator|>
+name|CachedCompletionTypes
+expr_stmt|;
+comment|/// \brief The number of top-level declarations present the last time we
+comment|/// cached code-completion results.
+comment|///
+comment|/// The value is used to help detect when we should repopulate the global
+comment|/// completion cache.
+name|unsigned
+name|NumTopLevelDeclsAtLastCompletionCache
+decl_stmt|;
+comment|/// \brief The number of reparses left until we'll consider updating the
+comment|/// code-completion cache.
+comment|///
+comment|/// This is meant to avoid thrashing during reparsing, by not allowing the
+comment|/// code-completion cache to be updated on every reparse.
+name|unsigned
+name|CacheCodeCompletionCoolDown
+decl_stmt|;
+comment|/// \brief Bit used by CIndex to mark when a translation unit may be in an
+comment|/// inconsistent state, and is not safe to free.
+name|unsigned
+name|UnsafeToFree
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Cache any "global" code-completion results, so that we can avoid
+comment|/// recomputing them with each completion.
+name|void
+name|CacheCodeCompletionResults
+parameter_list|()
+function_decl|;
+comment|/// \brief Clear out and deallocate
+name|void
+name|ClearCachedCompletionResults
+parameter_list|()
+function_decl|;
+comment|///
+comment|/// \}
+comment|///
+comment|/// \brief The timers we've created from the various parses, reparses, etc.
+comment|/// involved in this translation unit.
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Timer
+operator|*
+operator|>
+name|Timers
+expr_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -402,6 +742,65 @@ parameter_list|(
 name|bool
 name|MainFileIsAST
 parameter_list|)
+function_decl|;
+name|void
+name|CleanTemporaryFiles
+parameter_list|()
+function_decl|;
+name|bool
+name|Parse
+argument_list|(
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|OverrideMainBuffer
+argument_list|)
+decl_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|,
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+expr|>
+name|ComputePreamble
+argument_list|(
+argument|CompilerInvocation&Invocation
+argument_list|,
+argument|unsigned MaxLines
+argument_list|,
+argument|bool&CreatedBuffer
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getMainBufferWithPrecompiledPreamble
+argument_list|(
+argument|CompilerInvocation PreambleInvocation
+argument_list|,
+argument|bool AllowRebuild = true
+argument_list|,
+argument|unsigned MaxLines =
+literal|0
+argument_list|)
+expr_stmt|;
+name|void
+name|RealizeTopLevelDeclsFromPreamble
+parameter_list|()
 function_decl|;
 name|public
 label|:
@@ -474,6 +873,27 @@ return|return
 name|MainFileIsAST
 return|;
 block|}
+name|bool
+name|isUnsafeToFree
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnsafeToFree
+return|;
+block|}
+name|void
+name|setUnsafeToFree
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|UnsafeToFree
+operator|=
+name|Value
+expr_stmt|;
+block|}
 specifier|const
 name|Diagnostic
 operator|&
@@ -572,6 +992,33 @@ name|Ctx
 operator|.
 name|get
 argument_list|()
+return|;
+block|}
+name|bool
+name|hasSema
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheSema
+return|;
+block|}
+name|Sema
+operator|&
+name|getSema
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TheSema
+operator|&&
+literal|"ASTUnit does not have a Sema object!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|TheSema
 return|;
 block|}
 specifier|const
@@ -609,7 +1056,7 @@ name|std
 operator|::
 name|string
 operator|&
-name|getPCHFileName
+name|getASTFileName
 argument_list|()
 expr_stmt|;
 comment|/// \brief Add a temporary file that the ASTUnit depends on.
@@ -645,6 +1092,13 @@ return|return
 name|OnlyLocalDecls
 return|;
 block|}
+comment|/// \brief Retrieve the maximum PCH level of declarations that a
+comment|/// traversal of the translation unit should consider.
+name|unsigned
+name|getMaxPCHLevel
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|setLastASTLocation
 parameter_list|(
@@ -666,6 +1120,7 @@ return|return
 name|LastLoc
 return|;
 block|}
+typedef|typedef
 name|std
 operator|::
 name|vector
@@ -673,9 +1128,13 @@ operator|<
 name|Decl
 operator|*
 operator|>
-operator|&
-name|getTopLevelDecls
-argument_list|()
+operator|::
+name|iterator
+name|top_level_iterator
+expr_stmt|;
+name|top_level_iterator
+name|top_level_begin
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -685,21 +1144,60 @@ argument_list|()
 operator|&&
 literal|"Invalid call for AST based ASTUnit!"
 argument_list|)
-block|;
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TopLevelDeclsInPreamble
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|RealizeTopLevelDeclsFromPreamble
+argument_list|()
+expr_stmt|;
 return|return
 name|TopLevelDecls
+operator|.
+name|begin
+argument_list|()
 return|;
 block|}
-specifier|const
+name|top_level_iterator
+name|top_level_end
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isMainFileAST
+argument_list|()
+operator|&&
+literal|"Invalid call for AST based ASTUnit!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TopLevelDeclsInPreamble
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|RealizeTopLevelDeclsFromPreamble
+argument_list|()
+expr_stmt|;
+return|return
+name|TopLevelDecls
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|std
 operator|::
-name|vector
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|&
-name|getTopLevelDecls
+name|size_t
+name|top_level_size
 argument_list|()
 specifier|const
 block|{
@@ -713,8 +1211,78 @@ literal|"Invalid call for AST based ASTUnit!"
 argument_list|)
 block|;
 return|return
+name|TopLevelDeclsInPreamble
+operator|.
+name|size
+argument_list|()
+operator|+
 name|TopLevelDecls
+operator|.
+name|size
+argument_list|()
 return|;
+block|}
+name|bool
+name|top_level_empty
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isMainFileAST
+argument_list|()
+operator|&&
+literal|"Invalid call for AST based ASTUnit!"
+argument_list|)
+block|;
+return|return
+name|TopLevelDeclsInPreamble
+operator|.
+name|empty
+argument_list|()
+operator|&&
+name|TopLevelDecls
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// \brief Add a new top-level declaration.
+name|void
+name|addTopLevelDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|TopLevelDecls
+operator|.
+name|push_back
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Add a new top-level declaration, identified by its ID in
+comment|/// the precompiled preamble.
+name|void
+name|addTopLevelDeclFromPreamble
+argument_list|(
+name|serialization
+operator|::
+name|DeclID
+name|D
+argument_list|)
+block|{
+name|TopLevelDeclsInPreamble
+operator|.
+name|push_back
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// \brief Retrieve the mapping from File IDs to the preprocessed entities
 comment|/// within that file.
@@ -786,6 +1354,64 @@ return|return
 name|StoredDiagnostics
 return|;
 block|}
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|CachedCodeCompletionResult
+operator|>
+operator|::
+name|iterator
+name|cached_completion_iterator
+expr_stmt|;
+name|cached_completion_iterator
+name|cached_completion_begin
+parameter_list|()
+block|{
+return|return
+name|CachedCompletionResults
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|cached_completion_iterator
+name|cached_completion_end
+parameter_list|()
+block|{
+return|return
+name|CachedCompletionResults
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|cached_completion_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CachedCompletionResults
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// \brief Whether this AST represents a complete translation unit.
+comment|///
+comment|/// If false, this AST is only a partial translation unit, e.g., one
+comment|/// that might still be used as a precompiled header or preamble.
+name|bool
+name|isCompleteTranslationUnit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompleteTranslationUnit
+return|;
+block|}
 comment|/// \brief A mapping from a file name to the memory buffer that stores the
 comment|/// remapped contents of that file.
 typedef|typedef
@@ -805,18 +1431,18 @@ operator|*
 operator|>
 name|RemappedFile
 expr_stmt|;
-comment|/// \brief Create a ASTUnit from a PCH file.
+comment|/// \brief Create a ASTUnit from an AST file.
 comment|///
-comment|/// \param Filename - The PCH file to load.
+comment|/// \param Filename - The AST file to load.
 comment|///
 comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
 comment|/// lifetime is expected to extend past that of the returned ASTUnit.
 comment|///
-comment|/// \returns - The initialized ASTUnit or null if the PCH failed to load.
+comment|/// \returns - The initialized ASTUnit or null if the AST failed to load.
 specifier|static
 name|ASTUnit
 modifier|*
-name|LoadFromPCHFile
+name|LoadFromASTFile
 argument_list|(
 specifier|const
 name|std
@@ -892,6 +1518,21 @@ name|bool
 name|CaptureDiagnostics
 operator|=
 name|false
+argument_list|,
+name|bool
+name|PrecompilePreamble
+operator|=
+name|false
+argument_list|,
+name|bool
+name|CompleteTranslationUnit
+operator|=
+name|true
+argument_list|,
+name|bool
+name|CacheCodeCompletionResults
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// LoadFromCommandLine - Create an ASTUnit from a vector of command line
@@ -958,6 +1599,140 @@ name|bool
 name|CaptureDiagnostics
 operator|=
 name|false
+argument_list|,
+name|bool
+name|PrecompilePreamble
+operator|=
+name|false
+argument_list|,
+name|bool
+name|CompleteTranslationUnit
+operator|=
+name|true
+argument_list|,
+name|bool
+name|CacheCodeCompletionResults
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+comment|/// \brief Reparse the source files using the same command-line options that
+comment|/// were originally used to produce this translation unit.
+comment|///
+comment|/// \returns True if a failure occurred that causes the ASTUnit not to
+comment|/// contain any translation-unit information, false otherwise.
+name|bool
+name|Reparse
+parameter_list|(
+name|RemappedFile
+modifier|*
+name|RemappedFiles
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|NumRemappedFiles
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// \brief Perform code completion at the given file, line, and
+comment|/// column within this translation unit.
+comment|///
+comment|/// \param File The file in which code completion will occur.
+comment|///
+comment|/// \param Line The line at which code completion will occur.
+comment|///
+comment|/// \param Column The column at which code completion will occur.
+comment|///
+comment|/// \param IncludeMacros Whether to include macros in the code-completion
+comment|/// results.
+comment|///
+comment|/// \param IncludeCodePatterns Whether to include code patterns (such as a
+comment|/// for loop) in the code-completion results.
+comment|///
+comment|/// FIXME: The Diag, LangOpts, SourceMgr, FileMgr, StoredDiagnostics, and
+comment|/// OwnedBuffers parameters are all disgusting hacks. They will go away.
+name|void
+name|CodeComplete
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|File
+argument_list|,
+name|unsigned
+name|Line
+argument_list|,
+name|unsigned
+name|Column
+argument_list|,
+name|RemappedFile
+operator|*
+name|RemappedFiles
+argument_list|,
+name|unsigned
+name|NumRemappedFiles
+argument_list|,
+name|bool
+name|IncludeMacros
+argument_list|,
+name|bool
+name|IncludeCodePatterns
+argument_list|,
+name|CodeCompleteConsumer
+operator|&
+name|Consumer
+argument_list|,
+name|Diagnostic
+operator|&
+name|Diag
+argument_list|,
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|,
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+name|FileManager
+operator|&
+name|FileMgr
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|StoredDiagnostic
+operator|>
+operator|&
+name|StoredDiagnostics
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|>
+operator|&
+name|OwnedBuffers
+argument_list|)
+decl_stmt|;
+comment|/// \brief Save this translation unit to a file with the given name.
+comment|///
+comment|/// \returns True if an error occurred, false otherwise.
+name|bool
+name|Save
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|File
 argument_list|)
 decl_stmt|;
 block|}

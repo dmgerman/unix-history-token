@@ -85,6 +85,16 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|namespace
+name|idx
+block|{
+name|class
+name|Indexer
+decl_stmt|;
+name|class
+name|TranslationUnit
+decl_stmt|;
+block|}
 name|class
 name|AnalysisManager
 range|:
@@ -124,6 +134,15 @@ name|CreateStoreMgr
 block|;
 name|ConstraintManagerCreator
 name|CreateConstraintMgr
+block|;
+comment|/// \brief Provide function definitions in other translation units. This is
+comment|/// NULL if we don't have multiple translation units. AnalysisManager does
+comment|/// not own the Indexer.
+name|idx
+operator|::
+name|Indexer
+operator|*
+name|Idxer
 block|;    enum
 name|AnalysisScope
 block|{
@@ -182,6 +201,8 @@ argument|StoreManagerCreator storemgr
 argument_list|,
 argument|ConstraintManagerCreator constraintmgr
 argument_list|,
+argument|idx::Indexer *idxer
+argument_list|,
 argument|unsigned maxnodes
 argument_list|,
 argument|unsigned maxloop
@@ -197,8 +218,15 @@ argument_list|,
 argument|bool trim
 argument_list|,
 argument|bool inlinecall
+argument_list|,
+argument|bool useUnoptimizedCFG
 argument_list|)
 operator|:
+name|AnaCtxMgr
+argument_list|(
+name|useUnoptimizedCFG
+argument_list|)
+block|,
 name|Ctx
 argument_list|(
 name|ctx
@@ -227,6 +255,11 @@ block|,
 name|CreateConstraintMgr
 argument_list|(
 name|constraintmgr
+argument_list|)
+block|,
+name|Idxer
+argument_list|(
+name|idxer
 argument_list|)
 block|,
 name|AScope
@@ -295,6 +328,15 @@ operator|.
 name|clear
 argument_list|()
 block|;   }
+name|AnalysisContextManager
+operator|&
+name|getAnalysisContextManager
+argument_list|()
+block|{
+return|return
+name|AnaCtxMgr
+return|;
+block|}
 name|StoreManagerCreator
 name|getStoreManagerCreator
 argument_list|()
@@ -309,6 +351,18 @@ argument_list|()
 block|{
 return|return
 name|CreateConstraintMgr
+return|;
+block|}
+name|idx
+operator|::
+name|Indexer
+operator|*
+name|getIndexer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Idxer
 return|;
 block|}
 name|virtual
@@ -469,6 +523,28 @@ return|return
 name|InlineCall
 return|;
 block|}
+name|bool
+name|hasIndexer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Idxer
+operator|!=
+literal|0
+return|;
+block|}
+specifier|const
+name|AnalysisContext
+operator|*
+name|getAnalysisContextInAnotherTU
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+block|;
 name|CFG
 operator|*
 name|getCFG
@@ -526,6 +602,75 @@ name|getParentMap
 argument_list|()
 return|;
 block|}
+name|AnalysisContext
+operator|*
+name|getAnalysisContext
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|AnaCtxMgr
+operator|.
+name|getContext
+argument_list|(
+name|D
+argument_list|)
+return|;
+block|}
+name|AnalysisContext
+operator|*
+name|getAnalysisContext
+argument_list|(
+argument|const Decl *D
+argument_list|,
+argument|idx::TranslationUnit *TU
+argument_list|)
+block|{
+return|return
+name|AnaCtxMgr
+operator|.
+name|getContext
+argument_list|(
+name|D
+argument_list|,
+name|TU
+argument_list|)
+return|;
+block|}
+specifier|const
+name|StackFrameContext
+operator|*
+name|getStackFrame
+argument_list|(
+argument|AnalysisContext *Ctx
+argument_list|,
+argument|LocationContext const *Parent
+argument_list|,
+argument|Stmt const *S
+argument_list|,
+argument|const CFGBlock *Blk
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+block|{
+return|return
+name|LocCtxMgr
+operator|.
+name|getStackFrame
+argument_list|(
+name|Ctx
+argument_list|,
+name|Parent
+argument_list|,
+name|S
+argument_list|,
+name|Blk
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
 comment|// Get the top level stack frame.
 specifier|const
 name|StackFrameContext
@@ -533,6 +678,8 @@ operator|*
 name|getStackFrame
 argument_list|(
 argument|Decl const *D
+argument_list|,
+argument|idx::TranslationUnit *TU
 argument_list|)
 block|{
 return|return
@@ -545,6 +692,8 @@ operator|.
 name|getContext
 argument_list|(
 name|D
+argument_list|,
+name|TU
 argument_list|)
 argument_list|,
 literal|0

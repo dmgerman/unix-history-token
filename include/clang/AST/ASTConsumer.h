@@ -73,15 +73,19 @@ name|class
 name|DeclGroupRef
 decl_stmt|;
 name|class
-name|TagDecl
-decl_stmt|;
-name|class
 name|HandleTagDeclDefinition
 decl_stmt|;
+name|class
+name|ASTDeserializationListener
+decl_stmt|;
+comment|// layering violation because void* is ugly
 name|class
 name|SemaConsumer
 decl_stmt|;
 comment|// layering violation required for safe SemaConsumer
+name|class
+name|TagDecl
+decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
@@ -135,6 +139,17 @@ argument_list|(
 argument|DeclGroupRef D
 argument_list|)
 expr_stmt|;
+comment|/// HandleInterestingDecl - Handle the specified interesting declaration. This
+comment|/// is called by the AST reader when deserializing things that might interest
+comment|/// the consumer. The default implementation forwards to HandleTopLevelDecl.
+name|virtual
+name|void
+name|HandleInterestingDecl
+parameter_list|(
+name|DeclGroupRef
+name|D
+parameter_list|)
+function_decl|;
 comment|/// HandleTranslationUnit - This method is called when the ASTs for entire
 comment|/// translation unit have been parsed.
 name|virtual
@@ -198,6 +213,20 @@ name|bool
 name|DefinitionRequired
 parameter_list|)
 block|{}
+comment|/// \brief If the consumer is interested in entities being deserialized from
+comment|/// AST files, it should return a pointer to a ASTDeserializationListener here
+comment|///
+comment|/// The return type is void* because ASTDS lives in Frontend.
+name|virtual
+name|ASTDeserializationListener
+modifier|*
+name|GetASTDeserializationListener
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// PrintStats - If desired, print any statistics.
 name|virtual
 name|void

@@ -50,5 +50,77 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|inline
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|always_inline
+operator|)
+argument_list|)
+name|f1
+argument_list|(
+name|int
+name|x
+argument_list|)
+block|{
+name|int
+name|blarg
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|x
+condition|;
+operator|++
+name|i
+control|)
+name|blarg
+operator|=
+name|blarg
+operator|+
+name|x
+operator|*
+name|i
+expr_stmt|;
+return|return
+name|blarg
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @test1
+end_comment
+
+begin_function
+name|int
+name|test1
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// CHECK: br i1
+comment|// CHECK-NOT: call
+comment|// CHECK: ret i32
+return|return
+name|f1
+argument_list|(
+name|x
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

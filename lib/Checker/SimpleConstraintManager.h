@@ -164,20 +164,6 @@ argument_list|,
 argument|const llvm::APSInt& Int
 argument_list|)
 block|;
-specifier|const
-name|GRState
-operator|*
-name|AssumeInBound
-argument_list|(
-argument|const GRState *state
-argument_list|,
-argument|DefinedSVal Idx
-argument_list|,
-argument|DefinedSVal UpperBound
-argument_list|,
-argument|bool Assumption
-argument_list|)
-block|;
 name|protected
 operator|:
 comment|//===------------------------------------------------------------------===//

@@ -272,6 +272,9 @@ name|virtual
 name|void
 name|MacroUndefined
 parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
 specifier|const
 name|IdentifierInfo
 modifier|*
@@ -558,6 +561,8 @@ name|virtual
 name|void
 name|MacroUndefined
 argument_list|(
+argument|SourceLocation Loc
+argument_list|,
 argument|const IdentifierInfo *II
 argument_list|,
 argument|const MacroInfo *MI
@@ -567,6 +572,8 @@ name|First
 operator|->
 name|MacroUndefined
 argument_list|(
+name|Loc
+argument_list|,
 name|II
 argument_list|,
 name|MI
@@ -576,6 +583,8 @@ name|Second
 operator|->
 name|MacroUndefined
 argument_list|(
+name|Loc
+argument_list|,
 name|II
 argument_list|,
 name|MI

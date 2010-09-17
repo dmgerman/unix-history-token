@@ -114,6 +114,20 @@ name|Length
 decl_stmt|;
 block|}
 struct|;
+comment|/**  * \brief Describes the availability of a particular entity, which indicates  * whether the use of this entity will result in a warning or error due to  * it being deprecated or unavailable.  */
+enum|enum
+name|CXAvailabilityKind
+block|{
+comment|/**    * \brief The entity is available.    */
+name|CXAvailability_Available
+block|,
+comment|/**    * \brief The entity is available, but has been deprecated (and its use is    * not recommended).    */
+name|CXAvailability_Deprecated
+block|,
+comment|/**    * \brief The entity is not available; any use of it will be an error.    */
+name|CXAvailability_NotAvailable
+block|}
+enum|;
 comment|/**  * \defgroup CINDEX_STRING String manipulation routines  *  * @{  */
 comment|/**  * \brief A character string.  *  * The \c CXString type is used to return strings from the interface when  * the ownership of that string might different from one call to the next.  * Use \c clang_getCString() to retrieve the string data and, once finished  * with the string data, call \c clang_disposeString() to free the string.  */
 typedef|typedef
@@ -569,6 +583,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|clang_command_line_args
 parameter_list|,
@@ -594,12 +609,160 @@ modifier|*
 name|ast_filename
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Flags that control the creation of translation units.  *  * The enumerators in this enumeration type are meant to be bitwise  * ORed together to specify which options should be used when  * constructing the translation unit.  */
+enum|enum
+name|CXTranslationUnit_Flags
+block|{
+comment|/**    * \brief Used to indicate that no special translation-unit options are    * needed.    */
+name|CXTranslationUnit_None
+init|=
+literal|0x0
+block|,
+comment|/**    * \brief Used to indicate that the parser should construct a "detailed"    * preprocessing record, including all macro definitions and instantiations.    *    * Constructing a detailed preprocessing record requires more memory    * and time to parse, since the information contained in the record    * is usually not retained. However, it can be useful for    * applications that require more detailed information about the    * behavior of the preprocessor.    */
+name|CXTranslationUnit_DetailedPreprocessingRecord
+init|=
+literal|0x01
+block|,
+comment|/**    * \brief Used to indicate that the translation unit is incomplete.    *    * When a translation unit is considered "incomplete", semantic    * analysis that is typically performed at the end of the    * translation unit will be suppressed. For example, this suppresses    * the completion of tentative declarations in C and of    * instantiation of implicitly-instantiation function templates in    * C++. This option is typically used when parsing a header with the    * intent of producing a precompiled header.    */
+name|CXTranslationUnit_Incomplete
+init|=
+literal|0x02
+block|,
+comment|/**    * \brief Used to indicate that the translation unit should be built with an     * implicit precompiled header for the preamble.    *    * An implicit precompiled header is used as an optimization when a    * particular translation unit is likely to be reparsed many times    * when the sources aren't changing that often. In this case, an    * implicit precompiled header will be built containing all of the    * initial includes at the top of the main file (what we refer to as    * the "preamble" of the file). In subsequent parses, if the    * preamble or the files in it have not changed, \c    * clang_reparseTranslationUnit() will re-use the implicit    * precompiled header to improve parsing performance.    */
+name|CXTranslationUnit_PrecompiledPreamble
+init|=
+literal|0x04
+block|,
+comment|/**    * \brief Used to indicate that the translation unit should cache some    * code-completion results with each reparse of the source file.    *    * Caching of code-completion results is a performance optimization that    * introduces some overhead to reparsing but improves the performance of    * code-completion operations.    */
+name|CXTranslationUnit_CacheCompletionResults
+init|=
+literal|0x08
+block|}
+enum|;
+comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_defaultEditingTranslationUnitOptions
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Parse the given source file and the translation unit corresponding  * to that file.  *  * This routine is the main entry point for the Clang C API, providing the  * ability to parse a source file into a translation unit that can then be  * queried by other functions in the API. This routine accepts a set of  * command-line arguments so that the compilation can be configured in the same  * way that the compiler is configured on the command line.  *  * \param CIdx The index object with which the translation unit will be   * associated.  *  * \param source_filename The name of the source file to load, or NULL if the  * source file is included in \p clang_command_line_args.  *  * \param command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',   * '-emit-ast', '-fsyntex-only' (which is the default), and '-o<output file>'.  *  * \param num_command_line_args The number of command-line arguments in  * \p command_line_args.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param options A bitmask of options that affects how the translation unit  * is managed but not its compilation. This should be a bitwise OR of the  * CXTranslationUnit_XXX flags.  *  * \returns A new translation unit describing the parsed code and containing  * any diagnostics produced by the compiler. If there is a failure from which  * the compiler cannot recover, returns NULL.  */
+name|CINDEX_LINKAGE
+name|CXTranslationUnit
+name|clang_parseTranslationUnit
+parameter_list|(
+name|CXIndex
+name|CIdx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|source_filename
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|command_line_args
+parameter_list|,
+name|int
+name|num_command_line_args
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|unsigned
+name|options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Flags that control how translation units are saved.  *  * The enumerators in this enumeration type are meant to be bitwise  * ORed together to specify which options should be used when  * saving the translation unit.  */
+enum|enum
+name|CXSaveTranslationUnit_Flags
+block|{
+comment|/**    * \brief Used to indicate that no special saving options are needed.    */
+name|CXSaveTranslationUnit_None
+init|=
+literal|0x0
+block|}
+enum|;
+comment|/**  * \brief Returns the set of flags that is suitable for saving a translation  * unit.  *  * The set of flags returned provide options for  * \c clang_saveTranslationUnit() by default. The returned flag  * set contains an unspecified set of options that save translation units with  * the most commonly-requested data.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_defaultSaveOptions
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Saves a translation unit into a serialized representation of  * that translation unit on disk.  *  * Any translation unit that was parsed without error can be saved  * into a file. The translation unit can then be deserialized into a  * new \c CXTranslationUnit with \c clang_createTranslationUnit() or,  * if it is an incomplete translation unit that corresponds to a  * header, used as a precompiled header when parsing other translation  * units.  *  * \param TU The translation unit to save.  *  * \param FileName The file to which the translation unit will be saved.  *  * \param options A bitmask of options that affects how the translation unit  * is saved. This should be a bitwise OR of the  * CXSaveTranslationUnit_XXX flags.  *  * \returns Zero if the translation unit was saved successfully, a  * non-zero value otherwise.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_saveTranslationUnit
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|FileName
+parameter_list|,
+name|unsigned
+name|options
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Destroy the specified CXTranslationUnit object.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_disposeTranslationUnit
 parameter_list|(
 name|CXTranslationUnit
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Flags that control the reparsing of translation units.  *  * The enumerators in this enumeration type are meant to be bitwise  * ORed together to specify which options should be used when  * reparsing the translation unit.  */
+enum|enum
+name|CXReparse_Flags
+block|{
+comment|/**    * \brief Used to indicate that no special reparsing options are needed.    */
+name|CXReparse_None
+init|=
+literal|0x0
+block|}
+enum|;
+comment|/**  * \brief Returns the set of flags that is suitable for reparsing a translation  * unit.  *  * The set of flags returned provide options for  * \c clang_reparseTranslationUnit() by default. The returned flag  * set contains an unspecified set of optimizations geared toward common uses  * of reparsing. The set of optimizations enabled may change from one version   * to the next.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_defaultReparseOptions
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Reparse the source files that produced this translation unit.  *  * This routine can be used to re-parse the source files that originally  * created the given translation unit, for example because those source files  * have changed (either on disk or as passed via \p unsaved_files). The  * source code will be reparsed with the same command-line options as it  * was originally parsed.   *  * Reparsing a translation unit invalidates all cursors and source locations  * that refer into that translation unit. This makes reparsing a translation  * unit semantically equivalent to destroying the translation unit and then  * creating a new translation unit with the same command-line arguments.  * However, it may be more efficient to reparse a translation   * unit using this routine.  *  * \param TU The translation unit whose contents will be re-parsed. The  * translation unit must originally have been built with   * \c clang_createTranslationUnitFromSourceFile().  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files The files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *   * \param options A bitset of options composed of the flags in CXReparse_Flags.  * The function \c clang_defaultReparseOptions() produces a default set of  * options recommended for most uses, based on the translation unit.  *  * \returns 0 if the sources could be reparsed. A non-zero value will be  * returned if reparsing was impossible, such that the translation unit is  * invalid. In such cases, the only valid call for \p TU is   * \c clang_disposeTranslationUnit(TU).  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_reparseTranslationUnit
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|options
 parameter_list|)
 function_decl|;
 comment|/**  * @}  */
@@ -723,13 +886,73 @@ name|CXCursor_LinkageSpec
 init|=
 literal|23
 block|,
+comment|/** \brief A C++ constructor. */
+name|CXCursor_Constructor
+init|=
+literal|24
+block|,
+comment|/** \brief A C++ destructor. */
+name|CXCursor_Destructor
+init|=
+literal|25
+block|,
+comment|/** \brief A C++ conversion function. */
+name|CXCursor_ConversionFunction
+init|=
+literal|26
+block|,
+comment|/** \brief A C++ template type parameter. */
+name|CXCursor_TemplateTypeParameter
+init|=
+literal|27
+block|,
+comment|/** \brief A C++ non-type template parameter. */
+name|CXCursor_NonTypeTemplateParameter
+init|=
+literal|28
+block|,
+comment|/** \brief A C++ template template parameter. */
+name|CXCursor_TemplateTemplateParameter
+init|=
+literal|29
+block|,
+comment|/** \brief A C++ function template. */
+name|CXCursor_FunctionTemplate
+init|=
+literal|30
+block|,
+comment|/** \brief A C++ class template. */
+name|CXCursor_ClassTemplate
+init|=
+literal|31
+block|,
+comment|/** \brief A C++ class template partial specialization. */
+name|CXCursor_ClassTemplatePartialSpecialization
+init|=
+literal|32
+block|,
+comment|/** \brief A C++ namespace alias declaration. */
+name|CXCursor_NamespaceAlias
+init|=
+literal|33
+block|,
+comment|/** \brief A C++ using directive. */
+name|CXCursor_UsingDirective
+init|=
+literal|34
+block|,
+comment|/** \brief A using declaration. */
+name|CXCursor_UsingDeclaration
+init|=
+literal|35
+block|,
 name|CXCursor_FirstDecl
 init|=
 name|CXCursor_UnexposedDecl
 block|,
 name|CXCursor_LastDecl
 init|=
-name|CXCursor_LinkageSpec
+name|CXCursor_UsingDeclaration
 block|,
 comment|/* References */
 name|CXCursor_FirstRef
@@ -754,9 +977,23 @@ name|CXCursor_TypeRef
 init|=
 literal|43
 block|,
+name|CXCursor_CXXBaseSpecifier
+init|=
+literal|44
+block|,
+comment|/**     * \brief A reference to a class template, function template, or template    * template parameter.     */
+name|CXCursor_TemplateRef
+init|=
+literal|45
+block|,
+comment|/**    * \brief A reference to a namespace or namespace alias.    */
+name|CXCursor_NamespaceRef
+init|=
+literal|46
+block|,
 name|CXCursor_LastRef
 init|=
-literal|43
+name|CXCursor_NamespaceRef
 block|,
 comment|/* Error conditions */
 name|CXCursor_FirstInvalid
@@ -1040,6 +1277,16 @@ name|CINDEX_LINKAGE
 name|enum
 name|CXLinkageKind
 name|clang_getCursorLinkage
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the availability of the entity that this cursor refers to.  *  * \param cursor The cursor to query.  *  * \returns The availability of the cursor.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXAvailabilityKind
+name|clang_getCursorAvailability
 parameter_list|(
 name|CXCursor
 name|cursor
@@ -1379,6 +1626,55 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Return 1 if the CXType is a POD (plain old data) type, and 0  *  otherwise.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isPODType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns 1 if the base class specified by the cursor with kind  *   CX_CXXBaseSpecifier is virtual.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isVirtualBase
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Represents the C++ access control level to a base class for a  * cursor with kind CX_CXXBaseSpecifier.  */
+enum|enum
+name|CX_CXXAccessSpecifier
+block|{
+name|CX_CXXInvalidAccessSpecifier
+block|,
+name|CX_CXXPublic
+block|,
+name|CX_CXXProtected
+block|,
+name|CX_CXXPrivate
+block|}
+enum|;
+comment|/**  * \brief Returns the access control level for the C++ base specifier  *  represented by a cursor with kind CX_CXXBaseSpecifier.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CX_CXXAccessSpecifier
+name|clang_getCXXAccessSpecifier
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * @}  */
+comment|/**  * \defgroup CINDEX_ATTRIBUTES Information for attributes  *  * @{  */
+comment|/**  * \brief For cursors representing an iboutletcollection attribute,  *  this function returns the collection element type.  *  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getIBOutletCollectionType
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CURSOR_TRAVERSAL Traversing the AST with cursors  *  * These routines provide the ability to traverse the abstract syntax tree  * using cursors.  *  * @{  */
 comment|/**  * \brief Describes how the traversal of the children of a particular  * cursor should proceed after visiting a particular child cursor.  *  * A value of this enumeration type should be returned by each  * \c CXCursorVisitor to indicate how clang_visitChildren() proceed.  */
@@ -1556,10 +1852,29 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CPP C++ AST introspection  *  * The routines in this group provide access information in the ASTs specific  * to C++ language features.  *  * @{  */
-comment|/**  * \brief Determine if a C++ member function is declared 'static'.  */
+comment|/**  * \brief Determine if a C++ member function or member function template is   * declared 'static'.  */
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_CXXMethod_isStatic
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Given a cursor that represents a template, determine  * the cursor kind of the specializations would be generated by instantiating  * the template.  *  * This routine can be used to determine what flavor of function template,  * class template, or class template partial specialization is stored in the  * cursor. For example, it can describe whether a class template cursor is  * declared with "struct", "class" or "union".  *  * \param C The cursor to query. This cursor should represent a template  * declaration.  *  * \returns The cursor kind of the specializations that would be generated  * by instantiating the template \p C. If \p C is not a template, returns  * \c CXCursor_NoDeclFound.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXCursorKind
+name|clang_getTemplateCursorKind
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Given a cursor that may represent a specialization or instantiation  * of a template, retrieve the cursor that represents the template that it  * specializes or from which it was instantiated.  *  * This routine determines the template involved both for explicit   * specializations of templates and for implicit instantiations of the template,  * both of which are referred to as "specializations". For a class template  * specialization (e.g., \c std::vector<bool>), this routine will return   * either the primary template (\c std::vector) or, if the specialization was  * instantiated from a class template partial specialization, the class template  * partial specialization. For a class template partial specialization and a  * function template specialization (including instantiations), this  * this routine will return the specialized template.  *  * For members of a class template (e.g., member functions, member classes, or  * static data members), returns the specialized or instantiated member.   * Although not strictly "templates" in the C++ language, members of class  * templates have the same notions of specializations and instantiations that  * templates do, so this routine treats them similarly.  *  * \param C A cursor that may be a specialization of a template or a member  * of a template.  *  * \returns If the given cursor is a specialization or instantiation of a   * template or a member thereof, the template or member that it specializes or  * from which it was instantiated. Otherwise, returns a NULL cursor.  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getSpecializedCursorTemplate
 parameter_list|(
 name|CXCursor
 name|C
@@ -1902,6 +2217,16 @@ name|CXCompletionString
 name|completion_string
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine the availability of the entity that this code-completion  * string refers to.  *  * \param completion_string The completion string to query.  *  * \returns The availability of the completion string.  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXAvailabilityKind
+name|clang_getCompletionAvailability
+parameter_list|(
+name|CXCompletionString
+name|completion_string
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Contains the results of code-completion.  *  * This data structure contains the results of code completion, as  * produced by \c clang_codeComplete. Its contents must be freed by  * \c clang_disposeCodeCompleteResults.  */
 typedef|typedef
 struct|struct
@@ -1938,6 +2263,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|command_line_args
 parameter_list|,
@@ -1959,6 +2285,74 @@ name|complete_line
 parameter_list|,
 name|unsigned
 name|complete_column
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Flags that can be passed to \c clang_codeCompleteAt() to  * modify its behavior.  *  * The enumerators in this enumeration can be bitwise-OR'd together to  * provide multiple options to \c clang_codeCompleteAt().  */
+enum|enum
+name|CXCodeComplete_Flags
+block|{
+comment|/**    * \brief Whether to include macros within the set of code    * completions returned.    */
+name|CXCodeComplete_IncludeMacros
+init|=
+literal|0x01
+block|,
+comment|/**    * \brief Whether to include code patterns for language constructs    * within the set of code completions, e.g., for loops.    */
+name|CXCodeComplete_IncludeCodePatterns
+init|=
+literal|0x02
+block|}
+enum|;
+comment|/**  * \brief Returns a default set of code-completion options that can be  * passed to\c clang_codeCompleteAt().   */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_defaultCodeCompleteOptions
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Perform code completion at a given location in a translation unit.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of  * semantic analysis, what completions to provide. These completions are  * returned via a new \c CXCodeCompleteResults structure.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the  * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-completion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param TU The translation unit in which code-completion should  * occur. The source files for this translation unit need not be  * completely up-to-date (and the contents of those source files may  * be overridden via \p unsaved_files). Cursors referring into the  * translation unit may be invalidated by this invocation.  *  * \param complete_filename The name of the source file where code  * completion should be performed. This filename may be any file  * included in the translation unit.  *  * \param complete_line The line at which code-completion should occur.  *  * \param complete_column The column at which code-completion should occur.  * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param unsaved_files the Tiles that have not yet been saved to disk  * but may be required for parsing or code completion, including the  * contents of those files.  The contents and name of these files (as  * specified by CXUnsavedFile) are copied when necessary, so the  * client only needs to guarantee their validity until the call to  * this function returns.  *  * \param num_unsaved_files The number of unsaved file entries in \p  * unsaved_files.  *  * \param options Extra options that control the behavior of code  * completion, expressed as a bitwise OR of the enumerators of the  * CXCodeComplete_Flags enumeration. The   * \c clang_defaultCodeCompleteOptions() function returns a default set  * of code-completion options.  *  * \returns If successful, a new \c CXCodeCompleteResults structure  * containing code-completion results, which should eventually be  * freed with \c clang_disposeCodeCompleteResults(). If code  * completion fails, returns NULL.  */
+name|CINDEX_LINKAGE
+name|CXCodeCompleteResults
+modifier|*
+name|clang_codeCompleteAt
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|complete_filename
+parameter_list|,
+name|unsigned
+name|complete_line
+parameter_list|,
+name|unsigned
+name|complete_column
+parameter_list|,
+name|struct
+name|CXUnsavedFile
+modifier|*
+name|unsaved_files
+parameter_list|,
+name|unsigned
+name|num_unsaved_files
+parameter_list|,
+name|unsigned
+name|options
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Sort the code-completion results in case-insensitive alphabetical   * order.  *  * \param Results The set of results to sort.  * \param NumResults The number of results in \p Results.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_sortCodeCompletionResults
+parameter_list|(
+name|CXCompletionResult
+modifier|*
+name|Results
+parameter_list|,
+name|unsigned
+name|NumResults
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Free the given set of code-completion results.  */

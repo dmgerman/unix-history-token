@@ -4,15 +4,11 @@ comment|// RUN: echo "#include<stdio.h>"> %t.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang -S -save-temps -g -include %t.h %s -emit-llvm -o %t.ll
+comment|// RUN: %clang -S -g -include %t.h %s -emit-llvm -o %t.ll
 end_comment
 
 begin_comment
 comment|// RUN: grep "i32 5" %t.ll
-end_comment
-
-begin_comment
-comment|// RUN: rm -f lineno-dbginfo.i
 end_comment
 
 begin_comment

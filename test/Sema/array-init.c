@@ -1627,7 +1627,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//expected-error{{too many braces around scalar initializer}}
+comment|//expected-warning{{too many braces around scalar initializer}}
 end_comment
 
 begin_comment
@@ -1676,7 +1676,11 @@ block|}
 end_function
 
 begin_comment
-comment|//expected-warning{{empty struct extension}} expected-error{{initializer for aggregate with no elements}}
+comment|//expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}} \
+end_comment
+
+begin_comment
+comment|// expected-error{{initializer for aggregate with no elements}}
 end_comment
 
 begin_function
@@ -1834,7 +1838,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|//expected-warning{{empty struct extension}} expected-warning{{excess elements in struct initializer}}
+comment|//expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}} \
+end_comment
+
+begin_comment
+comment|// expected-warning{{excess elements in struct initializer}}
 end_comment
 
 begin_struct

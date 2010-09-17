@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ftrapv %s -emit-llvm -o %t
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -ftrapv %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep "__overflow_handler" %t | count 2
+comment|// CHECK: [[I32O:%.*]] = type { i32, i1 }
 end_comment
 
 begin_decl_stmt
@@ -28,23 +28,101 @@ name|k
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// CHECK: define void @test0()
+end_comment
+
 begin_function
 name|void
-name|foo
+name|test0
 parameter_list|()
 block|{
+comment|// -ftrapv doesn't affect unsigned arithmetic.
+comment|// CHECK:      [[T1:%.*]] = load i32* @uj
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @uk
+comment|// CHECK-NEXT: [[T3:%.*]] = add i32 [[T1]], [[T2]]
+comment|// CHECK-NEXT: store i32 [[T3]], i32* @ui
 name|ui
 operator|=
 name|uj
 operator|+
 name|uk
 expr_stmt|;
+comment|// CHECK:      [[T1:%.*]] = load i32* @j
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @k
+comment|// CHECK-NEXT: [[T3:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 [[T2]])
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T3]], 0
+comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue [[I32O]] [[T3]], 1
+comment|// CHECK-NEXT: br i1 [[T5]]
+comment|// CHECK:      call void @llvm.trap()
 name|i
 operator|=
 name|j
 operator|+
 name|k
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @test1()
+end_comment
+
+begin_function
+name|void
+name|test1
+parameter_list|()
+block|{
+specifier|extern
+name|void
+name|opaque
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+name|opaque
+argument_list|(
+name|i
+operator|++
+argument_list|)
+expr_stmt|;
+comment|// CHECK:      [[T1:%.*]] = load i32* @i
+comment|// CHECK-NEXT: [[T2:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
+comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue [[I32O]] [[T2]], 0
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T2]], 1
+comment|// CHECK-NEXT: br i1 [[T4]]
+comment|// CHECK:      call void @llvm.trap()
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @test2()
+end_comment
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+specifier|extern
+name|void
+name|opaque
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
+name|opaque
+argument_list|(
+operator|++
+name|i
+argument_list|)
+expr_stmt|;
+comment|// CHECK:      [[T1:%.*]] = load i32* @i
+comment|// CHECK-NEXT: [[T2:%.*]] = call [[I32O]] @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
+comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue [[I32O]] [[T2]], 0
+comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue [[I32O]] [[T2]], 1
+comment|// CHECK-NEXT: br i1 [[T4]]
+comment|// CHECK:      call void @llvm.trap()
 block|}
 end_function
 

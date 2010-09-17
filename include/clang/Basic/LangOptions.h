@@ -149,6 +149,12 @@ literal|1
 decl_stmt|;
 comment|// Microsoft extensions.
 name|unsigned
+name|Borland
+range|:
+literal|1
+decl_stmt|;
+comment|// Borland extensions.
+name|unsigned
 name|CPlusPlus
 range|:
 literal|1
@@ -560,6 +566,8 @@ expr_stmt|;
 name|C99
 operator|=
 name|Microsoft
+operator|=
+name|Borland
 operator|=
 name|CPlusPlus
 operator|=

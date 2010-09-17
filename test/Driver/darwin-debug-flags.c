@@ -12,11 +12,11 @@ comment|// CHECK: !1 = metadata !{
 end_comment
 
 begin_comment
-comment|// CHECK: -mmacosx-version-min=10.5.0
+comment|// CHECK: -g -Os
 end_comment
 
 begin_comment
-comment|// CHECK: -g -Os
+comment|// CHECK: -mmacosx-version-min=10.5.0
 end_comment
 
 begin_comment

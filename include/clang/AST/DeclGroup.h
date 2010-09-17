@@ -131,14 +131,6 @@ name|unsigned
 name|NumDecls
 parameter_list|)
 function_decl|;
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|)
-function_decl|;
 name|unsigned
 name|size
 argument_list|()

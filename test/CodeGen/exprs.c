@@ -762,5 +762,35 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// Check operations on incomplete types.
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|s14
+struct_decl|;
+end_struct_decl
+
+begin_function
+name|void
+name|f14
+parameter_list|(
+name|struct
+name|s13
+modifier|*
+name|a
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+operator|&
+operator|*
+name|a
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

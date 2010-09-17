@@ -240,6 +240,11 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|IdempotentOps
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|PurgeDead
 range|:
 literal|1
@@ -276,6 +281,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|InlineCall
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|UnoptimizedCFG
 range|:
 literal|1
 decl_stmt|;
@@ -333,6 +343,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|EnableExperimentalInternalChecks
+operator|=
+literal|0
+expr_stmt|;
+name|UnoptimizedCFG
 operator|=
 literal|0
 expr_stmt|;

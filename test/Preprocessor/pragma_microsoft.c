@@ -135,5 +135,39 @@ literal|"foo\abar\nbaz\tsome	thing"
 name|)
 end_pragma
 
+begin_comment
+comment|// __pragma
+end_comment
+
+begin_macro
+name|__pragma
+argument_list|(
+argument|comment(linker,
+literal|" bar="
+argument|BAR)
+argument_list|)
+end_macro
+
+begin_define
+define|#
+directive|define
+name|MACRO_WITH__PRAGMA
+value|{ \   __pragma(warning(push)); \   __pragma(warning(disable: 10000)); \   2+2; \   __pragma(warning(pop)); \ }
+end_define
+
+begin_function
+name|void
+name|f
+parameter_list|()
+block|{
+name|__pragma
+argument_list|()
+comment|// If we ever actually *support* __pragma(warning(disable: x)),
+comment|// this warning should go away.
+name|MACRO_WITH__PRAGMA
+comment|// expected-warning {{expression result unused}}
+block|}
+end_function
+
 end_unit
 

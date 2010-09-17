@@ -159,6 +159,26 @@ operator|::
 name|string
 name|ImplicitPCHInclude
 expr_stmt|;
+comment|/// \brief When true, disables most of the normal validation performed on
+comment|/// precompiled headers.
+name|bool
+name|DisablePCHValidation
+decl_stmt|;
+comment|/// \brief If non-zero, the implicit PCH include is actually a precompiled
+comment|/// preamble that covers this number of bytes in the main source file.
+comment|///
+comment|/// The boolean indicates whether the preamble ends at the start of a new
+comment|/// line.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|PrecompiledPreambleBytes
+expr_stmt|;
 comment|/// The implicit PTH input included at the start of the translation unit, or
 comment|/// empty.
 name|std
@@ -219,6 +239,37 @@ operator|>
 expr|>
 name|RemappedFileBuffers
 expr_stmt|;
+comment|/// \brief Whether the compiler instance should retain (i.e., not free)
+comment|/// the buffers associated with remapped files.
+comment|///
+comment|/// This flag defaults to false; it can be set true only through direct
+comment|/// manipulation of the compiler invocation object, in cases where the
+comment|/// compiler invocation and its buffers will be reused.
+name|bool
+name|RetainRemappedFileBuffers
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+operator|::
+name|iterator
+name|remapped_file_iterator
+expr_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -239,9 +290,20 @@ operator|>
 expr|>
 operator|::
 name|const_iterator
-name|remapped_file_iterator
+name|const_remapped_file_iterator
 expr_stmt|;
 name|remapped_file_iterator
+name|remapped_file_begin
+parameter_list|()
+block|{
+return|return
+name|RemappedFiles
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_remapped_file_iterator
 name|remapped_file_begin
 argument_list|()
 specifier|const
@@ -254,6 +316,17 @@ argument_list|()
 return|;
 block|}
 name|remapped_file_iterator
+name|remapped_file_end
+parameter_list|()
+block|{
+return|return
+name|RemappedFiles
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_remapped_file_iterator
 name|remapped_file_end
 argument_list|()
 specifier|const
@@ -286,10 +359,45 @@ operator|*
 operator|>
 expr|>
 operator|::
-name|const_iterator
+name|iterator
 name|remapped_file_buffer_iterator
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|>
+expr|>
+operator|::
+name|const_iterator
+name|const_remapped_file_buffer_iterator
+expr_stmt|;
 name|remapped_file_buffer_iterator
+name|remapped_file_buffer_begin
+parameter_list|()
+block|{
+return|return
+name|RemappedFileBuffers
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_remapped_file_buffer_iterator
 name|remapped_file_buffer_begin
 argument_list|()
 specifier|const
@@ -302,6 +410,17 @@ argument_list|()
 return|;
 block|}
 name|remapped_file_buffer_iterator
+name|remapped_file_buffer_end
+parameter_list|()
+block|{
+return|return
+name|RemappedFileBuffers
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_remapped_file_buffer_iterator
 name|remapped_file_buffer_end
 argument_list|()
 specifier|const
@@ -325,9 +444,26 @@ argument_list|)
 operator|,
 name|DetailedRecord
 argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DisablePCHValidation
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|PrecompiledPreambleBytes
+argument_list|(
+literal|0
+argument_list|,
+name|true
+argument_list|)
+operator|,
+name|RetainRemappedFileBuffers
+argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{ }
 name|void
 name|addMacroDef
 argument_list|(
@@ -390,12 +526,35 @@ name|To
 argument_list|)
 argument_list|)
 block|;   }
+name|remapped_file_iterator
+name|eraseRemappedFile
+argument_list|(
+argument|remapped_file_iterator Remapped
+argument_list|)
+block|{
+return|return
+name|RemappedFiles
+operator|.
+name|erase
+argument_list|(
+name|Remapped
+argument_list|)
+return|;
+block|}
 name|void
 name|addRemappedFile
 argument_list|(
-argument|llvm::StringRef From
+name|llvm
+operator|::
+name|StringRef
+name|From
 argument_list|,
-argument|const llvm::MemoryBuffer * To
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|To
 argument_list|)
 block|{
 name|RemappedFileBuffers
@@ -411,7 +570,39 @@ argument_list|,
 name|To
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+name|remapped_file_buffer_iterator
+name|eraseRemappedFile
+parameter_list|(
+name|remapped_file_buffer_iterator
+name|Remapped
+parameter_list|)
+block|{
+return|return
+name|RemappedFileBuffers
+operator|.
+name|erase
+argument_list|(
+name|Remapped
+argument_list|)
+return|;
+block|}
+name|void
+name|clearRemappedFiles
+parameter_list|()
+block|{
+name|RemappedFiles
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|RemappedFileBuffers
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

@@ -147,7 +147,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// -expected-warning{{use of empty struct extension}}
+comment|// -expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}}
 end_comment
 
 begin_decl_stmt

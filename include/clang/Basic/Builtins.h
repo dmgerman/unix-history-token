@@ -495,6 +495,24 @@ modifier|&
 name|HasVAListArg
 parameter_list|)
 function_decl|;
+comment|/// \brief Determine whether this builtin is like scanf in its
+comment|/// formatting rules and, if so, set the index to the format string
+comment|/// argument and whether this function as a va_list argument.
+name|bool
+name|isScanfLike
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+modifier|&
+name|FormatIdx
+parameter_list|,
+name|bool
+modifier|&
+name|HasVAListArg
+parameter_list|)
+function_decl|;
 comment|/// hasVAListUse - Return true of the specified builtin uses __builtin_va_list
 comment|/// as an operand or return type.
 name|bool

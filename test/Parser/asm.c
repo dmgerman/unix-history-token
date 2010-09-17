@@ -8,8 +8,8 @@ name|void
 name|f1
 parameter_list|()
 block|{
+comment|// PR7673: Some versions of GCC support an empty clobbers section.
 asm|asm ("ret" : : :);
-comment|// expected-error {{expected string literal}}
 block|}
 end_function
 

@@ -2329,6 +2329,24 @@ modifier|&
 name|BRC
 parameter_list|)
 function_decl|;
+name|void
+name|registerVarDeclsLastStore
+parameter_list|(
+name|BugReporterContext
+modifier|&
+name|BRC
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|stmt
+parameter_list|,
+specifier|const
+name|ExplodedNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -70,6 +70,10 @@ comment|// RUN: c-index-test -code-completion-at=%s:7:1 %s | FileCheck -check-pr
 end_comment
 
 begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:7:1 %s | FileCheck -check-prefix=CHECK-CC1 %s
+end_comment
+
+begin_comment
 comment|// CHECK-CC1: macro definition:{TypedText FOO}{LeftParen (}{Placeholder Arg1}{Comma , }{Placeholder Arg2}{RightParen )}
 end_comment
 
@@ -82,11 +86,19 @@ comment|// RUN: c-index-test -code-completion-at=%s:14:8 %s | FileCheck -check-p
 end_comment
 
 begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:14:8 %s | FileCheck -check-prefix=CHECK-CC2 %s
+end_comment
+
+begin_comment
 comment|// CHECK-CC2: macro definition:{TypedText nil} (30)
 end_comment
 
 begin_comment
 comment|// RUN: c-index-test -code-completion-at=%s:15:5 %s | FileCheck -check-prefix=CHECK-CC3 %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:15:5 %s | FileCheck -check-prefix=CHECK-CC3 %s
 end_comment
 
 begin_comment

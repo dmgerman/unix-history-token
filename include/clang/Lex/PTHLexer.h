@@ -157,6 +157,14 @@ operator|&
 name|T
 argument_list|)
 block|;
+name|bool
+name|LexEndOfFile
+argument_list|(
+name|Token
+operator|&
+name|Result
+argument_list|)
+block|;
 comment|/// PTHMgr - The PTHManager object that created this PTHLexer.
 name|PTHManager
 operator|&

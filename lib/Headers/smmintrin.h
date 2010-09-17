@@ -39,31 +39,6 @@ file|<tmmintrin.h>
 end_include
 
 begin_comment
-comment|/* Type defines.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|double
-name|__v2df
-name|__attribute__
-typedef|((
-name|__vector_size__
-typedef|(16)));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|long
-name|__v2di
-name|__attribute__
-typedef|((
-name|__vector_size__
-typedef|(16)));
-end_typedef
-
-begin_comment
 comment|/* SSE4 Rounding macros. */
 end_comment
 
@@ -1226,7 +1201,7 @@ comment|/* __x86_64__ */
 end_comment
 
 begin_comment
-comment|/* Extract int from packed integer array at index.  */
+comment|/* Extract int from packed integer array at index.  This returns the element  * as a zero extended value, so it is unsigned.  */
 end_comment
 
 begin_define
@@ -1238,7 +1213,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                  __a[N];}))
+value|(__extension__ ({ __v16qi __a = (__v16qi)(X); \                                                  (unsigned char)__a[N];}))
 end_define
 
 begin_define
@@ -1250,7 +1225,7 @@ name|X
 parameter_list|,
 name|N
 parameter_list|)
-value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                   __a[N];}))
+value|(__extension__ ({ __v4si __a = (__v4si)(X); \                                                   (unsigned)__a[N];}))
 end_define
 
 begin_ifdef

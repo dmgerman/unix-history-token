@@ -490,5 +490,35 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR7911
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|PR7911T
+name|PR7911V
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{ISO C forbids forward references to 'enum' types}}
+end_comment
+
+begin_function
+name|void
+name|PR7911F
+parameter_list|()
+block|{
+switch|switch
+condition|(
+name|PR7911V
+condition|)
+empty_stmt|;
+comment|// expected-error {{statement requires expression of integer type}}
+block|}
+end_function
+
 end_unit
 

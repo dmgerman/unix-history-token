@@ -255,5 +255,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR7888
+end_comment
+
+begin_decl_stmt
+name|double
+name|g
+init|=
+literal|1e100000000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{too large}}
+end_comment
+
 end_unit
 

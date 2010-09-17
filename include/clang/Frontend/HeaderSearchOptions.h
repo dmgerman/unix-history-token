@@ -113,35 +113,50 @@ name|IsFramework
 range|:
 literal|1
 decl_stmt|;
+comment|/// IsSysRootRelative - This is true if an absolute path should be treated
+comment|/// relative to the sysroot, or false if it should always be the absolute
+comment|/// path.
+name|unsigned
+name|IsSysRootRelative
+range|:
+literal|1
+decl_stmt|;
 name|Entry
 argument_list|(
-argument|llvm::StringRef _Path
+argument|llvm::StringRef path
 argument_list|,
-argument|frontend::IncludeDirGroup _Group
+argument|frontend::IncludeDirGroup group
 argument_list|,
-argument|bool _IsUserSupplied
+argument|bool isUserSupplied
 argument_list|,
-argument|bool _IsFramework
+argument|bool isFramework
+argument_list|,
+argument|bool isSysRootRelative
 argument_list|)
 block|:
 name|Path
 argument_list|(
-name|_Path
+name|path
 argument_list|)
 operator|,
 name|Group
 argument_list|(
-name|_Group
+name|group
 argument_list|)
 operator|,
 name|IsUserSupplied
 argument_list|(
-name|_IsUserSupplied
+name|isUserSupplied
 argument_list|)
 operator|,
 name|IsFramework
 argument_list|(
-argument|_IsFramework
+name|isFramework
+argument_list|)
+operator|,
+name|IsSysRootRelative
+argument_list|(
+argument|isSysRootRelative
 argument_list|)
 block|{}
 block|}
@@ -267,6 +282,8 @@ argument_list|,
 argument|bool IsUserSupplied
 argument_list|,
 argument|bool IsFramework
+argument_list|,
+argument|bool IsSysRootRelative
 argument_list|)
 block|{
 name|UserEntries
@@ -282,6 +299,8 @@ argument_list|,
 name|IsUserSupplied
 argument_list|,
 name|IsFramework
+argument_list|,
+name|IsSysRootRelative
 argument_list|)
 argument_list|)
 block|;   }

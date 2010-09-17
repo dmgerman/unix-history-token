@@ -81,8 +81,51 @@ decl_stmt|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|int
+name|Int
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|g
+parameter_list|(
+name|int
+name|i
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|__builtin_va_list
+name|va
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|__builtin_va_arg
+argument_list|(
+name|va
+argument_list|,
+name|Int
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|__builtin_types_compatible_p
+argument_list|(
+name|Int
+argument_list|,
+name|Int
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:9:32 %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:17:1 %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -287,6 +330,30 @@ end_comment
 
 begin_comment
 comment|// CHECK: Punctuation: "}" [10:1 - 10:2] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "__builtin_va_arg" [15:9 - 15:25] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Int" [15:30 - 15:33] TypeRef=Int:12:13
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "__builtin_types_compatible_p" [16:9 - 16:37] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Int" [16:38 - 16:41] TypeRef=Int:12:13
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "," [16:41 - 16:42] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "Int" [16:43 - 16:46] TypeRef=Int:12:13
 end_comment
 
 begin_comment

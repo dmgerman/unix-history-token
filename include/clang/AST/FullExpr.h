@@ -182,14 +182,6 @@ name|unsigned
 name|NumTemps
 parameter_list|)
 function_decl|;
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
 name|Expr
 modifier|*
 name|getExpr

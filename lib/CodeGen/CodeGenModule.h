@@ -110,12 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGCXXABI.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"CodeGenTypes.h"
 end_include
 
@@ -273,6 +267,9 @@ name|CodeGen
 block|{
 name|class
 name|CodeGenFunction
+decl_stmt|;
+name|class
+name|CGCXXABI
 decl_stmt|;
 name|class
 name|CGDebugInfo
@@ -456,6 +453,10 @@ name|Diagnostic
 modifier|&
 name|Diags
 decl_stmt|;
+name|CGCXXABI
+modifier|&
+name|ABI
+decl_stmt|;
 name|CodeGenTypes
 name|Types
 decl_stmt|;
@@ -470,10 +471,6 @@ decl_stmt|;
 name|CGObjCRuntime
 modifier|*
 name|Runtime
-decl_stmt|;
-name|CXXABI
-modifier|*
-name|ABI
 decl_stmt|;
 name|CGDebugInfo
 modifier|*
@@ -621,6 +618,22 @@ operator|*
 operator|>
 name|CXXGlobalInits
 expr_stmt|;
+comment|/// When a C++ decl with an initializer is deferred, null is
+comment|/// appended to CXXGlobalInits, and the index of that null is placed
+comment|/// here so that the initializer will be performed in the correct
+comment|/// order.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|DelayedCXXInitPosition
+expr_stmt|;
 comment|/// - Global variables with initializers whose order of initialization
 comment|/// is set by init_priority attribute.
 name|llvm
@@ -686,17 +699,59 @@ name|void
 name|createObjCRuntime
 parameter_list|()
 function_decl|;
-comment|/// Lazily create the C++ ABI
-name|void
-name|createCXXABI
-parameter_list|()
-function_decl|;
 name|llvm
 operator|::
 name|LLVMContext
 operator|&
 name|VMContext
 expr_stmt|;
+comment|/// @name Cache for Blocks Runtime Globals
+comment|/// @{
+specifier|const
+name|VarDecl
+modifier|*
+name|NSConcreteGlobalBlockDecl
+decl_stmt|;
+specifier|const
+name|VarDecl
+modifier|*
+name|NSConcreteStackBlockDecl
+decl_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|NSConcreteGlobalBlock
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|NSConcreteStackBlock
+expr_stmt|;
+specifier|const
+name|FunctionDecl
+modifier|*
+name|BlockObjectAssignDecl
+decl_stmt|;
+specifier|const
+name|FunctionDecl
+modifier|*
+name|BlockObjectDisposeDecl
+decl_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BlockObjectAssign
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BlockObjectDispose
+expr_stmt|;
+comment|/// @}
 name|public
 label|:
 name|CodeGenModule
@@ -769,34 +824,13 @@ operator|!
 name|Runtime
 return|;
 block|}
-comment|/// getCXXABI() - Return a reference to the configured
-comment|/// C++ ABI.
-name|CXXABI
+comment|/// getCXXABI() - Return a reference to the configured C++ ABI.
+name|CGCXXABI
 modifier|&
 name|getCXXABI
 parameter_list|()
 block|{
-if|if
-condition|(
-operator|!
-name|ABI
-condition|)
-name|createCXXABI
-argument_list|()
-expr_stmt|;
 return|return
-operator|*
-name|ABI
-return|;
-block|}
-comment|/// hasCXXABI() - Return true iff a C++ ABI has been configured.
-name|bool
-name|hasCXXABI
-parameter_list|()
-block|{
-return|return
-operator|!
-operator|!
 name|ABI
 return|;
 block|}
@@ -901,26 +935,6 @@ return|return
 name|Types
 return|;
 block|}
-name|MangleContext
-modifier|&
-name|getMangleContext
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|ABI
-condition|)
-name|createCXXABI
-argument_list|()
-expr_stmt|;
-return|return
-name|ABI
-operator|->
-name|getMangleContext
-argument_list|()
-return|;
-block|}
 name|CodeGenVTables
 modifier|&
 name|getVTables
@@ -966,11 +980,10 @@ return|;
 block|}
 specifier|const
 name|TargetCodeGenInfo
-operator|&
+modifier|&
 name|getTargetCodeGenInfo
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 name|bool
 name|isTargetDarwin
 argument_list|()
@@ -1001,6 +1014,27 @@ specifier|const
 name|Decl
 operator|*
 name|D
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// setTypeVisibility - Set the visibility for the given global
+comment|/// value which holds information about a type.
+name|void
+name|setTypeVisibility
+argument_list|(
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|D
+argument_list|,
+name|bool
+name|IsForRTTI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1203,15 +1237,11 @@ name|Constant
 operator|*
 name|GetNonVirtualBaseClassOffset
 argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ClassDecl
+argument|const CXXRecordDecl *ClassDecl
 argument_list|,
-specifier|const
-name|CXXBaseSpecifierArray
-operator|&
-name|BasePath
+argument|CastExpr::path_const_iterator PathBegin
+argument_list|,
+argument|CastExpr::path_const_iterator PathEnd
 argument_list|)
 expr_stmt|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
@@ -1365,20 +1395,6 @@ argument_list|(
 argument|const CXXDestructorDecl *D
 argument_list|,
 argument|CXXDtorType Type
-argument_list|)
-expr_stmt|;
-comment|// GetCXXMemberFunctionPointerValue - Given a method declaration, return the
-comment|// integer used in a member function pointer to refer to that value.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|GetCXXMemberFunctionPointerValue
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|MD
 argument_list|)
 expr_stmt|;
 comment|/// getBuiltinLibFunction - Given a builtin id for a function like
@@ -1585,6 +1601,37 @@ argument_list|,
 argument|llvm::StringRef Name
 argument_list|)
 expr_stmt|;
+comment|///@name Custom Blocks Runtime Interfaces
+comment|///@{
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getNSConcreteGlobalBlock
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getNSConcreteStackBlock
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getBlockObjectAssign
+argument_list|()
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getBlockObjectDispose
+argument_list|()
+expr_stmt|;
+comment|///@}
 name|void
 name|UpdateCompletedType
 parameter_list|(
@@ -1643,18 +1690,6 @@ argument_list|,
 argument|const AnnotateAttr *AA
 argument_list|,
 argument|unsigned LineNo
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|EmitPointerToDataMember
-argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
 argument_list|)
 expr_stmt|;
 comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
@@ -1861,22 +1896,6 @@ name|bool
 name|DefinitionRequired
 parameter_list|)
 function_decl|;
-enum|enum
-name|GVALinkage
-block|{
-name|GVA_Internal
-block|,
-name|GVA_C99Inline
-block|,
-name|GVA_CXXInline
-block|,
-name|GVA_StrongExternal
-block|,
-name|GVA_TemplateInstantiation
-block|,
-name|GVA_ExplicitTemplateInstantiation
-block|}
-enum|;
 name|llvm
 operator|::
 name|GlobalVariable

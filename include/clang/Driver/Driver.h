@@ -150,9 +150,6 @@ name|class
 name|OptTable
 decl_stmt|;
 name|class
-name|PipedJob
-decl_stmt|;
-name|class
 name|ToolChain
 decl_stmt|;
 comment|/// Driver - Encapsulate logic for constructing compilation processes
@@ -209,6 +206,12 @@ name|std
 operator|::
 name|string
 name|ClangExecutable
+expr_stmt|;
+comment|/// The path to the installed clang directory, if any.
+name|std
+operator|::
+name|string
+name|InstalledDir
 expr_stmt|;
 comment|/// The path to the compiler resource directory.
 name|std
@@ -396,9 +399,7 @@ name|public
 label|:
 name|Driver
 argument_list|(
-argument|llvm::StringRef _Name
-argument_list|,
-argument|llvm::StringRef _Dir
+argument|llvm::StringRef _ClangExecutable
 argument_list|,
 argument|llvm::StringRef _DefaultHostTriple
 argument_list|,
@@ -488,16 +489,62 @@ name|Value
 expr_stmt|;
 block|}
 comment|/// \brief Get the path to the main clang executable.
-name|std
-operator|::
-name|string
+specifier|const
+name|char
+operator|*
 name|getClangProgramPath
 argument_list|()
 specifier|const
 block|{
 return|return
 name|ClangExecutable
+operator|.
+name|c_str
+argument_list|()
 return|;
+block|}
+comment|/// \brief Get the path to where the clang executable was installed.
+specifier|const
+name|char
+operator|*
+name|getInstalledDir
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|InstalledDir
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|InstalledDir
+operator|.
+name|c_str
+argument_list|()
+return|;
+return|return
+name|Dir
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|void
+name|setInstalledDir
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Value
+argument_list|)
+block|{
+name|InstalledDir
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// @}
 comment|/// @name Primary Functionality
@@ -547,11 +594,17 @@ function_decl|;
 comment|/// BuildActions - Construct the list of actions to perform for the
 comment|/// given arguments, which are only done for a single architecture.
 comment|///
+comment|/// \param TC - The default host tool chain.
 comment|/// \param Args - The input arguments.
 comment|/// \param Actions - The list to store the resulting actions onto.
 name|void
 name|BuildActions
 argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
 specifier|const
 name|ArgList
 operator|&
@@ -566,11 +619,17 @@ decl_stmt|;
 comment|/// BuildUniversalActions - Construct the list of actions to perform
 comment|/// for the given arguments, which may require a universal build.
 comment|///
+comment|/// \param TC - The default host tool chain.
 comment|/// \param Args - The input arguments.
 comment|/// \param Actions - The list to store the resulting actions onto.
 name|void
 name|BuildUniversalActions
 argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
 specifier|const
 name|ArgList
 operator|&
@@ -766,9 +825,6 @@ operator|*
 name|BoundArch
 argument_list|,
 name|bool
-name|CanAcceptPipe
-argument_list|,
-name|bool
 name|AtTopLevel
 argument_list|,
 specifier|const
@@ -903,11 +959,14 @@ function_decl|;
 block|}
 empty_stmt|;
 block|}
-comment|// end namespace driver
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace driver
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

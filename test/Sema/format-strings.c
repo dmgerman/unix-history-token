@@ -1739,6 +1739,28 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{specified field width is missing a matching 'int' argument}}
+name|printf
+argument_list|(
+literal|"%%%1$d"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%1$d%%"
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 
@@ -2047,6 +2069,93 @@ argument_list|(
 literal|"%-+f"
 argument_list|,
 literal|1.23
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// PR 7981 - handle '%lc' (wint_t)
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|wint_t
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__darwin_wint_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__darwin_wint_t
+name|wint_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|pr7981
+parameter_list|(
+name|wint_t
+name|c
+parameter_list|,
+name|wchar_t
+name|c2
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%lc"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%lc"
+argument_list|,
+literal|1.0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{the argument has type 'double'}}
+name|printf
+argument_list|(
+literal|"%lc"
+argument_list|,
+operator|(
+name|char
+operator|)
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+literal|"%lc"
+argument_list|,
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{the argument has type 'wint_t *' (aka 'int *')}}
+name|printf
+argument_list|(
+literal|"%lc"
+argument_list|,
+name|c2
 argument_list|)
 expr_stmt|;
 comment|// no-warning

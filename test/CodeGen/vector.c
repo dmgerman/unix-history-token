@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -target-cpu pentium4 -g -emit-llvm %s -o -
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin9 -O1 -target-cpu pentium4 -target-feature +sse4.1 -g -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -127,6 +127,16 @@ name|c
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// Don't include mm_malloc.h, it's system specific.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MM_MALLOC_H
+end_define
 
 begin_include
 include|#
@@ -264,6 +274,76 @@ name|result
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|<smmintrin.h>
+end_include
+
+begin_function
+name|unsigned
+name|long
+name|test_epi8
+parameter_list|(
+name|__m128i
+name|x
+parameter_list|)
+block|{
+return|return
+name|_mm_extract_epi8
+argument_list|(
+name|x
+argument_list|,
+literal|4
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test_epi8
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement<16 x i8> {{.*}}, i32 4
+end_comment
+
+begin_comment
+comment|// CHECK: zext i8 {{.*}} to i32
+end_comment
+
+begin_function
+name|unsigned
+name|long
+name|test_epi16
+parameter_list|(
+name|__m128i
+name|x
+parameter_list|)
+block|{
+return|return
+name|_mm_extract_epi16
+argument_list|(
+name|x
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test_epi16
+end_comment
+
+begin_comment
+comment|// CHECK: extractelement<8 x i16> {{.*}}, i32 3
+end_comment
+
+begin_comment
+comment|// CHECK: zext i16 {{.*}} to i32
+end_comment
 
 end_unit
 

@@ -8,6 +8,7 @@ name|void
 name|a
 parameter_list|()
 block|{
+comment|// expected-note {{to match this '{'}}
 goto|goto
 name|A
 goto|;

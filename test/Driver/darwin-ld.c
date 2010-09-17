@@ -12,58 +12,6 @@ comment|// RUN: grep '".*ld.*" .*"-arch_multiple" "-final_output" "foo"' %t.log
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -filelist FOO -static 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lcrt0.o" .*"-lgcc_static"' %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lgcc"' %t.log | count 0
-end_comment
-
-begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin7 -### -filelist FOO 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lcrt1.o" .*"-lgcc" "-lSystem"' %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lgcc_s"' %t.log | count 0
-end_comment
-
-begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin8 -### -filelist FOO 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lcrt1.o" .*"-lgcc_s.10.4" "-lgcc" "-lSystem"' %t.log
-end_comment
-
-begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### -filelist FOO 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lcrt1.10.5.o" .*"-lgcc_s.10.5" "-lgcc" "-lSystem"' %t.log
-end_comment
-
-begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin10 -### -filelist FOO 2> %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lcrt1.10.6.o" .*"-lSystem" "-lgcc"' %t.log
-end_comment
-
-begin_comment
-comment|// RUN: grep '"-lgcc_s"' %t.log | count 0
-end_comment
-
-begin_comment
 comment|// Make sure we run dsymutil on source input files.
 end_comment
 
@@ -289,6 +237,86 @@ end_comment
 
 begin_comment
 comment|// LINK_EXPLICIT_NO_PIE: "-no_pie"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### %t.o \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=100 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NEWER_DEMANGLE %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_NEWER_DEMANGLE: ld"
+end_comment
+
+begin_comment
+comment|// LINK_NEWER_DEMANGLE: "-demangle"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### %t.o \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=100 -Wl,--no-demangle 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NEWER_NODEMANGLE %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_NEWER_NODEMANGLE: ld"
+end_comment
+
+begin_comment
+comment|// LINK_NEWER_NODEMANGLE-NOT: "-demangle"
+end_comment
+
+begin_comment
+comment|// LINK_NEWER_NODEMANGLE: "-lSystem"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### %t.o \
+end_comment
+
+begin_comment
+comment|// RUN:   -mlinker-version=95 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_OLDER_NODEMANGLE %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_OLDER_NODEMANGLE: ld"
+end_comment
+
+begin_comment
+comment|// LINK_OLDER_NODEMANGLE-NOT: "-demangle"
+end_comment
+
+begin_comment
+comment|// LINK_OLDER_NODEMANGLE: "-lSystem"
 end_comment
 
 end_unit

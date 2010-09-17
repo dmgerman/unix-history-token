@@ -4,15 +4,11 @@ comment|// Test the GNU comma swallowing extension.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep 'foo{A, }'
+comment|// RUN: %clang_cc1 %s -E | FileCheck -strict-whitespace %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep 'fo2{A,}'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep '{foo}'
+comment|// CHECK: 1: foo{A, }
 end_comment
 
 begin_define
@@ -25,12 +21,12 @@ parameter_list|)
 value|foo{A, Y}
 end_define
 
-begin_macro
+begin_expr_stmt
+literal|1
+operator|:
 name|X
 argument_list|()
-end_macro
-
-begin_define
+comment|// CHECK: 2: fo2{A,}
 define|#
 directive|define
 name|X2
@@ -38,18 +34,12 @@ parameter_list|(
 name|Y
 parameter_list|)
 value|fo2{A,##Y}
-end_define
-
-begin_macro
+literal|2
+operator|:
 name|X2
 argument_list|()
-end_macro
-
-begin_comment
 comment|// should eat the comma.
-end_comment
-
-begin_define
+comment|// CHECK: 3: {foo}
 define|#
 directive|define
 name|X3
@@ -59,24 +49,14 @@ parameter_list|,
 modifier|...
 parameter_list|)
 value|{b, ## __VA_ARGS__}
-end_define
-
-begin_macro
+literal|3
+operator|:
 name|X3
 argument_list|(
-argument|foo
+name|foo
 argument_list|)
-end_macro
-
-begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep 'AA BB'
-end_comment
-
-begin_comment
 comment|// PR3880
-end_comment
-
-begin_define
+comment|// CHECK: 4: AA BB
 define|#
 directive|define
 name|X4
@@ -84,12 +64,28 @@ parameter_list|(
 modifier|...
 parameter_list|)
 value|AA , ## __VA_ARGS__ BB
-end_define
-
-begin_macro
+literal|4
+operator|:
 name|X4
 argument_list|()
-end_macro
+comment|// PR7943
+comment|// CHECK: 5: 1
+define|#
+directive|define
+name|X5
+parameter_list|(
+name|x
+parameter_list|,
+modifier|...
+parameter_list|)
+value|x##,##__VA_ARGS__
+literal|5
+operator|:
+name|X5
+argument_list|(
+literal|1
+argument_list|)
+end_expr_stmt
 
 end_unit
 

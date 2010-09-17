@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclObjC.h"
+file|"clang/AST/ExternalASTSource.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/ExternalASTSource.h"
+file|"clang/Sema/ObjCMethodList.h"
 end_include
 
 begin_decl_stmt

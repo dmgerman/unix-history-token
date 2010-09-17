@@ -248,6 +248,10 @@ name|dst
 index|[
 literal|4
 index|]
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|memcpy
 argument_list|(
@@ -283,8 +287,28 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|// no-warning -- should be unreachable
+comment|// no-warning
 block|}
+if|if
+condition|(
+name|dst
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// expected-warning{{null}}
 block|}
 end_function
 
@@ -322,7 +346,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -360,7 +384,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{Byte string function overflows destination buffer}}
 block|}
 end_function
 
@@ -444,7 +468,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{Byte string function accesses out-of-bound array element}}
 block|}
 end_function
 
@@ -486,7 +510,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{Byte string function overflows destination buffer}}
 block|}
 end_function
 
@@ -853,6 +877,10 @@ name|dst
 index|[
 literal|4
 index|]
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|memmove
 argument_list|(
@@ -888,8 +916,28 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|// no-warning -- should be unreachable
+comment|// no-warning
 block|}
+if|if
+condition|(
+name|dst
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// expected-warning{{null}}
 block|}
 end_function
 
@@ -965,7 +1013,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{overflow}}
 block|}
 end_function
 
@@ -1438,6 +1486,59 @@ comment|// expected-warning{{null}}
 block|}
 end_function
 
+begin_function
+name|int
+name|memcmp7
+parameter_list|(
+name|char
+modifier|*
+name|a
+parameter_list|,
+name|size_t
+name|x
+parameter_list|,
+name|size_t
+name|y
+parameter_list|,
+name|size_t
+name|n
+parameter_list|)
+block|{
+comment|// We used to crash when either of the arguments was unknown.
+return|return
+name|memcmp
+argument_list|(
+name|a
+argument_list|,
+operator|&
+name|a
+index|[
+name|x
+operator|*
+name|y
+index|]
+argument_list|,
+name|n
+argument_list|)
+operator|+
+name|memcmp
+argument_list|(
+operator|&
+name|a
+index|[
+name|x
+operator|*
+name|y
+index|]
+argument_list|,
+name|a
+argument_list|,
+name|n
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|//===----------------------------------------------------------------------===
 end_comment
@@ -1504,6 +1605,10 @@ name|dst
 index|[
 literal|4
 index|]
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 name|bcopy
 argument_list|(
@@ -1515,6 +1620,26 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+if|if
+condition|(
+name|dst
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// expected-warning{{null}}
 block|}
 end_function
 
@@ -1590,7 +1715,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{out-of-bound}}
+comment|// expected-warning{{overflow}}
 block|}
 end_function
 

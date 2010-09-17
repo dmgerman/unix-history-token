@@ -39,7 +39,7 @@ union|;
 end_union
 
 begin_comment
-comment|// CHECK: @u2 = global %0 { i32 0, [4 x i8] undef }
+comment|// CHECK: @u2 = global %1 { i32 0, [4 x i8] undef }
 end_comment
 
 begin_union
@@ -59,7 +59,7 @@ union|;
 end_union
 
 begin_comment
-comment|// CHECK: @u3 = global %1 zeroinitializer
+comment|// CHECK: @u3 = global %2 zeroinitializer
 end_comment
 
 begin_union
@@ -100,8 +100,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
-name|main
+name|void
+name|test1
 parameter_list|(
 name|int
 name|argc
@@ -152,7 +152,68 @@ decl_stmt|;
 block|}
 name|u3
 union|;
-comment|// CHECK: ret i32
+comment|// CHECK: ret void
+block|}
+end_function
+
+begin_comment
+comment|// PR7151
+end_comment
+
+begin_struct
+struct|struct
+name|S
+block|{
+name|int
+name|nkeys
+decl_stmt|;
+name|int
+modifier|*
+name|keys
+decl_stmt|;
+union|union
+block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|}
+union|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+name|struct
+name|S
+modifier|*
+name|btkr
+decl_stmt|;
+operator|*
+name|btkr
+operator|=
+operator|(
+expr|struct
+name|S
+operator|)
+block|{
+operator|.
+name|keys
+operator|=
+literal|0
+block|,
+block|{
+operator|.
+name|data
+operator|=
+literal|0
+block|}
+block|,   }
+expr_stmt|;
 block|}
 end_function
 

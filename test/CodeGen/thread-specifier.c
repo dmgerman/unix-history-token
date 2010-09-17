@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -emit-llvm -o - %s | grep thread_local | count 4
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -emit-llvm -o - %s | not grep common
+end_comment
+
 begin_decl_stmt
 name|__thread
 name|int

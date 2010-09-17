@@ -133,10 +133,13 @@ name|class
 name|FrontendAction
 decl_stmt|;
 name|class
-name|PCHReader
+name|ASTReader
 decl_stmt|;
 name|class
 name|Preprocessor
+decl_stmt|;
+name|class
+name|Sema
 decl_stmt|;
 name|class
 name|SourceManager
@@ -193,15 +196,6 @@ operator|<
 name|Diagnostic
 operator|>
 name|Diagnostics
-expr_stmt|;
-comment|/// The diagnostics client instance.
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|DiagnosticClient
-operator|>
-name|DiagClient
 expr_stmt|;
 comment|/// The target being compiled for.
 name|llvm
@@ -266,6 +260,15 @@ name|CodeCompleteConsumer
 operator|>
 name|CompletionConsumer
 expr_stmt|;
+comment|/// \brief The semantic analysis object.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|Sema
+operator|>
+name|TheSema
+expr_stmt|;
 comment|/// The frontend timer
 name|llvm
 operator|::
@@ -298,11 +301,6 @@ operator|>
 expr|>
 name|OutputFiles
 expr_stmt|;
-comment|/// The PCH reader. Not owned; the ASTContext owns this.
-name|PCHReader
-modifier|*
-name|Reader
-decl_stmt|;
 name|void
 name|operator
 init|=
@@ -796,40 +794,24 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|DiagClient
+name|Diagnostics
+operator|&&
+name|Diagnostics
+operator|->
+name|getClient
+argument_list|()
 operator|&&
 literal|"Compiler instance has no diagnostic client!"
 argument_list|)
 block|;
 return|return
 operator|*
-name|DiagClient
-return|;
-block|}
-comment|/// takeDiagnosticClient - Remove the current diagnostics client and give
-comment|/// ownership to the caller.
-name|DiagnosticClient
-modifier|*
-name|takeDiagnosticClient
-parameter_list|()
-block|{
-return|return
-name|DiagClient
-operator|.
-name|take
+name|Diagnostics
+operator|->
+name|getClient
 argument_list|()
 return|;
 block|}
-comment|/// setDiagnosticClient - Replace the current diagnostics client; the compiler
-comment|/// instance takes ownership of \arg Value.
-name|void
-name|setDiagnosticClient
-parameter_list|(
-name|DiagnosticClient
-modifier|*
-name|Value
-parameter_list|)
-function_decl|;
 comment|/// }
 comment|/// @name Target Info
 comment|/// {
@@ -1110,6 +1092,16 @@ modifier|*
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// \brief Replace the current Sema; the compiler instance takes ownership
+comment|/// of S.
+name|void
+name|setSema
+parameter_list|(
+name|Sema
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
 comment|/// }
 comment|/// @name ASTConsumer
 comment|/// {
@@ -1166,6 +1158,50 @@ modifier|*
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// }
+comment|/// @name Semantic analysis
+comment|/// {
+name|bool
+name|hasSema
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheSema
+operator|!=
+literal|0
+return|;
+block|}
+name|Sema
+operator|&
+name|getSema
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TheSema
+operator|&&
+literal|"Compiler instance has no Sema object!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|TheSema
+return|;
+block|}
+name|Sema
+modifier|*
+name|takeSema
+parameter_list|()
+block|{
+return|return
+name|TheSema
+operator|.
+name|take
+argument_list|()
+return|;
+block|}
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1440,6 +1476,13 @@ name|llvm
 operator|::
 name|StringRef
 name|Path
+argument_list|,
+name|bool
+name|DisablePCHValidation
+argument_list|,
+name|void
+operator|*
+name|DeserializationListener
 argument_list|)
 decl_stmt|;
 comment|/// Create an external AST source to read a PCH file.
@@ -1462,6 +1505,9 @@ name|string
 operator|&
 name|Sysroot
 argument_list|,
+name|bool
+name|DisablePCHValidation
+argument_list|,
 name|Preprocessor
 operator|&
 name|PP
@@ -1469,18 +1515,12 @@ argument_list|,
 name|ASTContext
 operator|&
 name|Context
+argument_list|,
+name|void
+operator|*
+name|DeserializationListener
 argument_list|)
 decl_stmt|;
-comment|/// Get the PCH reader, if any.
-name|PCHReader
-modifier|*
-name|getPCHReader
-parameter_list|()
-block|{
-return|return
-name|Reader
-return|;
-block|}
 comment|/// Create a code completion consumer using the invocation; note that this
 comment|/// will cause the source manager to truncate the input source file at the
 comment|/// completion point.
@@ -1522,6 +1562,9 @@ argument_list|,
 name|bool
 name|ShowCodePatterns
 argument_list|,
+name|bool
+name|ShowGlobals
+argument_list|,
 name|llvm
 operator|::
 name|raw_ostream
@@ -1529,6 +1572,18 @@ operator|&
 name|OS
 argument_list|)
 decl_stmt|;
+comment|/// \brief Create the Sema object to be used for parsing.
+name|void
+name|createSema
+parameter_list|(
+name|bool
+name|CompleteTranslationUnit
+parameter_list|,
+name|CodeCompleteConsumer
+modifier|*
+name|CompletionConsumer
+parameter_list|)
+function_decl|;
 comment|/// Create the frontend timer and replace any existing one with it.
 name|void
 name|createFrontendTimer

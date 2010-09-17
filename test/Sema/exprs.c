@@ -718,7 +718,17 @@ argument_list|)
 operator|==
 literal|4
 return|;
-comment|// no warning.
+comment|// no warning, RHS is logical op.
+comment|// no warning, this is an idiom for "true" in old C style.
+return|return
+name|x
+operator|&&
+operator|(
+name|signed
+name|char
+operator|)
+literal|1
+return|;
 block|}
 end_function
 

@@ -67,6 +67,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|Diagnostic
+decl_stmt|;
+name|class
 name|Preprocessor
 decl_stmt|;
 name|namespace
@@ -101,6 +104,14 @@ name|virtual
 name|Preprocessor
 modifier|&
 name|getPreprocessor
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|Diagnostic
+modifier|&
+name|getDiagnostic
 parameter_list|()
 init|=
 literal|0

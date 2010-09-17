@@ -91,6 +91,9 @@ name|class
 name|Attr
 decl_stmt|;
 name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -113,6 +116,9 @@ name|ObjCProtocolDecl
 decl_stmt|;
 name|class
 name|Stmt
+decl_stmt|;
+name|class
+name|TemplateDecl
 decl_stmt|;
 name|class
 name|TypeDecl
@@ -310,6 +316,93 @@ argument_list|(
 argument|CXCursor C
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a reference to a template at the given location.
+name|CXCursor
+name|MakeCursorTemplateRef
+parameter_list|(
+name|TemplateDecl
+modifier|*
+name|Template
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a TemplateRef cursor into the template it references and
+comment|/// the location where the reference occurred.
+name|std
+operator|::
+name|pair
+operator|<
+name|TemplateDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorTemplateRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a reference to a namespace or namespace alias at the given
+comment|/// location.
+name|CXCursor
+name|MakeCursorNamespaceRef
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|NS
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a NamespaceRef cursor into the namespace or namespace alias
+comment|/// it references and the location where the reference occurred.
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorNamespaceRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a CXX base specifier cursor.
+name|CXCursor
+name|MakeCursorCXXBaseSpecifier
+parameter_list|(
+name|CXXBaseSpecifier
+modifier|*
+name|B
+parameter_list|,
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a CXXBaseSpecifier cursor into a CXXBaseSpecifier.
+name|CXXBaseSpecifier
+modifier|*
+name|getCursorCXXBaseSpecifier
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a preprocessing directive cursor.
 name|CXCursor
 name|MakePreprocessingDirectiveCursor
@@ -393,6 +486,14 @@ function_decl|;
 name|Stmt
 modifier|*
 name|getCursorStmt
+parameter_list|(
+name|CXCursor
+name|Cursor
+parameter_list|)
+function_decl|;
+name|Attr
+modifier|*
+name|getCursorAttr
 parameter_list|(
 name|CXCursor
 name|Cursor

@@ -149,6 +149,28 @@ name|friend
 name|class
 name|GRCallExitNodeBuilder
 decl_stmt|;
+name|public
+label|:
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|BlockEdge
+operator|,
+specifier|const
+name|ExplodedNode
+operator|*
+operator|>
+expr|>
+name|BlocksAborted
+expr_stmt|;
+name|private
+label|:
 name|GRSubEngine
 modifier|&
 name|SubEngine
@@ -177,10 +199,10 @@ operator|::
 name|Factory
 name|BCounterFactory
 expr_stmt|;
-comment|/// A flag that indicates whether paths were halted because
-comment|///  ProcessBlockEntrace returned false.
-name|bool
-name|BlockAborted
+comment|/// The locations where we stopped doing work because we visited a location
+comment|///  too many times.
+name|BlocksAborted
+name|blocksAborted
 decl_stmt|;
 name|void
 name|GenerateNode
@@ -229,6 +251,7 @@ function_decl|;
 name|void
 name|HandleBlockExit
 parameter_list|(
+specifier|const
 name|CFGBlock
 modifier|*
 name|B
@@ -246,6 +269,7 @@ name|PostStmt
 modifier|&
 name|S
 parameter_list|,
+specifier|const
 name|CFGBlock
 modifier|*
 name|B
@@ -261,14 +285,17 @@ function_decl|;
 name|void
 name|HandleBranch
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|Cond
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|Term
 parameter_list|,
+specifier|const
 name|CFGBlock
 modifier|*
 name|B
@@ -340,10 +367,19 @@ name|GREndPathNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessEndPath
+argument_list|(
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|ProcessStmt
 parameter_list|(
+specifier|const
 name|CFGElement
 name|E
 parameter_list|,
@@ -351,10 +387,21 @@ name|GRStmtNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessStmt
+argument_list|(
+name|E
+argument_list|,
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|bool
 name|ProcessBlockEntrance
 parameter_list|(
+specifier|const
 name|CFGBlock
 modifier|*
 name|Blk
@@ -367,14 +414,29 @@ parameter_list|,
 name|GRBlockCounter
 name|BC
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|SubEngine
+operator|.
+name|ProcessBlockEntrance
+argument_list|(
+name|Blk
+argument_list|,
+name|Pred
+argument_list|,
+name|BC
+argument_list|)
+return|;
+block|}
 name|void
 name|ProcessBranch
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|Condition
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|Terminator
@@ -383,7 +445,19 @@ name|GRBranchNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessBranch
+argument_list|(
+name|Condition
+argument_list|,
+name|Terminator
+argument_list|,
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|ProcessIndirectGoto
 parameter_list|(
@@ -391,7 +465,15 @@ name|GRIndirectGotoNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessIndirectGoto
+argument_list|(
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|ProcessSwitch
 parameter_list|(
@@ -399,7 +481,15 @@ name|GRSwitchNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessSwitch
+argument_list|(
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|ProcessCallEnter
 parameter_list|(
@@ -407,7 +497,15 @@ name|GRCallEnterNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessCallEnter
+argument_list|(
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|ProcessCallExit
 parameter_list|(
@@ -415,7 +513,15 @@ name|GRCallExitNodeBuilder
 modifier|&
 name|Builder
 parameter_list|)
-function_decl|;
+block|{
+name|SubEngine
+operator|.
+name|ProcessCallExit
+argument_list|(
+name|Builder
+argument_list|)
+expr_stmt|;
+block|}
 name|private
 label|:
 name|GRCoreEngine
@@ -467,15 +573,7 @@ argument_list|)
 operator|,
 name|BCounterFactory
 argument_list|(
-name|G
-operator|->
-name|getAllocator
-argument_list|()
-argument_list|)
-operator|,
-name|BlockAborted
-argument_list|(
-argument|false
+argument|G->getAllocator()
 argument_list|)
 block|{}
 comment|/// Construct a GRCoreEngine object to analyze the provided CFG and to
@@ -509,15 +607,7 @@ argument_list|)
 operator|,
 name|BCounterFactory
 argument_list|(
-name|G
-operator|->
-name|getAllocator
-argument_list|()
-argument_list|)
-operator|,
-name|BlockAborted
-argument_list|(
-argument|false
+argument|G->getAllocator()
 argument_list|)
 block|{}
 operator|~
@@ -567,8 +657,101 @@ name|L
 parameter_list|,
 name|unsigned
 name|Steps
+parameter_list|,
+specifier|const
+name|GRState
+modifier|*
+name|InitState
 parameter_list|)
 function_decl|;
+name|void
+name|ExecuteWorkListWithInitialState
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|L
+parameter_list|,
+name|unsigned
+name|Steps
+parameter_list|,
+specifier|const
+name|GRState
+modifier|*
+name|InitState
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+function_decl|;
+comment|// Functions for external checking of whether we have unfinished work
+name|bool
+name|wasBlockAborted
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|blocksAborted
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasWorkRemaining
+argument_list|()
+specifier|const
+block|{
+return|return
+name|wasBlockAborted
+argument_list|()
+operator|||
+name|WList
+operator|->
+name|hasWork
+argument_list|()
+return|;
+block|}
+name|GRWorkList
+operator|*
+name|getWorkList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WList
+return|;
+block|}
+name|BlocksAborted
+operator|::
+name|const_iterator
+name|blocks_aborted_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|blocksAborted
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|BlocksAborted
+operator|::
+name|const_iterator
+name|blocks_aborted_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|blocksAborted
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 block|}
 empty_stmt|;
 name|class
@@ -578,6 +761,7 @@ name|GRCoreEngine
 modifier|&
 name|Eng
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|&
 name|B
@@ -651,7 +835,7 @@ name|public
 label|:
 name|GRStmtNodeBuilder
 argument_list|(
-argument|CFGBlock* b
+argument|const CFGBlock* b
 argument_list|,
 argument|unsigned idx
 argument_list|,
@@ -949,6 +1133,7 @@ argument_list|)
 decl_stmt|;
 comment|/// getStmt - Return the current block-level expression associated with
 comment|///  this builder.
+specifier|const
 name|Stmt
 operator|*
 name|getStmt
@@ -964,6 +1149,7 @@ return|;
 block|}
 comment|/// getBlock - Return the CFGBlock associated with the block-level expression
 comment|///  of this builder.
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -1034,6 +1220,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -1071,6 +1258,7 @@ name|ExplodedNodeSet
 operator|&
 name|Dst
 argument_list|,
+specifier|const
 name|Stmt
 operator|*
 name|S
@@ -1098,6 +1286,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -1153,14 +1342,17 @@ name|GRCoreEngine
 modifier|&
 name|Eng
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|Src
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|DstT
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|DstF
@@ -1200,14 +1392,17 @@ name|public
 label|:
 name|GRBranchNodeBuilder
 argument_list|(
+specifier|const
 name|CFGBlock
 operator|*
 name|src
 argument_list|,
+specifier|const
 name|CFGBlock
 operator|*
 name|dstT
 argument_list|,
+specifier|const
 name|CFGBlock
 operator|*
 name|dstF
@@ -1323,6 +1518,7 @@ name|bool
 name|branch
 parameter_list|)
 function_decl|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|getTargetBlock
@@ -1406,14 +1602,17 @@ name|GRCoreEngine
 modifier|&
 name|Eng
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|Src
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|&
 name|DispatchBlock
 decl_stmt|;
+specifier|const
 name|Expr
 modifier|*
 name|E
@@ -1430,14 +1629,17 @@ name|ExplodedNode
 operator|*
 name|pred
 argument_list|,
+specifier|const
 name|CFGBlock
 operator|*
 name|src
 argument_list|,
+specifier|const
 name|Expr
 operator|*
 name|e
 argument_list|,
+specifier|const
 name|CFGBlock
 operator|*
 name|dispatch
@@ -1479,7 +1681,7 @@ name|iterator
 block|{
 name|CFGBlock
 operator|::
-name|succ_iterator
+name|const_succ_iterator
 name|I
 block|;
 name|friend
@@ -1488,7 +1690,7 @@ name|GRIndirectGotoNodeBuilder
 block|;
 name|iterator
 argument_list|(
-argument|CFGBlock::succ_iterator i
+argument|CFGBlock::const_succ_iterator i
 argument_list|)
 operator|:
 name|I
@@ -1532,6 +1734,7 @@ operator|.
 name|I
 return|;
 block|}
+specifier|const
 name|LabelStmt
 operator|*
 name|getLabel
@@ -1556,6 +1759,7 @@ argument_list|()
 operator|)
 return|;
 block|}
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -1608,6 +1812,7 @@ argument_list|,
 argument|bool isSink = false
 argument_list|)
 block|;
+specifier|const
 name|Expr
 operator|*
 name|getTarget
@@ -1640,10 +1845,12 @@ name|GRCoreEngine
 operator|&
 name|Eng
 block|;
+specifier|const
 name|CFGBlock
 operator|*
 name|Src
 block|;
+specifier|const
 name|Expr
 operator|*
 name|Condition
@@ -1660,10 +1867,12 @@ name|ExplodedNode
 operator|*
 name|pred
 argument_list|,
+specifier|const
 name|CFGBlock
 operator|*
 name|src
 argument_list|,
+specifier|const
 name|Expr
 operator|*
 name|condition
@@ -1699,7 +1908,7 @@ name|iterator
 block|{
 name|CFGBlock
 operator|::
-name|succ_reverse_iterator
+name|const_succ_reverse_iterator
 name|I
 block|;
 name|friend
@@ -1708,7 +1917,7 @@ name|GRSwitchNodeBuilder
 block|;
 name|iterator
 argument_list|(
-argument|CFGBlock::succ_reverse_iterator i
+argument|CFGBlock::const_succ_reverse_iterator i
 argument_list|)
 operator|:
 name|I
@@ -1752,6 +1961,26 @@ operator|.
 name|I
 return|;
 block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|)
+specifier|const
+block|{
+return|return
+name|I
+operator|==
+name|X
+operator|.
+name|I
+return|;
+block|}
+specifier|const
 name|CaseStmt
 operator|*
 name|getCase
@@ -1776,6 +2005,7 @@ argument_list|()
 operator|)
 return|;
 block|}
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -1843,6 +2073,7 @@ argument_list|,
 argument|bool isSink = false
 argument_list|)
 block|;
+specifier|const
 name|Expr
 operator|*
 name|getCondition
@@ -1875,6 +2106,7 @@ name|GRCoreEngine
 operator|&
 name|Eng
 block|;
+specifier|const
 name|CFGBlock
 operator|&
 name|B
@@ -1892,6 +2124,7 @@ name|public
 operator|:
 name|GREndPathNodeBuilder
 argument_list|(
+specifier|const
 name|CFGBlock
 operator|*
 name|b
@@ -2025,6 +2258,7 @@ operator|*
 name|state
 argument_list|)
 block|;
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -2071,11 +2305,10 @@ name|Stmt
 operator|*
 name|CE
 block|;
-comment|// The definition of callee.
-specifier|const
-name|FunctionDecl
+comment|// The AnalysisContext of the callee.
+name|AnalysisContext
 operator|*
-name|FD
+name|CalleeCtx
 block|;
 comment|// The parent block of the CallExpr.
 specifier|const
@@ -2097,7 +2330,7 @@ argument|const ExplodedNode *pred
 argument_list|,
 argument|const Stmt *s
 argument_list|,
-argument|const FunctionDecl *fd
+argument|AnalysisContext *callee
 argument_list|,
 argument|const CFGBlock *blk
 argument_list|,
@@ -2119,9 +2352,9 @@ argument_list|(
 name|s
 argument_list|)
 block|,
-name|FD
+name|CalleeCtx
 argument_list|(
-name|fd
+name|callee
 argument_list|)
 block|,
 name|Block
@@ -2173,15 +2406,14 @@ return|return
 name|CE
 return|;
 block|}
-specifier|const
-name|FunctionDecl
+name|AnalysisContext
 operator|*
-name|getCallee
+name|getCalleeContext
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FD
+name|CalleeCtx
 return|;
 block|}
 specifier|const

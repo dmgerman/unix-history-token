@@ -98,6 +98,9 @@ comment|///< Parse ASTs and view them in Graphviz.
 name|BoostCon
 block|,
 comment|///< BoostCon mode.
+name|CreateModule
+block|,
+comment|///< Create module definition
 name|DumpRawTokens
 block|,
 comment|///< Dump out raw tokens.
@@ -140,12 +143,6 @@ comment|///< View C++ inheritance for a specified class.
 name|InitOnly
 block|,
 comment|///< Only execute frontend initialization.
-name|ParseNoop
-block|,
-comment|///< Parse with noop callbacks.
-name|ParsePrintCallbacks
-block|,
-comment|///< Parse and print each callback.
 name|ParseSyntaxOnly
 block|,
 comment|///< Parse and perform semantic analysis.
@@ -155,6 +152,9 @@ comment|///< Run a plugin action, \see ActionName.
 name|PrintDeclContext
 block|,
 comment|///< Print DeclContext and their Decls.
+name|PrintPreamble
+block|,
+comment|///< Print the "preamble" of the input file
 name|PrintPreprocessedInput
 block|,
 comment|///< -E mode.
@@ -200,7 +200,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< When generating PCH files,
-comment|/// instruct the PCH writer to create
+comment|/// instruct the AST writer to create
 comment|/// relocatable PCH files.
 name|unsigned
 name|ChainedPCH
@@ -208,7 +208,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< When generating PCH files,
-comment|/// instruct the PCH writer to create
+comment|/// instruct the AST writer to create
 comment|/// chained PCH files.
 name|unsigned
 name|ShowHelp
@@ -231,6 +231,13 @@ decl_stmt|;
 comment|///< Show code patterns in code
 comment|/// completion results.
 name|unsigned
+name|ShowGlobalSymbolsInCodeCompletion
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show top-level decls in
+comment|/// code completion results.
+name|unsigned
 name|ShowStats
 range|:
 literal|1
@@ -250,6 +257,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|///< Show the -version text.
+name|unsigned
+name|FixWhatYouCan
+range|:
+literal|1
+decl_stmt|;
+comment|///< Apply fixes even if there are
+comment|/// unfixable errors.
 comment|/// The input files and their types.
 name|std
 operator|::
@@ -335,6 +349,17 @@ name|string
 operator|>
 name|ASTMergeFiles
 expr_stmt|;
+comment|/// \brief The list of modules to import.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Modules
+expr_stmt|;
 comment|/// \brief A list of arguments to forward to LLVM's option processing; this
 comment|/// should only be used for debugging and experimental features.
 name|std
@@ -389,6 +414,10 @@ expr_stmt|;
 name|ShowCodePatternsInCodeCompletion
 operator|=
 literal|0
+expr_stmt|;
+name|ShowGlobalSymbolsInCodeCompletion
+operator|=
+literal|1
 expr_stmt|;
 name|ShowStats
 operator|=

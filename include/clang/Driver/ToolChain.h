@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -74,6 +80,9 @@ block|{
 name|namespace
 name|driver
 block|{
+name|class
+name|ArgList
+decl_stmt|;
 name|class
 name|Compilation
 decl_stmt|;
@@ -180,6 +189,22 @@ specifier|const
 block|{
 return|return
 name|Triple
+return|;
+block|}
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ArchType
+name|getArch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Triple
+operator|.
+name|getArch
+argument_list|()
 return|;
 block|}
 name|llvm
@@ -347,6 +372,18 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|// Platform defaults information
+comment|/// LookupTypeForExtension - Return the default language type to use for the
+comment|/// given extension.
+name|virtual
+name|types
+operator|::
+name|ID
+name|LookupTypeForExtension
+argument_list|(
+argument|const char *Ext
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// IsBlocksDefault - Does this tool chain enable -fblocks by default.
 name|virtual
 name|bool
@@ -488,6 +525,33 @@ return|return
 name|false
 return|;
 block|}
+comment|/// ComputeLLVMTriple - Return the LLVM target triple to use, after taking
+comment|/// command line arguments into account.
+name|virtual
+name|std
+operator|::
+name|string
+name|ComputeLLVMTriple
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// ComputeEffectiveClangTriple - Return the Clang triple to use for this
+comment|/// target, which may take into account the command line arguments. For
+comment|/// example, on Darwin the -mmacosx-version-min= command line argument (which
+comment|/// sets the deployment target) determines the version in the triple passed to
+comment|/// Clang.
+name|virtual
+name|std
+operator|::
+name|string
+name|ComputeEffectiveClangTriple
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

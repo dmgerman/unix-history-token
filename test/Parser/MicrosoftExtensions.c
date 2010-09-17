@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify -fms-extensions -x objective-c++ %s
+comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify -fms-extensions -Wno-missing-declarations -x objective-c++ %s
 end_comment
 
 begin_function_decl
@@ -41,6 +41,27 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|__declspec
+argument_list|(
+name|uuid
+argument_list|(
+literal|"00000000-0000-0000-C000-000000000046"
+argument_list|)
+argument_list|)
+name|__declspec
+argument_list|(
+name|novtable
+argument_list|)
+name|IUnknown
+block|{}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_extern
 extern|extern __declspec(dllimport
@@ -257,6 +278,16 @@ name|a
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|E
+block|{
+name|e1
+block|}
+empty_stmt|;
+end_typedef
 
 end_unit
 

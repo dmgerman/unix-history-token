@@ -144,7 +144,7 @@ argument|GRExprEngine& Engine
 argument_list|,
 argument|GRStmtNodeBuilder& Builder
 argument_list|,
-argument|CallExpr* CE
+argument|const CallExpr* CE
 argument_list|,
 argument|SVal L
 argument_list|,
@@ -161,7 +161,7 @@ argument|GRExprEngine& Engine
 argument_list|,
 argument|GRStmtNodeBuilder& Builder
 argument_list|,
-argument|ObjCMessageExpr* ME
+argument|const ObjCMessageExpr* ME
 argument_list|,
 argument|ExplodedNode* Pred
 argument_list|,
@@ -218,7 +218,7 @@ argument|GRExprEngine& Engine
 argument_list|,
 argument|GRStmtNodeBuilder& Builder
 argument_list|,
-argument|ReturnStmt* S
+argument|const ReturnStmt* S
 argument_list|,
 argument|ExplodedNode* Pred
 argument_list|)

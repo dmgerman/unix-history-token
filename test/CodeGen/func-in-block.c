@@ -65,6 +65,10 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK: @__func__.__main_block_invoke_0 = private constant [22 x i8] c"__main_block_invoke_0\00"
+end_comment
+
+begin_comment
 comment|// CHECK: call void @PRINTF({{.*}}@__func__.__main_block_invoke_
 end_comment
 

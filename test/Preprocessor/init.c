@@ -304,7 +304,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fms-extensions -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
+comment|// RUN: %clang_cc1 -fms-extensions -triple i686-pc-win32 -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
 end_comment
 
 begin_comment
@@ -313,6 +313,10 @@ end_comment
 
 begin_comment
 comment|// MSEXT-NOT:#define __STDC__
+end_comment
+
+begin_comment
+comment|// MSEXT:#define _INTEGRAL_MAX_BITS 64
 end_comment
 
 begin_comment
@@ -469,6 +473,34 @@ end_comment
 
 begin_comment
 comment|// SCHAR:#define __clang__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fshort-wchar< /dev/null | FileCheck -check-prefix SHORTWCHAR %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR: #define __SIZEOF_WCHAR_T__ 2
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR: #define __WCHAR_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR: #define __WCHAR_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR: #define __WCHAR_WIDTH__ 16
 end_comment
 
 begin_comment

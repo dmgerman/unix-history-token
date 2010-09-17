@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wreturn-type< %s -emit-llvm
+comment|// RUN: %clang_cc1 -Wreturn-type %s -emit-llvm -o /dev/null
 end_comment
 
 begin_function
@@ -114,9 +114,25 @@ name|long
 name|b
 parameter_list|)
 block|{
+specifier|static
+name|void
+modifier|*
+name|lbls
+index|[]
+init|=
+block|{
+operator|&&
+name|lbl
+block|}
+decl_stmt|;
 goto|goto *
 name|b
 goto|;
+name|lbl
+label|:
+return|return
+literal|0
+return|;
 block|}
 end_function
 

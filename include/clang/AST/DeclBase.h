@@ -602,12 +602,17 @@ name|friend
 name|class
 name|CXXClassMemberWrapper
 decl_stmt|;
-comment|// PCHLevel - the "level" of precompiled header/AST file from which this
-comment|// declaration was built.
+comment|/// PCHLevel - the "level" of AST file from which this declaration was built.
 name|unsigned
 name|PCHLevel
 range|:
-literal|3
+literal|2
+decl_stmt|;
+comment|/// ChangedAfterLoad - if this declaration has changed since being loaded
+name|bool
+name|ChangedAfterLoad
+range|:
+literal|1
 decl_stmt|;
 comment|/// IdentifierNamespace - This specifies what IDNS_* namespace this lives in.
 name|unsigned
@@ -695,6 +700,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|ChangedAfterLoad
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|IdentifierNamespace
 argument_list|(
 argument|getIdentifierNamespaceForKind(DK)
@@ -758,6 +768,11 @@ operator|,
 name|PCHLevel
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|ChangedAfterLoad
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|IdentifierNamespace
@@ -1005,43 +1020,48 @@ name|HasAttrs
 return|;
 block|}
 name|void
-name|initAttrs
+name|setAttrs
 parameter_list|(
-name|Attr
-modifier|*
-name|attrs
-parameter_list|)
-function_decl|;
-name|void
-name|addAttr
-parameter_list|(
-name|Attr
-modifier|*
-name|attr
-parameter_list|)
-function_decl|;
 specifier|const
-name|Attr
+name|AttrVec
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+name|AttrVec
+modifier|&
+name|getAttrs
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|AttrVec
+operator|&
+operator|>
+operator|(
+name|const_cast
+operator|<
+specifier|const
+name|Decl
 operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getAttrs
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|AttrVec
+operator|&
 name|getAttrs
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|HasAttrs
-condition|)
-return|return
-literal|0
-return|;
-comment|// common case, no attributes.
-return|return
-name|getAttrsImpl
-argument_list|()
-return|;
-comment|// Uncommon case, out of line hash lookup.
-block|}
+expr_stmt|;
 name|void
 name|swapAttrs
 parameter_list|(
@@ -1051,65 +1071,161 @@ name|D
 parameter_list|)
 function_decl|;
 name|void
-name|invalidateAttrs
+name|dropAttrs
 parameter_list|()
 function_decl|;
+name|void
+name|addAttr
+parameter_list|(
+name|Attr
+modifier|*
+name|A
+parameter_list|)
+block|{
+if|if
+condition|(
+name|hasAttrs
+argument_list|()
+condition|)
+name|getAttrs
+argument_list|()
+operator|.
+name|push_back
+argument_list|(
+name|A
+argument_list|)
+expr_stmt|;
+else|else
+name|setAttrs
+argument_list|(
+name|AttrVec
+argument_list|(
+literal|1
+argument_list|,
+name|A
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+typedef|typedef
+name|AttrVec
+operator|::
+name|const_iterator
+name|attr_iterator
+expr_stmt|;
+comment|// FIXME: Do not rely on iterators having comparable singular values.
+comment|//        Note that this should error out if they do not.
+name|attr_iterator
+name|attr_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAttrs
+argument_list|()
+operator|?
+name|getAttrs
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+operator|:
+literal|0
+return|;
+block|}
+name|attr_iterator
+name|attr_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAttrs
+argument_list|()
+operator|?
+name|getAttrs
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|:
+literal|0
+return|;
+block|}
 name|template
 operator|<
 name|typename
 name|T
 operator|>
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>
+name|specific_attr_begin
+argument_list|()
 specifier|const
+block|{
+return|return
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>
+operator|(
+name|attr_begin
+argument_list|()
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>
+name|specific_attr_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>
+operator|(
+name|attr_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|T
 operator|*
 name|getAttr
 argument_list|()
 specifier|const
 block|{
-for|for
-control|(
-specifier|const
-name|Attr
-modifier|*
-name|attr
-init|=
-name|getAttrs
+return|return
+name|hasAttrs
 argument_list|()
-init|;
-name|attr
-condition|;
-name|attr
-operator|=
-name|attr
-operator|->
-name|getNext
-argument_list|()
-control|)
-if|if
-condition|(
-specifier|const
-name|T
-modifier|*
-name|V
-init|=
-name|dyn_cast
+operator|?
+name|getSpecificAttr
 operator|<
 name|T
 operator|>
 operator|(
-name|attr
+name|getAttrs
+argument_list|()
 operator|)
-condition|)
-return|return
-name|V
-return|;
-return|return
+operator|:
 literal|0
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1121,27 +1237,44 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getAttr
+name|hasAttrs
+argument_list|()
+operator|&&
+name|hasSpecificAttr
 operator|<
 name|T
 operator|>
 operator|(
+name|getAttrs
+argument_list|()
 operator|)
-operator|!=
+return|;
+block|}
+comment|/// getMaxAlignment - return the maximum alignment specified by attributes
+comment|/// on this decl, 0 if there are none.
+name|unsigned
+name|getMaxAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAttrs
+argument_list|()
+operator|?
+name|getMaxAttrAlignment
+argument_list|(
+name|getAttrs
+argument_list|()
+argument_list|,
+name|getASTContext
+argument_list|()
+argument_list|)
+operator|:
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// setInvalidDecl - Indicates the Decl had a semantic error. This
-end_comment
-
-begin_comment
 comment|/// allows for graceful error recovery.
-end_comment
-
-begin_function_decl
 name|void
 name|setInvalidDecl
 parameter_list|(
@@ -1151,9 +1284,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|bool
 name|isInvalidDecl
 argument_list|()
@@ -1166,21 +1296,9 @@ operator|)
 name|InvalidDecl
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// isImplicit - Indicates whether the declaration was implicitly
-end_comment
-
-begin_comment
 comment|/// generated by the implementation. If false, this declaration
-end_comment
-
-begin_comment
 comment|/// was written explicitly in the source code.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isImplicit
 argument_list|()
@@ -1190,9 +1308,6 @@ return|return
 name|Implicit
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setImplicit
 parameter_list|(
@@ -1207,33 +1322,12 @@ operator|=
 name|I
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Whether this declaration was used, meaning that a definition
-end_comment
-
-begin_comment
 comment|/// is required.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \param CheckUsedAttr When true, also consider the "used" attribute
-end_comment
-
-begin_comment
 comment|/// (in addition to the "used" bit set by \c setUsed()) when determining
-end_comment
-
-begin_comment
 comment|/// whether the function is used.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|isUsed
 argument_list|(
@@ -1244,9 +1338,6 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|setUsed
 parameter_list|(
@@ -1261,45 +1352,14 @@ operator|=
 name|U
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Retrieve the level of precompiled header from which this
-end_comment
-
-begin_comment
 comment|/// declaration was generated.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The PCH level of a declaration describes where the declaration originated
-end_comment
-
-begin_comment
-comment|/// from. A PCH level of 0 indicates that the declaration was not from a
-end_comment
-
-begin_comment
-comment|/// precompiled header. A PCH level of 1 indicates that the declaration was
-end_comment
-
-begin_comment
-comment|/// from a top-level precompiled header; 2 indicates that the declaration
-end_comment
-
-begin_comment
-comment|/// comes from a precompiled header on which the top-level precompiled header
-end_comment
-
-begin_comment
-comment|/// depends, and so on.
-end_comment
-
-begin_expr_stmt
+comment|/// from. A PCH level of 0 indicates that the declaration was parsed from
+comment|/// source. A PCH level of 1 indicates that the declaration was loaded from
+comment|/// a top-level AST file. A PCH level 2 indicates that the declaration was
+comment|/// loaded from a PCH file the AST file depends on, and so on.
 name|unsigned
 name|getPCHLevel
 argument_list|()
@@ -1309,27 +1369,15 @@ return|return
 name|PCHLevel
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The maximum PCH level that any declaration may have.
-end_comment
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|unsigned
 name|MaxPCHLevel
 init|=
-literal|7
+literal|3
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Set the PCH level of this declaration.
-end_comment
-
-begin_function
 name|void
 name|setPCHLevel
 parameter_list|(
@@ -1351,9 +1399,34 @@ operator|=
 name|Level
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
+comment|/// \brief Query whether this declaration was changed in a significant way
+comment|/// since being loaded from an AST file.
+comment|///
+comment|/// In an epic violation of layering, what is "significant" is entirely
+comment|/// up to the serialization system, but implemented in AST and Sema.
+name|bool
+name|isChangedSinceDeserialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChangedAfterLoad
+return|;
+block|}
+comment|/// \brief Mark this declaration as having changed since deserialization, or
+comment|/// reset the flag.
+name|void
+name|setChangedSinceDeserialization
+parameter_list|(
+name|bool
+name|Changed
+parameter_list|)
+block|{
+name|ChangedAfterLoad
+operator|=
+name|Changed
+expr_stmt|;
+block|}
 name|unsigned
 name|getIdentifierNamespace
 argument_list|()
@@ -1363,9 +1436,6 @@ return|return
 name|IdentifierNamespace
 return|;
 block|}
-end_expr_stmt
-
-begin_decl_stmt
 name|bool
 name|isInIdentifierNamespace
 argument_list|(
@@ -1381,9 +1451,6 @@ operator|&
 name|NS
 return|;
 block|}
-end_decl_stmt
-
-begin_function_decl
 specifier|static
 name|unsigned
 name|getIdentifierNamespaceForKind
@@ -1392,9 +1459,6 @@ name|Kind
 name|DK
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_expr_stmt
 name|bool
 name|hasTagIdentifierNamespace
 argument_list|()
@@ -1408,9 +1472,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|isTagIdentifierNamespace
@@ -1435,49 +1496,16 @@ name|IDNS_Type
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// getLexicalDeclContext - The declaration context where this Decl was
-end_comment
-
-begin_comment
 comment|/// lexically declared (LexicalDC). May be different from
-end_comment
-
-begin_comment
 comment|/// getDeclContext() (SemanticDC).
-end_comment
-
-begin_comment
 comment|/// e.g.:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   namespace A {
-end_comment
-
-begin_comment
 comment|///      void f(); // SemanticDC == LexicalDC == 'namespace A'
-end_comment
-
-begin_comment
 comment|///   }
-end_comment
-
-begin_comment
 comment|///   void A::f(); // SemanticDC == namespace 'A'
-end_comment
-
-begin_comment
 comment|///                // LexicalDC == global namespace
-end_comment
-
-begin_function
 name|DeclContext
 modifier|*
 name|getLexicalDeclContext
@@ -1499,9 +1527,6 @@ operator|->
 name|LexicalDC
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|DeclContext
 operator|*
@@ -1523,9 +1548,6 @@ name|getLexicalDeclContext
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|isOutOfLine
@@ -1540,17 +1562,8 @@ name|getDeclContext
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// setDeclContext - Set both the semantic and lexical DeclContext
-end_comment
-
-begin_comment
 comment|/// to DC.
-end_comment
-
-begin_function_decl
 name|void
 name|setDeclContext
 parameter_list|(
@@ -1559,9 +1572,6 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|setLexicalDeclContext
 parameter_list|(
@@ -1570,37 +1580,16 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
-comment|// isDefinedOutsideFunctionOrMethod - This predicate returns true if this
-end_comment
-
-begin_comment
-comment|// scoped decl is defined outside the current function or method.  This is
-end_comment
-
-begin_comment
-comment|// roughly global variables and functions, but also handles enums (which could
-end_comment
-
-begin_comment
-comment|// be defined inside or outside a function etc).
-end_comment
-
-begin_expr_stmt
+comment|/// isDefinedOutsideFunctionOrMethod - This predicate returns true if this
+comment|/// scoped decl is defined outside the current function or method.  This is
+comment|/// roughly global variables and functions, but also handles enums (which
+comment|/// could be defined inside or outside a function etc).
 name|bool
 name|isDefinedOutsideFunctionOrMethod
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieves the "canonical" declaration of the given declaration.
-end_comment
-
-begin_function
 name|virtual
 name|Decl
 modifier|*
@@ -1611,9 +1600,6 @@ return|return
 name|this
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -1635,13 +1621,7 @@ name|getCanonicalDecl
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this particular Decl is a canonical one.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isCanonicalDecl
 argument_list|()
@@ -1654,30 +1634,12 @@ operator|==
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|protected
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Returns the next redeclaration or itself if this is the only decl.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Decl subclasses that can be redeclared should override this method so that
-end_comment
-
-begin_comment
 comment|/// Decl::redecl_iterator can iterate over them.
-end_comment
-
-begin_function
 name|virtual
 name|Decl
 modifier|*
@@ -1688,18 +1650,9 @@ return|return
 name|this
 return|;
 block|}
-end_function
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_comment
 comment|/// \brief Iterates through all the redeclarations of the same decl.
-end_comment
-
-begin_decl_stmt
 name|class
 name|redecl_iterator
 block|{
@@ -1789,9 +1742,6 @@ return|return
 name|Current
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|redecl_iterator
 operator|&
 name|operator
@@ -1840,9 +1790,6 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|redecl_iterator
 name|operator
 operator|++
@@ -1867,9 +1814,6 @@ return|return
 name|tmp
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -1892,9 +1836,6 @@ operator|.
 name|Current
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -1917,18 +1858,10 @@ operator|.
 name|Current
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+block|}
+empty_stmt|;
 comment|/// \brief Returns iterator for all the redeclarations of the same decl.
-end_comment
-
-begin_comment
 comment|/// It will iterate at least once (when this decl is the only one).
-end_comment
-
-begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -1948,9 +1881,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -1961,21 +1891,9 @@ name|redecl_iterator
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getBody - If this Decl represents a declaration for a body of code,
-end_comment
-
-begin_comment
 comment|///  such as a function or method definition, this method returns the
-end_comment
-
-begin_comment
 comment|///  top-level Stmt* of that body.  Otherwise this method returns null.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|Stmt
 operator|*
@@ -1987,17 +1905,8 @@ return|return
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Returns true if this Decl represents a declaration for a body of
-end_comment
-
-begin_comment
 comment|/// code, such as a function or method definition.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|bool
 name|hasBody
@@ -2011,29 +1920,14 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getBodyRBrace - Gets the right brace of the body, if a body exists.
-end_comment
-
-begin_comment
 comment|/// This works whether the body is a CompoundStmt or a CXXTryStmt.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getBodyRBrace
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// global temp stats (until we have a per-module visitor)
-end_comment
-
-begin_function_decl
 specifier|static
 name|void
 name|add
@@ -2042,9 +1936,6 @@ name|Kind
 name|k
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|bool
 name|CollectingStats
@@ -2055,89 +1946,38 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
-end_comment
-
-begin_comment
 comment|/// template parameter.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isTemplateParameter
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
-end_comment
-
-begin_comment
 comment|/// template parameter pack.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isTemplateParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Whether this declaration is a function or function template.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|isFunctionOrFunctionTemplate
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Changes the namespace of this declaration to reflect that it's
-end_comment
-
-begin_comment
 comment|/// the object of a friend declaration.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// These declarations appear in the lexical context of the friending
-end_comment
-
-begin_comment
 comment|/// class, but in the semantic context of the actual entity.  This property
-end_comment
-
-begin_comment
 comment|/// applies only to a specific decl object;  other redeclarations of the
-end_comment
-
-begin_comment
 comment|/// same entity may not (and probably don't) share this property.
-end_comment
-
-begin_function
 name|void
 name|setObjectOfFriendDecl
 parameter_list|(
@@ -2247,9 +2087,6 @@ name|IDNS_Ordinary
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_enum
 enum|enum
 name|FriendObjectKind
 block|{
@@ -2263,25 +2100,10 @@ name|FOK_Undeclared
 comment|// a friend of a previously-undeclared entity
 block|}
 enum|;
-end_enum
-
-begin_comment
 comment|/// \brief Determines whether this declaration is the object of a
-end_comment
-
-begin_comment
 comment|/// friend declaration and, if so, what kind.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// There is currently no direct way to find the associated FriendDecl.
-end_comment
-
-begin_expr_stmt
 name|FriendObjectKind
 name|getFriendObjectKind
 argument_list|()
@@ -2308,9 +2130,6 @@ condition|)
 return|return
 name|FOK_None
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|IdentifierNamespace
@@ -2326,20 +2145,17 @@ else|:
 name|FOK_Undeclared
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/// Specifies that this declaration is a C++ overloaded non-member.
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|setNonMemberOperator
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|assert
 argument_list|(
@@ -2370,7 +2186,7 @@ operator||=
 name|IDNS_NonMemberOperator
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.
@@ -2429,22 +2245,6 @@ parameter_list|(
 specifier|const
 name|DeclContext
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Destroy - Call destructors and release memory.
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2626,6 +2426,237 @@ block|; }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|class
+name|DeclContextLookupResult
+range|:
+name|public
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+decl_stmt|,
+name|NamedDecl
+modifier|*
+modifier|*
+decl|>
+block|{
+name|public
+label|:
+name|DeclContextLookupResult
+argument_list|(
+name|NamedDecl
+operator|*
+operator|*
+name|I
+argument_list|,
+name|NamedDecl
+operator|*
+operator|*
+name|E
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|I
+operator|,
+name|E
+operator|)
+block|{}
+name|DeclContextLookupResult
+argument_list|()
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+operator|*
+operator|>
+operator|(
+operator|)
+block|{}
+name|using
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+operator|*
+operator|>
+operator|::
+name|operator
+operator|=
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|class
+name|DeclContextLookupConstResult
+range|:
+name|public
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+decl_stmt|,
+name|NamedDecl
+modifier|*
+decl|const
+modifier|*
+decl|>
+block|{
+name|public
+label|:
+name|DeclContextLookupConstResult
+argument_list|(
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+argument_list|,
+name|NamedDecl
+operator|*
+operator|*
+operator|>
+name|R
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|R
+operator|)
+block|{}
+name|DeclContextLookupConstResult
+argument_list|(
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+name|I
+argument_list|,
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+name|E
+argument_list|)
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|I
+operator|,
+name|E
+operator|)
+block|{}
+name|DeclContextLookupConstResult
+argument_list|()
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+operator|)
+block|{}
+name|using
+name|std
+operator|::
+name|pair
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|,
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|::
+name|operator
+operator|=
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/// DeclContext - This is used only as base class of specific decl types that
 end_comment
@@ -2773,16 +2804,8 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
-name|void
-name|DestroyDecls
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-expr_stmt|;
 name|public
-label|:
+operator|:
 operator|~
 name|DeclContext
 argument_list|()
@@ -3041,6 +3064,11 @@ operator|::
 name|Namespace
 return|;
 block|}
+name|bool
+name|isInlineNamespace
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Determines whether this context is dependent on a
 comment|/// template parameter.
 name|bool
@@ -3062,8 +3090,7 @@ comment|/// @endcode
 comment|/// Here, E is a transparent context, so its enumerator (Val1) will
 comment|/// appear (semantically) that it is in the same context of E.
 comment|/// Examples of transparent contexts include: enumerations (except for
-comment|/// C++0x scoped enums), C++ linkage specifications, and C++0x
-comment|/// inline namespaces.
+comment|/// C++0x scoped enums), and C++ linkage specifications.
 name|bool
 name|isTransparentContext
 argument_list|()
@@ -3073,11 +3100,13 @@ comment|/// \brief Determine whether this declaration context is equivalent
 comment|/// to the declaration context DC.
 name|bool
 name|Equals
-parameter_list|(
+argument_list|(
+specifier|const
 name|DeclContext
-modifier|*
+operator|*
 name|DC
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|DC
@@ -3097,12 +3126,14 @@ comment|/// \brief Determine whether this declaration context encloses the
 comment|/// declaration context DC.
 name|bool
 name|Encloses
-parameter_list|(
+argument_list|(
+specifier|const
 name|DeclContext
-modifier|*
+operator|*
 name|DC
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getPrimaryContext - There may be many different
 comment|/// declarations of the same entity (including forward declarations
 comment|/// of classes, multiple definitions of namespaces, etc.), each with
@@ -3135,19 +3166,18 @@ name|getPrimaryContext
 argument_list|()
 return|;
 block|}
-comment|/// getLookupContext - Retrieve the innermost non-transparent
-comment|/// context of this context, which corresponds to the innermost
-comment|/// location from which name lookup can find the entities in this
-comment|/// context.
+comment|/// getRedeclContext - Retrieve the context in which an entity conflicts with
+comment|/// other entities of the same name, or where it is a redeclaration if the
+comment|/// two entities are compatible. This skips through transparent contexts.
 name|DeclContext
 modifier|*
-name|getLookupContext
+name|getRedeclContext
 parameter_list|()
 function_decl|;
 specifier|const
 name|DeclContext
 operator|*
-name|getLookupContext
+name|getRedeclContext
 argument_list|()
 specifier|const
 block|{
@@ -3161,7 +3191,7 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getLookupContext
+name|getRedeclContext
 argument_list|()
 return|;
 block|}
@@ -3192,6 +3222,21 @@ name|getEnclosingNamespaceContext
 argument_list|()
 return|;
 block|}
+comment|/// \brief Test if this context is part of the enclosing namespace set of
+comment|/// the context NS, as defined in C++0x [namespace.def]p9. If either context
+comment|/// isn't a namespace, this is equivalent to Equals().
+comment|///
+comment|/// The enclosing namespace set of a namespace is the namespace and, if it is
+comment|/// inline, its enclosing namespace, recursively.
+name|bool
+name|InEnclosingNamespaceSetOf
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|NS
+parameter_list|)
+function|const;
 comment|/// getNextContext - If this is a DeclContext that may have other
 comment|/// DeclContexts that are semantically connected but syntactically
 comment|/// different, such as C++ namespaces, this routine retrieves the
@@ -3417,6 +3462,34 @@ end_expr_stmt
 begin_expr_stmt
 name|bool
 name|decls_empty
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// noload_decls_begin/end - Iterate over the declarations stored in this
+end_comment
+
+begin_comment
+comment|/// context that are currently loaded; don't attempt to retrieve anything
+end_comment
+
+begin_comment
+comment|/// from an external source.
+end_comment
+
+begin_expr_stmt
+name|decl_iterator
+name|noload_decls_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|decl_iterator
+name|noload_decls_end
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -4206,30 +4279,16 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|lookup_iterator
-operator|,
-name|lookup_iterator
-operator|>
+name|DeclContextLookupResult
 name|lookup_result
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|lookup_const_iterator
-operator|,
-name|lookup_const_iterator
-operator|>
+name|DeclContextLookupConstResult
 name|lookup_const_result
-expr_stmt|;
+typedef|;
 end_typedef
 
 begin_comment
@@ -4358,6 +4417,37 @@ name|Recoverable
 init|=
 name|true
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Deserialize all the visible declarations from external storage.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Name lookup deserializes visible declarations lazily, thus a DeclContext
+end_comment
+
+begin_comment
+comment|/// may not have a complete name lookup table. This function deserializes
+end_comment
+
+begin_comment
+comment|/// the rest of visible declarations from the external storage and completes
+end_comment
+
+begin_comment
+comment|/// the name lookup table.
+end_comment
+
+begin_function_decl
+name|void
+name|MaterializeVisibleDeclsFromExternalStorage
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -4644,14 +4734,6 @@ end_label
 begin_expr_stmt
 name|void
 name|LoadLexicalDeclsFromExternalStorage
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|void
-name|LoadVisibleDeclsFromExternalStorage
 argument_list|()
 specifier|const
 expr_stmt|;

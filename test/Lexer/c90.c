@@ -48,5 +48,33 @@ begin_comment
 comment|// comment accepted as extension    /* expected-error {{// comments are not allowed in this language}}
 end_comment
 
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+specifier|const
+name|char
+modifier|*
+name|str
+init|=
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+comment|// expected-error{{string literal of length 845 exceeds maximum length 509 that C90 compilers are required to support}}
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+literal|"sdjflksdjf lksdjf skldfjsdkljflksdjf kldsjflkdsj fldks jflsdkjfds"
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

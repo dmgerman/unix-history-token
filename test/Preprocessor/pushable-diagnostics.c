@@ -24,7 +24,7 @@ name|puhs
 end_pragma
 
 begin_comment
-comment|// expected-warning{{pragma diagnostic expected 'error', 'warning', 'ignored', 'fatal' 'push', or 'pop'}}
+comment|// expected-warning {{pragma diagnostic expected 'error', 'warning', 'ignored', 'fatal', 'push', or 'pop'}}
 end_comment
 
 begin_decl_stmt

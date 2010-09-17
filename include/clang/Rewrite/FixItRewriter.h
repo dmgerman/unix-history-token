@@ -112,13 +112,13 @@ name|class
 name|FileEntry
 decl_stmt|;
 name|class
-name|FixItPathRewriter
+name|FixItOptions
 block|{
 name|public
 label|:
 name|virtual
 operator|~
-name|FixItPathRewriter
+name|FixItOptions
 argument_list|()
 expr_stmt|;
 comment|/// \brief This file is about to be rewritten. Return the name of the file
@@ -139,6 +139,10 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+comment|/// \brief Whether to abort fixing a file when not all errors could be fixed.
+name|bool
+name|FixWhatYouCan
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -165,9 +169,9 @@ name|Client
 block|;
 comment|/// \brief Turn an input path into an output path. NULL implies overwriting
 comment|/// the original.
-name|FixItPathRewriter
+name|FixItOptions
 operator|*
-name|PathRewriter
+name|FixItOpts
 block|;
 comment|/// \brief The number of rewriter failures.
 name|unsigned
@@ -197,9 +201,9 @@ name|LangOptions
 operator|&
 name|LangOpts
 argument_list|,
-name|FixItPathRewriter
+name|FixItOptions
 operator|*
-name|PathRewriter
+name|FixItOpts
 argument_list|)
 decl_stmt|;
 comment|/// \brief Destroy the fix-it rewriter.

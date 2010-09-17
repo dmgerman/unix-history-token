@@ -4,27 +4,27 @@ comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f0() readnone$' %t
+comment|// RUN: grep 'declare i32 @f0() readnone' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f1() readonly$' %t
+comment|// RUN: grep 'declare i32 @f1() readonly' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f2(.* sret)$' %t
+comment|// RUN: grep 'declare void @f2(.* sret)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f3(.* sret)$' %t
+comment|// RUN: grep 'declare void @f3(.* sret)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f4(.* byval)$' %t
+comment|// RUN: grep 'declare void @f4(.* byval)' %t
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f5(.* byval)$' %t
+comment|// RUN: grep 'declare void @f5(.* byval)' %t
 end_comment
 
 begin_comment

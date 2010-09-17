@@ -14,7 +14,7 @@ block|{
 goto|goto
 name|L
 goto|;
-comment|// expected-error{{illegal goto into protected scope}}
+comment|// expected-error{{goto into protected scope}}
 name|int
 name|a
 index|[
@@ -49,7 +49,7 @@ block|{
 goto|goto
 name|L
 goto|;
-comment|// expected-error{{illegal goto into protected scope}}
+comment|// expected-error{{goto into protected scope}}
 typedef|typedef
 name|int
 name|a
@@ -87,7 +87,7 @@ block|{
 goto|goto
 name|L
 goto|;
-comment|// expected-error{{illegal goto into protected scope}}
+comment|// expected-error{{goto into protected scope}}
 name|int
 name|a
 name|__attribute
@@ -120,7 +120,7 @@ block|{
 goto|goto
 name|L
 goto|;
-comment|// expected-error{{illegal goto into protected scope}}
+comment|// expected-error{{goto into protected scope}}
 name|int
 name|a
 index|[
@@ -218,7 +218,7 @@ comment|// expected-note {{jump bypasses initialization of variable length array
 case|case
 literal|2
 case|:
-comment|// expected-error {{illegal switch case into protected scope}}
+comment|// expected-error {{switch case is in protected scope}}
 name|a
 index|[
 literal|1
@@ -243,7 +243,7 @@ comment|// For statement.
 goto|goto
 name|L2
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 for|for
 control|(
 name|int
@@ -264,7 +264,7 @@ comment|// Statement expressions.
 goto|goto
 name|L3
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 name|int
 name|Y
 init|=
@@ -286,7 +286,7 @@ decl_stmt|;
 goto|goto
 name|L4
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 block|{
 name|int
 name|A
@@ -401,7 +401,7 @@ else|else
 goto|goto
 name|L8
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 literal|4
 expr|;
 end_decl_stmt
@@ -477,7 +477,7 @@ goto|;
 end_else
 
 begin_comment
-comment|// fixme-error {{illegal goto into protected scope}}
+comment|// fixme-error {{goto into protected scope}}
 end_comment
 
 begin_expr_stmt
@@ -556,7 +556,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 end_comment
 
 begin_return
@@ -661,7 +661,7 @@ block|{
 goto|goto
 name|L0
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 typedef|typedef
 name|int
 name|A
@@ -675,7 +675,7 @@ label|:
 goto|goto
 name|L1
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 name|A
 name|b
 decl_stmt|,
@@ -690,7 +690,7 @@ label|:
 goto|goto
 name|L2
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 name|A
 name|d
 index|[
@@ -744,7 +744,7 @@ comment|// expected-note {{jump bypasses initialization of variable length array
 case|case
 literal|4
 case|:
-comment|// expected-error {{illegal switch case into protected scope}}
+comment|// expected-error {{switch case is in protected scope}}
 return|return;
 block|}
 block|}
@@ -783,7 +783,7 @@ label|:
 goto|goto
 name|L3
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 name|int
 name|Arr
 index|[

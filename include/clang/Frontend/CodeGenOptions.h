@@ -158,11 +158,33 @@ literal|1
 decl_stmt|;
 comment|/// Set when -mno-red-zone is enabled.
 name|unsigned
+name|EmitDeclMetadata
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit special metadata indicating what Decl*
+comment|/// various IR entities came from.  Only useful
+comment|/// when running CodeGen as a subroutine.
+name|unsigned
 name|FunctionSections
 range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -ffunction-sections is enabled
+name|unsigned
+name|HiddenWeakTemplateVTables
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit weak vtables and RTTI for
+comment|/// template classes with hidden visibility
+name|unsigned
+name|HiddenWeakVTables
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit weak vtables, RTTI, and thunks with
+comment|/// hidden visibility
 name|unsigned
 name|InstrumentFunctions
 range|:
@@ -268,14 +290,6 @@ literal|1
 decl_stmt|;
 comment|/// Control whether the module should be run
 comment|/// through the LLVM Verifier.
-name|unsigned
-name|EmitDeclMetadata
-range|:
-literal|1
-decl_stmt|;
-comment|/// Emit special metadata indicating what Decl*
-comment|/// various IR entities came from.  Only useful
-comment|/// when running CodeGen as a subroutine.
 comment|/// The code model to use (-mcmodel).
 name|std
 operator|::
@@ -362,7 +376,23 @@ name|DisableRedZone
 operator|=
 literal|0
 expr_stmt|;
+name|EmitDeclMetadata
+operator|=
+literal|0
+expr_stmt|;
 name|FunctionSections
+operator|=
+literal|0
+expr_stmt|;
+name|HiddenWeakTemplateVTables
+operator|=
+literal|0
+expr_stmt|;
+name|HiddenWeakVTables
+operator|=
+literal|0
+expr_stmt|;
+name|InstrumentFunctions
 operator|=
 literal|0
 expr_stmt|;
@@ -429,10 +459,6 @@ expr_stmt|;
 name|VerifyModule
 operator|=
 literal|1
-expr_stmt|;
-name|EmitDeclMetadata
-operator|=
-literal|0
 expr_stmt|;
 name|Inlining
 operator|=

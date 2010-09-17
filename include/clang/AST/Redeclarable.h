@@ -830,6 +830,20 @@ return|;
 block|}
 end_expr_stmt
 
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 unit|};  }
 endif|#

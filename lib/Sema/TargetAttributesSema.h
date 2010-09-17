@@ -54,7 +54,7 @@ name|class
 name|Decl
 decl_stmt|;
 name|class
-name|Attr
+name|AttributeList
 decl_stmt|;
 name|class
 name|Sema

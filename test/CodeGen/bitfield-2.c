@@ -44,7 +44,7 @@ comment|// CHECK-RECORD:   LLVMType:<{ [3 x i8] }>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   ContainsPointerToDataMember:0
+comment|// CHECK-RECORD:   IsZeroInitializable:1
 end_comment
 
 begin_comment
@@ -279,7 +279,7 @@ comment|// CHECK-RECORD:   LLVMType:<{ [2 x i8], i8 }>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   ContainsPointerToDataMember:0
+comment|// CHECK-RECORD:   IsZeroInitializable:1
 end_comment
 
 begin_comment
@@ -586,7 +586,7 @@ comment|// CHECK-RECORD:   LLVMType:<{ i8 }>
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   ContainsPointerToDataMember:0
+comment|// CHECK-RECORD:   IsZeroInitializable:1
 end_comment
 
 begin_comment
@@ -1594,7 +1594,7 @@ comment|// CHECK-RECORD:   LLVMType:{ i32, i32, i32, i8, [3 x i8], [4 x i8], [12
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   ContainsPointerToDataMember:0
+comment|// CHECK-RECORD:   IsZeroInitializable:1
 end_comment
 
 begin_comment

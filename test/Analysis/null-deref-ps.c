@@ -285,7 +285,7 @@ condition|(
 operator|!
 operator|(
 name|p
-operator|=
+operator|==
 operator|&
 name|array
 index|[
@@ -294,6 +294,7 @@ index|]
 operator|)
 condition|)
 block|{
+comment|// expected-warning{{Both operands to '==' always have the same value}}
 name|p
 operator|=
 literal|0
@@ -1302,7 +1303,6 @@ name|x
 operator|=
 literal|1
 expr_stmt|;
-comment|// no-warning
 block|}
 end_function
 

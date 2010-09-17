@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - -triple=i686-apple-darwin9> %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.memory.barrier %t1 | count 38
+comment|// RUN: grep @llvm.memory.barrier %t1 | count 42
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// RUN: grep @llvm.atomic.swap.i32 %t1
 end_comment
 
 begin_comment
-comment|// RUN: grep @llvm.atomic.cmp.swap.i32 %t1 | count 4
+comment|// RUN: grep @llvm.atomic.cmp.swap.i32 %t1 | count 5
 end_comment
 
 begin_comment
@@ -71,6 +71,11 @@ name|char
 name|valc
 init|=
 literal|1
+decl_stmt|;
+name|_Bool
+name|valb
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|int
@@ -279,6 +284,46 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|__sync_val_compare_and_swap
+argument_list|(
+operator|&
+name|valb
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|old
+operator|=
+literal|42
+expr_stmt|;
+block|}
+name|__sync_bool_compare_and_swap
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|__sync_lock_release
 argument_list|(
 operator|&
@@ -290,6 +335,25 @@ argument_list|()
 expr_stmt|;
 return|return
 name|old
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|release_return
+parameter_list|(
+name|int
+modifier|*
+name|lock
+parameter_list|)
+block|{
+comment|// Ensure this is actually returning void all the way through.
+return|return
+name|__sync_lock_release
+argument_list|(
+name|lock
+argument_list|)
 return|;
 block|}
 end_function

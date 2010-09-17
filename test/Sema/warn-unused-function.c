@@ -283,5 +283,99 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_function_decl
+specifier|static
+name|void
+name|f10
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{unused}}
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|f10
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|f11
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|f11
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-warning{{unused}}
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|f12
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-warning{{unused}}
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|f12
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// PR7923
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|unused
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unused
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-warning{{unused}}
+end_comment
+
 end_unit
 

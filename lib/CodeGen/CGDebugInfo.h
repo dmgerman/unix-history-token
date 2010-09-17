@@ -169,11 +169,6 @@ operator|::
 name|DIType
 name|VTablePtrType
 expr_stmt|;
-comment|/// FwdDeclCount - This counter is used to ensure unique names for forward
-comment|/// record decls.
-name|unsigned
-name|FwdDeclCount
-decl_stmt|;
 comment|/// TypeCache - Cache of previously constructed Types.
 name|llvm
 operator|::
@@ -225,12 +220,40 @@ name|WeakVH
 operator|>
 name|RegionMap
 expr_stmt|;
+comment|// FnBeginRegionCount - Keep track of RegionStack counter at the beginning
+comment|// of a function. This is used to pop unbalanced regions at the end of a
+comment|// function.
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|FnBeginRegionCount
+expr_stmt|;
+comment|/// LineDirectiveFiles - This stack is used to keep track of
+comment|/// scopes introduced by #line directives.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|LineDirectiveFiles
+expr_stmt|;
 comment|/// DebugInfoNames - This is a storage for names that are
 comment|/// constructed on demand. For example, C++ destructors, C++ operators etc..
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|DebugInfoNames
+expr_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|CWDName
 expr_stmt|;
 name|llvm
 operator|::
@@ -448,6 +471,16 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateEnumType
+argument_list|(
+argument|const EnumDecl *ED
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|getOrCreateMethodType
 argument_list|(
 argument|const CXXMethodDecl *Method
@@ -496,7 +529,7 @@ argument|const CXXMethodDecl *Method
 argument_list|,
 argument|llvm::DIFile F
 argument_list|,
-argument|llvm::DICompositeType&RecordTy
+argument|llvm::DIType RecordTy
 argument_list|)
 expr_stmt|;
 name|void
@@ -525,9 +558,38 @@ name|E
 argument_list|,
 name|llvm
 operator|::
-name|DICompositeType
-operator|&
+name|DIType
 name|T
+argument_list|)
+decl_stmt|;
+name|void
+name|CollectCXXFriends
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Decl
+argument_list|,
+name|llvm
+operator|::
+name|DIFile
+name|F
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|llvm
+operator|::
+name|DIDescriptor
+operator|>
+operator|&
+name|EltTys
+argument_list|,
+name|llvm
+operator|::
+name|DIType
+name|RecordTy
 argument_list|)
 decl_stmt|;
 name|void
@@ -556,8 +618,7 @@ name|EltTys
 argument_list|,
 name|llvm
 operator|::
-name|DICompositeType
-operator|&
+name|DIType
 name|RecordTy
 argument_list|)
 decl_stmt|;
@@ -637,18 +698,12 @@ comment|/// EmitStopPoint - Emit a call to llvm.dbg.stoppoint to indicate a chan
 comment|/// source line.
 name|void
 name|EmitStopPoint
-argument_list|(
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
+parameter_list|(
 name|CGBuilderTy
-operator|&
+modifier|&
 name|Builder
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// EmitFunctionStart - Emit a call to llvm.dbg.function.start to indicate
 comment|/// start of a new function.
 name|void
@@ -671,38 +726,45 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// EmitFunctionEnd - Constructs the debug code for exiting a function.
+name|void
+name|EmitFunctionEnd
+parameter_list|(
+name|CGBuilderTy
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
+comment|/// UpdateLineDirectiveRegion - Update region stack only if #line directive
+comment|/// has introduced scope change.
+name|void
+name|UpdateLineDirectiveRegion
+parameter_list|(
+name|CGBuilderTy
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
 comment|/// EmitRegionStart - Emit a call to llvm.dbg.region.start to indicate start
 comment|/// of a new block.
 name|void
 name|EmitRegionStart
-argument_list|(
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
+parameter_list|(
 name|CGBuilderTy
-operator|&
+modifier|&
 name|Builder
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// EmitRegionEnd - Emit call to llvm.dbg.region.end to indicate end of a
 comment|/// block.
 name|void
 name|EmitRegionEnd
-argument_list|(
-name|llvm
-operator|::
-name|Function
-operator|*
-name|Fn
-argument_list|,
+parameter_list|(
 name|CGBuilderTy
-operator|&
+modifier|&
 name|Builder
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// EmitDeclareOfAutoVariable - Emit call to llvm.dbg.declare for an automatic
 comment|/// variable declaration.
 name|void
@@ -801,6 +863,26 @@ operator|*
 name|Decl
 argument_list|)
 decl_stmt|;
+comment|/// EmitGlobalVariable - Emit global variable's debug info.
+name|void
+name|EmitGlobalVariable
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|VD
+argument_list|,
+name|llvm
+operator|::
+name|ConstantInt
+operator|*
+name|Init
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|Builder
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
@@ -888,6 +970,13 @@ operator|&
 name|CU
 argument_list|)
 expr_stmt|;
+comment|/// getCurrentDirname - Return current directory name.
+name|llvm
+operator|::
+name|StringRef
+name|getCurrentDirname
+argument_list|()
+expr_stmt|;
 comment|/// CreateCompileUnit - Create new compile unit.
 name|void
 name|CreateCompileUnit
@@ -953,6 +1042,30 @@ specifier|const
 name|FunctionDecl
 operator|*
 name|FD
+argument_list|)
+expr_stmt|;
+comment|/// getObjCMethodName - Returns the unmangled name of an Objective-C method.
+comment|/// This is the display name for the debugging info.
+name|llvm
+operator|::
+name|StringRef
+name|getObjCMethodName
+argument_list|(
+specifier|const
+name|ObjCMethodDecl
+operator|*
+name|FD
+argument_list|)
+expr_stmt|;
+comment|/// getClassName - Get class name including template argument list.
+name|llvm
+operator|::
+name|StringRef
+name|getClassName
+argument_list|(
+name|RecordDecl
+operator|*
+name|RD
 argument_list|)
 expr_stmt|;
 comment|/// getVTableName - Get vtable name for the given Class.

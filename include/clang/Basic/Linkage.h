@@ -96,6 +96,24 @@ comment|/// be referred to from other translation units.
 name|ExternalLinkage
 block|}
 enum|;
+comment|/// \brief A more specific kind of linkage. This is relevant to CodeGen and
+comment|/// AST file reading.
+enum|enum
+name|GVALinkage
+block|{
+name|GVA_Internal
+block|,
+name|GVA_C99Inline
+block|,
+name|GVA_CXXInline
+block|,
+name|GVA_StrongExternal
+block|,
+name|GVA_TemplateInstantiation
+block|,
+name|GVA_ExplicitTemplateInstantiation
+block|}
+enum|;
 comment|/// \brief Determine whether the given linkage is semantically
 comment|/// external.
 specifier|inline

@@ -48,47 +48,67 @@ comment|// RUN: c-index-test -test-print-typekind %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: TypedefDecl=FooType:1:13 (Definition) typekind=Typedef [canonical=Int]
+comment|// CHECK: TypedefDecl=FooType:1:13 (Definition) typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=p:2:6 typekind=Pointer
+comment|// CHECK: VarDecl=p:2:6 typekind=Pointer [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=FunctionProto [canonical=FunctionProto] [result=Pointer]
+comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=FunctionProto [canonical=FunctionProto] [result=Pointer] [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=p:3:13 (Definition) typekind=Pointer
+comment|// CHECK: ParmDecl=p:3:13 (Definition) typekind=Pointer [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=x:3:22 (Definition) typekind=Pointer
+comment|// CHECK: ParmDecl=x:3:22 (Definition) typekind=Pointer [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=z:3:33 (Definition) typekind=Typedef [canonical=Int]
+comment|// CHECK: ParmDecl=z:3:33 (Definition) typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=w:4:11 (Definition) typekind=Typedef [canonical=Int]
+comment|// CHECK: TypeRef=FooType:1:13 typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int]
+comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: UnexposedExpr= typekind=Pointer
+comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=p:3:13 typekind=Pointer
+comment|// CHECK: VarDecl=w:4:11 (Definition) typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int]
+comment|// CHECK: TypeRef=FooType:1:13 typekind=Invalid [isPOD=0]
+end_comment
+
+begin_comment
+comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
+end_comment
+
+begin_comment
+comment|// CHECK: UnexposedExpr= typekind=Pointer [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: DeclRefExpr=p:3:13 typekind=Pointer [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 end_unit

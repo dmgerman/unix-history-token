@@ -40,7 +40,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call void @__clear_cache
+comment|// CHECK: call {{.*}} @__clear_cache
 end_comment
 
 end_unit

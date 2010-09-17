@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -294,14 +300,10 @@ name|FixItHint
 block|{
 name|public
 label|:
-comment|/// \brief Code that should be removed to correct the error.
+comment|/// \brief Code that should be replaced to correct the error. Empty for an
+comment|/// insertion hint.
 name|CharSourceRange
 name|RemoveRange
-decl_stmt|;
-comment|/// \brief The location at which we should insert code to correct
-comment|/// the error.
-name|SourceLocation
-name|InsertionLoc
 decl_stmt|;
 comment|/// \brief The actual code to insert at the insertion location, as a
 comment|/// string.
@@ -317,9 +319,6 @@ argument_list|()
 operator|:
 name|RemoveRange
 argument_list|()
-operator|,
-name|InsertionLoc
-argument_list|()
 block|{ }
 name|bool
 name|isNull
@@ -329,12 +328,6 @@ block|{
 return|return
 operator|!
 name|RemoveRange
-operator|.
-name|isValid
-argument_list|()
-operator|&&
-operator|!
-name|InsertionLoc
 operator|.
 name|isValid
 argument_list|()
@@ -360,9 +353,19 @@ name|Hint
 decl_stmt|;
 name|Hint
 operator|.
-name|InsertionLoc
+name|RemoveRange
 operator|=
+name|CharSourceRange
+argument_list|(
+name|SourceRange
+argument_list|(
 name|InsertionLoc
+argument_list|,
+name|InsertionLoc
+argument_list|)
+argument_list|,
+name|false
+argument_list|)
 expr_stmt|;
 name|Hint
 operator|.
@@ -440,15 +443,6 @@ operator|.
 name|RemoveRange
 operator|=
 name|RemoveRange
-expr_stmt|;
-name|Hint
-operator|.
-name|InsertionLoc
-operator|=
-name|RemoveRange
-operator|.
-name|getBegin
-argument_list|()
 expr_stmt|;
 name|Hint
 operator|.
@@ -635,26 +629,145 @@ name|ExtensionHandling
 name|ExtBehavior
 decl_stmt|;
 comment|// Map extensions onto warnings or errors?
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
 name|DiagnosticClient
-modifier|*
+operator|>
 name|Client
-decl_stmt|;
+expr_stmt|;
 comment|/// DiagMappings - Mapping information for diagnostics.  Mapping info is
 comment|/// packed into four bits per diagnostic.  The low three bits are the mapping
 comment|/// (an instance of diag::Mapping), or zero if unset.  The high bit is set
 comment|/// when the mapping was established as a user mapping.  If the high bit is
 comment|/// clear, then the low bits are set to the default value, and should be
 comment|/// mapped with -pedantic, -Werror, etc.
-typedef|typedef
-name|std
-operator|::
-name|vector
-operator|<
+name|class
+name|DiagMappings
+block|{
 name|unsigned
 name|char
-operator|>
+name|Values
+index|[
+name|diag
+operator|::
+name|DIAG_UPPER_LIMIT
+operator|/
+literal|2
+index|]
+decl_stmt|;
+name|public
+label|:
 name|DiagMappings
+argument_list|()
+block|{
+name|memset
+argument_list|(
+name|Values
+argument_list|,
+literal|0
+argument_list|,
+name|diag
+operator|::
+name|DIAG_UPPER_LIMIT
+operator|/
+literal|2
+argument_list|)
 expr_stmt|;
+block|}
+name|void
+name|setMapping
+argument_list|(
+name|diag
+operator|::
+name|kind
+name|Diag
+argument_list|,
+name|unsigned
+name|Map
+argument_list|)
+block|{
+name|size_t
+name|Shift
+init|=
+operator|(
+name|Diag
+operator|&
+literal|1
+operator|)
+operator|*
+literal|4
+decl_stmt|;
+name|Values
+index|[
+name|Diag
+operator|/
+literal|2
+index|]
+operator|=
+operator|(
+name|Values
+index|[
+name|Diag
+operator|/
+literal|2
+index|]
+operator|&
+operator|~
+operator|(
+literal|15
+operator|<<
+name|Shift
+operator|)
+operator|)
+operator||
+operator|(
+name|Map
+operator|<<
+name|Shift
+operator|)
+expr_stmt|;
+block|}
+name|diag
+operator|::
+name|Mapping
+name|getMapping
+argument_list|(
+argument|diag::kind Diag
+argument_list|)
+specifier|const
+block|{
+return|return
+operator|(
+name|diag
+operator|::
+name|Mapping
+operator|)
+operator|(
+operator|(
+name|Values
+index|[
+name|Diag
+operator|/
+literal|2
+index|]
+operator|>>
+operator|(
+name|Diag
+operator|&
+literal|1
+operator|)
+operator|*
+literal|4
+operator|)
+operator|&
+literal|15
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 name|mutable
 name|std
 operator|::
@@ -809,6 +922,9 @@ parameter_list|()
 block|{
 return|return
 name|Client
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -820,6 +936,23 @@ specifier|const
 block|{
 return|return
 name|Client
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the current diagnostic client along with ownership of that
+comment|/// client.
+name|DiagnosticClient
+modifier|*
+name|takeClient
+parameter_list|()
+block|{
+return|return
+name|Client
+operator|.
+name|take
+argument_list|()
 return|;
 block|}
 comment|/// pushMappings - Copies the current DiagMappings and pushes the new copy
@@ -836,6 +969,9 @@ name|bool
 name|popMappings
 parameter_list|()
 function_decl|;
+comment|/// \brief Set the diagnostic client associated with this diagnostic object.
+comment|///
+comment|/// The diagnostic object takes ownership of \c client.
 name|void
 name|setClient
 parameter_list|(
@@ -845,8 +981,11 @@ name|client
 parameter_list|)
 block|{
 name|Client
-operator|=
+operator|.
+name|reset
+argument_list|(
 name|client
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// setErrorLimit - Specify a limit for the number of errors we should
@@ -1210,6 +1349,20 @@ return|return
 name|NumWarnings
 return|;
 block|}
+name|void
+name|setNumWarnings
+parameter_list|(
+name|unsigned
+name|NumWarnings
+parameter_list|)
+block|{
+name|this
+operator|->
+name|NumWarnings
+operator|=
+name|NumWarnings
+expr_stmt|;
+block|}
 comment|/// getCustomDiagID - Return an ID for a diagnostic with the specified message
 comment|/// and level.  If this is the first request for this diagnosic, it is
 comment|/// registered and created, otherwise the existing ID is returned.
@@ -1315,6 +1468,12 @@ operator|=
 name|Cookie
 expr_stmt|;
 block|}
+comment|/// \brief Reset the state of the diagnostic object to its initial
+comment|/// configuration.
+name|void
+name|Reset
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Diagnostic classification and reporting interfaces.
 comment|//
@@ -1587,42 +1746,16 @@ argument|diag::kind Diag
 argument_list|)
 specifier|const
 block|{
-specifier|const
-name|DiagMappings
-operator|&
-name|currentMappings
-operator|=
+return|return
 name|DiagMappingsStack
 operator|.
 name|back
 argument_list|()
-block|;
-return|return
-operator|(
-name|diag
-operator|::
-name|Mapping
-operator|)
-operator|(
-operator|(
-name|currentMappings
-index|[
+operator|.
+name|getMapping
+argument_list|(
 name|Diag
-operator|/
-literal|2
-index|]
-operator|>>
-operator|(
-name|Diag
-operator|&
-literal|1
-operator|)
-operator|*
-literal|4
-operator|)
-operator|&
-literal|15
-operator|)
+argument_list|)
 return|;
 block|}
 name|void
@@ -1648,46 +1781,22 @@ operator||=
 literal|8
 expr_stmt|;
 comment|// Set the high bit for user mappings.
-name|unsigned
-name|char
-modifier|&
-name|Slot
-init|=
 name|DiagMappingsStack
 operator|.
 name|back
 argument_list|()
-index|[
-name|DiagId
-operator|/
-literal|2
-index|]
-decl_stmt|;
-name|unsigned
-name|Shift
-init|=
+operator|.
+name|setMapping
+argument_list|(
 operator|(
+name|diag
+operator|::
+name|kind
+operator|)
 name|DiagId
-operator|&
-literal|1
-operator|)
-operator|*
-literal|4
-decl_stmt|;
-name|Slot
-operator|&=
-operator|~
-operator|(
-literal|15
-operator|<<
-name|Shift
-operator|)
-expr_stmt|;
-name|Slot
-operator||=
+argument_list|,
 name|Map
-operator|<<
-name|Shift
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// getDiagnosticLevel - This is an internal implementation helper used when
@@ -3330,6 +3439,20 @@ block|{
 return|return
 name|Message
 return|;
+block|}
+name|void
+name|setLocation
+parameter_list|(
+name|FullSourceLoc
+name|Loc
+parameter_list|)
+block|{
+name|this
+operator|->
+name|Loc
+operator|=
+name|Loc
+expr_stmt|;
 block|}
 typedef|typedef
 name|std

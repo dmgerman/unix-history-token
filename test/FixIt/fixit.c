@@ -167,5 +167,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: typedef int int_t;
+end_comment
+
+begin_typedef
+typedef|typedef
+typedef|typedef
+name|int
+name|int_t
+typedef|;
+end_typedef
+
 end_unit
 

@@ -805,11 +805,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @__func__.g25 = private constant [4 x i8] c"g25\00"
+comment|// CHECK: @g25.g26 = internal global i8* getelementptr inbounds ([4 x i8]* @__func__.g25, i32 0, i32 0)
 end_comment
 
 begin_comment
-comment|// CHECK: @g25.g26 = internal global i8* getelementptr inbounds ([4 x i8]* @__func__.g25, i32 0, i32 0)
+comment|// CHECK: @__func__.g25 = private constant [4 x i8] c"g25\00"
 end_comment
 
 begin_function
@@ -829,6 +829,27 @@ return|return
 operator|*
 name|g26
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @g27.x = internal global i8* bitcast (i8** @g27.x to i8*), align 4
+end_comment
+
+begin_function
+name|void
+name|g27
+parameter_list|()
+block|{
+comment|// PR8073
+specifier|static
+name|void
+modifier|*
+name|x
+init|=
+operator|&
+name|x
+decl_stmt|;
 block|}
 end_function
 

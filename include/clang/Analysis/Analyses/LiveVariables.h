@@ -129,6 +129,9 @@ name|AnalysisContext
 operator|*
 name|AC
 block|;
+name|bool
+name|killAtAssign
+block|;
 name|AnalysisDataTy
 argument_list|()
 operator|:
@@ -139,7 +142,12 @@ argument_list|)
 block|,
 name|AC
 argument_list|(
-argument|NULL
+name|NULL
+argument_list|)
+block|,
+name|killAtAssign
+argument_list|(
+argument|true
 argument_list|)
 block|{}
 block|}
@@ -202,11 +210,11 @@ name|ObserverTy
 expr_stmt|;
 name|LiveVariables
 argument_list|(
-name|AnalysisContext
-operator|&
-name|AC
+argument|AnalysisContext&AC
+argument_list|,
+argument|bool killAtAssign = true
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|/// IsLive - Return true if a variable is live at the end of a
 comment|/// specified block.
 name|bool

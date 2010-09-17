@@ -530,5 +530,30 @@ begin_comment
 comment|// Make sure test14a didn't get skipped.
 end_comment
 
+begin_comment
+comment|// rdar://problem/8358508
+end_comment
+
+begin_macro
+name|long
+end_macro
+
+begin_struct
+struct|struct
+name|X
+block|{
+name|int
+name|x
+decl_stmt|;
+block|}
+name|test15
+argument_list|()
+struct|;
+end_struct
+
+begin_comment
+comment|// expected-error {{'long struct' is invalid}}
+end_comment
+
 end_unit
 

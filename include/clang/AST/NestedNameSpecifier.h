@@ -594,17 +594,6 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/// \brief Dump the nested name specifier to standard output to aid
 end_comment
