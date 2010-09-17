@@ -6967,8 +6967,10 @@ name|NULL
 condition|)
 block|{
 comment|/* Resource shortage, roll back! */
-name|printf
+name|mps_printf
 argument_list|(
+name|sc
+argument_list|,
 literal|"out of chain frames\n"
 argument_list|)
 expr_stmt|;

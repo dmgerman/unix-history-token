@@ -2869,6 +2869,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|num_sim_reqs
+decl_stmt|;
 name|mps_dprint
 argument_list|(
 name|sc
@@ -2934,6 +2937,15 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
+comment|/* 	 * Tell CAM that we can handle 5 fewer requests than we have 	 * allocated.  If we allow the full number of requests, all I/O 	 * will halt when we run out of resources.  Things work fine with 	 * just 1 less request slot given to CAM than we have allocated. 	 * We also need a couple of extra commands so that we can send down 	 * abort, reset, etc. requests when commands time out.  Otherwise 	 * we could wind up in a situation with sc->num_reqs requests down 	 * on the card and no way to send an abort. 	 * 	 * XXX KDM need to figure out why I/O locks up if all commands are 	 * used. 	 */
+name|num_sim_reqs
+operator|=
+name|sc
+operator|->
+name|num_reqs
+operator|-
+literal|5
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2943,9 +2955,7 @@ name|devq
 operator|=
 name|cam_simq_alloc
 argument_list|(
-name|sc
-operator|->
-name|num_reqs
+name|num_sim_reqs
 argument_list|)
 operator|)
 operator|==
@@ -2995,13 +3005,9 @@ name|sc
 operator|->
 name|mps_mtx
 argument_list|,
-name|sc
-operator|->
-name|num_reqs
+name|num_sim_reqs
 argument_list|,
-name|sc
-operator|->
-name|num_reqs
+name|num_sim_reqs
 argument_list|,
 name|sassc
 operator|->
@@ -4285,6 +4291,12 @@ name|mpssas_target
 modifier|*
 name|targ
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|char cdb_str[(SCSI_MAX_CDBLEN * 3) + 1];
+endif|#
+directive|endif
 name|cm
 operator|=
 operator|(
@@ -4386,6 +4398,13 @@ operator|.
 name|SMID
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX KDM this is useful for debugging purposes, but the existing 	 * scsi_op_desc() implementation can't handle a NULL value for 	 * inq_data.  So this will remain commented out until I bring in 	 * those changes as well. 	 */
+if|#
+directive|if
+literal|0
+block|xpt_print(ccb->ccb_h.path, "Timed out command: %s. CDB %s\n", 		  scsi_op_desc((ccb->ccb_h.flags& CAM_CDB_POINTER) ? 		  		ccb->csio.cdb_io.cdb_ptr[0] : 				ccb->csio.cdb_io.cdb_bytes[0], NULL), 		  scsi_cdb_string((ccb->ccb_h.flags& CAM_CDB_POINTER) ? 				   ccb->csio.cdb_io.cdb_ptr : 				   ccb->csio.cdb_io.cdb_bytes, cdb_str, 		  		   sizeof(cdb_str)));
+endif|#
+directive|endif
 comment|/* Inform CAM about the timeout and that recovery is starting. */
 if|#
 directive|if
