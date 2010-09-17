@@ -857,6 +857,7 @@ argument_list|(
 literal|"envp is invalid\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * "ethaddr" is passed via envp on RedBoot platforms 	 * "kmac" is passed via argv on RouterBOOT platforms 	 */
 if|if
 condition|(
 operator|(
