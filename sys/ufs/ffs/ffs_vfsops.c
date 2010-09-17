@@ -1505,7 +1505,7 @@ name|FS_SUJ
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: Forced mount will invalidated journal contents\n"
+literal|"WARNING: Forced mount will invalidate journal contents\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1727,7 +1727,7 @@ name|mp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Soft updates is incompatible with "async", 		 * so if we are doing softupdates stop the user 		 * from setting the async flag in an update. 		 * Softdep_mount() clears it in an initial mount  		 * or ro->rw remount. 		 */
+comment|/* 		 * Soft updates is incompatible with "async", 		 * so if we are doing softupdates stop the user 		 * from setting the async flag in an update. 		 * Softdep_mount() clears it in an initial mount 		 * or ro->rw remount. 		 */
 if|if
 condition|(
 name|mp
@@ -3514,7 +3514,7 @@ name|FS_SUJ
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: Forced mount will invalidated journal contents\n"
+literal|"WARNING: Forced mount will invalidate journal contents\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -8961,7 +8961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write, release buffer on completion.  (Done by iodone  * if async).  Do not bother writing anything if the buffer  * is invalid.  *  * Note that we set B_CACHE here, indicating that buffer is  * fully valid and thus cacheable.  This is true even of NFS  * now so we set it generally.  This could be set either here   * or in biodone() since the I/O is synchronous.  We put it  * here.  */
+comment|/*  * Write, release buffer on completion.  (Done by iodone  * if async).  Do not bother writing anything if the buffer  * is invalid.  *  * Note that we set B_CACHE here, indicating that buffer is  * fully valid and thus cacheable.  This is true even of NFS  * now so we set it generally.  This could be set either here  * or in biodone() since the I/O is synchronous.  We put it  * here.  */
 end_comment
 
 begin_function
