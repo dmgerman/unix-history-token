@@ -185,21 +185,6 @@ argument|bool KillSrc
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr& MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|void
 name|storeRegToStackSlot

@@ -160,9 +160,9 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 name|PassesToRun
 expr_stmt|;
@@ -179,9 +179,6 @@ comment|// To generate reference output, etc.
 name|GCC
 modifier|*
 name|gcc
-decl_stmt|;
-name|bool
-name|run_as_child
 decl_stmt|;
 name|bool
 name|run_find_bugs
@@ -210,8 +207,6 @@ name|BugDriver
 argument_list|(
 argument|const char *toolname
 argument_list|,
-argument|bool as_child
-argument_list|,
 argument|bool find_bugs
 argument_list|,
 argument|unsigned timeout
@@ -239,9 +234,10 @@ name|ToolName
 return|;
 block|}
 name|LLVMContext
-modifier|&
+operator|&
 name|getContext
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Context
@@ -266,51 +262,52 @@ operator|&
 name|FileNames
 argument_list|)
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|It
-operator|>
 name|void
-name|addPasses
+name|addPass
 argument_list|(
-argument|It I
-argument_list|,
-argument|It E
+name|std
+operator|::
+name|string
+name|p
 argument_list|)
 block|{
 name|PassesToRun
 operator|.
-name|insert
+name|push_back
 argument_list|(
-name|PassesToRun
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|I
-argument_list|,
-name|E
+name|p
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 name|void
 name|setPassesToRun
 argument_list|(
-argument|const std::vector<const PassInfo*>&PTR
-argument_list|)
-block|{
-name|PassesToRun
-operator|=
-name|PTR
-block|;   }
 specifier|const
 name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|PTR
+argument_list|)
+block|{
+name|PassesToRun
+operator|=
+name|PTR
+expr_stmt|;
+block|}
 specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|getPassesToRun
@@ -445,52 +442,20 @@ comment|/// runPasses - Run all of the passes in the "PassesToRun" list, discard
 comment|/// output, and return true if any of the passes crashed.
 name|bool
 name|runPasses
-parameter_list|(
-name|Module
-modifier|*
-name|M
-init|=
-literal|0
-parameter_list|)
-block|{
-if|if
-condition|(
-name|M
-operator|==
-literal|0
-condition|)
-name|M
-operator|=
-name|Program
-expr_stmt|;
-name|std
-operator|::
-name|swap
 argument_list|(
+name|Module
+operator|*
 name|M
-argument_list|,
-name|Program
 argument_list|)
-expr_stmt|;
-name|bool
-name|Result
-init|=
+decl|const
+block|{
+return|return
 name|runPasses
 argument_list|(
-name|PassesToRun
-argument_list|)
-decl_stmt|;
-name|std
-operator|::
-name|swap
-argument_list|(
 name|M
 argument_list|,
-name|Program
+name|PassesToRun
 argument_list|)
-expr_stmt|;
-return|return
-name|Result
 return|;
 block|}
 name|Module
@@ -592,6 +557,7 @@ name|string
 operator|*
 name|Error
 argument_list|)
+decl|const
 decl_stmt|;
 comment|/// executeProgram - This method runs "Program", capturing the output of the
 comment|/// program to a file.  A recommended filename may be optionally specified.
@@ -601,6 +567,8 @@ operator|::
 name|string
 name|executeProgram
 argument_list|(
+argument|const Module *Program
+argument_list|,
 argument|std::string OutputFilename
 argument_list|,
 argument|std::string Bitcode
@@ -611,6 +579,7 @@ argument|AbstractInterpreter *AI
 argument_list|,
 argument|std::string *Error
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// executeProgramSafely - Used to create reference output with the "safe"
 comment|/// backend, if reference output is not provided.  If there is a problem with
@@ -622,10 +591,13 @@ operator|::
 name|string
 name|executeProgramSafely
 argument_list|(
+argument|const Module *Program
+argument_list|,
 argument|std::string OutputFile
 argument_list|,
 argument|std::string *Error
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// createReferenceFile - calls compileProgram and then records the output
 comment|/// into ReferenceOutputFile. Returns true if reference file created, false
@@ -658,6 +630,11 @@ name|bool
 name|diffProgram
 argument_list|(
 specifier|const
+name|Module
+operator|*
+name|Program
+argument_list|,
+specifier|const
 name|std
 operator|::
 name|string
@@ -688,13 +665,19 @@ name|Error
 operator|=
 literal|0
 argument_list|)
+decl|const
 decl_stmt|;
-comment|/// EmitProgressBitcode - This function is used to output the current Program
-comment|/// to a file named "bugpoint-ID.bc".
+comment|/// EmitProgressBitcode - This function is used to output M to a file named
+comment|/// "bugpoint-ID.bc".
 comment|///
 name|void
 name|EmitProgressBitcode
 argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|,
 specifier|const
 name|std
 operator|::
@@ -707,6 +690,7 @@ name|NoFlyer
 operator|=
 name|false
 argument_list|)
+decl|const
 decl_stmt|;
 comment|/// deleteInstructionFromProgram - This method clones the current Program and
 comment|/// deletes the specified instruction from the cloned module.  It then runs a
@@ -716,17 +700,16 @@ comment|///
 name|Module
 modifier|*
 name|deleteInstructionFromProgram
-argument_list|(
+parameter_list|(
 specifier|const
 name|Instruction
-operator|*
+modifier|*
 name|I
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Simp
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// performFinalCleanups - This method clones the current Program and performs
 comment|/// a series of cleanups intended to get rid of extra cruft on the module.  If
 comment|/// the MayModifySemantics argument is true, then the cleanups is allowed to
@@ -801,9 +784,9 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|Passes
@@ -840,14 +823,18 @@ comment|///
 name|bool
 name|runPasses
 argument_list|(
+name|Module
+operator|*
+name|Program
+argument_list|,
 specifier|const
 name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|PassesToRun
@@ -899,9 +886,9 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|AllPasses
@@ -926,11 +913,10 @@ name|string
 operator|&
 name|Filename
 argument_list|,
+specifier|const
 name|Module
 operator|*
 name|M
-operator|=
-literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -943,14 +929,18 @@ comment|///
 name|bool
 name|runPasses
 argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
 specifier|const
 name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|PassesToRun
@@ -970,6 +960,8 @@ expr_stmt|;
 return|return
 name|runPasses
 argument_list|(
+name|M
+argument_list|,
 name|PassesToRun
 argument_list|,
 name|Filename
@@ -978,23 +970,6 @@ name|DeleteOutput
 argument_list|)
 return|;
 block|}
-comment|/// runAsChild - The actual "runPasses" guts that runs in a child process.
-name|int
-name|runPassesAsChild
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|>
-operator|&
-name|PassesToRun
-argument_list|)
-decl_stmt|;
 comment|/// initializeExecutionEnvironment - This method is used to set up the
 comment|/// environment for executing LLVM programs.
 comment|///
@@ -1036,9 +1011,9 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
-name|PassInfo
-operator|*
+name|std
+operator|::
+name|string
 operator|>
 operator|&
 name|Passes

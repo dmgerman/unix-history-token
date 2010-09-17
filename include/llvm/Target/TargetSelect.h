@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_extern
@@ -260,36 +260,41 @@ block|{
 comment|// If we have a native target, initialize it to ensure it is linked in.
 ifdef|#
 directive|ifdef
-name|LLVM_NATIVE_ARCH
-define|#
-directive|define
-name|DoInit2
-parameter_list|(
-name|TARG
-parameter_list|)
-define|\
-value|LLVMInitialize ## TARG ## Info ();          \     LLVMInitialize ## TARG ()
-define|#
-directive|define
-name|DoInit
-parameter_list|(
-name|T
-parameter_list|)
-value|DoInit2(T)
-name|DoInit
-argument_list|(
-name|LLVM_NATIVE_ARCH
-argument_list|)
+name|LLVM_NATIVE_TARGET
+name|LLVM_NATIVE_TARGETINFO
+argument_list|()
+expr_stmt|;
+name|LLVM_NATIVE_TARGET
+argument_list|()
 expr_stmt|;
 return|return
 name|false
 return|;
-undef|#
-directive|undef
-name|DoInit
-undef|#
-directive|undef
-name|DoInit2
+else|#
+directive|else
+return|return
+name|true
+return|;
+endif|#
+directive|endif
+block|}
+comment|/// InitializeNativeTargetAsmPrinter - The main program should call
+comment|/// this function to initialize the native target asm printer.
+specifier|inline
+name|bool
+name|InitializeNativeTargetAsmPrinter
+parameter_list|()
+block|{
+comment|// If we have a native target, initialize the corresponding asm printer.
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ASMPRINTER
+name|LLVM_NATIVE_ASMPRINTER
+argument_list|()
+expr_stmt|;
+return|return
+name|false
+return|;
 else|#
 directive|else
 return|return

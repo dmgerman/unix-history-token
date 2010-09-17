@@ -201,11 +201,6 @@ name|bool
 name|deleteFn
 operator|=
 name|false
-argument_list|,
-name|bool
-name|relinkCallees
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -363,19 +358,8 @@ comment|///
 name|ModulePass
 modifier|*
 name|createBlockExtractorPass
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|BasicBlock
-operator|*
-operator|>
-operator|&
-name|BTNE
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// createStripDeadPrototypesPass - This pass removes any function declarations
 comment|/// (prototypes) that are not used.
 name|ModulePass

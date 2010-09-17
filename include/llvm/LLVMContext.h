@@ -127,8 +127,8 @@ enum|enum
 block|{
 name|MD_dbg
 init|=
-literal|1
-comment|// "dbg" -> 1.
+literal|0
+comment|// "dbg"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -142,8 +142,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
-comment|/// custom metadata IDs registered in this LLVMContext.   ID #0 is not used,
-comment|/// so it is filled in as an empty string.
+comment|/// custom metadata IDs registered in this LLVMContext.
 name|void
 name|getMDKindNames
 argument_list|(

@@ -258,6 +258,17 @@ name|int
 operator|>
 name|StaticAllocaMap
 expr_stmt|;
+comment|/// ByValArgFrameIndexMap - Keep track of frame indices for byval arguments.
+name|DenseMap
+operator|<
+specifier|const
+name|Argument
+operator|*
+operator|,
+name|int
+operator|>
+name|ByValArgFrameIndexMap
+expr_stmt|;
 comment|/// ArgDbgValues - A list of DBG_VALUE instructions created during isel for
 comment|/// function arguments that are inserted after scheduling is completed.
 name|SmallVector
@@ -486,6 +497,30 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// setByValArgumentFrameIndex - Record frame index for the byval
+comment|/// argument.
+name|void
+name|setByValArgumentFrameIndex
+parameter_list|(
+specifier|const
+name|Argument
+modifier|*
+name|A
+parameter_list|,
+name|int
+name|FI
+parameter_list|)
+function_decl|;
+comment|/// getByValArgumentFrameIndex - Get frame index for the byval argument.
+name|int
+name|getByValArgumentFrameIndex
+parameter_list|(
+specifier|const
+name|Argument
+modifier|*
+name|A
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// AddCatchInfo - Extract the personality and type infos from an eh.selector

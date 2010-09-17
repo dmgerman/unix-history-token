@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: true
+comment|// RUN: %llvmgcc_only -std=gnu99 %s -S |& grep {warning: alignment for}
 end_comment
 
 begin_comment
-comment|// %llvmgcc -std=gnu99 %s -S |& grep {error: "is greater than the stack alignment" }
+comment|// ppc does not support this feature, and gets a fatal error at runtime.
+end_comment
+
+begin_comment
+comment|// XFAIL: powerpc
 end_comment
 
 begin_function

@@ -87,6 +87,12 @@ directive|include
 file|"llvm/Function.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<deque>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -111,21 +117,8 @@ operator|:
 name|explicit
 name|LoopPass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|PT_Loop
-argument_list|,
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|LoopPass
-argument_list|(
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -211,7 +204,7 @@ name|assignPassManager
 argument_list|(
 argument|PMStack&PMS
 argument_list|,
-argument|PassManagerType PMT = PMT_LoopPassManager
+argument|PassManagerType PMT
 argument_list|)
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
@@ -336,7 +329,7 @@ argument_list|(
 argument|unsigned Offset
 argument_list|)
 block|;
-name|Pass
+name|LoopPass
 operator|*
 name|getContainedPass
 argument_list|(
@@ -355,13 +348,13 @@ operator|&&
 literal|"Pass number out of range!"
 argument_list|)
 block|;
-name|Pass
+name|LoopPass
 operator|*
-name|FP
+name|LP
 operator|=
 name|static_cast
 operator|<
-name|Pass
+name|LoopPass
 operator|*
 operator|>
 operator|(
@@ -372,7 +365,7 @@ index|]
 operator|)
 block|;
 return|return
-name|FP
+name|LP
 return|;
 block|}
 name|virtual

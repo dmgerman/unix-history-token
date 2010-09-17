@@ -137,7 +137,7 @@ comment|///   }  // namespace llvm
 comment|///
 comment|/// TypeBuilder cannot handle recursive types or types you only know at runtime.
 comment|/// If you try to give it a recursive type, it will deadlock, infinitely
-comment|/// recurse, or throw a recursive_init exception.
+comment|/// recurse, or do something similarly undesirable.
 name|template
 operator|<
 name|typename

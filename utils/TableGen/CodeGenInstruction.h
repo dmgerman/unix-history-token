@@ -398,6 +398,9 @@ name|bool
 name|isIndirectBranch
 decl_stmt|;
 name|bool
+name|isCompare
+decl_stmt|;
+name|bool
 name|isBarrier
 decl_stmt|;
 name|bool

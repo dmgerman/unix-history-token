@@ -144,7 +144,7 @@ argument_list|()
 operator|:
 name|ModulePass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 name|virtual

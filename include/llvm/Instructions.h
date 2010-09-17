@@ -4052,51 +4052,14 @@ name|isTC
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// @deprecated these "define hacks" will go away soon
-comment|/// @brief coerce out-of-tree code to abandon the low-level interfaces
-comment|/// @detail see below comments and update your code to high-level interfaces
-comment|///    - getOperand(0)  --->  getCalledValue(), or possibly getCalledFunction
-comment|///    - setOperand(0, V)  --->  setCalledFunction(V)
-comment|///
-comment|///    in LLVM v2.8-only code
-comment|///    - getOperand(N+1)  --->  getArgOperand(N)
-comment|///    - setOperand(N+1, V)  --->  setArgOperand(N, V)
-comment|///    - getNumOperands()  --->  getNumArgOperands()+1  // note the "+1"!
-comment|///
-comment|///    in backward compatible code please consult llvm/Support/CallSite.h,
-comment|///    you should create a callsite using the CallInst pointer and call its
-comment|///    methods
-comment|///
-define|#
-directive|define
-name|public
-value|private
-define|#
-directive|define
-name|protected
-value|private
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 name|Value
 argument_list|)
 block|;
-undef|#
-directive|undef
-name|public
-undef|#
-directive|undef
-name|protected
-name|public
-operator|:
-expr|enum
-block|{
-name|ArgOffset
-operator|=
-literal|0
-block|}
-block|;
-comment|///< temporary, do not use for new code!
+comment|/// getNumArgOperands - Return the number of call arguments.
+comment|///
 name|unsigned
 name|getNumArgOperands
 argument_list|()
@@ -4109,6 +4072,8 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/// getArgOperand/setArgOperand - Return/set the i-th call argument.
+comment|///
 name|Value
 operator|*
 name|getArgOperand
@@ -4121,8 +4086,6 @@ return|return
 name|getOperand
 argument_list|(
 name|i
-operator|+
-name|ArgOffset
 argument_list|)
 return|;
 block|}
@@ -4137,8 +4100,6 @@ block|{
 name|setOperand
 argument_list|(
 name|i
-operator|+
-name|ArgOffset
 argument_list|,
 name|v
 argument_list|)
@@ -4575,7 +4536,6 @@ operator|>
 operator|(
 name|Op
 operator|<
-name|ArgOffset
 operator|-
 literal|1
 operator|>
@@ -4596,7 +4556,6 @@ block|{
 return|return
 name|Op
 operator|<
-name|ArgOffset
 operator|-
 literal|1
 operator|>
@@ -4612,7 +4571,6 @@ block|{
 return|return
 name|Op
 operator|<
-name|ArgOffset
 operator|-
 literal|1
 operator|>
@@ -4629,7 +4587,6 @@ argument_list|)
 block|{
 name|Op
 operator|<
-name|ArgOffset
 operator|-
 literal|1
 operator|>
@@ -4638,6 +4595,28 @@ operator|)
 operator|=
 name|Fn
 block|;   }
+comment|/// isInlineAsm - Check if this call is an inline asm statement.
+name|bool
+name|isInlineAsm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|InlineAsm
+operator|>
+operator|(
+name|Op
+operator|<
+operator|-
+literal|1
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -10922,6 +10901,8 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
+comment|/// getNumArgOperands - Return the number of invoke arguments.
+comment|///
 name|unsigned
 name|getNumArgOperands
 argument_list|()
@@ -10934,6 +10915,8 @@ operator|-
 literal|3
 return|;
 block|}
+comment|/// getArgOperand/setArgOperand - Return/set the i-th invoke argument.
+comment|///
 name|Value
 operator|*
 name|getArgOperand

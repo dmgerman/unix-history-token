@@ -78,6 +78,8 @@ block|{
 name|namespace
 name|sys
 block|{
+comment|// ThreadLocalImpl - Common base class of all ThreadLocal instantiations.
+comment|// YOU SHOULD NEVER USE THIS DIRECTLY.
 name|class
 name|ThreadLocalImpl
 block|{
@@ -110,8 +112,14 @@ modifier|*
 name|getInstance
 parameter_list|()
 function_decl|;
+name|void
+name|removeInstance
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
+comment|/// ThreadLocal - A class used to abstract thread-local storage.  It holds,
+comment|/// for each thread, a pointer a single object of type T.
 name|template
 operator|<
 name|class
@@ -131,6 +139,8 @@ operator|:
 name|ThreadLocalImpl
 argument_list|()
 block|{ }
+comment|/// get - Fetches a pointer to the object associated with the current
+comment|/// thread.  If no object has yet been associated, it returns NULL;
 name|T
 operator|*
 name|get
@@ -148,6 +158,7 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|// set - Associates a pointer to an object with the current thread.
 name|void
 name|set
 argument_list|(
@@ -158,6 +169,14 @@ name|setInstance
 argument_list|(
 name|d
 argument_list|)
+block|; }
+comment|// erase - Removes the pointer associated with the current thread.
+name|void
+name|erase
+argument_list|()
+block|{
+name|removeInstance
+argument_list|()
 block|; }
 expr|}
 block|;   }

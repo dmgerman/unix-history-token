@@ -115,7 +115,7 @@ modifier|*
 name|isLocation
 function_decl|)
 parameter_list|(
-name|CallSite
+name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
@@ -287,6 +287,7 @@ name|LibCallFunctionInfo
 modifier|*
 name|getFunctionInfo
 argument_list|(
+specifier|const
 name|Function
 operator|*
 name|F

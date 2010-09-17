@@ -85,9 +85,6 @@ name|class
 name|Pass
 decl_stmt|;
 name|class
-name|ModulePass
-decl_stmt|;
-name|class
 name|Module
 decl_stmt|;
 name|class

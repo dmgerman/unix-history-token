@@ -116,22 +116,6 @@ name|RI
 return|;
 block|}
 name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(

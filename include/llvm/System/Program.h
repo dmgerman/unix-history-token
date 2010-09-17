@@ -261,7 +261,6 @@ comment|/// the operating system's file system using some pre-determined set of
 comment|/// locations to search (e.g. the PATH on Unix).
 comment|/// @returns A Path object initialized to the path of the program or a
 comment|/// Path object that is empty (invalid) if the program could not be found.
-comment|/// @throws nothing
 comment|/// @brief Construct a Program by finding it by name.
 specifier|static
 name|Path
@@ -295,7 +294,6 @@ parameter_list|()
 function_decl|;
 comment|/// A convenience function equivalent to Program prg; prg.Execute(..);
 comment|/// prg.Wait(..);
-comment|/// @throws nothing
 comment|/// @see Execute, Wait
 specifier|static
 name|int
@@ -350,7 +348,6 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/// A convenience function equivalent to Program prg; prg.Execute(..);
-comment|/// @throws nothing
 comment|/// @see Execute
 specifier|static
 name|void

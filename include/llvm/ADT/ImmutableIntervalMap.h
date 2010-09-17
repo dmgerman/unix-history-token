@@ -62,19 +62,19 @@ name|Interval
 block|{
 name|private
 label|:
-name|uint64_t
+name|int64_t
 name|Start
 decl_stmt|;
-name|uint64_t
+name|int64_t
 name|End
 decl_stmt|;
 name|public
 label|:
 name|Interval
 argument_list|(
-argument|uint64_t S
+argument|int64_t S
 argument_list|,
-argument|uint64_t E
+argument|int64_t E
 argument_list|)
 block|:
 name|Start
@@ -87,7 +87,7 @@ argument_list|(
 argument|E
 argument_list|)
 block|{}
-name|uint64_t
+name|int64_t
 name|getStart
 argument_list|()
 specifier|const
@@ -96,7 +96,7 @@ return|return
 name|Start
 return|;
 block|}
-name|uint64_t
+name|int64_t
 name|getEnd
 argument_list|()
 specifier|const

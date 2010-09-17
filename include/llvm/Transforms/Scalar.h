@@ -277,13 +277,6 @@ modifier|*
 name|createPromoteMemoryToRegisterPass
 parameter_list|()
 function_decl|;
-specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
-name|PromoteMemoryToRegisterID
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// DemoteRegisterToMemoryPass - This pass is used to demote registers to memory
@@ -296,10 +289,8 @@ name|createDemoteRegisterToMemoryPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|DemoteRegisterToMemoryID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -361,10 +352,8 @@ name|createBreakCriticalEdgesPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|BreakCriticalEdgesID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -381,10 +370,8 @@ name|createLoopSimplifyPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|LoopSimplifyID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -408,10 +395,8 @@ name|createLowerSwitchPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|LowerSwitchID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -450,10 +435,8 @@ name|useExpensiveEHSupport
 parameter_list|)
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|LowerInvokePassID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -477,10 +460,8 @@ name|createLCSSAPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|LCSSAID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -562,32 +543,10 @@ name|createInstructionNamerPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|InstructionNamerID
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// SSI - This pass converts instructions to Static Single Information form
-comment|// on demand.
-comment|//
-name|FunctionPass
-modifier|*
-name|createSSIPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
-comment|// SSI - This pass converts every non-void instuction to Static Single
-comment|// Information form.
-comment|//
-name|FunctionPass
-modifier|*
-name|createSSIEverythingPass
-parameter_list|()
-function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// GEPSplitter - Split complex GEPs into simple ones
@@ -599,20 +558,29 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// ABCD - Elimination of Array Bounds Checks on Demand
-comment|//
-name|FunctionPass
-modifier|*
-name|createABCDPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// Sink - Code Sinking
 comment|//
 name|FunctionPass
 modifier|*
 name|createSinkingPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LowerAtomic - Lower atomic intrinsics to non-atomic form
+comment|//
+name|Pass
+modifier|*
+name|createLowerAtomicPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ValuePropagation - Propagate CFG-derived value information
+comment|//
+name|Pass
+modifier|*
+name|createCorrelatedValuePropagationPass
 parameter_list|()
 function_decl|;
 block|}

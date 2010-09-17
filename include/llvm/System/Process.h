@@ -86,7 +86,6 @@ label|:
 comment|/// This static function will return the operating system's virtual memory
 comment|/// page size.
 comment|/// @returns The number of bytes in a virtual memory page.
-comment|/// @throws nothing
 comment|/// @brief Get the virtual memory page size
 specifier|static
 name|unsigned
@@ -97,7 +96,6 @@ comment|/// This static function will return the total amount of memory allocate
 comment|/// by the process. This only counts the memory allocated via the malloc,
 comment|/// calloc and realloc functions and includes any "free" holes in the
 comment|/// allocated space.
-comment|/// @throws nothing
 comment|/// @brief Return process memory usage.
 specifier|static
 name|size_t

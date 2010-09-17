@@ -81,7 +81,7 @@ name|INLINEASM
 init|=
 literal|1
 block|,
-name|DBG_LABEL
+name|PROLOG_LABEL
 init|=
 literal|2
 block|,

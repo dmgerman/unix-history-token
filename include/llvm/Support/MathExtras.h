@@ -572,6 +572,12 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__llvm__
+argument_list|)
+operator|||
+expr|\
 operator|(
 name|__GNUC__
 operator|>
@@ -687,6 +693,12 @@ parameter_list|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__llvm__
+argument_list|)
+operator|||
+expr|\
 operator|(
 name|__GNUC__
 operator|>

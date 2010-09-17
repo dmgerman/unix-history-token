@@ -1394,6 +1394,17 @@ return|return
 name|VNI
 return|;
 block|}
+comment|/// RenumberValues - Renumber all values in order of appearance and remove
+comment|/// unused values.
+comment|/// Recalculate phi-kill flags in case any phi-def values were removed.
+name|void
+name|RenumberValues
+parameter_list|(
+name|LiveIntervals
+modifier|&
+name|lis
+parameter_list|)
+function_decl|;
 comment|/// isOnlyLROfValNo - Return true if the specified live range is the only
 comment|/// one defined by the its val#.
 name|bool
@@ -1848,6 +1859,16 @@ name|other
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|other
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
 return|return
 name|overlapsFrom
 argument_list|(
@@ -2017,6 +2038,53 @@ name|getSize
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Returns true if the live interval is zero length, i.e. no live ranges
+comment|/// span instructions. It doesn't pay to spill such an interval.
+name|bool
+name|isZeroLength
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+name|const_iterator
+name|i
+init|=
+name|begin
+argument_list|()
+init|,
+name|e
+init|=
+name|end
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|i
+operator|->
+name|end
+operator|.
+name|getPrevIndex
+argument_list|()
+operator|>
+name|i
+operator|->
+name|start
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
 comment|/// isSpillable - Can this interval be spilled?
 name|bool
 name|isSpillable
@@ -2154,6 +2222,14 @@ argument_list|,
 argument|SlotIndex NewStr
 argument_list|)
 expr_stmt|;
+name|void
+name|markValNoForDeletion
+parameter_list|(
+name|VNInfo
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 name|LiveInterval
 modifier|&
 name|operator
@@ -2167,7 +2243,13 @@ operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 specifier|inline
 name|raw_ostream
 operator|&
@@ -2195,10 +2277,10 @@ return|return
 name|OS
 return|;
 block|}
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

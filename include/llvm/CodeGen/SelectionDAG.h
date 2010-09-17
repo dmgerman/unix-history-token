@@ -5505,20 +5505,6 @@ name|Op
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getShuffleScalarElt - Returns the scalar element that will make up the ith
-comment|/// element of the result of the vector shuffle.
-name|SDValue
-name|getShuffleScalarElt
-parameter_list|(
-specifier|const
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|,
-name|unsigned
-name|Idx
-parameter_list|)
-function_decl|;
 comment|/// UnrollVectorOp - Utility function used by legalize and lowering to
 comment|/// "unroll" a vector operation by splitting out the scalars and operating
 comment|/// on each element individually.  If the ResNE is 0, fully unroll the vector

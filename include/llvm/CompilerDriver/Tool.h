@@ -177,13 +177,17 @@ operator|~
 name|Tool
 argument_list|()
 block|{}
+comment|/// GenerateAction - Generate an Action given particular command-line
+comment|/// options. Returns non-zero value on error.
 name|virtual
-name|Action
+name|int
 name|GenerateAction
 argument_list|(
+argument|Action& Out
+argument_list|,
 argument|const PathVector& inFiles
 argument_list|,
-argument|bool  HasChildren
+argument|const bool HasChildren
 argument_list|,
 argument|const llvm::sys::Path& TempDir
 argument_list|,
@@ -195,13 +199,17 @@ specifier|const
 operator|=
 literal|0
 block|;
+comment|/// GenerateAction - Generate an Action given particular command-line
+comment|/// options. Returns non-zero value on error.
 name|virtual
-name|Action
+name|int
 name|GenerateAction
 argument_list|(
+argument|Action& Out
+argument_list|,
 argument|const llvm::sys::Path& inFile
 argument_list|,
-argument|bool  HasChildren
+argument|const bool HasChildren
 argument_list|,
 argument|const llvm::sys::Path& TempDir
 argument_list|,
@@ -331,10 +339,12 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|Action
+name|int
 name|GenerateAction
 argument_list|(
-argument|bool  HasChildren
+argument|Action& Out
+argument_list|,
+argument|const bool HasChildren
 argument_list|,
 argument|const llvm::sys::Path& TempDir
 argument_list|,
@@ -347,6 +357,8 @@ block|{
 return|return
 name|GenerateAction
 argument_list|(
+name|Out
+argument_list|,
 name|JoinList_
 argument_list|,
 name|HasChildren

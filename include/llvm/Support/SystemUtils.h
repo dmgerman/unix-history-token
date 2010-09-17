@@ -83,10 +83,9 @@ name|class
 name|Path
 decl_stmt|;
 block|}
-comment|/// Determine if the raw_ostream provided is connected to the outs() and
-comment|/// displayed or not (to a console window). If so, generate a warning message
-comment|/// advising against display of bitcode and return true. Otherwise just return
-comment|/// false
+comment|/// Determine if the raw_ostream provided is connected to a terminal. If so,
+comment|/// generate a warning message to errs() advising against display of bitcode
+comment|/// and return true. Otherwise just return false.
 comment|/// @brief Check for output written to a console
 name|bool
 name|CheckBitcodeOutputToConsole

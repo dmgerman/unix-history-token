@@ -89,8 +89,8 @@ begin_function
 name|main
 parameter_list|()
 block|{
-comment|// CHECK:  getelementptr inbounds %struct.T* %t, i32 0, i32 0 ;<i32*> [#uses=2]
-comment|// CHECK:  getelementptr inbounds %struct.T* %t, i32 0, i32 0 ;<i32*> [#uses=2]
+comment|// CHECK:  getelementptr inbounds %struct.T* %t, i32 0, i32 0
+comment|// CHECK:  getelementptr inbounds %struct.T* %t, i32 0, i32 0
 name|struct
 name|T
 name|t

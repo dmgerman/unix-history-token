@@ -853,6 +853,75 @@ init|=
 literal|36
 block|}
 enum|;
+comment|// i386 relocations.
+comment|// TODO: this is just a subset
+enum|enum
+block|{
+name|R_386_NONE
+init|=
+literal|0
+block|,
+name|R_386_32
+init|=
+literal|1
+block|,
+name|R_386_PC32
+init|=
+literal|2
+block|,
+name|R_386_GOT32
+init|=
+literal|3
+block|,
+name|R_386_PLT32
+init|=
+literal|4
+block|,
+name|R_386_COPY
+init|=
+literal|5
+block|,
+name|R_386_GLOB_DAT
+init|=
+literal|6
+block|,
+name|R_386_JUMP_SLOT
+init|=
+literal|7
+block|,
+name|R_386_RELATIVE
+init|=
+literal|8
+block|,
+name|R_386_GOTOFF
+init|=
+literal|9
+block|,
+name|R_386_GOTPC
+init|=
+literal|10
+block|,
+name|R_386_32PLT
+init|=
+literal|11
+block|,
+name|R_386_16
+init|=
+literal|20
+block|,
+name|R_386_PC16
+init|=
+literal|21
+block|,
+name|R_386_8
+init|=
+literal|22
+block|,
+name|R_386_PC8
+init|=
+literal|23
+block|}
+enum|;
 comment|// Section header.
 struct|struct
 name|Elf32_Shdr
@@ -1037,6 +1106,41 @@ init|=
 literal|11
 block|,
 comment|// Symbol table.
+name|SHT_INIT_ARRAY
+init|=
+literal|14
+block|,
+comment|// Pointers to initialisation functions.
+name|SHT_FINI_ARRAY
+init|=
+literal|15
+block|,
+comment|// Pointers to termination functions.
+name|SHT_PREINIT_ARRAY
+init|=
+literal|16
+block|,
+comment|// Pointers to pre-init functions.
+name|SHT_GROUP
+init|=
+literal|17
+block|,
+comment|// Section group.
+name|SHT_SYMTAB_SHNDX
+init|=
+literal|18
+block|,
+comment|// Indicies for SHN_XINDEX entries.
+name|SHT_LOOS
+init|=
+literal|0x60000000
+block|,
+comment|// Lowest operating system-specific type.
+name|SHT_HIOS
+init|=
+literal|0x6fffffff
+block|,
+comment|// Highest operating system-specific type.
 name|SHT_LOPROC
 init|=
 literal|0x70000000
@@ -1320,6 +1424,20 @@ expr_stmt|;
 block|}
 block|}
 struct|;
+comment|// The size (in bytes) of symbol table entries.
+enum|enum
+block|{
+name|SYMENTRY_SIZE32
+init|=
+literal|16
+block|,
+comment|// 32-bit symbol entry size
+name|SYMENTRY_SIZE64
+init|=
+literal|24
+comment|// 64-bit symbol entry size.
+block|}
+enum|;
 comment|// Symbol bindings.
 enum|enum
 block|{
@@ -1377,6 +1495,16 @@ init|=
 literal|4
 block|,
 comment|// Local, absolute symbol that refers to a file
+name|STT_COMMON
+init|=
+literal|5
+block|,
+comment|// An uninitialised common block
+name|STT_TLS
+init|=
+literal|6
+block|,
+comment|// Thread local data object
 name|STT_LOPROC
 init|=
 literal|13
@@ -1386,6 +1514,29 @@ name|STT_HIPROC
 init|=
 literal|15
 comment|// Highest processor-specific symbol type
+block|}
+enum|;
+enum|enum
+block|{
+name|STV_DEFAULT
+init|=
+literal|0
+block|,
+comment|// Visibility is specified by binding type
+name|STV_INTERNAL
+init|=
+literal|1
+block|,
+comment|// Defined by processor supplements
+name|STV_HIDDEN
+init|=
+literal|2
+block|,
+comment|// Not visible to other components
+name|STV_PROTECTED
+init|=
+literal|3
+comment|// Visible in other components but not preemptable
 block|}
 enum|;
 comment|// Relocation entry, without explicit addend.
@@ -1488,7 +1639,6 @@ operator|+
 name|t
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 struct|;
 comment|// Relocation entry with explicit addend.
@@ -1595,7 +1745,6 @@ operator|+
 name|t
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 struct|;
 comment|// Relocation entry, without explicit addend.
@@ -1702,7 +1851,6 @@ literal|0xffffffffL
 operator|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 struct|;
 comment|// Relocation entry with explicit addend.
@@ -1813,7 +1961,6 @@ literal|0xffffffffL
 operator|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 struct|;
 comment|// Program header for ELF32.

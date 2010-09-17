@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/MachineInstrBuilder.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|ARMSubtarget
+decl_stmt|;
+name|class
+name|ARMBaseRegisterInfo
+decl_stmt|;
 comment|/// ARMII - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
 comment|///
@@ -319,176 +319,182 @@ literal|12
 operator|<<
 name|FormShift
 block|,
+name|SatFrm
+init|=
+literal|13
+operator|<<
+name|FormShift
+block|,
 comment|// Extend instructions
 name|ExtFrm
 init|=
-literal|13
+literal|14
 operator|<<
 name|FormShift
 block|,
 comment|// VFP formats
 name|VFPUnaryFrm
 init|=
-literal|14
+literal|15
 operator|<<
 name|FormShift
 block|,
 name|VFPBinaryFrm
 init|=
-literal|15
+literal|16
 operator|<<
 name|FormShift
 block|,
 name|VFPConv1Frm
 init|=
-literal|16
+literal|17
 operator|<<
 name|FormShift
 block|,
 name|VFPConv2Frm
 init|=
-literal|17
+literal|18
 operator|<<
 name|FormShift
 block|,
 name|VFPConv3Frm
 init|=
-literal|18
+literal|19
 operator|<<
 name|FormShift
 block|,
 name|VFPConv4Frm
 init|=
-literal|19
+literal|20
 operator|<<
 name|FormShift
 block|,
 name|VFPConv5Frm
 init|=
-literal|20
+literal|21
 operator|<<
 name|FormShift
 block|,
 name|VFPLdStFrm
 init|=
-literal|21
+literal|22
 operator|<<
 name|FormShift
 block|,
 name|VFPLdStMulFrm
 init|=
-literal|22
+literal|23
 operator|<<
 name|FormShift
 block|,
 name|VFPMiscFrm
 init|=
-literal|23
+literal|24
 operator|<<
 name|FormShift
 block|,
 comment|// Thumb format
 name|ThumbFrm
 init|=
-literal|24
+literal|25
 operator|<<
 name|FormShift
 block|,
 comment|// Miscelleaneous format
 name|MiscFrm
 init|=
-literal|25
+literal|26
 operator|<<
 name|FormShift
 block|,
 comment|// NEON formats
 name|NGetLnFrm
 init|=
-literal|26
+literal|27
 operator|<<
 name|FormShift
 block|,
 name|NSetLnFrm
 init|=
-literal|27
+literal|28
 operator|<<
 name|FormShift
 block|,
 name|NDupFrm
 init|=
-literal|28
+literal|29
 operator|<<
 name|FormShift
 block|,
 name|NLdStFrm
 init|=
-literal|29
+literal|30
 operator|<<
 name|FormShift
 block|,
 name|N1RegModImmFrm
 init|=
-literal|30
+literal|31
 operator|<<
 name|FormShift
 block|,
 name|N2RegFrm
 init|=
-literal|31
+literal|32
 operator|<<
 name|FormShift
 block|,
 name|NVCVTFrm
 init|=
-literal|32
+literal|33
 operator|<<
 name|FormShift
 block|,
 name|NVDupLnFrm
 init|=
-literal|33
+literal|34
 operator|<<
 name|FormShift
 block|,
 name|N2RegVShLFrm
 init|=
-literal|34
+literal|35
 operator|<<
 name|FormShift
 block|,
 name|N2RegVShRFrm
 init|=
-literal|35
+literal|36
 operator|<<
 name|FormShift
 block|,
 name|N3RegFrm
 init|=
-literal|36
+literal|37
 operator|<<
 name|FormShift
 block|,
 name|N3RegVShFrm
 init|=
-literal|37
+literal|38
 operator|<<
 name|FormShift
 block|,
 name|NVExtFrm
 init|=
-literal|38
+literal|39
 operator|<<
 name|FormShift
 block|,
 name|NVMulSLFrm
 init|=
-literal|39
+literal|40
 operator|<<
 name|FormShift
 block|,
 name|NVTBLFrm
 init|=
-literal|40
+literal|41
 operator|<<
 name|FormShift
 block|,
@@ -739,7 +745,7 @@ argument|MachineBasicBlock *&FBB
 argument_list|,
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
-argument|bool AllowModify
+argument|bool AllowModify = false
 argument_list|)
 specifier|const
 block|;
@@ -900,24 +906,6 @@ name|unsigned
 name|GetInstSizeInBytes
 argument_list|(
 argument|const MachineInstr* MI
-argument_list|)
-specifier|const
-block|;
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
-name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
 argument_list|)
 specifier|const
 block|;
@@ -1149,17 +1137,46 @@ operator|==
 literal|1
 return|;
 block|}
-expr|}
+comment|/// AnalyzeCompare - For a comparison instruction, return the source register
+comment|/// in SrcReg and the value it compares against in CmpValue. Return true if
+comment|/// the comparison instruction can be analyzed.
+name|virtual
+name|bool
+name|AnalyzeCompare
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcReg
+argument_list|,
+argument|int&CmpValue
+argument_list|)
+specifier|const
 block|;
+comment|/// ConvertToSetZeroFlag - Convert the instruction to set the zero flag so
+comment|/// that we can remove a "comparison with zero".
+name|virtual
+name|bool
+name|ConvertToSetZeroFlag
+argument_list|(
+argument|MachineInstr *Instr
+argument_list|,
+argument|MachineInstr *CmpInstr
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
 specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-operator|&
+modifier|&
 name|AddDefaultPred
-argument_list|(
-argument|const MachineInstrBuilder&MIB
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|MIB
+parameter_list|)
 block|{
 return|return
 name|MIB
@@ -1184,11 +1201,14 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-operator|&
+modifier|&
 name|AddDefaultCC
-argument_list|(
-argument|const MachineInstrBuilder&MIB
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|MIB
+parameter_list|)
 block|{
 return|return
 name|MIB
@@ -1203,13 +1223,19 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-operator|&
+modifier|&
 name|AddDefaultT1CC
-argument_list|(
-argument|const MachineInstrBuilder&MIB
-argument_list|,
-argument|bool isDead = false
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|MIB
+parameter_list|,
+name|bool
+name|isDead
+init|=
+name|false
+parameter_list|)
 block|{
 return|return
 name|MIB
@@ -1236,11 +1262,14 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-operator|&
+modifier|&
 name|AddNoT1CC
-argument_list|(
-argument|const MachineInstrBuilder&MIB
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineInstrBuilder
+modifier|&
+name|MIB
+parameter_list|)
 block|{
 return|return
 name|MIB
@@ -1255,9 +1284,10 @@ specifier|static
 specifier|inline
 name|bool
 name|isUncondBranchOpcode
-argument_list|(
-argument|int Opc
-argument_list|)
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -1283,9 +1313,10 @@ specifier|static
 specifier|inline
 name|bool
 name|isCondBranchOpcode
-argument_list|(
-argument|int Opc
-argument_list|)
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -1311,9 +1342,10 @@ specifier|static
 specifier|inline
 name|bool
 name|isJumpTableBranchOpcode
-argument_list|(
-argument|int Opc
-argument_list|)
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -1351,9 +1383,10 @@ specifier|static
 specifier|inline
 name|bool
 name|isIndirectBranchOpcode
-argument_list|(
-argument|int Opc
-argument_list|)
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
 block|{
 return|return
 name|Opc
@@ -1392,92 +1425,146 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-block|;
+expr_stmt|;
 name|int
 name|getMatchingCondBranchOpcode
-argument_list|(
-argument|int Opc
-argument_list|)
-block|;
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
+function_decl|;
 comment|/// emitARMRegPlusImmediate / emitT2RegPlusImmediate - Emits a series of
 comment|/// instructions to materializea destreg = basereg + immediate in ARM / Thumb2
 comment|/// code.
 name|void
 name|emitARMRegPlusImmediate
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator&MBBI
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|MBBI
 argument_list|,
-argument|DebugLoc dl
+name|DebugLoc
+name|dl
 argument_list|,
-argument|unsigned DestReg
+name|unsigned
+name|DestReg
 argument_list|,
-argument|unsigned BaseReg
+name|unsigned
+name|BaseReg
 argument_list|,
-argument|int NumBytes
+name|int
+name|NumBytes
 argument_list|,
-argument|ARMCC::CondCodes Pred
+name|ARMCC
+operator|::
+name|CondCodes
+name|Pred
 argument_list|,
-argument|unsigned PredReg
+name|unsigned
+name|PredReg
 argument_list|,
-argument|const ARMBaseInstrInfo&TII
+specifier|const
+name|ARMBaseInstrInfo
+operator|&
+name|TII
 argument_list|)
-block|;
+decl_stmt|;
 name|void
 name|emitT2RegPlusImmediate
 argument_list|(
-argument|MachineBasicBlock&MBB
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|,
-argument|MachineBasicBlock::iterator&MBBI
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|MBBI
 argument_list|,
-argument|DebugLoc dl
+name|DebugLoc
+name|dl
 argument_list|,
-argument|unsigned DestReg
+name|unsigned
+name|DestReg
 argument_list|,
-argument|unsigned BaseReg
+name|unsigned
+name|BaseReg
 argument_list|,
-argument|int NumBytes
+name|int
+name|NumBytes
 argument_list|,
-argument|ARMCC::CondCodes Pred
+name|ARMCC
+operator|::
+name|CondCodes
+name|Pred
 argument_list|,
-argument|unsigned PredReg
+name|unsigned
+name|PredReg
 argument_list|,
-argument|const ARMBaseInstrInfo&TII
+specifier|const
+name|ARMBaseInstrInfo
+operator|&
+name|TII
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
 comment|/// offset could not be handled directly in MI, and return the left-over
 comment|/// portion by reference.
 name|bool
 name|rewriteARMFrameIndex
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|unsigned FrameRegIdx
-argument_list|,
-argument|unsigned FrameReg
-argument_list|,
-argument|int&Offset
-argument_list|,
-argument|const ARMBaseInstrInfo&TII
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|unsigned
+name|FrameRegIdx
+parameter_list|,
+name|unsigned
+name|FrameReg
+parameter_list|,
+name|int
+modifier|&
+name|Offset
+parameter_list|,
+specifier|const
+name|ARMBaseInstrInfo
+modifier|&
+name|TII
+parameter_list|)
+function_decl|;
 name|bool
 name|rewriteT2FrameIndex
-argument_list|(
-argument|MachineInstr&MI
-argument_list|,
-argument|unsigned FrameRegIdx
-argument_list|,
-argument|unsigned FrameReg
-argument_list|,
-argument|int&Offset
-argument_list|,
-argument|const ARMBaseInstrInfo&TII
-argument_list|)
-block|;  }
+parameter_list|(
+name|MachineInstr
+modifier|&
+name|MI
+parameter_list|,
+name|unsigned
+name|FrameRegIdx
+parameter_list|,
+name|unsigned
+name|FrameReg
+parameter_list|,
+name|int
+modifier|&
+name|Offset
+parameter_list|,
+specifier|const
+name|ARMBaseInstrInfo
+modifier|&
+name|TII
+parameter_list|)
+function_decl|;
+block|}
 end_decl_stmt
 
 begin_comment

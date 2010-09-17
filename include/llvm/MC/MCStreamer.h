@@ -165,6 +165,13 @@ name|MCSection
 modifier|*
 name|CurSection
 decl_stmt|;
+comment|/// PrevSection - This is the previous section code is being emitted to, it is
+comment|/// kept up to date by SwitchSection.
+specifier|const
+name|MCSection
+modifier|*
+name|PrevSection
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -254,6 +261,19 @@ specifier|const
 block|{
 return|return
 name|CurSection
+return|;
+block|}
+comment|/// getPreviousSection - Return the previous section that the streamer is
+comment|/// emitting code to.
+specifier|const
+name|MCSection
+operator|*
+name|getPreviousSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrevSection
 return|;
 block|}
 comment|/// SwitchSection - Set the current section where code is being emitted to
@@ -582,6 +602,8 @@ name|Size
 parameter_list|,
 name|unsigned
 name|AddrSpace
+init|=
+literal|0
 parameter_list|)
 init|=
 literal|0
@@ -600,6 +622,8 @@ name|Size
 parameter_list|,
 name|unsigned
 name|AddrSpace
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// EmitSymbolValue - Special case of EmitValue that avoids the client
@@ -862,7 +886,7 @@ comment|/// the MCInst representation will be printed.  This method takes owners
 comment|/// InstPrint.
 comment|///
 comment|/// \param CE - If given, a code emitter to use to show the instruction
-comment|/// encoding inline with the assembly.
+comment|/// encoding inline with the assembly. This method takes ownership of \arg CE.
 comment|///
 comment|/// \param ShowInst - Whether to show the MCInst representation inline with
 comment|/// the assembly.
@@ -904,6 +928,8 @@ parameter_list|)
 function_decl|;
 comment|/// createMachOStreamer - Create a machine code streamer which will generate
 comment|/// Mach-O format object files.
+comment|///
+comment|/// Takes ownership of \arg TAB and \arg CE.
 name|MCStreamer
 modifier|*
 name|createMachOStreamer
@@ -932,6 +958,8 @@ parameter_list|)
 function_decl|;
 comment|/// createWinCOFFStreamer - Create a machine code streamer which will
 comment|/// generate Microsoft COFF format object files.
+comment|///
+comment|/// Takes ownership of \arg TAB and \arg CE.
 name|MCStreamer
 modifier|*
 name|createWinCOFFStreamer
@@ -951,6 +979,39 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|bool
+name|RelaxAll
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// createELFStreamer - Create a machine code streamer which will generate
+comment|/// ELF format object files.
+name|MCStreamer
+modifier|*
+name|createELFStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|TargetAsmBackend
+modifier|&
+name|TAB
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+parameter_list|,
+name|bool
+name|RelaxAll
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// createLoggingStreamer - Create a machine code streamer which just logs the

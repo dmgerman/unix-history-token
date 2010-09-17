@@ -181,9 +181,6 @@ name|AliasAnalysis
 modifier|*
 name|AA
 decl_stmt|;
-name|BitVector
-name|allocatableRegs_
-decl_stmt|;
 name|DenseMap
 operator|<
 specifier|const
@@ -239,7 +236,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 expr|struct

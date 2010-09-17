@@ -105,6 +105,42 @@ name|OS
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// ClangAttrImplEmitter - class emits the class method defintions for
+comment|///   attributes for clang.
+name|class
+name|ClangAttrImplEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrImplEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
 comment|/// ClangAttrListEmitter - class emits the enumeration list for attributes for
 comment|///   clang.
 name|class
@@ -121,6 +157,78 @@ name|public
 operator|:
 name|explicit
 name|ClangAttrListEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ClangAttrPCHReadEmitter - class emits the code to read an attribute from
+comment|///   a clang precompiled header.
+name|class
+name|ClangAttrPCHReadEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrPCHReadEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// ClangAttrPCHWriteEmitter - class emits the code to read an attribute from
+comment|///   a clang precompiled header.
+name|class
+name|ClangAttrPCHWriteEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrPCHWriteEmitter
 argument_list|(
 name|RecordKeeper
 operator|&

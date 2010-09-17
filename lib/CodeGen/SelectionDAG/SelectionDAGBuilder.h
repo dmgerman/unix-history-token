@@ -83,23 +83,6 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -243,6 +226,9 @@ name|class
 name|SDISelAsmOperandInfo
 decl_stmt|;
 name|class
+name|SDDbgValue
+decl_stmt|;
+name|class
 name|SExtInst
 decl_stmt|;
 name|class
@@ -316,6 +302,106 @@ operator|,
 name|SDValue
 operator|>
 name|UnusedArgNodeMap
+expr_stmt|;
+comment|/// DanglingDebugInfo - Helper type for DanglingDebugInfoMap.
+name|class
+name|DanglingDebugInfo
+block|{
+specifier|const
+name|DbgValueInst
+modifier|*
+name|DI
+decl_stmt|;
+name|DebugLoc
+name|dl
+decl_stmt|;
+name|unsigned
+name|SDNodeOrder
+decl_stmt|;
+name|public
+label|:
+name|DanglingDebugInfo
+argument_list|()
+operator|:
+name|DI
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|dl
+argument_list|(
+name|DebugLoc
+argument_list|()
+argument_list|)
+operator|,
+name|SDNodeOrder
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|DanglingDebugInfo
+argument_list|(
+argument|const DbgValueInst *di
+argument_list|,
+argument|DebugLoc DL
+argument_list|,
+argument|unsigned SDNO
+argument_list|)
+operator|:
+name|DI
+argument_list|(
+name|di
+argument_list|)
+operator|,
+name|dl
+argument_list|(
+name|DL
+argument_list|)
+operator|,
+name|SDNodeOrder
+argument_list|(
+argument|SDNO
+argument_list|)
+block|{ }
+specifier|const
+name|DbgValueInst
+operator|*
+name|getDI
+argument_list|()
+block|{
+return|return
+name|DI
+return|;
+block|}
+name|DebugLoc
+name|getdl
+parameter_list|()
+block|{
+return|return
+name|dl
+return|;
+block|}
+name|unsigned
+name|getSDNodeOrder
+parameter_list|()
+block|{
+return|return
+name|SDNodeOrder
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// DanglingDebugInfoMap - Keeps track of dbg_values for which we have not
+comment|/// yet seen the referent.  We defer handling these until we do see it.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|DanglingDebugInfo
+operator|>
+name|DanglingDebugInfoMap
 expr_stmt|;
 name|public
 label|:
@@ -1359,6 +1445,20 @@ specifier|const
 name|User
 modifier|&
 name|I
+parameter_list|)
+function_decl|;
+comment|// resolveDanglingDebugInfo - if we saw an earlier dbg_value referring to V,
+comment|// generate the debug data structures now that we've seen its definition.
+name|void
+name|resolveDanglingDebugInfo
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|SDValue
+name|Val
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -2643,18 +2743,12 @@ modifier|*
 name|LLVMBB
 parameter_list|)
 function_decl|;
-comment|/// EmitFuncArgumentDbgValue - If the DbgValueInst is a dbg_value of a
-comment|/// function argument, create the corresponding DBG_VALUE machine instruction
-comment|/// for it now. At the end of instruction selection, they will be inserted to
-comment|/// the entry BB.
+comment|/// EmitFuncArgumentDbgValue - If V is an function argument then create
+comment|/// corresponding DBG_VALUE machine instruction for it now. At the end of
+comment|/// instruction selection, they will be inserted to the entry BB.
 name|bool
 name|EmitFuncArgumentDbgValue
 parameter_list|(
-specifier|const
-name|DbgValueInst
-modifier|&
-name|DI
-parameter_list|,
 specifier|const
 name|Value
 modifier|*
@@ -2664,7 +2758,7 @@ name|MDNode
 modifier|*
 name|Variable
 parameter_list|,
-name|uint64_t
+name|int64_t
 name|Offset
 parameter_list|,
 specifier|const

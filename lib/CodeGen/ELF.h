@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ELF.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/System/DataTypes.h"
 end_include
 
@@ -108,77 +114,6 @@ block|{
 name|class
 name|GlobalValue
 decl_stmt|;
-comment|// Identification Indexes
-enum|enum
-block|{
-name|EI_MAG0
-init|=
-literal|0
-block|,
-name|EI_MAG1
-init|=
-literal|1
-block|,
-name|EI_MAG2
-init|=
-literal|2
-block|,
-name|EI_MAG3
-init|=
-literal|3
-block|}
-enum|;
-comment|// File types
-enum|enum
-block|{
-name|ET_NONE
-init|=
-literal|0
-block|,
-comment|// No file type
-name|ET_REL
-init|=
-literal|1
-block|,
-comment|// Relocatable file
-name|ET_EXEC
-init|=
-literal|2
-block|,
-comment|// Executable file
-name|ET_DYN
-init|=
-literal|3
-block|,
-comment|// Shared object file
-name|ET_CORE
-init|=
-literal|4
-block|,
-comment|// Core file
-name|ET_LOPROC
-init|=
-literal|0xff00
-block|,
-comment|// Beginning of processor-specific codes
-name|ET_HIPROC
-init|=
-literal|0xffff
-comment|// Processor-specific
-block|}
-enum|;
-comment|// Versioning
-enum|enum
-block|{
-name|EV_NONE
-init|=
-literal|0
-block|,
-name|EV_CURRENT
-init|=
-literal|1
-block|}
-enum|;
 comment|/// ELFSym - This struct contains information about each symbol that is
 comment|/// added to logical symbol table for the module.  This is eventually
 comment|/// turned into a real symbol table in the file.
@@ -393,6 +328,8 @@ name|Sym
 operator|->
 name|setBind
 argument_list|(
+name|ELF
+operator|::
 name|STB_GLOBAL
 argument_list|)
 expr_stmt|;
@@ -400,6 +337,8 @@ name|Sym
 operator|->
 name|setType
 argument_list|(
+name|ELF
+operator|::
 name|STT_NOTYPE
 argument_list|)
 expr_stmt|;
@@ -407,6 +346,8 @@ name|Sym
 operator|->
 name|setVisibility
 argument_list|(
+name|ELF
+operator|::
 name|STV_DEFAULT
 argument_list|)
 expr_stmt|;
@@ -439,6 +380,8 @@ name|Sym
 operator|->
 name|setBind
 argument_list|(
+name|ELF
+operator|::
 name|STB_LOCAL
 argument_list|)
 expr_stmt|;
@@ -446,6 +389,8 @@ name|Sym
 operator|->
 name|setType
 argument_list|(
+name|ELF
+operator|::
 name|STT_SECTION
 argument_list|)
 expr_stmt|;
@@ -453,6 +398,8 @@ name|Sym
 operator|->
 name|setVisibility
 argument_list|(
+name|ELF
+operator|::
 name|STV_DEFAULT
 argument_list|)
 expr_stmt|;
@@ -485,6 +432,8 @@ name|Sym
 operator|->
 name|setBind
 argument_list|(
+name|ELF
+operator|::
 name|STB_LOCAL
 argument_list|)
 expr_stmt|;
@@ -492,6 +441,8 @@ name|Sym
 operator|->
 name|setType
 argument_list|(
+name|ELF
+operator|::
 name|STT_FILE
 argument_list|)
 expr_stmt|;
@@ -499,6 +450,8 @@ name|Sym
 operator|->
 name|setVisibility
 argument_list|(
+name|ELF
+operator|::
 name|STV_DEFAULT
 argument_list|)
 expr_stmt|;
@@ -561,6 +514,8 @@ name|Sym
 operator|->
 name|setType
 argument_list|(
+name|ELF
+operator|::
 name|STT_NOTYPE
 argument_list|)
 expr_stmt|;
@@ -568,6 +523,8 @@ name|Sym
 operator|->
 name|setVisibility
 argument_list|(
+name|ELF
+operator|::
 name|STV_DEFAULT
 argument_list|)
 expr_stmt|;
@@ -613,75 +570,6 @@ comment|// Symbol index into the Symbol table
 name|unsigned
 name|SymTabIdx
 decl_stmt|;
-enum|enum
-block|{
-name|STB_LOCAL
-init|=
-literal|0
-block|,
-comment|// Local sym, not visible outside obj file containing def
-name|STB_GLOBAL
-init|=
-literal|1
-block|,
-comment|// Global sym, visible to all object files being combined
-name|STB_WEAK
-init|=
-literal|2
-comment|// Weak symbol, like global but lower-precedence
-block|}
-enum|;
-enum|enum
-block|{
-name|STT_NOTYPE
-init|=
-literal|0
-block|,
-comment|// Symbol's type is not specified
-name|STT_OBJECT
-init|=
-literal|1
-block|,
-comment|// Symbol is a data object (variable, array, etc.)
-name|STT_FUNC
-init|=
-literal|2
-block|,
-comment|// Symbol is executable code (function, etc.)
-name|STT_SECTION
-init|=
-literal|3
-block|,
-comment|// Symbol refers to a section
-name|STT_FILE
-init|=
-literal|4
-comment|// Local, absolute symbol that refers to a file
-block|}
-enum|;
-enum|enum
-block|{
-name|STV_DEFAULT
-init|=
-literal|0
-block|,
-comment|// Visibility is specified by binding type
-name|STV_INTERNAL
-init|=
-literal|1
-block|,
-comment|// Defined by processor supplements
-name|STV_HIDDEN
-init|=
-literal|2
-block|,
-comment|// Not visible to other components
-name|STV_PROTECTED
-init|=
-literal|3
-comment|// Visible in other components but not preemptable
-block|}
-enum|;
 name|ELFSym
 argument_list|()
 operator|:
@@ -712,6 +600,8 @@ argument_list|)
 operator|,
 name|Other
 argument_list|(
+name|ELF
+operator|::
 name|STV_DEFAULT
 argument_list|)
 operator|,
@@ -760,6 +650,8 @@ return|return
 name|getBind
 argument_list|()
 operator|==
+name|ELF
+operator|::
 name|STB_LOCAL
 return|;
 block|}
@@ -772,6 +664,8 @@ return|return
 name|getType
 argument_list|()
 operator|==
+name|ELF
+operator|::
 name|STT_FILE
 return|;
 block|}
@@ -920,203 +814,6 @@ name|unsigned
 name|EntSize
 block|;
 comment|// sh_entsize - Size of entries in the section e
-comment|// Section Header Flags
-block|enum
-block|{
-name|SHF_WRITE
-operator|=
-literal|1
-operator|<<
-literal|0
-block|,
-comment|// Writable
-name|SHF_ALLOC
-operator|=
-literal|1
-operator|<<
-literal|1
-block|,
-comment|// Mapped into the process addr space
-name|SHF_EXECINSTR
-operator|=
-literal|1
-operator|<<
-literal|2
-block|,
-comment|// Executable
-name|SHF_MERGE
-operator|=
-literal|1
-operator|<<
-literal|4
-block|,
-comment|// Might be merged if equal
-name|SHF_STRINGS
-operator|=
-literal|1
-operator|<<
-literal|5
-block|,
-comment|// Contains null-terminated strings
-name|SHF_INFO_LINK
-operator|=
-literal|1
-operator|<<
-literal|6
-block|,
-comment|// 'sh_info' contains SHT index
-name|SHF_LINK_ORDER
-operator|=
-literal|1
-operator|<<
-literal|7
-block|,
-comment|// Preserve order after combining
-name|SHF_OS_NONCONFORMING
-operator|=
-literal|1
-operator|<<
-literal|8
-block|,
-comment|// nonstandard OS support required
-name|SHF_GROUP
-operator|=
-literal|1
-operator|<<
-literal|9
-block|,
-comment|// Section is a member of a group
-name|SHF_TLS
-operator|=
-literal|1
-operator|<<
-literal|10
-comment|// Section holds thread-local data
-block|}
-block|;
-comment|// Section Types
-block|enum
-block|{
-name|SHT_NULL
-operator|=
-literal|0
-block|,
-comment|// No associated section (inactive entry).
-name|SHT_PROGBITS
-operator|=
-literal|1
-block|,
-comment|// Program-defined contents.
-name|SHT_SYMTAB
-operator|=
-literal|2
-block|,
-comment|// Symbol table.
-name|SHT_STRTAB
-operator|=
-literal|3
-block|,
-comment|// String table.
-name|SHT_RELA
-operator|=
-literal|4
-block|,
-comment|// Relocation entries; explicit addends.
-name|SHT_HASH
-operator|=
-literal|5
-block|,
-comment|// Symbol hash table.
-name|SHT_DYNAMIC
-operator|=
-literal|6
-block|,
-comment|// Information for dynamic linking.
-name|SHT_NOTE
-operator|=
-literal|7
-block|,
-comment|// Information about the file.
-name|SHT_NOBITS
-operator|=
-literal|8
-block|,
-comment|// Data occupies no space in the file.
-name|SHT_REL
-operator|=
-literal|9
-block|,
-comment|// Relocation entries; no explicit addends.
-name|SHT_SHLIB
-operator|=
-literal|10
-block|,
-comment|// Reserved.
-name|SHT_DYNSYM
-operator|=
-literal|11
-block|,
-comment|// Symbol table.
-name|SHT_LOPROC
-operator|=
-literal|0x70000000
-block|,
-comment|// Lowest processor arch-specific type.
-name|SHT_HIPROC
-operator|=
-literal|0x7fffffff
-block|,
-comment|// Highest processor arch-specific type.
-name|SHT_LOUSER
-operator|=
-literal|0x80000000
-block|,
-comment|// Lowest type reserved for applications.
-name|SHT_HIUSER
-operator|=
-literal|0xffffffff
-comment|// Highest type reserved for applications.
-block|}
-block|;
-comment|// Special section indices.
-block|enum
-block|{
-name|SHN_UNDEF
-operator|=
-literal|0
-block|,
-comment|// Undefined, missing, irrelevant
-name|SHN_LORESERVE
-operator|=
-literal|0xff00
-block|,
-comment|// Lowest reserved index
-name|SHN_LOPROC
-operator|=
-literal|0xff00
-block|,
-comment|// Lowest processor-specific index
-name|SHN_HIPROC
-operator|=
-literal|0xff1f
-block|,
-comment|// Highest processor-specific index
-name|SHN_ABS
-operator|=
-literal|0xfff1
-block|,
-comment|// Symbol has absolute value; no relocation
-name|SHN_COMMON
-operator|=
-literal|0xfff2
-block|,
-comment|// FORTRAN COMMON or C external global variables
-name|SHN_HIRESERVE
-operator|=
-literal|0xffff
-comment|// Highest reserved index
-block|}
-block|;
 comment|/// SectionIdx - The number of the section in the Section Table.
 name|unsigned
 name|short

@@ -200,7 +200,6 @@ comment|/// release any memory block allocated any other way.
 comment|///
 comment|/// On success, this returns false, otherwise it returns true and fills
 comment|/// in *ErrMsg.
-comment|/// @throws std::string if an error occurred.
 comment|/// @brief Release Read/Write/Execute memory.
 specifier|static
 name|bool

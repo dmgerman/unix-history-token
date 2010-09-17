@@ -1042,7 +1042,7 @@ block|}
 end_function
 
 begin_function
-name|bool
+name|void
 name|erase
 parameter_list|(
 name|iterator
@@ -1078,9 +1078,6 @@ expr_stmt|;
 operator|++
 name|NumTombstones
 expr_stmt|;
-return|return
-name|true
-return|;
 block|}
 end_function
 

@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunctionPass.h"
+file|"llvm/CodeGen/MachineBasicBlock.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineRegisterInfo.h"
+file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
 begin_decl_stmt
@@ -79,6 +79,12 @@ name|llvm
 block|{
 name|class
 name|LiveVariables
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|MachineLoopInfo
 decl_stmt|;
 comment|/// Lower PHI instructions to copies.
 name|class
@@ -104,7 +110,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 name|virtual
@@ -179,6 +185,10 @@ argument_list|,
 name|LiveVariables
 operator|&
 name|LV
+argument_list|,
+name|MachineLoopInfo
+operator|*
+name|MLI
 argument_list|)
 block|;
 comment|/// SplitCriticalEdge - Split a critical edge from A to B by

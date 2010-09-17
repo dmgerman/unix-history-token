@@ -141,8 +141,6 @@ comment|// DO NOT IMPLEMENT
 name|StringRef
 name|Str
 block|;
-name|protected
-operator|:
 name|explicit
 name|MDString
 argument_list|(
@@ -389,28 +387,17 @@ operator|~
 name|MDNode
 argument_list|()
 expr_stmt|;
-name|protected
-label|:
-name|explicit
 name|MDNode
-parameter_list|(
-name|LLVMContext
-modifier|&
-name|C
-parameter_list|,
-name|Value
-modifier|*
-specifier|const
-modifier|*
-name|Vals
-parameter_list|,
-name|unsigned
-name|NumVals
-parameter_list|,
-name|bool
-name|isFunctionLocal
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|Value *const *Vals
+argument_list|,
+argument|unsigned NumVals
+argument_list|,
+argument|bool isFunctionLocal
+argument_list|)
+empty_stmt|;
 specifier|static
 name|MDNode
 modifier|*
@@ -503,6 +490,39 @@ name|unsigned
 name|NumVals
 parameter_list|)
 function_decl|;
+comment|/// getTemporary - Return a temporary MDNode, for use in constructing
+comment|/// cyclic MDNode structures. A temporary MDNode is not uniqued,
+comment|/// may be RAUW'd, and must be manually deleted with deleteTemporary.
+specifier|static
+name|MDNode
+modifier|*
+name|getTemporary
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Vals
+parameter_list|,
+name|unsigned
+name|NumVals
+parameter_list|)
+function_decl|;
+comment|/// deleteTemporary - Deallocate a node created by getTemporary. The
+comment|/// node must not have any users.
+specifier|static
+name|void
+name|deleteTemporary
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// getOperand - Return specified operand.
 name|Value
 modifier|*
@@ -554,11 +574,6 @@ name|getFunction
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// destroy - Delete this node.  Only when there are no uses.
-name|void
-name|destroy
-parameter_list|()
-function_decl|;
 comment|/// Profile - calculate a unique identifier for this MDNode to collapse
 comment|/// duplicates
 name|void
@@ -606,6 +621,11 @@ return|;
 block|}
 name|private
 label|:
+comment|// destroy - Delete this node.  Only when there are no uses.
+name|void
+name|destroy
+parameter_list|()
+function_decl|;
 name|bool
 name|isNotUniqued
 argument_list|()
@@ -647,192 +667,107 @@ block|}
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// NamedMDNode - a tuple of MDNodes.
-comment|/// NamedMDNode is always named. All NamedMDNode operand has a type of metadata.
+comment|/// NamedMDNode - a tuple of MDNodes. Despite its name, a NamedMDNode isn't
+comment|/// itself an MDNode. NamedMDNodes belong to modules, have names, and contain
+comment|/// lists of MDNodes.
 name|class
 name|NamedMDNode
 range|:
 name|public
-name|Value
-decl_stmt|,
-name|public
 name|ilist_node
-decl|<
+operator|<
 name|NamedMDNode
-decl|>
+operator|>
 block|{
 name|friend
 name|class
 name|SymbolTableListTraits
 operator|<
 name|NamedMDNode
-operator|,
+block|,
 name|Module
 operator|>
-expr_stmt|;
+block|;
 name|friend
-block|struct
+expr|struct
 name|ilist_traits
 operator|<
 name|NamedMDNode
 operator|>
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|LLVMContextImpl
-decl_stmt|;
+block|;
+name|friend
+name|class
+name|Module
+block|;
 name|NamedMDNode
 argument_list|(
 specifier|const
 name|NamedMDNode
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|std
 operator|::
 name|string
 name|Name
-expr_stmt|;
+block|;
 name|Module
-modifier|*
+operator|*
 name|Parent
-decl_stmt|;
+block|;
 name|void
-modifier|*
+operator|*
 name|Operands
-decl_stmt|;
-comment|// SmallVector<WeakVH<MDNode>, 4>
+block|;
+comment|// SmallVector<TrackingVH<MDNode>, 4>
 name|void
 name|setParent
-parameter_list|(
-name|Module
-modifier|*
-name|M
-parameter_list|)
+argument_list|(
+argument|Module *M
+argument_list|)
 block|{
 name|Parent
 operator|=
 name|M
-expr_stmt|;
-block|}
-name|protected
-label|:
+block|; }
 name|explicit
 name|NamedMDNode
-parameter_list|(
-name|LLVMContext
-modifier|&
-name|C
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|N
-parameter_list|,
-name|MDNode
-modifier|*
-specifier|const
-modifier|*
-name|Vals
-parameter_list|,
-name|unsigned
-name|NumVals
-parameter_list|,
-name|Module
-modifier|*
-name|M
-init|=
-literal|0
-parameter_list|)
-function_decl|;
-name|public
-label|:
-specifier|static
-name|NamedMDNode
-modifier|*
-name|Create
-parameter_list|(
-name|LLVMContext
-modifier|&
-name|C
-parameter_list|,
-specifier|const
-name|Twine
-modifier|&
-name|N
-parameter_list|,
-name|MDNode
-modifier|*
-specifier|const
-modifier|*
-name|MDs
-parameter_list|,
-name|unsigned
-name|NumMDs
-parameter_list|,
-name|Module
-modifier|*
-name|M
-init|=
-literal|0
-parameter_list|)
-block|{
-return|return
-name|new
-name|NamedMDNode
 argument_list|(
-name|C
-argument_list|,
-name|N
-argument_list|,
-name|MDs
-argument_list|,
-name|NumMDs
-argument_list|,
-name|M
-argument_list|)
-return|;
-block|}
-specifier|static
-name|NamedMDNode
-modifier|*
-name|Create
-parameter_list|(
 specifier|const
-name|NamedMDNode
-modifier|*
-name|NMD
-parameter_list|,
-name|Module
-modifier|*
-name|M
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+name|Twine
+operator|&
+name|N
+argument_list|)
+block|;
+name|public
+operator|:
 comment|/// eraseFromParent - Drop all references and remove the node from parent
 comment|/// module.
 name|void
 name|eraseFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// dropAllReferences - Remove all uses and clear node vector.
 name|void
 name|dropAllReferences
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// ~NamedMDNode - Destroy NamedMDNode.
 operator|~
 name|NamedMDNode
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// getParent - Get the module that holds this named metadata collection.
 specifier|inline
 name|Module
-modifier|*
+operator|*
 name|getParent
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Parent
@@ -852,81 +787,46 @@ return|;
 block|}
 comment|/// getOperand - Return specified operand.
 name|MDNode
-modifier|*
+operator|*
 name|getOperand
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// getNumOperands - Return the number of NamedMDNode operands.
 name|unsigned
 name|getNumOperands
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// addOperand - Add metadata operand.
 name|void
 name|addOperand
-parameter_list|(
+argument_list|(
 name|MDNode
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
-comment|/// setName - Set the name of this named metadata.
-name|void
-name|setName
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|NewName
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// getName - Return a constant reference to this named metadata's name.
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-parameter_list|(
+block|;
+comment|/// print - Implement operator<< on NamedMDNode.
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&ROS
+argument_list|,
+argument|AssemblyAnnotationWriter *AAW =
+literal|0
+argument_list|)
 specifier|const
-name|NamedMDNode
-modifier|*
-parameter_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|V
-parameter_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|NamedMDNodeVal
-return|;
-block|}
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

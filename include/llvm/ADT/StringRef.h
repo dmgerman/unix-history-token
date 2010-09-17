@@ -545,6 +545,18 @@ name|str
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|Data
+operator|==
+literal|0
+condition|)
+return|return
+name|std
+operator|::
+name|string
+argument_list|()
+return|;
 return|return
 name|std
 operator|::
@@ -826,6 +838,7 @@ name|char
 name|C
 argument_list|,
 name|size_t
+name|From
 operator|=
 literal|0
 argument_list|)
@@ -835,13 +848,15 @@ return|return
 name|find
 argument_list|(
 name|C
+argument_list|,
+name|From
 argument_list|)
 return|;
 block|}
 comment|/// find_first_of - Find the first character in the string that is in \arg
 comment|/// Chars, or npos if not found.
 comment|///
-comment|/// Note: O(size() * Chars.size())
+comment|/// Note: O(size() + Chars.size())
 name|size_type
 name|find_first_of
 argument_list|(
@@ -873,7 +888,7 @@ decl_stmt|;
 comment|/// find_first_not_of - Find the first character in the string that is not
 comment|/// in the string \arg Chars, or npos if not found.
 comment|///
-comment|/// Note: O(size() * Chars.size())
+comment|/// Note: O(size() + Chars.size())
 name|size_type
 name|find_first_not_of
 argument_list|(
@@ -1213,16 +1228,49 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// split - Split into two substrings around the first occurrence of a
+end_comment
+
+begin_comment
 comment|/// separator string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
+end_comment
+
+begin_comment
 comment|/// such that (*this == LHS + Separator + RHS) is true and RHS is
+end_comment
+
+begin_comment
 comment|/// maximal. If \arg Separator is not in the string, then the result is a
+end_comment
+
+begin_comment
 comment|/// pair (LHS, RHS) where (*this == LHS) and (RHS == "").
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Separator - The string to split on.
+end_comment
+
+begin_comment
 comment|/// \return - The split substrings.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -1263,6 +1311,9 @@ name|StringRef
 argument_list|()
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|std
 operator|::
@@ -1288,10 +1339,10 @@ name|npos
 argument_list|)
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// split - Split into substrings around the occurrences of a separator
 end_comment
 
@@ -1351,32 +1402,23 @@ begin_comment
 comment|/// \param KeepEmpty - True if empty substring should be added.
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|split
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|StringRef
-operator|>
-operator|&
-name|A
+argument|SmallVectorImpl<StringRef>&A
 argument_list|,
-name|StringRef
-name|Separator
+argument|StringRef Separator
 argument_list|,
-name|int
-name|MaxSplit
-operator|=
-operator|-
+argument|int MaxSplit = -
 literal|1
 argument_list|,
-name|bool
-name|KeepEmpty
-operator|=
-name|true
+argument|bool KeepEmpty = true
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 

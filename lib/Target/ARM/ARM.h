@@ -106,35 +106,51 @@ comment|// condition field for predicated instructions.
 enum|enum
 name|CondCodes
 block|{
+comment|// Meaning (integer)          Meaning (floating-point)
 name|EQ
 block|,
+comment|// Equal                      Equal
 name|NE
 block|,
+comment|// Not equal                  Not equal, or unordered
 name|HS
 block|,
+comment|// Carry set>, ==, or unordered
 name|LO
 block|,
+comment|// Carry clear                Less than
 name|MI
 block|,
+comment|// Minus, negative            Less than
 name|PL
 block|,
+comment|// Plus, positive or zero>, ==, or unordered
 name|VS
 block|,
+comment|// Overflow                   Unordered
 name|VC
 block|,
+comment|// No overflow                Not unordered
 name|HI
 block|,
+comment|// Unsigned higher            Greater than, or unordered
 name|LS
 block|,
+comment|// Unsigned lower or same     Less than or equal
 name|GE
 block|,
+comment|// Greater than or equal      Greater than or equal
 name|LT
 block|,
+comment|// Less than                  Less than, or unordered
 name|GT
 block|,
+comment|// Greater than               Greater than
 name|LE
 block|,
+comment|// Less than or equal<, ==, or unordered
 name|AL
+comment|// Always (unconditional)     Always (unconditional)
 block|}
 enum|;
 specifier|inline
@@ -391,6 +407,111 @@ literal|"al"
 return|;
 block|}
 block|}
+name|namespace
+name|ARM_MB
+block|{
+comment|// The Memory Barrier Option constants map directly to the 4-bit encoding of
+comment|// the option field for memory barrier operations.
+enum|enum
+name|MemBOpt
+block|{
+name|ST
+init|=
+literal|14
+block|,
+name|ISH
+init|=
+literal|11
+block|,
+name|ISHST
+init|=
+literal|10
+block|,
+name|NSH
+init|=
+literal|7
+block|,
+name|NSHST
+init|=
+literal|6
+block|,
+name|OSH
+init|=
+literal|3
+block|,
+name|OSHST
+init|=
+literal|2
+block|}
+enum|;
+specifier|inline
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|MemBOptToString
+parameter_list|(
+name|unsigned
+name|val
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|val
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown memory opetion"
+argument_list|)
+expr_stmt|;
+case|case
+name|ST
+case|:
+return|return
+literal|"st"
+return|;
+case|case
+name|ISH
+case|:
+return|return
+literal|"ish"
+return|;
+case|case
+name|ISHST
+case|:
+return|return
+literal|"ishst"
+return|;
+case|case
+name|NSH
+case|:
+return|return
+literal|"nsh"
+return|;
+case|case
+name|NSHST
+case|:
+return|return
+literal|"nshst"
+return|;
+case|case
+name|OSH
+case|:
+return|return
+literal|"osh"
+return|;
+case|case
+name|OSHST
+case|:
+return|return
+literal|"oshst"
+return|;
+block|}
+block|}
+block|}
+comment|// namespace ARM_MB
 name|FunctionPass
 modifier|*
 name|createARMISelDag
@@ -432,6 +553,16 @@ name|FunctionPass
 modifier|*
 name|createARMExpandPseudoPass
 parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createARMGlobalMergePass
+parameter_list|(
+specifier|const
+name|TargetLowering
+modifier|*
+name|tli
+parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*

@@ -729,6 +729,15 @@ expr_stmt|;
 name|UpgradedIntrinsicMap
 name|UpgradedIntrinsics
 decl_stmt|;
+comment|// Map the bitcode's custom MDKind ID to the Module's MDKind ID.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|MDKindMap
+expr_stmt|;
 comment|// After the module header has been read, the FunctionsWithBodies list is
 comment|// reversed.  This keeps track of whether we've done this yet.
 name|bool
@@ -774,6 +783,13 @@ operator|>
 expr|>
 name|BlockAddrFwdRefs
 expr_stmt|;
+comment|/// LLVM2_7MetadataDetected - True if metadata produced by LLVM 2.7 or
+comment|/// earlier was detected, in which case we behave slightly differently,
+comment|/// for compatibility.
+comment|/// FIXME: Remove in LLVM 3.0.
+name|bool
+name|LLVM2_7MetadataDetected
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -820,7 +836,12 @@ argument_list|)
 operator|,
 name|MDValueList
 argument_list|(
-argument|C
+name|C
+argument_list|)
+operator|,
+name|LLVM2_7MetadataDetected
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|HasReversedFunctionsWithBodies

@@ -109,7 +109,7 @@ argument_list|()
 operator|:
 name|ModulePass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 comment|/// getTypes - After the pass has been run, return the set containing all of

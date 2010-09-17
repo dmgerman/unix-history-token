@@ -122,25 +122,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utility>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -183,7 +165,7 @@ decl_stmt|;
 comment|// AnalysisID - Use the PassInfo to identify a pass...
 typedef|typedef
 specifier|const
-name|PassInfo
+name|void
 modifier|*
 name|AnalysisID
 typedef|;
@@ -247,7 +229,9 @@ modifier|*
 name|Resolver
 decl_stmt|;
 comment|// Used to resolve analysis
-name|intptr_t
+specifier|const
+name|void
+modifier|*
 name|PassID
 decl_stmt|;
 name|PassKind
@@ -279,19 +263,8 @@ parameter_list|(
 name|PassKind
 name|K
 parameter_list|,
-name|intptr_t
-name|pid
-parameter_list|)
-function_decl|;
-name|explicit
-name|Pass
-parameter_list|(
-name|PassKind
-name|K
-parameter_list|,
-specifier|const
-name|void
-modifier|*
+name|char
+modifier|&
 name|pid
 parameter_list|)
 function_decl|;
@@ -321,16 +294,17 @@ name|getPassName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getPassInfo - Return the PassInfo data structure that corresponds to this
-comment|/// pass...  If the pass has not been registered, this will return null.
-comment|///
-specifier|const
-name|PassInfo
-operator|*
-name|getPassInfo
+comment|/// getPassID - Return the PassID number that corresponds to this pass.
+name|virtual
+name|AnalysisID
+name|getPassID
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|PassID
+return|;
+block|}
 comment|/// print - Print out the internal state of the pass.  This is called by
 comment|/// Analyze to print out the contents of an analysis.  Otherwise it is not
 comment|/// necessary to implement this method.  Beware that the module pointer MAY be
@@ -391,8 +365,6 @@ name|PMStack
 modifier|&
 parameter_list|,
 name|PassManagerType
-init|=
-name|PMT_Unknown
 parameter_list|)
 block|{}
 comment|/// Check if available pass managers are suitable for this pass or not.
@@ -469,9 +441,8 @@ name|void
 modifier|*
 name|getAdjustedAnalysisPointer
 parameter_list|(
-specifier|const
-name|PassInfo
-modifier|*
+name|AnalysisID
+name|ID
 parameter_list|)
 function_decl|;
 name|virtual
@@ -505,31 +476,6 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-name|template
-operator|<
-name|typename
-name|AnalysisClass
-operator|>
-specifier|static
-specifier|const
-name|PassInfo
-operator|*
-name|getClassPassInfo
-argument_list|()
-block|{
-return|return
-name|lookupPassInfo
-argument_list|(
-name|intptr_t
-argument_list|(
-operator|&
-name|AnalysisClass
-operator|::
-name|ID
-argument_list|)
-argument_list|)
-return|;
-block|}
 comment|// lookupPassInfo - Return the pass info object for the specified pass class,
 comment|// or null if it is not known.
 specifier|static
@@ -538,7 +484,9 @@ name|PassInfo
 modifier|*
 name|lookupPassInfo
 parameter_list|(
-name|intptr_t
+specifier|const
+name|void
+modifier|*
 name|TI
 parameter_list|)
 function_decl|;
@@ -583,10 +531,9 @@ comment|///
 name|bool
 name|mustPreserveAnalysisID
 argument_list|(
-specifier|const
-name|PassInfo
-operator|*
-name|AnalysisID
+name|char
+operator|&
+name|AID
 argument_list|)
 decl|const
 decl_stmt|;
@@ -630,7 +577,7 @@ name|AnalysisType
 operator|&
 name|getAnalysisID
 argument_list|(
-argument|const PassInfo *PI
+argument|AnalysisID PI
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -643,14 +590,9 @@ name|AnalysisType
 operator|&
 name|getAnalysisID
 argument_list|(
-specifier|const
-name|PassInfo
-operator|*
-name|PI
+argument|AnalysisID PI
 argument_list|,
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
 expr_stmt|;
 block|}
@@ -698,7 +640,7 @@ name|assignPassManager
 argument_list|(
 argument|PMStack&PMS
 argument_list|,
-argument|PassManagerType T = PMT_ModulePassManager
+argument|PassManagerType T
 argument_list|)
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
@@ -711,22 +653,8 @@ block|;
 name|explicit
 name|ModulePass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|PT_Module
-argument_list|,
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|ModulePass
-argument_list|(
-specifier|const
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -793,20 +721,8 @@ block|}
 name|explicit
 name|ImmutablePass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|ModulePass
-argument_list|(
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|ImmutablePass
-argument_list|(
-specifier|const
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -842,22 +758,8 @@ operator|:
 name|explicit
 name|FunctionPass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|PT_Function
-argument_list|,
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|FunctionPass
-argument_list|(
-specifier|const
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -915,37 +817,13 @@ name|Module
 operator|&
 argument_list|)
 block|;
-comment|/// runOnModule - On a module, we run this pass by initializing,
-comment|/// ronOnFunction'ing once for every function in the module, then by
-comment|/// finalizing.
-comment|///
-name|virtual
-name|bool
-name|runOnModule
-argument_list|(
-name|Module
-operator|&
-name|M
-argument_list|)
-block|;
-comment|/// run - On a function, we simply initialize, run the function, then
-comment|/// finalize.
-comment|///
-name|bool
-name|run
-argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|)
-block|;
 name|virtual
 name|void
 name|assignPassManager
 argument_list|(
 argument|PMStack&PMS
 argument_list|,
-argument|PassManagerType T = PMT_FunctionPassManager
+argument|PassManagerType T
 argument_list|)
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.
@@ -977,22 +855,8 @@ operator|:
 name|explicit
 name|BasicBlockPass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|PT_BasicBlock
-argument_list|,
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|BasicBlockPass
-argument_list|(
-specifier|const
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -1072,24 +936,13 @@ name|Module
 operator|&
 argument_list|)
 block|;
-comment|// To run this pass on a function, we simply call runOnBasicBlock once for
-comment|// each function.
-comment|//
-name|bool
-name|runOnFunction
-argument_list|(
-name|Function
-operator|&
-name|F
-argument_list|)
-block|;
 name|virtual
 name|void
 name|assignPassManager
 argument_list|(
 argument|PMStack&PMS
 argument_list|,
-argument|PassManagerType T = PMT_BasicBlockPassManager
+argument|PassManagerType T
 argument_list|)
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.

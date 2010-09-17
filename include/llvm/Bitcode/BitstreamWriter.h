@@ -377,6 +377,8 @@ block|{
 name|assert
 argument_list|(
 name|NumBits
+operator|&&
+name|NumBits
 operator|<=
 literal|32
 operator|&&
@@ -1422,6 +1424,13 @@ name|BitCodeAbbrevOp
 operator|::
 name|Fixed
 case|:
+if|if
+condition|(
+name|Op
+operator|.
+name|getEncodingData
+argument_list|()
+condition|)
 name|Emit
 argument_list|(
 operator|(
@@ -1444,6 +1453,13 @@ name|BitCodeAbbrevOp
 operator|::
 name|VBR
 case|:
+if|if
+condition|(
+name|Op
+operator|.
+name|getEncodingData
+argument_list|()
+condition|)
 name|EmitVBR64
 argument_list|(
 name|V

@@ -87,7 +87,7 @@ name|Twine
 decl_stmt|;
 comment|/// Triple - Helper class for working with target triples.
 comment|///
-comment|/// Target triples are strings in the format of:
+comment|/// Target triples are strings in the canonical form:
 comment|///   ARCHITECTURE-VENDOR-OPERATING_SYSTEM
 comment|/// or
 comment|///   ARCHITECTURE-VENDOR-OPERATING_SYSTEM-ENVIRONMENT
@@ -98,20 +98,11 @@ comment|/// behavior for particular targets. This class isolates the mapping
 comment|/// from the components of the target triple to well known IDs.
 comment|///
 comment|/// At its core the Triple class is designed to be a wrapper for a triple
-comment|/// string; it does not normally change or normalize the triple string, instead
-comment|/// it provides additional APIs to parse normalized parts out of the triple.
+comment|/// string; the constructor does not change or normalize the triple string.
+comment|/// Clients that need to handle the non-canonical triples that users often
+comment|/// specify should use the normalize method.
 comment|///
-comment|/// One curiosity this implies is that for some odd triples the results of,
-comment|/// e.g., getOSName() can be very different from the result of getOS().  For
-comment|/// example, for 'i386-mingw32', getOS() will return MinGW32, but since
-comment|/// getOSName() is purely based on the string structure that will return the
-comment|/// empty string.
-comment|///
-comment|/// Clients should generally avoid using getOSName() and related APIs unless
-comment|/// they are familiar with the triple format (this is particularly true when
-comment|/// rewriting a triple).
-comment|///
-comment|/// See autoconf/config.guess for a glimpse into what they look like in
+comment|/// See autoconf/config.guess for a glimpse into what triples look like in
 comment|/// practice.
 name|class
 name|Triple
@@ -265,6 +256,30 @@ operator|!=
 name|InvalidArch
 return|;
 block|}
+specifier|static
+name|ArchType
+name|ParseArch
+parameter_list|(
+name|StringRef
+name|ArchName
+parameter_list|)
+function_decl|;
+specifier|static
+name|VendorType
+name|ParseVendor
+parameter_list|(
+name|StringRef
+name|VendorName
+parameter_list|)
+function_decl|;
+specifier|static
+name|OSType
+name|ParseOS
+parameter_list|(
+name|StringRef
+name|OSName
+parameter_list|)
+function_decl|;
 name|void
 name|Parse
 argument_list|()
@@ -337,6 +352,22 @@ name|Data
 operator|+=
 name|OSStr
 block|;   }
+comment|/// @}
+comment|/// @name Normalization
+comment|/// @{
+comment|/// normalize - Turn an arbitrary machine specification into the canonical
+comment|/// triple form (or something sensible that the Triple class understands if
+comment|/// nothing better can reasonably be done).  In particular, it handles the
+comment|/// common case in which otherwise valid components are in the wrong order.
+specifier|static
+name|std
+operator|::
+name|string
+name|normalize
+argument_list|(
+argument|StringRef Str
+argument_list|)
+expr_stmt|;
 comment|/// @}
 comment|/// @name Typed Component Access
 comment|/// @{

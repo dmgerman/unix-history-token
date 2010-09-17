@@ -195,7 +195,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 comment|/// VarInfo - This represents the regions where a virtual register is live in

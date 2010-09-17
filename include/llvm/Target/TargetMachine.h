@@ -209,7 +209,10 @@ name|RegPressure
 block|,
 comment|// Scheduling for lowest register pressure.
 name|Hybrid
+block|,
 comment|// Scheduling for both latency and register pressure.
+name|ILP
+comment|// Scheduling for ILP in low register pressure mode.
 block|}
 enum|;
 block|}
@@ -680,6 +683,35 @@ return|return
 name|true
 return|;
 block|}
+comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
+comment|/// machine code emitted with the MCJIT. This method returns true if machine
+comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
+comment|/// used to build custom MCStreamer.
+comment|///
+name|virtual
+name|bool
+name|addPassesToEmitMC
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|MCContext
+operator|*
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|,
+name|bool
+operator|=
+name|true
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// LLVMTargetMachine - This class describes a target machine that is
@@ -781,10 +813,42 @@ argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
 block|;
+comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
+comment|/// machine code emitted with the MCJIT. This method returns true if machine
+comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
+comment|/// used to build custom MCStreamer.
+comment|///
+name|virtual
+name|bool
+name|addPassesToEmitMC
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|MCContext *&Ctx
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|bool DisableVerify = true
+argument_list|)
+block|;
 comment|/// Target-Independent Code Generator Pass Configuration Options.
-comment|/// addInstSelector - This method should add any "last minute" LLVM->LLVM
-comment|/// passes, then install an instruction selector pass, which converts from
-comment|/// LLVM code to machine instructions.
+comment|/// addPreISelPasses - This method should add any "last minute" LLVM->LLVM
+comment|/// passes (which are run just before instruction selector).
+name|virtual
+name|bool
+name|addPreISel
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// addInstSelector - This method should install an instruction selector pass,
+comment|/// which converts from LLVM code to machine instructions.
 name|virtual
 name|bool
 name|addInstSelector

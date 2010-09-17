@@ -80,6 +80,9 @@ name|class
 name|MemoryBuffer
 decl_stmt|;
 name|class
+name|raw_ostream
+decl_stmt|;
+name|class
 name|Disassembler
 block|{
 name|public
@@ -103,6 +106,10 @@ argument_list|,
 name|MemoryBuffer
 operator|&
 name|buffer
+argument_list|,
+name|raw_ostream
+operator|&
+name|Out
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -119,6 +126,10 @@ argument_list|,
 name|MemoryBuffer
 operator|&
 name|buffer
+argument_list|,
+name|raw_ostream
+operator|&
+name|Out
 argument_list|)
 decl_stmt|;
 block|}

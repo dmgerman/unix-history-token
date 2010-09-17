@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -c -Os -m32 -emit-llvm -o - | llc -march=x86 -mtriple=i386-apple-darwin10 | FileCheck %s -check-prefix=DARWIN32
-end_comment
-
-begin_comment
-comment|// RUN: %llvmgcc %s -c -Os -m64 -emit-llvm -o - | llc -march=x86-64 -mtriple=x86_64-apple-darwin10 | FileCheck %s -check-prefix=DARWIN64
-end_comment
-
-begin_comment
-comment|// XTARGET: darwin
+comment|// RUN: %llvmgcc %s -c -Os -emit-llvm -o - | llc -march=x86 -mtriple=i386-apple-darwin10 | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -43,27 +35,15 @@ block|}
 end_function
 
 begin_comment
-comment|// DARWIN64: .align 4
+comment|// CHECK: .align 4
 end_comment
 
 begin_comment
-comment|// DARWIN64: ___func__.
+comment|// CHECK: ___func__.
 end_comment
 
 begin_comment
-comment|// DARWIN64: .asciz "long_function_name"
-end_comment
-
-begin_comment
-comment|// DARWIN32: .align 4
-end_comment
-
-begin_comment
-comment|// DARWIN32: ___func__.
-end_comment
-
-begin_comment
-comment|// DARWIN32: .asciz "long_function_name"
+comment|// CHECK: .asciz "long_function_name"
 end_comment
 
 end_unit

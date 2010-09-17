@@ -192,14 +192,14 @@ comment|/// GroupNodeIndices - For each register, the index of the GroupNode
 comment|/// currently representing the group that the register belongs to.
 comment|/// Register 0 is always represented by the 0 group, a group
 comment|/// composed of registers that are not eligible for anti-aliasing.
-name|unsigned
-name|GroupNodeIndices
-index|[
-name|TargetRegisterInfo
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
-decl_stmt|;
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|GroupNodeIndices
+expr_stmt|;
 comment|/// RegRefs - Map registers to all their references within a live range.
 name|std
 operator|::
@@ -213,24 +213,24 @@ name|RegRefs
 expr_stmt|;
 comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
 comment|/// or ~0u if the register is not live.
-name|unsigned
-name|KillIndices
-index|[
-name|TargetRegisterInfo
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
-decl_stmt|;
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|KillIndices
+expr_stmt|;
 comment|/// DefIndices - The index of the most recent complete def (proceding bottom
 comment|/// up), or ~0u if the register is live.
-name|unsigned
-name|DefIndices
-index|[
-name|TargetRegisterInfo
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
-decl_stmt|;
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|DefIndices
+expr_stmt|;
 name|public
 label|:
 name|AggressiveAntiDepState
@@ -241,20 +241,30 @@ argument|MachineBasicBlock *BB
 argument_list|)
 empty_stmt|;
 comment|/// GetKillIndices - Return the kill indices.
+name|std
+operator|::
+name|vector
+operator|<
 name|unsigned
-modifier|*
+operator|>
+operator|&
 name|GetKillIndices
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|KillIndices
 return|;
 block|}
 comment|/// GetDefIndices - Return the define indices.
+name|std
+operator|::
+name|vector
+operator|<
 name|unsigned
-modifier|*
+operator|>
+operator|&
 name|GetDefIndices
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|DefIndices

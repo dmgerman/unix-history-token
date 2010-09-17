@@ -95,7 +95,7 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{
 name|DT
@@ -443,7 +443,7 @@ argument_list|()
 operator|:
 name|DominanceFrontierBase
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|,
 argument|true
 argument_list|)

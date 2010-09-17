@@ -1263,7 +1263,7 @@ comment|/// namespace.  This must be the same for all targets, which means that 
 comment|/// target is limited to this fixed number of registers.
 name|FirstVirtualRegister
 init|=
-literal|1024
+literal|16384
 block|}
 enum|;
 comment|/// isPhysicalRegister - Return true if the specified register number is in
@@ -2292,6 +2292,24 @@ return|return
 name|false
 return|;
 block|}
+comment|/// requiresVirtualBaseRegisters - Returns true if the target wants the
+comment|/// LocalStackAllocation pass to be run and virtual base registers
+comment|/// used for more efficient stack access.
+name|virtual
+name|bool
+name|requiresVirtualBaseRegisters
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// hasFP - Return true if the specified function should have a dedicated
 comment|/// frame pointer register. For most targets this is true only if the function
 comment|/// has variable sized allocas or if frame pointer elimination is disabled.
@@ -2317,6 +2335,7 @@ name|virtual
 name|bool
 name|hasReservedCallFrame
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -2334,7 +2353,7 @@ block|}
 comment|/// canSimplifyCallFramePseudos - When possible, it's best to simplify the
 comment|/// call frame pseudo ops before doing frame index elimination. This is
 comment|/// possible only when frame index references between the pseudos won't
-comment|/// need adjusted for the call frame adjustments. Normally, that's true
+comment|/// need adjusting for the call frame adjustments. Normally, that's true
 comment|/// if the function has a reserved call frame or a frame pointer. Some
 comment|/// targets (Thumb2, for example) may have more complicated criteria,
 comment|/// however, and can override this behavior.
@@ -2342,6 +2361,7 @@ name|virtual
 name|bool
 name|canSimplifyCallFramePseudos
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -2370,6 +2390,7 @@ name|virtual
 name|bool
 name|hasReservedSpillSlot
 argument_list|(
+specifier|const
 name|MachineFunction
 operator|&
 name|MF
@@ -2404,6 +2425,132 @@ block|{
 return|return
 name|false
 return|;
+block|}
+comment|/// getFrameIndexInstrOffset - Get the offset from the referenced frame
+comment|/// index in the instruction, if the is one.
+name|virtual
+name|int64_t
+name|getFrameIndexInstrOffset
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int
+name|Idx
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// needsFrameBaseReg - Returns true if the instruction's frame index
+comment|/// reference would be better served by a base register other than FP
+comment|/// or SP. Used by LocalStackFrameAllocation to determine which frame index
+comment|/// references it should create new base registers for.
+name|virtual
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// materializeFrameBaseRegister - Insert defining instruction(s) for
+comment|/// BaseReg to be a pointer to FrameIdx before insertion point I.
+name|virtual
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+name|unsigned
+name|BaseReg
+argument_list|,
+name|int
+name|FrameIdx
+argument_list|,
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"materializeFrameBaseRegister does not exist on this target"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// resolveFrameIndex - Resolve a frame index operand of an instruction
+comment|/// to reference the indicated base register plus offset instead.
+name|virtual
+name|void
+name|resolveFrameIndex
+argument_list|(
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|I
+argument_list|,
+name|unsigned
+name|BaseReg
+argument_list|,
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"resolveFrameIndex does not exist on this target"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// isFrameOffsetLegal - Determine whether a given offset immediate is
+comment|/// encodable to resolve a frame index.
+name|virtual
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|int64_t
+name|Offset
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+literal|0
+operator|&&
+literal|"isFrameOffsetLegal does not exist on this target"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+comment|// Must return a value in order to compile with VS 2005
 block|}
 comment|/// getCallFrameSetup/DestroyOpcode - These methods return the opcode of the
 comment|/// frame setup/destroy instructions if they exist (-1 otherwise).  Some
@@ -2501,7 +2648,7 @@ argument_list|)
 decl|const
 block|{    }
 comment|/// processFunctionBeforeFrameFinalized - This method is called immediately
-comment|/// before the specified functions frame layout (MF.getFrameInfo()) is
+comment|/// before the specified function's frame layout (MF.getFrameInfo()) is
 comment|/// finalized.  Once the frame is finalized, MO_FrameIndex operands are
 comment|/// replaced with direct constants.  This method is optional.
 comment|///
@@ -2560,23 +2707,8 @@ comment|/// eliminated by this method.  This method may modify or replace the
 comment|/// specified instruction, as long as it keeps the iterator pointing at the
 comment|/// finished product. SPAdj is the SP adjustment due to call frame setup
 comment|/// instruction.
-comment|///
-comment|/// When -enable-frame-index-scavenging is enabled, the virtual register
-comment|/// allocated for this frame index is returned and its value is stored in
-comment|/// *Value.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|int
-operator|>
-name|FrameIndexValue
-expr_stmt|;
 name|virtual
-name|unsigned
+name|void
 name|eliminateFrameIndex
 argument_list|(
 name|MachineBasicBlock
@@ -2586,12 +2718,6 @@ name|MI
 argument_list|,
 name|int
 name|SPAdj
-argument_list|,
-name|FrameIndexValue
-operator|*
-name|Value
-operator|=
-name|NULL
 argument_list|,
 name|RegScavenger
 operator|*

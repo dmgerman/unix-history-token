@@ -173,6 +173,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createTypeBasedAliasAnalysisPass - This pass implements metadata-based
+comment|// type-based alias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createTypeBasedAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createProfileLoaderPass - This pass loads information from a profile dump
 comment|// file.
 comment|//
@@ -182,9 +192,8 @@ name|createProfileLoaderPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
+name|char
+modifier|&
 name|ProfileLoaderPassID
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -207,9 +216,8 @@ name|createProfileEstimatorPass
 parameter_list|()
 function_decl|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
+name|char
+modifier|&
 name|ProfileEstimatorPassID
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -290,6 +298,16 @@ comment|// print debug info intrinsics in human readable form
 name|FunctionPass
 modifier|*
 name|createDbgInfoPrinterPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createRegionInfoPass - This pass finds all single entry single exit regions
+comment|// in a function and builds the region hierarchy.
+comment|//
+name|FunctionPass
+modifier|*
+name|createRegionInfoPass
 parameter_list|()
 function_decl|;
 comment|// Print module-level debug info metadata in human-readable form.

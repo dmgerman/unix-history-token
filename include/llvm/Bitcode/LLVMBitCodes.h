@@ -273,12 +273,7 @@ comment|// PPC LONG DOUBLE (2 doubles)
 name|TYPE_CODE_METADATA
 init|=
 literal|16
-block|,
 comment|// METADATA
-name|TYPE_CODE_UNION
-init|=
-literal|17
-comment|// UNION: [eltty x N]
 block|}
 enum|;
 comment|// The type symbol table only has one code (TST_ENTRY_CODE).
@@ -314,34 +309,58 @@ init|=
 literal|1
 block|,
 comment|// MDSTRING:      [values]
+comment|// FIXME: Remove NODE in favor of NODE2 in LLVM 3.0
 name|METADATA_NODE
 init|=
 literal|2
 block|,
-comment|// MDNODE:        [n x (type num, value num)]
+comment|// NODE with potentially invalid metadata
+comment|// FIXME: Remove FN_NODE in favor of FN_NODE2 in LLVM 3.0
 name|METADATA_FN_NODE
 init|=
 literal|3
 block|,
-comment|// FN_MDNODE:     [n x (type num, value num)]
+comment|// FN_NODE with potentially invalid metadata
 name|METADATA_NAME
 init|=
 literal|4
 block|,
 comment|// STRING:        [values]
+comment|// FIXME: Remove NAMED_NODE in favor of NAMED_NODE2 in LLVM 3.0
 name|METADATA_NAMED_NODE
 init|=
 literal|5
 block|,
-comment|// NAMEDMDNODE:   [n x mdnodes]
+comment|// NAMED_NODE with potentially invalid metadata
 name|METADATA_KIND
 init|=
 literal|6
 block|,
 comment|// [n x [id, name]]
+comment|// FIXME: Remove ATTACHMENT in favor of ATTACHMENT2 in LLVM 3.0
 name|METADATA_ATTACHMENT
 init|=
 literal|7
+block|,
+comment|// ATTACHMENT with potentially invalid metadata
+name|METADATA_NODE2
+init|=
+literal|8
+block|,
+comment|// NODE2:         [n x (type num, value num)]
+name|METADATA_FN_NODE2
+init|=
+literal|9
+block|,
+comment|// FN_NODE2:      [n x (type num, value num)]
+name|METADATA_NAMED_NODE2
+init|=
+literal|10
+block|,
+comment|// NAMED_NODE2:   [n x mdnodes]
+name|METADATA_ATTACHMENT2
+init|=
+literal|11
 comment|// [m x [value, [n x [id, mdnode]]]
 block|}
 enum|;
@@ -709,11 +728,12 @@ init|=
 literal|21
 block|,
 comment|// STORE:      [valty,val,ptr, align, vol]
+comment|// FIXME: Remove CALL in favor of CALL2 in LLVM 3.0
 name|FUNC_CODE_INST_CALL
 init|=
 literal|22
 block|,
-comment|// CALL:       [attr, fnty, fnid, args...]
+comment|// CALL with potentially invalid metadata
 name|FUNC_CODE_INST_VAARG
 init|=
 literal|23
@@ -766,15 +786,26 @@ init|=
 literal|31
 block|,
 comment|// INDIRECTBR: [opty, op0, op1, ...]
+comment|// FIXME: Remove DEBUG_LOC in favor of DEBUG_LOC2 in LLVM 3.0
 name|FUNC_CODE_DEBUG_LOC
 init|=
 literal|32
 block|,
-comment|// DEBUG_LOC: [Line,Col,ScopeVal, IAVal]
+comment|// DEBUG_LOC with potentially invalid metadata
 name|FUNC_CODE_DEBUG_LOC_AGAIN
 init|=
 literal|33
+block|,
 comment|// DEBUG_LOC_AGAIN
+name|FUNC_CODE_INST_CALL2
+init|=
+literal|34
+block|,
+comment|// CALL2:      [attr, fnty, fnid, args...]
+name|FUNC_CODE_DEBUG_LOC2
+init|=
+literal|35
+comment|// DEBUG_LOC2: [Line,Col,ScopeVal, IAVal]
 block|}
 enum|;
 block|}

@@ -107,19 +107,8 @@ operator|:
 name|explicit
 name|MachineFunctionPass
 argument_list|(
-argument|intptr_t ID
-argument_list|)
-operator|:
-name|FunctionPass
-argument_list|(
-argument|ID
-argument_list|)
-block|{}
-name|explicit
-name|MachineFunctionPass
-argument_list|(
-name|void
-operator|*
+name|char
+operator|&
 name|ID
 argument_list|)
 operator|:

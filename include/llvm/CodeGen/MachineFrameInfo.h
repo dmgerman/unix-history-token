@@ -65,6 +65,10 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_comment
+comment|//#include "llvm/ADT/IndexedMap.h"
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -112,7 +116,7 @@ name|class
 name|BitVector
 decl_stmt|;
 comment|/// The CalleeSavedInfo class tracks the information need to locate where a
-comment|/// callee saved register in the current frame.
+comment|/// callee saved register is in the current frame.
 name|class
 name|CalleeSavedInfo
 block|{
@@ -232,10 +236,21 @@ comment|// default, fixed objects are immutable unless marked otherwise.
 name|bool
 name|isImmutable
 decl_stmt|;
-comment|// isSpillSlot - If true, the stack object is used as spill slot. It
+comment|// isSpillSlot - If true the stack object is used as spill slot. It
 comment|// cannot alias any other memory objects.
 name|bool
 name|isSpillSlot
+decl_stmt|;
+comment|// MayNeedSP - If true the stack object triggered the creation of the stack
+comment|// protector. We should allocate this object right after the stack
+comment|// protector.
+name|bool
+name|MayNeedSP
+decl_stmt|;
+comment|// PreAllocated - If true, the object was mapped into the local frame
+comment|// block and doesn't need additional handling for allocation beyond that.
+name|bool
+name|PreAllocated
 decl_stmt|;
 name|StackObject
 argument_list|(
@@ -248,6 +263,8 @@ argument_list|,
 argument|bool IM
 argument_list|,
 argument|bool isSS
+argument_list|,
+argument|bool NSP
 argument_list|)
 block|:
 name|SPOffset
@@ -272,7 +289,17 @@ argument_list|)
 operator|,
 name|isSpillSlot
 argument_list|(
-argument|isSS
+name|isSS
+argument_list|)
+operator|,
+name|MayNeedSP
+argument_list|(
+name|NSP
+argument_list|)
+operator|,
+name|PreAllocated
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 block|}
@@ -396,6 +423,38 @@ name|TargetFrameInfo
 modifier|&
 name|TFI
 decl_stmt|;
+comment|/// LocalFrameObjects - References to frame indices which are mapped
+comment|/// into the local frame allocation block.<FrameIdx, LocalOffset>
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+operator|,
+name|int64_t
+operator|>
+operator|,
+literal|32
+operator|>
+name|LocalFrameObjects
+expr_stmt|;
+comment|/// LocalFrameSize - Size of the pre-allocated local frame block.
+name|int64_t
+name|LocalFrameSize
+decl_stmt|;
+comment|/// Required alignment of the local object blob, which is the strictest
+comment|/// alignment of any object in it.
+name|unsigned
+name|LocalFrameMaxAlign
+decl_stmt|;
+comment|/// Whether the local object blob needs to be allocated together. If not,
+comment|/// PEI should ignore the isPreAllocated flags on the stack objects and
+comment|/// just allocate them normally.
+name|bool
+name|UseLocalStackAllocationBlock
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -452,6 +511,18 @@ operator|=
 literal|0
 block|;
 name|CSIValid
+operator|=
+name|false
+block|;
+name|LocalFrameSize
+operator|=
+literal|0
+block|;
+name|LocalFrameMaxAlign
+operator|=
+literal|0
+block|;
+name|UseLocalStackAllocationBlock
 operator|=
 name|false
 block|;   }
@@ -532,8 +603,8 @@ operator|=
 name|T
 expr_stmt|;
 block|}
-comment|/// isReturnAddressTaken - This method may be called any time after instruction
-comment|/// selection is complete to determine if there is a call to
+comment|/// isReturnAddressTaken - This method may be called any time after
+comment|/// instruction selection is complete to determine if there is a call to
 comment|/// \@llvm.returnaddress in this function.
 name|bool
 name|isReturnAddressTaken
@@ -587,7 +658,7 @@ operator|-
 name|NumFixedObjects
 return|;
 block|}
-comment|/// getNumFixedObjects() - Return the number of fixed objects.
+comment|/// getNumFixedObjects - Return the number of fixed objects.
 name|unsigned
 name|getNumFixedObjects
 argument_list|()
@@ -597,7 +668,7 @@ return|return
 name|NumFixedObjects
 return|;
 block|}
-comment|/// getNumObjects() - Return the number of objects.
+comment|/// getNumObjects - Return the number of objects.
 comment|///
 name|unsigned
 name|getNumObjects
@@ -609,6 +680,213 @@ name|Objects
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|/// mapLocalFrameObject - Map a frame index into the local object block
+name|void
+name|mapLocalFrameObject
+parameter_list|(
+name|int
+name|ObjectIndex
+parameter_list|,
+name|int64_t
+name|Offset
+parameter_list|)
+block|{
+name|LocalFrameObjects
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+argument_list|,
+name|int64_t
+operator|>
+operator|(
+name|ObjectIndex
+operator|,
+name|Offset
+operator|)
+argument_list|)
+expr_stmt|;
+name|Objects
+index|[
+name|ObjectIndex
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|PreAllocated
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// getLocalFrameObjectMap - Get the local offset mapping for a for an object
+name|std
+operator|::
+name|pair
+operator|<
+name|int
+operator|,
+name|int64_t
+operator|>
+name|getLocalFrameObjectMap
+argument_list|(
+argument|int i
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|i
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|i
+operator|<
+name|LocalFrameObjects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid local object reference!"
+argument_list|)
+block|;
+return|return
+name|LocalFrameObjects
+index|[
+name|i
+index|]
+return|;
+block|}
+comment|/// getLocalFrameObjectCount - Return the number of objects allocated into
+comment|/// the local object block.
+name|int64_t
+name|getLocalFrameObjectCount
+parameter_list|()
+block|{
+return|return
+name|LocalFrameObjects
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// setLocalFrameSize - Set the size of the local object blob.
+name|void
+name|setLocalFrameSize
+parameter_list|(
+name|int64_t
+name|sz
+parameter_list|)
+block|{
+name|LocalFrameSize
+operator|=
+name|sz
+expr_stmt|;
+block|}
+comment|/// getLocalFrameSize - Get the size of the local object blob.
+name|int64_t
+name|getLocalFrameSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LocalFrameSize
+return|;
+block|}
+comment|/// setLocalFrameMaxAlign - Required alignment of the local object blob,
+comment|/// which is the strictest alignment of any object in it.
+name|void
+name|setLocalFrameMaxAlign
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|LocalFrameMaxAlign
+operator|=
+name|Align
+expr_stmt|;
+block|}
+comment|/// getLocalFrameMaxAlign - Return the required alignment of the local
+comment|/// object blob.
+name|unsigned
+name|getLocalFrameMaxAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LocalFrameMaxAlign
+return|;
+block|}
+comment|/// getUseLocalStackAllocationBlock - Get whether the local allocation blob
+comment|/// should be allocated together or let PEI allocate the locals in it
+comment|/// directly.
+name|bool
+name|getUseLocalStackAllocationBlock
+parameter_list|()
+block|{
+return|return
+name|UseLocalStackAllocationBlock
+return|;
+block|}
+comment|/// setUseLocalStackAllocationBlock - Set whether the local allocation blob
+comment|/// should be allocated together or let PEI allocate the locals in it
+comment|/// directly.
+name|void
+name|setUseLocalStackAllocationBlock
+parameter_list|(
+name|bool
+name|v
+parameter_list|)
+block|{
+name|UseLocalStackAllocationBlock
+operator|=
+name|v
+expr_stmt|;
+block|}
+comment|/// isObjectPreAllocated - Return true if the object was pre-allocated into
+comment|/// the local block.
+name|bool
+name|isObjectPreAllocated
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|PreAllocated
 return|;
 block|}
 comment|/// getObjectSize - Return the size of the specified object.
@@ -776,6 +1054,44 @@ argument_list|,
 name|Align
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// NeedsStackProtector - Returns true if the object may need stack
+comment|/// protectors.
+name|bool
+name|MayNeedStackProtector
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|MayNeedSP
+return|;
 block|}
 comment|/// getObjectOffset - Return the assigned stack offset of the specified object
 comment|/// from the incoming stack pointer.
@@ -1193,8 +1509,8 @@ operator|~
 literal|0ULL
 return|;
 block|}
-comment|/// CreateStackObject - Create a new statically sized stack object,
-comment|/// returning a nonnegative identifier to represent it.
+comment|/// CreateStackObject - Create a new statically sized stack object, returning
+comment|/// a nonnegative identifier to represent it.
 comment|///
 name|int
 name|CreateStackObject
@@ -1207,6 +1523,11 @@ name|Alignment
 parameter_list|,
 name|bool
 name|isSS
+parameter_list|,
+name|bool
+name|MayNeedSP
+init|=
+name|false
 parameter_list|)
 block|{
 name|assert
@@ -1233,6 +1554,8 @@ argument_list|,
 name|false
 argument_list|,
 name|isSS
+argument_list|,
+name|MayNeedSP
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1275,9 +1598,9 @@ return|return
 name|Index
 return|;
 block|}
-comment|/// CreateSpillStackObject - Create a new statically sized stack
-comment|/// object that represents a spill slot, returning a nonnegative
-comment|/// identifier to represent it.
+comment|/// CreateSpillStackObject - Create a new statically sized stack object that
+comment|/// represents a spill slot, returning a nonnegative identifier to represent
+comment|/// it.
 comment|///
 name|int
 name|CreateSpillStackObject
@@ -1296,6 +1619,8 @@ argument_list|,
 name|Alignment
 argument_list|,
 name|true
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|int
@@ -1358,7 +1683,10 @@ comment|/// actually used.
 comment|///
 name|int
 name|CreateVariableSizedObject
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|Alignment
+parameter_list|)
 block|{
 name|HasVarSizedObjects
 operator|=
@@ -1372,14 +1700,27 @@ name|StackObject
 argument_list|(
 literal|0
 argument_list|,
-literal|1
+name|Alignment
 argument_list|,
 literal|0
 argument_list|,
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|true
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|MaxAlignment
+operator|=
+name|std
+operator|::
+name|max
+argument_list|(
+name|MaxAlignment
+argument_list|,
+name|Alignment
 argument_list|)
 expr_stmt|;
 return|return
@@ -1477,7 +1818,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// print - Used by the MachineFunction printer to print information about
-comment|/// stack objects.  Implemented in MachineFunction.cpp
+comment|/// stack objects. Implemented in MachineFunction.cpp
 comment|///
 name|void
 name|print

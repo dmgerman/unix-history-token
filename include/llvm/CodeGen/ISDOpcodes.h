@@ -800,7 +800,7 @@ name|FIRST_TARGET_MEMORY_OPCODE
 init|=
 name|BUILTIN_OP_END
 operator|+
-literal|100
+literal|150
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// MemIndexedMode enum - This enum defines the load / store indexed
@@ -830,7 +830,6 @@ comment|///              producing a chain, post-indexed load produces two value
 comment|///              (the result of the load and the result of the base +/- offset
 comment|///              computation); a post-indexed store produces one value (the
 comment|///              the result of the base +/- offset computation).
-comment|///
 enum|enum
 name|MemIndexedMode
 block|{
@@ -857,10 +856,8 @@ comment|/// SEXTLOAD loads the integer operand and sign extends it to a larger
 comment|///          integer result type.
 comment|/// ZEXTLOAD loads the integer operand and zero extends it to a larger
 comment|///          integer result type.
-comment|/// EXTLOAD  is used for three things: floating point extending loads,
-comment|///          integer extending loads [the top bits are undefined], and vector
-comment|///          extending loads [load into low elt].
-comment|///
+comment|/// EXTLOAD  is used for two things: floating point extending loads and
+comment|///          integer extending loads [the top bits are undefined].
 enum|enum
 name|LoadExtType
 block|{

@@ -803,6 +803,11 @@ argument_list|(
 name|nItr
 argument_list|)
 expr_stmt|;
+name|s
+operator|.
+name|recordR0
+argument_list|()
+expr_stmt|;
 block|}
 comment|/// \brief Apply rule R1.
 comment|/// @param xnItr Node iterator for node to apply R1 to.
@@ -1149,6 +1154,11 @@ name|pushToStack
 argument_list|(
 name|xnItr
 argument_list|)
+expr_stmt|;
+name|s
+operator|.
+name|recordR1
+argument_list|()
 expr_stmt|;
 block|}
 comment|/// \brief Apply rule R2.
@@ -1746,6 +1756,24 @@ name|pushToStack
 argument_list|(
 name|xnItr
 argument_list|)
+expr_stmt|;
+name|s
+operator|.
+name|recordR2
+argument_list|()
+expr_stmt|;
+block|}
+comment|/// \brief Record an application of the RN rule.
+comment|///
+comment|/// For use by the HeuristicBase.
+name|void
+name|recordRN
+parameter_list|()
+block|{
+name|s
+operator|.
+name|recordRN
+argument_list|()
 expr_stmt|;
 block|}
 name|private

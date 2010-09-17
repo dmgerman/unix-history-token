@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/PassManager.h"
+file|"llvm/Pass.h"
 end_include
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<deque>
+file|<vector>
 end_include
 
 begin_include
@@ -384,18 +384,9 @@ decl_stmt|;
 name|class
 name|Timer
 decl_stmt|;
-comment|/// FunctionPassManager and PassManager, two top level managers, serve
-comment|/// as the public interface of pass manager infrastructure.
-enum|enum
-name|TopLevelManagerType
-block|{
-name|TLM_Function
-block|,
-comment|// FunctionPassManager
-name|TLM_Pass
-comment|// PassManager
-block|}
-enum|;
+name|class
+name|PMDataManager
+decl_stmt|;
 comment|// enums for debugging strings
 enum|enum
 name|PassDebuggingString
@@ -539,14 +530,13 @@ decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// PMStack
 comment|//
-comment|/// PMStack
+comment|/// PMStack - This class implements a stack data structure of PMDataManager
+comment|/// pointers.
+comment|///
 comment|/// Top level pass managers (see PassManager.cpp) maintain active Pass Managers
 comment|/// using PMStack. Each Pass implements assignPassManager() to connect itself
 comment|/// with appropriate manager. assignPassManager() walks PMStack to find
 comment|/// suitable manager.
-comment|///
-comment|/// PMStack is just a wrapper around standard deque that overrides pop() and
-comment|/// push() methods.
 name|class
 name|PMStack
 block|{
@@ -555,18 +545,19 @@ label|:
 typedef|typedef
 name|std
 operator|::
-name|deque
+name|vector
 operator|<
 name|PMDataManager
 operator|*
 operator|>
 operator|::
-name|reverse_iterator
+name|const_reverse_iterator
 name|iterator
 expr_stmt|;
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|S
@@ -577,7 +568,8 @@ return|;
 block|}
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|S
@@ -587,18 +579,14 @@ argument_list|()
 return|;
 block|}
 name|void
-name|handleLastUserOverflow
-parameter_list|()
-function_decl|;
-name|void
 name|pop
 parameter_list|()
 function_decl|;
-specifier|inline
 name|PMDataManager
-modifier|*
+operator|*
 name|top
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|S
@@ -615,10 +603,10 @@ modifier|*
 name|PM
 parameter_list|)
 function_decl|;
-specifier|inline
 name|bool
 name|empty
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|S
@@ -629,13 +617,14 @@ return|;
 block|}
 name|void
 name|dump
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|std
 operator|::
-name|deque
+name|vector
 operator|<
 name|PMDataManager
 operator|*
@@ -652,8 +641,16 @@ comment|/// top level pass managers.
 name|class
 name|PMTopLevelManager
 block|{
-name|public
+name|protected
 label|:
+name|explicit
+name|PMTopLevelManager
+parameter_list|(
+name|PMDataManager
+modifier|*
+name|PMDM
+parameter_list|)
+function_decl|;
 name|virtual
 name|unsigned
 name|getNumContainedManagers
@@ -670,17 +667,12 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// Schedule pass P for execution. Make sure that passes required by
-comment|/// P are run before P is run. Update analysis info maintained by
-comment|/// the manager. Remove dead passes. This is a recursive function.
 name|void
-name|schedulePass
-parameter_list|(
-name|Pass
-modifier|*
-name|P
-parameter_list|)
+name|initializeAllAnalysisInfo
+parameter_list|()
 function_decl|;
+name|private
+label|:
 comment|/// This is implemented by top level pass manager and used by
 comment|/// schedulePass() to add analysis info passes that are not available.
 name|virtual
@@ -693,6 +685,19 @@ name|P
 parameter_list|)
 init|=
 literal|0
+function_decl|;
+name|public
+label|:
+comment|/// Schedule pass P for execution. Make sure that passes required by
+comment|/// P are run before P is run. Update analysis info maintained by
+comment|/// the manager. Remove dead passes. This is a recursive function.
+name|void
+name|schedulePass
+parameter_list|(
+name|Pass
+modifier|*
+name|P
+parameter_list|)
 function_decl|;
 comment|/// Set pass P as the last user of the given analysis passes.
 name|void
@@ -751,14 +756,6 @@ parameter_list|(
 name|Pass
 modifier|*
 name|P
-parameter_list|)
-function_decl|;
-name|explicit
-name|PMTopLevelManager
-parameter_list|(
-name|enum
-name|TopLevelManagerType
-name|t
 parameter_list|)
 function_decl|;
 name|virtual
@@ -851,10 +848,6 @@ name|dumpArguments
 argument_list|()
 specifier|const
 expr_stmt|;
-name|void
-name|initializeAllAnalysisInfo
-parameter_list|()
-function_decl|;
 comment|// Active Pass Managers
 name|PMStack
 name|activeStack
@@ -1074,9 +1067,7 @@ name|Pass
 modifier|*
 name|P
 parameter_list|,
-specifier|const
-name|PassInfo
-modifier|*
+name|AnalysisID
 name|PI
 parameter_list|,
 name|Function
@@ -1501,7 +1492,6 @@ argument_list|)
 block|:
 name|ModulePass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 operator|,

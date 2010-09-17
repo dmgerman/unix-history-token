@@ -117,12 +117,18 @@ name|void
 modifier|*
 name|AV
 decl_stmt|;
-comment|/// PrototypeValue is an arbitrary representative value, which we derive names
-comment|/// and a type for PHI nodes.
-name|Value
+comment|/// ProtoType holds the type of the values being rewritten.
+specifier|const
+name|Type
 modifier|*
-name|PrototypeValue
+name|ProtoType
 decl_stmt|;
+comment|// PHI nodes are given a name based on ProtoName.
+name|std
+operator|::
+name|string
+name|ProtoName
+expr_stmt|;
 comment|/// InsertedPHIs - If this is non-null, the SSAUpdater adds all PHI nodes that
 comment|/// it creates to the vector.
 name|SmallVectorImpl
@@ -156,13 +162,17 @@ name|SSAUpdater
 argument_list|()
 expr_stmt|;
 comment|/// Initialize - Reset this object to get ready for a new set of SSA
-comment|/// updates.  ProtoValue is the value used to name PHI nodes.
+comment|/// updates with type 'Ty'.  PHI nodes get a name based on 'Name'.
 name|void
 name|Initialize
 parameter_list|(
-name|Value
+specifier|const
+name|Type
 modifier|*
-name|ProtoValue
+name|Ty
+parameter_list|,
+name|StringRef
+name|Name
 parameter_list|)
 function_decl|;
 comment|/// AddAvailableValue - Indicate that a rewritten value is available at the
@@ -236,6 +246,18 @@ comment|/// the same block as the use, but above it.  Any 'AddAvailableValue's a
 comment|/// for the use's block will be considered to be below it.
 name|void
 name|RewriteUse
+parameter_list|(
+name|Use
+modifier|&
+name|U
+parameter_list|)
+function_decl|;
+comment|/// RewriteUseAfterInsertions - Rewrite a use, just like RewriteUse.  However,
+comment|/// this version of the method can rewrite uses in the same block as a
+comment|/// definition, because it assumes that all uses of a value are below any
+comment|/// inserted values.
+name|void
+name|RewriteUseAfterInsertions
 parameter_list|(
 name|Use
 modifier|&

@@ -122,6 +122,11 @@ comment|/// processFunctionBeforeCalleeSavedScan().
 name|bool
 name|HasStackFrame
 block|;
+comment|/// RestoreSPFromFP - True if epilogue should restore SP from FP. Set by
+comment|/// emitPrologue.
+name|bool
+name|RestoreSPFromFP
+block|;
 comment|/// LRSpilledForFarJump - True if the LR register has been for spilled to
 comment|/// enable far jump.
 name|bool
@@ -213,6 +218,11 @@ literal|0
 argument_list|)
 block|,
 name|HasStackFrame
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|RestoreSPFromFP
 argument_list|(
 name|false
 argument_list|)
@@ -342,6 +352,11 @@ literal|0
 argument_list|)
 block|,
 name|HasStackFrame
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|RestoreSPFromFP
 argument_list|(
 name|false
 argument_list|)
@@ -502,6 +517,25 @@ argument|bool s
 argument_list|)
 block|{
 name|HasStackFrame
+operator|=
+name|s
+block|; }
+name|bool
+name|shouldRestoreSPFromFP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RestoreSPFromFP
+return|;
+block|}
+name|void
+name|setShouldRestoreSPFromFP
+argument_list|(
+argument|bool s
+argument_list|)
+block|{
+name|RestoreSPFromFP
 operator|=
 name|s
 block|; }

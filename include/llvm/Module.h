@@ -118,9 +118,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-name|class
-name|MDSymbolTable
-decl_stmt|;
 name|template
 operator|<
 operator|>
@@ -290,11 +287,9 @@ name|NamedMDNode
 operator|>
 operator|:
 name|public
-name|SymbolTableListTraits
+name|ilist_default_traits
 operator|<
 name|NamedMDNode
-operator|,
-name|Module
 operator|>
 block|{
 comment|// createSentinel is used to get hold of a node that marks the end of
@@ -360,19 +355,15 @@ block|{}
 name|void
 name|addNodeToList
 argument_list|(
-name|NamedMDNode
-operator|*
-name|N
+argument|NamedMDNode *
 argument_list|)
-block|;
+block|{}
 name|void
 name|removeNodeFromList
 argument_list|(
-name|NamedMDNode
-operator|*
-name|N
+argument|NamedMDNode *
 argument_list|)
-block|;
+block|{}
 name|private
 operator|:
 name|mutable
@@ -427,7 +418,7 @@ name|AliasListType
 expr_stmt|;
 comment|/// The type for the list of named metadata.
 typedef|typedef
-name|iplist
+name|ilist
 operator|<
 name|NamedMDNode
 operator|>
@@ -602,7 +593,7 @@ name|string
 name|DataLayout
 expr_stmt|;
 comment|///< Target data description
-name|MDSymbolTable
+name|void
 modifier|*
 name|NamedMDSymTab
 decl_stmt|;
@@ -843,8 +834,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// getMDKindNames - Populate client supplied SmallVector with the name for
-comment|/// custom metadata IDs registered in this LLVMContext.   ID #0 is not used,
-comment|/// so it is filled in as an empty string.
+comment|/// custom metadata IDs registered in this LLVMContext.
 name|void
 name|getMDKindNames
 argument_list|(
@@ -1071,6 +1061,16 @@ name|getOrInsertNamedMetadata
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|)
+function_decl|;
+comment|/// eraseNamedMetadata - Remove the given NamedMDNode from this module
+comment|/// and delete it.
+name|void
+name|eraseNamedMetadata
+parameter_list|(
+name|NamedMDNode
+modifier|*
+name|NMD
 parameter_list|)
 function_decl|;
 comment|/// @}
@@ -1362,48 +1362,6 @@ operator|::
 name|AliasList
 return|;
 block|}
-comment|/// Get the Module's list of named metadata (constant).
-specifier|const
-name|NamedMDListType
-operator|&
-name|getNamedMDList
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NamedMDList
-return|;
-block|}
-comment|/// Get the Module's list of named metadata.
-name|NamedMDListType
-modifier|&
-name|getNamedMDList
-parameter_list|()
-block|{
-return|return
-name|NamedMDList
-return|;
-block|}
-specifier|static
-name|iplist
-operator|<
-name|NamedMDNode
-operator|>
-name|Module
-operator|::
-operator|*
-name|getSublistAccess
-argument_list|(
-argument|NamedMDNode *
-argument_list|)
-block|{
-return|return
-operator|&
-name|Module
-operator|::
-name|NamedMDList
-return|;
-block|}
 comment|/// Get the symbol table of global variable and function identifiers
 specifier|const
 name|ValueSymbolTable
@@ -1450,30 +1408,6 @@ block|{
 return|return
 operator|*
 name|TypeSymTab
-return|;
-block|}
-comment|/// Get the symbol table of named metadata
-specifier|const
-name|MDSymbolTable
-operator|&
-name|getMDSymbolTable
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|NamedMDSymTab
-return|;
-block|}
-comment|/// Get the Module's symbol table of named metadata
-name|MDSymbolTable
-modifier|&
-name|getMDSymbolTable
-parameter_list|()
-block|{
-return|return
-operator|*
-name|NamedMDSymTab
 return|;
 block|}
 comment|/// @}

@@ -125,16 +125,6 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|)
-block|;
-name|private
-operator|:
-name|void
-name|EmitPredicateFunctions
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
 block|; }
 decl_stmt|;
 block|}

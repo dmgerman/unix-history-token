@@ -184,6 +184,21 @@ decl_stmt|;
 name|class
 name|Operator
 decl_stmt|;
+name|class
+name|SCEVUnknown
+decl_stmt|;
+name|class
+name|SCEV
+decl_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEV
+operator|>
+expr_stmt|;
 comment|/// SCEV - This class represents an analyzed expression in the program.  These
 comment|/// are opaque objects that the client is not allowed to do much with
 comment|/// directly.
@@ -194,6 +209,13 @@ range|:
 name|public
 name|FoldingSetNode
 block|{
+name|friend
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEV
+operator|>
+block|;
 comment|/// FastID - A reference to an Interned FoldingSetNodeID for this node.
 comment|/// The ScalarEvolution's BumpPtrAllocator holds the data.
 name|FoldingSetNodeIDRef
@@ -274,17 +296,6 @@ return|return
 name|SCEVType
 return|;
 block|}
-comment|/// Profile - FoldingSet support.
-name|void
-name|Profile
-argument_list|(
-argument|FoldingSetNodeID& ID
-argument_list|)
-block|{
-name|ID
-operator|=
-name|FastID
-block|; }
 comment|/// isLoopInvariant - Return true if the value of this SCEV is unchanging in
 comment|/// the specified loop.
 name|virtual
@@ -406,6 +417,76 @@ argument_list|()
 specifier|const
 block|;   }
 decl_stmt|;
+comment|// Specialize FoldingSetTrait for SCEV to avoid needing to compute
+comment|// temporary FoldingSetNodeID values.
+name|template
+operator|<
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|SCEV
+operator|>
+operator|:
+name|DefaultFoldingSetTrait
+operator|<
+name|SCEV
+operator|>
+block|{
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|const SCEV&X
+argument_list|,
+argument|FoldingSetNodeID& ID
+argument_list|)
+block|{
+name|ID
+operator|=
+name|X
+operator|.
+name|FastID
+block|;     }
+specifier|static
+name|bool
+name|Equals
+argument_list|(
+argument|const SCEV&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+return|return
+name|ID
+operator|==
+name|X
+operator|.
+name|FastID
+return|;
+block|}
+specifier|static
+name|unsigned
+name|ComputeHash
+argument_list|(
+argument|const SCEV&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|FastID
+operator|.
+name|ComputeHash
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -438,9 +519,9 @@ comment|/// could not be answered.  For example, if you ask for the number of
 comment|/// iterations of a linked-list traversal loop, you will get one of these.
 comment|/// None of the standard SCEV operations are valid on this class, it is just a
 comment|/// marker.
-name|struct
+expr|struct
 name|SCEVCouldNotCompute
-range|:
+operator|:
 name|public
 name|SCEV
 block|{
@@ -539,14 +620,14 @@ operator|*
 name|S
 argument_list|)
 block|;   }
-decl_stmt|;
+block|;
 comment|/// ScalarEvolution - This class is the main scalar evolution driver.  Because
 comment|/// client code (intentionally) can't do much with the SCEV objects directly,
 comment|/// they must ask this class for services.
 comment|///
 name|class
 name|ScalarEvolution
-range|:
+operator|:
 name|public
 name|FunctionPass
 block|{
@@ -600,6 +681,10 @@ name|friend
 name|class
 name|SCEVExpander
 block|;
+name|friend
+name|class
+name|SCEVUnknown
+block|;
 comment|/// F - The function we are analyzing.
 comment|///
 name|Function
@@ -629,19 +714,29 @@ comment|/// counts and things.
 name|SCEVCouldNotCompute
 name|CouldNotCompute
 block|;
-comment|/// Scalars - This is a cache of the scalars we have analyzed so far.
+comment|/// ValueExprMapType - The typedef for ValueExprMap.
 comment|///
-name|std
-operator|::
-name|map
+typedef|typedef
+name|DenseMap
 operator|<
 name|SCEVCallbackVH
-block|,
+operator|,
 specifier|const
 name|SCEV
 operator|*
+operator|,
+name|DenseMapInfo
+operator|<
+name|Value
+operator|*
 operator|>
-name|Scalars
+expr|>
+name|ValueExprMapType
+expr_stmt|;
+comment|/// ValueExprMap - This is a cache of the values we have analyzed so far.
+comment|///
+name|ValueExprMapType
+name|ValueExprMap
 block|;
 comment|/// BackedgeTakenInfo - Information about the backedge-taken count
 comment|/// of a loop. This currently includes an exact count and a maximum count.
@@ -849,7 +944,7 @@ argument_list|)
 block|;
 comment|/// ForgetSymbolicValue - This looks up computed SCEV values for all
 comment|/// instructions that depend on the given instruction and removes them from
-comment|/// the Scalars map if they reference SymName. This is used during PHI
+comment|/// the ValueExprMap map if they reference SymName. This is used during PHI
 comment|/// resolution.
 name|void
 name|ForgetSymbolicName
@@ -1073,18 +1168,18 @@ operator|*
 name|BB
 argument_list|)
 block|;
-comment|/// isImpliedCond - Test whether the condition described by Pred, LHS,
-comment|/// and RHS is true whenever the given Cond value evaluates to true.
+comment|/// isImpliedCond - Test whether the condition described by Pred, LHS, and
+comment|/// RHS is true whenever the given FoundCondValue value evaluates to true.
 name|bool
 name|isImpliedCond
 argument_list|(
-argument|Value *Cond
-argument_list|,
 argument|ICmpInst::Predicate Pred
 argument_list|,
 argument|const SCEV *LHS
 argument_list|,
 argument|const SCEV *RHS
+argument_list|,
+argument|Value *FoundCondValue
 argument_list|,
 argument|bool Inverse
 argument_list|)
@@ -2281,6 +2376,13 @@ name|UniqueSCEVs
 block|;
 name|BumpPtrAllocator
 name|SCEVAllocator
+block|;
+comment|/// FirstUnknown - The head of a linked list of all SCEVUnknown
+comment|/// values that have been allocated. This is used by releaseMemory
+comment|/// to locate them all and call their destructors.
+name|SCEVUnknown
+operator|*
+name|FirstUnknown
 block|;   }
 block|; }
 end_decl_stmt

@@ -63,6 +63,15 @@ name|class
 name|MCSectionData
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
+name|MCFragment
+decl_stmt|;
+name|class
+name|MCDataFragment
+decl_stmt|;
+name|class
 name|TargetAsmBackend
 decl_stmt|;
 name|class
@@ -124,6 +133,31 @@ return|return
 name|CurSectionData
 return|;
 block|}
+name|MCFragment
+operator|*
+name|getCurrentFragment
+argument_list|()
+specifier|const
+block|;
+comment|/// Get a data fragment to write into, creating a new one if the current
+comment|/// fragment is not a data fragment.
+name|MCDataFragment
+operator|*
+name|getOrCreateDataFragment
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|AddValueSymbols
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|)
+block|;
 name|public
 operator|:
 name|MCAssembler

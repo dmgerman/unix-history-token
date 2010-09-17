@@ -73,6 +73,9 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvmc
+block|{
+name|namespace
 name|SaveTempsEnum
 block|{
 enum|enum
@@ -86,51 +89,23 @@ name|Unset
 block|}
 enum|;
 block|}
+extern|extern llvm::cl::list<std::string> InputFilenames;
+extern|extern llvm::cl::opt<std::string> OutputFilename;
+extern|extern llvm::cl::opt<std::string> TempDirname;
+extern|extern llvm::cl::list<std::string> Languages;
+extern|extern llvm::cl::opt<bool> DryRun;
+extern|extern llvm::cl::opt<bool> Time;
+extern|extern llvm::cl::opt<bool> VerboseMode;
+extern|extern llvm::cl::opt<bool> CheckGraph;
+extern|extern llvm::cl::opt<bool> ViewGraph;
+extern|extern llvm::cl::opt<bool> WriteGraph;
+extern|extern llvm::cl::opt<SaveTempsEnum::Values> SaveTemps;
+block|}
 end_decl_stmt
 
-begin_extern
-extern|extern llvm::cl::list<std::string> InputFilenames;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<std::string> OutputFilename;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<std::string> TempDirname;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::list<std::string> Languages;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> DryRun;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> Time;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> VerboseMode;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> CheckGraph;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> ViewGraph;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<bool> WriteGraph;
-end_extern
-
-begin_extern
-extern|extern llvm::cl::opt<SaveTempsEnum::Values> SaveTemps;
-end_extern
+begin_comment
+comment|// End namespace llvmc.
+end_comment
 
 begin_endif
 endif|#

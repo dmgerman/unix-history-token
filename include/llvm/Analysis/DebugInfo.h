@@ -135,6 +135,21 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|DIFile
+decl_stmt|;
+name|class
+name|DISubprogram
+decl_stmt|;
+name|class
+name|DILexicalBlock
+decl_stmt|;
+name|class
+name|DIVariable
+decl_stmt|;
+name|class
+name|DIType
+decl_stmt|;
 comment|/// DIDescriptor - A thin wraper around MDNode to access encoded debug info.
 comment|/// This should not be stored in a container, because underly MDNode may
 comment|/// change in certain situations.
@@ -221,6 +236,15 @@ name|Elt
 argument_list|)
 decl|const
 decl_stmt|;
+name|Constant
+modifier|*
+name|getConstantField
+argument_list|(
+name|unsigned
+name|Elt
+argument_list|)
+decl|const
+decl_stmt|;
 name|Function
 modifier|*
 name|getFunctionField
@@ -255,6 +279,44 @@ argument_list|(
 argument|N
 argument_list|)
 block|{}
+name|explicit
+name|DIDescriptor
+argument_list|(
+argument|const DIFile F
+argument_list|)
+expr_stmt|;
+name|explicit
+name|DIDescriptor
+parameter_list|(
+specifier|const
+name|DISubprogram
+name|F
+parameter_list|)
+function_decl|;
+name|explicit
+name|DIDescriptor
+parameter_list|(
+specifier|const
+name|DILexicalBlock
+name|F
+parameter_list|)
+function_decl|;
+name|explicit
+name|DIDescriptor
+parameter_list|(
+specifier|const
+name|DIVariable
+name|F
+parameter_list|)
+function_decl|;
+name|explicit
+name|DIDescriptor
+parameter_list|(
+specifier|const
+name|DIType
+name|F
+parameter_list|)
+function_decl|;
 name|bool
 name|Verify
 argument_list|()
@@ -1256,6 +1318,16 @@ name|getDirectory
 argument_list|()
 return|;
 block|}
+comment|/// replaceAllUsesWith - Replace all uses of debug info referenced by
+comment|/// this descriptor.
+name|void
+name|replaceAllUsesWith
+argument_list|(
+name|DIDescriptor
+operator|&
+name|D
+argument_list|)
+block|;
 comment|/// print - print type.
 name|void
 name|print
@@ -1308,6 +1380,12 @@ literal|9
 argument_list|)
 return|;
 block|}
+comment|/// Verify - Verify that a basic type descriptor is well formed.
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+block|;
 comment|/// print - print basic type.
 name|void
 name|print
@@ -1399,6 +1477,12 @@ name|getOriginalTypeSize
 argument_list|()
 specifier|const
 block|;
+comment|/// Verify - Verify that a derived type descriptor is well formed.
+name|bool
+name|Verify
+argument_list|()
+specifier|const
+block|;
 comment|/// print - print derived type.
 name|void
 name|print
@@ -1412,17 +1496,6 @@ name|void
 name|dump
 argument_list|()
 specifier|const
-block|;
-comment|/// replaceAllUsesWith - Replace all uses of debug info referenced by
-comment|/// this descriptor. After this completes, the current debug info value
-comment|/// is erased.
-name|void
-name|replaceAllUsesWith
-argument_list|(
-name|DIDescriptor
-operator|&
-name|D
-argument_list|)
 block|;   }
 block|;
 comment|/// DICompositeType - This descriptor holds a type that can refer to multiple
@@ -2189,6 +2262,22 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|Constant
+operator|*
+name|getConstant
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getConstantField
+argument_list|(
+literal|11
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// Verify - Verify that a global variable descriptor is well formed.
 end_comment
@@ -2542,32 +2631,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|StringRef
-name|getDirectory
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getContext
-argument_list|()
-operator|.
-name|getDirectory
-argument_list|()
-return|;
-block|}
-name|StringRef
-name|getFilename
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getContext
-argument_list|()
-operator|.
-name|getFilename
-argument_list|()
-return|;
-block|}
 name|unsigned
 name|getLineNumber
 argument_list|()
@@ -2590,6 +2653,86 @@ name|getUnsignedField
 argument_list|(
 literal|3
 argument_list|)
+return|;
+block|}
+name|StringRef
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|4
+operator|)
+block|;
+name|StringRef
+name|dir
+operator|=
+name|F
+operator|.
+name|getDirectory
+argument_list|()
+block|;
+return|return
+operator|!
+name|dir
+operator|.
+name|empty
+argument_list|()
+condition|?
+name|dir
+else|:
+name|getContext
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+name|DIFile
+name|F
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|4
+operator|)
+block|;
+name|StringRef
+name|filename
+operator|=
+name|F
+operator|.
+name|getFilename
+argument_list|()
+block|;
+return|return
+operator|!
+name|filename
+operator|.
+name|empty
+argument_list|()
+condition|?
+name|filename
+else|:
+name|getContext
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
 return|;
 block|}
 expr|}
@@ -3199,6 +3342,11 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// CreateTemporaryType - Create a temporary forward-declared type.
+name|DIType
+name|CreateTemporaryType
+parameter_list|()
+function_decl|;
 comment|/// CreateArtificialType - Create a new DIType with "artificial" flag set.
 name|DIType
 name|CreateArtificialType
@@ -3249,6 +3397,12 @@ name|Elements
 parameter_list|,
 name|unsigned
 name|RunTimeLang
+init|=
+literal|0
+parameter_list|,
+name|MDNode
+modifier|*
+name|ContainingType
 init|=
 literal|0
 parameter_list|)
@@ -3365,6 +3519,44 @@ operator|*
 name|GV
 argument_list|)
 decl_stmt|;
+comment|/// CreateGlobalVariable - Create a new descriptor for the specified constant.
+name|DIGlobalVariable
+name|CreateGlobalVariable
+argument_list|(
+name|DIDescriptor
+name|Context
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|StringRef
+name|DisplayName
+argument_list|,
+name|StringRef
+name|LinkageName
+argument_list|,
+name|DIFile
+name|F
+argument_list|,
+name|unsigned
+name|LineNo
+argument_list|,
+name|DIType
+name|Ty
+argument_list|,
+name|bool
+name|isLocalToUnit
+argument_list|,
+name|bool
+name|isDefinition
+argument_list|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|C
+argument_list|)
+decl_stmt|;
 comment|/// CreateVariable - Create a new descriptor for the specified variable.
 name|DIVariable
 name|CreateVariable
@@ -3438,6 +3630,9 @@ name|CreateLexicalBlock
 parameter_list|(
 name|DIDescriptor
 name|Context
+parameter_list|,
+name|DIFile
+name|F
 parameter_list|,
 name|unsigned
 name|Line

@@ -93,20 +93,12 @@ label|:
 name|bool
 name|HasGOT
 decl_stmt|;
-name|bool
-name|SizeRequired
-decl_stmt|;
 name|public
 label|:
 name|JITMemoryManager
 argument_list|()
 operator|:
 name|HasGOT
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|SizeRequired
 argument_list|(
 argument|false
 argument_list|)
@@ -190,17 +182,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// NeedsExactSize - If the memory manager requires to know the size of the
-comment|/// objects to be emitted
-name|bool
-name|NeedsExactSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SizeRequired
-return|;
-block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Main Allocation Functions
 comment|//===--------------------------------------------------------------------===//

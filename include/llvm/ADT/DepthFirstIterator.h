@@ -930,6 +930,43 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// getPathLength - Return the length of the path from the entry node to the
+comment|/// current node, counting both nodes.
+name|unsigned
+name|getPathLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VisitStack
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// getPath - Return the n'th node in the path from the the entry node to the
+comment|/// current node.
+name|NodeType
+modifier|*
+name|getPath
+argument_list|(
+name|unsigned
+name|n
+argument_list|)
+decl|const
+block|{
+return|return
+name|VisitStack
+index|[
+name|n
+index|]
+operator|.
+name|first
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
 block|}
 end_decl_stmt
 

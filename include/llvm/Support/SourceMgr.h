@@ -618,9 +618,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Loc
-argument_list|()
-operator|,
 name|Filename
 argument_list|(
 name|filename
@@ -641,11 +638,6 @@ operator|,
 name|Message
 argument_list|(
 name|Msg
-argument_list|)
-operator|,
-name|LineContents
-argument_list|(
-literal|""
 argument_list|)
 operator|,
 name|ShowLine

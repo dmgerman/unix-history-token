@@ -668,9 +668,6 @@ comment|// This is an instance of ConstantArray
 name|ConstantStructVal
 block|,
 comment|// This is an instance of ConstantStruct
-name|ConstantUnionVal
-block|,
-comment|// This is an instance of ConstantUnion
 name|ConstantVectorVal
 block|,
 comment|// This is an instance of ConstantVector
@@ -683,9 +680,6 @@ comment|// This is an instance of MDNode
 name|MDStringVal
 block|,
 comment|// This is an instance of MDString
-name|NamedMDNodeVal
-block|,
-comment|// This is an instance of NamedMDNode
 name|InlineAsmVal
 block|,
 comment|// This is an instance of InlineAsm
@@ -948,6 +942,17 @@ name|PredBB
 argument_list|)
 return|;
 block|}
+comment|/// MaximumAlignment - This is the greatest alignment value supported by
+comment|/// load, store, and alloca instructions, and global values.
+specifier|static
+specifier|const
+name|unsigned
+name|MaximumAlignment
+init|=
+literal|1u
+operator|<<
+literal|29
+decl_stmt|;
 name|protected
 label|:
 name|unsigned

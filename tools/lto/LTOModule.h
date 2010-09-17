@@ -242,6 +242,14 @@ modifier|*
 name|getTargetTriple
 parameter_list|()
 function_decl|;
+name|void
+name|setTargetTriple
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 name|uint32_t
 name|getSymbolCount
 parameter_list|()

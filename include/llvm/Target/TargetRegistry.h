@@ -292,6 +292,10 @@ argument_list|,
 name|MCAsmParser
 operator|&
 name|P
+argument_list|,
+name|TargetMachine
+operator|&
+name|TM
 argument_list|)
 argument_list|;     typedef
 name|MCDisassembler
@@ -787,6 +791,10 @@ argument_list|(
 name|MCAsmParser
 operator|&
 name|Parser
+argument_list|,
+name|TargetMachine
+operator|&
+name|TM
 argument_list|)
 decl|const
 block|{
@@ -805,6 +813,8 @@ operator|*
 name|this
 argument_list|,
 name|Parser
+argument_list|,
+name|TM
 argument_list|)
 return|;
 block|}
@@ -936,9 +946,9 @@ comment|/// createObjectStreamer - Create a target specific MCStreamer.
 comment|///
 comment|/// \arg TT - The target triple.
 comment|/// \arg Ctx - The target context.
-comment|/// \arg TAB - The target assembler backend object.
+comment|/// \arg TAB - The target assembler backend object. Takes ownership.
 comment|/// \arg _OS - The stream object.
-comment|/// \arg _Emitter - The target independent assembler object.
+comment|/// \arg _Emitter - The target independent assembler object.Takes ownership.
 comment|/// \arg RelaxAll - Relax all fixups?
 name|MCStreamer
 modifier|*
@@ -2646,6 +2656,8 @@ argument_list|(
 argument|const Target&T
 argument_list|,
 argument|MCAsmParser&P
+argument_list|,
+argument|TargetMachine&TM
 argument_list|)
 block|{
 return|return
@@ -2655,6 +2667,8 @@ argument_list|(
 name|T
 argument_list|,
 name|P
+argument_list|,
+name|TM
 argument_list|)
 return|;
 block|}

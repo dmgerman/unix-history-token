@@ -870,11 +870,6 @@ operator|*
 name|p
 operator|=
 name|NULL
-argument_list|,
-name|bool
-name|allowDoubleDefs
-operator|=
-name|false
 argument_list|)
 decl|const
 decl_stmt|;

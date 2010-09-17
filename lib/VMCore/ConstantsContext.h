@@ -2982,50 +2982,6 @@ unit|} }
 empty_stmt|;
 end_empty_stmt
 
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-expr|struct
-name|ConstantKeyData
-operator|<
-name|ConstantUnion
-operator|>
-block|{
-typedef|typedef
-name|Constant
-modifier|*
-name|ValType
-typedef|;
-specifier|static
-name|ValType
-name|getValType
-argument_list|(
-argument|ConstantUnion *CU
-argument_list|)
-block|{
-return|return
-name|cast
-operator|<
-name|Constant
-operator|>
-operator|(
-name|CU
-operator|->
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-return|;
-block|}
-block|}
-end_expr_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|// ConstantPointerNull does not take extra "value" argument...
 end_comment
@@ -4367,11 +4323,15 @@ argument_list|)
 expr_stmt|;
 comment|// If this constant is the representative element for its abstract type,
 comment|// update the AbstractTypeMap so that the representative element is I.
+comment|//
+comment|// This must use getRawType() because if the type is under refinement, we
+comment|// will get the refineAbstractType callback below, and we don't want to
+comment|// kick union find in on the constant.
 if|if
 condition|(
 name|C
 operator|->
-name|getType
+name|getRawType
 argument_list|()
 operator|->
 name|isAbstract
@@ -4388,10 +4348,16 @@ name|AbstractTypeMap
 operator|.
 name|find
 argument_list|(
+name|cast
+operator|<
+name|DerivedType
+operator|>
+operator|(
 name|C
 operator|->
-name|getType
+name|getRawType
 argument_list|()
+operator|)
 argument_list|)
 expr_stmt|;
 name|assert

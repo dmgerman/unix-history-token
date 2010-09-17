@@ -65,12 +65,6 @@ directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<cassert>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -116,7 +110,7 @@ operator|:
 name|bool
 name|insert
 argument_list|(
-argument|const std::string& InLang
+argument|StringRef InLang
 argument_list|)
 block|{
 name|assert
@@ -133,11 +127,10 @@ name|char
 operator|*
 name|KeyStart
 operator|=
-operator|&
 name|InLang
-index|[
-literal|0
-index|]
+operator|.
+name|data
+argument_list|()
 block|;
 specifier|const
 name|char

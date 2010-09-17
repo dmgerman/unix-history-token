@@ -1175,7 +1175,7 @@ specifier|inline
 name|size_t
 name|array_lengthof
 argument_list|(
-argument|T (&x)[N]
+argument|T (&)[N]
 argument_list|)
 block|{
 return|return
@@ -1292,7 +1292,7 @@ operator|>
 specifier|static
 name|int
 argument_list|(
-argument|*get_array_pad_sort_comparator(const T&X)
+argument|*get_array_pad_sort_comparator(const T&)
 argument_list|)
 operator|(
 specifier|const

@@ -117,6 +117,8 @@ name|V5TE
 block|,
 name|V6
 block|,
+name|V6M
+block|,
 name|V6T2
 block|,
 name|V7A
@@ -174,6 +176,10 @@ comment|/// ThumbMode - Indicates supported Thumb version.
 name|ThumbTypeEnum
 name|ThumbMode
 block|;
+comment|/// NoARM - True if subtarget does not support ARM mode execution.
+name|bool
+name|NoARM
+block|;
 comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
 name|bool
 name|PostRAScheduler
@@ -200,6 +206,21 @@ comment|/// HasT2ExtractPack - True if subtarget supports thumb2 extract/pack
 comment|/// instructions.
 name|bool
 name|HasT2ExtractPack
+block|;
+comment|/// HasDataBarrier - True if the subtarget supports DMB / DSB data barrier
+comment|/// instructions.
+name|bool
+name|HasDataBarrier
+block|;
+comment|/// Pref32BitThumb - If true, codegen would prefer 32-bit Thumb instructions
+comment|/// over 16-bit ones.
+name|bool
+name|Pref32BitThumb
+block|;
+comment|/// FPOnlySP - If true, the floating point unit only supports single
+comment|/// precision.
+name|bool
+name|FPOnlySP
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -353,6 +374,16 @@ name|V7A
 return|;
 block|}
 name|bool
+name|hasARMOps
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|NoARM
+return|;
+block|}
+name|bool
 name|hasVFP2
 argument_list|()
 specifier|const
@@ -416,6 +447,15 @@ name|HasT2ExtractPack
 return|;
 block|}
 name|bool
+name|hasDataBarrier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDataBarrier
+return|;
+block|}
+name|bool
 name|useVMLx
 argument_list|()
 specifier|const
@@ -435,6 +475,24 @@ specifier|const
 block|{
 return|return
 name|SlowFPBrcc
+return|;
+block|}
+name|bool
+name|isFPOnlySP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FPOnlySP
+return|;
+block|}
+name|bool
+name|prefers32BitThumb
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pref32BitThumb
 return|;
 block|}
 name|bool

@@ -93,13 +93,16 @@ directive|include
 file|"Pass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/PassRegistry.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetMachine
-decl_stmt|;
 comment|//===---------------------------------------------------------------------------
 comment|/// PassInfo class - An instance of this class exists for every pass known by
 comment|/// the system, and can be obtained from a live Pass by calling its
@@ -137,7 +140,8 @@ name|PassArgument
 decl_stmt|;
 comment|// Command Line argument to run this pass
 specifier|const
-name|intptr_t
+name|void
+modifier|*
 name|PassID
 decl_stmt|;
 specifier|const
@@ -179,14 +183,13 @@ argument|const char *name
 argument_list|,
 argument|const char *arg
 argument_list|,
-argument|intptr_t pi
+argument|const void *pi
 argument_list|,
-argument|NormalCtor_t normal =
-literal|0
+argument|NormalCtor_t normal
 argument_list|,
-argument|bool isCFGOnly = false
+argument|bool isCFGOnly
 argument_list|,
-argument|bool is_analysis = false
+argument|bool is_analysis
 argument_list|)
 block|:
 name|PassName
@@ -224,17 +227,31 @@ argument_list|(
 argument|normal
 argument_list|)
 block|{
-name|registerPass
+name|PassRegistry
+operator|::
+name|getPassRegistry
 argument_list|()
+operator|->
+name|registerPass
+argument_list|(
+operator|*
+name|this
+argument_list|)
 block|;   }
 comment|/// PassInfo ctor - Do not call this directly, this should only be invoked
 comment|/// through RegisterPass. This version is for use by analysis groups; it
 comment|/// does not auto-register the pass.
 name|PassInfo
 argument_list|(
-argument|const char *name
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|,
-argument|intptr_t pi
+specifier|const
+name|void
+operator|*
+name|pi
 argument_list|)
 operator|:
 name|PassName
@@ -302,7 +319,9 @@ return|;
 block|}
 comment|/// getTypeInfo - Return the id object for the pass...
 comment|/// TODO : Rename
-name|intptr_t
+specifier|const
+name|void
+operator|*
 name|getTypeInfo
 argument_list|()
 specifier|const
@@ -315,6 +334,7 @@ comment|/// Return true if this PassID implements the specified ID pointer.
 name|bool
 name|isPassID
 argument_list|(
+specifier|const
 name|void
 operator|*
 name|IDPtr
@@ -324,9 +344,6 @@ block|{
 return|return
 name|PassID
 operator|==
-operator|(
-name|intptr_t
-operator|)
 name|IDPtr
 return|;
 block|}
@@ -436,16 +453,6 @@ return|return
 name|ItfImpl
 return|;
 block|}
-name|protected
-label|:
-name|void
-name|registerPass
-parameter_list|()
-function_decl|;
-name|void
-name|unregisterPass
-parameter_list|()
-function_decl|;
 name|private
 label|:
 name|void
@@ -468,6 +475,22 @@ expr_stmt|;
 comment|// do not implement
 block|}
 empty_stmt|;
+define|#
+directive|define
+name|INITIALIZE_PASS
+parameter_list|(
+name|passName
+parameter_list|,
+name|arg
+parameter_list|,
+name|name
+parameter_list|,
+name|cfg
+parameter_list|,
+name|analysis
+parameter_list|)
+define|\
+value|static RegisterPass<passName> passName ## _info(arg, name, cfg, analysis)
 name|template
 operator|<
 name|typename
@@ -530,7 +553,7 @@ argument|Name
 argument_list|,
 argument|PassArg
 argument_list|,
-argument|intptr_t(&passName::ID)
+argument|&passName::ID
 argument_list|,
 argument|PassInfo::NormalCtor_t(callDefaultCtor<passName>)
 argument_list|,
@@ -538,7 +561,7 @@ argument|CFGOnly
 argument_list|,
 argument|is_analysis
 argument_list|)
-block|{   }
+block|{        }
 block|}
 expr_stmt|;
 comment|/// RegisterAnalysisGroup - Register a Pass as a member of an analysis _group_.
@@ -572,9 +595,9 @@ name|RegisterAGBase
 argument_list|(
 argument|const char *Name
 argument_list|,
-argument|intptr_t InterfaceID
+argument|const void *InterfaceID
 argument_list|,
-argument|intptr_t PassID =
+argument|const void *PassID =
 literal|0
 argument_list|,
 argument|bool isDefault = false
@@ -609,7 +632,7 @@ name|RegisterAGBase
 argument_list|(
 argument|RPB.getPassName()
 argument_list|,
-argument|intptr_t(&Interface::ID)
+argument|&Interface::ID
 argument_list|,
 argument|RPB.getTypeInfo()
 argument_list|,
@@ -629,11 +652,31 @@ name|RegisterAGBase
 argument_list|(
 argument|Name
 argument_list|,
-argument|intptr_t(&Interface::ID)
+argument|&Interface::ID
 argument_list|)
 block|{   }
 block|}
 expr_stmt|;
+define|#
+directive|define
+name|INITIALIZE_AG_PASS
+parameter_list|(
+name|passName
+parameter_list|,
+name|agName
+parameter_list|,
+name|arg
+parameter_list|,
+name|name
+parameter_list|,
+name|cfg
+parameter_list|,
+name|analysis
+parameter_list|,
+name|def
+parameter_list|)
+define|\
+value|static RegisterPass<passName> passName ## _info(arg, name, cfg, analysis); \   static RegisterAnalysisGroup<agName, def> passName ## _ag(passName ## _info)
 comment|//===---------------------------------------------------------------------------
 comment|/// PassRegistrationListener class - This class is meant to be derived from by
 comment|/// clients that are interested in which passes get registered and unregistered

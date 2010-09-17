@@ -355,7 +355,6 @@ comment|/// turn as it occurs in \p Items.
 comment|/// @returns true if an error occurred, false otherwise
 comment|/// @see LinkItemKind
 comment|/// @see getLastError
-comment|/// @throws nothing
 name|bool
 name|LinkInItems
 parameter_list|(

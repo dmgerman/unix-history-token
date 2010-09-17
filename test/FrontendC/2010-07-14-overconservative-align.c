@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -emit-llvm -m64 -S -o - | FileCheck %s
+comment|// RUN: %llvmgcc %s -emit-llvm -S -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-comment|// CHECK: load %struct.s** %s_addr, align 8
+comment|// CHECK: load %struct.s** %s_addr, align {{[48]}}
 name|s
 operator|->
 name|word

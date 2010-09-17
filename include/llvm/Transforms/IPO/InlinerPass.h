@@ -113,15 +113,15 @@ block|{
 name|explicit
 name|Inliner
 argument_list|(
-name|void
-operator|*
+name|char
+operator|&
 name|ID
 argument_list|)
 block|;
 name|explicit
 name|Inliner
 argument_list|(
-argument|void *ID
+argument|char&ID
 argument_list|,
 argument|int Threshold
 argument_list|)
