@@ -6955,6 +6955,10 @@ modifier|*
 name|base
 decl_stmt|;
 name|struct
+name|callout
+name|tx_thr
+decl_stmt|;
+name|struct
 name|fr_desc
 modifier|*
 name|frin_spill

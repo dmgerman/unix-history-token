@@ -179,28 +179,6 @@ directive|include
 file|<mips/rmi/board.h>
 end_include
 
-begin_function_decl
-name|void
-name|disable_msgring_int
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_msgring_int
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* definitions */
 end_comment
@@ -331,7 +309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|uint8_t
 name|msgring_pop_bucket_mask
 decl_stmt|;
 end_decl_stmt
@@ -364,17 +342,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|xlr_msgring_handler
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -765,20 +732,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Drain out max_messages for the buckets set in the bucket mask.   * Use max_messages = 0 to drain out all messages.  */
+end_comment
+
 begin_function
-name|void
+name|uint32_t
 name|xlr_msgring_handler
 parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|tf
+name|uint8_t
+name|bucket_mask
+parameter_list|,
+name|uint32_t
+name|max_messages
 parameter_list|)
 block|{
-name|unsigned
-name|long
-name|mflags
-decl_stmt|;
 name|int
 name|bucket
 init|=
@@ -805,8 +773,7 @@ name|struct
 name|msgrng_msg
 name|msg
 decl_stmt|;
-name|unsigned
-name|int
+name|uint8_t
 name|bucket_empty_bm
 init|=
 literal|0
@@ -817,6 +784,17 @@ name|status
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|long
+name|mflags
+decl_stmt|;
+name|uint32_t
+name|n_msgs
+decl_stmt|;
+name|n_msgs
+operator|=
+literal|0
+expr_stmt|;
 name|mflags
 operator|=
 name|msgrng_access_enable
@@ -838,14 +816,14 @@ operator|>>
 literal|24
 operator|)
 operator|&
-name|msgring_pop_bucket_mask
+name|bucket_mask
 expr_stmt|;
 comment|/* all buckets empty, break */
 if|if
 condition|(
 name|bucket_empty_bm
 operator|==
-name|msgring_pop_bucket_mask
+name|bucket_mask
 condition|)
 break|break;
 for|for
@@ -864,6 +842,18 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
+operator|(
+literal|1
+operator|<<
+name|bucket
+operator|)
+operator|&
+name|bucket_mask
+operator|)
+comment|/* bucket not in mask */
+operator|||
 operator|(
 name|bucket_empty_bm
 operator|&
@@ -873,8 +863,8 @@ operator|<<
 name|bucket
 operator|)
 operator|)
-comment|/* empty */
 condition|)
+comment|/* empty */
 continue|continue;
 name|status
 operator|=
@@ -908,6 +898,9 @@ name|msgmap
 index|[
 name|rx_stid
 index|]
+expr_stmt|;
+name|n_msgs
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -985,23 +978,42 @@ name|msgrng_access_enable
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|max_messages
+operator|>
+literal|0
+operator|&&
+name|n_msgs
+operator|>=
+name|max_messages
+condition|)
+goto|goto
+name|done
+goto|;
 block|}
 block|}
+name|done
+label|:
 name|msgrng_restore
 argument_list|(
 name|mflags
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|n_msgs
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|enable_msgring_int
 parameter_list|(
 name|void
-modifier|*
-name|arg
 parameter_list|)
 block|{
 name|uint32_t
@@ -1050,12 +1062,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|disable_msgring_int
 parameter_list|(
 name|void
-modifier|*
-name|arg
 parameter_list|)
 block|{
 name|uint32_t
@@ -1151,9 +1162,7 @@ name|i_thread
 expr_stmt|;
 comment|/* 	 * Interrupt thread will enable the interrupts after processing all 	 * messages 	 */
 name|disable_msgring_int
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|atomic_store_rel_int
 argument_list|(
@@ -1305,9 +1314,7 @@ name|arg
 argument_list|)
 expr_stmt|;
 name|enable_msgring_int
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -1324,7 +1331,9 @@ block|{
 comment|/* 			 * This might need a full read and write barrier to 			 * make sure that this write posts before any of the 			 * memory or device accesses in the handlers. 			 */
 name|xlr_msgring_handler
 argument_list|(
-name|NULL
+name|msgring_pop_bucket_mask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|atomic_store_rel_int
@@ -1338,9 +1347,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|enable_msgring_int
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if

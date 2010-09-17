@@ -1779,7 +1779,6 @@ enum|;
 end_enum
 
 begin_function_decl
-specifier|extern
 name|int
 name|register_msgring_handler
 parameter_list|(
@@ -1816,7 +1815,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+name|uint32_t
+name|xlr_msgring_handler
+parameter_list|(
+name|uint8_t
+name|bucket_mask
+parameter_list|,
+name|uint32_t
+name|max_messages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|xlr_msgring_cpu_init
 parameter_list|(
@@ -1826,7 +1837,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|xlr_msgring_config
 parameter_list|(
