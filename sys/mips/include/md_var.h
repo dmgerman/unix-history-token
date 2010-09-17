@@ -139,7 +139,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|is_physical_memory
+name|is_cacheable_mem
 parameter_list|(
 name|vm_offset_t
 name|addr
@@ -155,16 +155,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|is_cacheable_mem
-parameter_list|(
-name|pa
-parameter_list|)
-value|is_physical_memory((pa))
-end_define
 
 begin_define
 define|#

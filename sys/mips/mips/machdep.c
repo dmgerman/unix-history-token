@@ -1760,7 +1760,7 @@ end_function
 
 begin_function
 name|int
-name|is_physical_memory
+name|is_cacheable_mem
 parameter_list|(
 name|vm_offset_t
 name|addr
