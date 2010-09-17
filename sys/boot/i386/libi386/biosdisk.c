@@ -1001,6 +1001,9 @@ name|unit
 operator|++
 control|)
 block|{
+ifndef|#
+directive|ifndef
+name|VIRTUALBOX
 comment|/* check the BIOS equipment list for number of fixed disks */
 if|if
 condition|(
@@ -1026,6 +1029,8 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+endif|#
+directive|endif
 name|bdinfo
 index|[
 name|nbdinfo

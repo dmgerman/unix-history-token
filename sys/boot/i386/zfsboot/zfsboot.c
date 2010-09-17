@@ -3200,6 +3200,9 @@ name|spa
 argument_list|)
 expr_stmt|;
 comment|/*      * Probe the rest of the drives that the bios knows about. This      * will find any other available pools and it may fill in missing      * vdevs for the boot pool.      */
+ifndef|#
+directive|ifndef
+name|VIRTUALBOX
 for|for
 control|(
 name|i
@@ -3222,6 +3225,23 @@ condition|;
 name|i
 operator|++
 control|)
+else|#
+directive|else
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXBDDEV
+condition|;
+name|i
+operator|++
+control|)
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
