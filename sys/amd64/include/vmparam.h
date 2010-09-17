@@ -476,7 +476,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_SCALE
-value|(3)
+value|(1)
 end_define
 
 begin_endif
