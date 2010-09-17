@@ -257,6 +257,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_buffer_splitting
 decl_stmt|;
+name|uint32_t
+name|sctp_initial_cwnd
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2314,6 +2317,38 @@ define|#
 directive|define
 name|SCTPCTL_BUFFER_SPLITTING_DEFAULT
 value|SCTPCTL_BUFFER_SPLITTING_MIN
+end_define
+
+begin_comment
+comment|/* Initial congestion window in MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_DESC
+value|"Initial congestion window in MTU"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_MIN
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_MAX
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_INITIAL_CWND_DEFAULT
+value|3
 end_define
 
 begin_if
