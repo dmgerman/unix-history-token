@@ -254,6 +254,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_vtag_time_wait
 decl_stmt|;
+name|uint32_t
+name|sctp_buffer_splitting
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2218,7 +2221,7 @@ value|SCTPCTL_SACK_IMMEDIATELY_ENABLE_MIN
 end_define
 
 begin_comment
-comment|/* Enable sending of the SACK-IMMEDIATELY bit */
+comment|/* Enable sending of the NAT-FRIENDLY message */
 end_comment
 
 begin_define
@@ -2250,14 +2253,14 @@ value|SCTPCTL_NAT_FRIENDLY_INITS_MIN
 end_define
 
 begin_comment
-comment|/* Vtag tiem wait bits */
+comment|/* Vtag time wait in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_TIME_WAIT_DESC
-value|"Vtag time wait time 0 disables."
+value|"Vtag time wait time in seconds, 0 disables it."
 end_define
 
 begin_define
@@ -2279,6 +2282,38 @@ define|#
 directive|define
 name|SCTPCTL_TIME_WAIT_DEFAULT
 value|SCTP_TIME_WAIT
+end_define
+
+begin_comment
+comment|/* Enable Send/Receive buffer splitting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_DESC
+value|"Enable send/receive buffer splitting."
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_MAX
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BUFFER_SPLITTING_DEFAULT
+value|SCTPCTL_BUFFER_SPLITTING_MIN
 end_define
 
 begin_if
