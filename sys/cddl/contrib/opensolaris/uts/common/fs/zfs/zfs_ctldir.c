@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -379,6 +379,56 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{ }
+end_function
+
+begin_function
+name|boolean_t
+name|zfsctl_is_node
+parameter_list|(
+name|vnode_t
+modifier|*
+name|vp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vn_matchops
+argument_list|(
+name|vp
+argument_list|,
+name|zfsctl_ops_root
+argument_list|)
+operator|||
+name|vn_matchops
+argument_list|(
+name|vp
+argument_list|,
+name|zfsctl_ops_snapdir
+argument_list|)
+operator|||
+name|vn_matchops
+argument_list|(
+name|vp
+argument_list|,
+name|zfsctl_ops_snapshot
+argument_list|)
+operator|||
+name|vn_matchops
+argument_list|(
+name|vp
+argument_list|,
+name|zfsctl_ops_shares
+argument_list|)
+operator|||
+name|vn_matchops
+argument_list|(
+name|vp
+argument_list|,
+name|zfsctl_ops_shares_dir
+argument_list|)
+operator|)
+return|;
+block|}
 end_function
 
 begin_comment

@@ -298,6 +298,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|vn_matchops
+parameter_list|(
+name|vp
+parameter_list|,
+name|vops
+parameter_list|)
+value|((vp)->v_op ==&(vops))
+end_define
+
+begin_define
+define|#
+directive|define
 name|VN_HOLD
 parameter_list|(
 name|v
