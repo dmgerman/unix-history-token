@@ -486,6 +486,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
+condition|)
 name|warn
 argument_list|(
 literal|"waitpid"
