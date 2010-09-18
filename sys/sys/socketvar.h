@@ -622,16 +622,6 @@ parameter_list|)
 value|do {							\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count<= 0)					\ 		panic("sorele");					\ 	if (--(so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|sotryfree
-parameter_list|(
-name|so
-parameter_list|)
-value|do {						\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while(0)
-end_define
-
 begin_comment
 comment|/*  * In sorwakeup() and sowwakeup(), acquire the socket buffer lock to  * avoid a non-atomic test-and-wakeup.  However, sowakeup is  * responsible for releasing the lock if it is called.  We unlock only  * if we don't call into sowakeup.  If any code is introduced that  * directly invokes the underlying sowakeup() primitives, it must  * maintain the same semantics.  */
 end_comment

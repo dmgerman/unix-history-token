@@ -2450,7 +2450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to free a socket.  This should really be sotryfree().  *  * sofree() will succeed if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * - The socket is not in a completed connection queue, so a process has been  *   notified that it is present.  If it is removed, the user process may  *   block in accept() despite select() saying the socket was ready.  *  * Otherwise, it will quietly abort so that a future call to sofree(), when  * conditions are right, can succeed.  */
+comment|/*  * Evaluate the reference count and named references on a socket; if no  * references remain, free it.  This should be called whenever a reference is  * released, such as in sorele(), but also when named reference flags are  * cleared in socket or protocol code.  *  * sofree() will free the socket if:  *  * - There are no outstanding file descriptor references or related consumers  *   (so_count == 0).  *  * - The socket has been closed by user space, if ever open (SS_NOFDREF).  *  * - The protocol does not have an outstanding strong reference on the socket  *   (SS_PROTOREF).  *  * - The socket is not in a completed connection queue, so a process has been  *   notified that it is present.  If it is removed, the user process may  *   block in accept() despite select() saying the socket was ready.  */
 end_comment
 
 begin_function
