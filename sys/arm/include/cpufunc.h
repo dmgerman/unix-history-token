@@ -2190,6 +2190,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sheeva_cpu_sleep
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sheeva_setttb
 parameter_list|(
 name|u_int

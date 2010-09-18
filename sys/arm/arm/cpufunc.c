@@ -1040,11 +1040,7 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_E	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
+name|sheeva_cpu_sleep
 block|,
 comment|/* sleep		*/
 comment|/* Soft functions */
@@ -3303,6 +3299,11 @@ name|FC_L2CACHE_EN
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Use powersave on this CPU. */
+name|cpu_do_powersave
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 name|cpufuncs
