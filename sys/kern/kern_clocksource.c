@@ -1658,13 +1658,6 @@ argument_list|(
 argument|cpu
 argument_list|)
 block|{
-if|if
-condition|(
-name|curcpu
-operator|==
-name|cpu
-condition|)
-continue|continue;
 name|state
 operator|=
 name|DPCPU_ID_PTR
@@ -1708,6 +1701,13 @@ operator|.
 name|sec
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|curcpu
+operator|!=
+name|cpu
+condition|)
+block|{
 name|state
 operator|->
 name|ipi
@@ -1718,6 +1718,7 @@ name|bcast
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|ET_HW_UNLOCK
 argument_list|(
