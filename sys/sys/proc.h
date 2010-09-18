@@ -766,6 +766,12 @@ name|osd
 name|td_osd
 decl_stmt|;
 comment|/* (k) Object specific data. */
+name|struct
+name|vm_map_entry
+modifier|*
+name|td_map_def_user
+decl_stmt|;
+comment|/* (k) Deferred entries. */
 define|#
 directive|define
 name|td_endzero
