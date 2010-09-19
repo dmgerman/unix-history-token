@@ -4796,13 +4796,9 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
 name|TPFSZ
 operator|+
 name|TNMSZ
-operator|+
-literal|1
-operator|)
 condition|)
 return|return
 operator|(
@@ -4817,8 +4813,6 @@ operator|+
 name|len
 operator|-
 name|TNMSZ
-operator|-
-literal|1
 expr_stmt|;
 while|while
 condition|(
