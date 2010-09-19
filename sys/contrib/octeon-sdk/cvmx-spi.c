@@ -2064,6 +2064,13 @@ operator|*
 name|MS
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OCTEON_VENDOR_LANNER
+argument_list|)
 name|timeout_time
 operator|=
 name|cvmx_get_cycle
@@ -2076,6 +2083,21 @@ operator|*
 literal|600
 expr_stmt|;
 comment|/* Wait a really long time here */
+else|#
+directive|else
+name|timeout_time
+operator|=
+name|cvmx_get_cycle
+argument_list|()
+operator|+
+literal|1000ull
+operator|*
+name|MS
+operator|*
+literal|10
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* The HRM says we must wait for 34 + 16 * MAXDIST training sequences.         We'll be pessimistic and wait for a lot more */
 name|rx_training_needed
 operator|=
