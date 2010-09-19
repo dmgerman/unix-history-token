@@ -3121,10 +3121,6 @@ operator|->
 name|provider
 operator|->
 name|sectorsize
-operator|&&
-name|length
-operator|<=
-name|MAXPHYS
 argument_list|,
 operator|(
 literal|"g_delete_data(): invalid length %jd"

@@ -1555,10 +1555,6 @@ operator|||
 name|length
 operator|<=
 literal|0
-operator|||
-name|length
-operator|>
-name|MAXPHYS
 condition|)
 block|{
 name|printf
