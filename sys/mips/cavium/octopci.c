@@ -1693,6 +1693,13 @@ argument_list|,
 name|bus_generic_setup_intr
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
 comment|/* pcib interface */
 name|DEVMETHOD
 argument_list|(

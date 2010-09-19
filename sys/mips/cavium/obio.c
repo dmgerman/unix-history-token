@@ -731,6 +731,13 @@ argument_list|,
 name|bus_generic_teardown_intr
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_add_child
+argument_list|,
+name|bus_generic_add_child
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
