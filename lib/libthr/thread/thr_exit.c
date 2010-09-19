@@ -802,9 +802,9 @@ literal|1
 expr_stmt|;
 name|curthread
 operator|->
-name|cancel_enable
+name|no_cancel
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|curthread
 operator|->

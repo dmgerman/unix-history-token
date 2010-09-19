@@ -935,9 +935,6 @@ modifier|*
 name|sigfunc
 decl_stmt|;
 name|int
-name|cancel_defer
-decl_stmt|;
-name|int
 name|cancel_point
 decl_stmt|;
 name|int
@@ -998,12 +995,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * if thread is in deferred cancellation mode, disable cancellation 	 * in signal handler. 	 * if user signal handler calls a cancellation point function, e.g, 	 * it calls write() to write data to file, because write() is a 	 * cancellation point, the thread is immediately cancelled if  	 * cancellation is pending, to avoid this problem while thread is in 	 * deferring mode, cancellation is temporarily disabled. 	 */
-name|cancel_defer
-operator|=
-name|curthread
-operator|->
-name|cancel_defer
-expr_stmt|;
 name|cancel_point
 operator|=
 name|curthread
@@ -1025,12 +1016,6 @@ expr_stmt|;
 name|curthread
 operator|->
 name|cancel_point
-operator|=
-literal|0
-expr_stmt|;
-name|curthread
-operator|->
-name|cancel_defer
 operator|=
 literal|0
 expr_stmt|;
@@ -1137,12 +1122,6 @@ operator|->
 name|in_sigsuspend
 operator|=
 name|in_sigsuspend
-expr_stmt|;
-name|curthread
-operator|->
-name|cancel_defer
-operator|=
-name|cancel_defer
 expr_stmt|;
 name|curthread
 operator|->
@@ -1275,7 +1254,7 @@ name|cancel_enable
 operator|||
 name|curthread
 operator|->
-name|cancelling
+name|no_cancel
 argument_list|)
 condition|)
 return|return;

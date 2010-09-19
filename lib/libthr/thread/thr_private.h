@@ -1070,7 +1070,7 @@ parameter_list|(
 name|thr
 parameter_list|)
 define|\
-value|((thr)->cancel_pending&&				\ 	 ((thr)->cancel_point || (thr)->cancel_async)&&	\ 	 (thr)->cancel_enable&& (thr)->cancelling == 0)
+value|((thr)->cancel_pending&& (thr)->cancel_enable&&	\ 	 ((thr)->cancel_point || (thr)->cancel_async)&&	\ 	 (thr)->no_cancel == 0)
 comment|/* Cancellation is enabled */
 name|int
 name|cancel_enable
@@ -1083,9 +1083,9 @@ comment|/* Thread is at cancellation point */
 name|int
 name|cancel_point
 decl_stmt|;
-comment|/* Cancellation should be synchoronized */
+comment|/* Cancellation is temporarily disabled */
 name|int
-name|cancel_defer
+name|no_cancel
 decl_stmt|;
 comment|/* Asynchronouse cancellation is enabled */
 name|int
