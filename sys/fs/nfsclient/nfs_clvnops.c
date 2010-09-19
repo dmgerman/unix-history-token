@@ -258,7 +258,7 @@ name|vop_advlock_t
 modifier|*
 name|ncl_advlock_p
 init|=
-name|nfs_dolock
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
