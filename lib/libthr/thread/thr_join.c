@@ -136,7 +136,7 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-name|THR_THREAD_LOCK
+name|THR_THREAD_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
