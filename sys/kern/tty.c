@@ -1125,6 +1125,10 @@ name|CLOCAL
 operator|)
 operator|==
 literal|0
+operator|&&
+name|dev
+operator|!=
+name|dev_console
 condition|)
 block|{
 while|while
