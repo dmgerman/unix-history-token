@@ -1312,6 +1312,9 @@ name|g_provider
 modifier|*
 name|pp
 decl_stmt|;
+name|int
+name|first
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cp
@@ -1712,6 +1715,16 @@ operator|->
 name|nstart
 operator|++
 expr_stmt|;
+name|first
+operator|=
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|g_bio_run_down
+operator|.
+name|bio_queue
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1736,6 +1749,10 @@ name|g_bio_run_down
 argument_list|)
 expr_stmt|;
 comment|/* Pass it on down. */
+if|if
+condition|(
+name|first
+condition|)
 name|wakeup
 argument_list|(
 operator|&
@@ -1767,6 +1784,9 @@ name|struct
 name|g_provider
 modifier|*
 name|pp
+decl_stmt|;
+name|int
+name|first
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -2080,6 +2100,16 @@ name|bio_error
 operator|=
 name|error
 expr_stmt|;
+name|first
+operator|=
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|g_bio_run_up
+operator|.
+name|bio_queue
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2109,6 +2139,10 @@ operator|&
 name|g_bio_run_up
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|first
+condition|)
 name|wakeup
 argument_list|(
 operator|&
