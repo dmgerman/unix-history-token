@@ -22463,7 +22463,7 @@ operator|*
 operator|)
 name|sp
 argument_list|,
-literal|0
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -22868,7 +22868,7 @@ name|SCTP_NOTIFY_DATAGRAM_UNSENT
 argument_list|,
 name|chk
 argument_list|,
-literal|0
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -23023,7 +23023,7 @@ name|SCTP_NOTIFY_DATAGRAM_SENT
 argument_list|,
 name|chk
 argument_list|,
-literal|0
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
