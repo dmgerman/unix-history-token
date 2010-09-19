@@ -2238,9 +2238,7 @@ name|PDROP
 argument_list|,
 literal|"-"
 argument_list|,
-name|hz
-operator|/
-literal|10
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2752,9 +2750,7 @@ name|PDROP
 argument_list|,
 literal|"-"
 argument_list|,
-name|hz
-operator|/
-literal|10
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
