@@ -1026,7 +1026,6 @@ argument_list|,
 name|dev
 argument_list|)
 condition|)
-block|{
 name|tp
 operator|->
 name|t_termios
@@ -1035,9 +1034,7 @@ name|tp
 operator|->
 name|t_termios_init_out
 expr_stmt|;
-block|}
 else|else
-block|{
 name|tp
 operator|->
 name|t_termios
@@ -1046,7 +1043,6 @@ name|tp
 operator|->
 name|t_termios_init_in
 expr_stmt|;
-block|}
 name|ttydevsw_param
 argument_list|(
 name|tp
@@ -1056,6 +1052,28 @@ name|tp
 operator|->
 name|t_termios
 argument_list|)
+expr_stmt|;
+comment|/* Prevent modem control on callout devices and /dev/console. */
+if|if
+condition|(
+name|TTY_CALLOUT
+argument_list|(
+name|tp
+argument_list|,
+name|dev
+argument_list|)
+operator|||
+name|dev
+operator|==
+name|dev_console
+condition|)
+name|tp
+operator|->
+name|t_termios
+operator|.
+name|c_cflag
+operator||=
+name|CLOCAL
 expr_stmt|;
 name|ttydevsw_modem
 argument_list|(
@@ -1098,14 +1116,6 @@ block|}
 comment|/* Wait for Carrier Detect. */
 if|if
 condition|(
-operator|!
-name|TTY_CALLOUT
-argument_list|(
-name|tp
-argument_list|,
-name|dev
-argument_list|)
-operator|&&
 operator|(
 name|oflags
 operator|&
@@ -1125,10 +1135,6 @@ name|CLOCAL
 operator|)
 operator|==
 literal|0
-operator|&&
-name|dev
-operator|!=
-name|dev_console
 condition|)
 block|{
 while|while
