@@ -1790,58 +1790,6 @@ end_function
 
 begin_function
 name|void
-name|_vm_map_unlock_nodefer
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-block|{
-if|if
-condition|(
-name|map
-operator|->
-name|system_map
-condition|)
-name|_mtx_unlock_flags
-argument_list|(
-operator|&
-name|map
-operator|->
-name|system_mtx
-argument_list|,
-literal|0
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-else|else
-name|_sx_xunlock
-argument_list|(
-operator|&
-name|map
-operator|->
-name|lock
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|_vm_map_unlock
 parameter_list|(
 name|vm_map_t
@@ -2525,18 +2473,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	vm_map_unlock_and_wait:  */
+comment|/*  *	_vm_map_unlock_and_wait:  *  *	Atomically releases the lock on the specified map and puts the calling  *	thread to sleep.  The calling thread will remain asleep until either  *	vm_map_wakeup() is performed on the map or the specified timeout is  *	exceeded.  *  *	WARNING!  This function does not perform deferred deallocations of  *	objects and map	entries.  Therefore, the calling thread is expected to  *	reacquire the map lock after reawakening and later perform an ordinary  *	unlock operation, such as vm_map_unlock(), before completing its  *	operation on the map.  */
 end_comment
 
 begin_function
 name|int
-name|vm_map_unlock_and_wait
+name|_vm_map_unlock_and_wait
 parameter_list|(
 name|vm_map_t
 name|map
 parameter_list|,
 name|int
 name|timo
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_lock
@@ -2545,9 +2501,37 @@ operator|&
 name|map_sleep_mtx
 argument_list|)
 expr_stmt|;
-name|vm_map_unlock_nodefer
-argument_list|(
+if|if
+condition|(
 name|map
+operator|->
+name|system_map
+condition|)
+name|_mtx_unlock_flags
+argument_list|(
+operator|&
+name|map
+operator|->
+name|system_mtx
+argument_list|,
+literal|0
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+else|else
+name|_sx_xunlock
+argument_list|(
+operator|&
+name|map
+operator|->
+name|lock
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 return|return
@@ -2576,7 +2560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_wakeup:  */
+comment|/*  *	vm_map_wakeup:  *  *	Awaken any threads that have slept on the map using  *	vm_map_unlock_and_wait().  */
 end_comment
 
 begin_function
@@ -2587,7 +2571,7 @@ name|vm_map_t
 name|map
 parameter_list|)
 block|{
-comment|/* 	 * Acquire and release map_sleep_mtx to prevent a wakeup() 	 * from being performed (and lost) between the vm_map_unlock() 	 * and the msleep() in vm_map_unlock_and_wait(). 	 */
+comment|/* 	 * Acquire and release map_sleep_mtx to prevent a wakeup() 	 * from being performed (and lost) between the map unlock 	 * and the msleep() in _vm_map_unlock_and_wait(). 	 */
 name|mtx_lock
 argument_list|(
 operator|&

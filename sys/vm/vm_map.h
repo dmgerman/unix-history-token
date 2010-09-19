@@ -757,11 +757,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|_vm_map_unlock_nodefer
+name|int
+name|_vm_map_unlock_and_wait
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+name|int
+name|timo
 parameter_list|,
 specifier|const
 name|char
@@ -893,19 +896,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vm_map_unlock_and_wait
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-name|int
-name|timo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vm_map_wakeup
 parameter_list|(
@@ -938,12 +928,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|vm_map_unlock_nodefer
+name|vm_map_unlock_and_wait
 parameter_list|(
 name|map
+parameter_list|,
+name|timo
 parameter_list|)
 define|\
-value|_vm_map_unlock_nodefer(map, LOCK_FILE, LOCK_LINE)
+value|_vm_map_unlock_and_wait(map, timo, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
