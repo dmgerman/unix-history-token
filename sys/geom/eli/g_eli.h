@@ -1203,7 +1203,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|eli_metadata_decode_v1v2v3
+name|eli_metadata_decode_v1v2v3v4
 parameter_list|(
 specifier|const
 name|u_char
@@ -1571,9 +1571,12 @@ case|:
 case|case
 literal|3
 case|:
+case|case
+literal|4
+case|:
 name|error
 operator|=
-name|eli_metadata_decode_v1v2v3
+name|eli_metadata_decode_v1v2v3v4
 argument_list|(
 name|data
 argument_list|,
