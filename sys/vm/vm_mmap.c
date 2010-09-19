@@ -5535,6 +5535,15 @@ if|if
 condition|(
 operator|(
 operator|*
+name|flagsp
+operator|&
+name|MAP_SHARED
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+operator|*
 name|maxprotp
 operator|&
 name|VM_PROT_WRITE
