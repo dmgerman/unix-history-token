@@ -28478,7 +28478,7 @@ operator|&
 name|FRAME_SIZE_MASK
 operator|)
 expr_stmt|;
-comment|/* Remove length filed itself. */
+comment|/* Remove length field itself. */
 name|len
 operator|-=
 literal|4
