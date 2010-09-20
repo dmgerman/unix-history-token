@@ -392,7 +392,7 @@ name|u_int32_t
 name|devflags
 decl_stmt|;
 comment|/**< api level flags for device_get_flags() */
-name|u_short
+name|u_int
 name|flags
 decl_stmt|;
 comment|/**< internal device flags  */
@@ -436,13 +436,10 @@ directive|define
 name|DF_REBID
 value|128
 comment|/* Can rebid after attach */
-name|u_char
+name|u_int
 name|order
 decl_stmt|;
 comment|/**< order from device_add_child_ordered() */
-name|u_char
-name|pad
-decl_stmt|;
 name|void
 modifier|*
 name|ivars
@@ -6100,7 +6097,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|int
+name|u_int
 name|order
 parameter_list|,
 specifier|const
@@ -6121,7 +6118,7 @@ decl_stmt|;
 name|PDEBUG
 argument_list|(
 operator|(
-literal|"%s at %s with order %d as unit %d"
+literal|"%s at %s with order %u as unit %d"
 operator|,
 name|name
 operator|,
