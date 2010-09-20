@@ -20932,8 +20932,6 @@ operator|->
 name|n_vattr
 operator|.
 name|na_ctime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|cache_enter
 argument_list|(

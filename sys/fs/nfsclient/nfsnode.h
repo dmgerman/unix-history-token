@@ -190,21 +190,18 @@ name|n_mtime
 decl_stmt|;
 comment|/* Prev modify time. */
 name|time_t
-name|n_ctime
+name|n_unused0
 decl_stmt|;
-comment|/* Prev create time. */
 name|time_t
-name|n_dmtime
+name|n_unused1
 decl_stmt|;
-comment|/* Prev dir modify time. */
 name|int
 name|n_dmtime_ticks
 decl_stmt|;
 comment|/* Tick of -ve cache entry */
 name|time_t
-name|n_expiry
+name|n_unused2
 decl_stmt|;
-comment|/* Lease expiry time */
 name|struct
 name|nfsfh
 modifier|*
@@ -313,6 +310,16 @@ modifier|*
 name|n_v4
 decl_stmt|;
 comment|/* extra V4 stuff */
+name|struct
+name|timespec
+name|n_ctime
+decl_stmt|;
+comment|/* Prev create time. */
+name|struct
+name|timespec
+name|n_dmtime
+decl_stmt|;
+comment|/* Prev dir modify time. */
 block|}
 struct|;
 end_struct
