@@ -2271,6 +2271,10 @@ expr|struct
 name|ufs1_dinode
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|iobuf
 expr_stmt|;
 ifdef|#
