@@ -838,6 +838,7 @@ end_function
 
 begin_function
 specifier|static
+name|__dead2
 name|void
 name|primary_exit
 parameter_list|(
@@ -898,6 +899,7 @@ end_function
 
 begin_function
 specifier|static
+name|__dead2
 name|void
 name|primary_exitx
 parameter_list|(

@@ -2266,6 +2266,7 @@ end_function
 
 begin_function
 specifier|static
+name|__dead2
 name|void
 name|secondary_exit
 parameter_list|(
