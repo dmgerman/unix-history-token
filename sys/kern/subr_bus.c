@@ -415,42 +415,42 @@ comment|/**< internal device flags  */
 define|#
 directive|define
 name|DF_ENABLED
-value|1
+value|0x01
 comment|/* device should be probed/attached */
 define|#
 directive|define
 name|DF_FIXEDCLASS
-value|2
+value|0x02
 comment|/* devclass specified at create time */
 define|#
 directive|define
 name|DF_WILDCARD
-value|4
+value|0x04
 comment|/* unit was originally wildcard */
 define|#
 directive|define
 name|DF_DESCMALLOCED
-value|8
+value|0x08
 comment|/* description was malloced */
 define|#
 directive|define
 name|DF_QUIET
-value|16
+value|0x10
 comment|/* don't print verbose attach message */
 define|#
 directive|define
 name|DF_DONENOMATCH
-value|32
+value|0x20
 comment|/* don't execute DEVICE_NOMATCH again */
 define|#
 directive|define
 name|DF_EXTERNALSOFTC
-value|64
+value|0x40
 comment|/* softc not allocated by us */
 define|#
 directive|define
 name|DF_REBID
-value|128
+value|0x80
 comment|/* Can rebid after attach */
 name|u_int
 name|order
