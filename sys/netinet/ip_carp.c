@@ -12590,7 +12590,10 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|proto_reg
+index|[
+name|CARP_INET6
+index|]
 operator|)
 return|;
 block|}
@@ -12618,7 +12621,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|err
 operator|)
 return|;
 block|}
@@ -12669,7 +12672,10 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|proto_reg
+index|[
+name|CARP_INET
+index|]
 operator|)
 return|;
 block|}
@@ -12697,7 +12703,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|err
 operator|)
 return|;
 block|}
