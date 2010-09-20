@@ -3708,7 +3708,9 @@ begin_function
 specifier|static
 name|void
 name|sched_balance
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|tdq
