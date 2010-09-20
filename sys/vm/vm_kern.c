@@ -1020,7 +1020,20 @@ decl_stmt|;
 name|int
 name|pflags
 decl_stmt|;
-comment|/* 	 * XXX the map must be locked for write on entry, but there's 	 * no easy way to assert that. 	 */
+name|KASSERT
+argument_list|(
+name|vm_map_locked
+argument_list|(
+name|map
+argument_list|)
+argument_list|,
+operator|(
+literal|"kmem_back: map %p is not locked"
+operator|,
+name|map
+operator|)
+argument_list|)
+expr_stmt|;
 name|offset
 operator|=
 name|addr
