@@ -1979,6 +1979,22 @@ literal|1
 expr_stmt|;
 do|do
 block|{
+comment|/* Check that N doesn't get too big, so that es doesn't                   go negative.  The maximum value that can be                   RUNA/RUNB encoded is equal to the block size (post                   the initial RLE), viz, 900k, so bounding N at 2                   million should guard against overflow without                   rejecting any legitimate inputs. */
+if|if
+condition|(
+name|N
+operator|>=
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+name|RETURN
+argument_list|(
+name|BZ_DATA_ERROR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nextSym
